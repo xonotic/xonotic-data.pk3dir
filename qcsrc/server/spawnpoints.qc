@@ -1,39 +1,37 @@
-
-.float last_spawn_time;
-.float send_spawn;
-float Spawn_Send(entity to, float sf)
+float SpawnPoint_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
-	WriteByte(MSG_ENTITY, sf);
-	
-	if(sf & 1)
-	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteShort(MSG_ENTITY, self.origin_x);
-		WriteShort(MSG_ENTITY, self.origin_y);
-		WriteShort(MSG_ENTITY, self.origin_z);
-	}
-	if(sf & 2)
-	{
-		WriteLong(MSG_ENTITY, self.last_spawn_time);
-	}
-	
+
+	WriteByte(MSG_ENTITY, self.team);
+	WriteShort(MSG_ENTITY, self.origin_x);
+	WriteShort(MSG_ENTITY, self.origin_y);
+	WriteShort(MSG_ENTITY, self.origin_z);
+
 	return TRUE;
 }
 
-void Spawn_Think(void)
+float SpawnEvent_Send(entity to, float sf)
 {
-	if(self.send_spawn < 0)
+	float send;
+	
+	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
+
+	if(autocvar_g_spawnsound)
 	{
-		self.send_spawn = 0;
-		self.SendFlags |= 1;
+		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteShort(MSG_ENTITY, self.owner.origin_x);
+		WriteShort(MSG_ENTITY, self.owner.origin_y);
+		WriteShort(MSG_ENTITY, self.owner.origin_z);
+		send = TRUE;
 	}
-	else
+	else if((to == self.owner) || (IS_SPEC(to) && (to.enemy == self.owner)) )
 	{
-		self.last_spawn_time = self.send_spawn;
-		self.send_spawn = 0;
-		self.SendFlags |= 2;
+		WriteByte(MSG_ENTITY, 0);
+		send = TRUE;
 	}
+	else { send = FALSE; }
+
+	return send;
 }
 
 void spawnpoint_use()
@@ -45,8 +43,6 @@ void spawnpoint_use()
 		some_spawn_has_been_used = 1;
 	}
 	print("spawnpoint was used!\n");
-	self.send_spawn = time;
-	self.nextthink = time;
 }
 
 void relocate_spawnpoint()
@@ -104,11 +100,11 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
-	self.send_spawn = -1;
-	self.think = Spawn_Think;
-	self.nextthink = time;
+	//self.send_spawn = -1;
+	//self.think = Spawn_Think;
+	//self.nextthink = time;
 
-    Net_LinkEntity(self, FALSE, 0, Spawn_Send);
+    Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send);
 }
 
 void spawnfunc_info_player_survivor (void)
@@ -147,7 +143,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if(spot.target == "")
 			return '-1 0 0';
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		if(spot.restriction == 1)
 			return '-1 0 0';

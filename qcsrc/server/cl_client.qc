@@ -354,7 +354,7 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-
+float SpawnEvent_Send(entity to, float sf);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
@@ -510,11 +510,9 @@ void PutClientInServer (void)
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
 
-		msg_entity = self;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
-		});
+		entity spawnevent = spawn();
+		spawnevent.owner = self;
+		Net_LinkEntity(spawnevent, FALSE, 1, SpawnEvent_Send);
 
 		self.model = "";
 		FixPlayermodel();
@@ -601,10 +599,9 @@ void PutClientInServer (void)
 				self.alivetime = time;
 
 		antilag_clear(self);
-
-		if (autocvar_g_spawnsound)
-			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-	} else if(IS_OBSERVER(self)) {
+	}
+	else if(IS_OBSERVER(self))
+	{
 		PutObserverInServer ();
 	}
 }

@@ -695,45 +695,88 @@ void Ent_ReadAccuracy(void)
 			f *= 2;
 	}
 }
-.float last_spawn_time;
+
 void Spawn_Draw(void)
 {
-	pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 2', bound(0, frametime, 0.1));
+	pointparticles(self.cnt, self.origin, '0 0 2', bound(0, frametime, 0.1));
 }
 
-void Ent_ReadSpawnPoint(float is_new)
+void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 {
-	float sendflag = ReadByte();
+	float teamnum = ReadByte();
+	self.origin_x = ReadShort();
+	self.origin_y = ReadShort();
+	self.origin_z = ReadShort();
 
-	if(sendflag & 1)
+	if(is_new)
 	{
-		self.team = ReadByte();
+		switch(teamnum)
+		{
+			default: self.cnt = particleeffectnum("EF_STARDUST"); break;
+		}
+		
+		//self.colormod = '200 0 0'; //colormapPaletteColor(teamnum - 1, FALSE);
+
+		//setsize(self, PL_MIN, PL_MAX);
+
+		//droptofloor();
+
+		//self.mdl = "models/domination/dom_unclaimed.md3";
+		//precache_model(self.mdl);
+		//setmodel(self, self.mdl);
+		self.drawmask = MASK_NORMAL;
+		self.movetype = MOVETYPE_NOCLIP;
+		self.draw = Spawn_Draw;
+		
+	}
+
+	print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d (%s)\n", is_new, vtos(self.origin), teamnum, "foobar"));
+}
+
+void Ent_ReadSpawnEvent(float is_new)
+{
+	// If entnum is 0, ONLY do the local spawn actions
+	// this way the server can disable the sending of
+	// spawn origin or such to clients if wanted.
+	float entnum = ReadByte();
+	
+	if(entnum)
+	{
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
-	}
-	if(sendflag & 2)
-	{
-		self.last_spawn_time = ReadLong();
-	}
 
-	if(self.last_spawn_time) { pointparticles(particleeffectnum("fireball_muzzleflash"), self.origin, '0 0 2', 1); self.last_spawn_time = 0; }
+		if(is_new)
+		{
+			float teamnum = GetPlayerColor(entnum - 1);
+			//if(autocvar_cl_spawn_event_sound)
+			{
+				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+			}
+			//if(autocvar_cl_spawn_event_particles)
+			{
+				switch(teamnum)
+				{
+					default: pointparticles(particleeffectnum("red_cap"), self.origin, '0 0 0', 1); break;
+				}
+			}
+		}
+	}
 	
+	// local spawn actions
+	if(is_new && (!entnum || (entnum == player_localentnum)))
+	{
+		zoomin_effect = 1;
+		current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
 
-	self.colormod = '200 0 0'; //colormapPaletteColor(self.team - 1, FALSE);
-
-	//setsize(self, PL_MIN, PL_MAX);
-
-	//droptofloor();
-
-	//self.mdl = "models/domination/dom_unclaimed.md3";
-	//precache_model(self.mdl);
-	//setmodel(self, self.mdl);
-	self.drawmask = MASK_NORMAL;
-	self.movetype = MOVETYPE_NOCLIP;
-	self.draw = Spawn_Draw;
-
-	print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d (%s)\n", is_new, vtos(self.origin), self.team, "foobar"));
+		if(autocvar_cl_unpress_zoom_on_spawn)
+		{
+			localcmd("-zoom\n");
+			button_zoom = FALSE;
+		}
+	}
+	
+	print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d (%s), localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum, "foobar"));
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
@@ -822,6 +865,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
+		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 
 		default:
@@ -1143,18 +1187,6 @@ void Net_ReadRace()
 	}
 }
 
-void Net_ReadSpawn()
-{
-	zoomin_effect = 1;
-	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
-
-	if(autocvar_cl_unpress_zoom_on_spawn)
-	{
-		localcmd("-zoom\n");
-		button_zoom = FALSE;
-	}
-}
-
 void Net_TeamNagger()
 {
 	teamnagger = 1;
@@ -1222,10 +1254,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case TE_CSQC_SPAWN:
-			Net_ReadSpawn();
 			bHandled = true;
 			break;
 		case TE_CSQC_ZCURVEPARTICLES:
