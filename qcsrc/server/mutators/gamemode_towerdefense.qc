@@ -948,6 +948,15 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	entity targ = trace_ent;
 	if(targ.owner.realowner == self)
 		targ = targ.owner;
+		
+	if(cmd_name == "debugmonsters")
+	{
+		float i;
+		for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+			sprint(self, strcat(ftos(i), " ", ftos(td_moncount[i]), "\n"));
+			
+		return TRUE;
+	}
 	
 	if(cmd_name == "turretspawn")
 	{

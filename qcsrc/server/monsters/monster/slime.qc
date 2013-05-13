@@ -37,7 +37,7 @@ void slime_touch_jump()
 	if(other.takedamage)
 	if(vlen(self.velocity) > 200)
 	{
-		slime_dead();
+		Damage (self, world, world, self.health + self.max_health + 200, DEATH_MONSTER_SLIME, self.origin, '0 0 0');
 			
 		return;
 	}
