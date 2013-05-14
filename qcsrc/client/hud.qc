@@ -942,7 +942,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Ammo(void)
 {
-    if(hud != HUD_NORMAL) return;
+	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_ammo) return;
@@ -965,6 +965,7 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	const float AMMO_COUNT = 4;
 	float rows = 0, columns, row, column;
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
