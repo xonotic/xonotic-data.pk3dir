@@ -214,6 +214,9 @@ string wcross_name_goal_prev, wcross_name_goal_prev_prev;
 float wcross_resolution_goal_prev, wcross_resolution_goal_prev_prev;
 float wcross_name_changestarttime, wcross_name_changedonetime;
 float wcross_name_alpha_goal_prev, wcross_name_alpha_goal_prev_prev;
+
+string wcross_ring_image_prev;
+
 entity trueaim;
 entity trueaim_rifle;
 
@@ -378,6 +381,8 @@ vector liquidcolor_prev;
 float eventchase_current_distance;
 
 vector damage_blurpostprocess, content_blurpostprocess;
+
+float prev_ring_alpha; // TODO REMOVE THIS
 
 float checkfail[16];
 
@@ -1418,11 +1423,27 @@ void CSQC_UpdateView(float w, float h)
 					}
 
 					// if in weapon switch animation, fade ring out/in
-					if(fabs(autocvar_crosshair_effect_time) > 0)
+					if(autocvar_crosshair_effect_time > 0)
 					{
-						f = (time - wcross_name_changestarttime) / wcross_changedonetime;
-						if(f > 0 && f < 2)
-							ring_alpha *= fabs(1 - f);
+						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
+						if not(f < 1) { wcross_ring_image_prev = ring_image; }
+						
+						if(wcross_ring_image_prev)
+						{
+							if(f < 1)
+								ring_alpha *= fabs(1 - bound(0, f, 1));
+						}
+						else
+						{
+							if(f < 1)
+								ring_alpha *= bound(0, f, 1);
+						}
+
+						if(ring_alpha != prev_ring_alpha)
+						{
+							prev_ring_alpha = ring_alpha;
+							print("foobar: ", ftos(ring_alpha), ".\n");
+						}
 					}
 
 					if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
