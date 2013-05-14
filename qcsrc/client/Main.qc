@@ -704,12 +704,14 @@ void Spawn_Draw(void)
 void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 {
 	float teamnum = (ReadByte() - 1);
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
+	vector spn_origin;
+	spn_origin_x = ReadShort();
+	spn_origin_y = ReadShort();
+	spn_origin_z = ReadShort();
 	
 	if(is_new)
 	{
+		self.origin = spn_origin;
 		setsize(self, PL_MIN, PL_MAX);
 		droptofloor();
 
@@ -725,14 +727,19 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
-			switch(teamnum)
+			if(teamplay)
 			{
-				case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
-				case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
-				case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
-				case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
-				default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+				switch(teamnum)
+				{
+					case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
+					case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
+					case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
+					case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
+					default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+				}
 			}
+			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
+			
 			self.draw = Spawn_Draw;
 		}
 	}
