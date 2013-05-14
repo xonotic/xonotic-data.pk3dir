@@ -1027,8 +1027,6 @@ void Ent_Init()
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_weaponswitchdelay = ReadByte() / 255.0;
-
 	g_balance_grenadelauncher_bouncefactor = ReadCoord();
 	g_balance_grenadelauncher_bouncestop = ReadCoord();
 	g_balance_electro_secondary_bouncefactor = ReadCoord();

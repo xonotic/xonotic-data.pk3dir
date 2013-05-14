@@ -214,6 +214,9 @@ string wcross_name_goal_prev, wcross_name_goal_prev_prev;
 float wcross_resolution_goal_prev, wcross_resolution_goal_prev_prev;
 float wcross_name_changestarttime, wcross_name_changedonetime;
 float wcross_name_alpha_goal_prev, wcross_name_alpha_goal_prev_prev;
+
+float wcross_ring_prev;
+
 entity trueaim;
 entity trueaim_rifle;
 
@@ -1294,9 +1297,7 @@ void CSQC_UpdateView(float w, float h)
 			if(shottype == SHOTTYPE_HITTEAM)
 				wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
-			f = autocvar_crosshair_effect_speed;
-			if(f < 0)
-				f *= -2 * g_weaponswitchdelay; // anim starts when weapon has been lowered and new weapon comes up
+			f = fabs(autocvar_crosshair_effect_time);
 			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
 			{
 				wcross_changedonetime = time + f;
@@ -1420,11 +1421,24 @@ void CSQC_UpdateView(float w, float h)
 					}
 
 					// if in weapon switch animation, fade ring out/in
-					if(g_weaponswitchdelay > 0)
+					if(autocvar_crosshair_effect_time > 0)
 					{
-						f = (time - wcross_name_changestarttime) / g_weaponswitchdelay;
-						if(f > 0 && f < 2)
-							ring_alpha *= fabs(1 - f);
+						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
+						if not(f < 1)
+						{
+							wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
+						}
+						
+						if(wcross_ring_prev)
+						{
+							if(f < 1)
+								ring_alpha *= fabs(1 - bound(0, f, 1));
+						}
+						else
+						{
+							if(f < 1)
+								ring_alpha *= bound(0, f, 1);
+						}
 					}
 
 					if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring

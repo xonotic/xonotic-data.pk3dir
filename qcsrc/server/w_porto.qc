@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON, 0, "porto" , "porto", _("Port-O-Launch"))
+REGISTER_WEAPON(
+/* WEP_##id  */ PORTO,
+/* function  */ w_porto,
+/* ammotype  */ 0,
+/* impulse   */ 0,
+/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
+/* rating    */ 0,
+/* model     */ "porto" ,
+/* shortname */ "porto",
+/* fullname  */ _("Port-O-Launch")
+);
 #else
 #ifdef SVQC
 .entity porto_current;
