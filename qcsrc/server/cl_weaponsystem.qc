@@ -541,15 +541,18 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
+	
 	float f;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / ((self.switchdelay_raise < 0) ? autocvar_g_balance_weaponswitchdelay : self.switchdelay_raise);
+		entity newwep = get_weaponinfo(self.owner.switchweapon);
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / ((self.switchdelay_drop < 0) ? autocvar_g_balance_weaponswitchdelay : self.switchdelay_drop);
+		entity oldwep = get_weaponinfo(self.owner.weapon);
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)

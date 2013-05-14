@@ -2,7 +2,7 @@
 entity weapon_info[WEP_MAXCOUNT];
 entity dummy_weapon_info;
 
-void register_weapon(float id, float(float) func, float droptime, float raisetime, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
+void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
 {
 	entity e;
 	weapon_info[id - 1] = e = spawn();
@@ -19,7 +19,6 @@ void register_weapon(float id, float(float) func, float droptime, float raisetim
 	e.model2 = strzone(strcat("wpn-", e.mdl));
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
-	
 	if(ammotype & IT_SHELLS)
 		e.ammo_field = ammo_shells;
 	else if(ammotype & IT_NAILS)
@@ -32,9 +31,6 @@ void register_weapon(float id, float(float) func, float droptime, float raisetim
 		e.ammo_field = ammo_fuel;
 	else
 		e.ammo_field = ammo_batteries;
-
-	e.switchdelay_drop = droptime;
-	e.switchdelay_raise = raisetime;
 }
 float w_null(float dummy)
 {
@@ -56,8 +52,6 @@ void register_weapons_done()
 	dummy_weapon_info.model2 = "";
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.switchdelay_drop = 0;
-	dummy_weapon_info.switchdelay_raise = 0;
 
 	float i;
 	weaponorder_byid = "";

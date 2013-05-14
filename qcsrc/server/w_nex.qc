@@ -218,8 +218,6 @@ float w_nex(float req)
 	{
 		weapon_setup(WEP_NEX);
 		self.current_ammo = ammo_cells;
-		self.weaponentity.switchdelay_drop = autocvar_g_balance_nex_switchdelay_drop;
-		self.weaponentity.switchdelay_raise = autocvar_g_balance_nex_switchdelay_raise;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
