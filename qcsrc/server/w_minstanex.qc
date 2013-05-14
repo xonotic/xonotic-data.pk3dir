@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
+REGISTER_WEAPON(
+/* WEP_##id  */ MINSTANEX,
+/* function  */ w_minstanex,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "minstanex",
+/* shortname */ "minstanex",
+/* fullname  */ _("MinstaNex")
+);
 #else
 #ifdef SVQC
 .float minstanex_lasthit;

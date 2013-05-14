@@ -177,6 +177,8 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .vector weaponentity_glowmod;
 
 //.float weapon; // current weapon
+.float switchdelay_drop; // amount of time to complete drop frame for weapon
+.float switchdelay_raise; // amount of time to complete raise frame for weapon
 .float switchweapon; // weapon requested to switch to
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon

@@ -420,7 +420,7 @@ void W_WeaponFrame()
 
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
+			weapon_thinkf(WFRAME_IDLE, ((self.weaponentity.switchdelay_raise < 0) ? autocvar_g_balance_weaponswitchdelay : self.weaponentity.switchdelay_raise), w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_DROP)
@@ -440,7 +440,7 @@ void W_WeaponFrame()
 			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, ((self.weaponentity.switchdelay_drop < 0) ? autocvar_g_balance_weaponswitchdelay : self.weaponentity.switchdelay_drop), w_clear);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}

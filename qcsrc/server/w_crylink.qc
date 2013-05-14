@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
+REGISTER_WEAPON(
+/* WEP_##id  */ CRYLINK,
+/* function  */ w_crylink,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "crylink",
+/* shortname */ "crylink",
+/* fullname  */ _("Crylink")
+);
 #else
 #ifdef SVQC
 .float gravity;

@@ -544,12 +544,12 @@ void CL_Weaponentity_Think()
 	float f;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / ((self.switchdelay_raise < 0) ? autocvar_g_balance_weaponswitchdelay : self.switchdelay_raise);
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / ((self.switchdelay_drop < 0) ? autocvar_g_balance_weaponswitchdelay : self.switchdelay_drop);
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)
