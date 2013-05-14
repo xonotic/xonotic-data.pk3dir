@@ -215,7 +215,7 @@ float wcross_resolution_goal_prev, wcross_resolution_goal_prev_prev;
 float wcross_name_changestarttime, wcross_name_changedonetime;
 float wcross_name_alpha_goal_prev, wcross_name_alpha_goal_prev_prev;
 
-string wcross_ring_image_prev;
+float wcross_ring_prev;
 
 entity trueaim;
 entity trueaim_rifle;
@@ -381,8 +381,6 @@ vector liquidcolor_prev;
 float eventchase_current_distance;
 
 vector damage_blurpostprocess, content_blurpostprocess;
-
-float prev_ring_alpha; // TODO REMOVE THIS
 
 float checkfail[16];
 
@@ -1426,9 +1424,12 @@ void CSQC_UpdateView(float w, float h)
 					if(autocvar_crosshair_effect_time > 0)
 					{
 						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
-						if not(f < 1) { wcross_ring_image_prev = ring_image; }
+						if not(f < 1)
+						{
+							wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
+						}
 						
-						if(wcross_ring_image_prev)
+						if(wcross_ring_prev)
 						{
 							if(f < 1)
 								ring_alpha *= fabs(1 - bound(0, f, 1));
@@ -1437,12 +1438,6 @@ void CSQC_UpdateView(float w, float h)
 						{
 							if(f < 1)
 								ring_alpha *= bound(0, f, 1);
-						}
-
-						if(ring_alpha != prev_ring_alpha)
-						{
-							prev_ring_alpha = ring_alpha;
-							print("foobar: ", ftos(ring_alpha), ".\n");
 						}
 					}
 
