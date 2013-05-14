@@ -1,12 +1,5 @@
 .vector spawnpoint_score;
 float spawnpoint_nag;
-//void spawnpoint_use();
-//void relocate_spawnpoint();
-//void spawnfunc_info_player_survivor (void);
-//void spawnfunc_info_player_start (void);
-//void spawnfunc_info_player_deathmatch (void);
-//vector Spawn_Score(entity spot, float mindist, float teamcheck);
-//void Spawn_ScoreAll(entity firstspot, float mindist, float teamcheck);
+float SpawnEvent_Send(entity to, float sf);
 entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck);
-//entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exponent);
-//entity SelectSpawnPoint (float anypoint);
+

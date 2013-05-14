@@ -354,7 +354,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-float SpawnEvent_Send(entity to, float sf);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
