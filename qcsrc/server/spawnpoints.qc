@@ -16,7 +16,7 @@ float SpawnEvent_Send(entity to, float sf)
 	
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
 
-	if(autocvar_g_spawnsound)
+	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 		WriteShort(MSG_ENTITY, self.owner.origin_x);

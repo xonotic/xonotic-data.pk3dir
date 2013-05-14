@@ -707,12 +707,12 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	self.origin_x = ReadShort();
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
-
-	setsize(self, PL_MIN, PL_MAX);
-	droptofloor();
 	
 	if(is_new)
 	{
+		setsize(self, PL_MIN, PL_MAX);
+		droptofloor();
+
 		if(autocvar_cl_spawn_point_particles)
 		{
 			switch(teamnum)
@@ -737,7 +737,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 		}*/
 	}
 
-	print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt));
+	//print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt));
 }
 
 void Ent_ReadSpawnEvent(float is_new)
@@ -788,7 +788,7 @@ void Ent_ReadSpawnEvent(float is_new)
 		}
 	}
 	
-	print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
+	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
