@@ -629,7 +629,6 @@ float ClientInit_SendEntity(entity to, float sf)
 	else
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
@@ -650,11 +649,6 @@ void ClientInit_CheckUpdate()
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
 		self.count = autocvar_g_balance_armor_blockpercent;
-		self.SendFlags |= 1;
-	}
-	if(self.cnt != autocvar_g_balance_weaponswitchdelay)
-	{
-		self.cnt = autocvar_g_balance_weaponswitchdelay;
 		self.SendFlags |= 1;
 	}
 	if(self.bouncefactor != autocvar_g_balance_grenadelauncher_bouncefactor)

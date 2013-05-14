@@ -1294,9 +1294,7 @@ void CSQC_UpdateView(float w, float h)
 			if(shottype == SHOTTYPE_HITTEAM)
 				wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
-			f = autocvar_crosshair_effect_speed;
-			if(f < 0)
-				f *= -2 * g_weaponswitchdelay; // anim starts when weapon has been lowered and new weapon comes up
+			f = fabs(autocvar_crosshair_effect_time);
 			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
 			{
 				wcross_changedonetime = time + f;
@@ -1420,9 +1418,9 @@ void CSQC_UpdateView(float w, float h)
 					}
 
 					// if in weapon switch animation, fade ring out/in
-					if(g_weaponswitchdelay > 0)
+					if(fabs(autocvar_crosshair_effect_time) > 0)
 					{
-						f = (time - wcross_name_changestarttime) / g_weaponswitchdelay;
+						f = (time - wcross_name_changestarttime) / wcross_changedonetime;
 						if(f > 0 && f < 2)
 							ring_alpha *= fabs(1 - f);
 					}
