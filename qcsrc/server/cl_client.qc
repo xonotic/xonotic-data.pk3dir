@@ -511,7 +511,7 @@ void PutClientInServer (void)
 
 		entity spawnevent = spawn();
 		spawnevent.owner = self;
-		Net_LinkEntity(spawnevent, FALSE, 1, SpawnEvent_Send);
+		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
 
 		self.model = "";
 		FixPlayermodel();

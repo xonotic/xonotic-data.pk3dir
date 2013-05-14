@@ -100,7 +100,34 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
-    Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send);
+	// Don't show team spawns in non-team matches,
+	// and don't show non-team spawns in team matches.
+	// (Unless useallspawns is activated)
+	if(
+		!(
+			( // if this passes, there is a DM spawn on a team match
+				teamplay
+				&& (self.team != NUM_TEAM_1)
+				&& (self.team != NUM_TEAM_2)
+				&& (self.team != NUM_TEAM_3)
+				&& (self.team != NUM_TEAM_4)
+			)
+			||
+			( // if this passes, there is a team spawn on a DM match
+				!teamplay
+				&&
+				(
+					(self.team == NUM_TEAM_1)
+					|| (self.team == NUM_TEAM_2)
+					|| (self.team == NUM_TEAM_3)
+					|| (self.team == NUM_TEAM_4)
+				)
+			)
+		)
+		||
+		autocvar_g_spawn_useallspawns
+	)
+	{ Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send); }
 }
 
 void spawnfunc_info_player_survivor (void)
