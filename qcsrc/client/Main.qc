@@ -713,6 +713,16 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 		setsize(self, PL_MIN, PL_MAX);
 		droptofloor();
 
+		/*if(autocvar_cl_spawn_point_model) // needs a model first
+		{
+			self.mdl = "models/spawnpoint.md3";
+			self.colormod = Team_ColorRGB(teamnum);
+			precache_model(self.mdl);
+			setmodel(self, self.mdl);
+			self.drawmask = MASK_NORMAL;
+			//self.movetype = MOVETYPE_NOCLIP;
+			//self.draw = Spawn_Draw;
+		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
 			switch(teamnum)
@@ -725,16 +735,6 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 			}
 			self.draw = Spawn_Draw;
 		}
-		/*if(autocvar_cl_spawn_point_model) // needs a model first
-		{
-			self.mdl = "models/spawnpoint.md3";
-			self.colormod = Team_ColorRGB(teamnum);
-			precache_model(self.mdl);
-			setmodel(self, self.mdl);
-			self.drawmask = MASK_NORMAL;
-			//self.movetype = MOVETYPE_NOCLIP;
-			//self.draw = Spawn_Draw;
-		}*/
 	}
 
 	//print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt));
@@ -757,10 +757,6 @@ void Ent_ReadSpawnEvent(float is_new)
 		{
 			float teamnum = GetPlayerColor(entnum - 1);
 
-			if(autocvar_cl_spawn_event_sound)
-			{
-				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-			}
 			if(autocvar_cl_spawn_event_particles)
 			{
 				switch(teamnum)
@@ -771,6 +767,10 @@ void Ent_ReadSpawnEvent(float is_new)
 					case NUM_TEAM_4: pointparticles(particleeffectnum("spawn_event_pink"), self.origin, '0 0 0', 1); break;
 					default: pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); break;
 				}
+			}
+			if(autocvar_cl_spawn_event_sound)
+			{
+				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}

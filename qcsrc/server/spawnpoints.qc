@@ -100,10 +100,6 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
-	//self.send_spawn = -1;
-	//self.think = Spawn_Think;
-	//self.nextthink = time;
-
     Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send);
 }
 
