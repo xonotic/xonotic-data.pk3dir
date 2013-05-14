@@ -398,6 +398,9 @@ void W_WeaponFrame()
 	// Change weapon
 	if (self.weapon != self.switchweapon)
 	{
+		entity e;
+		e = get_weaponinfo(self.switchweapon);
+		
 		if (self.weaponentity.state == WS_CLEAR)
 		{
 			// end switching!
@@ -408,8 +411,6 @@ void W_WeaponFrame()
 			weapon_action(self.switchweapon, WR_SETUP);
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
-			entity e;
-			e = get_weaponinfo(self.switchweapon);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
 			{
 				self.clip_load = self.(weapon_load[self.switchweapon]);
@@ -420,7 +421,7 @@ void W_WeaponFrame()
 
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, ((self.weaponentity.switchdelay_raise < 0) ? autocvar_g_balance_weaponswitchdelay : self.weaponentity.switchdelay_raise), w_ready);
+			weapon_thinkf(WFRAME_IDLE, cvar(sprintf("g_balance_%s_switchdelay_raise", e.netname)), w_ready);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_DROP)
@@ -440,7 +441,7 @@ void W_WeaponFrame()
 			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, ((self.weaponentity.switchdelay_drop < 0) ? autocvar_g_balance_weaponswitchdelay : self.weaponentity.switchdelay_drop), w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, cvar(sprintf("g_balance_%s_switchdelay_drop", e.netname)), w_clear);
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}

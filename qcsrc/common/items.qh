@@ -83,11 +83,13 @@ string W_NumberWeaponOrder(string order);
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
 ..float ammo_field; // main ammo field
+.float switchdelay_drop; // amount of time to complete drop frame for weapon
+.float switchdelay_raise; // amount of time to complete raise frame for weapon
 // also, weaponinfo ents can act as a WEPSET
 
 // dynamic weapon adding
 float w_null(float dummy);
-void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
+void register_weapon(float id, float(float) func, float droptime, float raisetime, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
 void register_weapons_done();
 
 #define WEP_FIRST 1
@@ -207,7 +209,7 @@ float WEP_LAST;
 WEPSET_DECLARE_A(WEPBIT_ALL);
 WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+#define REGISTER_WEAPON_2(id,func,droptime,raisetime,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
 	float func(float); \
 	void RegisterWeapons_##id() \
@@ -217,15 +219,15 @@ WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 		if(fabs(weapontype & WEP_FLAG_SUPERWEAPON)) \
 			WEPSET_OR_AW(WEPBIT_SUPERWEAPONS, id); \
 		++WEP_COUNT; \
-		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
+		register_weapon(id,func,droptime,raisetime,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
-#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+#define REGISTER_WEAPON(id,func,droptime,raisetime,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	REGISTER_WEAPON_2(WEP_##id,w_null,0,0,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #else
-#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+#define REGISTER_WEAPON(id,func,droptime,raisetime,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+	REGISTER_WEAPON_2(WEP_##id,func,droptime,raisetime,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
 #include "../server/w_all.qc"
