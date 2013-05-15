@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(UZI, w_uzi, IT_NAILS, 3, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "uzi", "uzi", _("Machine Gun"))
+REGISTER_WEAPON(
+/* WEP_##id  */ UZI,
+/* function  */ w_uzi,
+/* ammotype  */ IT_NAILS,
+/* impulse   */ 3,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "uzi",
+/* shortname */ "uzi",
+/* fullname  */ _("Machine Gun")
+);
 #else
 #ifdef SVQC
 

@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(
+/* WEP_##id  */ FIREBALL,
+/* function  */ w_fireball,
+/* ammotype  */ 0,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "fireball",
+/* shortname */ "fireball",
+/* fullname  */ _("Fireball")
+);
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is

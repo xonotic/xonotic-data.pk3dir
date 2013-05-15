@@ -688,7 +688,6 @@ float autocvar_g_balance_uzi_sustained_refire;
 float autocvar_g_balance_uzi_sustained_spread;
 float autocvar_g_balance_uzi_reload_ammo;
 float autocvar_g_balance_uzi_reload_time;
-float autocvar_g_balance_weaponswitchdelay;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
 float autocvar_g_ballistics_materialconstant;

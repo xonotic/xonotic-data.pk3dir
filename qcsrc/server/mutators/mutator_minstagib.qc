@@ -350,15 +350,18 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 		if(other.health < 100)
 			other.health = 100;
+
+		return MUT_ITEMTOUCH_CONTINUE;
 	}
 	
 	if(self.max_health)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_minstagib_extralives);
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
+		return MUT_ITEMTOUCH_PICKUP;
 	}
 		
-	return FALSE;
+	return MUT_ITEMTOUCH_RETURN;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
