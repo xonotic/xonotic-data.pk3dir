@@ -190,6 +190,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value)
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
 	n: nickname of the player (optional)
 	t: team ID
 	i: player index
