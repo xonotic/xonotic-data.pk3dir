@@ -247,21 +247,12 @@ if(panel_bg_padding_str == "") {\
 }\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
-// return smoothly faded pos of given panel when a dialog is active
-var vector menu_enable_panelpos;
-#define HUD_Panel_GetMenuPos() \
-if(panel_size_x > panel_size_y)\
-	menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * 0.82 * vid_conheight;\
-else\
-	menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * 0.7 * vid_conwidth;\
-panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
-
-// return smoothly faded size of given panel when a dialog is active
-//var vector menu_enable_maxsize;
+// return smoothly faded pos and size of given panel when a dialog is active
 var float menu_enable_maxsize_x;
 var float menu_enable_maxsize_y;
 var vector menu_enable_size;
-#define HUD_Panel_GetMenuSize()\
+var vector menu_enable_pos;
+#define HUD_Panel_UpdatePosSize_ForMenu()\
 menu_enable_maxsize_x = 0.3 * vid_conwidth;\
 menu_enable_maxsize_y = 0.18 * vid_conheight;\
 if(panel_size_x > panel_size_y)\
@@ -281,7 +272,12 @@ else\
 		menu_enable_size_y = panel_size_y * (menu_enable_maxsize_x/panel_size_x);\
 		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
 	}\
-}
+}\
+if(panel_size_x > panel_size_y)\
+	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * 0.82 * vid_conheight;\
+else\
+	menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * 0.7 * vid_conwidth;\
+panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;
 
 // Scale the pos and size vectors to absolute coordinates
 #define HUD_Panel_ScalePosSize()\
@@ -311,8 +307,7 @@ if(panel.update_time <= time) { \
 	HUD_Panel_GetFgAlpha()\
 	HUD_Panel_GetPadding()\
 	if(menu_enabled == 2 && panel == highlightedPanel) {\
-		HUD_Panel_GetMenuSize()\
-		HUD_Panel_GetMenuPos()\
+		HUD_Panel_UpdatePosSize_ForMenu()\
 	} \
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
@@ -344,8 +339,7 @@ panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
 HUD_Panel_ScalePosSize()\
 if(menu_enabled == 2 && panel == highlightedPanel) {\
-	HUD_Panel_GetMenuSize()\
-	HUD_Panel_GetMenuPos()\
+	HUD_Panel_UpdatePosSize_ForMenu()\
 }\
 panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
 HUD_Panel_GetBorder() \
