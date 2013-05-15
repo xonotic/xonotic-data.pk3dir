@@ -117,7 +117,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 					_spectate(other);
 
 					self = _oldself;
-					return FALSE;
+					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 
@@ -149,7 +149,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 
 	self = _oldself;
 
-	return FALSE;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)

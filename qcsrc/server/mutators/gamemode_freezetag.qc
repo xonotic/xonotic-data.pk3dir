@@ -549,8 +549,8 @@ MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 MUTATOR_HOOKFUNCTION(freezetag_ItemTouch)
 {
 	if (other.freezetag_frozen)
-		return 1;
-	return 0;
+		return MUT_ITEMTOUCH_RETURN;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)

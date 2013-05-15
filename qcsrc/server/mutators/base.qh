@@ -292,6 +292,9 @@ MUTATOR_HOOKABLE(ItemTouch);
 	// called at when a item is touched. Called early, can edit item properties.
 	entity self;	// item
 	entity other; 	// player
+	#define MUT_ITEMTOUCH_CONTINUE 0 // return this flag to make the function continue as normal
+	#define MUT_ITEMTOUCH_RETURN 1 // return this flag to make the function return (handled entirely by mutator)
+	#define MUT_ITEMTOUCH_PICKUP 2 // return this flag to have the item "picked up" and taken even after mutator handled it
 
 MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
