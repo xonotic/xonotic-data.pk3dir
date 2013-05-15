@@ -727,7 +727,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
-			if(teamplay)
+			if((serverflags & SERVERFLAG_TEAMPLAY))
 			{
 				switch(teamnum)
 				{
