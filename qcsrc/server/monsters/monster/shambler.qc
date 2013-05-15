@@ -85,7 +85,7 @@ void CastLightning ()
 	self.delay = -1;
 
 	local vector org = '0 0 0', dir = '0 0 0';
-	vector v = '0 0 0';
+	//vector v = '0 0 0';
 
 	self.effects |= EF_MUZZLEFLASH;
 
@@ -99,8 +99,10 @@ void CastLightning ()
 	FireRailgunBullet (org, org + dir * 1000, autocvar_g_monster_shambler_attack_lightning_damage * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
 	
 	// teamcolor / hit beam effect
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), org, v);
+	//v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	//WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), org, v);
+	
+	te_csqc_lightningarc(org, trace_endpos);
 }
 
 float shambler_attack(float attack_type)
