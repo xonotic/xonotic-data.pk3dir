@@ -247,18 +247,6 @@ if(panel_bg_padding_str == "") {\
 }\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
-// Point to the macros above (stupid max macro length)
-#define HUD_Panel_GetStringVars()\
-HUD_Panel_GetBg()\
-if (panel_bg != "0") {\
-	HUD_Panel_GetColorTeam()\
-	HUD_Panel_GetColor()\
-	HUD_Panel_GetBgAlpha()\
-	HUD_Panel_GetBorder()\
-}\
-HUD_Panel_GetFgAlpha()\
-HUD_Panel_GetPadding()
-
 // return smoothly faded pos of given panel when a dialog is active
 var vector menu_enable_panelpos;
 #define HUD_Panel_GetMenuPos() \
@@ -313,7 +301,15 @@ if(panel.update_time <= time) { \
 	panel_bg_alpha_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_alpha")); \
 	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
 	panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding")); \
-	HUD_Panel_GetStringVars()\
+	HUD_Panel_GetBg()\
+	if (panel_bg != "0") {\
+		HUD_Panel_GetColorTeam()\
+		HUD_Panel_GetColor()\
+		HUD_Panel_GetBgAlpha()\
+		HUD_Panel_GetBorder()\
+	}\
+	HUD_Panel_GetFgAlpha()\
+	HUD_Panel_GetPadding()\
 	if(menu_enabled == 2 && panel == highlightedPanel) {\
 		HUD_Panel_GetMenuSize()\
 		HUD_Panel_GetMenuPos()\
