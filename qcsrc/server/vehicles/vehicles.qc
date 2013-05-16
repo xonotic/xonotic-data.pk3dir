@@ -580,6 +580,9 @@ void vehicles_enter()
 
     if(self.phase > time)
         return;
+		
+	if(other.frozen)
+		return;
 
     if(teamplay)
     if(self.team)
