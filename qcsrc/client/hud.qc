@@ -2232,13 +2232,13 @@ void HUD_Score(void)
 		float row, column, rows = 0, columns = 0;
 		local noref vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
-		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
+		if(autocvar_hud_panel_score_rankings)
 		{
-			if (autocvar_hud_panel_score_rankings)
-			{
-				HUD_Score_Rankings(pos, mySize, me);
-				return;
-			}
+			HUD_Score_Rankings(pos, mySize, me);
+			return;
+		}
+		if(spectatee_status == -1)
+		{
 			rows = mySize_y/mySize_x;
 			rows = bound(1, floor((sqrt(4 * (3/1) * rows * team_count + rows * rows) + rows + 0.5) / 2), team_count);
 			//                               ^^^ ammo item aspect goes here
