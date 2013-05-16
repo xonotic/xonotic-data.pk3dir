@@ -1997,7 +1997,7 @@ void HUD_Radar(void)
 // Score (#7)
 //
 void HUD_UpdatePlayerTeams();
-void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
+void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
 	entity tm = world, pl;
@@ -2188,7 +2188,7 @@ void HUD_Score(void)
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
-			HUD_Score_Rankings(pos, mySize, me, 0);
+			HUD_Score_Rankings(pos, mySize, me);
 			return;
 		}
 		// me vector := [team/connected frags id]
@@ -2229,23 +2229,21 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else { // teamgames
-		float scores_count = 0, row, column, rows = 0, columns = 0;
+		float row, column, rows = 0, columns = 0;
 		local noref vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
-			for(tm = teams.sort_next; tm, tm.team != NUM_SPECTATOR; tm = tm.sort_next)
-				++scores_count;
 			if (autocvar_hud_panel_score_rankings)
 			{
-				HUD_Score_Rankings(pos, mySize, me, scores_count);
+				HUD_Score_Rankings(pos, mySize, me);
 				return;
 			}
 			rows = mySize_y/mySize_x;
-			rows = bound(1, floor((sqrt(4 * (3/1) * rows * scores_count + rows * rows) + rows + 0.5) / 2), scores_count);
+			rows = bound(1, floor((sqrt(4 * (3/1) * rows * team_count + rows * rows) + rows + 0.5) / 2), team_count);
 			//                               ^^^ ammo item aspect goes here
 
-			columns = ceil(scores_count/rows);
+			columns = ceil(team_count/rows);
 
 			score_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
@@ -2674,11 +2672,6 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, f
 void HUD_Mod_CA(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
-	entity tm;
-	float teams_count = 0;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != NUM_SPECTATOR)
-			++teams_count;
 
 	float layout;
 	if(gametype == MAPINFO_TYPE_CA)
@@ -2688,14 +2681,14 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 2 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
-	columns = ceil(teams_count/rows);
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
 	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	for(i=0; i<teams_count; ++i)
+	for(i=0; i<team_count; ++i)
 	{
 		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
@@ -3300,24 +3293,19 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
-	entity tm;
-	float teams_count = 0;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != NUM_SPECTATOR)
-			++teams_count;
 
 	float layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
-	columns = ceil(teams_count/rows);
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
 	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	for(i=0; i<teams_count; ++i)
+	for(i=0; i<team_count; ++i)
 	{
 		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
