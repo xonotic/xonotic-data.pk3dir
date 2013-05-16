@@ -3332,6 +3332,22 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	}
 }
 
+void HUD_ModIcons_SetFunc()
+{
+	switch(gametype)
+	{
+		case MAPINFO_TYPE_KEYHUNT:		HUD_ModIcons_GameType = HUD_Mod_KH; break;
+		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
+		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
+		case MAPINFO_TYPE_CTS:
+		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
+		case MAPINFO_TYPE_CA:
+		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
+		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
+		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+	}
+}
+
 float mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
@@ -3341,17 +3357,13 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
+		if(!HUD_ModIcons_GameType) return;
 	}
 
 	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
-
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
 
 	if(mod_active != mod_prev) {
 		mod_change = time;
@@ -3368,25 +3380,14 @@ void HUD_ModIcons(void)
 
 	if(panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	// these MUST be ran in order to update mod_active
-	if(gametype == MAPINFO_TYPE_KEYHUNT)
-		HUD_Mod_KH(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
-		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == MAPINFO_TYPE_NEXBALL)
-		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
-		HUD_Mod_Race(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
-		HUD_Mod_CA(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_DOMINATION)
-		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
-		HUD_Mod_Keepaway(pos, mySize);
+	if(autocvar__hud_configure)
+		HUD_Mod_CTF(panel_pos, panel_size);
+	else
+		HUD_ModIcons_GameType(panel_pos, panel_size);
 
 	draw_endBoldFont();
 }

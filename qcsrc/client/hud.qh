@@ -354,3 +354,6 @@ string notify_icon[KN_MAX_ENTRIES];
 string notify_attackers[KN_MAX_ENTRIES];
 string notify_victims[KN_MAX_ENTRIES];
 void HUD_Notify_Push(string icon, string attacker, string victim);
+
+var void HUD_ModIcons_GameType(vector pos, vector size);
+void HUD_ModIcons_SetFunc();
