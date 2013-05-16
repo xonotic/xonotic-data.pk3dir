@@ -157,6 +157,9 @@ void GameCommand_butcher(float request)
 				
 				if(montokill.weaponentity)
 					remove(montokill.weaponentity);
+					
+				if(montokill.iceblock)
+					remove(montokill.iceblock);
                     
                 remove(montokill);
                 removed_count += 1;
