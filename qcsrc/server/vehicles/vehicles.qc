@@ -507,7 +507,7 @@ float vehicles_crushable(entity e)
         return TRUE;
 
     if(e.flags & FL_MONSTER)
-        return TRUE; // more bitflags for everyone!
+        return TRUE;
 
     return FALSE;
 }
@@ -585,6 +585,9 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
+		
+	if(MUTATOR_CALLHOOK(VehicleTouch))
+		return;
 
     RemoveGrapplingHook(other);
 
@@ -798,7 +801,6 @@ void vehicles_exit(float eject)
     
     if(!teamplay)
         _vehicle.team = 0;
-    else
 
     vh_player = _player;
     vh_vehicle = _vehicle;
@@ -1275,11 +1277,14 @@ float vehicle_initialize(string  net_name,
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
+	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
     if(!autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + 0.5;
+        self.nextthink = time + game_starttime;
     else
         self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 
+	if(autocvar_g_playerclip_collisions)
+		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
