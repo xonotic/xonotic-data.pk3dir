@@ -122,6 +122,14 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	self.SendFlags |= GSF_STATUS;
 }
 
+void td_generator_reset()
+{
+	self.SendFlags |= GSF_SETUP;
+	self.health = self.max_health;
+	
+	WaypointSprite_UpdateHealth(self.sprite, self.health);
+}
+
 void td_generator_setup()
 {
 	self.think 			= func_null;
@@ -133,7 +141,7 @@ void td_generator_setup()
 	self.monster_attack	= TRUE;
 	self.SendFlags		= GSF_SETUP;
 	self.netname		= "Generator";
-	self.SendFlags	   |= GSF_STATUS;
+	self.reset			= td_generator_reset;
 	
 	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, Team_ColorRGB(self.team));	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
@@ -522,6 +530,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		return FALSE;
 	}
 	
+	WaypointSprite_Kill(self.sprite);
+	
 	self.candrop = FALSE;
 	self.bot_attack = FALSE;
 	self.ammo_fuel = bound(20, 20 * self.level, 100);
@@ -535,6 +545,12 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 {
 	vector backuporigin;
 	entity oldself;
+	
+	if(IS_PLAYER(frag_attacker.realowner))
+	{
+		PlayerScore_Add(frag_attacker.realowner, SP_SCORE, 5);
+		PlayerScore_Add(frag_attacker.realowner, SP_KILLS, 1);
+	}
 	
 	total_killed++;
 	
@@ -589,6 +605,9 @@ MUTATOR_HOOKFUNCTION(td_MonsterThink)
 	}
 	
 	td_debug(sprintf("Monster target: %s. Monster target2: %s. Monster target entity: %s.\n", self.target, self.target2, etos(monster_target)));
+	
+	if(!self.enemy && !monster_target)
+		return TRUE; // no enemy or target, must be wandering
 	
 	monster_speed_run = (150 + random() * 4) * monster_skill;
 	monster_speed_walk = (100 + random() * 4) * monster_skill;
