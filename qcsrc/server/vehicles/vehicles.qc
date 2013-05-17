@@ -537,6 +537,9 @@ void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
 .void() vehicle_impact;
 void vehicles_touch()
 {
+	if(MUTATOR_CALLHOOK(VehicleTouch))
+		return;
+	
     // Vehicle currently in use
     if(self.owner)
     {
@@ -585,9 +588,6 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
-		
-	if(MUTATOR_CALLHOOK(VehicleTouch))
-		return;
 
     RemoveGrapplingHook(other);
 
