@@ -1,60 +1,76 @@
-// Tower Defense
-// Gamemode by Mario
+float redalive, bluealive, total_alive;
 
-float td_moncount[MONSTER_LAST];
- 
-void spawnfunc_td_controller()
+var float max_monsters = 20;
+var float max_alive = 10;
+
+float total_killed;
+
+var float max_turrets = 3;
+
+.float newfuel; // hack to not give players fuel every time they spawn
+
+float last_check;
+
+.float turret_cnt;
+
+.float level;
+.float last_trace;
+
+void td_debug(string input)
 {
-	if not(g_td) { remove(self); return; }
-	
-	if(autocvar_g_td_force_settings)
+	switch(autocvar_g_td_debug)
 	{
-		// TODO: find a better way to do this?
-		self.dontend = FALSE;
-		self.maxwaves = 0;
-		self.monstercount = 0;
-		self.startwave = 0;
-		self.maxturrets = 0;
-		self.buildtime = 0;
-		self.mspeed_walk = 0;
-		self.mspeed_run = 0;
-		self.spawndelay = 0;
-		self.maxcurrent = 0;
-		self.ignoreturrets = 0;
+		case 1: dprint(input); break;
+		case 2: print(input); break;
 	}
-		
-	self.netname = "Tower Defense controller entity";
-	self.classname = "td_controller";
-		
-	gensurvived = FALSE;
+}
+
+void td_waypoint_link(float tm, vector from, vector to)
+{
+	switch(tm)
+	{
+		case NUM_TEAM_1:
+			WarpZone_TrailParticles(world, particleeffectnum("waypoint_link_red"), from, to);
+			break;
+		case NUM_TEAM_2:
+			WarpZone_TrailParticles(world, particleeffectnum("waypoint_link_blue"), from, to);
+			break;
+	}
+}
+
+void td_waypoint_think()
+{
+	if(gameover)
+	{
+		remove(self);
+		return;
+	}
 	
-	td_dont_end = ((self.dontend == 0) ? autocvar_g_td_generator_dontend : self.dontend);
-	max_waves = ((self.maxwaves == 0) ? autocvar_g_td_max_waves : self.maxwaves);
-	totalmonsters = ((self.monstercount == 0) ? autocvar_g_td_monster_count : self.monstercount);
-	wave_count = ((self.startwave == 0) ? autocvar_g_td_start_wave : self.startwave);
-	max_turrets = ((self.maxturrets == 0) ? autocvar_g_td_turret_max : self.maxturrets);
-	build_time = ((self.buildtime == 0) ? autocvar_g_td_buildphase_time : self.buildtime);
-	m_speed_walk = ((self.mspeed_walk == 0) ? autocvar_g_td_monsters_speed_walk : self.mspeed_walk);
-	m_speed_run = ((self.mspeed_run == 0) ? autocvar_g_td_monsters_speed_run : self.mspeed_run);
-	spawn_delay = ((self.spawndelay == 0) ? autocvar_g_td_monsters_spawn_delay : self.spawndelay);
-	max_current = ((self.maxcurrent == 0) ? autocvar_g_td_current_monsters : self.maxcurrent);
-	ignore_turrets = ((self.ignoreturrets == 0) ? autocvar_g_td_monsters_ignore_turrets : self.ignoreturrets);
-	
-	if(autocvar_g_td_monsters_skill_start)
-		monster_skill = autocvar_g_td_monsters_skill_start;
+	if(time >= self.last_trace)
+	{
+		entity e, e2, e3;
 		
-	wave_end(TRUE);
+		e = find(world, targetname, self.target);
+		e2 = find(world, target, self.targetname);
+		e3 = find(world, targetname, self.target2);
+		
+		if(e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		if(e2.classname == "td_spawnpoint")
+			td_waypoint_link(self.team, self.origin, e2.origin);
+		if(e3.classname == "td_waypoint" || e3.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e3.origin);
+		
+		self.last_trace = time + 0.5;
+	}
+	
+	self.nextthink = time + 0.1;
 }
 
 void td_generator_die() 
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gendestroyed");
-		
-	gendestroyed = TRUE;
-	
-	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
-	sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
 	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_GENDESTROYED);
 	
@@ -62,7 +78,6 @@ void td_generator_die()
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
-	td_gencount			-= 1;
 	
 	WaypointSprite_Kill(self.sprite);
 }
@@ -72,10 +87,12 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	if(IS_PLAYER(attacker) || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE || self.takedamage == DAMAGE_NO)
 		return;
 		
+	entity head;
+		
 	if (time > self.pain_finished)
 	{
 		self.pain_finished = time + 10;
-		play2all("onslaught/generator_underattack.wav");
+		play2team(self.team, "onslaught/generator_underattack.wav");
 	}
 	
 	if (random() < 0.5)
@@ -83,14 +100,24 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	else
 		spamsound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 	
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDAMAGED);
+	
+	FOR_EACH_REALPLAYER(head)
+	if(!IsDifferentTeam(head, self))
+		Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_TD_GENDAMAGED);
 	
 	self.health -= damage;
 	
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
-	if(self.health <= 0) 
+	if(self.health <= 0)
+	{
+		FOR_EACH_REALPLAYER(head)
+		if(!IsDifferentTeam(head, attacker))
+			PlayerScore_Add(head, SP_TD_DESTROYS, 1);
+		
+		TeamScore_AddToTeam(attacker.team, ST_TD_DESTROYS, 1);
 		td_generator_die();
+	}
 		
 	self.SendFlags |= GSF_STATUS;
 }
@@ -99,164 +126,119 @@ void td_generator_setup()
 {
 	self.think 			= func_null;
 	self.nextthink 		= -1;
-	self.solid		    = SOLID_BBOX;
-	self.takedamage	    = DAMAGE_AIM;
-	self.event_damage   = td_generator_damage;
-	self.enemy		    = world;
-	self.movetype	    = MOVETYPE_NONE;
-	self.monster_attack = TRUE;
+	self.solid			= SOLID_BBOX;
+	self.takedamage		= DAMAGE_AIM;
+	self.event_damage	= td_generator_damage;
+	self.movetype		= MOVETYPE_NONE;
+	self.monster_attack	= TRUE;
+	self.SendFlags		= GSF_SETUP;
 	self.netname		= "Generator";
-	self.SendFlags 		= GSF_SETUP;
+	self.SendFlags	   |= GSF_STATUS;
 	
-	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
+	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, Team_ColorRGB(self.team));	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
 
-void spawnfunc_td_generator() 
+void AnnounceSpawn(string anounce)
 {
-	if not(g_td) { remove(self); return; }
+	entity e;
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_ANNOUNCE_SPAWN, anounce);
 	
-	precache_sound("onslaught/generator_underattack.wav");
-	precache_sound("onslaught/ons_hit1.wav");
-	precache_sound("onslaught/ons_hit2.wav");
-	precache_sound("weapons/rocket_impact.wav");
-	
-	gendestroyed = FALSE;
-	
-	if not(self.health)
-		self.health = autocvar_g_td_generator_health;
-		
-	self.max_health = self.health;
-	
-	self.classname = "td_generator";
-	self.flags = FL_GENERATOR;
-	td_gencount += 1;
-	
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
-	
-	setorigin(self, self.origin + '0 0 20');
-	droptofloor();
-	
-	generator_link(td_generator_setup);
+	FOR_EACH_REALCLIENT(e) soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
 }
 
-entity PickGenerator()
+entity PickSpawn (float tm)
 {
-	entity generator, head;
-	if(td_gencount == 1)
-		generator = findflags(world, flags, FL_GENERATOR);
-	else
+	entity e;
+	RandomSelection_Init();
+	for(e = world;(e = find(e, classname, "td_spawnpoint")); )
+	if(e.team == tm)
+		RandomSelection_Add(e, 0, string_null, 1, 1);
+
+	return RandomSelection_chosen_ent;
+}
+
+void TD_SpawnMonster(float tm, string mnster)
+{
+	entity e, mon;
+	
+	e = PickSpawn(tm);
+		
+	if(e == world)
 	{
-		RandomSelection_Init();
-		for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
-		{
-			RandomSelection_Add(head, 0, string_null, 1, 1);
-		}
-		generator = RandomSelection_chosen_ent;	
+		td_debug("Warning: couldn't find any td_spawnpoint spawnpoints, no monsters will spawn!\n");
+		return;
 	}
-	return generator;
+  
+	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 2);
+	if(e.target2)
+	{
+		if(random() <= 0.5 && e.target)
+			mon.target2 = e.target;
+		else
+			mon.target2 = e.target2;
+	}
+	else
+		mon.target2 = e.target;
 }
 
-void spawn_td_fuel(float fuel_size)
+string monster_type2string(float mnster)
 {
-	if not(g_td) {remove(self); return; }
-	
-	self.ammo_fuel = fuel_size * monster_skill;
-	StartItem("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Turret Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
-	
-	self.velocity = randomvec() * 175 + '0 0 325';
+	switch(mnster)
+	{
+		case MONSTER_ZOMBIE: return "zombie";
+		case MONSTER_BRUTE: return "brute";
+		case MONSTER_ANIMUS: return "animus";
+		case MONSTER_SHAMBLER: return "shambler";
+		case MONSTER_BRUISER: return "bruiser";
+		case MONSTER_WYVERN: return "wyvern";
+		case MONSTER_CERBERUS: return "cerberus";
+		case MONSTER_SLIME: return "slime";
+		case MONSTER_KNIGHT: return "knight";
+		case MONSTER_STINGRAY: return "stingray";
+		case MONSTER_MAGE: return "mage";
+		case MONSTER_SPIDER: return "spider";
+		default: return "";
+	}
 }
 
-void spawnfunc_td_waypoint() 
+float RandomMonster()
 {
-	if not(g_td) { remove(self); return; }
+	RandomSelection_Init();
 	
-	self.classname = "td_waypoint";
-}
-
-void spawnfunc_monster_swarm()
-{
-	if not(g_td) { remove(self); return; }
+	float i;
 	
-	self.flags = SWARM_NORMAL; // marked as a spawnpoint
-	self.classname = "monster_swarm";
-	
-	if(self.spawntype == SWARM_SWIM) waterspawns_count += 1;
-	if(self.spawntype == SWARM_FLY) flyspawns_count += 1;
-	
-	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '0 0 1');
-	
-	if(self.target == "")
-		dprint("Warning: monster_swarm entity without a set target\n");
-}
-
-void barricade_touch()
-{
-	if not(other.flags & FL_MONSTER)
-		return;
+	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+	{
+		if(i == MONSTER_STINGRAY || i == MONSTER_WYVERN)
+			continue; // flying/swimming monsters not yet supported
 		
-	if(time < self.dmg_time)
-		return;
-		
-	Damage(other, self, self, autocvar_g_td_barricade_damage, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+		RandomSelection_Add(world, i, "", 1, 1);
+	}
 	
-	self.dmg_time = time + 1;
+	return RandomSelection_chosen_float;
 }
 
-void barricade_die()
+void SpawnMonsters(float tm)
 {
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = func_null;
+	float whichmon;
 	
-	WaypointSprite_Kill(self.sprite);
+	whichmon = RandomMonster();
 	
-	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-	
-	if(self.realowner)
-		self.realowner.turret_cnt -= 1;
-		
-	self.think = SUB_Remove;
-	self.nextthink = time;
+	TD_SpawnMonster(tm, monster_type2string(whichmon));
 }
 
-void barricade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+entity PickGenerator(float tm)
 {
-	if not(attacker.flags & FL_MONSTER) return;
+	entity head;
 	
-	self.health -= damage;
+	RandomSelection_Init();
+	for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
+	if(head.team != tm)
+		RandomSelection_Add(head, 0, string_null, 1, 1);
 	
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
-	
-	if(self.health < 1)
-		barricade_die();
-}
-
-void spawn_barricade()
-{
-	self.health = 2000;
-	self.max_health = self.health;
-	self.dmg_time = time;
-	self.touch = barricade_touch;
-	self.think = func_null;
-	self.nextthink = -1;
-	self.takedamage = DAMAGE_AIM;
-	self.turrcaps_flags = TFL_TURRCAPS_ISTURRET; // for turretremove commands etc.
-	self.solid = SOLID_CORPSE; // hax
-	self.event_damage = barricade_damage;
-	self.netname = "Barricade";
-	
-	WaypointSprite_Spawn(self.netname, 0, 1200, self, '0 0 110', world, 0, self, sprite, FALSE, RADARICON_DOMPOINT, '1 1 0');	
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
-	
-	precache_model("models/td/barricade.md3");
-	setmodel(self, "models/td/barricade.md3");
-	
-	droptofloor();
-	
-	self.movetype = MOVETYPE_NONE;
+	return RandomSelection_chosen_ent;
 }
 
 float td_checkfuel(entity ent, string tur)
@@ -291,8 +273,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	self.playerid = own.playerid;
 	self.angles_y = spawnedby.v_angle_y;
 	spawnedby.turret_cnt += 1;
-	self.colormap = spawnedby.colormap;
-	self.colormod = '1 1 1';
+	self.team = own.team;
 	
 	switch(turet)
 	{
@@ -301,7 +282,6 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 		case "walker": spawnfunc_turret_walker(); break;
 		case "flac": spawnfunc_turret_flac(); break;
 		case "towerbuff": spawnfunc_turret_fusionreactor(); break;
-		case "barricade": spawn_barricade(); break;
 		default: Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_INVALID); remove(self); self = oldself; return;
 	}
 	
@@ -310,352 +290,185 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	self = oldself;
 }
 
-void buffturret (entity tur, float buff)
+void spawn_td_fuel(float fuel_size)
 {
-	tur.turret_buff		  += 1;
-	tur.max_health		  *= buff;
-	tur.tur_health 		   = tur.max_health;
-	tur.health			   = tur.max_health;
-	tur.ammo_max		  *= buff;
-	tur.ammo_recharge     *= buff;
-    tur.shot_dmg          *= buff;
-    tur.shot_refire       -= buff * 0.2;
-    tur.shot_radius       *= buff;
-    tur.shot_speed        *= buff;
-    tur.shot_spread       *= buff;
-    tur.shot_force        *= buff;
+	if not(g_td) {remove(self); return; }
+	
+	self.ammo_fuel = fuel_size * monster_skill;
+	StartItem("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Turret Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	
+	self.velocity = randomvec() * 175 + '0 0 325';
 }
 
-void AnnounceSpawn(string anounce)
+// round handling
+#define TD_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0))
+#define TD_ALIVE_TEAMS_OK() (TD_ALIVE_TEAMS() == 2)
+void TD_RoundStart()
 {
-	entity e;
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_ANNOUNCE_SPAWN, anounce);
-	
-	FOR_EACH_REALCLIENT(e) soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
+	allowed_to_spawn = TRUE;
 }
 
-entity PickSpawn (float strngth, float type)
-{
-	entity e;
-	RandomSelection_Init();
-	for(e = world;(e = find(e, classname, "monster_swarm")); )
-	{
-		if(flyspawns_count > 0 && type == SWARM_FLY && e.spawntype != SWARM_FLY) continue;
-		if(waterspawns_count > 0 && type == SWARM_SWIM && e.spawntype != SWARM_SWIM) continue;
-		
-		RandomSelection_Add(e, 0, string_null, 1, 1);
-	}
-
-	return RandomSelection_chosen_ent;
-}
-
-void TD_SpawnMonster(string mnster, float strngth, float type)
-{
-	entity e, mon;
-	
-	e = PickSpawn(strngth, type);
-	
-	if(e == world) // couldn't find anything for our class, so check for normal spawns
-		e = PickSpawn(SWARM_NORMAL, SWARM_NORMAL);
-		
-	if(e == world)
-	{
-		dprint("Warning: couldn't find any monster_swarm spawnpoints, no monsters will spawn!\n");
-		return;
-	}
-  
-	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 2);
-	if(e.target2)
-	{
-		if(random() <= 0.5 && e.target)
-			mon.target2 = e.target;
-		else
-			mon.target2 = e.target2;
-	}
-	else
-		mon.target2 = e.target;
-}
-
-float Monster_GetStrength(float mnster)
-{
-	switch(mnster)
-	{
-		default:
-		case MONSTER_BRUISER:
-		case MONSTER_ZOMBIE:
-		case MONSTER_SPIDER:
-		case MONSTER_SLIME:
-		case MONSTER_CERBERUS:
-		case MONSTER_WYVERN:
-		case MONSTER_STINGRAY:
-			return SWARM_WEAK;
-		case MONSTER_KNIGHT:
-		case MONSTER_BRUTE:
-		case MONSTER_SHAMBLER:
-		case MONSTER_MAGE:
-		case MONSTER_ANIMUS:
-			return SWARM_STRONG;
-		default: return SWARM_NORMAL;
-	}
-}
-
-string monster_type2string(float mnster)
-{
-	switch(mnster)
-	{
-		case MONSTER_ZOMBIE: return "zombie";
-		case MONSTER_BRUTE: return "brute";
-		case MONSTER_ANIMUS: return "animus";
-		case MONSTER_SHAMBLER: return "shambler";
-		case MONSTER_BRUISER: return "bruiser";
-		case MONSTER_WYVERN: return "wyvern";
-		case MONSTER_CERBERUS: return "cerberus";
-		case MONSTER_SLIME: return "slime";
-		case MONSTER_KNIGHT: return "knight";
-		case MONSTER_STINGRAY: return "stingray";
-		case MONSTER_MAGE: return "mage";
-		case MONSTER_SPIDER: return "spider";
-		default: return "";
-	}
-}
-
-float Monster_GetType(float mnster)
-{
-	switch(mnster)
-	{
-		default:
-		case MONSTER_BRUISER:
-		case MONSTER_ZOMBIE:
-		case MONSTER_SPIDER:
-		case MONSTER_SLIME:
-		case MONSTER_CERBERUS:
-		case MONSTER_BRUTE:
-		case MONSTER_SHAMBLER:
-		case MONSTER_MAGE:
-		case MONSTER_KNIGHT:
-		case MONSTER_ANIMUS:
-			return SWARM_NORMAL;
-		case MONSTER_WYVERN:
-			return SWARM_FLY;
-		case MONSTER_STINGRAY:
-			return SWARM_SWIM;
-	}
-}
-
-float RandomMonster()
-{
-	RandomSelection_Init();
-	
-	float i;
-	
-	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
-	if(td_moncount[i] > 0)
-	if(i == MONSTER_STINGRAY || i == MONSTER_SHAMBLER || i == MONSTER_SLIME)
-		RandomSelection_Add(world, i, "", 0.2, 0.2);
-	else
-		RandomSelection_Add(world, i, "", 1, 1);
-	
-	return RandomSelection_chosen_float;
-}
-
-void combat_phase()
-{
-	float mstrength, montype, whichmon;
-	
-	current_phase = PHASE_COMBAT;
-	
-	if(monster_count <= 0)
-	{
-		wave_end(FALSE);
-		return;
-	}
-	
-	self.think = combat_phase;
-	
-	whichmon 	= RandomMonster();
-	mstrength 	= Monster_GetStrength(whichmon);
-	montype 	= Monster_GetType(whichmon);
-	
-	if(current_monsters <= max_current && whichmon)
-	{
-		TD_SpawnMonster(monster_type2string(whichmon), mstrength, montype);
-		self.nextthink = time + spawn_delay;
-	}
-	else
-		self.nextthink = time + 6;
-}
-
-void queue_monsters(float maxmonsters)
-{
-	float mc = 9; // note: shambler + slime = 1
-	
-	if(waterspawns_count > 0)
-		mc += 1;
-	if(flyspawns_count > 0)
-		mc += 1;
-		
-	DistributeEvenly_Init(maxmonsters, mc);
-	
-	float i;
-	
-	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
-	{
-		if(i == MONSTER_WYVERN)
-		if(flyspawns_count < 1)
-			continue;
-			
-		if(i == MONSTER_STINGRAY)
-		if(waterspawns_count < 1)
-			continue;
-	
-		if(i == MONSTER_SLIME)
-			td_moncount[i] = DistributeEvenly_Get(0.7);
-		else if(i == MONSTER_SHAMBLER)
-			td_moncount[i] = DistributeEvenly_Get(0.3);
-		else
-			td_moncount[i] = DistributeEvenly_Get(1);
-	}
-}
-
-void combat_phase_begin()
-{
-	monster_count = totalmonsters;
-	entity gen;
-	
-	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_COMBAT);
-	
-	if(autocvar_sv_eventlog)
-		GameLogEcho(":combatphase");
-		
-	self.think = combat_phase;
-	self.nextthink = time + 1;
-	
-	for(gen = world;(gen = findflags(gen, flags, FL_GENERATOR)); )
-		gen.takedamage = DAMAGE_AIM;
-}
-
-float cphase_updates;
-void combat_phase_announce() // TODO: clean up these fail nextthinks...
-{
-	cphase_updates += 1;
-	
-	if(cphase_updates == 0)
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
-	else if(cphase_updates == 3)
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_3);
-	else if(cphase_updates == 4)
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_2);
-	else if(cphase_updates == 5)
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_1);
-	else if(cphase_updates == 6)
-	{
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_BEGIN);
-		combat_phase_begin();
-	}
-	
-	if(cphase_updates >= 6)
-		return;
-
-	self.think = combat_phase_announce;
-	self.nextthink = time + 1;
-}
-
-void build_phase()
+void TD_count_alive_monsters()
 {
 	entity head;
-	float n_players = 0, gen_washealed = FALSE, mcount, mskill;
 	
-	current_phase = PHASE_BUILD;
+	total_alive = 0;
 	
-	for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
+	FOR_EACH_MONSTER(head)
 	{
-		if(head.health < head.max_health)
+		if(head.health <= 0) continue;
+		
+		++total_alive;
+		
+		switch(head.team)
 		{
-			gen_washealed = TRUE;
-			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
-			head.health = head.max_health;
-			WaypointSprite_UpdateHealth(head.sprite, head.health);
-			head.SendFlags |= GSF_STATUS;
+			case NUM_TEAM_1:
+				++redalive;
+			case NUM_TEAM_2:
+				++bluealive;
 		}
-		head.takedamage = DAMAGE_NO;
 	}
-	
-	FOR_EACH_PLAYER(head)
-	{
-		if(head.health < 100) head.health = 100;
-		if(gen_washealed) PlayerScore_Add(head, SP_TD_SCORE, -autocvar_g_td_generator_damaged_points);
-			
-        n_players += 1;
-	}
-	
-	mcount = autocvar_g_td_monster_count_increment * wave_count;
-	mskill = n_players * 0.02;
-		
-	totalmonsters += mcount;
-	monster_skill += autocvar_g_td_monsters_skill_increment;
-	monster_skill += mskill;
-	
-	if(monster_skill < 1) monster_skill = 1;
-	if(totalmonsters < 1) totalmonsters = ((autocvar_g_td_monster_count > 0) ? autocvar_g_td_monster_count : 10);
-	if(wave_count < 1) wave_count = 1;
-	
-	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, wave_count, totalmonsters, build_time);
-    
-    FOR_EACH_MONSTER(head)
-    {
-		if(head.health <= 0)
-			continue;
-			
-        dprint(strcat("Warning: Monster still alive during build phase! Monster name: ", head.netname, "\n"));
-		
-		WaypointSprite_Kill(head.sprite);
-        remove(head);
-    }
-	
-	monsters_total = totalmonsters;
-	monsters_killed = 0;
-		
-	queue_monsters(totalmonsters);
-	
-	cphase_updates = -1;
-	
-	if(autocvar_sv_eventlog)
-        GameLogEcho(strcat(":buildphase:", ftos(wave_count), ":", ftos(totalmonsters)));
-	
-	self.think = combat_phase_announce;
-	self.nextthink = time + build_time - 6;
 }
 
-void wave_end(float starting)
+float TD_GetWinnerTeam()
 {
-	if not(starting)
+	float winner_team = 0;
+	if(redalive >= 1)
+		winner_team = NUM_TEAM_1;
+	if(bluealive >= 1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_VICTORY, ((wave_count >= max_waves) ? "Level" : "Wave"));
-		
-		if(autocvar_sv_eventlog)
-            GameLogEcho(strcat(":wave:", ftos(wave_count), ":victory"));
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_2;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no monster left
+}
+
+float TD_CheckWinner()
+{
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		round_handler_Init(5, 1, 180);
+		return 1;
 	}
 	
-	if(wave_count >= max_waves)
+	TD_count_alive_monsters();
+	
+	if(total_alive < max_alive && time >= last_check && total_killed < max_monsters)
 	{
-		gensurvived = TRUE;
+		SpawnMonsters(NUM_TEAM_1);
+		SpawnMonsters(NUM_TEAM_2);
+		
+		last_check = time + 0.5;
+	}
+	
+	if(total_killed < 1)
+		return 0; // nothing has died, can't be a tie
+	
+	if(TD_ALIVE_TEAMS() > 1)
+		return 0;
+
+	float winner_team = TD_GetWinnerTeam();
+	if(winner_team > 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
+	}
+	else if(winner_team == -1)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+	}
+
+	round_handler_Init(5, 1, 180);
+	return 1;
+}
+
+float TD_CheckTeams()
+{
+	allowed_to_spawn = TRUE;
+	
+	return TRUE;
+}
+
+// spawnfuncs	
+void spawnfunc_td_generator()
+{
+	if not(g_td) { remove(self); return; }
+	if not(self.team)
+	{
+		td_debug("Generator without a team, removing it.\n");
+		remove(self);
 		return;
 	}
 	
-	if not(starting)
-		wave_count += 1;
+	precache_sound("onslaught/generator_underattack.wav");
+	precache_sound("onslaught/ons_hit1.wav");
+	precache_sound("onslaught/ons_hit2.wav");
+	precache_sound("weapons/rocket_impact.wav");
+	
+	if not(self.health)
+		self.health = 1000;
 		
-	self.think = build_phase;
-	self.nextthink = time + 3;
+	self.max_health = self.health;
+	self.classname = "td_generator";
+	self.flags = FL_GENERATOR;
+	
+	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	
+	setorigin(self, self.origin + '0 0 20');
+	droptofloor();
+	
+	generator_link(td_generator_setup);
 }
 
+void spawnfunc_td_waypoint()
+{
+	if not(g_td) { remove(self); return; }
+	if not(self.team)
+	{
+		td_debug("Tower Defense waypoint without a team, removing it.\n");
+		remove(self);
+		return;
+	}
+	
+	setsize(self, '-6 -6 -6', '6 6 6');
+	
+	if not(self.noalign)
+	{
+		setorigin(self, self.origin + '0 0 20');
+		droptofloor();
+	}
+	
+	self.classname = "td_waypoint";
+	self.think = td_waypoint_think;
+	self.nextthink = time + 0.1;
+}
+
+void spawnfunc_td_controller()
+{
+	if not(g_td) { remove(self); return; }
+}
+
+void spawnfunc_td_spawnpoint()
+{
+	if not(g_td) { remove(self); return; }
+	
+	self.classname = "td_spawnpoint";
+	
+	self.effects = EF_STARDUST;
+}
+
+// initialization stuff
 void td_ScoreRules()
 {
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_SCORE,		"score",	 SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_KILLS,		"kills",	 SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_TURKILLS,  "frags",  	 SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_DEATHS,    "deaths",    SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_SUICIDES,  "suicides",  SFL_LOWER_IS_BETTER | SFL_ALLOW_HIDE);
+	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_TD_DESTROYS,  "destroyed", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_TD_DESTROYS,"destroyed", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
 
@@ -682,117 +495,79 @@ void td_DelayedInit()
 void td_Initialize()
 {
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
-}
-
-MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
-{
-	if(time < game_starttime || current_phase != PHASE_COMBAT || gameover)
-	{
-		turret_target = world;
-		return FALSE; // battle hasn't started
-	}
-
-	if(turret_flags & TFL_TARGETSELECT_MISSILESONLY)
-    if(turret_target.flags & FL_PROJECTILE)
-	if(turret_target.owner.flags & FL_MONSTER)
-        return TRUE; // flac support
-			
-	if(turret.turrcaps_flags & TFL_TURRCAPS_SUPPORT && turret_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-		return TRUE;
-	if not(turret_target.flags & FL_MONSTER)
-		turret_target = world;
-		
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(td_PlayerThink)
-{
-	self.stat_current_wave = wave_count;
-	self.stat_totalwaves = max_waves;
 	
-	return FALSE;
+	round_handler_Spawn(TD_CheckTeams, TD_CheckWinner, TD_RoundStart);
+	round_handler_Init(5, 10, 180);
 }
 
-MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
+// mutator hooks
+MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 {
+	if(self.realowner == world)
+		return TRUE;
+		
 	self.bot_attack = FALSE;
 	
-	Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_TD_PROTECT);
-	
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(td_PlayerDies)
+MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 {
-	if(frag_attacker.flags & FL_MONSTER)
-		PlayerScore_Add(frag_target, SP_TD_DEATHS, 1);
-		
-	if(frag_target == frag_attacker)
-		PlayerScore_Add(frag_attacker, SP_TD_SUICIDES, 1);
-
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(td_GiveFragsForKill)
-{
-	frag_score = 0;
-		
-	return TRUE; // no frags counted in td
-}
-
-MUTATOR_HOOKFUNCTION(td_PlayerDamage)
-{
-	if(frag_attacker.realowner == frag_target)
-		frag_damage = 0;
-		
-	if(frag_target.flags & FL_MONSTER && time < frag_target.spawnshieldtime)
-		frag_damage = 0;
-		
-	if(frag_target.vehicle_flags & VHF_ISVEHICLE && !(frag_attacker.flags & FL_MONSTER))
-		frag_damage = 0;
-		
-	if(frag_attacker.vehicle_flags & VHF_ISVEHICLE && !(frag_target.flags & FL_MONSTER))
-		frag_damage = 0;
-		
-	if(!autocvar_g_td_pvp && frag_attacker != frag_target && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if(!self.team || !self.realowner)
 	{
-		frag_attacker.typehitsound += 1;
-		frag_damage = 0;
+		td_debug(strcat("Removed monster ", self.netname, " with team ", ftos(self.team), "\n"));
+		WaypointSprite_Kill(self.sprite);
+		if(self.weaponentity) remove(self.weaponentity);
+		remove(self);
+		return FALSE;
 	}
-		
-	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET && IS_PLAYER(frag_target))
-		frag_damage = 0;
-		
-	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(frag_attacker.flags & FL_MONSTER || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
-		frag_damage = 0;
-		
-	return TRUE;
-}
-
-MUTATOR_HOOKFUNCTION(td_TurretDies)
-{
-	if(self.realowner)
-		self.realowner.turret_cnt -= 1;
-			
+	
+	self.candrop = FALSE;
+	self.bot_attack = FALSE;
+	self.ammo_fuel = bound(20, 20 * self.level, 100);
+	self.target_range = 300;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
+	
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
+MUTATOR_HOOKFUNCTION(td_MonsterDies)
 {
-	// No minibosses in tower defense
-	return TRUE;
+	vector backuporigin;
+	entity oldself;
+	
+	total_killed++;
+	
+	backuporigin = self.origin;
+	oldself = self;
+	self = spawn();
+	
+	self.gravity = 1;
+	setorigin(self, backuporigin + '0 0 5');
+	spawn_td_fuel(oldself.ammo_fuel);
+	self.touch = M_Item_Touch;
+	if(self == world)
+	{
+		self = oldself;
+		return FALSE;
+	}
+	SUB_SetFade(self, time + 5, 1);
+	
+	self = oldself;
+	
+	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(td_MonsterMove)
+MUTATOR_HOOKFUNCTION(td_MonsterThink)
 {
-	entity head;
-	float n_players = 0;
-	
-	FOR_EACH_PLAYER(head) { ++n_players; }
-	if(n_players < 1) return TRUE;
+	if(time <= game_starttime && round_handler_IsActive())
+		return TRUE;
+		
+	if(IS_PLAYER(self.enemy))
+		self.enemy = world;
 
 	if not(self.enemy) // don't change targets while attacking
-	if((vlen(monster_target.origin - self.origin) <= 100 && monster_target.classname == "td_waypoint") || (vlen(monster_target.origin - self.origin) <= 200 && (self.flags & FL_FLY) && monster_target.classname == "td_waypoint"))
+	if(vlen(monster_target.origin - self.origin) <= 100)
 	{
 		if(monster_target.target2)
 		{
@@ -807,150 +582,81 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		monster_target = find(world, targetname, self.target2);
 		
 		if(monster_target == world)
-			monster_target = PickGenerator();
+			monster_target = PickGenerator(self.team);
+			
+		if(monster_target == world)
+			return TRUE; // no generators or waypoints?!
 	}
 	
-	monster_speed_run = (m_speed_run + random() * 4) * monster_skill;
-	monster_speed_walk = (m_speed_walk + random() * 4) * monster_skill;
+	td_debug(sprintf("Monster target: %s. Monster target2: %s. Monster target entity: %s.\n", self.target, self.target2, etos(monster_target)));
 	
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
-{
-	if(self.realowner == world) // nothing spawned it, so kill it
-	{
-		WaypointSprite_Kill(self.sprite);
-		remove(self.weaponentity);
-		remove(self);
-		return TRUE;
-	}
+	monster_speed_run = (150 + random() * 4) * monster_skill;
+	monster_speed_walk = (100 + random() * 4) * monster_skill;
 	
-	current_monsters += 1;
-	
-	self.spawnshieldtime = time + autocvar_g_td_monsters_spawnshield_time;
-	
-	self.drop_size = bound(5, self.health * 0.05, autocvar_g_pickup_fuel_max);
-	
-	self.target_range = 600;
-	
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
-	
-	td_moncount[self.monsterid] -= 1;
-	
-	return TRUE;
-}
-
-MUTATOR_HOOKFUNCTION(td_MonsterDies)
-{
-	entity oldself;
-	vector backuporigin;
-
-	monster_count -= 1;
-	current_monsters -= 1;
-	monsters_killed += 1;
-	
-	if(IS_PLAYER(frag_attacker))
-	{
-		PlayerScore_Add(frag_attacker, SP_TD_SCORE, autocvar_g_td_kill_points);
-		PlayerScore_Add(frag_attacker, SP_TD_KILLS, 1);
-	}
-	else if(IS_PLAYER(frag_attacker.realowner))
-	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-	{
-		PlayerScore_Add(frag_attacker.realowner, SP_TD_SCORE, autocvar_g_td_turretkill_points);
-		PlayerScore_Add(frag_attacker.realowner, SP_TD_TURKILLS, 1);
-	}
-
-	backuporigin = self.origin;
-	oldself = self;
-	self = spawn();
-	
-	self.gravity = 1;
-	setorigin(self, backuporigin + '0 0 5');
-	spawn_td_fuel(oldself.drop_size);
-	self.touch = M_Item_Touch;
-	if(self == world)
-	{
-		self = oldself;
-		return FALSE;
-	}
-	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
-	
-	self = oldself;
-
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 {
-	float n_players = 0;
-	entity player;
-	local entity e;
-	
-	FOR_EACH_PLAYER(player) { ++n_players; }
-	
-	if(n_players < 1) // no players online, so do nothing
-	{
-		self.enemy = world;
-		return TRUE;
-	}
+	entity e;
 	
 	for(e = world;(e = findflags(e, monster_attack, TRUE)); ) 
 	{
 		if(ignore_turrets)
 		if(e.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			continue;
+			
+		if(e.flags & FL_MONSTER)
+			continue; // don't attack other monsters?
 		
 		if(monster_isvalidtarget(e, self))
-		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && !(e.flags & FL_GENERATOR)) || (vlen(trace_endpos - self.origin) < 500 && e.flags & FL_GENERATOR))
-		{
 			self.enemy = e;
-		}
 	}
 	
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(td_SetStartItems)
+MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 {
-	start_ammo_fuel = 150; // to be nice...
-	
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(td_SetModname)
-{
-	// TODO: find out why td_Initialize doesn't work for TD stats...
-	addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
-	addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
-		
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(td_TurretSpawn)
-{
-	if(self.realowner == world)
-		return TRUE; // wasn't spawned by a player
-		
+	self.monster_attack = FALSE;
 	self.bot_attack = FALSE;
-	buffturret(self, 0.5);
+	
+	if(self.newfuel)
+	{
+		self.ammo_fuel = self.newfuel;
+		self.newfuel = 0;
+	}
 	
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(td_DisableVehicles)
+MUTATOR_HOOKFUNCTION(td_Damage)
 {
-	// you shall not spawn!
-	return TRUE;
+	if(IS_PLAYER(frag_attacker))
+	if(frag_target.flags & FL_MONSTER)
+		frag_damage = 0;
+		
+	if(IS_PLAYER(frag_target))
+	{
+		frag_damage = 0;
+		if(frag_attacker != frag_target)
+			frag_force = '0 0 0';
+	}
+	
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
 	
+	vector org;
+	
 	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin, self.origin + v_forward * 100, MOVE_HITMODEL, self);
+	
+	org = self.origin + self.view_ofs + v_forward * 100;
+	
+	tracebox(self.origin + self.view_ofs, '-16 -16 -16', '16 16 16', org, MOVE_NORMAL, self);
 	entity targ = trace_ent;
 	if(targ.owner.realowner == self)
 		targ = targ.owner;
@@ -959,7 +665,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if(argv(1) == "list")
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_LIST, "mlrs walker plasma towerbuff flac barricade");
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_LIST, "mlrs walker plasma towerbuff flac");
 			return TRUE;
 		}
 		if(!IS_PLAYER(self) || self.health <= 0)
@@ -979,58 +685,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		}
 		
 		spawnturret(self, self, argv(1), trace_endpos);
-		
-		return TRUE;
-	}
-	if(cmd_name == "repairturret")
-	{
-		if((targ.playerid != self.playerid || targ.realowner != self) || !(targ.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_REPAIR);
-			return TRUE;
-		}
-		if(self.ammo_fuel < autocvar_g_td_turret_repair_cost)	
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_REPAIR, autocvar_g_td_turret_repair_cost);
-			return TRUE;
-		}
-		if(targ.health >= targ.max_health)
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXHEALTH);
-			return TRUE;
-		}
-		
-		self.ammo_fuel -= autocvar_g_td_turret_repair_cost;
-		targ.SendFlags |= TNSF_STATUS;
-		targ.health = bound(1, targ.health + 100, targ.max_health);
-		WaypointSprite_UpdateHealth(targ.sprite, targ.health);
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_REPAIR);
-		
-		return TRUE;
-	}
-	if(cmd_name == "buffturret")
-	{
-		if((targ.playerid != self.playerid || targ.realowner != self) || !(targ.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_UPGRADE);
-			return TRUE;
-		}
-		if(self.ammo_fuel < autocvar_g_td_turret_upgrade_cost)	
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
-			return TRUE;
-		}
-		if(targ.turret_buff >= 5)
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXPOWER);
-			return TRUE;
-		}
-		
-		self.ammo_fuel -= autocvar_g_td_turret_upgrade_cost;
-		targ.SendFlags |= TNSF_STATUS;
-		buffturret(targ, 1.2);
-		WaypointSprite_UpdateHealth(targ.sprite, targ.health);
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_UPGRADE);
 		
 		return TRUE;
 	}
@@ -1054,6 +708,8 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(td_ClientConnect)
 {
+	self.newfuel = 75;
+	
 	entity t;
 	
 	self.turret_cnt = 0;
@@ -1062,33 +718,80 @@ MUTATOR_HOOKFUNCTION(td_ClientConnect)
 	if(t.playerid == self.playerid)
 	{
 		t.realowner = self;
-		self.turret_cnt += 1;
+		self.turret_cnt += 1; // nice try
 	}
-
+	
 	return FALSE;
 }
 
-MUTATOR_DEFINITION(gamemode_td)
+MUTATOR_HOOKFUNCTION(td_DisableVehicles)
 {
+	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(td_SetModname)
+{
+	g_cloaked = 1;
+	
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
+{
+	if(time < game_starttime || (time <= game_starttime && round_handler_IsActive()) || gameover)
+	{
+		turret_target = world;
+		return FALSE; // battle hasn't started
+	}
+
+	if(turret_flags & TFL_TARGETSELECT_MISSILESONLY)
+    if(turret_target.flags & FL_PROJECTILE)
+	if(turret_target.owner.flags & FL_MONSTER)
+        return TRUE; // flac support
+			
+	if(turret.turrcaps_flags & TFL_TURRCAPS_SUPPORT && turret_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+		return TRUE;
+	if not(turret_target.flags & FL_MONSTER)
+		turret_target = world;
+		
+	if(!IsDifferentTeam(turret_target, turret))
+		turret_target = world;
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(td_TurretDies)
+{
+	if(self.realowner)
+		self.realowner.turret_cnt -= 1;
+			
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(td_GetTeamCount)
+{
+	ret_float = 2;
+	
+	return FALSE;
+}
+
+MUTATOR_DEFINITION(gamemode_towerdefense)
+{
+	MUTATOR_HOOK(TurretSpawn, td_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, td_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDies, td_MonsterDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterMove, td_MonsterMove, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterMove, td_MonsterThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterFindTarget, td_MonsterFindTarget, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterCheckBossFlag, td_MonsterCheckBossFlag, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, td_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, td_SetModname, CBC_ORDER_ANY);
-	MUTATOR_HOOK(TurretValidateTarget, td_TurretValidateTarget, CBC_ORDER_ANY);
-	MUTATOR_HOOK(TurretSpawn, td_TurretSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(TurretDies, td_TurretDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, td_GiveFragsForKill, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, td_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, td_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, td_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, td_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleSpawn, td_DisableVehicles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, td_Damage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, td_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, td_ClientConnect, CBC_ORDER_ANY);
-	
+	MUTATOR_HOOK(VehicleSpawn, td_DisableVehicles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, td_SetModname, CBC_ORDER_ANY);
+	MUTATOR_HOOK(TurretValidateTarget, td_TurretValidateTarget, CBC_ORDER_ANY);
+	MUTATOR_HOOK(TurretDies, td_TurretDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, td_GetTeamCount, CBC_ORDER_ANY);
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

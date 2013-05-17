@@ -108,10 +108,11 @@ void InitGameplayMode()
     
 	if(g_td)
 	{
-		fraglimit_override = 0; // no limits in TD - it's a survival mode
+		ActivateTeamplay();
+		fraglimit_override = 0; // not supported by TD
 		leadlimit_override = 0;
 		timelimit_override = 0;
-		MUTATOR_ADD(gamemode_td);
+		MUTATOR_ADD(gamemode_towerdefense);
 	}
 
 	if(g_lms)

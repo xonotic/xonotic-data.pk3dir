@@ -446,7 +446,7 @@ vector monster_pickmovetarget(entity targ)
 		{
 			self.monster_movestate = MONSTER_MOVE_OWNER;
 			self.last_trace = time + 0.3;
-			if(self.monster_owner && self.monster_owner.classname != "monster_swarm")
+			if(self.monster_owner && self.monster_owner.classname != "td_spawnpoint")
 				return self.monster_owner.origin;
 		}
 		case MONSTER_MOVE_SPAWNLOC:

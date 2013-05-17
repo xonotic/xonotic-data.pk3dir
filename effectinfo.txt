@@ -7977,3 +7977,43 @@ size 100 100
 alpha 190 190 180
 sizeincrease -80
 color 0xFFFFFF 0xFFFFFF
+
+// waypoint_link_red - red waypoint linking effect
+effect waypoint_link_red
+countabsolute 1
+type beam
+tex 200 200
+size 1 1
+alpha 256 256 64
+color 0xFF0F0F 0xFF0F0F
+sizeincrease 1
+
+// waypoint_link_blue - blue waypoint linking effect
+effect waypoint_link_blue
+countabsolute 1
+type beam
+tex 200 200
+size 1 1
+alpha 256 256 64
+color 0x0F0FFF 0x0F0FFF
+sizeincrease 1
+
+// waypoint_link_yellow - yellow waypoint linking effect
+effect waypoint_link_yellow
+countabsolute 1
+type beam
+tex 200 200
+size 1 1
+alpha 256 256 64
+color 0xFFFF0F 0xFFFF0F
+sizeincrease 1
+
+// waypoint_link_pink - pink waypoint linking effect
+effect waypoint_link_pink
+countabsolute 1
+type beam
+tex 200 200
+size 1 1
+alpha 256 256 64
+color 0xFF0FFF 0xFF0FFF
+sizeincrease 1

@@ -237,7 +237,7 @@ void generator_damage(float hp)
 }
 
 void generator_construct()
-{	
+{
 	self.netname = "Generator";
 
 	setorigin(self, self.origin);

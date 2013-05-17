@@ -33,8 +33,11 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	if(moveflag)
 		e.monster_moveflags = moveflag;
 	
-	if (spawnedby.classname == "monster_swarm")
-		e.monster_owner = own;  
+	if (spawnedby.classname == "td_spawnpoint")
+	{
+		e.monster_owner = own;
+		e.team = spawnedby.team;
+	}
 	else if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay && autocvar_g_monsters_teams)

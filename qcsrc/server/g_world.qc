@@ -2072,36 +2072,6 @@ float WinningCondition_RanOutOfSpawns()
 		return WINNING_NO;
 }
 
-// TD winning condition:
-// game terminates if there are no generators (or 1 dies if td_dont_end is FALSE)
-float gensurvived;
-float WinningCondition_TowerDefense()
-{
-	WinningConditionHelper(); // set worldstatus
-
-	if(inWarmupStage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	if(gendestroyed == TRUE)
-	if(td_gencount < 1 || !td_dont_end)
-	{
-		ClearWinners();
-		dprint("Everyone lost, ending game.\n");
-		return WINNING_YES;
-	}
-	
-	if(gensurvived)
-	{
-		ClearWinners();
-		checkrules_equality = TRUE;
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
 /*
 ============
 CheckRules_World
@@ -2256,10 +2226,6 @@ void CheckRules_World()
 	else if (g_onslaught)
 	{
 		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
-	}
-	else if(g_td)
-	{
-		checkrules_status = WinningCondition_TowerDefense();
 	}
 	else
 	{
