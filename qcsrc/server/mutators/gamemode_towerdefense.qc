@@ -125,9 +125,6 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 void td_generator_reset()
 {
 	self.SendFlags |= GSF_SETUP;
-	self.health = self.max_health;
-	
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
 
 void td_generator_setup()
@@ -314,6 +311,8 @@ void spawn_td_fuel(float fuel_size)
 void TD_RoundStart()
 {
 	allowed_to_spawn = TRUE;
+	
+	total_killed = 0;
 }
 
 void TD_count_alive_monsters()
@@ -321,6 +320,8 @@ void TD_count_alive_monsters()
 	entity head;
 	
 	total_alive = 0;
+	redalive = 0;
+	bluealive = 0;
 	
 	FOR_EACH_MONSTER(head)
 	{
@@ -330,10 +331,8 @@ void TD_count_alive_monsters()
 		
 		switch(head.team)
 		{
-			case NUM_TEAM_1:
-				++redalive;
-			case NUM_TEAM_2:
-				++bluealive;
+			case NUM_TEAM_1: ++redalive; break;
+			case NUM_TEAM_2: ++bluealive; break;
 		}
 	}
 }
@@ -365,7 +364,9 @@ float TD_CheckWinner()
 	
 	TD_count_alive_monsters();
 	
-	if(total_alive < max_alive && time >= last_check && total_killed < max_monsters)
+	if(time >= last_check)
+	if(total_alive < max_alive)
+	if(total_killed < max_monsters)
 	{
 		SpawnMonsters(NUM_TEAM_1);
 		SpawnMonsters(NUM_TEAM_2);
@@ -376,7 +377,7 @@ float TD_CheckWinner()
 	if(total_killed < 1)
 		return 0; // nothing has died, can't be a tie
 	
-	if(TD_ALIVE_TEAMS() > 1)
+	if(TD_ALIVE_TEAMS_OK())
 		return 0;
 
 	float winner_team = TD_GetWinnerTeam();
