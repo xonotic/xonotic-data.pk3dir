@@ -330,9 +330,14 @@ void td_generator_delayed()
 #define TD_ALIVE_TEAMS_OK() (TD_ALIVE_TEAMS() == 2)
 void TD_RoundStart()
 {
+	entity head;
+	
 	allowed_to_spawn = TRUE;
 	
 	ignore_turrets = TRUE;
+	
+	FOR_EACH_PLAYER(head)
+		head.ready = FALSE;
 	
 	total_killed = 0;
 }
@@ -383,6 +388,13 @@ float TD_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, 10, 180);
+		FOR_EACH_MONSTER(head) if(head.health > 0)
+		{
+			WaypointSprite_Kill(head.sprite);
+			if(head.weaponentity) remove(head.weaponentity);
+			if(head.iceblock) remove(head.iceblock);
+			remove(head);
+		}
 		return 1;
 	}
 	
@@ -434,9 +446,25 @@ float TD_CheckWinner()
 
 float TD_CheckTeams()
 {
+	entity head;
+	float readycount = 0, num_players = 0, ready_needed_factor, ready_needed_count;
+	
+	FOR_EACH_PLAYER(head)
+	{
+		++num_players;
+		if(head.ready)
+			++readycount;
+	}
+	
+	ready_needed_factor = bound(0.5, cvar("g_td_majority_factor"), 0.999);
+	ready_needed_count = floor(num_players * ready_needed_factor) + 1;
+	
+	if(readycount >= ready_needed_count)
+		return TRUE;
+	
 	allowed_to_spawn = TRUE;
 	
-	return TRUE;
+	return FALSE;
 }
 
 // spawnfuncs	
@@ -539,6 +567,8 @@ void td_DelayedInit()
 void td_Initialize()
 {
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
+	
+	readyrestart_happened = TRUE; // disable normal ready command
 	
 	round_handler_Spawn(TD_CheckTeams, TD_CheckWinner, TD_RoundStart);
 	round_handler_Init(5, 10, 180);
@@ -722,6 +752,17 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	entity targ = trace_ent;
 	if(targ.owner.realowner == self)
 		targ = targ.owner;
+		
+	if(cmd_name == "ready")
+	if not(self.ready)
+	{
+		self.ready = TRUE;
+		bprint(self.netname, "^2 is ready\n");
+		
+		Nagger_ReadyCounted();
+		
+		return TRUE;
+	}
 	
 	if(cmd_name == "turretspawn")
 	{
