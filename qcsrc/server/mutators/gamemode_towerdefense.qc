@@ -3,6 +3,8 @@ float redalive, bluealive, total_alive;
 var float max_monsters = 20;
 var float max_alive = 10;
 
+float max_perteam;
+
 float total_killed;
 
 var float max_turrets = 3;
@@ -78,6 +80,7 @@ void td_generator_die()
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
+	self.reset			= func_null; // don't reset this generator
 	
 	WaypointSprite_Kill(self.sprite);
 }
@@ -111,7 +114,7 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 		
 	if(self.health <= 0)
 	{
-		FOR_EACH_REALPLAYER(head)
+		FOR_EACH_PLAYER(head)
 		if(!IsDifferentTeam(head, attacker))
 			PlayerScore_Add(head, SP_TD_DESTROYS, 1);
 		
@@ -138,19 +141,11 @@ void td_generator_setup()
 	self.monster_attack	= TRUE;
 	self.SendFlags		= GSF_SETUP;
 	self.netname		= "Generator";
-	self.reset			= td_generator_reset;
+	self.reset			= func_null;
 	
 	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, Team_ColorRGB(self.team));	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
-}
-
-void AnnounceSpawn(string anounce)
-{
-	entity e;
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_ANNOUNCE_SPAWN, anounce);
-	
-	FOR_EACH_REALCLIENT(e) soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
 }
 
 entity PickSpawn (float tm)
@@ -263,7 +258,7 @@ float td_checkfuel(entity ent, string tur)
 
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
-	if not(IS_PLAYER(spawnedby)) { dprint("Warning: A non-player entity tried to spawn a turret\n"); return; }
+	if not(IS_PLAYER(spawnedby)) { td_debug("Warning: A non-player entity tried to spawn a turret\n"); return; }
 	if not(td_checkfuel(spawnedby, turet)) { return; }
 		
 	entity oldself;
@@ -354,28 +349,33 @@ float TD_GetWinnerTeam()
 
 float TD_CheckWinner()
 {
+	entity head = world;
+	
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
-		round_handler_Init(5, 1, 180);
+		round_handler_Init(5, 10, 180);
 		return 1;
 	}
 	
 	TD_count_alive_monsters();
 	
+	max_perteam = max_monsters * 0.5;
+	
 	if(time >= last_check)
-	if(total_alive < max_alive)
 	if(total_killed < max_monsters)
 	{
-		SpawnMonsters(NUM_TEAM_1);
-		SpawnMonsters(NUM_TEAM_2);
-		
+		if(redalive < max_perteam)
+			SpawnMonsters(NUM_TEAM_1);
+		if(bluealive < max_perteam)
+			SpawnMonsters(NUM_TEAM_2);
+			
 		last_check = time + 0.5;
 	}
-	
-	if(total_killed < 1)
-		return 0; // nothing has died, can't be a tie
+		
+	if(total_killed < max_monsters)
+		return 0;
 	
 	if(TD_ALIVE_TEAMS_OK())
 		return 0;
@@ -392,8 +392,16 @@ float TD_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
+	
+	FOR_EACH_MONSTER(head) if(head.health > 0)
+	{
+		WaypointSprite_Kill(head.sprite);
+		if(head.weaponentity) remove(head.weaponentity);
+		if(head.iceblock) remove(head.iceblock);
+		remove(head);
+	}
 
-	round_handler_Init(5, 1, 180);
+	round_handler_Init(5, 10, 180);
 	return 1;
 }
 
@@ -494,7 +502,7 @@ void td_DelayedInit()
 {
 	if(find(world, classname, "td_controller") == world)
 	{
-		print("No ""td_controller"" entity found on this map, creating it anyway.\n");
+		td_debug("No ""td_controller"" entity found on this map, creating it anyway.\n");
 		td_SpawnController();
 	}
 	
