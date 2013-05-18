@@ -257,11 +257,18 @@ void generator_construct()
 .vector glowmod;
 void generator_changeteam()
 {
-	self.glowmod = Team_ColorRGB(self.team - 1);
-	self.teamradar_color = Team_ColorRGB(self.team - 1);
-	
 	if(self.team)
+	{
+		self.glowmod = Team_ColorRGB(self.team - 1);
+		self.teamradar_color = Team_ColorRGB(self.team - 1);
 		self.colormap = 1024 + (self.team - 1) * 17;
+	}
+	else
+	{
+		self.colormap = 1024;
+		self.glowmod = '1 1 0';
+		self.teamradar_color = '1 1 0';
+	}
 }
 
 void ent_generator()
@@ -279,14 +286,14 @@ void ent_generator()
 		self.health = ReadByte();
 		self.max_health = ReadByte();
 		self.count = ReadByte();
+		self.team = ReadByte();
 		
 		if not(self.count)
 			self.count = 40;
 		
+		generator_changeteam();
 		generator_precache();
 		generator_construct();
-		self.colormap = 1024;
-		self.glowmod = '1 1 0'; 
 	}
 
 	if(sf & GSF_STATUS)
@@ -323,6 +330,7 @@ float generator_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.health);
 		WriteByte(MSG_ENTITY, self.max_health);
 		WriteByte(MSG_ENTITY, self.count);
+		WriteByte(MSG_ENTITY, self.team);
     }
     
     if(sf & GSF_STATUS)

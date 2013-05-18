@@ -139,7 +139,6 @@ void td_generator_setup()
 	self.event_damage	= td_generator_damage;
 	self.movetype		= MOVETYPE_NONE;
 	self.monster_attack	= TRUE;
-	self.SendFlags		= GSF_SETUP;
 	self.netname		= "Generator";
 	self.reset			= func_null;
 	
@@ -300,6 +299,13 @@ void spawn_td_fuel(float fuel_size)
 	self.velocity = randomvec() * 175 + '0 0 325';
 }
 
+void td_generator_delayed()
+{
+	generator_link(td_generator_setup);
+	
+	self.SendFlags = GSF_SETUP;
+}
+
 // round handling
 #define TD_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0))
 #define TD_ALIVE_TEAMS_OK() (TD_ALIVE_TEAMS() == 2)
@@ -440,7 +446,7 @@ void spawnfunc_td_generator()
 	setorigin(self, self.origin + '0 0 20');
 	droptofloor();
 	
-	generator_link(td_generator_setup);
+	InitializeEntity(self, td_generator_delayed, INITPRIO_LAST);
 }
 
 void spawnfunc_td_waypoint()
