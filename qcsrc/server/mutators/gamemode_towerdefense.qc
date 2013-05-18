@@ -7,7 +7,9 @@ float max_perteam;
 
 float total_killed;
 
-var float max_turrets = 3;
+var float max_turrets = 10;
+
+.float turret_buff;
 
 .float newfuel; // hack to not give players fuel every time they spawn
 
@@ -123,11 +125,6 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	}
 		
 	self.SendFlags |= GSF_STATUS;
-}
-
-void td_generator_reset()
-{
-	self.SendFlags |= GSF_SETUP;
 }
 
 void td_generator_setup()
@@ -289,6 +286,28 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	self = oldself;
 }
 
+void buffturret(entity tur, float buff)
+{
+	float refbuff = bound(0.01, buff * 0.05, 0.1);
+	
+	tur.turret_buff		  += 1;
+	tur.max_health		  *= buff;
+	tur.tur_health 		   = tur.max_health;
+	tur.health			   = tur.max_health;
+	tur.ammo_max		  *= buff;
+	tur.ammo_recharge     *= buff;
+    tur.shot_dmg          *= buff;
+    tur.shot_radius       *= buff;
+    tur.shot_speed        *= buff;
+    tur.shot_spread       *= buff;
+    tur.shot_force        *= buff;
+	
+	if(buff < 1)
+		tur.shot_refire += refbuff;
+	else
+		tur.shot_refire -= refbuff;
+}
+
 void spawn_td_fuel(float fuel_size)
 {
 	if not(g_td) {remove(self); return; }
@@ -312,6 +331,8 @@ void td_generator_delayed()
 void TD_RoundStart()
 {
 	allowed_to_spawn = TRUE;
+	
+	ignore_turrets = TRUE;
 	
 	total_killed = 0;
 }
@@ -530,6 +551,7 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 		return TRUE;
 		
 	self.bot_attack = FALSE;
+	buffturret(self, 0.7);
 	
 	return FALSE;
 }
@@ -544,8 +566,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		remove(self);
 		return FALSE;
 	}
-	
-	WaypointSprite_Kill(self.sprite);
 	
 	self.candrop = FALSE;
 	self.bot_attack = FALSE;
