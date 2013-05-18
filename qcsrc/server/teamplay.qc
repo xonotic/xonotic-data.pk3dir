@@ -109,8 +109,7 @@ void InitGameplayMode()
 	if(g_td)
 	{
 		ActivateTeamplay();
-		fraglimit_override = 0; // not supported by TD
-		leadlimit_override = 0;
+		leadlimit_override = 0; // not supported by TD
 		timelimit_override = 0;
 		MUTATOR_ADD(gamemode_towerdefense);
 	}

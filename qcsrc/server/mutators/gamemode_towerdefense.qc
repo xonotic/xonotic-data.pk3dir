@@ -545,7 +545,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	self.bot_attack = FALSE;
 	self.ammo_fuel = bound(20, 20 * self.level, 100);
 	self.target_range = 300;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
 	return FALSE;
 }
@@ -590,9 +590,16 @@ MUTATOR_HOOKFUNCTION(td_MonsterThink)
 		
 	if(IS_PLAYER(self.enemy))
 		self.enemy = world;
+		
+	float tr = 100;
+	
+	if not(self.enemy)
+	if(monster_target.flags & FL_GENERATOR)
+	if(monster_target.health <= 0)
+		tr = 250;
 
 	if not(self.enemy) // don't change targets while attacking
-	if(vlen(monster_target.origin - self.origin) <= 100)
+	if(vlen(monster_target.origin - self.origin) <= tr)
 	{
 		if(monster_target.target2)
 		{
@@ -648,6 +655,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 {
 	self.monster_attack = FALSE;
 	self.bot_attack = FALSE;
+	self.solid = SOLID_CORPSE;
 	
 	if(self.newfuel)
 	{
