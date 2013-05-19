@@ -248,13 +248,11 @@ if(panel_bg_padding_str == "") {\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
 // return smoothly faded pos and size of given panel when a dialog is active
-var float menu_enable_maxsize_x;
-var float menu_enable_maxsize_y;
-var vector menu_enable_size;
-var vector menu_enable_pos;
 #define HUD_Panel_UpdatePosSize_ForMenu()\
-menu_enable_maxsize_x = 0.3 * vid_conwidth;\
-menu_enable_maxsize_y = 0.18 * vid_conheight;\
+vector menu_enable_pos;\
+vector menu_enable_size = '0 0 0';\
+float menu_enable_maxsize_x = 0.3 * vid_conwidth;\
+float menu_enable_maxsize_y = 0.18 * vid_conheight;\
 if(panel_size_x > panel_size_y)\
 {\
 	if(panel_size_y > menu_enable_maxsize_y)\
@@ -274,9 +272,9 @@ else\
 	}\
 }\
 if(panel_size_x > panel_size_y)\
-	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * 0.82 * vid_conheight;\
+	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * (vid_conheight - menu_enable_maxsize_y);\
 else\
-	menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * 0.7 * vid_conwidth;\
+	menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * (vid_conwidth - menu_enable_maxsize_x);\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;
 
 // Scale the pos and size vectors to absolute coordinates
