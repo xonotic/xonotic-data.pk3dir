@@ -1780,7 +1780,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 {
-	if((frag_attacker != frag_target) && (IS_PLAYER(frag_target)) && (frag_target.flagcarried))
+	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
 		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
