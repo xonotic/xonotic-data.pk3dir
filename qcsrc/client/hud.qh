@@ -261,6 +261,7 @@ if(panel_size_x > panel_size_y)\
 		menu_enable_size_x = panel_size_x * (menu_enable_maxsize_y/panel_size_y);\
 		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
 	}\
+	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * (vid_conheight - menu_enable_maxsize_y);\
 }\
 else\
 {\
@@ -270,11 +271,8 @@ else\
 		menu_enable_size_y = panel_size_y * (menu_enable_maxsize_x/panel_size_x);\
 		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
 	}\
-}\
-if(panel_size_x > panel_size_y)\
-	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * (vid_conheight - menu_enable_maxsize_y);\
-else\
 	menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * (vid_conwidth - menu_enable_maxsize_x);\
+}\
 panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;
 
 // Scale the pos and size vectors to absolute coordinates
