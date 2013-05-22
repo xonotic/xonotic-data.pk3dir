@@ -4381,8 +4381,6 @@ void HUD_Main (void)
 
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
-	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
-		hud_fade_alpha = 1;
 
 	// panels that we want to be active together with the scoreboard
 	// they must call HUD_Panel_ApplyFadeAlpha(); only when showing the menu
