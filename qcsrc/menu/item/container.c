@@ -177,7 +177,9 @@ void Container_draw(entity me)
 		e.draw(e);
 		me.leaveSubitem(me);
 	}
-};
+
+	SUPER(Container).draw(me);
+}
 
 void Container_focusLeave(entity me)
 {
@@ -302,8 +304,7 @@ void Container_addItem(entity me, entity other, vector theOrigin, vector theSize
 	other.Container_size = theSize;
 	me.setAlphaOf(me, other, theAlpha);
 
-	entity f, l;
-	f = me.firstChild;
+	entity l;
 	l = me.lastChild;
 
 	if(l)
@@ -328,9 +329,7 @@ void Container_removeItem(entity me, entity other)
 
 	other.parent = NULL;
 
-	entity n, p, f, l;
-	f = me.firstChild;
-	l = me.lastChild;
+	entity n, p;
 	n = other.nextSibling;
 	p = other.prevSibling;
 
@@ -369,13 +368,11 @@ void Container_setFocus(entity me, entity other)
 void Container_moveItemAfter(entity me, entity other, entity dest)
 {
 	// first: remove other from the chain
-	entity n, p, f, l;
+	entity n, p;
 
 	if(other.parent != me)
 		error("Can't move in wrong container!");
 
-	f = me.firstChild;
-	l = me.lastChild;
 	n = other.nextSibling;
 	p = other.prevSibling;
 

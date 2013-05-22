@@ -216,7 +216,7 @@ float spritelookupblinkvalue(string s)
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
 		case "item-strength":    return 2;
-		case "item-shueld":      return 2;
+		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
@@ -256,6 +256,7 @@ string spritelookuptext(string s)
 		case "as-defend": return _("Defend");
 		case "bluebase": return _("Blue base");
 		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
 		case "helpme": return _("Help me!");
@@ -403,7 +404,7 @@ void Draw_WaypointSprite()
 
 	InterpolateOrigin_Do();
 
-	t = GetPlayerColor(player_localentnum - 1) + 1;
+	t = GetPlayerColor(player_localnum) + 1;
 
 	spriteimage = "";
 
@@ -422,7 +423,7 @@ void Draw_WaypointSprite()
 				spriteimage = self.netname;
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if(t == COLOR_SPECTATOR + 1)
+			if(t == NUM_SPECTATOR + 1)
 				spriteimage = self.netname3;
 			else if(self.team == t)
 				spriteimage = self.netname2;
@@ -542,7 +543,7 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min4((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
@@ -595,6 +596,7 @@ void Draw_WaypointSprite()
 	if(autocvar_g_waypointsprite_uppercase)
 		txt = strtoupper(txt);
 
+	draw_beginBoldFont();
 	if(self.health >= 0)
 	{
 		o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
@@ -630,6 +632,7 @@ void Draw_WaypointSprite()
 	{
 		o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	}
+	draw_endBoldFont();
 }
 
 void Ent_RemoveWaypointSprite()
@@ -653,6 +656,7 @@ void Ent_WaypointSprite()
 	self.draw2d = Draw_WaypointSprite;
 
 	InterpolateOrigin_Undo();
+	self.iflags |= IFLAG_ORIGIN;
 
 	if(sendflags & 0x80)
 	{
@@ -685,6 +689,7 @@ void Ent_WaypointSprite()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(sendflags & 1)

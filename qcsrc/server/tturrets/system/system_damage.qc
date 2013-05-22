@@ -18,7 +18,7 @@ void turret_stdproc_die()
     self.solid              = SOLID_NOT;
     self.tur_head.solid     = self.solid;
 
-    self.event_damage           = SUB_Null;
+    self.event_damage           = func_null;
     self.takedamage             = DAMAGE_NO;
 
     self.health             = 0;
@@ -88,14 +88,14 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         return;
 
     // Inactive turrets take no damage. (hm..)
-    if not (self.tur_active)
+    if not (self.active)
         return;
 
     if (teamplay)
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
-        if(clienttype(attacker) == CLIENTTYPE_REAL)
+        if(IS_REAL_CLIENT(attacker))
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
         if(autocvar_g_friendlyfire)
@@ -113,7 +113,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
         
         self.SendFlags  |= TNSF_ANG;
-
     }
 
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
@@ -121,8 +120,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     
     if (self.health <= 0)
     {
-        self.event_damage           = SUB_Null;
-        self.tur_head.event_damage  = SUB_Null;
+        self.event_damage           = func_null;
+        self.tur_head.event_damage  = func_null;
         self.takedamage             = DAMAGE_NO;
         self.nextthink = time;
         self.think = turret_stdproc_die;

@@ -1,11 +1,16 @@
 void WarpZone_Fade_PreDraw()
 {
-	if(self.warpzone_fadestart)
-	{
-		vector org;
-		org = R_SetView3fv(VF_ORIGIN);
+	vector org;
+	org = getpropertyvec(VF_ORIGIN);
+	if(
+#ifdef COMPAT_XON060_DONTCRASH_CHECKPVS
+		cvar_string("g_xonoticversion") != "0.5.0" &&
+		cvar_string("g_xonoticversion") != "0.6.0" &&
+#endif
+		!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		self.alpha = 0;
+	else if(self.warpzone_fadestart)
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
-	}
 	else
 		self.alpha = 1;
 	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
@@ -79,10 +84,7 @@ void WarpZone_Read(float isnew)
 
 	// how to draw
 	// engine currently wants this
-	if(self.warpzone_fadestart)
-		self.predraw = WarpZone_Fade_PreDraw;
-	else
-		self.drawmask = MASK_NORMAL;
+	self.predraw = WarpZone_Fade_PreDraw;
 }
 
 void WarpZone_Camera_Read(float isnew)
@@ -139,10 +141,7 @@ void WarpZone_Camera_Read(float isnew)
 
 	// how to draw
 	// engine currently wants this
-	if(self.warpzone_fadestart)
-		self.predraw = WarpZone_Fade_PreDraw;
-	else
-		self.drawmask = MASK_NORMAL;
+	self.predraw = WarpZone_Fade_PreDraw;
 }
 
 void CL_RotateMoves(vector ang) = #638;
@@ -156,7 +155,7 @@ void WarpZone_Teleported_Read(float isnew)
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
-	R_SetView3fv(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, R_SetView3fv(VF_CL_VIEWANGLES)));
+	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
 	if(checkextension("DP_CSQC_ROTATEMOVES"))
 		CL_RotateMoves(v);
 		//CL_RotateMoves('0 90 0');
@@ -194,12 +193,12 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	entity e;
 	float pd;
 
-	mi_x = min5(o_x, c0_x, c1_x, c2_x, c3_x);
-	ma_x = max5(o_x, c0_x, c1_x, c2_x, c3_x);
-	mi_y = min5(o_y, c0_y, c1_y, c2_y, c3_y);
-	ma_y = max5(o_y, c0_y, c1_y, c2_y, c3_y);
-	mi_z = min5(o_z, c0_z, c1_z, c2_z, c3_z);
-	ma_z = max5(o_z, c0_z, c1_z, c2_z, c3_z);
+	mi_x = min(o_x, c0_x, c1_x, c2_x, c3_x);
+	ma_x = max(o_x, c0_x, c1_x, c2_x, c3_x);
+	mi_y = min(o_y, c0_y, c1_y, c2_y, c3_y);
+	ma_y = max(o_y, c0_y, c1_y, c2_y, c3_y);
+	mi_z = min(o_z, c0_z, c1_z, c2_z, c3_z);
+	ma_z = max(o_z, c0_z, c1_z, c2_z, c3_z);
 
 	e = WarpZone_Find(mi, ma);
 	if(e)
@@ -207,7 +206,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 		if(WarpZone_PlaneDist(e, o) < 0)
 			return '0 0 0';
 			// can't really be, though, but if it is, this is not my warpzone, but a random different one in the same mins/maxs
-		pd = min4(
+		pd = min(
 				WarpZone_PlaneDist(e, c0),
 				WarpZone_PlaneDist(e, c1),
 				WarpZone_PlaneDist(e, c2),
@@ -240,8 +239,8 @@ void WarpZone_FixView()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
 	float f;
 
-	org = R_SetView3fv(VF_ORIGIN);
-	ang = R_SetView3fv(VF_ANGLES);
+	org = getpropertyvec(VF_ORIGIN);
+	ang = getpropertyvec(VF_ANGLES);
 #ifdef WORKAROUND_XON010
 	float dirty;
 	dirty = checkextension("DP_CSQC_ROTATEMOVES");
@@ -267,9 +266,9 @@ void WarpZone_FixView()
 	else
 		f = 0;
 
-	rick = R_SetView(VF_CL_VIEWANGLES_Z);
+	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
-	R_SetView(VF_CL_VIEWANGLES_Z, rick);
+	setproperty(VF_CL_VIEWANGLES_Z, rick);
 
 #ifdef WORKAROUND_XON010
 	if(ang_z > 1 || ang_z < -1)
@@ -282,8 +281,8 @@ void WarpZone_FixView()
 	if(dirty)
 	{
 #endif
-	R_SetView(VF_ORIGIN, org);
-	R_SetView(VF_ANGLES, ang);
+	setproperty(VF_ORIGIN, org);
+	setproperty(VF_ANGLES, ang);
 #ifdef WORKAROUND_XON010
 	}
 #endif
@@ -295,7 +294,7 @@ void WarpZone_FixView()
 	corner3 = cs_unproject('1 0 0' * cvar("vid_conwidth") + '0 1 0' * cvar("vid_conheight") + nearclip);
 	o = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
 	if(o != '0 0 0')
-		R_SetView(VF_ORIGIN, org + o);
+		setproperty(VF_ORIGIN, org + o);
 }
 
 void WarpZone_Init()

@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", _("Rocket Launcher"))
+REGISTER_WEAPON(
+/* WEP_##id  */ ROCKET_LAUNCHER,
+/* function  */ w_rlauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "rl",
+/* shortname */ "rocketlauncher",
+/* fullname  */ _("Rocket Launcher")
+);
 #else
 #ifdef SVQC
 .float rl_release;
@@ -19,13 +29,13 @@ void W_Rocket_Explode ()
 	W_Rocket_Unregister();
 
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
@@ -46,7 +56,7 @@ void W_Rocket_DoRemoteExplode ()
 {
 	W_Rocket_Unregister();
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
@@ -61,58 +71,6 @@ void W_Rocket_DoRemoteExplode ()
 		}
 	}
 	remove (self);
-}
-
-entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
-{
-	entity head, selected;
-	vector dir;
-	float dist, maxdist,// bestdist,
-		dot,// bestdot,
-		points, bestpoints;
-	//bestdist = 9999;
-	//bestdot = -2;
-	bestpoints = 0;
-	maxdist = 800;
-	selected = world;
-
-	makevectors(e.angles);
-
-	head = find(world, classname, "laser_target");
-	while(head)
-	{
-		points = 0;
-		dir = normalize(head.origin - self.origin);
-		dot = dir * v_forward;
-		dist = vlen(head.origin - self.origin);
-		if(dist > maxdist)
-			dist = maxdist;
-
-		// gain points for being in front
-		points = points + ((dot+1)*0.5) * 500
-			* (1 + crandom()*dot_variance);
-		// gain points for being close away
-		points = points + (1 - dist/maxdist) * 1000
-			* (1 + crandom()*dot_variance);
-
-		traceline(e.origin, head.origin, TRUE, self);
-		if(trace_fraction < 1)
-		{
-			points = 0;
-		}
-
-		if(points > bestpoints)//random() > 0.5)//
-		{
-			bestpoints = points;
-			selected = head;
-		}
-
-		head = find(head, classname, "laser_target");
-	}
-
-	//bprint(selected.realowner.netname);
-	//bprint("\n");
-	return selected;
 }
 
 void W_Rocket_RemoteExplode()
@@ -134,6 +92,8 @@ vector rocket_steerto(vector thisdir, vector goaldir, float maxturn_cos)
 {
 	if(thisdir * goaldir > maxturn_cos)
 		return goaldir;
+	if(thisdir * goaldir < -0.9998) // less than 1 degree and opposite
+		return thisdir; // refuse to guide (better than letting a numerical error happen)
 	float f, m2;
 	vector v;
 	// solve:
@@ -151,6 +111,15 @@ vector rocket_steerto(vector thisdir, vector goaldir, float maxturn_cos)
 	v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
 	return normalize(thisdir + goaldir * v_y); // the larger solution!
 }
+// assume thisdir == -goaldir:
+//   f == -1
+//   v = solve_qadratic(m2 - 1, -2 * (m2 - 1), m2 - 1)
+//   (m2 - 1) x^2 - 2 * (m2 - 1) * x + (m2 - 1) = 0
+//   x^2 - 2 * x + 1 = 0
+//   (x - 1)^2 = 0
+//   x = 1
+//   normalize(thisdir + goaldir)
+//   normalize(0)
 
 void W_Rocket_Think (void)
 {
@@ -238,16 +207,21 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if (self.health <= 0)
 		return;
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
 }
 
 void W_Rocket_Attack (void)
 {
-	local entity missile;
-	local entity flash;
+	entity missile;
+	entity flash;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo);
 
@@ -270,6 +244,7 @@ void W_Rocket_Attack (void)
 	missile.damageforcescale = autocvar_g_balance_rocketlauncher_damageforcescale;
 	missile.health = autocvar_g_balance_rocketlauncher_health;
 	missile.event_damage = W_Rocket_Damage;
+	missile.damagedbycontents = TRUE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -285,6 +260,7 @@ void W_Rocket_Attack (void)
 	missile.nextthink = time;
 	missile.cnt = time + autocvar_g_balance_rocketlauncher_lifetime;
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
 
 	CSQCProjectile(missile, autocvar_g_balance_rocketlauncher_guiderate == 0 && autocvar_g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE); // because of fly sound
 
@@ -314,9 +290,9 @@ float w_rlauncher(float req)
 		if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 		{
 			// decide whether to detonate rockets
-			local entity missile, targetlist, targ;
-			local float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
-			local float selfdamage, teamdamage, enemydamage;
+			entity missile, targetlist, targ;
+			float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+			float selfdamage, teamdamage, enemydamage;
 			edgedamage = autocvar_g_balance_rocketlauncher_edgedamage;
 			coredamage = autocvar_g_balance_rocketlauncher_damage;
 			edgeradius = autocvar_g_balance_rocketlauncher_radius;
@@ -349,7 +325,7 @@ float w_rlauncher(float req)
 				}
 				missile = find(missile, classname, "rocket");
 			}
-			local float desirabledamage;
+			float desirabledamage;
 			desirabledamage = enemydamage;
 			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
@@ -378,11 +354,11 @@ float w_rlauncher(float req)
 						targ = targ.chain;
 					}
 				}else{
-					local float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+					float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
 					if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
@@ -459,9 +435,10 @@ float w_rlauncher(float req)
 		// don't switch while guiding a missile
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
 		{
+			ammo_amount = FALSE;
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
-				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.(weapon_load[WEP_ROCKET_LAUNCHER]) < autocvar_g_balance_rocketlauncher_ammo)
 					ammo_amount = TRUE;
 			}
 			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
@@ -479,8 +456,19 @@ float w_rlauncher(float req)
 	{
 		W_Reload(autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_ROCKETLAUNCHER_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+			return WEAPON_ROCKETLAUNCHER_MURDER_SPLASH;
+		else
+			return WEAPON_ROCKETLAUNCHER_MURDER_DIRECT;
+	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rlauncher(float req)
@@ -496,17 +484,6 @@ float w_rlauncher(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/rocket_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s exploded");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s got too close to %s's rocket");
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s almost dodged %s's rocket");
-		else
-			w_deathtypestring = _("%s ate %s's rocket");
 	}
 	return TRUE;
 }

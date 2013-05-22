@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", _("Mortar"))
+REGISTER_WEAPON(
+/* WEP_##id  */ GRENADE_LAUNCHER,
+/* function  */ w_glauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "gl",
+/* shortname */ "grenadelauncher",
+/* fullname  */ _("Mortar")
+);
 #else
 #ifdef SVQC
 .float gl_detonate_later;
@@ -8,13 +18,13 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -28,13 +38,13 @@ void W_Grenade_Explode (void)
 void W_Grenade_Explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -49,11 +59,14 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 {
 	if (self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
+	
 	if (self.health <= 0)
-	{
-		W_PrepareExplosionByDamage(attacker, self.think);
-	}
+		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
 void W_Grenade_Think1 (void)
@@ -164,7 +177,7 @@ void W_Grenade_Touch2 (void)
 
 void W_Grenade_Attack (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 
@@ -196,6 +209,8 @@ void W_Grenade_Attack (void)
 	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -211,7 +226,7 @@ void W_Grenade_Attack (void)
 
 void W_Grenade_Attack2 (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_secondary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 
@@ -242,6 +257,8 @@ void W_Grenade_Attack2 (void)
 	gren.health = autocvar_g_balance_grenadelauncher_secondary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -346,21 +363,35 @@ float w_glauncher(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_SUICIDE_BOUNCE;
+		else
+			return WEAPON_MORTAR_SUICIDE_EXPLODE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_MURDER_BOUNCE;
+		else
+			return WEAPON_MORTAR_MURDER_EXPLODE;
+	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_glauncher(float req)
@@ -376,23 +407,6 @@ float w_glauncher(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/grenade_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s tried out his own grenade");
-		else
-			w_deathtypestring = _("%s detonated");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SPLASH)
-			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = _("%s didn't see %s's grenade");
-			else // unchecked: SECONDARY
-				w_deathtypestring = _("%s almost dodged %s's grenade");
-		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = _("%s ate %s's grenade");
 	}
 	return TRUE;
 }

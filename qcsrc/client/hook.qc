@@ -4,7 +4,7 @@
 .float HookSilent;
 .float HookRange;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector vieworg)
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
@@ -24,10 +24,10 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	D = to - thickdir * (thickness / 2);
 
 	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
+	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
 	R_EndPolygon();
 }
 
@@ -129,22 +129,22 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			intensity = 1;
 			offset = 0;
-			if(t == COLOR_TEAM1)
+			if(t == NUM_TEAM_1)
 			{
 				tex = "particles/hook_red";
 				rgb = '1 .3 .3';
 			}
-			else if(t == COLOR_TEAM2)
+			else if(t == NUM_TEAM_2)
 			{
 				tex = "particles/hook_blue";
 				rgb = '.3 .3 1';
 			}
-			else if(t == COLOR_TEAM3)
+			else if(t == NUM_TEAM_3)
 			{
 				tex = "particles/hook_yellow";
 				rgb = '1 1 .3';
 			}
-			else if(t == COLOR_TEAM4)
+			else if(t == NUM_TEAM_4)
 			{
 				tex = "particles/hook_pink";
 				rgb = '1 .3 1';
@@ -226,7 +226,7 @@ void Ent_ReadHook(float bIsNew, float type)
 	sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
-	self.iflags = IFLAG_VELOCITY;
+	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
 	InterpolateOrigin_Undo();
 

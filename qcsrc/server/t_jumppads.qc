@@ -2,6 +2,7 @@ float PUSH_ONCE			= 1;
 float PUSH_SILENT		= 2;
 
 .float pushltime;
+.float istypefrag;
 .float height;
 
 void() SUB_UseTargets;
@@ -30,12 +31,14 @@ void trigger_push_use()
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 {
-	local float grav, sdist, zdist, vs, vz, jumpheight;
-	local vector sdir, torg;
+	float grav, sdist, zdist, vs, vz, jumpheight;
+	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
 	grav = autocvar_sv_gravity;
+	if(other.gravity)
+		grav *= other.gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -127,8 +130,6 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
-	vector move;
-
 	if (self.active == ACTIVE_NOT)
 		return;
 
@@ -165,7 +166,7 @@ void trigger_push_touch()
 
 	other.flags &~= FL_ONGROUND;
 
-	if (other.classname == "player")
+	if (IS_PLAYER(other))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
@@ -177,12 +178,10 @@ void trigger_push_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		local float ct;
-		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
+		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
-			local float i;
-			local float found;
+			float i;
+			float found;
 			found = FALSE;
 			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
@@ -193,19 +192,23 @@ void trigger_push_touch()
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
-			if(ct == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(other))
 			{
 				if(self.message)
 					centerprint(other, self.message);
 			}
 			else
 				other.lastteleporttime = time;
+
+			if (other.deadflag == DEAD_NO)
+				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
 		}
 		else
 			other.jumppadcount = TRUE;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
+		other.istypefrag = 0;
 	}
 
 	if(self.enemy.target)
@@ -237,18 +240,17 @@ void trigger_push_touch()
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}
-};
+}
 
 .vector dest;
 void trigger_push_findtarget()
 {
-	local entity e, t;
-	local vector org;
-	local float flighttime;
+	entity e, t;
+	vector org;
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
@@ -280,7 +282,7 @@ void trigger_push_findtarget()
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			self.enemy = find(e, targetname, self.target);
+			self.enemy = find(world, targetname, self.target);
 		}
 		else
 		{
@@ -298,7 +300,7 @@ void trigger_push_findtarget()
 		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		remove(e);
 	}
-};
+}
 
 /*
  * ENTITY PARAMETERS:
@@ -333,8 +335,8 @@ void spawnfunc_trigger_push()
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
-};
+}
 
-void spawnfunc_target_push() {};
-void spawnfunc_info_notnull() {};
-void spawnfunc_target_position() {};
+void spawnfunc_target_push() {}
+void spawnfunc_info_notnull() {}
+void spawnfunc_target_position() {}

@@ -52,8 +52,8 @@ void new_te_bloodshower (float ef, vector org, float explosionspeed, float howma
 {
 	float i, pmod;
 	pmod = autocvar_cl_particles_quality;
-	for (i = 0; i < 250 * pmod; ++i)
-		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
+	for (i = 0; i < 50 * pmod; ++i)
+		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
 void SUB_RemoveOnNoImpact()
@@ -89,11 +89,17 @@ void Gib_Draw()
 		return;
 
 	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+		// TODO somehow make it spray in a direction dependent on self.angles
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_SLIGHTBLOOD")), oldorg, self.origin);
 	else
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
 
 	self.renderflags = 0;
+
+	// make gibs die faster at low view quality
+	// if view_quality is 0.5, we want to have them die twice as fast
+	self.nextthink -= frametime * (1 / bound(0.01, view_quality, 1.00) - 1);
+
 	self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
@@ -109,6 +115,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	// TODO remove some gibs according to cl_nogibs
 	gib = RubbleNew("gib");
+	gib.classname = "gib";
 	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
@@ -131,9 +138,10 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 		org = trace_endpos;
 	}
 
-	gib.move_origin = gib.origin = org;
+	gib.move_origin = org;
+	setorigin(gib, org);
 	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
-	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity);
+	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
 	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 
@@ -149,7 +157,7 @@ void Ent_GibSplash(float isNew)
 	vector org, vel;
 	string specstr;
 	float issilent;
-	string gentle_prefix;
+	string gentle_prefix = "morphed_";
 
 	float c, randomvalue;
 
@@ -170,8 +178,6 @@ void Ent_GibSplash(float isNew)
 			gentle_prefix = "";
 		else if(cl_gentle_gibs == 3) 
 			gentle_prefix = "happy_";
-		else
-			gentle_prefix = "morphed_";
 	}
 	else if(autocvar_cl_particlegibs)
 	{
@@ -188,7 +194,7 @@ void Ent_GibSplash(float isNew)
 	if(amount <= 0 || !isNew)
 		return;
 
-	self.origin = org; // for the sounds
+	setorigin(self, org); // for the sounds
 
 	specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
 	issilent = (type & 0x40);

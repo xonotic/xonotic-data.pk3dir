@@ -29,12 +29,12 @@ void trigger_teleport_use()
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (player.classname == "player" && player.health >= 1)
+	if (IS_PLAYER(player) && player.health >= 1)
 	{
 		TDEATHLOOP(org)
 		{
 			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
-				if(head.classname == "player")
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						return 1;
 		}
@@ -46,11 +46,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (player.classname == "player" && player.health >= 1)
+		if (IS_PLAYER(player) && player.health >= 1)
 		{
 			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
-				if(head.classname == "player")
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
 				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
@@ -75,6 +75,11 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_WARPZONE   0
 #define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
+
+// types for .teleportable entity setting
+#define TELEPORT_NORMAL 1 // play sounds/effects etc
+#define TELEPORT_SIMPLE 2 // only do teleport, nothing special
+
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -87,7 +92,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	makevectors (to_angles);
 
-	if(player.classname == "player") // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
+	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
@@ -114,7 +119,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	UpdateCSQCProjectileAfterTeleport(player);
 
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
 			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
@@ -131,24 +136,30 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		{
 			player.pusher = teleporter.owner;
 			player.pushltime = time + autocvar_g_maxpushtime;
+			player.istypefrag = player.BUTTON_CHAT;
 		}
 		else
 		{
 			player.pushltime = 0;
+			player.istypefrag = 0;
 		}
 
 		player.lastteleporttime = time;
 	}
 }
 
-void Simple_TeleportPlayer(entity teleporter, entity player)
+entity Simple_TeleportPlayer(entity teleporter, entity player)
 {
 	vector locout;
 	entity e;
 	float p;
 	
 	// Find the output teleporter
-	if(!teleporter.enemy)
+	if(teleporter.enemy)
+	{
+		e = teleporter.enemy;
+	}
+	else
 	{ 
 		RandomSelection_Init();
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
@@ -162,23 +173,25 @@ void Simple_TeleportPlayer(entity teleporter, entity player)
 			}
 			RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), p);
 		}
-		teleporter.enemy = RandomSelection_chosen_ent;
+		e = RandomSelection_chosen_ent;
 	}
 
-	if(!teleporter.enemy) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
+	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
 	
-	makevectors(teleporter.enemy.mangle);
+	makevectors(e.mangle);
 
-	if(teleporter.enemy.speed)
-		if(vlen(player.velocity) > teleporter.enemy.speed)
-			player.velocity = normalize(player.velocity) * max(0, teleporter.enemy.speed);
+	if(e.speed)
+		if(vlen(player.velocity) > e.speed)
+			player.velocity = normalize(player.velocity) * max(0, e.speed);
 			
 	if(autocvar_g_teleport_maxspeed)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
-	locout = teleporter.enemy.origin + '0 0 1' * (1 - player.mins_z - 24);
-	TeleportPlayer(teleporter, player, locout, teleporter.enemy.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+	locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+
+	return e;
 }
 
 void Teleport_Touch (void)
@@ -189,15 +202,17 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if not(other.iscreature)
-	if (other.deadflag != DEAD_NO)
+	if not(other.teleportable)
 		return;
-
-	// for gameplay: vehicles can't teleport
-	if (other.vehicle_flags & VHF_ISVEHICLE)
+    
+	if(other.vehicle)
+	if(!other.vehicle.teleportable)
 		return;
-
-	if (other.deadflag != DEAD_NO)
+			
+	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+		return;
+        
+	if(other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
@@ -206,10 +221,11 @@ void Teleport_Touch (void)
 
 	EXACTTRIGGER_TOUCH;
 
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
 		
-	Simple_TeleportPlayer(self, other);
+	entity e;
+	e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
@@ -217,7 +233,7 @@ void Teleport_Touch (void)
 	if not(self.target) self.target = s;
 
 	oldself = self;
-	self = self.enemy;
+	self = e;
 	SUB_UseTargets();
 	self = oldself;
 }
@@ -309,7 +325,7 @@ void spawnfunc_trigger_teleport (void)
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (!self.target)
+	if (self.target == "")
 	{
 		objerror ("Teleporter with no target");
 		return;
@@ -323,9 +339,14 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
 	// "disown" projectiles after teleport
+	if(pl.owner)
 	if(pl.owner == pl.realowner)
+	{
+		if(!(pl.flags & FL_PROJECTILE))
+			print("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
-	if(pl.classname == "player")
+	}
+	if(IS_PLAYER(pl))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		pl.oldvelocity = pl.velocity;

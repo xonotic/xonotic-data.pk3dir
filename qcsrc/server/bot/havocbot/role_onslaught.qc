@@ -27,18 +27,19 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 
 void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local float t, i, c, needarmor, needweapons;
+	entity head;
+	float t, i, c, needarmor = FALSE, needweapons = FALSE;
 
 	// Needs armor/health?
 	if(self.health<100)
 		needarmor = TRUE;
 
 	// Needs weapons?
+	c = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(power2of(i-1) & self.weapons)
+		if(WEPSET_CONTAINS_EW(self, i))
 		if(++c>=4)
 			break;
 	}
@@ -58,7 +59,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	{
 		// gather health and armor only
 		if (head.solid)
-		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
+		if ( ((head.health || head.armorvalue) && needarmor) || (!WEPSET_EMPTY_E(head) && needweapons ) )
 		if (vlen(head.origin - org) < sradius)
 		{
 			t = head.bot_pickupevalfunc(self, head);
@@ -67,7 +68,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 		}
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_role_ons_setrole(entity bot, float role)
 {
@@ -94,12 +95,12 @@ void havocbot_role_ons_setrole(entity bot, float role)
 			break;
 	}
 	dprint("\n");
-};
+}
 
 float havocbot_ons_teamcount(entity bot, float role)
 {
-	local float c;
-	local entity head;
+	float c = 0;
+	entity head;
 
 	FOR_EACH_PLAYER(head)
 	if(head.team==self.team)
@@ -107,7 +108,7 @@ float havocbot_ons_teamcount(entity bot, float role)
 		++c;
 
 	return c;
-};
+}
 
 void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 {
@@ -126,12 +127,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 		{
 			if( (cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) && !(cp2.isgenneighbor_red || cp2.iscpneighbor_red) )
 				continue;
 		}
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == NUM_TEAM_2)
 		{
 			if( (cp2.isgenneighbor_red || cp2.iscpneighbor_red) && !(cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) )
 				continue;
@@ -152,6 +153,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 	// We'll consider only the best case
 	bestvalue = 99999999999;
+	cp = world;
 	for (; cp1; cp1 = cp1.chain)
 	{
 		if not(cp1.wpconsidered)
@@ -215,6 +217,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	{
 		// Should be touched
 		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
+		found = FALSE;
 
 		// Look for auto generated waypoint
 		if not(bot_waypoints_for_items)
@@ -231,12 +234,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		if not(found)
 			navigation_routerating(cp, ratingscale, 10000);
 	}
-};
+}
 
 float havocbot_goalrating_ons_generator_attack(float ratingscale)
 {
-	local entity g, wp, bestwp;
-	local float found, best;
+	entity g, wp, bestwp;
+	float found, best;
 
 	for (g = findchain(classname, "onslaught_generator"); g; g = g.chain)
 	{
@@ -286,7 +289,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 		}
 	}
 	return FALSE;
-};
+}
 
 void havocbot_role_ons_offense()
 {
@@ -321,22 +324,22 @@ void havocbot_role_ons_offense()
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
-};
+}
 
 void havocbot_role_ons_assistant()
 {
 	havocbot_ons_reset_role(self);
-};
+}
 
 void havocbot_role_ons_defense()
 {
 	havocbot_ons_reset_role(self);
-};
+}
 
 void havocbot_ons_reset_role(entity bot)
 {
-	local entity head;
-	local float c;
+	entity head;
+	float c;
 
 	if(self.deadflag != DEAD_NO)
 		return;
@@ -358,9 +361,9 @@ void havocbot_ons_reset_role(entity bot)
 	}
 
 	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
-};
+}
 
 void havocbot_chooserole_ons()
 {
 	havocbot_ons_reset_role(self);
-};
+}

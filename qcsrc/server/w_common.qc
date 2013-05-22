@@ -1,23 +1,18 @@
 
-void W_GiveWeapon (entity e, float wep, string name)
+void W_GiveWeapon (entity e, float wep)
 {
 	entity oldself;
 
 	if (!wep)
 		return;
 
-	e.weapons = e.weapons | W_WeaponBit(wep);
+	WEPSET_OR_EW(e, wep);
 
 	oldself = self;
 	self = e;
 
-	if not(g_minstagib)
-	if (other.classname == "player")
-	{
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
-	}
+	if(IS_PLAYER(other))
+		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
 	self = oldself;
 }
@@ -26,9 +21,9 @@ void W_GiveWeapon (entity e, float wep, string name)
 .vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
-	local vector hitloc, force, endpoint, dir;
-	local entity ent, endent;
-	local float endq3surfaceflags;
+	vector hitloc, force, endpoint, dir;
+	entity ent, endent;
+	float endq3surfaceflags;
 	float totaldmg;
 	entity o;
 
@@ -37,6 +32,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	string snd;
 	entity pseudoprojectile;
 	float f, ffs;
+
+	pseudoprojectile = world;
 
 	railgun_start = start;
 	railgun_end = end;
@@ -65,6 +62,9 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			o = world;
 			continue;
 		}
+
+		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, self);
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -104,7 +104,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
 	{
-		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
+		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(IS_SPEC(msg_entity) && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
 		{
 			// nearest point on the beam
 			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
@@ -162,10 +162,10 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	trace_dphitq3surfaceflags = endq3surfaceflags;
 }
 
-.float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
 .float dmg_total;
+//.float last_yoda;
 void W_BallisticBullet_Hit (void)
 {
 	float f, q, g;
@@ -173,31 +173,24 @@ void W_BallisticBullet_Hit (void)
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 	q = 1 + self.dmg_edge / self.dmg;
 
-	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
+	if(other.solid == SOLID_BSP || other.solid == SOLID_SLIDEBOX)
+		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, other.species, self);
 
 	if(other && other != self.enemy)
 	{
 		endzcurveparticles();
 
-		headshot = 0;
 		yoda = 0;
-		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
 		g = accuracy_isgooddamage(self.realowner, other);
 		Damage(other, self, self.realowner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
-		damage_headshotbonus = 0;
 
-		if(headshot)
-			f *= q;
-		if(self.dmg_edge > 0)
+		/*if(yoda && (time > (self.last_yoda + 5)))
 		{
-			if(headshot)
-				AnnounceTo(self.realowner, "headshot");
-			if(yoda)
-				AnnounceTo(self.realowner, "awesome");
-		}
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+			self.last_yoda = time; 
+		}*/
 
 		// calculate hits for ballistic weapons
 		if(g)
@@ -224,7 +217,7 @@ void W_BallisticBullet_LeaveSolid_think()
 
 	self.think = self.W_BallisticBullet_LeaveSolid_think_save;
 	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
-	self.W_BallisticBullet_LeaveSolid_think_save = SUB_Null;
+	self.W_BallisticBullet_LeaveSolid_think_save = func_null;
 
 	self.flags &~= FL_ONGROUND;
 
@@ -232,37 +225,64 @@ void W_BallisticBullet_LeaveSolid_think()
 	{
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-		Damage_DamageInfo(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
+		Damage_DamageInfo(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, 0, self);
 	}
 
 	UpdateCSQCProjectile(self);
 }
 
-float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
+float W_BallisticBullet_LeaveSolid(float eff)
 {
 	// move the entity along its velocity until it's out of solid, then let it resume
-
+	vector vel = self.velocity;
 	float dt, dst, velfactor, v0, vs;
 	float maxdist;
 	float E0_m, Es_m;
+	float constant = self.dmg_radius * (other.ballistics_density ? other.ballistics_density : 1);
 
 	// outside the world? forget it
 	if(self.origin_x > world.maxs_x || self.origin_y > world.maxs_y || self.origin_z > world.maxs_z || self.origin_x < world.mins_x || self.origin_y < world.mins_y || self.origin_z < world.mins_z)
 		return 0;
 
+	// special case for zero density and zero bullet constant: 
+
+	if(self.dmg_radius == 0)
+	{
+		if(other.ballistics_density < 0)
+			constant = 0; // infinite travel distance
+		else
+			return 0; // no penetration
+	}
+	else
+	{
+		if(other.ballistics_density < 0)
+			constant = 0; // infinite travel distance
+		else if(other.ballistics_density == 0)
+			constant = self.dmg_radius;
+		else
+			constant = self.dmg_radius * other.ballistics_density;
+	}
+
 	// E(s) = E0 - constant * s, constant = area of bullet circle * material constant / mass
 	v0 = vlen(vel);
 
 	E0_m = 0.5 * v0 * v0;
-	maxdist = E0_m / constant;
-	// maxdist = 0.5 * v0 * v0 / constant
-	// dprint("max dist = ", ftos(maxdist), "\n");
 
-	if(maxdist <= autocvar_g_ballistics_mindistance)
-		return 0;
+	if(constant)
+	{
+		maxdist = E0_m / constant;
+		// maxdist = 0.5 * v0 * v0 / constant
+		// dprint("max dist = ", ftos(maxdist), "\n");
 
-	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
+		if(maxdist <= autocvar_g_ballistics_mindistance)
+			return 0;
+	}
+	else
+	{
+		maxdist = vlen(other.maxs - other.mins) + 1; // any distance, as long as we leave the entity
+	}
 
+	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self, TRUE);
 	if(trace_fraction == 1) // 1: we never got out of solid
 		return 0;
 
@@ -295,18 +315,31 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	self.flags |= FL_ONGROUND; // prevent moving
 	self.W_BallisticBullet_LeaveSolid_velocity = vel;
 
+	if(eff >= 0)
+		if(vlen(trace_endpos - self.origin) > 4)
+		{
+			endzcurveparticles();
+			trailparticles(self, eff, self.origin, trace_endpos);
+		}
+
 	return 1;
 }
 
 void W_BallisticBullet_Touch (void)
 {
-	float density;
+	//float density;
 
 	if(self.think == W_BallisticBullet_LeaveSolid_think) // skip this!
 		return;
 
 	PROJECTILE_TOUCH;
 	W_BallisticBullet_Hit ();
+
+	if(self.dmg_radius < 0) // these NEVER penetrate solid
+	{
+		remove(self);
+		return;
+	}
 
 	// if we hit "weapclip", bail out
 	//
@@ -328,12 +361,8 @@ void W_BallisticBullet_Touch (void)
 		return;
 	}
 
-	density = other.ballistics_density;
-	if(density == 0)
-		density = 1;
-
 	// go through solid!
-	if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
+	if(!W_BallisticBullet_LeaveSolid(-1))
 	{
 		remove(self);
 		return;
@@ -353,11 +382,13 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
 		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+	WarpZone_trace_forent = world;
+	self.owner = world;
 }
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt, savetime, density;
+	float lag, dt, savetime; //, density;
 	entity pl, oldself;
 	float antilagging;
 
@@ -379,14 +410,18 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
-	proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
+	if(bulletconstant > 0)
+		proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
+	else if(bulletconstant == 0)
+		proj.dmg_radius = 0;
+	else
+		proj.dmg_radius = -1;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
 	proj.flags = FL_PROJECTILE;
 
 	proj.touch = W_BallisticBullet_Touch;
 	proj.dmg = damage;
-	proj.dmg_edge = headshotbonus;
 	proj.dmg_force = force;
 	proj.projectiledeathtype = dtype;
 
@@ -409,14 +444,15 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		lag = ANTILAG_LATENCY(self);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(self) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(self))
 			lag = 0;
 		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 			lag = 0; // only do hitscan, but no antilag
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_takeback(pl, time - lag);
+				if(pl != self)
+					antilag_takeback(pl, time - lag);
 
 		oldself = self;
 		self = proj;
@@ -438,15 +474,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			trace_fraction = 0;
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = eff;
-			// FIXME can we somehow do this with just ONE trace?
-			WarpZone_TraceToss(self, self.owner);
-			if(self.owner && WarpZone_trace_firstzone)
-			{
-				self.owner = world;
-				self.velocity = v0;
-				self.gravity = g0;
-				continue;
-			}
 			WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
 			self.velocity = v0;
 			self.gravity = g0;
@@ -471,6 +498,9 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				W_BallisticBullet_Hit();
 			}
 
+			if(proj.dmg_radius < 0) // these NEVER penetrate solid
+				break;
+
 			// if we hit "weapclip", bail out
 			//
 			// rationale of this check:
@@ -488,22 +518,21 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
 				break;
 
-			density = other.ballistics_density;
-			if(density == 0)
-				density = 1;
-
 			// go through solid!
-			if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
+			if(!W_BallisticBullet_LeaveSolid((other && (other.solid != SOLID_BSP)) ? eff : -1))
 				break;
 
 			W_BallisticBullet_LeaveSolid_think();
+
+			self.projectiledeathtype |= HITTYPE_BOUNCE;
 		}
 		frametime = savetime;
 		self = oldself;
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_restore(pl);
+				if(pl != self)
+					antilag_restore(pl);
 
 		remove(proj);
 
@@ -531,23 +560,69 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 
 	end = trace_endpos;
 
-	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
+	if (pointcontents (trace_endpos) != CONTENT_SKY)
 	{
 		if not (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);                    
+			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, trace_ent.species, self);                    
 
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
 	}
 	trace_endpos = end;
 }
 
+float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
+{
+	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
+	float is_from_owner = (inflictor == projowner);
+	float is_from_exception = (exception != -1);
+	
+	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+
+	if(autocvar_g_projectiles_damage <= -2)
+	{
+		return FALSE; // no damage to projectiles at all, not even with the exceptions
+	}
+	else if(autocvar_g_projectiles_damage == -1)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else
+			return FALSE; // otherwise, no other damage is allowed
+	}
+	else if(autocvar_g_projectiles_damage == 0)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents)
+			return FALSE; // otherwise, only allow damage from contents
+	}	
+	else if(autocvar_g_projectiles_damage == 1)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents || is_from_owner)
+			return FALSE; // otherwise, only allow self damage and damage from contents
+	}
+	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+	}
+
+	return TRUE; // if none of these return, then allow damage anyway.
+}
+
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
-	self.owner = attacker;
-	self.realowner = attacker;
-
+	self.event_damage = func_null;
+	
+	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
+	{
+		self.owner = attacker;
+		self.realowner = attacker;
+	}
+	
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;

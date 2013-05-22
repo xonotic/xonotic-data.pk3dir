@@ -4,10 +4,6 @@
 .float trail_oldtime;
 .float fade_time, fade_rate;
 
-void SUB_Null()
-{
-}
-
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
@@ -20,7 +16,6 @@ void SUB_Stop()
 .float gravity;
 .float snd_looping;
 .float silent;
-.float traileffect;
 
 void Projectile_ResetTrail(vector to)
 {
@@ -75,7 +70,7 @@ void Projectile_Draw()
 			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 		if(!(self.move_flags & FL_ONGROUND))
 			if(self.velocity != '0 0 0')
-				self.angles = vectoangles(self.velocity);
+				self.move_angles = self.angles = vectoangles(self.velocity);
 	}
 	else
 	{
@@ -150,7 +145,7 @@ void Projectile_Draw()
 	{
 		case PROJECTILE_BULLET_GLOWING:
 		case PROJECTILE_BULLET_GLOWING_TRACER:
-			R_AddDynamicLight(self.origin, 50 * a, '1 1 0');
+			adddynamiclight(self.origin, 50 * a, '1 1 0');
 			break;
 		default:
 			break;
@@ -165,14 +160,11 @@ void loopsound(entity e, float ch, string samp, float vol, float attn)
 		return;
 
 	sound(e, ch, samp, vol, attn);
-	e.snd_looping = 1;
+	e.snd_looping = ch;
 }
 
 void Ent_RemoveProjectile()
 {
-	if(self.snd_looping)
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-
 	if(self.count & 0x80)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);
@@ -200,7 +192,7 @@ void Ent_Projectile()
 
 	f = ReadByte();
 	self.count = (f & 0x80);
-	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
+	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
 	//self.effects = EF_NOMODELFLAGS;
 
@@ -230,6 +222,7 @@ void Ent_Projectile()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 		if(self.count & 0x80)
 		{
 			self.velocity_x = ReadCoord();
@@ -283,14 +276,14 @@ void Ent_Projectile()
 			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
 			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
 			case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
 			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
-			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("TR_GRENADE"); self.scale = 0.4; break;
-			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("TR_GRENADE"); self.scale = 0.4; break;
+			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
+			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
@@ -304,6 +297,10 @@ void Ent_Projectile()
 			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
 			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
 			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
+
+			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -324,7 +321,7 @@ void Ent_Projectile()
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
@@ -341,7 +338,7 @@ void Ent_Projectile()
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
@@ -353,21 +350,21 @@ void Ent_Projectile()
 				self.colormod = '2 1 1';
 				self.alphamod = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				self.colormod = '1 1 2';
 				self.alphamod = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
@@ -377,7 +374,7 @@ void Ent_Projectile()
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -407,12 +404,25 @@ void Ent_Projectile()
 				break;
             case PROJECTILE_WAKIROCKET:
                 loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
-				break;
+				break;            
+            /*
             case PROJECTILE_WAKICANNON:
 				break;
+			case PROJECTILE_BUMBLE_GUN:
+				// only new engines support sound moving with object
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				self.mins = '0 0 -4';
+				self.maxs = '0 0 -4';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
+				break;
+			*/
 			default:
 				break;
 		}
+		setsize(self, self.mins, self.maxs);
 	}
 
 	if(self.gravity)

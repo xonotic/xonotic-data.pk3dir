@@ -11,10 +11,13 @@ float draw_alpha;
 vector draw_fontscale;
 
 void draw_reset(float cw, float ch, float ox, float oy);
+void draw_beginBoldFont();
+void draw_endBoldFont();
 void draw_setMousePointer(string pic, vector theSize, vector theOffset);
 void draw_drawMousePointer(vector where);
 
-void draw_PreloadPicture(string pic);
+string draw_PreloadPicture(string pic);
+string draw_PreloadPictureWithFlags(string pic, float f);
 void draw_ButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
 void draw_VertButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
 void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize);
@@ -37,8 +40,6 @@ vector globalToBox(vector v, vector shift, vector scale);
 vector globalToBoxSize(vector v, vector scale);
 
 float draw_NeedResizeNotify;
-
-string draw_currentSkin;
 
 float draw_TextWidth_WithColors(string s, vector size);
 float draw_TextWidth_WithoutColors(string s, vector size);

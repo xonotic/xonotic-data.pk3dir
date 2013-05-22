@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HLAC,
+/* function  */ w_hlac,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "hlac",
+/* shortname */ "hlac",
+/* fullname  */ _("Heavy Laser Assault Cannon")
+);
 #else
 #ifdef SVQC
 
@@ -7,7 +17,7 @@ void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
@@ -19,7 +29,7 @@ void W_HLAC_Touch (void)
 
 void W_HLAC_Attack (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_reload_ammo);
@@ -68,7 +78,7 @@ void W_HLAC_Attack (void)
 
 void W_HLAC_Attack2f (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
     spread = autocvar_g_balance_hlac_secondary_spread;
@@ -102,6 +112,7 @@ void W_HLAC_Attack2f (void)
     missile.nextthink = time + autocvar_g_balance_hlac_secondary_lifetime;
 
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
@@ -153,7 +164,7 @@ void HLAC_fire1_02()
 	{
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_animtime, w_ready);
 	}
-};
+}
 
 void spawnfunc_weapon_hlac (void)
 {
@@ -205,21 +216,29 @@ float w_hlac(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_HLAC_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_HLAC_MURDER;
+	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hlac(float req)
@@ -236,10 +255,6 @@ float w_hlac(float req)
 	{
 		precache_sound("weapons/laserimpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s should have used a smaller gun");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was cut down by %s");
 	return TRUE;
 }
 #endif

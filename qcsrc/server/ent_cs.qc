@@ -18,7 +18,7 @@
 void entcs_init()
 {
 	print("Initializing ClientSide information entities\n");
-};
+}
 
 float entcs_customize()
 {
@@ -26,11 +26,11 @@ float entcs_customize()
 	o = self.owner;
 	if(o.deadflag != DEAD_NO)
 		return FALSE;
-	if(o.classname != "player")
+	if not(IS_PLAYER(o))
 		return FALSE;
 	if(other == o)
 		return FALSE;
-	if(other.classname == "player")
+	if((IS_PLAYER(other)) || other.caplayer)
 		if(!teamplay || o.team != other.team)
 			if not (radar_showennemies)
 				return FALSE;
@@ -56,7 +56,7 @@ float entcs_send(entity to, float sf)
 	if(sf & 16)
 		WriteByte(MSG_ENTITY, self.armorvalue / 10); // FIXME use a better scale?
 	return TRUE;
-};
+}
 
 void entcs_think()
 {
@@ -85,11 +85,11 @@ void entcs_think()
 		self.armorvalue = o.armorvalue;
 		self.SendFlags |= 16;
 	}
-};
+}
 
 entity attach_entcs()
 {
-	local entity ent;
+	entity ent;
 
 	ent = spawn();
 	ent.classname = "entcs_sender_v2";
@@ -103,10 +103,10 @@ entity attach_entcs()
 	self.entcs = ent;
 
 	return ent;
-};
+}
 
 void detach_entcs()
 {
 	remove(self.entcs);
 	self.entcs = world;
-};
+}

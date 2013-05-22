@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", _("Nex"))
+REGISTER_WEAPON(
+/* WEP_##id  */ NEX,
+/* function  */ w_nex,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "nex",
+/* shortname */ "nex",
+/* fullname  */ _("Nex")
+);
 #else
 #ifdef SVQC
 
@@ -66,14 +76,10 @@ void W_Nex_Attack (float issecondary)
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
 
 	if(yoda && flying)
-		AnnounceTo(self, "yoda");
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
 
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
-
-	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
 
 	W_DecreaseAmmo(ammo_cells, myammo, autocvar_g_balance_nex_reload_ammo);
 }
@@ -161,7 +167,7 @@ float w_nex(float req)
 										{
 											self.clip_load = max(autocvar_g_balance_nex_secondary_ammo, self.clip_load - autocvar_g_balance_nex_secondary_ammo * dt);
 										}
-										self.weapon_load[WEP_NEX] = self.clip_load;
+										self.(weapon_load[WEP_NEX]) = self.clip_load;
 									}
 									else
 									{
@@ -216,23 +222,37 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_primary_ammo;
-		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_primary_ammo);
+		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_primary_ammo);
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		// don't allow charging if we don't have enough ammo
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_secondary_ammo;
-		return ammo_amount;
+		if(autocvar_g_balance_nex_secondary)
+		{
+			// don't allow charging if we don't have enough ammo
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;	
+			return ammo_amount;
+		}
+		else
+		{
+			return FALSE; // zoom is not a fire mode
+		}
 	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
 	}
-
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_NEX_MURDER;
+	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_nex(float req)
@@ -249,10 +269,6 @@ float w_nex(float req)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;
 }
 #endif

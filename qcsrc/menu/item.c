@@ -44,8 +44,41 @@ void Item_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOr
 	me.size = absSize;
 }
 
+float autocvar_menu_showboxes;
 void Item_draw(entity me)
 {
+	if(autocvar_menu_showboxes)
+	{
+		vector rgb = '1 0 1';
+		float a = fabs(autocvar_menu_showboxes);
+
+		// don't draw containers and border images
+		if(me.instanceOfContainer || me.instanceOfBorderImage)
+		{
+			rgb = '0 0 0';
+			a = 0;
+		}
+
+#if 0
+		// hack to detect multi drawing
+		float r = random() * 3;
+		if(r >= 2)
+			rgb = '1 0 0';
+		else if(r >= 1)
+			rgb = '0 1 0';
+		else
+			rgb = '0 0 1';
+#endif
+		if(autocvar_menu_showboxes < 0)
+		{
+			draw_Fill('0 0 0', '0.5 0.5 0', rgb, a);
+			draw_Fill('0.5 0.5 0', '0.5 0.5 0', rgb, a);
+		}
+		if(autocvar_menu_showboxes > 0)
+		{
+			draw_Fill('0 0 0', '1 1 0', rgb, a);
+		}
+	}
 }
 
 void Item_showNotify(entity me)

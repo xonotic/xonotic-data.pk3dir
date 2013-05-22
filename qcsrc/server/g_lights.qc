@@ -34,10 +34,10 @@ void dynlight_think()
 		remove(self);
 
 	self.nextthink = time + 0.1;
-};
+}
 void dynlight_find_aiment()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 
@@ -50,10 +50,10 @@ void dynlight_find_aiment()
 	self.v_angle = self.angles - targ.angles;
 	self.think = dynlight_think;
 	self.nextthink = time + 0.1;
-};
+}
 void dynlight_find_path()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 
@@ -62,10 +62,10 @@ void dynlight_find_path()
 	setorigin (self, targ.origin);
 	self.think = train_next;
 	self.nextthink = time + 0.1;
-};
+}
 void dynlight_find_target()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 
@@ -81,7 +81,7 @@ void dynlight_use()
 		self.light_lev = self.lefty;
 	else
 		self.light_lev = 0;
-};
+}
 void spawnfunc_dynlight()
 {
 	local	entity	targ;
@@ -96,7 +96,7 @@ void spawnfunc_dynlight()
 	setorigin (self, self.origin);
 	//self.pflags = PFLAGS_FULLDYNAMIC;
 	self.solid = SOLID_NOT;
-	//self.blocked = SUB_Null;
+	//self.blocked = func_null;
 	//if (self.spawnflags & DNOSHADOW)
 	//	self.pflags = self.pflags + PFLAGS_NOSHADOW;
 	//if (self.spawnflags & START_OFF)
@@ -125,4 +125,4 @@ void spawnfunc_dynlight()
 		InitializeEntity(self, dynlight_find_path, INITPRIO_FINDTARGET);
 		return;
 	}
-};
+}
