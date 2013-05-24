@@ -1067,8 +1067,8 @@ void VoteCommand_(float request)
 void VoteCommand_macro_help(entity caller, float argc)
 {
 	string command_origin = GetCommandPrefix(caller);
-	
-	if(argc == 2) // help display listing all commands
+
+	if(argc == 2 || argv(2) == "help") // help display listing all commands
 	{
 		print_to(caller, "\nVoting commands:\n");
 		#define VOTE_COMMAND(name,function,description,assignment) \
