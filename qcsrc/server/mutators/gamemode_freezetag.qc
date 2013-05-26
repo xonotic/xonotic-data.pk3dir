@@ -519,7 +519,7 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 
 MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
 {
-	if(other.freezetag_frozen)
+	if(other.frozen)
 		return TRUE;
 		
 	return FALSE;
