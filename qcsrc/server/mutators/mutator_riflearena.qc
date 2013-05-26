@@ -9,6 +9,12 @@ float ra_CanThrowNade()
 	if(gameover)
 		return FALSE;
 		
+	if(self.deadflag)
+		return FALSE;
+		
+	if not(IS_PLAYER(self))
+		return FALSE;
+		
 	if not(autocvar_g_riflearena_nades)
 		return FALSE;
 		
