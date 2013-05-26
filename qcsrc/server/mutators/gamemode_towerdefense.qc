@@ -1,25 +1,3 @@
-float redalive, bluealive, total_alive;
-
-var float max_monsters = 20;
-var float max_alive = 10;
-
-float max_perteam;
-
-float total_killed;
-
-var float max_turrets = 10;
-
-.float turret_buff;
-
-.float newfuel; // hack to not give players fuel every time they spawn
-
-float last_check;
-
-.float turret_cnt;
-
-.float level;
-.float last_trace;
-
 void td_debug(string input)
 {
 	switch(autocvar_g_td_debug)
@@ -39,31 +17,85 @@ void td_waypoint_link(float tm, vector from, vector to)
 		case NUM_TEAM_2:
 			WarpZone_TrailParticles(world, particleeffectnum("waypoint_link_blue"), from, to);
 			break;
+		case NUM_TEAM_3:
+			WarpZone_TrailParticles(world, particleeffectnum("waypoint_link_yellow"), from, to);
+			break;
+		case NUM_TEAM_4:
+			WarpZone_TrailParticles(world, particleeffectnum("waypoint_link_pink"), from, to);
+			break;
 	}
 }
 
 void td_waypoint_think()
 {
+	entity e = world;
 	if(gameover)
 	{
 		remove(self);
 		return;
 	}
 	
+	if not(self.team)
+	{
+		e = find(world, target, self.targetname);
+		if(e)
+			self.team = e.team;
+	}
+	if not(self.team)
+	{
+		e = find(world, target2, self.targetname);
+		if(e)
+			self.team = e.team;
+	}
+	if not(self.team)
+	{
+		e = find(world, target3, self.targetname);
+		if(e)
+			self.team = e.team;
+	}
+	if not(self.team)
+	{
+		e = find(world, target4, self.targetname);
+		if(e)
+			self.team = e.team;
+	}
+	
+	if not(self.team)
+	{
+		td_debug("Tower Defense waypoint without a team, removing it.\n");
+		remove(self);
+		return;
+	}
+	
 	if(time >= self.last_trace)
 	{
-		entity e, e2, e3;
+		entity e;
 		
 		e = find(world, targetname, self.target);
-		e2 = find(world, target, self.targetname);
-		e3 = find(world, targetname, self.target2);
-		
 		if(e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
 			td_waypoint_link(self.team, self.origin, e.origin);
-		if(e2.classname == "td_spawnpoint")
-			td_waypoint_link(self.team, self.origin, e2.origin);
-		if(e3.classname == "td_waypoint" || e3.flags & FL_GENERATOR)
-			td_waypoint_link(self.team, self.origin, e3.origin);
+		e = find(world, targetname, self.target2);
+		if(e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		e = find(world, targetname, self.target3);
+		if(e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		e = find(world, targetname, self.target4);
+		if(e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+			
+		e = find(world, target, self.targetname);
+		if(e.classname == "td_spawnpoint" || e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		e = find(world, target2, self.targetname);
+		if(e.classname == "td_spawnpoint" || e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		e = find(world, target3, self.targetname);
+		if(e.classname == "td_spawnpoint" || e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
+		e = find(world, target4, self.targetname);
+		if(e.classname == "td_spawnpoint" || e.classname == "td_waypoint" || e.flags & FL_GENERATOR)
+			td_waypoint_link(self.team, self.origin, e.origin);
 		
 		self.last_trace = time + 0.5;
 	}
@@ -449,7 +481,7 @@ float TD_CheckTeams()
 	entity head;
 	float readycount = 0, num_players = 0, ready_needed_factor, ready_needed_count;
 	
-	FOR_EACH_PLAYER(head)
+	FOR_EACH_REALPLAYER(head)
 	{
 		++num_players;
 		if(head.ready)
@@ -501,12 +533,6 @@ void spawnfunc_td_generator()
 void spawnfunc_td_waypoint()
 {
 	if not(g_td) { remove(self); return; }
-	if not(self.team)
-	{
-		td_debug("Tower Defense waypoint without a team, removing it.\n");
-		remove(self);
-		return;
-	}
 	
 	setsize(self, '-6 -6 -6', '6 6 6');
 	
@@ -676,7 +702,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterThink)
 			return TRUE; // no generators or waypoints?!
 	}
 	
-	td_debug(sprintf("Monster target: %s. Monster target2: %s. Monster target entity: %s.\n", self.target, self.target2, etos(monster_target)));
+	td_debug(sprintf("Monster name: %s. Monster target: %s. Monster target2: %s. Monster target entity: %s.\n", self.netname, self.target, self.target2, etos(monster_target)));
 	
 	if(!self.enemy && !monster_target)
 		return TRUE; // no enemy or target, must be wandering
