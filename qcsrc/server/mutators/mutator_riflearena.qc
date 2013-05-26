@@ -218,7 +218,7 @@ MUTATOR_HOOKFUNCTION(ra_PlayerSpawn)
 	WEPSET_OR_EW(self, WEP_RIFLE);
 	WEPSET_OR_EW(self, WEP_LASER);
 	
-	self.ra_nade_refire = time + 1;
+	self.ra_nade_refire = time + 2;
 	
 	return FALSE;
 }
