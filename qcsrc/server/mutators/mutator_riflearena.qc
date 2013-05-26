@@ -199,6 +199,7 @@ MUTATOR_HOOKFUNCTION(ra_VehicleEnter)
 MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 {
 	if(IS_PLAYER(frag_attacker))
+	if(IS_PLAYER(frag_target))
 	{
 		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
 		{
