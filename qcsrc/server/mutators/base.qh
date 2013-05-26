@@ -319,6 +319,13 @@ MUTATOR_HOOKABLE(VehicleEnter);
 	entity vh_player; // player
 	entity vh_vehicle; // vehicle
 	
+MUTATOR_HOOKABLE(VehicleTouch);
+	// called when a player touches a vehicle
+	// return TRUE to stop player from entering the vehicle
+	// INPUT
+	entity self; // vehicle
+	entity other; // player
+	
 MUTATOR_HOOKABLE(VehicleExit);
 	// called when a player exits a vehicle
 	// allows mutators to set special settings in this event
