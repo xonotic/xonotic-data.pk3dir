@@ -784,7 +784,12 @@ void m_draw()
 
 	draw_alpha *= menuAlpha;
 
-	if(menuMouseMode)
+	if(!Menu_Active)
+	{
+		// do not update mouse position
+		// it prevents mouse jumping to '0 0 0' when menu is fading out
+	}
+	else if(menuMouseMode)
 	{
 		vector newMouse;
 		newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);
