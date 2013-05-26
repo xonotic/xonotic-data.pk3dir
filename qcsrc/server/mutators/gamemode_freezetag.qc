@@ -517,14 +517,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
-{
-	if(other.frozen)
-		return TRUE;
-		
-	return FALSE;
-}
-
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
@@ -552,7 +544,6 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
-	MUTATOR_HOOK(VehicleTouch, freezetag_VehicleTouch, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

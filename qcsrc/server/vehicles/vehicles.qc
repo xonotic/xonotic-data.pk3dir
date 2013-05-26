@@ -564,6 +564,9 @@ void vehicles_touch()
 
     if(other.deadflag != DEAD_NO)
         return;
+		
+	if(other.frozen)
+		return;
 
     if(other.vehicle != world)
         return;
