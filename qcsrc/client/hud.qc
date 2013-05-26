@@ -490,7 +490,6 @@ void HUD_Weapons(void)
 
 	// update generic hud functions
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -950,7 +949,6 @@ void HUD_Ammo(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -1157,7 +1155,6 @@ void HUD_Powerups(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -1389,7 +1386,6 @@ void HUD_HealthArmor(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1630,7 +1626,6 @@ void HUD_Notify(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1767,7 +1762,6 @@ void HUD_Timer(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -1835,7 +1829,6 @@ void HUD_Radar(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	float f = 0;
 
@@ -2127,7 +2120,6 @@ void HUD_Score(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2320,7 +2312,6 @@ void HUD_RaceTimer (void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -2521,7 +2512,6 @@ void HUD_Vote(void)
 		return;
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	if(uid2name_dialog)
 	{
@@ -3349,7 +3339,6 @@ void HUD_ModIcons(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -3391,7 +3380,6 @@ void HUD_PressedKeys(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3463,7 +3451,6 @@ void HUD_Chat(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
@@ -3537,7 +3524,6 @@ void HUD_EngineInfo(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3598,7 +3584,6 @@ void HUD_InfoMessages(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3787,7 +3772,6 @@ void HUD_Physics(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -4177,14 +4161,19 @@ void HUD_CenterPrint (void)
 		}
 	}
 
+	// this panel fades only when the menu does
+	float hud_fade_alpha_save = 0;
+	if(scoreboard_fade_alpha)
+	{
+		hud_fade_alpha_save = hud_fade_alpha;
+		hud_fade_alpha = 1 - autocvar__menu_alpha;
+	}
 	HUD_Panel_UpdateCvars();
-
-	// this panel doesn't fade when showing the scoreboard
-	if(autocvar__menu_alpha)
-		HUD_Panel_ApplyFadeAlpha();
 
 	if(scoreboard_fade_alpha)
 	{
+		hud_fade_alpha = hud_fade_alpha_save;
+
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
@@ -4383,7 +4372,7 @@ void HUD_Main (void)
 		hud_fade_alpha = 0;
 
 	// panels that we want to be active together with the scoreboard
-	// they must call HUD_Panel_ApplyFadeAlpha(); only when showing the menu
+	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
 		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
