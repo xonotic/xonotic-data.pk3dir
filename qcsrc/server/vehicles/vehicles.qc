@@ -46,7 +46,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
-    if (clienttype(own) != CLIENTTYPE_REAL)
+    if not(IS_REAL_CLIENT(own))
         return;
 
     entity axh;
@@ -101,7 +101,7 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 **/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
-    if (clienttype(own) != CLIENTTYPE_REAL)
+    if not(IS_REAL_CLIENT(own))
         return;
 	
 	msg_entity = own;
@@ -503,10 +503,10 @@ void vehicles_spawn()
 // Better way of determening whats crushable needed! (fl_crushable?)
 float vehicles_crushable(entity e)
 {
-    if(e.classname == "player")
+    if(IS_PLAYER(e))
         return TRUE;
 
-    if(e.classname == "monster_zombie")
+    if(e.flags & FL_MONSTER)
         return TRUE;
 
     return FALSE;
@@ -537,6 +537,9 @@ void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
 .void() vehicle_impact;
 void vehicles_touch()
 {
+	if(MUTATOR_CALLHOOK(VehicleTouch))
+		return;
+	
     // Vehicle currently in use
     if(self.owner)
     {
@@ -556,7 +559,7 @@ void vehicles_touch()
         return;
     }
 
-    if(other.classname != "player")
+    if not(IS_PLAYER(other))
         return;
 
     if(other.deadflag != DEAD_NO)
@@ -572,7 +575,7 @@ void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
    
-    if (clienttype(other) == CLIENTTYPE_BOT)    
+    if (IS_BOT_CLIENT(other))    
         if (autocvar_g_vehicles_allow_bots)
             dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
         else
@@ -634,7 +637,7 @@ void vehicles_enter()
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
     
-    if (clienttype(other) == CLIENTTYPE_REAL)
+    if (IS_REAL_CLIENT(other))
     {
         msg_entity = other;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
@@ -740,7 +743,7 @@ void vehicles_exit(float eject)
     }
     
     vehicles_exit_running = TRUE;
-    if(self.flags & FL_CLIENT)
+    if(IS_CLIENT(self))
     {
         _vehicle = self.vehicle;
             
@@ -761,7 +764,7 @@ void vehicles_exit(float eject)
 
     if (_player)
     {
-        if (clienttype(_player) == CLIENTTYPE_REAL)
+        if (IS_REAL_CLIENT(_player))
         {
             msg_entity = _player;
             WriteByte (MSG_ONE, SVC_SETVIEWPORT);
@@ -798,7 +801,6 @@ void vehicles_exit(float eject)
     
     if(!teamplay)
         _vehicle.team = 0;
-    else
 
     vh_player = _player;
     vh_vehicle = _vehicle;
@@ -1275,11 +1277,14 @@ float vehicle_initialize(string  net_name,
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
-    if(g_assault || !autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + 0.5;
+	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
+    if(!autocvar_g_vehicles_delayspawn)
+        self.nextthink = time + game_starttime;
     else
         self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 
+	if(autocvar_g_playerclip_collisions)
+		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
@@ -1315,6 +1320,9 @@ float vehicle_initialize(string  net_name,
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
+	
+	if(MUTATOR_CALLHOOK(VehicleSpawn))
+		return FALSE;
 
     return TRUE;
 }

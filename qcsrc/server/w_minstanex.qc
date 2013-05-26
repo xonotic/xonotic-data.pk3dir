@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
+REGISTER_WEAPON(
+/* WEP_##id  */ MINSTANEX,
+/* function  */ w_minstanex,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "minstanex",
+/* shortname */ "minstanex",
+/* fullname  */ _("MinstaNex")
+);
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
@@ -16,20 +26,12 @@ void W_MinstaNex_Attack (void)
 	damage_goodhits = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 
-	if(g_minstagib)
+	if(yoda && flying)
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.minstanex_lasthit)
 	{
-		if(yoda)
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	}
-	else
-	{
-		if(yoda && flying)
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-		if(damage_goodhits && self.minstanex_lasthit)
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
-			damage_goodhits = 0; // only every second time
-		}
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
 	}
 
 	self.minstanex_lasthit = damage_goodhits;
@@ -39,128 +41,41 @@ void W_MinstaNex_Attack (void)
 	// teamcolor / hit beam effect
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if(teamplay)
+	switch(self.team)
 	{
-	    switch(self.team)
-	    {
-            case NUM_TEAM_1:   // Red
-                if(damage_goodhits)
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
-                else
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
-                break;
-            case NUM_TEAM_2:   // Blue
-                if(damage_goodhits)
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
-                else
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
-                break;
-            case NUM_TEAM_3:   // Yellow
-                if(damage_goodhits)
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
-                else
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
-                break;
-            case NUM_TEAM_4:   // Pink
-                if(damage_goodhits)
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
-                else
-                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, v);
-                break;
-	    }
+		case NUM_TEAM_1:   // Red
+			if(damage_goodhits)
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
+			else
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
+			break;
+		case NUM_TEAM_2:   // Blue
+			if(damage_goodhits)
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
+			else
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
+			break;
+		case NUM_TEAM_3:   // Yellow
+			if(damage_goodhits)
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
+			else
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
+			break;
+		case NUM_TEAM_4:   // Pink
+			if(damage_goodhits)
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
+			else
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, v);
+			break;
+		default:
+			if(damage_goodhits)
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3_HIT"), w_shotorg, v);
+			else
+				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
+			break;
 	}
-	else
-        WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
-
-	if (g_minstagib)
-		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
-	else
-		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
-}
-
-
-.float minstagib_nextthink;
-.float minstagib_needammo;
-void minstagib_stop_countdown(entity e)
-{
-	if (!e.minstagib_needammo)
-		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_MINSTA_FINDAMMO);
-	e.minstagib_needammo = FALSE;
-}
-void minstagib_ammocheck(void)
-{
-	if (time < self.minstagib_nextthink)
-		return;
-
-	if (self.deadflag || gameover || (self.flags & FL_GODMODE))
-		minstagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
-	{
-		minstagib_stop_countdown(self);
-		self.health = 100;
-	}
-	else
-	{
-		self.minstagib_needammo = TRUE;
-		if (self.health == 5)
-		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_MINSTAGIB_TERMINATED);
-		}
-		else if (self.health == 10)
-		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
-		}
-		else if (self.health == 20)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
-		}
-		else if (self.health == 30)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
-		}
-		else if (self.health == 40)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
-		}
-		else if (self.health == 50)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
-		}
-		else if (self.health == 60)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
-		}
-		else if (self.health == 70)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
-		}
-		else if (self.health == 80)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
-		}
-		else if (self.health == 90)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
-		}
-		else if (self.health == 100)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_MINSTA_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-		}
-	}
-	self.minstagib_nextthink = time + 1;
+	
+	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
@@ -171,10 +86,7 @@ float w_minstanex(float req)
 	float minstanex_ammo;
 
 	// now multiple WR_s use this
-	if(g_minstagib)
-		minstanex_ammo = 1;
-	else
-		minstanex_ammo = autocvar_g_balance_minstanex_ammo;
+	minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 
 	if (req == WR_AIM)
 	{

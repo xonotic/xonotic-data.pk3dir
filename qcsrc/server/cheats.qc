@@ -48,7 +48,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
-	if(gamestart_sv_cheats < 2 && self.classname != "player")
+	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
 	
 	// sv_clones
@@ -943,9 +943,9 @@ float Drag_IsDraggable(entity draggee)
 		return FALSE;
 //	if(draggee.model == "")
 //		return FALSE;
-	if(draggee.classname == "spectator")
+	if(IS_SPEC(draggee))
 		return FALSE;
-	if(draggee.classname == "observer")
+	if(IS_OBSERVER(draggee))
 		return FALSE;
 	if(draggee.classname == "exteriorweaponentity")
 		return FALSE;
@@ -1011,7 +1011,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (dragger.classname == "player");
+	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)

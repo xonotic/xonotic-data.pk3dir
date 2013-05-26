@@ -1,6 +1,23 @@
 .entity ra_nade;
 .float ra_nade_refire;
 
+float ra_CanThrowNade()
+{
+	if(self.vehicle)
+		return FALSE;
+		
+	if(gameover)
+		return FALSE;
+		
+	if not(autocvar_g_riflearena_nades)
+		return FALSE;
+		
+	if(forbidWeaponUse())
+		return FALSE;
+		
+	return TRUE;
+}
+
 void ra_nade_timer_think()
 {
 	self.skin = 8 - (self.owner.wait - time) / (autocvar_g_riflearena_nade_lifetime / 10);
@@ -106,10 +123,10 @@ void ra_nade_damage(entity inflictor, entity attacker, float damage, float death
 		ra_nade_burn_spawn(self);
 }
 
-void ra_toss_nade(vector _velocity, float _time)
+void ra_toss_nade(entity ent, vector _velocity, float _time)
 {
-	entity _nade = self.ra_nade;
-	self.ra_nade = world;
+	entity _nade = ent.ra_nade;
+	ent.ra_nade = world;
 	
 	setorigin(_nade, gettaginfo(_nade, gettagindex(_nade, "Object001")));
 	setattachment(_nade, world, "");
@@ -117,14 +134,14 @@ void ra_toss_nade(vector _velocity, float _time)
 	setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
 	
-	if(self.crouch)
+	if(ent.crouch)
 		_nade.velocity = '0 0 -10';
 	else if(autocvar_g_riflearena_nade_newton_style == 1)
-		_nade.velocity = self.velocity + _velocity;
+		_nade.velocity = ent.velocity + _velocity;
 	else if(autocvar_g_riflearena_nade_newton_style == 2)
 		_nade.velocity = _velocity;
 	else
-		_nade.velocity = W_CalculateProjectileVelocity(self.velocity, _velocity, FALSE);
+		_nade.velocity = W_CalculateProjectileVelocity(ent.velocity, _velocity, FALSE);
 
 	_nade.solid = SOLID_BBOX;
 	_nade.touch = ra_nade_touch;
@@ -143,7 +160,7 @@ void ra_toss_nade(vector _velocity, float _time)
 	else
 		_nade.projectiledeathtype = DEATH_NADE_NORMAL;
 
-	self.ra_nade_refire = time + autocvar_g_riflearena_nade_refire;
+	ent.ra_nade_refire = time + autocvar_g_riflearena_nade_refire;
 }
 
 void ra_nade_prime()
@@ -163,6 +180,14 @@ void ra_nade_prime()
 	self.ra_nade.think = ra_nade_beep;
 	self.ra_nade.nextthink = max(self.ra_nade.wait - 3, time);
 	self.ra_nade.projectiledeathtype = DEATH_NADE_NORMAL;
+}
+
+MUTATOR_HOOKFUNCTION(ra_VehicleEnter)
+{
+	if(other.ra_nade)
+		ra_toss_nade(other, '0 0 100', max(other.ra_nade.wait, time + 0.05));
+		
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
@@ -214,8 +239,9 @@ MUTATOR_HOOKFUNCTION(ra_PlayerThink)
 {
 	if(self.ra_nade)
 		if(self.ra_nade.wait - 0.1 <= time)
-			ra_toss_nade('0 0 0', time + 0.05);
+			ra_toss_nade(self, '0 0 0', time + 0.05);
 
+	if(ra_CanThrowNade())
 	if(self.ra_nade_refire < time)
 	{
 		if(self.BUTTON_HOOK)
@@ -231,7 +257,7 @@ MUTATOR_HOOKFUNCTION(ra_PlayerThink)
 				float _force = time - self.ra_nade.cnt;
 				_force /= autocvar_g_riflearena_nade_lifetime;
 				_force = autocvar_g_riflearena_nade_minforce + (_force * (autocvar_g_riflearena_nade_maxforce - autocvar_g_riflearena_nade_minforce));				
-				ra_toss_nade((v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				ra_toss_nade(self, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
 			}
 		}
 	}
@@ -262,14 +288,14 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 MUTATOR_HOOKFUNCTION(ra_PlayerDies)
 {
 	if(self.ra_nade)
-		ra_toss_nade('0 0 100', max(self.ra_nade.wait, time + 0.05));
+		ra_toss_nade(self, '0 0 100', max(self.ra_nade.wait, time + 0.05));
 
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ra_ForbidThrowCurrentWeapon)
 {
-	if(self.freezetag_frozen || !autocvar_g_riflearena_nades || self.vehicle)
+	if(!ra_CanThrowNade())
 		return 1;
 
 	if(!self.ra_nade)
@@ -289,7 +315,7 @@ MUTATOR_HOOKFUNCTION(ra_ForbidThrowCurrentWeapon)
 			float _force = time - self.ra_nade.cnt;
 			_force /= autocvar_g_riflearena_nade_lifetime;
 			_force = autocvar_g_riflearena_nade_minforce + (_force * (autocvar_g_riflearena_nade_maxforce - autocvar_g_riflearena_nade_minforce));
-			ra_toss_nade((v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
+			ra_toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
 		}
 	}
 	return 1;
@@ -315,6 +341,7 @@ MUTATOR_HOOKFUNCTION(ra_SetModname)
 
 MUTATOR_DEFINITION(mutator_riflearena)
 {
+	MUTATOR_HOOK(VehicleEnter, ra_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ra_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ra_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ra_FilterItem, CBC_ORDER_ANY);

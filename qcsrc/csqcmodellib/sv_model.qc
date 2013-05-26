@@ -25,7 +25,7 @@
 float CSQCModel_Send(entity to, float sf)
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = (self.flags & FL_CLIENT);
+	float isplayer = (IS_CLIENT(self));
 	float islocalplayer = (self == to);
 	float isnolocalplayer = (isplayer && (self != to));
 
@@ -59,7 +59,7 @@ float CSQCModel_Send(entity to, float sf)
 void CSQCModel_CheckUpdate()
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = (self.flags & FL_CLIENT);
+	float isplayer = (IS_CLIENT(self));
 	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 

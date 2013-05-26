@@ -20,7 +20,7 @@ float accuracy_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
 	a = self.owner;
-	if(a.classname == "spectator")
+	if(IS_SPEC(a))
 		a = a.enemy;
 	a = a.accuracy;
 
@@ -102,7 +102,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 	w = pow(2, mod(w, 24));
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
+		if(IS_SPEC(a))
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
@@ -110,7 +110,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
 	if(!inWarmupStage)
-	if(targ.flags & FL_CLIENT)
+	if(IS_CLIENT(targ))
 	if(targ.deadflag == DEAD_NO)
 	if(IsDifferentTeam(attacker, targ))
 		return TRUE;

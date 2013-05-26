@@ -29,12 +29,12 @@ void trigger_teleport_use()
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (player.classname == "player" && player.health >= 1)
+	if (IS_PLAYER(player) && player.health >= 1)
 	{
 		TDEATHLOOP(org)
 		{
 			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
-				if(head.classname == "player")
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						return 1;
 		}
@@ -46,11 +46,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (player.classname == "player" && player.health >= 1)
+		if (IS_PLAYER(player) && player.health >= 1)
 		{
 			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
 			{
-				if(head.classname == "player")
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
 				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
@@ -119,7 +119,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	UpdateCSQCProjectileAfterTeleport(player);
 
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
 			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
@@ -221,7 +221,7 @@ void Teleport_Touch (void)
 
 	EXACTTRIGGER_TOUCH;
 
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
 		
 	entity e;
@@ -346,7 +346,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 			print("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
 	}
-	if(pl.classname == "player")
+	if(IS_PLAYER(pl))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		pl.oldvelocity = pl.velocity;
