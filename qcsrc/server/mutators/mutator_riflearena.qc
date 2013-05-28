@@ -188,6 +188,15 @@ void ra_nade_prime()
 	self.ra_nade.projectiledeathtype = DEATH_NADE_NORMAL;
 }
 
+void ra_SetCvars()
+{
+	cvar_settemp("g_balance_rifle_secondary_spread", ftos(cvar("g_riflearena_rifle_secondary_spread")));
+	cvar_settemp("g_balance_rifle_secondary_shots", ftos(cvar("g_riflearena_rifle_secondary_shots")));
+	cvar_settemp("g_balance_rifle_secondary_animtime", ftos(cvar("g_riflearena_rifle_secondary_animtime")));
+	cvar_settemp("g_balance_rifle_secondary_refire", ftos(cvar("g_riflearena_rifle_secondary_refire")));
+	cvar_settemp("g_balance_rifle_secondary_damage", ftos(cvar("g_riflearena_rifle_secondary_damage")));
+}
+
 MUTATOR_HOOKFUNCTION(ra_VehicleEnter)
 {
 	if(other.ra_nade)
@@ -363,11 +372,8 @@ MUTATOR_DEFINITION(mutator_riflearena)
 	
 	MUTATOR_ONADD
 	{
-		cvar_settemp("g_balance_rifle_secondary_spread", "0");
-		cvar_settemp("g_balance_rifle_secondary_shots", "1");
-		cvar_settemp("g_balance_rifle_secondary_animtime", "0.15");
-		cvar_settemp("g_balance_rifle_secondary_refire", "0.15");
-		cvar_settemp("g_balance_rifle_secondary_damage", "40");
+		ra_SetCvars();
+		
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
 		
 		precache_model("models/weapons/h_ok_grenade.iqm");
