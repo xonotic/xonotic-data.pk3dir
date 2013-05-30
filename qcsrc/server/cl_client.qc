@@ -74,239 +74,8 @@ void ClientData_Touch(entity e)
 	}
 }
 
-
-.vector spawnpoint_score;
 .string netname_previous;
 
-void spawnfunc_info_player_survivor (void)
-{
-	spawnfunc_info_player_deathmatch();
-}
-
-void spawnfunc_info_player_start (void)
-{
-	spawnfunc_info_player_deathmatch();
-}
-
-void spawnfunc_info_player_deathmatch (void)
-{
-	self.classname = "info_player_deathmatch";
-	relocate_spawnpoint();
-}
-
-void spawnpoint_use()
-{
-	if(teamplay)
-	if(have_team_spawns > 0)
-	{
-		self.team = activator.team;
-		some_spawn_has_been_used = 1;
-	}
-}
-
-// Returns:
-//   _x: prio (-1 if unusable)
-//   _y: weight
-vector Spawn_Score(entity spot, float mindist, float teamcheck)
-{
-	float shortest, thisdist;
-	float prio;
-	entity player;
-
-	prio = 0;
-
-	// filter out spots for the wrong team
-	if(teamcheck >= 0)
-		if(spot.team != teamcheck)
-			return '-1 0 0';
-
-	if(race_spawns)
-		if(spot.target == "")
-			return '-1 0 0';
-
-	if(IS_REAL_CLIENT(self))
-	{
-		if(spot.restriction == 1)
-			return '-1 0 0';
-	}
-	else
-	{
-		if(spot.restriction == 2)
-			return '-1 0 0';
-	}
-
-	shortest = vlen(world.maxs - world.mins);
-	FOR_EACH_PLAYER(player) if (player != self)
-	{
-		thisdist = vlen(player.origin - spot.origin);
-		if (thisdist < shortest)
-			shortest = thisdist;
-	}
-	if(shortest > mindist)
-		prio += SPAWN_PRIO_GOOD_DISTANCE;
-
-	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
-	spawn_spot = spot;
-
-	// filter out spots for assault
-	if(spot.target != "") {
-		entity ent;
-		float found;
-
-		found = 0;
-		for(ent = world; (ent = find(ent, targetname, spot.target)); )
-		{
-			++found;
-			if(ent.spawn_evalfunc)
-			{
-				entity oldself = self;
-				self = ent;
-				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
-				self = oldself;
-				if(spawn_score_x < 0)
-					return spawn_score;
-			}
-		}
-
-		if(!found)
-		{
-			dprint("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
-			return '-1 0 0';
-		}
-	}
-
-	MUTATOR_CALLHOOK(Spawn_Score);
-	return spawn_score;
-}
-
-void Spawn_ScoreAll(entity firstspot, float mindist, float teamcheck)
-{
-	entity spot;
-	for(spot = firstspot; spot; spot = spot.chain)
-		spot.spawnpoint_score = Spawn_Score(spot, mindist, teamcheck);
-}
-
-entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
-{
-	entity spot, spotlist, spotlistend;
-
-	spotlist = world;
-	spotlistend = world;
-
-	Spawn_ScoreAll(firstspot, mindist, teamcheck);
-
-	for(spot = firstspot; spot; spot = spot.chain)
-	{
-		if(spot.spawnpoint_score_x >= 0) // spawning allowed here
-		{
-			if(spotlistend)
-				spotlistend.chain = spot;
-			spotlistend = spot;
-			if(!spotlist)
-				spotlist = spot;
-		}
-	}
-	if(spotlistend)
-		spotlistend.chain = world;
-
-	return spotlist;
-}
-
-entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exponent)
-{
-	// weight of a point: bound(lower, mindisttoplayer, upper)^exponent
-	// multiplied by spot.cnt (useful if you distribute many spawnpoints in a small area)
-	entity spot;
-
-	RandomSelection_Init();
-	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.spawnpoint_score_y, upper), exponent) * spot.cnt, (spot.spawnpoint_score_y >= lower) * 0.5 + spot.spawnpoint_score_x);
-
-	return RandomSelection_chosen_ent;
-}
-
-/*
-=============
-SelectSpawnPoint
-
-Finds a point to respawn
-=============
-*/
-entity SelectSpawnPoint (float anypoint)
-{
-	float teamcheck;
-	entity spot, firstspot;
-
-	spot = find (world, classname, "testplayerstart");
-	if (spot)
-		return spot;
-
-	if(anypoint || autocvar_g_spawn_useallspawns)
-		teamcheck = -1;
-	else if(have_team_spawns > 0)
-	{
-		if(have_team_spawns_forteam[self.team] == 0)
-		{
-			// we request a spawn for a team, and we have team
-			// spawns, but that team has no spawns?
-			if(have_team_spawns_forteam[0])
-				// try noteam spawns
-				teamcheck = 0;
-			else
-				// if not, any spawn has to do
-				teamcheck = -1;
-		}
-		else
-			teamcheck = self.team; // MUST be team
-	}
-	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
-		teamcheck = 0; // MUST be noteam
-	else
-		teamcheck = -1;
-		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
-
-
-	// get the entire list of spots
-	firstspot = findchain(classname, "info_player_deathmatch");
-	// filter out the bad ones
-	// (note this returns the original list if none survived)
-	if(anypoint)
-	{
-		spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
-	}
-	else
-	{
-		float mindist;
-		if (g_arena && arena_roundbased)
-			mindist = 800;
-		else
-			mindist = 100;
-		firstspot = Spawn_FilterOutBadSpots(firstspot, mindist, teamcheck);
-
-		// there is 50/50 chance of choosing a random spot or the furthest spot
-		// (this means that roughly every other spawn will be furthest, so you
-		// usually won't get fragged at spawn twice in a row)
-		if (random() > autocvar_g_spawn_furthest)
-			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
-		else
-			spot = Spawn_WeightedPoint(firstspot, 1, 5000, 5); // chooses a far far away spawnpoint
-	}
-
-	if (!spot)
-	{
-		if(autocvar_spawn_debug)
-			GotoNextMap(0);
-		else
-		{
-			if(some_spawn_has_been_used)
-				return world; // team can't spawn any more, because of actions of other team
-			else
-				error("Cannot find a spawn point - please fix the map!");
-		}
-	}
-
-	return spot;
-}
 
 /*
 =============
@@ -585,7 +354,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
@@ -741,11 +509,9 @@ void PutClientInServer (void)
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
 
-		msg_entity = self;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
-		});
+		entity spawnevent = spawn();
+		spawnevent.owner = self;
+		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
 
 		self.model = "";
 		FixPlayermodel();
@@ -832,10 +598,9 @@ void PutClientInServer (void)
 				self.alivetime = time;
 
 		antilag_clear(self);
-
-		if (autocvar_g_spawnsound)
-			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-	} else if(IS_OBSERVER(self)) {
+	}
+	else if(IS_OBSERVER(self))
+	{
 		PutObserverInServer ();
 	}
 }
@@ -864,7 +629,6 @@ float ClientInit_SendEntity(entity to, float sf)
 	else
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteByte(MSG_ENTITY, self.cnt * 255.0); // g_balance_weaponswitchdelay
 	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
@@ -885,11 +649,6 @@ void ClientInit_CheckUpdate()
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
 		self.count = autocvar_g_balance_armor_blockpercent;
-		self.SendFlags |= 1;
-	}
-	if(self.cnt != autocvar_g_balance_weaponswitchdelay)
-	{
-		self.cnt = autocvar_g_balance_weaponswitchdelay;
 		self.SendFlags |= 1;
 	}
 	if(self.bouncefactor != autocvar_g_balance_grenadelauncher_bouncefactor)
@@ -2776,11 +2535,16 @@ void PlayerPostThink (void)
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
 	}
 
-	if(sv_maxidle && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if(IS_PLAYER(self) || sv_maxidle_spectatorsareidle)
 	{
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
-			if(self.idlekick_lasttimeleft) { self.idlekick_lasttimeleft = 0; }
+			if(self.idlekick_lasttimeleft)
+			{
+				self.idlekick_lasttimeleft = 0;
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_IDLING);
+			}
 		}
 		else
 		{

@@ -690,8 +690,12 @@ void Item_Touch (void)
 		return;
 	if (self.owner == other)
 		return;
-	if(MUTATOR_CALLHOOK(ItemTouch))
-		return;
+
+	switch(MUTATOR_CALLHOOK(ItemTouch))
+	{
+		case MUT_ITEMTOUCH_RETURN: { return; }
+		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
+	}
 
 	if (self.classname == "droppedweapon")
 	{
@@ -711,6 +715,8 @@ void Item_Touch (void)
 		}
 		return;
 	}
+
+	:pickup
 
 	other.last_pickup = time;
 
