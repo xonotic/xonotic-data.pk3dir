@@ -606,6 +606,9 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 	if(self.realowner == world)
 		return TRUE;
 		
+	if(self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
+		self.target_range = 500;
+		
 	self.bot_attack = FALSE;
 	buffturret(self, 0.7);
 	
@@ -878,9 +881,7 @@ MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
     if(turret_target.flags & FL_PROJECTILE)
 	if(turret_target.owner.flags & FL_MONSTER)
         return TRUE; // flac support
-			
-	if(turret.turrcaps_flags & TFL_TURRCAPS_SUPPORT && turret_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-		return TRUE;
+	
 	if not(turret_target.flags & FL_MONSTER)
 		turret_target = world;
 		
