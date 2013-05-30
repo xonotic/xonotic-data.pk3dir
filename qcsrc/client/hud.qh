@@ -77,7 +77,6 @@ entity panel;
 var float panel_enabled;
 var vector panel_pos;
 var vector panel_size;
-var string panel_bg; // exceptionally this a temporary var, panel.current_panel_bg keeps the real value
 var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
 var vector panel_bg_color;
 var string panel_bg_color_str;
@@ -146,6 +145,7 @@ HUD_PANELS
 // Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
 #define HUD_Panel_GetBg()\
+string panel_bg;\
 if(!autocvar__hud_configure && panel_bg_str == "0") {\
 	panel_bg = "0";\
 } else {\

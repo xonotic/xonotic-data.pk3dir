@@ -1840,6 +1840,7 @@ void HUD_Radar(void)
 		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 		panel_pos_y = (vid_conheight - panel_size_y) / 2;
 
+		string panel_bg;
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if(precache_pic(panel_bg) == "")
 			panel_bg = "gfx/hud/default/border_default"; // fallback
@@ -3462,6 +3463,7 @@ void HUD_Chat(void)
 		panel_size_y = vid_conheight - panel_bg_border * 2;
 		if(panel.current_panel_bg == "0") // force a border when maximized
 		{
+			string panel_bg;
 			panel_bg = strcat(hud_skin_path, "/border_default");
 			if(precache_pic(panel_bg) == "")
 				panel_bg = "gfx/hud/default/border_default";
