@@ -77,7 +77,7 @@ entity panel;
 var float panel_enabled;
 var vector panel_pos;
 var vector panel_size;
-var string panel_bg;
+var string panel_bg; // exceptionally this a temporary var, panel.current_panel_bg keeps the real value
 var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
 var vector panel_bg_color;
 var string panel_bg_color_str;
@@ -143,7 +143,7 @@ HUD_PANELS
 // ----------------------
 // Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
-// Get value for panel_bg: if "" fetch default, else use panel_bg_str
+// Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
 #define HUD_Panel_GetBg()\
 if(!autocvar__hud_configure && panel_bg_str == "0") {\
@@ -165,7 +165,10 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 			}\
 		}\
 	}\
-}
+}\
+if(panel.current_panel_bg)\
+	strunzone(panel.current_panel_bg);\
+panel.current_panel_bg = strzone(panel_bg);
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
@@ -286,7 +289,7 @@ if(panel.update_time <= time) { \
 	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
 	panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding")); \
 	HUD_Panel_GetBg()\
-	if (panel_bg != "0") {\
+	if (panel.current_panel_bg != "0") {\
 		HUD_Panel_GetColorTeam()\
 		HUD_Panel_GetColor()\
 		HUD_Panel_GetBgAlpha()\
@@ -304,9 +307,6 @@ if(panel.update_time <= time) { \
 	}\
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
-	if(panel.current_panel_bg != "") \
-		strunzone(panel.current_panel_bg); \
-	panel.current_panel_bg = strzone(panel_bg); \
 	panel.current_panel_bg_border = panel_bg_border; \
 	panel.current_panel_bg_color = panel_bg_color; \
 	panel.current_panel_bg_color_team = panel_bg_color_team; \
@@ -315,7 +315,6 @@ if(panel.update_time <= time) { \
 } else { \
 	panel_pos = panel.current_panel_pos; \
 	panel_size = panel.current_panel_size; \
-	panel_bg = panel.current_panel_bg; \
 	panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha; \
 	panel_bg_border = panel.current_panel_bg_border; \
 	panel_bg_color = panel.current_panel_bg_color; \

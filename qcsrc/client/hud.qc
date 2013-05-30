@@ -264,8 +264,8 @@ HUD panels
 
 // draw the background/borders
 #define HUD_Panel_DrawBg(theAlpha)\
-if(panel_bg != "0")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
+if(panel.current_panel_bg != "0")\
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -1839,10 +1839,14 @@ void HUD_Radar(void)
 		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
 		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 		panel_pos_y = (vid_conheight - panel_size_y) / 2;
-		
+
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
-		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
-		
+		if(precache_pic(panel_bg) == "")
+			panel_bg = "gfx/hud/default/border_default"; // fallback
+		if(panel.current_panel_bg)
+			strunzone(panel.current_panel_bg);
+		panel.current_panel_bg = strzone(panel_bg);
+
 		switch(hud_panel_radar_maximized_zoommode)
 		{
 			default:
@@ -3456,13 +3460,16 @@ void HUD_Chat(void)
 	{
 		panel_pos_y = panel_bg_border;
 		panel_size_y = vid_conheight - panel_bg_border * 2;
-		if(panel_bg == "0") // force a border when maximized
+		if(panel.current_panel_bg == "0") // force a border when maximized
 		{
-			if(precache_pic(panel_bg) == "") {
+			if(precache_pic(panel.current_panel_bg) == "") {
 				panel_bg = strcat(hud_skin_path, "/border_default");
 				if(precache_pic(panel_bg) == "") {
 					panel_bg = "gfx/hud/default/border_default";
 				}
+				if(panel.current_panel_bg)
+					strunzone(panel.current_panel_bg);
+				panel.current_panel_bg = strzone(panel_bg);
 			}
 		}
 		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
