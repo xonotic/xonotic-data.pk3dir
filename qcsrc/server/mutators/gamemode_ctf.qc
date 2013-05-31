@@ -984,8 +984,8 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.think = ctf_FlagThink;
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
-	
-	
+
+	// appearence
 	if(flag.model == "")       { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
 	if(!flag.skin)             { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
