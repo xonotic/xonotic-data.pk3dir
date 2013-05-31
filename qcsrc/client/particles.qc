@@ -57,7 +57,7 @@ void Draw_PointParticles()
 			}
 			if(self.noise != "")
 			{
-				self.origin = p;
+				setorigin(self, p);
 				sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
@@ -68,7 +68,7 @@ void Draw_PointParticles()
 			--i;
 		}
 	}
-	self.origin = o;
+	setorigin(self, o);
 }
 
 void Ent_PointParticles_Remove()

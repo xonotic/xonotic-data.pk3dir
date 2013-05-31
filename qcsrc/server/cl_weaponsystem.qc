@@ -14,21 +14,6 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				t = t * autocvar_g_balance_rune_speed_combo_atkrate;
-			else
-				t = t * autocvar_g_balance_rune_speed_atkrate;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			t = t * autocvar_g_balance_curse_slow_atkrate;
-		}
-	}
-
 	return t;
 }
 
@@ -69,6 +54,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 
 	// x = 0..1 relative to hitbox; y = 0..1 relative to hitbox; z = distance
 
+	mi = ma = targ.origin + 0.5 * (targ.mins + targ.maxs);
 	for(i = 0; i < 2; ++i) for(j = 0; j < 2; ++j) for(k = 0; k < 2; ++k)
 	{
 		thisv = targ.origin;
@@ -107,12 +93,12 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(player) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(trace_ent.flags & FL_CLIENT)
+		if(IS_CLIENT(trace_ent))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
@@ -131,10 +117,9 @@ vector w_shotend;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-		if((!g_minstagib)
-			&& (player.items & IT_STRENGTH)
-			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+	if((player.items & IT_STRENGTH)
+		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
 			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 			player.prevstrengthsound = time;
@@ -212,7 +197,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (!trace_ent.takedamage)
 			{
 				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && trace_ent.classname == "player")
+				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
 					entity e;
 					e = trace_ent;
@@ -228,7 +213,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
 			if (ent.cursor_trace_ent != ent)         // just to make sure
 			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (ent.cursor_trace_ent.classname == "player") // and actually a player
+			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -270,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = self.owner;
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
 			self.viewmodelforclient = other;
 	return TRUE;
@@ -342,10 +327,10 @@ void CL_WeaponEntity_SetModel(string name)
 
 		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-		self.anim_fire1  = animfixfps(self, '0 1 0.01');
-		self.anim_fire2  = animfixfps(self, '1 1 0.01');
-		self.anim_idle   = animfixfps(self, '2 1 0.01');
-		self.anim_reload = animfixfps(self, '3 1 0.01');
+		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
+		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
+		self.anim_idle   = animfixfps(self, '2 1 0.01', '0 0 0');
+		self.anim_reload = animfixfps(self, '3 1 0.01', '0 0 0');
 
 		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 		// if we don't, this is a "real" animated model
@@ -556,16 +541,20 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	float f;
-	f = 0;
+	
+	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity newwep = get_weaponinfo(self.owner.switchweapon);
+		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity oldwep = get_weaponinfo(self.owner.weapon);
+		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)
@@ -578,7 +567,6 @@ void CL_Weaponentity_Think()
 void CL_ExteriorWeaponentity_Think()
 {
 	float tag_found;
-	vector ang;
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
 	{
@@ -609,10 +597,7 @@ void CL_ExteriorWeaponentity_Think()
 			setattachment(self, self.owner, "bip01 r hand");
 	}
 	self.effects = self.owner.effects;
-	if(sv_pitch_min == sv_pitch_max)
-		self.effects |= EF_LOWPRECISION;
-	else
-		self.effects &~= EF_LOWPRECISION;
+	self.effects |= EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
 	if(self.owner.alpha == default_player_alpha)
 		self.alpha = default_weapon_alpha;
@@ -620,58 +605,6 @@ void CL_ExteriorWeaponentity_Think()
 		self.alpha = self.owner.alpha;
 	else
 		self.alpha = 1;
-
-	if (!intermission_running)
-	{
-		ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-		ang_y = 0;
-		ang_z = 0;
-
-		if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-		{
-			ang_y = self.owner.v_angle_y;
-			makevectors(ang);
-			var vector v = v_forward;
-			var float t = self.tag_entity.frame1time;
-			var float f = self.tag_entity.frame;
-			self.tag_entity.frame1time = time;
-			self.tag_entity.frame = self.tag_entity.anim_idle_x;
-			gettaginfo(self.tag_entity, self.tag_index);
-			self.tag_entity.frame1time = t;
-			self.tag_entity.frame = f;
-			// untransform v according to this coordinate space
-			vector w;
-			w_x = v_forward * v;
-			w_y = -v_right * v;
-			w_z = v_up * v;
-			self.angles = vectoangles(w);
-		}
-		else
-		{
-			ang_x = -/* don't ask */ang_x;
-			self.angles = ang;
-		}
-
-		if(autocvar_g_loituma)
-		{
-			vector modangles;
-			float t;
-
-			t = time * autocvar_g_loituma;
-
-			modangles_x = t * 360;
-			modangles_y = 90;
-			modangles_z = 0;
-
-			self.angles =
-				AnglesTransform_ToAngles(
-					AnglesTransform_Multiply(
-						AnglesTransform_FromAngles(self.angles),
-						AnglesTransform_FromAngles(modangles)
-					)
-				);
-		}
-	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
@@ -727,7 +660,7 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
-	float weaponbit, f;
+	float f;
 	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
@@ -741,8 +674,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	weaponbit = W_WeaponBit(wpn);
-	if (cl.weapons & weaponbit)
+	if (WEPSET_CONTAINS_EW(cl, wpn))
 	{
 		if (andammo)
 		{
@@ -768,10 +700,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			if (!f)
 			{
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(cl))
 				{
 					play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", W_Name(wpn), "\n"));
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
 				}
 				return FALSE;
@@ -783,10 +714,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weaponsInMap & weaponbit)
+		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
 		{
-			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
-			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
+			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
 			if(autocvar_g_showweaponspawns)
 			{
@@ -796,7 +726,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				e = get_weaponinfo(wpn);
 				s = e.model2;
 
-				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
+				for(e = world; (e = findfloat(e, weapon, wpn)); )
 				{
 					if(e.classname == "droppedweapon")
 						continue;
@@ -817,7 +747,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		else
 		{
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
-			sprint(cl, strcat("The ^2", W_Name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
 		}
 
 		play2(cl, "weapons/unavailable.wav");
@@ -867,20 +796,17 @@ void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
-	w = W_WeaponBit(pl.weapon);
-	pl.weapons &~= w;
-	ww = w_getbestweapon(pl);
-	pl.weapons |= w;
+	w = pl.weapon;
+	if(WEPSET_CONTAINS_EW(pl, w))
+	{
+		WEPSET_ANDNOT_EW(pl, w);
+		ww = w_getbestweapon(pl);
+		WEPSET_OR_EW(pl, w);
+	}
+	else
+		ww = w_getbestweapon(pl);
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
-}
-
-string PrimaryOrSecondary(float secondary)
-{
-	if(secondary)
-		return "secondary";
-	else
-		return "primary";
 }
 
 .float prevdryfire;
@@ -906,7 +832,15 @@ float weapon_prepareattack_checkammo(float secondary)
 		{
 			if(time - self.prevwarntime > 1)
 			{
-				sprint(self, strcat("^2", W_Name(self.weapon), " ", PrimaryOrSecondary(secondary), "^7 is unable to fire, but its ^2", PrimaryOrSecondary(1 - secondary), "^7 can.\n"));
+				Send_Notification(
+					NOTIF_ONE,
+					self,
+					MSG_MULTI,
+					ITEM_WEAPON_PRIMORSEC,
+					self.weapon,
+					secondary,
+					(1 - secondary)
+				);
 			}
 			self.prevwarntime = time;
 		}
@@ -1004,13 +938,14 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
+		a = '0 0 0';
 		if (fr == WFRAME_IDLE)
 			a = self.weaponentity.anim_idle;
 		else if (fr == WFRAME_FIRE1)
 			a = self.weaponentity.anim_fire1;
 		else if (fr == WFRAME_FIRE2)
 			a = self.weaponentity.anim_fire2;
-		else if (fr == WFRAME_RELOAD)
+		else // if (fr == WFRAME_RELOAD)
 			a = self.weaponentity.anim_reload;
 		a_z *= g_weaponratefactor;
 		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
@@ -1042,25 +977,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
-	//anim = self.anim_shoot;
-	if (restartanim)
-	if (t)
-	if (!self.crouch) // shoot anim stands up, this looks bad
+	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		vector anim;
-		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
-		{
-			anim = self.anim_melee;
-			anim_z = anim_y / (t + sys_frametime);
-			setanim(self, anim, FALSE, TRUE, TRUE);
-		}
-		else if (self.animstate_startframe == self.anim_idle_x) // only allow shoot anim to override idle animation until we have animation blending
-		{
-			anim = self.anim_shoot;
-			anim_z = anim_y / (t + sys_frametime);
-			setanim(self, anim, FALSE, TRUE, TRUE);
-		}
+		if(self.weapon == WEP_SHOTGUN && fr == WFRAME_FIRE2)
+			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
+		else
+			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
+	}
+	else
+	{
+		if(self.anim_upper_action == ANIMACTION_SHOOT || self.anim_upper_action == ANIMACTION_MELEE)
+			self.anim_upper_action = 0;
 	}
 }
 
@@ -1073,8 +1000,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 {
 	vector mdirection;
 	float mspeed;
-	float outspeed;
-	float nstyle;
 	vector outvelocity;
 
 	mvelocity = mvelocity * g_weaponspeedfactor;
@@ -1082,61 +1007,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 
-	nstyle = autocvar_g_projectiles_newton_style;
-	if(nstyle == 0 || forceAbsolute)
-	{
-		// absolute velocity
-		outvelocity = mvelocity;
-	}
-	else if(nstyle == 1)
-	{
-		// true Newtonian projectiles
-		outvelocity = pvelocity + mvelocity;
-	}
-	else if(nstyle == 2)
-	{
-		// true Newtonian projectiles with automatic aim adjustment
-		//
-		// solve: |outspeed * mdirection - pvelocity| = mspeed
-		// outspeed^2 - 2 * outspeed * (mdirection * pvelocity) + pvelocity^2 - mspeed^2 = 0
-		// outspeed = (mdirection * pvelocity) +- sqrt((mdirection * pvelocity)^2 - pvelocity^2 + mspeed^2)
-		// PLUS SIGN!
-		// not defined?
-		// then...
-		// pvelocity^2 - (mdirection * pvelocity)^2 > mspeed^2
-		// velocity without mdirection component > mspeed
-		// fire at smallest possible mspeed that works?
-		// |(mdirection * pvelocity) * pvelocity - pvelocity| = mspeed
-
-		vector solution;
-		solution = solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
-		if(solution_z)
-			outspeed = solution_y; // the larger one
-		else
-		{
-			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
-			//dprint("impossible shot, adjusting\n");
-		}
-
-		outspeed = bound(mspeed * autocvar_g_projectiles_newton_style_2_minfactor, outspeed, mspeed * autocvar_g_projectiles_newton_style_2_maxfactor);
-		outvelocity = mdirection * outspeed;
-	}
-	else if(nstyle == 3)
-	{
-		// pseudo-Newtonian:
-		outspeed = mspeed + mdirection * pvelocity;
-		outspeed = bound(mspeed * 0.7, outspeed, mspeed * 5.0);
-		outvelocity = mdirection * outspeed;
-	}
-	else if(nstyle == 4)
-	{
-		// tZorkian:
-		outspeed = mspeed + vlen(pvelocity);
-		outvelocity = mdirection * outspeed;
-	}
-	else
-		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian), 2 (Newtonian + aimfix), 3 (pseudo Newtonian) or 4 (tZorkian)!");
+	outvelocity = get_shotvelocity(pvelocity, mdirection, mspeed, (forceAbsolute ? 0 : autocvar_g_projectiles_newton_style), autocvar_g_projectiles_newton_style_2_minfactor, autocvar_g_projectiles_newton_style_2_maxfactor);
 
 	return outvelocity;
 }
@@ -1248,7 +1119,7 @@ vector findperpendicular(vector v)
 vector W_CalculateProjectileSpread(vector forward, float spread)
 {
 	float sigma;
-	vector v1, v2;
+	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
 	float sstyle;
 	spread *= g_weaponspreadfactor;
@@ -1486,7 +1357,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
 			play2(self, "weapons/unavailable.wav");
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));

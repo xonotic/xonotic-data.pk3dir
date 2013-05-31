@@ -16,8 +16,6 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
-void SUB_Null() { }
-
 void m_sync()
 {
 	updateCompression();
@@ -55,7 +53,7 @@ void m_init()
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK()));
+	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
 #endif
 
 	// list all game dirs (TEST)
@@ -73,8 +71,8 @@ void m_init()
 	}
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
@@ -306,6 +304,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
 	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
 
+#ifdef GMQCC
+	isz = '0 0 0';
+#endif
 	switch(scalemode)
 	{
 		default:
@@ -344,6 +345,7 @@ void drawBackground(string img, float a, string algn, float force1)
 
 	scalemode = SCALEMODE_CROP;
 
+	l = 0;
 	for(i = 0; i < strlen(algn); ++i)
 	{
 		c = substring(algn, i, 1);
@@ -685,7 +687,7 @@ void m_draw()
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
@@ -782,7 +784,12 @@ void m_draw()
 
 	draw_alpha *= menuAlpha;
 
-	if(menuMouseMode)
+	if(!Menu_Active)
+	{
+		// do not update mouse position
+		// it prevents mouse jumping to '0 0 0' when menu is fading out
+	}
+	else if(menuMouseMode)
 	{
 		vector newMouse;
 		newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);

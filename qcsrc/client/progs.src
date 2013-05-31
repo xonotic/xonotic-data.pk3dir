@@ -14,7 +14,9 @@ Defs.qc
 ../warpzonelib/common.qh
 ../warpzonelib/client.qh
 
+../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
@@ -23,9 +25,13 @@ Defs.qc
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/urllib.qh
+../common/animdecide.qh
 command/cl_cmd.qh
 
 autocvars.qh
+
+../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
 
 damage.qh
 
@@ -38,7 +44,6 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
-teamplay.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
 ../server/movelib.qc
@@ -49,10 +54,11 @@ vehicles/vehicles.qh
 ../csqcmodellib/cl_model.qh
 ../csqcmodellib/cl_player.qh
 projectile.qh
+player_skeleton.qh
 
 sortlist.qc
 miscfunctions.qc
-teamplay.qc
+../server/t_items.qc
 
 teamradar.qc
 hud_config.qc
@@ -79,6 +85,7 @@ tuba.qc
 target_music.qc
 
 vehicles/vehicles.qc
+../server/vehicles/bumblebee.qc
 shownames.qh
 shownames.qc
 
@@ -93,6 +100,7 @@ bgmscript.qc
 noise.qc
 
 ../common/util.qc
+../common/notifications.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
@@ -108,5 +116,8 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 tturrets.qc
+
+player_skeleton.qc
+../common/animdecide.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

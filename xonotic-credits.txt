@@ -141,7 +141,8 @@ SoulKeeper_p
 Stephan "esteel" Stahl
 The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
-
+Erik "Ablu" Schilling
+BlaXpirit
 **Past Contributors
 Alexander "motorsep" Zubov
 Amos "torus" Dudley

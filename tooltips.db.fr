@@ -28,6 +28,7 @@
 \sv_vote_simple_majority_factor\À partir de 51% de oui seulement, un vote est gagné
 \XonoticMultiplayerDialog/Advanced settings...\Paramètres du serveur avancés
 \XonoticMultiplayerDialog/Mutators...\Spéciales et arènes d'une seule arme
+\g_dodging\Enable dodging
 \g_cloaked\Tous les joueurs sont presque invisibles
 \g_footsteps\Activer les bruitages de pas
 \g_midair\Il faut que votre adversaire soit en l'air pour lui faire mal
@@ -62,12 +63,10 @@
 \cl_gunalign\Position de l'arme à l'écran, reconnection au serveur nécessaire pour prendre effet
 
 \crosshair_per_weapon\Set a different crosshair for each weapon, good if you play without weapon models
-\crosshair_color_override\Also set the color of the crosshair depending on the weapon you are currently holding
+\crosshair_color_per_weapon\Set the color of the crosshair depending on the weapon you are currently holding
 \crosshair_size\Ajuster la taille du viseur
 \crosshair_color_alpha\Ajuster l'opacité du viseur
-\crosshair_color_red\Couleur: intensité du rouge dans le viseur
-\crosshair_color_green\Couleur: intensité du vert dans le viseur
-\crosshair_color_blue\Couleur: intensité du bleu dans le viseur
+\crosshair_color\Ajuster le couleur du viseur
 \sbar_hudselector\Utiliser l'ancienne interface HUD
 \XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Pseudonyme utilisé pour vous reconnaître dans le jeu
@@ -95,14 +94,13 @@
 \m_pitch\Inverser la souris sur l'axe vertical (mode jeu d'avion)
 \vid_dgamouse\Utiliser une souris DGA
 \con_closeontoggleconsole\Autoriser la fermeture de console avec la touche d'ouverture de console (sinon, Shift+Échap)
-\sbar_showbinds\Afficher les actions possibles avec des touches/commandes
-\cl_showpressedkeys\Afficher les touches qu'un joueur est en train d'appuyer
 
 \XonoticSettingsDialog/Vidéo\Video settings
 \vid_width\Résolution de l'écran
 \vid_bitsperpixel\Profondeur des couleurs: 16 bits est plus rapide, mais 32 bits est de meilleure qualité (recommandé)
 \vid_fullscreen\Activer le mode plein écran (par défaut: activé)
 \vid_vsync\Activer la syncronisation verticale pour éviter des problèmes d'affichage, limite le nombre maximum d'images par seconde (par défaut: désactivé)
+\gl_texture_anisotropy\Qualité du filtrage anistrope (par défaut: 1x)
 \r_glsl\Activer les Shaders OpenGL 2.0 pour des effets de lumière améliorés
 \gl_vbo\Utiliser les VBOs pour stocker les modèles 3D statiques dans la mémoire pour une meilleure performance (par défaut: Points et Triangles)
 \r_depthfirst\Éviter des problèmes de profondeur de rendu en faisant un rendu de profondeur de la carte/joueurs avant le rendu "standard" (par défaut: désactivé)
@@ -132,7 +130,6 @@
 \cl_gentle\Remplacer les effets gore par des effets moins violents (par défaut: désactivé)
 \cl_nogibs\Réduire le nombre de Gibs ou les désactiver totalement (par défaut: beaucoup)
 \v_kicktime\Faire trembler la vue en recevant des dégâts (par défaut: 0)
-\gl_texture_anisotropy\Qualité du filtrage anistrope (par défaut: 1x)
 \r_glsl_deluxemapping\Utiliser les effets lumineux avancés (par défaut: activé)
 \r_shadow_gloss\Utiliser le reflet des textures (par défaut: activé)
 \gl_flashblend\Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)
@@ -150,8 +147,7 @@
 \r_coronas_occlusionquery\Prendre en compte la visibilité pour les effets "Brillance Lumière" (par défaut: activé)
 \r_bloom\Activer un effet d'éblouissement plus beau, mais gourmand (par défaut: désactivé)
 \r_hdr\Activer un effet d'ébloissement encore plus beau, mais encore plus gourmand (par défaut: désactivé)
-\r_motionblur\Intensité du flou de mouvement - 0.5 est recommandé
-\r_damageblur\Intensité du flou en recevant des dégâts - 0.4 est recommandé
+\r_motionblur\Intensité du flou de mouvement - 0.4 est recommandé
 
 \XonoticSettingsDialog/Audio\Audio settings
 \mastervolume\-
@@ -178,7 +174,7 @@
 \XonoticSettingsDialog/Réseau\Paramètres du jeu en réseau
 \cl_movement\Activer la prédiction des mouvements du joueur pour éviter les saccades lors de parties en réseau
 \cl_nolerp\Algorithme pour éviter les saccades lors de parties en réseau
-\shownetgraph\Show a 
+\shownetgraph\Show a graph of packet sizes and other information
 \_cl_rate\Specify your network speed with this slider
 \cl_netfps\Nombre maximum de paquets à envoyer au server chaque seconde
 \cl_curl_maxdownloads\Nombre maximum de téléchargements simultanés
@@ -186,32 +182,17 @@
 \cl_port\Forcer le client à passer par le port défini (UDP) s'il n'est pas 0
 
 \XonoticSettingsDialog/Autres\Autres paramètres
+\menu_tooltips\Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)
 \showtime\Montrer l'heure, utile pour les captures d'écran
 \showdate\Montrer la date, utile pour les captures d'écran
 \showfps\Montrer le nombre d'Images Par Seconde rendues (Frames Per Second = FPS)
-\cl_showspeed\Montrer la vitesse du joueur
-\cl_showspeed_unit\Séléctionner l'unité de mesure de la vitesse (qu/s = in/s)
-\cl_showacceleration\Montrer l'accélération du joueur
-\cl_showacceleration_scale\Éxagérer l'accéléromètre avec ce facteur pour qu'il soit plus visible
 
 \XonoticSettingsDialog/Advanced settings...\Paramètres avancés pour configuer le jeu dans ses moindres détails
 \g_friendlyfire\Pourcentage de dégâts infligés aux équipiers si vous les touchez
 \g_mirrordamage\Pourcentage de dégâts infligés aux équipiers qui vous sera renvoyé
 \g_tdm_teams_override\Écraser le nombre d'équipes défini par la carte
 
-\cl_teamradar_position\-
-\cl_teamradar_size\-
-\cl_teamradar_zoommode\-
-\cl_teamradar_rotation\-
-\cl_teamradar_scale\-
-\cl_teamradar_foreground_alpha\-
-\cl_teamradar_background_alpha\Opacité de l'arrière-plan du radar
 \viewsize\Enable/Désactiver l'arrière plan de l'interface
-\sbar_alpha_bg\Opacité de l'arrière plan de l'interface
-\sbar_color_bg_r\Intensité du rouge dans l'arrière-plan de l'interface
-\sbar_color_bg_g\Intensité du vert dans l'arrière-plan de l'interface
-\sbar_color_bg_b\Intensité du bleu dans l'arrière-plan de l'interface
-\sbar_color_bg_team\Saturation de la couleur d'équipe avec l'arrière-plan de l'interface
 \cl_hidewaypoints\Montrer/Cacher les Waypoints (flèches 3D)
 \g_waypointsprite_scale\Ajuster la taille des Waypoints
 \g_waypointsprite_alpha\Ajuster l'opacité des Waypoints

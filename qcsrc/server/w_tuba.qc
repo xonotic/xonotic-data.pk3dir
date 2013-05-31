@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", _("@!#%'n Tuba"))
+REGISTER_WEAPON(
+/* WEP_##id  */ TUBA,
+/* function  */ w_tuba,
+/* ammotype  */ 0,
+/* impulse   */ 1,
+/* flags     */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "tuba",
+/* shortname */ "tuba",
+/* fullname  */ _("@!#%'n Tuba")
+);
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
@@ -130,6 +140,9 @@ void W_Tuba_NoteOff()
 				case 1:
 					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Accordeon: ^7", s, "\n"));
 					break;
+				case 2:
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Klein Bottle: ^7", s, "\n"));
+					break;
 			}
 		}
 	}
@@ -145,6 +158,9 @@ float Tuba_GetNote(entity pl, float hittype)
 	if(pl.movement_x > 0) movestate += 3;
 	if(pl.movement_y < 0) movestate -= 1;
 	if(pl.movement_y > 0) movestate += 1;
+#ifdef GMQCC
+	note = 0;
+#endif
 	switch(movestate)
 	{
 	// layout: originally I wanted
@@ -160,6 +176,7 @@ float Tuba_GetNote(entity pl, float hittype)
 		case 2: note = -5; break; // G
 		case 3: note = -4; break; // G#
 		case 4: note = +5; break; // e#
+		default:
 		case 5: note =  0; break; // c
 		case 6: note = +2; break; // d
 		case 7: note = +3; break; // eb
@@ -179,7 +196,7 @@ float Tuba_GetNote(entity pl, float hittype)
 	// that way, holes in the range of notes are "plugged"
 	if(teamplay)
 	{
-		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
+		if(pl.team == NUM_TEAM_2 || pl.team == NUM_TEAM_4)
 			note += 3;
 	}
 	else
@@ -283,8 +300,6 @@ void W_Tuba_NoteOn(float hittype)
 		hittype |= HITTYPE_SECONDARY;
 	if(self.tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
-	if(self.tuba_instrument & 4)
-		hittype |= HITTYPE_HEADSHOT;
 
 	if(self.tuba_note)
 	{
@@ -373,9 +388,10 @@ float w_tuba(float req)
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
 		precache_model ("models/weapons/h_tuba.iqm");
-		precache_model ("models/weapons/g_akordeon.md3");
 		precache_model ("models/weapons/v_akordeon.md3");
 		precache_model ("models/weapons/h_akordeon.iqm");
+		precache_model ("models/weapons/v_kleinbottle.md3");
+		precache_model ("models/weapons/h_kleinbottle.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)
@@ -399,6 +415,10 @@ float w_tuba(float req)
 					self.weaponname = "akordeon";
 					break;
 				case 1:
+					self.tuba_instrument = 2;
+					self.weaponname = "kleinbottle";
+					break;
+				case 2:
 					self.tuba_instrument = 0;
 					self.weaponname = "tuba";
 					break;
@@ -413,62 +433,32 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_SUICIDE;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_SUICIDE;
+		else
+			return WEAPON_TUBA_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_MURDER;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_MURDER;
+		else
+			return WEAPON_TUBA_MURDER;
+	}
 	return TRUE;
 }
 #endif
 #ifdef CSQC
 float w_tuba(float req)
 {
-	if(req == WR_IMPACTEFFECT)
-	{
-		// nothing to do here; particles of tuba are handled differently
-	}
-	else if(req == WR_PRECACHE)
-	{
-		// nothing to do
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
-				break;
-		}
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
-				break;
-		}
-	}
+	// nothing to do here; particles of tuba are handled differently
+
 	return TRUE;
 }
 #endif

@@ -49,6 +49,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, _("Client UDP port:")));
 		me.TD(me, 1, 1, e = makeXonoticInputBox(0, "cl_port"));
+			e.enableClearButton = 0;
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);

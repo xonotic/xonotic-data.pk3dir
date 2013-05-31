@@ -23,7 +23,7 @@ float hk_is_valid_target(entity e_target)
         return 0;
 
     // player
-    if (e_target.flags & FL_CLIENT)
+    if (IS_CLIENT(e_target))
     {
         if (self.owner.target_select_playerbias < 0)
             return 0;
@@ -108,6 +108,8 @@ void turret_hk_missile_think()
     }
     else
     {
+	edist = 0;
+	ve = '0 0 0';
         fe = 0;
     }
 
@@ -255,7 +257,8 @@ void turret_hk_attack()
     missile.angles           = vectoangles(missile.velocity);
     missile.cnt              = time + 30;
     missile.ticrate          = max(autocvar_sys_ticrate, 0.05);
-
+    missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
+    
     if (self.tur_head.frame == 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 

@@ -115,7 +115,7 @@ void func_breakable_behave_destroyed()
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
 	self.bot_attack = FALSE;
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
 }
@@ -240,9 +240,9 @@ void spawnfunc_func_breakable() {
 	if(self.count == 0)
 		self.count = 1;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "got too close to an explosion";
-	if(!self.message2)
+	if(self.message2 == "")
 		self.message2 = "was pushed into an explosion by";
 	if(!self.dmg_radius)
 		self.dmg_radius = 150;

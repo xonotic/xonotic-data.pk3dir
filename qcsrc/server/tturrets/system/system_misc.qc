@@ -45,7 +45,7 @@ vector shortangle_v(vector ang1, vector ang2)
 
 vector shortangle_vxy(vector ang1, vector ang2)
 {
-    vector vtmp;
+    vector vtmp = '0 0 0';
 
     vtmp_x = shortangle_f(ang1_x,ang2_x);
     vtmp_y = shortangle_f(ang1_y,ang2_y);
@@ -60,7 +60,7 @@ vector shortangle_vxy(vector ang1, vector ang2)
 vector real_origin(entity ent)
 {
     entity e;
-    vector v;
+    vector v = ((ent.absmin + ent.absmax) * 0.5);
 
     e = ent.tag_entity;
     while(e)
@@ -68,7 +68,7 @@ vector real_origin(entity ent)
         v = v + ((e.absmin + e.absmax) * 0.5);
         e = e.tag_entity;
     }
-    v = v + ((ent.absmin + ent.absmax) * 0.5);
+
     return v;
 }
 

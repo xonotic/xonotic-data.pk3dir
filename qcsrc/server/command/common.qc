@@ -24,11 +24,11 @@ string GetCallerName(entity caller)
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if not(client.flags & FL_CLIENT)
+	if not(IS_CLIENT(client))
 		return CLIENT_DOESNT_EXIST;
-	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
+	else if(must_be_real && !IS_REAL_CLIENT(client))
 		return CLIENT_NOT_REAL;
-	else if(must_be_bots && (clienttype(client) != CLIENTTYPE_BOT))
+	else if(must_be_bots && !IS_BOT_CLIENT(client))
 		return CLIENT_NOT_BOT;
 		
 	return CLIENT_ACCEPTABLE;
@@ -63,6 +63,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	
 	next_token = -1;
 	index = start_index;
+	selection = world;
 	
 	if(argc > start_index)
 	{
@@ -80,6 +81,8 @@ entity GetIndexedEntity(float argc, float start_index)
 				tmp_number = stof(argv(index));
 				++index;
 			}
+			else
+				tmp_number = 0;
 		}
 		else // maybe it's ONLY a number?
 		{
@@ -123,6 +126,7 @@ entity GetFilteredEntity(string input)
 	}
 	else
 	{
+		selection = world;
 		FOR_EACH_CLIENT(tmp_player)
 			if (strdecolorize(tmp_player.netname) == strdecolorize(input))
 				selection = tmp_player;
@@ -137,12 +141,12 @@ float GetFilteredNumber(string input)
 	entity selection = GetFilteredEntity(input);
 	float output;
 	
-	if(selection) { output = num_for_edict(selection); }
+	output = num_for_edict(selection);
 
 	return output;
 }
 
-// switch between sprint and print depending on whether the reciever is the server or a player
+// switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {
     if(to)
@@ -158,14 +162,9 @@ void print_to(entity to, string input)
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
 void timeout_handler_reset()
 {
-	entity tmp_player;
-	
 	timeout_caller = world;
 	timeout_time = 0;
 	timeout_leadtime = 0;
-	
-	FOR_EACH_REALPLAYER(tmp_player)
-		Send_CSQC_Centerprint_Generic_Expire(tmp_player, CPID_TIMEOUT_COUNTDOWN);
 				
 	remove(self);
 }
@@ -180,11 +179,10 @@ void timeout_handler_think()
 		{
 			if(timeout_time > 0) // countdown is still going
 			{
-				FOR_EACH_REALPLAYER(tmp_player)
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, timeout_time);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
-					Announce("prepareforbattle");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 
 				self.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
 				timeout_time -= 1; // decrease the time counter
@@ -210,9 +208,7 @@ void timeout_handler_think()
 		{
 			if(timeout_leadtime > 0) // countdown is still going
 			{
-				// centerprint the information to every player
-				FOR_EACH_REALPLAYER(tmp_player) 
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, timeout_leadtime);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 				
 				self.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1; // decrease the time counter
@@ -433,7 +429,7 @@ void CommonCommand_records(float request, entity caller)
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				if(records_reply[i])
+				if(records_reply[i] != "")
 					print_to(caller, records_reply[i]);
 				
 			return; // never fall through to usage
@@ -561,14 +557,14 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
 				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
 				else if(caller && (caller.allowed_timeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
-				else if(caller && (caller.classname != "player")) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
+				else if(caller && !IS_PLAYER(caller)) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
 				else if((autocvar_timelimit) && (last_possible_timeout < time - game_starttime)) { print_to(caller, "^7Error: It is too late to call a timeout now!"); }
 				
 				else // everything should be okay, proceed with starting the timeout
 				{					
 					if(caller) { caller.allowed_timeouts -= 1; }
 					
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n"); // write a bprint who started the timeout (and how many they have left)
 					
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -579,7 +575,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 					timeout_handler.think = timeout_handler_think;
 					timeout_handler.nextthink = time; // always let the entity think asap
 
-					Announce("timeoutcalled");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}
 			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }
@@ -603,20 +599,21 @@ void CommonCommand_who(float request, entity caller, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
+			float total_listed_players, is_bot;
 			entity tmp_player;
 			
 			float privacy = (caller && autocvar_sv_status_privacy);
 			string separator = strreplace("%", " ", strcat((argv(1) ? argv(1) : " "), "^7"));
 			string tmp_netaddress, tmp_crypto_idfp;
 			
-			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : string_null), ":"));
+			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : ""), ":"));
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
+			total_listed_players = 0;
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				is_bot = (IS_BOT_CLIENT(tmp_player));
 				
 				if(is_bot)
 				{
@@ -633,22 +630,13 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_netaddress = tmp_player.netaddress;
 					tmp_crypto_idfp = tmp_player.crypto_idfp;
 				}
-				
-				tmp_hours = tmp_minutes = tmp_seconds = 0;
-				
-				tmp_seconds = floor(time - tmp_player.jointime);
-				tmp_minutes = floor(tmp_seconds / 60);
-				tmp_hours = floor(tmp_minutes / 60);
-
-				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
-				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "), 
 					num_for_edict(tmp_player), 
 					tmp_player.netname,
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
-					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
+					process_time(1, time - tmp_player.jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 				

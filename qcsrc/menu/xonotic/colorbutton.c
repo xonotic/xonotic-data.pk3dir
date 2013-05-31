@@ -70,6 +70,9 @@ void XonoticColorButton_loadCvars(entity me)
 	if not(me.cvarName)
 		return;
 
+	if(cvar_string(me.cvarName) == cvar_defstring(me.cvarName))
+		cvar_set(me.cvarName, ftos(16 * floor(random() * 15) + floor(random() * 15)));
+
 	if(me.cvarPart == 1)
 		me.checked = (cvar(me.cvarName) & 240) == me.cvarValueFloat * 16;
 	else

@@ -7,12 +7,15 @@
 void ewheel_attack()
 {
     float i;
-
+    entity _mis;
+    
     for (i = 0; i < 1; ++i)
     {
         turret_do_updates(self);
 
-        turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE);    
+        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE); 
+        _mis.missile_flags = MIF_SPLASH;
+
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
         self.tur_head.frame += 2;
@@ -252,6 +255,7 @@ void turret_ewheel_dinit()
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.iscreature = TRUE;
+    self.teleportable = TELEPORT_NORMAL;
     self.damagedbycontents = TRUE;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;

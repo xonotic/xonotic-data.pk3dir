@@ -79,6 +79,7 @@ void turret_hellion_attack()
     missile.flags        = FL_PROJECTILE;
     missile.tur_health   = time + 9;
     missile.tur_aimpos   = randomvec() * 128;
+    missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 	self.tur_head.frame += 1;
 }
 

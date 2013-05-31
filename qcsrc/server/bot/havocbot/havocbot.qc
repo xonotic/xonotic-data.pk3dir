@@ -1,10 +1,6 @@
 #include "havocbot.qh"
-#include "role_ctf.qc"
 #include "role_onslaught.qc"
 #include "role_keyhunt.qc"
-#include "role_freezetag.qc"
-#include "role_keepaway.qc"
-#include "role_assault.qc"
 #include "roles.qc"
 
 void havocbot_ai()
@@ -94,7 +90,7 @@ void havocbot_ai()
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &~= AI_STATUS_ROAMING;
 
-		if(self.weapons)
+		if(!WEPSET_EMPTY_E(self))
 		{
 			weapon_action(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
@@ -110,7 +106,7 @@ void havocbot_ai()
 		}
 		else
 		{
-			if(self.bot_aimtarg.classname=="player")
+			if(IS_PLAYER(self.bot_aimtarg))
 				bot_aimdir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
 		}
 	}
@@ -168,7 +164,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if ((self.weapons & W_WeaponBit(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+				if (WEPSET_CONTAINS_EW(self, i) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
 					self.switchweapon = i;
 			}
 		}
@@ -264,7 +260,7 @@ void havocbot_bunnyhop(vector dir)
 	if(self.aistatus & AI_STATUS_ATTACKING)
 		return;
 
-	if(self.goalcurrent.classname == "player")
+	if(IS_PLAYER(self.goalcurrent))
 		return;
 
 	maxspeed = autocvar_sv_maxspeed;
@@ -493,8 +489,8 @@ void havocbot_movetogoal()
 		{
 			if(fabs(self.velocity_z)<50)
 			{
-				entity head, newgoal;
-				float distance, bestdistance;
+				entity head, newgoal = world;
+				float distance, bestdistance = 0;
 
 				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
@@ -544,7 +540,7 @@ void havocbot_movetogoal()
 			}
 
 			// Don't chase players while using a jump pad
-			if(self.goalcurrent.classname=="player" || self.goalstack01.classname=="player")
+			if(IS_PLAYER(self.goalcurrent) || IS_PLAYER(self.goalstack01))
 				return;
 		}
 	}
@@ -809,7 +805,7 @@ void havocbot_movetogoal()
 		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
 		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), TRUE, world);
-		if(trace_ent.classname == "player")
+		if(IS_PLAYER(trace_ent))
 			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
@@ -908,7 +904,7 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(;;)
+	for(i = 0; ; ++i)
 	{
 		while (head)
 		{
@@ -930,7 +926,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || !WEPSET_EMPTY_E(self)) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;
@@ -939,7 +935,6 @@ void havocbot_chooseenemy()
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
-		++i;
 	}
 
 	// Restore hit flags
@@ -960,7 +955,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available;
+		float i, other_weapon_available = FALSE;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
@@ -979,7 +974,7 @@ void havocbot_chooseweapon()
 	float i;
 
 	// ;)
-	if(g_weaponarena == WEPBIT_TUBA)
+	if(WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 	{
 		self.switchweapon = WEP_TUBA;
 		return;

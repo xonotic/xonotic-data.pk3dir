@@ -14,6 +14,8 @@ string getrecords(float page) // 50 records per page
 {	
 	float rec = 0, r, i;
 	string h, s;
+	
+	s = "";
 
 	if (g_ctf)
 	{
@@ -23,7 +25,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				// TODO: uid2name
@@ -42,7 +44,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);
@@ -60,7 +62,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);
@@ -72,7 +74,7 @@ string getrecords(float page) // 50 records per page
 
 	MapInfo_ClearTemps();
 
-	if (s == "" && page == 0)
+	if(s == "" && page == 0)
 		return "No records are available on this server.\n";
 	else
 		return s;
@@ -85,6 +87,7 @@ string getrankings()
 
 	map = GetMapname();
 
+	s = "";
 	for (i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		t = race_readTime(map, i);
@@ -93,7 +96,7 @@ string getrankings()
 			continue;
 			
 		n = race_readName(map, i);
-		p = race_placeName(i);
+		p = count_ordinal(i);
 		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
 	}
 
@@ -107,7 +110,7 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt, thiscnt;
+	float i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 	
 	if(g_cts)
@@ -237,7 +240,7 @@ string getladder()
 	s = strcat(s, " ^7Total  ^3|");
 	
 	for(i = 1; i <= LADDER_CNT; ++i)
-		{ s = strcat(s, " ^7", race_placeName(i), " ^3|"); }
+		{ s = strcat(s, " ^7", count_ordinal(i), " ^3|"); }
 	
 	s = strcat(s, " ^7Speed awards ^3| ^7Name");
 	s = strcat(s, "\n^3----+--------");
@@ -260,7 +263,7 @@ string getladder()
 		if(argv(LADDER_CNT+1) == "") // total is 0, skip
 			continue;
 			
-		s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
+		s = strcat(s, strpad(4, count_ordinal(i+1)), "^3| ^7"); // pos
 		s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
 		
 		for(j = 1; j <= min(9, LADDER_CNT); ++j)

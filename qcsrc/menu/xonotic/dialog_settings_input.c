@@ -40,6 +40,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear"), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Clear;
 			e.onClickEntity = kb;
+			kb.clearButton = e;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));

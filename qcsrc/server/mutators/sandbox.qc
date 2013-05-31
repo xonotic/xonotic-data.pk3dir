@@ -26,7 +26,7 @@ void sandbox_ObjectFunction_Touch()
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTN_NORM);
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
@@ -205,7 +205,7 @@ string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't def
 string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties, and return them as a string
-	float i;
+	float i = 0;
 	string s;
 	entity head;
 
@@ -268,6 +268,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	}
 
 	// now apply the array to a simple string, with the ; symbol separating objects
+	s = "";
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
 	{
 		if(port_string[i])
@@ -282,7 +283,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
-	entity e, parent;
+	entity e = world, parent = world;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -293,7 +294,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	for(i = 0; i < n; ++i)
 	{
 		float argv_num;
-		string tagname;
+		string tagname = string_null;
 		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
@@ -402,7 +403,7 @@ void sandbox_Database_Load()
 			{
 				// since objects are being loaded for the first time, precache material sounds for each
 				for (i = 1; i <= 5; i++) // 5 sounds in total
-					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".ogg"));
+					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
@@ -674,7 +675,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							if(argv(3))
 							{
 								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else
@@ -744,13 +745,16 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
 							return TRUE;
 						case "mesh":
+							s = "";
 							FOR_EACH_TAG(e)
 								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return TRUE;
 						case "attachments":
 							// this should show the same info as 'mesh' but for attachments
+							s = "";
 							entity head;
+							i = 0;
 							for(head = world; (head = find(head, classname, "object")); )
 							{
 								if(head.owner == e)
@@ -811,6 +815,16 @@ MUTATOR_DEFINITION(sandbox)
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Database_Load();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// nothing to remove
 	}
 
 	return FALSE;

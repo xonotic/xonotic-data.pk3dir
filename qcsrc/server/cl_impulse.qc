@@ -46,9 +46,19 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
+	// forbid impulses when not in round time
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
+		return;
+    
+    if(self.vehicle)
+        if(self.vehicle.deadflag == DEAD_NO)
+            if(self.vehicle.vehicles_impusle)
+                if(self.vehicle.vehicles_impusle(imp))
+                    return;
+    
 	if(CheatImpulse(imp))
 	{
 	}
@@ -88,8 +98,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (2);
 					break;
 				case 17:
-					if (!g_minstagib)
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
+					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
 					W_NextWeapon (1);
@@ -159,11 +168,14 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
-					if(!wp)
-						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
-					else
-						WaypointSprite_Ping(wp);
+					if not(MUTATOR_CALLHOOK(HelpMePing))
+					{
+						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
+						if(!wp)
+							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
+						else
+							WaypointSprite_Ping(wp);
+					}
 					sprint(self, "HELP ME attached\n");
 				}
 				break;

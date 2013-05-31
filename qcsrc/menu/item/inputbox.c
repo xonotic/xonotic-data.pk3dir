@@ -5,10 +5,12 @@ CLASS(InputBox) EXTENDS(Label)
 	METHOD(InputBox, setText, void(entity, string))
 	METHOD(InputBox, enterText, void(entity, string))
 	METHOD(InputBox, keyDown, float(entity, float, float, float))
+	METHOD(InputBox, mouseMove, float(entity, vector))
 	METHOD(InputBox, mouseRelease, float(entity, vector))
 	METHOD(InputBox, mousePress, float(entity, vector))
 	METHOD(InputBox, mouseDrag, float(entity, vector))
 	METHOD(InputBox, showNotify, void(entity))
+	METHOD(InputBox, resizeNotify, void(entity, vector, vector, vector, vector))
 
 	ATTRIB(InputBox, src, string, string_null)
 
@@ -26,6 +28,15 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, color, vector, '1 1 1')
 	ATTRIB(InputBox, colorF, vector, '1 1 1')
 	ATTRIB(InputBox, maxLength, float, 255) // if negative, it counts bytes, not chars
+
+	ATTRIB(InputBox, enableClearButton, float, 1)
+	ATTRIB(InputBox, clearButton, entity, NULL)
+	ATTRIB(InputBox, cb_width, float, 0)
+	ATTRIB(InputBox, cb_pressed, float, 0)
+	ATTRIB(InputBox, cb_focused, float, 0)
+	ATTRIB(InputBox, cb_color, vector, '1 1 1')
+	ATTRIB(InputBox, cb_colorF, vector, '1 1 1')
+	ATTRIB(InputBox, cb_colorC, vector, '1 1 1')
 ENDCLASS(InputBox)
 void InputBox_Clear_Click(entity btn, entity me);
 #endif
@@ -36,6 +47,16 @@ void InputBox_configureInputBox(entity me, string theText, float theCursorPos, f
 	SUPER(InputBox).configureLabel(me, theText, theFontSize, 0.0);
 	me.src = gfx;
 	me.cursorPos = theCursorPos;
+}
+void InputBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+{
+	SUPER(InputBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
+	if (me.enableClearButton)
+	{
+		me.cb_width = absSize_y / absSize_x;
+		me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_width; // bound to range -1, 0
+		me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_width;
+	}
 }
 
 void InputBox_setText(entity me, string txt)
@@ -50,18 +71,60 @@ void InputBox_Clear_Click(entity btn, entity me)
 	me.setText(me, "");
 }
 
+float over_ClearButton(entity me, vector pos)
+{
+	if (pos_x >= 1 + me.cb_offset - me.cb_width)
+	if (pos_x < 1 + me.cb_offset)
+	if (pos_y >= 0)
+	if (pos_y < 1)
+		return 1;
+	return 0;
+}
+
+float InputBox_mouseMove(entity me, vector pos)
+{
+	if (me.enableClearButton)
+	{
+		if (over_ClearButton(me, pos))
+		{
+			me.cb_focused = 1;
+			return 1;
+		}
+		me.cb_focused = 0;
+	}
+	return 1;
+}
+
 float InputBox_mouseDrag(entity me, vector pos)
 {
 	float p;
-	me.dragScrollPos = pos;
-	p = me.scrollPos + pos_x - me.keepspaceLeft;
-	me.cursorPos = draw_TextLengthUpToWidth(me.text, p, 0, me.realFontSize);
-	me.lastChangeTime = time;
+	if(me.pressed)
+	{
+		me.dragScrollPos = pos;
+		p = me.scrollPos + pos_x - me.keepspaceLeft;
+		me.cursorPos = draw_TextLengthUpToWidth(me.text, p, 0, me.realFontSize);
+		me.lastChangeTime = time;
+	}
+	else if (me.enableClearButton)
+	{
+		if (over_ClearButton(me, pos))
+		{
+			me.cb_pressed = 1;
+			return 1;
+		}
+	}
+	me.cb_pressed = 0;
 	return 1;
 }
 
 float InputBox_mousePress(entity me, vector pos)
 {
+	if (me.enableClearButton)
+	if (over_ClearButton(me, pos))
+	{
+		me.cb_pressed = 1;
+		return 1;
+	}
 	me.dragScrollTimer = time;
 	me.pressed = 1;
 	return InputBox_mouseDrag(me, pos);
@@ -69,8 +132,19 @@ float InputBox_mousePress(entity me, vector pos)
 
 float InputBox_mouseRelease(entity me, vector pos)
 {
+	if(me.cb_pressed)
+	if (over_ClearButton(me, pos))
+	{
+		me.cb_pressed = 0;
+		InputBox_Clear_Click(world, me);
+		return 1;
+	}
+	float r = InputBox_mouseDrag(me, pos);
+	//reset cb_pressed after mouseDrag, mouseDrag could set cb_pressed in this case:
+	//mouse press out of the clear button, drag and then mouse release over the clear button
+	me.cb_pressed = 0;
 	me.pressed = 0;
-	return InputBox_mouseDrag(me, pos);
+	return r;
 }
 
 void InputBox_enterText(entity me, string ch)
@@ -145,6 +219,9 @@ void InputBox_draw(entity me)
 
 	if(me.pressed)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
+
+	if(me.recalcPos)
+		me.recalcPositionWithText(me, me.text);
 
 	me.focusable = !me.disabled;
 	if(me.disabled)
@@ -223,7 +300,6 @@ void InputBox_draw(entity me)
 				else if(ch2 == "x") // ^x found
 				{
 					theColor = '1 1 1';
-					theTempColor = '0 0 0';
 					
 					component = HEXDIGIT_TO_DEC(substring(me.text, i+2, 1));
 					if (component >= 0) // ^xr found
@@ -292,6 +368,17 @@ void InputBox_draw(entity me)
 		draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
 	draw_ClearClip();
+
+	if (me.enableClearButton)
+	if (me.text != "")
+	{
+		if(me.focused && me.cb_pressed)
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
+		else if(me.focused && me.cb_focused)
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
+		else
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
+	}
 
 	// skipping SUPER(InputBox).draw(me);
 	Item_draw(me);

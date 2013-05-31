@@ -144,6 +144,7 @@ void ModalController_draw(entity me)
 	vector fs;
 	animating = 0;
 
+	front = world;
 	for(e = me.firstChild; e; e = e.nextSibling)
 		if(e.ModalController_state)
 		{

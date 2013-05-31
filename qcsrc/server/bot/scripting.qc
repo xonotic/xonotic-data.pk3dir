@@ -6,7 +6,7 @@
 void bot_clearqueue(entity bot)
 {
 	if(!bot.bot_cmdqueuebuf_allocated)
-		error("clearqueue but no queue allocated");
+		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
 	dprint("bot ", bot.netname, " queue cleared\n");
@@ -18,6 +18,8 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_start = 0;
+		bot.bot_cmdqueuebuf_end = 0;
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
@@ -29,18 +31,24 @@ void bot_queuecommand(entity bot, string cmdstring)
 		string parm;
 		string cmdstr;
 
-		sp = strstrofs(cmdstr, " ", 0);
-		if(sp < 0)
+		sp = strstrofs(cmdstring, " ", 0);
+		if(sp >= 0)
 		{
-			parm = "";
+			parm = substring(cmdstring, sp + 1, -1);
+			cmdstr = substring(cmdstring, 0, sp);
+			if(cmdstr == "sound")
+			{
+				// find the LAST word
+				for(;;)
+				{
+					sp = strstrofs(parm, " ", 0);
+					if(sp < 0)
+						break;
+					parm = substring(parm, sp + 1, -1);
+				}
+				precache_sound(parm);
+			}
 		}
-		else
-		{
-			parm = substring(cmdstr, sp + 1, -1);
-			cmdstr = substring(cmdstr, 0, sp);
-		}
-		if(cmdstr == "sound")
-			precache_sound(cmdstr);
 	}
 
 	bot.bot_cmdqueuebuf_end += 1;
@@ -278,7 +286,7 @@ entity find_bot_by_name(string name)
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		if(bot.netname==name)
 			return bot;
 
@@ -292,7 +300,7 @@ entity find_bot_by_name(string name)
 entity find_bot_by_number(float number)
 {
 	entity bot;
-	float c;
+	float c = 0;
 
 	if(!number)
 		return world;
@@ -300,7 +308,7 @@ entity find_bot_by_number(float number)
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		{
 			if(++c==number)
 				return bot;
@@ -1089,8 +1097,24 @@ float bot_cmd_sound()
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
 
+	float n = tokenizebyseparator(f, " ");
+
+	string sample = f;
+	float chan = CH_WEAPON_B;
+	float vol = VOL_BASE;
+	float atten = ATTN_MIN;
+
+	if(n >= 1)
+		sample = argv(n - 1);
+	if(n >= 2)
+		chan = stof(argv(0));
+	if(n >= 3)
+		vol = stof(argv(1));
+	if(n >= 4)
+		atten = stof(argv(2));
+
 	precache_sound(f);
-	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
+	sound(self, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }
@@ -1194,8 +1218,8 @@ void bot_resetqueues()
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
-		if(cl.bot_cmdqueuebuf_allocated)
-			bot_clearqueue(cl);
+		cl.bot_cmd_execution_index = 0;
+		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
 		for(i = 0; i < cl.bot_places_count; ++i)

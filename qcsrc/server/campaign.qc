@@ -183,12 +183,12 @@ void CampaignPreIntermission()
 	float lost;
 	string savevar;
 
-	won = 0;
+	won = lost = 0;
 
 	head = findchain(classname, "player");
 	while(head)
 	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(head))
 		{
 			if(head.winning)
 				won = won + 1;

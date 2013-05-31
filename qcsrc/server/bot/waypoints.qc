@@ -360,8 +360,8 @@ void waypoint_schedulerelinkall()
 float waypoint_load_links()
 {
 	string filename, s;
-	float file, tokens, c, found;
-	entity wp_from, wp_to;
+	float file, tokens, c = 0, found;
+	entity wp_from = world, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.cache");
@@ -375,12 +375,8 @@ float waypoint_load_links()
 		return FALSE;
 	}
 
-	while (1)
+	while ((s = fgets(file)))
 	{
-		s = fgets(file);
-		if (!s)
-			break;
-
 		tokens = tokenizebyseparator(s, "*");
 
 		if (tokens!=2)
@@ -394,7 +390,7 @@ float waypoint_load_links()
 		wp_to_pos	= stov(argv(1));
 
 		// Search "from" waypoint
-		if(wp_from.origin!=wp_from_pos)
+		if(!wp_from || wp_from.origin!=wp_from_pos)
 		{
 			wp_from = findradius(wp_from_pos, 1);
 			found = FALSE;
@@ -456,8 +452,8 @@ float waypoint_load_links()
 void waypoint_load_links_hardwired()
 {
 	string filename, s;
-	float file, tokens, c, found;
-	entity wp_from, wp_to;
+	float file, tokens, c = 0, found;
+	entity wp_from = world, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.hardwired");
@@ -473,12 +469,8 @@ void waypoint_load_links_hardwired()
 		return;
 	}
 
-	for (;;)
+	while ((s = fgets(file)))
 	{
-		s = fgets(file);
-		if (!s)
-			break;
-
 		if(substring(s, 0, 2)=="//")
 			continue;
 
@@ -494,7 +486,7 @@ void waypoint_load_links_hardwired()
 		wp_to_pos	= stov(argv(1));
 
 		// Search "from" waypoint
-		if(wp_from.origin!=wp_from_pos)
+		if(!wp_from || wp_from.origin!=wp_from_pos)
 		{
 			wp_from = findradius(wp_from_pos, 5);
 			found = FALSE;
@@ -573,19 +565,20 @@ void waypoint_save_links()
 		for(i=0;i<32;++i)
 		{
 			// :S
+			link = world;
 			switch(i)
 			{
 				//	for i in $(seq -w 0 31); do echo "case $i:link = w.wp$i; break;"; done;
-				case 00:link = w.wp00; break;
-				case 01:link = w.wp01; break;
-				case 02:link = w.wp02; break;
-				case 03:link = w.wp03; break;
-				case 04:link = w.wp04; break;
-				case 05:link = w.wp05; break;
-				case 06:link = w.wp06; break;
-				case 07:link = w.wp07; break;
-				case 08:link = w.wp08; break;
-				case 09:link = w.wp09; break;
+				case  0:link = w.wp00; break;
+				case  1:link = w.wp01; break;
+				case  2:link = w.wp02; break;
+				case  3:link = w.wp03; break;
+				case  4:link = w.wp04; break;
+				case  5:link = w.wp05; break;
+				case  6:link = w.wp06; break;
+				case  7:link = w.wp07; break;
+				case  8:link = w.wp08; break;
+				case  9:link = w.wp09; break;
 				case 10:link = w.wp10; break;
 				case 11:link = w.wp11; break;
 				case 12:link = w.wp12; break;
@@ -686,18 +679,15 @@ float waypoint_loadall()
 	file = fopen(filename, FILE_READ);
 	if (file >= 0)
 	{
-		while (1)
+		while ((s = fgets(file)))
 		{
-			s = fgets(file);
-			if (!s)
-				break;
 			m1 = stov(s);
 			s = fgets(file);
-			if (!s)
+			if not(s)
 				break;
 			m2 = stov(s);
 			s = fgets(file);
-			if (!s)
+			if not(s)
 				break;
 			fl = stof(s);
 			waypoint_spawn(m1, m2, fl);

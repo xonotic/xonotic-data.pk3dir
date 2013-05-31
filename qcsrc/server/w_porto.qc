@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON, 0, "porto" , "porto", _("Port-O-Launch"))
+REGISTER_WEAPON(
+/* WEP_##id  */ PORTO,
+/* function  */ w_porto,
+/* ammotype  */ 0,
+/* impulse   */ 0,
+/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
+/* rating    */ 0,
+/* model     */ "porto" ,
+/* shortname */ "porto",
+/* fullname  */ _("Port-O-Launch")
+);
 #else
 #ifdef SVQC
 .entity porto_current;
@@ -36,7 +46,7 @@ void W_Porto_Fail (float failhard)
 
 	self.realowner.porto_current = world;
 
-	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPBIT_PORTO))
+	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !WEPSET_CONTAINS_EW(self.realowner, WEP_PORTO))
 	{
 		setsize (self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);
@@ -202,12 +212,6 @@ void W_Porto_Attack (float type)
 {
 	entity gren;
 
-	if(type == -1)
-	{
-		if not(self.items & IT_UNLIMITED_SUPERWEAPONS)
-			self.weapons = self.weapons - (self.weapons & WEPBIT_PORTO);
-	}
-
 	W_SetupShot (self, FALSE, 4, "porto/fire.wav", CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
@@ -278,7 +282,7 @@ void spawnfunc_weapon_porto (void)
 float w_nexball_weapon(float req);
 float w_porto(float req)
 {
-	vector v_angle_save;
+	//vector v_angle_save;
 
 	if (g_nexball) { return w_nexball_weapon(req); }
 	if (req == WR_AIM)
@@ -332,7 +336,6 @@ float w_porto(float req)
 					ClientData_Touch(self);
 				}
 			}
-			v_angle_save = self.v_angle;
 			if(self.porto_v_angle_held)
 				makevectors(self.porto_v_angle); // override the previously set angles
 
@@ -382,10 +385,6 @@ float w_porto(float req)
 	{
 		// nothing to do
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s felt %s doing the impossible to him");
 	return TRUE;
 }
 #endif

@@ -153,6 +153,7 @@ void XonoticLanguageList_getLanguages(entity me)
 	buf = buf_create();
 
 	fh = fopen("languages.txt", FILE_READ);
+	i = 0;
 	while((s = fgets(fh)))
 	{
 		n = tokenize_console(s);

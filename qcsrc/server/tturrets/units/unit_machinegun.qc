@@ -5,7 +5,7 @@ void turret_machinegun_attack();
 //.float bulletcounter;
 void turret_machinegun_attack()
 {
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
 
     UziFlash();
@@ -31,6 +31,7 @@ void turret_machinegun_std_init()
     }
 
     self.damage_flags |= TFL_DMG_HEADSHAKE;
+	self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
 
     // Our fire routine
     self.turret_firefunc  = turret_machinegun_attack;

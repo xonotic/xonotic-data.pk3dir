@@ -147,11 +147,40 @@ void BanCommand_unban(float request, float argc)
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
-		{
+		{	
 			if(argv(1))
 			{
-				Ban_Delete(stof(argv(1)));
-				return;
+				float tmp_number = -1;
+				string tmp_string;
+				
+				if(substring(argv(1), 0, 1) == "#")
+				{
+					tmp_string = substring(argv(1), 1, -1);
+					
+					if(tmp_string != "") // is it all one token? like #1
+					{
+						tmp_number = stof(tmp_string);
+					}
+					else if(argc > 2) // no, it's two tokens? # 1
+					{
+						tmp_number = stof(argv(2));
+					}
+					else
+						tmp_number = -1;
+				}
+				else // maybe it's ONLY a number?
+				{
+					tmp_number = stof(argv(1));
+					
+					if((tmp_number == 0) && (argv(1) != "0"))
+						{ tmp_number = -1; }
+				}
+
+				if(tmp_number >= 0)
+				{
+					Ban_Delete(tmp_number);
+					return;
+				}
 			}
 		}
 			

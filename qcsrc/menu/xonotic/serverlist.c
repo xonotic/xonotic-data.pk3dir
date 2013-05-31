@@ -608,6 +608,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
+	typestr = "";
 	if(m >= 2)
 	{
 		typestr = argv(0);
@@ -616,6 +617,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
+	pure = 0;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -649,6 +651,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(modname != "Xonotic")
 	if(modname != "MinstaGib")
 	if(modname != "CTS")
+	if(modname != "NIX")
 	if(modname != "NewToys")
 		pure = 0;
 
@@ -730,11 +733,11 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 5: AES required
 
 	{
-		vector iconSize;
+		vector iconSize = '0 0 0';
 		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
 		iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
 
-		vector iconPos;
+		vector iconPos = '0 0 0';
 		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
 		iconPos_y = (1 - iconSize_y) * 0.5;
 
@@ -822,7 +825,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 		{
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+			return 1;
 		}
+		return 0;
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
@@ -831,7 +836,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 		{
 			ToggleFavorite(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
+			return 1;
 		}
+		return 0;
 	}
 	else if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 		return 1;
