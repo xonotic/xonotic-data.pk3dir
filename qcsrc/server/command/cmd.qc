@@ -196,20 +196,17 @@ void ClientCommand_mobedit(float request, float argc)
 			
 			switch(argv(1))
 			{
-				case "name": trace_ent.netname = strzone(strdecolorize(argv(2))); if(trace_ent.sprite) WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.netname, "", ""); break;
-				case "skin": trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; break;
-				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); break;
-				default: sprint(self, "Unknown parameter\n"); break;
+				case "name": trace_ent.netname = strzone(strdecolorize(argv(2))); if(trace_ent.sprite) WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.netname, "", ""); return;
+				case "skin": trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; return;
+				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
 			}
-			
-			return; // never fall through to usage
 		}
 		default:
 			sprint(self, "Incorrect parameters for ^2mobedit^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
-			sprint(self, "  Where 'argument' can be name, skin, color or movetarget.\n");
+			sprint(self, "  Where 'argument' can be name, color or movetarget.\n");
 			return;
 		}
 	}
