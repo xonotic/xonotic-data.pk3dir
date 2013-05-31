@@ -479,7 +479,7 @@ void SpawnBall(void)
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
-	if(!self.model)
+	if(self.model == "")
 	{
 		self.model = "models/nexball/ball.md3";
 		self.scale = 1.3;
@@ -505,13 +505,13 @@ void SpawnBall(void)
 
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
-	else if(!self.noise)
+	else if(self.noise == "")
 		self.noise = "sound/nexball/bounce.wav";
 	//bounce sound placeholder (FIXME)
-	if(!self.noise1)
+	if(self.noise1 == "")
 		self.noise1 = "sound/nexball/drop.wav";
 	//ball drop sound placeholder (FIXME)
-	if(!self.noise2)
+	if(self.noise2 == "")
 		self.noise2 = "sound/nexball/steal.wav";
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
@@ -568,7 +568,7 @@ void SpawnGoal(void)
 	}
 	EXACTTRIGGER_INIT;
 	self.classname = "nexball_goal";
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "ctf/respawn.wav";
 	precache_sound(self.noise);
 	self.touch = GoalTouch;
@@ -598,7 +598,7 @@ void spawnfunc_nexball_pinkgoal(void)
 void spawnfunc_nexball_fault(void)
 {
 	self.team = GOAL_FAULT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
@@ -606,7 +606,7 @@ void spawnfunc_nexball_fault(void)
 void spawnfunc_nexball_out(void)
 {
 	self.team = GOAL_OUT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
