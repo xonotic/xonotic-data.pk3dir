@@ -171,6 +171,11 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 		teamscores_primary = teamscores[i];
 		teamscores_flags_primary = scoreflags;
 	}
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 float ScoreInfo_SendEntity(entity to, float sf)
@@ -927,6 +932,7 @@ void PlayerScore_TeamStats(void)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(sk.(teamscores[i]) != 0)
 				if(teamscores_label[i] != "")
-					PlayerStats_TeamScore(t, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+					// the +1 is important here!
+					PlayerStats_TeamScore(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
 	}
 }
