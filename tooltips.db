@@ -147,6 +147,7 @@
 \r_bloom\Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)
 \r_hdr\Higher quality version of bloom, which has a huge impact on performance. (default: disabled)
 \r_motionblur\Motion blur strength - 0.4 recommended
+\hud_postprocessing_maxbluralpha\Enables special postprocessing effects for when damaged or under water or using a powerup (default: disabled)
 
 \XonoticSettingsDialog/Audio\Audio settings
 \mastervolume\-
