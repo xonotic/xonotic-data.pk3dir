@@ -63,10 +63,10 @@ vector Team_ColorRGB(float teamid)
 {
 	switch(teamid)
 	{
-		case NUM_TEAM_1: return '1 0.0625 0.0625';
-		case NUM_TEAM_2: return '0.0625 0.0625 1';
-		case NUM_TEAM_3: return '1 1 0.0625';
-		case NUM_TEAM_4: return '1 0.0625 1';
+		case NUM_TEAM_1: return '1 0.0625 0.0625'; // 0xFF0F0F
+		case NUM_TEAM_2: return '0.0625 0.0625 1'; // 0x0F0FFF
+		case NUM_TEAM_3: return '1 1 0.0625'; // 0xFFFF0F
+		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
 	}
 
     return '0 0 0';

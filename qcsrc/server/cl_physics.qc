@@ -760,7 +760,7 @@ void SV_PlayerPhysics()
 	else if(self.specialcommand_pos && (c != substring(specialcommand, self.specialcommand_pos - 1, 1)))
 		self.specialcommand_pos = 0;
 
-	if(!sv_maxidle_spectatorsareidle || self.movetype == MOVETYPE_WALK)
+	if(sv_maxidle > 0)
 	{
 		if(buttons != self.buttons_old || self.movement != self.movement_old || self.v_angle != self.v_angle_old)
 			self.parm_idlesince = time;

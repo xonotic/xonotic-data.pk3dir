@@ -155,63 +155,6 @@ void GameLogClose()
     }
 }
 
-float spawnpoint_nag;
-void relocate_spawnpoint()
-{
-    // nudge off the floor
-    setorigin(self, self.origin + '0 0 1');
-
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
-    if (trace_startsolid)
-    {
-        vector o;
-        o = self.origin;
-        self.mins = PL_MIN;
-        self.maxs = PL_MAX;
-        if (!move_out_of_solid(self))
-            objerror("could not get out of solid at all!");
-        print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
-        print(" ", ftos(self.origin_y - o_y));
-        print(" ", ftos(self.origin_z - o_z), "'\n");
-        if (autocvar_g_spawnpoints_auto_move_out_of_solid)
-        {
-            if (!spawnpoint_nag)
-                print("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
-            spawnpoint_nag = 1;
-        }
-        else
-        {
-            setorigin(self, o);
-            self.mins = self.maxs = '0 0 0';
-            objerror("player spawn point in solid, mapper sucks!\n");
-            return;
-        }
-    }
-
-    self.use = spawnpoint_use;
-    self.team_saved = self.team;
-    if (!self.cnt)
-        self.cnt = 1;
-
-    if (have_team_spawns != 0)
-        if (self.team)
-            have_team_spawns = 1;
-    have_team_spawns_forteam[self.team] = 1;
-
-    if (autocvar_r_showbboxes)
-    {
-        // show where spawnpoints point at too
-        makevectors(self.angles);
-        entity e;
-        e = spawn();
-        e.classname = "info_player_foo";
-        setorigin(e, self.origin + v_forward * 24);
-        setsize(e, '-8 -8 -8', '8 8 8');
-        e.solid = SOLID_TRIGGER;
-    }
-}
-
 #define strstr strstrofs
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.

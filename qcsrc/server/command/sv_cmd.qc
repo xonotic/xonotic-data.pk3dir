@@ -1588,10 +1588,10 @@ void GameCommand_trace(float request, float argc)
 				
 				case "walk":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
 						e = nextent(world);
-						if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
+						if(tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL))
 							print("can walk\n");
 						else
 							print("cannot walk\n");
@@ -1601,10 +1601,10 @@ void GameCommand_trace(float request, float argc)
 				
 				case "showline":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
-						vv = stov(argv(1));
-						dv = stov(argv(2));
+						vv = stov(argv(2));
+						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
 						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
@@ -1721,7 +1721,6 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// Common commands have double indentation to separate them a bit.
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \

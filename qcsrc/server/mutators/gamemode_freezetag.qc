@@ -549,8 +549,8 @@ MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 MUTATOR_HOOKFUNCTION(freezetag_ItemTouch)
 {
 	if (other.freezetag_frozen)
-		return 1;
-	return 0;
+		return MUT_ITEMTOUCH_RETURN;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
@@ -581,6 +581,14 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 	freezetag_teams = bound(2, freezetag_teams, 4);
 	ret_float = freezetag_teams;
 	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
+{
+	if(other.freezetag_frozen)
+		return TRUE;
+		
+	return FALSE;
 }
 
 void freezetag_Initialize()
@@ -616,6 +624,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
+	MUTATOR_HOOK(VehicleTouch, freezetag_VehicleTouch, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

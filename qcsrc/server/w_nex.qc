@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", _("Nex"))
+REGISTER_WEAPON(
+/* WEP_##id  */ NEX,
+/* function  */ w_nex,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "nex",
+/* shortname */ "nex",
+/* fullname  */ _("Nex")
+);
 #else
 #ifdef SVQC
 

@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", _("Rocket Launcher"))
+REGISTER_WEAPON(
+/* WEP_##id  */ ROCKET_LAUNCHER,
+/* function  */ w_rlauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "rl",
+/* shortname */ "rocketlauncher",
+/* fullname  */ _("Rocket Launcher")
+);
 #else
 #ifdef SVQC
 .float rl_release;

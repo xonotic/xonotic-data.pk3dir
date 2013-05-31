@@ -212,7 +212,7 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
 	}
 	
-	return FALSE;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 // scoreboard stuff

@@ -57,6 +57,7 @@ float autocvar_bot_sound_monopoly;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 float autocvar_bot_usemodelnames;
 float autocvar_bot_vs_human;
+float autocvar_bot_debug;
 float autocvar_bot_debug_tracewalk;
 float autocvar_bot_debug_goalstack;
 float autocvar_bot_wander_enable;
@@ -687,7 +688,6 @@ float autocvar_g_balance_uzi_sustained_refire;
 float autocvar_g_balance_uzi_sustained_spread;
 float autocvar_g_balance_uzi_reload_ammo;
 float autocvar_g_balance_uzi_reload_time;
-float autocvar_g_balance_weaponswitchdelay;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
 float autocvar_g_ballistics_materialconstant;
@@ -970,11 +970,11 @@ float autocvar_g_shootfromclient;
 float autocvar_g_shootfromeye;
 string autocvar_g_shootfromfixedorigin;
 float autocvar_g_showweaponspawns;
+float autocvar_g_spawn_alloweffects;
 float autocvar_g_spawn_furthest;
 float autocvar_g_spawn_useallspawns;
 float autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
-float autocvar_g_spawnsound;
 #define autocvar_g_start_weapon_laser cvar("g_start_weapon_laser")
 float autocvar_g_tdm_team_spawns;
 float autocvar_g_tdm_teams;
