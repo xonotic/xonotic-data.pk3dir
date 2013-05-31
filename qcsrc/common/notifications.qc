@@ -895,7 +895,10 @@ void Local_Notification_sound(
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
-			"Local_Notification_sound(world, %f, '%s', %f, %f) ^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', time/prevtime: %f, limit: %f\n",
+			strcat(
+				"Local_Notification_sound(world, %f, '%s', %f, %f) ",
+				"^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', timediff: %f, limit: %f\n"
+			 ),
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
