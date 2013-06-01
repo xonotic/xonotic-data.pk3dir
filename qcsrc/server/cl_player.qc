@@ -498,7 +498,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_inflictor = inflictor;
 
 	if(g_ca && self != attacker && IS_PLAYER(attacker))
-		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		PlayerTeamScore_Add(attacker, SP_SCORE, ST_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
 	float abot, vbot, awep;
 	abot = (IS_BOT_CLIENT(attacker));

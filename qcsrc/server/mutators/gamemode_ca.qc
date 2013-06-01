@@ -85,7 +85,7 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
-		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
+		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
@@ -226,7 +226,7 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 {
 	start_health = cvar("g_lms_start_health");
 	start_armorvalue = cvar("g_lms_start_armor");
-	
+
 	start_ammo_shells = cvar("g_lms_start_ammo_shells");
 	start_ammo_nails = cvar("g_lms_start_ammo_nails");
 	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
@@ -236,6 +236,19 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	start_items &~= IT_UNLIMITED_AMMO;
 
 	return 0;
+}
+
+// scoreboard setup
+void ca_ScoreRules()
+{
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_CA_ROUNDS,    "rounds",    SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
+
+void ca_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+{
+	ca_ScoreRules();
 }
 
 void ca_Initialize()
@@ -249,6 +262,8 @@ void ca_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	InitializeEntity(world, ca_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_ca)
