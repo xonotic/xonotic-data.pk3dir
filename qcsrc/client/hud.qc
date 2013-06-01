@@ -2633,32 +2633,100 @@ void HUD_Vote(void)
 
 float mod_active; // is there any active mod icon?
 
-// Clan Arena HUD modicons
-void HUD_Mod_CA(vector pos, vector mySize)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
 {
-	mod_active = 1; // CA should never hide the mod icons panel
-	float redalive, bluealive;
-	redalive = getstati(STAT_REDALIVE);
-	bluealive = getstati(STAT_BLUEALIVE);
-
-	vector redpos, bluepos;
-	if(mySize_x > mySize_y)
+	float stat;
+	string pic;
+	vector color;
+#ifdef GMQCC
+	stat = -1;
+	pic = "";
+	color = '0 0 0';
+#endif
+	switch(i)
 	{
-		redpos = pos;
-		bluepos = pos + eY * 0.5 * mySize_y;
-		drawpic_aspect_skin(redpos, "player_red.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(redpos + eX * 0.5 * mySize_x, ftos(redalive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bluepos, "player_blue.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(bluepos + eX * 0.5 * mySize_x, ftos(bluealive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		case 0:
+			stat = getstati(STAT_REDALIVE);
+			pic = "player_red.tga";
+			color = '1 0 0';
+			break;
+		case 1:
+			stat = getstati(STAT_BLUEALIVE);
+			pic = "player_blue.tga";
+			color = '0 0 1';
+			break;
+		case 2:
+			stat = getstati(STAT_YELLOWALIVE);
+			pic = "player_yellow.tga";
+			color = '1 1 0';
+			break;
+		default:
+		case 3:
+			stat = getstati(STAT_PINKALIVE);
+			pic = "player_pink.tga";
+			color = '1 0 1';
+			break;
+	}
+
+	if(mySize_x/mySize_y > aspect_ratio)
+	{
+		i = aspect_ratio * mySize_y;
+		myPos_x = myPos_x + (mySize_x - i) / 2;
+		mySize_x = i;
 	}
 	else
 	{
-		redpos = pos;
-		bluepos = pos + eY * 0.5 * mySize_y;
-		drawpic_aspect_skin(redpos, "player_red.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(redpos + eY * 0.3 * mySize_y, ftos(redalive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bluepos, "player_blue.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(bluepos + eY * 0.3 * mySize_y, ftos(bluealive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		i = 1/aspect_ratio * mySize_x;
+		myPos_y = myPos_y + (mySize_y - i) / 2;
+		mySize_y = i;
+	}
+
+	if(layout)
+	{
+		drawpic_aspect_skin(myPos, pic, eX * 0.7 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.7 * mySize_x, ftos(stat), eX * 0.3 * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else
+		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+// Clan Arena and Freeze Tag HUD modicons
+void HUD_Mod_CA(vector myPos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	entity tm;
+	float teams_count = 0;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm.team != NUM_SPECTATOR)
+			++teams_count;
+
+	float layout;
+	if(gametype == MAPINFO_TYPE_CA)
+		layout = autocvar_hud_panel_modicons_ca_layout;
+	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
+		layout = autocvar_hud_panel_modicons_freezetag_layout;
+	float rows, columns, aspect_ratio;
+	rows = mySize_y/mySize_x;
+	aspect_ratio = (layout) ? 2 : 1;
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	columns = ceil(teams_count/rows);
+
+	int i;
+	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	for(i=0; i<teams_count; ++i)
+	{
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
+
+		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
 	}
 }
 
@@ -3272,11 +3340,11 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 	int i;
 	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for(i=0; i<teams_count; ++i)
 	{
-		vector pos, itemSize;
-		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
 		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -3625,7 +3693,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
-				s = sprintf(_("^1Press ^3%s^1 for another player"), getcommandkey("primary fire", "+fire"));
+				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)

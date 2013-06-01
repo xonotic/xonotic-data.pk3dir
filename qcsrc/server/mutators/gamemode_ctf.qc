@@ -825,7 +825,7 @@ void ctf_FlagTouch()
 		else
 			return; // do nothing
 	}
-	else if(toucher.classname != "player") // The flag just touched an object, most likely the world
+	else if not(IS_PLAYER(toucher)) // The flag just touched an object, most likely the world
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
@@ -865,7 +865,7 @@ void ctf_FlagTouch()
 		
 		case FLAG_PASSING:
 		{
-			if((toucher.classname == "player") && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
+			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
 			{
 				if(IsDifferentTeam(toucher, self.pass_sender))
 					ctf_Handle_Return(self, toucher);
@@ -928,7 +928,7 @@ void ctf_RespawnFlag(entity flag)
 void ctf_Reset()
 {
 	if(self.owner)
-		if(self.owner.classname == "player")
+		if(IS_PLAYER(self.owner))
 			ctf_Handle_Throw(self.owner, world, DROP_RESET);
 			
 	ctf_RespawnFlag(self);
@@ -984,22 +984,23 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.think = ctf_FlagThink;
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
-	
-	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
-	if(!flag.scale) { flag.scale = FLAG_SCALE; }
-	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
-	if(!flag.toucheffect) { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
-	if(!flag.passeffect) { flag.passeffect = ((teamnumber) ? "red_pass" : "blue_pass"); }
-	if(!flag.capeffect) { flag.capeffect = ((teamnumber) ? "red_cap" : "blue_cap"); }
+
+	// appearence
+	if(flag.model == "")       { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
+	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
+	if(!flag.skin)             { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
+	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
+	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber) ? "red_pass" : "blue_pass"); }
+	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber) ? "red_cap" : "blue_cap"); }
 	
 	// sound 
-	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
-	if(!flag.snd_flag_returned) { flag.snd_flag_returned = ((teamnumber) ? "ctf/red_returned.wav" : "ctf/blue_returned.wav"); }
-	if(!flag.snd_flag_capture) { flag.snd_flag_capture = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
-	if(!flag.snd_flag_respawn) { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(!flag.snd_flag_dropped) { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
-	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
-	if(!flag.snd_flag_pass) { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
+	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
+	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = ((teamnumber) ? "ctf/red_returned.wav" : "ctf/blue_returned.wav"); }
+	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
+	if(flag.snd_flag_respawn == "")  { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
+	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
+	if(flag.snd_flag_touch == "")    { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
+	if(flag.snd_flag_pass == "")     { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 	
 	// precache
 	precache_sound(flag.snd_flag_taken);
@@ -1780,7 +1781,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 {
-	if((frag_attacker != frag_target) && (frag_attacker.classname == "player") && (frag_target.flagcarried))
+	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
 		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
@@ -1840,7 +1841,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			
 			while(head) // find the closest acceptable target to pass to
 			{
-				if(head.classname == "player" && head.deadflag == DEAD_NO)
+				if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
@@ -1852,7 +1853,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 					{
 						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
 						{ 
-							if(clienttype(head) == CLIENTTYPE_BOT)
+							if(IS_BOT_CLIENT(head))
 							{
 								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 								ctf_Handle_Throw(head, player, DROP_PASS);

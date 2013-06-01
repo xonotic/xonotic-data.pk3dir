@@ -8,6 +8,7 @@ CLASS(Label) EXTENDS(Item)
 	METHOD(Label, recalcPositionWithText, void(entity, string))
 	ATTRIB(Label, isBold, float, 0)
 	ATTRIB(Label, text, string, string_null)
+	ATTRIB(Label, currentText, string, string_null)
 	ATTRIB(Label, fontSize, float, 8)
 	ATTRIB(Label, align, float, 0.5)
 	ATTRIB(Label, allowCut, float, 0)
@@ -39,7 +40,13 @@ string Label_toString(entity me)
 void Label_setText(entity me, string txt)
 {
 	me.text = txt;
-	me.recalcPos = 1;
+	if(txt != me.currentText)
+	{
+		if(me.currentText)
+			strunzone(me.currentText);
+		me.currentText = strzone(txt);
+		me.recalcPos = 1;
+	}
 }
 void Label_recalcPositionWithText(entity me, string t)
 {
@@ -146,7 +153,13 @@ void Label_draw(entity me)
 	if(me.textEntity)
 	{
 		t = me.textEntity.toString(me.textEntity);
-		me.recalcPos = 1;
+		if(t != me.currentText)
+		{
+			if(me.currentText)
+				strunzone(me.currentText);
+			me.currentText = strzone(t);
+			me.recalcPos = 1;
+		}
 	}
 	else
 		t = me.text;

@@ -205,7 +205,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 {
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 		NIX_GiveCurrentWeapon();
 	return 0;
 }

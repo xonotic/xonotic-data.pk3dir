@@ -168,7 +168,7 @@ void RuneCarriedThink()
 	vector ang = '0 0 0';
 	entity rune;
 
-	if(self.owner.classname != "player" || time < game_starttime)
+	if(!IS_PLAYER(self.owner) || time < game_starttime)
 	{
 		rune_respawn();
 		return;
@@ -205,7 +205,7 @@ void rune_touch()
 		return;
 	}
 
-	if(other.classname != "player" || other.health < 1)
+	if(!IS_PLAYER(other) || other.health < 1)
 		return;
 	if(self.wait > time)
 		return; // "notouch" time isn't finished
@@ -551,7 +551,7 @@ void RuneMatchGivePoints()
 		if(!rune)
 			return;
 
-		if(rune.owner.classname == "player")
+		if(IS_PLAYER(rune.owner))
 		{
 			UpdateFrags(rune.owner, autocvar_g_runematch_pointamt);
 		}

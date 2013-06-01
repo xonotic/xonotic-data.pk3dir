@@ -93,12 +93,12 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(player) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(trace_ent.flags & FL_CLIENT)
+		if(IS_CLIENT(trace_ent))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
@@ -117,10 +117,9 @@ vector w_shotend;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-		if((!g_minstagib)
-			&& (player.items & IT_STRENGTH)
-			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+	if((player.items & IT_STRENGTH)
+		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
 			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 			player.prevstrengthsound = time;
@@ -198,7 +197,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (!trace_ent.takedamage)
 			{
 				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && trace_ent.classname == "player")
+				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
 					entity e;
 					e = trace_ent;
@@ -214,7 +213,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
 			if (ent.cursor_trace_ent != ent)         // just to make sure
 			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (ent.cursor_trace_ent.classname == "player") // and actually a player
+			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -256,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = self.owner;
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
 			self.viewmodelforclient = other;
 	return TRUE;
@@ -542,15 +541,20 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	float f;
+	
+	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity newwep = get_weaponinfo(self.owner.switchweapon);
+		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity oldwep = get_weaponinfo(self.owner.weapon);
+		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)
@@ -696,7 +700,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			if (!f)
 			{
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(cl))
 				{
 					play2(cl, "weapons/unavailable.wav");
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
@@ -1353,7 +1357,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
 			play2(self, "weapons/unavailable.wav");
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));

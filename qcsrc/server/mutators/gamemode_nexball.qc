@@ -248,7 +248,7 @@ void football_touch(void)
 			self.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if(other.health < 1)
 		return;
@@ -288,7 +288,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && other.classname == "player" && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -327,7 +327,7 @@ void GoalTouch(void)
 	else
 		otherteam = 0;
 
-	if((isclient = ball.pusher.flags & FL_CLIENT))
+	if((isclient = IS_CLIENT(ball.pusher)))
 		pname = ball.pusher.netname;
 	else
 		pname = "Someone (?)";
@@ -479,7 +479,7 @@ void SpawnBall(void)
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
-	if(!self.model)
+	if(self.model == "")
 	{
 		self.model = "models/nexball/ball.md3";
 		self.scale = 1.3;
@@ -505,13 +505,13 @@ void SpawnBall(void)
 
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
-	else if(!self.noise)
+	else if(self.noise == "")
 		self.noise = "sound/nexball/bounce.wav";
 	//bounce sound placeholder (FIXME)
-	if(!self.noise1)
+	if(self.noise1 == "")
 		self.noise1 = "sound/nexball/drop.wav";
 	//ball drop sound placeholder (FIXME)
-	if(!self.noise2)
+	if(self.noise2 == "")
 		self.noise2 = "sound/nexball/steal.wav";
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
@@ -568,7 +568,7 @@ void SpawnGoal(void)
 	}
 	EXACTTRIGGER_INIT;
 	self.classname = "nexball_goal";
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "ctf/respawn.wav";
 	precache_sound(self.noise);
 	self.touch = GoalTouch;
@@ -598,7 +598,7 @@ void spawnfunc_nexball_pinkgoal(void)
 void spawnfunc_nexball_fault(void)
 {
 	self.team = GOAL_FAULT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
@@ -606,7 +606,7 @@ void spawnfunc_nexball_fault(void)
 void spawnfunc_nexball_out(void)
 {
 	self.team = GOAL_OUT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
@@ -674,7 +674,7 @@ void W_Nexball_Touch(void)
 	
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && (attacker.classname == "player"))
+		if((ball = other.ballcarried) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			other.flags &~= FL_ONGROUND;
@@ -900,7 +900,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 				//tracebox(self.origin + self.view_ofs, '-2 -2 -2', '2 2 2', self.origin + self.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
 				crosshair_trace(self);
 				if( trace_ent && 
-					trace_ent.flags & FL_CLIENT &&
+					IS_CLIENT(trace_ent) &&
 					trace_ent.deadflag == DEAD_NO &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )

@@ -262,10 +262,6 @@ void player_anim (void)
 
 void SpawnThrownWeapon (vector org, float w)
 {
-	if(g_minstagib)
-	if(self.ammo_cells <= 0)
-		return;
-
 	if(g_pinata)
 	{
 		float j;
@@ -278,8 +274,9 @@ void SpawnThrownWeapon (vector org, float w)
 	}
 	else
 	{
-		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+		if(WEPSET_CONTAINS_EW(self, self.weapon))
+			if(W_IsWeaponThrowable(self.weapon))
+				W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
 	}
 }
 
@@ -338,7 +335,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
-void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -346,9 +342,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
-
-	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
-		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -391,17 +384,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if (!g_minstagib)
-	{
-		v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
-		take = v_x;
-		save = v_y;
-	}
-	else
-	{
-		save = 0;
-		take = damage;
-	}
+
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+	take = v_x;
+	save = v_y;
 
 	if(attacker == self)
 	{
@@ -410,7 +396,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		//self.pushltime = 0;
 		self.istypefrag = 0;
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -511,18 +497,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if(g_ca && self != attacker && attacker.classname == "player")
-		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
+	if(g_ca && self != attacker && IS_PLAYER(attacker))
+		PlayerTeamScore_Add(attacker, SP_SCORE, ST_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
 	float abot, vbot, awep;
-	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
-	vbot = (clienttype(self) == CLIENTTYPE_BOT);
+	abot = (IS_BOT_CLIENT(attacker));
+	vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	awep = 0;
 
-	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
-	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
+	if(vbot || IS_REAL_CLIENT(self))
+	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && self != attacker)
 	if(IsDifferentTeam(self, attacker))
 	{
@@ -579,14 +565,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(!g_freezetag)
-		{
-			// become fully visible
-			self.alpha = default_player_alpha;
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
-		}
-
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
@@ -598,25 +576,19 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
-		{
-			PutClientInServer();
-			count_alive_players(); // re-count players
-			freezetag_CheckWinner();
-			return;
-		}
-
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
+
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);
 
 		Portal_ClearAllLater(self);
 
-		if(clienttype(self) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(self))
 		{
 			self.fixangle = TRUE;
 			//msg_entity = self;
@@ -626,19 +598,23 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			//WriteAngle (MSG_ONE, 80);
 		}
 
-		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
-			ClientKill_Now_TeamChange();
+		if(defer_ClientKill_Now_TeamChange)
+			ClientKill_Now_TeamChange(); // can turn player into spectator
 
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(g_freezetag)
+		// player could have been miraculously resuscitated ;)
+		// e.g. players in freezetag get frozen, they don't really die
+		if(self.health >= 1 || !IS_PLAYER(self))
 			return;
 
 		// when we get here, player actually dies
-		// clear waypoints (do this AFTER FreezeTag)
-		WaypointSprite_PlayerDead();
 
+		// clear waypoints
+		WaypointSprite_PlayerDead();
+		// throw a weapon
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+
+		// become fully visible
+		self.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -677,6 +653,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+
+		if(g_cts || autocvar_g_forced_respawn)
+			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+
 		self.death_time = time;
 		if (random() < 0.5)
 			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
@@ -729,7 +709,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if(source.classname != "player")
+	if not(IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -889,7 +869,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if(source.classname != "player")
+	if not(IS_PLAYER(source))
 	{
 		if not(intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
@@ -957,7 +937,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
+			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
@@ -1130,7 +1110,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
 			}
 			break;
@@ -1159,7 +1139,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
@@ -1203,7 +1183,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
@@ -1216,7 +1196,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
@@ -1224,7 +1204,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
 				}
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
 			}
 			break;
@@ -1256,7 +1236,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 				}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)

@@ -69,7 +69,7 @@ entity deathtypes[DT_MAX];
 		CHECK_MAX_COUNT(name, DT_MAX, DT_COUNT, "deathtypes") \
 		\
 		entity deathent = spawn(); \
-		deathtypes[(name - DT_FIRST) - 1] = deathent; \
+		deathtypes[(name - DT_FIRST)] = deathent; \
 		deathent.classname = "deathtype"; \
 		deathent.nent_name = #name; \
 		#if (msg_death != NO_MSG) \
@@ -96,7 +96,7 @@ string Deathtype_Name(float deathtype)
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = deathtypes[(deathtype - DT_FIRST) - 1];
+		entity deathent = deathtypes[(deathtype - DT_FIRST)];
 		if not(deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
 		return deathent.nent_name;
 	}

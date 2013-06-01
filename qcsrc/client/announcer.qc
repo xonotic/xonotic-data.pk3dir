@@ -16,19 +16,34 @@ float announcer_5min;
 void Announcer_Countdown() 
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(roundstarttime == -1)
+	{
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
+		remove(self);
+		return;
+	}
+	if(roundstarttime >= starttime)
+		starttime = roundstarttime;
+	if(starttime <= time && roundstarttime != starttime) // game start time has passed
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
+
 	float countdown = (starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
-	
+
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN); 
-		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 		remove(self);
 		return;
 	}
 	else // countdown is still going
 	{
-		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
+		if(roundstarttime == starttime)
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+		else
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 
 		switch(countdown_rounded)
 		{
@@ -52,17 +67,24 @@ void Announcer_Countdown()
 void Announcer_Gamestart() 
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
-	
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(roundstarttime > startTime)
+		startTime = roundstarttime;
+
 	if(previous_game_starttime != startTime) 
 	{
 		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
-		
+
 		if(time < startTime) 
 		{
-			entity e;
-			e = spawn();
-			e.think = Announcer_Countdown;
+			entity e = find(world, classname, "announcer_countdown");
+			if not(e)
+			{
+				e = spawn();
+				e.classname = "announcer_countdown";
+				e.think = Announcer_Countdown;
+			}
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}

@@ -155,63 +155,6 @@ void GameLogClose()
     }
 }
 
-float spawnpoint_nag;
-void relocate_spawnpoint()
-{
-    // nudge off the floor
-    setorigin(self, self.origin + '0 0 1');
-
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
-    if (trace_startsolid)
-    {
-        vector o;
-        o = self.origin;
-        self.mins = PL_MIN;
-        self.maxs = PL_MAX;
-        if (!move_out_of_solid(self))
-            objerror("could not get out of solid at all!");
-        print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
-        print(" ", ftos(self.origin_y - o_y));
-        print(" ", ftos(self.origin_z - o_z), "'\n");
-        if (autocvar_g_spawnpoints_auto_move_out_of_solid)
-        {
-            if (!spawnpoint_nag)
-                print("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
-            spawnpoint_nag = 1;
-        }
-        else
-        {
-            setorigin(self, o);
-            self.mins = self.maxs = '0 0 0';
-            objerror("player spawn point in solid, mapper sucks!\n");
-            return;
-        }
-    }
-
-    self.use = spawnpoint_use;
-    self.team_saved = self.team;
-    if (!self.cnt)
-        self.cnt = 1;
-
-    if (have_team_spawns != 0)
-        if (self.team)
-            have_team_spawns = 1;
-    have_team_spawns_forteam[self.team] = 1;
-
-    if (autocvar_r_showbboxes)
-    {
-        // show where spawnpoints point at too
-        makevectors(self.angles);
-        entity e;
-        e = spawn();
-        e.classname = "info_player_foo";
-        setorigin(e, self.origin + v_forward * 24);
-        setsize(e, '-8 -8 -8', '8 8 8');
-        e.solid = SOLID_TRIGGER;
-    }
-}
-
 #define strstr strstrofs
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
@@ -589,7 +532,7 @@ void GetCvars(float f)
 string playername(entity p)
 {
     string t;
-    if (teamplay && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
@@ -750,7 +693,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_lms || g_ca)
+		if(g_ca)
 			s = "most";
 	}
 
@@ -824,26 +767,10 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		g_minstagib = 0; // incompatible
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
-		if(!(g_lms || g_ca))
-			start_items |= IT_UNLIMITED_AMMO;
-	}
-	else if (g_minstagib)
-	{
-		g_pinata = 0; // incompatible
-		g_weapon_stay = 0; // incompatible
-		g_bloodloss = 0; // incompatible
-		start_health = 100;
-		start_armorvalue = 0;
-		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-		start_items |= IT_UNLIMITED_SUPERWEAPONS;
-
-		if (g_minstagib_invis_alpha <= 0)
-			g_minstagib_invis_alpha = -1;
+		start_items |= IT_UNLIMITED_AMMO;
 	}
 	else
 	{
@@ -866,12 +793,7 @@ void readplayerstartcvars()
 	if(cvar("g_nexball"))
 		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
-	if(g_minstagib)
-	{
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-	}
-	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
@@ -881,28 +803,11 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		if(g_lms || g_ca)
-		{
-			start_ammo_shells = cvar("g_lms_start_ammo_shells");
-			start_ammo_nails = cvar("g_lms_start_ammo_nails");
-			start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-			start_ammo_cells = cvar("g_lms_start_ammo_cells");
-			start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-		}
-		else
-		{
-			start_ammo_shells = cvar("g_start_ammo_shells");
-			start_ammo_nails = cvar("g_start_ammo_nails");
-			start_ammo_rockets = cvar("g_start_ammo_rockets");
-			start_ammo_cells = cvar("g_start_ammo_cells");
-			start_ammo_fuel = cvar("g_start_ammo_fuel");
-		}
-	}
-
-	if (g_lms || g_ca)
-	{
-		start_health = cvar("g_lms_start_health");
-		start_armorvalue = cvar("g_lms_start_armor");
+		start_ammo_shells = cvar("g_start_ammo_shells");
+		start_ammo_nails = cvar("g_start_ammo_nails");
+		start_ammo_rockets = cvar("g_start_ammo_rockets");
+		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
 	if (inWarmupStage)
@@ -918,7 +823,7 @@ void readplayerstartcvars()
 		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
 		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
-		if (!g_weaponarena && !g_minstagib && !g_ca)
+		if (!g_weaponarena && !g_ca)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
@@ -999,37 +904,25 @@ float sv_taunt;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	g_minstagib = cvar("g_minstagib");
-
-	// load ALL the mutators
-	if(cvar("g_dodging"))
-		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_spawn_near_teammate"))
-		MUTATOR_ADD(mutator_spawn_near_teammate);
-	if(cvar("g_physical_items"))
-		MUTATOR_ADD(mutator_physical_items);
-	if(cvar("g_touchexplode"))
-		MUTATOR_ADD(mutator_touchexplode);
-	if(!g_minstagib)
-	{
-		if(cvar("g_invincible_projectiles"))
-			MUTATOR_ADD(mutator_invincibleprojectiles);
-		if(cvar("g_new_toys"))
-			MUTATOR_ADD(mutator_new_toys);
-		if(cvar("g_nix"))
-			MUTATOR_ADD(mutator_nix);
-		if(cvar("g_rocket_flying"))
-			MUTATOR_ADD(mutator_rocketflying);
-		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);		
-		if(cvar("g_superspectate"))
-			MUTATOR_ADD(mutator_superspec);
-	}
-
-	// is this a mutator? is this a mode?
-	if(cvar("g_sandbox"))
-		MUTATOR_ADD(sandbox);
-
+	// load mutators
+	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
+		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
+		
+	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
+	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
+	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
+	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
+	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
+	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
+	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
+	
+	#undef CHECK_MUTATOR_ADD
+	
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
@@ -1048,6 +941,8 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
+	
+	g_minstagib = cvar("g_minstagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
@@ -1071,7 +966,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_arena || g_minstagib || g_assault || cvar("g_campaign"))
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1140,8 +1035,8 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(inWarmupStage && !g_ca)
-		game_starttime = cvar("g_start_delay");
+	if not(inWarmupStage)
+		game_starttime = time + cvar("g_start_delay");
 
 	readplayerstartcvars();
 }
@@ -1177,7 +1072,7 @@ float sound_allowed(float dest, entity e)
             return TRUE;
     // sounds by players can be removed
     if (autocvar_bot_sound_monopoly)
-        if (clienttype(e) == CLIENTTYPE_REAL)
+        if (IS_REAL_CLIENT(e))
             return FALSE;
     // anything else may pass
     return TRUE;

@@ -7778,3 +7778,202 @@ alpha 190 190 180
 sizeincrease -80
 color 0x0000FF 0x000097
 
+// spawn_point_red -- red team idle spawn point effect
+effect spawn_point_red
+count 37.5
+type static
+color 0xFF0F0F 0xFF0F0F
+size 1.0 2.0
+alpha 64 128 128
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 64
+velocityjitter 32 32 0
+//lightradius 200
+//lighttime 0
+//lightcolor 0.4 0.9 0.9
+
+// spawn_point_blue -- blue team idle spawn point effect
+effect spawn_point_blue
+count 37.5
+type static
+color 0x0F0FFF 0x0F0FFF
+size 1.0 2.0
+alpha 64 128 128
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 64
+velocityjitter 32 32 0
+//lightradius 200
+//lighttime 0
+//lightcolor 0.4 0.9 0.9
+
+// spawn_point_yellow -- yellow team idle spawn point effect
+effect spawn_point_yellow
+count 37.5
+type static
+color 0xFFFF0F 0xFFFF0F
+size 1.0 2.0
+alpha 64 128 128
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 64
+velocityjitter 32 32 0
+//lightradius 200
+//lighttime 0
+//lightcolor 0.4 0.9 0.9
+
+// spawn_point_pink -- pink team idle spawn point effect
+effect spawn_point_pink
+count 37.5
+type static
+color 0xFF0FFF 0xFF0FFF
+size 1.0 2.0
+alpha 64 128 128
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 64
+velocityjitter 32 32 0
+//lightradius 200
+//lighttime 0
+//lightcolor 0.4 0.9 0.9
+
+// spawn_point_neutral -- neutral idle spawn point effect
+effect spawn_point_neutral
+count 37.5
+type static
+color 0xFFFFFF 0xFFFFFF
+size 1.0 2.0
+alpha 64 128 128
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 16 16 64
+velocityjitter 32 32 0
+//lightradius 200
+//lighttime 0
+//lightcolor 0.4 0.9 0.9
+
+// spawn_event_red -- red team spawning effect
+effect spawn_event_red
+count 100
+type spark
+tex 64 64
+color 0xFF0F0F 0xFF0F0F
+size 1 1
+alpha 0 256 256
+stretchfactor 0.6
+//gravity 1
+bounce 1
+originjitter 1 1 1
+velocityjitter 500 500 500
+velocitymultiplier 0.1
+airfriction 2
+effect spawn_event_red
+countabsolute 1
+type smoke
+tex 65 65
+size 100 100
+alpha 190 190 180
+sizeincrease -80
+color 0xFF0F0F 0xFF0F0F
+
+// spawn_event_blue -- blue team spawning effect
+effect spawn_event_blue
+count 100
+type spark
+tex 64 64
+color 0x0F0FFF 0x0F0FFF
+size 1 1
+alpha 0 256 256
+stretchfactor 0.6
+//gravity 1
+bounce 1
+originjitter 1 1 1
+velocityjitter 500 500 500
+velocitymultiplier 0.1
+airfriction 2
+effect spawn_event_blue
+countabsolute 1
+type smoke
+tex 65 65
+size 100 100
+alpha 190 190 180
+sizeincrease -80
+color 0x0F0FFF 0x0F0FFF
+
+// spawn_event_yellow -- yellow team spawning effect
+effect spawn_event_yellow
+count 100
+type spark
+tex 64 64
+color 0xFFFF0F 0xFFFF0F
+size 1 1
+alpha 0 256 256
+stretchfactor 0.6
+//gravity 1
+bounce 1
+originjitter 1 1 1
+velocityjitter 500 500 500
+velocitymultiplier 0.1
+airfriction 2
+effect spawn_event_yellow
+countabsolute 1
+type smoke
+tex 65 65
+size 100 100
+alpha 190 190 180
+sizeincrease -80
+color 0xFFFF0F 0xFFFF0F
+
+// spawn_event_pink -- pink team spawning effect
+effect spawn_event_pink
+count 100
+type spark
+tex 64 64
+color 0xFF0FFF 0xFF0FFF
+size 1 1
+alpha 0 256 256
+stretchfactor 0.6
+//gravity 1
+bounce 1
+originjitter 1 1 1
+velocityjitter 500 500 500
+velocitymultiplier 0.1
+airfriction 2
+effect spawn_event_pink
+countabsolute 1
+type smoke
+tex 65 65
+size 100 100
+alpha 190 190 180
+sizeincrease -80
+color 0xFF0FFF 0xFF0FFF
+
+// spawn_event_neutral -- neutral spawning effect
+effect spawn_event_neutral
+count 100
+type spark
+tex 64 64
+color 0xFFFFFF 0xFFFFFF
+size 1 1
+alpha 0 256 256
+stretchfactor 0.6
+//gravity 1
+bounce 1
+originjitter 1 1 1
+velocityjitter 500 500 500
+velocitymultiplier 0.1
+airfriction 2
+effect spawn_event_neutral
+countabsolute 1
+type smoke
+tex 65 65
+size 100 100
+alpha 190 190 180
+sizeincrease -80
+color 0xFFFFFF 0xFFFFFF

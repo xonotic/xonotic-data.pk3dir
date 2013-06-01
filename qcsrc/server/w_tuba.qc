@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", _("@!#%'n Tuba"))
+REGISTER_WEAPON(
+/* WEP_##id  */ TUBA,
+/* function  */ w_tuba,
+/* ammotype  */ 0,
+/* impulse   */ 1,
+/* flags     */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "tuba",
+/* shortname */ "tuba",
+/* fullname  */ _("@!#%'n Tuba")
+);
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")

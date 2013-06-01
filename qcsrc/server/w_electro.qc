@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ELECTRO, w_electro, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "electro", "electro", _("Electro"));
+REGISTER_WEAPON(
+/* WEP_##id  */ ELECTRO,
+/* function  */ w_electro,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 5,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "electro",
+/* shortname */ "electro",
+/* fullname  */ _("Electro")
+);
 #else
 #ifdef SVQC
 .float electro_count;
@@ -29,7 +39,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 void W_Plasma_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))

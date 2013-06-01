@@ -642,12 +642,6 @@ void button_reset()
 
 void button_use()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" triggered a button\n");
-//	}
-
 	if not (self.active == ACTIVE_ACTIVE)
 		return;
 
@@ -657,11 +651,6 @@ void button_use()
 
 void button_touch()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" touched a button\n");
-//	}
 	if (!other)
 		return;
 	if not(other.iscreature)
@@ -682,11 +671,6 @@ void button_damage(entity inflictor, entity attacker, float damage, float deatht
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
-	//	if (activator.classname != "player")
-	//	{
-	//		dprint(activator.classname);
-	//		dprint(" killed a button\n");
-	//	}
 		self.enemy = damage_attacker;
 		button_fire ();
 	}
@@ -918,7 +902,7 @@ float door_check_keys(void) {
 
 	// this door require a key
 	// only a player can have a key
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return FALSE;
 	
 	if (item_keys_usekey(door, other)) {
@@ -1079,7 +1063,7 @@ Prints messages
 */
 void door_touch()
 {
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1088,7 +1072,7 @@ void door_touch()
 
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
@@ -1761,7 +1745,7 @@ void secret_touch()
 
 	if (self.message)
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.message);
 		play2(other, "misc/talk.wav");
 	}
@@ -2110,7 +2094,7 @@ void conveyor_think()
 
 		for(e = world; (e = findentity(e, conveyor, self)); )
 		{
-			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
+			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics
 
 			setorigin(e, e.origin + self.movedir * sys_frametime);

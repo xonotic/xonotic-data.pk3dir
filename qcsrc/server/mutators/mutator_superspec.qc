@@ -21,7 +21,7 @@
 
 float _spectate(entity _player)
 {
-	if(SpectateNext(_player) == 1)
+	if(Spectate(_player) == 1)
 	{
 		PutObserverInServer();
 		self.classname = "spectator";
@@ -82,7 +82,7 @@ float superspec_filteritem(entity _for, entity _item)
 {
 	float i;
 
-	if(!_for.superspec_itemfilter)
+	if(_for.superspec_itemfilter == "")
 		return TRUE;
 
 	if(_for.superspec_itemfilter == "")
@@ -117,7 +117,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 					_spectate(other);
 
 					self = _oldself;
-					return FALSE;
+					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 
@@ -129,9 +129,9 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				(self.autospec_flags& ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{
 
-			if((self.enemy != other) || self.classname == "observer")
+			if((self.enemy != other) || IS_OBSERVER(self))
 			{
-				if(self.autospec_flags & ASF_OBSERVER_ONLY && self.classname != "observer")
+				if(self.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(self))
 				{
 					if(self.superspec_flags & SSF_VERBOSE)
 						superspec_msg("", "", self, sprintf("^8Ignored that %s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
@@ -149,7 +149,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 
 	self = _oldself;
 
-	return FALSE;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
@@ -161,7 +161,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return FALSE;
 
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 		return FALSE;
 
 	if(cmd_name == "superspec_itemfilter")
@@ -443,6 +443,9 @@ void superspec_hello()
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 {
+	if(!IS_REAL_CLIENT(self))
+		return FALSE;
+
 	string fn = "superspec-local.options";
 	float fh;
 

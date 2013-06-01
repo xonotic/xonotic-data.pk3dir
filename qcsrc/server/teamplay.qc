@@ -112,19 +112,14 @@ void InitGameplayMode()
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
-		lms_lowest_lives = 9999;
-		lms_next_place = 0;
-		ScoreRules_lms();
+		MUTATOR_ADD(gamemode_lms);
 	}
 
 	if(g_arena)
 	{
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		maxspawned = autocvar_g_arena_maxspawned;
-		if(maxspawned < 2)
-			maxspawned = 2;
-		arena_roundbased = autocvar_g_arena_roundbased;
+		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)
@@ -132,9 +127,9 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
-		precache_sound("ctf/red_capture.wav");
-		precache_sound("ctf/blue_capture.wav");
+		MUTATOR_ADD(gamemode_ca);
 	}
+
 	if(g_keyhunt)
 	{
 		ActivateTeamplay();
@@ -154,7 +149,7 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		ScoreRules_assault();
+		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -275,9 +270,7 @@ string getwelcomemessage(void)
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
-	
-	if(g_minstagib)
-		modifications = strcat(modifications, ", MinstaGib");
+
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
@@ -469,7 +462,7 @@ void CheckAllowedTeams (entity for_whom)
 		if(autocvar_bot_vs_human > 0)
 		{
 			// bots are all blue
-			if(clienttype(for_whom) == CLIENTTYPE_BOT)
+			if(IS_BOT_CLIENT(for_whom))
 				c1 = c3 = c4 = -1;
 			else
 				c2 = -1;
@@ -477,7 +470,7 @@ void CheckAllowedTeams (entity for_whom)
 		else
 		{
 			// bots are all red
-			if(clienttype(for_whom) == CLIENTTYPE_BOT)
+			if(IS_BOT_CLIENT(for_whom))
 				c2 = c3 = c4 = -1;
 			else
 				c1 = -1;
@@ -515,7 +508,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(head.classname == "player")
+		if(IS_PLAYER(head))
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot
@@ -524,7 +517,7 @@ void GetTeamCounts(entity ignore)
 		if(head != ignore)// && head.netname != "")
 		{
 			value = PlayerValue(head);
-			if(clienttype(head) == CLIENTTYPE_BOT)
+			if(IS_BOT_CLIENT(head))
 				bvalue = value;
 			else
 				bvalue = 0;
@@ -605,7 +598,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 	if(ta == tb)
 		return TRUE;
 
-	if(clienttype(e) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(e))
 	{
 		if(bots_would_leave)
 		{
@@ -663,7 +656,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	if(totalteams <= 1)
 	{
-		if(autocvar_g_campaign && pl && clienttype(pl) == CLIENTTYPE_REAL)
+		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
 		else if(g_domination)
 			error("Too few teams available for domination\n");
@@ -846,7 +839,7 @@ void SV_ChangeTeam(float _color)
 
 //	bprint("allow change teams from ", ftos(steam), " to ", ftos(dteam), "\n");
 
-	if(self.classname == "player" && steam != dteam)
+	if(IS_PLAYER(self) && steam != dteam)
 	{
 		// reduce frags during a team change
 		TeamchangeFrags(self);
@@ -854,7 +847,7 @@ void SV_ChangeTeam(float _color)
 
 	SetPlayerTeam(self, dteam, steam, FALSE);
 
-	if(self.classname == "player" && steam != dteam)
+	if(IS_PLAYER(self) && steam != dteam)
 	{
 		// kill player when changing teams
 		if(self.deadflag == DEAD_NO)

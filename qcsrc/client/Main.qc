@@ -696,6 +696,108 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+void Spawn_Draw(void)
+{
+	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+}
+
+void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
+{
+	float teamnum = (ReadByte() - 1);
+	vector spn_origin;
+	spn_origin_x = ReadShort();
+	spn_origin_y = ReadShort();
+	spn_origin_z = ReadShort();
+	
+	if(is_new)
+	{
+		self.origin = spn_origin;
+		setsize(self, PL_MIN, PL_MAX);
+		droptofloor();
+
+		/*if(autocvar_cl_spawn_point_model) // needs a model first
+		{
+			self.mdl = "models/spawnpoint.md3";
+			self.colormod = Team_ColorRGB(teamnum);
+			precache_model(self.mdl);
+			setmodel(self, self.mdl);
+			self.drawmask = MASK_NORMAL;
+			//self.movetype = MOVETYPE_NOCLIP;
+			//self.draw = Spawn_Draw;
+		}*/
+		if(autocvar_cl_spawn_point_particles)
+		{
+			if((serverflags & SERVERFLAG_TEAMPLAY))
+			{
+				switch(teamnum)
+				{
+					case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
+					case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
+					case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
+					case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
+					default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+				}
+			}
+			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
+			
+			self.draw = Spawn_Draw;
+		}
+	}
+
+	//print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt));
+}
+
+void Ent_ReadSpawnEvent(float is_new)
+{
+	// If entnum is 0, ONLY do the local spawn actions
+	// this way the server can disable the sending of
+	// spawn origin or such to clients if wanted.
+	float entnum = ReadByte();
+	
+	if(entnum)
+	{
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+
+		if(is_new)
+		{
+			float teamnum = GetPlayerColor(entnum - 1);
+
+			if(autocvar_cl_spawn_event_particles)
+			{
+				switch(teamnum)
+				{
+					case NUM_TEAM_1: pointparticles(particleeffectnum("spawn_event_red"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_2: pointparticles(particleeffectnum("spawn_event_blue"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_3: pointparticles(particleeffectnum("spawn_event_yellow"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_4: pointparticles(particleeffectnum("spawn_event_pink"), self.origin, '0 0 0', 1); break;
+					default: pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); break;
+				}
+			}
+			if(autocvar_cl_spawn_event_sound)
+			{
+				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	
+	// local spawn actions
+	if(is_new && (!entnum || (entnum == player_localentnum)))
+	{
+		zoomin_effect = 1;
+		current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+
+		if(autocvar_cl_unpress_zoom_on_spawn)
+		{
+			localcmd("-zoom\n");
+			button_zoom = FALSE;
+		}
+	}
+	
+	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
+}
+
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -781,7 +883,10 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
+		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
+		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
+
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -921,8 +1026,6 @@ void Ent_Init()
 	forcefog = strzone(ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
-
-	g_weaponswitchdelay = ReadByte() / 255.0;
 
 	g_balance_grenadelauncher_bouncefactor = ReadCoord();
 	g_balance_grenadelauncher_bouncestop = ReadCoord();
@@ -1101,18 +1204,6 @@ void Net_ReadRace()
 	}
 }
 
-void Net_ReadSpawn()
-{
-	zoomin_effect = 1;
-	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
-
-	if(autocvar_cl_unpress_zoom_on_spawn)
-	{
-		localcmd("-zoom\n");
-		button_zoom = FALSE;
-	}
-}
-
 void Net_TeamNagger()
 {
 	teamnagger = 1;
@@ -1180,10 +1271,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case TE_CSQC_SPAWN:
-			Net_ReadSpawn();
 			bHandled = true;
 			break;
 		case TE_CSQC_ZCURVEPARTICLES:

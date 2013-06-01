@@ -69,7 +69,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 				if ( player.team == self.team )
 				{
-					if ( clienttype(player) != CLIENTTYPE_REAL || discard )
+					if ( !IS_REAL_CLIENT(player) || discard )
 						continue;
 
 					if( d > friend_distance)
@@ -277,8 +277,6 @@ void havocbot_chooserole()
 		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
-	else if (g_assault)
-		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }

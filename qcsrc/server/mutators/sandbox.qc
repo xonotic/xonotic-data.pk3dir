@@ -72,7 +72,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return world; // entity is not an object
 	if(!permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
-	if(!trace_ent.crypto_idfp)
+	if(trace_ent.crypto_idfp == "")
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
 	if not(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2)
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
@@ -389,7 +389,7 @@ void sandbox_Database_Load()
 		for(;;)
 		{
 			file_read = fgets(file_get);
-			if(!file_read)
+			if(file_read == "")
 				break;
 			if(substring(file_read, 0, 2) == "//")
 				continue;
@@ -538,7 +538,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 						self.object_flood = time + autocvar_g_sandbox_editor_flood;
-						if(!argv(3)) // no object in clipboard
+						if(argv(3) == "") // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
 							return TRUE;
@@ -610,7 +610,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: OBJECT, EDIT ----------------
 			case "object_edit":
-				if(!argv(2))
+				if(argv(2) == "")
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Too few parameters. You must specify a property to edit");
 					return TRUE;

@@ -140,7 +140,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_alreadyvoted_alpha");
 					break;
 				case HUD_PANEL_MODICONS:
+					HUD_Write_PanelCvar_q("_ca_layout");
 					HUD_Write_PanelCvar_q("_dom_layout");
+					HUD_Write_PanelCvar_q("_freezetag_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
 					HUD_Write_PanelCvar_q("_aspect");

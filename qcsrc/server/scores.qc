@@ -171,6 +171,11 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 		teamscores_primary = teamscores[i];
 		teamscores_flags_primary = scoreflags;
 	}
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 float ScoreInfo_SendEntity(entity to, float sf)
@@ -256,8 +261,8 @@ float PlayerScore_Clear(entity player)
 	if(teamscores_entities_count)
 		return 0;
 
-	if(g_lms) return 0;
-	if(g_arena || g_ca) return 0;
+	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return 0;
+
 	if(g_cts) return 0; // in CTS, you don't lose score by observing
 	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
 
@@ -523,16 +528,16 @@ void WinningConditionHelper()
 		if(fullstatus)
 		{
 			s = GetPlayerScoreString(p, 1);
-			if(clienttype(p) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(p))
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena && !g_ca && !g_lms)
+			if(!IS_PLAYER(p) && !g_arena && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena || g_ca || g_lms)
+			if(IS_PLAYER(p) || g_arena || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
@@ -894,7 +899,7 @@ void Score_NicePrint(entity to)
 	
 	t = 0;
 	FOR_EACH_CLIENT(p)
-	if(p.classname != "player")
+	if not(IS_PLAYER(p))
 	{
 		if not(t)
 			Score_NicePrint_Spectators(to);
@@ -927,6 +932,7 @@ void PlayerScore_TeamStats(void)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(sk.(teamscores[i]) != 0)
 				if(teamscores_label[i] != "")
-					PlayerStats_TeamScore(t, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+					// the +1 is important here!
+					PlayerStats_TeamScore(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
 	}
 }

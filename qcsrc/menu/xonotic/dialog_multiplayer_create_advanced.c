@@ -55,7 +55,7 @@ void XonoticAdvancedDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, makeXonoticTextLabel(0, _("Teams:")));
-		me.TD(me, 1, 1.6, e = makeXonoticTextSlider("g_tdm_teams_override g_domination_teams_override g_keyhunt_teams_override"));
+		me.TD(me, 1, 1.6, e = makeXonoticTextSlider("g_tdm_teams_override g_domination_teams_override g_ca_teams_override g_freezetag_teams_override g_keyhunt_teams_override"));
 			e.addValue(e, "Default", "0");
 			e.addValue(e, "2 teams", "2");
 			e.addValue(e, "3 teams", "3");

@@ -6,7 +6,7 @@
 float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
 {
 	if(e.ballcarried)
-		if(other.classname == "spectator") 
+		if(IS_SPEC(other)) 
 			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
 		
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
@@ -71,7 +71,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		return;
 	}
 	if(other.deadflag != DEAD_NO) { return; }
-	if(other.classname != "player") 
+	if not(IS_PLAYER(other)) 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
@@ -159,7 +159,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
 {
-	if((self.owner) && (self.owner.classname == "player"))
+	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
 	ka_RespawnBall();
@@ -243,7 +243,7 @@ void havocbot_role_ka_collector()
 
 MUTATOR_HOOKFUNCTION(ka_Scoring)
 {
-	if((frag_attacker != frag_target) && (frag_attacker.classname == "player"))
+	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
 			PlayerScore_Add(frag_attacker, SP_KEEPAWAY_CARRIERKILLS, 1);

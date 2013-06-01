@@ -10,7 +10,7 @@ void secrets_setstatus() {
  */
 void trigger_secret_touch() {
 	// only a player can trigger this
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	
 	// update secrets found counter

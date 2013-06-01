@@ -24,11 +24,11 @@ string GetCallerName(entity caller)
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if not(client.flags & FL_CLIENT)
+	if not(IS_CLIENT(client))
 		return CLIENT_DOESNT_EXIST;
-	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
+	else if(must_be_real && !IS_REAL_CLIENT(client))
 		return CLIENT_NOT_REAL;
-	else if(must_be_bots && (clienttype(client) != CLIENTTYPE_BOT))
+	else if(must_be_bots && !IS_BOT_CLIENT(client))
 		return CLIENT_NOT_BOT;
 		
 	return CLIENT_ACCEPTABLE;
@@ -557,7 +557,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
 				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
 				else if(caller && (caller.allowed_timeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
-				else if(caller && (caller.classname != "player")) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
+				else if(caller && !IS_PLAYER(caller)) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
 				else if((autocvar_timelimit) && (last_possible_timeout < time - game_starttime)) { print_to(caller, "^7Error: It is too late to call a timeout now!"); }
 				
 				else // everything should be okay, proceed with starting the timeout
@@ -613,7 +613,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 			total_listed_players = 0;
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				is_bot = (IS_BOT_CLIENT(tmp_player));
 				
 				if(is_bot)
 				{
