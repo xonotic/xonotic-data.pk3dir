@@ -119,6 +119,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 }
 void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
+	// FORCEMODEL
 	// which one is ALWAYS good?
 	if not(forceplayermodels_goodmodel)
 	{
@@ -211,7 +212,6 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 		self.skin = self.forceplayermodels_saveskin;
 	}
 
-	//float selected_colormap = cm;
 	// forceplayercolors too
 	if(teamplay)
 	{
@@ -270,6 +270,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 			self.colormap = player_localnum + 1;
 	}
 
+	// GLOWMOD AND DEATH FADING
 	if(self.colormap > 0)
 		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
 	else
@@ -293,39 +294,6 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 
 	//print(sprintf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod)));
 }
-
-/*// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	float cm = self.colormap;
-
-	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
-		cm = 1024;
-
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
-
-	if(self.colormod != '0 0 0') { self.colormod = '0 0 0'; }
-
-	if(autocvar_cl_deathglow > 0)
-	{
-		if(self.csqcmodel_isdead)
-		{
-			self.colormap = 0;
-			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			// prevent the zero vector
-			self.glowmod_x = max(self.glowmod_x, 0.0001);
-			self.glowmod_y = max(self.glowmod_y, 0.0001);
-			self.glowmod_z = max(self.glowmod_z, 0.0001);
-		}
-		
-	}
-	
-	print(sprintf("CSQCPlayer_GlowMod_Apply(): state = %s, colormap = %f, colormod = %s, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), cm, vtos(self.colormod), vtos(self.glowmod)));
-}*/
 
 // FEATURE: fallback frames
 .float csqcmodel_saveframe;
