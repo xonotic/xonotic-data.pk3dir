@@ -159,14 +159,18 @@ float PlayerStats_Event(entity e, string event_id, float value)
 	return val;
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value)
+float PlayerStats_TeamScore(float t, string event_id, float value)
 {
+	if(playerstats_db < 0)
+		return 0;
+
 	string key;
 	float val;
 	key = sprintf("team#%d:%s", t, event_id);
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
 /*
