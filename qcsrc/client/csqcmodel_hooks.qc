@@ -279,19 +279,19 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	{
 		if(self.csqcmodel_isdead)
 		{
+			// Fade out to black now...
 			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
 			self.colormap = 0;
+			
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			// prevent the zero vector
 			self.glowmod_x = max(self.glowmod_x, 0.0001);
 			self.glowmod_y = max(self.glowmod_y, 0.0001);
 			self.glowmod_z = max(self.glowmod_z, 0.0001);
 		}
 		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
 	}
-	//self.colormap = selected_colormap;
 
-	print(sprintf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod)));
+	//print(sprintf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod)));
 }
 
 /*// FEATURE: auto glowmod
