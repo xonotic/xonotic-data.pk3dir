@@ -92,6 +92,90 @@ float forceplayermodels_attempted;
 string forceplayermodels_goodmodel;
 float forceplayermodels_goodmodelindex;
 
+.vector glowmod;
+void CSQCPlayer_ColorSelection_Apply(float islocalplayer, float cm)
+{
+	float selected_colormap = self.colormap;
+	// forceplayercolors too
+	if(teamplay)
+	{
+		// own team's color is never forced
+		float forcecolor_friend = 0;
+		float forcecolor_enemy = 0;
+		float teams_count = 0;
+		entity tm;
+
+		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+			if(tm.team != NUM_SPECTATOR)
+				++teams_count;
+
+		if(autocvar_cl_forcemyplayercolors)
+			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
+		if(autocvar_cl_forceplayercolors && teams_count == 2)
+			forcecolor_enemy = 1024 + autocvar__cl_color;
+
+		if(forcecolor_enemy && !forcecolor_friend)
+		{
+			// only enemy color is forced?
+			// verify it is not equal to the friend color
+			if(forcecolor_enemy == 1024 + 17 * myteam)
+				forcecolor_enemy = 0;
+		}
+
+		if(forcecolor_friend && !forcecolor_enemy)
+		{
+			// only friend color is forced?
+			// verify it is not equal to the enemy color
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				// note: we even compare against our own team.
+				// if we rejected because we matched our OWN team color,
+				// this is not bad; we then simply keep our color as is
+				// anyway.
+				if(forcecolor_friend == 1024 + 17 * tm.team)
+					forcecolor_friend = 0;
+		}
+
+		if(cm == 1024 + 17 * myteam)
+		{
+			if(forcecolor_friend)
+				selected_colormap = forcecolor_friend;
+		}
+		else
+		{
+			if(forcecolor_enemy)
+				selected_colormap = forcecolor_enemy;
+		}
+	}
+	else
+	{
+		if(autocvar_cl_forcemyplayercolors && islocalplayer)
+			selected_colormap = 1024 + autocvar_cl_forcemyplayercolors;
+		else if(autocvar_cl_forceplayercolors)
+			selected_colormap = player_localnum + 1;
+	}
+
+	if(selected_colormap > 0)
+		self.glowmod = colormapPaletteColor(((selected_colormap >= 1024) ? selected_colormap : stof(getplayerkeyvalue(selected_colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(autocvar_cl_deathglow > 0)
+	{
+		if(self.csqcmodel_isdead)
+		{
+			selected_colormap = 0;
+			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			// prevent the zero vector
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
+		}
+	}
+	self.colormap = selected_colormap;
+
+	print(sprintf("CSQCPlayer_GlowMod_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), selected_colormap, vtos(self.glowmod)));
+}
+
 void CSQCPlayer_ForceModel_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
@@ -114,7 +198,7 @@ void CSQCPlayer_ForceModel_PostUpdate(void)
 			print(sprintf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel));
 	}
 }
-void CSQCPlayer_ForceModel_Apply(float islocalplayer)
+void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
 	// which one is ALWAYS good?
 	if not(forceplayermodels_goodmodel)
@@ -208,64 +292,42 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		self.skin = self.forceplayermodels_saveskin;
 	}
 
-	// forceplayercolors too
-	if(teamplay)
-	{
-		// own team's color is never forced
-		float forcecolor_friend = 0;
-		float forcecolor_enemy = 0;
-		float teams_count = 0;
-		entity tm;
-
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-			if(tm.team != NUM_SPECTATOR)
-				++teams_count;
-
-		if(autocvar_cl_forcemyplayercolors)
-			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors && teams_count == 2)
-			forcecolor_enemy = 1024 + autocvar__cl_color;
-
-		if(forcecolor_enemy && !forcecolor_friend)
-		{
-			// only enemy color is forced?
-			// verify it is not equal to the friend color
-			if(forcecolor_enemy == 1024 + 17 * myteam)
-				forcecolor_enemy = 0;
-		}
-
-		if(forcecolor_friend && !forcecolor_enemy)
-		{
-			// only friend color is forced?
-			// verify it is not equal to the enemy color
-			for(tm = teams.sort_next; tm; tm = tm.sort_next)
-				// note: we even compare against our own team.
-				// if we rejected because we matched our OWN team color,
-				// this is not bad; we then simply keep our color as is
-				// anyway.
-				if(forcecolor_friend == 1024 + 17 * tm.team)
-					forcecolor_friend = 0;
-		}
-
-		if(cm == 1024 + 17 * myteam)
-		{
-			if(forcecolor_friend)
-				self.colormap = forcecolor_friend;
-		}
-		else
-		{
-			if(forcecolor_enemy)
-				self.colormap = forcecolor_enemy;
-		}
-	}
-	else
-	{
-		if(autocvar_cl_forcemyplayercolors && islocalplayer)
-			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
-		else if(autocvar_cl_forceplayercolors)
-			self.colormap = player_localnum + 1;
-	}
+	// now pick the color and glowmod of the model
+	CSQCPlayer_ColorSelection_Apply(islocalplayer, cm);
 }
+
+/*// FEATURE: auto glowmod
+.vector glowmod;
+void CSQCPlayer_GlowMod_Apply(void)
+{
+	float cm = self.colormap;
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		cm = 1024;
+
+	if(self.colormap > 0)
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(self.colormod != '0 0 0') { self.colormod = '0 0 0'; }
+
+	if(autocvar_cl_deathglow > 0)
+	{
+		if(self.csqcmodel_isdead)
+		{
+			self.colormap = 0;
+			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			// prevent the zero vector
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
+		}
+		
+	}
+	
+	print(sprintf("CSQCPlayer_GlowMod_Apply(): state = %s, colormap = %f, colormod = %s, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), cm, vtos(self.colormod), vtos(self.glowmod)));
+}*/
 
 // FEATURE: fallback frames
 .float csqcmodel_saveframe;
@@ -552,32 +614,6 @@ void CSQCPlayer_Precache()
 	precache_sound("misc/jetpack_fly.wav");
 }
 
-// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	float cm = self.colormap;
-
-	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
-		cm = 1024;
-
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
-
-	if(autocvar_cl_deathglow > 0)
-		if(self.csqcmodel_isdead)
-		{
-			self.colormod = '1 1 1';
-			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			// prevent the zero vector
-			self.glowmod_x = max(self.glowmod_x, 0.0001);
-			self.glowmod_y = max(self.glowmod_y, 0.0001);
-			self.glowmod_z = max(self.glowmod_z, 0.0001);
-		}
-}
-
 // general functions
 .float csqcmodel_predraw_run;
 .float anim_frame;
@@ -605,8 +641,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
-		CSQCPlayer_GlowMod_Apply();
+		float islocalplayer = (self.entnum == player_localnum + 1);
+		CSQCPlayer_ModelAppearance_Apply(islocalplayer);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_Apply();
