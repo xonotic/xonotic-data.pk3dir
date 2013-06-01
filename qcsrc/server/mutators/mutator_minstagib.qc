@@ -109,6 +109,13 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
+{
+	other.monster_loot = spawnfunc_item_minst_cells;
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
 {
 	if(checkentity.items & IT_STRENGTH)
@@ -402,6 +409,7 @@ MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsPrettyString)
 MUTATOR_DEFINITION(mutator_minstagib)
 {
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);

@@ -174,8 +174,7 @@ MUTATOR_HOOKABLE(MonsterRespawn);
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:
-		string monster_dropitem;
-		string monster_dropsize;
+		.void() monster_loot;
 	
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves

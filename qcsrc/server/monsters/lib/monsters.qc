@@ -14,7 +14,7 @@ void M_Item_Touch ()
 
 void monster_item_spawn()
 {
-	self.monster_delayedattack();
+	self.monster_loot();
 	
 	self.gravity = 1;
 	self.velocity = randomvec() * 175 + '0 0 325';
@@ -36,40 +36,41 @@ void Monster_DropItem (string itype, string itemsize)
 		{
 			switch(itemsize)
 			{
-				case "mega": e.monster_delayedattack = spawnfunc_item_armor_large; break;
-				case "large": e.monster_delayedattack = spawnfunc_item_armor_big; break;
-				case "medium": e.monster_delayedattack = spawnfunc_item_armor_medium; break;
-				case "small": e.monster_delayedattack = spawnfunc_item_armor_small; break;
+				case "mega": e.monster_loot = spawnfunc_item_armor_large; break;
+				case "large": e.monster_loot = spawnfunc_item_armor_big; break;
+				case "medium": e.monster_loot = spawnfunc_item_armor_medium; break;
+				case "small": e.monster_loot = spawnfunc_item_armor_small; break;
 			}
-			break; // break here?
+			break;
 		}
 		case "health":
 		{
 			switch(itemsize)
 			{
-				case "mega": e.monster_delayedattack = spawnfunc_item_health_mega; break;
-				case "large": e.monster_delayedattack = spawnfunc_item_health_large; break;
-				case "medium": e.monster_delayedattack = spawnfunc_item_health_medium; break;
-				case "small": e.monster_delayedattack = spawnfunc_item_health_small; break;
+				case "mega": e.monster_loot = spawnfunc_item_health_mega; break;
+				case "large": e.monster_loot = spawnfunc_item_health_large; break;
+				case "medium": e.monster_loot = spawnfunc_item_health_medium; break;
+				case "small": e.monster_loot = spawnfunc_item_health_small; break;
 			}
-			break; // break here?
+			break;
 		}
 		case "ammo":
 		{
 			switch(itemsize)
 			{
-				case "shells": e.monster_delayedattack = spawnfunc_item_shells; break;
-				case "cells": e.monster_delayedattack = spawnfunc_item_cells; break;
-				case "rockets": e.monster_delayedattack = spawnfunc_item_rockets; break;
+				case "shells": e.monster_loot = spawnfunc_item_shells; break;
+				case "cells": e.monster_loot = spawnfunc_item_cells; break;
+				case "rockets": e.monster_loot = spawnfunc_item_rockets; break;
 				case "bullets":
-				case "nails": e.monster_delayedattack = spawnfunc_item_bullets; break;
+				case "nails": e.monster_loot = spawnfunc_item_bullets; break;
 			}
 			break;
 		}
 	}
 	
-	if(g_minstagib)
-		e.monster_delayedattack = spawnfunc_item_minst_cells;
+	other = e;
+	MUTATOR_CALLHOOK(MonsterDropItem);
+	e = other;
 		
 	e.think = monster_item_spawn;
 	e.nextthink = time + 0.1;
@@ -237,12 +238,6 @@ void Monster_CheckDropCvars (string mon)
 	
 	dropitem = cvar_string(strcat("g_monster_", mon, "_drop"));
 	dropsize = cvar_string(strcat("g_monster_", mon, "_drop_size"));
-	
-	monster_dropitem = dropitem;
-	monster_dropsize = dropsize;
-	MUTATOR_CALLHOOK(MonsterDropItem);
-	dropitem = monster_dropitem;
-	dropsize = monster_dropsize;
 	
 	if(autocvar_g_monsters_forcedrop)
 		Monster_DropItem(autocvar_g_monsters_drop_type, autocvar_g_monsters_drop_size);
