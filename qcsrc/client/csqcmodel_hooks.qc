@@ -607,8 +607,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		float islocalplayer = (self.entnum == player_localnum + 1);
-		CSQCPlayer_ModelAppearance_Apply(islocalplayer);
+		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_Apply();
