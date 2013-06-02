@@ -451,7 +451,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
 		
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname);
@@ -459,7 +459,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns

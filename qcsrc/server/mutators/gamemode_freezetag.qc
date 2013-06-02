@@ -218,7 +218,7 @@ void havocbot_role_ft_offense()
 	}
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (self.frozen != 1)) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (!self.frozen)) || (time > self.havocbot_role_timeout))
 	{
 		dprint("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
@@ -286,7 +286,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
-		if(self.frozen == 1)
+		if(self.frozen)
 			freezetag_Unfreeze(world);
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
