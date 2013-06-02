@@ -500,13 +500,6 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_SpectateCopy)
-{
-	self.frozen = other.frozen;
-	self.revive_progress = other.revive_progress;
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;
@@ -542,7 +535,6 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 
 	MUTATOR_ONADD
