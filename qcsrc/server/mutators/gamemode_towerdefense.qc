@@ -187,7 +187,7 @@ entity PickSpawn (float tm)
 	return RandomSelection_chosen_ent;
 }
 
-void TD_SpawnMonster(float tm, string mnster)
+void TD_SpawnMonster(float tm, float monster)
 {
 	entity e, mon;
 	
@@ -199,7 +199,7 @@ void TD_SpawnMonster(float tm, string mnster)
 		return;
 	}
   
-	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 2);
+	mon = spawnmonster("", monster, e, e, e.origin, FALSE, 2);
 	if(e.target2)
 	{
 		if(random() <= 0.5 && e.target)
@@ -209,26 +209,6 @@ void TD_SpawnMonster(float tm, string mnster)
 	}
 	else
 		mon.target2 = e.target;
-}
-
-string monster_type2string(float mnster)
-{
-	switch(mnster)
-	{
-		case MONSTER_ZOMBIE: return "zombie";
-		case MONSTER_BRUTE: return "brute";
-		case MONSTER_ANIMUS: return "animus";
-		case MONSTER_SHAMBLER: return "shambler";
-		case MONSTER_BRUISER: return "bruiser";
-		case MONSTER_WYVERN: return "wyvern";
-		case MONSTER_CERBERUS: return "cerberus";
-		case MONSTER_SLIME: return "slime";
-		case MONSTER_KNIGHT: return "knight";
-		case MONSTER_STINGRAY: return "stingray";
-		case MONSTER_MAGE: return "mage";
-		case MONSTER_SPIDER: return "spider";
-		default: return "";
-	}
 }
 
 float RandomMonster()
@@ -254,7 +234,7 @@ void SpawnMonsters(float tm)
 	
 	whichmon = RandomMonster();
 	
-	TD_SpawnMonster(tm, monster_type2string(whichmon));
+	TD_SpawnMonster(tm, whichmon);
 }
 
 entity PickGenerator(float tm)

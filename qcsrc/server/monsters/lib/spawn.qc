@@ -1,14 +1,4 @@
-float spawnmonster_checkinlist(string monster, string list)
-{
-	string l = strcat(" ", list, " ");
-	
-	if(strstrofs(l, strcat(" ", monster, " "), 0) >= 0)
-		return TRUE;
-	
-	return FALSE;
-}
-
-entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
+entity spawnmonster (string monster, float mnster, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
 {
 	if(!spawncode_first_load)
 	{
@@ -25,8 +15,13 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	
 	setorigin(e, orig);
 	
-	if not(spawnmonster_checkinlist(monster, autocvar_g_monsters_spawn_list))
+	if(monster != "")
+	if not(monster_string2id(monster))
 		monster = "bruiser";
+		
+	if(monster == "")
+	if(mnster)
+		monster = monster_id2string(mnster);
 	
 	e.realowner = spawnedby;
 	

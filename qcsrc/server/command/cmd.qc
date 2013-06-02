@@ -265,8 +265,14 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(tospawn == "list")
 			{
-				sprint(self, "Available monsters:\n");
-				sprint(self, strcat(autocvar_g_monsters_spawn_list, "\n"));
+				float i;
+				string list = "Available monsters:";
+				
+				for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+					list = strcat(list, " ", monster_id2string(i));
+				
+				sprint(self, strcat(list, "\n"));
+				
 				return;
 			}
 			
@@ -287,7 +293,7 @@ void ClientCommand_mobspawn(float request, float argc)
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 			
-				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
+				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
 				if(mname) e.netname = strzone(mname);
 			
 				sprint(self, strcat("Spawned 1 ", tospawn, "\n"));

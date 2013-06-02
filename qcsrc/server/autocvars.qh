@@ -1254,7 +1254,6 @@ float autocvar_g_monsters_skill_normal;
 float autocvar_g_monsters_skill_hard;
 float autocvar_g_monsters_skill_insane;
 float autocvar_g_monsters_skill_nightmare;
-string autocvar_g_monsters_spawn_list;
 float autocvar_g_touchexplode_radius;
 float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;

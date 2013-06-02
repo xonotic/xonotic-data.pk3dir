@@ -36,6 +36,46 @@ float MONSTER_MAGE 			= 12;
 float MONSTER_SPIDER 		= 13;
 float MONSTER_LAST 			= 14;
 
+// id-string converters (TODO: remove these!)
+string monster_id2string(float mnster)
+{
+	switch(mnster)
+	{
+		case MONSTER_ZOMBIE: 	return "zombie";
+		case MONSTER_BRUTE: 	return "brute";
+		case MONSTER_ANIMUS: 	return "animus";
+		case MONSTER_SHAMBLER: 	return "shambler";
+		case MONSTER_BRUISER: 	return "bruiser";
+		case MONSTER_WYVERN: 	return "wyvern";
+		case MONSTER_CERBERUS: 	return "cerberus";
+		case MONSTER_SLIME: 	return "slime";
+		case MONSTER_KNIGHT: 	return "knight";
+		case MONSTER_STINGRAY: 	return "stingray";
+		case MONSTER_MAGE: 		return "mage";
+		case MONSTER_SPIDER: 	return "spider";
+		default: return "";
+	}
+}
+float monster_string2id(string monster)
+{
+	switch(monster)
+	{
+		case "zombie": 		return MONSTER_ZOMBIE;
+		case "brute": 		return MONSTER_BRUTE;
+		case "animus": 		return MONSTER_ANIMUS;
+		case "shambler": 	return MONSTER_SHAMBLER;
+		case "bruiser": 	return MONSTER_BRUISER;
+		case "wyvern": 		return MONSTER_WYVERN;
+		case "cerberus": 	return MONSTER_CERBERUS;
+		case "slime": 		return MONSTER_SLIME;
+		case "knight": 		return MONSTER_KNIGHT;
+		case "stingray": 	return MONSTER_STINGRAY;
+		case "mage": 		return MONSTER_MAGE;
+		case "spider": 		return MONSTER_SPIDER;
+		default: 			return 0;
+	}
+}
+
 float MSF_UPDATE       = 2;
 float MSF_STATUS       = 4;
 float MSF_SETUP        = 8;
