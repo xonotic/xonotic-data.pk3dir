@@ -70,7 +70,7 @@ void CastLightning ()
 	self.monster_delayedattack = func_null;
 	self.delay = -1;
 
-	local vector org = '0 0 0', dir = '0 0 0';
+	local vector org, dir;
 	//vector v = '0 0 0';
 
 	self.effects |= EF_MUZZLEFLASH;

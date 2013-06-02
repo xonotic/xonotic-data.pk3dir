@@ -601,7 +601,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
 		self.moveto_z = self.origin_z;
 	
-	if(self.state != MONSTER_STATE_ATTACK_LEAP)
+	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		self.angles_y = angles_face_y;
 	
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
@@ -644,6 +644,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			if (vlen(self.velocity) <= 30)
 			{
 				monsters_setframe(manim_idle);
+				if(self.state != MONSTER_STATE_ATTACK_MELEE)
 				if(self.enemy)
 					self.angles_y = enemy_face_y;
 				else
