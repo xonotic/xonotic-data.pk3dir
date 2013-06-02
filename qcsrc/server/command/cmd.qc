@@ -295,8 +295,8 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
 				if(mname) e.netname = strzone(mname);
-			
-				sprint(self, strcat("Spawned 1 ", tospawn, "\n"));
+				
+				sprint(self, strcat("Spawned ", e.netname, "\n"));
 			}
 			
 			return;
