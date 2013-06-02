@@ -50,31 +50,17 @@ void shambler_delayedsmash ()
 	self.attack_finished_single = time + 1.1;
 }
 
-void() shambler_swing_right;
-void shambler_swing_left ()
+void shambler_swing()
 {
-	monsters_setframe(shambler_anim_swingl);
-	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
-	self.attack_finished_single = time + 0.8;
-	self.delay = -1;
-	self.monster_delayedattack = func_null;
-	if(random() < 0.5)
-	{
-		self.monster_delayedattack = shambler_swing_right;
-		self.delay = time + 0.5;
-	}
-}
-
-void shambler_swing_right ()
-{
-	monsters_setframe(shambler_anim_swingr);
+	float r = ((random() < 0.5) ? TRUE : FALSE);
+	monsters_setframe((r) ? shambler_anim_swingr : shambler_anim_swingl);
 	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
 	self.monster_delayedattack = func_null;
 	self.delay = -1;
-	if(random() < 0.5)
+	if(r)
 	{
-		self.monster_delayedattack = shambler_swing_left;
+		self.monster_delayedattack = shambler_swing;
 		self.delay = time + 0.5;
 	}
 }
@@ -115,10 +101,8 @@ float shambler_attack(float attack_type)
 
 			if(chance > 0.6)
 				shambler_delayedsmash();
-			else if(chance > 0.3)
-				shambler_swing_right();
 			else
-				shambler_swing_left();
+				shambler_swing();
 			
 			return TRUE;
 		}
