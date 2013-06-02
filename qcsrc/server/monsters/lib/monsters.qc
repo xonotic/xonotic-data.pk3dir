@@ -644,7 +644,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			if (vlen(self.velocity) <= 30)
 			{
 				monsters_setframe(manim_idle);
-				if(self.state != MONSTER_STATE_ATTACK_MELEE)
+				if(self.state != MONSTER_STATE_ATTACK_MELEE && self.state != MONSTER_STATE_ATTACK_LEAP)
 				if(self.enemy)
 					self.angles_y = enemy_face_y;
 				else
