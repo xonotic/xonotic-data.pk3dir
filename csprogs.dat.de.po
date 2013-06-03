@@ -1870,6 +1870,7 @@ msgid "^BG%s^BG has dropped the ball!\n"
 msgstr "^BG%s^BG hat den Ball verloren!\n"
 
 #: qcsrc/common/notifications.qh:344
+#, c-format
 #, c-format, fuzzy
 msgid "^BG%s^BG has picked up the ball!\n"
 msgstr "^BG%s^BG hat den Ball genommen!\n"
@@ -2575,6 +2576,7 @@ msgid "^K1You got stuck in a swamp!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:482
+#, c-format
 #, c-format, fuzzy
 msgid "^BGYou are now on: %s"
 msgstr "Du bist jetzt im: %s"

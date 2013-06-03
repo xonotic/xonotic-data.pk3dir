@@ -5111,87 +5111,87 @@ msgstr ""
 msgid "Neutral"
 msgstr ""
 
-msgid "Runematch"
-msgstr "Runematch"
+#~ msgid "Runematch"
+#~ msgstr "Runematch"
 
-msgid "Browser not initialized!"
-msgstr "Browser nicht initialisiert!"
+#~ msgid "Browser not initialized!"
+#~ msgstr "Browser nicht initialisiert!"
 
-msgid "Force models:"
-msgstr "Modell erzwingen:"
+#~ msgid "Force models:"
+#~ msgstr "Modell erzwingen:"
 
-msgid "MDL^None"
-msgstr "Keine"
+#~ msgid "MDL^None"
+#~ msgstr "Keine"
 
-msgid "MDL^Custom"
-msgstr "Benutzerdefiniert"
+#~ msgid "MDL^Custom"
+#~ msgstr "Benutzerdefiniert"
 
-msgid "MDL^All"
-msgstr "Alle"
+#~ msgid "MDL^All"
+#~ msgstr "Alle"
 
-msgid "VWMDL^Scale"
-msgstr "Größe"
+#~ msgid "VWMDL^Scale"
+#~ msgstr "Größe"
 
-msgid "News"
-msgstr "Nachrichten"
+#~ msgid "News"
+#~ msgstr "Nachrichten"
 
-msgid "http://www.xonotic.org/team/blog/"
-msgstr "http://www.xonotic.org/team/blog/"
+#~ msgid "http://www.xonotic.org/team/blog/"
+#~ msgstr "http://www.xonotic.org/team/blog/"
 
-msgid "Rifle"
-msgstr "Gewehr"
+#~ msgid "Rifle"
+#~ msgstr "Gewehr"
 
-msgid "Machine Gun"
-msgstr "Maschinengewehr"
+#~ msgid "Machine Gun"
+#~ msgstr "Maschinengewehr"
 
-msgid "Rocket Launcher"
-msgstr "Rocket Launcher"
+#~ msgid "Rocket Launcher"
+#~ msgstr "Rocket Launcher"
 
 #~ msgid "Port-O-Launch"
 #~ msgstr "Port-O-Launch"
 
-msgid "Grappling Hook"
-msgstr "Enterhaken"
+#~ msgid "Grappling Hook"
+#~ msgstr "Enterhaken"
 
-msgid "Electro"
-msgstr "Elektro"
+#~ msgid "Electro"
+#~ msgstr "Elektro"
 
-msgid "Laser"
-msgstr "Laser"
+#~ msgid "Laser"
+#~ msgstr "Laser"
 
-msgid "Shotgun"
-msgstr "Schrotgewehr"
+#~ msgid "Shotgun"
+#~ msgstr "Schrotgewehr"
 
 #, c-format
-msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
+#~ msgid "@!#%'n Tuba"
+#~ msgstr "@!#%'n Tuba"
 
-msgid "MinstaNex"
-msgstr "MinstaNex"
+#~ msgid "MinstaNex"
+#~ msgstr "MinstaNex"
 
-msgid "Crylink"
-msgstr "Crylink"
+#~ msgid "Crylink"
+#~ msgstr "Crylink"
 
-msgid "Heavy Laser Assault Cannon"
-msgstr "Heavy Laser Assault Cannon"
+#~ msgid "Heavy Laser Assault Cannon"
+#~ msgstr "Heavy Laser Assault Cannon"
 
-msgid "Mortar"
-msgstr "Mortar"
+#~ msgid "Mortar"
+#~ msgstr "Mortar"
 
-msgid "Hagar"
-msgstr "Hagar"
+#~ msgid "Hagar"
+#~ msgstr "Hagar"
 
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+#~ msgid "T.A.G. Seeker"
+#~ msgstr "T.A.G. Seeker"
 
-msgid "Fireball"
-msgstr "Fireball"
+#~ msgid "Fireball"
+#~ msgstr "Fireball"
 
-msgid "Mine Layer"
-msgstr "Minenleger"
+#~ msgid "Mine Layer"
+#~ msgstr "Minenleger"
 
-msgid "Nex"
-msgstr "Nex"
+#~ msgid "Nex"
+#~ msgstr "Nex"
 
 #~ msgid "%d/%d, %d free player slots"
 #~ msgstr "%d/%d, %d freie Slots"
