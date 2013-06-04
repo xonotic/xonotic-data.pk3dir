@@ -26,7 +26,7 @@ void minstagib_stop_countdown(entity e)
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_MINSTA_FINDAMMO);
 	e.minstagib_needammo = FALSE;
 }
-void minstagib_ammocheck(void)
+void minstagib_ammocheck()
 {
 	if not(IS_PLAYER(self))
 		return; // not a player
@@ -202,9 +202,6 @@ MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 {
-	if (self.health < 1)
-		return FALSE;
-		
 	return TRUE;
 }
 
