@@ -202,6 +202,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 {
+	// weapon dropping on death handled by FilterItem
+
 	return TRUE;
 }
 
