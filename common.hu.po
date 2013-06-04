@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-25 22:57+0100\n"
+"POT-Creation-Date: 2013-06-04 20:08+0200\n"
 "PO-Revision-Date: 2012-01-29 20:34+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: qcsrc/client/Main.qc:30
+#: qcsrc/client/Main.qc:21
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
 msgstr "HIBA - A MENÜ LÁTHATÓ, DE NEM VOLT DEFINIÁLVA!"
 
-#: qcsrc/client/Main.qc:104
+#: qcsrc/client/Main.qc:95
 msgid ""
 "^3Your engine build is outdated\n"
 "^3This Server uses a newer QC VM. Please update!\n"
@@ -32,53 +32,29 @@ msgstr ""
 "^3A szerver újabb QC Virtuális Gépet (VM) használ. Kérlek, frissítsd a "
 "sajátodat!\n"
 
-#: qcsrc/client/Main.qc:114
+#: qcsrc/client/Main.qc:105
 #, c-format
 msgid "^4CSQC Build information: ^1%s\n"
 msgstr "^4CSQC Build-Információ: ^1%s (magyar)\n"
 
-#: qcsrc/client/Main.qc:293 qcsrc/client/Main.qc:309
+#: qcsrc/client/Main.qc:273 qcsrc/client/Main.qc:289
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
 msgstr "nem támogatott %d csapathoz próbálsz csatlakozni"
 
-#: qcsrc/client/Main.qc:424 qcsrc/client/scoreboard.qc:241
-msgid "Usage:\n"
-msgstr "Használat:\n"
-
-#: qcsrc/client/Main.qc:425
-msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-msgstr "hud_save configname   (hud_skinname_configname.cfg mentése)\n"
-
-#: qcsrc/client/Main.qc:549
-msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
-msgstr "Használat: cl_cmd PARANCS..., ahol a lehetséges parancsok:\n"
-
-#: qcsrc/client/Main.qc:550
-msgid "  settemp cvar value\n"
-msgstr "  settemp Cvar Wert\n"
-
-#: qcsrc/client/Main.qc:551
-msgid "  scoreboard_columns_set ...\n"
-msgstr "  scoreboard_columns_set ...\n"
-
-#: qcsrc/client/Main.qc:552
-msgid "  scoreboard_columns_help\n"
-msgstr "  scoreboard_columns_help\n"
-
-#: qcsrc/client/Main.qc:788
+#: qcsrc/client/Main.qc:484
 #, c-format
 msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
 msgstr "Egy CSQC entitás gazdát cserélt! (edict: %d, classname: %s)\n"
 
-#: qcsrc/client/Main.qc:1029
+#: qcsrc/client/Main.qc:834
 #, c-format
 msgid ""
 "A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
 msgstr ""
 "Egy CSQC entitás típust váltott! (edict: %d, server: %d, type: %d -> %d)\n"
 
-#: qcsrc/client/Main.qc:1038
+#: qcsrc/client/Main.qc:844
 #, c-format
 msgid ""
 "A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
@@ -86,7 +62,7 @@ msgstr ""
 "Egy CSQC-entitás a nagy semmiből jelent meg! (edict: %d, server: %d, type: "
 "%d)\n"
 
-#: qcsrc/client/Main.qc:1080
+#: qcsrc/client/Main.qc:892
 #, c-format
 msgid ""
 "Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
@@ -95,919 +71,268 @@ msgstr ""
 "Ismeretlen entitás típus CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
 "%s)\n"
 
-#: qcsrc/client/Main.qc:1526
+#: qcsrc/client/Main.qc:1352
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nincs kiosztva)"
 
-#: qcsrc/client/Main.qc:1531 qcsrc/client/hud.qc:230
+#: qcsrc/client/Main.qc:1357 qcsrc/client/hud.qc:221
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:157
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: qcsrc/client/announcer.qc:31
-msgid "^1Begin!"
-msgstr "^1Kezdődjék a játszma!"
+#: qcsrc/client/View.qc:1089
+msgid "Revival progress"
+msgstr ""
 
-#: qcsrc/client/announcer.qc:41
-#, c-format
-msgid "^1Game starts in %d seconds"
-msgstr "^1A játszma kezdéséig még %d másodperc van hátra"
-
-#: qcsrc/client/announcer.qc:153
-msgid "^1RED^7 flag"
-msgstr "^1VÖRÖS^7 ZÁSZLÓ"
-
-#: qcsrc/client/announcer.qc:158
-msgid "^4BLUE^7 flag"
-msgstr "^4BLAUE^7 Flagge"
-
-#: qcsrc/client/announcer.qc:166
-#, c-format
-msgid "You picked up the %s!"
-msgstr "Felvetted a %s -t!"
-
-#: qcsrc/client/announcer.qc:170
-#, c-format
-msgid "You got the %s!"
-msgstr "Nálad van a %s!"
-
-#: qcsrc/client/csqcmodel_hooks.qc:17
-#, c-format
-msgid "Trying to use non existing model %s. "
-msgstr "A %s modell nem létezik "
-
-#: qcsrc/client/csqcmodel_hooks.qc:19
-#, c-format
-msgid "Reverted to %s.\n"
-msgstr "Visszaállítva %s helyzetbe.\n"
-
-#: qcsrc/client/hud.qc:160
-msgid "1st"
-msgstr "1."
-
-#: qcsrc/client/hud.qc:162
-msgid "2nd"
-msgstr "2."
-
-#: qcsrc/client/hud.qc:164
-msgid "3rd"
-msgstr "3."
-
-#: qcsrc/client/hud.qc:166
-#, c-format
-msgid "%dth"
-msgstr "%d."
-
-#: qcsrc/client/hud.qc:198
+#: qcsrc/client/hud.qc:186
 #, c-format
 msgid " (-%dL)"
 msgstr " (-%dR)"
 
-#: qcsrc/client/hud.qc:203
+#: qcsrc/client/hud.qc:191
 #, c-format
 msgid " (+%dL)"
 msgstr " (+%dR)"
 
-#: qcsrc/client/hud.qc:219
+#: qcsrc/client/hud.qc:210
 msgid "Start line"
 msgstr "Start"
 
-#: qcsrc/client/hud.qc:221 qcsrc/client/hud.qc:225
+#: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
 msgstr "Cél"
 
-#: qcsrc/client/hud.qc:223
+#: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
 msgstr "Közepes %d"
 
-#: qcsrc/client/hud.qc:232
+#: qcsrc/client/hud.qc:223
 #, c-format
 msgid "%s (%s %s)"
 msgstr "%s (%s %s)"
 
-#: qcsrc/client/hud.qc:786
+#: qcsrc/client/hud.qc:830
 msgid "Out of ammo"
 msgstr "Nincs több lőszered."
 
-#: qcsrc/client/hud.qc:790
+#: qcsrc/client/hud.qc:834
 msgid "Don't have"
 msgstr "nincs nálad"
 
-#: qcsrc/client/hud.qc:794
+#: qcsrc/client/hud.qc:838
 msgid "Unavailable"
 msgstr "nem elérhető"
 
-#: qcsrc/client/hud.qc:1534
-#, c-format
-msgid "^1%s^1 couldn't take it anymore\n"
-msgstr "^1%s^1 már nem bírta tovább\n"
-
-#: qcsrc/client/hud.qc:1538 qcsrc/client/hud.qc:1887
-#, c-format
-msgid "^1%s^1 died\n"
-msgstr "^1%s^1 meghalt\n"
-
-#: qcsrc/client/hud.qc:1542
-#, c-format
-msgid "^7%s^7 committed suicide. What's the point of living without ammo?\n"
-msgstr "^7%s^7 öngyilkos lett. Lőszer nélkül mi értelme az életnek?\n"
-
-#: qcsrc/client/hud.qc:1546
-#, c-format
-msgid "^1%s^1 thought they found a nice camping ground\n"
-msgstr "^1%s^1 azt hitte, jó helyen vert tanyát\n"
-
-#: qcsrc/client/hud.qc:1550
-#, c-format
-msgid "^1%s^1 didn't become friends with the Lord of Teamplay\n"
-msgstr "^1%s^1 és a Csapatjátékosok Ura mégse jött ki jól egymással\n"
-
-#: qcsrc/client/hud.qc:1554
-#, c-format
-msgid "^1%s^1 unfairly eliminated themself\n"
-msgstr "^1%s^1 unfair módon kicsinálta magát\n"
-
-#: qcsrc/client/hud.qc:1558
-#, c-format
-msgid "^1%s^1 burned to death\n"
-msgstr "^1%s^1 szénné égett\n"
-
-#: qcsrc/client/hud.qc:1562
-#, c-format
-msgid "^1%s^1 couldn't resist the urge to self-destruct\n"
-msgstr "^1%s^1 szerint jó móka az öngyilkosság\n"
-
-#: qcsrc/client/hud.qc:1566
-#, c-format
-msgid "^1%s^1 ended it all after a %d kill spree\n"
-msgstr "^1%s^1 kinyírta magát %d-szeres Ámokfutása után\n"
-
-#: qcsrc/client/hud.qc:1583
-#, c-format
-msgid "^1%s^1 took action against a team mate\n"
-msgstr "^1%s^1 a saját csapattársa ellen fordult!\n"
-
-#: qcsrc/client/hud.qc:1585
-#, c-format
-msgid "^1%s^1 mows down a team mate\n"
-msgstr "^1%s^1 ledarált még egy csapattársat!\n"
-
-#: qcsrc/client/hud.qc:1590
-#, c-format
-msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
-msgstr "^1%s^1 befejezte %d-szeres Ámokfutását, és a csapattársára rontott!\n"
-
-#: qcsrc/client/hud.qc:1592
-#, c-format
-msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
-msgstr "^1%s^1 bevégezte %d-szres Ámokfutását, és megölte egy csapattársát!\n"
-
-#: qcsrc/client/hud.qc:1596
-#, c-format
-msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
-msgstr "^1%s^1s %s-szeres Ámokfutásának egy csapattársa vetett véget!\n"
-
-#: qcsrc/client/hud.qc:1598
-#, c-format
-msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
-msgstr "^1%s^1s %s-szeres Ámokfutását egy csapattársa fejezte be!\n"
-
-#: qcsrc/client/hud.qc:1602
-#, c-format
-msgid "^1%s^1 drew first blood\n"
-msgstr "^1%s^1 ontotta az első vért!\n"
-
-#: qcsrc/client/hud.qc:1606
-#, c-format
-msgid "^1%s^1 tried to occupy %s^1's teleport destination space\n"
-msgstr "^1%s^1 megpróbálta elfoglalni %s^1 teleportációs helyét\n"
-
-#: qcsrc/client/hud.qc:1608
-#, c-format
-msgid "^1%s^1 was telefragged by %s\n"
-msgstr "^1%s^1-ba %s^1 egyszerűen bele-teleportált\n"
-
-#: qcsrc/client/hud.qc:1613
-#, c-format
-msgid "^1%s^1 was drowned by %s\n"
-msgstr "^1%2$s^1 megfolytotta %1$^1-t a víz alatt\n"
-
-#: qcsrc/client/hud.qc:1618
-#, c-format
-msgid "^1%s^1 was slimed by %s\n"
-msgstr "^1%2$s^1 belelökte %1$s^1-t a trutymóba\n"
-
-#: qcsrc/client/hud.qc:1623
-#, c-format
-msgid "^1%s^1 was cooked by %s\n"
-msgstr "^1%2$s^1 ropogósra sütötte %1$s^1-t a lávában\n"
-
-#: qcsrc/client/hud.qc:1628
-#, c-format
-msgid "^1%s^1 was grounded by %s\n"
-msgstr "^1%2$s^1 lelökte %1$s^1-t a mélybe\n"
-
-#: qcsrc/client/hud.qc:1633
-#, c-format
-msgid "^1%s^1 was shot into space by %s\n"
-msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
-
-#: qcsrc/client/hud.qc:1638
-#, c-format
-msgid "^1%s^1 was conserved by %s\n"
-msgstr "^1%2$s^1 összecsomagolta %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1644
-#, c-format
-msgid "^1%s^1 was thrown into a world of hurt by %s\n"
-msgstr "^1%2$s^1 kilökte %1$s^1-t a nagy semmibe\n"
-
-#: qcsrc/client/hud.qc:1648
-#, c-format
-msgid "^1%s^1 was crushed by %s\n"
-msgstr "^1%2$s^1 összeroppantotta %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1652
-#, c-format
-msgid "^1%s^1 got shredded by %s\n"
-msgstr "^1%2$s^1 ledarálta %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1656
-#, c-format
-msgid "^1%s^1 was blasted to bits by %s\n"
-msgstr "^1%2$s^1 darabokra robbantotta %1$s^1\n"
-
-#: qcsrc/client/hud.qc:1660
-#, c-format
-msgid "^1%s^1 got caught in the destruction of %s^1's vehicle\n"
-msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
-
-#: qcsrc/client/hud.qc:1664
-#, c-format
-msgid "^1%s^1 was bolted down by %s\n"
-msgstr "^1%2$s^1 odaszögezte %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1668
-#, c-format
-msgid "^1%s^1 could find no shelter from %s^1's rockets\n"
-msgstr "^1%s^1 nem tudott fedezékbe húzódni %s^1s rakétái elől\n"
-
-#: qcsrc/client/hud.qc:1672
-#, c-format
-msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
-msgstr "^1%s^1 meghalt %s^1's Wakizashijának becsapódásától.\n"
-
-#: qcsrc/client/hud.qc:1676
-#, c-format
-msgid "^1%s^1 nailed to hell by %s\n"
-msgstr "^1%2$s^1 odaszögezte %1$s^1-t a földhöz\n"
-
-#: qcsrc/client/hud.qc:1680
-#, c-format
-msgid "^1%s^1 cluster crushed by %s\n"
-msgstr "^1%2$s^1 cafatokra tépte %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1684
-#, c-format
-msgid "^1%s^1 dies when %s^1's raptor dies.\n"
-msgstr "^1%s^1 is belehalt %s^1 Raptorjának lezuhanásába.\n"
-
-#: qcsrc/client/hud.qc:1688
-#, c-format
-msgid "^1%s^1 was pushed into the line of fire by %s\n"
-msgstr "^1%2$s^1 kilökte %1$s^1-t a tűzvonalba\n"
-
-#: qcsrc/client/hud.qc:1692
-#, c-format
-msgid "^1%s^1 was pushed into an accident by %s\n"
-msgstr "^1%2$s^1 miatt %1$s^1 halálos balesetet szenvedett\n"
-
-#: qcsrc/client/hud.qc:1696
-#, c-format
-msgid "^1%s^1 was unfairly eliminated by %s\n"
-msgstr "^%2$s^1 unfair módon kinyírta %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1700
-#, c-format
-msgid "^1%s^1 was burnt to death by %s\n"
-msgstr "^1%2$s^1 elégette %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1712
-#, c-format
-msgid "^1%s^1 was fragged by %s\n"
-msgstr "^1%2$s^1 kinyírta %1$s^1-t\n"
-
-#: qcsrc/client/hud.qc:1717
-#, c-format
-msgid "^1%s^1's %s scoring spree was ended by %s\n"
-msgstr "^1%s^1 %s értékű pontgyűjtésének %s^1 vetet véget\n"
-
-#: qcsrc/client/hud.qc:1719
-#, c-format
-msgid "^1%s^1's %s kill spree was ended by %s\n"
-msgstr "^1%s^1 %s Gyilokos Ámokfutásának %s^1 vetett véget\n"
-
-#: qcsrc/client/hud.qc:1722
-#, c-format
-msgid "^1%s^1 made %s scores in a row\n"
-msgstr "^1%s^1 már a %s-dik pontot szerzi zsinórban!\n"
-
-#: qcsrc/client/hud.qc:1724
-#, c-format
-msgid "^1%s^1 has %s frags in a row\n"
-msgstr "^1%s^1 már a  %s-dik ellenfelét öli meg zsinórban!\n"
-
-#: qcsrc/client/hud.qc:1727
-#, c-format
-msgid "%s^7 made a ^1TRIPLE SCORE\n"
-msgstr "%s^7-nak ^1MESTER HÁRMASA^7 van!\n"
-
-#: qcsrc/client/hud.qc:1729
-#, c-format
-msgid "%s^7 made a ^1TRIPLE FRAG\n"
-msgstr "%s^7-nak  ^1TRIPLAGYILOK^7-j van!\n"
-
-#: qcsrc/client/hud.qc:1732
-#, c-format
-msgid "%s^7 unleashes ^1SCORING RAGE\n"
-msgstr "%s^7 egy ^1PONTSZERZŐGÉP!\n"
-
-#: qcsrc/client/hud.qc:1734
-#, c-format
-msgid "%s^7 unleashes ^1RAGE\n"
-msgstr "%s^7 egy^1GYILKOLÓGÉP!\n"
-
-#: qcsrc/client/hud.qc:1737
-#, c-format
-msgid "%s^7 made ^1TEN SCORES IN A ROW!\n"
-msgstr "%s^7 már ^1TÍZ PONTOT SZERZETT ZSINÓRBAN!\n"
-
-#: qcsrc/client/hud.qc:1739
-#, c-format
-msgid "%s^7 starts the ^1MASSACRE!\n"
-msgstr "%s^7 egy ^1MÉSZÁROS!\n"
-
-#: qcsrc/client/hud.qc:1742
-#, c-format
-msgid "%s^7 made ^1FIFTEEN SCORES IN A ROW!\n"
-msgstr "%s^7 már ^1TIZENÖT PONTOT SZERZETT ZSINÓRBAN!\n"
-
-#: qcsrc/client/hud.qc:1744
-#, c-format
-msgid "%s^7 executes ^1MAYHEM!\n"
-msgstr "%s^7 elhozta a ^1KÁOSZT!\n"
-
-#: qcsrc/client/hud.qc:1747
-#, c-format
-msgid "%s^7 made ^1TWENTY SCORES IN A ROW!\n"
-msgstr "%s^7 már ^1HÚSZ PONTOT GYŰJTÖTT ZSINÓRBAN!\n"
-
-#: qcsrc/client/hud.qc:1749
-#, c-format
-msgid "%s^7 is a ^1BERSERKER!\n"
-msgstr "%s^7 ^1ŐRÜLETBE ESETT!\n"
-
-#: qcsrc/client/hud.qc:1752
-#, c-format
-msgid "%s^7 made ^1TWENTY FIVE SCORES IN A ROW!\n"
-msgstr "%s^7 már ^1HUSZONÖT PONTOT SZERZETT ZSINÓRBAN!\n"
-
-#: qcsrc/client/hud.qc:1754
-#, c-format
-msgid "%s^7 inflicts ^1CARNAGE!\n"
-msgstr "%s^7 ^1VÉRFÜRDŐT RENDEZ!\n"
-
-#: qcsrc/client/hud.qc:1757
-#, c-format
-msgid "%s^7 made ^1THIRTY SCORES IN A ROW!\n"
-msgstr "%s^7 már ^1HARMINC PONTOT SZERZETT ZSINÓRBAN!\n"
-
-#: qcsrc/client/hud.qc:1759
-#, c-format
-msgid "%s^7 unleashes ^1ARMAGEDDON!\n"
-msgstr "%s^7 MAGA AZ ^1APOKALIPSZIS ANGYALA!\n"
-
-#: qcsrc/client/hud.qc:1767
-#, c-format
-msgid "^1%s^1 was in the water for too long\n"
-msgstr "^1%s^1 túl sokáig maradt a víz alatt\n"
-
-#: qcsrc/client/hud.qc:1769
-#, c-format
-msgid "^1%s^1 drowned\n"
-msgstr "^1%s^1 már a halakkal alszik\n"
-
-#: qcsrc/client/hud.qc:1774
-#, c-format
-msgid "^1%s^1 was slimed\n"
-msgstr "^1%s^1 feloldótott a trugymóban\n"
-
-#: qcsrc/client/hud.qc:1780
-#, c-format
-msgid "^1%s^1 found a hot place\n"
-msgstr "^1%s^1 ropogósra sült a lávában\n"
-
-#: qcsrc/client/hud.qc:1782
-#, c-format
-msgid "^1%s^1 turned into hot slag\n"
-msgstr "^1%s^1 szó szerint beleolvadt a környezetébe\n"
-
-#: qcsrc/client/hud.qc:1789
-#, c-format
-msgid "^1%s^1 tested gravity (and it worked)\n"
-msgstr ""
-"^1%s^1 kíváncsi volt, hogy működik-e még a gravitáció (a válasz: igen)\n"
-
-#: qcsrc/client/hud.qc:1791
-#, c-format
-msgid "^1%s^1 hit the ground with a crunch\n"
-msgstr "^1%s^1 szétplaccsant a földön\n"
-
-#: qcsrc/client/hud.qc:1796
-#, c-format
-msgid "^1%s^1 became a shooting star\n"
-msgstr "^1%s^1 elszállt, mint a győzelmi zászló\n"
-
-#: qcsrc/client/hud.qc:1802
-#, c-format
-msgid "^1%s^1 discovered a swamp\n"
-msgstr "^1%s^1 rátalált egy mocsárra\n"
-
-#: qcsrc/client/hud.qc:1804
-#, c-format
-msgid "^1%s^1 is now conserved for centuries to come\n"
-msgstr "^1%s^1 már örökké elvan, mint a befőtt\n"
-
-#: qcsrc/client/hud.qc:1811
-#, c-format
-msgid "^1%s^1 ran into a turret\n"
-msgstr "^1%s^1 belefutott egy automatikus lövegbe\n"
-
-#: qcsrc/client/hud.qc:1817
-#, c-format
-msgid "^1%s^1 was laserd down by a eWheel turret \n"
-msgstr "^1%s^1 belenézett egy eWheel lézersugarába\n"
-
-#: qcsrc/client/hud.qc:1820
-#, c-format
-msgid "^1%s^1 got caught in the flac \n"
-msgstr "^1%s^1 beleszaladt a repeszekbe\n"
-
-#: qcsrc/client/hud.qc:1823
-#, c-format
-msgid "^1%s^1 was riddeld full of riddled by a machinegun turret \n"
-msgstr "^1Egy automatikus Gépágyú torony szitává lyuggatta 1%s^1-t\n"
-
-#: qcsrc/client/hud.qc:1826
-#, c-format
-msgid "^1%s^1 got served a led enrichment by a walker turret \n"
-msgstr "^1%s^1 megkapta az ólom beültetést egy Pókjárótól\n"
-
-#: qcsrc/client/hud.qc:1829
-#, c-format
-msgid "^1%s^1 was impaled by a walker turret \n"
-msgstr "^1Egy Pókjáró darabokra tépte %s^1-t\n"
-
-#: qcsrc/client/hud.qc:1832
-#, c-format
-msgid "^1%s^1 was rocketed to hell by a walker turret \n"
-msgstr "^1%s^1 lefejelte egy Pókjáró rakétáját\n"
-
-#: qcsrc/client/hud.qc:1835
-#, c-format
-msgid "^1%s^1 was blasted away hellion turret \n"
-msgstr "^1Egy Pokoltorony felrobbantotta %s^1-t a rakétáival\n"
-
-#: qcsrc/client/hud.qc:1838
-#, c-format
-msgid "^1%s^1 could not hide from the hunter turret \n"
-msgstr "^1%s nem tudott elbújni egy Vadász torony elől\n"
-
-#: qcsrc/client/hud.qc:1841
-#, c-format
-msgid "^1%s^1 got turned into smoldering gibs by a mlrs turret \n"
-msgstr ""
-"^1%s^1 pici forró húscafatokká vált egy automatikus MLRS torony rakétáitól\n"
-
-#: qcsrc/client/hud.qc:1844
-#, c-format
-msgid "^1%s^1 got served some superheated plasma from a plasma turret \n"
-msgstr "^1%s^1 atomjaira hullott egy Plazma torony forró sugaraitól\n"
-
-#: qcsrc/client/hud.qc:1847
-#, c-format
-msgid "^1%s^1 was phased out \n"
-msgstr "^1%s^1 légneművé változott egy Fázistoronytól\n"
-
-#: qcsrc/client/hud.qc:1850
-#, c-format
-msgid "^1%s^1 was electrocuted by a tesla turret \n"
-msgstr "^1%s^1 egészen felvillanyozódott egy Tesla toronytól\n"
-
-#: qcsrc/client/hud.qc:1866
-#, c-format
-msgid "^1%s^1 died in an accident\n"
-msgstr "^1%s^1 elhunyt egy tragikus balesetben\n"
-
-#: qcsrc/client/hud.qc:1870
-#, c-format
-msgid "^1%s^1 was unfairly eliminated\n"
-msgstr "^1%s^1-t kicsinálták unfair módón \n"
-
-#: qcsrc/client/hud.qc:1876
-#, c-format
-msgid "^1%s^1 felt a little hot\n"
-msgstr "^1%s^1 kissé forrófejű lett\n"
-
-#: qcsrc/client/hud.qc:1878
-#, c-format
-msgid "^1%s^1 burnt to death\n"
-msgstr "^1%s^1 ropogósra sült\n"
-
-#: qcsrc/client/hud.qc:1885
-#, c-format
-msgid "^1%s^1 needs a restart\n"
-msgstr "^1%s^1 újra kell hogy kezdje\n"
-
-#: qcsrc/client/hud.qc:1892
-#, c-format
-msgid "^1%s^1 needs a restart after a %d scoring spree\n"
-msgstr "^1%s^1 újra kell hogy kezdje %d pont után\n"
-
-#: qcsrc/client/hud.qc:1894
-#, c-format
-msgid "^1%s^1 died with a %d kill spree\n"
-msgstr "^1%s^1 bevégezte %d-gyilokos ÁMOKFUTÁSÁT\n"
-
-#: qcsrc/client/hud.qc:1898
-#, c-format
-msgid "%s^7 got the %s\n"
-msgstr "%s^7 megszerezte a %s-t\n"
-
-#: qcsrc/client/hud.qc:1901
-#, c-format
-msgid "%s^7 lost the %s\n"
-msgstr "%s^7 elvesztette a %s-t\n"
-
-#: qcsrc/client/hud.qc:1904
-#, c-format
-msgid "%s^7 picked up the %s\n"
-msgstr "%s^7 felvette a %s-t\n"
-
-#: qcsrc/client/hud.qc:1907
-#, c-format
-msgid "%s^7 returned the %s\n"
-msgstr "%s^7 visszaszerezte a %s^7-t\n"
-
-#: qcsrc/client/hud.qc:1910
-#, c-format
-msgid "%s^7 captured the %s%s\n"
-msgstr "%s^7 elfoglalta a %s%s-t\n"
-
-#: qcsrc/client/hud.qc:1929
-#, c-format
-msgid "%s^7 has picked up the ball!\n"
-msgstr "%s^7 felvette a labdát!\n"
-
-#: qcsrc/client/hud.qc:1934
-#, c-format
-msgid "%s^7 has dropped the ball!\n"
-msgstr "%s^7 elhagyta a labdát!\n"
-
-#: qcsrc/client/hud.qc:1945
-#, c-format
-msgid "You are now on: %s"
-msgstr "Mostantól a %s tagja vagy."
-
-#: qcsrc/client/hud.qc:1947
-#, c-format
-msgid ""
-"You have been moved into a different team to improve team balance\n"
-"You are now on: %s"
-msgstr ""
-"Át lettél mozgatva egy másik csapatba, hogy kiegyenlített legyen a játék.\n"
-"Mostantól a %s tagja vagy."
-
-#: qcsrc/client/hud.qc:1950
-msgid "^1Reconsider your tactics, camper!"
-msgstr "^1Ne ülj a tojásaidon, nem vagy te tojógalamb!!"
-
-#: qcsrc/client/hud.qc:1952
-msgid "^1Die camper!"
-msgstr "^1Ne tanyázz le, ez itt nem a kemping !"
-
-#: qcsrc/client/hud.qc:1955
-msgid "^1You are reinserted into the game for running out of ammo..."
-msgstr "^1Visszakerültél a játékba, mert kifogytál a lőszerből"
-
-#: qcsrc/client/hud.qc:1957
-msgid "^1You were killed for running out of ammo..."
-msgstr "^1Meghaltál, mert elfogyott a lőszered..."
-
-#: qcsrc/client/hud.qc:1960
-msgid "^1You need to preserve your health"
-msgstr "^1Szinten kell tartanod az életerőd"
-
-#: qcsrc/client/hud.qc:1962
-msgid "^1You grew too old without taking your medicine"
-msgstr "^1Öregszel, be kéne venned a gyógyszereid"
-
-#: qcsrc/client/hud.qc:1965
-msgid "^1Don't go against team mates!"
-msgstr "^1A csapattársaid ellen mész!"
-
-#: qcsrc/client/hud.qc:1967
-msgid "^1Don't shoot your team mates!"
-msgstr "^1Ne lőj a csapattársaidra!"
-
-#: qcsrc/client/hud.qc:1972
-msgid "^1You need to be more careful!"
-msgstr "^1Jobban oda kéne figyelned!"
-
-#: qcsrc/client/hud.qc:1974
-msgid "^1You killed your own dumb self!"
-msgstr "^1Kinyírtad magad, hülyegyerek..."
-
-#: qcsrc/client/hud.qc:1979
-#, c-format
-msgid "^1Moron! You went against ^7%s^1, a team mate!"
-msgstr "^1Marha! %s ellen fordultál, pedig a csapattársad!"
-
-#: qcsrc/client/hud.qc:1981
-#, c-format
-msgid "^1Moron! You fragged ^7%s^1, a team mate!"
-msgstr "^1Idióta! Megölted %s-t pedig a csapattársad!"
-
-#: qcsrc/client/hud.qc:1985
-msgid "^1First score"
-msgstr "^1ELSŐ PONT!"
-
-#: qcsrc/client/hud.qc:1987
-msgid "^1First blood"
-msgstr "^1ELSŐ VÉR!"
-
-#: qcsrc/client/hud.qc:1991
-msgid "^1First casualty"
-msgstr "^1Te vagy az első sérült"
-
-#: qcsrc/client/hud.qc:1993
-msgid "^1First victim"
-msgstr "^1Ta vagy az első áldozat "
-
-#: qcsrc/client/hud.qc:1997
-#, c-format
-msgid "^1You scored against ^7%s^1 who was typing!"
-msgstr "^1Szereztél egy pontot ^7%s^1 ellen, aki épp gépelt!"
-
-#: qcsrc/client/hud.qc:1999
-#, c-format
-msgid "^1You typefragged ^7%s"
-msgstr "^1Csevejgyilok áltozatod: ^7%s^1"
-
-#: qcsrc/client/hud.qc:2003
-#, c-format
-msgid "^1You were scored against by ^7%s^1 while you were typing!"
-msgstr ""
-"^7%s^1 szerzett egy pontot ellened, amíg a gépeléssel voltál elfoglalva!"
-
-#: qcsrc/client/hud.qc:2005
-#, c-format
-msgid "^1You were typefragged by ^7%s"
-msgstr "^7%s^1 kinyírt téged, amíg a gépeléssel voltál elfoglalva"
-
-#: qcsrc/client/hud.qc:2009
-#, c-format
-msgid "^4You scored against ^7%s"
-msgstr "^4Pontot szereztél ^7%s^4 ellen"
-
-#: qcsrc/client/hud.qc:2011
-#, c-format
-msgid "^4You fragged ^7%s"
-msgstr "^4Kinyírtad ^7%s^4-t!"
-
-#: qcsrc/client/hud.qc:2015
-#, c-format
-msgid "^1You were scored against by ^7%s"
-msgstr "^7%s^1 szerzett egy pontot ellened"
-
-#: qcsrc/client/hud.qc:2017
-#, c-format
-msgid "^1You were fragged by ^7%s"
-msgstr "^7%s^1 kinyírt téged"
-
-#: qcsrc/client/hud.qc:2022
-msgid "^1Watch your step!"
-msgstr "^1Nézz a lábad elé!"
-
-#: qcsrc/client/hud.qc:2091 qcsrc/client/hud.qc:2092 qcsrc/client/hud.qc:2598
+#: qcsrc/client/hud.qc:1705 qcsrc/client/hud.qc:1706 qcsrc/client/hud.qc:2069
 #, c-format
 msgid "Player %d"
 msgstr "Játékos %d"
 
-#: qcsrc/client/hud.qc:2907
+#: qcsrc/client/hud.qc:2385
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Közepes 1 (+15.42)"
 
-#: qcsrc/client/hud.qc:2909 qcsrc/client/hud.qc:2951 qcsrc/client/hud.qc:2992
+#: qcsrc/client/hud.qc:2387 qcsrc/client/hud.qc:2429 qcsrc/client/hud.qc:2470
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1BÜNTETÉS: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:2994
+#: qcsrc/client/hud.qc:2472
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2BÜNTETÉS: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:3022
+#: qcsrc/client/hud.qc:2502
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr "^1Választanod kell, mielőtt beléphetsz a HUD beállításokba\n"
 
-#: qcsrc/client/hud.qc:3027
+#: qcsrc/client/hud.qc:2507
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr "^2Név^7 mutatása \"^1Anonymous player^7\" helyett a statisztikákban"
 
-#: qcsrc/client/hud.qc:3109
+#: qcsrc/client/hud.qc:2587
 msgid "A vote has been called for:"
 msgstr "Szavaznod kell az alábbi ügyben:"
 
-#: qcsrc/client/hud.qc:3111
+#: qcsrc/client/hud.qc:2589
 msgid "Allow servers to store and display your name?"
 msgstr "Megengeded, hogy a szerver eltárolja én megjelenítse a neved?"
 
-#: qcsrc/client/hud.qc:3115
+#: qcsrc/client/hud.qc:2593
 msgid "^1Configure the HUD"
 msgstr "^1A HUD beállításai"
 
-#: qcsrc/client/hud.qc:3119
+#: qcsrc/client/hud.qc:2597
 #, c-format
 msgid "Yes (%s): %d"
 msgstr "Igen (%s): %d"
 
-#: qcsrc/client/hud.qc:3121
+#: qcsrc/client/hud.qc:2599
 #, c-format
 msgid "No (%s): %d"
 msgstr "Nem (%s): %d"
 
-#: qcsrc/client/hud.qc:3624 qcsrc/client/hud.qc:3627 qcsrc/client/hud.qc:3629
+#: qcsrc/client/hud.qc:3170 qcsrc/client/hud.qc:3173 qcsrc/client/hud.qc:3175
 msgid "Personal best"
 msgstr "Saját legjobb idő"
 
-#: qcsrc/client/hud.qc:3642 qcsrc/client/hud.qc:3645 qcsrc/client/hud.qc:3647
+#: qcsrc/client/hud.qc:3188 qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3193
 msgid "Server best"
 msgstr "Szerver legjobb idő"
 
-#: qcsrc/client/hud.qc:3993
+#: qcsrc/client/hud.qc:3553
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Player^7: Ez a csevej terület"
 
-#: qcsrc/client/hud.qc:4061
+#: qcsrc/client/hud.qc:3619
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud.qc:4128
+#: qcsrc/client/hud.qc:3684
 msgid "^1Observing"
 msgstr "^1Néző"
 
-#: qcsrc/client/hud.qc:4131 qcsrc/client/hud.qc:4133
+#: qcsrc/client/hud.qc:3687 qcsrc/client/hud.qc:3689
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^7%s^1-t nézed és követed"
 
-#: qcsrc/client/hud.qc:4138
+#: qcsrc/client/hud.qc:3694
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy nézőként lépj be!"
 
-#: qcsrc/client/hud.qc:4140
-#, c-format
-msgid "^1Press ^3%s^1 for another player"
+#: qcsrc/client/hud.qc:3696
+#, fuzzy, c-format
+msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr "^1Nyomd meg a ^3%s^1 gombot egy másik játékos követéséhez!"
 
-#: qcsrc/client/hud.qc:4144
+#: qcsrc/client/hud.qc:3700
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Használd a ^3%s^1 vagy ^3%s^1 gombokat a sebesség változtatásához!"
 
-#: qcsrc/client/hud.qc:4146
+#: qcsrc/client/hud.qc:3702
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy néző lehess!"
 
-#: qcsrc/client/hud.qc:4149
+#: qcsrc/client/hud.qc:3705
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Nyomd meg a ^3%s^1 gombot a játékmód információkért!"
 
-#: qcsrc/client/hud.qc:4153
+#: qcsrc/client/hud.qc:3709
 msgid "^1Wait for your turn to join"
 msgstr "^1Várj kérlek a saját körödre!"
 
-#: qcsrc/client/hud.qc:4159
+#: qcsrc/client/hud.qc:3715
 msgid "^1Match has already begun"
 msgstr "^1A játék már elkezdődött"
 
-#: qcsrc/client/hud.qc:4161
+#: qcsrc/client/hud.qc:3717
 msgid "^1You have no more lives left"
 msgstr "^1Nincs több életed"
 
-#: qcsrc/client/hud.qc:4163 qcsrc/client/hud.qc:4166
+#: qcsrc/client/hud.qc:3719 qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Nyomd meg a ^3%s^1 gombot a játékba való belépéshez!"
 
-#: qcsrc/client/hud.qc:4174
+#: qcsrc/client/hud.qc:3730
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1A játék ^3%d^1 másodpercen belül elkezdődik!"
 
-#: qcsrc/client/hud.qc:4181
+#: qcsrc/client/hud.qc:3737
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Jelenleg ^1BEMELEGÍTÉS^7 zajlik!"
 
-#: qcsrc/client/hud.qc:4196
+#: qcsrc/client/hud.qc:3752
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%s, kérlek nyomd meg a ^3%s%s gombot a bemelegítés befejezéséhez!"
 
-#: qcsrc/client/hud.qc:4198
+#: qcsrc/client/hud.qc:3754
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr "%s, kérlek nyomd meg a ^3%s%s gombot, amint készen állsz!"
 
-#: qcsrc/client/hud.qc:4203
+#: qcsrc/client/hud.qc:3759
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Várakozás a többiekre, hogy befejezzék a bemelegítést..."
 
-#: qcsrc/client/hud.qc:4205
+#: qcsrc/client/hud.qc:3761
 msgid "^2Waiting for others to ready up..."
 msgstr "^2Várj kérlek, amíg a többiek készen állnak..."
 
-#: qcsrc/client/hud.qc:4211
+#: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Nyomd meg a ^3%s^2 gombot a bemelegítés befejezéséhez!"
 
-#: qcsrc/client/hud.qc:4232
+#: qcsrc/client/hud.qc:3788
 msgid "Teamnumbers are unbalanced!"
 msgstr "A csapatok egyenlőtlenül vannak elosztva!"
 
-#: qcsrc/client/hud.qc:4237
+#: qcsrc/client/hud.qc:3793
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " Nyomd meg a ^3%s%s gombot a kiegyenlítéshez!"
 
-#: qcsrc/client/hud.qc:4245
+#: qcsrc/client/hud.qc:3801
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Nyomd meg az ^3ESC^7 gombot a HUD beállításának lehetőségeihez!"
 
-#: qcsrc/client/hud.qc:4247
+#: qcsrc/client/hud.qc:3803
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3Kattints duplán^7 egy panelre a panel-specifikus beállításokhoz!"
 
-#: qcsrc/client/hud.qc:4249
+#: qcsrc/client/hud.qc:3805
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 "A ^3CTRL^7 gomb segítségével kikapcsolhatod az illesztést, a ^3SHIFT^7 és"
 
-#: qcsrc/client/hud.qc:4251
+#: qcsrc/client/hud.qc:3807
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "az ^3ALT^7 + ^3NYÍLGOMBOK^7-kal finoman mozgathatsz!"
 
-#: qcsrc/client/hud.qc:4289
+#: qcsrc/client/hud.qc:3855
 msgid " qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/hud.qc:4293
+#: qcsrc/client/hud.qc:3859
 msgid " m/s"
 msgstr "m/s"
 
-#: qcsrc/client/hud.qc:4297
+#: qcsrc/client/hud.qc:3863
 msgid " km/h"
 msgstr "km/h"
 
-#: qcsrc/client/hud.qc:4301
+#: qcsrc/client/hud.qc:3867
 msgid " mph"
 msgstr "mph"
 
-#: qcsrc/client/hud.qc:4305
+#: qcsrc/client/hud.qc:3871
 msgid " knots"
 msgstr "Csomó"
 
-#: qcsrc/client/hud.qc:4968
+#: qcsrc/client/hud.qc:4548
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
 msgstr "A panel számok a _hud_panelorder -ben autonatikus javításra kerültek"
 
-#: qcsrc/client/hud_config.qc:185
+#: qcsrc/client/hud_config.qc:196
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr ""
 "^2Sikeresen exportálva %s -ként! (Figyelem: az adatok a data/data/ "
 "könyvtárban találhatók meg!)\n"
 
-#: qcsrc/client/hud_config.qc:189
+#: qcsrc/client/hud_config.qc:200
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr "^1Nem lehet írni a %s -ba/be\n"
@@ -1021,35 +346,40 @@ msgstr "(1 szavazat)"
 msgid " (%d votes)"
 msgstr "(%d szavazat)"
 
-#: qcsrc/client/mapvoting.qc:113
+#: qcsrc/client/mapvoting.qc:118
 msgid "Don't care"
 msgstr "Mindegy"
 
-#: qcsrc/client/mapvoting.qc:194
+#: qcsrc/client/mapvoting.qc:203
 msgid "Vote for a map"
 msgstr "Válassz pályát!"
 
-#: qcsrc/client/mapvoting.qc:200
+#: qcsrc/client/mapvoting.qc:209
 #, c-format
 msgid "%d seconds left"
 msgstr "%d másodperc maradt hátra"
 
-#: qcsrc/client/mapvoting.qc:263
+#: qcsrc/client/mapvoting.qc:273
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr "mv_mapdownload: ^3Nem kéne ezt a parancsot használnod!\n"
 
-#: qcsrc/client/mapvoting.qc:273
+#: qcsrc/client/mapvoting.qc:283
 msgid "^1Error:^7 Couldn't find pak index.\n"
 msgstr "^1Hiba:^7 nem találom a pak-Indexet\n"
 
-#: qcsrc/client/mapvoting.qc:282
+#: qcsrc/client/mapvoting.qc:292
 msgid "Requesting preview...\n"
 msgstr "Előnézet kérése...\n"
 
-#: qcsrc/client/miscfunctions.qc:100
+#: qcsrc/client/miscfunctions.qc:98
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Olyan csapatot próbálsz eltávolítani, ami nincs a csapatlistában!"
+
+#: qcsrc/client/miscfunctions.qc:604 qcsrc/menu/xonotic/util.qc:283
+#, c-format
+msgid "Received HTTP request data for an invalid id %d.\n"
+msgstr "Érvénytelen HTTP adatkérés érkezett id %d.\n"
 
 #: qcsrc/client/movetypes.qc:163
 #, c-format
@@ -1077,184 +407,193 @@ msgid "SCO^caps"
 msgstr "Rablások"
 
 #: qcsrc/client/scoreboard.qc:22
+#, fuzzy
+msgid "SCO^captime"
+msgstr "Labdaidő"
+
+#: qcsrc/client/scoreboard.qc:23
 msgid "SCO^deaths"
 msgstr "Halálok"
 
-#: qcsrc/client/scoreboard.qc:23
+#: qcsrc/client/scoreboard.qc:24
 msgid "SCO^destroyed"
 msgstr "megsemmisítve"
 
-#: qcsrc/client/scoreboard.qc:24
+#: qcsrc/client/scoreboard.qc:25
 msgid "SCO^drops"
 msgstr "elvesztve"
 
-#: qcsrc/client/scoreboard.qc:25
+#: qcsrc/client/scoreboard.qc:26
 msgid "SCO^faults"
 msgstr "Hibák"
 
-#: qcsrc/client/scoreboard.qc:26
+#: qcsrc/client/scoreboard.qc:27
 msgid "SCO^fckills"
 msgstr "ZH gyilokok"
 
-#: qcsrc/client/scoreboard.qc:27
+#: qcsrc/client/scoreboard.qc:28
 msgid "SCO^goals"
 msgstr "Gólok"
 
-#: qcsrc/client/scoreboard.qc:28
+#: qcsrc/client/scoreboard.qc:29
 msgid "SCO^kckills"
 msgstr "KH gyilokok"
 
-#: qcsrc/client/scoreboard.qc:29
+#: qcsrc/client/scoreboard.qc:30
 msgid "SCO^kdratio"
 msgstr "ÖH arány"
 
-#: qcsrc/client/scoreboard.qc:30
+#: qcsrc/client/scoreboard.qc:31
 msgid "SCO^k/d"
 msgstr "Ö/H"
 
-#: qcsrc/client/scoreboard.qc:31
+#: qcsrc/client/scoreboard.qc:32
 msgid "SCO^kd"
 msgstr "ÖH"
 
-#: qcsrc/client/scoreboard.qc:32
+#: qcsrc/client/scoreboard.qc:33
 msgid "SCO^kdr"
 msgstr "ÖHA"
 
-#: qcsrc/client/scoreboard.qc:33
+#: qcsrc/client/scoreboard.qc:34
 msgid "SCO^kills"
 msgstr "Gyilokok"
 
-#: qcsrc/client/scoreboard.qc:34
+#: qcsrc/client/scoreboard.qc:35
 msgid "SCO^laps"
 msgstr "Körök"
 
-#: qcsrc/client/scoreboard.qc:35
+#: qcsrc/client/scoreboard.qc:36
 msgid "SCO^lives"
 msgstr "Életek"
 
-#: qcsrc/client/scoreboard.qc:36
+#: qcsrc/client/scoreboard.qc:37
 msgid "SCO^losses"
 msgstr "elvesztve"
 
-#: qcsrc/client/scoreboard.qc:37
+#: qcsrc/client/scoreboard.qc:38
 msgid "SCO^name"
 msgstr "Név"
 
-#: qcsrc/client/scoreboard.qc:38
+#: qcsrc/client/scoreboard.qc:39
 msgid "SCO^nick"
 msgstr "Nick"
 
-#: qcsrc/client/scoreboard.qc:39
+#: qcsrc/client/scoreboard.qc:40
 msgid "SCO^objectives"
 msgstr "célpontok"
 
-#: qcsrc/client/scoreboard.qc:40
+#: qcsrc/client/scoreboard.qc:41
 msgid "SCO^pickups"
 msgstr "Zászlók"
 
-#: qcsrc/client/scoreboard.qc:41
+#: qcsrc/client/scoreboard.qc:42
 msgid "SCO^ping"
 msgstr "Ping"
 
-#: qcsrc/client/scoreboard.qc:42
+#: qcsrc/client/scoreboard.qc:43
 msgid "SCO^pl"
 msgstr "CSV"
 
-#: qcsrc/client/scoreboard.qc:43
+#: qcsrc/client/scoreboard.qc:44
 msgid "SCO^pushes"
 msgstr "Lökések"
 
-#: qcsrc/client/scoreboard.qc:44
+#: qcsrc/client/scoreboard.qc:45
 msgid "SCO^rank"
 msgstr "Rang"
 
-#: qcsrc/client/scoreboard.qc:45
+#: qcsrc/client/scoreboard.qc:46
 msgid "SCO^returns"
 msgstr "Visszaszerzések"
 
-#: qcsrc/client/scoreboard.qc:46
+#: qcsrc/client/scoreboard.qc:47
 msgid "SCO^revivals"
 msgstr "Újraéledések"
 
-#: qcsrc/client/scoreboard.qc:47
+#: qcsrc/client/scoreboard.qc:48
 msgid "SCO^score"
 msgstr "Pontok"
 
-#: qcsrc/client/scoreboard.qc:48
+#: qcsrc/client/scoreboard.qc:49
 msgid "SCO^suicides"
 msgstr "Öngyilokok"
 
-#: qcsrc/client/scoreboard.qc:49
+#: qcsrc/client/scoreboard.qc:50
 msgid "SCO^takes"
 msgstr "Átvétel"
 
-#: qcsrc/client/scoreboard.qc:50
+#: qcsrc/client/scoreboard.qc:51
 msgid "SCO^ticks"
 msgstr "Tikk"
 
-#: qcsrc/client/scoreboard.qc:239
+#: qcsrc/client/scoreboard.qc:250
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
 "A ponttábla méretét a ^2scoreboard_columns_set paranccsal tudod "
 "megváltoztatni.\n"
 
-#: qcsrc/client/scoreboard.qc:240
+#: qcsrc/client/scoreboard.qc:251
 msgid "^3|---------------------------------------------------------------|\n"
 msgstr "^3|---------------------------------------------------------------|\n"
 
-#: qcsrc/client/scoreboard.qc:242
+#: qcsrc/client/scoreboard.qc:252
+msgid "Usage:\n"
+msgstr "Használat:\n"
+
+#: qcsrc/client/scoreboard.qc:253
 msgid "^2scoreboard_columns_set default\n"
 msgstr "^2scoreboard_columns_set default\n"
 
-#: qcsrc/client/scoreboard.qc:243
+#: qcsrc/client/scoreboard.qc:254
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
 msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
 
-#: qcsrc/client/scoreboard.qc:244
+#: qcsrc/client/scoreboard.qc:255
 msgid "The following field names are recognized (case insensitive):\n"
 msgstr ""
 "Az alábbi mező azonosítókat ismertem fel (nagybetű/kisbetű nem számít):\n"
 
-#: qcsrc/client/scoreboard.qc:245
+#: qcsrc/client/scoreboard.qc:256
 msgid ""
 "You can use a ^3|^7 to start the right-aligned fields.\n"
 "\n"
 msgstr "A ^3|^7 karakterrel jobbra rendezett mezőket tudsz létrehozni.\n"
 
-#: qcsrc/client/scoreboard.qc:247
+#: qcsrc/client/scoreboard.qc:258
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
 msgstr "^3név ^7 vagy ^3nick^7           A játékos neve\n"
 
-#: qcsrc/client/scoreboard.qc:248
+#: qcsrc/client/scoreboard.qc:259
 msgid "^3ping^7                     Ping time\n"
 msgstr "^3ping^7                     Ping\n"
 
-#: qcsrc/client/scoreboard.qc:249
+#: qcsrc/client/scoreboard.qc:260
 msgid "^3pl^7                       Packet loss\n"
 msgstr "^3csv^7                       Csomagvesztés\n"
 
-#: qcsrc/client/scoreboard.qc:250
+#: qcsrc/client/scoreboard.qc:261
 msgid "^3kills^7                    Number of kills\n"
 msgstr "^3megölt^7                    Megöltek száma\n"
 
-#: qcsrc/client/scoreboard.qc:251
+#: qcsrc/client/scoreboard.qc:262
 msgid "^3deaths^7                   Number of deaths\n"
 msgstr "^3halálok^7                   Halálok száma\n"
 
-#: qcsrc/client/scoreboard.qc:252
+#: qcsrc/client/scoreboard.qc:263
 msgid "^3suicides^7                 Number of suicides\n"
 msgstr "^3öngyilkosságok^7                 Öngyilkosságok száma\n"
 
-#: qcsrc/client/scoreboard.qc:253
+#: qcsrc/client/scoreboard.qc:264
 msgid "^3frags^7                    kills - suicides\n"
 msgstr "^3gyilokok^7                    Ölések mínusz öngyilkosságok\n"
 
-#: qcsrc/client/scoreboard.qc:254
+#: qcsrc/client/scoreboard.qc:265
 msgid "^3kd^7                       The kill-death ratio\n"
 msgstr "^3GYH^7                       Das Kill/Death-Ratio\n"
 
-#: qcsrc/client/scoreboard.qc:255
+#: qcsrc/client/scoreboard.qc:266
 msgid ""
 "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
 "captured\n"
@@ -1262,89 +601,96 @@ msgstr ""
 "^3rablások^7                     Hányszor rabolta el a zászlót "
 "(Zászlórablás) vagy gyűjtötte össze a kulcsokat (Kulcsvadászat)\n"
 
-#: qcsrc/client/scoreboard.qc:256
+#: qcsrc/client/scoreboard.qc:267
 msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
 "^3megszerzések^7                  Hányszor szerezte meg a Zászlót/Kulcsot\n"
 
-#: qcsrc/client/scoreboard.qc:257
+#: qcsrc/client/scoreboard.qc:268
+#, fuzzy
+msgid "^3captime^7                  Time of fastest cap (CTF)\n"
+msgstr ""
+"^3leggyorsabb^7                  Leggyorsabb kör ideje (Verseny/Ügyességi "
+"v.)\n"
+
+#: qcsrc/client/scoreboard.qc:269
 msgid "^3fckills^7                  Number of flag carrier kills\n"
 msgstr "^3ZHgyilokok^7                  Megölt zászlóhordozók száma\n"
 
-#: qcsrc/client/scoreboard.qc:258
+#: qcsrc/client/scoreboard.qc:270
 msgid "^3returns^7                  Number of flag returns\n"
 msgstr "^3visszaszerzések^7                  Zászló visszaszerzések száma\n"
 
-#: qcsrc/client/scoreboard.qc:259
+#: qcsrc/client/scoreboard.qc:271
 msgid "^3drops^7                    Number of flag drops\n"
 msgstr "^3elvesztések^7                    Hányszor dobta el a zászlót\n"
 
-#: qcsrc/client/scoreboard.qc:260
+#: qcsrc/client/scoreboard.qc:272
 msgid "^3lives^7                    Number of lives (LMS)\n"
 msgstr "^3életek^7                    Életek száma (Csak egy maradhat)\n"
 
-#: qcsrc/client/scoreboard.qc:261
+#: qcsrc/client/scoreboard.qc:273
 msgid "^3rank^7                     Player rank\n"
 msgstr "^3rank^7                     Játékos rangja\n"
 
-#: qcsrc/client/scoreboard.qc:262
+#: qcsrc/client/scoreboard.qc:274
 msgid "^3pushes^7                   Number of players pushed into void\n"
 msgstr "^3lökések^7                   A Nagy Semmibe lökött áldozatok száma\n"
 
-#: qcsrc/client/scoreboard.qc:263
+#: qcsrc/client/scoreboard.qc:275
 msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
 "^3elpusztítva^7                A Nagy Semmiben elpusztított kulcsok száma\n"
 
-#: qcsrc/client/scoreboard.qc:264
+#: qcsrc/client/scoreboard.qc:276
 msgid "^3kckills^7                  Number of keys carrier kills\n"
 msgstr "^3KHgyilokok^7                  Megölt kulcshordozók száma\n"
 
-#: qcsrc/client/scoreboard.qc:265
+#: qcsrc/client/scoreboard.qc:277
 msgid "^3losses^7                   Number of times a key was lost\n"
 msgstr "^3elvesztve^7                   Elvesztett kulcsok száma\n"
 
-#: qcsrc/client/scoreboard.qc:266
+#: qcsrc/client/scoreboard.qc:278
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
 msgstr ""
 "^3körök^7                     Befejezett körök száma (Verseny/Ügyességi v.)\n"
 
-#: qcsrc/client/scoreboard.qc:267
+#: qcsrc/client/scoreboard.qc:279
 msgid "^3time^7                     Total time raced (race/cts)\n"
 msgstr ""
 "^3idő^7                     Összes versenyzéssel töltött idő (Verseny/"
 "Ügyességi v.)\n"
 
-#: qcsrc/client/scoreboard.qc:268
+#: qcsrc/client/scoreboard.qc:280
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
 msgstr ""
 "^3leggyorsabb^7                  Leggyorsabb kör ideje (Verseny/Ügyességi "
 "v.)\n"
 
-#: qcsrc/client/scoreboard.qc:269
+#: qcsrc/client/scoreboard.qc:281
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
 msgstr "^3ketyegés^7                    Ketyegések száma (Uralom)\n"
 
-#: qcsrc/client/scoreboard.qc:270
+#: qcsrc/client/scoreboard.qc:282
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
 msgstr "^3foglalás^7                    Elfoglalt Uralompontok (Uralom)\n"
 
-#: qcsrc/client/scoreboard.qc:271
+#: qcsrc/client/scoreboard.qc:283
 msgid "^3bckills^7                  Number of ball carrier kills\n"
 msgstr "^3LHgyilokok^7                  Megölt labdahordozók száma\n"
 
-#: qcsrc/client/scoreboard.qc:272
+#: qcsrc/client/scoreboard.qc:284
 msgid ""
 "^3bctime^7                   Total amount of time holding the ball in "
 "Keepaway\n"
 msgstr ""
 "^3LHidő^7                   Labda birtoklásának összesített ideje (Önzőség)\n"
 
-#: qcsrc/client/scoreboard.qc:273
+#: qcsrc/client/scoreboard.qc:285
 msgid ""
 "^3score^7                    Total score\n"
 "\n"
@@ -1352,7 +698,7 @@ msgstr ""
 "^3pont^7                    Teljes pontszám\n"
 "\n"
 
-#: qcsrc/client/scoreboard.qc:275
+#: qcsrc/client/scoreboard.qc:287
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -1364,7 +710,7 @@ msgstr ""
 "azon játék típusok listáját bezárva egy / jellel, amelyekben szeretnéd\n"
 "hogy megjelenjen vagy ne jelenjen meg az adott mező."
 
-#: qcsrc/client/scoreboard.qc:280
+#: qcsrc/client/scoreboard.qc:292
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes.\n"
@@ -1374,12 +720,12 @@ msgstr ""
 "az összes csapatjátékos módra (teams) és egyéni (noteams)\n"
 "módra utalhatsz. "
 
-#: qcsrc/client/scoreboard.qc:283
+#: qcsrc/client/scoreboard.qc:295
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 msgstr ""
 "Például: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 
-#: qcsrc/client/scoreboard.qc:284
+#: qcsrc/client/scoreboard.qc:296
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right.\n"
@@ -1387,7 +733,7 @@ msgstr ""
 "balra rendezve kiírja a nevet, a pinget, a csv-t\n"
 "a jobb oldalra rendezett egyenes vonal jobb oldalára."
 
-#: qcsrc/client/scoreboard.qc:286
+#: qcsrc/client/scoreboard.qc:298
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM.\n"
@@ -1395,120 +741,131 @@ msgstr ""
 "'field3' csak Zászlórablás játékmódban látszik,\n"
 "'field4' pedig Haláljátszma kivételével az összes többiben.\n"
 
-#: qcsrc/client/scoreboard.qc:432 qcsrc/client/scoreboard.qc:447
-#: qcsrc/client/scoreboard.qc:457 qcsrc/client/scoreboard.qc:466
-#: qcsrc/client/scoreboard.qc:475
+#: qcsrc/client/scoreboard.qc:445 qcsrc/client/scoreboard.qc:460
+#: qcsrc/client/scoreboard.qc:470 qcsrc/client/scoreboard.qc:479
+#: qcsrc/client/scoreboard.qc:488
 #, c-format
 msgid "fixed missing field '%s'\n"
 msgstr "Pótoltam a '%s' hiányzó mezőt\n"
 
-#: qcsrc/client/scoreboard.qc:515 qcsrc/client/scoreboard.qc:522
+#: qcsrc/client/scoreboard.qc:529 qcsrc/client/scoreboard.qc:536
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:235
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:240
 msgid "N/A"
 msgstr "-"
 
-#: qcsrc/client/scoreboard.qc:950
+#: qcsrc/client/scoreboard.qc:966
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr "Tüzelési pontosság (Átlag: %d%%)"
 
-#: qcsrc/client/scoreboard.qc:1015
+#: qcsrc/client/scoreboard.qc:1029
 #, c-format
 msgid "%d%%"
 msgstr "%d%%"
 
-#: qcsrc/client/scoreboard.qc:1085
+#: qcsrc/client/scoreboard.qc:1087
 msgid "Map stats:"
 msgstr "Pálya statisztikák:"
 
-#: qcsrc/client/scoreboard.qc:1101
+#: qcsrc/client/scoreboard.qc:1103
 msgid "Secrets found:"
 msgstr "Feldezett titkok:"
 
-#: qcsrc/client/scoreboard.qc:1128
+#: qcsrc/client/scoreboard.qc:1130
 msgid "Rankings"
 msgstr "Helyezések"
 
-#: qcsrc/client/scoreboard.qc:1223
+#: qcsrc/client/scoreboard.qc:1226
 msgid "Scoreboard"
 msgstr "Ponttábla"
 
-#: qcsrc/client/scoreboard.qc:1268
+#: qcsrc/client/scoreboard.qc:1285
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
 msgstr "Gyorsasági díj: %d ^7(%s^7)"
 
-#: qcsrc/client/scoreboard.qc:1272
+#: qcsrc/client/scoreboard.qc:1289
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
 msgstr "Rekord: %d ^7(%s^7)"
 
-#: qcsrc/client/scoreboard.qc:1305 qcsrc/client/teamplay.qc:63
+#: qcsrc/client/scoreboard.qc:1323
 msgid "Spectators"
 msgstr "Nézők"
 
-#: qcsrc/client/scoreboard.qc:1311
+#: qcsrc/client/scoreboard.qc:1330
 #, c-format
 msgid "playing on ^2%s^7"
 msgstr "A játék a ^2%s^7 pályán zajlik"
 
-#: qcsrc/client/scoreboard.qc:1318 qcsrc/client/scoreboard.qc:1323
+#: qcsrc/client/scoreboard.qc:1337 qcsrc/client/scoreboard.qc:1342
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr " még ^1%.1f percig^7"
 
-#: qcsrc/client/scoreboard.qc:1327 qcsrc/client/scoreboard.qc:1346
+#: qcsrc/client/scoreboard.qc:1346 qcsrc/client/scoreboard.qc:1365
 msgid " or"
 msgstr " vagy "
 
-#: qcsrc/client/scoreboard.qc:1330 qcsrc/client/scoreboard.qc:1337
+#: qcsrc/client/scoreboard.qc:1349 qcsrc/client/scoreboard.qc:1356
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr "^3%s %s^7"
 
-#: qcsrc/client/scoreboard.qc:1331 qcsrc/client/scoreboard.qc:1338
 #: qcsrc/client/scoreboard.qc:1350 qcsrc/client/scoreboard.qc:1357
+#: qcsrc/client/scoreboard.qc:1369 qcsrc/client/scoreboard.qc:1376
 msgid "SCO^points"
 msgstr "pontszámig"
 
-#: qcsrc/client/scoreboard.qc:1332 qcsrc/client/scoreboard.qc:1339
 #: qcsrc/client/scoreboard.qc:1351 qcsrc/client/scoreboard.qc:1358
+#: qcsrc/client/scoreboard.qc:1370 qcsrc/client/scoreboard.qc:1377
 msgid "SCO^is beaten"
 msgstr " időt valaki meg nem dönti"
 
-#: qcsrc/client/scoreboard.qc:1349 qcsrc/client/scoreboard.qc:1356
+#: qcsrc/client/scoreboard.qc:1368 qcsrc/client/scoreboard.qc:1375
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr " amíg valaki ^3%s %s^7 -ig nem vezeti a mezőnyt."
 
-#: qcsrc/client/target_music.qc:93 qcsrc/client/target_music.qc:181
+#: qcsrc/client/scoreboard.qc:1396
+#, c-format
+msgid "^1Respawning in ^3%s^1..."
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1406
+#, c-format
+msgid "You are dead, wait ^3%s^7 before respawning"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:1415
+#, c-format
+msgid "You are dead, press ^2%s^7 to respawn"
+msgstr ""
+
+#: qcsrc/client/target_music.qc:93 qcsrc/client/target_music.qc:182
 #, c-format
 msgid "Cannot initialize sound %s\n"
 msgstr "Nem tudtam a %s hangot inicializálni\n"
 
-#: qcsrc/client/teamplay.qc:64
-msgid "Red Team"
-msgstr "Vörös Csapat"
-
-#: qcsrc/client/teamplay.qc:65
-msgid "Blue Team"
-msgstr "Kék Csapat"
-
-#: qcsrc/client/teamplay.qc:66
-msgid "Yellow Team"
-msgstr "Sárga Csapat"
-
-#: qcsrc/client/teamplay.qc:67
-msgid "Pink Team"
-msgstr "Rózsaszín Csapat"
-
-#: qcsrc/client/tturrets.qc:285 qcsrc/client/waypointsprites.qc:590
+#: qcsrc/client/tturrets.qc:299 qcsrc/client/waypointsprites.qc:591
 msgid "Spam"
 msgstr "Spam"
 
-#: qcsrc/client/tturrets.qc:294
+#: qcsrc/client/tturrets.qc:308
 #, c-format
 msgid "%s under attack!"
 msgstr "%s támadás alatt!"
+
+#: qcsrc/client/vehicles/vehicles.qc:331 qcsrc/client/vehicles/vehicles.qc:333
+msgid "No right gunner!"
+msgstr ""
+
+#: qcsrc/client/vehicles/vehicles.qc:353 qcsrc/client/vehicles/vehicles.qc:355
+msgid "No left gunner!"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:254
 msgid "Push"
@@ -1531,529 +888,419 @@ msgid "DANGER"
 msgstr "VESZÉLY!"
 
 #: qcsrc/client/waypointsprites.qc:259
+#, fuzzy
+msgid "Enemy carrier"
+msgstr "Kulcshordozó"
+
+#: qcsrc/client/waypointsprites.qc:260
 msgid "Flag carrier"
 msgstr "Zászlóhordozó"
 
-#: qcsrc/client/waypointsprites.qc:260
+#: qcsrc/client/waypointsprites.qc:261
 msgid "Dropped flag"
 msgstr "Elhagyott zászló"
 
-#: qcsrc/client/waypointsprites.qc:261
+#: qcsrc/client/waypointsprites.qc:262
 msgid "Help me!"
 msgstr "Segítség!"
 
-#: qcsrc/client/waypointsprites.qc:262
+#: qcsrc/client/waypointsprites.qc:263
 msgid "Here"
 msgstr "Itt"
 
-#: qcsrc/client/waypointsprites.qc:263
+#: qcsrc/client/waypointsprites.qc:264
 msgid "Dropped key"
 msgstr "Elhagyott kulcs"
 
-#: qcsrc/client/waypointsprites.qc:264 qcsrc/client/waypointsprites.qc:266
-#: qcsrc/client/waypointsprites.qc:267 qcsrc/client/waypointsprites.qc:268
-#: qcsrc/client/waypointsprites.qc:269
+#: qcsrc/client/waypointsprites.qc:265 qcsrc/client/waypointsprites.qc:267
+#: qcsrc/client/waypointsprites.qc:268 qcsrc/client/waypointsprites.qc:269
+#: qcsrc/client/waypointsprites.qc:270
 msgid "Key carrier"
 msgstr "Kulcshordozó"
 
-#: qcsrc/client/waypointsprites.qc:265
+#: qcsrc/client/waypointsprites.qc:266
 msgid "Run here"
 msgstr "Rohanj ide!"
 
-#: qcsrc/client/waypointsprites.qc:270
+#: qcsrc/client/waypointsprites.qc:271
 msgid "Red base"
 msgstr "Vörös Bázis"
 
-#: qcsrc/client/waypointsprites.qc:271
+#: qcsrc/client/waypointsprites.qc:272
 msgid "Waypoint"
 msgstr "Irányjelző"
 
-#: qcsrc/client/waypointsprites.qc:272 qcsrc/client/waypointsprites.qc:273
-#: qcsrc/client/waypointsprites.qc:274
+#: qcsrc/client/waypointsprites.qc:273 qcsrc/client/waypointsprites.qc:274
+#: qcsrc/client/waypointsprites.qc:275
 msgid "Generator"
 msgstr "Generátor"
 
-#: qcsrc/client/waypointsprites.qc:275 qcsrc/client/waypointsprites.qc:276
-#: qcsrc/client/waypointsprites.qc:277 qcsrc/client/waypointsprites.qc:278
-#: qcsrc/client/waypointsprites.qc:279 qcsrc/client/waypointsprites.qc:280
-#: qcsrc/client/waypointsprites.qc:281 qcsrc/client/waypointsprites.qc:282
-#: qcsrc/client/waypointsprites.qc:306 qcsrc/client/waypointsprites.qc:307
-#: qcsrc/client/waypointsprites.qc:308 qcsrc/client/waypointsprites.qc:309
-#: qcsrc/client/waypointsprites.qc:310
+#: qcsrc/client/waypointsprites.qc:276 qcsrc/client/waypointsprites.qc:277
+#: qcsrc/client/waypointsprites.qc:278 qcsrc/client/waypointsprites.qc:279
+#: qcsrc/client/waypointsprites.qc:280 qcsrc/client/waypointsprites.qc:281
+#: qcsrc/client/waypointsprites.qc:282 qcsrc/client/waypointsprites.qc:283
+#: qcsrc/client/waypointsprites.qc:307 qcsrc/client/waypointsprites.qc:308
+#: qcsrc/client/waypointsprites.qc:309 qcsrc/client/waypointsprites.qc:310
+#: qcsrc/client/waypointsprites.qc:311
 msgid "Control point"
 msgstr "Uralompont"
 
-#: qcsrc/client/waypointsprites.qc:283
+#: qcsrc/client/waypointsprites.qc:284
 msgid "Checkpoint"
 msgstr "Ellenőrző pont"
 
-#: qcsrc/client/waypointsprites.qc:284 qcsrc/client/waypointsprites.qc:286
+#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:287
 msgid "Finish"
 msgstr "Cél"
 
-#: qcsrc/client/waypointsprites.qc:285 qcsrc/client/waypointsprites.qc:286
+#: qcsrc/client/waypointsprites.qc:286 qcsrc/client/waypointsprites.qc:287
 msgid "Start"
 msgstr "Start"
 
-#: qcsrc/client/waypointsprites.qc:287 qcsrc/client/waypointsprites.qc:288
+#: qcsrc/client/waypointsprites.qc:288 qcsrc/client/waypointsprites.qc:289
 msgid "Ball"
 msgstr "Labda"
 
-#: qcsrc/client/waypointsprites.qc:289
+#: qcsrc/client/waypointsprites.qc:290
 msgid "Ball carrier"
 msgstr "Labdahordozó"
 
-#: qcsrc/client/waypointsprites.qc:290 qcsrc/server/w_laser.qc:2
+#: qcsrc/client/waypointsprites.qc:291 qcsrc/server/w_laser.qc:11
 msgid "Laser"
 msgstr "Lézer"
 
-#: qcsrc/client/waypointsprites.qc:291 qcsrc/server/w_shotgun.qc:2
+#: qcsrc/client/waypointsprites.qc:292 qcsrc/server/w_shotgun.qc:11
 msgid "Shotgun"
 msgstr "Puska"
 
-#: qcsrc/client/waypointsprites.qc:292 qcsrc/server/w_uzi.qc:2
+#: qcsrc/client/waypointsprites.qc:293 qcsrc/server/w_uzi.qc:11
 msgid "Machine Gun"
 msgstr "Gépfegyver"
 
-#: qcsrc/client/waypointsprites.qc:293 qcsrc/server/w_grenadelauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:294 qcsrc/server/w_grenadelauncher.qc:11
 msgid "Mortar"
 msgstr "Gránátvető"
 
-#: qcsrc/client/waypointsprites.qc:294 qcsrc/server/w_electro.qc:2
+#: qcsrc/client/waypointsprites.qc:295 qcsrc/server/w_electro.qc:11
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/client/waypointsprites.qc:295 qcsrc/server/w_crylink.qc:2
+#: qcsrc/client/waypointsprites.qc:296 qcsrc/server/w_crylink.qc:11
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/client/waypointsprites.qc:296 qcsrc/server/w_nex.qc:2
+#: qcsrc/client/waypointsprites.qc:297 qcsrc/server/w_nex.qc:11
 msgid "Nex"
 msgstr "Nex"
 
-#: qcsrc/client/waypointsprites.qc:297 qcsrc/server/w_hagar.qc:2
+#: qcsrc/client/waypointsprites.qc:298 qcsrc/server/w_hagar.qc:11
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/client/waypointsprites.qc:298 qcsrc/server/w_rocketlauncher.qc:2
+#: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_rocketlauncher.qc:11
 msgid "Rocket Launcher"
 msgstr "Rakétavető"
 
-#: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_porto.qc:2
+#: qcsrc/client/waypointsprites.qc:300 qcsrc/server/w_porto.qc:11
 msgid "Port-O-Launch"
 msgstr "Port-O-Launch"
 
-#: qcsrc/client/waypointsprites.qc:300
+#: qcsrc/client/waypointsprites.qc:301
 msgid "Minstanex"
 msgstr "MinstaNex"
 
-#: qcsrc/client/waypointsprites.qc:301
+#: qcsrc/client/waypointsprites.qc:302
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
 msgid "Hook"
 msgstr "Kampó"
 
-#: qcsrc/client/waypointsprites.qc:302 qcsrc/server/w_fireball.qc:2
+#: qcsrc/client/waypointsprites.qc:303 qcsrc/server/w_fireball.qc:11
 msgid "Fireball"
 msgstr "Tűzgömb"
 
-#: qcsrc/client/waypointsprites.qc:303
+#: qcsrc/client/waypointsprites.qc:304
 msgid "HLAC"
 msgstr "NLRÁ"
 
-#: qcsrc/client/waypointsprites.qc:304 qcsrc/server/w_rifle.qc:2
+#: qcsrc/client/waypointsprites.qc:305 qcsrc/server/w_rifle.qc:11
 msgid "Rifle"
 msgstr "Vadászpuska"
 
-#: qcsrc/client/waypointsprites.qc:305 qcsrc/server/w_minelayer.qc:2
+#: qcsrc/client/waypointsprites.qc:306 qcsrc/server/w_minelayer.qc:11
 msgid "Mine Layer"
 msgstr "Aknavető"
 
-#: qcsrc/client/waypointsprites.qc:311
+#: qcsrc/client/waypointsprites.qc:312
 msgid "Invisibility"
 msgstr "Láthatatlanság"
 
-#: qcsrc/client/waypointsprites.qc:312
+#: qcsrc/client/waypointsprites.qc:313
 msgid "Extra life"
 msgstr "Extra élet"
 
-#: qcsrc/client/waypointsprites.qc:313
+#: qcsrc/client/waypointsprites.qc:314
 msgid "Speed"
 msgstr "Sebesség"
 
-#: qcsrc/client/waypointsprites.qc:314
+#: qcsrc/client/waypointsprites.qc:315
 msgid "Strength"
 msgstr "Sebzésnövelő"
 
-#: qcsrc/client/waypointsprites.qc:315
+#: qcsrc/client/waypointsprites.qc:316
 msgid "Shield"
 msgstr "Védelmező"
 
-#: qcsrc/client/waypointsprites.qc:316
+#: qcsrc/client/waypointsprites.qc:317
 msgid "Fuel regen"
 msgstr "Üzemanyag újratöltés"
 
-#: qcsrc/client/waypointsprites.qc:317
+#: qcsrc/client/waypointsprites.qc:318
 msgid "Jet Pack"
 msgstr "Hátirakéta"
 
-#: qcsrc/client/waypointsprites.qc:318
+#: qcsrc/client/waypointsprites.qc:319
 msgid "Frozen!"
 msgstr "Megfagyva!"
 
-#: qcsrc/client/waypointsprites.qc:319
+#: qcsrc/client/waypointsprites.qc:320
 msgid "Tagged"
 msgstr "Megjelölt"
 
-#: qcsrc/client/waypointsprites.qc:320
+#: qcsrc/client/waypointsprites.qc:321
 msgid "Vehicle"
 msgstr "Jármű"
 
-#: qcsrc/client/waypointsprites.qc:594
+#: qcsrc/client/waypointsprites.qc:595
 #, c-format
 msgid "%s needing help!"
 msgstr "%s segítséget kér!"
 
-#: qcsrc/common/mapinfo.qc:1097
+#: qcsrc/common/command/generic.qc:31
 #, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
+msgid "error: status is %d\n"
+msgstr "Hiba: állapot %d\n"
 
-#: qcsrc/server/w_crylink.qc:666
-#, c-format
-msgid "%s succeeded at self-destructing themself with the Crylink"
-msgstr "%s sikeresen kinyírta magát a Crylinkkal"
-
-#: qcsrc/server/w_crylink.qc:671
-#, c-format
-msgid "%s could not hide from %s's Crylink"
-msgstr "%s nem tudott elhajolni %s Crylinkja elől"
-
-#: qcsrc/server/w_crylink.qc:673
-#, c-format
-msgid "%s was too close to %s's Crylink"
-msgstr "%s túl közel merészkedett %ss Crylinkjához"
-
-#: qcsrc/server/w_crylink.qc:675
-#, c-format
-msgid "%s took a close look at %s's Crylink"
-msgstr "%s közelebbről is megismerkedett %s Crylinkjával"
-
-#: qcsrc/server/w_electro.qc:581
-#, c-format
-msgid "%s could not remember where they put their electro plasma"
-msgstr "%s most már tudja, mire való a plazma"
-
-#: qcsrc/server/w_electro.qc:583
-#, c-format
-msgid "%s played with electro plasma"
-msgstr "%s szerint a plazma nem veszélyes. Tévedett."
-
-#: qcsrc/server/w_electro.qc:590
-#, c-format
-msgid "%s just noticed %s's electro plasma"
-msgstr "%s csak most figyelt fel %s plazmagömbjére"
-
-#: qcsrc/server/w_electro.qc:592
-#, c-format
-msgid "%s got in touch with %s's electro plasma"
-msgstr "%s lefejelte %s plazmagömbjét"
-
-#: qcsrc/server/w_electro.qc:597
-#, c-format
-msgid "%s felt the electrifying air of %s's electro combo"
-msgstr "%s haja is égnek állt %s Elektro-kombójától"
-
-#: qcsrc/server/w_electro.qc:599
-#, c-format
-msgid "%s got too close to %s's blue electro bolt"
-msgstr "%s túl közel került %s kék sugarához"
-
-#: qcsrc/server/w_electro.qc:601
-#, c-format
-msgid "%s was blasted by %s's blue electro bolt"
-msgstr "%s atomjaira hullott %s kék sugarától"
-
-#: qcsrc/server/w_fireball.qc:421
-#, c-format
-msgid "%s forgot about some firemine"
-msgstr "%s benézett pár tűzlabdacsot"
-
-#: qcsrc/server/w_fireball.qc:423 qcsrc/server/w_hlac.qc:240
-#, c-format
-msgid "%s should have used a smaller gun"
-msgstr "%s játszott volna inkább vízipisztollyal"
-
-#: qcsrc/server/w_fireball.qc:430
-#, c-format
-msgid "%s tried to catch %s's firemine"
-msgstr "%s megpróbálta elkapni %s tűzlabdacsát"
-
-#: qcsrc/server/w_fireball.qc:432
-#, c-format
-msgid "%s fatefully ignored %s's firemine"
-msgstr "%s benézte %s egyik tűzlabdacsát"
-
-#: qcsrc/server/w_fireball.qc:439
-#, c-format
-msgid "%s could not hide from %s's fireball"
-msgstr "%s nem tudott elmenekülni %s Tűzgömbje elől"
-
-#: qcsrc/server/w_fireball.qc:441
-#, c-format
-msgid "%s saw the pretty lights of %s's fireball"
-msgstr "%s megcsodálhatta %s színpompás Tűzgömbjét"
-
-#: qcsrc/server/w_fireball.qc:444
-#, c-format
-msgid "%s got too close to %s's fireball"
-msgstr "%s szénné égett %s Tűzlabdájától"
-
-#: qcsrc/server/w_fireball.qc:446
-#, c-format
-msgid "%s tasted %s's fireball"
-msgstr "%s benyelte %s Tűzlabdáját"
-
-#: qcsrc/server/w_grenadelauncher.qc:388
-#, c-format
-msgid "%s didn't see their own grenade"
-msgstr "%s lefejelte a saját gránátját"
-
-#: qcsrc/server/w_grenadelauncher.qc:390
-#, c-format
-msgid "%s blew themself up with their grenadelauncher"
-msgstr "%s felrobbantotta magát a saját Gránátvetőjével"
-
-#: qcsrc/server/w_grenadelauncher.qc:396
-#, c-format
-msgid "%s didn't see %s's grenade"
-msgstr "%s nem vette észre %s gránátját"
+#: qcsrc/common/command/generic.qc:159
+msgid "error creating curl handle\n"
+msgstr "Curl kezelő hibát okozott\n"
 
-#: qcsrc/server/w_grenadelauncher.qc:398
-#, c-format
-msgid "%s almost dodged %s's grenade"
-msgstr "%s lefejelte %s gránátját"
+#: qcsrc/common/command/generic.qc:263
+msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
+msgstr ""
 
-#: qcsrc/server/w_grenadelauncher.qc:400
-#, c-format
-msgid "%s ate %s's grenade"
-msgstr "%s bekapta %s gránátját"
+#: qcsrc/common/command/generic.qc:455
+msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
+msgstr ""
 
-#: qcsrc/server/w_hagar.qc:462
+#: qcsrc/common/counting.qh:5
 #, c-format
-msgid "%s played with tiny hagar rockets"
-msgstr "%s játszott volna inkább római rakétákkal"
+msgid "CI_DEC^%s years"
+msgstr ""
 
-#: qcsrc/server/w_hagar.qc:466
+#: qcsrc/common/counting.qh:7
 #, c-format
-msgid "%s was pummeled with a burst of hagar rockets by %s"
-msgstr "%2$s szétszaggatta %1$s-t a Hagarjával"
+msgid "CI_ZER^%d years"
+msgstr ""
 
-#: qcsrc/server/w_hagar.qc:468
+#: qcsrc/common/counting.qh:8
 #, c-format
-msgid "%s was pummeled with hagar rockets by %s"
-msgstr "%2$s ledarálta %1$s-t a Hagarjával"
+msgid "CI_FIR^%d year"
+msgstr ""
 
-#: qcsrc/server/w_hlac.qc:2
-msgid "Heavy Laser Assault Cannon"
-msgstr "Nehéz Lézer Rohamágyú"
-
-#: qcsrc/server/w_hlac.qc:242
+#: qcsrc/common/counting.qh:9
 #, c-format
-msgid "%s was cut down with a HLAC by %s"
-msgstr "%2$s kettévágta %1$s-t a NLRÁ-val"
-
-#: qcsrc/server/w_hook.qc:2
-msgid "Grappling Hook"
-msgstr "Vonóhorog"
+msgid "CI_SEC^%d years"
+msgstr ""
 
-#: qcsrc/server/w_hook.qc:286 qcsrc/server/w_porto.qc:296
+#: qcsrc/common/counting.qh:10
 #, c-format
-msgid "%s did the impossible"
-msgstr "%s teljesítette a lehetetlent"
+msgid "CI_THI^%d years"
+msgstr ""
 
-#: qcsrc/server/w_hook.qc:288
+#: qcsrc/common/counting.qh:11
 #, c-format
-msgid "%s was caught in %s's hook gravity bomb"
-msgstr "%2$s elkapta %1$s-t a Gravitációs bombájával"
+msgid "CI_MUL^%d years"
+msgstr ""
 
-#: qcsrc/server/w_laser.qc:312
+#: qcsrc/common/counting.qh:13
 #, c-format
-msgid "%s lasered themself to hell"
-msgstr "%s egészen a mennyekig lézerezte magát"
+msgid "CI_DEC^%s weeks"
+msgstr ""
 
-#: qcsrc/server/w_laser.qc:316
+#: qcsrc/common/counting.qh:15
 #, c-format
-msgid "%s was cut in half by %s's gauntlet"
-msgstr "%2$s kettészabta %1$s-t a Páncélöklével"
+msgid "CI_ZER^%d weeks"
+msgstr ""
 
-#: qcsrc/server/w_laser.qc:318
+#: qcsrc/common/counting.qh:16
 #, c-format
-msgid "%s was lasered to death by %s"
-msgstr "%2$s halálba lézerezte %1$s-t"
+msgid "CI_FIR^%d week"
+msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:533
+#: qcsrc/common/counting.qh:17
 #, c-format
-msgid "%s blew themself up with their minelayer"
-msgstr "%s rálépett a saját aknájára"
+msgid "CI_SEC^%d weeks"
+msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:535
+#: qcsrc/common/counting.qh:18
 #, c-format
-msgid "%s forgot about their mine"
-msgstr "%s egy aknáról mégiscsak megfeledkezett"
+msgid "CI_THI^%d weeks"
+msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:539
+#: qcsrc/common/counting.qh:19
 #, c-format
-msgid "%s got too close to %s's mine"
-msgstr "%s túl közel került %s aknájához"
+msgid "CI_MUL^%d weeks"
+msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:541
+#: qcsrc/common/counting.qh:21
 #, c-format
-msgid "%s almost dodged %s's mine"
-msgstr "%s nem tudott elhajolni %s aknája elől"
+msgid "CI_DEC^%s days"
+msgstr ""
 
-#: qcsrc/server/w_minelayer.qc:543
+#: qcsrc/common/counting.qh:23
 #, c-format
-msgid "%s stepped on %s's mine"
-msgstr "%s rátaposott %s aknájára"
+msgid "CI_ZER^%d days"
+msgstr ""
 
-#: qcsrc/server/w_minstanex.qc:2
-msgid "MinstaNex"
-msgstr "MinstaNex"
-
-#: qcsrc/server/w_minstanex.qc:293 qcsrc/server/w_nex.qc:253
-#: qcsrc/server/w_rifle.qc:232 qcsrc/server/w_shotgun.qc:271
-#: qcsrc/server/w_uzi.qc:318
+#: qcsrc/common/counting.qh:24
 #, c-format
-msgid "%s is now thinking with portals"
-msgstr "%s már Portálokkal mereng"
+msgid "CI_FIR^%d day"
+msgstr ""
 
-#: qcsrc/server/w_minstanex.qc:295
+#: qcsrc/common/counting.qh:25
 #, c-format
-msgid "%s has been vaporized by %s's minstanex"
-msgstr "%s^1 elpárolgott %s MinstaNexétől"
+msgid "CI_SEC^%d days"
+msgstr ""
 
-#: qcsrc/server/w_nex.qc:255
+#: qcsrc/common/counting.qh:26
 #, c-format
-msgid "%s has been vaporized by %s's nex"
-msgstr "%s^1 elpárolgott %s Nex sugarától"
+msgid "CI_THI^%d days"
+msgstr ""
 
-#: qcsrc/server/w_porto.qc:298
+#: qcsrc/common/counting.qh:27
 #, c-format
-msgid "%s felt %s doing the impossible to him"
-msgstr "%2$s bebizonyította %1$s számára a lehetetlent"
+msgid "CI_MUL^%d days"
+msgstr ""
 
-#: qcsrc/server/w_rifle.qc:239
+#: qcsrc/common/counting.qh:29
 #, c-format
-msgid "%s failed to hide from %s's rifle bullet hail"
-msgstr "%s nem tudott fedezékbe húzódni %s golyózápora elől"
+msgid "CI_DEC^%s hours"
+msgstr ""
 
-#: qcsrc/server/w_rifle.qc:241
+#: qcsrc/common/counting.qh:31
 #, c-format
-msgid "%s died in %s's rifle bullet hail"
-msgstr "%2$s levadászta %1$s-t"
+msgid "CI_ZER^%d hours"
+msgstr ""
 
-#: qcsrc/server/w_rifle.qc:248
+#: qcsrc/common/counting.qh:32
 #, c-format
-msgid "%s failed to hide from %s's rifle"
-msgstr "%s csinosan mutat majd %s trófea gyűjteményében"
+msgid "CI_FIR^%d hour"
+msgstr ""
 
-#: qcsrc/server/w_rifle.qc:253
+#: qcsrc/common/counting.qh:33
 #, c-format
-msgid "%s got shot in the head with a rifle by %s"
-msgstr "%2$s fejbelőtte %1$s-t"
+msgid "CI_SEC^%d hours"
+msgstr ""
 
-#: qcsrc/server/w_rifle.qc:255
+#: qcsrc/common/counting.qh:34
 #, c-format
-msgid "%s was sniped with a rifle by %s"
-msgstr "%s lefejelte %s golyóját"
+msgid "CI_THI^%d hours"
+msgstr ""
 
-#: qcsrc/server/w_rocketlauncher.qc:507
+#: qcsrc/common/counting.qh:35
 #, c-format
-msgid "%s blew themself up with their rocketlauncher"
-msgstr "%s játszott volna inkább petárdákkal"
+msgid "CI_MUL^%d hours"
+msgstr ""
 
-#: qcsrc/server/w_rocketlauncher.qc:511
-#, c-format
-msgid "%s got too close to %s's rocket"
-msgstr "%s túl közel került %s rakétájához"
+#: qcsrc/common/counting.qh:38
+#, fuzzy, c-format
+msgid "CI_DEC^%s minutes"
+msgstr "5 perc"
 
-#: qcsrc/server/w_rocketlauncher.qc:513
-#, c-format
-msgid "%s almost dodged %s's rocket"
-msgstr "%s nem tudott elugrani %s rakétája elől"
+#: qcsrc/common/counting.qh:40
+#, fuzzy, c-format
+msgid "CI_ZER^%d minutes"
+msgstr "5 perc"
 
-#: qcsrc/server/w_rocketlauncher.qc:515
+#: qcsrc/common/counting.qh:41
 #, c-format
-msgid "%s ate %s's rocket"
-msgstr "%s beszopta %s rakétáját"
+msgid "CI_FIR^%d minute"
+msgstr ""
 
-#: qcsrc/server/w_seeker.qc:2
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+#: qcsrc/common/counting.qh:42
+#, fuzzy, c-format
+msgid "CI_SEC^%d minutes"
+msgstr "5 perc"
 
-#: qcsrc/server/w_seeker.qc:661
-#, c-format
-msgid "%s played with tiny seeker rockets"
-msgstr "%s rakétái saját maga ellen fordultak"
+#: qcsrc/common/counting.qh:43
+#, fuzzy, c-format
+msgid "CI_THI^%d minutes"
+msgstr "5 perc"
 
-#: qcsrc/server/w_seeker.qc:665
-#, c-format
-msgid "%s was tagged with a seeker by %s"
-msgstr "%2$s rakétái levadászták %1$s-t"
+#: qcsrc/common/counting.qh:44
+#, fuzzy, c-format
+msgid "CI_MUL^%d minutes"
+msgstr "5 perc"
 
-#: qcsrc/server/w_seeker.qc:667
+#: qcsrc/common/counting.qh:46
 #, c-format
-msgid "%s was pummeled with seeker rockets by %s"
-msgstr "%s-t darabokra tépték %s kis célkövető rakétái"
+msgid "CI_DEC^%s seconds"
+msgstr ""
 
-#: qcsrc/server/w_shotgun.qc:275
-#, c-format
-msgid "%2$s slapped %1$s around a bit with a large shotgun"
-msgstr "%2$s bucira verte %1$s-t a puskájával"
+#: qcsrc/common/counting.qh:48
+#, fuzzy, c-format
+msgid "CI_ZER^%d seconds"
+msgstr "%d másodperc maradt hátra"
 
-#: qcsrc/server/w_shotgun.qc:277
+#: qcsrc/common/counting.qh:49
 #, c-format
-msgid "%s was gunned down with a shotgun by %s"
-msgstr "%2$s megkínálta %1$s-t egy kis söréttel"
+msgid "CI_FIR^%d second"
+msgstr ""
 
-#: qcsrc/server/w_tuba.qc:2
-#, c-format
-msgid "@!#%'n Tuba"
-msgstr "ki@!#%tt Tuba"
+#: qcsrc/common/counting.qh:50
+#, fuzzy, c-format
+msgid "CI_SEC^%d seconds"
+msgstr "%d másodperc maradt hátra"
 
-#: qcsrc/server/w_tuba.qc:444
-#, c-format
-msgid "%s hurt his own ears with the @!#%%'n Tuba"
-msgstr "%s saját dobhártyája is megrepedt a  ki@!#%%tt Tuba hangjától"
+#: qcsrc/common/counting.qh:51
+#, fuzzy, c-format
+msgid "CI_THI^%d seconds"
+msgstr "%d másodperc maradt hátra"
 
-#: qcsrc/server/w_tuba.qc:447
-#, c-format
-msgid "%s hurt his own ears with the @!#%%'n Accordeon"
-msgstr "%s saját dobhártyája is megrepedt a ki@!#%%tt Akkordeon hangjától"
+#: qcsrc/common/counting.qh:52
+#, fuzzy, c-format
+msgid "CI_MUL^%d seconds"
+msgstr "%d másodperc maradt hátra"
 
-#: qcsrc/server/w_tuba.qc:465
+#: qcsrc/common/counting.qh:68
 #, c-format
-msgid "%s died of %s's great playing on the @!#%%'n Tuba"
-msgstr "%s agyvérzést kapott %s frenetikus ki@!#%%tt Tuba muzsikájától"
+msgid "%dst"
+msgstr ""
 
-#: qcsrc/server/w_tuba.qc:468
+#: qcsrc/common/counting.qh:69
 #, c-format
-msgid "%s died of %s's great playing on the @!#%%'n Accordeon"
-msgstr "%s agyvérzést kapott %s frenetikus ki@!#%%tt Akkordeon muzsikájától"
+msgid "%dnd"
+msgstr ""
 
-#: qcsrc/server/w_uzi.qc:322
+#: qcsrc/common/counting.qh:70
 #, c-format
-msgid "%s was sniped by %s's machine gun"
-msgstr "%2$s lekapta %s-t a gépfegyverével"
+msgid "%drd"
+msgstr ""
 
-#: qcsrc/server/w_uzi.qc:324
+#: qcsrc/common/counting.qh:71 qcsrc/common/counting.qh:74
 #, c-format
-msgid "%s was riddled full of holes by %s's machine gun"
-msgstr "%2$s szitává lyuggatta %s-t a gépfegyverével"
+msgid "%dth"
+msgstr "%d."
 
-#: qcsrc/common/mapinfo.qc:665
+#: qcsrc/common/mapinfo.qc:711
 #, c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Dobás"
+
+#: qcsrc/common/mapinfo.qc:1103 qcsrc/menu/xonotic/skinlist.c:166
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: qcsrc/common/mapinfo.qh:36
 msgid "Deathmatch"
@@ -2068,94 +1315,1956 @@ msgid "Arena"
 msgstr "Aréna"
 
 #: qcsrc/common/mapinfo.qh:45
-msgid "Runematch"
-msgstr "Rúnameccs"
-
-#: qcsrc/common/mapinfo.qh:48
 msgid "Race"
 msgstr "Verseny"
 
-#: qcsrc/common/mapinfo.qh:51
+#: qcsrc/common/mapinfo.qh:48
 msgid "Race CTS"
 msgstr "Ügyességi verseny"
 
-#: qcsrc/common/mapinfo.qh:54
+#: qcsrc/common/mapinfo.qh:51
 msgid "Team Deathmatch"
 msgstr "Csapat[os] öldöklés "
 
-#: qcsrc/common/mapinfo.qh:57
+#: qcsrc/common/mapinfo.qh:54
 msgid "Capture the Flag"
 msgstr "Zászlórablás"
 
-#: qcsrc/common/mapinfo.qh:60
+#: qcsrc/common/mapinfo.qh:57
 msgid "Clan Arena"
 msgstr "Klán Aréna"
 
-#: qcsrc/common/mapinfo.qh:63
+#: qcsrc/common/mapinfo.qh:60
 msgid "Domination"
 msgstr "Uralom"
 
-#: qcsrc/common/mapinfo.qh:66
+#: qcsrc/common/mapinfo.qh:63
 msgid "Key Hunt"
 msgstr "Kulcsvadászat"
 
-#: qcsrc/common/mapinfo.qh:69
+#: qcsrc/common/mapinfo.qh:66
 msgid "Assault"
 msgstr "Ostrom"
 
-#: qcsrc/common/mapinfo.qh:72
+#: qcsrc/common/mapinfo.qh:69
 msgid "Onslaught"
 msgstr "Támadás"
 
-#: qcsrc/common/mapinfo.qh:75
+#: qcsrc/common/mapinfo.qh:72
 msgid "Nexball"
 msgstr "Nexball"
 
-#: qcsrc/common/mapinfo.qh:78
+#: qcsrc/common/mapinfo.qh:75
 msgid "Freeze Tag"
 msgstr "Fagyasztás"
 
-#: qcsrc/common/mapinfo.qh:81
+#: qcsrc/common/mapinfo.qh:78
 msgid "Keepaway"
 msgstr "Önzőség"
 
-#: qcsrc/menu/command/menu_cmd.qc:41
-#, c-format
-msgid "error: status is %d\n"
-msgstr "Hiba: állapot %d\n"
+#: qcsrc/common/net_notice.qc:89
+#, fuzzy
+msgid "^1Server notices:"
+msgstr "Szerver legjobb idő"
 
-#: qcsrc/menu/command/menu_cmd.qc:64
+#: qcsrc/common/net_notice.qc:95
+#, fuzzy, c-format
+msgid "^7%s (^3%d sec left)"
+msgstr "%d másodperc maradt hátra"
+
+#: qcsrc/common/notifications.qh:248
+#, fuzzy, c-format
+msgid "^BG%s^BG captured the ^TC^TT^BG flag\n"
+msgstr "%s^7 elfoglalta a %s%s-t\n"
+
+#: qcsrc/common/notifications.qh:249
+#, c-format
+msgid ""
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
+"%s^BG's previous record of ^F2%s^BG seconds\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:250
+#, c-format
+msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:251
+#, c-format
+msgid ""
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
+"^BG%s^BG's previous record of ^F1%s^BG seconds\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:252
+msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:253
+msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:254
+msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:255
+msgid ""
+"^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
+"base\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:256
+#, c-format
+msgid ""
+"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
+"itself\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:257
+msgid "^BGThe ^TC^TT^BG flag has returned to the base\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:258
+#, c-format
+msgid "^BG%s^BG lost the ^TC^TT^BG flag\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:259
+#, c-format
+msgid "^BG%s^BG got the ^TC^TT^BG flag\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:260
+#, fuzzy, c-format
+msgid "^BG%s^BG returned the ^TC^TT^BG flag\n"
+msgstr "%s^7 visszaszerezte a %s^7-t\n"
+
+#: qcsrc/common/notifications.qh:261
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s\n"
+msgstr "^%2$s^1 unfair módon kinyírta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:262
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 megfolytotta %1$^1-t a víz alatt\n"
+
+#: qcsrc/common/notifications.qh:263
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 lelökte %1$s^1-t a mélybe\n"
+
+#: qcsrc/common/notifications.qh:264
+#, c-format
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:264
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 elégette %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:265
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 ropogósra sütötte %1$s^1-t a lávában\n"
+
+#: qcsrc/common/notifications.qh:266
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
+
+#: qcsrc/common/notifications.qh:267
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 belelökte %1$s^1-t a trutymóba\n"
+
+#: qcsrc/common/notifications.qh:268
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 összecsomagolta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:269
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgstr "^1%s^1 megpróbálta elfoglalni %s^1 teleportációs helyét\n"
+
+#: qcsrc/common/notifications.qh:269
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s\n"
+msgstr "^1%s^1-ba %s^1 egyszerűen bele-teleportált\n"
+
+#: qcsrc/common/notifications.qh:270
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s\n"
+msgstr "^1%s^1 elhunyt egy tragikus balesetben\n"
+
+#: qcsrc/common/notifications.qh:271
+#, fuzzy, c-format
+msgid ""
+"^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s\n"
+msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
+
+#: qcsrc/common/notifications.qh:272
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s\n"
+msgstr "%s megcsodálhatta %s színpompás Tűzgömbjét"
+
+#: qcsrc/common/notifications.qh:273
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 összeroppantotta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:274
+#, c-format
+msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:275
+#, c-format
+msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:276
+#, fuzzy, c-format
+msgid ""
+"^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s\n"
+msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
+
+#: qcsrc/common/notifications.qh:277
+#, fuzzy, c-format
+msgid ""
+"^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s\n"
+msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
+
+#: qcsrc/common/notifications.qh:278
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s\n"
+msgstr "^1%2$s^1 ledarálta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:279
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s\n"
+msgstr "^1%2$s^1 darabokra robbantotta %1$s^1\n"
+
+#: qcsrc/common/notifications.qh:280
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s\n"
+msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
+
+#: qcsrc/common/notifications.qh:281
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s\n"
+msgstr "^1%2$s^1 odaszögezte %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:282
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s\n"
+msgstr "^1%s^1 nem tudott fedezékbe húzódni %s^1s rakétái elől\n"
+
+#: qcsrc/common/notifications.qh:283
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 kilökte %1$s^1-t a nagy semmibe\n"
+
+#: qcsrc/common/notifications.qh:284
+#, fuzzy, c-format
+msgid "^BG%s^K1 was moved into the %s%s\n"
+msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
+
+#: qcsrc/common/notifications.qh:285
+#, fuzzy, c-format
+msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s\n"
+msgstr "^1%s^1 és a Csapatjátékosok Ura mégse jött ki jól egymással\n"
+
+#: qcsrc/common/notifications.qh:286
+#, fuzzy, c-format
+msgid "^BG%s^K1 thought they found a nice camping ground%s%s\n"
+msgstr "^1%s^1 azt hitte, jó helyen vert tanyát\n"
+
+#: qcsrc/common/notifications.qh:287
+#, fuzzy, c-format
+msgid "^BG%s^K1 unfairly eliminated themself%s%s\n"
+msgstr "^1%s^1 unfair módon kicsinálta magát\n"
+
+#: qcsrc/common/notifications.qh:288
+#, c-format
+msgid "^BG%s^K1 %s^K1%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:289
+#, fuzzy, c-format
+msgid "^BG%s^K1 couldn't catch their breath%s%s\n"
+msgstr "^1%s^1 már nem bírta tovább\n"
+
+#: qcsrc/common/notifications.qh:289
+#, fuzzy, c-format
+msgid "^BG%s^K1 was in the water for too long%s%s\n"
+msgstr "^1%s^1 túl sokáig maradt a víz alatt\n"
+
+#: qcsrc/common/notifications.qh:290
+#, fuzzy, c-format
+msgid "^BG%s^K1 hit the ground with a bit too much force%s%s\n"
+msgstr "^1%s^1 szétplaccsant a földön\n"
+
+#: qcsrc/common/notifications.qh:290
+#, fuzzy, c-format
+msgid "^BG%s^K1 hit the ground with a crunch%s%s\n"
+msgstr "^1%s^1 szétplaccsant a földön\n"
+
+#: qcsrc/common/notifications.qh:291
+#, c-format
+msgid "^BG%s^K1 became a bit too crispy%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:291
+#, fuzzy, c-format
+msgid "^BG%s^K1 felt a little hot%s%s\n"
+msgstr "^1%s^1 kissé forrófejű lett\n"
+
+#: qcsrc/common/notifications.qh:292
+#, fuzzy, c-format
+msgid "^BG%s^K1 died%s%s\n"
+msgstr "^1%s^1 meghalt\n"
+
+#: qcsrc/common/notifications.qh:293
+#, fuzzy, c-format
+msgid "^BG%s^K1 found a hot place%s%s\n"
+msgstr "^1%s^1 ropogósra sült a lávában\n"
+
+#: qcsrc/common/notifications.qh:293
+#, fuzzy, c-format
+msgid "^BG%s^K1 turned into hot slag%s%s\n"
+msgstr "^1%s^1 szó szerint beleolvadt a környezetébe\n"
+
+#: qcsrc/common/notifications.qh:294
+#, fuzzy, c-format
+msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?\n"
+msgstr "^7%s^7 öngyilkos lett. Lőszer nélkül mi értelme az életnek?\n"
+
+#: qcsrc/common/notifications.qh:294
+#, c-format
+msgid "^BG%s^K1 ran out of ammo%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:295
+#, c-format
+msgid "^BG%s^K1 rotted away%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:296
+#, fuzzy, c-format
+msgid "^BG%s^K1 became a shooting star%s%s\n"
+msgstr "^1%s^1 elszállt, mint a győzelmi zászló\n"
+
+#: qcsrc/common/notifications.qh:297
+#, fuzzy, c-format
+msgid "^BG%s^K1 was slimed%s%s\n"
+msgstr "^1%s^1 feloldótott a trugymóban\n"
+
+#: qcsrc/common/notifications.qh:298
+#, fuzzy, c-format
+msgid "^BG%s^K1 couldn't take it anymore%s%s\n"
+msgstr "^1%s^1 már nem bírta tovább\n"
+
+#: qcsrc/common/notifications.qh:299
+#, fuzzy, c-format
+msgid "^BG%s^K1 is now preserved for centuries to come%s%s\n"
+msgstr "^1%s^1 már örökké elvan, mint a befőtt\n"
+
+#: qcsrc/common/notifications.qh:300
+#, fuzzy, c-format
+msgid "^BG%s^K1 switched to the %s%s\n"
+msgstr "^1%2$s^1 odaszögezte %1$s^1-t a földhöz\n"
+
+#: qcsrc/common/notifications.qh:301
+#, fuzzy, c-format
+msgid "^BG%s^K1 died in an accident%s%s\n"
+msgstr "^1%s^1 elhunyt egy tragikus balesetben\n"
+
+#: qcsrc/common/notifications.qh:302
+#, fuzzy, c-format
+msgid "^BG%s^K1 ran into a turret%s%s\n"
+msgstr "^1%s^1 belefutott egy automatikus lövegbe\n"
+
+#: qcsrc/common/notifications.qh:303
+#, fuzzy, c-format
+msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s\n"
+msgstr "^1%s^1 belenézett egy eWheel lézersugarába\n"
+
+#: qcsrc/common/notifications.qh:304
+#, fuzzy, c-format
+msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s\n"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:305
+#, fuzzy, c-format
+msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s\n"
+msgstr "^1Egy Pokoltorony felrobbantotta %s^1-t a rakétáival\n"
+
+#: qcsrc/common/notifications.qh:306
+#, fuzzy, c-format
+msgid "^BG%s^K1 could not hide from the Hunter turret%s%s\n"
+msgstr "^1%s nem tudott elbújni egy Vadász torony elől\n"
+
+#: qcsrc/common/notifications.qh:307
+#, fuzzy, c-format
+msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s\n"
+msgstr "^1Egy automatikus Gépágyú torony szitává lyuggatta 1%s^1-t\n"
+
+#: qcsrc/common/notifications.qh:308
+#, fuzzy, c-format
+msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s\n"
+msgstr ""
+"^1%s^1 pici forró húscafatokká vált egy automatikus MLRS torony rakétáitól\n"
+
+#: qcsrc/common/notifications.qh:309
+#, fuzzy, c-format
+msgid "^BG%s^K1 was phased out by a turret%s%s\n"
+msgstr "^1%s^1 belenézett egy eWheel lézersugarába\n"
+
+#: qcsrc/common/notifications.qh:310
+#, fuzzy, c-format
+msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s\n"
+msgstr "^1%s^1 atomjaira hullott egy Plazma torony forró sugaraitól\n"
+
+#: qcsrc/common/notifications.qh:311
+#, fuzzy, c-format
+msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s\n"
+msgstr "^1%s^1 egészen felvillanyozódott egy Tesla toronytól\n"
+
+#: qcsrc/common/notifications.qh:312
+#, fuzzy, c-format
+msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s\n"
+msgstr "^1%s^1 megkapta az ólom beültetést egy Pókjárótól\n"
+
+#: qcsrc/common/notifications.qh:313
+#, fuzzy, c-format
+msgid "^BG%s^K1 was impaled by a Walker turret%s%s\n"
+msgstr "^1Egy Pókjáró darabokra tépte %s^1-t\n"
+
+#: qcsrc/common/notifications.qh:314
+#, fuzzy, c-format
+msgid "^BG%s^K1 was blasted away by a Walker turret%s%s\n"
+msgstr "^1Egy Pókjáró darabokra tépte %s^1-t\n"
+
+#: qcsrc/common/notifications.qh:315
+#, fuzzy, c-format
+msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s\n"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:316
+#, fuzzy, c-format
+msgid "^BG%s^K1 was crushed by a vehicle%s%s\n"
+msgstr "^1%2$s^1 összeroppantotta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:317
+#, fuzzy, c-format
+msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s\n"
+msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
+
+#: qcsrc/common/notifications.qh:318
+#, fuzzy, c-format
+msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s\n"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:319
+#, fuzzy, c-format
+msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s\n"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:320
+#, fuzzy, c-format
+msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s\n"
+msgstr "^1%2$s^1 darabokra robbantotta %1$s^1\n"
+
+#: qcsrc/common/notifications.qh:321
+#, fuzzy, c-format
+msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s\n"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:322
+#, fuzzy, c-format
+msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s\n"
+msgstr "^1%s^1 nem tudott fedezékbe húzódni %s^1s rakétái elől\n"
+
+#: qcsrc/common/notifications.qh:323
+#, fuzzy, c-format
+msgid "^BG%s^K1 was in the wrong place%s%s\n"
+msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
+
+#: qcsrc/common/notifications.qh:324
+#, fuzzy, c-format
+msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s\n"
+msgstr "^1%2$s^1 kinyírta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:325
+#, fuzzy, c-format
+msgid "^BG%s^K1 was frozen by ^BG%s\n"
+msgstr "^1%2$s^1 kinyírta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:326
+#, fuzzy, c-format
+msgid "^BG%s^K3 was revived by ^BG%s\n"
+msgstr "^1%2$s^1 belelökte %1$s^1-t a trutymóba\n"
+
+#: qcsrc/common/notifications.qh:327
+#, c-format
+msgid "^BG%s^K3 was automatically revived after %s second(s)\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:328
+msgid "^TC^TT^BG team wins the round\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:329
+#, c-format
+msgid "^BG%s^BG wins the round\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:330
+msgid "^BGRound tied\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:331
+msgid "^BGRound over, there's no winner\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:332
+#, fuzzy, c-format
+msgid "^BG%s^K1 froze themself\n"
+msgstr "^1%s^1 unfair módon kicsinálta magát\n"
+
+#: qcsrc/common/notifications.qh:333
+#, c-format
+msgid "^BGGodmode saved you %s units of damage, cheater!\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:334
+#, c-format
+msgid "^BGYou do not have the ^F1%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:335
+#, c-format
+msgid "^BGYou dropped the ^F1%s^BG%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:336
+#, fuzzy, c-format
+msgid "^BGYou got the ^F1%s\n"
+msgstr "Nálad van a %s!"
+
+#: qcsrc/common/notifications.qh:337
+#, c-format
+msgid "^BGYou don't have enough ammo for the ^F1%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:338
+#, c-format
+msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:339
+#, c-format
+msgid "^F1%s^BG is ^F4not available^BG on this map\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:340
+#, c-format
+msgid "^BG%s^F3 connected%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:341
+#, c-format
+msgid "^BG%s^F3 connected and joined the ^TC^TT\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:342
+#, c-format
+msgid "^BG%s^F3 is now playing\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:343
+#, fuzzy, c-format
+msgid "^BG%s^BG has dropped the ball!\n"
+msgstr "%s^7 elhagyta a labdát!\n"
+
+#: qcsrc/common/notifications.qh:344
+#, fuzzy, c-format
+msgid "^BG%s^BG has picked up the ball!\n"
+msgstr "%s^7 felvette a labdát!\n"
+
+#: qcsrc/common/notifications.qh:345
+#, c-format
+msgid "^BG%s^BG captured the keys for the ^TC^TT team\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:346
+#, c-format
+msgid "^BG%s^BG dropped the ^TC^TT Key\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:347
+#, fuzzy, c-format
+msgid "^BG%s^BG lost the ^TC^TT Key\n"
+msgstr "%s^7 elvesztette a %s-t\n"
+
+#: qcsrc/common/notifications.qh:348
+#, fuzzy, c-format
+msgid "^BG%s^BG picked up the ^TC^TT Key\n"
+msgstr "%s^7 felvette a %s-t\n"
+
+#: qcsrc/common/notifications.qh:349
+#, c-format
+msgid "^BG%s^F3 forfeited\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:350
+#, fuzzy, c-format
+msgid "^BG%s^F3 has no more lives left\n"
+msgstr "^1Nincs több életed"
+
+#: qcsrc/common/notifications.qh:351
+#, c-format
+msgid "^BG%s^K1 picked up Invisibility\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:352
+#, fuzzy, c-format
+msgid "^BG%s^K1 picked up Shield\n"
+msgstr "%s^7 felvette a %s-t\n"
+
+#: qcsrc/common/notifications.qh:353
+#, fuzzy, c-format
+msgid "^BG%s^K1 picked up Speed\n"
+msgstr "%s^7 felvette a %s-t\n"
+
+#: qcsrc/common/notifications.qh:354
+#, fuzzy, c-format
+msgid "^BG%s^K1 picked up Strength\n"
+msgstr "%s^7 felvette a %s-t\n"
+
+#: qcsrc/common/notifications.qh:355
+#, c-format
+msgid "^BG%s^F3 disconnected\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:356
+#, c-format
+msgid "^BG%s^F3 was kicked for idling\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:357
+msgid ""
+"^F2You were kicked from the server because you are a spectator and "
+"spectators aren't allowed at the moment.\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:358
+#, fuzzy, c-format
+msgid "^BG%s^F3 is now spectating\n"
+msgstr "Nézők engedélyezése"
+
+#: qcsrc/common/notifications.qh:359
+#, fuzzy, c-format
+msgid "^BG%s^BG has abandoned the race\n"
+msgstr "%s^7 elhagyta a labdát!\n"
+
+#: qcsrc/common/notifications.qh:360
+#, c-format
+msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:361
+#, c-format
+msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:362
+#, fuzzy, c-format
+msgid "^BG%s^BG has finished the race\n"
+msgstr "%s^7 felvette a labdát!\n"
+
+#: qcsrc/common/notifications.qh:363
+#, c-format
+msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:364
+#, c-format
+msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:365
+#, c-format
+msgid ""
+"^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
+"and will be lost.\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:366
+#, c-format
+msgid "^BG%s^BG set the %s%s^BG place record with %s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:367
+msgid "^TC^TT ^BGteam scores!\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:368
+#, c-format
+msgid ""
+"^F2You have to become a player within the next %s, otherwise you will be "
+"kicked, because spectating isn't allowed at this time!\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:369
+#, c-format
+msgid "^BG%s^K1 picked up a Superweapon\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:370
+#, c-format
+msgid ""
+"^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
+"^F2Xonotic %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:371
+#, c-format
+msgid ""
+"^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:372
+#, c-format
+msgid ""
+"^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
+"the update from ^F3http://www.xonotic.org/^BG!\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:373
+#, fuzzy, c-format
+msgid "^F3SVQC Build information: ^F4%s\n"
+msgstr "^4CSQC Build-Információ: ^1%s (magyar)\n"
+
+#: qcsrc/common/notifications.qh:374
+#, fuzzy, c-format
+msgid ""
+"^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s\n"
+msgstr "%s agyvérzést kapott %s frenetikus ki@!#%%tt Akkordeon muzsikájától"
+
+#: qcsrc/common/notifications.qh:375
+#, fuzzy, c-format
+msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s\n"
+msgstr "%s saját dobhártyája is megrepedt a ki@!#%%tt Akkordeon hangjától"
+
+#: qcsrc/common/notifications.qh:376
+#, c-format
+msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:377
+#, c-format
+msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:378
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s\n"
+msgstr "%s atomjaira hullott %s kék sugarától"
+
+#: qcsrc/common/notifications.qh:379
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s\n"
+msgstr "%s haja is égnek állt %s Elektro-kombójától"
+
+#: qcsrc/common/notifications.qh:380
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro plasma%s%s\n"
+msgstr "%s túl közel került %s kék sugarához"
+
+#: qcsrc/common/notifications.qh:381
+#, fuzzy, c-format
+msgid "^BG%s^K1 played with Electro plasma%s%s\n"
+msgstr "%s szerint a plazma nem veszélyes. Tévedett."
+
+#: qcsrc/common/notifications.qh:382
+#, fuzzy, c-format
+msgid "^BG%s^K1 could not remember where they put their Electro plasma%s%s\n"
+msgstr "%s most már tudja, mire való a plazma"
+
+#: qcsrc/common/notifications.qh:383
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s\n"
+msgstr "%s szénné égett %s Tűzlabdájától"
+
+#: qcsrc/common/notifications.qh:384
+#, c-format
+msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:385
+#, fuzzy, c-format
+msgid "^BG%s^K1 should have used a smaller gun%s%s\n"
+msgstr "%s játszott volna inkább vízipisztollyal"
+
+#: qcsrc/common/notifications.qh:386
+#, fuzzy, c-format
+msgid "^BG%s^K1 forgot about their firemine%s%s\n"
+msgstr "%s egy aknáról mégiscsak megfeledkezett"
+
+#: qcsrc/common/notifications.qh:387
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s\n"
+msgstr "%2$s szétszaggatta %1$s-t a Hagarjával"
+
+#: qcsrc/common/notifications.qh:388
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s\n"
+msgstr "%2$s ledarálta %1$s-t a Hagarjával"
+
+#: qcsrc/common/notifications.qh:389
+#, fuzzy, c-format
+msgid "^BG%s^K1 played with tiny Hagar rockets%s%s\n"
+msgstr "%s játszott volna inkább római rakétákkal"
+
+#: qcsrc/common/notifications.qh:390
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s\n"
+msgstr "%2$s kettévágta %1$s-t a NLRÁ-val"
+
+#: qcsrc/common/notifications.qh:391
+#, c-format
+msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:392
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s\n"
+msgstr "%2$s elkapta %1$s-t a Gravitációs bombájával"
+
+#: qcsrc/common/notifications.qh:393
+#, fuzzy, c-format
+msgid ""
+"^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s\n"
+msgstr "%s agyvérzést kapott %s frenetikus ki@!#%%tt Akkordeon muzsikájától"
+
+#: qcsrc/common/notifications.qh:394
+#, fuzzy, c-format
+msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s\n"
+msgstr "%s saját dobhártyája is megrepedt a ki@!#%%tt Akkordeon hangjától"
+
+#: qcsrc/common/notifications.qh:395
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Laser%s%s\n"
+msgstr "^1%2$s^1 elégette %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:396
+#, fuzzy, c-format
+msgid "^BG%s^K1 shot themself to hell with their Laser%s%s\n"
+msgstr "%s rálépett a saját aknájára"
+
+#: qcsrc/common/notifications.qh:397
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s\n"
+msgstr "%s túl közel került %s aknájához"
+
+#: qcsrc/common/notifications.qh:398
+#, fuzzy, c-format
+msgid "^BG%s^K1 forgot about their mine%s%s\n"
+msgstr "%s egy aknáról mégiscsak megfeledkezett"
+
+#: qcsrc/common/notifications.qh:399
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Minstanex%s%s\n"
+msgstr "%s^1 elpárolgott %s MinstaNexétől"
+
+#: qcsrc/common/notifications.qh:400
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s\n"
+msgstr "%s túl közel került %s aknájához"
+
+#: qcsrc/common/notifications.qh:401
+#, c-format
+msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s\n"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:402
+#, fuzzy, c-format
+msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s\n"
+msgstr "%s lefejelte a saját gránátját"
+
+#: qcsrc/common/notifications.qh:403
+#, fuzzy, c-format
+msgid "^BG%s^K1 blew themself up with their own Mortar%s%s\n"
+msgstr "%s rálépett a saját aknájára"
+
+#: qcsrc/common/notifications.qh:404
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Nex%s%s\n"
+msgstr "%s^1 elpárolgott %s Nex sugarától"
+
+#: qcsrc/common/notifications.qh:405
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s\n"
+msgstr "%s lefejelte %s golyóját"
+
+#: qcsrc/common/notifications.qh:406
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s\n"
+msgstr "%2$s levadászta %1$s-t"
+
+#: qcsrc/common/notifications.qh:407
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s\n"
+msgstr "%s nem tudott fedezékbe húzódni %s golyózápora elől"
+
+#: qcsrc/common/notifications.qh:408
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s\n"
+msgstr "%s csinosan mutat majd %s trófea gyűjteményében"
+
+#: qcsrc/common/notifications.qh:409
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s\n"
+msgstr "%s beszopta %s rakétáját"
+
+#: qcsrc/common/notifications.qh:410
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s\n"
+msgstr "%s túl közel került %s rakétájához"
+
+#: qcsrc/common/notifications.qh:411
+#, fuzzy, c-format
+msgid "^BG%s^K1 blew themself up with their Rocketlauncher%s%s\n"
+msgstr "%s játszott volna inkább petárdákkal"
+
+#: qcsrc/common/notifications.qh:412
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s\n"
+msgstr "%s-t darabokra tépték %s kis célkövető rakétái"
+
+#: qcsrc/common/notifications.qh:413
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s\n"
+msgstr "^1%2$s^1 kinyírta %1$s^1-t\n"
+
+#: qcsrc/common/notifications.qh:414
+#, fuzzy, c-format
+msgid "^BG%s^K1 played with tiny Seeker rockets%s%s\n"
+msgstr "%s rakétái saját maga ellen fordultak"
+
+#: qcsrc/common/notifications.qh:415
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s\n"
+msgstr "%2$s megkínálta %1$s-t egy kis söréttel"
+
+#: qcsrc/common/notifications.qh:416
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s\n"
+msgstr "%2$s bucira verte %1$s-t a puskájával"
+
+#: qcsrc/common/notifications.qh:417
+#, fuzzy, c-format
+msgid "^BG%s^K1 is now thinking with portals%s%s\n"
+msgstr "%s már Portálokkal mereng"
+
+#: qcsrc/common/notifications.qh:418
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s\n"
+msgstr "%s agyvérzést kapott %s frenetikus ki@!#%%tt Tuba muzsikájától"
+
+#: qcsrc/common/notifications.qh:419
+#, fuzzy, c-format
+msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s\n"
+msgstr "%s saját dobhártyája is megrepedt a  ki@!#%%tt Tuba hangjától"
+
+#: qcsrc/common/notifications.qh:420
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s\n"
+msgstr "%2$s lekapta %s-t a gépfegyverével"
+
+#: qcsrc/common/notifications.qh:421
+#, fuzzy, c-format
+msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"
+msgstr "%2$s szitává lyuggatta %s-t a gépfegyverével"
+
+#: qcsrc/common/notifications.qh:433
+msgid "^BGYou are attacking!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:434
+msgid "^BGYou are defending!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:435
+#, fuzzy
+msgid "^F4Begin!"
+msgstr "^1Kezdődjék a játszma!"
+
+#: qcsrc/common/notifications.qh:436
+#, fuzzy
+msgid "^F4Game starts in ^COUNT"
+msgstr "^1A játszma kezdéséig még %d másodperc van hátra"
+
+#: qcsrc/common/notifications.qh:437
+msgid "^F4Round starts in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:438
+msgid "^F4Round cannot start"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:439
+msgid "^BGRound tied"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:440
+msgid "^BGRound over, there's no winner"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:441
+msgid ""
+"^BGYou are now free.\n"
+"^BGFeel free to ^F2try to capture^BG the flag again\n"
+"^BGif you think you will succeed."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:442
+msgid ""
+"^BGYou are now ^F1shielded^BG from the flag\n"
+"^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
+"^BGMake some defensive scores before trying again."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:443
+msgid "^BGYou captured the ^TC^TT^BG flag!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:444
+#, c-format
+msgid "^BGToo many flag throws! Throwing disabled for %s."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:445
+#, c-format
+msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:446
+#, c-format
+msgid "^BGYou received the ^TC^TT^BG flag from %s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:447
+#, c-format
+msgid "^BG%s^BG requests you to pass the flag%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:448
+#, c-format
+msgid "^BGRequesting %s^BG to pass you the flag"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:449
+#, c-format
+msgid "^BGYou passed the ^TC^TT^BG flag to %s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:450
+msgid "^BGYou got the ^TC^TT^BG flag!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:451
+#, c-format
+msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:452
+#, c-format
+msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:453
+#, c-format
+msgid "^BGYour %steam mate^BG got the flag! Protect them!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:454
+#, c-format
+msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:455
+msgid "^BGYou returned the ^TC^TT^BG flag!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:456
+msgid "^BGStalemate! Enemies can now see you on radar!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:457
+msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:458
+#, fuzzy, c-format
+msgid "^K3%sYou fragged ^BG%s"
+msgstr "^4Kinyírtad ^7%s^4-t!"
+
+#: qcsrc/common/notifications.qh:458
+#, fuzzy, c-format
+msgid "^K3%sYou scored against ^BG%s"
+msgstr "^4Pontot szereztél ^7%s^4 ellen"
+
+#: qcsrc/common/notifications.qh:459
+#, fuzzy, c-format
+msgid "^K1%sYou were fragged by ^BG%s"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:459
+#, fuzzy, c-format
+msgid "^K1%sYou were scored against by ^BG%s"
+msgstr "^7%s^1 szerzett egy pontot ellened"
+
+#: qcsrc/common/notifications.qh:460
+#, fuzzy, c-format
+msgid "^K1%sYou were fragged by ^BG%s^BG%s"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:460
+#, fuzzy, c-format
+msgid "^K1%sYou were scored against by ^BG%s^BG%s"
+msgstr "^7%s^1 szerzett egy pontot ellened"
+
+#: qcsrc/common/notifications.qh:461
+#, fuzzy, c-format
+msgid "^K3%sYou fragged ^BG%s^BG%s"
+msgstr "^4Kinyírtad ^7%s^4-t!"
+
+#: qcsrc/common/notifications.qh:461
+#, fuzzy, c-format
+msgid "^K3%sYou scored against ^BG%s^BG%s"
+msgstr "^4Pontot szereztél ^7%s^4 ellen"
+
+#: qcsrc/common/notifications.qh:462
+#, fuzzy, c-format
+msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
+msgstr ""
+"^7%s^1 szerzett egy pontot ellened, amíg a gépeléssel voltál elfoglalva!"
+
+#: qcsrc/common/notifications.qh:462
+#, fuzzy, c-format
+msgid "^K1%sYou typefragged ^BG%s"
+msgstr "^1Csevejgyilok áltozatod: ^7%s^1"
+
+#: qcsrc/common/notifications.qh:463
+#, fuzzy, c-format
+msgid "^K1%sYou were scored against by ^BG%s^K1 while typing!"
+msgstr ""
+"^7%s^1 szerzett egy pontot ellened, amíg a gépeléssel voltál elfoglalva!"
+
+#: qcsrc/common/notifications.qh:463
+#, fuzzy, c-format
+msgid "^K1%sYou were typefragged by ^BG%s"
+msgstr "^7%s^1 kinyírt téged, amíg a gépeléssel voltál elfoglalva"
+
+#: qcsrc/common/notifications.qh:464
+#, fuzzy, c-format
+msgid "^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s"
+msgstr ""
+"^7%s^1 szerzett egy pontot ellened, amíg a gépeléssel voltál elfoglalva!"
+
+#: qcsrc/common/notifications.qh:464
+#, fuzzy, c-format
+msgid "^K1%sYou were typefragged by ^BG%s^BG%s"
+msgstr "^7%s^1 kinyírt téged, amíg a gépeléssel voltál elfoglalva"
+
+#: qcsrc/common/notifications.qh:465
+#, fuzzy, c-format
+msgid "^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s"
+msgstr ""
+"^7%s^1 szerzett egy pontot ellened, amíg a gépeléssel voltál elfoglalva!"
+
+#: qcsrc/common/notifications.qh:465
+#, fuzzy, c-format
+msgid "^K1%sYou typefragged ^BG%s^BG%s"
+msgstr "^1Csevejgyilok áltozatod: ^7%s^1"
+
+#: qcsrc/common/notifications.qh:466
+#, fuzzy, c-format
+msgid ""
+"^BGYou have been moved into a different team\n"
+"You are now on: %s"
+msgstr ""
+"Át lettél mozgatva egy másik csapatba, hogy kiegyenlített legyen a játék.\n"
+"Mostantól a %s tagja vagy."
+
+#: qcsrc/common/notifications.qh:467
+#, fuzzy
+msgid "^K1Don't go against your team mates!"
+msgstr "^1A csapattársaid ellen mész!"
+
+#: qcsrc/common/notifications.qh:467
+#, fuzzy
+msgid "^K1Don't shoot your team mates!"
+msgstr "^1Ne lőj a csapattársaidra!"
+
+#: qcsrc/common/notifications.qh:468
+#, fuzzy
+msgid "^K1Die camper!"
+msgstr "^1Ne tanyázz le, ez itt nem a kemping !"
+
+#: qcsrc/common/notifications.qh:468
+#, fuzzy
+msgid "^K1Reconsider your tactics, camper!"
+msgstr "^1Ne ülj a tojásaidon, nem vagy te tojógalamb!!"
+
+#: qcsrc/common/notifications.qh:469
+#, fuzzy
+msgid "^K1You unfairly eliminated yourself!"
+msgstr "^1%s^1 unfair módon kicsinálta magát\n"
+
+#: qcsrc/common/notifications.qh:470
+#, fuzzy, c-format
+msgid "^K1You were %s"
+msgstr "^1Csevejgyilok áltozatod: ^7%s^1"
+
+#: qcsrc/common/notifications.qh:471
+msgid "^K1You couldn't catch your breath!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:472
+#, fuzzy
+msgid "^K1You hit the ground with a crunch!"
+msgstr "^1%s^1 szétplaccsant a földön\n"
+
+#: qcsrc/common/notifications.qh:473
+#, fuzzy
+msgid "^K1You felt a little too hot!"
+msgstr "^1%s^1 kissé forrófejű lett\n"
+
+#: qcsrc/common/notifications.qh:473
+msgid "^K1You got a little bit too crispy!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:474
+#, fuzzy
+msgid "^K1You killed your own dumb self!"
+msgstr "^1Kinyírtad magad, hülyegyerek..."
+
+#: qcsrc/common/notifications.qh:474
+#, fuzzy
+msgid "^K1You need to be more careful!"
+msgstr "^1Jobban oda kéne figyelned!"
+
+#: qcsrc/common/notifications.qh:475
+msgid "^K1You couldn't stand the heat!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:476
+#, fuzzy
+msgid "^K1You are respawning for running out of ammo..."
+msgstr "^1Meghaltál, mert elfogyott a lőszered..."
+
+#: qcsrc/common/notifications.qh:476
+#, fuzzy
+msgid "^K1You were killed for running out of ammo..."
+msgstr "^1Meghaltál, mert elfogyott a lőszered..."
+
+#: qcsrc/common/notifications.qh:477
+#, fuzzy
+msgid "^K1You grew too old without taking your medicine"
+msgstr "^1Öregszel, be kéne venned a gyógyszereid"
+
+#: qcsrc/common/notifications.qh:477
+#, fuzzy
+msgid "^K1You need to preserve your health"
+msgstr "^1Szinten kell tartanod az életerőd"
+
+#: qcsrc/common/notifications.qh:478
+#, fuzzy
+msgid "^K1You became a shooting star!"
+msgstr "^1%s^1 elszállt, mint a győzelmi zászló\n"
+
+#: qcsrc/common/notifications.qh:479
+msgid "^K1You melted away in slime!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:480
+msgid "^K1You committed suicide!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:480
+#, fuzzy
+msgid "^K1You ended it all!"
+msgstr "^1Jobban oda kéne figyelned!"
+
+#: qcsrc/common/notifications.qh:481
+msgid "^K1You got stuck in a swamp!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:482
+#, fuzzy, c-format
+msgid "^BGYou are now on: %s"
+msgstr "Mostantól a %s tagja vagy."
+
+#: qcsrc/common/notifications.qh:483
+#, fuzzy
+msgid "^K1You died in an accident!"
+msgstr "^1%s^1 elhunyt egy tragikus balesetben\n"
+
+#: qcsrc/common/notifications.qh:484
+msgid "^K1You had an unfortunate run in with a turret!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:484
+#, fuzzy
+msgid "^K1You were fragged by a turret!"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:485
+msgid "^K1You had an unfortunate run in with an eWheel turret!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:485
+#, fuzzy
+msgid "^K1You were fragged by an eWheel turret!"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:486
+msgid "^K1You had an unfortunate run in with a Walker turret!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:486
+#, fuzzy
+msgid "^K1You were fragged by a Walker turret!"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:487
+msgid "^K1You got caught in the blast of a Bumblebee explosion!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:488
+#, fuzzy
+msgid "^K1You were crushed by a vehicle!"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:489
+msgid "^K1You were caught in a Raptor cluster bomb!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:490
+msgid "^K1You got caught in the blast of a Raptor explosion!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:491
+msgid "^K1You got caught in the blast of a Spiderbot explosion!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:492
+msgid "^K1You were blasted to bits by a Spiderbot rocket!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:493
+#, fuzzy
+msgid "^K1You got caught in the blast of a Racer explosion!"
+msgstr "^1%s^1 beleszaladt a repeszekbe\n"
+
+#: qcsrc/common/notifications.qh:494
+#, fuzzy
+msgid "^K1You couldn't find shelter from a Racer rocket!"
+msgstr "^1%s^1 nem tudott fedezékbe húzódni %s^1s rakétái elől\n"
+
+#: qcsrc/common/notifications.qh:495
+#, fuzzy
+msgid "^K1Watch your step!"
+msgstr "^1Nézz a lábad elé!"
+
+#: qcsrc/common/notifications.qh:496
+#, fuzzy, c-format
+msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
+msgstr "^1Idióta! Megölted %s-t pedig a csapattársad!"
+
+#: qcsrc/common/notifications.qh:496
+#, fuzzy, c-format
+msgid "^K1Moron! You went against ^BG%s^K1, a team mate!"
+msgstr "^1Marha! %s ellen fordultál, pedig a csapattársad!"
+
+#: qcsrc/common/notifications.qh:497
+#, fuzzy, c-format
+msgid "^K1You were fragged by ^BG%s^K1, a team mate"
+msgstr "^1Idióta! Megölted %s-t pedig a csapattársad!"
+
+#: qcsrc/common/notifications.qh:497
+#, fuzzy, c-format
+msgid "^K1You were scored against by ^BG%s^K1, a team mate"
+msgstr "^7%s^1 szerzett egy pontot ellened"
+
+#: qcsrc/common/notifications.qh:498
+msgid ""
+"^K1Stop idling!\n"
+"^BGDisconnecting in ^COUNT..."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:499
+#, fuzzy
+msgid "^F2You picked up some extra lives"
+msgstr "Felvetted a %s -t!"
+
+#: qcsrc/common/notifications.qh:500
+#, fuzzy, c-format
+msgid "^K3You froze ^BG%s"
+msgstr "^4Kinyírtad ^7%s^4-t!"
+
+#: qcsrc/common/notifications.qh:501
+#, fuzzy, c-format
+msgid "^K1You were frozen by ^BG%s"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:502
+#, fuzzy, c-format
+msgid "^K3You revived ^BG%s"
+msgstr "^4Kinyírtad ^7%s^4-t!"
+
+#: qcsrc/common/notifications.qh:503
+#, fuzzy, c-format
+msgid "^K3You were revived by ^BG%s"
+msgstr "^7%s^1 kinyírt téged"
+
+#: qcsrc/common/notifications.qh:504
+#, c-format
+msgid "^K3You were automatically revived after %s second(s)"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:505
+msgid "^TC^TT^BG team wins the round"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:506
+#, c-format
+msgid "^BG%s^BG wins the round"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:507
+#, fuzzy
+msgid "^K1You froze yourself"
+msgstr "^1Kinyírtad magad, hülyegyerek..."
+
+#: qcsrc/common/notifications.qh:508
+msgid "^K1Round already started, you spawn as frozen"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:509
+#, fuzzy, c-format
+msgid "^BGYou do not have the ^F1%s"
+msgstr "Nálad van a %s!"
+
+#: qcsrc/common/notifications.qh:510
+#, c-format
+msgid "^BGYou dropped the ^F1%s^BG%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:511
+#, fuzzy, c-format
+msgid "^BGYou got the ^F1%s"
+msgstr "Nálad van a %s!"
+
+#: qcsrc/common/notifications.qh:512
+#, c-format
+msgid "^BGYou don't have enough ammo for the ^F1%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:513
+#, c-format
+msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:514
+#, c-format
+msgid "^F1%s^BG is ^F4not available^BG on this map"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:515
+msgid ""
+"^K1No spawnpoints available!\n"
+"Hope your team can fix it..."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:516
+msgid ""
+"^K1You may not join the game at this time.\n"
+"The player limit reached maximum capacity."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:517
+#, fuzzy, c-format
+msgid "^BG%s^BG has dropped the ball!"
+msgstr "%s^7 elhagyta a labdát!\n"
+
+#: qcsrc/common/notifications.qh:518
+#, fuzzy, c-format
+msgid "^BG%s^BG has picked up the ball!"
+msgstr "%s^7 felvette a labdát!\n"
+
+#: qcsrc/common/notifications.qh:519
+msgid "^BGKilling people while you don't have the ball gives no points!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:520
+msgid ""
+"^BGAll keys are in your team's hands!\n"
+"Help the key carriers to meet!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:521
+msgid ""
+"^BGAll keys are in ^TC^TT team^BG's hands!\n"
+"Interfere ^F4NOW^BG!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:522
+msgid ""
+"^BGAll keys are in your team's hands!\n"
+"Meet the other key carriers ^F4NOW^BG!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:523
+msgid "^F4Round will start in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:524
+msgid "^BGScanning frequency range..."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:525
+msgid "^BGYou are starting with the ^TC^TT Key"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:526 qcsrc/common/notifications.qh:527
+#, c-format
+msgid ""
+"^BGWaiting for players to join...\n"
+"Need active players for: %s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:528
+#, fuzzy, c-format
+msgid "^BGWaiting for %s player(s) to join..."
+msgstr "^2Várj kérlek, amíg a többiek készen állnak..."
+
+#: qcsrc/common/notifications.qh:529
+#, fuzzy
+msgid "^F2Don't camp!"
+msgstr "Mindegy"
+
+#: qcsrc/common/notifications.qh:530
+msgid "^F4^COUNT^BG left to find some ammo!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:531
+msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:531
+msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:532
+#, c-format
+msgid "^F2Extra lives remaining: ^K1%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:533
+msgid "^BGSecondary fire inflicts no damage!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:534
+#, c-format
+msgid "^BG%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:535
+#, c-format
+msgid ""
+"^F2^COUNT^BG until weapon change...\n"
+"Next weapon: ^F1%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:536
+#, c-format
+msgid "^F2Active weapon: ^F1%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:537
+msgid ""
+"^F2Now playing ^F4OVERTIME^F2!\n"
+"Keep fragging until we have a winner!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:537
+msgid ""
+"^F2Now playing ^F4OVERTIME^F2!\n"
+"Keep scoring until we have a winner!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:538
+#, c-format
+msgid ""
+"^F2Now playing ^F4OVERTIME^F2!\n"
+"^BGAdded ^F4%s^BG to the game!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:539
+#, fuzzy
+msgid "^F2Invisibility has worn off"
+msgstr "Láthatatlanság"
+
+#: qcsrc/common/notifications.qh:540
+msgid "^F2Shield has worn off"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:541
+msgid "^F2Speed has worn off"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:542
+msgid "^F2Strength has worn off"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:543
+msgid "^F2You are invisible"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:544
+msgid "^F2Shield surrounds you"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:545
+#, fuzzy
+msgid "^F2You are on speed"
+msgstr "Mostantól a %s tagja vagy."
+
+#: qcsrc/common/notifications.qh:546
+msgid "^F2Strength infuses your weapons with devastating power"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:547
+msgid "^F2The race is over, finish your lap!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:548
+msgid "^F2Superweapons have broken down"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:549
+msgid "^F2Superweapons have been lost"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:550
+msgid "^F2You now have a superweapon"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:551
+msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:552
+msgid "^K1Changing team in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:553
+#, fuzzy
+msgid "^K1Spectating in ^COUNT"
+msgstr "^7%s^1-t nézed és követed"
+
+#: qcsrc/common/notifications.qh:554
+msgid "^K1Suicide in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:555
+msgid "^F4Timeout begins in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:556
+msgid "^F4Timeout ends in ^COUNT"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:788 qcsrc/common/notifications.qh:789
+#, fuzzy, c-format
+msgid " (near %s)"
+msgstr "%s (%s %s)"
+
+#: qcsrc/common/notifications.qh:796 qcsrc/common/notifications.qh:797
+msgid "primary"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:796 qcsrc/common/notifications.qh:797
+msgid "secondary"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:807
+#, c-format
+msgid " ^F1(Press %s)"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:816
+#, fuzzy, c-format
+msgid " with %s"
+msgstr "lézerrel"
+
+#: qcsrc/common/notifications.qh:825
+#, fuzzy, c-format
+msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
+msgstr "%s^7-nak  ^1TRIPLAGYILOK^7-j van!\n"
+
+#: qcsrc/common/notifications.qh:825
+#, fuzzy, c-format
+msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
+msgstr "%s^7-nak ^1MESTER HÁRMASA^7 van!\n"
+
+#: qcsrc/common/notifications.qh:825
+msgid "TRIPLE FRAG! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:826
+#, fuzzy, c-format
+msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1TIZENÖT PONTOT SZERZETT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:826
+#, c-format
+msgid "%s^K1 unlocked RAGE! %s^BG"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:826
+msgid "RAGE! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:827
+#, fuzzy, c-format
+msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1TÍZ PONTOT SZERZETT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:827
+#, fuzzy, c-format
+msgid "%s^K1 started a MASSACRE! %s^BG"
+msgstr "%s^7 egy ^1MÉSZÁROS!\n"
+
+#: qcsrc/common/notifications.qh:827
+msgid "MASSACRE! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:828
+#, fuzzy, c-format
+msgid "%s^K1 executed MAYHEM! %s^BG"
+msgstr "%s^7 elhozta a ^1KÁOSZT!\n"
+
+#: qcsrc/common/notifications.qh:828
+#, fuzzy, c-format
+msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1TIZENÖT PONTOT SZERZETT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:828
+msgid "MAYHEM! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:829
+#, fuzzy, c-format
+msgid "%s^K1 is a BERSERKER! %s^BG"
+msgstr "%s^7 ^1ŐRÜLETBE ESETT!\n"
+
+#: qcsrc/common/notifications.qh:829
+#, fuzzy, c-format
+msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1HÚSZ PONTOT GYŰJTÖTT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:829
+msgid "BERSERKER! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:830
+#, fuzzy, c-format
+msgid "%s^K1 inflicts CARNAGE! %s^BG"
+msgstr "%s^7 ^1VÉRFÜRDŐT RENDEZ!\n"
+
+#: qcsrc/common/notifications.qh:830
+#, fuzzy, c-format
+msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1HUSZONÖT PONTOT SZERZETT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:830
+msgid "CARNAGE! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:831
+#, fuzzy, c-format
+msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
+msgstr "%s^7 már ^1HARMINC PONTOT SZERZETT ZSINÓRBAN!\n"
+
+#: qcsrc/common/notifications.qh:831
+#, fuzzy, c-format
+msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
+msgstr "%s^7 MAGA AZ ^1APOKALIPSZIS ANGYALA!\n"
+
+#: qcsrc/common/notifications.qh:831
+msgid "ARMAGEDDON! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:837
+#, c-format
+msgid "%s(^F1Bot^BG)"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:839
+#, c-format
+msgid "%s(Ping ^F1%d^BG)"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:845
+#, c-format
+msgid ""
+"\n"
+"(Health ^1%d^BG / Armor ^2%d^BG)%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:847
+#, c-format
+msgid ""
+"\n"
+"(^F4Dead^BG)%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:884 qcsrc/common/notifications.qh:897
+#, c-format
+msgid "%d score spree! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:896
+#, c-format
+msgid "%d frag spree! "
+msgstr ""
+
+#: qcsrc/common/notifications.qh:909
+#, fuzzy
+msgid "First blood! "
+msgstr "^1ELSŐ VÉR!"
+
+#: qcsrc/common/notifications.qh:909
+#, fuzzy
+msgid "First score! "
+msgstr "^1ELSŐ PONT!"
+
+#: qcsrc/common/notifications.qh:913
+#, fuzzy
+msgid "First casualty! "
+msgstr "^1Te vagy az első sérült"
+
+#: qcsrc/common/notifications.qh:913
+#, fuzzy
+msgid "First victim! "
+msgstr "^1Ta vagy az első áldozat "
+
+#: qcsrc/common/notifications.qh:954
+#, fuzzy, c-format
+msgid "%s^K1 has %d frags in a row! %s^BG"
+msgstr "^1%s^1 már a  %s-dik ellenfelét öli meg zsinórban!\n"
+
+#: qcsrc/common/notifications.qh:955
+#, fuzzy, c-format
+msgid "%s^K1 made %d scores in a row! %s^BG"
+msgstr "^1%s^1 már a %s-dik pontot szerzi zsinórban!\n"
+
+#: qcsrc/common/notifications.qh:973
+#, fuzzy, c-format
+msgid "%s^K1 drew first blood! %s^BG"
+msgstr "^1%s^1 ontotta az első vért!\n"
+
+#: qcsrc/common/notifications.qh:974
+#, c-format
+msgid "%s^K1 got the first score! %s^BG"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:990
+#, c-format
+msgid ", ending their %d frag spree"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:991
+#, c-format
+msgid ", ending their %d score spree"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:1005
+#, c-format
+msgid ", losing their %d frag spree"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:1006
+#, c-format
+msgid ", losing their %d score spree"
+msgstr ""
+
+#: qcsrc/common/teams.qh:26
+#, fuzzy
+msgid "Red"
+msgstr "Vörös"
+
+#: qcsrc/common/teams.qh:27
+#, fuzzy
+msgid "Blue"
+msgstr "Kék Csapat"
+
+#: qcsrc/common/teams.qh:28
+#, fuzzy
+msgid "Yellow"
+msgstr "Sárga"
+
+#: qcsrc/common/teams.qh:29
+#, fuzzy
+msgid "Pink"
+msgstr "Rózsaszín Csapat"
+
+#: qcsrc/common/teams.qh:30
+#, fuzzy
+msgid "Team"
+msgstr "Csapatok:"
+
+#: qcsrc/common/teams.qh:31
+msgid "Neutral"
+msgstr ""
+
+#: qcsrc/menu/command/menu_cmd.qc:35
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
 msgstr "Használat: menu_cmd parancs..., ahol a lehetséges parancs:\n"
 
-#: qcsrc/menu/command/menu_cmd.qc:65
+#: qcsrc/menu/command/menu_cmd.qc:36
 msgid "  sync - reloads all cvars on the current menu page\n"
 msgstr "sync - újratölti az összes cvar-t az aktuális menü oldalon\n"
 
-#: qcsrc/menu/command/menu_cmd.qc:66
+#: qcsrc/menu/command/menu_cmd.qc:37
 msgid "  directmenu ITEM - select a menu item as main item\n"
 msgstr " directmenu TÁRGY - kiválaszt egy menü pontot, fő pontként\n"
 
-#: qcsrc/menu/command/menu_cmd.qc:179
-msgid "error creating curl handle\n"
-msgstr "Curl kezelő hibát okozott\n"
+#: qcsrc/menu/command/menu_cmd.qc:62
+msgid "Available options:\n"
+msgstr ""
 
-#: qcsrc/menu/command/menu_cmd.qc:186
+#: qcsrc/menu/command/menu_cmd.qc:113
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
 msgstr ""
 " Érvénytelen parancs. A támogatott parancsok listájáért, próbáld a menu_cmd "
 "segitséget.\n"
 
-#: qcsrc/menu/item/gecko.c:49
-msgid "Browser not initialized!"
-msgstr "A böngésző nem indult el!"
-
-#: qcsrc/menu/item/label.c:63
+#: qcsrc/menu/item/label.c:82
 #, c-format
 msgid "NOTE: label text %s too wide for label, condensed by factor %f\n"
 msgstr "MEGJEGYZÉS: a(z) %s szöveg túl széles címkének, csökkentsd %f-el\n"
 
-#: qcsrc/menu/item/listbox.c:300
+#: qcsrc/menu/item/listbox.c:302
 #, c-format
 msgid "Item %d"
 msgstr "Tárgy %d"
@@ -2169,17 +3278,17 @@ msgstr "%d (%s)"
 msgid "custom"
 msgstr "egyéni"
 
-#: qcsrc/menu/menu.qc:37
+#: qcsrc/menu/menu.qc:56
 #, c-format
 msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Build információ: %s\n"
 
-#: qcsrc/menu/xonotic/campaign.c:288
+#: qcsrc/menu/xonotic/campaign.c:286
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:123
 msgid "???"
 msgstr "???"
 
-#: qcsrc/menu/xonotic/campaign.c:289
+#: qcsrc/menu/xonotic/campaign.c:287
 #, c-format
 msgid "Level %d: %s"
 msgstr "Szint %d: %s"
@@ -2210,14 +3319,14 @@ msgstr "Közreműködők"
 
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:277
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:271
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:91
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:56
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:99
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:47
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:113
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:74
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:89
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:73
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:77
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:21
 msgid "OK"
 msgstr "Rendben"
@@ -2582,8 +3691,8 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:66
-#: qcsrc/menu/xonotic/util.qc:655
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:69
+#: qcsrc/menu/xonotic/util.qc:708
 msgid "Alpha:"
 msgstr "Átlátszóság:"
 
@@ -2612,7 +3721,7 @@ msgid "North"
 msgstr "Észak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:46
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:61
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:63
 msgid "Scale:"
 msgstr "Méret:"
 
@@ -2706,12 +3815,12 @@ msgid "EF^None"
 msgstr "EF^Nincs"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:36
-msgid "Slide"
-msgstr "Becsúszó"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:37
 msgid "Alpha"
 msgstr "Halványuló"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:37
+msgid "Slide"
+msgstr "Becsúszó"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:38
 msgid "EF^Both"
@@ -2765,24 +3874,24 @@ msgstr "HUD panel beállítása"
 msgid "Panel background defaults:"
 msgstr "Alapértelmezett panel háttér:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:630
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:683
 msgid "Background:"
 msgstr "Háttér:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:633
-#: qcsrc/menu/xonotic/util.qc:649 qcsrc/menu/xonotic/util.qc:666
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:686
+#: qcsrc/menu/xonotic/util.qc:702 qcsrc/menu/xonotic/util.qc:719
 msgid "Disable"
 msgstr "Letiltás"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:638
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:691
 msgid "Color:"
 msgstr "Szín:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:646
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:699
 msgid "Border size:"
 msgstr "Keret méret:"
 
@@ -2791,11 +3900,11 @@ msgstr "Keret méret:"
 msgid "Team color:"
 msgstr "Csapat szín:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:672
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:725
 msgid "Test team color in configure mode"
 msgstr "Csapat szín tesztelés beállítás közben"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:675
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:728
 msgid "Padding:"
 msgstr "Kitöltés:"
 
@@ -2881,10 +3990,9 @@ msgstr "Pályához tartozó alapérték használata"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:55
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:154
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:155
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:156
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:159
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:160
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:161
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
 msgid "Point limit:"
 msgstr "Ponthatár:"
 
@@ -2950,7 +4058,7 @@ msgid "Mutators..."
 msgstr "Módosítók..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:96
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:145
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:146
 msgid "Advanced settings..."
 msgstr "Haladó beállítások..."
 
@@ -2974,19 +4082,19 @@ msgstr "Többjátékos indítása!"
 msgid "Capture limit:"
 msgstr "Zászlórablások száma:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:157
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:156
 msgid "Lives:"
 msgstr "Életek:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:158
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:157
 msgid "Laps:"
 msgstr "Körök:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:158
 msgid "Goals:"
 msgstr "Célok:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:163
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
 msgid "Frag limit:"
 msgstr "Gyilok határérték:"
 
@@ -3107,7 +4215,7 @@ msgid "Game types:"
 msgstr "Játék típusok:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:121
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:335
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:328
 msgid "Close"
 msgstr "Bezár"
 
@@ -3133,145 +4241,153 @@ msgid "%s Arena"
 msgstr "%s Aréna"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:162
 msgid "Dodging"
 msgstr "Félreugrás"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:258
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:254
 msgid "MinstaGib"
 msgstr "MinstaGib"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:261
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
+msgid "New Toys"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:258
 msgid "NIX"
 msgstr "NIX"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:213
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:212
 msgid "Rocket Flying"
 msgstr "Rakéta repülés"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:210
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:204
 msgid "Invincible Projectiles"
 msgstr "Sérthetetlen lövedékek"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:266
 msgid "No start weapons"
 msgstr "Nincs kezdő fegyver"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:195
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:189
 msgid "Low gravity"
 msgstr "Alacsony gravitáció"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:168
 msgid "Cloaked"
 msgstr "Álcázott"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:171
 msgid "Midair"
 msgstr "Sebzés csak levegőben"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:174
 msgid "Vampire"
 msgstr "Vámpír"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:216
 msgid "Piñata"
 msgstr "Piñata"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:219
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:220
 msgid "Weapons stay"
 msgstr "Fegyverek maradnak"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:179
 msgid "Blood loss"
 msgstr "Vérveszteség"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:207
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:201
 msgid "Jet pack"
 msgstr "Háti rakéta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:102
 msgid "No powerups"
 msgstr "Nincsenek Turbózók"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:102
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:104
 msgid "Powerups"
 msgstr "Powerup Panel"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:104
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:106
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:165
+#, fuzzy
+msgid "Touch explode"
+msgstr "%s ist explodiert"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:108
 msgid "MUT^None"
 msgstr "Nincs"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:159
 msgid "Gameplay mutators:"
 msgstr "Játékmenet módosítók:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:195
 msgid "Weapon & item mutators:"
 msgstr "Fegyver és tárgy módosítók:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:204
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:198
 msgid "Grappling hook"
 msgstr "Vonóhorog"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:223
-msgid "Weapon arenas:"
-msgstr "Fegyver Arénák:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:226
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:225
 msgid "Regular (no arena)"
 msgstr "Hagyományos (nincs módosítás)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:247
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
-msgid "with laser"
-msgstr "lézerrel"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:227
+msgid "Weapon arenas:"
+msgstr "Fegyver Arénák:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:255
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:244
+msgid "Most weapons"
+msgstr "Minden fegyver"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:248
+#, fuzzy
+msgid "All weapons"
+msgstr "Minden Fegyver Aréna"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:251
 msgid "Special arenas:"
 msgstr "Különleges Arénák:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:268
-msgid "Most weapons"
-msgstr "Minden fegyver"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:262
+msgid "with laser"
+msgstr "lézerrel"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
 msgstr "Demók"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:26
 msgid "Automatically record demos while playing"
 msgstr "Játék közben demók rögzítése"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:31
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:29
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:28
 msgid "Filter:"
 msgstr "Szűrés:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:32
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:29
-#: qcsrc/menu/xonotic/dialog_settings_input.c:40
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:32
-msgid "Clear"
-msgstr "Törlés"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:45
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:40
 msgid "Timedemo"
 msgstr "Időmérés"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:48
+#: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:43
 msgid "DEMO^Play"
 msgstr "Visszajátszás"
 
@@ -3279,29 +4395,29 @@ msgstr "Visszajátszás"
 msgid "Join"
 msgstr "Csatlakozás"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:33
 msgid "SRVS^Empty"
 msgstr "SRVS^Üres"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:37
 msgid "SRVS^Full"
 msgstr "SRVS^Megtelt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:41
 msgid "Pause"
 msgstr "Szünet"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:56
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:262
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:53
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:255
 msgid "Address:"
 msgstr "Cím:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:67
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:64
 msgid "Info..."
 msgstr "További infó"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:342
+#: qcsrc/menu/xonotic/dialog_multiplayer_join.c:69
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:335
 msgid "Join!"
 msgstr "Csatlakozok!"
 
@@ -3309,188 +4425,198 @@ msgstr "Csatlakozok!"
 msgid "Server Information"
 msgstr "Szerver információ"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:174
 #, c-format
 msgid "%d/%d"
 msgstr "%d/%d"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
-#: qcsrc/menu/xonotic/util.qc:632 qcsrc/menu/xonotic/util.qc:648
-#: qcsrc/menu/xonotic/util.qc:657 qcsrc/menu/xonotic/util.qc:665
-#: qcsrc/menu/xonotic/util.qc:677
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:186
+#: qcsrc/menu/xonotic/util.qc:685 qcsrc/menu/xonotic/util.qc:701
+#: qcsrc/menu/xonotic/util.qc:710 qcsrc/menu/xonotic/util.qc:718
+#: qcsrc/menu/xonotic/util.qc:730
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
 #, c-format
 msgid "%d modified"
 msgstr "%d módosított beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
 msgid "Official"
 msgstr "Hivatalos beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:208
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:201
 msgid "N/A (auth library missing, can't connect)"
 msgstr "N/A (nem tudok csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:210
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:203
 msgid "N/A (auth library missing)"
 msgstr "N/A (titkosítási függvénytár hiányzik) "
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:216
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:209
 msgid "Not supported (can't connect)"
 msgstr "nem támogatott (nem tudok csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:218
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "Not supported (won't encrypt)"
 msgstr "nem támogatott (nem titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:222
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:215
 msgid "Supported (will encrypt)"
 msgstr "támogatott (titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:224
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "Supported (won't encrypt)"
 msgstr "támogatott (nem titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:228
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:221
 msgid "Requested (will encrypt)"
 msgstr "kért (titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:230
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "Requested (won't encrypt)"
 msgstr "kért (nem titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:234
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:227
 msgid "Required (can't connect)"
 msgstr "szükséges (nem tudok csatlakozni)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:236
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:229
 msgid "Required (will encrypt)"
 msgstr "szükséges (titkosított)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:256
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:249
 msgid "Hostname:"
 msgstr "Szerver neve:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:270
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:263
 msgid "Gametype:"
 msgstr "Játék típusa:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:275
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:268
 msgid "Map:"
 msgstr "Pálya:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:280
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:273
 msgid "Mod:"
 msgstr "Mod:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:285
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:278
 msgid "Version:"
 msgstr "Verzió:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:290
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:283
 msgid "Settings:"
 msgstr "Beállítások:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:297
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:329
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:290
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:322
 msgid "Players:"
 msgstr "Játékosok:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:302
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
 msgid "Bots:"
 msgstr "Botok:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:300
 msgid "Free slots:"
 msgstr "Szabad férőhelyek:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:313
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:306
 msgid "Encryption:"
 msgstr "Titkosítás:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:318
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:311
 msgid "ID:"
 msgstr "ID:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:323
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:316
 msgid "Key:"
 msgstr "Kulcs:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:60
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:61
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:19
 msgid "Model:"
 msgstr "Modell:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:73
+#, fuzzy
+msgid "Glowing color:"
+msgstr "Pont színe:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:82
+#, fuzzy
+msgid "Detail color:"
+msgstr "Pont színe:"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
 msgid "No crosshair"
 msgstr "Nincs célkereszt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:95
 msgid "Per weapon crosshair"
 msgstr "Fegyverenkénti célkereszt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:98
 msgid "Custom crosshair"
 msgstr "Egyéni célkereszt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:112
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:117
 msgid "Crosshair size:"
 msgstr "Célkereszt mérete:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:117
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:122
 msgid "Crosshair alpha:"
 msgstr "Célkereszt átlátszósága:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:128
 msgid "Crosshair color:"
 msgstr "Célkereszt színe:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:125
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
 msgid "Per weapon"
 msgstr "Fegyverenként"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:132
 msgid "By health"
 msgstr "Életerőtől függ"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:136
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:47
 msgid "Custom"
 msgstr "Egyéni"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:144
 msgid "Other crosshair settings"
 msgstr "További célkereszt beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:147
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:152
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:6
 msgid "Model settings"
 msgstr "Játékosmodell beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:153
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:6
 msgid "View settings"
 msgstr "Nézet beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:164
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
 msgid "Weapon settings"
 msgstr "Fegyver beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:6
 msgid "HUD settings"
 msgstr "HUD beállítások"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:203
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:185
-#: qcsrc/menu/xonotic/dialog_settings_input.c:89
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:184
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:200
+#: qcsrc/menu/xonotic/dialog_settings_input.c:90
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
-#: qcsrc/menu/xonotic/dialog_settings_video.c:142
+#: qcsrc/menu/xonotic/dialog_settings_video.c:143
 msgid "Apply immediately"
 msgstr "Azonnali alkalmazás"
 
@@ -3570,31 +4696,31 @@ msgstr "Telítettség:"
 msgid "Factor:"
 msgstr "Szorzó:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:52
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:53
 msgid "Fade rate:"
 msgstr "Elhalványulási sebesség:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:58
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:60
 msgid "Waypoints"
 msgstr "Iránypontok"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:71
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:75
 msgid "Edge offset:"
 msgstr "Eltolás:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:83
 msgid "Show names above players"
 msgstr "Játékosok nevének megjelenítése"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:83
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:86
 msgid "Only when near crosshair"
 msgstr "Csak a célkereszt közelében lévő játékosokét"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:89
 msgid "Display health and armor"
 msgstr "Életerő és páncél jelzése"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:4
 msgid "Enter HUD editor"
 msgstr "Belépés a HUD szerkesztőbe"
@@ -3639,31 +4765,11 @@ msgstr "GIBS^Sok"
 msgid "GIBS^Lots"
 msgstr "GIBS^Rengeteg"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:40
-msgid "Playermodel LOD:"
-msgstr "Játékos modell LOD:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:44
-msgid "Force models:"
-msgstr "Modellek kényszerítése:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:45
-msgid "MDL^None"
-msgstr "MDL^Egyiket se"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:46
-msgid "MDL^Custom"
-msgstr "MDL^Egyéni"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:47
-msgid "MDL^All"
-msgstr "MDL^Mindet"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:50
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:41
 msgid "Force player models to mine"
 msgstr "Ellenség modelljeinek kényszerítése az enyémmel megegyezőre"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:52
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:43
 msgid "Force player colors to mine"
 msgstr "Ellenség színeinek kényszerítése az enyémmel megegyezőre"
 
@@ -3786,18 +4892,6 @@ msgstr "Fegyver hintáztatása"
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:63
 msgid "Gun model bobbing"
 msgstr "Fegyver biccentése"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:68
-msgid "VWMDL^Scale"
-msgstr "Fegyvermodell mérete"
-
-#: qcsrc/menu/xonotic/dialog_news.c:4
-msgid "News"
-msgstr "Hírek"
-
-#: qcsrc/menu/xonotic/dialog_news.c:18
-msgid "http://www.xonotic.org/team/blog/"
-msgstr "http://www.xonotic.org/team/blog/"
 
 #: qcsrc/menu/xonotic/dialog_quit.c:4
 msgid "Quit"
@@ -4026,7 +5120,7 @@ msgid "Mute sounds when not active"
 msgstr "Elnémítás, ha nem a játék az aktív ablak"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:194
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:176
 msgid "Frequency:"
 msgstr "Frekvencia:"
 
@@ -4106,43 +5200,43 @@ msgstr "Sztereó felcserélése"
 msgid "Headphone friendly mode"
 msgstr "Fejhallgató barát mód"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:152
 msgid "Hit indication sound"
 msgstr "Találat jelző"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:172
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:154
 msgid "Chat message sound"
 msgstr "Csevej pittyenés"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:174
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
 msgid "Menu sounds"
 msgstr "Menü hangok"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:177
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:159
 msgid "Time announcer:"
 msgstr "Időre figyelmeztetés:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:179
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:161
 msgid "WRN^Disabled"
 msgstr "AA^Letiltva"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:180
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:162
 msgid "1 minute"
 msgstr "1 perc"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:181
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:163
 msgid "5 minutes"
 msgstr "5 perc"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:182
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
 msgid "WRN^Both"
 msgstr "Mindkettő"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:189
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:171
 msgid "Automatic taunts"
 msgstr "Automatikus gúnyolódás"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:199
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:181
 msgid "Debug info about sounds"
 msgstr "Hangok hibakeresési információi"
 
@@ -4207,174 +5301,176 @@ msgid "DET^Insane"
 msgstr "DET^Nagyon magas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
+#, fuzzy
+msgid "Player detail:"
+msgstr "Játékos %d"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "Texture resolution:"
 msgstr "Textúra felbontás:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:65
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
 msgid "RES^Leet"
 msgstr "RES^Semmi"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:66
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "RES^Lowest"
 msgstr "RES^Legalacsonyabb"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:67
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
 msgid "RES^Very low"
 msgstr "RES^Nagyon alacsony"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
 msgid "RES^Low"
 msgstr "RES^Alacsony"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "RES^Normal"
 msgstr "RES^Normál"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
 msgid "RES^Good"
 msgstr "RES^Jó"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
 msgid "RES^Best"
 msgstr "RES^Legjobb"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:84
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
 msgid "Avoid lossy texture compression"
 msgstr "Veszteséges textúra tömörítés mellőzése"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:93
-msgid "Use lightmaps"
-msgstr "Fénytérképek használata"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:94
-msgid "Deluxe mapping"
-msgstr "Deluxe mapping"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:96
-msgid "Gloss"
-msgstr "Csillogás"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:100
-msgid "Particles quality:"
-msgstr "Részecskék minősége:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:103
-msgid "Particles distance:"
-msgstr "Részecskék megjelenítése:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:106
-msgid "Damage effects:"
-msgstr "Sebzési effektek:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-msgid "DMGPRTCLS^Disabled"
-msgstr "Letiltva"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
-msgid "DMGPRTCLS^Skeletal"
-msgstr "Testrészenként"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-msgid "DMGPRTCLS^All"
-msgstr "MDL^Mind"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:114
-msgid "Decals"
-msgstr "Vér- és égésnyomok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:115
-msgid "Decals on models"
-msgstr "Foltok a modelleken"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:119
-msgid "Distance:"
-msgstr "Megjelenítés távolsága:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:125
-msgid "Time:"
-msgstr "Eltűnés ideje"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:131
-msgid "Coronas"
-msgstr "Fényudvarok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
-msgid "Use Occlusion Queries"
-msgstr "Láthatósági ellenőrzés"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:134
-msgid "No dynamic lighting"
-msgstr "Nincsenek dinamikus fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-msgid "Fake corona lighting"
-msgstr "Hamis fényudvarok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
-msgid "Realtime dynamic lighting"
-msgstr "Valós idejű dinamikus fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:139
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:143
-msgid "Shadows"
-msgstr "Árnyékok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
-msgid "Realtime world lighting"
-msgstr "Valósidejű világ fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:147
-msgid "Use normal maps"
-msgstr "Normal map használata"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:149
-msgid "Soft shadows"
-msgstr "Lágy árnyékok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "Show surfaces"
 msgstr "Felületek megjelenítése"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
+msgid "Use lightmaps"
+msgstr "Fénytérképek használata"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
+msgid "Deluxe mapping"
+msgstr "Deluxe mapping"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
+msgid "Gloss"
+msgstr "Csillogás"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:114
 msgid "Offset mapping"
 msgstr "Offset mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
 msgid "Relief mapping"
 msgstr "Relief mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
-msgid "LOD"
-msgstr "LOD"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:162
-msgid "Bloom"
-msgstr "Ragyogás"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:119
 msgid "Reflections:"
 msgstr "Tükröződés:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:167
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Blurred"
 msgstr "Homályos"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:168
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:123
 msgid "REFL^Good"
 msgstr "Refl^Jó"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:169
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:124
 msgid "Sharp"
 msgstr "Éles"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:174
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:129
+msgid "Particles quality:"
+msgstr "Részecskék minősége:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
+msgid "Particles distance:"
+msgstr "Részecskék megjelenítése:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+msgid "Damage effects:"
+msgstr "Sebzési effektek:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
+msgid "DMGPRTCLS^Disabled"
+msgstr "Letiltva"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
+msgid "DMGPRTCLS^Skeletal"
+msgstr "Testrészenként"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:139
+msgid "DMGPRTCLS^All"
+msgstr "MDL^Mind"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
+msgid "Particle effects for spawnpoints"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:146
+msgid "No dynamic lighting"
+msgstr "Nincsenek dinamikus fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+msgid "Fake corona lighting"
+msgstr "Hamis fényudvarok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
+msgid "Realtime dynamic lighting"
+msgstr "Valós idejű dinamikus fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+msgid "Shadows"
+msgstr "Árnyékok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:156
+msgid "Realtime world lighting"
+msgstr "Valósidejű világ fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
+msgid "Use normal maps"
+msgstr "Normal map használata"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:163
+msgid "Soft shadows"
+msgstr "Lágy árnyékok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:167
+msgid "Fade corona according to visibility"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+msgid "Bloom"
+msgstr "Ragyogás"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:172
+msgid "Extra postprocessing effects"
+msgstr "Extra utófeldolgozási effektek"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:177
 msgid "Motion blur:"
 msgstr "Mozgási elmosódás:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:179
-msgid "Extra postprocessing effects"
-msgstr "Extra utófeldolgozási effektek"
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:183
+msgid "Decals"
+msgstr "Vér- és égésnyomok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:184
+msgid "Decals on models"
+msgstr "Foltok a modelleken"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+msgid "Distance:"
+msgstr "Megjelenítés távolsága:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+msgid "Time:"
+msgstr "Eltűnés ideje"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -4388,43 +5484,47 @@ msgstr "Megváltoztatás..."
 msgid "Edit..."
 msgstr "Szerkesztés..."
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:45
+#: qcsrc/menu/xonotic/dialog_settings_input.c:40
+msgid "Clear"
+msgstr "Törlés"
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:46
 msgid "Pressing \"enter console\" key also closes it"
 msgstr "\"belépés a konzolba\" bezárásra is alkalmas"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:47
+#: qcsrc/menu/xonotic/dialog_settings_input.c:48
 msgid "Automatically repeat jumping if holding jump"
 msgstr "Automatikus ugrás az \"ugrás\" billentyű lenyomva tartásakor"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:51
-#: qcsrc/menu/xonotic/dialog_settings_input.c:53
-#: qcsrc/menu/xonotic/dialog_settings_input.c:56
+#: qcsrc/menu/xonotic/dialog_settings_input.c:52
+#: qcsrc/menu/xonotic/dialog_settings_input.c:54
+#: qcsrc/menu/xonotic/dialog_settings_input.c:57
 msgid "Use joystick input"
 msgstr "Botkormány bemenet használata"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:61
+#: qcsrc/menu/xonotic/dialog_settings_input.c:62
 msgid "Mouse:"
 msgstr "Egér:"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:64
+#: qcsrc/menu/xonotic/dialog_settings_input.c:65
 msgid "Sensitivity:"
 msgstr "Érzékenység:"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:68
+#: qcsrc/menu/xonotic/dialog_settings_input.c:69
 msgid "Smooth aiming"
 msgstr "Egér mozgásának simítása"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:71
+#: qcsrc/menu/xonotic/dialog_settings_input.c:72
 msgid "Invert aiming"
 msgstr "Fordított egérmozgás"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:75
-#: qcsrc/menu/xonotic/dialog_settings_input.c:77
-#: qcsrc/menu/xonotic/dialog_settings_input.c:80
+#: qcsrc/menu/xonotic/dialog_settings_input.c:76
+#: qcsrc/menu/xonotic/dialog_settings_input.c:78
+#: qcsrc/menu/xonotic/dialog_settings_input.c:81
 msgid "Disable system mouse acceleration"
 msgstr "OS egér gyorsítás kikapcsolása"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:85
+#: qcsrc/menu/xonotic/dialog_settings_input.c:86
 msgid "Enable built in mouse acceleration"
 msgstr "Beépített egér gyorsítás engedélyezése"
 
@@ -4484,176 +5584,176 @@ msgstr "Helyi késleltetés:"
 msgid "Client UDP port:"
 msgstr "Kliens UDP port:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:55
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:56
 msgid "Show netgraph"
 msgstr "Hálózati forgalom megjelenítése"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:59
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:60
 msgid "Client-side movement prediction"
 msgstr "Kliensoldali mozgásbecslés"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:62
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:63
 msgid "Movement error compensation"
 msgstr "Mozgási hibák javítása"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:66
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:67
 msgid "Downloads:"
 msgstr "Letöltések:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:69
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:81
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:70
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:82
 msgid "Maximum:"
 msgstr "Maximum:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:73
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:74
 msgid "Speed (kB/s):"
 msgstr "Sebesség (kB/s):"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:78
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:79
 msgid "Framerate:"
 msgstr "Képfrissítés sebessége:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:83
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "MAXFPS^5 fps"
 msgstr "MAXFPS^5 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:84
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:85
 msgid "MAXFPS^10 fps"
 msgstr "MAXFPS^10 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:85
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:86
 msgid "MAXFPS^20 fps"
 msgstr "MAXFPS^20 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:86
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:87
 msgid "MAXFPS^30 fps"
 msgstr "MAXFPS^30 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:87
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:88
 msgid "MAXFPS^40 fps"
 msgstr "MAXFPS^40 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:88
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:89
 msgid "MAXFPS^50 fps"
 msgstr "MAXFPS^50 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:89
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:90
 msgid "MAXFPS^60 fps"
 msgstr "MAXFPS^60 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:90
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:91
 msgid "MAXFPS^70 fps"
 msgstr "MAXFPS^70 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:91
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:92
 msgid "MAXFPS^100 fps"
 msgstr "MAXFPS^100 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:92
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:93
 msgid "MAXFPS^125 fps"
 msgstr "MAXFPS^125 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:93
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:94
 msgid "MAXFPS^200 fps"
 msgstr "MAXFPS^200 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:94
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:95
 msgid "MAXFPS^Unlimited"
 msgstr "MAXFPS^Korlátlan"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:98
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:99
 msgid "Target:"
 msgstr "Cél érték:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:100
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:101
 msgid "TRGT^Disabled"
 msgstr "TRGT^Letiltva"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:101
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:102
 msgid "TRGT^30 fps"
 msgstr "TRGT^30 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:102
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:103
 msgid "TRGT^40 fps"
 msgstr "TRGT^40 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:103
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:104
 msgid "TRGT^50 fps"
 msgstr "TRGT^50 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:104
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:105
 msgid "TRGT^60 fps"
 msgstr "TRGT^60 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:105
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:106
 msgid "TRGT^100 fps"
 msgstr "TRGT^100 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:106
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:107
 msgid "TRGT^125 fps"
 msgstr "TRGT^125 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:107
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:108
 msgid "TRGT^200 fps"
 msgstr "TRGT^200 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:111
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:112
 msgid "Idle limit:"
 msgstr "Tétlenség esetén:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:113
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:114
 msgid "IDLFPS^10 fps"
 msgstr "IDLFPS^10 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:114
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:115
 msgid "IDLFPS^20 fps"
 msgstr "IDLFPS^20 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:115
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:116
 msgid "IDLFPS^30 fps"
 msgstr "IDLFPS^30 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:116
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:117
 msgid "IDLFPS^60 fps"
 msgstr "IDLFPS^60 fps"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:117
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:118
 msgid "IDLFPS^Unlimited"
 msgstr "IDLFPS^Korlátlan"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:122
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:123
 msgid "Show frames per second"
 msgstr "A képkocka/másodperc megjelenítése"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:125
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:126
 msgid "Save processing time for other apps"
 msgstr "Feldolgozási adatok elmentése más programok számára"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:129
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:130
 msgid "Menu tooltips:"
 msgstr "Menü tippek:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:131
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:132
 msgid "TLTIP^Disabled"
 msgstr "TLTIP^Letiltva"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:132
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:133
 msgid "TLTIP^Standard"
 msgstr "TLTIP^Normál"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:133
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:134
 msgid "TLTIP^Advanced"
 msgstr "TLTIP^Részletes"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:137
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:138
 msgid "Show current time"
 msgstr "Jelenlegi idő mutatása"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:139
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:140
 msgid "Show current date"
 msgstr "Mai dátum mutatása"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:141
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:142
 msgid "Enable developer mode"
 msgstr "Fejlesztői mód engedélyezése"
 
@@ -4661,23 +5761,23 @@ msgstr "Fejlesztői mód engedélyezése"
 msgid "Advanced settings"
 msgstr "Haladó beállítások"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:31
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:32
 msgid "Cvar filter:"
 msgstr "Cvar szűrés:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:44
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:45
 msgid "Setting:"
 msgstr "Beállítás:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:48
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:49
 msgid "Type:"
 msgstr "Típus:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:52
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:53
 msgid "Value:"
 msgstr "Érték:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:68
+#: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:72
 msgid "Description:"
 msgstr "Leírás:"
 
@@ -4872,26 +5972,26 @@ msgid "Intensity:"
 msgstr "Erősség:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:123
-msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "OpenGL 2.0 shaderek (GLSL) használata"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:125
-msgid "Use GLSL to handle color control"
-msgstr "GLSL használata a színvezérlés kezeléséhez"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:128
 msgid "Wait for GPU to finish each frame"
 msgstr "Várakozás a GPU-ra minden képkockánál"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:132
+#: qcsrc/menu/xonotic/dialog_settings_video.c:125
+msgid "Use OpenGL 2.0 shaders (GLSL)"
+msgstr "OpenGL 2.0 shaderek (GLSL) használata"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:128
+msgid "Use GLSL to handle color control"
+msgstr "GLSL használata a színvezérlés kezeléséhez"
+
+#: qcsrc/menu/xonotic/dialog_settings_video.c:133
 msgid "Psycho coloring (easter egg)"
 msgstr "Pszichedelikus fények (csak a poén kedvéért)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:135
+#: qcsrc/menu/xonotic/dialog_settings_video.c:136
 msgid "Trippy vertices (easter egg)"
 msgstr "Mint aki be van rúgva (csak a poén kedvéért)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:138
+#: qcsrc/menu/xonotic/dialog_settings_video.c:139
 msgid "Flip view horizontally"
 msgstr "A képernyő vízszintes tükrözése"
 
@@ -4959,19 +6059,19 @@ msgstr "Nézőként csatlakozok"
 msgid "Do not press this button again!"
 msgstr "Ne nyomd meg újra ezt a gombot!"
 
-#: qcsrc/menu/xonotic/maplist.c:282
+#: qcsrc/menu/xonotic/maplist.c:280
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
 msgstr ""
 "Jajj? Ezzel nem lehet játszani (m is NULL). Állítsd át a szűrést, hogy ne "
 "ismétlődjön meg!\n"
 
-#: qcsrc/menu/xonotic/maplist.c:290
+#: qcsrc/menu/xonotic/maplist.c:288
 #, c-format
 msgid "%s's Xonotic Server"
 msgstr "%s Xonotic szervere"
 
-#: qcsrc/menu/xonotic/maplist.c:295
+#: qcsrc/menu/xonotic/maplist.c:293
 msgid ""
 "Huh? Can't play this (invalid game type). Refiltering so this won't happen "
 "again.\n"
@@ -4988,31 +6088,31 @@ msgstr "Nézőként csatlakozok"
 msgid "<no model found>"
 msgstr "<modell nem található>"
 
-#: qcsrc/menu/xonotic/serverlist.c:185
+#: qcsrc/menu/xonotic/serverlist.c:186
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: qcsrc/menu/xonotic/serverlist.c:187
+#: qcsrc/menu/xonotic/serverlist.c:188
 msgid "Bookmark"
 msgstr "Könyvjelző"
 
-#: qcsrc/menu/xonotic/serverlist.c:548
+#: qcsrc/menu/xonotic/serverlist.c:549
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.c:549
+#: qcsrc/menu/xonotic/serverlist.c:550
 msgid "Host name"
 msgstr "Szerver név"
 
-#: qcsrc/menu/xonotic/serverlist.c:550
+#: qcsrc/menu/xonotic/serverlist.c:551
 msgid "Map"
 msgstr "Pálya"
 
-#: qcsrc/menu/xonotic/serverlist.c:551
+#: qcsrc/menu/xonotic/serverlist.c:552
 msgid "Type"
 msgstr "Típus"
 
-#: qcsrc/menu/xonotic/serverlist.c:552
+#: qcsrc/menu/xonotic/serverlist.c:553
 msgid "Players"
 msgstr "Játékosok"
 
@@ -5024,43 +6124,38 @@ msgstr "<CÍM>"
 msgid "<AUTHOR>"
 msgstr "<SZERZŐ>"
 
-#: qcsrc/menu/xonotic/slider_decibels.c:50
-msgid "VOL^OFF"
-msgstr "Kikapcsolva"
-
-#: qcsrc/menu/xonotic/slider_decibels.c:52
+#: qcsrc/menu/xonotic/slider_decibels.c:62
 msgid "VOL^MAX"
 msgstr "Maximum hangerő"
 
-#: qcsrc/menu/xonotic/slider_decibels.c:53
+#: qcsrc/menu/xonotic/slider_decibels.c:64
+msgid "VOL^OFF"
+msgstr "Kikapcsolva"
+
+#: qcsrc/menu/xonotic/slider_decibels.c:65
 #, c-format
 msgid "%s dB"
 msgstr "%s dB"
 
-#: qcsrc/menu/xonotic/slider_resolution.c:65
+#: qcsrc/menu/xonotic/slider_resolution.c:72
 #, c-format
 msgid "%dx%d"
 msgstr "%dx%d"
 
-#: qcsrc/menu/xonotic/util.qc:276
-#, c-format
-msgid "Received HTTP request data for an invalid id %d.\n"
-msgstr "Érvénytelen HTTP adatkérés érkezett id %d.\n"
-
-#: qcsrc/menu/xonotic/util.qc:291
+#: qcsrc/menu/xonotic/util.qc:298
 #, c-format
 msgid "error receiving update notification: status is %d\n"
 msgstr "Frissítési értesítési hiba: az állapota %d\n"
 
-#: qcsrc/menu/xonotic/util.qc:296
+#: qcsrc/menu/xonotic/util.qc:303
 msgid "error: received HTML instead of an update notification\n"
 msgstr "Hiba: frissítési értesítés helyett egy HTML-t kapott\n"
 
-#: qcsrc/menu/xonotic/util.qc:301
+#: qcsrc/menu/xonotic/util.qc:308
 msgid "error: received carriage returns from update notification server\n"
 msgstr "Hiba: a frissítés értesítő szerverről egy 'kocsi vissza'-t kapott\n"
 
-#: qcsrc/menu/xonotic/util.qc:322
+#: qcsrc/menu/xonotic/util.qc:329
 #, c-format
 msgid ""
 "Update can be downloaded at:\n"
@@ -5069,21 +6164,21 @@ msgstr ""
 "Frissítés letölthető: \n"
 "%s -ről\n"
 
-#: qcsrc/menu/xonotic/util.qc:351
+#: qcsrc/menu/xonotic/util.qc:447
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "MapInfo készítése az újonnan hozzáadott pályákhoz..."
 
-#: qcsrc/menu/xonotic/util.qc:381
+#: qcsrc/menu/xonotic/util.qc:476
 #, c-format
 msgid "^1%s TEST BUILD"
 msgstr "^1%s TEST BUILD"
 
-#: qcsrc/menu/xonotic/util.qc:439
+#: qcsrc/menu/xonotic/util.qc:491
 #, c-format
 msgid "Update to %s now!"
 msgstr "Frissítés %s-re/ra!"
 
-#: qcsrc/menu/xonotic/util.qc:524
+#: qcsrc/menu/xonotic/util.qc:576
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
@@ -5091,263 +6186,546 @@ msgstr ""
 "^1Hiba: textúra tömörítés szükséges, de nem támogatott.\n"
 "^1Gondok lehetnek a megjelenítéssel.\n"
 
-#: qcsrc/menu/xonotic/util.qc:643
+#: qcsrc/menu/xonotic/util.qc:696
 msgid "Use default"
 msgstr "Alapértékek használata"
 
-#: qcsrc/menu/xonotic/util.qc:663
+#: qcsrc/menu/xonotic/util.qc:716
 msgid "Team Color:"
 msgstr "Csapat színe:"
 
-#: qcsrc/menu/xonotic/util.qh:50
+#: qcsrc/menu/xonotic/util.qh:43
 msgid "Enable panel"
 msgstr "Panel engedélyezése"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+#: qcsrc/menu/xonotic/weaponslist.c:102
+#, fuzzy, c-format
+msgid "%s (mutator weapon)"
+msgstr "Nincs kezdő fegyver"
 
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+#: qcsrc/server/miscfunctions.qc:1721
+#, c-format
+msgid ""
+"A hit from a projectile happened with no hit contents! DEBUG THIS, this "
+"should never happen for projectiles! Profectile will self-destruct. (edict: "
+"%d, classname: %s, origin: %s)\n"
+msgstr ""
 
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
+#: qcsrc/server/w_hlac.qc:11
+msgid "Heavy Laser Assault Cannon"
+msgstr "Nehéz Lézer Rohamágyú"
 
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+#: qcsrc/server/w_hook.qc:11
+msgid "Grappling Hook"
+msgstr "Vonóhorog"
 
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
+#: qcsrc/server/w_minstanex.qc:11
+msgid "MinstaNex"
+msgstr "MinstaNex"
 
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+#: qcsrc/server/w_seeker.qc:11
+msgid "T.A.G. Seeker"
+msgstr "T.A.G. Seeker"
 
-#~ msgid "Awaiting orders..."
-#~ msgstr "Warten auf Auftrag..."
+#: qcsrc/server/w_tuba.qc:11
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr "ki@!#%tt Tuba"
 
-#~ msgid "You're commander!"
-#~ msgstr "Sie sind Befehlshaber!"
+#~ msgid "%d/%d, %d free player slots"
+#~ msgstr "%d/%d, %d szabad férőhely"
 
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Befehlsgewalt abgeben."
+#~ msgid "Gameplay:"
+#~ msgstr "Játékmenet:"
 
-#~ msgid " 2) Defend"
-#~ msgstr " 2) Verteidigen"
+#~ msgid "Ping:"
+#~ msgstr "Ping:"
 
-#~ msgid " 1) Attack"
-#~ msgstr " 1) Angreifen"
+#~ msgid "CA:"
+#~ msgstr "CA:"
 
-#~ msgid "Issue orders:"
-#~ msgstr "Auftrag geben:"
+#~ msgid "View bobbing:"
+#~ msgstr "Fej biccenés:"
 
-#~ msgid "----- Command Menu -----"
-#~ msgstr "---- Befehlsmenü -----"
+#~ msgid "Zoom speed:"
+#~ msgstr "Nagyítás sebessége:"
 
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Kann Spieler %d nicht finden\n"
+#~ msgid "Weapon settings..."
+#~ msgstr "Fegyverzet beállítások..."
 
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Menü verlassen"
+#~ msgid "Size:"
+#~ msgstr "Méret:"
 
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3nächste Seite"
+#~ msgid "HTST^None"
+#~ msgstr "HTST^Nincs"
 
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3vorherige Seite"
+#~ msgid "Waypoints setup..."
+#~ msgstr "Iránypontok beállítása..."
 
-#~ msgid "Order: %s"
-#~ msgstr "Auftrag: %s"
+#~ msgid "Waypoint scale:"
+#~ msgstr "Iránypontok mérete:"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Auftragsmenü -----"
+#~ msgid "Show names:"
+#~ msgstr "Nevek mutatása:"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Iránypont beállítások:"
+#~ msgid "Teammates"
+#~ msgstr "Csapattársak"
 
-#~ msgid ""
-#~ "Please answer a few initial questions to enhance the game experience."
-#~ msgstr ""
-#~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
+#~ msgid "All players"
+#~ msgstr "Minden játékos"
 
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Gyorsulásmérő beosztás:"
+#~ msgid "Spatial voices:"
+#~ msgstr "Utasítások:"
 
-#~ msgid "Show accelerometer"
-#~ msgstr "Gyorsulásmérő mutatása"
+#~ msgid "VOCS^None"
+#~ msgstr "VOCS^Nincs"
 
-#~ msgid "qu/s (hidden)"
-#~ msgstr "qu/s (rejtett)"
+#~ msgid "VOCS^Taunts"
+#~ msgstr "VOCS^Gúnyolódás"
 
-#~ msgid "Speedometer"
-#~ msgstr "Sebességmérő"
+#~ msgid "VOCS^All"
+#~ msgstr "VOCS^Minden"
 
-#, fuzzy
-#~ msgid "Powerup sharpen"
-#~ msgstr "Powerup élesítés"
+#~ msgid "Taunt range:"
+#~ msgstr "Gúnyolódások hallhatósága:"
 
-#, fuzzy
-#~ msgid "Damage & water blur"
-#~ msgstr "Sérülés és víz elmosás"
+#~ msgid "RNG^Very short"
+#~ msgstr "RNG^Közvetlen közelről"
 
-#~ msgid "%s was riddled full of holes by %s"
-#~ msgstr "%s -t %s szitává lyuggatta"
+#~ msgid "RNG^Short"
+#~ msgstr "RNG^Közelről"
 
-#~ msgid "%s was gunned by %s"
-#~ msgstr "%s-t lelőtte %s"
+#~ msgid "RNG^Normal"
+#~ msgstr "RNG^Normál"
+
+#~ msgid "RNG^Long"
+#~ msgstr "RNG^Távolról is"
+
+#~ msgid "RNG^Full"
+#~ msgstr "RNG^Teljes pályán"
+
+#~ msgid "WRN^None"
+#~ msgstr "Kikapcsolva"
+
+#~ msgid "Flash blend approximation"
+#~ msgstr "Elnagyolt villanások"
+
+#~ msgid "High Dynamic Range (HDR)"
+#~ msgstr "Magas dinamika tartomány (HDR)"
+
+#~ msgid "Blur and sharpen postprocessing"
+#~ msgstr "Elmosás és élesítés"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "Menü egér sebessége:"
+
+#~ msgid "Mouse filter"
+#~ msgstr "Egérmozgás simítása"
+
+#~ msgid "Minimize input latency"
+#~ msgstr "Bemeneti késleltetés minimalizása"
+
+#~ msgid "Network speed:"
+#~ msgstr "Hálózat sebessége:"
+
+#~ msgid "HTTP downloads:"
+#~ msgstr "HTTP letöltéseket:"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "Többszálú OpenGL letiltása"
+
+#~ msgid "%s could not remember where they put plasma"
+#~ msgstr "%s nem tudja, hogy mire való a plazma"
+
+#~ msgid "%s played with plasma"
+#~ msgstr "%s  plazmával játszadozott"
+
+#~ msgid "%s just noticed %s's blue ball"
+#~ msgstr "%s csak most vette észre %s kék golyóját"
+
+#~ msgid "%s got in touch with %s's blue ball"
+#~ msgstr "%s lefejelte %s kék golyóját"
+
+#~ msgid "%s felt the electrifying air of %s's combo"
+#~ msgstr "%s felvillanyozódott %s kombójától"
+
+#~ msgid "%s got too close to %s's blue beam"
+#~ msgstr "%s túl közel került %s kék sugarához"
+
+#~ msgid "%s was blasted by %s's blue beam"
+#~ msgstr "%s megsemmisült %s kék sugarától"
+
+#~ msgid "%s played with tiny rockets"
+#~ msgstr "%s  kis rakétákkal önfelgyújtósat játszott"
+
+#~ msgid "%s was pummeled by %s"
+#~ msgstr "%s -t ledarálta %s Hagarja"
+
+#~ msgid "%s was cut down by %s"
+#~ msgstr "%s -t feldarabolta %s"
+
+#~ msgid "%s has run into %s's gravity bomb"
+#~ msgstr "%s beleszalad %s gravitációs bombájába"
+
+#~ msgid "%s has been vaporized by %s"
+#~ msgstr "%s -t gázzá vált %s által"
+
+#~ msgid "%s failed to hide from %s's bullet hail"
+#~ msgstr "%s -nak nem sikerült elbújnia %s golyózápora elől "
+
+#~ msgid "%s died in %s's bullet hail"
+#~ msgstr "%s meghalt %s golyózáporában"
+
+#~ msgid "%s got hit in the head by %s"
+#~ msgstr "%s -t fejen találta %s"
+
+#~ msgid "%s was sniped by %s"
+#~ msgstr "%s -t levadászta %s"
+
+#~ msgid "%s was tagged by %s"
+#~ msgstr "%s-t megjelölte %s"
 
 #~ msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
 #~ msgstr ""
 #~ "%2$s ^7úgy elverte %1$s -t ^7 a ^2puskályával, mintha ^7szívlapáttal "
 #~ "csapta volna agyon"
 
-#~ msgid "%s was tagged by %s"
-#~ msgstr "%s-t megjelölte %s"
+#~ msgid "%s was gunned by %s"
+#~ msgstr "%s-t lelőtte %s"
 
-#~ msgid "%s was sniped by %s"
-#~ msgstr "%s -t levadászta %s"
+#~ msgid "%s was riddled full of holes by %s"
+#~ msgstr "%s -t %s szitává lyuggatta"
 
-#~ msgid "%s got hit in the head by %s"
-#~ msgstr "%s -t fejen találta %s"
+#, fuzzy
+#~ msgid "Damage & water blur"
+#~ msgstr "Sérülés és víz elmosás"
 
-#~ msgid "%s died in %s's bullet hail"
-#~ msgstr "%s meghalt %s golyózáporában"
+#, fuzzy
+#~ msgid "Powerup sharpen"
+#~ msgstr "Powerup élesítés"
 
-#~ msgid "%s failed to hide from %s's bullet hail"
-#~ msgstr "%s -nak nem sikerült elbújnia %s golyózápora elől "
+#~ msgid "Speedometer"
+#~ msgstr "Sebességmérő"
 
-#~ msgid "%s has been vaporized by %s"
-#~ msgstr "%s -t gázzá vált %s által"
+#~ msgid "qu/s (hidden)"
+#~ msgstr "qu/s (rejtett)"
 
-#~ msgid "%s has run into %s's gravity bomb"
-#~ msgstr "%s beleszalad %s gravitációs bombájába"
+#~ msgid "Show accelerometer"
+#~ msgstr "Gyorsulásmérő mutatása"
 
-#~ msgid "%s was cut down by %s"
-#~ msgstr "%s -t feldarabolta %s"
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Gyorsulásmérő beosztás:"
 
-#~ msgid "%s was pummeled by %s"
-#~ msgstr "%s -t ledarálta %s Hagarja"
+#~ msgid ""
+#~ "Please answer a few initial questions to enhance the game experience."
+#~ msgstr ""
+#~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
 
-#~ msgid "%s played with tiny rockets"
-#~ msgstr "%s  kis rakétákkal önfelgyújtósat játszott"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Iránypont beállítások:"
 
-#~ msgid "%s was blasted by %s's blue beam"
-#~ msgstr "%s megsemmisült %s kék sugarától"
+#~ msgid "----- Order Menu -----"
+#~ msgstr "----- Auftragsmenü -----"
 
-#~ msgid "%s got too close to %s's blue beam"
-#~ msgstr "%s túl közel került %s kék sugarához"
+#~ msgid "Order: %s"
+#~ msgstr "Auftrag: %s"
 
-#~ msgid "%s felt the electrifying air of %s's combo"
-#~ msgstr "%s felvillanyozódott %s kombójától"
+#~ msgid "1) ^3previous page"
+#~ msgstr "1) ^3vorherige Seite"
 
-#~ msgid "%s got in touch with %s's blue ball"
-#~ msgstr "%s lefejelte %s kék golyóját"
+#~ msgid "2) ^3next page"
+#~ msgstr "2) ^3nächste Seite"
 
-#~ msgid "%s just noticed %s's blue ball"
-#~ msgstr "%s csak most vette észre %s kék golyóját"
+#~ msgid "ESC) Exit Menu"
+#~ msgstr "ESC) Menü verlassen"
 
-#~ msgid "%s played with plasma"
-#~ msgstr "%s  plazmával játszadozott"
+#~ msgid "Couldn't find player %d\n"
+#~ msgstr "Kann Spieler %d nicht finden\n"
 
-#~ msgid "%s could not remember where they put plasma"
-#~ msgstr "%s nem tudja, hogy mire való a plazma"
+#~ msgid "----- Command Menu -----"
+#~ msgstr "---- Befehlsmenü -----"
 
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "Többszálú OpenGL letiltása"
+#~ msgid "Issue orders:"
+#~ msgstr "Auftrag geben:"
 
-#~ msgid "HTTP downloads:"
-#~ msgstr "HTTP letöltéseket:"
+#~ msgid " 1) Attack"
+#~ msgstr " 1) Angreifen"
 
-#~ msgid "Network speed:"
-#~ msgstr "Hálózat sebessége:"
+#~ msgid " 2) Defend"
+#~ msgstr " 2) Verteidigen"
 
-#~ msgid "Minimize input latency"
-#~ msgstr "Bemeneti késleltetés minimalizása"
+#~ msgid "3) Resign from command."
+#~ msgstr "3) Befehlsgewalt abgeben."
 
-#~ msgid "Mouse filter"
-#~ msgstr "Egérmozgás simítása"
+#~ msgid "You're commander!"
+#~ msgstr "Sie sind Befehlshaber!"
 
-#~ msgid "UI mouse speed:"
-#~ msgstr "Menü egér sebessége:"
+#~ msgid "Awaiting orders..."
+#~ msgstr "Warten auf Auftrag..."
 
-#~ msgid "Blur and sharpen postprocessing"
-#~ msgstr "Elmosás és élesítés"
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
 
-#~ msgid "High Dynamic Range (HDR)"
-#~ msgstr "Magas dinamika tartomány (HDR)"
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
 
-#~ msgid "Flash blend approximation"
-#~ msgstr "Elnagyolt villanások"
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
 
-#~ msgid "WRN^None"
-#~ msgstr "Kikapcsolva"
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
 
-#~ msgid "RNG^Full"
-#~ msgstr "RNG^Teljes pályán"
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
 
-#~ msgid "RNG^Long"
-#~ msgstr "RNG^Távolról is"
+#~ msgid "LOD"
+#~ msgstr "LOD"
 
-#~ msgid "RNG^Normal"
-#~ msgstr "RNG^Normál"
+#~ msgid "Use Occlusion Queries"
+#~ msgstr "Láthatósági ellenőrzés"
 
-#~ msgid "RNG^Short"
-#~ msgstr "RNG^Közelről"
+#~ msgid "Coronas"
+#~ msgstr "Fényudvarok"
 
-#~ msgid "RNG^Very short"
-#~ msgstr "RNG^Közvetlen közelről"
+#~ msgid "http://www.xonotic.org/team/blog/"
+#~ msgstr "http://www.xonotic.org/team/blog/"
 
-#~ msgid "Taunt range:"
-#~ msgstr "Gúnyolódások hallhatósága:"
+#~ msgid "News"
+#~ msgstr "Hírek"
 
-#~ msgid "VOCS^All"
-#~ msgstr "VOCS^Minden"
+#~ msgid "VWMDL^Scale"
+#~ msgstr "Fegyvermodell mérete"
 
-#~ msgid "VOCS^Taunts"
-#~ msgstr "VOCS^Gúnyolódás"
+#~ msgid "MDL^All"
+#~ msgstr "MDL^Mindet"
 
-#~ msgid "VOCS^None"
-#~ msgstr "VOCS^Nincs"
+#~ msgid "MDL^Custom"
+#~ msgstr "MDL^Egyéni"
 
-#~ msgid "Spatial voices:"
-#~ msgstr "Utasítások:"
+#~ msgid "MDL^None"
+#~ msgstr "MDL^Egyiket se"
 
-#~ msgid "All players"
-#~ msgstr "Minden játékos"
+#~ msgid "Force models:"
+#~ msgstr "Modellek kényszerítése:"
 
-#~ msgid "Teammates"
-#~ msgstr "Csapattársak"
+#~ msgid "Playermodel LOD:"
+#~ msgstr "Játékos modell LOD:"
 
-#~ msgid "Show names:"
-#~ msgstr "Nevek mutatása:"
+#~ msgid "Browser not initialized!"
+#~ msgstr "A böngésző nem indult el!"
 
-#~ msgid "Waypoint scale:"
-#~ msgstr "Iránypontok mérete:"
+#~ msgid "Runematch"
+#~ msgstr "Rúnameccs"
 
-#~ msgid "Waypoints setup..."
-#~ msgstr "Iránypontok beállítása..."
+#~ msgid "%s was tagged with a seeker by %s"
+#~ msgstr "%2$s rakétái levadászták %1$s-t"
 
-#~ msgid "HTST^None"
-#~ msgstr "HTST^Nincs"
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "%s nem tudott elugrani %s rakétája elől"
 
-#~ msgid "Size:"
-#~ msgstr "Méret:"
+#~ msgid "%s got shot in the head with a rifle by %s"
+#~ msgstr "%2$s fejbelőtte %1$s-t"
 
-#~ msgid "Weapon settings..."
-#~ msgstr "Fegyverzet beállítások..."
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "%2$s bebizonyította %1$s számára a lehetetlent"
 
-#~ msgid "Zoom speed:"
-#~ msgstr "Nagyítás sebessége:"
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "%s rátaposott %s aknájára"
 
-#~ msgid "View bobbing:"
-#~ msgstr "Fej biccenés:"
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "%s nem tudott elhajolni %s aknája elől"
 
-#~ msgid "CA:"
-#~ msgstr "CA:"
+#~ msgid "%s was lasered to death by %s"
+#~ msgstr "%2$s halálba lézerezte %1$s-t"
 
-#~ msgid "Ping:"
-#~ msgstr "Ping:"
+#~ msgid "%s was cut in half by %s's gauntlet"
+#~ msgstr "%2$s kettészabta %1$s-t a Páncélöklével"
 
-#~ msgid "Gameplay:"
-#~ msgstr "Játékmenet:"
+#~ msgid "%s lasered themself to hell"
+#~ msgstr "%s egészen a mennyekig lézerezte magát"
 
-#~ msgid "%d/%d, %d free player slots"
-#~ msgstr "%d/%d, %d szabad férőhely"
+#~ msgid "%s did the impossible"
+#~ msgstr "%s teljesítette a lehetetlent"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "%s bekapta %s gránátját"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "%s lefejelte %s gránátját"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "%s nem vette észre %s gránátját"
+
+#~ msgid "%s blew themself up with their grenadelauncher"
+#~ msgstr "%s felrobbantotta magát a saját Gránátvetőjével"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "%s benyelte %s Tűzlabdáját"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "%s nem tudott elmenekülni %s Tűzgömbje elől"
+
+#~ msgid "%s fatefully ignored %s's firemine"
+#~ msgstr "%s benézte %s egyik tűzlabdacsát"
+
+#~ msgid "%s tried to catch %s's firemine"
+#~ msgstr "%s megpróbálta elkapni %s tűzlabdacsát"
+
+#~ msgid "%s forgot about some firemine"
+#~ msgstr "%s benézett pár tűzlabdacsot"
+
+#~ msgid "%s got in touch with %s's electro plasma"
+#~ msgstr "%s lefejelte %s plazmagömbjét"
+
+#~ msgid "%s just noticed %s's electro plasma"
+#~ msgstr "%s csak most figyelt fel %s plazmagömbjére"
+
+#~ msgid "%s took a close look at %s's Crylink"
+#~ msgstr "%s közelebbről is megismerkedett %s Crylinkjával"
+
+#~ msgid "%s was too close to %s's Crylink"
+#~ msgstr "%s túl közel merészkedett %ss Crylinkjához"
+
+#~ msgid "%s could not hide from %s's Crylink"
+#~ msgstr "%s nem tudott elhajolni %s Crylinkja elől"
+
+#~ msgid "%s succeeded at self-destructing themself with the Crylink"
+#~ msgstr "%s sikeresen kinyírta magát a Crylinkkal"
+
+#~ msgid "Yellow Team"
+#~ msgstr "Sárga Csapat"
+
+#~ msgid "Red Team"
+#~ msgstr "Vörös Csapat"
+
+#~ msgid "^1You scored against ^7%s^1 who was typing!"
+#~ msgstr "^1Szereztél egy pontot ^7%s^1 ellen, aki épp gépelt!"
+
+#~ msgid "^1You are reinserted into the game for running out of ammo..."
+#~ msgstr "^1Visszakerültél a játékba, mert kifogytál a lőszerből"
+
+#~ msgid "%s^7 got the %s\n"
+#~ msgstr "%s^7 megszerezte a %s-t\n"
+
+#~ msgid "^1%s^1 died with a %d kill spree\n"
+#~ msgstr "^1%s^1 bevégezte %d-gyilokos ÁMOKFUTÁSÁT\n"
+
+#~ msgid "^1%s^1 needs a restart after a %d scoring spree\n"
+#~ msgstr "^1%s^1 újra kell hogy kezdje %d pont után\n"
+
+#~ msgid "^1%s^1 needs a restart\n"
+#~ msgstr "^1%s^1 újra kell hogy kezdje\n"
+
+#~ msgid "^1%s^1 burnt to death\n"
+#~ msgstr "^1%s^1 ropogósra sült\n"
+
+#~ msgid "^1%s^1 was unfairly eliminated\n"
+#~ msgstr "^1%s^1-t kicsinálták unfair módón \n"
+
+#~ msgid "^1%s^1 was phased out \n"
+#~ msgstr "^1%s^1 légneművé változott egy Fázistoronytól\n"
+
+#~ msgid "^1%s^1 was rocketed to hell by a walker turret \n"
+#~ msgstr "^1%s^1 lefejelte egy Pókjáró rakétáját\n"
+
+#~ msgid "^1%s^1 discovered a swamp\n"
+#~ msgstr "^1%s^1 rátalált egy mocsárra\n"
+
+#~ msgid "^1%s^1 tested gravity (and it worked)\n"
+#~ msgstr ""
+#~ "^1%s^1 kíváncsi volt, hogy működik-e még a gravitáció (a válasz: igen)\n"
+
+#~ msgid "^1%s^1 drowned\n"
+#~ msgstr "^1%s^1 már a halakkal alszik\n"
+
+#~ msgid "%s^7 unleashes ^1RAGE\n"
+#~ msgstr "%s^7 egy^1GYILKOLÓGÉP!\n"
+
+#~ msgid "%s^7 unleashes ^1SCORING RAGE\n"
+#~ msgstr "%s^7 egy ^1PONTSZERZŐGÉP!\n"
+
+#~ msgid "^1%s^1's %s kill spree was ended by %s\n"
+#~ msgstr "^1%s^1 %s Gyilokos Ámokfutásának %s^1 vetett véget\n"
+
+#~ msgid "^1%s^1's %s scoring spree was ended by %s\n"
+#~ msgstr "^1%s^1 %s értékű pontgyűjtésének %s^1 vetet véget\n"
+
+#~ msgid "^1%s^1 was pushed into an accident by %s\n"
+#~ msgstr "^1%2$s^1 miatt %1$s^1 halálos balesetet szenvedett\n"
+
+#~ msgid "^1%s^1 was pushed into the line of fire by %s\n"
+#~ msgstr "^1%2$s^1 kilökte %1$s^1-t a tűzvonalba\n"
+
+#~ msgid "^1%s^1 dies when %s^1's raptor dies.\n"
+#~ msgstr "^1%s^1 is belehalt %s^1 Raptorjának lezuhanásába.\n"
+
+#~ msgid "^1%s^1 cluster crushed by %s\n"
+#~ msgstr "^1%2$s^1 cafatokra tépte %1$s^1-t\n"
+
+#~ msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
+#~ msgstr "^1%s^1 meghalt %s^1's Wakizashijának becsapódásától.\n"
+
+#~ msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
+#~ msgstr "^1%s^1s %s-szeres Ámokfutását egy csapattársa fejezte be!\n"
+
+#~ msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
+#~ msgstr "^1%s^1s %s-szeres Ámokfutásának egy csapattársa vetett véget!\n"
+
+#~ msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
+#~ msgstr ""
+#~ "^1%s^1 bevégezte %d-szres Ámokfutását, és megölte egy csapattársát!\n"
+
+#~ msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
+#~ msgstr ""
+#~ "^1%s^1 befejezte %d-szeres Ámokfutását, és a csapattársára rontott!\n"
+
+#~ msgid "^1%s^1 mows down a team mate\n"
+#~ msgstr "^1%s^1 ledarált még egy csapattársat!\n"
+
+#~ msgid "^1%s^1 took action against a team mate\n"
+#~ msgstr "^1%s^1 a saját csapattársa ellen fordult!\n"
+
+#~ msgid "^1%s^1 ended it all after a %d kill spree\n"
+#~ msgstr "^1%s^1 kinyírta magát %d-szeres Ámokfutása után\n"
+
+#~ msgid "^1%s^1 couldn't resist the urge to self-destruct\n"
+#~ msgstr "^1%s^1 szerint jó móka az öngyilkosság\n"
+
+#~ msgid "^1%s^1 burned to death\n"
+#~ msgstr "^1%s^1 szénné égett\n"
+
+#~ msgid "3rd"
+#~ msgstr "3."
+
+#~ msgid "2nd"
+#~ msgstr "2."
+
+#~ msgid "1st"
+#~ msgstr "1."
+
+#~ msgid "Reverted to %s.\n"
+#~ msgstr "Visszaállítva %s helyzetbe.\n"
+
+#~ msgid "Trying to use non existing model %s. "
+#~ msgstr "A %s modell nem létezik "
+
+#~ msgid "^4BLUE^7 flag"
+#~ msgstr "^4BLAUE^7 Flagge"
+
+#~ msgid "^1RED^7 flag"
+#~ msgstr "^1VÖRÖS^7 ZÁSZLÓ"
+
+#~ msgid "  scoreboard_columns_help\n"
+#~ msgstr "  scoreboard_columns_help\n"
+
+#~ msgid "  scoreboard_columns_set ...\n"
+#~ msgstr "  scoreboard_columns_set ...\n"
+
+#~ msgid "  settemp cvar value\n"
+#~ msgstr "  settemp Cvar Wert\n"
+
+#~ msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
+#~ msgstr "Használat: cl_cmd PARANCS..., ahol a lehetséges parancsok:\n"
+
+#~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
+#~ msgstr "hud_save configname   (hud_skinname_configname.cfg mentése)\n"
