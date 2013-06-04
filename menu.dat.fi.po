@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 13:13-0400\n"
-"PO-Revision-Date: 2013-05-30 22:57+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2013-06-03 17:19+0000\n"
+"Last-Translator: FruitieX <fruitiex@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0\n"
-"X-POOTLE-MTIME: 1369954658.0\n"
+"X-POOTLE-MTIME: 1370279959.0\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:35
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
@@ -24,15 +24,15 @@ msgstr "Käyttö: menu_cmd_command..., missä mahdollisia komentoja ovat:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:36
 msgid "  sync - reloads all cvars on the current menu page\n"
-msgstr "  sync - uudelleenlataa kaikki cvar-muuttujat nykyiseen valikkoon"
+msgstr "  sync - uudelleenlataa kaikki cvar-muuttujat nykyiseen valikkoon\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:37
 msgid "  directmenu ITEM - select a menu item as main item\n"
-msgstr "  directmenu ITMEM - valitse valikon kohta pääkohdaksi\n"
+msgstr "  directmenu ITEM - valitse valikon kohta pääkohdaksi\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:62
 msgid "Available options:\n"
-msgstr ""
+msgstr "Mahdolliset vaihtoehdot:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:113
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
@@ -121,8 +121,9 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Tervetuloa pelaamaan Xonoticcia! Valitse haluamasi kieli ja pelaajanimesi "
-"aloittaaksesi. Voit vaihtaa näitä asetuksia jälkikäteen pelin asetuksista."
+"Tervetuloa pelaamaan Xonoticia! Valitse haluamasi kieli ja pelaajanimesi "
+"aloittaaksesi. Voit vaihtaa näitä asetuksia jälkikäteen pelin "
+"asetusvalikosta."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:37
@@ -212,11 +213,11 @@ msgstr "Tekstin kohdistus:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:51
 msgid "Center"
-msgstr "Keskus"
+msgstr "Keskitetty"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:41
 msgid "Font scale:"
-msgstr "Fontin skaala:"
+msgstr "Fontin skaalaus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
@@ -224,19 +225,19 @@ msgstr "Keskustelupaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:22
 msgid "Chat entries:"
-msgstr "Keskustelun sisältö:"
+msgstr "Viestien määrä:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:25
 msgid "Chat size:"
-msgstr "Keskustelun koko"
+msgstr "Fontin koko:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:29
 msgid "Chat lifetime:"
-msgstr "Keskustelun kesto:"
+msgstr "Viestin kesto:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:33
 msgid "Chat beep sound"
-msgstr "Keskustelun piippausääni"
+msgstr "Viestin piippausääni"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
@@ -252,7 +253,7 @@ msgstr "Käytä tasoittavaa algoritmia ruudunpäivitykselle (FPS)"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:4
 msgid "Health/Armor Panel"
-msgstr "Elämä/panssaripaneeli"
+msgstr "Elämä/Panssaripaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:22
@@ -3208,17 +3209,17 @@ msgstr "%dt"
 #: qcsrc/common/counting.qh:69
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%dnd"
 
 #: qcsrc/common/counting.qh:70
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%drd"
 
 #: qcsrc/common/counting.qh:71 qcsrc/common/counting.qh:74
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%dth"
 
 #: qcsrc/common/mapinfo.qc:711
 #, c-format
@@ -3287,12 +3288,12 @@ msgstr "Pakomatka (Keepaway)"
 
 #: qcsrc/common/net_notice.qc:89
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Palvelimen ilmoitukset:"
 
 #: qcsrc/common/net_notice.qc:95
 #, c-format
 msgid "^7%s (^3%d sec left)"
-msgstr ""
+msgstr "^7%s (^3%d sek jäljellä)"
 
 #: qcsrc/common/notifications.qh:248
 #, c-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 13:13-0400\n"
-"PO-Revision-Date: 2013-06-03 07:09+0000\n"
+"PO-Revision-Date: 2013-06-03 21:35+0000\n"
 "Last-Translator: mach1ne <karloskarrikaas@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0\n"
-"X-POOTLE-MTIME: 1370243379.0\n"
+"X-POOTLE-MTIME: 1370295352.0\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:35
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
@@ -1341,74 +1341,72 @@ msgstr "Modell:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:73
 msgid "Glowing color:"
-msgstr ""
+msgstr "Glödfärg:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:82
 msgid "Detail color:"
-msgstr ""
+msgstr "Detaljfärg:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
 msgid "No crosshair"
-msgstr ""
+msgstr "Inget sikte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:95
 msgid "Per weapon crosshair"
-msgstr ""
+msgstr "Per vapen sikte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:98
 msgid "Custom crosshair"
-msgstr ""
+msgstr "Personligt sikte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:117
 msgid "Crosshair size:"
-msgstr ""
+msgstr "Siktets storlek:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:122
 msgid "Crosshair alpha:"
-msgstr ""
+msgstr "Siktets alfa:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:128
-#, fuzzy
 msgid "Crosshair color:"
-msgstr "Färg på ammoraden:"
+msgstr "Siktets färg:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
 msgid "Per weapon"
-msgstr ""
+msgstr "Per vapen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:132
 msgid "By health"
-msgstr ""
+msgstr "Av liv"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:136
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:47
-#, fuzzy
 msgid "Custom"
-msgstr "anpassad"
+msgstr "Personlig"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:144
 msgid "Other crosshair settings"
-msgstr ""
+msgstr "Andra sikteinställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:152
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:6
 msgid "Model settings"
-msgstr ""
+msgstr "Modellinställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:6
 msgid "View settings"
-msgstr ""
+msgstr "Syninställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:164
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
 msgid "Weapon settings"
-msgstr ""
+msgstr "Vapeninställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:6
 msgid "HUD settings"
-msgstr ""
+msgstr "HUD inställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:184
@@ -1417,35 +1415,35 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
 #: qcsrc/menu/xonotic/dialog_settings_video.c:143
 msgid "Apply immediately"
-msgstr "Tillämpa nu"
+msgstr "Tillämpa direkt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:6
 msgid "Crosshair settings"
-msgstr ""
+msgstr "Sikteinställningar"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:28
 msgid "Enable center crosshair dot"
-msgstr ""
+msgstr "Aktivera center siktpunkt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:31
 msgid "Dot size:"
-msgstr ""
+msgstr "Punktstorlek:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:36
 msgid "Dot alpha:"
-msgstr ""
+msgstr "Punktalfa:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:41
 msgid "Dot color:"
-msgstr ""
+msgstr "Punktfärg:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:43
 msgid "Use normal crosshair color"
-msgstr ""
+msgstr "Används normal siktefärg"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:54
 msgid "Crosshair animations:"
-msgstr ""
+msgstr "Sikteanimationer:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:57
 msgid "Smooth effects of crosshairs"
