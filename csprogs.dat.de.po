@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 13:13-0400\n"
+"POT-Creation-Date: 2013-06-04 18:02-0400\n"
 "PO-Revision-Date: 2013-06-04 10:38+0000\n"
 "Last-Translator: Sless <sless@gmx.net>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -293,24 +293,6 @@ msgstr "^4CSQC Build-Information: ^1%s (deutsch)\n"
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
 msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln\n"
-
-#: qcsrc/client/Main.qc:484
-#, c-format
-msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr "Ein CSQC-Entity hat seinen Besitzer gewechselt! (edict: %d, classname: %s)\n"
-
-#: qcsrc/client/Main.qc:834
-#, c-format
-msgid ""
-"A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
-msgstr "Ein CSQC-Entity hat seinen Typ gewechselt! (edict: %d, server: %d, type: %d "
-"-> %d)\n"
-
-#: qcsrc/client/Main.qc:844
-#, c-format
-msgid ""
-"A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
-msgstr "Ein CSQC-Entity kam aus dem Nichts! (edict: %d, server: %d, type: %d)\n"
 
 #: qcsrc/client/Main.qc:892
 #, c-format
@@ -715,14 +697,6 @@ msgid ""
 msgstr ""
 "'feld3' wird nur in CTF sichtbar sein, und 'feld4' wird in allen Spieltypen\n"
 "außer DM erscheinen.\n"
-
-# This should not be translated *at all*, it's an error that is irrelevant to users... Adding bug report to tracker.
-#: qcsrc/client/scoreboard.qc:445 qcsrc/client/scoreboard.qc:460
-#: qcsrc/client/scoreboard.qc:470 qcsrc/client/scoreboard.qc:479
-#: qcsrc/client/scoreboard.qc:488
-#, c-format
-msgid "fixed missing field '%s'\n"
-msgstr "fehlendes Feld '%s' wurde ergänzt\n"
 
 #: qcsrc/client/scoreboard.qc:529 qcsrc/client/scoreboard.qc:536
 msgid "N/A"
@@ -1439,7 +1413,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
-msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:265
@@ -1469,8 +1443,8 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:269
 #, c-format
-msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
-msgstr "^BG%s^K1 dachte, ^BG%s^K1 am Teleportieren hindern zu können%s%s\n"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgstr ""
 
 #: qcsrc/common/notifications.qh:270
 #, c-format
@@ -3205,6 +3179,30 @@ msgstr "T.A.G. Seeker"
 #, c-format
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
+
+#, c-format
+#~ msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
+#~ msgstr "Ein CSQC-Entity hat seinen Besitzer gewechselt! (edict: %d, classname: %s)\n"
+
+#, c-format
+#~ msgid ""
+#~ "A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
+#~ msgstr "Ein CSQC-Entity hat seinen Typ gewechselt! (edict: %d, server: %d, type: %d "
+#~ "-> %d)\n"
+
+#, c-format
+#~ msgid ""
+#~ "A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
+#~ msgstr "Ein CSQC-Entity kam aus dem Nichts! (edict: %d, server: %d, type: %d)\n"
+
+# This should not be translated *at all*, it's an error that is irrelevant to users... Adding bug report to tracker.
+#, c-format
+#~ msgid "fixed missing field '%s'\n"
+#~ msgstr "fehlendes Feld '%s' wurde ergänzt\n"
+
+#, c-format
+#~ msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+#~ msgstr "^BG%s^K1 dachte, ^BG%s^K1 am Teleportieren hindern zu können%s%s\n"
 
 #~ msgid "^1Begin!"
 #~ msgstr "^1Los!"
