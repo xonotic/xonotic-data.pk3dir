@@ -416,6 +416,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	frag_inflictor = inflictor;
 	frag_attacker = attacker;
 	frag_target = self;
+	frag_damage = damage;
 	damage_take = take;
 	damage_save = save;
 	damage_force = force;
