@@ -195,7 +195,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPhysics)
 MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 {
 	damage_save = 0;
-	//damage_take = frag_damage; // frag_damage isn't even set here?!
+	damage_take = frag_damage;
 	
 	return FALSE;
 }
@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
-	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target))
+	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 		
 	if(IS_PLAYER(frag_target))
@@ -223,7 +223,9 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			frag_damage = 0;
 		}
 		
-		if (frag_target.armorvalue && (frag_deathtype == WEP_MINSTANEX) && frag_damage)
+		if(IS_PLAYER(frag_attacker))
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
+		if(frag_target.armorvalue)
 		{
 			frag_target.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
@@ -231,27 +233,30 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			frag_target.hitsound += 1;
 			frag_attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 		}
+		
+		if(IS_PLAYER(frag_attacker))
 		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
 		{
 			frag_damage = 0;
 			frag_mirrordamage = 0;
 			if (frag_target != frag_attacker)
 			{
-				if ((frag_target.health >= 1) && IS_PLAYER(frag_target))
+				if (frag_target.health >= 1)
 					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
 				frag_force = '0 0 0';
 				// keep mirrorfrag_force
-				frag_attacker = frag_target;
+				//frag_attacker = frag_target;
 			}
 		}
 	}
 	
+	if(IS_PLAYER(frag_attacker))
 	if(frag_mirrordamage > 0)
 	{
 		// just lose extra LIVES, don't kill the player for mirror damage
 		if(frag_attacker.armorvalue > 0)
 		{
-			frag_attacker.armorvalue = frag_attacker.armorvalue - 1;
+			frag_attacker.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_attacker.armorvalue);
 			frag_attacker.hitsound += 1;
 		}
