@@ -1,19 +1,15 @@
-// size
 const vector BRUISER_MIN = '-20 -20 -31';
 const vector BRUISER_MAX = '20 20 53';
 
-// model
 string BRUISER_MODEL = "models/monsters/knight.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_bruiser;
 float autocvar_g_monster_bruiser_health;
 float autocvar_g_monster_bruiser_melee_damage;
 float autocvar_g_monster_bruiser_speed_walk;
 float autocvar_g_monster_bruiser_speed_run;
 
-// animations
 const float bruiser_anim_stand 		= 0;
 const float bruiser_anim_run 		= 1;
 const float bruiser_anim_runattack 	= 2;
@@ -26,7 +22,7 @@ const float bruiser_anim_standing 	= 8;
 const float bruiser_anim_death1 	= 9;
 const float bruiser_anim_death2 	= 10;
 
-void bruiser_think ()
+void bruiser_think()
 {
 	self.think = bruiser_think;
 	self.nextthink = time + self.ticrate;
@@ -54,7 +50,7 @@ float bruiser_attack(float attack_type)
 	return FALSE;
 }
 
-void bruiser_die ()
+void bruiser_die()
 {
 	Monster_CheckDropCvars ("bruiser");
 	
@@ -66,7 +62,7 @@ void bruiser_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void bruiser_spawn ()
+void bruiser_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_bruiser_health;
@@ -84,8 +80,8 @@ void bruiser_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_bruiser ()
-{	
+void spawnfunc_monster_bruiser()
+{
 	if not(autocvar_g_monster_bruiser) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_bruiser;

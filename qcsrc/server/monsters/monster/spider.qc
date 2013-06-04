@@ -1,12 +1,9 @@
-// size
 const vector SPIDER_MIN = '-18 -18 -25';
 const vector SPIDER_MAX = '18 18 30';
 
-// model
 string SPIDER_MODEL = "models/monsters/spider.dpm";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_spider;
 float autocvar_g_monster_spider_stopspeed;
 float autocvar_g_monster_spider_attack_leap_delay;
@@ -18,7 +15,6 @@ float autocvar_g_monster_spider_speed_walk;
 float autocvar_g_monster_spider_speed_run;
 float autocvar_g_monster_spider_attack_type;
 
-// animations
 const float spider_anim_idle		= 0;
 const float spider_anim_walk		= 1;
 const float spider_anim_attack		= 2;
@@ -36,7 +32,7 @@ void spider_think()
 	monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
 }
 
-void spider_web_explode ()
+void spider_web_explode()
 {
 	float damg = 0, edamg = 0, rad = 1;
 	switch(self.realowner.spider_type)
@@ -55,7 +51,7 @@ void spider_web_explode ()
 	remove (self);
 }
 
-void spider_web_touch ()
+void spider_web_touch()
 {
 	PROJECTILE_TOUCH;
 	
@@ -159,7 +155,7 @@ float spider_attack(float attack_type)
 	return FALSE;
 }
 
-void spider_die ()
+void spider_die()
 {
 	Monster_CheckDropCvars ("spider");
 	

@@ -1,12 +1,9 @@
-// size
 const vector WYVERN_MIN = '-20 -20 -58';
 const vector WYVERN_MAX = '20 20 20';
 
-// model
 string WYVERN_MODEL = "models/monsters/wizard.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_wyvern;
 float autocvar_g_monster_wyvern_health;
 float autocvar_g_monster_wyvern_speed_walk;
@@ -18,14 +15,13 @@ float autocvar_g_monster_wyvern_fireball_edgedamage;
 float autocvar_g_monster_wyvern_fireball_damagetime;
 float autocvar_g_monster_wyvern_fireball_speed;
 
-// animations
 const float wyvern_anim_hover 	= 0;
 const float wyvern_anim_fly 	= 1;
 const float wyvern_anim_magic 	= 2;
 const float wyvern_anim_pain 	= 3;
 const float wyvern_anim_death 	= 4;
 
-void wyvern_think ()
+void wyvern_think()
 {
 	self.think = wyvern_think;
 	self.nextthink = time + self.ticrate;
@@ -131,7 +127,7 @@ void wyvern_spawn()
 }
 
 void spawnfunc_monster_wyvern()
-{	
+{
 	if not(autocvar_g_monster_wyvern) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_wyvern;

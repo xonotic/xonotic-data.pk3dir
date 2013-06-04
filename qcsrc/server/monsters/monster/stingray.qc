@@ -1,25 +1,21 @@
-// size
 const vector STINGRAY_MIN = '-20 -20 -31';
 const vector STINGRAY_MAX = '20 20 20';
 
-// model
 string STINGRAY_MODEL = "models/monsters/fish.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_stingray;
 float autocvar_g_monster_stingray_health;
 float autocvar_g_monster_stingray_damage;
 float autocvar_g_monster_stingray_speed_walk;
 float autocvar_g_monster_stingray_speed_run;
 
-// animations
 const float stingray_anim_attack = 0;
 const float stingray_anim_death  = 1;
 const float stingray_anim_swim   = 2;
 const float stingray_anim_pain   = 3;
 
-void stingray_think ()
+void stingray_think()
 {
 	self.think = stingray_think;
 	self.nextthink = time + self.ticrate;
@@ -45,7 +41,7 @@ float stingray_attack(float attack_type)
 	return FALSE;
 }
 
-void stingray_die ()
+void stingray_die()
 {
 	Monster_CheckDropCvars ("stingray");
 	
@@ -57,7 +53,7 @@ void stingray_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void stingray_spawn ()
+void stingray_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_stingray_health;
@@ -74,8 +70,8 @@ void stingray_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_stingray ()
-{	
+void spawnfunc_monster_stingray()
+{
 	if not(autocvar_g_monster_stingray) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_stingray;

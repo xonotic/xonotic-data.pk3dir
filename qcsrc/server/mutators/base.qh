@@ -175,6 +175,7 @@ MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:
 		.void() monster_loot;
+		entity other;
 	
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves

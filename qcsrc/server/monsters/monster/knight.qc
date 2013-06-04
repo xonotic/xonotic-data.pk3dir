@@ -1,12 +1,9 @@
-// size
 const vector KNIGHT_MIN = '-20 -20 -32';
 const vector KNIGHT_MAX = '20 20 41';
 
-// model
 string KNIGHT_MODEL = "models/monsters/hknight.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_knight;
 float autocvar_g_monster_knight_health;
 float autocvar_g_monster_knight_melee_damage;
@@ -29,7 +26,6 @@ float autocvar_g_monster_knight_jump_chance;
 float autocvar_g_monster_knight_jump_damage;
 float autocvar_g_monster_knight_jump_dist;
 
-// animations
 const float knight_anim_stand 	= 0;
 const float knight_anim_walk 	= 1;
 const float knight_anim_run 	= 2;
@@ -308,7 +304,7 @@ void knight_spawn()
 }
 
 void spawnfunc_monster_knight()
-{	
+{
 	if not(autocvar_g_monster_knight) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_knight;

@@ -1,12 +1,9 @@
-// size
 const vector MAGE_MIN = '-36 -36 -24';
 const vector MAGE_MAX = '36 36 50';
 
-// model
 string MAGE_MODEL = "models/monsters/mage.dpm";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_mage;
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_speed;
@@ -30,7 +27,6 @@ float autocvar_g_monster_mage_attack_grenade_lifetime;
 float autocvar_g_monster_mage_attack_grenade_force;
 float autocvar_g_monster_mage_attack_grenade_chance;
 
-// animations
 const float mage_anim_idle		= 0;
 const float mage_anim_walk 		= 1;
 const float mage_anim_attack 	= 2;
@@ -362,7 +358,7 @@ void mage_spawn()
 }
 
 void spawnfunc_monster_mage()
-{	
+{
 	if not(autocvar_g_monster_mage) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_mage;

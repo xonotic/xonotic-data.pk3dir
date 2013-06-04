@@ -1,12 +1,9 @@
-// size
 const vector BRUTE_MIN = '-36 -36 -20';
 const vector BRUTE_MAX = '36 36 50';
 
-// model
 string BRUTE_MODEL = "models/monsters/ogre.dpm";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_brute;
 float autocvar_g_monster_brute_health;
 float autocvar_g_monster_brute_chainsaw_damage;
@@ -21,7 +18,6 @@ float autocvar_g_monster_brute_attack_grenade_edgedamage;
 float autocvar_g_monster_brute_attack_grenade_force;
 float autocvar_g_monster_brute_attack_grenade_radius;
 
-// animations
 const float brute_anim_idle 		= 0;
 const float brute_anim_walk 		= 1;
 const float brute_anim_run 			= 2;
@@ -232,7 +228,7 @@ void brute_spawn()
 }
 
 void spawnfunc_monster_brute()
-{	
+{
 	if not(autocvar_g_monster_brute) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_brute;

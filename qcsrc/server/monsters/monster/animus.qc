@@ -1,12 +1,9 @@
-// size
 const vector ANIMUS_MIN = '-41 -41 -31';
 const vector ANIMUS_MAX = '41 41 31';
 
-// model
 string ANIMUS_MODEL = "models/monsters/demon.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_animus;
 float autocvar_g_monster_animus_health;
 float autocvar_g_monster_animus_attack_jump_damage;
@@ -14,7 +11,6 @@ float autocvar_g_monster_animus_damage;
 float autocvar_g_monster_animus_speed_walk;
 float autocvar_g_monster_animus_speed_run;
 
-// animations
 const float animus_anim_stand	= 0;
 const float animus_anim_walk	= 1;
 const float animus_anim_run		= 2;
@@ -23,7 +19,7 @@ const float animus_anim_pain	= 4;
 const float animus_anim_death	= 5;
 const float animus_anim_attack	= 6;
 
-void animus_think ()
+void animus_think()
 {
 	self.think = animus_think;
 	self.nextthink = time + self.ticrate;
@@ -31,7 +27,7 @@ void animus_think ()
 	monster_move(autocvar_g_monster_animus_speed_run, autocvar_g_monster_animus_speed_walk, 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
 }
 
-void animus_touch_jump ()
+void animus_touch_jump()
 {
 	if (self.health <= 0)
 		return;
@@ -72,7 +68,7 @@ float animus_attack(float attack_type)
 	return FALSE;
 }
 
-void animus_die ()
+void animus_die()
 {
 	Monster_CheckDropCvars ("animus");
 	
@@ -84,7 +80,7 @@ void animus_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void animus_spawn ()
+void animus_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_animus_health;
@@ -102,8 +98,8 @@ void animus_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_animus ()
-{	
+void spawnfunc_monster_animus()
+{
 	if not(autocvar_g_monster_animus) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_animus;

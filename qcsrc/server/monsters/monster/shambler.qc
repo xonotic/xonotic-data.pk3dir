@@ -1,12 +1,9 @@
-// size
 const vector SHAMBLER_MIN = '-41 -41 -31';
 const vector SHAMBLER_MAX = '41 41 65';
 
-// model
 string SHAMBLER_MODEL = "models/monsters/shambler.mdl";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_shambler;
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_damage;
@@ -15,7 +12,6 @@ float autocvar_g_monster_shambler_attack_claw_damage;
 float autocvar_g_monster_shambler_speed_walk;
 float autocvar_g_monster_shambler_speed_run;
 
-// animations
 const float shambler_anim_stand 	= 0;
 const float shambler_anim_walk 		= 1;
 const float shambler_anim_run 		= 2;
@@ -26,7 +22,7 @@ const float shambler_anim_magic 	= 6;
 const float shambler_anim_pain 		= 7;
 const float shambler_anim_death 	= 8;
 
-void shambler_think ()
+void shambler_think()
 {
 	self.think = shambler_think;
 	self.nextthink = time + self.ticrate;
@@ -34,7 +30,7 @@ void shambler_think ()
 	monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 }
 
-void shambler_smash ()
+void shambler_smash()
 {
 	self.monster_delayedattack = func_null;
 	self.delay = -1;
@@ -42,7 +38,7 @@ void shambler_smash ()
 	monster_melee(self.enemy, autocvar_g_monster_shambler_damage, 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
-void shambler_delayedsmash ()
+void shambler_delayedsmash()
 {
 	monsters_setframe(shambler_anim_smash);
 	self.monster_delayedattack = shambler_smash;
@@ -65,7 +61,7 @@ void shambler_swing()
 	}
 }
 
-void CastLightning ()
+void CastLightning()
 {
 	self.monster_delayedattack = func_null;
 	self.delay = -1;
@@ -120,7 +116,7 @@ float shambler_attack(float attack_type)
 	return FALSE;
 }
 
-void shambler_die ()
+void shambler_die()
 {
 	Monster_CheckDropCvars ("shambler");
 	
@@ -132,7 +128,7 @@ void shambler_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void shambler_spawn ()
+void shambler_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_shambler_health;
@@ -151,8 +147,8 @@ void shambler_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_shambler ()
-{	
+void spawnfunc_monster_shambler()
+{
 	if not(autocvar_g_monster_shambler) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_shambler;

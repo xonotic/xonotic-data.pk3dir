@@ -1,26 +1,20 @@
-// size
 const vector SLIME_MIN = '-16 -16 -24';
 const vector SLIME_MAX = '16 16 16';
 
-// model
 string SLIME_MODEL = "models/monsters/slime.dpm";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_slime;
 float autocvar_g_monster_slime_health;
 float autocvar_g_monster_slime_speed_walk;
 float autocvar_g_monster_slime_speed_run;
 
-// animations
 const float slime_anim_walk		= 0;
 const float slime_anim_idle		= 1;
 const float slime_anim_jump		= 2;
 const float slime_anim_fly		= 3;
 const float slime_anim_die		= 4;
 const float slime_anim_pain		= 5;
-
-void() slime_dead;
 
 void slime_think()
 {
@@ -122,7 +116,7 @@ void slime_spawn()
 }
 
 void spawnfunc_monster_slime()
-{	
+{
 	if not(autocvar_g_monster_slime) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_slime;

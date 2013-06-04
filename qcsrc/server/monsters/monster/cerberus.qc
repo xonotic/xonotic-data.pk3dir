@@ -1,12 +1,9 @@
-// size
 const vector CERBERUS_MIN = '-16 -16 -24';
 const vector CERBERUS_MAX = '16 16 12';
 
-// model
 string CERBERUS_MODEL = "models/monsters/dog.dpm";
 
 #ifdef SVQC
-// cvars
 float autocvar_g_monster_cerberus;
 float autocvar_g_monster_cerberus_health;
 float autocvar_g_monster_cerberus_bite_damage;
@@ -14,7 +11,6 @@ float autocvar_g_monster_cerberus_attack_jump_damage;
 float autocvar_g_monster_cerberus_speed_walk;
 float autocvar_g_monster_cerberus_speed_run;
 
-// animations
 const float cerberus_anim_idle	= 0;
 const float cerberus_anim_walk	= 1;
 const float cerberus_anim_run	= 2;
@@ -97,7 +93,7 @@ void cerberus_spawn()
 }
 
 void spawnfunc_monster_cerberus()
-{	
+{
 	if not(autocvar_g_monster_cerberus) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_cerberus;
