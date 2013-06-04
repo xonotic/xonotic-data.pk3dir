@@ -361,7 +361,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 		
-	return MUT_ITEMTOUCH_RETURN;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
