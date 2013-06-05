@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 13:13-0400\n"
+"POT-Creation-Date: 2013-06-04 18:02-0400\n"
 "PO-Revision-Date: 2012-01-29 20:34+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -295,24 +295,6 @@ msgstr "^4CSQC Build-Információ: ^1%s (magyar)\n"
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
 msgstr "nem támogatott %d csapathoz próbálsz csatlakozni"
-
-#: qcsrc/client/Main.qc:484
-#, c-format
-msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr "Egy CSQC entitás gazdát cserélt! (edict: %d, classname: %s)\n"
-
-#: qcsrc/client/Main.qc:834
-#, c-format
-msgid ""
-"A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
-msgstr "Egy CSQC entitás típust váltott! (edict: %d, server: %d, type: %d -> %d)\n"
-
-#: qcsrc/client/Main.qc:844
-#, c-format
-msgid ""
-"A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
-msgstr "Egy CSQC-entitás a nagy semmiből jelent meg! (edict: %d, server: %d, type: %"
-"d)\n"
 
 #: qcsrc/client/Main.qc:892
 #, c-format
@@ -714,13 +696,6 @@ msgid ""
 msgstr ""
 "'field3' csak Zászlórablás játékmódban látszik,\n"
 "'field4' pedig Haláljátszma kivételével az összes többiben.\n"
-
-#: qcsrc/client/scoreboard.qc:445 qcsrc/client/scoreboard.qc:460
-#: qcsrc/client/scoreboard.qc:470 qcsrc/client/scoreboard.qc:479
-#: qcsrc/client/scoreboard.qc:488
-#, c-format
-msgid "fixed missing field '%s'\n"
-msgstr "Pótoltam a '%s' hiányzó mezőt\n"
 
 #: qcsrc/client/scoreboard.qc:529 qcsrc/client/scoreboard.qc:536
 msgid "N/A"
@@ -1433,7 +1408,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
-msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:265
@@ -1463,7 +1438,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:269
 #, c-format
-msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:270
@@ -3181,6 +3156,25 @@ msgstr "T.A.G. Seeker"
 #, c-format
 msgid "@!#%'n Tuba"
 msgstr "ki@!#%tt Tuba"
+
+#, c-format
+#~ msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
+#~ msgstr "Egy CSQC entitás gazdát cserélt! (edict: %d, classname: %s)\n"
+
+#, c-format
+#~ msgid ""
+#~ "A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
+#~ msgstr "Egy CSQC entitás típust váltott! (edict: %d, server: %d, type: %d -> %d)\n"
+
+#, c-format
+#~ msgid ""
+#~ "A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
+#~ msgstr "Egy CSQC-entitás a nagy semmiből jelent meg! (edict: %d, server: %d, type: %"
+#~ "d)\n"
+
+#, c-format
+#~ msgid "fixed missing field '%s'\n"
+#~ msgstr "Pótoltam a '%s' hiányzó mezőt\n"
 
 #~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
 #~ msgstr "hud_save configname   (hud_skinname_configname.cfg mentése)\n"

@@ -6,15 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 13:13-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-04 18:02-0400\n"
+"PO-Revision-Date: 2013-06-04 21:12+0000\n"
+"Last-Translator: freefang <alnicrvada@gmail.com>\n"
 "Language-Team: Merlijn Hofstra <mhofstra@gmail.com>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.10.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.0\n"
+"X-POOTLE-MTIME: 1370380329.0\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:35
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
@@ -30,7 +32,7 @@ msgstr "  directmenu ITEM - selecteer deel van menu als hoofddeel"
 
 #: qcsrc/menu/command/menu_cmd.qc:62
 msgid "Available options:\n"
-msgstr ""
+msgstr "Beschikbare opties:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:113
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
@@ -1026,10 +1028,11 @@ msgstr "Ontwijken"
 msgid "MinstaGib"
 msgstr "MinstaGib"
 
+# Translate this mutator name?
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
 msgid "New Toys"
-msgstr ""
+msgstr "Nieuw Speelgoed"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:258
@@ -1138,7 +1141,7 @@ msgstr "Meeste wapens"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:248
 msgid "All weapons"
-msgstr ""
+msgstr "Alle wapens"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:251
 msgid "Special arenas:"
@@ -1212,8 +1215,9 @@ msgstr "N/A"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:157
 #, c-format
+#, c-format, fuzzy
 msgid "%s (%s)"
-msgstr ""
+msgstr "%d (%s)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:174
 #, c-format
@@ -1332,11 +1336,11 @@ msgstr "Personage:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:73
 msgid "Glowing color:"
-msgstr ""
+msgstr "Gloed kleur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:82
 msgid "Detail color:"
-msgstr ""
+msgstr "Detail kleur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
 msgid "No crosshair"
@@ -1401,7 +1405,7 @@ msgstr "HUD instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:184
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:200
 #: qcsrc/menu/xonotic/dialog_settings_input.c:90
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
 #: qcsrc/menu/xonotic/dialog_settings_video.c:143
@@ -2089,178 +2093,175 @@ msgid "DET^Insane"
 msgstr "DET^Geweldig"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
-msgid "Playermodel LOD:"
-msgstr "Spelermodel LOD:"
+msgid "Player detail:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "Texture resolution:"
 msgstr "Textuur resolutie:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
 msgid "RES^Leet"
 msgstr "RES^"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "RES^Lowest"
 msgstr "RES^Laagste"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
 msgid "RES^Very low"
 msgstr "Zeer Laag"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
 msgid "RES^Low"
 msgstr "RES^Laag"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "RES^Normal"
 msgstr "RES^Normaal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
 msgid "RES^Good"
 msgstr "RES^Goed"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
 msgid "RES^Best"
 msgstr "RES^Beste"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:86
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:89
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
 msgid "Avoid lossy texture compression"
 msgstr "Voorkom textuur compressie met kwaliteitsverlies"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
-msgid "Use lightmaps"
-msgstr "Gebuik "
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:96
-msgid "Deluxe mapping"
-msgstr "Deluxe mapping"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:98
-msgid "Gloss"
-msgstr "Glans"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-msgid "Particles quality:"
-msgstr "Deeltjes kwaliteit:"
-
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
-msgid "Particles distance:"
-msgstr "Deeltjes afstand:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-msgid "Damage effects:"
-msgstr "Schade effects:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-msgid "DMGPRTCLS^Disabled"
-msgstr "Uitgeschakeld"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
-msgid "DMGPRTCLS^Skeletal"
-msgstr "Skelet"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:112
-msgid "DMGPRTCLS^All"
-msgstr "Alle"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
-msgid "Decals"
-msgstr "Decals"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:117
-msgid "Decals on models"
-msgstr "Decals op modellen"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:121
-msgid "Distance:"
-msgstr "Afstand:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:127
-msgid "Time:"
-msgstr "Tijd:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:133
-msgid "Coronas"
-msgstr "Coronas"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:134
-msgid "Use Occlusion Queries"
-msgstr "Gebruik Occlusion Queries"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-msgid "No dynamic lighting"
-msgstr "Geen dynamische verlichting"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
-msgid "Fake corona lighting"
-msgstr "Nep corona verlichting"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
-msgid "Realtime dynamic lighting"
-msgstr "Real-time dynamische verlichting"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:141
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:145
-msgid "Shadows"
-msgstr "Schaduwen"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:144
-msgid "Realtime world lighting"
-msgstr "Real-time wereld verlichting"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:149
-msgid "Use normal maps"
-msgstr "Gebruik normal maps"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
-msgid "Soft shadows"
-msgstr "Zachte schaduwen"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "Show surfaces"
 msgstr "Laat oppervlaktes zien"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
+msgid "Use lightmaps"
+msgstr "Gebuik "
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
+msgid "Deluxe mapping"
+msgstr "Deluxe mapping"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
+msgid "Gloss"
+msgstr "Glans"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:114
 msgid "Offset mapping"
 msgstr "Offset mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
 msgid "Relief mapping"
 msgstr "Relief mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
-msgid "LOD"
-msgstr "LOD"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
-msgid "Bloom"
-msgstr "Bloom"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:119
 msgid "Reflections:"
 msgstr "Reflecties"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:169
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Blurred"
 msgstr "Vervaagd"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:170
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:123
 msgid "REFL^Good"
 msgstr "REFL^Goed"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:124
 msgid "Sharp"
 msgstr "Scherp"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:129
+msgid "Particles quality:"
+msgstr "Deeltjes kwaliteit:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
+msgid "Particles distance:"
+msgstr "Deeltjes afstand:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+msgid "Damage effects:"
+msgstr "Schade effects:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
+msgid "DMGPRTCLS^Disabled"
+msgstr "Uitgeschakeld"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
+msgid "DMGPRTCLS^Skeletal"
+msgstr "Skelet"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:139
+msgid "DMGPRTCLS^All"
+msgstr "Alle"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
+msgid "Particle effects for spawnpoints"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:146
+msgid "No dynamic lighting"
+msgstr "Geen dynamische verlichting"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+msgid "Fake corona lighting"
+msgstr "Nep corona verlichting"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
+msgid "Realtime dynamic lighting"
+msgstr "Real-time dynamische verlichting"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+msgid "Shadows"
+msgstr "Schaduwen"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:156
+msgid "Realtime world lighting"
+msgstr "Real-time wereld verlichting"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
+msgid "Use normal maps"
+msgstr "Gebruik normal maps"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:163
+msgid "Soft shadows"
+msgstr "Zachte schaduwen"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:167
+msgid "Fade corona according to visibility"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+msgid "Bloom"
+msgstr "Bloom"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:172
+msgid "Extra postprocessing effects"
+msgstr "Extra naprocessing effecten"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:177
 msgid "Motion blur:"
 msgstr "Bewegingsonscherpte:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:181
-msgid "Extra postprocessing effects"
-msgstr "Extra naprocessing effecten"
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:183
+msgid "Decals"
+msgstr "Decals"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:184
+msgid "Decals on models"
+msgstr "Decals op modellen"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+msgid "Distance:"
+msgstr "Afstand:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+msgid "Time:"
+msgstr "Tijd:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2998,7 +2999,7 @@ msgstr "Activeer paneel"
 #: qcsrc/menu/xonotic/weaponslist.c:102
 #, c-format
 msgid "%s (mutator weapon)"
-msgstr ""
+msgstr "%s (mutator wapen)"
 
 #: qcsrc/common/command/generic.qc:31
 #, c-format
@@ -3011,186 +3012,187 @@ msgstr "fout bij aanmaken curl handgreep\n"
 
 #: qcsrc/common/command/generic.qc:263
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
-msgstr ""
+msgstr "Notificatie dump commando werkt alleen met cl_cmd en sv_cmd.\n"
 
 #: qcsrc/common/command/generic.qc:455
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
-msgstr ""
+msgstr "Notificatie herstart commando werkt alleen met cl_cmd en sv_cmd.\n"
 
 #: qcsrc/common/counting.qh:5
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "%s jaar"
 
 #: qcsrc/common/counting.qh:7
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "%d jaar"
 
 #: qcsrc/common/counting.qh:8
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "%d jaar"
 
 #: qcsrc/common/counting.qh:9
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "%d jaar"
 
 #: qcsrc/common/counting.qh:10
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "%d jaar"
 
 #: qcsrc/common/counting.qh:11
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "%d jaar"
 
 #: qcsrc/common/counting.qh:13
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "%s weken"
 
 #: qcsrc/common/counting.qh:15
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "%d weken"
 
 #: qcsrc/common/counting.qh:16
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "%d weken"
 
 #: qcsrc/common/counting.qh:17
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "%d weken"
 
 #: qcsrc/common/counting.qh:18
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "%d weken"
 
 #: qcsrc/common/counting.qh:19
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "%d weken"
 
 #: qcsrc/common/counting.qh:21
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "%s dagen"
 
 #: qcsrc/common/counting.qh:23
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%d dagen"
 
 #: qcsrc/common/counting.qh:24
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "%d dag"
 
 #: qcsrc/common/counting.qh:25
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "%d dagen"
 
 #: qcsrc/common/counting.qh:26
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "%d dagen"
 
 #: qcsrc/common/counting.qh:27
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "%d dagen"
 
 #: qcsrc/common/counting.qh:29
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "%s uren"
 
+# Maybe "uur" instead of "uren" depending on context
 #: qcsrc/common/counting.qh:31
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%d uren"
 
 #: qcsrc/common/counting.qh:32
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "%d uur"
 
 #: qcsrc/common/counting.qh:33
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "%d uren"
 
 #: qcsrc/common/counting.qh:34
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "%d uren"
 
 #: qcsrc/common/counting.qh:35
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "%d uren"
 
 #: qcsrc/common/counting.qh:38
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "%s minuten"
 
 #: qcsrc/common/counting.qh:40
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "%d minuten"
 
 #: qcsrc/common/counting.qh:41
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "%d minuten"
 
 #: qcsrc/common/counting.qh:42
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "%d minuten"
 
 #: qcsrc/common/counting.qh:43
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "%d minuten"
 
 #: qcsrc/common/counting.qh:44
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "%d minuten"
 
 #: qcsrc/common/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "%s seconden"
 
 #: qcsrc/common/counting.qh:48
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "%d seconden"
 
 #: qcsrc/common/counting.qh:49
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "%d seconde"
 
 #: qcsrc/common/counting.qh:50
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "%d seconden"
 
 #: qcsrc/common/counting.qh:51
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "%d seconden"
 
 #: qcsrc/common/counting.qh:52
 #, c-format
@@ -3199,8 +3201,9 @@ msgstr ""
 
 #: qcsrc/common/counting.qh:68
 #, c-format
+#, c-format, fuzzy
 msgid "%dst"
-msgstr ""
+msgstr "%ds"
 
 #: qcsrc/common/counting.qh:69
 #, c-format
@@ -3284,29 +3287,30 @@ msgstr "Keepaway"
 
 #: qcsrc/common/net_notice.qc:89
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Server aankondigingen:"
 
 #: qcsrc/common/net_notice.qc:95
 #, c-format
 msgid "^7%s (^3%d sec left)"
-msgstr ""
+msgstr "^7%s (^3%d sec resterend)"
 
 #: qcsrc/common/notifications.qh:248
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag\n"
-msgstr ""
+msgstr "^BG%s^BG heeft de ^TC^TT^BG vlag verovert\n"
 
 #: qcsrc/common/notifications.qh:249
 #, c-format
 msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds\n"
-msgstr ""
+msgstr "^BG%s^BG heeft de ^TC^TT^BG vlag verovert in ^F1%s^BG seconden, en heeft "
+"daarmee het vorige record van ^BG%s^BG's van ^F2%s^BG seconden verbroken\n"
 
 #: qcsrc/common/notifications.qh:250
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds\n"
-msgstr ""
+msgstr "^BG%s^BG heeft de ^TC^TT^BG vlag in ^F1%s^BG seconden verovert\n"
 
 #: qcsrc/common/notifications.qh:251
 #, c-format
@@ -3325,93 +3329,97 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:254
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"
-msgstr ""
+msgstr "^BGDe ^TC^TT^BG vlag was in de basis gedropt en is vanzelf teruggekeerd\n"
 
 #: qcsrc/common/notifications.qh:255
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base\n"
-msgstr ""
+msgstr "^BGDe ^TC^TT^BG vlag viel ergens waar het niet bereikt kon worden en is "
+"teruggekeerd naar de basis\n"
 
 #: qcsrc/common/notifications.qh:256
 #, c-format
 msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself\n"
-msgstr ""
+msgstr "^BGDe ^TC^TT^BG vlag werd ongeduldig na ^F1%.2f^BG seconden en is vanzelf "
+"teruggekeerd\n"
 
 #: qcsrc/common/notifications.qh:257
 msgid "^BGThe ^TC^TT^BG flag has returned to the base\n"
-msgstr ""
+msgstr "^BGDe ^TC^TT^BG vlag is teruggekeerd naar de basis\n"
 
 #: qcsrc/common/notifications.qh:258
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag\n"
-msgstr ""
+msgstr "^BG%s^BG is de ^TC^TT^BG vlag verloren\n"
 
 #: qcsrc/common/notifications.qh:259
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag\n"
-msgstr ""
+msgstr "^BG%s^BG heeft de ^TC^TT^BG vlag\n"
 
 #: qcsrc/common/notifications.qh:260
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag\n"
-msgstr ""
+msgstr "^BG%s^BG heeft de ^TC^TT^BG vlag terug gebracht\n"
 
 #: qcsrc/common/notifications.qh:261
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was oneerlijk geëlimineerd door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:262
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was verdronken door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:263
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was naar de grond gebracht door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was verbrand door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
-msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:265
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was gekookt door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:266
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was de ruimte ingeschoten door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:267
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 zit onder het slijm door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:268
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was gepreserveerd door ^BG%s^K1%s%s\n"
 
+# telefragged maybe should be kept untranslated? Is there any Dutch equivalent?
 #: qcsrc/common/notifications.qh:269
 #, c-format
+#, c-format, fuzzy
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was telefragged door ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:269
 #, c-format
-msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:270
@@ -3428,39 +3436,42 @@ msgstr ""
 #: qcsrc/common/notifications.qh:272
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 heeft de mooie lichtjes van de Bumblebee gun van ^BG%s^K1 gezien%"
+"s%s\n"
 
 #: qcsrc/common/notifications.qh:273
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was verplettert ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:274
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 was gebombardeerd door de Raptor van ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:275
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 kon de paarse blobs van ^BG%s^K1 niet weerstaan%s%s\n"
 
 #: qcsrc/common/notifications.qh:276
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 werd in de explosie meegenomen toen de Raptor van ^BG%s^K1 "
+"explodeerde%s%s\n"
 
 #: qcsrc/common/notifications.qh:277
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 werd in de explosie meegenomen toen de Spiderbot van ^BG%s^K1 "
+"explodeerde%s%s\n"
 
 #: qcsrc/common/notifications.qh:278
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 werd verscheurd door de Spiderbot van ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:279
 #, c-format
@@ -3500,12 +3511,12 @@ msgstr ""
 #: qcsrc/common/notifications.qh:286
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 dachten dat ze een goede kampeerplaats hadden gevonden%s%s\n"
 
 #: qcsrc/common/notifications.qh:287
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 hebben zichzelf oneerlijk geëlimineerd%s%s\n"
 
 #: qcsrc/common/notifications.qh:288
 #, c-format
@@ -3515,32 +3526,32 @@ msgstr ""
 #: qcsrc/common/notifications.qh:289
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 kon geen adem halen%s%s\n"
 
 #: qcsrc/common/notifications.qh:289
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 was te lang in het water%s%s\n"
 
 #: qcsrc/common/notifications.qh:290
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 raakte de grond met een smak%s%s\n"
 
 #: qcsrc/common/notifications.qh:290
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 raakte de grond met te veel kracht%s%s\n"
 
 #: qcsrc/common/notifications.qh:291
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 brandde een beetje aan%s%s\n"
 
 #: qcsrc/common/notifications.qh:291
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 voelde zich een beetje warm%s%s\n"
 
 #: qcsrc/common/notifications.qh:292
 #, c-format
@@ -3579,48 +3590,50 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:297
 #, c-format
+#, c-format, fuzzy
 msgid "^BG%s^K1 was slimed%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 was onder geslijmd%s%s\n"
 
 #: qcsrc/common/notifications.qh:298
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 kon het niet meer aan%s%s\n"
 
 #: qcsrc/common/notifications.qh:299
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 is nu gepreserveerd voor de komende eeuwen%s%s\n"
 
+# Depending on context of what comes after "de" could be "het"
 #: qcsrc/common/notifications.qh:300
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 wisselde naar de %s%s\n"
 
 #: qcsrc/common/notifications.qh:301
 #, c-format
 msgid "^BG%s^K1 died in an accident%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 is in een ongeluk overleden%s%s\n"
 
 #: qcsrc/common/notifications.qh:302
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 is een turret tegen het lijf gelopen%s%s\n"
 
 #: qcsrc/common/notifications.qh:303
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 was weggeblazen door een eWheel turret%s%s\n"
 
 #: qcsrc/common/notifications.qh:304
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 kwam door de vuurlinie van de FLAC turret%s%s\n"
 
 #: qcsrc/common/notifications.qh:305
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 was opgeblazen door een Hellion turret%s%s\n"
 
 #: qcsrc/common/notifications.qh:306
 #, c-format
@@ -3665,7 +3678,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:314
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 was opgeblazen door een Walker turret%s%s\n"
 
 #: qcsrc/common/notifications.qh:315
 #, c-format
@@ -3965,8 +3978,9 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:373
 #, c-format
+#, c-format, fuzzy
 msgid "^F3SVQC Build information: ^F4%s\n"
-msgstr ""
+msgstr "^4MQC Versie informatie: %s\n"
 
 #: qcsrc/common/notifications.qh:374
 #, c-format
@@ -5090,16 +5104,19 @@ msgid "Red"
 msgstr ""
 
 #: qcsrc/common/teams.qh:27
+#, fuzzy
 msgid "Blue"
-msgstr ""
+msgstr "blauw"
 
 #: qcsrc/common/teams.qh:28
+#, fuzzy
 msgid "Yellow"
-msgstr ""
+msgstr "geel"
 
 #: qcsrc/common/teams.qh:29
+#, fuzzy
 msgid "Pink"
-msgstr ""
+msgstr "roze"
 
 #: qcsrc/common/teams.qh:30
 msgid "Team"
@@ -5108,6 +5125,26 @@ msgstr ""
 #: qcsrc/common/teams.qh:31
 msgid "Neutral"
 msgstr ""
+
+#~ msgid "Playermodel LOD:"
+#~ msgstr "Spelermodel LOD:"
+
+#~ msgid "Coronas"
+#~ msgstr "Coronas"
+
+#~ msgid "Use Occlusion Queries"
+#~ msgstr "Gebruik Occlusion Queries"
+
+#~ msgid "LOD"
+#~ msgstr "LOD"
+
+#, c-format
+#~ msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+#~ msgstr "^BG%s^K1 voelde zich erg warm door het vuur van ^BG%s^K1^K1%s%s\n"
+
+#, c-format, fuzzy
+#~ msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+#~ msgstr "^BG%s^K1 probeerde de teleportatie locatie van ^BG%s^K1 in te nemen%s%s\n"
 
 #~ msgid "Runematch"
 #~ msgstr "Runematch"
