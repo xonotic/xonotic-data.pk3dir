@@ -580,7 +580,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(time >= self.last_trace)
 	if not(monster_isvalidtarget(self.enemy, self))
-		self.enemy = world; // check enemy each think frame?
+		self.enemy = world;
+		
+	if(self.enemy && self.enemy.health < 1)
+		self.enemy = world; // enough!
 		
 	if not(self.enemy)
 	{
