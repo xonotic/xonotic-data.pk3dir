@@ -575,10 +575,6 @@ MUTATOR_HOOKFUNCTION(freezetag_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
-	freezetag_teams = autocvar_g_freezetag_teams_override;
-	if(freezetag_teams < 2)
-		freezetag_teams = autocvar_g_freezetag_teams;
-	freezetag_teams = bound(2, freezetag_teams, 4);
 	ret_float = freezetag_teams;
 	return 0;
 }
@@ -594,7 +590,12 @@ MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	ScoreRules_freezetag();
+
+	freezetag_teams = autocvar_g_freezetag_teams_override;
+	if(freezetag_teams < 2)
+		freezetag_teams = autocvar_g_freezetag_teams;
+	freezetag_teams = bound(2, freezetag_teams, 4);
+	ScoreRules_freezetag(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
