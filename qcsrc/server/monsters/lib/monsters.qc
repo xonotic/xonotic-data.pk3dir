@@ -433,7 +433,7 @@ vector monster_pickmovetarget(entity targ)
 	if(self.enemy)
 	{
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
-		self.last_trace = time + 0.1;
+		self.last_trace = time + 1.2;
 		return self.enemy.origin;
 	}
 	
@@ -489,6 +489,8 @@ vector monster_pickmovetarget(entity targ)
 
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
+	fixedmakevectors(self.angles);
+
 	if(self.target2)
 		self.goalentity = find(world, targetname, self.target2);
 		
@@ -576,6 +578,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
+	if(time >= self.last_trace)
 	if not(monster_isvalidtarget(self.enemy, self))
 		self.enemy = world; // check enemy each think frame?
 		
@@ -596,15 +599,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if not(self.enemy)
 		monster_sound(self.msound_idle, 5, TRUE);
 	
-	vector angles_face = vectoangles(self.moveto - self.origin);
-	vector owner_face = vectoangles(self.monster_owner.origin - self.origin);
-	vector enemy_face = vectoangles(self.enemy.origin - self.origin);
-	
-	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
-		self.moveto_z = self.origin_z;
-	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		self.angles_y = angles_face_y;
+		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
 	{
@@ -612,7 +608,29 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.touch = MonsterTouch;
 	}
 	 
-	v_forward = normalize(self.moveto - self.origin);
+	//v_forward = normalize(self.moveto - self.origin);
+	
+	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	
+	float turny = 0;
+	vector real_angle = vectoangles(self.steerto) - self.angles;
+	
+	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
+		turny = 20;
+	
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		self.angles_y += turny;
+	}
+	
+	if(self.state == MONSTER_STATE_ATTACK_MELEE)
+		self.moveto = self.origin;
+	else
+		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
+	
+	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
+		self.moveto_z = self.origin_z + 64; 
 	
 	float l = vlen(self.moveto - self.origin);
 	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
@@ -647,10 +665,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			{
 				monsters_setframe(manim_idle);
 				if(self.state != MONSTER_STATE_ATTACK_MELEE && self.state != MONSTER_STATE_ATTACK_LEAP)
-				if(self.enemy)
-					self.angles_y = enemy_face_y;
-				else
-					self.angles_y = ((self.monster_owner) ? owner_face_y : self.pos2_y); // reset looking angle now?
+					self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 			}
 		}
 	}
