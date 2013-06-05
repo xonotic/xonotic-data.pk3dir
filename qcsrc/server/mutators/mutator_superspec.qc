@@ -82,7 +82,7 @@ float superspec_filteritem(entity _for, entity _item)
 {
 	float i;
 
-	if(!_for.superspec_itemfilter)
+	if(_for.superspec_itemfilter == "")
 		return TRUE;
 
 	if(_for.superspec_itemfilter == "")

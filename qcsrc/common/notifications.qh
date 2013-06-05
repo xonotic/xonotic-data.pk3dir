@@ -236,13 +236,13 @@ void Send_Notification_WOVA(
 	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTN_NONE)
 
 #define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1))) \
-	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2))) \
+	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3))) \
+		MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4))) \
+		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 2,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
@@ -261,13 +261,13 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_water",         _("^BG%s%s^K1 was drowned by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FALL,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_fall",          _("^BG%s%s^K1 was grounded by ^BG%s^K1%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"), _("^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n")) \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"), _("^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_LAVA,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_lava",          _("^BG%s%s^K1 was cooked by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_NORMAL,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was blown up by ^BG%s^K1's nade%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SHOOTING_STAR,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_shootingstar",  _("^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SLIME,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SWAMP,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TELEFRAG,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_telefrag",      _("^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s\n"), _("^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n")) \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TELEFRAG,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_telefrag",      _("^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s\n"), _("^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TOUCHEXPLODE,      3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_GUN,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s\n"), "") \
@@ -340,7 +340,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_PRIMORSEC,          0, 3, "item_wepname f2primsec f3primsec", "",  "",               _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can\n"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_UNAVAILABLE,        0, 1, "item_wepname", "",                      "",               _("^F1%s^BG is ^F4not available^BG on this map\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,                   1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected%s\n"), "") \
-	MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
+	MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected and joined the ^TC^TT team\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,                      1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,               1, 0, "s1", "s1",                        "notify_balldropped",   _("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,                1, 0, "s1", "s1",                        "notify_ballpickedup",  _("^BG%s^BG has picked up the ball!\n"), "") \
@@ -423,13 +423,13 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"), "") 
 
 #define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1))) \
-	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2))) \
+	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3))) \
+		MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4))) \
+		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \

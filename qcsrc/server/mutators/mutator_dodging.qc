@@ -16,16 +16,10 @@
 // and to ramp up the dodge acceleration in the physics hook.
 .float last_dodging_time;
 
-// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
-.float dodging_action;
-
 // This is the velocity gain to be added over the ramp time.
 // It will decrease from frame to frame during dodging_action = 1
 // until it's 0.
 .float dodging_velocity_gain;
-
-// the jump part of the dodge cannot be ramped
-.float dodging_single_action;
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");

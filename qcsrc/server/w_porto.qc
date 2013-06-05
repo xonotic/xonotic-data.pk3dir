@@ -151,7 +151,7 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.realowner, "^1Out^7-portal created.");
+			centerprint(self.realowner, "^4Out^7-portal created.");
 			W_Porto_Success();
 		}
 		else

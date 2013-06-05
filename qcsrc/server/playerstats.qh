@@ -41,7 +41,7 @@ void PlayerStats_AddEvent(string event_id);
 float PlayerStats_Event(entity e, string event_id, float value);
 
 // add a team score
-void PlayerStats_TeamScore(float t, string event_id, float value);
+float PlayerStats_TeamScore(float t, string event_id, float value);
 
 // call at game over
 void PlayerStats_Shutdown(); // send stats to the server

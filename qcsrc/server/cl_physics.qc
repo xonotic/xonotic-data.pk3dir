@@ -23,7 +23,7 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(self.freezetag_frozen)
+	if(self.freezetag_frozen && !self.dodging_action)
 		return; // no jumping in freezetag when frozen
 
 	float mjumpheight;
