@@ -1165,6 +1165,7 @@ float autocvar_sv_timeout_resumetime;
 float autocvar_sv_vote_call;
 float autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
+float autocvar_sv_vote_limit;
 float autocvar_sv_vote_majority_factor;
 float autocvar_sv_vote_majority_factor_of_voted;
 float autocvar_sv_vote_master;
