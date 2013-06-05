@@ -63,7 +63,7 @@ float friend_needshelp(entity e)
 		}
 		case 1:
 		{
-			if(e.ammo_cells < g_pickup_cells_max || e.ammo_rockets < g_pickup_rockets_max || e.ammo_nails < g_pickup_nails_max || e.ammo_shells < g_pickup_shells_max)
+			if((e.ammo_cells && e.ammo_cells < g_pickup_cells_max) || (e.ammo_rockets && e.ammo_rockets < g_pickup_rockets_max) || (e.ammo_nails && e.ammo_nails < g_pickup_nails_max) || (e.ammo_shells && e.ammo_shells < g_pickup_shells_max))
 				return TRUE;
 			break;
 		}
