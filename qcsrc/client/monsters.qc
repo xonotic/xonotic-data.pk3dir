@@ -232,7 +232,7 @@ void monster_draw()
 		return;
     
 	fixedmakevectors(self.angles);
-	movelib_groundalign4point(50, 25, 0.25, 45);
+	//movelib_groundalign4point(50, 25, 0.25, 45);
 	setorigin(self, self.origin + self.velocity * dt);
 	self.angles_y = self.move_angles_y;
 }
