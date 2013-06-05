@@ -948,6 +948,7 @@ void monster_hook_spawn()
 	}
 	
 	if not(self.monster_respawned)
+	if not(self.skin)
 		self.skin = rint(random() * 4);
 	
 	self.pos1 = self.origin;
