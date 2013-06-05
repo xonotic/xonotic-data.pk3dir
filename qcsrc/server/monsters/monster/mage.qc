@@ -52,6 +52,8 @@ float friend_needshelp(entity e)
 		return FALSE;
 	if(!IS_PLAYER(e))
 		return (e.health < e.max_health);
+	if(e.items & IT_INVINCIBLE)
+		return FALSE;
 
 	switch(self.skin)
 	{
