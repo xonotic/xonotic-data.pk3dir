@@ -204,14 +204,14 @@ void monster_setupsounds(string mon)
 	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
 }
 
-void monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
+float monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
 {
 	float dot, rdmg = damg * random();
 
 	if (self.health <= 0)
-		return;
+		return FALSE;
 	if (targ == world)
-		return;
+		return FALSE;
 		
 	if(dostop)
 	{
@@ -226,6 +226,8 @@ void monster_melee (entity targ, float damg, float er, float deathtype, float do
 	
 	if(dot > er)
 		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
+		
+	return TRUE;
 }
 
 void Monster_CheckDropCvars (string mon)
