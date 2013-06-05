@@ -21,5 +21,6 @@ MUTATOR_DECLARATION(mutator_vampire);
 MUTATOR_DECLARATION(mutator_superspec);
 MUTATOR_DECLARATION(mutator_minstagib);
 MUTATOR_DECLARATION(mutator_touchexplode);
+MUTATOR_DECLARATION(mutator_nades);
 
 MUTATOR_DECLARATION(sandbox);

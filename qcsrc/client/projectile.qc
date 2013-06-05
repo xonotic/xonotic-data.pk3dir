@@ -300,6 +300,17 @@ void Ent_Projectile()
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			
+			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
+			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
+			case PROJECTILE_NADE_YELLOW: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
+			case PROJECTILE_NADE_YELLOW_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow_burn"); break;
+			case PROJECTILE_NADE_PINK: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink"); break;
+			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
+			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
+			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -341,6 +352,23 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
+				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+			case PROJECTILE_NADE_YELLOW_BURN:
+			case PROJECTILE_NADE_YELLOW:
+			case PROJECTILE_NADE_PINK_BURN:
+			case PROJECTILE_NADE_PINK:
+			case PROJECTILE_NADE_BURN:
+			case PROJECTILE_NADE:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_MINE:
 				self.mins = '-4 -4 -4';

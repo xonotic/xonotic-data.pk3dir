@@ -919,6 +919,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
+	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
