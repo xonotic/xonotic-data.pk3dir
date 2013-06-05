@@ -211,6 +211,9 @@ float CanThrowNade()
 	if(forbidWeaponUse())
 		return FALSE;
 		
+	if not(IS_PLAYER(self))
+		return FALSE;
+		
 	return TRUE;
 }
 
