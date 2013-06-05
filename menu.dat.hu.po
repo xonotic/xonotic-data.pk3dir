@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 13:13-0400\n"
+"POT-Creation-Date: 2013-06-04 18:02-0400\n"
 "PO-Revision-Date: 2012-03-10 15:47+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1407,7 +1407,7 @@ msgstr "HUD beállítások"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:184
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:200
 #: qcsrc/menu/xonotic/dialog_settings_input.c:90
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
 #: qcsrc/menu/xonotic/dialog_settings_video.c:143
@@ -2095,178 +2095,175 @@ msgid "DET^Insane"
 msgstr "DET^Nagyon magas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
-msgid "Playermodel LOD:"
-msgstr "Játékos modell LOD:"
+msgid "Player detail:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "Texture resolution:"
 msgstr "Textúra felbontás:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
 msgid "RES^Leet"
 msgstr "RES^Semmi"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "RES^Lowest"
 msgstr "RES^Legalacsonyabb"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
 msgid "RES^Very low"
 msgstr "RES^Nagyon alacsony"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
 msgid "RES^Low"
 msgstr "RES^Alacsony"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "RES^Normal"
 msgstr "RES^Normál"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
 msgid "RES^Good"
 msgstr "RES^Jó"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
 msgid "RES^Best"
 msgstr "RES^Legjobb"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:86
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:89
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
 msgid "Avoid lossy texture compression"
 msgstr "Veszteséges textúra tömörítés mellőzése"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
-msgid "Use lightmaps"
-msgstr "Fénytérképek használata"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:96
-msgid "Deluxe mapping"
-msgstr "Deluxe mapping"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:98
-msgid "Gloss"
-msgstr "Csillogás"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-msgid "Particles quality:"
-msgstr "Részecskék minősége:"
-
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
-msgid "Particles distance:"
-msgstr "Részecskék megjelenítése:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-msgid "Damage effects:"
-msgstr "Sebzési effektek:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-msgid "DMGPRTCLS^Disabled"
-msgstr "Letiltva"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
-msgid "DMGPRTCLS^Skeletal"
-msgstr "Testrészenként"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:112
-msgid "DMGPRTCLS^All"
-msgstr "MDL^Mind"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
-msgid "Decals"
-msgstr "Vér- és égésnyomok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:117
-msgid "Decals on models"
-msgstr "Foltok a modelleken"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:121
-msgid "Distance:"
-msgstr "Megjelenítés távolsága:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:127
-msgid "Time:"
-msgstr "Eltűnés ideje"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:133
-msgid "Coronas"
-msgstr "Fényudvarok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:134
-msgid "Use Occlusion Queries"
-msgstr "Láthatósági ellenőrzés"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-msgid "No dynamic lighting"
-msgstr "Nincsenek dinamikus fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
-msgid "Fake corona lighting"
-msgstr "Hamis fényudvarok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
-msgid "Realtime dynamic lighting"
-msgstr "Valós idejű dinamikus fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:141
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:145
-msgid "Shadows"
-msgstr "Árnyékok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:144
-msgid "Realtime world lighting"
-msgstr "Valósidejű világ fények"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:149
-msgid "Use normal maps"
-msgstr "Normal map használata"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
-msgid "Soft shadows"
-msgstr "Lágy árnyékok"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "Show surfaces"
 msgstr "Felületek megjelenítése"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
+msgid "Use lightmaps"
+msgstr "Fénytérképek használata"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
+msgid "Deluxe mapping"
+msgstr "Deluxe mapping"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
+msgid "Gloss"
+msgstr "Csillogás"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:114
 msgid "Offset mapping"
 msgstr "Offset mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
 msgid "Relief mapping"
 msgstr "Relief mapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
-msgid "LOD"
-msgstr "LOD"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
-msgid "Bloom"
-msgstr "Ragyogás"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:119
 msgid "Reflections:"
 msgstr "Tükröződés:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:169
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Blurred"
 msgstr "Homályos"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:170
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:123
 msgid "REFL^Good"
 msgstr "Refl^Jó"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:124
 msgid "Sharp"
 msgstr "Éles"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:129
+msgid "Particles quality:"
+msgstr "Részecskék minősége:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
+msgid "Particles distance:"
+msgstr "Részecskék megjelenítése:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+msgid "Damage effects:"
+msgstr "Sebzési effektek:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
+msgid "DMGPRTCLS^Disabled"
+msgstr "Letiltva"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
+msgid "DMGPRTCLS^Skeletal"
+msgstr "Testrészenként"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:139
+msgid "DMGPRTCLS^All"
+msgstr "MDL^Mind"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
+msgid "Particle effects for spawnpoints"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:146
+msgid "No dynamic lighting"
+msgstr "Nincsenek dinamikus fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+msgid "Fake corona lighting"
+msgstr "Hamis fényudvarok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
+msgid "Realtime dynamic lighting"
+msgstr "Valós idejű dinamikus fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+msgid "Shadows"
+msgstr "Árnyékok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:156
+msgid "Realtime world lighting"
+msgstr "Valósidejű világ fények"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
+msgid "Use normal maps"
+msgstr "Normal map használata"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:163
+msgid "Soft shadows"
+msgstr "Lágy árnyékok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:167
+msgid "Fade corona according to visibility"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+msgid "Bloom"
+msgstr "Ragyogás"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:172
+msgid "Extra postprocessing effects"
+msgstr "Extra utófeldolgozási effektek"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:177
 msgid "Motion blur:"
 msgstr "Mozgási elmosódás:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:181
-msgid "Extra postprocessing effects"
-msgstr "Extra utófeldolgozási effektek"
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:183
+msgid "Decals"
+msgstr "Vér- és égésnyomok"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:184
+msgid "Decals on models"
+msgstr "Foltok a modelleken"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+msgid "Distance:"
+msgstr "Megjelenítés távolsága:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+msgid "Time:"
+msgstr "Eltűnés ideje"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -3389,7 +3386,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
-msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:265
@@ -3419,7 +3416,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:269
 #, c-format
-msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:270
@@ -5116,6 +5113,18 @@ msgstr ""
 #: qcsrc/common/teams.qh:31
 msgid "Neutral"
 msgstr ""
+
+#~ msgid "Playermodel LOD:"
+#~ msgstr "Játékos modell LOD:"
+
+#~ msgid "Coronas"
+#~ msgstr "Fényudvarok"
+
+#~ msgid "Use Occlusion Queries"
+#~ msgstr "Láthatósági ellenőrzés"
+
+#~ msgid "LOD"
+#~ msgstr "LOD"
 
 #~ msgid "Runematch"
 #~ msgstr "Rúnameccs"

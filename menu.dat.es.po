@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 13:13-0400\n"
+"POT-Creation-Date: 2013-06-04 18:02-0400\n"
 "PO-Revision-Date: 2013-06-03 13:28+0000\n"
 "Last-Translator: kammy <kammysmb@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1405,7 +1405,7 @@ msgstr "Configuracion de HUD"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:184
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:186
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:200
 #: qcsrc/menu/xonotic/dialog_settings_input.c:90
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
 #: qcsrc/menu/xonotic/dialog_settings_video.c:143
@@ -2095,178 +2095,175 @@ msgid "DET^Insane"
 msgstr "Insano"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
-msgid "Playermodel LOD:"
-msgstr "Perdida de detalle del modelo de jugador:"
+msgid "Player detail:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "Texture resolution:"
 msgstr "Resolución de textura:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:68
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
 msgid "RES^Leet"
 msgstr "Leet"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:69
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "RES^Lowest"
 msgstr "Mínimo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
 msgid "RES^Very low"
 msgstr "Muy bajo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
 msgid "RES^Low"
 msgstr "Bajo"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:72
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "RES^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
 msgid "RES^Good"
 msgstr "Bueno"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
 msgid "RES^Best"
 msgstr "Mejor"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:86
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:89
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:87
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
 msgid "Avoid lossy texture compression"
 msgstr "Evitar compresion de Textura con Pérdida"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:95
-msgid "Use lightmaps"
-msgstr "Usar lightmaps"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:96
-msgid "Deluxe mapping"
-msgstr "Mapeado Deluxe"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:98
-msgid "Gloss"
-msgstr "Brillo"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
-msgid "Particles quality:"
-msgstr "Calidad de partículas:"
-
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:105
-msgid "Particles distance:"
-msgstr "Distancia de partículas:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-msgid "Damage effects:"
-msgstr "Effectos de daño:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-msgid "DMGPRTCLS^Disabled"
-msgstr "Deshabilitado"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
-msgid "DMGPRTCLS^Skeletal"
-msgstr "Esqueletal"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:112
-msgid "DMGPRTCLS^All"
-msgstr "Todas"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
-msgid "Decals"
-msgstr "Símbolos"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:117
-msgid "Decals on models"
-msgstr "Marcas en los jugadores"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:121
-msgid "Distance:"
-msgstr "Distancia:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:127
-msgid "Time:"
-msgstr "Tiempo:"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:133
-msgid "Coronas"
-msgstr "Coronas"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:134
-msgid "Use Occlusion Queries"
-msgstr "Usar consultas de oclusion"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-msgid "No dynamic lighting"
-msgstr "Sin iluminación dinámica"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
-msgid "Fake corona lighting"
-msgstr "Iluminacion por medio de coronas falsas"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
-msgid "Realtime dynamic lighting"
-msgstr "Iluminación dinámica en tiempo real"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:141
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:145
-msgid "Shadows"
-msgstr "Sombras"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:144
-msgid "Realtime world lighting"
-msgstr "Iluminación del mundo en tiempo real"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:149
-msgid "Use normal maps"
-msgstr "Usar mapa de normales"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
-msgid "Soft shadows"
-msgstr "Sombras Suaves"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "Show surfaces"
 msgstr "Mostrar superficies"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
+msgid "Use lightmaps"
+msgstr "Usar lightmaps"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
+msgid "Deluxe mapping"
+msgstr "Mapeado Deluxe"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:111
+msgid "Gloss"
+msgstr "Brillo"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:114
 msgid "Offset mapping"
 msgstr "Despl. de mapeado"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
 msgid "Relief mapping"
 msgstr "Mapeado Relief"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
-msgid "LOD"
-msgstr "Nivel de detalle"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
-msgid "Bloom"
-msgstr "Bloom"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:119
 msgid "Reflections:"
 msgstr "Reflejos:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:169
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Blurred"
 msgstr "Borroso"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:170
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:123
 msgid "REFL^Good"
 msgstr "Bueno"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:124
 msgid "Sharp"
 msgstr "Ajustado"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:129
+msgid "Particles quality:"
+msgstr "Calidad de partículas:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:132
+msgid "Particles distance:"
+msgstr "Distancia de partículas:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+msgid "Damage effects:"
+msgstr "Effectos de daño:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
+msgid "DMGPRTCLS^Disabled"
+msgstr "Deshabilitado"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
+msgid "DMGPRTCLS^Skeletal"
+msgstr "Esqueletal"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:139
+msgid "DMGPRTCLS^All"
+msgstr "Todas"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
+msgid "Particle effects for spawnpoints"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:146
+msgid "No dynamic lighting"
+msgstr "Sin iluminación dinámica"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+msgid "Fake corona lighting"
+msgstr "Iluminacion por medio de coronas falsas"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
+msgid "Realtime dynamic lighting"
+msgstr "Iluminación dinámica en tiempo real"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+msgid "Shadows"
+msgstr "Sombras"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:156
+msgid "Realtime world lighting"
+msgstr "Iluminación del mundo en tiempo real"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
+msgid "Use normal maps"
+msgstr "Usar mapa de normales"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:163
+msgid "Soft shadows"
+msgstr "Sombras Suaves"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:167
+msgid "Fade corona according to visibility"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:171
+msgid "Bloom"
+msgstr "Bloom"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:172
+msgid "Extra postprocessing effects"
+msgstr "Efectos de postprocesado"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:177
 msgid "Motion blur:"
 msgstr "Difuminado p/ movimiento:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:181
-msgid "Extra postprocessing effects"
-msgstr "Efectos de postprocesado"
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:183
+msgid "Decals"
+msgstr "Símbolos"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:184
+msgid "Decals on models"
+msgstr "Marcas en los jugadores"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:188
+msgid "Distance:"
+msgstr "Distancia:"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+msgid "Time:"
+msgstr "Tiempo:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -3395,8 +3392,8 @@ msgstr "^BG%s%s^K1 fue quemado hasta crujir por ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:264
 #, c-format
-msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
-msgstr "^BG%s^K1 se sintio un poco caliente por el fuego^K1%s%s de ^BG%s^K1\n"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+msgstr ""
 
 #: qcsrc/common/notifications.qh:265
 #, c-format
@@ -3426,8 +3423,8 @@ msgstr "^BG%s%s^K1 fue \"telefragged\" por ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:269
 #, c-format
-msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
-msgstr "^BG%s^K1 intento ocupar la destinacion de teletransportacion de ^BG%s^K1%s%s\n"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+msgstr ""
 
 #: qcsrc/common/notifications.qh:270
 #, c-format
@@ -5185,6 +5182,26 @@ msgstr "Equipo"
 #: qcsrc/common/teams.qh:31
 msgid "Neutral"
 msgstr "Neutro"
+
+#~ msgid "Playermodel LOD:"
+#~ msgstr "Perdida de detalle del modelo de jugador:"
+
+#~ msgid "Coronas"
+#~ msgstr "Coronas"
+
+#~ msgid "Use Occlusion Queries"
+#~ msgstr "Usar consultas de oclusion"
+
+#~ msgid "LOD"
+#~ msgstr "Nivel de detalle"
+
+#, c-format
+#~ msgid "^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
+#~ msgstr "^BG%s^K1 se sintio un poco caliente por el fuego^K1%s%s de ^BG%s^K1\n"
+
+#, c-format
+#~ msgid "^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
+#~ msgstr "^BG%s^K1 intento ocupar la destinacion de teletransportacion de ^BG%s^K1%s%s\n"
 
 #~ msgid "Browser not initialized!"
 #~ msgstr "¡Navegador no inicializado!"
