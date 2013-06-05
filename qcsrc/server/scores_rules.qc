@@ -115,3 +115,11 @@ void ScoreRules_freezetag()
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
 	ScoreRules_basics_end();
 }
+#define ST_CA_ROUNDS 1
+void ScoreRules_ca(float teams)
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
