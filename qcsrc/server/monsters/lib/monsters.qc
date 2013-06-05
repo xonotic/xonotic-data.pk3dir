@@ -626,11 +626,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
 		self.moveto = self.origin;
-	else
+	else if(self.enemy)
 		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
 	
 	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
-		self.moveto_z = self.origin_z + 64; 
+		self.moveto_z = self.origin_z; 
 	
 	float l = vlen(self.moveto - self.origin);
 	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
@@ -652,22 +652,17 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
-		if(targ.target)
-			self.target2 = targ.target;
-		else if(targ.target2)
-			self.target2 = targ.target2;
-		else
-		{
-			movelib_beak_simple(stopspeed);
-			if(time > self.attack_finished_single)
-			if(time > self.pain_finished)
-			if (vlen(self.velocity) <= 30)
-			{
-				monsters_setframe(manim_idle);
-				if(self.state != MONSTER_STATE_ATTACK_MELEE && self.state != MONSTER_STATE_ATTACK_LEAP)
-					self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-			}
-		}
+		entity e = find(world, targetname, self.target2);
+		if(e.target2)
+			self.target2 = e.target2;
+		else if(e.target)
+			self.target2 = e.target;
+		
+		movelib_beak_simple(stopspeed);
+		if(time > self.attack_finished_single)
+		if(time > self.pain_finished)
+		if (vlen(self.velocity) <= 30)
+			monsters_setframe(manim_idle);
 	}
 	
 	if(self.enemy)
