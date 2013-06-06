@@ -2311,7 +2311,7 @@ void PlayerPreThink (void)
 				
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(self.respawn_flags & RESPAWN_FORCE)
+					if(self.respawn_flags & RESPAWN_FORCE && !autocvar_g_respawn_delay_max)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2320,6 +2320,8 @@ void PlayerPreThink (void)
 				{
 					if(button_pressed)
 						self.deadflag = DEAD_RESPAWNABLE;
+					else if(time >= self.respawn_time_max && self.respawn_flags & RESPAWN_FORCE)
+						self.deadflag = DEAD_RESPAWNING;
 				}
 				else if (self.deadflag == DEAD_RESPAWNABLE)
 				{
@@ -2331,6 +2333,7 @@ void PlayerPreThink (void)
 					if(time > self.respawn_time)
 					{
 						self.respawn_time = time + 1; // only retry once a second
+						self.respawn_time_max = self.respawn_time;
 						respawn();
 					}
 				}
@@ -2339,6 +2342,8 @@ void PlayerPreThink (void)
 
 				if(self.respawn_flags & RESPAWN_SILENT)
 					self.stat_respawn_time = 0;
+				else if(self.respawn_flags & RESPAWN_FORCE && autocvar_g_respawn_delay_max)
+					self.stat_respawn_time = self.respawn_time_max;
 				else
 					self.stat_respawn_time = self.respawn_time;
 			}
