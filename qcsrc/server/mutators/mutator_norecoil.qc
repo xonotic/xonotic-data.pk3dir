@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(norecoil_BuildMutatorsString)
 MUTATOR_DEFINITION(mutator_norecoil)
 {
 	MUTATOR_HOOK(PlayerPreThink, norecoil_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, midair_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, norecoil_BuildMutatorsString, CBC_ORDER_ANY);
 
 	return FALSE;
 }
