@@ -924,6 +924,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
 	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
 	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
+	CHECK_MUTATOR_ADD("g_jump_grunt", mutator_jump_grunt, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
@@ -954,7 +955,6 @@ void readlevelcvars(void)
 	g_cloaked = cvar("g_cloaked");
     if(g_cts)
         g_cloaked = 1; // always enable cloak in CTS
-	g_jump_grunt = cvar("g_jump_grunt");
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
