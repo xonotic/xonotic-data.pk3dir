@@ -2,7 +2,7 @@ float gravity_delay;
 float old_gravity;
 MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 {
-	if(gameover)
+	if(gameover || !cvar("g_random_gravity"))
 	{
 		if(autocvar_sv_gravity != old_gravity)
 		{
