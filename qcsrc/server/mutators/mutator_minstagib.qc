@@ -275,6 +275,7 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 	start_health = 100;
 	start_armorvalue = 0;
 	WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
+	WEPSET_COPY_AW(warmup_start_weapons, WEP_MINSTANEX);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 		
 	return FALSE;
