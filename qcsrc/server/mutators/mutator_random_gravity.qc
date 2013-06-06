@@ -1,4 +1,10 @@
+// Random Gravity
+//
+// Mutator by Mario
+// Inspired by Player 2
+
 float gravity_delay;
+
 MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 {
 	if(gameover || !cvar("g_random_gravity")) return FALSE;	
@@ -38,7 +44,7 @@ MUTATOR_DEFINITION(mutator_random_gravity)
 	
 	MUTATOR_ONADD
 	{
-		cvar_settemp("sv_gravity", ftos(cvar("sv_gravity"))); // settemp current gravity so it's restored on match end
+		cvar_settemp("sv_gravity", cvar_string("sv_gravity")); // settemp current gravity so it's restored on match end
 	}
 
 	return FALSE;
