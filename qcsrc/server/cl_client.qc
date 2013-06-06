@@ -2404,9 +2404,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		if(g_nexball)
-			nexball_setstatus();
 		
 		// secret status
 		secrets_setstatus();
