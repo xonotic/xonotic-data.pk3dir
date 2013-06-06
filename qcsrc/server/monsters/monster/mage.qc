@@ -130,9 +130,6 @@ void mage_think()
 void mageattack_melee()
 {
 	monster_melee(self.enemy, autocvar_g_monster_mage_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
-	
-	self.delay = -1;
-	self.monster_delayedattack = func_null;
 }
 
 void mage_grenade_explode()
@@ -228,9 +225,6 @@ void mage_spike()
 {
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	
-	self.delay = -1;
-	self.monster_delayedattack = func_null;
 
 	makevectors(self.angles);
 
@@ -356,10 +350,9 @@ float mage_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			self.monster_delayedattack = mageattack_melee;
-			self.delay = time + 0.2;
 			monsters_setframe(mage_anim_attack);
 			self.attack_finished_single = time + autocvar_g_monster_mage_attack_melee_delay;
+			defer(0.2, mageattack_melee);
 			
 			return TRUE;
 		}
@@ -372,9 +365,8 @@ float mage_attack(float attack_type)
 			}
 	
 			monsters_setframe(mage_anim_attack);
-			self.delay = time + 0.2;
 			self.attack_finished_single = time + autocvar_g_monster_mage_attack_spike_delay;
-			self.monster_delayedattack = mage_spike;
+			defer(0.2, mage_spike);
 			
 			return TRUE;
 		}

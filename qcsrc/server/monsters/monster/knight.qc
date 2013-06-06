@@ -53,8 +53,6 @@ void knight_think()
 
 void knight_inferno()
 {
-	self.monster_delayedattack = func_null;
-	self.delay = -1;
 	if not(self.enemy)
 		return;
 		
@@ -98,9 +96,6 @@ void knight_fireball()
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 	
 	monster_makevectors(self.enemy);
-	
-	self.monster_delayedattack = func_null;
-	self.delay = -1;
 	
 	self.effects |= EF_MUZZLEFLASH;
 	sound(self, CHAN_WEAPON, "weapons/fireball2.wav", 1, ATTN_NORM);
@@ -165,15 +160,11 @@ void knight_spike()
 
 void knight_spikes()
 {
-	self.monster_delayedattack = knight_spikes;
-	self.delay = time + 0.1;
 	self.knight_cycles += 1;
 	knight_spike();
-	if(self.knight_cycles >= 7)
-	{
-		self.monster_delayedattack = func_null;
-		self.delay = -1;
-	}
+	
+	if(self.knight_cycles <= 7)
+		defer(0.1, knight_spikes);
 }
 
 float knight_attack_ranged()
@@ -194,25 +185,22 @@ float knight_attack_ranged()
 		case 1:
 		{
 			monsters_setframe(knight_anim_magic2);
-			self.delay = time + 0.4;
-			self.monster_delayedattack = knight_fireball;
 			self.attack_finished_single = time + 2;
+			defer(0.4, knight_fireball);
 			
 			return TRUE;
 		}
 		case 2:
 		{
-			self.monster_delayedattack = knight_inferno;
-			self.delay = time + 0.5;
 			self.attack_finished_single = time + 3;
+			defer(0.5, knight_inferno);
 			return TRUE;
 		}
 		case 3:
 		{
 			monsters_setframe(knight_anim_magic3);
-			self.monster_delayedattack = knight_spikes;
-			self.delay = time + 0.4;
 			self.attack_finished_single = time + 3;
+			defer(0.4, knight_spikes);
 			
 			return TRUE;
 		}

@@ -352,24 +352,10 @@ void monster_checkattack(entity e, entity targ)
 	if(e == world)
 		return;
 	if(targ == world)
-	{
-		e.monster_delayedattack = func_null;
-		e.delay = -1;
 		return;
-	}
 		
 	if not(e.monster_attackfunc)
 		return;
-		
-	if(e.monster_delayedattack && e.delay != -1)
-	{
-		if(time < e.delay)
-			return;
-			
-		e.monster_delayedattack();
-		
-		return;
-	}
 	
 	if(time < e.attack_finished_single)
 		return;
@@ -1016,7 +1002,6 @@ float monster_initialize(string  net_name, float mon_id,
 	self.solid				= SOLID_BBOX;
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
-	self.delay				= -1; // used in attack delay code
 	self.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	monsters_spawned	   += 1;
 	self.enemy				= world;

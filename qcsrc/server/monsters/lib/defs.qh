@@ -40,7 +40,6 @@ const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
 
 .void() monster_spawnfunc;
 .void() monster_die;
-.void() monster_delayedattack;
 
 .float monster_movestate; // used to tell what the monster is currently doing
 const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still
