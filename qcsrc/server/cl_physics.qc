@@ -23,8 +23,8 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(self.freezetag_frozen)
-		return; // no jumping in freezetag when frozen
+	if(MUTATOR_CALLHOOK(PlayerJump))
+		return;
 
 	float mjumpheight;
 	float doublejump;
@@ -109,9 +109,6 @@ void PlayerJump (void)
 	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
-
-	if(self.health <= g_bloodloss)
-		return;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *

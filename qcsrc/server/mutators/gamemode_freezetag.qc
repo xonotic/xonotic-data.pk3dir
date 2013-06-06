@@ -539,6 +539,14 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_PlayerJump)
+{
+	if(self.freezetag_frozen)
+		return TRUE; // no jumping in freezetag when frozen
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 {
 	if (self.freezetag_frozen)
@@ -619,6 +627,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerJump, freezetag_PlayerJump, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, freezetag_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);

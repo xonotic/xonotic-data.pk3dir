@@ -2346,8 +2346,6 @@ void PlayerPreThink (void)
 		float do_crouch = self.BUTTON_CROUCH;
 		if(self.hook.state)
 			do_crouch = 0;
-		if(self.health <= g_bloodloss)
-			do_crouch = 1;
 		if(self.vehicle)
 			do_crouch = 0;
 		if(self.freezetag_frozen)
@@ -2376,15 +2374,6 @@ void PlayerPreThink (void)
 					self.view_ofs = PL_VIEW_OFS;
 					setsize (self, PL_MIN, PL_MAX);
 				}
-			}
-		}
-
-		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
-		{
-			if(self.bloodloss_timer < time)
-			{
-				self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-				self.bloodloss_timer = time + 0.5 + random() * 0.5;
 			}
 		}
 
