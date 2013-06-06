@@ -28,5 +28,6 @@ MUTATOR_DECLARATION(mutator_random_gravity);
 MUTATOR_DECLARATION(mutator_norecoil);
 MUTATOR_DECLARATION(mutator_multijump);
 MUTATOR_DECLARATION(mutator_jump_grunt);
+MUTATOR_DECLARATION(mutator_footsteps);
 
 MUTATOR_DECLARATION(sandbox);

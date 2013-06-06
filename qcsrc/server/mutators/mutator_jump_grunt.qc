@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(grunt_BuildMutatorsString)
 MUTATOR_DEFINITION(mutator_jump_grunt)
 {
 	MUTATOR_HOOK(PlayerJump, grunt_PlayerJump, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, norecoil_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, grunt_BuildMutatorsString, CBC_ORDER_ANY);
 
 	return FALSE;
 }
