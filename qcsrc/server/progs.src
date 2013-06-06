@@ -253,6 +253,7 @@ mutators/mutator_midair.qc
 mutators/mutator_bloodloss.qc
 mutators/mutator_random_gravity.qc
 mutators/mutator_norecoil.qc
+mutators/mutator_multijump.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

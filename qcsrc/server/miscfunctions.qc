@@ -923,6 +923,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
 	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
+	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
