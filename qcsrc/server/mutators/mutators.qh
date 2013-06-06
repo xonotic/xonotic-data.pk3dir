@@ -25,5 +25,6 @@ MUTATOR_DECLARATION(mutator_pinata);
 MUTATOR_DECLARATION(mutator_midair);
 MUTATOR_DECLARATION(mutator_bloodloss);
 MUTATOR_DECLARATION(mutator_random_gravity);
+MUTATOR_DECLARATION(mutator_norecoil);
 
 MUTATOR_DECLARATION(sandbox);

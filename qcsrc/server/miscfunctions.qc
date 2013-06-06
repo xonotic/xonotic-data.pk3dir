@@ -922,6 +922,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
 	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
+	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
@@ -956,7 +957,6 @@ void readlevelcvars(void)
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
-	g_norecoil = cvar("g_norecoil");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
 	sv_autotaunt = cvar("sv_autotaunt");
