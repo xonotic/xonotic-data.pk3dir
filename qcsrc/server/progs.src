@@ -251,6 +251,7 @@ mutators/mutator_touchexplode.qc
 mutators/mutator_pinata.qc
 mutators/mutator_midair.qc
 mutators/mutator_bloodloss.qc
+mutators/mutator_random_gravity.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
