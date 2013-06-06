@@ -1,18 +1,7 @@
 float gravity_delay;
-float old_gravity;
 MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 {
-	if(gameover || !cvar("g_random_gravity"))
-	{
-		if(autocvar_sv_gravity != old_gravity)
-		{
-			cvar_set("sv_gravity", ftos(old_gravity));
-			old_gravity = autocvar_sv_gravity; // update now so it can be changed during match end
-		}
-		
-		return FALSE;
-	}
-		
+	if(gameover || !cvar("g_random_gravity")) return FALSE;	
 	if(time < gravity_delay) return FALSE;
 	if(time < game_starttime) return FALSE;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) return FALSE;
@@ -49,12 +38,7 @@ MUTATOR_DEFINITION(mutator_random_gravity)
 	
 	MUTATOR_ONADD
 	{
-		old_gravity = autocvar_sv_gravity;
-	}
-	
-	MUTATOR_ONREMOVE
-	{
-		cvar_set("sv_gravity", ftos(old_gravity));
+		cvar_settemp("sv_gravity", ftos(cvar("sv_gravity"))); // settemp current gravity so it's restored on match end
 	}
 
 	return FALSE;
