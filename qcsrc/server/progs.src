@@ -249,6 +249,7 @@ mutators/mutator_superspec.qc
 mutators/mutator_minstagib.qc
 mutators/mutator_touchexplode.qc
 mutators/mutator_pinata.qc
+mutators/mutator_midair.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

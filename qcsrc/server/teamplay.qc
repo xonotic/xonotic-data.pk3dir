@@ -286,8 +286,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
-	if(g_midair)
-		modifications = strcat(modifications, ", Midair");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_bloodloss > 0)
