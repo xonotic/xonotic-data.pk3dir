@@ -767,7 +767,6 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		start_items |= IT_UNLIMITED_AMMO;
@@ -919,6 +918,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
+	CHECK_MUTATOR_ADD("g_pinata", mutator_pinata, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
@@ -1028,8 +1028,6 @@ void readlevelcvars(void)
 
 	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
 	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
-
-	g_pinata = cvar("g_pinata");
 
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)

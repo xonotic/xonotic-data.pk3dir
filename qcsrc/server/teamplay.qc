@@ -288,8 +288,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Hook");
 	if(g_midair)
 		modifications = strcat(modifications, ", Midair");
-	if(g_pinata)
-		modifications = strcat(modifications, ", Piñata");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_bloodloss > 0)
