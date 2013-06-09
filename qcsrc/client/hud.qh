@@ -340,8 +340,13 @@ if(panel.update_time <= time) { \
 	} \
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
-	if(panel.current_panel_bg != "") \
+	if(panel.current_panel_bg) \
 		strunzone(panel.current_panel_bg); \
+	if(panel_bg == "")\
+	{\
+		/*print(sprintf("^xf08 %s panel: panel_bg is empty\n", panel.panel_name));*/\
+		panel_bg = "0";\
+	}\
 	panel.current_panel_bg = strzone(panel_bg); \
 	panel.current_panel_bg_alpha = panel_bg_alpha; \
 	panel.current_panel_bg_border = panel_bg_border; \
@@ -354,6 +359,11 @@ if(panel.update_time <= time) { \
 	panel_pos = panel.current_panel_pos; \
 	panel_size = panel.current_panel_size; \
 	panel_bg = panel.current_panel_bg; \
+	if(panel.current_panel_bg == "")\
+	{\
+		/*print(sprintf("^xf08 %s panel: panel.current_panel_bg is empty\n", panel.panel_name));*/\
+		panel_bg = "0";\
+	}\
 	panel_bg_alpha = panel.current_panel_bg_alpha; \
 	panel_bg_border = panel.current_panel_bg_border; \
 	panel_bg_color = panel.current_panel_bg_color; \
