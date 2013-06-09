@@ -1,4 +1,5 @@
 .entity nade;
+.entity fake_nade;
 .float nade_refire;
 
 void nade_timer_think()
@@ -114,8 +115,14 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
 		damage = autocvar_g_nades_nade_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && !(deathtype & HITTYPE_SECONDARY))
 		damage = autocvar_g_nades_nade_health * 1.1;
+		
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY))
+	{
+		damage = autocvar_g_nades_nade_health * 0.1;
+		force *= 15;
+	}
 	
 	self.velocity += force;
 
@@ -143,9 +150,15 @@ void toss_nade(entity e, vector _velocity, float _time)
 	entity _nade = e.nade;
 	e.nade = world;
 	
+	remove(e.fake_nade);
+	e.fake_nade = world;
+	
+	makevectors(e.v_angle);
+	
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 	
-	setorigin(_nade, gettaginfo(_nade, gettagindex(_nade, "Object001")));
+	setorigin(_nade, CENTER_OR_VIEWOFS(e) + (v_right * 10) * -1);
+	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -163,7 +176,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.solid = SOLID_BBOX;
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
-	_nade.takedamage = DAMAGE_YES;
+	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	_nade.teleportable = TRUE;
 
@@ -182,10 +195,13 @@ void nade_prime()
 {
 	if(self.nade)
 		remove(self.nade);
+		
+	if(self.fake_nade)
+		remove(self.fake_nade);
 	
 	self.nade = spawn();
-	setmodel(self.nade, "models/weapons/h_ok_grenade.iqm");
-	setattachment(self.nade, self.weaponentity, "");
+	setmodel(self.nade, "null");
+	setattachment(self.nade, self, "bip01 l hand");
 	self.nade.classname = "nade";
 	self.nade.realowner = self;
 	self.nade.colormap = self.colormap;
@@ -195,6 +211,17 @@ void nade_prime()
 	self.nade.think = nade_beep;
 	self.nade.nextthink = max(self.nade.wait - 3, time);
 	self.nade.projectiledeathtype = DEATH_NADE;
+
+	self.fake_nade = spawn();
+	setmodel(self.fake_nade, "models/weapons/h_ok_grenade.iqm");
+	setattachment(self.fake_nade, self.weaponentity, "");
+	self.fake_nade.classname = "fake_nade";
+	//self.fake_nade.viewmodelforclient = self;
+	self.fake_nade.realowner = self.fake_nade.owner = self;
+	self.fake_nade.colormap = self.colormap;
+	self.fake_nade.glowmod = self.glowmod;
+	self.fake_nade.think = SUB_Remove;
+	self.fake_nade.nextthink = self.nade.wait;
 }
 
 float CanThrowNade()
@@ -203,6 +230,9 @@ float CanThrowNade()
 		return FALSE;
 		
 	if(gameover)
+		return FALSE;
+		
+	if(self.deadflag != DEAD_NO)
 		return FALSE;
 	
 	if not(autocvar_g_nades)
@@ -307,6 +337,17 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
+{
+	if(self.nade)
+		remove(self.nade);
+
+	if(self.fake_nade)
+		remove(self.fake_nade);
+		
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(nades_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Nades");
@@ -326,6 +367,8 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	
