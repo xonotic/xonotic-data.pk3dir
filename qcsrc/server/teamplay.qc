@@ -406,8 +406,8 @@ void CheckAllowedTeams (entity for_whom)
 	}
 	else if(g_domination)
 		teament_name = "dom_team";
-	else if(g_ctf)
-		teament_name = "ctf_team";
+	//else if(g_ctf)
+		//teament_name = "ctf_team";
 	else if(g_tdm)
 		teament_name = "tdm_team";
 	else if(g_nexball)

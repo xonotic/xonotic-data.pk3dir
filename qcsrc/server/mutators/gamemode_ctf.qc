@@ -32,11 +32,11 @@ void ctf_CaptureRecord(entity flag, entity player)
 	{
 		if(tmp_entity.CAPTURE_VERBOSE)
 		{
-			if(!ctf_captimerecord) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
-			else if(cap_time < cap_record) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-			else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			if(!ctf_captimerecord) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
 		}
-		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
+		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
 
 	// the previous notification broadcast is only sent to real clients, this will notify server log too
@@ -44,11 +44,11 @@ void ctf_CaptureRecord(entity flag, entity player)
 	{
 		if(autocvar_notification_ctf_capture_verbose)
 		{
-			if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
-			else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-			else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Local_Notification(MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
 		}
-		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
+		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
 	
 	// write that shit in the database
@@ -239,7 +239,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_LOST_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_LOST_), player.netname);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -292,11 +292,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
-			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
 	// create new waypoint
@@ -409,7 +409,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
-	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	
@@ -451,8 +451,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname);
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_RETURN_));
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -500,14 +500,14 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_PICKUP_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
 		{
-			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PICKUP_));
 			if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
@@ -582,14 +582,14 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 		{
 			switch(returntype)
 			{
-				case RETURN_DROPPED: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DROPPED_)); break;
-				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DAMAGED_)); break;
-				case RETURN_SPEEDRUN: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), ctf_captimerecord); break;
-				case RETURN_NEEDKILL: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_NEEDKILL_)); break;
+				case RETURN_DROPPED: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_DROPPED_)); break;
+				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_DAMAGED_)); break;
+				case RETURN_SPEEDRUN: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), ctf_captimerecord); break;
+				case RETURN_NEEDKILL: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_NEEDKILL_)); break;
 				
 				default:
 				case RETURN_TIMEOUT:
-					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_TIMEOUT_)); break; }
+					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_TIMEOUT_)); break; }
 			}
 			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 			ctf_EventLog("returned", flag.team, world);
@@ -709,6 +709,7 @@ void ctf_FlagThink()
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
 					if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
 					if(time > tmp_entity.ctf_droptime + autocvar_g_ctf_dropped_capture_delay)
+					if(!IsDifferentTeam(self, tmp_entity.flagcarried))
 						ctf_Handle_Capture(self, tmp_entity, CAPTURE_DROPPED);
 			}
 			return;
@@ -942,7 +943,17 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((self.team == NUM_TEAM_1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	string basename = "base";
+	
+	switch(self.team)
+	{
+		case NUM_TEAM_1: basename = "redbase"; break;
+		case NUM_TEAM_2: basename = "bluebase"; break;
+		case NUM_TEAM_3: basename = "yellowbase"; break;
+		case NUM_TEAM_4: basename = "pinkbase"; break;
+	}
+	
+	WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 
 	// captureshield setup
@@ -950,10 +961,26 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 }
 
 void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
-{	
+{
 	// declarations
-	teamnumber = fabs(teamnumber - bound(0, autocvar_g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
+	//teamnumber = fabs(teamnumber - bound(0, autocvar_g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
 	self = flag; // for later usage with droptofloor()
+	
+	switch(teamnumber)
+	{
+		case 0: // blue
+			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_1 : NUM_TEAM_2);
+			break;
+		case 1: // red
+			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_2 : NUM_TEAM_1);
+			break;
+		case 2: // yellow
+			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_4 : NUM_TEAM_3);
+			break;
+		case 3: // pink
+			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_3 : NUM_TEAM_4);
+			break;
+	}
 	
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
@@ -962,7 +989,8 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	setattachment(flag, world, "");
 
 	flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag"); // Primarily only used for debugging or when showing nearby item name
-	flag.team = ((teamnumber) ? NUM_TEAM_1 : NUM_TEAM_2); // NUM_TEAM_1: color 4 team (red) - NUM_TEAM_2: color 13 team (blue)
+	//flag.team = ((teamnumber) ? NUM_TEAM_1 : NUM_TEAM_2); // NUM_TEAM_1: color 4 team (red) - NUM_TEAM_2: color 13 team (blue)
+	flag.team = teamnumber;
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -988,10 +1016,20 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	// appearence
 	if(flag.model == "")       { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
-	if(!flag.skin)             { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
+	//if(!flag.skin)             { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
 	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
 	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber) ? "red_pass" : "blue_pass"); }
 	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber) ? "red_cap" : "blue_cap"); }
+	if(!flag.skin)
+	{
+		switch(teamnumber)
+		{
+			case NUM_TEAM_1: flag.skin = autocvar_g_ctf_flag_red_skin; break;
+			case NUM_TEAM_2: flag.skin = autocvar_g_ctf_flag_blue_skin; break;
+			case NUM_TEAM_3: flag.skin = 2; break;
+			case NUM_TEAM_4: flag.skin = 3; break;
+		}
+	}
 	
 	// sound 
 	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
@@ -1973,7 +2011,7 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 {
 	if(self.flagcarried)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_));
 		ctf_RespawnFlag(self.flagcarried);
 		return TRUE;
 	}
@@ -2027,6 +2065,12 @@ MUTATOR_HOOKFUNCTION(ctf_GetCvars)
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_ctf_pickup_team_verbose");
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_ctf_pickup_enemy_verbose");
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(ctf_GetTeamCount)
+{
+	ret_float = ctf_teams;
+	return 0;
 }
 
 
@@ -2116,6 +2160,42 @@ void spawnfunc_item_flag_team2()
 	ctf_FlagSetup(0, self); // the 0 is misleading, but -- 0 = blue.
 }
 
+/*QUAKED spawnfunc_item_flag_team3 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
+CTF flag for team three (Yellow).
+Keys: 
+"angle" Angle the flag will point (minus 90 degrees)... 
+"model" model to use, note this needs red, blue yellow and pink as skins 0, 1, 2 and 3...
+"noise" sound played when flag is picked up...
+"noise1" sound played when flag is returned by a teammate...
+"noise2" sound played when flag is captured...
+"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise4" sound played when flag is dropped by a player...
+"noise5" sound played when flag touches the ground... */
+void spawnfunc_item_flag_team3()
+{
+	if(!g_ctf) { remove(self); return; }
+
+	ctf_FlagSetup(2, self); // 2 = yellow?
+}
+
+/*QUAKED spawnfunc_item_flag_team4 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
+CTF flag for team two (Pink).
+Keys: 
+"angle" Angle the flag will point (minus 90 degrees)... 
+"model" model to use, note this needs red, blue yellow and pink as skins 0, 1, 2 and 3...
+"noise" sound played when flag is picked up...
+"noise1" sound played when flag is returned by a teammate...
+"noise2" sound played when flag is captured...
+"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise4" sound played when flag is dropped by a player...
+"noise5" sound played when flag touches the ground... */
+void spawnfunc_item_flag_team4()
+{
+	if(!g_ctf) { remove(self); return; }
+
+	ctf_FlagSetup(3, self); // 3 = pink?
+}
+
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for CTF gameplay, this allows you to decide what team names and control point models are used in your map.
 Note: If you use spawnfunc_ctf_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
@@ -2144,9 +2224,10 @@ void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
 // ==============
 
 // scoreboard setup
-void ctf_ScoreRules()
+void ctf_ScoreRules(float teams)
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
 	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -2174,15 +2255,37 @@ void ctf_SpawnTeam (string teamname, float teamcolor)
 
 void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
+	ctf_teams = autocvar_g_ctf_teams_override;
+	if(ctf_teams < 2)
+		ctf_teams = autocvar_g_ctf_teams;
+		
+		
+	entity tmp_entity;
+	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	switch(tmp_entity.team)
+	{
+		case NUM_TEAM_3: ++ctf_teams;
+		case NUM_TEAM_4: ++ctf_teams;
+	}
+		
+	ctf_teams = bound(2, ctf_teams, 4);
+
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
 		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
+		if(ctf_teams >= 3)
+		{
+			ctf_SpawnTeam("Yellow", NUM_TEAM_3 - 1);
+			if(ctf_teams >= 4)
+				ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
+		}
 	}
 	
-	ctf_ScoreRules();
+	ret_float = ctf_teams;
+	ctf_ScoreRules(ctf_teams);
 }
 
 void ctf_Initialize()
@@ -2214,6 +2317,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, ctf_GetCvars, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, ctf_GetTeamCount, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
