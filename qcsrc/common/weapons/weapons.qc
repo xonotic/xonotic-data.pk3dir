@@ -1,3 +1,8 @@
+#ifndef MENUQC
+#include "calculations.qc"
+#endif
+#include "all.qh"
+
 // WEAPON PLUGIN SYSTEM
 entity weapon_info[WEP_MAXCOUNT];
 entity dummy_weapon_info;

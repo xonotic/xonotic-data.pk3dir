@@ -1,0 +1,26 @@
+// ONLY EVER ADD NEW WEAPONS AT THE END. IF YOU REMOVE ONE, PUT THE LAST ONE ON
+// ITS PLACE. THIS IS TO AVOID UNNECESSARY RENUMBERING OF WEAPON IMPULSES.
+// IF YOU DISREGARD THIS NOTICE, I'LL KILL YOU WITH THE @!#%'N TUBA
+
+// core weapons
+#include "blaster.qc"
+#include "shockwave.qc"
+#include "machinegun.qc"
+#include "mortar.qc"
+#include "minelayer.qc"
+#include "electro.qc"
+#include "arc.qc"
+#include "crylink.qc"
+#include "nex.qc"
+#include "hagar.qc"
+#include "devastator.qc"
+
+// other weapons
+#include "porto.qc"
+#include "minstanex.qc"
+#include "hook.qc"
+#include "hlac.qc"
+#include "tuba.qc"
+#include "rifle.qc"
+#include "fireball.qc"
+#include "seeker.qc"

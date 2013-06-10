@@ -346,10 +346,6 @@ typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
-#ifndef MENUQC
-vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle);
-#endif
-
 #ifdef SVQC
 vector get_corner_position(entity box, float corner);
 #endif

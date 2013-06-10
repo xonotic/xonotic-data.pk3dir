@@ -17,8 +17,7 @@ Defs.qc
 ../common/teams.qh
 ../common/util.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
+../common/weapons/weapons.qh // TODO
 ../common/mapinfo.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -105,9 +104,7 @@ noise.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 ../common/mapinfo.qc
-../common/items.qc
-../server/weapons/w_all.qc
-../common/explosion_equation.qc
+../common/weapons/weapons.qc // TODO
 ../common/urllib.qc
 command/cl_cmd.qc
 

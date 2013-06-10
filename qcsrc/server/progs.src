@@ -16,8 +16,7 @@ sys-post.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
+../common/weapons/weapons.qh // TODO
 ../common/urllib.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -63,7 +62,7 @@ command/cmd.qh
 command/sv_cmd.qh
 
 accuracy.qh
-csqcprojectile.qh
+weapons/csqcprojectile.qh // TODO
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/sv_model.qh
@@ -76,8 +75,8 @@ playerstats.qh
 portals.qh
 
 g_hook.qh
-weapons/w_electro.qh
-weapons/w_lightning.qh
+../common/weapons/electro.qh // TODO
+../common/weapons/arc.qh
 
 scores.qh
 
@@ -138,13 +137,13 @@ g_models.qc
 item_key.qc
 secret.qc
 
-weapons/cl_weaponsystem.qc
-weapons/w_common.qc
-
-weapons/w_all.qc
+weapons/main.qc
+weapons/common.qc
+weapons/csqcprojectile.qc // TODO
+../common/weapons/weapons.qc // TODO
 
 t_items.qc
-weapons/cl_weapons.qc
+weapons/cl_weapons.qc // TODO
 cl_impulse.qc
 
 ent_cs.qc
@@ -207,12 +206,9 @@ target_spawn.qc
 func_breakable.qc
 target_music.qc
 
-../common/items.qc
-
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc
-csqcprojectile.qc
 
 playerdemo.qc
 
@@ -221,8 +217,6 @@ cheats.qc
 playerstats.qc
 
 round_handler.qc
-
-../common/explosion_equation.qc
 
 mutators/base.qc
 mutators/gamemode_assault.qc
