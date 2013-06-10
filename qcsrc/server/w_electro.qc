@@ -214,7 +214,7 @@ void W_Electro_Attack2()
 .vector hook_start, hook_end;
 float lgbeam_send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LGBEAM);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ELECTRO_BEAM);
 	sf = sf & 0x7F;
 	if(sound_allowed(MSG_BROADCAST, self.realowner))
 		sf |= 0x80;

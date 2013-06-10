@@ -7,6 +7,7 @@
 #include "w_grenadelauncher.qc"
 #include "w_minelayer.qc"
 #include "w_electro.qc"
+#include "w_lightning.qc"
 #include "w_crylink.qc"
 #include "w_nex.qc"
 #include "w_hagar.qc"

@@ -654,6 +654,7 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
+	LightningInit();
 	ElectroInit();
 	LaserInit();
 

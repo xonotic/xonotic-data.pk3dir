@@ -14,8 +14,8 @@ void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
 // GL -> Mortar
 void spawnfunc_ammo_grenades()       { spawnfunc_item_rockets();        }
 
-// LG -> Electro
-void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
+// LG -> Lightning
+//void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
 void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 
 // Plasma -> Hagar
