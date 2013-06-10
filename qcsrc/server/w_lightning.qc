@@ -102,7 +102,7 @@ void W_Lightning_Attack1 (void)
 {
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.lg_fire_prev > 0.5)
-		sound (self, CHAN_WEAPON, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
 
 	entity beam, oldself;
 
@@ -162,10 +162,10 @@ float w_lightning(float req)
 	{
 		if (self.BUTTON_ATCK)
 		{
-			if(self.BUTTON_ATCK_prev)
-				if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+			if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
+				/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
 					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_lightning_primary_animtime, w_ready);
-				else
+				else*/
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
 			
 			if (weapon_prepareattack(0, 0))
@@ -219,6 +219,20 @@ float w_lightning(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 		return self.ammo_cells >= autocvar_g_balance_lightning_secondary_ammo;
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			return WEAPON_ELECTRO_MURDER_ORBS;
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_ELECTRO_MURDER_COMBO;
+			else
+				return WEAPON_ELECTRO_MURDER_BOLT;
+		}
+	}
 	else if (req == WR_RESETPLAYER)
 	{
 		//self.lightning_secondarytime = time;
@@ -252,45 +266,19 @@ float w_lightning(float req)
 		{
 			pointparticles(particleeffectnum("lightning_ballexplode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 		{
 			pointparticles(particleeffectnum("lightning_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CHAN_PROJECTILE, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/lightning_impact.wav");
 		precache_sound("weapons/lightning_impact_combo.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s could not remember where they put plasma");
-		else
-			w_deathtypestring = _("%s played with plasma");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = _("%s just noticed %s's blue ball");
-			else // unchecked: BOUNCE
-				w_deathtypestring = _("%s got in touch with %s's blue ball");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = _("%s felt the electrifying air of %s's combo");
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = _("%s got too close to %s's blue beam");
-			else
-				w_deathtypestring = _("%s was blasted by %s's blue beam");
-		}
 	}
 	return TRUE;
 }
