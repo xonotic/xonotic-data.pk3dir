@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(LIGHTNING, w_lightning, IT_CELLS, 5, WEP_FLAG_NORMAL | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "lightning", "lightning", _("Lightning"));
+REGISTER_WEAPON(
+/* WEP_##id  */ LIGHTNING,
+/* function  */ w_lightning,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 5,
+/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "lightning",
+/* shortname */ "lightning",
+/* fullname  */ _("Lightning")
+);
 #else
 #ifdef SVQC
 
