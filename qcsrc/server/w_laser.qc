@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id  */ LASER,
-/* function  */ w_laser,
+/* function  */ W_Laser,
 /* ammotype  */ 0,
 /* impulse   */ 1,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
