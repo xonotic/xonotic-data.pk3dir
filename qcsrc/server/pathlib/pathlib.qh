@@ -18,7 +18,6 @@ void pathlib_showpath2(entity path);
 
 entity openlist;
 entity closedlist;
-entity edgelist;
 
 entity goal_node;
 entity start_node;
@@ -76,9 +75,9 @@ vector movenode_boxmax;
 vector movenode_boxmin;
 float  pathlib_movenode_goodnode;
 
-vector     pathlib_wateroutnode(vector start, vector end);
-vector     pathlib_swimnode(vector start, vector end);
-vector     pathlib_flynode(vector start, vector end);
+vector     pathlib_wateroutnode(vector start, vector end, float doedge);
+vector     pathlib_swimnode(vector start, vector end, float doedge);
+vector     pathlib_flynode(vector start, vector end, float doedge);
 vector     pathlib_walknode(vector start, vector end, float doedge);
 var vector pathlib_movenode(vector start, vector end, float doedge);
 
@@ -106,7 +105,6 @@ var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,f
 var float  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
-var const float pathlib_wpp_wpcb_null();
 
 #ifdef DEBUGPATHING
 	#include "debug.qc"

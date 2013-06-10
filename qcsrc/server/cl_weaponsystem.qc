@@ -14,21 +14,6 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				t = t * autocvar_g_balance_rune_speed_combo_atkrate;
-			else
-				t = t * autocvar_g_balance_rune_speed_atkrate;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			t = t * autocvar_g_balance_curse_slow_atkrate;
-		}
-	}
-
 	return t;
 }
 
@@ -69,6 +54,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 
 	// x = 0..1 relative to hitbox; y = 0..1 relative to hitbox; z = distance
 
+	mi = ma = targ.origin + 0.5 * (targ.mins + targ.maxs);
 	for(i = 0; i < 2; ++i) for(j = 0; j < 2; ++j) for(k = 0; k < 2; ++k)
 	{
 		thisv = targ.origin;
@@ -107,12 +93,12 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(player) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(trace_ent.flags & FL_CLIENT)
+		if(IS_CLIENT(trace_ent))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
@@ -127,18 +113,30 @@ vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
 
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
+void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
+{
+	if((player.items & IT_STRENGTH)
+		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		{
+			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			player.prevstrengthsound = time;
+		}
+		player.prevstrengthsoundattempt = time;
+}
+
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local float oldsolid;
+	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_SNIPERRIFLE)
+	if(ent.weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -172,8 +170,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
 
 	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
@@ -201,7 +197,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (!trace_ent.takedamage)
 			{
 				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && trace_ent.classname == "player")
+				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
 					entity e;
 					e = trace_ent;
@@ -217,7 +213,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
 			if (ent.cursor_trace_ent != ent)         // just to make sure
 			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (ent.cursor_trace_ent.classname == "player") // and actually a player
+			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -241,24 +237,14 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
-
-	if(ent.items & IT_STRENGTH)
-	if(!g_minstagib)
-	if(
-		(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
-		||
-		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
-	) // prevent insane sound spam
 	{
-		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-		ent.prevstrengthsound = time;
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		W_PlayStrengthSound(ent);
 	}
-	ent.prevstrengthsoundattempt = time;
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
-};
+}
 
 #define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
 #define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
@@ -269,32 +255,11 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = self.owner;
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
 			self.viewmodelforclient = other;
 	return TRUE;
 }
-
-float qcweaponanimation;
-vector weapon_offset = '0 -10 0';
-vector weapon_adjust = '10 0 -15';
-.vector weapon_morph0origin;
-.vector weapon_morph0angles;
-.float  weapon_morph0time;
-.vector weapon_morph1origin;
-.vector weapon_morph1angles;
-.float  weapon_morph1time;
-.vector weapon_morph2origin;
-.vector weapon_morph2angles;
-.float  weapon_morph2time;
-.vector weapon_morph3origin;
-.vector weapon_morph3angles;
-.float  weapon_morph3time;
-.vector weapon_morph4origin;
-.vector weapon_morph4angles;
-.float  weapon_morph4time;
-.string weaponname;
-#define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
 
 /*
  * supported formats:
@@ -349,8 +314,6 @@ vector weapon_adjust = '10 0 -15';
 //   remove the ent
 void CL_WeaponEntity_SetModel(string name)
 {
-	string animfilename;
-	float animfile;
 	float v_shot_idx;
 	if (name != "")
 	{
@@ -362,140 +325,115 @@ void CL_WeaponEntity_SetModel(string name)
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		if(qcweaponanimation)
+		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
+		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
+		self.anim_idle   = animfixfps(self, '2 1 0.01', '0 0 0');
+		self.anim_reload = animfixfps(self, '3 1 0.01', '0 0 0');
+
+		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
+		// if we don't, this is a "real" animated model
+		if(gettagindex(self, "weapon"))
 		{
-			self.angles = '0 0 0';
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			self.movedir = weapon_offset_x * v_forward - weapon_offset_y * v_right + weapon_offset_z * v_up + weapon_adjust;
-			self.movedir_x += 32;
-			self.spawnorigin = self.movedir;
-			// oldorigin - not calculated here
+			if (!self.weaponentity)
+				self.weaponentity = spawn();
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setattachment(self.weaponentity, self, "weapon");
+		}
+		else if(gettagindex(self, "tag_weapon"))
+		{
+			if (!self.weaponentity)
+				self.weaponentity = spawn();
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
 		{
-			setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
-			animfilename = strcat("models/weapons/h_", name, ".iqm.animinfo");
-			animfile = fopen(animfilename, FILE_READ);
-			// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-			self.anim_fire1  = '0 1 0.01';
-			self.anim_fire2  = '1 1 0.01';
-			self.anim_idle   = '2 1 0.01';
-			self.anim_reload = '3 1 0.01';
-			if (animfile >= 0)
-			{
-				animparseerror = FALSE;
-				self.anim_fire1  = animparseline(animfile);
-				self.anim_fire2  = animparseline(animfile);
-				self.anim_idle   = animparseline(animfile);
-				self.anim_reload = animparseline(animfile);
-				fclose(animfile);
-				if (animparseerror)
-					print("Parse error in ", animfilename, ", some player animations are broken\n");
-			}
-
-			// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
-			// if we don't, this is a "real" animated model
-			if(gettagindex(self, "weapon"))
-			{
-				if (!self.weaponentity)
-					self.weaponentity = spawn();
-				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
-				setattachment(self.weaponentity, self, "weapon");
-			}
-			else if(gettagindex(self, "tag_weapon"))
-			{
-				if (!self.weaponentity)
-					self.weaponentity = spawn();
-				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
-				setattachment(self.weaponentity, self, "tag_weapon");
-			}
-			else
-			{
-				if(self.weaponentity)
-					remove(self.weaponentity);
-				self.weaponentity = world;
-			}
-
-			setorigin(self,'0 0 0');
-			self.angles = '0 0 0';
-			self.frame = 0;
-			self.viewmodelforclient = world;
-
-			float idx;
-
-			if(v_shot_idx) // v_ model attached to invisible h_ model
-			{
-				self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
-			}
-			else
-			{
-				idx = gettagindex(self, "shot");
-				if(!idx)
-					idx = gettagindex(self, "tag_shot");
-				if(idx)
-					self.movedir = gettaginfo(self, idx);
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
-					self.movedir = '0 0 0';
-				}
-			}
-
-			if(self.weaponentity) // v_ model attached to invisible h_ model
-			{
-				idx = gettagindex(self.weaponentity, "shell");
-				if(!idx)
-					idx = gettagindex(self.weaponentity, "tag_shell");
-				if(idx)
-					self.spawnorigin = gettaginfo(self.weaponentity, idx);
-			}
-			else
-				idx = 0;
-			if(!idx)
-			{
-				idx = gettagindex(self, "shell");
-				if(!idx)
-					idx = gettagindex(self, "tag_shell");
-				if(idx)
-					self.spawnorigin = gettaginfo(self, idx);
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
-					self.spawnorigin = self.movedir;
-				}
-			}
-
-			if(v_shot_idx)
-			{
-				self.oldorigin = '0 0 0'; // use regular attachment
-			}
-			else
-			{
-				if(self.weaponentity)
-				{
-					idx = gettagindex(self, "weapon");
-					if(!idx)
-						idx = gettagindex(self, "tag_weapon");
-				}
-				else
-				{
-					idx = gettagindex(self, "handle");
-					if(!idx)
-						idx = gettagindex(self, "tag_handle");
-				}
-				if(idx)
-				{
-					self.oldorigin = self.movedir - gettaginfo(self, idx);
-				}
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
-					self.oldorigin = '0 0 0'; // there is no way to recover from this
-				}
-			}
-
-			self.viewmodelforclient = self.owner;
+			if(self.weaponentity)
+				remove(self.weaponentity);
+			self.weaponentity = world;
 		}
+
+		setorigin(self,'0 0 0');
+		self.angles = '0 0 0';
+		self.frame = 0;
+		self.viewmodelforclient = world;
+
+		float idx;
+
+		if(v_shot_idx) // v_ model attached to invisible h_ model
+		{
+			self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
+		}
+		else
+		{
+			idx = gettagindex(self, "shot");
+			if(!idx)
+				idx = gettagindex(self, "tag_shot");
+			if(idx)
+				self.movedir = gettaginfo(self, idx);
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
+				self.movedir = '0 0 0';
+			}
+		}
+
+		if(self.weaponentity) // v_ model attached to invisible h_ model
+		{
+			idx = gettagindex(self.weaponentity, "shell");
+			if(!idx)
+				idx = gettagindex(self.weaponentity, "tag_shell");
+			if(idx)
+				self.spawnorigin = gettaginfo(self.weaponentity, idx);
+		}
+		else
+			idx = 0;
+		if(!idx)
+		{
+			idx = gettagindex(self, "shell");
+			if(!idx)
+				idx = gettagindex(self, "tag_shell");
+			if(idx)
+				self.spawnorigin = gettaginfo(self, idx);
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
+				self.spawnorigin = self.movedir;
+			}
+		}
+
+		if(v_shot_idx)
+		{
+			self.oldorigin = '0 0 0'; // use regular attachment
+		}
+		else
+		{
+			if(self.weaponentity)
+			{
+				idx = gettagindex(self, "weapon");
+				if(!idx)
+					idx = gettagindex(self, "tag_weapon");
+			}
+			else
+			{
+				idx = gettagindex(self, "handle");
+				if(!idx)
+					idx = gettagindex(self, "tag_handle");
+			}
+			if(idx)
+			{
+				self.oldorigin = self.movedir - gettaginfo(self, idx);
+			}
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
+				self.oldorigin = '0 0 0'; // there is no way to recover from this
+			}
+		}
+
+		self.viewmodelforclient = self.owner;
 	}
 	else
 	{
@@ -527,24 +465,9 @@ void CL_WeaponEntity_SetModel(string name)
 	self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
 	// check if an instant weapon switch occurred
-	if (qcweaponanimation)
-	{
-		if (self.state == WS_READY)
-		{
-			self.angles = '0 0 0';
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
-	}
-	else
-		setorigin(self, self.view_ofs);
+	setorigin(self, self.view_ofs);
 	// reset animstate now
 	self.wframe = WFRAME_IDLE;
-	self.weapon_morph0time = 0;
-	self.weapon_morph1time = 0;
-	self.weapon_morph2time = 0;
-	self.weapon_morph3time = 0;
-	self.weapon_morph4time = 0;
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
 }
 
@@ -583,9 +506,9 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
@@ -618,166 +541,32 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	local float f;
-	f = 0;
+	
+	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity newwep = get_weaponinfo(self.owner.switchweapon);
+		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity oldwep = get_weaponinfo(self.owner.weapon);
+		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
 	}
 	else if (self.state == WS_CLEAR)
 	{
 		f = 1;
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
 	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph1time)
-	{
-		f = (time - self.owner.weapon_morph0time) / (self.owner.weapon_morph1time - self.owner.weapon_morph0time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph0angles * (1 - f) + self.owner.weapon_morph1angles * f;
-		setorigin(self, self.owner.weapon_morph0origin * (1 - f) + self.owner.weapon_morph1origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph2time)
-	{
-		f = (time - self.owner.weapon_morph1time) / (self.owner.weapon_morph2time - self.owner.weapon_morph1time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph1angles * (1 - f) + self.owner.weapon_morph2angles * f;
-		setorigin(self, self.owner.weapon_morph1origin * (1 - f) + self.owner.weapon_morph2origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph3time)
-	{
-		f = (time - self.owner.weapon_morph2time) / (self.owner.weapon_morph3time - self.owner.weapon_morph2time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph2angles * (1 - f) + self.owner.weapon_morph3angles * f;
-		setorigin(self, self.owner.weapon_morph2origin * (1 - f) + self.owner.weapon_morph3origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph4time)
-	{
-		f = (time - self.owner.weapon_morph3time) / (self.owner.weapon_morph4time - self.owner.weapon_morph3time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph3angles * (1 - f) + self.owner.weapon_morph4angles * f;
-		setorigin(self, self.owner.weapon_morph3origin * (1 - f) + self.owner.weapon_morph4origin * f);
-	}
-	else if (qcweaponanimation)
-	{
-		// begin a new idle morph
-		self.owner.weapon_morph0time   = time;
-		self.owner.weapon_morph0angles = self.angles;
-		self.owner.weapon_morph0origin = self.origin;
-
-		float r;
-		float t;
-
-		r = random();
-		if (r < 0.1)
-		{
-			// turn gun to the left to look at it
-			t = 2;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 3 + '-5 30 0';
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.6;
-			self.owner.weapon_morph2angles = randomvec() * 3 + '-5 30 0';
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else if (r < 0.2)
-		{
-			// raise the gun a bit
-			t = 2;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 3 + '30 -10 0';
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.5;
-			self.owner.weapon_morph2angles = randomvec() * 3 + '30 -10 5';
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else if (r < 0.3)
-		{
-			// tweak it a bit
-			t = 5;
-			self.owner.weapon_morph1time   = time + t * 0.3;
-			self.owner.weapon_morph1angles = randomvec() * 6;
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.7;
-			self.owner.weapon_morph2angles = randomvec() * 6;
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else
-		{
-			// hold it mostly steady
-			t = random() * 6 + 4;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.5;
-			self.owner.weapon_morph2angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t * 0.7;
-			self.owner.weapon_morph3angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-
-		self.owner.weapon_morph4time   = time + t;
-		self.owner.weapon_morph4angles = '0 0 0';
-		makevectors(self.owner.weapon_morph4angles_x * '-1 0 0' + self.owner.weapon_morph4angles_y * '0 1 0' + self.owner.weapon_morph4angles_z * '0 0 1');
-		self.owner.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self);
-
-	}
-};
+}
 
 void CL_ExteriorWeaponentity_Think()
 {
 	float tag_found;
-	vector ang;
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
 	{
@@ -789,9 +578,9 @@ void CL_ExteriorWeaponentity_Think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
@@ -806,16 +595,9 @@ void CL_ExteriorWeaponentity_Think()
 		}
 		else
 			setattachment(self, self.owner, "bip01 r hand");
-
-		// if that didn't find a tag, hide the exterior weapon model
-		if (!self.tag_index)
-			self.model = "";
 	}
 	self.effects = self.owner.effects;
-	if(sv_pitch_min == sv_pitch_max)
-		self.effects |= EF_LOWPRECISION;
-	else
-		self.effects &~= EF_LOWPRECISION;
+	self.effects |= EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
 	if(self.owner.alpha == default_player_alpha)
 		self.alpha = default_weapon_alpha;
@@ -824,38 +606,11 @@ void CL_ExteriorWeaponentity_Think()
 	else
 		self.alpha = 1;
 
-	ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-	ang_y = 0;
-	ang_z = 0;
-
-	if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-	{
-		ang_y = self.owner.v_angle_y;
-		makevectors(ang);
-		var vector v = v_forward;
-		var float t = self.tag_entity.frame1time;
-		var float f = self.tag_entity.frame;
-		self.tag_entity.frame1time = time;
-		self.tag_entity.frame = self.tag_entity.anim_idle_x;
-		gettaginfo(self.tag_entity, self.tag_index);
-		self.tag_entity.frame1time = t;
-		self.tag_entity.frame = f;
-		// untransform v according to this coordinate space
-		vector w;
-		w_x = v_forward * v;
-		w_y = -v_right * v;
-		w_z = v_up * v;
-		self.angles = vectoangles(w);
-	}
-	else
-	{
-		ang_x = -/* don't ask */ang_x;
-		self.angles = ang;
-	}
-
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
-};
+
+	CSQCMODEL_AUTOUPDATE();
+}
 
 // spawning weaponentity for client
 void CL_SpawnWeaponentity()
@@ -882,7 +637,14 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
 	self.exteriorweaponentity.nextthink = time;
-};
+
+	{
+		entity oldself = self;
+		self = self.exteriorweaponentity;
+		CSQCMODEL_AUTOINIT();
+		self = oldself;
+	}
+}
 
 void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 {
@@ -898,8 +660,8 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
-	local float weaponbit, f;
-	local entity oldself;
+	float f;
+	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
@@ -912,8 +674,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	weaponbit = W_WeaponBit(wpn);
-	if (cl.weapons & weaponbit)
+	if (WEPSET_CONTAINS_EW(cl, wpn))
 	{
 		if (andammo)
 		{
@@ -929,7 +690,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				local entity mine;
+				entity mine;
 				if(wpn == WEP_MINE_LAYER)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
@@ -939,10 +700,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			if (!f)
 			{
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(cl))
 				{
 					play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", W_Name(wpn), "\n"));
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
 				}
 				return FALSE;
@@ -954,10 +714,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weaponsInMap & weaponbit)
+		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
 		{
-			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
-			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
+			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
 			if(autocvar_g_showweaponspawns)
 			{
@@ -967,7 +726,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				e = get_weaponinfo(wpn);
 				s = e.model2;
 
-				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
+				for(e = world; (e = findfloat(e, weapon, wpn)); )
 				{
 					if(e.classname == "droppedweapon")
 						continue;
@@ -979,7 +738,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						world, e.origin,
 						self, 0,
 						world, enemy,
-						0
+						0,
+						RADARICON_NONE, '0 0 0'
 					);
 				}
 			}
@@ -987,79 +747,108 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		else
 		{
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
-			sprint(cl, strcat("The ^2", W_Name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
 		}
 
 		play2(cl, "weapons/unavailable.wav");
 	}
 	return FALSE;
-};
+}
 
 // Weapon subs
 void w_clear()
 {
 	if (self.weapon != -1)
+	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
+	}
 	if (self.weaponentity)
 	{
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponentity.effects = 0;
 	}
-};
+}
 
 void w_ready()
 {
 	if (self.weaponentity)
 		self.weaponentity.state = WS_READY;
 	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
-};
+}
 
 // Setup weapon for client (after this raise frame will be launched)
 void weapon_setup(float windex)
 {
 	entity e;
-	qcweaponanimation = autocvar_sv_qcweaponanimation;
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
-	self.items = self.items | e.items;
+	self.items = self.items | (e.items & IT_AMMO);
 
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;
+	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
-};
+}
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
-	w = W_WeaponBit(pl.weapon);
-	pl.weapons &~= w;
-	ww = w_getbestweapon(pl);
-	pl.weapons |= w;
+	w = pl.weapon;
+	if(WEPSET_CONTAINS_EW(pl, w))
+	{
+		WEPSET_ANDNOT_EW(pl, w);
+		ww = w_getbestweapon(pl);
+		WEPSET_OR_EW(pl, w);
+	}
+	else
+		ww = w_getbestweapon(pl);
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }
+
 .float prevdryfire;
+.float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
-		local entity mine;
+		entity mine;
 		if(self.weapon == WEP_MINE_LAYER)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 			self.prevdryfire = time;
 		}
 
-		W_SwitchToOtherWeapon(self);
+		if(weapon_action(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		{
+			if(time - self.prevwarntime > 1)
+			{
+				Send_Notification(
+					NOTIF_ONE,
+					self,
+					MSG_MULTI,
+					ITEM_WEAPON_PRIMORSEC,
+					self.weapon,
+					secondary,
+					(1 - secondary)
+				);
+			}
+			self.prevwarntime = time;
+		}
+		else // this weapon is totally unable to fire, switch to another one
+		{
+			W_SwitchToOtherWeapon(self);
+		}
+		
 		return FALSE;
 	}
 	return TRUE;
@@ -1076,7 +865,7 @@ float weapon_prepareattack_check(float secondary, float attacktime)
 		return FALSE;
 	}
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow the player to shoot while game is paused
 		return FALSE;
 
 	// do not even think about shooting if switching
@@ -1149,82 +938,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
-		if (qcweaponanimation)
-		{
-			if (fr != WFRAME_IDLE)
-			{
-				self.weapon_morph0time = time;
-				self.weapon_morph0angles = self.weaponentity.angles;
-				self.weapon_morph0origin = self.weaponentity.origin;
-
-				self.weapon_morph1angles = '0 0 0';
-				self.weapon_morph1time = time + t;
-				makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-				self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph2angles = '0 0 0';
-				self.weapon_morph2time = time + t;
-				makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-				self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph3angles = '0 0 0';
-				self.weapon_morph3time = time + t;
-				makevectors(self.weapon_morph3angles_x * '-1 0 0' + self.weapon_morph3angles_y * '0 1 0' + self.weapon_morph3angles_z * '0 0 1');
-				self.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph4angles = '0 0 0';
-				self.weapon_morph4time = time + t;
-				makevectors(self.weapon_morph4angles_x * '-1 0 0' + self.weapon_morph4angles_y * '0 1 0' + self.weapon_morph4angles_z * '0 0 1');
-				self.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				if (fr == WFRAME_FIRE1)
-				{
-					self.weapon_morph1angles = '5 0 0';
-					self.weapon_morph1time = time + t * 0.1;
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-					self.weapon_morph4time = time + t + 1; // delay idle effect
-				}
-				else if (fr == WFRAME_FIRE2)
-				{
-					self.weapon_morph1angles = '10 0 0';
-					self.weapon_morph1time = time + t * 0.1;
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-					self.weapon_morph4time = time + t + 1; // delay idle effect
-				}
-				else if (fr == WFRAME_RELOAD)
-				{
-					self.weapon_morph1time = time + t * 0.05;
-					self.weapon_morph1angles = '-10 40 0';
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-					self.weapon_morph2time = time + t * 0.15;
-					self.weapon_morph2angles = '-10 40 5';
-					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-					self.weapon_morph3time = time + t * 0.25;
-					self.weapon_morph3angles = '-10 40 0';
-					makevectors(self.weapon_morph3angles_x * '-1 0 0' + self.weapon_morph3angles_y * '0 1 0' + self.weapon_morph3angles_z * '0 0 1');
-					self.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-				}
-			}
-		}
-		else
-		{
-			if (fr == WFRAME_IDLE)
-				a = self.weaponentity.anim_idle;
-			else if (fr == WFRAME_FIRE1)
-				a = self.weaponentity.anim_fire1;
-			else if (fr == WFRAME_FIRE2)
-				a = self.weaponentity.anim_fire2;
-			else if (fr == WFRAME_RELOAD)
-				a = self.weaponentity.anim_reload;
-			a_z *= g_weaponratefactor;
-			setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
-		}
+		a = '0 0 0';
+		if (fr == WFRAME_IDLE)
+			a = self.weaponentity.anim_idle;
+		else if (fr == WFRAME_FIRE1)
+			a = self.weaponentity.anim_fire1;
+		else if (fr == WFRAME_FIRE2)
+			a = self.weaponentity.anim_fire2;
+		else // if (fr == WFRAME_RELOAD)
+			a = self.weaponentity.anim_reload;
+		a_z *= g_weaponratefactor;
+		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
 	}
 
 	v_forward = of;
@@ -1253,28 +977,29 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-	if (restartanim)
-	if (t)
-	if (!self.crouch) // shoot anim stands up, this looks bad
+	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		local vector anim;
-		anim = self.anim_shoot;
-		anim_z = anim_y / (t + sys_frametime);
-		setanim(self, anim, FALSE, TRUE, TRUE);
+		if(self.weapon == WEP_SHOTGUN && fr == WFRAME_FIRE2)
+			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
+		else
+			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
 	}
-};
+	else
+	{
+		if(self.anim_upper_action == ANIMACTION_SHOOT || self.anim_upper_action == ANIMACTION_MELEE)
+			self.anim_upper_action = 0;
+	}
+}
 
 void weapon_boblayer1(float spd, vector org)
 {
 	// VorteX: haste can be added here
-};
+}
 
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
 	float mspeed;
-	float outspeed;
-	float nstyle;
 	vector outvelocity;
 
 	mvelocity = mvelocity * g_weaponspeedfactor;
@@ -1282,61 +1007,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 
-	nstyle = autocvar_g_projectiles_newton_style;
-	if(nstyle == 0 || forceAbsolute)
-	{
-		// absolute velocity
-		outvelocity = mvelocity;
-	}
-	else if(nstyle == 1)
-	{
-		// true Newtonian projectiles
-		outvelocity = pvelocity + mvelocity;
-	}
-	else if(nstyle == 2)
-	{
-		// true Newtonian projectiles with automatic aim adjustment
-		//
-		// solve: |outspeed * mdirection - pvelocity| = mspeed
-		// outspeed^2 - 2 * outspeed * (mdirection * pvelocity) + pvelocity^2 - mspeed^2 = 0
-		// outspeed = (mdirection * pvelocity) +- sqrt((mdirection * pvelocity)^2 - pvelocity^2 + mspeed^2)
-		// PLUS SIGN!
-		// not defined?
-		// then...
-		// pvelocity^2 - (mdirection * pvelocity)^2 > mspeed^2
-		// velocity without mdirection component > mspeed
-		// fire at smallest possible mspeed that works?
-		// |(mdirection * pvelocity) * pvelocity - pvelocity| = mspeed
-
-		vector solution;
-		solution = solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
-		if(solution_z)
-			outspeed = solution_y; // the larger one
-		else
-		{
-			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
-			//dprint("impossible shot, adjusting\n");
-		}
-
-		outspeed = bound(mspeed * autocvar_g_projectiles_newton_style_2_minfactor, outspeed, mspeed * autocvar_g_projectiles_newton_style_2_maxfactor);
-		outvelocity = mdirection * outspeed;
-	}
-	else if(nstyle == 3)
-	{
-		// pseudo-Newtonian:
-		outspeed = mspeed + mdirection * pvelocity;
-		outspeed = bound(mspeed * 0.7, outspeed, mspeed * 5.0);
-		outvelocity = mdirection * outspeed;
-	}
-	else if(nstyle == 4)
-	{
-		// tZorkian:
-		outspeed = mspeed + vlen(pvelocity);
-		outvelocity = mdirection * outspeed;
-	}
-	else
-		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian), 2 (Newtonian + aimfix), 3 (pseudo Newtonian) or 4 (tZorkian)!");
+	outvelocity = get_shotvelocity(pvelocity, mdirection, mspeed, (forceAbsolute ? 0 : autocvar_g_projectiles_newton_style), autocvar_g_projectiles_newton_style_2_minfactor, autocvar_g_projectiles_newton_style_2_maxfactor);
 
 	return outvelocity;
 }
@@ -1346,38 +1017,30 @@ void W_AttachToShotorg(entity flash, vector offset)
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
-	if(qcweaponanimation)
+
+	if(gettagindex(self.weaponentity, "shot"))
+		setattachment(flash, self.weaponentity, "shot");
+	else
+		setattachment(flash, self.weaponentity, "tag_shot");
+	setorigin(flash, offset);
+
+	xflash = spawn();
+	copyentity(flash, xflash);
+
+	flash.viewmodelforclient = self;
+
+	if(self.weaponentity.oldorigin_x > 0)
 	{
-		setorigin(flash, w_shotorg + w_shotdir * 50);
-		flash.angles = vectoangles(w_shotdir);
-		flash.angles_z = random() * 360;
+		setattachment(xflash, self.exteriorweaponentity, "");
+		setorigin(xflash, self.weaponentity.oldorigin + offset);
 	}
 	else
 	{
-		if(gettagindex(self.weaponentity, "shot"))
-			setattachment(flash, self.weaponentity, "shot");
+		if(gettagindex(self.exteriorweaponentity, "shot"))
+			setattachment(xflash, self.exteriorweaponentity, "shot");
 		else
-			setattachment(flash, self.weaponentity, "tag_shot");
-		setorigin(flash, offset);
-
-		xflash = spawn();
-		copyentity(flash, xflash);
-
-		flash.viewmodelforclient = self;
-
-		if(self.weaponentity.oldorigin_x > 0)
-		{
-			setattachment(xflash, self.exteriorweaponentity, "");
-			setorigin(xflash, self.weaponentity.oldorigin + offset);
-		}
-		else
-		{
-			if(gettagindex(self.exteriorweaponentity, "shot"))
-				setattachment(xflash, self.exteriorweaponentity, "shot");
-			else
-				setattachment(xflash, self.exteriorweaponentity, "tag_shot");
-			setorigin(xflash, offset);
-		}
+			setattachment(xflash, self.exteriorweaponentity, "tag_shot");
+		setorigin(xflash, offset);
 	}
 }
 
@@ -1456,7 +1119,7 @@ vector findperpendicular(vector v)
 vector W_CalculateProjectileSpread(vector forward, float spread)
 {
 	float sigma;
-	vector v1, v2;
+	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
 	float sstyle;
 	spread *= g_weaponspreadfactor;
@@ -1611,3 +1274,127 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
+
+void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
+{
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
+		return;
+
+	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+	if(ammo_reload)
+	{
+		self.clip_load -= ammo_use;
+		self.(weapon_load[self.weapon]) = self.clip_load;
+	}
+	else
+		self.(self.current_ammo) -= ammo_use;
+}
+
+// weapon reloading code
+
+.float reload_ammo_amount, reload_ammo_min, reload_time;
+.float reload_complain;
+.string reload_sound;
+
+void W_ReloadedAndReady()
+{
+	// finish the reloading process, and do the ammo transfer
+
+	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
+
+	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
+	if(!self.reload_ammo_min || self.items & IT_UNLIMITED_WEAPON_AMMO)
+		self.clip_load = self.reload_ammo_amount;
+	else
+	{
+		while(self.clip_load < self.reload_ammo_amount && self.(self.current_ammo)) // make sure we don't add more ammo than we have
+		{
+			self.clip_load += 1;
+			self.(self.current_ammo) -= 1;
+		}
+	}
+	self.(weapon_load[self.weapon]) = self.clip_load;
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) -= self.reload_time - 1;
+
+	w_ready();
+}
+
+void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+{
+	// set global values to work with
+
+	self.reload_ammo_min = sent_ammo_min;
+	self.reload_ammo_amount = sent_ammo_amount;
+	self.reload_time = sent_time;
+	self.reload_sound = sent_sound;
+
+	// check if we meet the necessary conditions to reload
+
+	entity e;
+	e = get_weaponinfo(self.weapon);
+
+	// don't reload weapons that don't have the RELOADABLE flag
+	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	{
+		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		return;
+	}
+
+	// return if reloading is disabled for this weapon
+	if(!self.reload_ammo_amount)
+		return;
+
+	// our weapon is fully loaded, no need to reload
+	if (self.clip_load >= self.reload_ammo_amount)
+		return;
+
+	// no ammo, so nothing to load
+	if(!self.(self.current_ammo) && self.reload_ammo_min)
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
+		{
+			play2(self, "weapons/unavailable.wav");
+			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
+			self.reload_complain = time + 1;
+		}
+		// switch away if the amount of ammo is not enough to keep using this weapon
+		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		{
+			self.clip_load = -1; // reload later
+			W_SwitchToOtherWeapon(self);
+		}
+		return;
+	}
+
+	if (self.weaponentity)
+	{
+		if (self.weaponentity.wframe == WFRAME_RELOAD)
+			return;
+
+		// allow switching away while reloading, but this will cause a new reload!
+		self.weaponentity.state = WS_READY;
+	}
+
+	// now begin the reloading process
+
+	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
+
+	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
+	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
+	// so your weapon is disabled for a few seconds without reason
+
+	//ATTACK_FINISHED(self) = max(time, ATTACK_FINISHED(self)) + self.reload_time + 1;
+
+	weapon_thinkf(WFRAME_RELOAD, self.reload_time, W_ReloadedAndReady);
+
+	if(self.clip_load < 0)
+		self.clip_load = 0;
+	self.old_clip_load = self.clip_load;
+	self.clip_load = self.(weapon_load[self.weapon]) = -1;
+}

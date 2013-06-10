@@ -33,6 +33,7 @@ float	MOVETYPE_FLYMISSILE			= 9;
 float	MOVETYPE_BOUNCE				= 10;
 float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
 //float	MOVETYPE_FOLLOW				= 12;	// 'Attaches' the entity to its aim_ent
+//float MOVETYPE_FLY_WORLDONLY = 33;
 
 float	SOLID_NOT				= 0;
 float	SOLID_TRIGGER				= 1;
@@ -45,6 +46,9 @@ float	DEAD_DYING				= 1;
 float	DEAD_DEAD				= 2;
 float	DEAD_RESPAWNABLE			= 3;
 float	DEAD_RESPAWNING			= 4;
+
+float	RESPAWN_FORCE			= 1;
+float	RESPAWN_SILENT			= 2;
 
 float	DAMAGE_NO				= 0;
 float	DAMAGE_YES				= 1;
@@ -105,6 +109,7 @@ float	TE_KNIGHTSPIKE				= 8;
 float	TE_LIGHTNING3				= 9;
 float	TE_LAVASPLASH				= 10;
 float	TE_TELEPORT				= 11;
+float TE_BEAM					= 13;		// grappling hook
 
 float	UPDATE_GENERAL				= 0;
 float	UPDATE_STATIC				= 1;
@@ -124,13 +129,6 @@ float	MSG_ALL					= 2; // reliable
 float	MSG_INIT				= 3; // initialization
 float	MSG_ENTITY				= 5; // csqc
 
-vector	PL_VIEW_OFS				= '0 0 35';
-vector	PL_MIN					= '-16 -16 -24';
-vector	PL_MAX					= '16 16 45';
-vector	PL_CROUCH_VIEW_OFS			= '0 0 15';
-vector	PL_CROUCH_MIN				= '-16 -16 -24';
-vector	PL_CROUCH_MAX				= '16 16 25';
-
 // Sajt - added these, just as constants. Not sure how you want them actually put in the game, but I just
 // did this so at least they worked
 // NOTE: instagib IS NOT compatible with rocket-arena, so make sure to prevent selecting both in a menu
@@ -139,26 +137,11 @@ vector	PL_CROUCH_MAX				= '16 16 25';
 //float	GAME_FULLBRIGHT_PLAYERS			= 64; /// makes the players model fullbright
 //float	GAME_TEAMS				= 128; /// Teams, red/green/yellow/blue
 
-float	game;	// set to "gamecfg" on spawnfunc_worldspawn
-
 
 //float	POWERUP_STRENGTH_DAMAGE			= 2; // damage multiplier for strength powerup
 //float	POWERUP_STRENGTH_FORCE			= 4; // force multiplier for strength powerup
 
 //float	POWERUP_INVINCIBLE_TAKEDAMAGE		= 0.2; // received damage multiplier for invincible powerup
-
-
-float TE_BEAM					= 13;		// grappling hook
-
-// CTF
-float FLAG_BASE = 1;
-float FLAG_CARRY = 2;
-float FLAG_DROPPED = 3;
-
-float COLOR_TEAM1	= 5;  // red
-float COLOR_TEAM2	= 14; // blue
-float COLOR_TEAM3	= 13; // yellow
-float COLOR_TEAM4	= 10; // pink
 
 float NUM_PLAYERSKINS_TEAMPLAY = 3;
 

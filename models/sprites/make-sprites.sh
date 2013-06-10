@@ -206,3 +206,5 @@ sprite item-fuelregen     "Fuel regen"    ff8000 000000 0.5 ff8000 ffff00 0.5
 sprite item-jetpack       "Jet Pack"      808080 000000 0.5 808080 ffff00 0.5
 
 sprite freezetag_frozen   "Frozen!"       40e6ff 000000 0.0 # bright cyan
+
+sprite tagged-target			"Tagged"				80ff0f 000000 0.25 80ff0f ffff80 0.25

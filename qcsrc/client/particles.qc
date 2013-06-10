@@ -57,8 +57,8 @@ void Draw_PointParticles()
 			}
 			if(self.noise != "")
 			{
-				self.origin = p;
-				sound(self, CHAN_TRIGGER, self.noise, VOL_BASE * self.volume, self.atten);
+				setorigin(self, p);
+				sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		}
@@ -68,7 +68,7 @@ void Draw_PointParticles()
 			--i;
 		}
 	}
-	self.origin = o;
+	setorigin(self, o);
 }
 
 void Ent_PointParticles_Remove()
@@ -191,12 +191,12 @@ void Ent_PointParticles()
 .float glow_color; // palette index
 void Draw_Rain()
 {
-    te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, self.count * drawframetime, self.glow_color);
+    te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
 void Draw_Snow()
 {
-    te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, self.count * drawframetime, self.glow_color);
+    te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
 void Ent_RainOrSnow()

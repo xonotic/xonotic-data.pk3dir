@@ -22,6 +22,7 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
+	ATTRIB(XonoticKeyBinder, clearButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity, NULL)
 	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string))
 ENDCLASS(XonoticKeyBinder)
@@ -70,6 +71,19 @@ entity makeXonoticKeyBinder()
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
+void replace_bind(string from, string to)
+{
+	float n, j, k;
+	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
+	for(j = 0; j < n; ++j)
+	{
+		k = stof(argv(j));
+		if(k != -1)
+			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
+	}
+	if(n)
+		cvar_set("_hud_showbinds_reload", "1");
+}
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
@@ -77,6 +91,18 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 		Xonotic_KeyBinds_Read();
 	me.nItems = Xonotic_KeyBinds_Count;
 	me.setSelected(me, 0);
+
+	// TEMP: Xonotic 0.1 to later
+	replace_bind("impulse 1", "weapon_group_1");
+	replace_bind("impulse 2", "weapon_group_2");
+	replace_bind("impulse 3", "weapon_group_3");
+	replace_bind("impulse 4", "weapon_group_4");
+	replace_bind("impulse 5", "weapon_group_5");
+	replace_bind("impulse 6", "weapon_group_6");
+	replace_bind("impulse 7", "weapon_group_7");
+	replace_bind("impulse 8", "weapon_group_8");
+	replace_bind("impulse 9", "weapon_group_9");
+	replace_bind("impulse 14", "weapon_group_0");
 }
 void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -103,6 +129,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 		return;
 
 	me.keyGrabButton.forcePressed = 1;
+	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
 void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
@@ -111,6 +138,8 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
+	me.clearButton.disabled = 0;
+
 	if(key == K_ESCAPE)
 		return;
 
@@ -118,7 +147,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	nvalid = 0;
 	for(j = 0; j < n; ++j)
 	{
@@ -138,6 +167,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -145,11 +175,11 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -166,11 +196,11 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -190,7 +220,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
@@ -199,6 +229,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
@@ -308,7 +339,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
-		n = tokenize(findkeysforcommand(func)); // uses '...' strings
+		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 		s = "";
 		for(j = 0; j < n; ++j)
 		{

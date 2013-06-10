@@ -5,7 +5,7 @@ void turret_tesla_fire();
 entity toast(entity from, float range, float damage)
 {
     entity e;
-    entity etarget;
+    entity etarget = world;
     float d,dd;
     float r;
 
@@ -35,11 +35,9 @@ entity toast(entity from, float range, float damage)
     }
 
     if (etarget)
-    {
-        te_smallflash(etarget.origin);
+    {        
         te_csqc_lightningarc(from.origin,etarget.origin);
-        dprint("DMG:",ftos(damage),"\n");
-        Damage(etarget, self, self, damage, DEATH_TURRET, etarget.origin, '0 0 0');
+        Damage(etarget, self, self, damage, DEATH_TURRET_TESLA, etarget.origin, '0 0 0');
         etarget.railgunhit = 1;
     }
 
@@ -48,26 +46,45 @@ entity toast(entity from, float range, float damage)
 
 float turret_tesla_firecheck()
 {
+    // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
+    float do_target_scan = 0;
+    
+    if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
+        do_target_scan = 1;
+
+    // Old target (if any) invalid?
+    if(self.target_validate_time < time)
+    if (turret_validate_target(self, self.enemy, self.target_validate_flags) <= 0)
+    {
+        self.enemy = world;
+        self.target_validate_time = time + 0.5;
+        do_target_scan = 1;
+    }
+
+    // But never more often then g_turrets_targetscan_mindelay!
+    if (self.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
+        do_target_scan = 0;
+
+    if(do_target_scan)
+    {
+        self.enemy = turret_select_target();
+        self.target_select_time = time;
+    }
+
     if not (turret_stdproc_firecheck())
         return 0;
-
-    self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    self.enemy = turret_select_target();
 
     if(self.enemy)
         return 1;
 
     return 0;
-
 }
+
 
 void turret_tesla_fire()
 {
-    entity e,t;
-    float d,r,i;
-
-    //w_deathtypestring = "discoverd how a tesla coil works";
+    entity e, t;
+    float d, r, i;
 
     d = self.shot_dmg;
     r = self.target_range;
@@ -103,7 +120,7 @@ void turret_tesla_fire()
 
 void turret_tesla_postthink()
 {
-    if not (self.tur_active)
+    if not (self.active)
     {
         self.tur_head.avelocity = '0 0 0';
         return;
@@ -145,7 +162,7 @@ void turret_tesla_dinit()
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;
 
-    if (turret_stdproc_init("tesla_std",0,"models/turrets/tesla_base.md3","models/turrets/tesla_head.md3") == 0)
+    if (turret_stdproc_init("tesla_std", "models/turrets/tesla_base.md3", "models/turrets/tesla_head.md3", TID_TESLA) == 0)
     {
         remove(self);
         return;
@@ -154,9 +171,6 @@ void turret_tesla_dinit()
 
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
                                  TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firefunc      = turret_tesla_fire;
     self.turret_postthink     = turret_tesla_postthink;

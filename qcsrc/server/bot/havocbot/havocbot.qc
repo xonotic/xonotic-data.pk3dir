@@ -1,5 +1,4 @@
 #include "havocbot.qh"
-#include "role_ctf.qc"
 #include "role_onslaught.qc"
 #include "role_keyhunt.qc"
 #include "roles.qc"
@@ -32,8 +31,8 @@ void havocbot_ai()
 		if(self.waterlevel==WATERLEVEL_SWIMMING || self.aistatus & AI_STATUS_OUT_WATER)
 		{
 			// Look for the closest waypoint out of water
-			local entity newgoal, head;
-			local float bestdistance, distance;
+			entity newgoal, head;
+			float bestdistance, distance;
 
 			newgoal = world;
 			bestdistance = 10000;
@@ -91,7 +90,7 @@ void havocbot_ai()
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &~= AI_STATUS_ROAMING;
 
-		if(self.weapons)
+		if(!WEPSET_EMPTY_E(self))
 		{
 			weapon_action(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
@@ -107,7 +106,7 @@ void havocbot_ai()
 		}
 		else
 		{
-			if(self.bot_aimtarg.classname=="player")
+			if(IS_PLAYER(self.bot_aimtarg))
 				bot_aimdir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
 		}
 	}
@@ -116,9 +115,9 @@ void havocbot_ai()
 		self.aistatus |= AI_STATUS_ROAMING;
 		self.aistatus &~= AI_STATUS_ATTACKING;
 
-		local vector now,v,next;//,heading;
-		local float aimdistance,skillblend,distanceblend,blend;
-		next = now = self.goalcurrent.origin - (self.origin + self.view_ofs);
+		vector now,v,next;//,heading;
+		float aimdistance,skillblend,distanceblend,blend;
+		next = now = ( (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5) - (self.origin + self.view_ofs);
 		aimdistance = vlen(now);
 		//heading = self.velocity;
 		//dprint(self.goalstack01.classname,etos(self.goalstack01),"\n");
@@ -126,7 +125,7 @@ void havocbot_ai()
 			self.goalstack01 != self && self.goalstack01 != world && self.aistatus & AI_STATUS_RUNNING == 0 &&
 			!(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		)
-			next = self.goalstack01.origin - (self.origin + self.view_ofs);
+			next = ((self.goalstack01.absmin + self.goalstack01.absmax) * 0.5) - (self.origin + self.view_ofs);
 
 		skillblend=bound(0,(skill+self.bot_moveskill-2.5)*0.5,1); //lower skill player can't preturn
 		distanceblend=bound(0,aimdistance/autocvar_bot_ai_keyboard_distance,1);
@@ -145,12 +144,37 @@ void havocbot_ai()
 		bot_aimdir(v, -1);
 	}
 	havocbot_movetogoal();
-};
+
+	// if the bot is not attacking, consider reloading weapons
+	if not(self.aistatus & AI_STATUS_ATTACKING)
+	{
+		float i;
+		entity e;
+
+		// we are currently holding a weapon that's not fully loaded, reload it
+		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
+		if(self.clip_load < self.clip_size)
+			self.impulse = 20; // "press" the reload button, not sure if this is done right
+
+		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
+		// the code above executes next frame, starting the reloading then
+		if(skill >= 5) // bots can only look for unloaded weapons past this skill
+		if(self.clip_load >= 0) // only if we're not reloading a weapon already
+		{
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			{
+				e = get_weaponinfo(i);
+				if (WEPSET_CONTAINS_EW(self, i) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+					self.switchweapon = i;
+			}
+		}
+	}
+}
 
 void havocbot_keyboard_movement(vector destorg)
 {
-	local vector keyboard;
-	local float blend, maxspeed;
+	vector keyboard;
+	float blend, maxspeed;
 	float sk;
 
 	sk = skill + self.bot_moveskill;
@@ -168,7 +192,7 @@ void havocbot_keyboard_movement(vector destorg)
 		, time);
 	keyboard = self.movement * (1.0 / maxspeed);
 
-	local float trigger, trigger1;
+	float trigger, trigger1;
 	blend = bound(0,sk*0.1,1);
 	trigger = autocvar_bot_ai_keyboard_threshold;
 	trigger1 = 0 - trigger;
@@ -220,26 +244,24 @@ void havocbot_keyboard_movement(vector destorg)
 	blend = bound(0,vlen(destorg-self.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(self.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	self.movement = self.movement + (keyboard - self.movement) * blend;
-};
+}
 
 void havocbot_bunnyhop(vector dir)
 {
-	local float bunnyhopdistance;
-	local vector deviation;
-	local float maxspeed;
+	float bunnyhopdistance;
+	vector deviation;
+	float maxspeed;
+	vector gco, gno;
 
 	if(autocvar_g_midair)
 		return;
 
-	// Don't jump when using some weapons
-	/*
+	// Don't jump when attacking
 	if(self.aistatus & AI_STATUS_ATTACKING)
-	if(self.weapon == WEP_SNIPERRIFLE)
 		return;
 
-	if(self.goalcurrent.classname == "player")
+	if(IS_PLAYER(self.goalcurrent))
 		return;
-	*/
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -264,7 +286,8 @@ void havocbot_bunnyhop(vector dir)
 		self.bot_timelastseengoal = 0;
 	}
 
-	bunnyhopdistance = vlen(self.origin - self.goalcurrent.origin);
+	gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
+	bunnyhopdistance = vlen(self.origin - gco);
 
 	// Run only to visible goals
 	if(self.flags & FL_ONGROUND)
@@ -279,7 +302,7 @@ void havocbot_bunnyhop(vector dir)
 				// for a period of time
 				if(time - self.bot_timelastseengoal > autocvar_bot_ai_bunnyhop_firstjumpdelay)
 				{
-					local float checkdistance;
+					float checkdistance;
 					checkdistance = TRUE;
 
 					// don't run if it is too close
@@ -297,18 +320,19 @@ void havocbot_bunnyhop(vector dir)
 					if(self.aistatus & AI_STATUS_ROAMING)
 					if(self.goalcurrent.classname=="waypoint")
 					if not(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)
-					if(fabs(self.goalcurrent.origin_z - self.origin_z) < self.maxs_z - self.mins_z)
+					if(fabs(gco_z - self.origin_z) < self.maxs_z - self.mins_z)
 					if(self.goalstack01!=world)
 					{
-						deviation = vectoangles(self.goalstack01.origin - self.origin) - vectoangles(self.goalcurrent.origin - self.origin);
+						gno = (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5;
+						deviation = vectoangles(gno - self.origin) - vectoangles(gco - self.origin);
 						while (deviation_y < -180) deviation_y = deviation_y + 360;
 						while (deviation_y > 180) deviation_y = deviation_y - 360;
 
 						if(fabs(deviation_y) < 20)
-						if(bunnyhopdistance < vlen(self.origin - self.goalstack01.origin))
-						if(fabs(self.goalstack01.origin_z - self.goalcurrent.origin_z) < self.maxs_z - self.mins_z)
+						if(bunnyhopdistance < vlen(self.origin - gno))
+						if(fabs(gno_z - gco_z) < self.maxs_z - self.mins_z)
 						{
-							if(vlen(self.goalcurrent.origin - self.goalstack01.origin) > autocvar_bot_ai_bunnyhop_startdistance)
+							if(vlen(gco - gno) > autocvar_bot_ai_bunnyhop_startdistance)
 							if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 							{
 								checkdistance = FALSE;
@@ -339,6 +363,7 @@ void havocbot_bunnyhop(vector dir)
 		self.bot_timelastseengoal = 0;
 	}
 
+#if 0
 	// Release jump button
 	if(!cvar("sv_pogostick"))
 	if(self.flags & FL_ONGROUND == 0)
@@ -364,22 +389,24 @@ void havocbot_bunnyhop(vector dir)
 
 		}
 	}
-};
+#endif
+}
 
 void havocbot_movetogoal()
 {
-	local vector destorg;
-	local vector diff;
-	local vector dir;
-	local vector flatdir;
-	local vector m1;
-	local vector m2;
-	local vector evadeobstacle;
-	local vector evadelava;
-	local float s;
-	local float maxspeed;
-	//local float dist;
-	local vector dodge;
+	vector destorg;
+	vector diff;
+	vector dir;
+	vector flatdir;
+	vector m1;
+	vector m2;
+	vector evadeobstacle;
+	vector evadelava;
+	float s;
+	float maxspeed;
+	vector gco;
+	//float dist;
+	vector dodge;
 	//if (self.goalentity)
 	//	te_lightning2(self, self.origin, (self.goalentity.absmin + self.goalentity.absmax) * 0.5);
 	self.movement = '0 0 0';
@@ -391,10 +418,11 @@ void havocbot_movetogoal()
 	if(self.goalcurrent==self.navigation_jetpack_goal)
 	if(self.ammo_fuel)
 	{
-		#ifdef DEBUG_BOT_GOALSTACK
+		if(autocvar_bot_debug_goalstack)
+		{
 			debuggoalstack();
 			te_wizspike(self.navigation_jetpack_point);
-		#endif
+		}
 
 		// Take off
 		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
@@ -415,7 +443,7 @@ void havocbot_movetogoal()
 			float db, v, d;
 			vector dxy;
 
-			dxy = self.origin - self.goalcurrent.origin; dxy_z = 0;
+			dxy = self.origin - ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ); dxy_z = 0;
 			d = vlen(dxy);
 			v = vlen(self.velocity -  self.velocity_z * '0 0 1');
 			db = (pow(v,2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
@@ -456,24 +484,22 @@ void havocbot_movetogoal()
 	// Handling of jump pads
 	if(self.jumppadcount)
 	{
-		// If got stuck on the jump pad try to reach the farthest visible item
+		// If got stuck on the jump pad try to reach the farthest visible waypoint
 		if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
 			if(fabs(self.velocity_z)<50)
 			{
-				local entity head, newgoal;
-				local float distance, bestdistance;
+				entity head, newgoal = world;
+				float distance, bestdistance = 0;
 
-				for (head = findchainfloat(bot_pickup, TRUE); head; head = head.chain)
+				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
-					if(head.classname=="worldspawn")
-						continue;
 
 					distance = vlen(head.origin - self.origin);
 					if(distance>1000)
 						continue;
 
-					traceline(self.origin + self.view_ofs , head.origin, TRUE, world);
+					traceline(self.origin + self.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), TRUE, world);
 
 					if(trace_fraction<1)
 						continue;
@@ -501,18 +527,20 @@ void havocbot_movetogoal()
 		{
 			if(self.velocity_z>0)
 			{
-				local float threshold;
+				float threshold, sxy;
+				vector velxy = self.velocity; velxy_z = 0;
+				sxy = vlen(velxy);
 				threshold = maxspeed * 0.2;
-				if(fabs(self.velocity_x) < threshold  &&  fabs(self.velocity_y) < threshold)
+				if(sxy < threshold)
 				{
-					dprint("Warning: ", self.netname, " got stuck on a jumppad, trying to get out of it now\n");
+					dprint("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
 			}
 
 			// Don't chase players while using a jump pad
-			if(self.goalcurrent.classname=="player" || self.goalstack01.classname=="player")
+			if(IS_PLAYER(self.goalcurrent) || IS_PLAYER(self.goalstack01))
 				return;
 		}
 	}
@@ -543,10 +571,10 @@ void havocbot_movetogoal()
 			if(self.goalcurrent==world)
 				dir = v_forward;
 			else
-				dir = normalize(self.goalcurrent.origin - self.origin);
+				dir = normalize(( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ) - self.origin);
 
-			local vector xyvelocity = self.velocity; xyvelocity_z = 0;
-			local float xyspeed = xyvelocity * dir;
+			vector xyvelocity = self.velocity; xyvelocity_z = 0;
+			float xyspeed = xyvelocity * dir;
 
 			if(xyspeed < (maxspeed / 2))
 			{
@@ -628,9 +656,9 @@ void havocbot_movetogoal()
 		return;
 	}
 
-#ifdef DEBUG_BOT_GOALSTACK
-	debuggoalstack();
-#endif
+
+	if(autocvar_bot_debug_goalstack)
+		debuggoalstack();
 
 	m1 = self.goalcurrent.origin + self.goalcurrent.mins;
 	m2 = self.goalcurrent.origin + self.goalcurrent.maxs;
@@ -643,6 +671,7 @@ void havocbot_movetogoal()
 	dir = normalize(diff);
 	flatdir = diff;flatdir_z = 0;
 	flatdir = normalize(flatdir);
+	gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
 
 	//if (self.bot_dodgevector_time < time)
 	{
@@ -660,7 +689,7 @@ void havocbot_movetogoal()
 			}
 			else
 			{
-				if(self.velocity_z >= 0 && !(self.watertype == CONTENT_WATER && self.goalcurrent.origin_z < self.origin_z) &&
+				if(self.velocity_z >= 0 && !(self.watertype == CONTENT_WATER && gco_z < self.origin_z) &&
 					( !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
 					self.BUTTON_JUMP = TRUE;
 				else
@@ -681,19 +710,19 @@ void havocbot_movetogoal()
 			if (trace_plane_normal_z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(self.origin + '0 0 16', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 16', FALSE, self);
+				tracebox(self.origin + stepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + stepheightvec, FALSE, self);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal_z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(self.origin + '0 0 48', self.mins, self.maxs, self.origin + self.velocity * 0.2 + '0 0 48', FALSE, self);
+					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, FALSE, self);
 					if (trace_fraction > s)
 						self.BUTTON_JUMP = 1;
 				}
 			}
 
 			// avoiding dangers and obstacles
-			local vector dst_ahead, dst_down;
+			vector dst_ahead, dst_down;
 			makevectors(self.v_angle_y * '0 1 0');
 			dst_ahead = self.origin + self.view_ofs + (self.velocity * 0.4) + (v_forward * 32 * 3);
 			dst_down = dst_ahead + '0 0 -1500';
@@ -732,7 +761,7 @@ void havocbot_movetogoal()
 			// (only when the bot is on the ground or jumping intentionally)
 			self.aistatus &~= AI_STATUS_DANGER_AHEAD;
 
-			if(trace_fraction == 1 && self.jumppadcount == 0)
+			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
 			if(self.flags & FL_ONGROUND || self.aistatus & AI_STATUS_RUNNING || self.BUTTON_JUMP == TRUE)
 			{
 				// Look downwards
@@ -755,11 +784,9 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							if (self.goalcurrent.classname == "player" || self.goalcurrent.classname == "droppedweapon")
-								navigation_poproute();
-							// try to stop
-							flatdir = '0 0 0';
-							evadeobstacle = normalize(self.velocity) * -1;
+							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							navigation_clearroute();
+							return;
 						}
 					}
 				}
@@ -777,8 +804,8 @@ void havocbot_movetogoal()
 		dodge = havocbot_dodge();
 		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
-		traceline(self.origin, self.enemy.origin, TRUE, world);
-		if(trace_ent.classname == "player")
+		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), TRUE, world);
+		if(IS_PLAYER(trace_ent))
 			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
@@ -820,13 +847,13 @@ void havocbot_movetogoal()
 	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
-};
+}
 
 void havocbot_chooseenemy()
 {
-	local entity head, best, head2;
-	local float rating, bestrating, i, f;
-	local vector eye, v;
+	entity head, best, head2;
+	float rating, bestrating, i, hf;
+	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
 		self.enemy = world;
@@ -847,13 +874,13 @@ void havocbot_chooseenemy()
 			// and not really really far away
 			// and we're not severely injured
 			// then keep tracking for a half second into the future
-			traceline(self.origin+self.view_ofs, self.enemy.origin+self.enemy.view_ofs*0.5,FALSE,world);
+			traceline(self.origin+self.view_ofs, ( self.enemy.absmin + self.enemy.absmax ) * 0.5,FALSE,world);
 			if (trace_ent == self.enemy || trace_fraction == 1)
-			if (vlen(self.enemy.origin - self.origin) < 1000)
+			if (vlen((( self.enemy.absmin + self.enemy.absmax ) * 0.5) - self.origin) < 1000)
 			if (self.health > 30)
 			{
 				// remain tracking him for a shot while (case he went after a small corner or pilar
-				self.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
+				self.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
 			// enemy isn't visible, or is far away, or we're injured severely
@@ -870,8 +897,14 @@ void havocbot_chooseenemy()
 	bestrating = 100000000;
 	head = head2 = findchainfloat(bot_attack, TRUE);
 
+	// Backup hit flags
+	hf = self.dphitcontentsmask;
+
 	// Search for enemies, if no enemy can be seen directly try to look through transparent objects
-	for(;;)
+
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
+	for(i = 0; ; ++i)
 	{
 		while (head)
 		{
@@ -893,33 +926,55 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_SNIPERRIFLE
+		if(best || !WEPSET_EMPTY_E(self)) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;
 
 		// Set flags to see through transparent objects
-		f = self.dphitcontentsmask;
-		self.dphitcontentsmask = DPCONTENTS_OPAQUE;
+		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
-		++i;
 	}
 
-	// Restore hit flags if needed
-	if(i)
-		self.dphitcontentsmask = f;
+	// Restore hit flags
+	self.dphitcontentsmask = hf;
 
 	self.enemy = best;
 	self.havocbot_stickenemy = TRUE;
-};
+}
+
+float havocbot_chooseweapon_checkreload(float new_weapon)
+{
+	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
+	// so skip this for them, or they'll never get to reload their weapons at all.
+	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
+	if(skill < 5)
+		return FALSE;
+
+	// if this weapon is scheduled for reloading, don't switch to it during combat
+	if (self.weapon_load[new_weapon] < 0)
+	{
+		float i, other_weapon_available = FALSE;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
+			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+				other_weapon_available = TRUE;
+		}
+		if(other_weapon_available)
+			return TRUE;
+	}
+
+	return FALSE;
+}
 
 void havocbot_chooseweapon()
 {
-	local float i;
+	float i;
 
 	// ;)
-	if(g_weaponarena == WEPBIT_TUBA)
+	if(WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 	{
 		self.switchweapon = WEP_TUBA;
 		return;
@@ -946,16 +1001,11 @@ void havocbot_chooseweapon()
 	if(i < 1)
 		return;
 
-	// Workaround for rifle reloading (..)
-	if(self.weapon == WEP_SNIPERRIFLE)
-	if(i < autocvar_g_balance_sniperrifle_reloadtime + 1)
-		return;
-
-	local float w;
-	local float distance; distance=bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
+	float w;
+	float distance; distance=bound(10,vlen(self.origin-self.enemy.origin)-200,10000);
 
 	// Should it do a weapon combo?
-	local float af, ct, combo_time, combo;
+	float af, ct, combo_time, combo;
 
 	af = ATTACK_FINISHED(self);
 	ct = autocvar_bot_ai_weapon_combo_threshold;
@@ -983,8 +1033,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
-					if ( self.weapon == w && combo)
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				{
+					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
 					self.switchweapon = w;
 					return;
@@ -996,8 +1047,9 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) ){
-					if ( self.weapon == w && combo)
+				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				{
+					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
 					self.switchweapon = w;
 					return;
@@ -1008,19 +1060,20 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, TRUE, FALSE) ){
-				if ( self.weapon == w && combo)
+			if ( client_hasweapon(self, w, TRUE, FALSE) )
+			{
+				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
 				self.switchweapon = w;
 				return;
 			}
 		}
 	}
-};
+}
 
 void havocbot_aim()
 {
-	local vector selfvel, enemyvel;
+	vector selfvel, enemyvel;
 //	if(self.flags & FL_INWATER)
 //		return;
 	if (time < self.nextaim)
@@ -1034,11 +1087,11 @@ void havocbot_aim()
 		enemyvel = self.enemy.velocity;
 		if (!self.enemy.waterlevel)
 			enemyvel_z = 0;
-		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, self.enemy.origin, enemyvel);
+		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, (self.enemy.absmin + self.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, self.goalcurrent.origin, '0 0 0');
-};
+		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5, '0 0 0');
+}
 
 float havocbot_moveto_refresh_route()
 {
@@ -1053,7 +1106,7 @@ float havocbot_moveto_refresh_route()
 
 float havocbot_moveto(vector pos)
 {
-	local entity wp;
+	entity wp;
 
 	if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 	{
@@ -1091,12 +1144,11 @@ float havocbot_moveto(vector pos)
 			}
 		}
 
-		#ifdef DEBUG_BOT_GOALSTACK
+		if(autocvar_bot_debug_goalstack)
 			debuggoalstack();
-		#endif
 
 		// Heading
-		local vector dir = self.goalcurrent.origin - (self.origin + self.view_ofs);
+		vector dir = ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ) - (self.origin + self.view_ofs);
 		dir_z = 0;
 		bot_aimdir(dir, -1);
 
@@ -1188,9 +1240,9 @@ vector havocbot_dodge()
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0
-	local entity head;
-	local vector dodge, v, n;
-	local float danger, bestdanger, vl, d;
+	entity head;
+	vector dodge, v, n;
+	float danger, bestdanger, vl, d;
 	dodge = '0 0 0';
 	bestdanger = -20;
 	// check for dangerous objects near bot or approaching bot
@@ -1233,4 +1285,4 @@ vector havocbot_dodge()
 	}
 	return dodge;
 #endif
-};
+}

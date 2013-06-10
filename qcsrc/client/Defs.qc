@@ -1,6 +1,3 @@
-#pragma flag off fastarrays // make dp behave with new fteqcc versions. remove when dp bug with fteqcc fastarrays is fixed
-
-
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.
@@ -28,7 +25,7 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum
+float 		player_localentnum;	//the entnum of the VIEW entity
 float 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 
@@ -177,9 +174,6 @@ float		dmg_take;
 float vid_conwidth, vid_conheight;
 float binddb;
 
-//	Announcer
-string announce_snd;
-
 // QUALIFYING
 float race_checkpoint;
 float race_time;
@@ -225,10 +219,6 @@ float spectatee_status;
 // short mapname
 string shortmapname;
 
-//remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
-
 // database for misc stuff
 float tempdb;
 float ClientProgsDB;
@@ -246,6 +236,9 @@ float servertime, serverprevtime, serverdeltatime;
 float ticrate;
 
 .float damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 .void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
@@ -256,15 +249,14 @@ vector angles_held;
 .float silent;
 
 float w_deathtype, w_issilent, w_random;
-string w_deathtypestring;
 vector w_org, w_backoff;
 
-float sniperrifle_scope;
+float rifle_scope;
 float nex_scope;
 
-float cr_maxbullets;
-
 float minelayer_maxmines;
+
+float hagar_maxrockets;
 
 float bgmtime;
 
@@ -276,3 +268,9 @@ float nex_charge_movingavg;
 float serverflags;
 
 float uid2name_dialog;
+
+.float csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
+
+#define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
+
+float g_balance_porto_secondary;

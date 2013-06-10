@@ -2,7 +2,7 @@
 
 void g_model_setcolormaptoactivator (void)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(activator.team)
 			self.colormap = (activator.team - 1) * 0x11;
@@ -128,15 +128,17 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 
 
 #define G_MODEL_INIT(sol) \
-	SetBrushEntityModel(); \
+	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
+	SetBrushEntityModel(); \
 	self.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(self, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
 
 #define G_CLIENTMODEL_INIT(sol) \
-	SetBrushEntityModel(); \
+	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
+	SetBrushEntityModel(); \
 	self.use = g_clientmodel_setcolormaptoactivator; \
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \

@@ -15,6 +15,8 @@ void Casing_Draw()
 	}
 
 	Movetype_Physics_MatchTicrate(autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+	if(wasfreed(self))
+		return; // deleted by touch function
 
 	self.renderflags = 0;
 	self.alpha = bound(0, self.cnt - time, 1);
@@ -55,7 +57,7 @@ void Casing_Touch()
 						break;
 				}
 
-				sound (self, CHAN_PROJECTILE, s, VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS, s, VOL_BASE, ATTN_LARGE);
 			}
 		}
 	}
@@ -82,6 +84,7 @@ void Ent_Casing(float isNew)
 	casing.origin_x = ReadCoord();
 	casing.origin_y = ReadCoord();
 	casing.origin_z = ReadCoord();
+	setorigin(casing, casing.origin);
 	casing.velocity = decompressShortVector(ReadShort());
 	casing.angles_x = ReadByte() * 360 / 256;
 	casing.angles_y = ReadByte() * 360 / 256;
@@ -107,23 +110,28 @@ void Ent_Casing(float isNew)
 				casing.cnt = time + autocvar_cl_casings_shell_time;
 				break;
 			default:
-				setmodel(casing, "models/casing_bronze.mdl");
+				setmodel(casing, "models/casing_bronze.iqm");
 				casing.cnt = time + autocvar_cl_casings_bronze_time;
 				break;
 		}
 
 		setsize(casing, '0 0 -1', '0 0 -1');
-	}
-    else
-        Casing_Delete();
 
-	RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
+		RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
+	}
+	else
+	{
+		entity oldself = self;
+		self = casing;
+		Casing_Delete(); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+		self = oldself;
+	}
 }
 
 void Casings_Precache()
 {
 	precache_model("models/casing_shell.mdl");
-	precache_model("models/casing_bronze.mdl");
+	precache_model("models/casing_bronze.iqm");
 	precache_sound("weapons/brass1.wav");
 	precache_sound("weapons/brass2.wav");
 	precache_sound("weapons/brass3.wav");

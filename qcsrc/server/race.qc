@@ -141,6 +141,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	newpos = race_readPos(map, t);
 
 	float i;
+	player_prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
@@ -148,20 +149,17 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	}
 
 	float oldrec;
-	string recorddifference, oldrec_holder;
+	string oldrec_holder;
 	if (player_prevpos && (player_prevpos < newpos || !newpos))
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
-		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(GetMapname(), RANKINGS_CNT)), "]");
-		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(GetMapname(), RANKINGS_CNT)), recorddifference, "\n");
+		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
@@ -170,7 +168,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
 	if(myuid == "")
 	{
-		bprint(mynetname, "^1 scored a new record with ^7", TIME_ENCODED_TOSTRING(t), "^1, but lacks a UID, so the record will unfortunately be lost.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
 		return;
 	}
 
@@ -189,34 +187,24 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	if(rankings_reply)
 		strunzone(rankings_reply);
 	rankings_reply = strzone(getrankings());
-	if(newpos == 1) {
-		if(newpos == player_prevpos) {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^1 improved their 1st place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
-		} else if (oldrec == 0) {
-			bprint(mynetname, "^1 set the 1st place record with ", TIME_ENCODED_TOSTRING(t), "\n");
-		} else {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^1 broke ", oldrec_holder, "^1's 1st place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
-		}
-		race_SendStatus(3, e); // "new server record"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_SERVER_RECORD, MSG_RACE);
-	} else {
-		if(newpos == player_prevpos) {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^5 improved their ", race_placeName(newpos), " ^5place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
-			race_SendStatus(1, e); // "new time"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_TIME, MSG_RACE);
-		} else if (oldrec == 0) {
-			bprint(mynetname, "^2 set the ", race_placeName(newpos), " ^2place record with ", TIME_ENCODED_TOSTRING(t), "\n");
-			race_SendStatus(2, e); // "new rank"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_RANK, MSG_RACE);
-		} else {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^2 broke ", oldrec_holder, "^2's ", race_placeName(newpos), " ^2place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
-			race_SendStatus(2, e); // "new rank"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_TIME, MSG_RACE);
-		}
+	
+	if(newpos == player_prevpos)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(1, e); } // "new time"
+	}
+	else if(oldrec == 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(2, e); } // "new rank"
+	}
+	else
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(2, e); } // "new rank"
 	}
 }
 
@@ -272,6 +260,10 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		}
 		else
 		{
+			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			if(!s || t < s)
+				PlayerScore_Add(e, SP_RACE_FASTEST, t - s);
+
 			s = PlayerScore_Add(e, SP_RACE_TIME, 0);
 			snew = TIME_ENCODE(time - game_starttime);
 			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
@@ -285,7 +277,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				e.race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
-				bprint(e.netname, "^7 has finished the race.\n");
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
 			}
 		}
@@ -465,7 +457,7 @@ void checkpoint_passed()
 	/*
 	 * Trigger targets
 	 */
-	if not((self.spawnflags & 2) && (other.classname == "player"))
+	if not((self.spawnflags & 2) && (IS_PLAYER(other)))
 	{
 		activator = other;
 		oldmsg = self.message;
@@ -474,7 +466,7 @@ void checkpoint_passed()
 		self.message = oldmsg;
 	}
 
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 
 	/*
@@ -490,8 +482,8 @@ void checkpoint_passed()
 			self.race_checkpoint = other.race_checkpoint;
 		}
 
-		float largest_cp_id;
-		float cp_amount;
+		float largest_cp_id = 0;
+		float cp_amount = 0;
 		for(cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
 			cp_amount += 1;
 			if(cp.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
@@ -635,7 +627,7 @@ void trigger_race_checkpoint_verify()
 			// race only (middle of the race)
 			g_race_qualifying = 0;
 			self.race_place = 0;
-			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for respawning in race) - bailing out"));
 
 			if(i == 0)
@@ -643,7 +635,7 @@ void trigger_race_checkpoint_verify()
 				// qualifying only
 				g_race_qualifying = 1;
 				self.race_place = race_lowest_place_spawn;
-				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 				
 				// race only (initial spawn)
@@ -651,7 +643,7 @@ void trigger_race_checkpoint_verify()
 				for(p = 1; p <= race_highest_place_spawn; ++p)
 				{
 					self.race_place = p;
-					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for initially spawning in race) - bailing out"));
 				}
 			}
@@ -663,8 +655,8 @@ void trigger_race_checkpoint_verify()
 		self.race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
-		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
-			error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
+		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
+			error(strcat("Checkpoint 0 misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 	else
 	{
@@ -710,7 +702,7 @@ void trigger_race_checkpoint_verify()
 			}
 
 			if(defragcpexists != -1){
-				float largest_cp_id;
+				float largest_cp_id = 0;
 				for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
 					if(cp.race_checkpoint > largest_cp_id)
 						largest_cp_id = cp.race_checkpoint;
@@ -764,6 +756,38 @@ void trigger_race_checkpoint_verify()
 	self = oldself;
 }
 
+vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)
+{
+	if(g_race_qualifying)
+	{
+		// spawn at first
+		if(self.race_checkpoint != 0)
+			return '-1 0 0';
+		if(spot.race_place != race_lowest_place_spawn)
+			return '-1 0 0';
+	}
+	else
+	{
+		if(self.race_checkpoint != player.race_respawn_checkpoint)
+			return '-1 0 0';
+		// try reusing the previous spawn
+		if(self == player.race_respawn_spotref || spot == player.race_respawn_spotref)
+			current_x += SPAWN_PRIO_RACE_PREVIOUS_SPAWN;
+		if(self.race_checkpoint == 0)
+		{
+			float pl;
+			pl = player.race_place;
+			if(pl > race_highest_place_spawn)
+				pl = 0;
+			if(pl == 0 && !player.race_started)
+				pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
+			if(spot.race_place != pl)
+				return '-1 0 0';
+		}
+	}
+	return current;
+}
+
 void spawnfunc_trigger_race_checkpoint()
 {
 	vector o;
@@ -784,11 +808,11 @@ void spawnfunc_trigger_race_checkpoint()
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "went backwards";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed backwards by";
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 	
 	self.race_checkpoint = self.cnt;
@@ -805,12 +829,13 @@ void spawnfunc_trigger_race_checkpoint()
 	if(!self.race_penalty)
 	{
 		if(self.race_checkpoint)
-			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite);
+			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 		else
-			WaypointSprite_SpawnFixed("race-finish", o, self, sprite);
+			WaypointSprite_SpawnFixed("race-start-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+	self.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
 
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
@@ -836,11 +861,11 @@ void spawnfunc_target_checkpoint() // defrag entity
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "went backwards";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed backwards by";
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 
 	if(self.classname == "target_startTimer")
@@ -851,9 +876,9 @@ void spawnfunc_target_checkpoint() // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(self.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed("race-start", o, self, sprite);
+		WaypointSprite_SpawnFixed("race-start", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 	else
-		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite);
+		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 
@@ -869,7 +894,7 @@ void race_AbandonRaceCheck(entity p)
 	{
 		p.race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
-		bprint(p.netname, "^7 has abandoned the race.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
 	}
 }
@@ -992,7 +1017,7 @@ void race_ReadyRestart()
 	Score_NicePrint(world);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place);
+	PlayerScore_Sort(race_place, 0, 1, 0);
 
 	entity e;
 	FOR_EACH_CLIENT(e)
@@ -1068,7 +1093,7 @@ void spawnfunc_trigger_race_penalty()
 	if not(self.spawnflags & 1)
 		self.touch = penalty_touch;
 
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 	if (!self.race_penalty)
 		self.race_penalty = 5;

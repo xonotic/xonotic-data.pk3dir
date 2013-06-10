@@ -19,9 +19,9 @@ void XonoticHUDInfoMessagesDialog_fill(entity me)
 	DIALOG_HUDPANEL_COMMON();
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Info messages:")));
+		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Info messages:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_infomessages_flip", _("Flip align")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_infomessages_flip", _("Flip align")));
 }
 #endif

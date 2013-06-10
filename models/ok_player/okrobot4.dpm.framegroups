@@ -1,0 +1,29 @@
+/*
+Generated framegroups file for okrobot4
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 41 30 0 // okrobot4 die1
+67 56 30 0 // okrobot4 die2
+133 11 15 1 // okrobot4 draw
+144 6 10 1 // okrobot4 duck
+150 17 15 1 // okrobot4 duckwalk
+167 31 40 0 // okrobot4 duckjump
+198 1 10 1 // okrobot4 duckidle
+199 101 15 1 // okrobot4 idle
+300 17 20 1 // okrobot4 jump
+317 6 10 0 // okrobot4 pain1
+323 6 10 0 // okrobot4 pain2
+329 6 30 0 // okrobot4 shoot
+335 17 15 1 // okrobot4 taunt
+352 17 30 1 // okrobot4 run
+369 17 30 1 // okrobot4 runbackwards
+386 17 30 1 // okrobot4 strafeleft
+403 17 30 1 // okrobot4 straferight
+41 1 10 0 // okrobot4 dead1
+122 1 10 0 // okrobot4 dead2
+424 17 30 1 // okrobot4 forwardright
+441 17 30 1 // okrobot4 forwardleft
+458 17 30 1 // okrobot4 backright
+475 17 30 1 // okrobot4 backleft
+492 21 15 1 // okrobot4 melee

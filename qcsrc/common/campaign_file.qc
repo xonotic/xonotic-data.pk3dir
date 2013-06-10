@@ -18,7 +18,7 @@ float CampaignFile_Load(float offset, float n)
 	campaign_entries = 0;
 	campaign_title = string_null;
 
-	fn = strcat("maps/campaign", campaign_name, ".txt");
+	fn = language_filename(strcat("maps/campaign", campaign_name, ".txt"));
 	fh = fopen(fn, FILE_READ);
 	if(fh >= 0)
 	{
@@ -38,13 +38,12 @@ float CampaignFile_Load(float offset, float n)
 			{
 				entlen = tokenize(l); // using insane tokenizer for CSV
 
-#define CAMPAIGN_GETARG0                  if(i >= entlen)
-#define CAMPAIGN_GETARG1 CAMPAIGN_GETARG0     error("syntax error in campaign file: line has not enough fields");
-#define CAMPAIGN_GETARG2 CAMPAIGN_GETARG1 a = argv(++i);
-#define CAMPAIGN_GETARG3 CAMPAIGN_GETARG2 if(a == ",")
-#define CAMPAIGN_GETARG4 CAMPAIGN_GETARG3     a = "";
-#define CAMPAIGN_GETARG5 CAMPAIGN_GETARG4 else
-#define CAMPAIGN_GETARG  CAMPAIGN_GETARG5     ++i
+#define CAMPAIGN_GETARG \
+	a = argv(++i); \
+	if(a == ",") \
+		a = ""; \
+	else \
+		++i
 // What you're seeing here is what people will do when your compiler supports
 // C-style macros but no line continuations.
 
@@ -58,6 +57,10 @@ float CampaignFile_Load(float offset, float n)
 				CAMPAIGN_GETARG; campaign_mutators[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_shortdesc[campaign_entries] = strzone(a);
 				CAMPAIGN_GETARG; campaign_longdesc[campaign_entries] = strzone(strreplace("\\n", "\n", a));
+
+				if(i > entlen)
+					error("syntax error in campaign file: line has not enough fields");
+
 				campaign_entries = campaign_entries + 1;
 
 				if(campaign_entries >= n)				

@@ -5,7 +5,7 @@ crylink_projectile_core
 	deformVertexes autosprite
 	{
 		map textures/projectiles/crylink_projectile_core.tga
-		blendfunc add
+		blendfunc GL_SRC_ALPHA GL_ONE
 		rgbGen lightingDiffuse
 	}
 }
@@ -16,7 +16,7 @@ crylink_projectile_long
 	deformVertexes autosprite2
 	{
 		map textures/projectiles/crylink_projectile_long.tga
-		blendfunc add
+		blendfunc GL_SRC_ALPHA GL_ONE
 		rgbGen lightingDiffuse
 	}
 }

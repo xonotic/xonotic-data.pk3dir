@@ -15,7 +15,9 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 	cvar_set("g_campaign", "0");
-	print("campaign initialization failed: ", s, "\n");
+	print("^4campaign initialization failed: ", s, "\n");
+	if(autocvar__campaign_testrun)
+		error("CAMPAIGN FAIL AHAHAHAHAHAHAHAHAH))");
 	return 1;
 }
 
@@ -108,7 +110,7 @@ void CampaignPreInit()
 
 	title = campaign_shortdesc[0];
 	title = strzone(strcat("Level ", ftos(campaign_level + 1), ": ", title));
-	campaign_message = strzone(strcat("\n\n\n\n\n\n\n\n\n\n^1\n", title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
+	campaign_message = strzone(strcat(title, "\n^3\n", campaign_longdesc[0], "\n\n^1press jump to enter the game"));
 	strunzone(title);
 }
 
@@ -118,10 +120,20 @@ void CampaignPostInit()
 	// now some sanity checks
 	if(Campaign_Invalid())
 		return;
-	cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set("timelimit", ftos(campaign_timelimit[0]));
-	cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
-	cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
+	if(autocvar__campaign_testrun)
+	{
+		cvar_set("fraglimit", "0");
+		cvar_set("timelimit", "0.01");
+		cvar_set_normal("fraglimit", "0");
+		cvar_set_normal("timelimit", "0.01");
+	}
+	else
+	{
+		cvar_set("fraglimit", ftos(campaign_fraglimit[0]));
+		cvar_set("timelimit", ftos(campaign_timelimit[0]));
+		cvar_set_normal("fraglimit", ftos(campaign_fraglimit[0]));
+		cvar_set_normal("timelimit", ftos(campaign_timelimit[0]));
+	}
 }
 
 void CampaignSaveCvar(string cvarname, float value)
@@ -169,14 +181,14 @@ void CampaignPreIntermission()
 	entity head;
 	float won;
 	float lost;
-	local string savevar;
+	string savevar;
 
-	won = 0;
+	won = lost = 0;
 
 	head = findchain(classname, "player");
 	while(head)
 	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(head))
 		{
 			if(head.winning)
 				won = won + 1;
@@ -186,7 +198,12 @@ void CampaignPreIntermission()
 		head = head.chain;
 	}
 
-	if(won == 1 && lost == 0 && checkrules_equality == 0 && cheatcount_total == 0)
+	if(autocvar__campaign_testrun)
+	{
+		campaign_won = 1;
+		bprint("Campaign test run, advancing level.\n");
+	}
+	else if(won == 1 && lost == 0 && checkrules_equality == 0)
 	{
 		if(autocvar_timelimit != 0 && autocvar_fraglimit != 0 && time > autocvar_timelimit * 60) // checks if the timelimit has expired.
 		{
@@ -214,20 +231,23 @@ void CampaignPreIntermission()
 		// sound!
 	}
 
-	if(campaign_won)
+	if(campaign_won && cheatcount_total == 0 && !autocvar__campaign_testrun)
 	{
-		if(campaign_entries < 2)
+		if(campaign_level == cvar_normal(campaign_index_var))
 		{
-			// I have won
-			savevar = strcat("g_campaign", campaign_name, "_won");
-			CampaignSaveCvar(savevar, 1);
-			// advance level (for menu to show it right)
-			CampaignSaveCvar(campaign_index_var, campaign_level + 1);
-		}
-		else if(campaign_level == cvar_normal(campaign_index_var))
-		{
-			// advance level
-			CampaignSaveCvar(campaign_index_var, campaign_level + 1);
+			if(campaign_entries < 2)
+			{
+				// I have won
+				savevar = strcat("g_campaign", campaign_name, "_won");
+				CampaignSaveCvar(savevar, 1);
+				// advance level (for menu to show it right)
+				CampaignSaveCvar(campaign_index_var, campaign_level + 1);
+			}
+			else
+			{
+				// advance level
+				CampaignSaveCvar(campaign_index_var, campaign_level + 1);
+			}
 		}
 	}
 }
@@ -239,6 +259,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
+		print("^2test run: campaign looks GOOD\n");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;
@@ -256,6 +277,8 @@ void CampaignPostIntermission()
 
 void CampaignLevelWarp(float n)
 {
+	if(n < 0)
+		n = campaign_level + 1;
 	CampaignFile_Unload();
 	CampaignFile_Load(n, 1);
 	if(campaign_entries)

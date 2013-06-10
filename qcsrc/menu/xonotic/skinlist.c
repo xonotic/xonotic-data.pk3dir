@@ -104,7 +104,10 @@ void XonoticSkinList_getSkins(entity me)
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, substring(s, 9, strlen(s) - 24)); // the * part
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
+		if(draw_PictureSize(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == '0 0 0')
+			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, "nopreview_menuskin");
+		else
+			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
 		fh = fopen(language_filename(s), FILE_READ);
 		if(fh < 0)
 		{
@@ -172,7 +175,7 @@ void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float i
 void XonoticSkinList_setSkin(entity me)
 {
 	me.saveCvars(me);
-	localcmd("\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
+	localcmd("\nmenu_restart\nmenu_cmd skinselect\n");
 }
 
 void SetSkin_Click(entity btn, entity me)

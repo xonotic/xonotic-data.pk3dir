@@ -27,7 +27,7 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
 
-	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "menu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd languageselect\"")
+	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "prvm_language \"$_menu_prvm_language\"\nmenu_restart\nmenu_cmd languageselect")
 ENDCLASS(XonoticLanguageList)
 
 entity makeXonoticLanguageList();
@@ -85,7 +85,7 @@ void XonoticLanguageList_loadCvars(entity me)
 {
 	string s;
 	float i, n;
-	s = cvar_string("prvm_language");
+	s = cvar_string("_menu_prvm_language");
 	n = me.nItems;
 
 	// default to English
@@ -107,11 +107,14 @@ void XonoticLanguageList_loadCvars(entity me)
 			break;
 		}
 	}
+
+	// save it off (turning anything unknown into "en")
+	me.saveCvars(me);
 }
 
 void XonoticLanguageList_saveCvars(entity me)
 {
-	cvar_set("prvm_language", me.languageParameter(me, me.selectedItem, LANGPARM_ID));
+	cvar_set("_menu_prvm_language", me.languageParameter(me, me.selectedItem, LANGPARM_ID));
 }
 
 void XonoticLanguageList_clickListBoxItem(entity me, float i, vector where)
@@ -150,6 +153,7 @@ void XonoticLanguageList_getLanguages(entity me)
 	buf = buf_create();
 
 	fh = fopen("languages.txt", FILE_READ);
+	i = 0;
 	while((s = fgets(fh)))
 	{
 		n = tokenize_console(s);

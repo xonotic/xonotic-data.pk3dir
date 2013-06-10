@@ -1,3 +1,0 @@
-#undef cvar
-#undef cvar_string
-#undef cvar_set

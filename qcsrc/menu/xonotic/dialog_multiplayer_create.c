@@ -5,7 +5,7 @@ CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.5)
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
@@ -29,12 +29,11 @@ entity makeXonoticServerCreateTab()
 void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
-	float n;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));
 	me.TR(me);
-		me.TD(me, 9, 3, e = makeXonoticGametypeList());
+		me.TD(me, 8, 3, e = makeXonoticGametypeList());
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
@@ -43,10 +42,9 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
+		//me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Match settings:"))); // pointless, overcrowds the dialog imo
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Match settings:")));
-	me.TR(me);
-		me.sliderTimelimit = makeXonoticSlider(1.0, 60.0, 0.5, "timelimit_override");
+		me.sliderTimelimit = makeXonoticSlider(1.0, 60.0, 1, "timelimit_override");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, me.sliderTimelimit, _("Time limit:")));
 		me.TD(me, 1, 2, me.sliderTimelimit);
 	me.TR(me);
@@ -68,8 +66,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
 		me.TD(me, 1, 2, makeXonoticSlider(0, 9, 1, "bot_number"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Bot skill:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
 			setDependent(e, "bot_number", 0, -1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("skill"));
 			e.addValue(e, _("Botlike"), "0");
@@ -86,6 +83,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
 	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
@@ -100,7 +98,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClickEntity = main.advancedDialog;
 			main.advancedDialog.refilterEntity = me.mapListBox;
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Map list:")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
@@ -155,7 +153,6 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, l2, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
 		case MAPINFO_TYPE_DOMINATION: GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_domination_point_limit"); break;
 		case MAPINFO_TYPE_KEYHUNT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case MAPINFO_TYPE_RUNEMATCH:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_runematch_point_limit");  break;
 		case MAPINFO_TYPE_LMS:        GameType_ConfigureSliders(e, l, l2, _("Lives:"),           3,   50,  1, "g_lms_lives_override");     break;
 		case MAPINFO_TYPE_RACE:       GameType_ConfigureSliders(e, l, l2, _("Laps:"),            1,   25,  1, "g_race_laps_limit");        break;
 		case MAPINFO_TYPE_NEXBALL:    GameType_ConfigureSliders(e, l, l2, _("Goals:"),           1,   50,  1, "g_nexball_goallimit");      break;

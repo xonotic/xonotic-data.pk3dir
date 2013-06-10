@@ -62,13 +62,13 @@ void turret_fusionreactor_dinit()
     self.turrcaps_flags      = TFL_TURRCAPS_SUPPORT | TFL_TURRCAPS_AMMOSOURCE;
     self.ammo_flags          = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE;
     self.target_select_flags = TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_OWNTEAM | TFL_TARGETSELECT_RANGELIMTS;
-    self.firecheck_flags     = TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_OTHER_AMMO | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_WORLD;
+    self.firecheck_flags     = TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_OTHER_AMMO | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD;
     self.shoot_flags         = TFL_SHOOT_HITALLVALID;
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;
     // self.turret_respawnhook  = turret_fusionreactor_respawnhook;
 
-    if (turret_stdproc_init("fusreac_std",0,"models/turrets/base.md3","models/turrets/reactor.md3") == 0)
+    if (turret_stdproc_init("fusreac_std", "models/turrets/base.md3", "models/turrets/reactor.md3", TID_FUSION) == 0)
     {
         remove(self);
         return;

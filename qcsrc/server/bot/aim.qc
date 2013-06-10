@@ -1,12 +1,13 @@
 
+entity ka_ball;
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
 // returns TRUE only if it hit targ (don't target non-solid entities)
 
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
 {
-	local float c, savesolid, shottime;
-	local vector dir, end, v;
+	float c, savesolid, shottime;
+	vector dir, end, v, o;
 	if (shotspeed < 1)
 		return FALSE; // could cause division by zero if calculated
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
@@ -17,9 +18,10 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	setsize(tracetossent, m1, m2);
 	savesolid = targ.solid;
 	targ.solid = SOLID_NOT;
-	shottime = ((vlen(targ.origin - org) / shotspeed) + shotdelay);
-	v = targ.velocity * shottime + targ.origin;
-	tracebox(targ.origin, targ.mins, targ.maxs, v, FALSE, targ);
+	o = (targ.absmin + targ.absmax) * 0.5;
+	shottime = ((vlen(o - org) / shotspeed) + shotdelay);
+	v = targ.velocity * shottime + o;
+	tracebox(o, targ.mins, targ.maxs, v, FALSE, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
 	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
@@ -76,7 +78,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	// leave a valid one even if it won't reach
 	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
 	return FALSE;
-};
+}
 
 void lag_update()
 {
@@ -85,7 +87,7 @@ void lag_update()
 	if (self.lag3_time) if (time > self.lag3_time) {self.lag_func(self.lag3_time, self.lag3_float1, self.lag3_float2, self.lag3_entity1, self.lag3_vec1, self.lag3_vec2, self.lag3_vec3, self.lag3_vec4);self.lag3_time = 0;}
 	if (self.lag4_time) if (time > self.lag4_time) {self.lag_func(self.lag4_time, self.lag4_float1, self.lag4_float2, self.lag4_entity1, self.lag4_vec1, self.lag4_vec2, self.lag4_vec3, self.lag4_vec4);self.lag4_time = 0;}
 	if (self.lag5_time) if (time > self.lag5_time) {self.lag_func(self.lag5_time, self.lag5_float1, self.lag5_float2, self.lag5_entity1, self.lag5_vec1, self.lag5_vec2, self.lag5_vec3, self.lag5_vec4);self.lag5_time = 0;}
-};
+}
 
 float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
@@ -96,7 +98,7 @@ float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, 
 	if (self.lag5_time == 0) {self.lag5_time = t;self.lag5_float1 = f1;self.lag5_float2 = f2;self.lag5_entity1 = e1;self.lag5_vec1 = v1;self.lag5_vec2 = v2;self.lag5_vec3 = v3;self.lag5_vec4 = v4;return TRUE;}
 	// no room for it (what is the best thing to do here??)
 	return FALSE;
-};
+}
 
 float bot_shouldattack(entity e)
 {
@@ -104,22 +106,27 @@ float bot_shouldattack(entity e)
 	{
 		if (e == self)
 			return FALSE;
-		if (teams_matter)
+		if (teamplay)
 		if (e.team != 0)
 			return FALSE;
 	}
 
-	if(g_freezetag)
-		if(e.freezetag_frozen)
+	if(e.freezetag_frozen)
+		return FALSE;
+
+	// If neither player has ball then don't attack unless the ball is on the
+	// ground.
+	if (g_keepaway)
+		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
 			return FALSE;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(e.team==0)
 			return FALSE;
 	}
 	else if(bot_ignore_bots)
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			return FALSE;
 
 	if (!e.takedamage)
@@ -128,13 +135,15 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if (e.BUTTON_CHAT)
 		return FALSE;
-	if(g_minstagib)
-	if(e.items & IT_STRENGTH)
-		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
+		
+	checkentity = e;
+	if(MUTATOR_CALLHOOK(BotShouldAttack))
+		return FALSE;
+		
 	return TRUE;
-};
+}
 
 void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
@@ -157,12 +166,12 @@ void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, v
 		self.bot_canfire = (random() < 0.95);
 	else
 		self.bot_canfire = 1;
-};
+}
 
 float bot_aimdir(vector v, float maxfiredeviation)
 {
-	local float dist, delta_t, blend;
-	local vector desiredang, diffang;
+	float dist, delta_t, blend;
+	vector desiredang, diffang;
 
 	//dprint("aim ", self.netname, ": old:", vtos(self.v_angle));
 	// make sure v_angle is sane first
@@ -263,7 +272,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//diffang = diffang + randomvec() * (dist * 0.05 * (3.5 - bound(0, skill, 3)));
 
 	// turn
-	local float r, fixedrate, blendrate;
+	float r, fixedrate, blendrate;
 	fixedrate = autocvar_bot_ai_aimskill_fixedrate / bound(1,dist,1000);
 	blendrate = autocvar_bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
@@ -302,18 +311,18 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//dprint(" diff:", vtos(diffang), "\n");
 
 	return self.bot_canfire && (time < self.bot_firetimer);
-};
+}
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
 {
 	// Try to add code here that predicts gravity effect here, no clue HOW to though ... well not yet atleast...
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
-};
+}
 
 float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
 {
-	local float f, r;
-	local vector v;
+	float f, r, hf, distanceratio;
+	vector v;
 	/*
 	eprint(self);
 	dprint("bot_aim(", ftos(shotspeed));
@@ -322,6 +331,10 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	dprint(", ", ftos(applygravity));
 	dprint(");\n");
 	*/
+
+	hf = self.dphitcontentsmask;
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	shotspeed *= g_weaponspeedfactor;
 	shotspeedupward *= g_weaponspeedfactor;
 	if (!shotspeed)
@@ -338,15 +351,18 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotorg = self.origin + self.view_ofs;
 	shotdir = v_forward;
 	v = bot_shotlead(self.bot_aimtargorigin, self.bot_aimtargvelocity, shotspeed, self.bot_aimlatency);
-	local float distanceratio;
-	distanceratio =sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
+	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
 	distanceratio = bound(0,distanceratio,1);
 	r =  (autocvar_bot_ai_aimskill_firetolerance_maxdegrees-autocvar_bot_ai_aimskill_firetolerance_mindegrees)
 		* (1-distanceratio) + autocvar_bot_ai_aimskill_firetolerance_mindegrees;
 	if (applygravity && self.bot_aimtarg)
 	{
 		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
+		{
+			self.dphitcontentsmask = hf;
 			return FALSE;
+		}
+
 		f = bot_aimdir(findtrajectory_velocity - shotspeedupward * '0 0 1', r);
 	}
 	else
@@ -362,10 +378,14 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
 		if (!bot_shouldattack(trace_ent))
+		{
+			self.dphitcontentsmask = hf;
 			return FALSE;
+		}
 	}
 
 	//if (r > maxshottime * shotspeed)
 	//	return FALSE;
+	self.dphitcontentsmask = hf;
 	return TRUE;
-};
+}

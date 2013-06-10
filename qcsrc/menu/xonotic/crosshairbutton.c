@@ -34,7 +34,7 @@ void XonoticCrosshairButton_configureXonoticCrosshairButton(entity me, float the
 	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	if(me.cvarValueFloat == -1)
-		me.src3 = strzone(strcat("/gfx/crosshair", cvar("crosshair")));
+		me.src3 = strzone(strcat("/gfx/crosshair", cvar_string("crosshair")));
 	else
 		me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
 	me.src4 = "/gfx/crosshairdot";
@@ -69,12 +69,20 @@ void XonoticCrosshairButton_draw(entity me)
 	vector sz, rgb;
 	float a;
 
-	rgb = stov(cvar_string("crosshair_color"));
-	a = cvar("crosshair_alpha");
 
-	if(!me.checked && !me.focused && me.cvarValueFloat != -1)
+	if(me.cvarValueFloat == -1)
 	{
-		a *= me.disabledAlpha;
+		rgb = stov(cvar_string("crosshair_color"));
+		a = cvar("crosshair_alpha");
+	}
+	else if(me.checked || me.focused)
+	{
+		a = 1;
+		rgb = '1 1 1';
+	}
+	else
+	{
+		a = me.disabledAlpha;
 		rgb = '1 1 1';
 	}
 
@@ -90,24 +98,31 @@ void XonoticCrosshairButton_draw(entity me)
 	SUPER(XonoticCrosshairButton).draw(me);
 
 	sz = draw_PictureSize(me.src3);
-	sz = globalToBoxSize(sz, draw_scale);
+	sz = globalToBoxSize(sz, me.size);
 	if(me.cvarValueFloat == -1)
 	{
-		sz = (6 * '1 1 0' + sz * cvar("crosshair_size")) * 0.08; // (6 * '1 1 0' + ...) * 0.08 here to make visible size changes happen also at bigger sizes
+		sz = sz * cvar("crosshair_size"); // (6 * '1 1 0' + ...) * 0.08 here to make visible size changes happen also at bigger sizes
+		/*
 		if(sz_x > 0.95)
 			sz = sz * (0.95 / sz_x);
 		if(sz_y > 0.95)
 			sz = sz * (0.95 / sz_y);
+		*/
 	}
 	else // show the crosshair picker at full size
-		sz = '0.95 0.95 0';
+	{
+		sz = sz * (0.95 / sz_x);
+		if(sz_y > 0.95)
+			sz = sz * (0.95 / sz_y);
+	}
 
 	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);
 	if(cvar("crosshair_dot"))
-    {
-        if(cvar_string("crosshair_dot_color") != "0")
-            rgb = stov(cvar_string("crosshair_dot_color"));
+	{
+		if(cvar("crosshair_dot_color_custom") && (cvar_string("crosshair_dot_color") != "0"))
+			rgb = stov(cvar_string("crosshair_dot_color"));
+			
 		draw_Picture('0.5 0.5 0' - 0.5 * sz * cvar("crosshair_dot_size"), me.src4, sz * cvar("crosshair_dot_size"), rgb, a * cvar("crosshair_dot_alpha"));
-    }
+	}
 }
 #endif

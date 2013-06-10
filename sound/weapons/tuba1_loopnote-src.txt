@@ -1,0 +1,47 @@
+r=44642
+
+base=261.6
+ls=$((7646/2))
+le=$((10378/2))
+for n in -18 -12 -6; do
+	this=`echo "440*e(l(2)/12*($n+60-69))" | bc -l`
+	f=`echo "$r * $this / $base + 0.5" | bc -l`
+	f=${f%.*}
+	echo "$r -> $f"
+	if [ "$f" -gt 48000 ]; then
+		o="-r 48000"
+		s=`echo "$ls * 48000 / $f + 0.5" | bc -l`
+		s=${s%.*}
+		e=`echo "$le * 48000 / $f + 0.5" | bc -l`
+		e=${e%.*}
+	else
+		o=
+		s=$ls
+		e=$le
+	fi
+	sox -r "$f" 023_Tango_Accordion-0.wav $o "tuba1_loopnote$n.wav"
+	oggenc -c "LOOP_START=$s" -c "LOOP_END=$e" -q8 -o "tuba1_loopnote$n.ogg" "tuba1_loopnote$n.wav"
+done
+
+base=659.191
+ls=$((6326/2))
+le=$((7140/2))
+for n in 0 6 12 18 24; do
+	this=`echo "440*e(l(2)/12*($n+60-69))" | bc -l`
+	f=`echo "$r * $this / $base + 0.5" | bc -l`
+	f=${f%.*}
+	echo "$r -> $f"
+	if [ "$f" -gt 48000 ]; then
+		o="-r 48000"
+		s=`echo "$ls * 48000 / $f + 0.5" | bc -l`
+		s=${s%.*}
+		e=`echo "$le * 48000 / $f + 0.5" | bc -l`
+		e=${e%.*}
+	else
+		o=
+		s=$ls
+		e=$le
+	fi
+	sox -r "$f" 023_Tango_Accordion-1.wav $o "tuba1_loopnote$n.wav"
+	oggenc -c "LOOP_START=$s" -c "LOOP_END=$e" -q8 -o "tuba1_loopnote$n.ogg" "tuba1_loopnote$n.wav"
+done

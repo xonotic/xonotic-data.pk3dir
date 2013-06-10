@@ -16,17 +16,44 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
-void SUB_Null() { };
-
-void() m_init =
+void m_sync()
 {
+	updateCompression();
+	updateConwidths();
+
+	loadAllCvars(main);
+}
+
+void m_gamestatus()
+{
+	gamestatus = 0;
+	if(isserver())
+		gamestatus = gamestatus | GAME_ISSERVER;
+	if(clientstate() == CS_CONNECTED || isdemo())
+		gamestatus = gamestatus | GAME_CONNECTED;
+	if(cvar("developer"))
+		gamestatus = gamestatus | GAME_DEVELOPER;
+}
+
+void m_init()
+{
+	float restarting = 0;
 	cvar_set("_menu_alpha", "0");
-	prvm_language = strzone(cvar_string("prvm_language"));
+	prvm_language = cvar_string("prvm_language");
+	if(prvm_language == "")
+	{
+		prvm_language = "en";
+		cvar_set("prvm_language", prvm_language);
+		localcmd("\nmenu_restart\n");
+		restarting = 1;
+	}
+	prvm_language = strzone(prvm_language);
+	cvar_set("_menu_prvm_language", prvm_language);
 
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: %s\n"), WATERMARK()));
+	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
 #endif
 
 	// list all game dirs (TEST)
@@ -41,6 +68,26 @@ void() m_init =
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
+	}
+
+	// needs to be done so early because of the constants they create
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+
+	float ddsload = cvar("r_texture_dds_load");
+	float texcomp = cvar("gl_texturecompression");
+	updateCompression();
+	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
+	initConwidths();
+
+	if(!restarting)
+	{
+		if(cvar("_menu_initialized")) // always show menu after menu_restart
+			m_display();
+		else
+			m_hide();
+		cvar_set("_menu_initialized", "1");
 	}
 }
 
@@ -95,7 +142,8 @@ void UpdateConWidthHeight()
 	}
 }
 
-void() m_init_delayed =
+string m_goto_buffer;
+void m_init_delayed()
 {
 	float fh, glob, n, i;
 	string s;
@@ -108,9 +156,6 @@ void() m_init_delayed =
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
-
-	RegisterWeapons();
 
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
@@ -121,13 +166,18 @@ void() m_init_delayed =
 	if(fh < 0)
 	if(cvar_defstring("menu_skin") != "")
 	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_defstring("menu_skin"));
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	if(fh < 0)
 	{
 		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		error("cannot load any menu skin\n");
 	}
 	draw_currentSkin = strzone(draw_currentSkin);
 	while((s = fgets(fh)))
@@ -164,11 +214,20 @@ void() m_init_delayed =
 	menuShiftState = 0;
 	menuMousePos = '0.5 0.5 0';
 
+	m_sync();
+
+	if(m_goto_buffer)
+	{
+		m_goto(m_goto_buffer);
+		strunzone(m_goto_buffer);
+		m_goto_buffer = string_null;
+	}
+
 	if(Menu_Active)
 		m_display(); // delayed menu display
-};
+}
 
-void(float key, float ascii) m_keyup =
+void m_keyup (float key, float ascii)
 {
 	if(!menuInitialized)
 		return;
@@ -190,9 +249,9 @@ void(float key, float ascii) m_keyup =
 	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
 	if(key == K_CTRL) menuShiftState -= (menuShiftState & S_CTRL);
 	if(key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
-};
+}
 
-void(float key, float ascii) m_keydown =
+void m_keydown(float key, float ascii)
 {
 	if(!menuInitialized)
 		return;
@@ -228,7 +287,7 @@ void(float key, float ascii) m_keydown =
 	if(key == K_ALT) menuShiftState |= S_ALT;
 	if(key == K_CTRL) menuShiftState |= S_CTRL;
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
-};
+}
 
 float SCALEMODE_CROP = 0;
 float SCALEMODE_LETTERBOX = 1;
@@ -242,9 +301,12 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 	sz = draw_PictureSize(img);
 	width_is_larger = (sz_x * draw_scale_y >= sz_y * draw_scale_x);
-	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y)); 
-	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x)); 
+	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
+	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
 
+#ifdef GMQCC
+	isz = '0 0 0';
+#endif
 	switch(scalemode)
 	{
 		default:
@@ -269,7 +331,7 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	draw_Picture(org, img, isz, '1 1 1', a);
 }
 
-void(string img, float a, string algn, float force1) drawBackground =
+void drawBackground(string img, float a, string algn, float force1)
 {
 	if(main.mainNexposee.ModalController_state == 0)
 		return;
@@ -283,6 +345,7 @@ void(string img, float a, string algn, float force1) drawBackground =
 
 	scalemode = SCALEMODE_CROP;
 
+	l = 0;
 	for(i = 0; i < strlen(algn); ++i)
 	{
 		c = substring(algn, i, 1);
@@ -319,12 +382,15 @@ void(string img, float a, string algn, float force1) drawBackground =
 	}
 }
 
+float menu_tooltips;
+float menu_tooltips_old;
 vector menuTooltipAveragedMousePos;
 entity menuTooltipItem;
 vector menuTooltipOrigin;
 vector menuTooltipSize;
 float menuTooltipAlpha;
-float menuTooltipState; // 0: no tooltip, 1: fading in, 2: displaying, 3: fading out
+string menuTooltipText;
+float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 float m_testmousetooltipbox(vector pos)
 {
 	if(pos_x >= menuTooltipOrigin_x && pos_x < menuTooltipOrigin_x + menuTooltipSize_x)
@@ -410,6 +476,8 @@ entity m_findtooltipitem(entity root, vector pos)
 			it = it.itemFromPoint(it, pos);
 			if(it.tooltip)
 				best = it;
+			else if(menu_tooltips == 2 && (it.cvarName || it.onClickCommand))
+				best = it;
 			it = world;
 		}
 		else if(it.instanceOfModalController)
@@ -420,10 +488,34 @@ entity m_findtooltipitem(entity root, vector pos)
 			break;
 		if(it.tooltip)
 			best = it;
+		else if(menu_tooltips == 2 && (it.cvarName || it.onClickCommand))
+			best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
 	return best;
+}
+string gettooltip()
+{
+	if (menu_tooltips == 2)
+	{
+		string s;
+		if (menuTooltipItem.cvarName)
+		{
+			if (getCvarsMulti(menuTooltipItem))
+				s = strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
+			else
+				s = strcat("[", menuTooltipItem.cvarName, "]");
+		}
+		else if (menuTooltipItem.onClickCommand)
+			s = strcat("<", menuTooltipItem.onClickCommand, ">");
+		else
+			return menuTooltipItem.tooltip;
+		if (menuTooltipItem.tooltip)
+			return strcat(menuTooltipItem.tooltip, " ", s);
+		return s;
+	}
+	return menuTooltipItem.tooltip;
 }
 void m_tooltip(vector pos)
 {
@@ -432,16 +524,26 @@ void m_tooltip(vector pos)
 	vector fontsize, p;
 	string s;
 
-	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
-
-	f = bound(0, frametime * 2, 1);
-	menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
-	f = vlen(pos - menuTooltipAveragedMousePos);
-
-	if(f < 0.01)
-		it = m_findtooltipitem(main, pos);
-	else	
+	menu_tooltips = cvar("menu_tooltips");
+	if (!menu_tooltips)
+	{
+		// don't return immediately, fade out the active tooltip first
+		if (menuTooltipItem == world)
+			return;
 		it = world;
+		menu_tooltips_old = menu_tooltips;
+	}
+	else
+	{
+		f = bound(0, frametime * 2, 1);
+		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
+		f = vlen(pos - menuTooltipAveragedMousePos);
+		if(f < 0.01)
+			it = m_findtooltipitem(main, pos);
+		else
+			it = world;
+	}
+	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
 	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 	if(it != menuTooltipItem)
@@ -461,9 +563,14 @@ void m_tooltip(vector pos)
 					menuTooltipItem = it;
 
 					menuTooltipOrigin_x = -1; // unallocated
+
+					if (menuTooltipText)
+						strunzone(menuTooltipText);
+					menuTooltipText = strzone(gettooltip());
+
 					i = 0;
-					w =  0;
-					getWrappedLine_remaining = it.tooltip;
+					w = 0;
+					getWrappedLine_remaining = menuTooltipText;
 					while(getWrappedLine_remaining)
 					{
 						s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
@@ -510,9 +617,24 @@ void m_tooltip(vector pos)
 			break;
 	}
 
-	if(menuTooltipItem)
+	if(menuTooltipItem == world)
 	{
-		if(menuTooltipOrigin_x < 0) // unallocated?
+		if (menuTooltipText)
+		{
+			strunzone(menuTooltipText);
+			menuTooltipText = string_null;
+		}
+		return;
+	}
+	else
+	{
+		if(menu_tooltips != menu_tooltips_old)
+		{
+			if (menu_tooltips != 0 && menu_tooltips_old != 0)
+				menuTooltipItem = world; // reload tooltip next frame
+			menu_tooltips_old = menu_tooltips;
+		}
+		else if(menuTooltipOrigin_x < 0) // unallocated?
 			m_allocatetooltipbox(pos);
 
 		if(menuTooltipOrigin_x >= 0)
@@ -525,7 +647,7 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p_x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p_y += SKINMARGIN_TOOLTIP_y / conheight;
-			getWrappedLine_remaining = menuTooltipItem.tooltip;
+			getWrappedLine_remaining = menuTooltipText;
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
@@ -536,10 +658,14 @@ void m_tooltip(vector pos)
 	}
 }
 
-void() m_draw =
+void m_draw()
 {
 	float t;
 	float realFrametime;
+
+	m_gamestatus();
+
+	execute_next_frame();
 
 	menuMouseMode = cvar("menu_mouse_absolute");
 
@@ -561,7 +687,7 @@ void() m_draw =
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
@@ -592,14 +718,6 @@ void() m_draw =
 
 	if(cvar("cl_capturevideo"))
 		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
-
-	gamestatus = 0;
-	if(isserver())
-		gamestatus = gamestatus | GAME_ISSERVER;
-	if(clientstate() == CS_CONNECTED)
-		gamestatus = gamestatus | GAME_CONNECTED;
-	if(cvar("developer"))
-		gamestatus = gamestatus | GAME_DEVELOPER;
 
 	prevMenuAlpha = menuAlpha;
 	if(Menu_Active)
@@ -666,7 +784,12 @@ void() m_draw =
 
 	draw_alpha *= menuAlpha;
 
-	if(menuMouseMode)
+	if(!Menu_Active)
+	{
+		// do not update mouse position
+		// it prevents mouse jumping to '0 0 0' when menu is fading out
+	}
+	else if(menuMouseMode)
 	{
 		vector newMouse;
 		newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);
@@ -713,9 +836,9 @@ void() m_draw =
 	postMenuDraw();
 
 	frametime = 0;
-};
+}
 
-void() m_display =
+void m_display()
 {
 	Menu_Active = true;
 	setkeydest(KEY_MENU);
@@ -730,9 +853,9 @@ void() m_display =
 
 	main.focusEnter(main);
 	main.showNotify(main);
-};
+}
 
-void() m_hide =
+void m_hide()
 {
 	Menu_Active = false;
 	setkeydest(KEY_GAME);
@@ -743,17 +866,25 @@ void() m_hide =
 
 	main.focusLeave(main);
 	main.hideNotify(main);
-};
+}
 
-void() m_toggle =
+void m_toggle(float mode)
 {
 	if(Menu_Active)
+	{
+		if (mode == 1)
+			return;
 		m_hide();
+	}
 	else
+	{
+		if (mode == 0)
+			return;
 		m_display();
-};
+	}
+}
 
-void() m_shutdown =
+void Shutdown()
 {
 	entity e;
 
@@ -764,7 +895,7 @@ void() m_shutdown =
 			if(e.destroy)
 				e.destroy(e);
 	}
-};
+}
 
 void m_focus_item_chain(entity outermost, entity innermost)
 {
@@ -820,15 +951,22 @@ void m_setpointerfocus(entity wnd)
 	}
 }
 
-void(string itemname) m_goto =
+void m_goto(string itemname)
 {
 	entity e;
 	if(!menuInitialized)
+	{
+		if(m_goto_buffer)
+			strunzone(m_goto_buffer);
+		m_goto_buffer = strzone(itemname);
 		return;
+	}
 	if(itemname == "") // this can be called by GameCommand
 	{
 		if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+		{
 			m_hide();
+		}
 		else
 		{
 			m_activate_window(main.mainNexposee);
@@ -837,7 +975,7 @@ void(string itemname) m_goto =
 	}
 	else
 	{
-		for(e = NULL; (e = findstring(e, name, itemname)); )
+		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
 		if(e)
@@ -848,28 +986,4 @@ void(string itemname) m_goto =
 			m_display();
 		}
 	}
-}
-
-void() m_goto_skin_selector =
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
-	m_goto("skinselector");
-}
-
-void() m_goto_language_selector =
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the language selector (no idea how to do it now)
-	m_goto("languageselector");
-}
-
-void() m_goto_video_settings =
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the video settings (no idea how to do it now)
-	m_goto("videosettings");
 }

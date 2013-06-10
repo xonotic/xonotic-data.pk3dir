@@ -6,18 +6,25 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
+void initConwidths();
 void updateConwidths();
 #endif
 
 #ifdef IMPLEMENTATION
+void initConwidths()
+{
+	cvar_set("_menu_vid_width", cvar_string("vid_width"));
+	cvar_set("_menu_vid_height", cvar_string("vid_height"));
+	cvar_set("_menu_vid_pixelheight", cvar_string("vid_pixelheight"));
+}
 void updateConwidths()
 {
 	vector r, c;
 	float minfactor, maxfactor;
 	float sz, f;
-	r_x = cvar("menu_vid_width");
-	r_y = cvar("menu_vid_height");
-	r_z = cvar("menu_vid_pixelheight");
+	r_x = cvar("_menu_vid_width");
+	r_y = cvar("_menu_vid_height");
+	r_z = cvar("_menu_vid_pixelheight");
 	sz = cvar("menu_vid_scale");
 
 	// calculate the base resolution
@@ -34,8 +41,8 @@ void updateConwidths()
 	if(f < 1)
 		c = c * f; // ensures that c_x <= r_x and c_y <= r_y
 
-	minfactor = min(1, 640 / c_x);             // can be > 1 only if c_x is <640
-	maxfactor = max3(1, r_x / c_x, r_y / c_y); // can be < 1 only if r_x < c_x and r_y < c_y
+	minfactor = min(1, 640 / c_x);            // can be > 1 only if c_x is <640
+	maxfactor = max(1, r_x / c_x, r_y / c_y); // can be < 1 only if r_x < c_x and r_y < c_y
 	dprint("min factor: ", ftos(minfactor), "\n");
 	dprint("max factor: ", ftos(maxfactor), "\n");
 
@@ -70,7 +77,7 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 	float i;
 	vector r0, r;
 
-	me.configureXonoticTextSlider(me, "menu_vid_width");
+	me.configureXonoticTextSlider(me, "_menu_vid_width");
 
 	r0 = '0 0 0';
 	for(i = 0;; ++i)
@@ -105,16 +112,16 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 }
 void XonoticResolutionSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier(me, strcat(cvar_string("menu_vid_width"), " ", cvar_string("menu_vid_height"), " ", cvar_string("menu_vid_pixelheight")));
+	me.setValueFromIdentifier(me, strcat(cvar_string("_menu_vid_width"), " ", cvar_string("_menu_vid_height"), " ", cvar_string("_menu_vid_pixelheight")));
 }
 void XonoticResolutionSlider_saveCvars(entity me)
 {
 	if(me.value >= 0 || me.value < me.nValues)
 	{
 		tokenize_console(me.getIdentifier(me));
-		cvar_set("menu_vid_width", argv(0));
-		cvar_set("menu_vid_height", argv(1));
-		cvar_set("menu_vid_pixelheight", argv(2));
+		cvar_set("_menu_vid_width", argv(0));
+		cvar_set("_menu_vid_height", argv(1));
+		cvar_set("_menu_vid_pixelheight", argv(2));
 	}
 }
 #endif

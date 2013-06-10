@@ -6,9 +6,14 @@ float waypointsprite_minalpha;
 float waypointsprite_distancealphaexponent;
 float waypointsprite_timealphaexponent;
 float waypointsprite_scale;
+float waypointsprite_fontsize;
 float waypointsprite_edgefadealpha;
 float waypointsprite_edgefadescale;
 float waypointsprite_edgefadedistance;
+float waypointsprite_edgeoffset_bottom;
+float waypointsprite_edgeoffset_left;
+float waypointsprite_edgeoffset_right;
+float waypointsprite_edgeoffset_top;
 float waypointsprite_crosshairfadealpha;
 float waypointsprite_crosshairfadescale;
 float waypointsprite_crosshairfadedistance;
@@ -17,6 +22,7 @@ float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 float waypointsprite_alpha;
 
+.float helpme;
 .float rule;
 .string netname; // primary picture
 .string netname2; // secondary picture
@@ -32,14 +38,14 @@ float waypointsprite_alpha;
 .float build_starthealth;
 .float build_finished;
 
-vector SPRITE_SIZE = '288 36 0';
-vector SPRITE_HOTSPOT = '144 36 0';
 float SPRITE_HEALTHBAR_WIDTH = 144;
 float SPRITE_HEALTHBAR_HEIGHT = 9;
 float SPRITE_HEALTHBAR_MARGIN = 6;
 float SPRITE_HEALTHBAR_BORDER = 2;
 float SPRITE_HEALTHBAR_BORDERALPHA = 1;
 float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+float SPRITE_ARROW_SCALE = 1.0;
+float SPRITE_HELPME_BLINK = 2;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -106,6 +112,276 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
 }
 
+// returns location of sprite text
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
+{
+	float SQRT2 = 1.414;
+	float BORDER; BORDER = 1.5 * t;
+	float TSIZE; TSIZE = 8 * t;
+	float RLENGTH; RLENGTH = 8 * t;
+	float RWIDTH; RWIDTH = 4 * t;
+	float MLENGTH; MLENGTH = 4 * t;
+
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eY * -(        BORDER *      SQRT2),                          ang), '0 0 0', '0 0 0', a);
+	R_EndPolygon();
+	R_BeginPolygon("", DRAWFLAG_NORMAL);
+	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_EndPolygon();
+
+	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+	R_PolygonVertex(o + rotate(eX * -TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate('0 0 0',                  ang), '0 0 0', rgb, a);
+	R_EndPolygon();
+	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_EndPolygon();
+
+	return
+		o + rotate(eY * (TSIZE + RLENGTH + MLENGTH), ang);
+}
+
+// returns location of sprite healthbar
+vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s)
+{
+	float algnx, algny;
+	float sw, w, h;
+	float aspect, sa, ca;
+
+	sw = stringwidth(s, FALSE, fontsize);
+	if(sw > minwidth)
+		w = sw;
+	else
+		w = minwidth;
+	h = fontsize_y;
+
+	// how do corners work?
+	aspect = vid_conwidth / vid_conheight;
+	sa = sin(ang);
+	ca = cos(ang) * aspect;
+	if(fabs(sa) > fabs(ca))
+	{
+		algnx = (sa < 0);
+		algny = 0.5 - 0.5 * ca / fabs(sa);
+	}
+	else
+	{
+		algnx = 0.5 - 0.5 * sa / fabs(ca);
+		algny = (ca < 0);
+	}
+
+	// align
+	o_x -= w * algnx;
+	o_y -= h * algny;
+
+	// we want to be onscreen
+	if(o_x < 0)
+		o_x = 0;
+	if(o_y < 0)
+		o_y = 0;
+	if(o_x > vid_conwidth - w)
+		o_x = vid_conwidth - w;
+	if(o_y > vid_conheight - h)
+		o_x = vid_conheight - h;
+
+	o_x += 0.5 * (w - sw);
+
+	drawstring(o, s, fontsize, rgb, a, DRAWFLAG_NORMAL);
+
+	o_x += 0.5 * sw;
+	o_y += 0.5 * h;
+
+	return o;
+}
+
+float spritelookupblinkvalue(string s)
+{
+	switch(s)
+	{
+		case "ons-cp-atck-neut": return 2;
+		case "ons-cp-atck-red":  return 2;
+		case "ons-cp-atck-blue": return 2;
+		case "ons-cp-dfnd-red":  return 0.5;
+		case "ons-cp-dfnd-blue": return 0.5;
+		case "item-invis":       return 2;
+		case "item-extralife":   return 2;
+		case "item-speed":       return 2;
+		case "item-strength":    return 2;
+		case "item-shield":      return 2;
+		case "item-fuelregen":   return 2;
+		case "item-jetpack":     return 2;
+		case "tagged-target":    return 2;
+		default:                 return 1;
+	}
+}
+vector spritelookupcolor(string s, vector def)
+{
+	switch(s)
+	{
+		case "keycarrier-friend": return '0 1 0';
+		case "wpn-laser":         return '1 0.5 0.5';
+		case "wpn-shotgun":       return '0.5 0.25 0';
+		case "wpn-uzi":           return '1 1 0';
+		case "wpn-gl":            return '1 0 0';
+		case "wpn-electro":       return '0 0.5 1';
+		case "wpn-crylink":       return '1 0.5 1';
+		case "wpn-nex":           return '0.5 1 1';
+		case "wpn-hagar":         return '1 1 0.5';
+		case "wpn-rl":            return '1 1 0';
+		case "wpn-porto":         return '0.5 0.5 0.5';
+		case "wpn-minstanex":     return '0.5 1 1';
+		case "wpn-hookgun":       return '0 0.5 0';
+		case "wpn-fireball":      return '1 0.5 0';
+		case "wpn-hlac":          return '0 1 0';
+		case "wpn-campingrifle":  return '0.5 1 0';
+		case "wpn-minelayer":     return '0.75 1 0';
+		default:                  return def;
+	}
+}
+string spritelookuptext(string s)
+{
+	switch(s)
+	{
+		case "as-push": return _("Push");
+		case "as-destroy": return _("Destroy");
+		case "as-defend": return _("Defend");
+		case "bluebase": return _("Blue base");
+		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
+		case "flagcarrier": return _("Flag carrier");
+		case "flagdropped": return _("Dropped flag");
+		case "helpme": return _("Help me!");
+		case "here": return _("Here");
+		case "key-dropped": return _("Dropped key");
+		case "keycarrier-blue": return _("Key carrier");
+		case "keycarrier-finish": return _("Run here");
+		case "keycarrier-friend": return _("Key carrier");
+		case "keycarrier-pink": return _("Key carrier");
+		case "keycarrier-red": return _("Key carrier");
+		case "keycarrier-yellow": return _("Key carrier");
+		case "redbase": return _("Red base");
+		case "waypoint": return _("Waypoint");
+		case "ons-gen-red": return _("Generator");
+		case "ons-gen-blue": return _("Generator");
+		case "ons-gen-shielded": return _("Generator");
+		case "ons-cp-neut": return _("Control point");
+		case "ons-cp-red": return _("Control point");
+		case "ons-cp-blue": return _("Control point");
+		case "ons-cp-atck-neut": return _("Control point");
+		case "ons-cp-atck-red": return _("Control point");
+		case "ons-cp-atck-blue": return _("Control point");
+		case "ons-cp-dfnd-red": return _("Control point");
+		case "ons-cp-dfnd-blue": return _("Control point");
+		case "race-checkpoint": return _("Checkpoint");
+		case "race-finish": return _("Finish");
+		case "race-start": return _("Start");
+		case "race-start-finish": return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+		case "nb-ball": return _("Ball");
+		case "ka-ball": return _("Ball");
+		case "ka-ballcarrier": return _("Ball carrier");
+		case "wpn-laser": return _("Laser");
+		case "wpn-shotgun": return _("Shotgun");
+		case "wpn-uzi": return _("Machine Gun");
+		case "wpn-gl": return _("Mortar");
+		case "wpn-electro": return _("Electro");
+		case "wpn-crylink": return _("Crylink");
+		case "wpn-nex": return _("Nex");
+		case "wpn-hagar": return _("Hagar");
+		case "wpn-rl": return _("Rocket Launcher");
+		case "wpn-porto": return _("Port-O-Launch");
+		case "wpn-minstanex": return _("Minstanex");
+		case "wpn-hookgun": return _("Hook");
+		case "wpn-fireball": return _("Fireball");
+		case "wpn-hlac": return _("HLAC");
+		case "wpn-campingrifle": return _("Rifle");
+		case "wpn-minelayer": return _("Mine Layer");
+		case "dom-neut": return _("Control point");
+		case "dom-red": return _("Control point");
+		case "dom-blue": return _("Control point");
+		case "dom-yellow": return _("Control point");
+		case "dom-pink": return _("Control point");
+		case "item-invis": return _("Invisibility");
+		case "item-extralife": return _("Extra life");
+		case "item-speed": return _("Speed");
+		case "item-strength": return _("Strength");
+		case "item-shield": return _("Shield");
+		case "item-fuelregen": return _("Fuel regen");
+		case "item-jetpack": return _("Jet Pack");
+		case "freezetag_frozen": return _("Frozen!");
+		case "tagged-target": return _("Tagged");
+		case "vehicle": return _("Vehicle");
+		default: return s;
+	}
+}
+
+vector fixrgbexcess_move(vector rgb, vector src, vector dst)
+{
+	vector yvec = '0.299 0.587 0.114';
+	return rgb + dst * ((src * yvec) / (dst * yvec)) * ((rgb - '1 1 1') * src);
+}
+vector fixrgbexcess(vector rgb)
+{
+	if(rgb_x > 1)
+	{
+		rgb = fixrgbexcess_move(rgb, '1 0 0', '0 1 1');
+		if(rgb_y > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '0 1 0', '0 0 1');
+			if(rgb_z > 1)
+				rgb_z = 1;
+		}
+		else if(rgb_z > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '0 0 1', '0 1 0');
+			if(rgb_y > 1)
+				rgb_y = 1;
+		}
+	}
+	else if(rgb_y > 1)
+	{
+		rgb = fixrgbexcess_move(rgb, '0 1 0', '1 0 1');
+		if(rgb_x > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 0 1');
+			if(rgb_z > 1)
+				rgb_z = 1;
+		}
+		else if(rgb_z > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '0 0 1', '1 0 0');
+			if(rgb_x > 1)
+				rgb_x = 1;
+		}
+	}
+	else if(rgb_z > 1)
+	{
+		rgb = fixrgbexcess_move(rgb, '0 0 1', '1 1 0');
+		if(rgb_x > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 1 0');
+			if(rgb_y > 1)
+				rgb_y = 1;
+		}
+		else if(rgb_y > 1)
+		{
+			rgb = fixrgbexcess_move(rgb, '0 1 0', '1 0 0');
+			if(rgb_x > 1)
+				rgb_x = 1;
+		}
+	}
+	return rgb;
+}
+
+float waypointsprite_count, waypointsprite_newcount;
 void Draw_WaypointSprite()
 {
 	string spriteimage;
@@ -128,7 +404,7 @@ void Draw_WaypointSprite()
 
 	InterpolateOrigin_Do();
 
-	t = GetPlayerColor(player_localentnum - 1) + 1;
+	t = GetPlayerColor(player_localnum) + 1;
 
 	spriteimage = "";
 
@@ -147,7 +423,7 @@ void Draw_WaypointSprite()
 				spriteimage = self.netname;
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if(t == COLOR_SPECTATOR + 1)
+			if(t == NUM_SPECTATOR + 1)
 				spriteimage = self.netname3;
 			else if(self.team == t)
 				spriteimage = self.netname2;
@@ -161,6 +437,8 @@ void Draw_WaypointSprite()
 
 	if(spriteimage == "")
 		return;
+
+	++waypointsprite_newcount;
 	
 	float dist;
 	dist = vlen(self.origin - view_origin);
@@ -173,34 +451,52 @@ void Draw_WaypointSprite()
 	else if(self.maxdistance > 0)
 		a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
+	vector rgb;
+	rgb = self.teamradar_color;
+	rgb = spritelookupcolor(spriteimage, rgb);
+	if(rgb == '0 0 0')
+	{
+		self.teamradar_color = '1 0 1';
+		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
+	}
+
+	if(time - floor(time) > 0.5)
+	{
+		if(self.helpme && time < self.helpme)
+			a *= SPRITE_HELPME_BLINK;
+		else
+			a *= spritelookupblinkvalue(spriteimage);
+	}
+
+	if(a > 1)
+	{
+		rgb *= a;
+		a = 1;
+	}
+
 	if(a <= 0)
 		return;
-	
-	// draw the sprite image
-	vector o;
-	float rot;
-	o = project_3d_to_2d(self.origin);
-	rot = 0;
 
-	if(o_z < 0 || o_x < 0 || o_y < 0 || o_x > vid_conwidth || o_y > vid_conheight)
+	rgb = fixrgbexcess(rgb);
+
+	vector o;
+	float ang;
+
+	o = project_3d_to_2d(self.origin);
+	if(o_z < 0 
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
 		vector d;
 		float f1, f2;
 
-		// get the waypoint angle vector
-		/*
-		d_x = view_right * (self.origin - view_origin) * vid_conwidth / vid_width;
-		d_y = -view_up * (self.origin - view_origin) * vid_conheight / (vid_height * vid_pixelheight);
-		d_z = 0;
-		*/
-		
 		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
-
-		/*
-		if(autocvar_v_flipped)
-			d_x = -d_x;
-		*/
+		ang = atan2(-d_x, -d_y);
+		if(o_z < 0)
+			ang += M_PI;
 
 		f1 = d_x / vid_conwidth;
 		f2 = d_y / vid_conheight;
@@ -210,14 +506,12 @@ void Draw_WaypointSprite()
 			if(d_z * f1 > 0)
 			{
 				// RIGHT edge
-				d = d * (0.5 / f1);
-				rot = 3;
+				d = d * ((0.5 - waypointsprite_edgeoffset_right) / f1);
 			}
 			else
 			{
 				// LEFT edge
-				d = d * (-0.5 / f1);
-				rot = 1;
+				d = d * (-(0.5 - waypointsprite_edgeoffset_left) / f1);
 			}
 		}
 		else
@@ -225,32 +519,37 @@ void Draw_WaypointSprite()
 			if(d_z * f2 > 0)
 			{
 				// BOTTOM edge
-				d = d * (0.5 / f2);
-				rot = 0;
+				d = d * ((0.5 - waypointsprite_edgeoffset_bottom) / f2);
 			}
 			else
 			{
 				// TOP edge
-				d = d * (-0.5 / f2);
-				rot = 2;
+				d = d * (-(0.5 - waypointsprite_edgeoffset_top) / f2);
 			}
 		}
 
 		o = d + '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 	}
+	else
+	{
+#if 1
+		ang = M_PI;
+#else
+		vector d;
+		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+		ang = atan2(-d_x, -d_y);
+#endif
+	}
 	o_z = 0;
+
+	float edgedistance_min, crosshairdistance;
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
+	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
 	float vidscale;
 	vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
-
-	t = stof(db_get(tempdb, strcat("/spriteframes/", spriteimage)));
-	if(t == 0)
-		spriteimage = strcat("models/sprites/", spriteimage);
-	else
-		spriteimage = strcat("models/sprites/", spriteimage, "_frame", ftos(mod(floor((max(0, time - self.spawntime)) * 2), t)));
-
-	float edgedistance_min, crosshairdistance;
-	edgedistance_min = min4(o_y, o_x,vid_conwidth - o_x, vid_conheight - o_y);
 
 	crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
 
@@ -269,7 +568,6 @@ void Draw_WaypointSprite()
 		a = a * (1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
 		t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
 	}
-	drawrotpic(o, rot * 90 * DEG2RAD, spriteimage, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, '1 1 1', a, DRAWFLAG_MIPMAP);
 
 	if(self.build_finished)
 	{
@@ -286,15 +584,55 @@ void Draw_WaypointSprite()
 			self.health = -1;
 	}
 
+	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
+	
+	string txt;
+	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
+		txt = _("Spam");
+	else
+		txt = spritelookuptext(spriteimage);
+	if(self.helpme && time < self.helpme)
+		txt = sprintf(_("%s needing help!"), txt);
+	if(autocvar_g_waypointsprite_uppercase)
+		txt = strtoupper(txt);
+
+	draw_beginBoldFont();
 	if(self.health >= 0)
 	{
-		float align;
+		o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+
+		float align, marg;
 		if(self.build_finished)
 			align = 0.5;
 		else
 			align = 0;
-		drawhealthbar(o, rot * 90 * DEG2RAD, self.health, SPRITE_SIZE * t, SPRITE_HOTSPOT * t, SPRITE_HEALTHBAR_WIDTH * t, SPRITE_HEALTHBAR_HEIGHT * t, SPRITE_HEALTHBAR_MARGIN * t, SPRITE_HEALTHBAR_BORDER * t, align, self.teamradar_color, a * SPRITE_HEALTHBAR_BORDERALPHA, self.teamradar_color, a * SPRITE_HEALTHBAR_HEALTHALPHA, DRAWFLAG_NORMAL);
+		if(cos(ang) > 0)
+			marg = -(SPRITE_HEALTHBAR_MARGIN + SPRITE_HEALTHBAR_HEIGHT + 2 * SPRITE_HEALTHBAR_BORDER) * t - 0.5 * waypointsprite_fontsize;
+		else
+			marg = SPRITE_HEALTHBAR_MARGIN * t + 0.5 * waypointsprite_fontsize;
+		drawhealthbar(
+				o,
+				0,
+				self.health,
+				'0 0 0',
+				'0 0 0',
+				SPRITE_HEALTHBAR_WIDTH * t,
+				SPRITE_HEALTHBAR_HEIGHT * t,
+				marg,
+				SPRITE_HEALTHBAR_BORDER * t,
+				align,
+				rgb,
+				a * SPRITE_HEALTHBAR_BORDERALPHA,
+				rgb,
+				a * SPRITE_HEALTHBAR_HEALTHALPHA,
+				DRAWFLAG_NORMAL
+			     );
 	}
+	else
+	{
+		o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
+	}
+	draw_endBoldFont();
 }
 
 void Ent_RemoveWaypointSprite()
@@ -318,6 +656,7 @@ void Ent_WaypointSprite()
 	self.draw2d = Draw_WaypointSprite;
 
 	InterpolateOrigin_Undo();
+	self.iflags |= IFLAG_ORIGIN;
 
 	if(sendflags & 0x80)
 	{
@@ -350,6 +689,7 @@ void Ent_WaypointSprite()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(sendflags & 1)
@@ -399,11 +739,37 @@ void Ent_WaypointSprite()
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;
 		self.teamradar_color_z = ReadByte() / 255.0;
+		self.helpme = ReadByte() * 0.1;
+		if(self.helpme > 0)
+			self.helpme += servertime;
 	}
 
 	InterpolateOrigin_Note();
 
 	self.entremove = Ent_RemoveWaypointSprite;
+}
+
+void WaypointSprite_Load_Frames(string ext)
+{
+	float dh, n, i, o, f;
+	string s, sname, sframes;
+	dh = search_begin(strcat("models/sprites/*_frame*", ext), FALSE, FALSE);
+	if (dh < 0)
+		 return;
+	float ext_len = strlen(ext);
+	n = search_getsize(dh);
+	for(i = 0; i < n; ++i)
+	{
+		s = search_getfilename(dh, i);
+		s = substring(s, 15, strlen(s) - 15 - ext_len); // strip models/sprites/ and extension
+
+		o = strstrofs(s, "_frame", 0);
+		sname = strcat("/spriteframes/", substring(s, 0, o));
+		sframes = substring(s, o + 6, strlen(s) - o - 6);
+		f = stof(sframes) + 1;
+		db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
+	}
+	search_end(dh);
 }
 
 void WaypointSprite_Load()
@@ -415,9 +781,14 @@ void WaypointSprite_Load()
 	waypointsprite_distancealphaexponent = autocvar_g_waypointsprite_distancealphaexponent;
 	waypointsprite_timealphaexponent = autocvar_g_waypointsprite_timealphaexponent;
 	waypointsprite_scale = autocvar_g_waypointsprite_scale;
+	waypointsprite_fontsize = autocvar_g_waypointsprite_fontsize;
 	waypointsprite_edgefadealpha = autocvar_g_waypointsprite_edgefadealpha;
 	waypointsprite_edgefadescale = autocvar_g_waypointsprite_edgefadescale;
 	waypointsprite_edgefadedistance = autocvar_g_waypointsprite_edgefadedistance;
+	waypointsprite_edgeoffset_bottom = autocvar_g_waypointsprite_edgeoffset_bottom;
+	waypointsprite_edgeoffset_left = autocvar_g_waypointsprite_edgeoffset_left;
+	waypointsprite_edgeoffset_right = autocvar_g_waypointsprite_edgeoffset_right;
+	waypointsprite_edgeoffset_top = autocvar_g_waypointsprite_edgeoffset_top;
 	waypointsprite_crosshairfadealpha = autocvar_g_waypointsprite_crosshairfadealpha;
 	waypointsprite_crosshairfadescale = autocvar_g_waypointsprite_crosshairfadescale;
 	waypointsprite_crosshairfadedistance = autocvar_g_waypointsprite_crosshairfadedistance;
@@ -428,38 +799,11 @@ void WaypointSprite_Load()
 
 	if(!waypointsprite_initialized)
 	{
-		float dh, n, i, o, f;
-		string s, sname, sframes;
-
-		dh = search_begin("models/sprites/*_frame*.tga", FALSE, FALSE);
-		n = search_getsize(dh);
-		for(i = 0; i < n; ++i)
-		{
-			s = search_getfilename(dh, i);
-			s = substring(s, 15, strlen(s) - 15 - 4); // strip models/sprites/ and .tga
-
-			o = strstrofs(s, "_frame", 0);
-			sname = strcat("/spriteframes/", substring(s, 0, o));
-			sframes = substring(s, o + 6, strlen(s) - o - 6);
-			f = stof(sframes) + 1;
-			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
-		}
-		search_end(dh);
-
-		dh = search_begin("models/sprites/*_frame*.jpg", FALSE, FALSE);
-		n = search_getsize(dh);
-		for(i = 0; i < n; ++i)
-		{
-			s = search_getfilename(dh, i);
-			s = substring(s, 15, strlen(s) - 15 - 4); // strip models/sprites/ and .jpg
-
-			o = strstrofs(s, "_frame", 0);
-			sname = strcat("/spriteframes/", substring(s, 0, o));
-			sframes = substring(s, o + 6, strlen(s) - o - 6);
-			f = stof(sframes) + 1;
-			db_put(tempdb, sname, ftos(max(f, stof(db_get(tempdb, sname)))));
-		}
-		search_end(dh);
+		WaypointSprite_Load_Frames(".tga");
+		WaypointSprite_Load_Frames(".jpg");
 		waypointsprite_initialized = true;
 	}
+
+	waypointsprite_count = waypointsprite_newcount;
+	waypointsprite_newcount = 0;
 }

@@ -1,8 +1,7 @@
-.entity accuracy;
 .float accuracy_hit[WEP_MAXCOUNT];
 .float accuracy_fired[WEP_MAXCOUNT];
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_hit);
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(accuracy_fired);
+.float accuracy_cnt_hit[WEP_MAXCOUNT];
+.float accuracy_cnt_fired[WEP_MAXCOUNT];
 
 float accuracy_byte(float n, float d)
 {
@@ -21,7 +20,7 @@ float accuracy_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
 	a = self.owner;
-	if(a.classname == "spectator")
+	if(IS_SPEC(a))
 		a = a.enemy;
 	a = a.accuracy;
 
@@ -33,10 +32,14 @@ float accuracy_send(entity to, float sf)
 	if(sf == 0)
 		return TRUE;
 	// note: we know that client and server agree about SendFlags...
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
 		if(sf & f)
 			WriteByte(MSG_ENTITY, accuracy_byte(self.(accuracy_hit[w]), self.(accuracy_fired[w])));
+		if(f == 0x800000)
+			f = 1;
+		else
+			f *= 2;
 	}
 	return TRUE;
 }
@@ -63,31 +66,15 @@ void accuracy_resend(entity e)
 }
 
 // update accuracy stats
-void accuracy_set(entity e, float w, float fired, float hit)
-{
-	entity a;
-	float b;
-	a = e.accuracy;
-	if(!a)
-		return;
-	w -= WEP_FIRST;
-	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
-	a.(accuracy_hit[w]) = hit;
-	a.(accuracy_fired[w]) = fired;
-	if(b == accuracy_byte(hit, fired))
-		return;
-	w = pow(2, w);
-	a.SendFlags |= w;
-	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
-			if(a.enemy == e)
-				a.SendFlags |= w;
-}
+.float hit_time;
+.float fired_time;
 
 void accuracy_add(entity e, float w, float fired, float hit)
 {
 	entity a;
 	float b;
+	if(IS_INDEPENDENT_PLAYER(e))
+		return;
 	a = e.accuracy;
 	if(!a || !(hit || fired))
 		return;
@@ -97,12 +84,25 @@ void accuracy_add(entity e, float w, float fired, float hit)
 		a.(accuracy_hit[w]) += hit;
 	if(fired)
 		a.(accuracy_fired[w]) += fired;
+
+    if(hit && a.hit_time != time) // only run this once per frame
+    {
+        a.(accuracy_cnt_hit[w]) += 1;
+        a.hit_time = time;
+    }
+
+    if(fired && a.fired_time != time) // only run this once per frame
+    {
+        a.(accuracy_cnt_fired[w]) += 1;
+        a.fired_time = time;
+    }
+
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
-	w = pow(2, w);
+	w = pow(2, mod(w, 24));
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
+		if(IS_SPEC(a))
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
@@ -110,7 +110,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
 	if(!inWarmupStage)
-	if(targ.flags & FL_CLIENT)
+	if(IS_CLIENT(targ))
 	if(targ.deadflag == DEAD_NO)
 	if(IsDifferentTeam(attacker, targ))
 		return TRUE;

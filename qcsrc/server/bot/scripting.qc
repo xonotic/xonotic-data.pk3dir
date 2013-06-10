@@ -6,7 +6,7 @@
 void bot_clearqueue(entity bot)
 {
 	if(!bot.bot_cmdqueuebuf_allocated)
-		error("clearqueue but no queue allocated");
+		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
 	dprint("bot ", bot.netname, " queue cleared\n");
@@ -18,9 +18,39 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_start = 0;
+		bot.bot_cmdqueuebuf_end = 0;
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
+
+	// if the command was a "sound" command, precache the sound NOW
+	// this prevents lagging!
+	{
+		float sp;
+		string parm;
+		string cmdstr;
+
+		sp = strstrofs(cmdstring, " ", 0);
+		if(sp >= 0)
+		{
+			parm = substring(cmdstring, sp + 1, -1);
+			cmdstr = substring(cmdstring, 0, sp);
+			if(cmdstr == "sound")
+			{
+				// find the LAST word
+				for(;;)
+				{
+					sp = strstrofs(parm, " ", 0);
+					if(sp < 0)
+						break;
+					parm = substring(parm, sp + 1, -1);
+				}
+				precache_sound(parm);
+			}
+		}
+	}
+
 	bot.bot_cmdqueuebuf_end += 1;
 }
 
@@ -63,8 +93,8 @@ float bot_havecommand(entity bot, float idx)
 
 #define MAX_BOT_PLACES 4
 .float bot_places_count;
-.entity bot_places[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_places);
-.string bot_placenames[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_placenames);
+.entity bot_places[MAX_BOT_PLACES];
+.string bot_placenames[MAX_BOT_PLACES];
 entity bot_getplace(string placename)
 {
 	entity e;
@@ -131,11 +161,12 @@ entity bot_getplace(string placename)
 #define BOT_CMD_BARRIER         20
 #define BOT_CMD_CONSOLE			21
 #define BOT_CMD_SOUND			22
-#define BOT_CMD_WHILE			23	// TODO: Not implemented yet
-#define BOT_CMD_WEND			24	// TODO: Not implemented yet
-#define BOT_CMD_CHASE			25	// TODO: Not implemented yet
+#define BOT_CMD_DEBUG_ASSERT_CANFIRE 23
+#define BOT_CMD_WHILE			24	// TODO: Not implemented yet
+#define BOT_CMD_WEND			25	// TODO: Not implemented yet
+#define BOT_CMD_CHASE			26	// TODO: Not implemented yet
 
-#define BOT_CMD_COUNTER			23	// Update this value if you add/remove a command
+#define BOT_CMD_COUNTER			24	// Update this value if you add/remove a command
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
@@ -241,18 +272,21 @@ void bot_commands_init()
 	bot_cmd_string[BOT_CMD_SOUND] = "sound";
 	bot_cmd_parm_type[BOT_CMD_SOUND] = BOT_CMD_PARAMETER_STRING;
 
+	bot_cmd_string[BOT_CMD_DEBUG_ASSERT_CANFIRE] = "debug_assert_canfire";
+	bot_cmd_parm_type[BOT_CMD_DEBUG_ASSERT_CANFIRE] = BOT_CMD_PARAMETER_FLOAT;
+
 	bot_cmds_initialized = TRUE;
 }
 
 // Returns first bot with matching name
 entity find_bot_by_name(string name)
 {
-	local entity bot;
+	entity bot;
 
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		if(bot.netname==name)
 			return bot;
 
@@ -265,8 +299,8 @@ entity find_bot_by_name(string name)
 // Returns a bot by number on list
 entity find_bot_by_number(float number)
 {
-	local entity bot;
-	local float c;
+	entity bot;
+	float c = 0;
 
 	if(!number)
 		return world;
@@ -274,7 +308,7 @@ entity find_bot_by_number(float number)
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		{
 			if(++c==number)
 				return bot;
@@ -287,7 +321,7 @@ entity find_bot_by_number(float number)
 
 float bot_decodecommand(string cmdstring)
 {
-	local float cmd_parm_type, i;
+	float cmd_parm_type, i;
 	float sp;
 	string parm;
 
@@ -346,8 +380,8 @@ float bot_decodecommand(string cmdstring)
 
 void bot_cmdhelp(string scmd)
 {
-	local float i, ntype;
-	local string stype;
+	float i, ntype;
+	string stype;
 
 	if(!bot_cmds_initialized)
 		bot_commands_init();
@@ -448,6 +482,9 @@ void bot_cmdhelp(string scmd)
 			case BOT_CMD_SOUND:
 				print("play sound file at bot location");
 				break;
+			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+				print("verify the state of the weapon entity");
+				break;
 			default:
 				print("This command has no description yet.");
 				break;
@@ -458,14 +495,14 @@ void bot_cmdhelp(string scmd)
 
 void bot_list_commands()
 {
-	local float i;
-	local string ptype;
+	float i;
+	string ptype;
 
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
 	print("List of all available commands:\n");
-	print(" Command\t\t\t\tParameter Type\n");
+	print("  Command - Parameter Type\n");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
@@ -484,7 +521,7 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		print(strcat(" ",bot_cmd_string[i],"\t\t\t\t<",ptype,"> \n"));
+		print(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
 	}
 }
 
@@ -596,7 +633,7 @@ float bot_cmd_turn()
 
 float bot_cmd_select_weapon()
 {
-	local float id;
+	float id;
 
 	id = bot_cmd.bot_cmd_parm_float;
 
@@ -650,8 +687,8 @@ float bot_cmd_eval(string expr)
 
 float bot_cmd_if()
 {
-	local string expr, val_a, val_b;
-	local float cmpofs;
+	string expr, val_a, val_b;
+	float cmpofs;
 
 	if(self.bot_cmd_condition_status != CMD_CONDITION_NONE)
 	{
@@ -748,7 +785,7 @@ float bot_cmd_aim()
 	// Current direction
 	if(self.bot_cmd_aim_endtime)
 	{
-		local float progress;
+		float progress;
 
 		progress = min(1 - (self.bot_cmd_aim_endtime - time) / (self.bot_cmd_aim_endtime - self.bot_cmd_aim_begintime),1);
 		self.v_angle = self.bot_cmd_aim_begin + ((self.bot_cmd_aim_end - self.bot_cmd_aim_begin) * progress);
@@ -763,24 +800,24 @@ float bot_cmd_aim()
 	}
 
 	// New aiming direction
-	local string parms;
-	local float tokens, step;
+	string parms;
+	float tokens, step;
 
 	parms = bot_cmd.bot_cmd_parm_string;
 
 	tokens = tokenizebyseparator(parms, " ");
 
-	if(tokens==2)
+	if(tokens<2||tokens>3)
+		return CMD_STATUS_ERROR;
+
+	step = (tokens == 3) ? stof(argv(2)) : 0;
+
+	if(step == 0)
 	{
 		self.v_angle_x -= stof(argv(1));
 		self.v_angle_y += stof(argv(0));
 		return CMD_STATUS_FINISHED;
 	}
-
-	if(tokens<2||tokens>3)
-		return CMD_STATUS_ERROR;
-
-	step = stof(argv(2));
 
 	self.bot_cmd_aim_begin = self.v_angle;
 
@@ -801,10 +838,10 @@ float bot_cmd_aimtarget()
 		return bot_cmd_aim();
 	}
 
-	local entity e;
-	local string parms;
-	local vector v;
-	local float tokens, step;
+	entity e;
+	string parms;
+	vector v;
+	float tokens, step;
 
 	parms = bot_cmd.bot_cmd_parm_string;
 
@@ -998,7 +1035,7 @@ float bot_cmd_keypress_handler(string key, float enabled)
 
 float bot_cmd_presskey()
 {
-	local string key;
+	string key;
 
 	key = bot_cmd.bot_cmd_parm_string;
 
@@ -1009,7 +1046,7 @@ float bot_cmd_presskey()
 
 float bot_cmd_releasekey()
 {
-	local string key;
+	string key;
 
 	key = bot_cmd.bot_cmd_parm_string;
 
@@ -1060,8 +1097,66 @@ float bot_cmd_sound()
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
 
+	float n = tokenizebyseparator(f, " ");
+
+	string sample = f;
+	float chan = CH_WEAPON_B;
+	float vol = VOL_BASE;
+	float atten = ATTN_MIN;
+
+	if(n >= 1)
+		sample = argv(n - 1);
+	if(n >= 2)
+		chan = stof(argv(0));
+	if(n >= 3)
+		vol = stof(argv(1));
+	if(n >= 4)
+		atten = stof(argv(2));
+
 	precache_sound(f);
-	sound(self, CHAN_WEAPON2, f, VOL_BASE, ATTN_MIN);
+	sound(self, chan, sample, vol, atten);
+
+	return CMD_STATUS_FINISHED;
+}
+
+.entity tuba_note;
+float bot_cmd_debug_assert_canfire()
+{
+	float f;
+	f = bot_cmd.bot_cmd_parm_float;
+
+	if(self.weaponentity.state != WS_READY)
+	{
+		if(f)
+		{
+			self.colormod = '0 8 8';
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by weaponentity state\n");
+		}
+	}
+	else if(ATTACK_FINISHED(self) > time)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 8';
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self) - time), " seconds left)\n");
+		}
+	}
+	else if(self.tuba_note)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 0';
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, bot still has an active tuba note\n");
+		}
+	}
+	else
+	{
+		if(!f)
+		{
+			self.colormod = '8 8 0';
+			print("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self) - time), " seconds left\n");
+		}
+	}
 
 	return CMD_STATUS_FINISHED;
 }
@@ -1123,8 +1218,8 @@ void bot_resetqueues()
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
-		if(cl.bot_cmdqueuebuf_allocated)
-			bot_clearqueue(cl);
+		cl.bot_cmd_execution_index = 0;
+		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
 		for(i = 0; i < cl.bot_places_count; ++i)
@@ -1142,13 +1237,17 @@ void bot_resetqueues()
 // NOTE: Of course you need to include your commands here too :)
 float bot_execute_commands_once()
 {
-	local float status, ispressingkey;
-
-	if(self.deadflag!=DEAD_NO)
-		return 0;
+	float status, ispressingkey;
 
 	// Find command
 	bot_setcurrentcommand();
+
+	// if we have no bot command, better return
+	// old logic kept pressing previously pressed keys, but that has problems
+	// (namely, it means you cannot make a bot "normal" ever again)
+	// to keep a bot walking for a while, use the "wait" bot command
+	if(bot_cmd == world)
+		return FALSE;
 
 	// Ignore all commands except continue when the bot is paused
 	if(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
@@ -1164,9 +1263,6 @@ float bot_execute_commands_once()
 
 	// Keep pressing keys raised by the "presskey" command
 	ispressingkey = !!bot_presskeys();
-
-	if(bot_cmd==world)
-		return ispressingkey;
 
 	// Handle conditions
 	if not(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE)
@@ -1254,6 +1350,9 @@ float bot_execute_commands_once()
 		case BOT_CMD_SOUND:
 			status = bot_cmd_sound();
 			break;
+		case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+			status = bot_cmd_debug_assert_canfire();
+			break;
 		default:
 			print(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));
 			return 0;
@@ -1271,7 +1370,7 @@ float bot_execute_commands_once()
 	{
 		if(autocvar_g_debug_bot_commands)
 		{
-			local string parms;
+			string parms;
 
 			switch(bot_cmd_parm_type[bot_cmd.bot_cmd_type])
 			{

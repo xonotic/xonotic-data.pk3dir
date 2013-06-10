@@ -5,12 +5,13 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 	if(g_minstagib)
 	{
 		// minstagib: each hit means +1 ammo
-		frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
+		if(frag_attacker != frag_target)
+			frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
 	}
 	else
 	{
 		// otherwise: each hit gets damage back
-		frag_attacker.health += damage_take;
+		frag_attacker.health = frag_attacker.health + bound(0, damage_take, self.health);
 	}
 	return 0;
 }

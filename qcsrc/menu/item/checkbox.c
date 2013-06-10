@@ -42,7 +42,7 @@ void CheckBox_draw(entity me)
 	}
 	else
 		me.srcSuffix = (me.checked ? "1" : "0");
-	SUPER(CheckBox).draw(me);
 	me.pressed = s;
+	SUPER(CheckBox).draw(me);
 }
 #endif

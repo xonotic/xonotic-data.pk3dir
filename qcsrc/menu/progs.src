@@ -1,36 +1,46 @@
 ../../menu.dat
 
+sys-pre.qh
+../dpdefs/menudefs.qc
+../dpdefs/keycodes.qc
+sys-post.qh
+
 config.qh
 ../common/util-pre.qh
-msys.qh
-mbuiltin.qh
+
 ../warpzonelib/mathlib.qh
 ../common/util.qh
 
 oo/base.h
 
+../common/teams.qh
 ../common/constants.qh
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/counting.qh
+../common/command/markup.qh
+../common/command/rpn.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
+../common/urllib.qh
 
-gamecommand.qh
+command/menu_cmd.qh
 menu.qh
 draw.qh
 skin.qh
 xonotic/util.qh
 
-oo/classdefs.h
-	classes.c
-
-oo/constructors.h
+oo/interface.h
 	classes.c
 oo/implementation.h
 	classes.c
 
 ../common/util.qc
-../common/gamecommand.qc
-gamecommand.qc
+../common/command/markup.qc
+../common/command/rpn.qc
+../common/command/generic.qc
+command/menu_cmd.qc
 menu.qc
 draw.qc
 xonotic/util.qc
@@ -39,5 +49,8 @@ xonotic/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../common/urllib.qc
 
 ../warpzonelib/mathlib.qc
+
+../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

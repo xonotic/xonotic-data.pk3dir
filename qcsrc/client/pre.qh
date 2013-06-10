@@ -1,5 +1,0 @@
-#ifdef USE_FTE
-#pragma target FTE
-#endif
-
-#define CSQC 1

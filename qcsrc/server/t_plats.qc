@@ -31,8 +31,8 @@ float PLAT_LOW_TRIGGER = 1;
 
 void plat_spawn_inside_trigger()
 {
-	local entity trigger;
-	local vector tmin, tmax;
+	entity trigger;
+	vector tmin, tmax;
 
 	trigger = spawn();
 	trigger.touch = plat_center_touch;
@@ -57,36 +57,46 @@ void plat_spawn_inside_trigger()
 		tmax_y = tmin_y + 1;
 	}
 
-	setsize (trigger, tmin, tmax);
-};
+	if(tmin_x < tmax_x)
+		if(tmin_y < tmax_y)
+			if(tmin_z < tmax_z)
+			{
+				setsize (trigger, tmin, tmax);
+				return;
+			}
+
+	// otherwise, something is fishy...
+	remove(trigger);
+	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
+}
 
 void plat_hit_top()
 {
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 1;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
-};
+}
 
 void plat_hit_bottom()
 {
-	sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 2;
-};
+}
 
 void plat_go_down()
 {
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, self.speed, plat_hit_bottom);
-};
+}
 
 void plat_go_up()
 {
-	sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, self.speed, plat_hit_top);
-};
+}
 
 void plat_center_touch()
 {
@@ -101,7 +111,7 @@ void plat_center_touch()
 		plat_go_up ();
 	else if (self.state == 1)
 		self.nextthink = self.ltime + 1;	// delay going down
-};
+}
 
 void plat_outside_touch()
 {
@@ -114,14 +124,14 @@ void plat_outside_touch()
 	self = self.enemy;
 	if (self.state == 1)
 		plat_go_down ();
-};
+}
 
 void plat_trigger_use()
 {
 	if (self.think)
 		return;		// already activated
 	plat_go_down();
-};
+}
 
 
 void plat_crush()
@@ -140,18 +150,19 @@ void plat_crush()
             plat_go_down ();
         else if (self.state == 3)
             plat_go_up ();
-        else
-            objerror ("plat_crush: bad self.state\n");
+	// when in other states, then the plat_crush event came delayed after
+	// plat state already had changed
+	// this isn't a bug per se!
     }
-};
+}
 
 void plat_use()
 {
-	self.use = SUB_Null;
+	self.use = func_null;
 	if (self.state != 4)
 		objerror ("plat_use: not in up state");
 	plat_go_down();
-};
+}
 
 .string sound1, sound2;
 
@@ -171,23 +182,18 @@ void plat_reset()
 	}
 }
 
-void spawnfunc_path_corner() { };
+void spawnfunc_path_corner() { }
 void spawnfunc_func_plat()
 {
-	if (!self.t_length)
-		self.t_length = 80;
-	if (!self.t_width)
-		self.t_width = 10;
-
 	if (self.sounds == 0)
 		self.sounds = 2;
 
     if(self.spawnflags & 4)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds == 1)
@@ -230,23 +236,27 @@ void spawnfunc_func_plat()
 
 	if (!self.speed)
 		self.speed = 150;
+	if (!self.lip)
+		self.lip = 16;
+	if (!self.height)
+		self.height = self.size_z - self.lip;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.size_z + 8;
-
-	plat_spawn_inside_trigger ();	// the "start moving" trigger
+	self.pos2_z = self.origin_z - self.height;
 
 	self.reset = plat_reset;
 	plat_reset();
-};
+
+	plat_spawn_inside_trigger ();	// the "start moving" trigger
+}
 
 
 void() train_next;
 void train_wait()
 {
 	if(self.noise != "")
-		stopsoundto(MSG_BROADCAST, self, CHAN_TRIGGER); // send this as unreliable only, as the train will resume operation shortly anyway
+		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 
 	if(self.wait < 0)
 	{
@@ -264,15 +274,15 @@ void train_wait()
 	SUB_UseTargets();
 	self = oldself;
 	self.enemy = world;
-};
+}
 
 void train_next()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.enemy = targ;
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("train_next: no next target");
 	self.wait = targ.wait;
 	if (!self.wait)
@@ -284,20 +294,20 @@ void train_next()
 		SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
 
 	if(self.noise != "")
-		sound(self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
-};
+		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+}
 
 void func_train_find()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - self.mins);
 	self.nextthink = self.ltime + 1;
 	self.think = train_next;
-};
+}
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
 Ridable platform, targets spawnfunc_path_corner path to follow.
@@ -309,7 +319,7 @@ void spawnfunc_func_train()
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
@@ -322,16 +332,16 @@ void spawnfunc_func_train()
 	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 	self.dmgtime2 = time;
 
 	// TODO make a reset function for this one
-};
+}
 
 void func_rotating_setactive(float astate)
 {
@@ -385,9 +395,9 @@ void spawnfunc_func_rotating()
 	
 	self.pos1 = self.avelocity;
     
-    if(self.dmg & (!self.message))
+    if(self.dmg && (self.message == ""))
         self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 
@@ -404,15 +414,15 @@ void spawnfunc_func_rotating()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// TODO make a reset function for this one
-};
+}
 
 .float height;
 void func_bobbing_controller_think()
 {
-	local vector v;
+	vector v;
 	self.nextthink = time + 0.1;
 	
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -427,7 +437,7 @@ void func_bobbing_controller_think()
 	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
-};
+}
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
 Brush model that moves back and forth on one axis (default Z).
@@ -440,11 +450,11 @@ dmgtime : See above.
 */
 void spawnfunc_func_bobbing()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 	if (!self.speed)
 		self.speed = 4;
@@ -459,9 +469,9 @@ void spawnfunc_func_bobbing()
 
 	// damage when blocked
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -485,18 +495,18 @@ void spawnfunc_func_bobbing()
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 .float freq;
 void func_pendulum_controller_think()
 {
-	local float v;
+	float v;
 	self.nextthink = time + 0.1;
 
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -513,15 +523,15 @@ void func_pendulum_controller_think()
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
 	}
-};
+}
 
 void spawnfunc_func_pendulum()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	self.active = ACTIVE_ACTIVE;
@@ -532,9 +542,9 @@ void spawnfunc_func_pendulum()
 		self.speed = 30;
 	// not initializing self.dmg to 2, to allow damageless pendulum
 
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-	if(self.dmg && (!self.message2))
+	if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -562,12 +572,12 @@ void spawnfunc_func_pendulum()
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	//self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 // button and multiple button
 
@@ -582,12 +592,12 @@ void button_wait()
 	activator = self.enemy;
 	SUB_UseTargets();
 	self.frame = 1;			// use alternate textures
-};
+}
 
 void button_done()
 {
 	self.state = STATE_BOTTOM;
-};
+}
 
 void button_return()
 {
@@ -596,13 +606,13 @@ void button_return()
 	self.frame = 0;			// use normal textures
 	if (self.health)
 		self.takedamage = DAMAGE_YES;	// can be shot again
-};
+}
 
 
 void button_blocked()
 {
 	// do nothing, just don't come all the way back out
-};
+}
 
 
 void button_fire()
@@ -614,11 +624,11 @@ void button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, button_wait);
-};
+}
 
 void button_reset()
 {
@@ -632,26 +642,15 @@ void button_reset()
 
 void button_use()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" triggered a button\n");
-//	}
-
 	if not (self.active == ACTIVE_ACTIVE)
 		return;
 
 	self.enemy = activator;
 	button_fire ();
-};
+}
 
 void button_touch()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" touched a button\n");
-//	}
 	if (!other)
 		return;
 	if not(other.iscreature)
@@ -662,7 +661,7 @@ void button_touch()
 	if (other.owner)
 		self.enemy = other.owner;
 	button_fire ();
-};
+}
 
 void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -672,15 +671,10 @@ void button_damage(entity inflictor, entity attacker, float damage, float deatht
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
-	//	if (activator.classname != "player")
-	//	{
-	//		dprint(activator.classname);
-	//		dprint(" killed a button\n");
-	//	}
 		self.enemy = damage_attacker;
 		button_fire ();
 	}
-};
+}
 
 
 /*QUAKED spawnfunc_func_button (0 .5 .8) ?
@@ -737,7 +731,7 @@ void spawnfunc_func_button()
     self.flags |= FL_NOTARGET;
 
 	button_reset();
-};
+}
 
 
 float DOOR_START_OPEN = 1;
@@ -819,13 +813,13 @@ void door_blocked()
 			door_go_down ();
 	}
 */
-};
+}
 
 
 void door_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -837,19 +831,19 @@ void door_hit_top()
 		self.think = door_rotating_go_down;
 	}
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
 void door_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_BOTTOM;
-};
+}
 
 void door_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -858,7 +852,7 @@ void door_go_down()
 
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, self.speed, door_hit_bottom);
-};
+}
 
 void door_go_up()
 {
@@ -872,7 +866,7 @@ void door_go_up()
 	}
 
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, door_hit_top);
 
@@ -881,7 +875,8 @@ void door_go_up()
 	self.message = "";
 	SUB_UseTargets();
 	self.message = oldmessage;
-};
+}
+
 
 
 /*
@@ -892,10 +887,54 @@ ACTIVATION FUNCTIONS
 =============================================================================
 */
 
+float door_check_keys(void) {
+	local entity door;
+	
+	
+	if (self.owner)
+		door = self.owner;
+	else
+		door = self;
+	
+	// no key needed
+	if not(door.itemkeys)
+		return TRUE;
+
+	// this door require a key
+	// only a player can have a key
+	if not(IS_PLAYER(other))
+		return FALSE;
+	
+	if (item_keys_usekey(door, other)) {
+		// some keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	} else {
+		// no keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	}
+
+	if (door.itemkeys) {
+		// door is now unlocked
+		play2(other, "misc/talk.wav");
+		centerprint(other, "Door unlocked!");
+		return TRUE;
+	} else
+		return FALSE;
+}
+
+
 void door_fire()
 {
-	local entity 	oself;
-	local entity	starte;
+	entity 	oself;
+	entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
@@ -949,14 +988,15 @@ void door_fire()
 		self = self.enemy;
 	} while ( (self != starte) && (self != world) );
 	self = oself;
-};
+}
 
 
 void door_use()
 {
-	local entity oself;
+	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
+	
 	if (self.owner)
 	{
 		oself = self;
@@ -964,33 +1004,44 @@ void door_use()
 		door_fire ();
 		self = oself;
 	}
-};
+}
 
 
 void door_trigger_touch()
 {
 	if (other.health < 1)
-	if not(other.iscreature && other.deadflag == DEAD_NO)
-		return;
+		if not(other.iscreature && other.deadflag == DEAD_NO)
+			return;
 
 	if (time < self.attack_finished_single)
 		return;
+	
+	// check if door is locked
+	if (!door_check_keys())
+		return;
+	
 	self.attack_finished_single = time + 1;
 
 	activator = other;
 
 	self = self.owner;
 	door_use ();
-};
+}
 
 
 void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local entity oself;
+	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
+	
+	if (self.itemkeys) {
+		// don't allow opening doors through damage if keys are required
+		return;
+	}
+	
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1000,7 +1051,7 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		door_use ();
 		self = oself;
 	}
-};
+}
 
 
 /*
@@ -1012,7 +1063,7 @@ Prints messages
 */
 void door_touch()
 {
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1021,11 +1072,11 @@ void door_touch()
 
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
-};
+}
 
 
 void door_generic_plat_blocked()
@@ -1065,36 +1116,36 @@ void door_generic_plat_blocked()
 			door_rotating_go_down ();
 	}
 */
-};
+}
 
 
 void door_rotating_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
 	self.think = door_rotating_go_down;
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
 void door_rotating_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
 	{
 		self.pos2 = '0 0 0' - self.pos2;
 		self.lip = 0;
 	}
 	self.state = STATE_BOTTOM;
-};
+}
 
 void door_rotating_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -1103,7 +1154,7 @@ void door_rotating_go_down()
 
 	self.state = STATE_DOWN;
 	SUB_CalcAngleMove (self.pos1, self.speed, door_rotating_hit_bottom);
-};
+}
 
 void door_rotating_go_up()
 {
@@ -1116,7 +1167,7 @@ void door_rotating_go_up()
 		return;
 	}
 	if (self.noise2 != "")
-		sound (self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcAngleMove (self.pos2, self.speed, door_rotating_hit_top);
 
@@ -1125,7 +1176,7 @@ void door_rotating_go_up()
 	self.message = "";
 	SUB_UseTargets();
 	self.message = oldmessage;
-};
+}
 
 
 
@@ -1141,8 +1192,8 @@ SPAWNING FUNCTIONS
 
 entity spawn_field(vector fmins, vector fmaxs)
 {
-	local entity	trigger;
-	local	vector	t1, t2;
+	entity	trigger;
+	vector	t1, t2;
 
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
@@ -1155,26 +1206,34 @@ entity spawn_field(vector fmins, vector fmaxs)
 	t2 = fmaxs;
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
 	return (trigger);
-};
+}
 
 
-float EntitiesTouching(entity e1, entity e2)
+entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	if (e1.absmin_x > e2.absmax_x)
+	while((cur = find(cur, classname, self.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+	{
+	}
+	return cur;
+}
+
+float LinkDoors_isconnected(entity e1, entity e2, entity pass)
+{
+	float DELTA = 4;
+	if (e1.absmin_x > e2.absmax_x + DELTA)
 		return FALSE;
-	if (e1.absmin_y > e2.absmax_y)
+	if (e1.absmin_y > e2.absmax_y + DELTA)
 		return FALSE;
-	if (e1.absmin_z > e2.absmax_z)
+	if (e1.absmin_z > e2.absmax_z + DELTA)
 		return FALSE;
-	if (e1.absmax_x < e2.absmin_x)
+	if (e2.absmin_x > e1.absmax_x + DELTA)
 		return FALSE;
-	if (e1.absmax_y < e2.absmin_y)
+	if (e2.absmin_y > e1.absmax_y + DELTA)
 		return FALSE;
-	if (e1.absmax_z < e2.absmin_z)
+	if (e2.absmin_z > e1.absmax_z + DELTA)
 		return FALSE;
 	return TRUE;
-};
-
+}
 
 /*
 =============
@@ -1185,8 +1244,8 @@ LinkDoors
 */
 void LinkDoors()
 {
-	local entity	t, starte;
-	local vector	cmins, cmaxs;
+	entity	t;
+	vector	cmins, cmaxs;
 
 	if (self.enemy)
 		return;		// already linked by another door
@@ -1205,77 +1264,83 @@ void LinkDoors()
 		return;		// don't want to link this door
 	}
 
+	FindConnectedComponent(self, enemy, LinkDoors_nextent, LinkDoors_isconnected, world);
+
+	// set owner, and make a loop of the chain
+	dprint("LinkDoors: linking doors:");
+	for(t = self; ; t = t.enemy)
+	{
+		dprint(" ", etos(t));
+		t.owner = self;
+		if(t.enemy == world)
+		{
+			t.enemy = self;
+			break;
+		}
+	}
+	dprint("\n");
+
+	// collect health, targetname, message, size
 	cmins = self.absmin;
 	cmaxs = self.absmax;
-
-	starte = self;
-	t = self;
-
-	do
+	for(t = self; ; t = t.enemy)
 	{
-		self.owner = starte;			// master door
+		if(t.health && !self.health)
+			self.health = t.health;
+		if((t.targetname != "") && (self.targetname == ""))
+			self.targetname = t.targetname;
+		if((t.message != "") && (self.message == ""))
+			self.message = t.message;
+		if (t.absmin_x < cmins_x)
+			cmins_x = t.absmin_x;
+		if (t.absmin_y < cmins_y)
+			cmins_y = t.absmin_y;
+		if (t.absmin_z < cmins_z)
+			cmins_z = t.absmin_z;
+		if (t.absmax_x > cmaxs_x)
+			cmaxs_x = t.absmax_x;
+		if (t.absmax_y > cmaxs_y)
+			cmaxs_y = t.absmax_y;
+		if (t.absmax_z > cmaxs_z)
+			cmaxs_z = t.absmax_z;
+		if(t.enemy == self)
+			break;
+	}
 
-		if (self.health)
-			starte.health = self.health;
-		IFTARGETED
-			starte.targetname = self.targetname;
-		if (self.message != "")
-			starte.message = self.message;
+	// distribute health, targetname, message
+	for(t = self; t; t = t.enemy)
+	{
+		t.health = self.health;
+		t.targetname = self.targetname;
+		t.message = self.message;
+		if(t.enemy == self)
+			break;
+	}
 
-		t = find(t, classname, self.classname);
-		if (!t)
-		{
-			self.enemy = starte;		// make the chain a loop
+	// shootable, or triggered doors just needed the owner/enemy links,
+	// they don't spawn a field
 
-		// shootable, or triggered doors just needed the owner/enemy links,
-		// they don't spawn a field
+	if (self.health)
+		return;
+	IFTARGETED
+		return;
+	if (self.items)
+		return;
 
-			self = self.owner;
-
-			if (self.health)
-				return;
-			IFTARGETED
-				return;
-			if (self.items)
-				return;
-
-			self.owner.trigger_field = spawn_field(cmins, cmaxs);
-
-			return;
-		}
-
-		if (EntitiesTouching(self,t))
-		{
-			if (t.enemy)
-				objerror ("cross connected doors");
-
-			self.enemy = t;
-			self = t;
-
-			if (t.absmin_x < cmins_x)
-				cmins_x = t.absmin_x;
-			if (t.absmin_y < cmins_y)
-				cmins_y = t.absmin_y;
-			if (t.absmin_z < cmins_z)
-				cmins_z = t.absmin_z;
-			if (t.absmax_x > cmaxs_x)
-				cmaxs_x = t.absmax_x;
-			if (t.absmax_y > cmaxs_y)
-				cmaxs_y = t.absmax_y;
-			if (t.absmax_z > cmaxs_z)
-				cmaxs_z = t.absmax_z;
-		}
-	} while (1 );
-
-};
+	self.trigger_field = spawn_field(cmins, cmaxs);
+}
 
 
-/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
+/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
 
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 START_OPEN causes the door to move to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
+
+GOLD_KEY causes the door to open only if the activator holds a gold key.
+
+SILVER_KEY causes the door to open only if the activator holds a silver key.
 
 "message"	is printed when the door is touched if it is a trigger door and it hasn't been fired yet
 "angle"		determines the opening direction
@@ -1307,11 +1372,21 @@ void door_reset()
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
+// spawnflags require key (for now only func_door)
+#define SPAWNFLAGS_GOLD_KEY 8
+#define SPAWNFLAGS_SILVER_KEY 16
 void spawnfunc_func_door()
 {
+	// Quake 1 keys compatibility
+	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(0);
+	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(1);
+		
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
@@ -1325,12 +1400,13 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
+	// FIXME: undocumented flag 8, originally (Q1) GOLD_KEY
+	// if(self.spawnflags & 8)
+	// 	self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0)
@@ -1374,7 +1450,7 @@ void spawnfunc_func_door()
 	InitializeEntity(self, LinkDoors, INITPRIO_LINKDOORS);
 
 	self.reset = door_reset;
-};
+}
 
 /*QUAKED spawnfunc_func_door_rotating (0 .5 .8) ? START_OPEN BIDIR DOOR_DONT_LINK BIDIR_IN_DOWN x TOGGLE X_AXIS Y_AXIS
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -1409,7 +1485,8 @@ void door_rotating_reset()
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void door_rotating_init_startopen()
@@ -1453,9 +1530,9 @@ void spawnfunc_func_door_rotating()
     if(self.spawnflags & 8)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
     if (self.sounds > 0)
@@ -1498,7 +1575,7 @@ void spawnfunc_func_door_rotating()
 	InitializeEntity(self, LinkDoors, INITPRIO_LINKDOORS);
 
 	self.reset = door_rotating_reset;
-};
+}
 
 /*
 =============================================================================
@@ -1522,10 +1599,9 @@ float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
 float SECRET_NO_SHOOT = 8;		// only opened by trigger
 float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
-
 void fd_secret_use()
 {
-	local float temp;
+	float temp;
 	string message_save;
 
 	self.health = 10000;
@@ -1545,7 +1621,7 @@ void fd_secret_use()
 	// Make a sound, wait a little...
 
 	if (self.noise1 != "")
-		sound(self, CHAN_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.nextthink = self.ltime + 0.1;
 
 	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
@@ -1570,8 +1646,13 @@ void fd_secret_use()
 	self.dest2 = self.dest1 + v_forward * self.t_length;
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
-};
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+}
+
+void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	fd_secret_use();
+}
 
 // Wait after first movement...
 void fd_secret_move1()
@@ -1579,36 +1660,36 @@ void fd_secret_move1()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+}
 
 // Start moving sideways w/sound...
 void fd_secret_move2()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest2, self.speed, fd_secret_move3);
-};
+}
 
 // Wait here until time to go back...
 void fd_secret_move3()
 {
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
 	{
 		self.nextthink = self.ltime + self.wait;
 		self.think = fd_secret_move4;
 	}
-};
+}
 
 // Move backward...
 void fd_secret_move4()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);
-};
+}
 
 // Wait 1 second...
 void fd_secret_move5()
@@ -1616,15 +1697,15 @@ void fd_secret_move5()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+}
 
 void fd_secret_move6()
 {
 	if (self.noise2 != "")
-		sound(self, CHAN_TRIGGER, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.oldorigin, self.speed, fd_secret_done);
-};
+}
 
 void fd_secret_done()
 {
@@ -1635,8 +1716,8 @@ void fd_secret_done()
 		//self.th_pain = fd_secret_use;
 	}
 	if (self.noise3 != "")
-		sound(self, CHAN_TRIGGER, self.noise3, VOL_BASE, ATTN_NORM);
-};
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+}
 
 void secret_blocked()
 {
@@ -1644,7 +1725,7 @@ void secret_blocked()
 		return;
 	self.attack_finished_single = time + 0.5;
 	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
-};
+}
 
 /*
 ==============
@@ -1664,11 +1745,11 @@ void secret_touch()
 
 	if (self.message)
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.message);
 		play2(other, "misc/talk.wav");
 	}
-};
+}
 
 void secret_reset()
 {
@@ -1678,7 +1759,8 @@ void secret_reset()
 		self.takedamage = DAMAGE_YES;
 	}
 	setorigin(self, self.oldorigin);
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -1728,7 +1810,7 @@ void spawnfunc_func_door_secret()
 	{
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
-		self.event_damage = fd_secret_use;
+		self.event_damage = fd_secret_damage;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)
@@ -1736,7 +1818,7 @@ void spawnfunc_func_door_secret()
 
 	self.reset = secret_reset;
 	secret_reset();
-};
+}
 
 /*QUAKED spawnfunc_func_fourier (0 .5 .8) ?
 Brush model that moves in a pattern of added up sine waves, can be used e.g. for circular motions.
@@ -1751,7 +1833,7 @@ dmgtime: See above.
 
 void func_fourier_controller_think()
 {
-	local vector v;
+	vector v;
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
@@ -1776,15 +1858,15 @@ void func_fourier_controller_think()
 	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
-};
+}
 
 void spawnfunc_func_fourier()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if (!self.speed)
@@ -1795,9 +1877,9 @@ void spawnfunc_func_fourier()
 	self.cnt = 360 / self.speed;
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -1818,13 +1900,13 @@ void spawnfunc_func_fourier()
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 // reusing some fields havocbots declared
 .entity wp00, wp01, wp02, wp03;
@@ -1915,9 +1997,9 @@ void func_vectormamamam_findtarget()
 	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
 		objerror("No reference entity found, so there is nothing to move. Aborting.");
 
-	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
+	self.destvec = self.origin - func_vectormamamam_origin(self, 0);
 
-	local entity controller;
+	entity controller;
 	controller = spawn();
 	controller.classname = "func_vectormamamam_controller";
 	controller.owner = self;
@@ -1930,7 +2012,7 @@ void spawnfunc_func_vectormamamam()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CHAN_TRIGGER, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
 	}
 
 	if(!self.targetfactor)
@@ -1958,9 +2040,9 @@ void spawnfunc_func_vectormamamam()
 		self.target4normal = normalize(self.target4normal);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -1974,7 +2056,7 @@ void spawnfunc_func_vectormamamam()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -1982,4 +2064,92 @@ void spawnfunc_func_vectormamamam()
 	self.active = ACTIVE_ACTIVE;
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+}
+
+void conveyor_think()
+{
+	entity e;
+
+	// set myself as current conveyor where possible
+	for(e = world; (e = findentity(e, conveyor, self)); )
+		e.conveyor = world;
+
+	if(self.state)
+	{
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+			if(!e.conveyor.state)
+				if(isPushable(e))
+				{
+					vector emin = e.absmin;
+					vector emax = e.absmax;
+					if(self.solid == SOLID_BSP)
+					{
+						emin -= '1 1 1';
+						emax += '1 1 1';
+					}
+					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+							e.conveyor = self;
+				}
+
+		for(e = world; (e = findentity(e, conveyor, self)); )
+		{
+			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
+				continue; // done in SV_PlayerPhysics
+
+			setorigin(e, e.origin + self.movedir * sys_frametime);
+			move_out_of_solid(e);
+			UpdateCSQCProjectile(e);
+			/*
+			// stupid conveyor code
+			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
+			if(trace_fraction > 0)
+				setorigin(e, trace_endpos);
+			*/
+		}
+	}
+
+	self.nextthink = time;
+}
+
+void conveyor_use()
+{
+	self.state = !self.state;
+}
+
+void conveyor_reset()
+{
+	self.state = (self.spawnflags & 1);
+}
+
+void conveyor_init()
+{
+	if (!self.speed)
+		self.speed = 200;
+	self.movedir = self.movedir * self.speed;
+	self.think = conveyor_think;
+	self.nextthink = time;
+	IFTARGETED
+	{
+		self.use = conveyor_use;
+		self.reset = conveyor_reset;
+		conveyor_reset();
+	}
+	else
+		self.state = 1;
+}
+
+void spawnfunc_trigger_conveyor()
+{
+	SetMovedir();
+	EXACTTRIGGER_INIT;
+	conveyor_init();
+}
+
+void spawnfunc_func_conveyor()
+{
+	SetMovedir();
+	InitMovingBrushTrigger();
+	self.movetype = MOVETYPE_NONE;
+	conveyor_init();
 }

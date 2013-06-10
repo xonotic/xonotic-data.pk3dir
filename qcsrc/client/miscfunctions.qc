@@ -1,190 +1,5 @@
-var float(string text, float handleColors, vector fontSize) stringwidth;
-
 entity players;
 entity teams;
-
-void serverAnnouncer()
-{
-	// check for pending announcement, play it and remove it
-	if(announce_snd != "")
-	{
-		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
-		strunzone(announce_snd);
-		announce_snd = "";
-	}
-}
-
-void restartAnnouncer_Think() {
-	float countdown_rounded, countdown;
-	countdown = getstatf(STAT_GAMESTARTTIME) - time;
-	countdown_rounded = floor(0.5 + countdown);
-	if(countdown <= 0) {
-		if (!spectatee_status) //do cprint only for players
-			centerprint(_("^1Begin!"));
-
-		sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
-		//reset maptime announcers now as well
-		announcer_5min = announcer_1min = FALSE;
-
-		remove(self);
-		return;
-	}
-	else {
-		if (!spectatee_status) //do cprint only for players
-			centerprint(sprintf(_("^1Game starts in %d seconds"), countdown_rounded));
-
-		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
-		}
-
-		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
-	}
-}
-
-/**
- * Plays the 1minute or 5 minutes (of maptime) remaining sound, if client wants it
- */
-void maptimeAnnouncer() {
-	float timelimit;
-	timelimit = getstatf(STAT_TIMELIMIT);
-	float timeleft;
-	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
-
-	float warmuplimit;
-	float warmuptimeleft;
-	if(warmup_stage) {
-		warmuplimit = autocvar_g_warmup_limit;
-		if(warmuplimit > 0) {
-			warmuptimeleft = max(0, warmuplimit + getstatf(STAT_GAMESTARTTIME) - time); 
-		}
-	}
-
-	//5 minute check
-	if (autocvar_cl_sound_maptime_warning >= 2) {
-		//make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
-		if(announcer_5min)
-		{
-			if(((!warmup_stage || warmuplimit == 0) && timeleft > 300) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 300))
-				announcer_5min = FALSE;
-		}
-		else if (((!warmup_stage || warmuplimit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299) || (warmup_stage && warmuplimit > 0 && warmuptimeleft < 300 && warmuptimeleft > 299))
-			//if we're in warmup mode, check whether there's a warmup timelimit
-			if not (warmuplimit == -1 && warmup_stage) {
-				announcer_5min = TRUE;
-				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
-			}
-	}
-
-	//1 minute check
-	if (autocvar_cl_sound_maptime_warning == 1 || autocvar_cl_sound_maptime_warning == 3) {
-		if (announcer_1min)
-		{
-			if(((!warmup_stage || warmuplimit == 0) && timeleft > 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 60))
-				announcer_1min = FALSE;
-		}
-		else if (((!warmup_stage || warmuplimit == 0) && timelimit > 0 && timeleft < 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft < 60))
-			//if we're in warmup mode, check whether there's a warmup timelimit
-			if not (warmuplimit == -1 && warmup_stage) {
-				announcer_1min = TRUE;
-				sound(world, CHAN_AUTO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
-			}
-	}
-}
-
-/**
- * Announce carried items (e.g. flags in CTF).
- */
-float redflag_prev;
-float blueflag_prev;
-void carrierAnnouncer() {
-	float stat_items, redflag, blueflag;
-	float pickup;
-	string item;
-
-	if not(autocvar_cl_notify_carried_items)
-		return;
-
-	stat_items = getstati(STAT_ITEMS);
-
-	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
-	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-
-	if (redflag == 3 && redflag != redflag_prev) {
-		item = _("^1RED^7 flag");
-		pickup = (redflag_prev == 2);
-	}
-
-	if (blueflag == 3 && blueflag != blueflag_prev) {
-		item = _("^4BLUE^7 flag");
-		pickup = (blueflag_prev == 2);
-	}
-
-	if (item)
-	{
-		if (pickup) {
-			if (autocvar_cl_notify_carried_items & 2)
-				centerprint(sprintf(_("You picked up the %s!"), item));
-		}
-		else {
-			if (autocvar_cl_notify_carried_items & 1)
-				centerprint(sprintf(_("You got the %s!"), item));
-		}
-	}
-
-	blueflag_prev = blueflag;
-	redflag_prev = redflag;
-}
-
-/**
- * Add all future announcer sounds precaches here.
- * TODO: announcer queues
- */
-void Announcer_Precache () {
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/electrobitch.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/airshot.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/03kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/05kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/15kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/20kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/25kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/30kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/botlike.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/yoda.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/amazing.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/awesome.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/headshot.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/impressive.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/begin.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/timeoutcalled.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1fragleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2fragsleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3fragsleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/terminated.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/4.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/6.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/7.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/8.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/9.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/lastsecond.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/narrowly.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/voteaccept.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votecall.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votefail.wav"));
-}
 
 void AuditLists()
 {
@@ -293,11 +108,11 @@ entity GetTeam(float Team, float add)
 {
 	float num;
 	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
+	num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
 	if not(add)
-		return NULL;
+		return world;
 	tm = spawn();
 	tm.team = Team;
 	teamslots[num] = tm;
@@ -319,46 +134,20 @@ vector HUD_GetFontsize(string cvarname)
 
 float PreviewExists(string name)
 {
-	float f;
-	string file;
-
 	if(autocvar_cl_readpicture_force)
 		return false;
 
-	file = strcat(name, ".tga");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".png");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".jpg");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
-	file = strcat(name, ".pcx");
-	f = fopen(file, FILE_READ);
-	if(f >= 0)
-	{
-		fclose(f);
-		return true;
-	}
+	if (fexists(strcat(name, ".tga"))) return true;
+	if (fexists(strcat(name, ".png"))) return true;
+	if (fexists(strcat(name, ".jpg"))) return true;
+	if (fexists(strcat(name, ".pcx"))) return true;
+
 	return false;
 }
 
 vector rotate(vector v, float a)
 {
-	vector w;
+	vector w = '0 0 0';
 	// FTEQCC SUCKS AGAIN
 	w_x =      v_x * cos(a) + v_y * sin(a);
 	w_y = -1 * v_x * sin(a) + v_y * cos(a);
@@ -373,6 +162,19 @@ string ColorTranslateRGB(string s)
 		return strdecolorize(s);
 	else
 		return s;
+}
+
+// decolorizes and team colors the player name when needed
+string playername(string thename, float teamid)
+{
+    string t;
+    if (teamplay)
+    {
+        t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return strdecolorize(thename);
 }
 
 float cvar_or(string cv, float v)
@@ -411,28 +213,28 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 	return boxsize * (0.5 * (1 - sz));
 }
 
-void drawborderlines(float thickness, vector pos, vector dim, vector color, float alpha, float drawflag)
+void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
 {
-	vector line_dim;
+	vector line_dim = '0 0 0';
 
 	// left and right lines
 	pos_x -= thickness;
 	line_dim_x = thickness;
 	line_dim_y = dim_y;
-	drawfill(pos, line_dim, color, alpha, drawflag);
-	drawfill(pos + (dim_x + thickness) * '1 0 0', line_dim, color, alpha, drawflag);
+	drawfill(pos, line_dim, color, theAlpha, drawflag);
+	drawfill(pos + (dim_x + thickness) * '1 0 0', line_dim, color, theAlpha, drawflag);
 
 	// upper and lower lines
 	pos_y -= thickness;
 	line_dim_x = dim_x + thickness * 2; // make upper and lower lines longer
 	line_dim_y = thickness;
-	drawfill(pos, line_dim, color, alpha, drawflag);
-	drawfill(pos + (dim_y + thickness) * '0 1 0', line_dim, color, alpha, drawflag);
+	drawfill(pos, line_dim, color, theAlpha, drawflag);
+	drawfill(pos + (dim_y + thickness) * '0 1 0', line_dim, color, theAlpha, drawflag);
 }
 
-void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float alpha, float drawflag)
+void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag)
 {
-	vector current_pos, end_pos, new_size, ratio;
+	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
 	current_pos_y = pos_y;
@@ -445,7 +247,7 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 			new_size_y = min(sz_y, end_pos_y - current_pos_y);
 			ratio_x = new_size_x / sz_x;
 			ratio_y = new_size_y / sz_y;
-			drawsubpic(current_pos, new_size, pic, '0 0 0', ratio, color, alpha, drawflag);
+			drawsubpic(current_pos, new_size, pic, '0 0 0', ratio, color, theAlpha, drawflag);
 			current_pos_x += sz_x;
 		}
 		current_pos_y += sz_y;
@@ -454,115 +256,99 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 var float _drawpic_imgaspect;
-var float _drawpic_aspect;
 var vector _drawpic_imgsize;
 var vector _drawpic_sz;
-var vector _drawpic_oldsz;
+var float _drawpic_oldsz;
 var string _drawpic_picpath;
-#define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
+#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
 	do {\
-		_drawpic_imgsize = drawgetimagesize(pic);\
-		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
-		_drawpic_oldsz = _drawpic_sz = mySize;\
-		_drawpic_aspect = _drawpic_sz_x/_drawpic_sz_y;\
-		if(_drawpic_aspect > _drawpic_imgaspect) {\
-			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz_x - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
-		} else {\
-			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz_y - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, alpha, drawflag);\
+		_drawpic_imgsize = draw_getimagesize(pic);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz_x;\
+				_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
+				if(_drawpic_sz_x)\
+					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz_y;\
+				_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
+				if(_drawpic_sz_y)\
+					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
 		}\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_aspect_skin(pos,pic,sz,color,alpha,drawflag)\
+#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	do{\
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "") {\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic_aspect(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
 	} while(0)
 
 // draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_skin(pos,pic,sz,color,alpha,drawflag)\
+#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
 	do{\
 		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
 		if(precache_pic(_drawpic_picpath) == "") {\
 			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
 		}\
-		drawpic(pos, _drawpic_picpath, sz, color, alpha, drawflag);\
+		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
 		_drawpic_picpath = string_null;\
 	} while(0)
 
-void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawpic_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, alpha * (1 - fadelerp), flag);
+	drawpic_aspect_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, theAlpha * (1 - fadelerp), flag);
 }
 
-void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
-	drawpic_aspect_skin_expanding(position, pic, scale, rgb, alpha, flag, fadelerp);
-	drawpic_skin(position, pic, scale, rgb, alpha * fadelerp, flag);
+	drawpic_aspect_skin_expanding(position, pic, scale, rgb, theAlpha, flag, fadelerp);
+	drawpic_skin(position, pic, scale, rgb, theAlpha * fadelerp, flag);
 }
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors)\
+	float textaspect, oldsz;\
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz_y) / sz_y;\
+	if(sz_x/sz_y > textaspect) {\
+		oldsz = sz_x;\
+		sz_x = sz_y * textaspect;\
+		pos_x += (oldsz - sz_x) * 0.5;\
+	} else {\
+		oldsz = sz_y;\
+		sz_y = sz_x / textaspect; \
+		pos_y += (oldsz - sz_y) * 0.5;\
+	}
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
-void drawstring_aspect(vector pos, string text, vector sz, vector color, float alpha, float drawflag) {
-	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag);
-	}
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
+	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	drawstring(pos, text, '1 1 0' * sz_y, color, theAlpha, drawflag);
 }
 
 // drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
-void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float alpha, float drawflag) {
-	vector textsize;
-	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawcolorcodedstring(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawcolorcodedstring(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag);
-	}
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
+	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	drawcolorcodedstring(pos, text, '1 1 0' * sz_y, theAlpha, drawflag);
 }
 
 vector drawfontscale;
-void drawstring_expanding(vector position, string text, vector scale, vector rgb, float alpha, float flag, float fadelerp)
+void drawstring_expanding(vector position, string text, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), rgb, alpha * (1 - fadelerp), flag);
+	drawstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
@@ -570,57 +356,25 @@ void drawstring_expanding(vector position, string text, vector scale, vector rgb
 }
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
-void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float alpha, float drawflag, float fadelerp) {
-	vector textsize;
-	textsize = eX * stringwidth(text, FALSE, '1 1 1' * sz_y) + eY * sz_y;
-
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, color, alpha, drawflag, fadelerp);
-	}
+void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp) {
+	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	drawstring_expanding(pos, text, '1 1 0' * sz_y, color, theAlpha, drawflag, fadelerp);
 }
 
-void drawcolorcodedstring_expanding(vector position, string text, vector scale, float alpha, float flag, float fadelerp)
+void drawcolorcodedstring_expanding(vector position, string text, vector scale, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), alpha * (1 - fadelerp), flag);
+	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
 
-void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float alpha, float drawflag, float fadelerp) {
-	vector textsize;
-	textsize = eX * stringwidth(text, TRUE, '1 1 1' * sz_y) + eY * sz_y;
-	
-	float textaspect;
-	textaspect = textsize_x/textsize_y;
-
-	vector oldsz;
-	oldsz = sz;
-	float aspect;
-	aspect = sz_x/sz_y;
-
-	if(aspect > textaspect) {
-		sz_x = sz_y * textaspect;
-		drawcolorcodedstring_expanding(pos + eX * (oldsz_x - sz_x) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
-	} else {
-		sz_y = sz_x / textaspect; 
-		drawcolorcodedstring_expanding(pos + eY * (oldsz_y - sz_y) * 0.5, text, '1 1 0' * sz_y, alpha, drawflag, fadelerp);
-	}
+void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp) {
+	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz_y, theAlpha, drawflag, fadelerp);
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
@@ -802,3 +556,119 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 		R_EndPolygon();
 	}
 }
+
+const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
+vector getplayerorigin(float pl)
+{
+	entity e;
+
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.origin;
+
+	e = entcs_receiver[pl];
+	if(e)
+		return e.origin;
+
+	return GETPLAYERORIGIN_ERROR;
+}
+
+float getplayerisdead(float pl)
+{
+	entity e;
+	
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.csqcmodel_isdead;
+	
+	return FALSE;
+}
+
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
+	}
+}
+
+void draw_beginBoldFont()
+{
+	drawfont = FONT_USER+2;
+}
+
+void draw_endBoldFont()
+{
+	drawfont = FONT_USER+1;
+}
+
+
+#define MAX_ACCURACY_LEVELS 10
+float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
+float acc_col_loadtime;
+float acc_levels;
+string acc_color_levels;
+void Accuracy_LoadLevels()
+{
+	float i;
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		if(acc_color_levels)
+			strunzone(acc_color_levels);
+		acc_color_levels = strzone(autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	float i;
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float j, factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
+}
+

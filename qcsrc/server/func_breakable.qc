@@ -37,7 +37,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 // func_breakable
 // - basically func_assault_destructible for general gameplay use
 //
-void LaunchDebris (string debrisname, vector force) =
+void LaunchDebris (string debrisname, vector force)
 {
 	local	entity dbr;
 
@@ -65,7 +65,7 @@ void LaunchDebris (string debrisname, vector force) =
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
 	SUB_SetFade(dbr, time + self.debristime + crandom() * self.debristimejitter, self.debrisfadetime);
-};
+}
 
 void func_breakable_colormod()
 {
@@ -83,7 +83,7 @@ void func_breakable_colormod()
 
 void func_breakable_look_destroyed()
 {
-	local float floor_z;
+	float floor_z;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		self.dropped_origin = self.origin;
@@ -114,7 +114,8 @@ void func_breakable_behave_destroyed()
 {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
+	self.bot_attack = FALSE;
+	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
 }
@@ -128,8 +129,10 @@ void func_breakable_behave_restore()
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
 	self.takedamage = DAMAGE_AIM;
+	self.bot_attack = TRUE;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
+	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 }
 
@@ -161,13 +164,19 @@ void func_breakable_destroy() {
 	func_breakable_destroyed();
 
 	if(self.noise)
-		sound (self, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	if(self.dmg)
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
+
+	if(self.respawntime)
+	{
+		self.think = func_breakable_restore;
+		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+	}
 
 	oldmsg = self.message;
 	self.message = "";
@@ -231,9 +240,9 @@ void spawnfunc_func_breakable() {
 	if(self.count == 0)
 		self.count = 1;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "got too close to an explosion";
-	if(!self.message2)
+	if(self.message2 == "")
 		self.message2 = "was pushed into an explosion by";
 	if(!self.dmg_radius)
 		self.dmg_radius = 150;
@@ -259,4 +268,9 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+}
+
+// for use in maps with a "model" key set
+void spawnfunc_misc_breakablemodel() {
+	spawnfunc_func_breakable();
 }

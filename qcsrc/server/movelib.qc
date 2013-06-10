@@ -1,3 +1,4 @@
+#ifdef SVQC 
 .vector moveto;
 
 /**
@@ -161,10 +162,14 @@ void movelib_update(vector dir,float force)
 }
 */
 
+/*
 void movelib_move_simple(vector newdir,float velo,float blendrate)
 {
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
+*/
+#define movelib_move_simple(newdir,velo,blendrate) \
+    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
 
 void movelib_beak_simple(float force)
 {
@@ -183,7 +188,9 @@ void movelib_beak_simple(float force)
 Pitches and rolls the entity to match the gound.
 Yed need to set v_up and v_forward (generally by calling makevectors) before calling this.
 **/
-void movelib_groundalign4point(float spring_length, float spring_up, float blendrate)
+#endif
+
+void movelib_groundalign4point(float spring_length, float spring_up, float blendrate, float _max)
 {
     vector a, b, c, d, e, r, push_angle, ahead, side;
 
@@ -220,11 +227,11 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     r = self.origin;
     r_z = r_z;
 
-    push_angle_x = (a_z - c_z) * 45;
-    push_angle_x += (b_z - d_z) * 45;
+    push_angle_x = (a_z - c_z) * _max;
+    push_angle_x += (b_z - d_z) * _max;
 
-    push_angle_z = (b_z - a_z) * 45;
-    push_angle_z += (d_z - c_z) * 45;
+    push_angle_z = (b_z - a_z) * _max;
+    push_angle_z += (d_z - c_z) * _max;
 
     //self.angles_x += push_angle_x * 0.95;
     //self.angles_z += push_angle_z * 0.95;

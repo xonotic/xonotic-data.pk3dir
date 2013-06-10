@@ -59,6 +59,7 @@ float CallbackChain_Remove(entity cb, float() func)
 	entity e;
 	float n;
 	n = 0;
+	order = 0;
 	for(e = cb; e.cbc_next; e = e.cbc_next)
 	{
 		while(e.cbc_next.cbc_func == func)
@@ -83,7 +84,10 @@ float CallbackChain_Call(entity cb)
 	entity e;
 	r = 0;
 	for(e = cb; e.cbc_next; e = e.cbc_next)
+	{
+		CallbackChain_ReturnValue = r;
 		r |= e.cbc_next.cbc_func();
+	}
 	return r; // callbacks return an error status, so 0 is default return value
 }
 
@@ -97,7 +101,7 @@ float Mutator_Add(mutatorfunc_t func, string name)
 	{
 		if(name == loaded_mutators[i])
 			return 1; // already added
-		if(!loaded_mutators[i])
+		if not(loaded_mutators[i])
 			j = i;
 	}
 	if(j < 0)
@@ -112,8 +116,14 @@ float Mutator_Add(mutatorfunc_t func, string name)
 		// good
 		return 1;
 	}
-	backtrace("WARNING: when adding mutator: adding failed\n");
-	Mutator_Remove(func, name);
+
+	backtrace("WARNING: when adding mutator: adding failed, rolling back\n");
+
+	if(func(MUTATOR_ROLLING_BACK) != 0)
+	{
+		// baaaaad
+		error("WARNING: when adding mutator: rolling back failed");
+	}
 	return 0;
 }
 void Mutator_Remove(float(float) func, string name)

@@ -6,6 +6,7 @@ void saveAllCvars(entity root);
 void loadAllCvars(entity root);
 
 void makeMulti(entity me, string otherCvars);
+string getCvarsMulti(entity me);
 void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
 
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
@@ -22,16 +23,7 @@ string getZonedTooltipForIdentifier(string s);
 
 string resolvemod(string m);
 
-string HUD_Panel_GetSettingName(float setting);
-
-float URI_GET_DISCARD = 0;
-
-float URI_GET_UPDATENOTIFICATION = 1;
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
-
-float URI_GET_CURL = 2;
-float URI_GET_CURL_END = 9;
-void Curl_URI_Get_Callback(float id, float status, string data);
 
 void URI_Get_Callback(float id, float status, string data);
 
@@ -39,6 +31,8 @@ void URI_Get_Callback(float id, float status, string data);
 // types stay available via console)
 float GameType_GetID(float cnt);
 string GameType_GetName(float cnt);
+string GameType_GetIcon(float cnt);
+//string GameType_GetTeams(float cnt);
 float GameType_GetCount();
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname);
@@ -48,3 +42,6 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	me.TR(me); \
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
+
+string _Nex_ExtResponseSystem_BannedServers;
+float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;

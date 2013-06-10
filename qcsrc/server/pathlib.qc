@@ -214,7 +214,7 @@ float edge_show(vector point,float fsize)
 #endif
 
 var vector pathlib_movenode(vector start,vector end,float doedge);
-vector pathlib_wateroutnode(vector start,vector end)
+vector pathlib_wateroutnode(vector start,vector end,float doedge)
 {
     vector surface;
 
@@ -248,7 +248,7 @@ vector pathlib_wateroutnode(vector start,vector end)
     return end;
 }
 
-vector pathlib_swimnode(vector start,vector end)
+vector pathlib_swimnode(vector start,vector end,float doedge)
 {
     pathlib_movenode_goodnode = 0;
 
@@ -598,6 +598,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     {
         pathlib_expandnode = pathlib_expandnode_box;
         pathlib_movenode   = pathlib_swimnode;
+	doedge = 0;
     }
     else
     {
@@ -605,6 +606,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         {
             pathlib_expandnode = pathlib_expandnode_box;
             pathlib_movenode   = pathlib_swimnode;
+	    doedge = 0;
         }
         else
         {

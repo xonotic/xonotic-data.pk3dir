@@ -13,6 +13,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	if(self.flags & FL_ONGROUND)
 		sf |= 0x40;
 
+	ft = fr = 0;
 	if(self.fade_time != 0 || self.fade_rate != 0)
 	{
 		ft = (self.fade_time - time) / sys_frametime;
@@ -79,9 +80,9 @@ void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 	else
 		e.gravity = 0;
 
-	e.csqcprojectile_type = type;
 	if(!sound_allowed(MSG_BROADCAST, e))
 		type |= 0x80;
+	e.csqcprojectile_type = type;
 }
 
 void UpdateCSQCProjectile(entity e)
@@ -101,27 +102,5 @@ void UpdateCSQCProjectileAfterTeleport(entity e)
 		e.SendFlags |= 0x01;
 		// mark as teleported
 		e.SendFlags |= 0x08;
-	}
-}
-
-.void(void) csqcprojectile_oldthink;
-.float csqcprojectile_oldnextthink;
-
-void CSQCProjectile_Update_Think()
-{
-	UpdateCSQCProjectile(self);
-	self.think = self.csqcprojectile_oldthink;
-	self.nextthink = max(time, self.csqcprojectile_oldnextthink);
-}
-
-void UpdateCSQCProjectileNextFrame(entity e)
-{
-	if(e.SendEntity == CSQCProjectile_SendEntity)
-	if(e.think != CSQCProjectile_Update_Think)
-	{
-		e.csqcprojectile_oldthink = e.think;
-		e.csqcprojectile_oldnextthink = e.nextthink;
-		e.think = CSQCProjectile_Update_Think;
-		e.nextthink = time;
 	}
 }

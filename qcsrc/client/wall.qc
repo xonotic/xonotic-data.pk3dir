@@ -7,44 +7,42 @@
 void Ent_Wall_Draw()
 {
 	float f;
-	float d;
 	var .vector fld;
 
 	if(self.bgmscriptangular)
-		self.angles = self.saved;
+		fld = angles;
 	else
-		self.origin = self.saved;
+		fld = origin;
+	self.fld = self.saved;
 
 	if(self.lodmodelindex1)
 	{
-		d = autocvar_loddebug;
-		if(d > 0)
+		if(autocvar_cl_modeldetailreduction <= 0)
 		{
-			if(d == 1)
-				self.modelindex = self.lodmodelindex0;
-			else if(d == 2 || !self.lodmodelindex2)
-				self.modelindex = self.lodmodelindex1;
-			else // if(d == 3)
+			if(self.lodmodelindex2 && autocvar_cl_modeldetailreduction <= -2)
 				self.modelindex = self.lodmodelindex2;
+			else if(autocvar_cl_modeldetailreduction <= -1)
+				self.modelindex = self.lodmodelindex1;
+			else
+				self.modelindex = self.lodmodelindex0;
 		}
 		else
 		{
-			d = vlen(NearestPointOnBox(self, view_origin) - view_origin);
-			if(d < self.loddistance1)
-				self.modelindex = self.lodmodelindex0;
-			else if(!self.lodmodelindex2 || d < self.loddistance2)
+			float distance = vlen(NearestPointOnBox(self, view_origin) - view_origin);
+			f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
+			f *= 1.0 / bound(0.01, view_quality, 1);
+			if(self.lodmodelindex2 && f > self.loddistance2)
+				self.modelindex = self.lodmodelindex2;
+			else if(f > self.loddistance1)
 				self.modelindex = self.lodmodelindex1;
 			else
-				self.modelindex = self.lodmodelindex2;
+				self.modelindex = self.lodmodelindex0;
 		}
 	}
 
 	InterpolateOrigin_Do();
 
-	if(self.bgmscriptangular)
-		self.saved = self.angles;
-	else
-		self.saved = self.origin;
+	self.saved = self.fld;
 
 	f = BGMScript(self);
 	if(f >= 0)
@@ -74,13 +72,16 @@ void Ent_Wall_Remove()
 void Ent_Wall()
 {
 	float f;
+	var .vector fld;
+
 	InterpolateOrigin_Undo();
-	self.iflags = IFLAG_ANGLES;
+	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(self.bgmscriptangular)
-		self.angles = self.saved;
+		fld = angles;
 	else
-		self.origin = self.saved;
+		fld = origin;
+	self.fld = self.saved;
 
 	f = ReadByte();
 
@@ -97,6 +98,7 @@ void Ent_Wall()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(f & 4)
@@ -140,6 +142,7 @@ void Ent_Wall()
 		}
 		else
 			self.mins = self.maxs = '0 0 0';
+		setsize(self, self.mins, self.maxs);
 
 		if(self.bgmscript)
 			strunzone(self.bgmscript);
@@ -170,10 +173,7 @@ void Ent_Wall()
 
 	InterpolateOrigin_Note();
 
-	if(self.bgmscriptangular)
-		self.saved = self.angles;
-	else
-		self.saved = self.origin;
+	self.saved = self.fld;
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;

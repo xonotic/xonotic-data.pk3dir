@@ -25,6 +25,7 @@ void Image_configureImage(entity me, string path)
 void Image_draw(entity me)
 {
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
+	SUPER(Image).draw(me);
 }
 void Image_updateAspect(entity me)
 {

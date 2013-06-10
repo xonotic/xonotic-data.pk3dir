@@ -8,7 +8,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-float tooltipdb;
 void loadTooltips()
 {
 	tooltipdb = db_load(language_filename("tooltips.db"));
@@ -32,7 +31,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "")
 			return strzone(t);
 	}
-	if(prvm_language == "en" || prvm_language == "")
+	if(prvm_language == "en")
 	{
 		t = cvar_description(s);
 		if(t != "" && t != "custom cvar")
@@ -72,6 +71,12 @@ void loadAllCvars(entity root)
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
+string getCvarsMulti(entity me)
+{
+	if (me.cvarNames_Multi)
+		return me.cvarNames_Multi;
+	return string_null;
+}
 void saveCvarsMulti(entity me)
 {
 	float n, i;
@@ -250,20 +255,28 @@ void setDependentWeird(entity e, float(entity) func)
 
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
+string _Nex_ExtResponseSystem_UpdateToURL;
+string _Nex_ExtResponseSystem_Packs;
+float _Nex_ExtResponseSystem_PacksStep;
 
 void URI_Get_Callback(float id, float status, string data)
 {
-	if (id == URI_GET_DISCARD)
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
 	{
 		// discard
 	}
-	else if(id == URI_GET_UPDATENOTIFICATION)
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id == URI_GET_UPDATENOTIFICATION)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
-	}
-	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
-	{
-		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
 	{
@@ -314,63 +327,33 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			// update needed
 			if(n >= 2)
 				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
+			if(n >= 3)
+				_Nex_ExtResponseSystem_UpdateToURL = strzone(argv(2));
 		}
 
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+
+		if(n >= 4)
+		{
+			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
+			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+		}
+
+		if(n >= 5)
+		{
+			if(cvar("menu_updatecheck_getpacks"))
+			{
+				_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+				_Nex_ExtResponseSystem_PacksStep = 1;
+			}
+		}
 	}
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
-float preMenuInit()
+void updateCheck()
 {
-	vector sz;
-	vector boxA, boxB;
-
-	MapInfo_Cache_Create();
-	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
-	{
-		draw_reset_cropped();
-
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
-
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
-		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
-		boxA += sz * 0.1;
-		boxB -= sz * 0.1;
-		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
-
-		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
-		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-string campaign_name_previous;
-float campaign_won_previous;
-#ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK();
-#else
-var string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		vector fs = '48 48 0';
-		draw_CenterText('0.5 0.1 0', autocvar_menu_watermark, globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
-void preMenuDraw()
-{
-	vector fs, sz, line, mid;
-
 	if(cvar("menu_updatecheck"))
 	{
 		if(!_Nex_ExtResponseSystem_Queried)
@@ -416,21 +399,113 @@ void preMenuDraw()
 		}
 	}
 
+	if(_Nex_ExtResponseSystem_PacksStep > 0)
+	{
+		float n, i;
+		float allgood;
+		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
+		allgood = TRUE;
+		for(i = 0; i+1 < n; i += 2)
+		{
+			if(fexists(argv(i+1)))
+				continue;
+			allgood = FALSE;
+			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
+				localcmd("\ncurl --pak \"", argv(i), "\"\n");
+		}
+		if(allgood)
+		{
+			if(_Nex_ExtResponseSystem_PacksStep == 2)
+			{
+				if(!Menu_Active)
+					cvar_set("_menu_initialized", "0");
+					// HACK: cause m_hide call on next start
+				localcmd("\nmenu_restart\n");
+			}
+			_Nex_ExtResponseSystem_PacksStep = 0;
+		}
+		else
+			_Nex_ExtResponseSystem_PacksStep = 2;
+	}
+
+}
+
+float preMenuInit()
+{
+	vector sz;
+	vector boxA, boxB;
+
+	updateCheck();
+
+	MapInfo_Cache_Create();
+	MapInfo_Enumerate();
+	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	{
+		draw_reset_cropped();
+
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+
+		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
+		
+		boxA += sz * 0.1;
+		boxB -= sz * 0.1;
+		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
+
+		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
+		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
+
+		return FALSE;
+	}
+	return TRUE;
+}
+
+string campaign_name_previous;
+float campaign_won_previous;
+#ifdef WATERMARK
+var string autocvar_menu_watermark = WATERMARK;
+#else
+var string autocvar_menu_watermark = "";
+#endif
+void postMenuDraw()
+{
+	if(autocvar_menu_watermark != "")
+	{
+		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
+	}
+}
+void preMenuDraw()
+{
+	vector fs, sz = '0 0 0', line, mid;
+
+	updateCheck();
+
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
-		sz_x = draw_TextWidth("  http://www.xonotic.org/  ", 0, fs);
+		string l1, l2;
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l2 = "http://www.xonotic.org/";
+		if(_Nex_ExtResponseSystem_UpdateToURL)
+			l2 = _Nex_ExtResponseSystem_UpdateToURL;
+
+		sz_x = draw_TextWidth("    ", 0, fs) + max(
+				draw_TextWidth(l1, 0, fs),
+				draw_TextWidth(l2, 0, fs)
+			);
 		sz_y = 3 * fs_y;
 
-		draw_alpha = sin(time * 0.112 - 0.3) * 10;
+		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
 		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
-		draw_CenterText(mid - 1 * line, sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo), fs, '1 0 0', 1, 0);
-		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
+		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
+		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
@@ -464,25 +539,13 @@ string resolvemod(string m)
 		return m;
 }
 
-string HUD_Panel_GetSettingName(float theSetting)
-{
-	switch(theSetting) {
-		case HUD_MENU_ENABLE: return ""; break;
-		default: return "";
-	}
-}
-
 float updateCompression()
 {
-	float fh;
 	float have_dds, have_jpg, have_tga;
 	float can_dds;
-	if((have_dds = ((fh = fopen("dds/particles/particlefont.dds", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_jpg = ((fh = fopen("particles/particlefont.jpg", FILE_READ)) >= 0)))
-		fclose(fh);
-	if((have_tga = ((fh = fopen("particles/particlefont.tga", FILE_READ)) >= 0)))
-		fclose(fh);
+	have_dds = (fexists("dds/particles/particlefont.dds"));
+	have_jpg = (fexists("particles/particlefont.jpg"));
+	have_tga = (fexists("particles/particlefont.tga"));
 	can_dds = GL_Have_TextureCompression();
 	if(have_dds && (have_jpg || have_tga))
 	{
@@ -490,8 +553,12 @@ float updateCompression()
 		// but ONLY if we actually support it!
 		if(can_dds)
 		{
+			// these builds are meant to have GOOD quality, so let's not compress non-skinframes
 			cvar_set("gl_texturecompression", "0");
 			return 1;
+
+			//cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
+			//return 2;
 		}
 		else
 		{
@@ -528,51 +595,84 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
-	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_CTF) \
+	GAMETYPE(MAPINFO_TYPE_CA) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
+	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return id;
+	
+	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+
+	unused_float = i;
+	
 	return 0;
 }
-string GameType_GetName(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return name;
-	GAMETYPES
-#undef GAMETYPE
-	return _("@!#%'n Tuba Throwing");
-}
+
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) ++i;
+	
+	#define GAMETYPE(id) ++i;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return i;
 }
+
+string GameType_GetName(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return MapInfo_Type_ToText(i);
+	
+	return "";
+}
+
+string GameType_GetIcon(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return strcat("gametype_", MapInfo_Type_ToString(i));
+	
+	return "";
+}
+
+/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
+{
+	float i = GameType_GetID(cnt);
+	string s = _MapInfo_GetDefaultEx(i);
+	
+	if(i)
+	{
+		if(strstrofs(s, "teams", 0) >= 0)
+			return _("teamplay");
+		else
+			return _("free for all");
+	}
+	
+	return _("tuba for all");
+}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {

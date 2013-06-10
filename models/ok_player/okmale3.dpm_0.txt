@@ -1,0 +1,7 @@
+name overkillmale3
+species human
+sex Male
+weight 105
+age 28
+
+overkill solider

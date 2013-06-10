@@ -172,8 +172,8 @@ vector steerlib_dodge(vector point,vector dodge_dir,float min_distance)
 vector steerlib_flock(float radius, float standoff,float separation_force,float flock_force)
 {
     entity flock_member;
-    vector push,pull;
-    float ccount;
+    vector push = '0 0 0', pull = '0 0 0';
+    float ccount = 0;
 
     flock_member = findradius(self.origin,radius);
     while(flock_member)
@@ -198,8 +198,8 @@ vector steerlib_flock(float radius, float standoff,float separation_force,float 
 vector steerlib_flock2d(float radius, float standoff,float separation_force,float flock_force)
 {
     entity flock_member;
-    vector push,pull;
-    float ccount;
+    vector push = '0 0 0', pull = '0 0 0';
+    float ccount = 0;
 
     flock_member = findradius(self.origin,radius);
     while(flock_member)
@@ -229,8 +229,8 @@ vector steerlib_flock2d(float radius, float standoff,float separation_force,floa
 vector steerlib_swarm(float radius, float standoff,float separation_force,float swarm_force)
 {
     entity swarm_member;
-    vector force,center;
-    float ccount;
+    vector force = '0 0 0', center = '0 0 0';
+    float ccount = 0;
 
     swarm_member = findradius(self.origin,radius);
 
@@ -424,7 +424,7 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
     vr = vectoangles(dir);
     //vr_x *= -1;
 
-    tracebox(self.origin , self.mins,self.maxs,self.origin +  (dir * length) ,MOVE_NOMONSTERS,self);
+    tracebox(self.origin + '0 0 1' * step_up, self.mins, self.maxs, ('0 0 1' * step_up) + self.origin +  (dir * length), MOVE_NOMONSTERS, self);
     if(trace_fraction == 1.0)
     {
         //te_lightning1(self,self.origin,self.origin +  (dir * length));
@@ -493,8 +493,6 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
 #ifdef TLIBS_TETSLIBS
 void flocker_die()
 {
-	sound (self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-
 	pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     self.owner.cnt += 1;

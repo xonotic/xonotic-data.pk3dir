@@ -19,6 +19,8 @@
  *     server IP that registered the ban
  */
 
+#define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
+
 float Ban_Insert(string ip, float bantime, string reason, float dosync);
 
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
@@ -317,17 +319,27 @@ void Ban_LoadBans()
 
 void Ban_View()
 {
-	float i;
+	float i, n;
 	string msg;
+	
+	print("^2Listing all existing active bans:\n");
+	
+	n = 0;
 	for(i = 0; i < ban_count; ++i)
 	{
 		if(time > ban_expire[i])
 			continue;
+			
+		++n; // total number of existing bans
+			
 		msg = strcat("#", ftos(i), ": ");
 		msg = strcat(msg, ban_ip[i], " is still banned for ");
 		msg = strcat(msg, ftos(ban_expire[i] - time), " seconds");
-		print(msg, "\n");
+		
+		print("  ", msg, "\n");
 	}
+	
+	print("^2Done listing all active (", ftos(n), ") bans.\n");
 }
 
 float Ban_GetClientIP(entity client)
@@ -419,8 +431,12 @@ float Ban_IsClientBanned(entity client, float idx)
 		if(ban_idfp == s) return TRUE;
 	}
 	if(ipbanned)
-		if(!autocvar_g_banned_list_idmode || !ban_idfp)
+	{
+		if(!autocvar_g_banned_list_idmode)
 			return TRUE;
+		if not(ban_idfp)
+			return TRUE;
+	}
 	return FALSE;
 }
 
@@ -435,6 +451,15 @@ float Ban_MaybeEnforceBan(entity client)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+.float ban_checked;
+float Ban_MaybeEnforceBanOnce(entity client)
+{
+	if(client.ban_checked)
+		return FALSE;
+	client.ban_checked = TRUE;
+	return Ban_MaybeEnforceBan(self);
 }
 
 string Ban_Enforce(float i, string reason)
@@ -455,7 +480,7 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, e.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netname, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
 			dropclient(e);
 		}
 	bprint(s);
@@ -542,111 +567,43 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
 {
+	string ip, id;
 	if(!Ban_GetClientIP(client))
 	{
 		sprint(client, strcat("Kickbanned: ", reason, "\n"));
 		dropclient(client);
 		return;
 	}
-	// now ban him
+
+	// who to ban?
 	switch(masksize)
 	{
 		case 1:
-			Ban_Insert(ban_ip1, bantime, reason, 1);
+			ip = strcat1(ban_ip1);
 			break;
 		case 2:
-			Ban_Insert(ban_ip2, bantime, reason, 1);
+			ip = strcat1(ban_ip2);
 			break;
 		case 3:
-			Ban_Insert(ban_ip3, bantime, reason, 1);
+			ip = strcat1(ban_ip3);
 			break;
 		case 4:
 		default:
-			Ban_Insert(ban_ip4, bantime, reason, 1);
+			ip = strcat1(ban_ip4);
 			break;
 	}
 	if(ban_idfp)
-		Ban_Insert(ban_idfp, bantime, reason, 1);
+		id = strcat1(ban_idfp);
+	else
+		id = string_null;
+
+	Ban_Insert(ip, bantime, reason, 1);
+	if(id)
+		Ban_Insert(id, bantime, reason, 1);
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him
 	sprint(client, strcat("Kickbanned: ", reason, "\n"));
 	dropclient(client);
 	 */
-}
-
-float GameCommand_Ban(string command)
-{
-	float argc;
-	float bantime;
-	entity client;
-	float entno;
-	float masksize;
-	string reason;
-	float reasonarg;
-
-	argc = tokenize_console(command);
-	if(argv(0) == "help")
-	{
-		print("  kickban # n m p reason - kickban player n for m seconds, using mask size p (1 to 4)\n");
-		print("  ban ip m reason - ban an IP or range (incomplete IP, like 1.2.3) for m seconds\n");
-		print("  bans - list all existing bans\n");
-		print("  unban n - delete the entry #n from the bans list\n");
-		return TRUE;
-	}
-	if(argv(0) == "kickban")
-	{
-#define INITARG(c) reasonarg = c
-#define GETARG(v,d) if((argc > reasonarg) && ((v = stof(argv(reasonarg))) != 0)) ++reasonarg; else v = d
-#define RESTARG(v) if(argc > reasonarg) v = substring(command, argv_start_index(reasonarg), strlen(command) - argv_start_index(reasonarg)); else v = ""
-		if(argc >= 3)
-		{
-			entno = stof(argv(2));
-			if(entno > maxclients || entno < 1)
-				return TRUE;
-			client = edict_num(entno);
-
-			INITARG(3);
-			GETARG(bantime, autocvar_g_ban_default_bantime);
-			GETARG(masksize, autocvar_g_ban_default_masksize);
-			RESTARG(reason);
-
-			Ban_KickBanClient(client, bantime, masksize, reason);
-			return TRUE;
-		}
-	}
-	else if(argv(0) == "ban")
-	{
-		if(argc >= 2)
-		{
-			string ip;
-			ip = argv(1);
-
-			INITARG(2);
-			GETARG(bantime, autocvar_g_ban_default_bantime);
-			RESTARG(reason);
-
-			Ban_Insert(ip, bantime, reason, 1);
-			return TRUE;
-		}
-#undef INITARG
-#undef GETARG
-#undef RESTARG
-	}
-	else if(argv(0) == "bans")
-	{
-		Ban_View();
-		return TRUE;
-	}
-	else if(argv(0) == "unban")
-	{
-		if(argc >= 2)
-		{
-			float who;
-			who = stof(argv(1));
-			Ban_Delete(who);
-			return TRUE;
-		}
-	}
-	return FALSE;
 }

@@ -45,7 +45,7 @@ vector shortangle_v(vector ang1, vector ang2)
 
 vector shortangle_vxy(vector ang1, vector ang2)
 {
-    vector vtmp;
+    vector vtmp = '0 0 0';
 
     vtmp_x = shortangle_f(ang1_x,ang2_x);
     vtmp_y = shortangle_f(ang1_y,ang2_y);
@@ -60,7 +60,7 @@ vector shortangle_vxy(vector ang1, vector ang2)
 vector real_origin(entity ent)
 {
     entity e;
-    vector v;
+    vector v = ((ent.absmin + ent.absmax) * 0.5);
 
     e = ent.tag_entity;
     while(e)
@@ -68,7 +68,7 @@ vector real_origin(entity ent)
         v = v + ((e.absmin + e.absmax) * 0.5);
         e = e.tag_entity;
     }
-    v = v + ((ent.absmin + ent.absmax) * 0.5);
+
     return v;
 }
 
@@ -113,7 +113,8 @@ vector angleofs3(vector from, vector from_a, entity to)
 * Update self.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
-float turret_tag_fire_update()
+#define turret_tag_fire_update() self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));v_forward = normalize(v_forward)
+float turret_tag_fire_update_s()
 {
     if(!self.tur_head)
     {
@@ -135,8 +136,8 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
                   float bforce, float f_dmg, float f_velfactor, float deathtype)
 
 {
-    local vector hitloc, force, endpoint, dir;
-    local entity ent;
+    vector hitloc, force, endpoint, dir;
+    entity ent;
 
     dir = normalize(end - start);
     force = dir * bforce;
@@ -221,34 +222,6 @@ void turrets_precache_debug_models()
 
 void turrets_precash()
 {
-    precache_model ("models/turrets/base-gib1.md3");
-    precache_model ("models/turrets/base-gib2.md3");
-    precache_model ("models/turrets/base-gib3.md3");
-    precache_model ("models/turrets/base-gib4.md3");
-
-    precache_model ("models/turrets/head-gib1.md3");
-    precache_model ("models/turrets/head-gib2.md3");
-    precache_model ("models/turrets/head-gib3.md3");
-    precache_model ("models/turrets/head-gib4.md3");
-    precache_model ("models/turrets/terrainbase.md3");
-
-    //precache_model ("models/turrets/base.md3");
-    //precache_model ("models/turrets/flac.md3");
-    //precache_model ("models/turrets/pd_proj.md3");
-    //precache_model ("models/turrets/reactor.md3");
-    //precache_model ("models/turrets/mlrs_rocket.md3");
-    //precache_model ("models/turrets/hellion.md3");
-    //precache_model ("models/turrets/hunter2.md3");
-    //precache_model ("models/turrets/hk.md3");
-    //precache_model ("models/turrets/machinegun.md3");
-    //precache_model ("models/turrets/rocket.md3");
-    //precache_model ("models/turrets/mlrs.md3");
-    //precache_model ("models/turrets/phaser.md3");
-    //precache_model ("models/turrets/phaser_beam.md3");
-    //precache_model ("models/turrets/plasmad.md3");
-    //precache_model ("models/turrets/plasma.md3");
-    //precache_model ("models/turrets/tesla_head.md3");
-    //precache_model ("models/turrets/tesla_base.md3");
     #ifdef TURRET_DEBUG
 	turrets_precache_debug_models();
 	#endif

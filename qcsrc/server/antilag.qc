@@ -3,17 +3,18 @@
 .float antilag_times[ANTILAG_MAX_ORIGINS];
 .float antilag_index;
 .vector antilag_saved_origin;
+.float antilag_takenback;
 
 .float antilag_debug;
 
-void antilag_dummy()
-{
-	self.antilag_times = 0;
-	self.antilag_origins = '0 0 0';
-}
-
 void antilag_record(entity e, float t)
 {
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+        
+    if(e.vehicle)
+        antilag_record(e.vehicle, t);
+
 	if(time < e.(antilag_times[e.antilag_index]))
 		return;
 	e.antilag_index = e.antilag_index + 1;
@@ -24,6 +25,7 @@ void antilag_record(entity e, float t)
 
 	if(e.antilag_debug)
 		te_spark(antilag_takebackorigin(e, t - e.antilag_debug), '0 0 0', 32);
+
 }
 
 // finds the index BEFORE t
@@ -61,9 +63,11 @@ vector antilag_takebackorigin(entity e, float t)
 	i0 = antilag_find(e, t);
 	if(i0 < 0)
 	{
-		i0 = e.antilag_index - 1;
-		if(i0 < 0)
-			i0 = ANTILAG_MAX_ORIGINS - 1;
+		// IN THE PRESENT
+		if(e.antilag_takenback)
+			return e.antilag_saved_origin;
+		else
+			return e.origin;
 	}
 	i1 = i0 + 1;
 	if(i1 >= ANTILAG_MAX_ORIGINS)
@@ -75,6 +79,7 @@ vector antilag_takebackorigin(entity e, float t)
 vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 {
 	vector o0, o1;
+
 	if(t0 >= t1)
 		return '0 0 0';
 	o0 = antilag_takebackorigin(e, t0);
@@ -84,11 +89,44 @@ vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 
 void antilag_takeback(entity e, float t)
 {
-	e.antilag_saved_origin = e.origin;
+
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+
+	if(e.vehicle)
+		antilag_takeback(e.vehicle, t);
+
+	if(!e.antilag_takenback)
+		e.antilag_saved_origin = e.origin;
+
 	setorigin(e, antilag_takebackorigin(e, t));
+	e.antilag_takenback = TRUE;
 }
 
 void antilag_restore(entity e)
 {
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+
+	if(e.vehicle)
+		antilag_restore(e.vehicle);
+
+	if(!e.antilag_takenback)
+		return;
+
 	setorigin(e, e.antilag_saved_origin);
+	e.antilag_takenback = FALSE;
+}
+
+void antilag_clear(entity e)
+{
+	float i;
+
+	antilag_restore(e);
+	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
+	{
+		e.(antilag_times[i]) = -2342;
+		e.(antilag_origins[i]) = e.origin;
+	}
+	e.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
 }

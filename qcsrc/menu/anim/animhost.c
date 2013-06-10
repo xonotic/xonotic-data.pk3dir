@@ -29,8 +29,7 @@ void AnimHost_addAnim(entity me, entity other)
 
 	other.parent = me;
 
-	entity f, l;
-	f = me.firstChild;
+	entity l;
 	l = me.lastChild;
 
 	if(l)
@@ -50,9 +49,7 @@ void AnimHost_removeAnim(entity me, entity other)
 
 	other.parent = NULL;
 
-	entity n, p, f, l;
-	f = me.firstChild;
-	l = me.lastChild;
+	entity n, p;
 	n = other.nextSibling;
 	p = other.prevSibling;
 

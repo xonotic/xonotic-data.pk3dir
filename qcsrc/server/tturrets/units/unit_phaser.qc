@@ -40,7 +40,7 @@ void beam_think()
         self.owner.attack_finished_single = time + self.owner.shot_refire;
         self.owner.fireflag = 2;
         self.owner.tur_head.frame = 10;
-        sound (self, CHAN_PROJECTILE, "", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
         remove(self);
         return;
     }
@@ -50,7 +50,7 @@ void beam_think()
     if (time - self.shot_spread > 0)
     {
         self.shot_spread = time + 2;
-        sound (self, CHAN_VOICE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
     }
 
 
@@ -60,7 +60,6 @@ void beam_think()
     entity oldself;
     oldself = self;
     self = self.owner;
-    //w_deathtypestring = "was phased out of existence";
     FireImoBeam (   self.tur_shotorg,
                     self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
                     '-1 -1 -1' * self.shot_radius,
@@ -68,7 +67,7 @@ void beam_think()
                     self.shot_force,
                     oldself.shot_dmg,
                     0.75,
-                    DEATH_TURRET);
+                    DEATH_TURRET_PHASER);
     self = oldself;
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 
@@ -94,7 +93,7 @@ void turret_phaser_attack()
     beam.enemy = self.enemy;
     beam.bot_dodge = TRUE;
     beam.bot_dodgerating = beam.shot_dmg;
-    sound (beam, CHAN_PROJECTILE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+    sound (beam, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
     self.fireflag = 1;
 
     beam.attack_finished_single = self.attack_finished_single;
@@ -102,7 +101,7 @@ void turret_phaser_attack()
 
     setattachment(beam,self.tur_head,"tag_fire");
 
-    soundat (self, trace_endpos, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+    soundat (self, trace_endpos, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
@@ -116,14 +115,11 @@ void turret_phaser_dinit()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.aim_flags = TFL_AIM_LEAD;
 
-    if (turret_stdproc_init("phaser_std",0,"models/turrets/base.md3","models/turrets/phaser.md3") == 0)
+    if (turret_stdproc_init("phaser_std", "models/turrets/base.md3","models/turrets/phaser.md3", TID_PHASER) == 0)
     {
         remove(self);
         return;
     }
-
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
 
     self.turret_firecheckfunc = turret_phaser_firecheck;
     self.turret_firefunc  = turret_phaser_attack;

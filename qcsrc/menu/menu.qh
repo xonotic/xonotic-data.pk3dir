@@ -26,9 +26,6 @@ entity main;
 void m_hide();
 void m_display();
 void m_goto(string name);
-void m_goto_skin_selector();
-void m_goto_language_selector();
-void m_goto_video_settings();
 .string name;
 
 entity keyGrabber;
@@ -36,8 +33,8 @@ entity keyGrabber;
 
 float conwidth, conheight; // "virtual" conwidth/height values for other stuff to assume for scaling
 
-void SUB_Null();
-
 float preMenuInit(); // you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded.
 void preMenuDraw(); // this is run before the menu is drawn. You may put some stuff there that has to be done every frame.
 void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
+
+void m_sync();
