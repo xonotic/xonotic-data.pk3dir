@@ -29,7 +29,7 @@ void W_Fireball_Explode (void)
 
 	// 1. dist damage
 	d = (self.realowner.health + self.realowner.armorvalue);
-	RadiusDamage (self, self.realowner, autocvar_g_balance_fireball_primary_damage, autocvar_g_balance_fireball_primary_edgedamage, autocvar_g_balance_fireball_primary_radius, world, autocvar_g_balance_fireball_primary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_fireball_primary_damage, autocvar_g_balance_fireball_primary_edgedamage, autocvar_g_balance_fireball_primary_radius, world, world, autocvar_g_balance_fireball_primary_force, self.projectiledeathtype, other);
 	if(self.realowner.health + self.realowner.armorvalue >= d)
 	if(!self.cnt)
 	{

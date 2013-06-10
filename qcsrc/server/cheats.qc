@@ -264,7 +264,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
 			print("404 Sportsmanship not found.\n");

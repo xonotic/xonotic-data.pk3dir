@@ -143,7 +143,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
-		//RadiusDamage (explosion, self, 10, 0, 50, world, 300, deathtype);
+		//RadiusDamage (explosion, self, 10, 0, 50, world, world, 300, deathtype);
 
 		ent.railgunhitloc = '0 0 0';
 		ent.railgunhitsolidbackup = SOLID_NOT;

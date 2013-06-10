@@ -78,7 +78,6 @@ portals.qh
 g_hook.qh
 w_electro.qh
 w_lightning.qh
-w_laser.qh
 
 scores.qh
 

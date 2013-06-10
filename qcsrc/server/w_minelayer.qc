@@ -81,7 +81,7 @@ void W_Mine_Explode ()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
 
 	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
@@ -108,7 +108,7 @@ void W_Mine_DoRemoteExplode ()
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		self.velocity = self.mine_orientation; // particle fx and decals need .velocity
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
 	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{

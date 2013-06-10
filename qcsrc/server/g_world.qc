@@ -656,7 +656,6 @@ void spawnfunc_worldspawn (void)
 	GrappleHookInit();
 	LightningInit();
 	ElectroInit();
-	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;

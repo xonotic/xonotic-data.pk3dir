@@ -30,7 +30,7 @@ void W_Grenade_Explode (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_primary_damage, autocvar_g_balance_grenadelauncher_primary_edgedamage, autocvar_g_balance_grenadelauncher_primary_radius, world, autocvar_g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_primary_damage, autocvar_g_balance_grenadelauncher_primary_edgedamage, autocvar_g_balance_grenadelauncher_primary_radius, world, world, autocvar_g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -50,7 +50,7 @@ void W_Grenade_Explode2 (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_secondary_damage, autocvar_g_balance_grenadelauncher_secondary_edgedamage, autocvar_g_balance_grenadelauncher_secondary_radius, world, autocvar_g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_secondary_damage, autocvar_g_balance_grenadelauncher_secondary_edgedamage, autocvar_g_balance_grenadelauncher_secondary_radius, world, world, autocvar_g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

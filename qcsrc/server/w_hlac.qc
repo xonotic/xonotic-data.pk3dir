@@ -20,9 +20,9 @@ void W_HLAC_Touch (void)
 	self.event_damage = func_null;
 	
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
-		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

@@ -38,7 +38,7 @@ void W_Rocket_Explode ()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
 
 	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
@@ -59,7 +59,7 @@ void W_Rocket_DoRemoteExplode ()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
 	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{

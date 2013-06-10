@@ -877,7 +877,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
 		case ENT_CLIENT_ELECTRO_BEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_ELECTRO_BEAM); break;
 		case ENT_CLIENT_LIGHTNING_BEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LIGHTNING_BEAM); break;
-		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
@@ -1021,10 +1020,6 @@ void Ent_Init()
 	lightning_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	lightning_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	lightning_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1308,6 +1303,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
+			bHandled = true;
+			break;
+		case TE_CSQC_SHOCKWAVEPARTICLE:
+			Net_ReadShockwaveParticle();
 			bHandled = true;
 			break;
 		default:

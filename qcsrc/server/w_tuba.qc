@@ -327,7 +327,7 @@ void W_Tuba_NoteOn(float hittype)
 	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
 
 	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
+	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
 
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)

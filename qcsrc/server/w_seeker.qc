@@ -23,7 +23,8 @@ REGISTER_WEAPON(
 void Seeker_Missile_Explode ()
 {
 	self.event_damage = func_null;
-	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_missile_damage, autocvar_g_balance_seeker_missile_edgedamage, autocvar_g_balance_seeker_missile_radius, world, autocvar_g_balance_seeker_missile_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_missile_damage, autocvar_g_balance_seeker_missile_edgedamage, autocvar_g_balance_seeker_missile_radius, world, world, autocvar_g_balance_seeker_missile_force, self.projectiledeathtype, other);
+
 
 	remove (self);
 }
@@ -235,7 +236,7 @@ void Seeker_Flac_Explode ()
 {
 	self.event_damage = func_null;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
