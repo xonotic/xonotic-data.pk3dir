@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", _("Grappling Hook"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HOOK,
+/* function  */ w_hook,
+/* ammotype  */ IT_CELLS|IT_FUEL,
+/* impulse   */ 0,
+/* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ 0,
+/* model     */ "hookgun",
+/* shortname */ "hook",
+/* fullname  */ _("Grappling Hook")
+);
 #else
 #ifdef SVQC
 .float dmg;
@@ -35,8 +45,8 @@ void W_Hook_ExplodeThink (void)
 
 void W_Hook_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
-	self.touch = SUB_Null;
+	self.event_damage = func_null;
+	self.touch = func_null;
 	self.effects |= EF_NODRAW;
 
 	self.think = W_Hook_ExplodeThink;
@@ -265,6 +275,14 @@ float w_hook(float req)
 	{
 		self.hook_refire = time;
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return FALSE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_HOOK_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -283,10 +301,6 @@ float w_hook(float req)
 	{
 		precache_sound("weapons/hookbomb_impact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was caught in %s's hook gravity bomb");
 	return TRUE;
 }
 #endif

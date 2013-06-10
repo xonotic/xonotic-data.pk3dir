@@ -37,6 +37,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
 	grav = autocvar_sv_gravity;
+	if(other.gravity)
+		grav *= other.gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -164,7 +166,7 @@ void trigger_push_touch()
 
 	other.flags &~= FL_ONGROUND;
 
-	if (other.classname == "player")
+	if (IS_PLAYER(other))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
@@ -176,9 +178,7 @@ void trigger_push_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		float ct;
-		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
+		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
 			float i;
 			float found;
@@ -192,7 +192,7 @@ void trigger_push_touch()
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
-			if(ct == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(other))
 			{
 				if(self.message)
 					centerprint(other, self.message);
@@ -200,14 +200,8 @@ void trigger_push_touch()
 			else
 				other.lastteleporttime = time;
 
-			if (!other.animstate_override)
 			if (other.deadflag == DEAD_NO)
-			{
-				if (other.crouch)
-					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
-				else
-					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
-			}
+				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
 		}
 		else
 			other.jumppadcount = TRUE;
@@ -246,7 +240,7 @@ void trigger_push_touch()
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}

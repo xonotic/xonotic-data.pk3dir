@@ -93,7 +93,7 @@ void raptor_bomblet_boom()
     RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, world, world,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_RAPTOR_BOMB, world);
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB, world);
     remove(self);
 }
 
@@ -124,7 +124,7 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, 0, self);
+    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT, 0, self);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
@@ -185,7 +185,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
+                           DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
 }
 
 void raptor_think()
@@ -691,7 +691,7 @@ void raptor_blowup()
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_WAKIBLOWUP, world);
+    RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_RAPT_DEATH, world);
 
     self.alpha          = -1;
     self.movetype       = MOVETYPE_NONE;
@@ -701,7 +701,7 @@ void raptor_blowup()
     self.velocity       = '0 0 0';
 
     setorigin(self, self.pos1);
-    self.touch = SUB_Null;
+    self.touch = func_null;
     self.nextthink = 0;
 }
 
@@ -721,7 +721,7 @@ void raptor_diethink()
 void raptor_die()
 {
     self.health       = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = func_null;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;

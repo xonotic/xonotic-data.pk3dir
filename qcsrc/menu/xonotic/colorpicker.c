@@ -53,7 +53,7 @@ vector hslimage_color(vector v, vector margin)
 
 vector color_hslimage(vector v, vector margin)
 {
-	vector pos;
+	vector pos = '0 0 0';
 	v = rgb_to_hsl(v);
 	if (v_y)
 	{

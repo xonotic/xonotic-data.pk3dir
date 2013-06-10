@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(LASER, W_Laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", _("Blaster"))
+REGISTER_WEAPON(
+/* WEP_##id  */ LASER,
+/* function  */ w_laser,
+/* ammotype  */ 0,
+/* impulse   */ 1,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ 0,
+/* model     */ "laser",
+/* shortname */ "laser",
+/* fullname  */ _("Blaster")
+);
 #else
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
@@ -28,10 +38,11 @@ void W_Laser_Touch()
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	
 	if(self.dmg)
 		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
+
 	else
 		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
 
@@ -135,11 +146,11 @@ void W_Laser_Shockwave()
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
-	float final_damage, final_spread;
+	float final_damage; //, final_spread;
 	vector final_force, center, vel;
 	entity head, next;
 
-	float i, queue;
+	float i, queue = 0;
 	
 	// set up the shot direction
 	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_shockwave_damage);
@@ -148,7 +159,7 @@ void W_Laser_Shockwave()
 	vector attack_hitpos = trace_endpos;
 	float distance_to_end = vlen(w_shotorg - attack_endpos);
 	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
-	entity transform = WarpZone_trace_transform;
+	//entity transform = WarpZone_trace_transform;
 
 	// do the firing effect now
 	SendCSQCShockwaveParticle(attack_endpos);
@@ -256,8 +267,8 @@ void W_Laser_Shockwave()
 		print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
 		shockwave_hit[i] = world;
-		shockwave_hit_force = '0 0 0';
-		shockwave_hit_damage = 0;
+		shockwave_hit_force[i] = '0 0 0';
+		shockwave_hit_damage[i] = 0;
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
 }
@@ -373,19 +384,13 @@ void W_Laser_Attack(float issecondary)
 	entity missile;
 	vector s_forward;
 	float a;
-	float nodamage;
-
-	if(issecondary == 2) // minstanex shot
-		nodamage = g_minstagib;
-	else
-		nodamage = FALSE;
 
 	a = autocvar_g_balance_laser_primary_shotangle;
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
-	if(nodamage)
-		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
-	else if(issecondary == 1)
+	//if(nodamage)
+	//	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
+	/*else*/if(issecondary == 1)
 		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage);
 	else
 		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
@@ -395,11 +400,8 @@ void W_Laser_Attack(float issecondary)
 	missile.owner = missile.realowner = self;
 	missile.classname = "laserbolt";
 	missile.dmg = 0;
-	if(!nodamage)
-	{
-		missile.bot_dodge = TRUE;
-		missile.bot_dodgerating = autocvar_g_balance_laser_primary_damage;
-	}
+	missile.bot_dodge = TRUE;
+	missile.bot_dodgerating = autocvar_g_balance_laser_primary_damage;
 
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_LASER;
@@ -533,6 +535,16 @@ float W_Laser(float request)
 			W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 			return TRUE;
 		}
+		
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_LASER_SUICIDE;
+		}
+		
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_LASER_MURDER;
+		}
 	}
 	
 	return TRUE;
@@ -555,19 +567,6 @@ float W_Laser(float request)
 		case WR_PRECACHE:
 		{
 			precache_sound("weapons/laserimpact.wav");
-			return TRUE;
-		}
-		case WR_SUICIDEMESSAGE:
-		{
-			w_deathtypestring = _("%s lasered themself to hell");
-			return TRUE;
-		}
-		case WR_KILLMESSAGE:
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH // TODO 
-			else
-				w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
 			return TRUE;
 		}
 	}

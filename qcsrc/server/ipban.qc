@@ -431,8 +431,12 @@ float Ban_IsClientBanned(entity client, float idx)
 		if(ban_idfp == s) return TRUE;
 	}
 	if(ipbanned)
-		if(!autocvar_g_banned_list_idmode || !ban_idfp)
+	{
+		if(!autocvar_g_banned_list_idmode)
 			return TRUE;
+		if not(ban_idfp)
+			return TRUE;
+	}
 	return FALSE;
 }
 

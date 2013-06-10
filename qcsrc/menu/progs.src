@@ -1,7 +1,9 @@
 ../../menu.dat
 
+sys-pre.qh
 ../dpdefs/menudefs.qc
 ../dpdefs/keycodes.qc
+sys-post.qh
 
 config.qh
 ../common/util-pre.qh
@@ -11,10 +13,12 @@ config.qh
 
 oo/base.h
 
+../common/teams.qh
 ../common/constants.qh
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/counting.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh

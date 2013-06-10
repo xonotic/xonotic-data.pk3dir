@@ -15,7 +15,7 @@ void sv_notice_join_think()
 void sv_notice_join()
 {
     // to-do: make sv_join_notices support per-entry times
-    if(!autocvar_sv_join_notices || autocvar_sv_join_notices == "")      
+    if(autocvar_sv_join_notices == "")
         return;
 
     entity n = spawn();
@@ -72,7 +72,7 @@ float cl_notice_run()
     #define M1 30
     #define M2 10
     
-    vector v1, v2, v3;
+    vector v1, v2 = '0 0 0', v3;
     v1 = '1 1 0' * M1;
     v2_x = vid_conwidth - (2 * M1);
     v2_y = vid_conheight - (2 * M1);

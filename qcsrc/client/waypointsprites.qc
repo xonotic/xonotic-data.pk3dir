@@ -256,6 +256,7 @@ string spritelookuptext(string s)
 		case "as-defend": return _("Defend");
 		case "bluebase": return _("Blue base");
 		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
 		case "helpme": return _("Help me!");
@@ -422,7 +423,7 @@ void Draw_WaypointSprite()
 				spriteimage = self.netname;
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if(t == COLOR_SPECTATOR + 1)
+			if(t == NUM_SPECTATOR + 1)
 				spriteimage = self.netname3;
 			else if(self.team == t)
 				spriteimage = self.netname2;
@@ -655,6 +656,7 @@ void Ent_WaypointSprite()
 	self.draw2d = Draw_WaypointSprite;
 
 	InterpolateOrigin_Undo();
+	self.iflags |= IFLAG_ORIGIN;
 
 	if(sendflags & 0x80)
 	{
@@ -687,6 +689,7 @@ void Ent_WaypointSprite()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(sendflags & 1)

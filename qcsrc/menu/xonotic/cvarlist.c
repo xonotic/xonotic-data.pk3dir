@@ -166,7 +166,10 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 		return 1;
 	}
 	else if(scan == K_ENTER)
+	{
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
+		return 1;
+	}
 	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
 	else if(!me.controlledTextbox)

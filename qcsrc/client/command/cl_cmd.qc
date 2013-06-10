@@ -57,6 +57,45 @@ void LocalCommand_blurtest(float request)
 	#endif
 }
 
+void LocalCommand_create_scrshot_ent(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float fh;
+			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
+			fh = fopen(filename, FILE_WRITE);
+			
+			if(fh >= 0)
+			{
+				fputs(fh, "{\n");
+				fputs(fh, strcat("\"classname\" \"info_autoscreenshot\"\n"));
+				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin_x), " ", ftos(view_origin_y), " ", ftos(view_origin_z)), "\"\n"));
+				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles_x), " ", ftos(view_angles_y), " ", ftos(view_angles_z)), "\"\n"));
+				fputs(fh, "}\n");
+				
+				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
+				
+				fclose(fh);
+			}
+			else
+			{
+				print("^1Error: ^7Could not dump to file!\n");
+			}
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd create_scrshot_ent\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void LocalCommand_debugmodel(float request, float argc)
 {
 	switch(request)
@@ -175,7 +214,10 @@ void LocalCommand_hud(float request, float argc)
 				
 				case "radar":
 				{
-					hud_panel_radar_maximized = (argv(2) ? InterpretBoolean(argv(2)) : !hud_panel_radar_maximized);
+					if(argv(2))
+						hud_panel_radar_maximized = InterpretBoolean(argv(2));
+					else
+						hud_panel_radar_maximized = !hud_panel_radar_maximized;
 					return;
 				}
 			}
@@ -307,17 +349,15 @@ void LocalCommand_(float request)
 // ==================================
 
 // Normally do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// but for 0.5 compat, we need vyes and vno here as they were replaced... REMOVE THEM AFTER 0.6 RELEASE!!!!
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", LocalCommand_blurtest(request), "Feature for testing blur postprocessing") \
+	CLIENT_COMMAND("create_scrshot_ent", LocalCommand_create_scrshot_ent(request), "Create an entity at this location for automatic screenshots") \
 	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("vyes", LocalCommand_handlevote(request, tokenize_console("handlevote yes")), "") \
-	CLIENT_COMMAND("vno", LocalCommand_handlevote(request, tokenize_console("handlevote no")), "") \
 	/* nothing */
 	
 void LocalCommand_macro_help()

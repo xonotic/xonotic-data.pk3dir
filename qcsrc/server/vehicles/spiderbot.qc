@@ -210,7 +210,7 @@ void spiderbot_rocket_do()
 {
 
     vector v;
-    entity rocket;
+    entity rocket = world;
 
     if (self.wait != -10)
     {        
@@ -257,7 +257,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             crosshair_trace(self.owner);
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
@@ -271,7 +271,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE, self.owner);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE, self.owner);
             crosshair_trace(self.owner);
             rocket.pos1       = trace_endpos;
             rocket.nextthink  = time;
@@ -283,10 +283,9 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             
             crosshair_trace(self.owner);
-            vector _ct_end = trace_endpos + trace_plane_normal;
             
             rocket.pos1       = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z       = trace_endpos_z;
@@ -496,14 +495,15 @@ float spiderbot_frame()
             v_forward = normalize(v_forward);
             v += v_forward * 50;
 
-//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 
             fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
-                                5, autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_SBMINIGUN, 0, 1, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
+                                5, autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0, 1, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
+
             endFireBallisticBullet();
 
 //            fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
-//                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
+//                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_VH_SPID_MINIGUN, 0);
 
             sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
             //trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -723,7 +723,7 @@ void spiderbot_blowup()
     SUB_SetFade(g1, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
     SUB_SetFade(g2, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_SBBLOWUP, world);
+    RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.movetype   = MOVETYPE_NONE;
@@ -736,9 +736,9 @@ void spiderbot_blowup()
 void spiderbot_die()
 {
     self.health             = 0;
-    self.event_damage       = SUB_Null;
+    self.event_damage       = func_null;
     self.takedamage         = DAMAGE_NO;
-    self.touch              = SUB_Null;
+    self.touch              = func_null;
     self.cnt                = 3.4 + time + random() * 2;
     self.think              = spiderbot_blowup;
     self.nextthink          = time;

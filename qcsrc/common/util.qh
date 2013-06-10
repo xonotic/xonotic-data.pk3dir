@@ -1,12 +1,13 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+#ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
 // I HERD YO LIEK MACROS
 // SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
 // SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
-#define ACCUMULATE_FUNCTION(func,otherfunc) \
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
 	#ifdef func \
 	void __merge__##otherfunc() { func(); otherfunc(); } \
 	#undef func \
@@ -14,6 +15,32 @@
 	#else \
 	#define func otherfunc \
 	#endif
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	.void _ACCUMULATE_##func##__##otherfunc;
+void ACCUMULATE_call(string func)
+{
+	float i;
+	float n = numentityfields();
+	string funcprefix = strcat("_ACCUMULATE_", func, "__");
+	float funcprefixlen = strlen(funcprefix);
+	for(i = 0; i < n; ++i)
+	{
+		string name = entityfieldname(i);
+		if(substring(name, 0, funcprefixlen) == funcprefix)
+			callfunction(substring(name, funcprefixlen, -1));
+	}
+}
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	ACCUMULATE_call(#func)
+#endif
+
+// used for simplifying ACCUMULATE_FUNCTIONs
+#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
+#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
@@ -23,7 +50,7 @@ string wordwrap(string s, float l);
 void wordwrap_sprint(string s, float l);
 #endif
 #endif
-void wordwrap_cb(string s, float l, void(string) callback)
+void wordwrap_cb(string s, float l, void(string) callback);
 
 #ifndef SVQC
 string draw_currentSkin;
@@ -118,8 +145,6 @@ vector mi_pictexcoord3; // texcoords of the image corners (after transforming, t
 void get_mi_min_max_texcoords(float mode);
 #endif
 
-#define FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(x) void reference_##x() { x = x; }
-
 float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
 
@@ -204,8 +229,13 @@ void WriteInt24_t(float dest, float val);
 #endif
 
 // the NULL function
-const var void func_null(void); FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(func_null)
-const var string string_null;
+#ifdef GMQCC
+#define func_null nil
+#define string_null nil
+#else
+var void func_null(void);
+var string string_null;
+#endif
 float float2range11(float f);
 float float2range01(float f);
 
@@ -225,36 +255,14 @@ float get_model_parameters_species;
 string get_model_parameters_sex;
 float get_model_parameters_weight;
 float get_model_parameters_age;
+string get_model_parameters_bone_upperbody;
+string get_model_parameters_bone_weapon;
+#define MAX_AIM_BONES 4
+string get_model_parameters_bone_aim[MAX_AIM_BONES];
+float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
+float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
-
-// stupid stupid stupid FTEQCC has a max limit on macro sizes, let's work around by splitting the macro into two macros! :(
-#define HUD_Panel_GetName_Part2(id) \
-switch(id) {\
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
-	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
-	case HUD_PANEL_PHYSICS: panel_name = HUD_PANELNAME_PHYSICS; break; \
-	case HUD_PANEL_CENTERPRINT: panel_name = HUD_PANELNAME_CENTERPRINT; break; \
-} ENDS_WITH_CURLY_BRACE
-
-// Get name of specified panel id
-#define HUD_Panel_GetName(id) \
-switch(id) { \
-	case HUD_PANEL_WEAPONS: panel_name = HUD_PANELNAME_WEAPONS; break; \
-	case HUD_PANEL_AMMO: panel_name = HUD_PANELNAME_AMMO; break; \
-	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
-	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
-	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \
-	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; break; \
-	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; break; \
-	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; break; \
-	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; break; \
-	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; break; \
-	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
-	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
-	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-    default: HUD_Panel_GetName_Part2(id)\
-}
 
 vector vec2(vector v);
 
@@ -286,7 +294,7 @@ float xdecode(string s);
 float lowestbit(float f);
 
 #ifdef CSQC
-entity ReadCSQCEntity()
+entity ReadCSQCEntity();
 #endif
 
 #ifndef MENUQC
@@ -334,10 +342,75 @@ float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x);
 // as it may exceed 0..1 bounds, or go in reverse
 float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
 
+typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_t;
+typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
 #ifndef MENUQC
-vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
+vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle);
 #endif
 
 #ifdef SVQC
 vector get_corner_position(entity box, float corner);
+#endif
+
+// expand multiple arguments into one argument by stripping parenthesis
+#define XPD(...) __VA_ARGS__
+
+#ifndef MENUQC
+void backtrace(string msg);
+#endif
+
+// color code replace, place inside of sprintf and parse the string... defaults described as constants
+// foreground/normal colors
+var string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
+var string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+var string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
+var string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+// "kill" colors
+var string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+var string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+var string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+// background color
+var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+
+string CCR(string input);
+
+#ifndef MENUQC
+#ifdef CSQC
+#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+#else
+#define GENTLE autocvar_sv_gentle
+#endif
+#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+#endif
+
+// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
+#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
+#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
+#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
+
+vector vec3(float x, float y, float z);
+
+#ifndef MENUQC
+vector animfixfps(entity e, vector a, vector b);
+#endif
+
+#ifdef SVQC
+void dedicated_print(string input);
+#endif
+
+// todo: better way to do this?
+#ifdef MENUQC
+#define PROGNAME "MENUQC"
+#else
+#ifdef SVQC
+#define PROGNAME "SVQC"
+#else
+#define PROGNAME "CSQC"
+#endif
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num);
 #endif

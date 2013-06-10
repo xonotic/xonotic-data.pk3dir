@@ -43,7 +43,7 @@ void Draw_ShowNames(entity ent)
 		}
 
 		// handle tag fading
-		float overlap, onscreen, crosshairdistance;
+		float overlap = FALSE, onscreen, crosshairdistance;
 		vector o, eo;
 		
 		o = project_3d_to_2d(ent.origin);
@@ -187,7 +187,7 @@ void Draw_ShowNames_All()
 	{
 		float t;
 		t = GetPlayerColor(i);
-		if(t == COLOR_SPECTATOR)
+		if(t == NUM_SPECTATOR)
 			continue;
 
 		entity e;
@@ -215,7 +215,7 @@ void Draw_ShowNames_All()
 			e.sameteam = 0;
 		}
 
-		e.origin = getplayerorigin(i);
+		setorigin(e, getplayerorigin(i));
 		if(e.origin == GETPLAYERORIGIN_ERROR)
 			continue;
 			

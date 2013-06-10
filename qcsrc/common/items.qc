@@ -172,3 +172,13 @@ void W_RandomWeapons(entity e, float n)
 	}
 	WEPSET_COPY_EA(e, result);
 }
+
+string W_Name(float weaponid)
+{
+	return (get_weaponinfo(weaponid)).message;
+}
+
+float W_AmmoItemCode(float wpn)
+{
+	return (get_weaponinfo(wpn)).items & IT_AMMO;
+}

@@ -74,7 +74,7 @@ float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
-void racer_spawn(float _spawnflag);
+void racer_spawn_default();
 
 void racer_align4point(float _delta)
 {
@@ -129,7 +129,7 @@ void racer_fire_cannon(string tagname)
     bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
+                           DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
@@ -243,7 +243,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
+                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
@@ -542,10 +542,10 @@ void racer_blowup()
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, world, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_WAKIBLOWUP, world);
+					DEATH_VH_WAKI_DEATH, world);
 
     self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-    self.think      = racer_spawn;
+    self.think      = racer_spawn_default;
     self.movetype   = MOVETYPE_NONE;
     self.effects    = EF_NODRAW;
 
@@ -554,8 +554,6 @@ void racer_blowup()
     self.velocity  = '0 0 0';
 
     setorigin(self, self.pos1);
-	self.think     = racer_spawn;
-	self.nextthink = time + autocvar_g_vehicle_racer_respawntime;
 }
 
 void racer_deadtouch()
@@ -569,7 +567,7 @@ void racer_deadtouch()
 void racer_die()
 {
     self.health       = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = func_null;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
@@ -625,6 +623,10 @@ void racer_spawn(float _spawnflag)
     self.vehicle_impact = racer_impact;
     self.damageforcescale = 0.5;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
+}
+void racer_spawn_default()
+{
+	racer_spawn(0);
 }
 
 

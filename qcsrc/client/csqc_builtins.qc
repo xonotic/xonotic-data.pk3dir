@@ -125,6 +125,7 @@ void (entity e)									runstandardplayerphysics = #347;
 
 string (float playernum, string key)					getplayerkeyvalue = #348;
 void (string cmdname)							registercmd = #352;
+void(float usecursor)							setcursormode = #343;
 vector ()								getmousepos = #344;
 
 string (string s) 							uncolorstring = #170;

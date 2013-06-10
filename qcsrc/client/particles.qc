@@ -57,7 +57,7 @@ void Draw_PointParticles()
 			}
 			if(self.noise != "")
 			{
-				self.origin = p;
+				setorigin(self, p);
 				sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
@@ -68,7 +68,7 @@ void Draw_PointParticles()
 			--i;
 		}
 	}
-	self.origin = o;
+	setorigin(self, o);
 }
 
 void Ent_PointParticles_Remove()
@@ -318,8 +318,8 @@ void Draw_Shockwave()
 
 	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
 
-	vector first_min_end, prev_min_end, new_min_end;
-	vector first_max_end, prev_max_end, new_max_end;
+	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
+	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
 
 	float new_max_dist, new_min_dist;
 	

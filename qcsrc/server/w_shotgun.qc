@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
+REGISTER_WEAPON(
+/* WEP_##id  */ SHOTGUN,
+/* function  */ w_shotgun,
+/* ammotype  */ IT_SHELLS,
+/* impulse   */ 2,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_LOW,
+/* model     */ "shotgun",
+/* shortname */ "shotgun",
+/* fullname  */ _("Shotgun")
+);
 #else
 #ifdef SVQC
 
@@ -27,7 +37,7 @@ void W_Shotgun_Attack (void)
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOTGUN, 0, 1, bulletconstant);
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
@@ -85,13 +95,13 @@ void shotgun_meleethink (void)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
 		
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
 		//te_customflash(targpos, 40,  2, '1 1 1');
 		
-		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
@@ -151,7 +161,7 @@ void W_Shotgun_Attack2 (void)
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = meleetemp.realowner = self;
+	meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -199,7 +209,7 @@ float w_shotgun(float req)
 			}
 		}
 		if (self.clip_load >= 0) // we are not currently reloading
-		if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
+		if (!self.crouch) // no crouchmelee please
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
@@ -238,6 +248,17 @@ float w_shotgun(float req)
 	{
 		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_SHOTGUN_MURDER_SLAP;
+		else
+			return WEAPON_SHOTGUN_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -266,15 +287,6 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%2$s slapped %1$s around a bit with a large shotgun");
-		else
-			w_deathtypestring = _("%s was gunned down with a shotgun by %s");
 	}
 	return TRUE;
 }

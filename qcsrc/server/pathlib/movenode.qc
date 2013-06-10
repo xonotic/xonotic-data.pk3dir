@@ -1,4 +1,4 @@
-vector pathlib_wateroutnode(vector start,vector end)
+vector pathlib_wateroutnode(vector start,vector end, float doedge)
 {
     vector surface;
 
@@ -32,7 +32,7 @@ vector pathlib_wateroutnode(vector start,vector end)
     return end;
 }
 
-vector pathlib_swimnode(vector start,vector end)
+vector pathlib_swimnode(vector start,vector end, float doedge)
 {
     pathlib_movenode_goodnode = 0;
 
@@ -43,7 +43,7 @@ vector pathlib_swimnode(vector start,vector end)
     end_y = fsnap(end_y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
-        return pathlib_wateroutnode( start, end);
+        return pathlib_wateroutnode( start, end, doedge);
 
     tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -52,7 +52,7 @@ vector pathlib_swimnode(vector start,vector end)
     return end;
 }
 
-vector pathlib_flynode(vector start,vector end)
+vector pathlib_flynode(vector start,vector end, float doedge)
 {
     pathlib_movenode_goodnode = 0;
 

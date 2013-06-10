@@ -1,5 +1,5 @@
 
-void W_GiveWeapon (entity e, float wep, string name)
+void W_GiveWeapon (entity e, float wep)
 {
 	entity oldself;
 
@@ -11,13 +11,8 @@ void W_GiveWeapon (entity e, float wep, string name)
 	oldself = self;
 	self = e;
 
-	if not(g_minstagib)
-	if (other.classname == "player")
-	{
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
-	}
+	if(IS_PLAYER(other))
+		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
 	self = oldself;
 }
@@ -109,7 +104,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
 	{
-		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
+		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(IS_SPEC(msg_entity) && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
 		{
 			// nearest point on the beam
 			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
@@ -167,10 +162,10 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	trace_dphitq3surfaceflags = endq3surfaceflags;
 }
 
-.float dmg_edge;
 .float dmg_force;
 .float dmg_radius;
 .float dmg_total;
+//.float last_yoda;
 void W_BallisticBullet_Hit (void)
 {
 	float f, q, g;
@@ -185,24 +180,17 @@ void W_BallisticBullet_Hit (void)
 	{
 		endzcurveparticles();
 
-		headshot = 0;
 		yoda = 0;
-		damage_headshotbonus = self.dmg_edge * f;
 		railgun_start = self.origin - 2 * frametime * self.velocity;
 		railgun_end = self.origin + 2 * frametime * self.velocity;
 		g = accuracy_isgooddamage(self.realowner, other);
 		Damage(other, self, self.realowner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
-		damage_headshotbonus = 0;
 
-		if(headshot)
-			f *= q;
-		if(self.dmg_edge > 0)
+		/*if(yoda && (time > (self.last_yoda + 5)))
 		{
-			if(headshot)
-				AnnounceTo(self.realowner, "headshot");
-			if(yoda)
-				AnnounceTo(self.realowner, "awesome");
-		}
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+			self.last_yoda = time; 
+		}*/
 
 		// calculate hits for ballistic weapons
 		if(g)
@@ -229,7 +217,7 @@ void W_BallisticBullet_LeaveSolid_think()
 
 	self.think = self.W_BallisticBullet_LeaveSolid_think_save;
 	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
-	self.W_BallisticBullet_LeaveSolid_think_save = SUB_Null;
+	self.W_BallisticBullet_LeaveSolid_think_save = func_null;
 
 	self.flags &~= FL_ONGROUND;
 
@@ -398,7 +386,7 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 	self.owner = world;
 }
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
 	float lag, dt, savetime; //, density;
 	entity pl, oldself;
@@ -434,7 +422,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	proj.touch = W_BallisticBullet_Touch;
 	proj.dmg = damage;
-	proj.dmg_edge = headshotbonus;
 	proj.dmg_force = force;
 	proj.projectiledeathtype = dtype;
 
@@ -457,7 +444,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		lag = ANTILAG_LATENCY(self);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(self) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(self))
 			lag = 0;
 		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 			lag = 0; // only do hitscan, but no antilag
@@ -628,9 +615,9 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	
-	if((attacker.flags & FL_CLIENT) && !autocvar_g_projectiles_keep_owner)
+	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		self.owner = attacker;
 		self.realowner = attacker;

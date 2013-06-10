@@ -41,7 +41,6 @@ void CSQC_BUMBLE_GUN_HUD();
 
 #define MAX_AXH 4
 entity AuxiliaryXhair[MAX_AXH];
-const var void Draw_Not();
 
 .string axh_image;
 .float  axh_fadetime;
@@ -84,7 +83,7 @@ void AuxiliaryXhair_Draw2D()
     }
 
     if(time - self.cnt > self.axh_fadetime)
-        self.draw2d = Draw_Not;
+        self.draw2d = func_null;
 }
 
 void Net_AuXair2(float bIsNew)
@@ -95,7 +94,7 @@ void Net_AuXair2(float bIsNew)
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
         axh					= spawn();
-		axh.draw2d			= Draw_Not;
+		axh.draw2d			= func_null;
 		axh.drawmask 		= MASK_NORMAL;
 		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
 		axh.axh_fadetime	= 0.1;
@@ -148,7 +147,7 @@ void Net_VehicleSetup()
             remove(axh);
 
         axh					= spawn();
-		axh.draw2d			= Draw_Not;
+		axh.draw2d			= func_null;
 		axh.drawmask		= MASK_NORMAL;
 		axh.axh_drawflag	= DRAWFLAG_NORMAL;
 		axh.axh_fadetime	= 0.1;
@@ -212,13 +211,13 @@ void Net_VehicleSetup()
     }
 }
 #define HUD_GETSTATS \
-    float vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	float shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
-	float energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	float ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
-	float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
-	float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+    local noref float vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
+	local noref float shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
+	local noref float energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
+	local noref float ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
+	local noref float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
+	local noref float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
+	local noref float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
 
 void CSQC_BUMBLE_HUD()
 {
@@ -231,7 +230,7 @@ void CSQC_BUMBLE_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -327,7 +326,7 @@ void CSQC_BUMBLE_HUD()
     drawresetcliparea();
 
 // Right gunner slot occupied?
-	if(AuxiliaryXhair[1].draw2d == Draw_Not)
+	if(!AuxiliaryXhair[1].draw2d)
 	{
 		shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));				
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
@@ -349,7 +348,7 @@ void CSQC_BUMBLE_HUD()
     drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // Left gunner slot occupied?
-	if(AuxiliaryXhair[2].draw2d == Draw_Not)
+	if(!AuxiliaryXhair[2].draw2d)
 	{
 		shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));				
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
@@ -382,7 +381,7 @@ void CSQC_BUMBLE_GUN_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -503,7 +502,7 @@ void CSQC_SPIDER_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
     float i;
 
     // Fetch health & ammo stats
@@ -666,7 +665,7 @@ void CSQC_RAPTOR_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -860,7 +859,7 @@ void CSQC_WAKIZASHI_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS

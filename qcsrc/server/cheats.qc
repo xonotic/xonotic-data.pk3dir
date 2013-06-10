@@ -48,7 +48,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
-	if(self.classname != "player")
+	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
 	
 	// sv_clones
@@ -126,7 +126,6 @@ float CheatImpulse(float i)
 	switch(i)
 	{
 		entity e, e2;
-		vector org;
 
 		case CHIMPULSE_SPEEDRUN_INIT: // deploy personal waypoint
 			// shared with regular waypoint init, so this is not a cheat by itself
@@ -191,47 +190,26 @@ float CheatImpulse(float i)
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
 					self.fixangle = TRUE;
-					if(self.flagcarried)
-					{
-						bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
-						ReturnFlag(self.flagcarried);
-					}
+					
+					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
-				if(g_ctf)
-				{
-					self.ammo_rockets = 999;
-					self.ammo_nails = 999;
-					self.ammo_cells = 999;
-					self.ammo_shells = 999;
-					self.ammo_fuel = 999;
-					self.health = start_health;
-					self.armorvalue = start_armorvalue;
-					WEPSET_OR_EA(self.personal, weaponsInMap);
-					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
-					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
-					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
-					self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
-					self.strength_finished = 0;
-					self.invincible_finished = 0;
-				}
-				else
-				{
-					self.ammo_rockets = self.personal.ammo_rockets;
-					self.ammo_nails = self.personal.ammo_nails;
-					self.ammo_cells = self.personal.ammo_cells;
-					self.ammo_shells = self.personal.ammo_shells;
-					self.ammo_fuel = self.personal.ammo_fuel;
-					self.health = self.personal.health;
-					self.armorvalue = self.personal.armorvalue;
-					WEPSET_COPY_EE(self, self.personal);
-					self.items = self.personal.items;
-					self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
-					self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
-					self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
-					self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
-					self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
-					self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
-				}
+
+				self.ammo_rockets = self.personal.ammo_rockets;
+				self.ammo_nails = self.personal.ammo_nails;
+				self.ammo_cells = self.personal.ammo_cells;
+				self.ammo_shells = self.personal.ammo_shells;
+				self.ammo_fuel = self.personal.ammo_fuel;
+				self.health = self.personal.health;
+				self.armorvalue = self.personal.armorvalue;
+				WEPSET_COPY_EE(self, self.personal);
+				self.items = self.personal.items;
+				self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
+				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
+				self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
+				self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
+				self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
+				self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
+
 				DID_CHEAT();
 				break;
 			}
@@ -258,7 +236,7 @@ float CheatImpulse(float i)
 					break;
 				}
 			}
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 1024, 256))
 			{
 				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
@@ -271,32 +249,24 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_R00T:
 			IS_CHEAT(i, 0, 0);
+			RandomSelection_Init();
 			FOR_EACH_PLAYER(e)
-			{
-				get_model_parameters(e.playermodel, e.skin);
-				if(get_model_parameters_sex == "Female")
-				{
-					makevectors(e.angles);
-					traceline(e.origin, e.origin + v_right * 256, MOVE_NORMAL, e);
-				}
-				else
-				{
-					org_x = random();
-					org_y = random();
-					org_z = 0;
-					org = normalize(org);
-					traceline(e.origin, e.origin + org * 256, MOVE_NORMAL, e); // random direction
-				}
+				if(e.deadflag == DEAD_NO)
+					if(IsDifferentTeam(e, self))
+						RandomSelection_Add(e, 0, string_null, 1, 1);
+			if(RandomSelection_chosen_ent)
+				e = RandomSelection_chosen_ent;
+			else
+				e = self;
 
-				org = findbetterlocation(trace_endpos, 12);
+			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
+			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 
-				e2 = spawn();
-				setorigin(e2, org);
-				pointparticles(particleeffectnum("rocket_explode"), org, '0 0 0', 1);
-				sound(e2, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-				RadiusDamage(e2, e, 1000, 0, 128, e, world, 500, DEATH_CHEAT, world);
-				remove(e2);
-			}
+			e2 = spawn();
+			setorigin(e2, e.origin);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
+			remove(e2);
+
 			print("404 Sportsmanship not found.\n");
 			DID_CHEAT();
 			break;
@@ -703,6 +673,46 @@ float CheatCommand(float argc)
 			if(GiveItems(self, 1, argc))
 				DID_CHEAT();
 			break;
+		case "usetarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.target = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
+		case "killtarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.killtarget = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
+		case "teleporttotarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			setorigin(self, self.origin);
+			self.classname = "cheattriggerteleport";
+			self.target = argv(1);
+			teleport_findtarget();
+			if(!wasfreed(self))
+			{
+				Simple_TeleportPlayer(self, e);
+				remove(self);
+				self = e;
+				DID_CHEAT();
+			}
+			else
+				self = e;
+			break;
 	}
 
 	END_CHEAT_FUNCTION();
@@ -933,9 +943,9 @@ float Drag_IsDraggable(entity draggee)
 		return FALSE;
 //	if(draggee.model == "")
 //		return FALSE;
-	if(draggee.classname == "spectator")
+	if(IS_SPEC(draggee))
 		return FALSE;
-	if(draggee.classname == "observer")
+	if(IS_OBSERVER(draggee))
 		return FALSE;
 	if(draggee.classname == "exteriorweaponentity")
 		return FALSE;
@@ -1001,7 +1011,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (dragger.classname == "player");
+	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)
