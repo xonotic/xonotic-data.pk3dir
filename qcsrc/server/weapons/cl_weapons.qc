@@ -497,14 +497,6 @@ void W_WeaponFrame()
 		}
 	}
 
-	// don't let attack_finished fall behind when not firing (must be after weapon_setup calls!)
-	//if (ATTACK_FINISHED(self) < time)
-	//	ATTACK_FINISHED(self) = time;
-
-	//if (self.weapon_nextthink < time)
-	//	self.weapon_nextthink = time;
-
-	// update currentammo incase it has changed
 #if 0
 	if (self.items & IT_CELLS)
 		self.currentammo = self.ammo_cells;
