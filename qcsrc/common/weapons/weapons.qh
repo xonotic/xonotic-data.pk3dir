@@ -1,0 +1,22 @@
+// ONLY EVER ADD NEW WEAPONS AT THE END. IF YOU REMOVE ONE, PUT THE LAST ONE ON
+// ITS PLACE. THIS IS TO AVOID UNNECESSARY RENUMBERING OF WEAPON IMPULSES.
+// IF YOU DISREGARD THIS NOTICE, I'LL KILL YOU WITH THE @!#%'N TUBA
+#include "laser.qc"
+#include "shotgun.qc"
+#include "uzi.qc"
+#include "grenadelauncher.qc"
+#include "minelayer.qc"
+#include "electro.qc"
+#include "lightning.qc"
+#include "crylink.qc"
+#include "nex.qc"
+#include "hagar.qc"
+#include "rocketlauncher.qc"
+#include "porto.qc"
+#include "minstanex.qc"
+#include "hook.qc"
+#include "hlac.qc"
+#include "tuba.qc"
+#include "rifle.qc"
+#include "fireball.qc"
+#include "seeker.qc"
