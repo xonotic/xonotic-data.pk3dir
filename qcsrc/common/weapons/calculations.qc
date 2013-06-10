@@ -1,6 +1,7 @@
 // =============================
 //  Explosion Force Calculation
 // =============================
+
 float explosion_calcpush_getmultiplier(vector explosion_v, vector target_v)
 {
 	float a;
