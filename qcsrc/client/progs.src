@@ -106,7 +106,7 @@ noise.qc
 ../common/command/generic.qc
 ../common/mapinfo.qc
 ../common/items.qc
-../server/w_all.qc
+../server/weapons/w_all.qc
 ../common/explosion_equation.qc
 ../common/urllib.qc
 command/cl_cmd.qc

@@ -228,7 +228,7 @@ WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 	REGISTER_WEAPON_2(WEP_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
-#include "../server/w_all.qc"
+#include "../server/weapons/w_all.qc"
 
 #undef REGISTER_WEAPON
 ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)

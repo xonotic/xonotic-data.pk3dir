@@ -76,8 +76,8 @@ playerstats.qh
 portals.qh
 
 g_hook.qh
-w_electro.qh
-w_lightning.qh
+weapons/w_electro.qh
+weapons/w_lightning.qh
 
 scores.qh
 
@@ -138,13 +138,13 @@ g_models.qc
 item_key.qc
 secret.qc
 
-cl_weaponsystem.qc
-w_common.qc
+weapons/cl_weaponsystem.qc
+weapons/w_common.qc
 
-w_all.qc
+weapons/w_all.qc
 
 t_items.qc
-cl_weapons.qc
+weapons/cl_weapons.qc
 cl_impulse.qc
 
 ent_cs.qc
