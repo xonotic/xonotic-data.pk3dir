@@ -547,7 +547,7 @@ void havocbot_movetogoal()
 	else if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		self.aistatus &~= AI_STATUS_OUT_JUMPPAD;
 
-	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
+	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump // WEAPONTODO: move this to bot think!
 	if(skill>6)
 	if not(self.flags & FL_ONGROUND)
 	{
@@ -593,10 +593,10 @@ void havocbot_movetogoal()
 
 			return;
 		}
-		else if(self.health>autocvar_g_balance_rocketlauncher_damage*0.5)
+		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity_z < 0)
-			if(client_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
+			if(client_hasweapon(self, WEP_DEVASTATOR, TRUE, FALSE))
 			{
 				self.movement_x = maxspeed;
 
@@ -610,10 +610,10 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_ROCKET_LAUNCHER;
+				self.switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = TRUE;
-				self.rocketjumptime = time + autocvar_g_balance_rocketlauncher_detonatedelay;
+				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
 				return;
 			}
 		}
