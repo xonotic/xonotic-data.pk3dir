@@ -924,6 +924,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_jump_grunt", mutator_jump_grunt, 1);
 	CHECK_MUTATOR_ADD("g_footsteps", mutator_footsteps, 1);
 	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
