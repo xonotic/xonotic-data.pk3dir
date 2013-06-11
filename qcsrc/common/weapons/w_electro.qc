@@ -10,6 +10,11 @@ REGISTER_WEAPON(
 /* shortname */ "electro",
 /* fullname  */ _("Electro")
 );
+
+#ifdef SVQC
+void ElectroInit();
+vector electro_shotorigin[4];
+#endif
 #else
 #ifdef SVQC
 .float electro_count;

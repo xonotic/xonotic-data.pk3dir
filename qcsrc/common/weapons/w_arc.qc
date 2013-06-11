@@ -10,6 +10,11 @@ REGISTER_WEAPON(
 /* shortname */ "lightning",
 /* fullname  */ _("Lightning")
 );
+
+#ifdef SVQC
+void LightningInit();
+vector lightning_shotorigin[4];
+#endif
 #else
 #ifdef SVQC
 

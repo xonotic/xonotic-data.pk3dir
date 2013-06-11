@@ -1,2 +1,0 @@
-void LightningInit();
-vector lightning_shotorigin[4];

@@ -61,7 +61,7 @@ command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
-accuracy.qh
+weapons/accuracy.qh
 weapons/csqcprojectile.qh // TODO
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
@@ -74,9 +74,7 @@ playerstats.qh
 
 portals.qh
 
-g_hook.qh
-../common/weapons/electro.qh // TODO
-../common/weapons/arc.qh
+g_hook.qh // TODO
 
 scores.qh
 
@@ -153,6 +151,8 @@ cl_client.qc
 t_plats.qc
 antilag.qc
 
+weapons/accuracy.qc // TODO
+
 //ctf.qc
 //domination.qc
 //mode_onslaught.qc
@@ -206,8 +206,6 @@ target_spawn.qc
 func_breakable.qc
 target_music.qc
 
-
-accuracy.qc
 ../csqcmodellib/sv_model.qc
 
 playerdemo.qc
