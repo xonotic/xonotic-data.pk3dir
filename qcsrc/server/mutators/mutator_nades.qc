@@ -260,13 +260,10 @@ float CanThrowNade()
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(nades_ForbidThrowing)
+void nades_CheckThrow()
 {
-	if(!g_weaponarena || !g_minstagib)
-		return FALSE; // TODO: fix this to support all modes that disable weapon dropping
-		
 	if(!CanThrowNade())
-		return FALSE;
+		return;
 		
 	if(!self.nade)
 	{
@@ -288,8 +285,6 @@ MUTATOR_HOOKFUNCTION(nades_ForbidThrowing)
 			toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
 		}
 	}
-	
-	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
@@ -375,7 +370,6 @@ MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_nades)
 {
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);

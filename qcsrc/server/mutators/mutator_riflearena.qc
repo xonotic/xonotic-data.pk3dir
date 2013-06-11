@@ -63,6 +63,7 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 
 MUTATOR_HOOKFUNCTION(ra_ForbidThrowCurrentWeapon)
 {
+	nades_CheckThrow();
 	return TRUE;
 }
 
