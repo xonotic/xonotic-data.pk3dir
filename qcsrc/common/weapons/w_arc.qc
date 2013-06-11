@@ -4,14 +4,28 @@ REGISTER_WEAPON(
 /* function  */ w_lightning,
 /* ammotype  */ IT_CELLS,
 /* impulse   */ 5,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
+/* flags     */ WEP_FLAG_NORMAL,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
 /* model     */ "lightning",
-/* shortname */ "lightning",
-/* fullname  */ _("Lightning")
+/* shortname */ "arc",
+/* fullname  */ _("Arc")
 );
 
+#define ARC_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, float, ammo) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, animtime) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, damage) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_halflifedist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_maxdist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_mindist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, force) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, range) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  float, refire) 
+	//WEP_ADD_PROP(weapon, float, switchdelay_raise, switchdelay_raise) \
+	//WEP_ADD_PROP(weapon, float, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+ARC_SETTINGS(arc)
 void LightningInit();
 vector lightning_shotorigin[4];
 #endif
@@ -35,7 +49,7 @@ float W_Lightning_Beam_Send(entity to, float sf)
 	if(sf & 1)
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-		WriteCoord(MSG_ENTITY, autocvar_g_balance_lightning_primary_range);
+		WriteCoord(MSG_ENTITY, WEP_CVAR_PRI(arc, range));
 	}
 	if(sf & 2)
 	{
@@ -76,27 +90,27 @@ void W_Lightning_Beam_Think()
 	dt = frametime;
 	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(autocvar_g_balance_lightning_primary_ammo)
+		if(WEP_CVAR_PRI(arc, ammo))
 		{
-			dt = min(dt, self.owner.ammo_cells / autocvar_g_balance_lightning_primary_ammo);
-			self.owner.ammo_cells = max(0, self.owner.ammo_cells - autocvar_g_balance_lightning_primary_ammo * frametime);
+			dt = min(dt, self.owner.ammo_cells / WEP_CVAR_PRI(arc, ammo));
+			self.owner.ammo_cells = max(0, self.owner.ammo_cells - WEP_CVAR_PRI(arc, ammo) * frametime);
 		}
 	}
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, autocvar_g_balance_lightning_primary_damage * dt, autocvar_g_balance_lightning_primary_range);
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
 	// apply the damage
 	if(trace_ent)
 	{
 		vector force;
-		force = w_shotdir * autocvar_g_balance_lightning_primary_force;
+		force = w_shotdir * WEP_CVAR_PRI(arc, force);
 
-		f = ExponentialFalloff(autocvar_g_balance_lightning_primary_falloff_mindist, autocvar_g_balance_lightning_primary_falloff_maxdist, autocvar_g_balance_lightning_primary_falloff_halflifedist, vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
+		f = ExponentialFalloff(WEP_CVAR_PRI(arc, falloff_mindist), WEP_CVAR_PRI(arc, falloff_maxdist), WEP_CVAR_PRI(arc, falloff_halflifedist), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
 
 		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_LIGHTNING, 0, autocvar_g_balance_lightning_primary_damage * dt * f);
-		Damage (trace_ent, self.owner, self.owner, autocvar_g_balance_lightning_primary_damage * dt * f, WEP_LIGHTNING, trace_endpos, force * dt);
+			accuracy_add(self.owner, WEP_LIGHTNING, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
+		Damage (trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_LIGHTNING, trace_endpos, force * dt);
 	}
 
 	// draw effect
@@ -129,7 +143,7 @@ void W_Lightning_Attack1 (void)
 	beam.movetype = MOVETYPE_NONE;
 	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
-	beam.bot_dodgerating = autocvar_g_balance_lightning_primary_damage;
+	beam.bot_dodgerating = WEP_CVAR_PRI(arc, damage);
 	Net_LinkEntity(beam, FALSE, 0, W_Lightning_Beam_Send);
 
 	oldself = self;
@@ -181,7 +195,7 @@ float w_lightning(float req)
 				/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
 					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_lightning_primary_animtime, w_ready);
 				else*/
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
 			
 			if (weapon_prepareattack(0, 0))
 			{
@@ -190,7 +204,7 @@ float w_lightning(float req)
 				
 				if(!self.BUTTON_ATCK_prev)
 				{
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
 					self.BUTTON_ATCK_prev = 1;
 				}
 			}
@@ -199,8 +213,8 @@ float w_lightning(float req)
 		{
 			if (self.BUTTON_ATCK_prev != 0)
 			{
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_lightning_primary_animtime, w_ready);
-				ATTACK_FINISHED(self) = time + autocvar_g_balance_lightning_primary_refire * W_WeaponRateFactor();
+				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+				ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor();
 			}
 			self.BUTTON_ATCK_prev = 0;
 		}
@@ -230,10 +244,10 @@ float w_lightning(float req)
 		weapon_setup(WEP_LIGHTNING);
 	else if (req == WR_CHECKAMMO1)
 	{
-		return !autocvar_g_balance_lightning_primary_ammo || (self.ammo_cells > 0);
+		return !WEP_CVAR_PRI(arc, ammo) || (self.ammo_cells > 0);
 	}
 	else if (req == WR_CHECKAMMO2)
-		return self.ammo_cells >= autocvar_g_balance_lightning_secondary_ammo;
+		return self.ammo_cells >= WEP_CVAR_SEC(arc, ammo);
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)

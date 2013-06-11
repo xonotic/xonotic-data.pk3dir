@@ -241,8 +241,41 @@ float WEP_LAST;
 	REGISTER_WEAPON_2(WEP_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
+#define MO_NONE 0
+#define MO_PRI 1
+#define MO_SEC 2
+#define MO_BOTH 3
+
+#define WEP_ADD_CVAR(weapon,mode,type,name) \
+	#if mode == MO_PRI \
+		##type autocvar_g_balance_##weapon##_primary_##name; \
+	#endif \
+	#if mode == MO_SEC \
+		##type autocvar_g_balance_##weapon##_secondary_##name; \
+	#endif \
+	#if mode == MO_BOTH \
+		##type autocvar_g_balance_##weapon##_primary_##name; \
+		##type autocvar_g_balance_##weapon##_secondary_##name; \
+	#endif \
+	#if mode == MO_NONE \
+		##type autocvar_g_balance_##weapon##_##name; \
+	#endif
+
+#define WEP_CVAR(weapon,name) autocvar_g_balance_##weapon##_##name
+#define WEP_CVAR_PRI(weapon,name) WEP_CVAR(weapon, primary_##name)
+#define WEP_CVAR_SEC(weapon,name) WEP_CVAR(weapon, secondary_##name)
+#define WEP_CVAR_BOTH(weapon,mode,name) ((mode == MO_PRI) ? WEP_CVAR_PRI(weapon, name) : WEP_CVAR_SEC(weapon, name))
+			
+				
+
+#define WEP_ADD_PROP(weapon,type,prop,name) \
+	.##type prop; \
+	##type autocvar_g_balance_##weapon##_##name;
+
 #include "all.qh"
 
+#undef WEP_ADD_CVAR
+#undef WEP_ADD_PROP
 #undef REGISTER_WEAPON
 ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)
 
