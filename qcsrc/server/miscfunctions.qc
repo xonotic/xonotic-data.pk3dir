@@ -927,6 +927,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
     CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
 	
 	#undef CHECK_MUTATOR_ADD
 	

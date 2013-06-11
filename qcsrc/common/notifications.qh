@@ -440,6 +440,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_ROUNDSTOP,         0, 0, "",             CPID_ROUND,          "2 0", _("^F4Round cannot start"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_TIED,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound tied"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_OVER,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, there's no winner"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CAMPCHECK,                   0, 0, "",             CPID_CAMPCHECK,      "0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 2,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
@@ -530,7 +531,6 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,                0, 4, "missing_teams", CPID_KEYHUNT_OTHER,    "0 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 4, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,               0, 0, "",              CPID_LMS_CAMP,         "0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,             0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,       0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!")) \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_LIVES_REMAINING,      0, 1, "f1",            NO_CPID,  			  "0 0", _("^F2Extra lives remaining: ^K1%s"), "") \

@@ -260,6 +260,7 @@ mutators/mutator_footsteps.qc
 mutators/mutator_melee_only.qc
 mutators/mutator_nades.qc
 mutators/mutator_riflearena.qc
+mutators/mutator_campcheck.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
