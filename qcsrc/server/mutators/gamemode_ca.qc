@@ -158,6 +158,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 {
 	FOR_EACH_CLIENT(self)
 	{
+		self.killcount = 0;
 		if(self.caplayer)
 		{
 			self.classname = "player";

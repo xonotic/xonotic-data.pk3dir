@@ -401,6 +401,7 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 {
 	FOR_EACH_PLAYER(self)
 	{
+		self.killcount = 0;
 		if (self.freezetag_frozen)
 			freezetag_Unfreeze(world);
 		self.freezetag_frozen_timeout = -1;

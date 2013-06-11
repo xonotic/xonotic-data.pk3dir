@@ -156,6 +156,7 @@ MUTATOR_HOOKFUNCTION(arena_reset_map_players)
 {
 	FOR_EACH_CLIENT(self)
 	{
+		self.killcount = 0;
 		if(self.spawned)
 		{
 			PutClientInServer();
