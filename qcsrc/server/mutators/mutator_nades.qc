@@ -51,7 +51,7 @@ void nade_spawn(entity _nade)
 	
 }
 
-void nade_boom() // TODO: DamageInfo
+void nade_boom()
 {
 	string expef;
 	
