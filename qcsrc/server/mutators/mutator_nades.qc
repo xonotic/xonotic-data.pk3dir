@@ -263,7 +263,7 @@ float CanThrowNade()
 MUTATOR_HOOKFUNCTION(nades_ForbidThrowing)
 {
 	if(!g_weaponarena || !g_minstagib)
-		return FALSE; // TODO: fix this to support all modes that don't disable weapon dropping
+		return FALSE; // TODO: fix this to support all modes that disable weapon dropping
 		
 	if(!CanThrowNade())
 		return FALSE;

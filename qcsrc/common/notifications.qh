@@ -476,7 +476,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FIRE,             0, 0, "",             NO_CPID,             "0 0", _("^K1You got a little bit too crispy!"), _("^K1You felt a little too hot!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_GENERIC,          0, 0, "",             NO_CPID,             "0 0", _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_LAVA,             0, 0, "",             NO_CPID,             "0 0", _("^K1You couldn't stand the heat!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE,				0, 0, "",			  NO_CPID,		       "0 0", _("^K1You forgot to put the pin back in!"), _("^K1Try throwing the nade!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE,				0, 0, "",			  NO_CPID,			   "0 0", _("^K1You forgot to put the pin back in!"), _("^K1Tastes like chicken!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NOAMMO,           0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo...")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_ROT,              0, 0, "",             NO_CPID,             "0 0", _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_SHOOTING_STAR,    0, 0, "",             NO_CPID,             "0 0", _("^K1You became a shooting star!"), "") \
@@ -538,6 +538,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "-1 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_NADE,            			0, 0, "",              NO_CPID,		          "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \

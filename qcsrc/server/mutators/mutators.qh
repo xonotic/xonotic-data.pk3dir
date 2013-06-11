@@ -31,5 +31,6 @@ MUTATOR_DECLARATION(mutator_jump_grunt);
 MUTATOR_DECLARATION(mutator_footsteps);
 MUTATOR_DECLARATION(mutator_melee_only);
 MUTATOR_DECLARATION(mutator_nades);
+MUTATOR_DECLARATION(mutator_riflearena);
 
 MUTATOR_DECLARATION(sandbox);

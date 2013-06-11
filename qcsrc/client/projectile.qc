@@ -369,6 +369,17 @@ void Ent_Projectile()
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
+				break;
 			case PROJECTILE_GRENADE_BOUNCING:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
