@@ -144,6 +144,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 	if(!allowed_to_spawn)
 	{
 		self.classname = "observer";
+		if(self.jointime != time) //not when connecting
 		if(!self.caplayer)
 		{
 			self.caplayer = 0.5;
