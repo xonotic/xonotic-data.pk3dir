@@ -546,14 +546,14 @@ void CL_Weaponentity_Think()
 	if (self.state == WS_RAISE && !intermission_running)
 	{
 		entity newwep = get_weaponinfo(self.owner.switchweapon);
-		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
+		f = f * g_weaponratefactor / max(f, newwep.switchdelay_raise);
 		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
 		entity oldwep = get_weaponinfo(self.owner.weapon);
-		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
+		f = 1 - f * g_weaponratefactor / max(f, oldwep.switchdelay_drop);
 		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}

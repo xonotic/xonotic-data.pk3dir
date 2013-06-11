@@ -12,17 +12,17 @@ REGISTER_WEAPON(
 );
 
 #define ARC_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, float, ammo) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, animtime) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, damage) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_halflifedist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_maxdist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, falloff_mindist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, force) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, range) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  float, refire) 
-	//WEP_ADD_PROP(weapon, float, switchdelay_raise, switchdelay_raise) \
-	//WEP_ADD_PROP(weapon, float, switchdelay_drop, switchdelay_drop)
+	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  animtime) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  damage) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_halflifedist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_maxdist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_mindist) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  force) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  range) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  refire) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 ARC_SETTINGS(arc)
@@ -276,6 +276,12 @@ void LightningInit()
 	lightning_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 2);
 	lightning_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 3);
 	lightning_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 4);
+
+	#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+	#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_LIGHTNING).##prop = autocvar_g_balance_##weapon##_##name;
+	ARC_SETTINGS(arc)
+	#undef WEP_ADD_CVAR
+	#undef WEP_ADD_PROP
 }
 
 void spawnfunc_weapon_lightning (void) // should this really be here?
