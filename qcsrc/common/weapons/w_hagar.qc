@@ -12,6 +12,7 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_hagar() { weapon_defaultspawnfunc(WEP_HAGAR); }
 // NO bounce protection, as bounces are limited!
 
 void W_Hagar_Explode (void)
@@ -343,11 +344,6 @@ void W_Hagar_Attack2_Load (void)
 		W_SwitchToOtherWeapon(self);
 		return;
 	}
-}
-
-void spawnfunc_weapon_hagar (void)
-{
-	weapon_defaultspawnfunc(WEP_HAGAR);
 }
 
 float w_hagar(float req)

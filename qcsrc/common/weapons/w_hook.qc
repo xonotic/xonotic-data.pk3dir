@@ -12,6 +12,17 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_hook()
+{
+	if(g_grappling_hook) // offhand hook
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
+	weapon_defaultspawnfunc(WEP_HOOK);
+}
+
 .float dmg;
 .float dmg_edge;
 .float dmg_radius;
@@ -125,17 +136,6 @@ void W_Hook_Attack2()
 	CSQCProjectile(gren, TRUE, PROJECTILE_HOOKBOMB, TRUE);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
-}
-
-void spawnfunc_weapon_hook (void)
-{
-	if(g_grappling_hook) // offhand hook
-	{
-		startitem_failed = TRUE;
-		remove(self);
-		return;
-	}
-	weapon_defaultspawnfunc(WEP_HOOK);
 }
 
 float w_hook(float req)

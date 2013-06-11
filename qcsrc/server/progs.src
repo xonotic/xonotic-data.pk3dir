@@ -16,7 +16,8 @@ sys-post.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/counting.qh
-../common/weapons/weapons.qh // TODO
+weapons/cl_weapons.qh
+../common/weapons/weapons.qh // WEAPONTODO
 ../common/urllib.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh

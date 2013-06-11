@@ -12,6 +12,7 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_laser() { weapon_defaultspawnfunc(WEP_LASER); }
 void(float imp) W_SwitchWeapon;
 void() W_LastWeapon;
 .float swing_prev;
@@ -430,11 +431,6 @@ void W_Laser_Attack(float issecondary)
 		self.think();
 		self = oldself;
 	}
-}
-
-void spawnfunc_weapon_laser(void)
-{
-	weapon_defaultspawnfunc(WEP_LASER);
 }
 
 float W_Laser(float request)

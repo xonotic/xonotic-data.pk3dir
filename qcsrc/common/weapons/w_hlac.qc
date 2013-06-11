@@ -12,6 +12,7 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_hlac() { weapon_defaultspawnfunc(WEP_HLAC); }
 
 void W_HLAC_Touch (void)
 {
@@ -164,11 +165,6 @@ void HLAC_fire1_02()
 	{
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_animtime, w_ready);
 	}
-}
-
-void spawnfunc_weapon_hlac (void)
-{
-	weapon_defaultspawnfunc(WEP_HLAC);
 }
 
 float w_hlac(float req)

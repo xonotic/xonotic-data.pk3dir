@@ -10,8 +10,21 @@ REGISTER_WEAPON(
 /* shortname */ "uzi",
 /* fullname  */ _("Machine Gun")
 );
+
+#ifdef SVQC
+#endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_uzi()
+{
+	if(autocvar_sv_q3acompat_machineshotgunswap)
+	if(self.classname != "droppedweapon")
+	{
+		weapon_defaultspawnfunc(WEP_SHOTGUN);
+		return;
+	}
+	weapon_defaultspawnfunc(WEP_UZI);
+}
 
 // leilei's fancy muzzleflash stuff
 void UZI_Flash_Go()
@@ -186,8 +199,6 @@ void uzi_mode1_fire_burst()
 	}
 
 }
-
-void spawnfunc_weapon_machinegun(); // defined in t_items.qc
 
 float w_uzi(float req)
 {

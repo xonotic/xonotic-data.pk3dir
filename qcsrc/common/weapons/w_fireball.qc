@@ -12,6 +12,8 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_fireball() { weapon_defaultspawnfunc(WEP_FIREBALL); }
+
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -305,11 +307,6 @@ void W_Fireball_Attack2()
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
-}
-
-void spawnfunc_weapon_fireball (void)
-{
-	weapon_defaultspawnfunc(WEP_FIREBALL);
 }
 
 float w_fireball(float req)

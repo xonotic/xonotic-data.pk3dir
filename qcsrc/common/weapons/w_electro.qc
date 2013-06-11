@@ -17,6 +17,8 @@ vector electro_shotorigin[4];
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_electro() { weapon_defaultspawnfunc(WEP_ELECTRO); }
+
 .float electro_count;
 .float electro_secondarytime;
 
@@ -371,11 +373,6 @@ void ElectroInit()
 	electro_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 2);
 	electro_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 3);
 	electro_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 4);
-}
-
-void spawnfunc_weapon_electro (void)
-{
-	weapon_defaultspawnfunc(WEP_ELECTRO);
 }
 
 void w_electro_checkattack()

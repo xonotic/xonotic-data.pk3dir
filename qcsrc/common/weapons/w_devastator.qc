@@ -47,10 +47,8 @@ DEVASTATOR_SETTINGS(devastator)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_rocketlauncher()
-{
-	weapon_defaultspawnfunc(WEP_DEVASTATOR);
-}
+void spawnfunc_weapon_devastator() { weapon_defaultspawnfunc(WEP_DEVASTATOR); }
+void spawnfunc_weapon_rocketlauncher() { spawnfunc_weapon_devastator(); }
 
 void W_Devastator_Unregister()
 {

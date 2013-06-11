@@ -10,6 +10,13 @@ REGISTER_WEAPON(
 /* shortname */ "minstanex",
 /* fullname  */ _("MinstaNex")
 );
+
+#ifdef SVQC
+void spawnfunc_weapon_minstanex (void)
+{
+	weapon_defaultspawnfunc(WEP_MINSTANEX);
+}
+#endif
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
@@ -77,8 +84,6 @@ void W_MinstaNex_Attack (void)
 	
 	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
-
-void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
 
 float w_minstanex(float req)
 {

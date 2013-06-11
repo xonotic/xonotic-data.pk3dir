@@ -12,6 +12,17 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_shotgun()
+{
+	if(autocvar_sv_q3acompat_machineshotgunswap)
+	if(self.classname != "droppedweapon")
+	{
+		weapon_defaultspawnfunc(WEP_UZI);
+		return;
+	}
+	weapon_defaultspawnfunc(WEP_SHOTGUN);
+}
+
 
 void W_Shotgun_Attack (void)
 {

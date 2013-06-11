@@ -10,6 +10,13 @@ REGISTER_WEAPON(
 /* shortname */ "nex",
 /* fullname  */ _("Nex")
 );
+
+#ifdef SVQC
+void spawnfunc_weapon_nex (void)
+{
+	weapon_defaultspawnfunc(WEP_NEX);
+}
+#endif
 #else
 #ifdef SVQC
 

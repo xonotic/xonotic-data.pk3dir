@@ -12,6 +12,7 @@ REGISTER_WEAPON(
 );
 #else
 #ifdef SVQC
+void spawnfunc_weapon_crylink() { weapon_defaultspawnfunc(WEP_CRYLINK); }
 .float gravity;
 .float crylink_waitrelease;
 .entity crylink_lastgroup;
@@ -575,11 +576,6 @@ void W_Crylink_Attack2 (void)
 		W_Crylink_CheckLinks(proj);
 		self.crylink_waitrelease = 2;
 	}
-}
-
-void spawnfunc_weapon_crylink (void)
-{
-	weapon_defaultspawnfunc(WEP_CRYLINK);
 }
 
 float w_crylink(float req)
