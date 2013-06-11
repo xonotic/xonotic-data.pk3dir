@@ -101,6 +101,18 @@ void Projectile_Draw()
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+			case PROJECTILE_NADE_YELLOW_BURN:
+			case PROJECTILE_NADE_YELLOW:
+			case PROJECTILE_NADE_PINK_BURN:
+			case PROJECTILE_NADE_PINK:
+			case PROJECTILE_NADE_BURN:
+			case PROJECTILE_NADE:
+				rot = self.avelocity; 
+				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
 				break;
@@ -124,6 +136,18 @@ void Projectile_Draw()
 	trailorigin = self.origin;
 	switch(self.cnt)
 	{
+	    case PROJECTILE_NADE_RED_BURN:
+		case PROJECTILE_NADE_RED:
+		case PROJECTILE_NADE_BLUE_BURN:
+		case PROJECTILE_NADE_BLUE:
+		case PROJECTILE_NADE_YELLOW_BURN:
+		case PROJECTILE_NADE_YELLOW:
+		case PROJECTILE_NADE_PINK_BURN:
+		case PROJECTILE_NADE_PINK:
+		case PROJECTILE_NADE_BURN:
+		case PROJECTILE_NADE:
+			trailorigin += v_up * 4;
+			break;
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
@@ -363,8 +387,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
-				self.mins = '-3 -3 -3';
-				self.maxs = '3 3 3';
+				self.mins = '-16 -16 -16';
+				self.maxs = '16 16 16';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.scale = 1.5;
@@ -488,6 +512,8 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	
+	precache_model("models/weapons/v_ok_grenade.md3");
 
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
