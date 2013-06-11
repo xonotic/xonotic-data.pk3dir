@@ -1,12 +1,12 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ LIGHTNING,
-/* function  */ w_lightning,
+/* WEP_##id  */ ARC,
+/* function  */ w_arc,
 /* ammotype  */ IT_CELLS,
 /* impulse   */ 5,
 /* flags     */ WEP_FLAG_NORMAL,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "lightning",
+/* model     */ "arc",
 /* shortname */ "arc",
 /* fullname  */ _("Arc")
 );
@@ -24,24 +24,23 @@ REGISTER_WEAPON(
 	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
 	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
 
+#ifndef MENUQC
+vector arc_shotorigin[4];
+#endif
 #ifdef SVQC
 ARC_SETTINGS(arc)
-void LightningInit();
-vector lightning_shotorigin[4];
+void ArcInit();
+.vector hook_start, hook_end; // used for beam
+.entity arc_beam; // used for beam
+.float BUTTON_ATCK_prev; // for better animation control
+.float lg_fire_prev; // for better animation control
 #endif
 #else
 #ifdef SVQC
 
-// Declarations ========================= 
-.vector hook_start, hook_end; // used for beam
-.entity lightning_beam; // used for beam
-.float BUTTON_ATCK_prev; // for better animation control
-.float lg_fire_prev; // for better animation control
-
-// Lightning functions ========================= 
-float W_Lightning_Beam_Send(entity to, float sf)
+float W_Arc_Beam_Send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LIGHTNING_BEAM);
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 	sf = sf & 0x7F;
 	if(sound_allowed(MSG_BROADCAST, self.owner))
 		sf |= 0x80;
@@ -66,18 +65,18 @@ float W_Lightning_Beam_Send(entity to, float sf)
 	return TRUE;
 }
 
-void W_Lightning_Beam_Think()
+void W_Arc_Beam_Think()
 {
 	self.owner.lg_fire_prev = time;
-	if (self != self.owner.lightning_beam)
+	if (self != self.owner.arc_beam)
 	{
 		remove(self);
 		return;
 	}
 	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.ammo_cells <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
-		if(self == self.owner.lightning_beam)
-			self.owner.lightning_beam = world;
+		if(self == self.owner.arc_beam)
+			self.owner.arc_beam = world;
 		remove(self);
 		return;
 	}
@@ -109,8 +108,8 @@ void W_Lightning_Beam_Think()
 		f = ExponentialFalloff(WEP_CVAR_PRI(arc, falloff_mindist), WEP_CVAR_PRI(arc, falloff_maxdist), WEP_CVAR_PRI(arc, falloff_halflifedist), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
 
 		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_LIGHTNING, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
-		Damage (trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_LIGHTNING, trace_endpos, force * dt);
+			accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
+		Damage (trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_ARC, trace_endpos, force * dt);
 	}
 
 	// draw effect
@@ -127,7 +126,7 @@ void W_Lightning_Beam_Think()
 }
 
 // Attack functions ========================= 
-void W_Lightning_Attack1 (void)
+void W_Arc_Attack1 (void)
 {
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.lg_fire_prev > 0.5)
@@ -135,16 +134,16 @@ void W_Lightning_Attack1 (void)
 
 	entity beam, oldself;
 
-	self.lightning_beam = beam = spawn();
-	beam.classname = "W_Lightning_Beam";
+	self.arc_beam = beam = spawn();
+	beam.classname = "W_Arc_Beam";
 	beam.solid = SOLID_NOT;
-	beam.think = W_Lightning_Beam_Think;
+	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
 	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR_PRI(arc, damage);
-	Net_LinkEntity(beam, FALSE, 0, W_Lightning_Beam_Send);
+	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
 	oldself = self;
 	self = beam;
@@ -152,7 +151,7 @@ void W_Lightning_Attack1 (void)
 	self = oldself;
 }
 
-float w_lightning(float req)
+float w_arc(float req)
 {
 	if (req == WR_AIM)
 	{
@@ -166,8 +165,8 @@ float w_lightning(float req)
 		{
 			float shoot;
 
-			if(autocvar_g_balance_lightning_primary_speed)
-				shoot = bot_aim(autocvar_g_balance_lightning_primary_speed, 0, autocvar_g_balance_lightning_primary_lifetime, FALSE);
+			if(autocvar_g_balance_arc_primary_speed)
+				shoot = bot_aim(autocvar_g_balance_arc_primary_speed, 0, autocvar_g_balance_arc_primary_lifetime, FALSE);
 			else
 				shoot = bot_aim(1000000, 0, 0.001, FALSE);
 
@@ -179,7 +178,7 @@ float w_lightning(float req)
 		}
 		else // todo
 		{
-			//if(bot_aim(autocvar_g_balance_lightning_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_lightning_secondary_lifetime, TRUE))
+			//if(bot_aim(autocvar_g_balance_arc_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_arc_secondary_lifetime, TRUE))
 			//{
 			//	self.BUTTON_ATCK2 = TRUE;
 			//	if(random() < 0.03) self.bot_aim_whichfiretype = 0;
@@ -193,14 +192,14 @@ float w_lightning(float req)
 		{
 			if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
 				/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
-					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_lightning_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 				else*/
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
 			
 			if (weapon_prepareattack(0, 0))
 			{
-				if ((!self.lightning_beam) || wasfreed(self.lightning_beam))
-					W_Lightning_Attack1();
+				if ((!self.arc_beam) || wasfreed(self.arc_beam))
+					W_Arc_Attack1();
 				
 				if(!self.BUTTON_ATCK_prev)
 				{
@@ -220,28 +219,28 @@ float w_lightning(float req)
 		}
 
 		//if (self.BUTTON_ATCK2)
-			//if (weapon_prepareattack(1, autocvar_g_balance_lightning_secondary_refire))
+			//if (weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
 			//{
-			//	W_Lightning_Attack2();
-			//	self.lightning_count = autocvar_g_balance_lightning_secondary_count;
-			//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_lightning_secondary_animtime, w_lightning_checkattack);
-			//	self.lightning_secondarytime = time + autocvar_g_balance_lightning_secondary_refire2 * W_WeaponRateFactor();
+			//	W_Arc_Attack2();
+			//	self.arc_count = autocvar_g_balance_arc_secondary_count;
+			//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+			//	self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
 			//}
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_lightning.md3");
-		precache_model ("models/weapons/v_lightning.md3");
-		precache_model ("models/weapons/h_lightning.iqm");
-		//precache_sound ("weapons/lightning_bounce.wav");
-		precache_sound ("weapons/lightning_fire.wav");
-		precache_sound ("weapons/lightning_fire2.wav");
-		precache_sound ("weapons/lightning_impact.wav");
-		//precache_sound ("weapons/lightning_impact_combo.wav");
-		//precache_sound ("weapons/W_Lightning_Beam_fire.wav");
+		precache_model ("models/weapons/g_arc.md3");
+		precache_model ("models/weapons/v_arc.md3");
+		precache_model ("models/weapons/h_arc.iqm");
+		//precache_sound ("weapons/arc_bounce.wav");
+		precache_sound ("weapons/arc_fire.wav");
+		precache_sound ("weapons/arc_fire2.wav");
+		precache_sound ("weapons/arc_impact.wav");
+		//precache_sound ("weapons/arc_impact_combo.wav");
+		//precache_sound ("weapons/W_Arc_Beam_fire.wav");
 	}
 	else if (req == WR_SETUP)
-		weapon_setup(WEP_LIGHTNING);
+		weapon_setup(WEP_ARC);
 	else if (req == WR_CHECKAMMO1)
 	{
 		return !WEP_CVAR_PRI(arc, ammo) || (self.ammo_cells > 0);
@@ -264,33 +263,33 @@ float w_lightning(float req)
 	}
 	else if (req == WR_RESETPLAYER)
 	{
-		//self.lightning_secondarytime = time;
+		//self.arc_secondarytime = time;
 	}
 	return TRUE;
 };
 
-void LightningInit()
+void ArcInit()
 {
-	weapon_action(WEP_LIGHTNING, WR_PRECACHE);
-	lightning_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 1);
-	lightning_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 2);
-	lightning_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 3);
-	lightning_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_LIGHTNING), FALSE, FALSE, 4);
+	weapon_action(WEP_ARC, WR_PRECACHE);
+	arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
+	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
+	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
+	arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
 
 	#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-	#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_LIGHTNING).##prop = autocvar_g_balance_##weapon##_##name;
+	#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_ARC).##prop = autocvar_g_balance_##weapon##_##name;
 	ARC_SETTINGS(arc)
 	#undef WEP_ADD_CVAR
 	#undef WEP_ADD_PROP
 }
 
-void spawnfunc_weapon_lightning (void) // should this really be here?
+void spawnfunc_weapon_arc (void) // should this really be here?
 {
-	weapon_defaultspawnfunc(WEP_LIGHTNING);
+	weapon_defaultspawnfunc(WEP_ARC);
 }
 #endif
 #ifdef CSQC
-float w_lightning(float req)
+float w_arc(float req)
 {
 	if(req == WR_IMPACTEFFECT)
 	{
@@ -299,21 +298,21 @@ float w_lightning(float req)
 		
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
-			pointparticles(particleeffectnum("lightning_ballexplode"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum("arc_ballexplode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 		{
-			pointparticles(particleeffectnum("lightning_impact"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum("arc_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/lightning_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/lightning_impact.wav");
-		precache_sound("weapons/lightning_impact_combo.wav");
+		precache_sound("weapons/arc_impact.wav");
+		precache_sound("weapons/arc_impact_combo.wav");
 	}
 	return TRUE;
 }

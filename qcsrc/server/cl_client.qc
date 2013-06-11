@@ -620,10 +620,10 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(lightning_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(lightning_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(lightning_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(lightning_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[3]));
 
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);

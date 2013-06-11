@@ -78,7 +78,7 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_ELECTRO_BEAM:
 			vs = electro_shotorigin[s];
 			break;
-		case ENT_CLIENT_LIGHTNING_BEAM:
+		case ENT_CLIENT_ARC_BEAM:
 			vs = lightning_shotorigin[s];
 			break;
 	}
@@ -93,7 +93,7 @@ void Draw_GrapplingHook()
 				b = self.origin;
 				break;
 			case ENT_CLIENT_ELECTRO_BEAM:
-			case ENT_CLIENT_LIGHTNING_BEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -114,7 +114,7 @@ void Draw_GrapplingHook()
 				b = self.origin;
 				break;
 			case ENT_CLIENT_ELECTRO_BEAM:
-			case ENT_CLIENT_LIGHTNING_BEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
 				break;
@@ -161,7 +161,7 @@ void Draw_GrapplingHook()
 			tex = "particles/lgbeam";
 			rgb = '1 1 1';
 			break;
-		case ENT_CLIENT_LIGHTNING_BEAM: // todo
+		case ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
@@ -194,7 +194,7 @@ void Draw_GrapplingHook()
 			}
 			break;
 		case ENT_CLIENT_ELECTRO_BEAM:
-		case ENT_CLIENT_LIGHTNING_BEAM:
+		case ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -207,7 +207,7 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_ELECTRO_BEAM:
 			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
-		case ENT_CLIENT_LIGHTNING_BEAM:
+		case ENT_CLIENT_ARC_BEAM:
 			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
@@ -240,7 +240,7 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.HookRange = 0;
 				break;
 			case ENT_CLIENT_ELECTRO_BEAM:
-			case ENT_CLIENT_LIGHTNING_BEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
 		}
@@ -277,7 +277,7 @@ void Ent_ReadHook(float bIsNew, float type)
 			case ENT_CLIENT_ELECTRO_BEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
-			case ENT_CLIENT_LIGHTNING_BEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 		}

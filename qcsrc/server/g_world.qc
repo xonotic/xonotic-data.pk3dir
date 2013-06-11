@@ -654,7 +654,7 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
-	LightningInit();
+	ArcInit();
 	ElectroInit();
 
 	player_count = 0;
