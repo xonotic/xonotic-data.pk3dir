@@ -349,7 +349,6 @@ float autocvar_g_balance_health_regenstable;
 float autocvar_g_balance_health_rot;
 float autocvar_g_balance_health_rotlinear;
 float autocvar_g_balance_health_rotstable;
-float autocvar_g_balance_health_start;
 float autocvar_g_balance_hlac_primary_ammo;
 float autocvar_g_balance_hlac_primary_animtime;
 float autocvar_g_balance_hlac_primary_damage;

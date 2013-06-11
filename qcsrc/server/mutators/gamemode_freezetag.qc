@@ -469,7 +469,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		if(inWarmupStage)
+			self.health = max(1, self.freezetag_revive_progress * warmup_start_health);
+		else
+			self.health = max(1, self.freezetag_revive_progress * start_health);
 
 		if(self.freezetag_revive_progress >= 1)
 		{
@@ -510,7 +513,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		if(inWarmupStage)
+			self.health = max(1, self.freezetag_revive_progress * warmup_start_health);
+		else
+			self.health = max(1, self.freezetag_revive_progress * start_health);
 	}
 	else if(!n)
 	{
