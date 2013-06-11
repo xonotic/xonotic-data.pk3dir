@@ -291,7 +291,7 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 		return FALSE;
 	}
 	
-	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
+	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_NEX)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);

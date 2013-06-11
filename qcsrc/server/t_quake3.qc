@@ -72,7 +72,7 @@ void target_give_init()
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_rocketlauncher_ammo;
+			self.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
 			self.netname = "rocketlauncher";
 		}
 		else if (targ.classname == "weapon_plasmagun") {

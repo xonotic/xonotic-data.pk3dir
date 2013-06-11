@@ -421,7 +421,7 @@ float GetAmmoStat(float i)
 	}
 }
 
-float GetAmmoTypeForWep(float i)
+float GetAmmoTypeForWep(float i) // WEAPONTODO
 {
 	switch(i)
 	{
@@ -436,7 +436,7 @@ float GetAmmoTypeForWep(float i)
 		case WEP_NEX: return 3;
 		case WEP_RIFLE: return 1;
 		case WEP_HAGAR: return 2;
-		case WEP_ROCKET_LAUNCHER: return 2;
+		case WEP_DEVASTATOR: return 2;
 		case WEP_SEEKER: return 2;
 		case WEP_FIREBALL: return 4;
 		case WEP_HOOK: return 3;

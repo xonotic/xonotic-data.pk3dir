@@ -458,7 +458,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-float w_getbestweapon(entity e);
+float w_getbestweapon(entity e); // WEAPONTODO
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o;
@@ -1385,18 +1385,6 @@ void precache()
     {
         precache_sound ("weapons/hook_fire.wav"); // hook
         precache_sound ("weapons/hook_impact.wav"); // hook
-    }
-
-    if(autocvar_sv_precacheweapons)
-    {
-        //precache weapon models/sounds
-        float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_action(wep, WR_PRECACHE);
-            wep = wep + 1;
-        }
     }
 
     precache_model("models/elaser.mdl");

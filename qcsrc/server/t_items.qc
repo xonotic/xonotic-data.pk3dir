@@ -1320,11 +1320,6 @@ void spawnfunc_weapon_minstanex (void)
 	weapon_defaultspawnfunc(WEP_MINSTANEX);
 }
 
-void spawnfunc_weapon_rocketlauncher (void)
-{
-	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
-}
-
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;

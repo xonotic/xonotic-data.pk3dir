@@ -21,6 +21,8 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_PRI,  force) \
 	WEP_ADD_CVAR(weapon, MO_PRI,  range) \
 	WEP_ADD_CVAR(weapon, MO_PRI,  refire) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
 	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
 	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
 

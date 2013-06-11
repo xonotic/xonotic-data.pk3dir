@@ -270,7 +270,7 @@ float TrueAimCheck()
 	ta = trueaim;
 	mv = MOVE_NOMONSTERS;
 
-	switch(activeweapon)
+	switch(activeweapon) // WEAPONTODO
 	{
 		case WEP_TUBA: // no aim
 		case WEP_PORTO: // shoots from eye
@@ -290,7 +290,7 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_ROCKET_LAUNCHER: // projectile has a size!
+		case WEP_DEVASTATOR: // projectile has a size!
 			mi = '-3 -3 -3';
 			ma = '3 3 3';
 			break;

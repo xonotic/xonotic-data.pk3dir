@@ -177,7 +177,6 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
 	Tuba_Precache();

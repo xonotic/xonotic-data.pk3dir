@@ -35,16 +35,22 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
 	WEP_ADD_CVAR(weapon, MO_NONE, speedaccel) \
 	WEP_ADD_CVAR(weapon, MO_NONE, speedstart) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
 	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
 	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 DEVASTATOR_SETTINGS(devastator)
+.float rl_release;
+.float rl_detonate_later;
 #endif
 #else
 #ifdef SVQC
-.float rl_release;
-.float rl_detonate_later;
+void spawnfunc_weapon_rocketlauncher()
+{
+	weapon_defaultspawnfunc(WEP_DEVASTATOR);
+}
 
 void W_Devastator_Unregister()
 {
@@ -55,7 +61,7 @@ void W_Devastator_Unregister()
 	}
 }
 
-void W_Devastator_Explode ()
+void W_Devastator_Explode()
 {
 	W_Devastator_Unregister();
 
@@ -83,7 +89,7 @@ void W_Devastator_Explode ()
 	remove (self);
 }
 
-void W_Devastator_DoRemoteExplode ()
+void W_Devastator_DoRemoteExplode()
 {
 	W_Devastator_Unregister();
 
@@ -306,8 +312,6 @@ void W_Devastator_Attack (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void spawnfunc_weapon_rocketlauncher (void); // defined in t_items.qc
-
 float W_Devastator(float req)
 {
 	entity rock;
@@ -446,13 +450,22 @@ float W_Devastator(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/flash.md3");
-		precache_model ("models/weapons/g_rl.md3");
-		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.iqm");
-		precache_sound ("weapons/rocket_det.wav");
-		precache_sound ("weapons/rocket_fire.wav");
-		precache_sound ("weapons/rocket_mode.wav");
+		if(autocvar_sv_precacheweapons)
+		{
+			precache_model ("models/flash.md3");
+			precache_model ("models/weapons/g_rl.md3");
+			precache_model ("models/weapons/v_rl.md3");
+			precache_model ("models/weapons/h_rl.iqm");
+			precache_sound ("weapons/rocket_det.wav");
+			precache_sound ("weapons/rocket_fire.wav");
+			precache_sound ("weapons/rocket_mode.wav");
+		}
+
+		#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+		#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_DEVASTATOR).##prop = autocvar_g_balance_##weapon##_##name;
+		ARC_SETTINGS(devastator)
+		#undef WEP_ADD_CVAR
+		#undef WEP_ADD_PROP
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)

@@ -353,10 +353,3 @@ void Ent_DamageInfo(float isNew)
 		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
 	}
 }
-
-void DamageInfo_Precache()
-{
-	float i;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
-}
