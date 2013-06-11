@@ -39,6 +39,10 @@ void ArcInit();
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_arc (void) // should this really be here?
+{
+	weapon_defaultspawnfunc(WEP_ARC);
+}
 
 float W_Arc_Beam_Send(entity to, float sf)
 {
@@ -297,11 +301,6 @@ void ArcInit()
 	ARC_SETTINGS(arc)
 	#undef WEP_ADD_CVAR
 	#undef WEP_ADD_PROP
-}
-
-void spawnfunc_weapon_arc (void) // should this really be here?
-{
-	weapon_defaultspawnfunc(WEP_ARC);
 }
 #endif
 #ifdef CSQC
