@@ -174,68 +174,77 @@ void spawnfunc_weapon_hlac (void)
 float w_hlac(float req)
 {
 	float ammo_amount;
-	if (req == WR_AIM)
-        self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hlac_primary_speed, 0, autocvar_g_balance_hlac_primary_lifetime, FALSE);
-	else if (req == WR_THINK)
+	switch(req)
 	{
-		if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		case WR_AIM:
 		{
-			if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
-			{
-				self.misc_bulletcounter = 0;
-				W_HLAC_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
-			}
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hlac_primary_speed, 0, autocvar_g_balance_hlac_primary_lifetime, FALSE);
+			return TRUE;
 		}
-
-		else if (self.BUTTON_ATCK2 && autocvar_g_balance_hlac_secondary)
+		case WR_THINK:
 		{
-			if (weapon_prepareattack(1, autocvar_g_balance_hlac_secondary_refire))
+			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if (self.BUTTON_ATCK)
 			{
-				W_HLAC_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hlac_secondary_animtime, w_ready);
+				if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))
+				{
+					self.misc_bulletcounter = 0;
+					W_HLAC_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_refire, HLAC_fire1_02);
+				}
 			}
-		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-        precache_model ("models/weapons/g_hlac.md3");
-		precache_model ("models/weapons/v_hlac.md3");
-		precache_model ("models/weapons/h_hlac.iqm");
-		precache_sound ("weapons/lasergun_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
 
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_HLAC);
-		self.current_ammo = ammo_cells;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
-		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_primary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_secondary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_HLAC_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		return WEAPON_HLAC_MURDER;
+			else if (self.BUTTON_ATCK2 && autocvar_g_balance_hlac_secondary)
+			{
+				if (weapon_prepareattack(1, autocvar_g_balance_hlac_secondary_refire))
+				{
+					W_HLAC_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hlac_secondary_animtime, w_ready);
+				}
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_hlac.md3");
+			precache_model ("models/weapons/v_hlac.md3");
+			precache_model ("models/weapons/h_hlac.iqm");
+			precache_sound ("weapons/lasergun_fire.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_HLAC);
+			self.current_ammo = ammo_cells;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_primary_ammo;
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
+		{
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_secondary_ammo;
+			return ammo_amount;
+		}
+		case WR_RELOAD:
+		{
+			W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_HLAC_SUICIDE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_HLAC_MURDER;
+		}
 	}
 	return TRUE;
 }
@@ -243,17 +252,23 @@ float w_hlac(float req)
 #ifdef CSQC
 float w_hlac(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/laserimpact.wav");
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+			if(!w_issilent)
+				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+				
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/laserimpact.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

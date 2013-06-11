@@ -366,178 +366,188 @@ float w_minelayer(float req)
 {
 	entity mine;
 	float ammo_amount;
-
-	if (req == WR_AIM)
+	switch(req)
 	{
-		// aim and decide to fire if appropriate
-		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
-			self.BUTTON_ATCK = FALSE;
-		else
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
-		if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
+		case WR_AIM:
 		{
-			// decide whether to detonate mines
-			entity targetlist, targ;
-			float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
-			float selfdamage, teamdamage, enemydamage;
-			edgedamage = autocvar_g_balance_minelayer_edgedamage;
-			coredamage = autocvar_g_balance_minelayer_damage;
-			edgeradius = autocvar_g_balance_minelayer_radius;
-			recipricoledgeradius = 1 / edgeradius;
-			selfdamage = 0;
-			teamdamage = 0;
-			enemydamage = 0;
-			targetlist = findchainfloat(bot_attack, TRUE);
-			mine = find(world, classname, "mine");
-			while (mine)
+			// aim and decide to fire if appropriate
+			if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+				self.BUTTON_ATCK = FALSE;
+			else
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
+			if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 			{
-				if (mine.realowner != self)
+				// decide whether to detonate mines
+				entity targetlist, targ;
+				float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+				float selfdamage, teamdamage, enemydamage;
+				edgedamage = autocvar_g_balance_minelayer_edgedamage;
+				coredamage = autocvar_g_balance_minelayer_damage;
+				edgeradius = autocvar_g_balance_minelayer_radius;
+				recipricoledgeradius = 1 / edgeradius;
+				selfdamage = 0;
+				teamdamage = 0;
+				enemydamage = 0;
+				targetlist = findchainfloat(bot_attack, TRUE);
+				mine = find(world, classname, "mine");
+				while (mine)
 				{
-					mine = find(mine, classname, "mine");
-					continue;
-				}
-				targ = targetlist;
-				while (targ)
-				{
-					d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - mine.origin);
-					d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
-					// count potential damage according to type of target
-					if (targ == self)
-						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teamplay)
-						teamdamage = teamdamage + d;
-					else if (bot_shouldattack(targ))
-						enemydamage = enemydamage + d;
-					targ = targ.chain;
-				}
-				mine = find(mine, classname, "mine");
-			}
-			float desirabledamage;
-			desirabledamage = enemydamage;
-			if (time > self.invincible_finished && time > self.spawnshieldtime)
-				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-			if (teamplay && self.team)
-				desirabledamage = desirabledamage - teamdamage;
-
-			mine = find(world, classname, "mine");
-			while (mine)
-			{
-				if (mine.realowner != self)
-				{
-					mine = find(mine, classname, "mine");
-					continue;
-				}
-				makevectors(mine.v_angle);
-				targ = targetlist;
-				if (skill > 9) // normal players only do this for the target they are tracking
-				{
+					if (mine.realowner != self)
+					{
+						mine = find(mine, classname, "mine");
+						continue;
+					}
 					targ = targetlist;
 					while (targ)
 					{
-						if (
-							(v_forward * normalize(mine.origin - targ.origin)< 0.1)
-							&& desirabledamage > 0.1*coredamage
-						)self.BUTTON_ATCK2 = TRUE;
+						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - mine.origin);
+						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+						// count potential damage according to type of target
+						if (targ == self)
+							selfdamage = selfdamage + d;
+						else if (targ.team == self.team && teamplay)
+							teamdamage = teamdamage + d;
+						else if (bot_shouldattack(targ))
+							enemydamage = enemydamage + d;
 						targ = targ.chain;
 					}
-				}else{
-					float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
-					//As the distance gets larger, a correct detonation gets near imposible
-					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
-					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
-						if(IS_PLAYER(self.enemy))
-							if(desirabledamage >= 0.1*coredamage)
-								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-									self.BUTTON_ATCK2 = TRUE;
-				//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
+					mine = find(mine, classname, "mine");
 				}
+				float desirabledamage;
+				desirabledamage = enemydamage;
+				if (time > self.invincible_finished && time > self.spawnshieldtime)
+					desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
+				if (teamplay && self.team)
+					desirabledamage = desirabledamage - teamdamage;
 
-				mine = find(mine, classname, "mine");
-			}
-			// if we would be doing at X percent of the core damage, detonate it
-			// but don't fire a new shot at the same time!
-			if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
-				self.BUTTON_ATCK2 = TRUE;
-			if ((skill > 6.5) && (selfdamage > self.health))
-				self.BUTTON_ATCK2 = FALSE;
-			//if(self.BUTTON_ATCK2 == TRUE)
-			//	dprint(ftos(desirabledamage),"\n");
-			if (self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
-		}
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
-		{
-			// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-			if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-				weapon_action(self.weapon, WR_RELOAD);
-		}
-		else if (self.BUTTON_ATCK)
-		{
-			if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
-			{
-				W_Mine_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minelayer_animtime, w_ready);
-			}
-		}
+				mine = find(world, classname, "mine");
+				while (mine)
+				{
+					if (mine.realowner != self)
+					{
+						mine = find(mine, classname, "mine");
+						continue;
+					}
+					makevectors(mine.v_angle);
+					targ = targetlist;
+					if (skill > 9) // normal players only do this for the target they are tracking
+					{
+						targ = targetlist;
+						while (targ)
+						{
+							if (
+								(v_forward * normalize(mine.origin - targ.origin)< 0.1)
+								&& desirabledamage > 0.1*coredamage
+							)self.BUTTON_ATCK2 = TRUE;
+							targ = targ.chain;
+						}
+					}else{
+						float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+						//As the distance gets larger, a correct detonation gets near imposible
+						//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
+						if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
+							if(IS_PLAYER(self.enemy))
+								if(desirabledamage >= 0.1*coredamage)
+									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
+										self.BUTTON_ATCK2 = TRUE;
+					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
+					}
 
-		if (self.BUTTON_ATCK2)
-		{
-			if(W_PlacedMines(TRUE))
-				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
-		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/flash.md3");
-		precache_model ("models/mine.md3");
-		precache_model ("models/weapons/g_minelayer.md3");
-		precache_model ("models/weapons/v_minelayer.md3");
-		precache_model ("models/weapons/h_minelayer.iqm");
-		precache_sound ("weapons/mine_det.wav");
-		precache_sound ("weapons/mine_fire.wav");
-		precache_sound ("weapons/mine_stick.wav");
-		precache_sound ("weapons/mine_trigger.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_MINE_LAYER);
-		self.current_ammo = ammo_rockets;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		// don't switch while placing a mine
-		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
-		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
-			ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= autocvar_g_balance_minelayer_ammo;
-			return ammo_amount;
-		}
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		if (W_PlacedMines(FALSE))
+					mine = find(mine, classname, "mine");
+				}
+				// if we would be doing at X percent of the core damage, detonate it
+				// but don't fire a new shot at the same time!
+				if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
+					self.BUTTON_ATCK2 = TRUE;
+				if ((skill > 6.5) && (selfdamage > self.health))
+					self.BUTTON_ATCK2 = FALSE;
+				//if(self.BUTTON_ATCK2 == TRUE)
+				//	dprint(ftos(desirabledamage),"\n");
+				if (self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
+			}
+			
 			return TRUE;
-		else
-			return FALSE;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.minelayer_mines = 0;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_MINELAYER_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		return WEAPON_MINELAYER_MURDER;
+		}
+		case WR_THINK:
+		{
+			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
+			{
+				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
+				if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+					weapon_action(self.weapon, WR_RELOAD);
+			}
+			else if (self.BUTTON_ATCK)
+			{
+				if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
+				{
+					W_Mine_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minelayer_animtime, w_ready);
+				}
+			}
+
+			if (self.BUTTON_ATCK2)
+			{
+				if(W_PlacedMines(TRUE))
+					sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/flash.md3");
+			precache_model ("models/mine.md3");
+			precache_model ("models/weapons/g_minelayer.md3");
+			precache_model ("models/weapons/v_minelayer.md3");
+			precache_model ("models/weapons/h_minelayer.iqm");
+			precache_sound ("weapons/mine_det.wav");
+			precache_sound ("weapons/mine_fire.wav");
+			precache_sound ("weapons/mine_stick.wav");
+			precache_sound ("weapons/mine_trigger.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_MINE_LAYER);
+			self.current_ammo = ammo_rockets;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			// don't switch while placing a mine
+			if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
+			{
+				ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
+				ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= autocvar_g_balance_minelayer_ammo;
+				return ammo_amount;
+			}
+			return TRUE;
+		}
+		case WR_CHECKAMMO2:
+		{
+			if (W_PlacedMines(FALSE))
+				return TRUE;
+			else
+				return FALSE;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.minelayer_mines = 0;
+			return TRUE;
+		}
+		case WR_RELOAD:
+		{
+			W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_MINELAYER_SUICIDE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_MINELAYER_MURDER;
+		}
 	}
 	return TRUE;
 }
@@ -545,17 +555,23 @@ float w_minelayer(float req)
 #ifdef CSQC
 float w_minelayer(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 12;
-		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
-		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/mine_exp.wav");
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 12;
+			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/mine_exp.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

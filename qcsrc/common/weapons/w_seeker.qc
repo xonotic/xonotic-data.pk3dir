@@ -537,120 +537,129 @@ float w_seeker(float req)
 {
 	float ammo_amount;
 
-	if (req == WR_AIM)
+	switch(req)
 	{
-		if (autocvar_g_balance_seeker_type == 1) 
-			if (Seeker_Tagged_Info(self, self.enemy) != world)
-				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_missile_speed_max, 0, autocvar_g_balance_seeker_missile_lifetime, FALSE);
+		case WR_AIM:
+		{
+			if (autocvar_g_balance_seeker_type == 1) 
+				if (Seeker_Tagged_Info(self, self.enemy) != world)
+					self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_missile_speed_max, 0, autocvar_g_balance_seeker_missile_lifetime, FALSE);
+				else
+					self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
 			else
-				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
-		else
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-			
-		else if (self.BUTTON_ATCK)
-		{
-			if (autocvar_g_balance_seeker_type == 1) 
-			{
-				if (weapon_prepareattack(0, autocvar_g_balance_seeker_missile_refire))
-				{
-					Seeker_Attack();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_missile_animtime, w_ready);
-				}
-			}
-			else 
-			{
-				if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
-				{
-					Seeker_Fire_Tag();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_tag_animtime, w_ready);
-				}
-			}
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_seeker_tag_speed, 0, autocvar_g_balance_seeker_tag_lifetime, FALSE);
+				
+			return TRUE;
 		}
+		case WR_THINK:
+		{
+			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+				
+			else if (self.BUTTON_ATCK)
+			{
+				if (autocvar_g_balance_seeker_type == 1) 
+				{
+					if (weapon_prepareattack(0, autocvar_g_balance_seeker_missile_refire))
+					{
+						Seeker_Attack();
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_missile_animtime, w_ready);
+					}
+				}
+				else 
+				{
+					if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
+					{
+						Seeker_Fire_Tag();
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_tag_animtime, w_ready);
+					}
+				}
+			}
 
-		else if (self.BUTTON_ATCK2)
+			else if (self.BUTTON_ATCK2)
+			{
+				if (autocvar_g_balance_seeker_type == 1) 
+				{
+					if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
+					{
+						Seeker_Fire_Tag();
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_tag_animtime, w_ready);
+					}
+				}
+				else 
+				{
+					if (weapon_prepareattack(0, autocvar_g_balance_seeker_flac_refire))
+					{
+						Seeker_Fire_Flac();
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_flac_animtime, w_ready);
+					}
+				}
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_seeker.md3");
+			precache_model ("models/weapons/v_seeker.md3");
+			precache_model ("models/weapons/h_seeker.iqm");
+			precache_sound ("weapons/tag_fire.wav");
+			precache_sound ("weapons/flac_fire.wav");
+			precache_sound ("weapons/seeker_fire.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_SEEKER);
+			self.current_ammo = ammo_rockets;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
 		{
 			if (autocvar_g_balance_seeker_type == 1) 
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_seeker_tag_refire))
-				{
-					Seeker_Fire_Tag();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_tag_animtime, w_ready);
-				}
+				ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
+				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_missile_ammo;
 			}
-			else 
+			else
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_seeker_flac_refire))
-				{
-					Seeker_Fire_Flac();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_seeker_flac_animtime, w_ready);
-				}
+				ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
+				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_tag_ammo;
 			}
+			
+			return ammo_amount;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_seeker.md3");
-		precache_model ("models/weapons/v_seeker.md3");
-		precache_model ("models/weapons/h_seeker.iqm");
-		precache_sound ("weapons/tag_fire.wav");
-		precache_sound ("weapons/flac_fire.wav");
-		precache_sound ("weapons/seeker_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_SEEKER);
-		self.current_ammo = ammo_rockets;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		if (autocvar_g_balance_seeker_type == 1) 
+		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
-			ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_missile_ammo;
+			if (autocvar_g_balance_seeker_type == 1) 
+			{
+				ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
+				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_tag_ammo;
+			}
+			else
+			{
+				ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_flac_ammo;
+				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_flac_ammo;
+			}
+			
+			return ammo_amount;
 		}
-		else
+		case WR_RELOAD:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
-			ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_tag_ammo;
+			W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
+			return TRUE;
 		}
-		
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		if (autocvar_g_balance_seeker_type == 1) 
+		case WR_SUICIDEMESSAGE:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
-			ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_tag_ammo;
+			return WEAPON_SEEKER_SUICIDE;
 		}
-		else
+		case WR_KILLMESSAGE:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_flac_ammo;
-			ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_flac_ammo;
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_SEEKER_MURDER_TAG;
+			else
+				return WEAPON_SEEKER_MURDER_SPRAY;
 		}
-		
-		return ammo_amount;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_SEEKER_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_SEEKER_MURDER_TAG;
-		else
-			return WEAPON_SEEKER_MURDER_SPRAY;
 	}
 	return TRUE;
 }
@@ -658,16 +667,32 @@ float w_seeker(float req)
 #ifdef CSQC
 float w_seeker(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		if(w_deathtype & HITTYPE_BOUNCE)
+		case WR_IMPACTEFFECT:
 		{
-			if(w_deathtype & HITTYPE_SECONDARY)
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			if(w_deathtype & HITTYPE_BOUNCE)
 			{
-				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
+				if(w_deathtype & HITTYPE_SECONDARY)
+				{
+					if(!w_issilent)
+						sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
+				}
+				else
+				{
+					pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+					if(!w_issilent)
+					{
+						if (w_random<0.15)
+							sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
+						else if (w_random<0.7)
+							sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
+						else
+							sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
+					}
+				}
 			}
 			else
 			{
@@ -675,38 +700,29 @@ float w_seeker(float req)
 				if(!w_issilent)
 				{
 					if (w_random<0.15)
-						sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTN_NORM);
 					else if (w_random<0.7)
-						sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTN_NORM);
 					else
-						sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTN_NORM);
 				}
 			}
+			
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-			if(!w_issilent)
-			{
-				if (w_random<0.15)
-					sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTN_NORM);
-				else if (w_random<0.7)
-					sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTN_NORM);
-				else
-					sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTN_NORM);
-			}
+			precache_sound("weapons/seekerexp1.wav");
+			precache_sound("weapons/seekerexp2.wav");
+			precache_sound("weapons/seekerexp3.wav");
+			precache_sound("weapons/tagexp1.wav");
+			precache_sound("weapons/tagexp2.wav");
+			precache_sound("weapons/tagexp3.wav");
+			precache_sound("weapons/tag_impact.wav");
+			return TRUE;
 		}
 	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/seekerexp1.wav");
-		precache_sound("weapons/seekerexp2.wav");
-		precache_sound("weapons/seekerexp3.wav");
-		precache_sound("weapons/tagexp1.wav");
-		precache_sound("weapons/tagexp2.wav");
-		precache_sound("weapons/tagexp3.wav");
-		precache_sound("weapons/tag_impact.wav");
-	}
+	
 	return TRUE;
 }
 #endif

@@ -155,120 +155,134 @@ void W_Arc_Attack1 (void)
 
 float w_arc(float req)
 {
-	if (req == WR_AIM)
+	switch(req)
 	{
-		self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-		/*
-		self.BUTTON_ATCK=FALSE;
-		self.BUTTON_ATCK2=FALSE;
-		if(vlen(self.origin-self.enemy.origin) > 1000)
-			self.bot_aim_whichfiretype = 0;
-		if(self.bot_aim_whichfiretype == 0)
+		case WR_AIM:
 		{
-			float shoot;
-
-			if(autocvar_g_balance_arc_primary_speed)
-				shoot = bot_aim(autocvar_g_balance_arc_primary_speed, 0, autocvar_g_balance_arc_primary_lifetime, FALSE);
-			else
-				shoot = bot_aim(1000000, 0, 0.001, FALSE);
-
-			if(shoot)
+			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			/*
+			self.BUTTON_ATCK=FALSE;
+			self.BUTTON_ATCK2=FALSE;
+			if(vlen(self.origin-self.enemy.origin) > 1000)
+				self.bot_aim_whichfiretype = 0;
+			if(self.bot_aim_whichfiretype == 0)
 			{
-				self.BUTTON_ATCK = TRUE;
-				if(random() < 0.01) self.bot_aim_whichfiretype = 1;
-			}
-		}
-		else // todo
-		{
-			//if(bot_aim(autocvar_g_balance_arc_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_arc_secondary_lifetime, TRUE))
-			//{
-			//	self.BUTTON_ATCK2 = TRUE;
-			//	if(random() < 0.03) self.bot_aim_whichfiretype = 0;
-			//}
-		}
-		*/
-	}
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK)
-		{
-			if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
-				/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
-					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
-				else*/
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
-			
-			if (weapon_prepareattack(0, 0))
-			{
-				if ((!self.arc_beam) || wasfreed(self.arc_beam))
-					W_Arc_Attack1();
-				
-				if(!self.BUTTON_ATCK_prev)
+				float shoot;
+
+				if(autocvar_g_balance_arc_primary_speed)
+					shoot = bot_aim(autocvar_g_balance_arc_primary_speed, 0, autocvar_g_balance_arc_primary_lifetime, FALSE);
+				else
+					shoot = bot_aim(1000000, 0, 0.001, FALSE);
+
+				if(shoot)
 				{
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
-					self.BUTTON_ATCK_prev = 1;
+					self.BUTTON_ATCK = TRUE;
+					if(random() < 0.01) self.bot_aim_whichfiretype = 1;
 				}
 			}
-		} 
-		else // todo
-		{
-			if (self.BUTTON_ATCK_prev != 0)
+			else // todo
 			{
-				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
-				ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor();
+				//if(bot_aim(autocvar_g_balance_arc_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_arc_secondary_lifetime, TRUE))
+				//{
+				//	self.BUTTON_ATCK2 = TRUE;
+				//	if(random() < 0.03) self.bot_aim_whichfiretype = 0;
+				//}
 			}
-			self.BUTTON_ATCK_prev = 0;
+			*/
+			
+			return TRUE;
 		}
+		case WR_THINK:
+		{
+			if (self.BUTTON_ATCK)
+			{
+				if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
+					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+					else*/
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+				
+				if (weapon_prepareattack(0, 0))
+				{
+					if ((!self.arc_beam) || wasfreed(self.arc_beam))
+						W_Arc_Attack1();
+					
+					if(!self.BUTTON_ATCK_prev)
+					{
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+						self.BUTTON_ATCK_prev = 1;
+					}
+				}
+			} 
+			else // todo
+			{
+				if (self.BUTTON_ATCK_prev != 0)
+				{
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+					ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor();
+				}
+				self.BUTTON_ATCK_prev = 0;
+			}
 
-		//if (self.BUTTON_ATCK2)
-			//if (weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
-			//{
-			//	W_Arc_Attack2();
-			//	self.arc_count = autocvar_g_balance_arc_secondary_count;
-			//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-			//	self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
-			//}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_arc.md3");
-		precache_model ("models/weapons/v_arc.md3");
-		precache_model ("models/weapons/h_arc.iqm");
-		//precache_sound ("weapons/arc_bounce.wav");
-		precache_sound ("weapons/arc_fire.wav");
-		precache_sound ("weapons/arc_fire2.wav");
-		precache_sound ("weapons/arc_impact.wav");
-		//precache_sound ("weapons/arc_impact_combo.wav");
-		//precache_sound ("weapons/W_Arc_Beam_fire.wav");
-	}
-	else if (req == WR_SETUP)
-		weapon_setup(WEP_ARC);
-	else if (req == WR_CHECKAMMO1)
-	{
-		return !WEP_CVAR_PRI(arc, ammo) || (self.ammo_cells > 0);
-	}
-	else if (req == WR_CHECKAMMO2)
-		return self.ammo_cells >= WEP_CVAR_SEC(arc, ammo);
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			return WEAPON_ELECTRO_MURDER_ORBS;
+			//if (self.BUTTON_ATCK2)
+				//if (weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
+				//{
+				//	W_Arc_Attack2();
+				//	self.arc_count = autocvar_g_balance_arc_secondary_count;
+				//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+				//	self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
+				//}
+				
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				return WEAPON_ELECTRO_MURDER_COMBO;
+			precache_model ("models/weapons/g_arc.md3");
+			precache_model ("models/weapons/v_arc.md3");
+			precache_model ("models/weapons/h_arc.iqm");
+			//precache_sound ("weapons/arc_bounce.wav");
+			precache_sound ("weapons/arc_fire.wav");
+			precache_sound ("weapons/arc_fire2.wav");
+			precache_sound ("weapons/arc_impact.wav");
+			//precache_sound ("weapons/arc_impact_combo.wav");
+			//precache_sound ("weapons/W_Arc_Beam_fire.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_ARC);
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			return !WEP_CVAR_PRI(arc, ammo) || (self.ammo_cells > 0);
+		}
+		case WR_CHECKAMMO2:
+		{
+			return self.ammo_cells >= WEP_CVAR_SEC(arc, ammo);
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				return WEAPON_ELECTRO_MURDER_ORBS;
+			}
 			else
-				return WEAPON_ELECTRO_MURDER_BOLT;
+			{
+				if(w_deathtype & HITTYPE_BOUNCE)
+					return WEAPON_ELECTRO_MURDER_COMBO;
+				else
+					return WEAPON_ELECTRO_MURDER_BOLT;
+			}
 		}
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		//self.arc_secondarytime = time;
+		case WR_RESETPLAYER:
+		{
+			//self.arc_secondarytime = time;
+			return TRUE;
+		}
 	}
 	return TRUE;
-};
+}
 
 void ArcInit()
 {
@@ -293,28 +307,34 @@ void spawnfunc_weapon_arc (void) // should this really be here?
 #ifdef CSQC
 float w_arc(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		
-		if(w_deathtype & HITTYPE_SECONDARY)
+		case WR_IMPACTEFFECT:
 		{
-			pointparticles(particleeffectnum("arc_ballexplode"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				pointparticles(particleeffectnum("arc_ballexplode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("arc_impact"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+			
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-			pointparticles(particleeffectnum("arc_impact"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
+			precache_sound("weapons/arc_impact.wav");
+			precache_sound("weapons/arc_impact_combo.wav");
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/arc_impact.wav");
-		precache_sound("weapons/arc_impact_combo.wav");
 	}
 	return TRUE;
 }

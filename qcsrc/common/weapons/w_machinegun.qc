@@ -192,123 +192,132 @@ void spawnfunc_weapon_machinegun(); // defined in t_items.qc
 float w_uzi(float req)
 {
 	float ammo_amount;
-	if (req == WR_AIM)
-		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-		else
-		{
-			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
-		}
-	else if (req == WR_THINK)
+	switch(req)
 	{
-		if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if(autocvar_g_balance_uzi_mode == 1)
+		case WR_AIM:
 		{
-			if (self.BUTTON_ATCK)
-			if (weapon_prepareattack(0, 0))
+			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+			
+			return TRUE;
+		}
+		case WR_THINK:
+		{
+			if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if(autocvar_g_balance_uzi_mode == 1)
 			{
-				self.misc_bulletcounter = 0;
-				uzi_mode1_fire_auto();
-			}
-
-			if(self.BUTTON_ATCK2)
-			if(weapon_prepareattack(1, 0))
-			{
-				if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				if (self.BUTTON_ATCK)
+				if (weapon_prepareattack(0, 0))
 				{
-					W_SwitchWeapon_Force(self, w_getbestweapon(self));
-					w_ready();
-					return FALSE;
+					self.misc_bulletcounter = 0;
+					uzi_mode1_fire_auto();
 				}
 
-				W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_burst_ammo, autocvar_g_balance_uzi_reload_ammo);
+				if(self.BUTTON_ATCK2)
+				if(weapon_prepareattack(1, 0))
+				{
+					if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					{
+						W_SwitchWeapon_Force(self, w_getbestweapon(self));
+						w_ready();
+						return FALSE;
+					}
 
-				self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
-				uzi_mode1_fire_burst();
+					W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_burst_ammo, autocvar_g_balance_uzi_reload_ammo);
+
+					self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
+					uzi_mode1_fire_burst();
+				}
 			}
+			else
+			{
+
+				if (self.BUTTON_ATCK)
+				if (weapon_prepareattack(0, 0))
+				{
+					self.misc_bulletcounter = 1;
+					W_UZI_Attack(WEP_UZI); // sets attack_finished
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
+				}
+
+				if (self.BUTTON_ATCK2 && autocvar_g_balance_uzi_first)
+				if (weapon_prepareattack(1, 0))
+				{
+					self.misc_bulletcounter = 1;
+					W_UZI_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
+				}
+			}
+			
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-
-			if (self.BUTTON_ATCK)
-			if (weapon_prepareattack(0, 0))
-			{
-				self.misc_bulletcounter = 1;
-				W_UZI_Attack(WEP_UZI); // sets attack_finished
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
-			}
-
-			if (self.BUTTON_ATCK2 && autocvar_g_balance_uzi_first)
-			if (weapon_prepareattack(1, 0))
-			{
-				self.misc_bulletcounter = 1;
-				W_UZI_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
-			}
+			precache_model ("models/uziflash.md3");
+			precache_model ("models/weapons/g_uzi.md3");
+			precache_model ("models/weapons/v_uzi.md3");
+			precache_model ("models/weapons/h_uzi.iqm");
+			precache_sound ("weapons/uzi_fire.wav");
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/uziflash.md3");
-		precache_model ("models/weapons/g_uzi.md3");
-		precache_model ("models/weapons/v_uzi.md3");
-		precache_model ("models/weapons/h_uzi.iqm");
-		precache_sound ("weapons/uzi_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_UZI);
-		self.current_ammo = ammo_nails;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		if(autocvar_g_balance_uzi_mode == 1)
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
-		else
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
-
-		if(autocvar_g_balance_uzi_reload_ammo)
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_UZI);
+			self.current_ammo = ammo_nails;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_sustained_ammo;
+				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
 			else
-				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
-		}
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		if(autocvar_g_balance_uzi_mode == 1)
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
-		else
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
 
-		if(autocvar_g_balance_uzi_reload_ammo)
+			if(autocvar_g_balance_uzi_reload_ammo)
+			{
+				if(autocvar_g_balance_uzi_mode == 1)
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_sustained_ammo;
+				else
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
+			}
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_burst_ammo;
+				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
 			else
-				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+
+			if(autocvar_g_balance_uzi_reload_ammo)
+			{
+				if(autocvar_g_balance_uzi_mode == 1)
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_burst_ammo;
+				else
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
+			}
+			return ammo_amount;
 		}
-		return ammo_amount;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_THINKING_WITH_PORTALS;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_UZI_MURDER_SNIPE;
-		else
-			return WEAPON_UZI_MURDER_SPRAY;
+		case WR_RELOAD:
+		{
+			W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_THINKING_WITH_PORTALS;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_UZI_MURDER_SNIPE;
+			else
+				return WEAPON_UZI_MURDER_SPRAY;
+		}
 	}
 	return TRUE;
 }
@@ -316,24 +325,30 @@ float w_uzi(float req)
 #ifdef CSQC
 float w_uzi(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 2;
-		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
-		if(!w_issilent)
-			if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.1)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 2;
+			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+			if(!w_issilent)
+				if(w_random < 0.05)
+					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				else if(w_random < 0.1)
+					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				else if(w_random < 0.2)
+					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+					
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/ric1.wav");
+			precache_sound("weapons/ric2.wav");
+			precache_sound("weapons/ric3.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

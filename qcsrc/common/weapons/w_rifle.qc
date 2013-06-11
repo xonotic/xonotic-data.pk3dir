@@ -117,118 +117,128 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 float w_rifle(float req)
 {
 	float ammo_amount;
-
-	if (req == WR_AIM)
+	
+	switch(req)
 	{
-		self.BUTTON_ATCK=FALSE;
-		self.BUTTON_ATCK2=FALSE;
-		if(vlen(self.origin-self.enemy.origin) > 1000)
-			self.bot_secondary_riflemooth = 0;
-		if(self.bot_secondary_riflemooth == 0)
+		case WR_AIM:
 		{
-			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
+			self.BUTTON_ATCK=FALSE;
+			self.BUTTON_ATCK2=FALSE;
+			if(vlen(self.origin-self.enemy.origin) > 1000)
+				self.bot_secondary_riflemooth = 0;
+			if(self.bot_secondary_riflemooth == 0)
 			{
-				self.BUTTON_ATCK = TRUE;
-				if(random() < 0.01) self.bot_secondary_riflemooth = 1;
-			}
-		}
-		else
-		{
-			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
-			{
-				self.BUTTON_ATCK2 = TRUE;
-				if(random() < 0.03) self.bot_secondary_riflemooth = 0;
-			}
-		}
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo)) // forced reload
-            weapon_action(self.weapon, WR_RELOAD);
-		else
-		{
-			self.rifle_accumulator = bound(time - autocvar_g_balance_rifle_bursttime, self.rifle_accumulator, time);
-			if (self.BUTTON_ATCK)
-			if (weapon_prepareattack_check(0, autocvar_g_balance_rifle_primary_refire))
-			if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_primary_burstcost)
-			{
-				weapon_prepareattack_do(0, autocvar_g_balance_rifle_primary_refire);
-				W_Rifle_BulletHail(autocvar_g_balance_rifle_primary_bullethail, W_Rifle_Attack, WFRAME_FIRE1, autocvar_g_balance_rifle_primary_animtime, autocvar_g_balance_rifle_primary_refire);
-				self.rifle_accumulator += autocvar_g_balance_rifle_primary_burstcost;
-			}
-			if (self.BUTTON_ATCK2)
-			{
-				if (autocvar_g_balance_rifle_secondary)
+				if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
 				{
-                    if(autocvar_g_balance_rifle_secondary_reload)
-                        weapon_action(self.weapon, WR_RELOAD);
-                    else
-                    {
-                        if (weapon_prepareattack_check(1, autocvar_g_balance_rifle_secondary_refire))
-                        if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_secondary_burstcost)
-                        {
-                            weapon_prepareattack_do(1, autocvar_g_balance_rifle_secondary_refire);
-                            W_Rifle_BulletHail(autocvar_g_balance_rifle_secondary_bullethail, W_Rifle_Attack2, WFRAME_FIRE2, autocvar_g_balance_rifle_secondary_animtime, autocvar_g_balance_rifle_primary_refire);
-                            self.rifle_accumulator += autocvar_g_balance_rifle_secondary_burstcost;
-                        }
-                    }
+					self.BUTTON_ATCK = TRUE;
+					if(random() < 0.01) self.bot_secondary_riflemooth = 1;
 				}
 			}
-		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_campingrifle.md3");
-		precache_model ("models/weapons/v_campingrifle.md3");
-		precache_model ("models/weapons/h_campingrifle.iqm");
-		precache_sound ("weapons/campingrifle_fire.wav");
-		precache_sound ("weapons/campingrifle_fire2.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_RIFLE);
-		self.current_ammo = ammo_nails;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
-		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.rifle_accumulator = time - autocvar_g_balance_rifle_bursttime;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_THINKING_WITH_PORTALS;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
 			else
-				return WEAPON_RIFLE_MURDER_HAIL;
+			{
+				if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
+				{
+					self.BUTTON_ATCK2 = TRUE;
+					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
+				}
+			}
+			
+			return TRUE;
 		}
-		else
+		case WR_THINK:
 		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				return WEAPON_RIFLE_MURDER_PIERCING;
+			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
 			else
-				return WEAPON_RIFLE_MURDER;
+			{
+				self.rifle_accumulator = bound(time - autocvar_g_balance_rifle_bursttime, self.rifle_accumulator, time);
+				if (self.BUTTON_ATCK)
+				if (weapon_prepareattack_check(0, autocvar_g_balance_rifle_primary_refire))
+				if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_primary_burstcost)
+				{
+					weapon_prepareattack_do(0, autocvar_g_balance_rifle_primary_refire);
+					W_Rifle_BulletHail(autocvar_g_balance_rifle_primary_bullethail, W_Rifle_Attack, WFRAME_FIRE1, autocvar_g_balance_rifle_primary_animtime, autocvar_g_balance_rifle_primary_refire);
+					self.rifle_accumulator += autocvar_g_balance_rifle_primary_burstcost;
+				}
+				if (self.BUTTON_ATCK2)
+				{
+					if (autocvar_g_balance_rifle_secondary)
+					{
+						if(autocvar_g_balance_rifle_secondary_reload)
+							weapon_action(self.weapon, WR_RELOAD);
+						else
+						{
+							if (weapon_prepareattack_check(1, autocvar_g_balance_rifle_secondary_refire))
+							if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_secondary_burstcost)
+							{
+								weapon_prepareattack_do(1, autocvar_g_balance_rifle_secondary_refire);
+								W_Rifle_BulletHail(autocvar_g_balance_rifle_secondary_bullethail, W_Rifle_Attack2, WFRAME_FIRE2, autocvar_g_balance_rifle_secondary_animtime, autocvar_g_balance_rifle_primary_refire);
+								self.rifle_accumulator += autocvar_g_balance_rifle_secondary_burstcost;
+							}
+						}
+					}
+				}
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_campingrifle.md3");
+			precache_model ("models/weapons/v_campingrifle.md3");
+			precache_model ("models/weapons/h_campingrifle.iqm");
+			precache_sound ("weapons/campingrifle_fire.wav");
+			precache_sound ("weapons/campingrifle_fire2.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_RIFLE);
+			self.current_ammo = ammo_nails;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
+		{
+			ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
+			return ammo_amount;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.rifle_accumulator = time - autocvar_g_balance_rifle_bursttime;
+			return TRUE;
+		}
+		case WR_RELOAD:
+		{
+			W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_THINKING_WITH_PORTALS;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				if(w_deathtype & HITTYPE_BOUNCE)
+					return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
+				else
+					return WEAPON_RIFLE_MURDER_HAIL;
+			}
+			else
+			{
+				if(w_deathtype & HITTYPE_BOUNCE)
+					return WEAPON_RIFLE_MURDER_PIERCING;
+				else
+					return WEAPON_RIFLE_MURDER;
+			}
 		}
 	}
 	return TRUE;
@@ -237,26 +247,32 @@ float w_rifle(float req)
 #ifdef CSQC
 float w_rifle(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 2;
-		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
-		if(!w_issilent)
+		case WR_IMPACTEFFECT:
 		{
-			if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.4)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
-			else if(w_random < 0.5)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			vector org2;
+			org2 = w_org + w_backoff * 2;
+			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+			if(!w_issilent)
+			{
+				if(w_random < 0.2)
+					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				else if(w_random < 0.4)
+					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				else if(w_random < 0.5)
+					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+			}
+			
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/ric1.wav");
+			precache_sound("weapons/ric2.wav");
+			precache_sound("weapons/ric3.wav");
+			return TRUE;
+		}
 	}
 
 	return TRUE;

@@ -142,146 +142,155 @@ float w_hook(float req)
 {
 	float hooked_time_max, hooked_fuel;
 		
-	if (req == WR_AIM)
+	switch(req)
 	{
-		// ... sorry ...
-	}
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+		case WR_AIM:
 		{
-			if(!self.hook)
-			if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
-			if not(self.hook_state & HOOK_FIRING)
-			if (time > self.hook_refire)
-			if (weapon_prepareattack(0, -1))
-			{
-				W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
-				self.hook_state |= HOOK_FIRING;
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
-			}
+			// no bot AI for hook (yet?)
+			return TRUE;
 		}
-
-		if (self.BUTTON_ATCK2)
+		case WR_THINK:
 		{
-			if (weapon_prepareattack(1, autocvar_g_balance_hook_secondary_refire))
+			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 			{
-				W_Hook_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hook_secondary_animtime, w_ready);
-			}
-		}
-
-		if(self.hook)
-		{
-			// if hooked, no bombs, and increase the timer
-			self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
-
-			// hook also inhibits health regeneration, but only for 1 second
-			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
-		}
-
-		if(self.hook && self.hook.state == 1)
-		{
-			hooked_time_max = autocvar_g_balance_hook_primary_hooked_time_max;			
-			if (hooked_time_max > 0)
-			{
-				if ( time > self.hook_time_hooked + hooked_time_max )
-					self.hook_state |= HOOK_REMOVING;
-			}
-			
-			hooked_fuel = autocvar_g_balance_hook_primary_hooked_fuel;
-			if (hooked_fuel > 0)
-			{
-				if ( time > self.hook_time_fueldecrease )
+				if(!self.hook)
+				if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
+				if not(self.hook_state & HOOK_FIRING)
+				if (time > self.hook_refire)
+				if (weapon_prepareattack(0, -1))
 				{
-					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
+					self.hook_state |= HOOK_FIRING;
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
+				}
+			}
+
+			if (self.BUTTON_ATCK2)
+			{
+				if (weapon_prepareattack(1, autocvar_g_balance_hook_secondary_refire))
+				{
+					W_Hook_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hook_secondary_animtime, w_ready);
+				}
+			}
+
+			if(self.hook)
+			{
+				// if hooked, no bombs, and increase the timer
+				self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
+
+				// hook also inhibits health regeneration, but only for 1 second
+				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
+			}
+
+			if(self.hook && self.hook.state == 1)
+			{
+				hooked_time_max = autocvar_g_balance_hook_primary_hooked_time_max;			
+				if (hooked_time_max > 0)
+				{
+					if ( time > self.hook_time_hooked + hooked_time_max )
+						self.hook_state |= HOOK_REMOVING;
+				}
+				
+				hooked_fuel = autocvar_g_balance_hook_primary_hooked_fuel;
+				if (hooked_fuel > 0)
+				{
+					if ( time > self.hook_time_fueldecrease )
 					{
-						if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
+						if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 						{
-							W_DecreaseAmmo(ammo_fuel, (time - self.hook_time_fueldecrease) * hooked_fuel, FALSE);
-							self.hook_time_fueldecrease = time;
-							// decrease next frame again
-						}
-						else
-						{
-							self.ammo_fuel = 0;
-							self.hook_state |= HOOK_REMOVING;
-							W_SwitchWeapon_Force(self, w_getbestweapon(self));
+							if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
+							{
+								W_DecreaseAmmo(ammo_fuel, (time - self.hook_time_fueldecrease) * hooked_fuel, FALSE);
+								self.hook_time_fueldecrease = time;
+								// decrease next frame again
+							}
+							else
+							{
+								self.ammo_fuel = 0;
+								self.hook_state |= HOOK_REMOVING;
+								W_SwitchWeapon_Force(self, w_getbestweapon(self));
+							}
 						}
 					}
 				}
 			}
-		}
-		else
-		{
-			self.hook_time_hooked = time;				
-			self.hook_time_fueldecrease = time + autocvar_g_balance_hook_primary_hooked_time_free;
-		}
+			else
+			{
+				self.hook_time_hooked = time;				
+				self.hook_time_fueldecrease = time + autocvar_g_balance_hook_primary_hooked_time_free;
+			}
 
-		if (self.BUTTON_CROUCH)
-		{
-			self.hook_state &~= HOOK_PULLING;
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if (self.BUTTON_CROUCH)
+			{
+				self.hook_state &~= HOOK_PULLING;
+				if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+					self.hook_state &~= HOOK_RELEASING;
+				else
+					self.hook_state |= HOOK_RELEASING;
+			}
+			else
+			{
+				self.hook_state |= HOOK_PULLING;
 				self.hook_state &~= HOOK_RELEASING;
-			else
-				self.hook_state |= HOOK_RELEASING;
-		}
-		else
-		{
-			self.hook_state |= HOOK_PULLING;
-			self.hook_state &~= HOOK_RELEASING;
 
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
-			{
-				// already fired
-				if(self.hook)
-					self.hook_state |= HOOK_WAITING_FOR_RELEASE;
+				if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+				{
+					// already fired
+					if(self.hook)
+						self.hook_state |= HOOK_WAITING_FOR_RELEASE;
+				}
+				else
+				{
+					self.hook_state |= HOOK_REMOVING;
+					self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+				}
 			}
-			else
-			{
-				self.hook_state |= HOOK_REMOVING;
-				self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
-			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_hookgun.md3");
-		precache_model ("models/weapons/v_hookgun.md3");
-		precache_model ("models/weapons/h_hookgun.iqm");
-		precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
-		precache_sound ("weapons/hook_fire.wav");
-		precache_sound ("weapons/hookbomb_fire.wav");
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_HOOK);
-		self.current_ammo = ammo_fuel;
-		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		if(self.hook)
-			return self.ammo_fuel > 0;
-		else
-			return self.ammo_fuel >= autocvar_g_balance_hook_primary_fuel;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		return self.ammo_cells >= autocvar_g_balance_hook_secondary_ammo;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.hook_refire = time;
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return FALSE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		return WEAPON_HOOK_MURDER;
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_hookgun.md3");
+			precache_model ("models/weapons/v_hookgun.md3");
+			precache_model ("models/weapons/h_hookgun.iqm");
+			precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
+			precache_sound ("weapons/hook_fire.wav");
+			precache_sound ("weapons/hookbomb_fire.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_HOOK);
+			self.current_ammo = ammo_fuel;
+			self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			if(self.hook)
+				return self.ammo_fuel > 0;
+			else
+				return self.ammo_fuel >= autocvar_g_balance_hook_primary_fuel;
+		}
+		case WR_CHECKAMMO2:
+		{
+			return self.ammo_cells >= autocvar_g_balance_hook_secondary_ammo;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.hook_refire = time;
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return FALSE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_HOOK_MURDER;
+		}
 	}
 	return TRUE;
 }
@@ -289,17 +298,23 @@ float w_hook(float req)
 #ifdef CSQC
 float w_hook(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 2;
-		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
-		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/hookbomb_impact.wav");
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 2;
+			pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+				
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/hookbomb_impact.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

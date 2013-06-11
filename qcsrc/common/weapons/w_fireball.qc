@@ -314,92 +314,93 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
-	//float ammo_amount;
-	if (req == WR_AIM)
+	switch(req)
 	{
-		self.BUTTON_ATCK = FALSE;
-		self.BUTTON_ATCK2 = FALSE;
-		if (self.bot_primary_fireballmooth == 0)
+		case WR_AIM:
 		{
-			if(bot_aim(autocvar_g_balance_fireball_primary_speed, 0, autocvar_g_balance_fireball_primary_lifetime, FALSE))
+			self.BUTTON_ATCK = FALSE;
+			self.BUTTON_ATCK2 = FALSE;
+			if (self.bot_primary_fireballmooth == 0)
 			{
-				self.BUTTON_ATCK = TRUE;
-				if(random() < 0.02) self.bot_primary_fireballmooth = 0;
+				if(bot_aim(autocvar_g_balance_fireball_primary_speed, 0, autocvar_g_balance_fireball_primary_lifetime, FALSE))
+				{
+					self.BUTTON_ATCK = TRUE;
+					if(random() < 0.02) self.bot_primary_fireballmooth = 0;
+				}
 			}
-		}
-		else
-		{
-			if(bot_aim(autocvar_g_balance_fireball_secondary_speed, autocvar_g_balance_fireball_secondary_speed_up, autocvar_g_balance_fireball_secondary_lifetime, TRUE))
+			else
 			{
-				self.BUTTON_ATCK2 = TRUE;
-				if(random() < 0.01) self.bot_primary_fireballmooth = 1;
+				if(bot_aim(autocvar_g_balance_fireball_secondary_speed, autocvar_g_balance_fireball_secondary_speed_up, autocvar_g_balance_fireball_secondary_lifetime, TRUE))
+				{
+					self.BUTTON_ATCK2 = TRUE;
+					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
+				}
 			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK)
+		case WR_THINK:
 		{
-			if (time >= self.fireball_primarytime)
-			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+			if (self.BUTTON_ATCK)
 			{
-				W_Fireball_Attack1_Frame0();
-				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2 * W_WeaponRateFactor();
+				if (time >= self.fireball_primarytime)
+				if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
+				{
+					W_Fireball_Attack1_Frame0();
+					self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2 * W_WeaponRateFactor();
+				}
 			}
-		}
-		else if (self.BUTTON_ATCK2)
-		{
-			if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+			else if (self.BUTTON_ATCK2)
 			{
-				W_Fireball_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+				if (weapon_prepareattack(1, autocvar_g_balance_fireball_secondary_refire))
+				{
+					W_Fireball_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_fireball_secondary_animtime, w_ready);
+				}
 			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_fireball.md3");
-		precache_model ("models/weapons/v_fireball.md3");
-		precache_model ("models/weapons/h_fireball.iqm");
-		precache_model ("models/sphere/sphere.md3");
-		precache_sound ("weapons/fireball_fire.wav");
-		precache_sound ("weapons/fireball_fire2.wav");
-		precache_sound ("weapons/fireball_prefire2.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_FIREBALL);
-		self.current_ammo = ammo_none;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		return 1;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		return 1;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.fireball_primarytime = time;
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_FIREBALL_SUICIDE_FIREMINE;
-		else
-			return WEAPON_FIREBALL_SUICIDE_BLAST;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
+		case WR_PRECACHE:
 		{
-			return WEAPON_FIREBALL_MURDER_FIREMINE;
+			precache_model ("models/weapons/g_fireball.md3");
+			precache_model ("models/weapons/v_fireball.md3");
+			precache_model ("models/weapons/h_fireball.iqm");
+			precache_model ("models/sphere/sphere.md3");
+			precache_sound ("weapons/fireball_fire.wav");
+			precache_sound ("weapons/fireball_fire2.wav");
+			precache_sound ("weapons/fireball_prefire2.wav");
+			return TRUE;
 		}
-		else
+		case WR_SETUP:
 		{
-			return WEAPON_FIREBALL_MURDER_BLAST;
+			weapon_setup(WEP_FIREBALL);
+			self.current_ammo = ammo_none;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			return TRUE; // fireball has infinite ammo
+		}
+		case WR_RESETPLAYER:
+		{
+			self.fireball_primarytime = time;
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_FIREBALL_SUICIDE_FIREMINE;
+			else
+				return WEAPON_FIREBALL_SUICIDE_BLAST;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_FIREBALL_MURDER_FIREMINE;
+			else
+				return WEAPON_FIREBALL_MURDER_BLAST;
 		}
 	}
 	return TRUE;
@@ -408,24 +409,30 @@ float w_fireball(float req)
 #ifdef CSQC
 float w_fireball(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		if(w_deathtype & HITTYPE_SECONDARY)
+		case WR_IMPACTEFFECT:
 		{
-			// firemine goes out silently
+			vector org2;
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				// firemine goes out silently
+			}
+			else
+			{
+				org2 = w_org + w_backoff * 16;
+				pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+			}
+			
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-			org2 = w_org + w_backoff * 16;
-			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+			precache_sound("weapons/fireball_impact2.wav");
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/fireball_impact2.wav");
 	}
 
 	return TRUE;

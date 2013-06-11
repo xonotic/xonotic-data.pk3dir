@@ -398,186 +398,198 @@ void w_electro_checkattack()
 float w_electro(float req)
 {
 	float ammo_amount;
-	if (req == WR_AIM)
+	switch(req)
 	{
-		self.BUTTON_ATCK=FALSE;
-		self.BUTTON_ATCK2=FALSE;
-		if(vlen(self.origin-self.enemy.origin) > 1000)
-			self.bot_secondary_electromooth = 0;
-		if(self.bot_secondary_electromooth == 0)
+		case WR_AIM:
 		{
-			float shoot;
+			self.BUTTON_ATCK=FALSE;
+			self.BUTTON_ATCK2=FALSE;
+			if(vlen(self.origin-self.enemy.origin) > 1000)
+				self.bot_secondary_electromooth = 0;
+			if(self.bot_secondary_electromooth == 0)
+			{
+				float shoot;
 
-			if(autocvar_g_balance_electro_primary_speed)
-				shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
+				if(autocvar_g_balance_electro_primary_speed)
+					shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
+				else
+					shoot = bot_aim(1000000, 0, 0.001, FALSE);
+
+				if(shoot)
+				{
+					self.BUTTON_ATCK = TRUE;
+					if(random() < 0.01) self.bot_secondary_electromooth = 1;
+				}
+			}
 			else
-				shoot = bot_aim(1000000, 0, 0.001, FALSE);
-
-			if(shoot)
 			{
-				self.BUTTON_ATCK = TRUE;
-				if(random() < 0.01) self.bot_secondary_electromooth = 1;
+				if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE))
+				{
+					self.BUTTON_ATCK2 = TRUE;
+					if(random() < 0.03) self.bot_secondary_electromooth = 0;
+				}
 			}
+			
+			return TRUE;
 		}
-		else
+		case WR_THINK:
 		{
-			if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE))
+			if(autocvar_g_balance_electro_reload_ammo) // forced reload
 			{
-				self.BUTTON_ATCK2 = TRUE;
-				if(random() < 0.03) self.bot_secondary_electromooth = 0;
-			}
-		}
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_electro_reload_ammo) // forced reload
-		{
-			ammo_amount = 0;
-			if(autocvar_g_balance_electro_lightning)
-			{
-				if(self.clip_load > 0)
-					ammo_amount = 1;
-			}
-			else if(self.clip_load >= autocvar_g_balance_electro_primary_ammo)
-				ammo_amount = 1;
-			if(self.clip_load >= autocvar_g_balance_electro_secondary_ammo)
-				ammo_amount += 1;
-
-			if(!ammo_amount)
-			{
-				weapon_action(self.weapon, WR_RELOAD);
-				return FALSE;
-			}
-		}
-		if (self.BUTTON_ATCK)
-		{
-			if(autocvar_g_balance_electro_lightning)
-				if(self.BUTTON_ATCK_prev)
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-
-			if (weapon_prepareattack(0, (autocvar_g_balance_electro_lightning ? 0 : autocvar_g_balance_electro_primary_refire)))
-			{
+				ammo_amount = 0;
 				if(autocvar_g_balance_electro_lightning)
 				{
-					if ((!self.lgbeam) || wasfreed(self.lgbeam))
+					if(self.clip_load > 0)
+						ammo_amount = 1;
+				}
+				else if(self.clip_load >= autocvar_g_balance_electro_primary_ammo)
+					ammo_amount = 1;
+				if(self.clip_load >= autocvar_g_balance_electro_secondary_ammo)
+					ammo_amount += 1;
+
+				if(!ammo_amount)
+				{
+					weapon_action(self.weapon, WR_RELOAD);
+					return FALSE;
+				}
+				
+				return TRUE;
+			}
+			if (self.BUTTON_ATCK)
+			{
+				if(autocvar_g_balance_electro_lightning)
+					if(self.BUTTON_ATCK_prev)
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+
+				if (weapon_prepareattack(0, (autocvar_g_balance_electro_lightning ? 0 : autocvar_g_balance_electro_primary_refire)))
+				{
+					if(autocvar_g_balance_electro_lightning)
 					{
-						W_Electro_Attack3();
+						if ((!self.lgbeam) || wasfreed(self.lgbeam))
+						{
+							W_Electro_Attack3();
+						}
+						if(!self.BUTTON_ATCK_prev)
+						{
+							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+							self.BUTTON_ATCK_prev = 1;
+						}
 					}
-					if(!self.BUTTON_ATCK_prev)
+					else
+					{
+						W_Electro_Attack();
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+					}
+				}
+			} else {
+				if(autocvar_g_balance_electro_lightning)
+				{
+					if (self.BUTTON_ATCK_prev != 0)
 					{
 						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-						self.BUTTON_ATCK_prev = 1;
+						ATTACK_FINISHED(self) = time + autocvar_g_balance_electro_primary_refire * W_WeaponRateFactor();
+					}
+					self.BUTTON_ATCK_prev = 0;
+				}
+
+				if (self.BUTTON_ATCK2)
+				{
+					if (time >= self.electro_secondarytime)
+					if (weapon_prepareattack(1, autocvar_g_balance_electro_secondary_refire))
+					{
+						W_Electro_Attack2();
+						self.electro_count = autocvar_g_balance_electro_secondary_count;
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
+						self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
 					}
 				}
-				else
-				{
-					W_Electro_Attack();
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-				}
 			}
-		} else {
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_electro.md3");
+			precache_model ("models/weapons/v_electro.md3");
+			precache_model ("models/weapons/h_electro.iqm");
+			precache_sound ("weapons/electro_bounce.wav");
+			precache_sound ("weapons/electro_fire.wav");
+			precache_sound ("weapons/electro_fire2.wav");
+			precache_sound ("weapons/electro_impact.wav");
+			precache_sound ("weapons/electro_impact_combo.wav");
+			
+			if(autocvar_g_balance_electro_lightning)
+				precache_sound ("weapons/lgbeam_fire.wav");
+				
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_ELECTRO);
+			self.current_ammo = ammo_cells;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
 			if(autocvar_g_balance_electro_lightning)
 			{
-				if (self.BUTTON_ATCK_prev != 0)
-				{
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-					ATTACK_FINISHED(self) = time + autocvar_g_balance_electro_primary_refire * W_WeaponRateFactor();
-				}
-				self.BUTTON_ATCK_prev = 0;
+				if(!autocvar_g_balance_electro_primary_ammo)
+					ammo_amount = 1;
+				else
+					ammo_amount = self.ammo_cells > 0;
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) > 0;
 			}
-
-			if (self.BUTTON_ATCK2)
+			else
 			{
-				if (time >= self.electro_secondarytime)
-				if (weapon_prepareattack(1, autocvar_g_balance_electro_secondary_refire))
-				{
-					W_Electro_Attack2();
-					self.electro_count = autocvar_g_balance_electro_secondary_count;
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-					self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
-				}
+				ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
 			}
+			return ammo_amount;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_electro.md3");
-		precache_model ("models/weapons/v_electro.md3");
-		precache_model ("models/weapons/h_electro.iqm");
-		precache_sound ("weapons/electro_bounce.wav");
-		precache_sound ("weapons/electro_fire.wav");
-		precache_sound ("weapons/electro_fire2.wav");
-		precache_sound ("weapons/electro_impact.wav");
-		precache_sound ("weapons/electro_impact_combo.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-		if(autocvar_g_balance_electro_lightning)
+		case WR_CHECKAMMO2:
 		{
-			precache_sound ("weapons/lgbeam_fire.wav");
-		}
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_ELECTRO);
-		self.current_ammo = ammo_cells;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		if(autocvar_g_balance_electro_lightning)
-		{
-			if(!autocvar_g_balance_electro_primary_ammo)
-				ammo_amount = 1;
+			if(autocvar_g_balance_electro_combo_safeammocheck) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+			{
+				ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+			}
 			else
-				ammo_amount = self.ammo_cells > 0;
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) > 0;
+			{
+				ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
+			}
+			return ammo_amount;
 		}
-		else
+		case WR_RESETPLAYER:
 		{
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
+			self.electro_secondarytime = time;
+			return TRUE;
 		}
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		if(autocvar_g_balance_electro_combo_safeammocheck) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+		case WR_RELOAD:
 		{
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+			W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
+			return TRUE;
 		}
-		else
+		case WR_SUICIDEMESSAGE:
 		{
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
-		}
-		return ammo_amount;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.electro_secondarytime = time;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_ELECTRO_SUICIDE_ORBS;
-		else
-			return WEAPON_ELECTRO_SUICIDE_BOLT;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			return WEAPON_ELECTRO_MURDER_ORBS;
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				return WEAPON_ELECTRO_MURDER_COMBO;
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_ELECTRO_SUICIDE_ORBS;
 			else
-				return WEAPON_ELECTRO_MURDER_BOLT;
+				return WEAPON_ELECTRO_SUICIDE_BOLT;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				return WEAPON_ELECTRO_MURDER_ORBS;
+			}
+			else
+			{
+				if(w_deathtype & HITTYPE_BOUNCE)
+					return WEAPON_ELECTRO_MURDER_COMBO;
+				else
+					return WEAPON_ELECTRO_MURDER_BOLT;
+			}
 		}
 	}
 	return TRUE;
@@ -586,37 +598,43 @@ float w_electro(float req)
 #ifdef CSQC
 float w_electro(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		if(w_deathtype & HITTYPE_SECONDARY)
+		case WR_IMPACTEFFECT:
 		{
-			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
-			}
-			else
-			{
-				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
 			}
+			else
+			{
+				if(w_deathtype & HITTYPE_BOUNCE)
+				{
+					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+					pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
+					if(!w_issilent)
+						sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+				}
+				else
+				{
+					pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+					if(!w_issilent)
+						sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+				}
+			}
+			
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/electro_impact.wav");
-		precache_sound("weapons/electro_impact_combo.wav");
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/electro_impact.wav");
+			precache_sound("weapons/electro_impact_combo.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

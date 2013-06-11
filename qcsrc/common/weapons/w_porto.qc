@@ -285,91 +285,102 @@ float w_porto(float req)
 	//vector v_angle_save;
 
 	if (g_nexball) { return w_nexball_weapon(req); }
-	if (req == WR_AIM)
+	
+	switch(req)
 	{
-		self.BUTTON_ATCK = FALSE;
-		self.BUTTON_ATCK2 = FALSE;
-		if(!autocvar_g_balance_porto_secondary)
-			if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_grenadelauncher_primary_lifetime, FALSE))
-				self.BUTTON_ATCK = TRUE;
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_porto_secondary)
+		case WR_AIM:
 		{
-			if (self.BUTTON_ATCK)
-			if (!self.porto_current)
-			if (!self.porto_forbidden)
-			if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
-			{
-				W_Porto_Attack(0);
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
-			}
-
-			if (self.BUTTON_ATCK2)
-			if (!self.porto_current)
-			if (!self.porto_forbidden)
-			if (weapon_prepareattack(1, autocvar_g_balance_porto_secondary_refire))
-			{
-				W_Porto_Attack(1);
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_porto_secondary_animtime, w_ready);
-			}
+			self.BUTTON_ATCK = FALSE;
+			self.BUTTON_ATCK2 = FALSE;
+			if(!autocvar_g_balance_porto_secondary)
+				if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_grenadelauncher_primary_lifetime, FALSE))
+					self.BUTTON_ATCK = TRUE;
+					
+			return TRUE;
 		}
-		else
+		case WR_THINK:
 		{
-			if(self.porto_v_angle_held)
+			if(autocvar_g_balance_porto_secondary)
 			{
-				if(!self.BUTTON_ATCK2)
+				if (self.BUTTON_ATCK)
+				if (!self.porto_current)
+				if (!self.porto_forbidden)
+				if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
 				{
-					self.porto_v_angle_held = 0;
+					W_Porto_Attack(0);
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
+				}
 
-					ClientData_Touch(self);
+				if (self.BUTTON_ATCK2)
+				if (!self.porto_current)
+				if (!self.porto_forbidden)
+				if (weapon_prepareattack(1, autocvar_g_balance_porto_secondary_refire))
+				{
+					W_Porto_Attack(1);
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_porto_secondary_animtime, w_ready);
 				}
 			}
 			else
 			{
-				if(self.BUTTON_ATCK2)
+				if(self.porto_v_angle_held)
 				{
-					self.porto_v_angle = self.v_angle;
-					self.porto_v_angle_held = 1;
+					if(!self.BUTTON_ATCK2)
+					{
+						self.porto_v_angle_held = 0;
 
-					ClientData_Touch(self);
+						ClientData_Touch(self);
+					}
+				}
+				else
+				{
+					if(self.BUTTON_ATCK2)
+					{
+						self.porto_v_angle = self.v_angle;
+						self.porto_v_angle_held = 1;
+
+						ClientData_Touch(self);
+					}
+				}
+				if(self.porto_v_angle_held)
+					makevectors(self.porto_v_angle); // override the previously set angles
+
+				if (self.BUTTON_ATCK)
+				if (!self.porto_current)
+				if (!self.porto_forbidden)
+				if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
+				{
+					W_Porto_Attack(-1);
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
 				}
 			}
-			if(self.porto_v_angle_held)
-				makevectors(self.porto_v_angle); // override the previously set angles
-
-			if (self.BUTTON_ATCK)
-			if (!self.porto_current)
-			if (!self.porto_forbidden)
-			if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
-			{
-				W_Porto_Attack(-1);
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
-			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_porto.md3");
-		precache_model ("models/weapons/v_porto.md3");
-		precache_model ("models/weapons/h_porto.iqm");
-		precache_model ("models/portal.md3");
-		precache_sound ("porto/bounce.wav");
-		precache_sound ("porto/create.wav");
-		precache_sound ("porto/expire.wav");
-		precache_sound ("porto/explode.wav");
-		precache_sound ("porto/fire.wav");
-		precache_sound ("porto/unsupported.wav");
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_PORTO);
-		self.current_ammo = ammo_none;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.porto_current = world;
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_porto.md3");
+			precache_model ("models/weapons/v_porto.md3");
+			precache_model ("models/weapons/h_porto.iqm");
+			precache_model ("models/portal.md3");
+			precache_sound ("porto/bounce.wav");
+			precache_sound ("porto/create.wav");
+			precache_sound ("porto/expire.wav");
+			precache_sound ("porto/explode.wav");
+			precache_sound ("porto/fire.wav");
+			precache_sound ("porto/unsupported.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_PORTO);
+			self.current_ammo = ammo_none;
+			return TRUE;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.porto_current = world;
+			return TRUE;
+		}
 	}
 	return TRUE;
 }
@@ -377,13 +388,18 @@ float w_porto(float req)
 #ifdef CSQC
 float w_porto(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		print("Since when does Porto send DamageInfo?\n");
-	}
-	else if(req == WR_PRECACHE)
-	{
-		// nothing to do
+		case WR_IMPACTEFFECT:
+		{
+			print("Since when does Porto send DamageInfo?\n");
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			// nothing to do
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

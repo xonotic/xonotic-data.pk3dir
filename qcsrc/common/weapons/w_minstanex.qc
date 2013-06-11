@@ -88,106 +88,116 @@ float w_minstanex(float req)
 	// now multiple WR_s use this
 	minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 
-	if (req == WR_AIM)
+	switch(req)
 	{
-		if(self.ammo_cells > 0)
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-		else
-			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
-	}
-	else if (req == WR_THINK)
-	{
-		// if the laser uses load, we also consider its ammo for reloading
-		if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		case WR_AIM:
 		{
-			if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
-			{
-				W_MinstaNex_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
-			}
-		}
-		else if (self.BUTTON_ATCK2)
-		{
-			if (self.jump_interval <= time)
-			if (weapon_prepareattack(1, -1))
-			{
-				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
-				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+			if(self.ammo_cells > 0)
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+			else
+				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 				
-				// decrease ammo for the laser?
-				if(autocvar_g_balance_minstanex_laser_ammo)
-					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
-
-				// ugly minstagib hack to reuse the fire mode of the laser
-				float w;
-				w = self.weapon;
-				self.weapon = WEP_LASER;
-				W_Laser_Shockwave();
-				self.weapon = w;
-				
-				// now do normal refire
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
-			}
-		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/nexflash.md3");
-		precache_model ("models/weapons/g_minstanex.md3");
-		precache_model ("models/weapons/v_minstanex.md3");
-		precache_model ("models/weapons/h_minstanex.iqm");
-		precache_sound ("weapons/minstanexfire.wav");
-		precache_sound ("weapons/nexwhoosh1.wav");
-		precache_sound ("weapons/nexwhoosh2.wav");
-		precache_sound ("weapons/nexwhoosh3.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-		W_Laser(WR_PRECACHE);
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_MINSTANEX);
-		self.current_ammo = ammo_cells;
-		self.minstanex_lasthit = 0;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		ammo_amount = self.ammo_cells >= minstanex_ammo;
-		ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= minstanex_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
-		ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= autocvar_g_balance_minstanex_laser_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.minstanex_lasthit = 0;
-	}
-	else if (req == WR_RELOAD)
-	{
-		float used_ammo;
-		if(autocvar_g_balance_minstanex_laser_ammo)
-			used_ammo = min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
-		else
-			used_ammo = minstanex_ammo;
+		}
+		case WR_THINK:
+		{
+			// if the laser uses load, we also consider its ammo for reloading
+			if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if (self.BUTTON_ATCK)
+			{
+				if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
+				{
+					W_MinstaNex_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
+				}
+			}
+			else if (self.BUTTON_ATCK2)
+			{
+				if (self.jump_interval <= time)
+				if (weapon_prepareattack(1, -1))
+				{
+					// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
+					self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+					
+					// decrease ammo for the laser?
+					if(autocvar_g_balance_minstanex_laser_ammo)
+						W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
 
-		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_THINKING_WITH_PORTALS;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		return WEAPON_MINSTANEX_MURDER;
+					// ugly minstagib hack to reuse the fire mode of the laser
+					float w;
+					w = self.weapon;
+					self.weapon = WEP_LASER;
+					W_Laser_Shockwave();
+					self.weapon = w;
+					
+					// now do normal refire
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
+				}
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/nexflash.md3");
+			precache_model ("models/weapons/g_minstanex.md3");
+			precache_model ("models/weapons/v_minstanex.md3");
+			precache_model ("models/weapons/h_minstanex.iqm");
+			precache_sound ("weapons/minstanexfire.wav");
+			precache_sound ("weapons/nexwhoosh1.wav");
+			precache_sound ("weapons/nexwhoosh2.wav");
+			precache_sound ("weapons/nexwhoosh3.wav");
+			W_Laser(WR_PRECACHE);
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_MINSTANEX);
+			self.current_ammo = ammo_cells;
+			self.minstanex_lasthit = 0;
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.ammo_cells >= minstanex_ammo;
+			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= minstanex_ammo;
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
+		{
+			if(!autocvar_g_balance_minstanex_laser_ammo)
+				return TRUE;
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
+			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= autocvar_g_balance_minstanex_laser_ammo;
+			return ammo_amount;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.minstanex_lasthit = 0;
+			return TRUE;
+		}
+		case WR_RELOAD:
+		{
+			float used_ammo;
+			if(autocvar_g_balance_minstanex_laser_ammo)
+				used_ammo = min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
+			else
+				used_ammo = minstanex_ammo;
+
+			W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_THINKING_WITH_PORTALS;
+		}
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_MINSTANEX_MURDER;
+		}
 	}
 	return TRUE;
 }
@@ -195,17 +205,23 @@ float w_minstanex(float req)
 #ifdef CSQC
 float w_minstanex(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
-		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/neximpact.wav");
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+			if(!w_issilent)
+				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+				
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/neximpact.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

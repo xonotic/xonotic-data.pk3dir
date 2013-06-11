@@ -585,122 +585,131 @@ void spawnfunc_weapon_crylink (void)
 float w_crylink(float req)
 {
 	float ammo_amount;
-	if (req == WR_AIM)
+	switch(req)
 	{
-		if (random() < 0.10)
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_crylink_primary_speed, 0, autocvar_g_balance_crylink_primary_middle_lifetime, FALSE);
-		else
-			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_crylink_secondary_speed, 0, autocvar_g_balance_crylink_secondary_middle_lifetime, FALSE);
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-
-		if (self.BUTTON_ATCK)
+		case WR_AIM:
 		{
-			if (self.crylink_waitrelease != 1)
-			if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
-			{
-				W_Crylink_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_crylink_primary_animtime, w_ready);
-			}
+			if (random() < 0.10)
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_crylink_primary_speed, 0, autocvar_g_balance_crylink_primary_middle_lifetime, FALSE);
+			else
+				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_crylink_secondary_speed, 0, autocvar_g_balance_crylink_secondary_middle_lifetime, FALSE);
+				
+			return TRUE;
 		}
-
-		if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
+		case WR_THINK:
 		{
-			if (self.crylink_waitrelease != 2)
-			if (weapon_prepareattack(1, autocvar_g_balance_crylink_secondary_refire))
+			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+
+			if (self.BUTTON_ATCK)
 			{
-				W_Crylink_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_crylink_secondary_animtime, w_ready);
-			}
-		}
-
-		if ((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
-		{
-			if (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
-			{
-				// fired and released now!
-				if(self.crylink_lastgroup)
+				if (self.crylink_waitrelease != 1)
+				if (weapon_prepareattack(0, autocvar_g_balance_crylink_primary_refire))
 				{
-					vector pos;
-					entity linkjoineffect;
-
-					if(self.crylink_waitrelease == 1)
-					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed, autocvar_g_balance_crylink_primary_jointime);
-
-					}
-					else
-					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed, autocvar_g_balance_crylink_secondary_jointime);
-					}
-
-					linkjoineffect = spawn();
-					linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-					linkjoineffect.classname = "linkjoineffect";
-					linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
-					linkjoineffect.owner = self;
-					setorigin(linkjoineffect, pos);
-				}
-				self.crylink_waitrelease = 0;
-				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					// ran out of ammo!
-					self.cnt = WEP_CRYLINK;
-					self.switchweapon = w_getbestweapon(self);
+					W_Crylink_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_crylink_primary_animtime, w_ready);
 				}
 			}
+
+			if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
+			{
+				if (self.crylink_waitrelease != 2)
+				if (weapon_prepareattack(1, autocvar_g_balance_crylink_secondary_refire))
+				{
+					W_Crylink_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_crylink_secondary_animtime, w_ready);
+				}
+			}
+
+			if ((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
+			{
+				if (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
+				{
+					// fired and released now!
+					if(self.crylink_lastgroup)
+					{
+						vector pos;
+						entity linkjoineffect;
+
+						if(self.crylink_waitrelease == 1)
+						{
+							pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed, autocvar_g_balance_crylink_primary_jointime);
+
+						}
+						else
+						{
+							pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed, autocvar_g_balance_crylink_secondary_jointime);
+						}
+
+						linkjoineffect = spawn();
+						linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
+						linkjoineffect.classname = "linkjoineffect";
+						linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
+						linkjoineffect.owner = self;
+						setorigin(linkjoineffect, pos);
+					}
+					self.crylink_waitrelease = 0;
+					if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
+					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					{
+						// ran out of ammo!
+						self.cnt = WEP_CRYLINK;
+						self.switchweapon = w_getbestweapon(self);
+					}
+				}
+			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_crylink.md3");
-		precache_model ("models/weapons/v_crylink.md3");
-		precache_model ("models/weapons/h_crylink.iqm");
-		precache_sound ("weapons/crylink_fire.wav");
-		precache_sound ("weapons/crylink_fire2.wav");
-		precache_sound ("weapons/crylink_linkjoin.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_CRYLINK);
-		self.current_ammo = ammo_cells;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		// don't "run out of ammo" and switch weapons while waiting for release
-		if(self.crylink_lastgroup && self.crylink_waitrelease)
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_crylink.md3");
+			precache_model ("models/weapons/v_crylink.md3");
+			precache_model ("models/weapons/h_crylink.iqm");
+			precache_sound ("weapons/crylink_fire.wav");
+			precache_sound ("weapons/crylink_fire2.wav");
+			precache_sound ("weapons/crylink_linkjoin.wav");
 			return TRUE;
-
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
-		ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_primary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		// don't "run out of ammo" and switch weapons while waiting for release
-		if(self.crylink_lastgroup && self.crylink_waitrelease)
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_CRYLINK);
+			self.current_ammo = ammo_cells;
 			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		{
+			// don't "run out of ammo" and switch weapons while waiting for release
+			if(self.crylink_lastgroup && self.crylink_waitrelease)
+				return TRUE;
 
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_secondary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_CRYLINK_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		return WEAPON_CRYLINK_MURDER;
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_primary_ammo;
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
+		{
+			// don't "run out of ammo" and switch weapons while waiting for release
+			if(self.crylink_lastgroup && self.crylink_waitrelease)
+				return TRUE;
+
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_secondary_ammo;
+			return ammo_amount;
+		}
+		case WR_RELOAD:
+		{
+			W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_CRYLINK_SUICIDE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			return WEAPON_CRYLINK_MURDER;
+		}
 	}
 	return TRUE;
 }
@@ -708,27 +717,33 @@ float w_crylink(float req)
 #ifdef CSQC
 float w_crylink(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 2;
-		if(w_deathtype & HITTYPE_SECONDARY)
+		case WR_IMPACTEFFECT:
 		{
-			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+			vector org2;
+			org2 = w_org + w_backoff * 2;
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+			}
+			else
+			{
+				pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+			}
+			
+			return TRUE;
 		}
-		else
+		case WR_PRECACHE:
 		{
-			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+			precache_sound("weapons/crylink_impact2.wav");
+			precache_sound("weapons/crylink_impact.wav");
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/crylink_impact2.wav");
-		precache_sound("weapons/crylink_impact.wav");
 	}
 	return TRUE;
 }

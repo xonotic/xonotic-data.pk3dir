@@ -353,108 +353,123 @@ void spawnfunc_weapon_hagar (void)
 float w_hagar(float req)
 {
 	float ammo_amount;
-	if (req == WR_AIM)
-		if (random()>0.15)
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
-		else
-		{
-			// not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-			self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
-		}
-	else if (req == WR_THINK)
+	switch(req)
 	{
-		float loadable_secondary;
-		loadable_secondary = (autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary);
+		case WR_AIM:
+		{
+			if (random()>0.15)
+				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
+			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
+				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_hagar_primary_speed, 0, autocvar_g_balance_hagar_primary_lifetime, FALSE);
+				
+			return TRUE;
+		}
+		case WR_THINK:
+		{
+			float loadable_secondary;
+			loadable_secondary = (autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary);
 
-		if (loadable_secondary)
-			W_Hagar_Attack2_Load(); // must always run each frame
-		if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
-		{
-			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+			if (loadable_secondary)
+				W_Hagar_Attack2_Load(); // must always run each frame
+			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
-				W_Hagar_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
+				{
+					W_Hagar_Attack();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+				}
 			}
-		}
-		else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
-		{
-			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+			else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
 			{
-				W_Hagar_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+				if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
+				{
+					W_Hagar_Attack2();
+					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+				}
 			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_GONETHINK)
-	{
-		// we lost the weapon and want to prepare switching away
-		if(self.hagar_load)
+		case WR_GONETHINK:
 		{
-			self.weaponentity.state = WS_READY;
-			W_Hagar_Attack2_Load_Release();
+			// we lost the weapon and want to prepare switching away
+			if(self.hagar_load)
+			{
+				self.weaponentity.state = WS_READY;
+				W_Hagar_Attack2_Load_Release();
+			}
+			
+			return TRUE;
 		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_hagar.md3");
-		precache_model ("models/weapons/v_hagar.md3");
-		precache_model ("models/weapons/h_hagar.iqm");
-		precache_sound ("weapons/hagar_fire.wav");
-		precache_sound ("weapons/hagar_load.wav");
-		precache_sound ("weapons/hagar_beep.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_HAGAR);
-		self.current_ammo = ammo_rockets;
-		self.hagar_loadblock = FALSE;
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_hagar.md3");
+			precache_model ("models/weapons/v_hagar.md3");
+			precache_model ("models/weapons/h_hagar.iqm");
+			precache_sound ("weapons/hagar_fire.wav");
+			precache_sound ("weapons/hagar_load.wav");
+			precache_sound ("weapons/hagar_beep.wav");
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_HAGAR);
+			self.current_ammo = ammo_rockets;
+			self.hagar_loadblock = FALSE;
 
-		if(self.hagar_load)
+			if(self.hagar_load)
+			{
+				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo if necessary
+				self.hagar_load = 0;
+			}
+			
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
 		{
-			W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo if necessary
+			ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_primary_ammo;
+			return ammo_amount;
+		}
+		case WR_CHECKAMMO2:
+		{
+			ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
+			return ammo_amount;
+		}
+		case WR_RESETPLAYER:
+		{
 			self.hagar_load = 0;
+			return TRUE;
 		}
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
-		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_primary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
-		return ammo_amount;
-	}
-	else if (req == WR_RESETPLAYER)
-	{
-		self.hagar_load = 0;
-	}
-	else if (req == WR_PLAYERDEATH)
-	{
-		// if we have any rockets loaded when we die, release them
-		if(self.hagar_load && autocvar_g_balance_hagar_secondary_load_releasedeath)
-			W_Hagar_Attack2_Load_Release();
-	}
-	else if (req == WR_RELOAD)
-	{
-		if not(self.hagar_load) // require releasing loaded rockets first
-			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		return WEAPON_HAGAR_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_HAGAR_MURDER_BURST;
-		else
-			return WEAPON_HAGAR_MURDER_SPRAY;
+		case WR_PLAYERDEATH:
+		{
+			// if we have any rockets loaded when we die, release them
+			if(self.hagar_load && autocvar_g_balance_hagar_secondary_load_releasedeath)
+				W_Hagar_Attack2_Load_Release();
+				
+			return TRUE;
+		}
+		case WR_RELOAD:
+		{
+			if not(self.hagar_load) // require releasing loaded rockets first
+				W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
+				
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			return WEAPON_HAGAR_SUICIDE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_HAGAR_MURDER_BURST;
+			else
+				return WEAPON_HAGAR_MURDER_SPRAY;
+		}
 	}
 	return TRUE;
 }
@@ -462,26 +477,32 @@ float w_hagar(float req)
 #ifdef CSQC
 float w_hagar(float req)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(req)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-		if(!w_issilent)
+		case WR_IMPACTEFFECT:
 		{
-			if (w_random<0.15)
-				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
-			else if (w_random<0.7)
-				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
-			else
-				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+			if(!w_issilent)
+			{
+				if (w_random<0.15)
+					sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+				else if (w_random<0.7)
+					sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+				else
+					sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+			}
+			
+			return TRUE;
 		}
-	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/hagexp1.wav");
-		precache_sound("weapons/hagexp2.wav");
-		precache_sound("weapons/hagexp3.wav");
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/hagexp1.wav");
+			precache_sound("weapons/hagexp2.wav");
+			precache_sound("weapons/hagexp3.wav");
+			return TRUE;
+		}
 	}
 	return TRUE;
 }

@@ -344,112 +344,121 @@ void spawnfunc_weapon_tuba (void)
 
 float w_tuba(float req)
 {
-	if (req == WR_AIM)
+	switch(req)
 	{
-		// bots cannot play the Tuba well yet
-		// I think they should start with the recorder first
-		if(vlen(self.origin - self.enemy.origin) < autocvar_g_balance_tuba_radius)
+		case WR_AIM:
 		{
-			if(random() > 0.5)
-				self.BUTTON_ATCK = 1;
+			// bots cannot play the Tuba well yet
+			// I think they should start with the recorder first
+			if(vlen(self.origin - self.enemy.origin) < autocvar_g_balance_tuba_radius)
+			{
+				if(random() > 0.5)
+					self.BUTTON_ATCK = 1;
+				else
+					self.BUTTON_ATCK2 = 1;
+			}
+			
+			return TRUE;
+		}
+		case WR_THINK:
+		{
+			if (self.BUTTON_ATCK)
+			if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
+			{
+				W_Tuba_NoteOn(0);
+				//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
+			}
+			if (self.BUTTON_ATCK2)
+			if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
+			{
+				W_Tuba_NoteOn(HITTYPE_SECONDARY);
+				//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
+			}
+			if(self.tuba_note)
+			{
+				if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
+				{
+					entity oldself = self;
+					self = self.tuba_note;
+					W_Tuba_NoteOff();
+					self = oldself;
+				}
+			}
+			
+			return TRUE;
+		}
+		case WR_PRECACHE:
+		{
+			precache_model ("models/weapons/g_tuba.md3");
+			precache_model ("models/weapons/v_tuba.md3");
+			precache_model ("models/weapons/h_tuba.iqm");
+			precache_model ("models/weapons/v_akordeon.md3");
+			precache_model ("models/weapons/h_akordeon.iqm");
+			precache_model ("models/weapons/v_kleinbottle.md3");
+			precache_model ("models/weapons/h_kleinbottle.iqm");
+			
+			return TRUE;
+		}
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_TUBA);
+			self.current_ammo = ammo_none;
+			self.tuba_instrument = 0;
+			return TRUE;
+		}
+		case WR_RELOAD:
+		{
+			// switch to alternate instruments :)
+			if(self.weaponentity.state == WS_READY)
+			{
+				switch(self.tuba_instrument)
+				{
+					case 0:
+						self.tuba_instrument = 1;
+						self.weaponname = "akordeon";
+						break;
+					case 1:
+						self.tuba_instrument = 2;
+						self.weaponname = "kleinbottle";
+						break;
+					case 2:
+						self.tuba_instrument = 0;
+						self.weaponname = "tuba";
+						break;
+				}
+				W_SetupShot(self, FALSE, 0, "", 0, 0);
+				pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
+				self.weaponentity.state = WS_INUSE;
+				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
+			}
+			
+			return TRUE;
+		}
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			return TRUE; // tuba has infinite ammo
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_KLEINBOTTLE_SUICIDE;
+			else if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_ACCORDEON_SUICIDE;
 			else
-				self.BUTTON_ATCK2 = 1;
+				return WEAPON_TUBA_SUICIDE;
 		}
-	}
-	else if (req == WR_THINK)
-	{
-		if (self.BUTTON_ATCK)
-		if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
+		case WR_KILLMESSAGE:
 		{
-			W_Tuba_NoteOn(0);
-			//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
-			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_KLEINBOTTLE_MURDER;
+			else if(w_deathtype & HITTYPE_SECONDARY)
+				return WEAPON_ACCORDEON_MURDER;
+			else
+				return WEAPON_TUBA_MURDER;
 		}
-		if (self.BUTTON_ATCK2)
-		if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
-		{
-			W_Tuba_NoteOn(HITTYPE_SECONDARY);
-			//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
-			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
-		}
-		if(self.tuba_note)
-		{
-			if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
-			{
-				entity oldself = self;
-				self = self.tuba_note;
-				W_Tuba_NoteOff();
-				self = oldself;
-			}
-		}
-	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_tuba.md3");
-		precache_model ("models/weapons/v_tuba.md3");
-		precache_model ("models/weapons/h_tuba.iqm");
-		precache_model ("models/weapons/v_akordeon.md3");
-		precache_model ("models/weapons/h_akordeon.iqm");
-		precache_model ("models/weapons/v_kleinbottle.md3");
-		precache_model ("models/weapons/h_kleinbottle.iqm");
-
-		//float i;
-		//for(i = -18; i <= +27; ++i)
-		//	precache_sound(TUBA_NOTE(i));
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_TUBA);
-		self.current_ammo = ammo_none;
-		self.tuba_instrument = 0;
-	}
-	else if (req == WR_RELOAD)
-	{
-		// switch to alternate instruments :)
-		if(self.weaponentity.state == WS_READY)
-		{
-			switch(self.tuba_instrument)
-			{
-				case 0:
-					self.tuba_instrument = 1;
-					self.weaponname = "akordeon";
-					break;
-				case 1:
-					self.tuba_instrument = 2;
-					self.weaponname = "kleinbottle";
-					break;
-				case 2:
-					self.tuba_instrument = 0;
-					self.weaponname = "tuba";
-					break;
-			}
-			W_SetupShot(self, FALSE, 0, "", 0, 0);
-			pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
-			self.weaponentity.state = WS_INUSE;
-			weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
-		}
-	}
-	else if (req == WR_CHECKAMMO1)
-		return TRUE; // TODO use fuel?
-	else if (req == WR_CHECKAMMO2)
-		return TRUE; // TODO use fuel?
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE)
-			return WEAPON_KLEINBOTTLE_SUICIDE;
-		else if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_ACCORDEON_SUICIDE;
-		else
-			return WEAPON_TUBA_SUICIDE;
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE)
-			return WEAPON_KLEINBOTTLE_MURDER;
-		else if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_ACCORDEON_MURDER;
-		else
-			return WEAPON_TUBA_MURDER;
 	}
 	return TRUE;
 }
