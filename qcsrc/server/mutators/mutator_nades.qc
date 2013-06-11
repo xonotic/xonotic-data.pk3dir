@@ -1,7 +1,3 @@
-.entity nade;
-.entity fake_nade;
-.float nade_refire;
-
 void nade_timer_think()
 {
 	self.skin = 8 - (self.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
@@ -71,6 +67,8 @@ void nade_boom() // TODO: DamageInfo
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	
+	Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 
 	self.takedamage = DAMAGE_NO;
 	RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
