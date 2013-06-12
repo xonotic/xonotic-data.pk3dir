@@ -85,4 +85,19 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 		return sprintf(_("%s dB"), ftos_decimals(toDecibelOfSquare(fromDecibelOfSquare(v, me.valueMin), 0), me.valueDigits));
 }
 
+void _TEST_XonoticDecibelsSlider()
+{
+	float i;
+	for(i = -400; i < 0; ++i)
+	{
+		float db = i * 0.1;
+		float v = fromDecibelOfSquare(db, -40);
+		float dbv = toDecibelOfSquare(v, -40);
+		float d = dbv - db;
+		print(sprintf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d));
+		TEST_Check(fabs(d) > 0.02);
+	}
+	TEST_OK();
+}
+
 #endif
