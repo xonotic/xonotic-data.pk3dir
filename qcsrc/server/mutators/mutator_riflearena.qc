@@ -99,15 +99,7 @@ MUTATOR_DEFINITION(mutator_riflearena)
 		
 		weapon_action(WEP_LASER, WR_PRECACHE);
 		weapon_action(WEP_RIFLE, WR_PRECACHE);
-		
-		get_weaponinfo(WEP_HOOK).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
-	
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		get_weaponinfo(WEP_HOOK).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
-	}
-	
 	MUTATOR_ONREMOVE
 	{
 		print("This cannot be removed at runtime\n");
