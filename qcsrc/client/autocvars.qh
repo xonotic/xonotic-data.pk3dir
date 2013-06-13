@@ -21,7 +21,6 @@ float autocvar_cl_allow_uid2name;
 string autocvar_cl_announcer;
 var float autocvar_cl_announcer_antispam = 2;
 var float autocvar_cl_announcer_maptime = 3;
-var float autocvar_cl_announcer_matchend = 1;
 float autocvar_cl_autodemo_delete;
 float autocvar_cl_autodemo_delete_keeprecords;
 float autocvar_cl_casings;
