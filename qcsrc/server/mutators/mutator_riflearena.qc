@@ -55,8 +55,6 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = 100;
-	
-	g_grappling_hook = 0;
 
 	return FALSE;
 }
