@@ -5,7 +5,6 @@ string previous_announcement;
 // remaining maptime announcer sounds, true when sound was already played
 float announcer_1min;
 float announcer_5min;
-float announcer_matchend;
 
 void Announcer_Play(string announcement)
 {
@@ -32,7 +31,7 @@ void Announcer_Countdown()
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
 
 		Announcer_Play("begin");
-		announcer_5min = announcer_1min = announcer_matchend = FALSE; // reset maptime announcers now as well
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 		remove(self);
 		return;
 	}
@@ -133,25 +132,6 @@ void Announcer_Time()
 			}
 		}
 	}
-	
-	// Check for matchend = 0 seconds remaining
-	if(autocvar_cl_announcer_matchend == 1)
-	{
-		if (announcer_matchend)
-		{
-			if((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft == 0)
-					announcer_matchend = TRUE;
-		}
-		else if((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft == 0)
-		{
-			// if we're in warmup mode, dont play a sound
-			if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
-			{
-				announcer_matchend = TRUE;
-				Announcer_Play("matchend");
-			}
-		}
-	}
 }
 
 void Announcer()
@@ -162,7 +142,6 @@ void Announcer()
 
 void Announcer_Precache () 
 {
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/matchend.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
 
