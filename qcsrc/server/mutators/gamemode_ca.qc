@@ -238,6 +238,15 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
+{
+	if(IS_PLAYER(frag_attacker))
+	if(frag_target == frag_attacker)
+		frag_damage = 0;
+		
+	return FALSE;
+}
+
 // scoreboard setup
 void ca_ScoreRules()
 {
@@ -280,6 +289,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(SetStartItems, ca_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
