@@ -685,6 +685,10 @@ void bumb_exit(float eject)
 	
 	spot = vehicles_findgoodexit(spot);
 	
+	// Hide beam
+	if(self.gun3.enemy || !wasfreed(self.gun3.enemy)) {
+		self.gun3.enemy.effects |= EF_NODRAW;
+    }
 
 	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
 	self.owner.velocity_z += 10;
