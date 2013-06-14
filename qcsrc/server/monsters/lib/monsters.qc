@@ -599,13 +599,16 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	 
 	//v_forward = normalize(self.moveto - self.origin);
 	
-	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	//self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	float turny = 0;
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		turny = 20;
+		
+	if(g_td)
+		turny = vlen(self.angles - self.moveto);
 	
 	if(turny)
 	{
