@@ -128,6 +128,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		MUTATOR_ADD(gamemode_ca);
+		if(autocvar_g_ca_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_keyhunt)
@@ -144,6 +146,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
 		MUTATOR_ADD(gamemode_freezetag);
+		if(autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_assault)
