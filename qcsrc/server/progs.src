@@ -15,6 +15,7 @@ sys-post.qh
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
+../common/test.qh
 ../common/counting.qh
 weapons/cl_weapons.qh
 ../common/weapons/weapons.qh // WEAPONTODO
@@ -249,6 +250,7 @@ mutators/mutator_touchexplode.qc
 ../warpzonelib/server.qc
 
 ../common/animdecide.qc
+../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
 
