@@ -626,13 +626,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
-							if(complainteamdamage > 0 && !g_ca) // FIXME why is g_ca ruled out here? Why not just g_mirrordamage 0 on CA servers?
+							if(complainteamdamage > 0)
 								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
 							mirrorforce = autocvar_g_mirrordamage * vlen(force);
-							if(g_ca)
-								damage = 0;
-							else
-								damage = autocvar_g_friendlyfire * damage;
+							damage = autocvar_g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 
 							if(autocvar_g_mirrordamage_virtual)

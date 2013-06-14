@@ -240,9 +240,12 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 {
-	if(IS_PLAYER(frag_attacker))
-	if(frag_target == frag_attacker)
+	if(IS_PLAYER(frag_target))
+	if(frag_target.deadflag == DEAD_NO)
+	if(frag_target == frag_attacker || !IsDifferentTeam(frag_target, frag_attacker))
 		frag_damage = 0;
+		
+	frag_mirrordamage = 0;
 		
 	return FALSE;
 }
