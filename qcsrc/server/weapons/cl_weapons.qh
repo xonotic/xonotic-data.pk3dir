@@ -1,0 +1,4 @@
+float weaponswapping;
+float internalteam;
+
+void weapon_defaultspawnfunc(float wpn);
