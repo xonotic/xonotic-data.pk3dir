@@ -35,7 +35,6 @@ void superspec_save_client_conf()
 	string fn = "superspec-local.options";
 	float fh;
 
-
 	if not(_ISLOCAL)
 	{
 		if(self.crypto_idfp == "")
@@ -65,7 +64,6 @@ void superspec_save_client_conf()
 
 void superspec_msg(string _center_title, string _con_title, entity _to, string _msg, float _spamlevel)
 {
-
 	sprint(_to, strcat(_con_title, _msg));
 
 	if(_to.superspec_flags & SSF_SILENT)
@@ -120,7 +118,6 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
-
 
 		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
 				(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
@@ -207,7 +204,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			self.superspec_itemfilter = strzone(argv(1));
 		}
 
-
 		return TRUE;
 	}
 
@@ -258,15 +254,14 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			}
 		}
 
-
 		_aspeco = "";
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_SILENT, "Silent", "silent", "si");
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_VERBOSE, "Verbose", "verbose", "ve");
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_ITEMMSG, "Item pickup messages", "item_message", "im");
 
 		superspec_msg("^3Current Super Spectate options are:\n\n\n\n\n", "\n^3Current Super Spectate options are:\n", self, _aspeco, 1);
-		return TRUE;
 
+		return TRUE;
 	}
 
 /////////////////////
@@ -423,14 +418,6 @@ MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
 	return 0;
 }
 
-/*
-MUTATOR_HOOKFUNCTION(superspec_PlayerSpawn)
-{
-
-    return FALSE;
-}
-*/
-
 void superspec_hello()
 {
 	if(self.enemy.crypto_idfp == "")
@@ -495,19 +482,6 @@ MUTATOR_HOOKFUNCTION(superspec_ClientDisconnect)
 	return FALSE;
 }
 
-
-/*
-MUTATOR_HOOKFUNCTION(superspec_MakePlayerObserver)
-{
-    return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(superspec_PlayerPreThink)
-{
-    return FALSE;
-}
-*/
-
 MUTATOR_DEFINITION(mutator_superspec)
 {
 
@@ -516,9 +490,6 @@ MUTATOR_DEFINITION(mutator_superspec)
 	MUTATOR_HOOK(SV_ParseClientCommand, superspec_SV_ParseClientCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, superspec_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, superspec_ClientConnect, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerSpawn, superspec_PlayerSpawn, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerPreThink, superspec_PlayerPreThink, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(MakePlayerObserver, superspec_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, superspec_ClientDisconnect, CBC_ORDER_ANY);
 
 	return 0;
