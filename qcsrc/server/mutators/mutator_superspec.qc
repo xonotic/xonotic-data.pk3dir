@@ -380,6 +380,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 
 		entity _player;
 		float _team = 0;
+		float found = FALSE;
 
 		if(cmd_argc == 2)
 		{
@@ -392,10 +393,16 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		FOR_EACH_PLAYER(_player)
 		{
 			if(_player.flagcarried && (_player.team == _team || _team == 0))
+			{
+				found = TRUE;
+				if(_team == 0 && IS_SPEC(self) && self.enemy == _player)
+					continue; // already spectating a fc, try to find the other fc
 				return _spectate(_player);
+			}
 		}
 
-		superspec_msg("", "", self, "No active flag carrier\n", 1);
+		if(!found)
+			superspec_msg("", "", self, "No active flag carrier\n", 1);
 		return TRUE;
 	}
 
