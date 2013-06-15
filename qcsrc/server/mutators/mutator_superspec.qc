@@ -221,9 +221,9 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			if(argv(1) == "help")
 			{
 				_aspeco = "use cmd superspec [option] [on|off] to set options\n\n";
-				_aspeco = strcat(_aspeco, "^3 silent ^7(short^5 si^7) supress ALL mesagess from superspectate.\n");
-				_aspeco = strcat(_aspeco, "^3 verrbose ^7(short^5 ve^7) makes superspectate print some additional information.\n");
-				_aspeco = strcat(_aspeco, "^3 item_message ^7(short^5 im^7) makes superspectate print items that was picked up.\n");
+				_aspeco = strcat(_aspeco, "^3 silent ^7(short^5 si^7) supresses ALL messages from superspectate.\n");
+				_aspeco = strcat(_aspeco, "^3 verbose ^7(short^5 ve^7) makes superspectate print some additional information.\n");
+				_aspeco = strcat(_aspeco, "^3 item_message ^7(short^5 im^7) makes superspectate print items that were picked up.\n");
 				_aspeco = strcat(_aspeco, "^7    Use cmd superspec_itemfilter \"item_class1 item_class2\" to set up a filter of what to show with ^3item_message.\n");
 				superspec_msg("^2Available Super Spectate ^3options:\n\n\n", "\n^2Available Super Spectate ^3options:\n", self, _aspeco, 1);
 				return TRUE;
@@ -285,9 +285,9 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				_aspeco = strcat(_aspeco, "^3 mega_armor ^7(short^5 ma^7) for automatic spectate on mega armor\n");
 				_aspeco = strcat(_aspeco, "^3 flag_grab ^7(short^5 fg^7) for automatic spectate on CTF flag grab\n");
 				_aspeco = strcat(_aspeco, "^3 observer_only (short^5 oo^7) for automatic spectate only if in observer mode\n");
-				_aspeco = strcat(_aspeco, "^3 show_what (short^5 sw^7) to display what event triggerd autospectate\n");
-				_aspeco = strcat(_aspeco, "^3 item_msg ^7(short^5 im^7) to autospec when item_message in superspectate is triggerd\n");
-				_aspeco = strcat(_aspeco, "^3 all ^7(short ^5aa^7) turn everything on/off\n");
+				_aspeco = strcat(_aspeco, "^3 show_what (short^5 sw^7) to display what event triggered autospectate\n");
+				_aspeco = strcat(_aspeco, "^3 item_msg ^7(short^5 im^7) to autospec when item_message in superspectate is triggered\n");
+				_aspeco = strcat(_aspeco, "^3 all ^7(short ^5aa^7) to turn everything on/off\n");
 				superspec_msg("^2Available Auto Spectate ^3options:\n\n\n", "\n^2Available Auto Spectate ^3options:\n", self, _aspeco, 1);
 				return TRUE;
 			}
@@ -334,7 +334,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_AR, "Mega Armor", "mega_armor", "ma");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FLAG_GRAB, "Flag grab", "flag_grab","fg");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_OBSERVER_ONLY, "Only switch if Observer", "observer_only", "oo");
+		OPTIONINFO(self.autospec_flags, _aspeco, ASF_OBSERVER_ONLY, "Only switch if observer", "observer_only", "oo");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHOWWHAT, "Show what item triggered spectate", "show_what", "sw");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SSIM, "Switch on superspec item message", "item_msg", "im");
 
@@ -351,7 +351,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				return _spectate(_player);
 		}
 
-		superspec_msg("", "", self, "No active powerups\n", 1);
+		superspec_msg("", "", self, "No active powerup\n", 1);
 		return TRUE;
 	}
 
@@ -368,7 +368,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		return TRUE;
 	}
 
-	if(cmd_name == "followstshield")
+	if(cmd_name == "followshield")
 	{
 		entity _player;
 		FOR_EACH_PLAYER(_player)
@@ -436,7 +436,7 @@ void superspec_hello()
 	if(self.enemy.crypto_idfp == "")
 		centerprint(self.enemy, "Your client have/allow no crypto id, superspec options will not be saved/restored.");
 	else
-		centerprint(self.enemy, sprintf("Hello %s\nSince your client has a Crypto ID, your superspec preferenses will be presisted on this server.", self.enemy.netname));
+		centerprint(self.enemy, sprintf("Hello %s\nSince your client has a Crypto ID, your superspec preferences will be persisted on this server.", self.enemy.netname));
 
 	remove(self);
 }
@@ -475,7 +475,7 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 		string _magic = fgets(fh);
 		if(_magic != _SSMAGIX)
 		{
-			dprint("^1ERROR^7 While reading superspec options file: unkown magic\n");
+			dprint("^1ERROR^7 While reading superspec options file: unknown magic\n");
 		}
 		else
 		{
