@@ -417,11 +417,11 @@ void PutClientInServer (void)
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
-		if(autocvar_g_balance_nex_charge)
+		if(WEP_CVAR(nex, charge))
 		{
-			if(autocvar_g_balance_nex_secondary_chargepool)
+			if(WEP_CVAR_SEC(nex, chargepool))
 				self.nex_chargepool_ammo = 1;
-			self.nex_charge = autocvar_g_balance_nex_charge_start;
+			self.nex_charge = WEP_CVAR(nex, charge_start);
 		}
 
 		if(inWarmupStage)
@@ -2272,17 +2272,17 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
+			if(self.weapon == WEP_NEX && WEP_CVAR(nex, charge))
 			{
-				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
+				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
+				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
 
-				if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+				if(self.nex_charge > WEP_CVAR(nex, charge_animlimit))
 				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
 				}
 			}
 			else
@@ -2420,8 +2420,8 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// rot nex charge to the charge limit
-		if(autocvar_g_balance_nex_charge_rot_rate && self.nex_charge > autocvar_g_balance_nex_charge_limit && self.nex_charge_rottime < time)
-			self.nex_charge = bound(autocvar_g_balance_nex_charge_limit, self.nex_charge - autocvar_g_balance_nex_charge_rot_rate * frametime / W_TICSPERFRAME, 1);
+		if(WEP_CVAR(nex, charge_rot_rate) && self.nex_charge > WEP_CVAR(nex, charge_limit) && self.nex_charge_rottime < time)
+			self.nex_charge = bound(WEP_CVAR(nex, charge_limit), self.nex_charge - WEP_CVAR(nex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 
 		if(frametime)
 			player_anim();

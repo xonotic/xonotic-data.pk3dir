@@ -107,11 +107,11 @@ void NIX_GiveCurrentWeapon()
 			self.(weapon_load[nix_weapon]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 
 		// nex too
-		if(autocvar_g_balance_nex_charge)
+		if(WEP_CVAR(nex, charge))
 		{
-			if(autocvar_g_balance_nex_secondary_chargepool)
+			if(WEP_CVAR_SEC(nex, chargepool))
 				self.nex_chargepool_ammo = 1;
-			self.nex_charge = autocvar_g_balance_nex_charge_start;
+			self.nex_charge = WEP_CVAR(nex, charge_start);
 		}
 	}
 	if(self.nix_lastinfotime != dt)
