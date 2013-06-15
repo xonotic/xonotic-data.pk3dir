@@ -10,10 +10,38 @@ REGISTER_WEAPON(
 /* shortname */ "grenadelauncher",
 /* fullname  */ _("Mortar")
 );
-#else
+
+#define MORTAR_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, bouncefactor) \
+	WEP_ADD_CVAR(weapon, MO_NONE, bouncestop) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, damageforcescale) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, health) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime_bounce) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime_stick) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  remote_minbouncecnt) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, speed_up) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, type) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+MORTAR_SETTINGS(mortar)
 .float gl_detonate_later;
 .float gl_bouncecnt;
+#endif
+#else
+#ifdef SVQC
 
 void W_Grenade_Explode (void)
 {
@@ -30,7 +58,7 @@ void W_Grenade_Explode (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_primary_damage, autocvar_g_balance_grenadelauncher_primary_edgedamage, autocvar_g_balance_grenadelauncher_primary_radius, world, world, autocvar_g_balance_grenadelauncher_primary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), world, world, WEP_CVAR_PRI(mortar, force), self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -50,7 +78,7 @@ void W_Grenade_Explode2 (void)
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_grenadelauncher_secondary_damage, autocvar_g_balance_grenadelauncher_secondary_edgedamage, autocvar_g_balance_grenadelauncher_secondary_radius, world, world, autocvar_g_balance_grenadelauncher_secondary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), world, world, WEP_CVAR_SEC(mortar, force), self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -79,18 +107,18 @@ void W_Grenade_Think1 (void)
 		W_Grenade_Explode ();
 		return;
 	}
-	if(self.gl_detonate_later && self.gl_bouncecnt >= autocvar_g_balance_grenadelauncher_primary_remote_minbouncecnt)
+	if(self.gl_detonate_later && self.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
 		W_Grenade_Explode();
 }
 
 void W_Grenade_Touch1 (void)
 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM || autocvar_g_balance_grenadelauncher_primary_type == 0) // always explode when hitting a player, or if normal mortar projectile
+	if (other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
 		self.use ();
 	}
-	else if (autocvar_g_balance_grenadelauncher_primary_type == 1) // bounce
+	else if (WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
 		float r;
 		r = random() * 6;
@@ -109,7 +137,7 @@ void W_Grenade_Touch1 (void)
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
-	else if(autocvar_g_balance_grenadelauncher_primary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -123,18 +151,18 @@ void W_Grenade_Touch1 (void)
 		// do not respond to any more touches
 		self.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_primary_lifetime_stick);
+		self.nextthink = min(self.nextthink, time + WEP_CVAR_PRI(mortar, lifetime_stick));
 	}
 }
 
 void W_Grenade_Touch2 (void)
 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM || autocvar_g_balance_grenadelauncher_secondary_type == 0) // always explode when hitting a player, or if normal mortar projectile
+	if (other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
 		self.use ();
 	}
-	else if (autocvar_g_balance_grenadelauncher_secondary_type == 1) // bounce
+	else if (WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
 		float r;
 		r = random() * 6;
@@ -153,11 +181,11 @@ void W_Grenade_Touch2 (void)
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 		
-		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
-			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
+		if (WEP_CVAR_SEC(mortar, lifetime_bounce) && self.gl_bouncecnt == 1)
+			self.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
 			
 	}
-	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -171,7 +199,7 @@ void W_Grenade_Touch2 (void)
 		// do not respond to any more touches
 		self.solid = SOLID_NOT;
 
-		self.nextthink = min(self.nextthink, time + autocvar_g_balance_grenadelauncher_secondary_lifetime_stick);
+		self.nextthink = min(self.nextthink, time + WEP_CVAR_SEC(mortar, lifetime_stick));
 	}
 }
 
@@ -179,9 +207,9 @@ void W_Grenade_Attack (void)
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
+	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_PRI(mortar, ammo), autocvar_g_balance_mortar_reload_ammo); // WEAPONTODO
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_balance_grenadelauncher_primary_damage);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -190,33 +218,33 @@ void W_Grenade_Attack (void)
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = autocvar_g_balance_grenadelauncher_primary_damage;
+	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
-	gren.bouncefactor = autocvar_g_balance_grenadelauncher_bouncefactor;
-	gren.bouncestop = autocvar_g_balance_grenadelauncher_bouncestop;
+	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
+	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
-	gren.cnt = time + autocvar_g_balance_grenadelauncher_primary_lifetime;
+	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
 	gren.think = W_Grenade_Think1;
 	gren.use = W_Grenade_Explode;
 	gren.touch = W_Grenade_Touch1;
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
-	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
+	gren.health = WEP_CVAR_PRI(mortar, health);
+	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
+	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_mortar_primary); // WEAPONTODO
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	if(autocvar_g_balance_grenadelauncher_primary_type == 0 || autocvar_g_balance_grenadelauncher_primary_type == 2)
+	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
@@ -228,9 +256,9 @@ void W_Grenade_Attack2 (void)
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_secondary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
+	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(mortar, ammo), autocvar_g_balance_mortar_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_balance_grenadelauncher_secondary_damage);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -239,32 +267,32 @@ void W_Grenade_Attack2 (void)
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = autocvar_g_balance_grenadelauncher_secondary_damage;
+	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
-	gren.bouncefactor = autocvar_g_balance_grenadelauncher_bouncefactor;
-	gren.bouncestop = autocvar_g_balance_grenadelauncher_bouncestop;
+	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
+	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
-	gren.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime;
+	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Grenade_Explode2;
 	gren.touch = W_Grenade_Touch2;
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = autocvar_g_balance_grenadelauncher_secondary_health;
-	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
+	gren.health = WEP_CVAR_SEC(mortar, health);
+	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
+	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_mortar_secondary); // WEAPONTODO
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	if(autocvar_g_balance_grenadelauncher_secondary_type == 0 || autocvar_g_balance_grenadelauncher_secondary_type == 2)
+	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 	else
 		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
@@ -289,9 +317,9 @@ float w_glauncher(float req)
 		{
 			self.BUTTON_ATCK = FALSE;
 			self.BUTTON_ATCK2 = FALSE;
-			if (self.bot_secondary_grenademooth == 0)
+			if (self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
 			{
-				if(bot_aim(autocvar_g_balance_grenadelauncher_primary_speed, autocvar_g_balance_grenadelauncher_primary_speed_up, autocvar_g_balance_grenadelauncher_primary_lifetime, TRUE))
+				if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), TRUE))
 				{
 					self.BUTTON_ATCK = TRUE;
 					if(random() < 0.01) self.bot_secondary_grenademooth = 1;
@@ -299,7 +327,7 @@ float w_glauncher(float req)
 			}
 			else
 			{
-				if(bot_aim(autocvar_g_balance_grenadelauncher_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_grenadelauncher_secondary_lifetime, TRUE))
+				if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), TRUE))
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
@@ -310,19 +338,19 @@ float w_glauncher(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_grenadelauncher_reload_ammo && self.clip_load < min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo)) // forced reload
+			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
 				weapon_action(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK)
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_grenadelauncher_primary_refire))
+				if (weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))
 				{
 					W_Grenade_Attack();
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_grenadelauncher_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
 			else if (self.BUTTON_ATCK2)
 			{
-				if (cvar("g_balance_grenadelauncher_secondary_remote_detonateprimary"))
+				if (cvar("g_balance_mortar_secondary_remote_detonateprimary"))
 				{
 					nadefound = 0;
 					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == self)
@@ -336,10 +364,10 @@ float w_glauncher(float req)
 					if(nadefound)
 						sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 				}
-				else if (weapon_prepareattack(1, autocvar_g_balance_grenadelauncher_secondary_refire))
+				else if (weapon_prepareattack(1, WEP_CVAR_SEC(mortar, refire)))
 				{
 					W_Grenade_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_grenadelauncher_secondary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
 			
@@ -368,19 +396,19 @@ float w_glauncher(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_primary_ammo;
+			ammo_amount = self.ammo_rockets >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
-			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+			ammo_amount = self.ammo_rockets >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), autocvar_g_balance_mortar_reload_ammo, autocvar_g_balance_mortar_reload_time, "weapons/reload.wav"); // WEAPONTODO
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
