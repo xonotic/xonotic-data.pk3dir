@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				if(self.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(self))
 				{
 					if(self.superspec_flags & SSF_VERBOSE)
-						superspec_msg("", "", self, sprintf("^8Ignored that %s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
+						superspec_msg("", "", self, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
 				}
 				else
 				{
@@ -284,8 +284,8 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				_aspeco = strcat(_aspeco, "^3 mega_health ^7(short^5 mh^7) for automatic spectate on mega health\n");
 				_aspeco = strcat(_aspeco, "^3 mega_armor ^7(short^5 ma^7) for automatic spectate on mega armor\n");
 				_aspeco = strcat(_aspeco, "^3 flag_grab ^7(short^5 fg^7) for automatic spectate on CTF flag grab\n");
-				_aspeco = strcat(_aspeco, "^3 observer_only (short^5 oo^7) for automatic spectate only if in observer mode\n");
-				_aspeco = strcat(_aspeco, "^3 show_what (short^5 sw^7) to display what event triggered autospectate\n");
+				_aspeco = strcat(_aspeco, "^3 observer_only ^7(short^5 oo^7) for automatic spectate only if in observer mode\n");
+				_aspeco = strcat(_aspeco, "^3 show_what ^7(short^5 sw^7) to display what event triggered autospectate\n");
 				_aspeco = strcat(_aspeco, "^3 item_msg ^7(short^5 im^7) to autospec when item_message in superspectate is triggered\n");
 				_aspeco = strcat(_aspeco, "^3 all ^7(short ^5aa^7) to turn everything on/off\n");
 				superspec_msg("^2Available Auto Spectate ^3options:\n\n\n", "\n^2Available Auto Spectate ^3options:\n", self, _aspeco, 1);
