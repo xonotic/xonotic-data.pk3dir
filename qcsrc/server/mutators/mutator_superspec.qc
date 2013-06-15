@@ -22,10 +22,7 @@
 float _spectate(entity _player)
 {
 	if(Spectate(_player) == 1)
-	{
-		PutObserverInServer();
 		self.classname = "spectator";
-	}
 
 	return TRUE;
 }
