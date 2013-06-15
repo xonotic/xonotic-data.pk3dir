@@ -90,7 +90,7 @@ void target_give_init()
 				self.netname = strcat(self.netname, " crylink");
 		}
 		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_grenadelauncher_primary_ammo;
+			self.ammo_rockets += targ.count * autocvar_g_balance_mortar_primary_ammo; // WEAPONTODO
 			if(self.netname == "")
 				self.netname = "grenadelauncher";
 			else

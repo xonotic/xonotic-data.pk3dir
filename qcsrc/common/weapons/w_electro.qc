@@ -420,7 +420,7 @@ float w_electro(float req)
 			}
 			else
 			{
-				if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE))
+				if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_mortar_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE)) // WHAT THE ACTUAL FUUUUUUUUUCK?!?!? WEAPONTODO
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;

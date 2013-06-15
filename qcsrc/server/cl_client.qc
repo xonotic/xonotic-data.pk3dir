@@ -630,10 +630,10 @@ float ClientInit_SendEntity(entity to, float sf)
 	else
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
-	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
-	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
+	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
+	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
 	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, autocvar_g_balance_rifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
@@ -652,14 +652,14 @@ void ClientInit_CheckUpdate()
 		self.count = autocvar_g_balance_armor_blockpercent;
 		self.SendFlags |= 1;
 	}
-	if(self.bouncefactor != autocvar_g_balance_grenadelauncher_bouncefactor)
+	if(self.bouncefactor != autocvar_g_balance_mortar_bouncefactor) // WEAPONTODO
 	{
-		self.bouncefactor = autocvar_g_balance_grenadelauncher_bouncefactor;
+		self.bouncefactor = autocvar_g_balance_mortar_bouncefactor;
 		self.SendFlags |= 1;
 	}
-	if(self.bouncestop != autocvar_g_balance_grenadelauncher_bouncestop)
+	if(self.bouncestop != autocvar_g_balance_mortar_bouncestop)
 	{
-		self.bouncestop = autocvar_g_balance_grenadelauncher_bouncestop;
+		self.bouncestop = autocvar_g_balance_mortar_bouncestop;
 		self.SendFlags |= 1;
 	}
 	if(self.ebouncefactor != autocvar_g_balance_electro_secondary_bouncefactor)

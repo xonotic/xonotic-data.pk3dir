@@ -293,7 +293,7 @@ float w_porto(float req)
 			self.BUTTON_ATCK = FALSE;
 			self.BUTTON_ATCK2 = FALSE;
 			if(!autocvar_g_balance_porto_secondary)
-				if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_grenadelauncher_primary_lifetime, FALSE))
+				if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_mortar_primary_lifetime, FALSE)) // WEAPONTODO
 					self.BUTTON_ATCK = TRUE;
 					
 			return TRUE;
