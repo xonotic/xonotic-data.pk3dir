@@ -386,6 +386,12 @@ float w_glauncher(float req)
 			precache_sound ("weapons/grenade_bounce6.wav");
 			precache_sound ("weapons/grenade_stick.wav");
 			precache_sound ("weapons/grenade_fire.wav");
+
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_GRENADE_LAUNCHER).##prop = autocvar_g_balance_##weapon##_##name;
+			ARC_SETTINGS(mortar)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
