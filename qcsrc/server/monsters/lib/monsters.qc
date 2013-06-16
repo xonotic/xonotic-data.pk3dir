@@ -600,8 +600,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.state = 0;
 		self.touch = MonsterTouch;
 	}
-	 
-	//v_forward = normalize(self.moveto - self.origin);
 	
 	//self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
@@ -611,7 +609,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		turny = 20;
 		
-	if(g_td)
+	if(g_td || self.flags & FL_SWIM)
 		turny = vlen(self.angles - self.moveto);
 	
 	if(turny)
@@ -625,12 +623,15 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	else if(self.enemy)
 		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
 	
-	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
+	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
 		self.moveto_z = self.origin_z; 
 	
 	float l = vlen(self.moveto - self.origin);
 	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
 	float t2 = trace_path(self.origin-'0 0 15', self.moveto-'0 0 15'); 
+	
+	if(self.flags & FL_FLY || self.flags & FL_SWIM)
+		v_forward = normalize(self.moveto - self.origin);
 	
 	if(t1*l-t2*l>50 && (t1*l > 100 || t1 > 0.8))
 	if(self.flags & FL_ONGROUND)
