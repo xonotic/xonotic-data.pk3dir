@@ -1023,6 +1023,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.deadflag			= DEAD_NO; // UNDEAD
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
+	self.gravity			= 1;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
 	if not(self.attack_range)
