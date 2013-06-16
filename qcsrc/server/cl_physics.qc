@@ -1332,6 +1332,7 @@ void SV_PlayerPhysics()
 		}
 	}
 
+	// WEAPONTODO
 	float xyspeed;
 	xyspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
 	if(self.weapon == WEP_NEX && WEP_CVAR(nex, charge) && WEP_CVAR(nex, charge_velocity_rate) && xyspeed > WEP_CVAR(nex, charge_minspeed))

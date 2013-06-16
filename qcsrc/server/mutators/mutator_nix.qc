@@ -1,5 +1,5 @@
 float g_nix_with_laser;
-
+// WEAPONTODO
 float nix_weapon;
 float nix_weapon_ammo;
 float nix_nextchange;
