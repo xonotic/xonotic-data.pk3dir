@@ -62,7 +62,7 @@ void spider_web_explode()
 					Freeze(e, 0.3, 2, FALSE);
 					break;
 				case SPIDER_TYPE_FIRE:
-					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE, FALSE);
+					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
 					break;
 			}
 		}

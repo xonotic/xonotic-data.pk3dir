@@ -2256,9 +2256,6 @@ void PlayerPreThink (void)
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
-	
-	if(!Fire_IsBurning(self))
-		self.poisoned = FALSE;
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
