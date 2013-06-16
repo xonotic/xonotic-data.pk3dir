@@ -428,7 +428,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_title[0] = strzone(TranslateScoresLabel("name"));
 			hud_field[0] = SP_NAME;
 			++hud_num_fields;
-			print(sprintf(_("fixed missing field '%s'\n"), "name"));
+			print("fixed missing field 'name'\n");
 
 			if(!have_separator)
 			{
@@ -443,7 +443,7 @@ void Cmd_HUD_SetFields(float argc)
 				hud_field[1] = SP_SEPARATOR;
 				hud_size[1] = stringwidth("|", FALSE, hud_fontsize);
 				++hud_num_fields;
-				print(sprintf(_("fixed missing field '%s'\n"), "|"));
+				print("fixed missing field '|'\n");
 			}
 		}
 		else if(!have_separator)
@@ -453,7 +453,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth("|", FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = SP_SEPARATOR;
 			++hud_num_fields;
-			print(sprintf(_("fixed missing field '%s'\n"), "|"));
+			print("fixed missing field '|'\n");
 		}
 		if(!have_secondary)
 		{
@@ -462,7 +462,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			print(sprintf(_("fixed missing field '%s'\n"), scores_label[ps_secondary]));
+			print(sprintf("fixed missing field '%s'\n", scores_label[ps_secondary]));
 		}
 		if(!have_primary)
 		{
@@ -471,7 +471,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			print(sprintf(_("fixed missing field '%s'\n"), scores_label[ps_primary]));
+			print(sprintf("fixed missing field '%s'\n", scores_label[ps_primary]));
 		}
 	}
 

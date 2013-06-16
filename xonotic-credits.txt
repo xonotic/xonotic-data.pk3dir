@@ -1,27 +1,38 @@
 **Core Team
-
 Rudolf "divVerent" Polzer
-Tyler "-z-" Mulligan
+Ant "Antibody" Zucaro
 Merlijn Hofstra
-morphed
+Morphed
 Samual "Ares" Lenks
-Saulo "mand1nga" Gil
-Jakob "tZork" Markström Gröhn
+Tyler "-z-" Mulligan
 
-**Coordinators
+
+**Extended Team
+Debugger
+Jan "zykure" Behrens
+Łukasz "kuniu the frogg" Polek
+Mario
+Marvin "Mirio" Beck
+Matthias "matthiaskrgr" Krüger
+MrBougo
+Nick "bitbomb" Lucca
+Rasmus "FruitieX" Eskola
+
+
+*Website
+Ant "Antibody" Zucaro (web)
+Merlijn Hofstra
+Tyler "-z-" Mulligan (web / game)
+
+*Stats
+Ant "Antibody" Zucaro
+Jan "zykure" Behrens
 
 *Art
+Severin "sev" Meyer
 Sahil "DiaboliK" Singhal
-
-*2D Art / Web
-Tyler "-z-" Mulligan (web / game)
-FruitieX (game / web)
-
-*3D Art
-morphed
-
-*Concept Art
-LJFHutch
+Morphed
+Sam "LJFHutch" Hutchinson
 Pearce "theShadow" Michal
 
 *Animation
@@ -29,38 +40,80 @@ Sahil "DiaboliK" Singhal
 nifrek
 
 *Level Design
-FruitieX
-MirceaKitsune
+Ben "MooKow" Banker
+Calinou
+Cortez
+Cuinn "Cuinnton" Herrick
+Debugger
 Jakob "tZork" Markström Gröhn
+Konrad "Justin" Slawinski
+Łukasz "kuniu the frogg" Polek
+Maik "SavageX" Merten
+Marvin "Mirio" Beck
+Mircea "Taoki" Kitsune
+Pearce "theShadow" Michal
+Rasmus "FruitieX" Eskola
 Ruszkai "C.Brutail" Ákos
+Severin "sev" Meyer
 
 *Music / Sound FX
-mand1nga
-Merlijn Hofstra
-remaxim
-Stephan
+blkrbt
+chooksta
 Independent.nu
-
-*Engine Code Additions & QA
-Rudolf "divVerent" Polzer
+[master]mind
+Merlijn Hofstra
+Mick Rippon
+Nick "bitbomb" Lucca
+remaxim
+Saulo "mand1nga" Gil
+{SC0RP} - Ian "ID" Dorrell
+Stephan
+unfa
 
 *Game Code
+Samual "Ares" Lenks
 Rudolf "divVerent" Polzer
-FruitieX
 Jakob "tZork" Markström Gröhn
+Rasmus "FruitieX" Eskola
 
 *Marketing / PR
 Tyler "-z-" Mulligan
-mand1nga
 Ruszkai "C.Brutail" Ákos
+Samual "Ares" Lenks
+Saulo "mand1nga" Gil
 
 *Legal
 Rudolf "divVerent" Polzer
 Merlijn Hofstra
 
+
 **Game Engine
-DarkPlaces
-by Forest "LordHavoc" Hale
+*DarkPlaces
+Forest "LordHavoc" Hale
+
+*Engine Additions
+Rudolf "divVerent" Polzer
+Samual "Ares" Lenks
+
+
+**Compiler
+*GMQCC
+Wolfgang "Blub\0" Bumiller
+Dale "graphitemaster" Weiler
+
+
+**Other Active Contributors
+Alexander "naryl" Suhoverhov
+Antonio "terencehill" Piu
+Erik "Ablu" Schilling
+Florian Paul "lda17h" Schmidt
+Halogene
+Jope "Sless" Withers
+Oleh "BlaXpirit" Prypin
+Przemysław "atheros" Grzywacz
+Robert "ai" Kuroto
+The player with the unnecessarily long name
+
 
 **Translators
 
@@ -70,80 +123,58 @@ PinkRobot
 
 *German
 Rudolf "divVerent" Polzer
+Marvin "Mirio" Beck
+Erik "Ablu" Schilling
+Jope "Sless" Withers
 
 *Finnish
 Henry "Exitium" Sanmark
+Rasmus "FruitieX" Eskola
 
 *French
 Calinou
 Maxime "Taximus" Paradis
+Yannick "SpiKe" Le Guen
 
 *Greek
-Γιάννης Α.
+Γιάννης "Evropi" Α.
 
 *Hungarian
-xaN1C4n3
 Ruszkai "C.Brutail" Ákos
+xaN1C4n3
 
 *Italian
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
+stdi
 
 *Portuguese
 Ricardo "Hellgardia" Silva
 
 *Romanian
-MirceaKitsune
+Mircea "Taoki" Kitsune
 
 *Russian
+Hot Dog
 Lord Canistra
 Nikoli
 Sergej "Clearness High" Lutsyk
 
 *Spanish
+Kammy
 Rodrigo Mouton Laudin
 
 *Swedish
+Karl-Oskar "machine" Rikås
 marcus256
 
 *Ukrainian
+Oleh "BlaXpirit" Prypin
 Vasyl "Harmata" Melnyk
 
-**Other Active Contributors
-Akari
-Ant "Antibody" Zucaro
-Antonio "terencehill" Piu
-atheros
-Ben "MooKow" Banker
-blkrbt
-Calinou
-chooksta
-cortez
-Cuinn "Cuinnton" Herrick
-Florian Paul "lda17h" Schmidt
-Jope “Sless” Withers
-kojn
-Kristian "morfar" Johansson
-kuniuthefrogg
-magorian
-Maik "SavageX" Merten
-Marvin "Mirio" Beck
-Mepper
-Mick Rippon
-MrBougo
-parasti
-Paul Scott
-PlasmaSheep
-Przemysław "atheros" Grzywacz
-{SC0RP} - Ian "ID" Dorrell
-Severin "sev" Meyer
-SoulKeeper_p
-Stephan "esteel" Stahl
-The player with the unnecessarily long name
-Wolfgang "Blub\0" Bumiller
-Erik "Ablu" Schilling
-BlaXpirit
+
 **Past Contributors
+Akari
 Alexander "motorsep" Zubov
 Amos "torus" Dudley
 Andreas "Black" Kirsch
@@ -156,6 +187,7 @@ Christian Ice
 Clinton "Kaziganthe" Freeman
 Dan "Digger" Korostelev
 Dan "Wazat" Hale
+Dokujisan
 Donkey
 dstrek
 Dustin Geeraert
@@ -168,17 +200,19 @@ Garth "Zombie" Hendy
 Gerd "Elysis" Raudenbusch
 Gottfried "Toddd" Hofmann
 Henning "Tymo" Janssen
-"Innovati"
+Innovati
 Jitspoe
 Jody Gallagher
 Juergen "LowDragon" Timm
 KadaverJack
 Kevin "Tyrann" Shanahan
+Kristian "morfar" Johansson
 Kurt Dereli
 lcatlnx
 Lee David Ash
 Lee Vermeulen
 leileilol
+magorian
 Marius "GreEn`mArine" Shekow
 Marko "Urre" Permanto
 Mathieu "Elric" Olivier
@@ -187,24 +221,30 @@ MauveBib
 Mephisto
 michaelb
 Michael "Tenshihan" Quinn
+Mepper
 Munyul
 Netzwerg
 NoelCower
 Parapraxis
+parasti
 Paul "Strahlemann" Evers
+Paul Scott
 Petithomme
+PlasmaSheep
 Q1 Retexturing Project
 Qantourisc
 Rick "Rat" Kelley
-Robert "ai" Kuroto
 Ronan
 Sajt
+Saulo "mand1nga" Gil
 Shaggy
 Shank
 Simon O'Callaghan
 SomeGuy
+SoulKeeper_p
 Spike
 Spirit
+Stephan "esteel" Stahl
 Steve Vermeulen
 Supajoe
 Tei

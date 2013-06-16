@@ -307,6 +307,7 @@ if(panel.update_time <= time) { \
 	}\
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
+	panel.current_panel_bg_alpha = panel_bg_alpha; \
 	panel.current_panel_bg_border = panel_bg_border; \
 	panel.current_panel_bg_color = panel_bg_color; \
 	panel.current_panel_bg_color_team = panel_bg_color_team; \
