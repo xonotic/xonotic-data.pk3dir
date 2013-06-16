@@ -378,7 +378,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 		
-	v = e.origin + (e.mins + e.maxs) * 0.5;
+	v = CENTER_OR_VIEWOFS(e);
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 	
@@ -413,6 +413,7 @@ float trace_path(vector from, vector to)
 }
 
 .float last_trace;
+.float last_enemycheck; // for checking enemy
 vector monster_pickmovetarget(entity targ)
 {
 	// enemy is always preferred target
@@ -564,9 +565,12 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
-	if(time >= self.last_trace)
-	if not(monster_isvalidtarget(self.enemy, self))
-		self.enemy = world;
+	if(time >= self.last_enemycheck)
+	{
+		if not(monster_isvalidtarget(self.enemy, self))
+			self.enemy = world;
+		self.last_enemycheck = time + 2;
+	}
 		
 	if(self.enemy && self.enemy.health < 1)
 		self.enemy = world; // enough!
