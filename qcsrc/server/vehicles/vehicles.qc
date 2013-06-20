@@ -16,7 +16,7 @@ void vehicles_return();
 void vehicles_enter();
 void vehicles_touch();
 void vehicles_reset_colors();
-void vehicles_clearrturn();
+void vehicles_clearreturn();
 void vehicles_setreturn();
 
 
@@ -512,7 +512,7 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
-void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
+void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return;
@@ -658,7 +658,7 @@ void vehicles_enter()
         }
     }
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     CSQCVehicleSetup(self.owner, self.hud);
     
@@ -964,7 +964,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
 }
 
-void vehicles_clearrturn()
+void vehicles_clearreturn()
 {
     entity ret;
     // Remove "return helper", if any.
@@ -1055,7 +1055,7 @@ void vehicles_setreturn()
 {
     entity ret;
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     ret = spawn();
     ret.classname   = "vehicle_return";
@@ -1075,7 +1075,6 @@ void vehicles_setreturn()
 
     setmodel(ret, "null");
     setorigin(ret, self.pos1 + '0 0 96');
-
 }
 
 void vehicles_reset_colors()

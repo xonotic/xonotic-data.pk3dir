@@ -639,8 +639,8 @@ void spiderbot_exit(float eject)
 
 void spider_impact()
 {
-    if(autocvar_g_vehicle_spiderbot_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
+	if(autocvar_g_vehicle_spiderbot_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 }
 
 void spiderbot_headfade()
@@ -789,7 +789,7 @@ void spiderbot_spawn(float _f)
 {
     if(!self.gun1)
     {        
-        self.vehicles_impusle   = spiderbot_impulse;
+        self.vehicles_impulse   = spiderbot_impulse;
         self.gun1               = spawn();
         self.gun2               = spawn();    
         setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");

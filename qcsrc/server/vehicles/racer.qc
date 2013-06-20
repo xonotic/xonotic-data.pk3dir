@@ -529,8 +529,8 @@ void racer_exit(float eject)
 
 void racer_impact()
 {
-    if(autocvar_g_vehicle_racer_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+	if(autocvar_g_vehicle_racer_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
 void racer_blowup()

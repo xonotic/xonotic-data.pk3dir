@@ -742,8 +742,8 @@ void raptor_die()
 
 void raptor_impact()
 {
-    if(autocvar_g_vehicle_raptor_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+	if(autocvar_g_vehicle_raptor_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 
 // If we dont do this ever now and then, the raptors rotors
@@ -798,7 +798,7 @@ void raptor_spawn(float _f)
         //FIXME: Camera is in a bad place in HUD model.
         //setorigin(self.vehicle_viewport, '25 0 5');
         
-        self.vehicles_impusle   = raptor_impulse;
+        self.vehicles_impulse   = raptor_impulse;
         
         self.frame = 0;
 
