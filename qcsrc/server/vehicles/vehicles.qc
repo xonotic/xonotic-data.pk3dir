@@ -1088,15 +1088,13 @@ void vehicles_setreturn()
     ret.team        = self.team;
     ret.think       = vehicles_showwp;
 
-    if(self.deadflag != DEAD_NO)
-    {
-        ret.cnt         = time + self.vehicle_respawntime;
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 5);
-    }
-    else
-    {
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 1);
-    }
+	if(self.deadflag != DEAD_NO)
+	{
+		ret.cnt = max(game_starttime, time) + self.vehicle_respawntime;
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 5);
+	}
+	else
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 1);
 
     setmodel(ret, "null");
     setorigin(ret, self.pos1 + '0 0 96');
@@ -1297,14 +1295,14 @@ float vehicle_initialize(string  net_name,
     self.event_damage        = func_null;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
-    self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
+	self.vehicle_respawntime = max(0, _respawntime);
     self.effects             = EF_NODRAW;
 	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
-	if(!autocvar_g_vehicles_delayspawn)
+	if(!autocvar_g_vehicles_delayspawn || !self.vehicle_respawntime)
 		self.nextthink = time;
 	else
-		self.nextthink = max(time, game_starttime) + _respawntime + ((random() * 2 - 1) * autocvar_g_vehicles_delayspawn_jitter);
+		self.nextthink = max(time, game_starttime) + max(0, self.vehicle_respawntime + ((random() * 2 - 1) * autocvar_g_vehicles_delayspawn_jitter));
 
 	if(autocvar_g_playerclip_collisions)
 		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
