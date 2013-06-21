@@ -394,6 +394,9 @@ void PutClientInServer (void)
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELESE);
+
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
