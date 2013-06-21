@@ -456,6 +456,30 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 }
 // End generic vehile projectile system
 
+void vehicles_reset()
+{
+	if(self.owner)
+	{
+		entity oldself = self;
+		self = self.owner;
+		vehicles_exit(VHEF_RELESE);
+		self = oldself;
+	}
+	self.alpha      = -1;
+	self.movetype   = MOVETYPE_NONE;
+	self.effects    = EF_NODRAW;
+	self.colormod  = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.velocity  = '0 0 0';
+	self.event_damage = func_null;
+	self.solid = SOLID_NOT;
+	self.deadflag = DEAD_NO;
+
+	self.touch = func_null;
+	self.nextthink = 0;
+	vehicles_setreturn();
+}
+
 /** vehicles_spawn
     Exetuted for all vehicles on (re)spawn.
     Sets defaults for newly spawned units.
@@ -470,6 +494,7 @@ void vehicles_spawn()
     self.owner              = world;
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
+    self.reset              = vehicles_reset;
     self.iscreature         = TRUE;
     self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
