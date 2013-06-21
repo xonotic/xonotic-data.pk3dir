@@ -70,6 +70,11 @@ float autocvar_g_vehicle_raptor_shield;
 float autocvar_g_vehicle_raptor_shield_regen;
 float autocvar_g_vehicle_raptor_shield_regen_pause;
 
+float autocvar_g_vehicle_raptor_blowup_radius;
+float autocvar_g_vehicle_raptor_blowup_coredamage;
+float autocvar_g_vehicle_raptor_blowup_edgedamage;
+float autocvar_g_vehicle_raptor_blowup_forceintensity;
+
 float autocvar_g_vehicle_raptor_bouncefactor;
 float autocvar_g_vehicle_raptor_bouncestop;
 vector autocvar_g_vehicle_raptor_bouncepain;
@@ -690,7 +695,10 @@ void raptor_blowup()
 {
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_RAPT_DEATH, world);
+	RadiusDamage(self, self.enemy, autocvar_g_vehicle_raptor_blowup_coredamage,
+				autocvar_g_vehicle_raptor_blowup_edgedamage,
+				autocvar_g_vehicle_raptor_blowup_radius, world,
+				autocvar_g_vehicle_raptor_blowup_forceintensity, DEATH_VH_RAPT_DEATH, world);
 
     self.alpha          = -1;
     self.movetype       = MOVETYPE_NONE;

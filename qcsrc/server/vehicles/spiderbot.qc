@@ -59,6 +59,11 @@ float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
+float autocvar_g_vehicle_spiderbot_blowup_radius;
+float autocvar_g_vehicle_spiderbot_blowup_coredamage;
+float autocvar_g_vehicle_spiderbot_blowup_edgedamage;
+float autocvar_g_vehicle_spiderbot_blowup_forceintensity;
+
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 
@@ -723,7 +728,10 @@ void spiderbot_blowup()
     SUB_SetFade(g1, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
     SUB_SetFade(g2, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
+	RadiusDamage(self, self.enemy, autocvar_g_vehicle_spiderbot_blowup_coredamage,
+				autocvar_g_vehicle_spiderbot_blowup_edgedamage,
+				autocvar_g_vehicle_spiderbot_blowup_radius, world,
+				autocvar_g_vehicle_spiderbot_blowup_forceintensity, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.movetype   = MOVETYPE_NONE;
