@@ -739,6 +739,7 @@ void spiderbot_blowup()
     self.solid      = SOLID_NOT;
     self.tur_head.effects  &~=  EF_FLAME;
 	self.vehicle_hudmodel.viewmodelforclient = self;
+	setorigin(self, self.pos1);
 }
 
 void spiderbot_die()
