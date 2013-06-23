@@ -24,7 +24,6 @@ void XonoticAudioSettingsTab_fill(entity me)
 
 	me.TR(me);
 		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "mastervolume");
-		s.
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Master:")));
 		me.TD(me, 1, 2, s);
 	me.TR(me);
