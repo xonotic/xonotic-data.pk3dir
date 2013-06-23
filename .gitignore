@@ -5,3 +5,5 @@ qcsrc/client/fteqcc.log
 qcsrc/menu/fteqcc.log
 qcsrc/server/fteqcc.log
 weapons.qc.tmp
+*.lno
+qcsrc/qccversion.*
