@@ -3,7 +3,7 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
 QCC ?= gmqcc
 
-QCCVERSIONFILE = qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)
+QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)
 
 QCCFLAGS ?= \
 	-std=fteqcc \
