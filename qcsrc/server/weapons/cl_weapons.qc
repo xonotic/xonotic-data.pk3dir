@@ -153,10 +153,10 @@ float w_getbestweapon(entity e)
 
 // generic weapons table
 // TODO should they be macros instead?
-float weapon_action(float wpn, float wrequest)
-{
-	return (get_weaponinfo(wpn)).weapon_func(wrequest);
-}
+//float weapon_action(float wpn, float wrequest)
+//{
+//	return (get_weaponinfo(wpn)).weapon_func(wrequest);
+//}
 
 .float savenextthink;
 void thrown_wep_think()

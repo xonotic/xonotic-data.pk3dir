@@ -2,3 +2,6 @@ float weaponswapping;
 float internalteam;
 
 void weapon_defaultspawnfunc(float wpn);
+
+#define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
+#define weapon_action(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
