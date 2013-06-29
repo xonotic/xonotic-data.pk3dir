@@ -339,7 +339,7 @@ float w_glauncher(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK)
 			{
 				if (weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))

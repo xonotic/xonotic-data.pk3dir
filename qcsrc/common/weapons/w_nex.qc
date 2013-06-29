@@ -145,7 +145,7 @@ float w_nex(float req)
 				}
 
 			if(autocvar_g_balance_nex_reload_ammo && self.clip_load < min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				if (self.BUTTON_ATCK)

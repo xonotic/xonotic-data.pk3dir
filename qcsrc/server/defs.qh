@@ -183,7 +183,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 // WEAPONTODO
 .float autoswitch;
-//float weapon_action(float wpn, float wrequest);
+//float WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 void w_clear();
 void w_ready();

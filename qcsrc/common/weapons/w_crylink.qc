@@ -572,7 +572,7 @@ float w_crylink(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 
 			if (self.BUTTON_ATCK)
 			{

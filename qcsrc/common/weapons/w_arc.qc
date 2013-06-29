@@ -287,7 +287,7 @@ float w_arc(float req)
 
 void ArcInit()
 {
-	weapon_action(WEP_ARC, WR_PRECACHE);
+	WEP_ACTION(WEP_ARC, WR_PRECACHE);
 	arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
 	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
 	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);

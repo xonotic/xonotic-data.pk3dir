@@ -475,7 +475,7 @@ void GrappleHookInit()
 	}
 	else
 	{
-		weapon_action(WEP_HOOK, WR_PRECACHE);
+		WEP_ACTION(WEP_HOOK, WR_PRECACHE);
 		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
 		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
 		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);

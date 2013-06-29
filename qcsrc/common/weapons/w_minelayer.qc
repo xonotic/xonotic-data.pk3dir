@@ -88,7 +88,7 @@ void W_Mine_Explode ()
 		entity oldself;
 		oldself = self;
 		self = self.realowner;
-		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		if (!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
 			ATTACK_FINISHED(self) = time;
@@ -115,7 +115,7 @@ void W_Mine_DoRemoteExplode ()
 		entity oldself;
 		oldself = self;
 		self = self.realowner;
-		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		if (!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
 			ATTACK_FINISHED(self) = time;
@@ -474,7 +474,7 @@ float w_minelayer(float req)
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
 				if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
-					weapon_action(self.weapon, WR_RELOAD);
+					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else if (self.BUTTON_ATCK)
 			{

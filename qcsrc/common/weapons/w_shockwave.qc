@@ -208,7 +208,7 @@ float w_shotgun(float req)
 			{
 				// don't force reload an empty shotgun if its melee attack is active
 				if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
-					weapon_action(self.weapon, WR_RELOAD);
+					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
 			{

@@ -613,8 +613,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			{
 				oldself = self;
 				self = cl;
-				f = weapon_action(wpn, WR_CHECKAMMO1);
-				f = f + weapon_action(wpn, WR_CHECKAMMO2);
+				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
+				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
@@ -741,7 +741,7 @@ void W_SwitchToOtherWeapon(entity pl)
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
+	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
@@ -755,7 +755,7 @@ float weapon_prepareattack_checkammo(float secondary)
 			self.prevdryfire = time;
 		}
 
-		if(weapon_action(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		if(WEP_ACTION(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
 		{
 			if(time - self.prevwarntime > 1)
 			{
@@ -1101,7 +1101,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		if not(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);

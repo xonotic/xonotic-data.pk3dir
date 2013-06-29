@@ -148,7 +148,7 @@ void HLAC_fire1_02()
 
 	if (self.BUTTON_ATCK)
 	{
-		if (!weapon_action(self.weapon, WR_CHECKAMMO1))
+		if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -180,7 +180,7 @@ float w_hlac(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK)
 			{
 				if (weapon_prepareattack(0, autocvar_g_balance_hlac_primary_refire))

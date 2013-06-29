@@ -105,7 +105,7 @@ void uzi_fire1_02()
 	}
 	if (self.BUTTON_ATCK)
 	{
-		if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+		if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -131,7 +131,7 @@ void uzi_mode1_fire_auto()
 		return;
 	}
 
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1))
+	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -217,7 +217,7 @@ float w_uzi(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(autocvar_g_balance_uzi_mode == 1)
 			{
 				if (self.BUTTON_ATCK)
@@ -230,7 +230,7 @@ float w_uzi(float req)
 				if(self.BUTTON_ATCK2)
 				if(weapon_prepareattack(1, 0))
 				{
-					if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+					if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));

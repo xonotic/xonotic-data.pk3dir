@@ -148,7 +148,7 @@ float w_rifle(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				self.rifle_accumulator = bound(time - autocvar_g_balance_rifle_bursttime, self.rifle_accumulator, time);
@@ -165,7 +165,7 @@ float w_rifle(float req)
 					if (autocvar_g_balance_rifle_secondary)
 					{
 						if(autocvar_g_balance_rifle_secondary_reload)
-							weapon_action(self.weapon, WR_RELOAD);
+							WEP_ACTION(self.weapon, WR_RELOAD);
 						else
 						{
 							if (weapon_prepareattack_check(1, autocvar_g_balance_rifle_secondary_refire))

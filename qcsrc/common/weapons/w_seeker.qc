@@ -554,7 +554,7 @@ float w_seeker(float req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 				
 			else if (self.BUTTON_ATCK)
 			{

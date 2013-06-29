@@ -338,7 +338,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
-	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+	if not(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	{
 		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
@@ -368,7 +368,7 @@ float w_hagar(float req)
 			if (loadable_secondary)
 				W_Hagar_Attack2_Load(); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))

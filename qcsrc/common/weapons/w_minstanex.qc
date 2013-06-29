@@ -108,9 +108,9 @@ float w_minstanex(float req)
 		{
 			// if the laser uses load, we also consider its ammo for reloading
 			if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK)
 			{
 				if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))

@@ -60,7 +60,7 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		//weapon_action(nix_weapon, WR_PRECACHE); // forget it, too slow
+		//WEP_ACTION(nix_weapon, WR_PRECACHE); // forget it, too slow
 	}
 
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
@@ -98,7 +98,7 @@ void NIX_GiveCurrentWeapon()
 		else
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		weapon_action(nix_weapon, WR_RESETPLAYER);
+		WEP_ACTION(nix_weapon, WR_RESETPLAYER);
 
 		// all weapons must be fully loaded when we spawn
 		entity e;
@@ -152,7 +152,7 @@ void NIX_precache()
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		if (NIX_CanChooseWeapon(i))
-			weapon_action(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_PRECACHE);
 }
 
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)

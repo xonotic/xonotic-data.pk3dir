@@ -142,7 +142,7 @@ void GiveBall(entity plyr, entity ball)
 	WEPSET_COPY_EE(self.weaponentity, self);
 	self.weaponentity.switchweapon = self.weapon;
 	WEPSET_COPY_EW(self, WEP_PORTO);
-	weapon_action(WEP_PORTO, WR_RESETPLAYER);
+	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO;
 	W_SwitchWeapon(WEP_PORTO);
 	self = ownr;
@@ -920,7 +920,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(!WEPSET_EMPTY_E(self.weaponentity))
 			{
 				WEPSET_COPY_EE(self, self.weaponentity);
-				weapon_action(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 				

@@ -449,7 +449,7 @@ float W_Laser(float request)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
-				weapon_action(self.weapon, WR_RELOAD);
+				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))

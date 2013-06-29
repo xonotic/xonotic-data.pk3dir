@@ -1,6 +1,6 @@
 void W_TriggerReload()
 {
-    weapon_action(self.weapon, WR_RELOAD);
+    WEP_ACTION(self.weapon, WR_RELOAD);
 }
 
 // switch between weapons
@@ -153,7 +153,7 @@ float w_getbestweapon(entity e)
 
 // generic weapons table
 // TODO should they be macros instead?
-//float weapon_action(float wpn, float wrequest)
+//float WEP_ACTION(float wpn, float wrequest)
 //{
 //	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 //}
@@ -407,7 +407,7 @@ void W_WeaponFrame()
 
 			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
-			weapon_action(self.switchweapon, WR_SETUP);
+			WEP_ACTION(self.switchweapon, WR_SETUP);
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
 			if(newwep.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"))) // prevent accessing undefined cvars
@@ -479,9 +479,9 @@ void W_WeaponFrame()
 		v_up = up;
 
 		if(w)
-			weapon_action(self.weapon, WR_THINK);
+			WEP_ACTION(self.weapon, WR_THINK);
 		else
-			weapon_action(self.weapon, WR_GONETHINK);
+			WEP_ACTION(self.weapon, WR_GONETHINK);
 
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
@@ -662,5 +662,5 @@ void weapon_defaultspawnfunc(float wpn)
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
-		weapon_action(e.weapon, WR_PRECACHE);
+		WEP_ACTION(e.weapon, WR_PRECACHE);
 }

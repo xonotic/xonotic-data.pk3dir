@@ -368,7 +368,7 @@ void W_Electro_Attack3 (void)
 
 void ElectroInit()
 {
-	weapon_action(WEP_ELECTRO, WR_PRECACHE);
+	WEP_ACTION(WEP_ELECTRO, WR_PRECACHE);
 	electro_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 1);
 	electro_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 2);
 	electro_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 3);
@@ -446,7 +446,7 @@ float w_electro(float req)
 
 				if(!ammo_amount)
 				{
-					weapon_action(self.weapon, WR_RELOAD);
+					WEP_ACTION(self.weapon, WR_RELOAD);
 					return FALSE;
 				}
 				

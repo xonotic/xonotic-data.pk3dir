@@ -92,7 +92,7 @@ void havocbot_ai()
 
 		if(!WEPSET_EMPTY_E(self))
 		{
-			weapon_action(self.weapon, WR_AIM);
+			WEP_ACTION(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = FALSE;
@@ -959,7 +959,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
 				other_weapon_available = TRUE;
 		}
 		if(other_weapon_available)
