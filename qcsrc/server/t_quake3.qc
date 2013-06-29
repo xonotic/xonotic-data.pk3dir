@@ -76,7 +76,7 @@ void target_give_init()
 			self.netname = "rocketlauncher";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_hagar_primary_ammo;
+			self.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
 			if(self.netname == "")
 				self.netname = "hagar";
 			else
