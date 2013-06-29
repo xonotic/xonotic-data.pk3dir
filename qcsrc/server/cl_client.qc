@@ -1188,13 +1188,7 @@ void ClientConnect (void)
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if(autocvar_g_hitplots || strstrofs(strcat(" ", autocvar_g_hitplots_individuals, " "), strcat(" ", self.netaddress, " "), 0) >= 0)
-	{
-		self.hitplotfh = fopen(strcat("hits-", matchid, "-", self.netaddress, "-", ftos(self.playerid), ".plot"), FILE_WRITE);
-		fputs(self.hitplotfh, strcat("#name ", self.netname, "\n"));
-	}
-	else
-		self.hitplotfh = -1;
+	W_HitPlotOpen(self);
 
 	if(g_race || g_cts) {
 		string rr;
@@ -1254,11 +1248,7 @@ void ClientDisconnect (void)
 
 	CheatShutdownClient();
 
-	if(self.hitplotfh >= 0)
-	{
-		fclose(self.hitplotfh);
-		self.hitplotfh = -1;
-	}
+	W_HitPlotClose(self);
 
 	anticheat_report();
 	anticheat_shutdown();

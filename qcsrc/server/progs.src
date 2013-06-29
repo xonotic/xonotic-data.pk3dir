@@ -63,6 +63,7 @@ command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
+weapons/hitplot.qh
 weapons/accuracy.qh
 weapons/csqcprojectile.qh // TODO
 ../common/csqcmodel_settings.qh
@@ -137,6 +138,7 @@ g_models.qc
 item_key.qc
 secret.qc
 
+weapons/hitplot.qc
 weapons/main.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO

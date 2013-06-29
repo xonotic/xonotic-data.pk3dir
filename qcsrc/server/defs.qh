@@ -511,7 +511,6 @@ float servertime, serverprevtime, serverframetime;
 .float stat_shotorg; // networked stat for trueaim HUD
 
 string matchid;
-.float hitplotfh;
 
 .float last_pickup;
 
