@@ -18,6 +18,7 @@ sys-post.qh
 ../common/test.qh
 ../common/counting.qh
 weapons/cl_weapons.qh
+../common/weapons/config.qh
 ../common/weapons/weapons.qh // WEAPONTODO
 ../common/urllib.qh
 ../common/command/markup.qh

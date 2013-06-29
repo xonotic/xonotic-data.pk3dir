@@ -17,6 +17,26 @@ float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
 float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
+float MAX_SHOT_DISTANCE = 32768;
+
+// weapon requests // WEAPONTODO
+float WR_SETUP		= 1; // (SVQC) setup weapon data
+float WR_THINK		= 2; // (SVQC) logic to run every frame
+float WR_CHECKAMMO1	= 3; // (SVQC) checks ammo for weapon
+float WR_CHECKAMMO2	= 4; // (SVQC) checks ammo for weapon
+float WR_AIM		= 5; // (SVQC) runs bot aiming code for this weapon
+float WR_PRECACHE	= 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
+float WR_SUICIDEMESSAGE = 7; // (SVQC) notification number for suicide message (may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // (SVQC) notification number for kill message (may inspect w_deathtype for details)
+float WR_RELOAD         = 9; // (SVQC) does not need to do anything
+float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
+float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
+float WR_SWITCHABLE	= 12; // (CSQC) impact effect
+float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
+float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
+float WR_CONFIG = 15;
+
+// WEAPONTODO
 float	IT_UNLIMITED_WEAPON_AMMO     = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 float	IT_UNLIMITED_SUPERWEAPONS    = 2;

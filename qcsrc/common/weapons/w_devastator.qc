@@ -455,13 +455,13 @@ float W_Devastator(float req)
 		{
 			if(autocvar_sv_precacheweapons)
 			{
-				precache_model ("models/flash.md3");
-				precache_model ("models/weapons/g_rl.md3");
-				precache_model ("models/weapons/v_rl.md3");
-				precache_model ("models/weapons/h_rl.iqm");
-				precache_sound ("weapons/rocket_det.wav");
-				precache_sound ("weapons/rocket_fire.wav");
-				precache_sound ("weapons/rocket_mode.wav");
+				precache_model("models/flash.md3");
+				precache_model("models/weapons/g_rl.md3");
+				precache_model("models/weapons/v_rl.md3");
+				precache_model("models/weapons/h_rl.iqm");
+				precache_sound("weapons/rocket_det.wav");
+				precache_sound("weapons/rocket_fire.wav");
+				precache_sound("weapons/rocket_mode.wav");
 			}
 
 			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
@@ -471,38 +471,16 @@ float W_Devastator(float req)
 			#undef WEP_ADD_PROP
 			
 			return TRUE;
-		}/*
+		}
 		case WR_CONFIG:
 		{
-			
-			#define WEP_CONFIG_WRITE(a) { \
-				fputs(wep_config_file, a); \
-				if(wep_config_alsoprint) { print(a); } }
-
-			#define WEP_CONFIG_WRITE_CVAR(cvarstring) \
-				{ WEP_CONFIG_WRITE(sprintf(cvarstring, weapon, #name)); }
-				
-			#define WEP_ADD_CVAR(weapon,mode,name) \
-				#if mode == MO_PRI \
-					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_primary_%s") \
-				#endif \
-				#if mode == MO_SEC \
-					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_secondary_%s") \
-				#endif \
-				#if mode == MO_BOTH \
-					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_primary_%s") \
-					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_secondary_%s") \
-				#endif \
-				#if mode == MO_NONE \
-					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_%s") \
-				#endif
-				
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_CVAR("set g_balance_%s_%s")
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,mode,name)
 			ARC_SETTINGS(devastator)
 			#undef WEP_ADD_CVAR
 			#undef WEP_ADD_PROP
 			return TRUE;
-		}*/
+		}
 		case WR_SETUP:
 		{
 			weapon_setup(WEP_DEVASTATOR);

@@ -10,7 +10,7 @@ void Dump_Weapon_Settings(float fh, float alsoprint)
 		WEP_ACTION(i, WR_CONFIG)
 	}
 
-			
+	/*
 	#define WEP_BAL_WRITE(a) { \
 		fputs(fh, a); \
 		if(alsoprint) { print(a); } }
@@ -107,5 +107,5 @@ void Dump_Weapon_Settings(float fh, float alsoprint)
 	return;
 	#undef NOTIF_WRITE_HARDCODED
 	#undef NOTIF_WRITE_ENTITY
-	#undef NOTIF_WRITE
+	#undef NOTIF_WRITE*/
 }
