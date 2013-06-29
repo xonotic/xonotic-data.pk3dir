@@ -206,6 +206,10 @@ string W_NumberWeaponOrder(string order);
 WEPSET_DECLARE_A(WEPBIT_ALL);
 WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 
+// other useful macros
+#define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
+#define weapon_action(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
+
 
 // =====================
 //  Weapon Registration

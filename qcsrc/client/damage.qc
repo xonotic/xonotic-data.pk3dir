@@ -350,6 +350,6 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
+		WEP_ACTION(hitwep, WR_IMPACTEFFECT);
 	}
 }

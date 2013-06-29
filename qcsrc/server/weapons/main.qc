@@ -1085,7 +1085,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
-void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
+void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload) // WEAPONTODO: why does this have ammo_type?
 {
 	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
 		return;
