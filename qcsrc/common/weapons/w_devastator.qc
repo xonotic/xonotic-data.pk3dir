@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ DEVASTATOR,
-/* function  */ W_Devastator,
-/* ammotype  */ IT_ROCKETS,
-/* impulse   */ 9,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "rl",
-/* shortname */ "devastator",
-/* fullname  */ _("Devastator")
+/* WEP_##id */ DEVASTATOR,
+/* function */ W_Devastator,
+/* ammotype */ IT_ROCKETS,
+/* impulse  */ 9,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating   */ BOT_PICKUP_RATING_HIGH,
+/* model    */ "rl",
+/* netname  */ "devastator",
+/* fullname */ _("Devastator")
 );
 
 #define DEVASTATOR_SETTINGS(weapon) \
@@ -471,7 +471,38 @@ float W_Devastator(float req)
 			#undef WEP_ADD_PROP
 			
 			return TRUE;
-		}
+		}/*
+		case WR_CONFIG:
+		{
+			
+			#define WEP_CONFIG_WRITE(a) { \
+				fputs(wep_config_file, a); \
+				if(wep_config_alsoprint) { print(a); } }
+
+			#define WEP_CONFIG_WRITE_CVAR(cvarstring) \
+				{ WEP_CONFIG_WRITE(sprintf(cvarstring, weapon, #name)); }
+				
+			#define WEP_ADD_CVAR(weapon,mode,name) \
+				#if mode == MO_PRI \
+					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_primary_%s") \
+				#endif \
+				#if mode == MO_SEC \
+					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_secondary_%s") \
+				#endif \
+				#if mode == MO_BOTH \
+					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_primary_%s") \
+					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_secondary_%s") \
+				#endif \
+				#if mode == MO_NONE \
+					WEP_CONFIG_WRITE_CVAR("set g_balance_%s_%s") \
+				#endif
+				
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_CVAR("set g_balance_%s_%s")
+			ARC_SETTINGS(devastator)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}*/
 		case WR_SETUP:
 		{
 			weapon_setup(WEP_DEVASTATOR);
