@@ -11,10 +11,41 @@ REGISTER_WEAPON(
 /* fullname  */ _("Machine Gun")
 );
 
+#define UZI_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
+	WEP_ADD_CVAR(weapon, MO_NONE, spread_min) \
+	WEP_ADD_CVAR(weapon, MO_NONE, spread_max) \
+	WEP_ADD_CVAR(weapon, MO_NONE, spread_add) \
+	WEP_ADD_CVAR(weapon, MO_NONE, mode) \
+	WEP_ADD_CVAR(weapon, MO_NONE, bulletconstant) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first_damage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first_force) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first_refire) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first_spread) \
+	WEP_ADD_CVAR(weapon, MO_NONE, first_ammo) \
+	WEP_ADD_CVAR(weapon, MO_NONE, sustained_damage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, sustained_force) \
+	WEP_ADD_CVAR(weapon, MO_NONE, sustained_refire) \
+	WEP_ADD_CVAR(weapon, MO_NONE, sustained_spread) \
+	WEP_ADD_CVAR(weapon, MO_NONE, sustained_ammo) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst_refire) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst_refire2) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst_animtime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst_speed) \
+	WEP_ADD_CVAR(weapon, MO_NONE, burst_ammo) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+UZI_SETTINGS(uzi)
 #endif
 #else
 #ifdef SVQC
+
 void spawnfunc_weapon_uzi()
 {
 	if(autocvar_sv_q3acompat_machineshotgunswap)
@@ -64,7 +95,7 @@ void UziFlash()
 
 void W_UZI_Attack (float deathtype)
 {
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
+	W_SetupShot (self, autocvar_g_antilag_bullets && WEP_CVAR(uzi, speed) >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(uzi, first_damage) : WEP_CVAR(uzi, sustained_damage)));
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -72,12 +103,12 @@ void W_UZI_Attack (float deathtype)
 	}
 
 	// this attack_finished just enforces a cooldown at the end of a burst
-	ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_first_refire * W_WeaponRateFactor();
+	ATTACK_FINISHED(self) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor();
 
 	if (self.misc_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_first_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_first_damage, autocvar_g_balance_uzi_first_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, 0, 1, WEP_CVAR(uzi, bulletconstant));
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_sustained_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, 0, 1, WEP_CVAR(uzi, bulletconstant));
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -90,9 +121,9 @@ void W_UZI_Attack (float deathtype)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
 	if (self.misc_bulletcounter == 1)
-		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_first_ammo, autocvar_g_balance_uzi_reload_ammo);
+		W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, first_ammo), autocvar_g_balance_uzi_reload_ammo);
 	else
-		W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
+		W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, sustained_ammo), autocvar_g_balance_uzi_reload_ammo);
 }
 
 // weapon frames
@@ -114,10 +145,10 @@ void uzi_fire1_02()
 		}
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
 		W_UZI_Attack(WEP_UZI);
-		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
+		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), uzi_fire1_02);
 	}
 	else
-		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, w_ready);
+		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), w_ready);
 }
 
 
@@ -139,17 +170,17 @@ void uzi_mode1_fire_auto()
 		return;
 	}
 
-	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
+	W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, sustained_ammo), autocvar_g_balance_uzi_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
+	W_SetupShot (self, autocvar_g_antilag_bullets && WEP_CVAR(uzi, speed) >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(uzi, sustained_damage));
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
 
-	uzi_spread = bound(autocvar_g_balance_uzi_spread_min, autocvar_g_balance_uzi_spread_min + (autocvar_g_balance_uzi_spread_add * self.misc_bulletcounter), autocvar_g_balance_uzi_spread_max);
-	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+	uzi_spread = bound(WEP_CVAR(uzi, spread_min), WEP_CVAR(uzi, spread_min) + (WEP_CVAR(uzi, spread_add) * self.misc_bulletcounter), WEP_CVAR(uzi, spread_max));
+	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0, 1, WEP_CVAR(uzi, bulletconstant));
 	endFireBallisticBullet();
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
@@ -162,20 +193,20 @@ void uzi_mode1_fire_auto()
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
-	ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_first_refire * W_WeaponRateFactor();
-	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_mode1_fire_auto);
+	ATTACK_FINISHED(self) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor();
+	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), uzi_mode1_fire_auto);
 }
 
 void uzi_mode1_fire_burst()
 {
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
+	W_SetupShot (self, autocvar_g_antilag_bullets && WEP_CVAR(uzi, speed) >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(uzi, sustained_damage));
 	if (!g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_burst_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+	fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0, 1, WEP_CVAR(uzi, bulletconstant));
 	endFireBallisticBullet();
 
 
@@ -190,12 +221,12 @@ void uzi_mode1_fire_burst()
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 	if (self.misc_bulletcounter == 0)
 	{
-		ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_burst_refire2 * W_WeaponRateFactor();
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_animtime, w_ready);
+		ATTACK_FINISHED(self) = time + WEP_CVAR(uzi, burst_refire2) * W_WeaponRateFactor();
+		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(uzi, burst_animtime), w_ready);
 	}
 	else
 	{
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_burst_refire, uzi_mode1_fire_burst);
+		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(uzi, burst_refire), uzi_mode1_fire_burst);
 	}
 
 }
@@ -216,9 +247,9 @@ float w_uzi(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo)) // forced reload
+			if(autocvar_g_balance_uzi_reload_ammo && self.clip_load < min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(autocvar_g_balance_uzi_mode == 1)
+			else if(WEP_CVAR(uzi, mode) == 1)
 			{
 				if (self.BUTTON_ATCK)
 				if (weapon_prepareattack(0, 0))
@@ -238,9 +269,9 @@ float w_uzi(float req)
 						return FALSE;
 					}
 
-					W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_burst_ammo, autocvar_g_balance_uzi_reload_ammo);
+					W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, burst_ammo), autocvar_g_balance_uzi_reload_ammo);
 
-					self.misc_bulletcounter = autocvar_g_balance_uzi_burst * -1;
+					self.misc_bulletcounter = WEP_CVAR(uzi, burst) * -1;
 					uzi_mode1_fire_burst();
 				}
 			}
@@ -252,15 +283,15 @@ float w_uzi(float req)
 				{
 					self.misc_bulletcounter = 1;
 					W_UZI_Attack(WEP_UZI); // sets attack_finished
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_uzi_sustained_refire, uzi_fire1_02);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), uzi_fire1_02);
 				}
 
-				if (self.BUTTON_ATCK2 && autocvar_g_balance_uzi_first)
+				if (self.BUTTON_ATCK2 && WEP_CVAR(uzi, first))
 				if (weapon_prepareattack(1, 0))
 				{
 					self.misc_bulletcounter = 1;
 					W_UZI_Attack(WEP_UZI | HITTYPE_SECONDARY); // sets attack_finished
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_uzi_first_refire, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(uzi, first_refire), w_ready);
 				}
 			}
 			
@@ -273,6 +304,11 @@ float w_uzi(float req)
 			precache_model ("models/weapons/v_uzi.md3");
 			precache_model ("models/weapons/h_uzi.iqm");
 			precache_sound ("weapons/uzi_fire.wav");
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_UZI).##prop = autocvar_g_balance_##weapon##_##name;
+			UZI_SETTINGS(uzi)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -283,39 +319,39 @@ float w_uzi(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_sustained_ammo;
+			if(WEP_CVAR(uzi, mode) == 1)
+				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, sustained_ammo);
 			else
-				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{
-				if(autocvar_g_balance_uzi_mode == 1)
-					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_sustained_ammo;
+				if(WEP_CVAR(uzi, mode) == 1)
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= WEP_CVAR(uzi, sustained_ammo);
 				else
-					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= WEP_CVAR(uzi, first_ammo);
 			}
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_burst_ammo;
+			if(WEP_CVAR(uzi, mode) == 1)
+				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, burst_ammo);
 			else
-				ammo_amount = self.ammo_nails >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{
-				if(autocvar_g_balance_uzi_mode == 1)
-					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_burst_ammo;
+				if(WEP_CVAR(uzi, mode) == 1)
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= WEP_CVAR(uzi, burst_ammo);
 				else
-					ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
+					ammo_amount += self.(weapon_load[WEP_UZI]) >= WEP_CVAR(uzi, first_ammo);
 			}
 			return ammo_amount;
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
+			W_Reload(min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo)), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
