@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* netname  */ "hook",
 /* fullname */ _("Grappling Hook")
 );
+
 #define HOOK_SETTINGS(weapon) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \

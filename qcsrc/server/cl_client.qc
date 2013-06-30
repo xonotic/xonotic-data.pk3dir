@@ -634,8 +634,8 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, autocvar_g_balance_rifle_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, WEP_CVAR(nex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(MSG_ENTITY, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
 	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
@@ -2436,7 +2436,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && autocvar_g_balance_rifle_secondary == 0));
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

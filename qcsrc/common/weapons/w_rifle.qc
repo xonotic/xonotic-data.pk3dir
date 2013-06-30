@@ -10,10 +10,41 @@ REGISTER_WEAPON(
 /* netname  */ "rifle",
 /* fullname */ _("Rifle")
 );
-#else
+
+#define RIFLE_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, bulletconstant) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, bullethail) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, burstcost) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, shots) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, spread) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, tracer) \
+	WEP_ADD_CVAR(weapon, MO_NONE, bursttime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  reload) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+RIFLE_SETTINGS(rifle)
+void spawnfunc_weapon_rifle (void) { weapon_defaultspawnfunc(WEP_RIFLE); }
+
+// compatibility aliases
+void spawnfunc_weapon_campingrifle (void) { spawnfunc_weapon_rifle(); }
+void spawnfunc_weapon_sniperrifle (void) { spawnfunc_weapon_rifle(); }
 
 .float rifle_accumulator;
+#endif
+#else
+#ifdef SVQC
 
 void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant, float pTracer, float pShots, string pSound)
 {
@@ -41,27 +72,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 
 void W_Rifle_Attack()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_primary_spread, autocvar_g_balance_rifle_primary_damage, autocvar_g_balance_rifle_primary_force, autocvar_g_balance_rifle_primary_speed, autocvar_g_balance_rifle_primary_lifetime, autocvar_g_balance_rifle_primary_ammo, WEP_RIFLE, autocvar_g_balance_rifle_primary_bulletconstant, autocvar_g_balance_rifle_primary_tracer, autocvar_g_balance_rifle_primary_shots, "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, speed), WEP_CVAR_PRI(rifle, lifetime), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, bulletconstant), WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
 }
 
 void W_Rifle_Attack2()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_speed, autocvar_g_balance_rifle_secondary_lifetime, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_bulletconstant, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, "weapons/campingrifle_fire2.wav");
-}
-
-void spawnfunc_weapon_rifle (void)
-{
-	weapon_defaultspawnfunc(WEP_RIFLE);
-}
-
-// compatibility alias
-void spawnfunc_weapon_campingrifle (void)
-{
-	spawnfunc_weapon_rifle();
-}
-void spawnfunc_weapon_sniperrifle (void)
-{
-	spawnfunc_weapon_rifle();
+	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, speed), WEP_CVAR_SEC(rifle, lifetime), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, bulletconstant), WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
 }
 
 .void(void) rifle_bullethail_attackfunc;
@@ -128,7 +144,7 @@ float w_rifle(float req)
 				self.bot_secondary_riflemooth = 0;
 			if(self.bot_secondary_riflemooth == 0)
 			{
-				if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
+				if(bot_aim(WEP_CVAR_PRI(rifle, speed), 0, WEP_CVAR_PRI(rifle, lifetime), FALSE))
 				{
 					self.BUTTON_ATCK = TRUE;
 					if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -136,7 +152,7 @@ float w_rifle(float req)
 			}
 			else
 			{
-				if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
+				if(bot_aim(WEP_CVAR_SEC(rifle, speed), 0, WEP_CVAR_SEC(rifle, lifetime), FALSE))
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
@@ -147,33 +163,33 @@ float w_rifle(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo)) // forced reload
+			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
-				self.rifle_accumulator = bound(time - autocvar_g_balance_rifle_bursttime, self.rifle_accumulator, time);
+				self.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), self.rifle_accumulator, time);
 				if (self.BUTTON_ATCK)
-				if (weapon_prepareattack_check(0, autocvar_g_balance_rifle_primary_refire))
-				if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_primary_burstcost)
+				if (weapon_prepareattack_check(0, WEP_CVAR_PRI(rifle, refire)))
+				if (time >= self.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
-					weapon_prepareattack_do(0, autocvar_g_balance_rifle_primary_refire);
-					W_Rifle_BulletHail(autocvar_g_balance_rifle_primary_bullethail, W_Rifle_Attack, WFRAME_FIRE1, autocvar_g_balance_rifle_primary_animtime, autocvar_g_balance_rifle_primary_refire);
-					self.rifle_accumulator += autocvar_g_balance_rifle_primary_burstcost;
+					weapon_prepareattack_do(0, WEP_CVAR_PRI(rifle, refire));
+					W_Rifle_BulletHail(WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+					self.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
 				}
 				if (self.BUTTON_ATCK2)
 				{
-					if (autocvar_g_balance_rifle_secondary)
+					if (WEP_CVAR(rifle, secondary))
 					{
-						if(autocvar_g_balance_rifle_secondary_reload)
+						if(WEP_CVAR_SEC(rifle, reload))
 							WEP_ACTION(self.weapon, WR_RELOAD);
 						else
 						{
-							if (weapon_prepareattack_check(1, autocvar_g_balance_rifle_secondary_refire))
-							if (time >= self.rifle_accumulator + autocvar_g_balance_rifle_secondary_burstcost)
+							if (weapon_prepareattack_check(1, WEP_CVAR_SEC(rifle, refire)))
+							if (time >= self.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
 							{
-								weapon_prepareattack_do(1, autocvar_g_balance_rifle_secondary_refire);
-								W_Rifle_BulletHail(autocvar_g_balance_rifle_secondary_bullethail, W_Rifle_Attack2, WFRAME_FIRE2, autocvar_g_balance_rifle_secondary_animtime, autocvar_g_balance_rifle_primary_refire);
-								self.rifle_accumulator += autocvar_g_balance_rifle_secondary_burstcost;
+								weapon_prepareattack_do(1, WEP_CVAR_SEC(rifle, refire));
+								W_Rifle_BulletHail(WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+								self.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
 							}
 						}
 					}
@@ -189,6 +205,11 @@ float w_rifle(float req)
 			precache_model ("models/weapons/h_campingrifle.iqm");
 			precache_sound ("weapons/campingrifle_fire.wav");
 			precache_sound ("weapons/campingrifle_fire2.wav");
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_RIFLE,weapon,prop,name)
+			RIFLE_SETTINGS(rifle)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -199,24 +220,24 @@ float w_rifle(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
+			ammo_amount = self.ammo_nails >= WEP_CVAR_PRI(rifle, ammo);
+			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_PRI(rifle, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
-			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
+			ammo_amount = self.ammo_nails >= WEP_CVAR_SEC(rifle, ammo);
+			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
 		}
 		case WR_RESETPLAYER:
 		{
-			self.rifle_accumulator = time - autocvar_g_balance_rifle_bursttime;
+			self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
 			return TRUE;
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

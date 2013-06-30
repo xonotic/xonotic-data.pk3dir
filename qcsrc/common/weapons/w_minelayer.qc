@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* netname  */ "minelayer",
 /* fullname */ _("Mine Layer")
 );
+
 #define MINELAYER_SETTINGS(weapon) \
 	WEP_ADD_CVAR(weapon, MO_NONE, ammo) \
 	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
