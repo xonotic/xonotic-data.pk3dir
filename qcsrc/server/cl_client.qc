@@ -640,7 +640,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
 	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
-	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
+	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
 	return TRUE;
 }
 

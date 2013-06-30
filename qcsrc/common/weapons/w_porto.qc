@@ -10,12 +10,29 @@ REGISTER_WEAPON(
 /* netname  */ "porto",
 /* fullname */ _("Port-O-Launch")
 );
-#else
+
+#define PORTO_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
+	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+PORTO_SETTINGS(porto)
+void spawnfunc_weapon_porto (void) { weapon_defaultspawnfunc(WEP_PORTO); }
+
 .entity porto_current;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
 .vector right_vector;
+#endif
+#else
+#ifdef SVQC
 
 void W_Porto_Success (void)
 {
@@ -232,28 +249,15 @@ void W_Porto_Attack (float type)
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
-
-	if(type > 0)
-		gren.nextthink = time + autocvar_g_balance_porto_secondary_lifetime;
-	else
-		gren.nextthink = time + autocvar_g_balance_porto_primary_lifetime;
+	
+	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
-
-	if(type > 0)
-	{
-		if(self.items & IT_STRENGTH)
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_secondary_speed * autocvar_g_balance_powerup_strength_force, 0);
-		else
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_secondary_speed, 0);
-	}
+	
+	if(self.items & IT_STRENGTH)
+		W_SetupProjectileVelocity(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
-	{
-		if(self.items & IT_STRENGTH)
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed * autocvar_g_balance_powerup_strength_force, 0);
-		else
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed, 0);
-	}
+		W_SetupProjectileVelocity(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -274,11 +278,6 @@ void W_Porto_Attack (float type)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void spawnfunc_weapon_porto (void)
-{
-	weapon_defaultspawnfunc(WEP_PORTO);
-}
-
 float w_nexball_weapon(float req);
 float w_porto(float req)
 {
@@ -292,32 +291,32 @@ float w_porto(float req)
 		{
 			self.BUTTON_ATCK = FALSE;
 			self.BUTTON_ATCK2 = FALSE;
-			if(!autocvar_g_balance_porto_secondary)
-				if(bot_aim(autocvar_g_balance_porto_primary_speed, 0, autocvar_g_balance_mortar_primary_lifetime, FALSE)) // WEAPONTODO
+			if(!WEP_CVAR(porto, secondary))
+				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), FALSE))
 					self.BUTTON_ATCK = TRUE;
 					
 			return TRUE;
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_porto_secondary)
+			if(WEP_CVAR(porto, secondary))
 			{
 				if (self.BUTTON_ATCK)
 				if (!self.porto_current)
 				if (!self.porto_forbidden)
-				if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
+				if (weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
 				if (self.BUTTON_ATCK2)
 				if (!self.porto_current)
 				if (!self.porto_forbidden)
-				if (weapon_prepareattack(1, autocvar_g_balance_porto_secondary_refire))
+				if (weapon_prepareattack(1, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_porto_secondary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
 				}
 			}
 			else
@@ -347,10 +346,10 @@ float w_porto(float req)
 				if (self.BUTTON_ATCK)
 				if (!self.porto_current)
 				if (!self.porto_forbidden)
-				if (weapon_prepareattack(0, autocvar_g_balance_porto_primary_refire))
+				if (weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_porto_primary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
 			
@@ -368,6 +367,11 @@ float w_porto(float req)
 			precache_sound ("porto/explode.wav");
 			precache_sound ("porto/fire.wav");
 			precache_sound ("porto/unsupported.wav");
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_PORTO,weapon,prop,name)
+			PORTO_SETTINGS(porto)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
