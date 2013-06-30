@@ -20,7 +20,6 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_BOTH, damagefalloff_maxdist) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, damagefalloff_halflife) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, damagefalloff_forcehalflife) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
 	WEP_ADD_CVAR(weapon, MO_NONE, charge) \
 	WEP_ADD_CVAR(weapon, MO_NONE, charge_mindmg) \

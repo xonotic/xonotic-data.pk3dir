@@ -17,7 +17,6 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, damageforcescale) \

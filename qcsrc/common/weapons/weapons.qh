@@ -285,14 +285,14 @@ float WEP_LAST;
 
 #define WEP_ADD_CVAR(weapon,mode,name) \
 	#if mode == MO_PRI \
-		WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name) \
+		WEP_DUPECHECK(WEP_CVAR_P_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name) \
 	#endif \
 	#if mode == MO_SEC \
-		WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name) \
+		WEP_DUPECHECK(WEP_CVAR_S_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name) \
 	#endif \
 	#if mode == MO_BOTH \
-		WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name) \
-		WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name) \
+		WEP_DUPECHECK(WEP_CVAR_P_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name) \
+		WEP_DUPECHECK(WEP_CVAR_S_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name) \
 	#endif \
 	#if mode == MO_NONE \
 		WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_##name) \
