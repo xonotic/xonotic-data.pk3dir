@@ -476,6 +476,15 @@ float w_hagar(float req)
 			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			HAGAR_SETTINGS(hagar)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RESETPLAYER:
 		{
 			self.hagar_load = 0;

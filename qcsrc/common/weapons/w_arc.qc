@@ -262,6 +262,15 @@ float w_arc(float req)
 		{
 			return self.ammo_cells >= WEP_CVAR_SEC(arc, ammo);
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			ARC_SETTINGS(arc)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_KILLMESSAGE:
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)

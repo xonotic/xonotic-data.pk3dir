@@ -274,6 +274,15 @@ float w_nex(float req)
 				return FALSE; // zoom is not a fire mode
 			}
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			NEX_SETTINGS(nex)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(nex, ammo), WEP_CVAR_SEC(nex, ammo)), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");

@@ -412,6 +412,15 @@ float w_glauncher(float req)
 			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			MORTAR_SETTINGS(mortar)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), autocvar_g_balance_mortar_reload_ammo, autocvar_g_balance_mortar_reload_time, "weapons/reload.wav"); // WEAPONTODO
