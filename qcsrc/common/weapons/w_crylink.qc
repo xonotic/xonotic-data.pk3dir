@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ CRYLINK,
-/* function  */ w_crylink,
-/* ammotype  */ IT_CELLS,
-/* impulse   */ 6,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "crylink",
-/* shortname */ "crylink",
-/* fullname  */ _("Crylink")
+/* WEP_##id */ CRYLINK,
+/* function */ w_crylink,
+/* ammotype */ IT_CELLS,
+/* impulse  */ 6,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating   */ BOT_PICKUP_RATING_MID,
+/* model    */ "crylink",
+/* netname  */ "crylink",
+/* fullname */ _("Crylink")
 );
 
 #define CRYLINK_SETTINGS(weapon) \

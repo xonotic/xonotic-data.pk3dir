@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ RIFLE,
-/* function  */ w_rifle,
-/* ammotype  */ IT_NAILS,
-/* impulse   */ 7,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "campingrifle",
-/* shortname */ "rifle",
-/* fullname  */ _("Rifle")
+/* WEP_##id */ RIFLE,
+/* function */ w_rifle,
+/* ammotype */ IT_NAILS,
+/* impulse  */ 7,
+/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating   */ BOT_PICKUP_RATING_MID,
+/* model    */ "campingrifle",
+/* netname  */ "rifle",
+/* fullname */ _("Rifle")
 );
 #else
 #ifdef SVQC

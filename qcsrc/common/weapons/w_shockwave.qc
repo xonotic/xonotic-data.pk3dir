@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ SHOTGUN,
-/* function  */ w_shotgun,
-/* ammotype  */ IT_SHELLS,
-/* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_LOW,
-/* model     */ "shotgun",
-/* shortname */ "shotgun",
-/* fullname  */ _("Shotgun")
+/* WEP_##id */ SHOTGUN,
+/* function */ w_shotgun,
+/* ammotype */ IT_SHELLS,
+/* impulse  */ 2,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating   */ BOT_PICKUP_RATING_LOW,
+/* model    */ "shotgun",
+/* netname  */ "shotgun",
+/* fullname */ _("Shotgun")
 );
 #else
 #ifdef SVQC

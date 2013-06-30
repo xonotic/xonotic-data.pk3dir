@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ HLAC,
-/* function  */ w_hlac,
-/* ammotype  */ IT_CELLS,
-/* impulse   */ 6,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "hlac",
-/* shortname */ "hlac",
-/* fullname  */ _("Heavy Laser Assault Cannon")
+/* WEP_##id */ HLAC,
+/* function */ w_hlac,
+/* ammotype */ IT_CELLS,
+/* impulse  */ 6,
+/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating   */ BOT_PICKUP_RATING_MID,
+/* model    */ "hlac",
+/* netname  */ "hlac",
+/* fullname */ _("Heavy Laser Assault Cannon")
 );
 #else
 #ifdef SVQC

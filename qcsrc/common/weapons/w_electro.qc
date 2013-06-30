@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ ELECTRO,
-/* function  */ w_electro,
-/* ammotype  */ IT_CELLS,
-/* impulse   */ 5,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "electro",
-/* shortname */ "electro",
-/* fullname  */ _("Electro")
+/* WEP_##id */ ELECTRO,
+/* function */ w_electro,
+/* ammotype */ IT_CELLS,
+/* impulse  */ 5,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating   */ BOT_PICKUP_RATING_MID,
+/* model    */ "electro",
+/* netname  */ "electro",
+/* fullname */ _("Electro")
 );
 
 #ifdef SVQC

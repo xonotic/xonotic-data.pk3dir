@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ UZI,
-/* function  */ w_uzi,
-/* ammotype  */ IT_NAILS,
-/* impulse   */ 3,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "uzi",
-/* shortname */ "uzi",
-/* fullname  */ _("Machine Gun")
+/* WEP_##id */ UZI,
+/* function */ w_uzi,
+/* ammotype */ IT_NAILS,
+/* impulse  */ 3,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating   */ BOT_PICKUP_RATING_MID,
+/* model    */ "uzi",
+/* netname  */ "uzi",
+/* fullname */ _("Machine Gun")
 );
 
 #define UZI_SETTINGS(weapon) \

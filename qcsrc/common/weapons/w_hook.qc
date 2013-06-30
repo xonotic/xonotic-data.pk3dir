@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ HOOK,
-/* function  */ w_hook,
-/* ammotype  */ IT_CELLS|IT_FUEL,
-/* impulse   */ 0,
-/* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ 0,
-/* model     */ "hookgun",
-/* shortname */ "hook",
-/* fullname  */ _("Grappling Hook")
+/* WEP_##id */ HOOK,
+/* function */ w_hook,
+/* ammotype */ IT_CELLS|IT_FUEL,
+/* impulse  */ 0,
+/* flags    */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating   */ 0,
+/* model    */ "hookgun",
+/* netname  */ "hook",
+/* fullname */ _("Grappling Hook")
 );
 #else
 #ifdef SVQC

@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ PORTO,
-/* function  */ w_porto,
-/* ammotype  */ 0,
-/* impulse   */ 0,
-/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
-/* rating    */ 0,
-/* model     */ "porto" ,
-/* shortname */ "porto",
-/* fullname  */ _("Port-O-Launch")
+/* WEP_##id */ PORTO,
+/* function */ w_porto,
+/* ammotype */ 0,
+/* impulse  */ 0,
+/* flags    */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
+/* rating   */ 0,
+/* model    */ "porto" ,
+/* netname  */ "porto",
+/* fullname */ _("Port-O-Launch")
 );
 #else
 #ifdef SVQC

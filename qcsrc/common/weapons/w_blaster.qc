@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ LASER,
-/* function  */ W_Laser,
-/* ammotype  */ 0,
-/* impulse   */ 1,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ 0,
-/* model     */ "laser",
-/* shortname */ "laser",
-/* fullname  */ _("Blaster")
+/* WEP_##id */ LASER,
+/* function */ W_Laser,
+/* ammotype */ 0,
+/* impulse  */ 1,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating   */ 0,
+/* model    */ "laser",
+/* netname  */ "laser",
+/* fullname */ _("Blaster")
 );
 #else
 #ifdef SVQC

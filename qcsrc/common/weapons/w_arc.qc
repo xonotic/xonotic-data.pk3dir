@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ ARC,
-/* function  */ w_arc,
-/* ammotype  */ IT_CELLS,
-/* impulse   */ 5,
-/* flags     */ WEP_FLAG_NORMAL,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "arc",
-/* shortname */ "arc",
-/* fullname  */ _("Arc")
+/* WEP_##id */ ARC,
+/* function */ w_arc,
+/* ammotype */ IT_CELLS,
+/* impulse  */ 5,
+/* flags    */ WEP_FLAG_NORMAL,
+/* rating   */ BOT_PICKUP_RATING_HIGH,
+/* model    */ "arc",
+/* netname  */ "arc",
+/* fullname */ _("Arc")
 );
 
 #define ARC_SETTINGS(weapon) \
