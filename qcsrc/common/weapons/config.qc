@@ -2,17 +2,55 @@
 //  Balance Config Generator
 // ==========================
 
+void W_Config_Queue_Swap(float root, float child, entity pass)
+{
+	string oldroot = wep_config_queue[root];
+	wep_config_queue[root] = wep_config_queue[child];
+	wep_config_queue[child] = oldroot;
+}
+
+float W_Config_Queue_Compare(float root, float child, entity pass)
+{
+	float i, r, c;
+
+	for(i = 1; i <= 100; ++i)
+	{
+		r = str2chr(wep_config_queue[root], i);
+		c = str2chr(wep_config_queue[child], i);
+		if(r == c) { continue; }
+		else if(c > r) { return -1; }
+		else { return 1; }
+	}
+	
+	return 0;
+}
+
 void Dump_Weapon_Settings(void)
 {
-	float i;
+	float i, x;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		WEP_CONFIG_WRITE(sprintf("// {{{ #%d: %s\n", i, W_Name(i)))
+		// step 1: clear the queue
+		WEP_CONFIG_COUNT = 0;
+		for(x = 0; x <= MAX_WEP_CONFIG; ++x)
+			{ wep_config_queue[x] = string_null; }
+
+		// step 2: build new queue
 		WEP_ACTION(i, WR_CONFIG);
+
+		// step 3: sort queue
+		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
+		
+		// step 4: write queue
+		WEP_CONFIG_WRITE(sprintf("// {{{ #%d: %s\n// %d settings\n", i, W_Name(i), WEP_CONFIG_COUNT))
+		for(x = 0; x <= WEP_CONFIG_COUNT; ++x)
+			{ WEP_CONFIG_WRITE(wep_config_queue[x]) }
 		WEP_CONFIG_WRITE("// }}}\n")
 	}
 }
 	/*
+	 * float WEP_CONFIG_COUNT;
+string wep_config_queue[MAX_WEP_CONFIG];
 	#define WEP_BAL_WRITE(a) { \
 		fputs(fh, a); \
 		if(alsoprint) { print(a); } }
