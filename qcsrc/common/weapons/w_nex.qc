@@ -34,6 +34,7 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_NONE, charge_minspeed) \
 	WEP_ADD_CVAR(weapon, MO_NONE, charge_maxspeed) \
 	WEP_ADD_CVAR(weapon, MO_NONE, charge_velocity_rate) \
+	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
 	WEP_ADD_CVAR(weapon, MO_SEC,  chargepool) \
 	WEP_ADD_CVAR(weapon, MO_SEC,  chargepool_regen) \
 	WEP_ADD_CVAR(weapon, MO_SEC,  chargepool_pause_regen) \
@@ -141,7 +142,7 @@ float w_nex(float req)
 					self.pauseregen_finished = max(self.pauseregen_finished, time + WEP_CVAR_SEC(nex, chargepool_pause_regen));
 				}
 
-			if(autocvar_g_balance_nex_reload_ammo && self.clip_load < min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo)) // forced reload
+			if(autocvar_g_balance_nex_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(nex, ammo), WEP_CVAR_SEC(nex, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
@@ -153,7 +154,7 @@ float w_nex(float req)
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(nex, animtime), w_ready);
 					}
 				}
-				if ((WEP_CVAR(nex, charge) && !autocvar_g_balance_nex_secondary) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
+				if ((WEP_CVAR(nex, charge) && !WEP_CVAR(nex, secondary)) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
 				{
 					if(WEP_CVAR(nex, charge))
 					{
@@ -217,7 +218,7 @@ float w_nex(float req)
 							}
 						}
 					}
-					else if(autocvar_g_balance_nex_secondary)
+					else if(WEP_CVAR(nex, secondary))
 					{
 						if (weapon_prepareattack(0, WEP_CVAR_SEC(nex, refire)))
 						{
@@ -262,7 +263,7 @@ float w_nex(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			if(autocvar_g_balance_nex_secondary)
+			if(WEP_CVAR(nex, secondary))
 			{
 				// don't allow charging if we don't have enough ammo
 				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(nex, ammo);

@@ -10,18 +10,31 @@ REGISTER_WEAPON(
 /* netname  */ "hook",
 /* fullname */ _("Grappling Hook")
 );
-#else
+#define HOOK_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
+	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_ammo) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_time_free) \
+	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_time_max) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  damage) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  duration) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  edgedamage) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  force) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  gravity) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  power) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  radius) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  speed) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  health) \
+	WEP_ADD_CVAR(weapon, MO_SEC,  damageforcescale) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
-void spawnfunc_weapon_hook()
-{
-	if(g_grappling_hook) // offhand hook
-	{
-		startitem_failed = TRUE;
-		remove(self);
-		return;
-	}
-	weapon_defaultspawnfunc(WEP_HOOK);
-}
+HOOK_SETTINGS(hook)
 
 .float dmg;
 .float dmg_edge;
@@ -33,6 +46,20 @@ void spawnfunc_weapon_hook()
 .float hook_refire;
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
+#endif
+#else
+#ifdef SVQC
+
+void spawnfunc_weapon_hook()
+{
+	if(g_grappling_hook) // offhand hook
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
+	weapon_defaultspawnfunc(WEP_HOOK);
+}
 
 void W_Hook_ExplodeThink (void)
 {
@@ -62,12 +89,12 @@ void W_Hook_Explode2 (void)
 
 	self.think = W_Hook_ExplodeThink;
 	self.nextthink = time;
-	self.dmg = autocvar_g_balance_hook_secondary_damage;
-	self.dmg_edge = autocvar_g_balance_hook_secondary_edgedamage;
-	self.dmg_radius = autocvar_g_balance_hook_secondary_radius;
-	self.dmg_force = autocvar_g_balance_hook_secondary_force;
-	self.dmg_power = autocvar_g_balance_hook_secondary_power;
-	self.dmg_duration = autocvar_g_balance_hook_secondary_duration;
+	self.dmg = WEP_CVAR_SEC(hook, damage);
+	self.dmg_edge = WEP_CVAR_SEC(hook, edgedamage);
+	self.dmg_radius = WEP_CVAR_SEC(hook, radius);
+	self.dmg_force = WEP_CVAR_SEC(hook, force);
+	self.dmg_power = WEP_CVAR_SEC(hook, power);
+	self.dmg_duration = WEP_CVAR_SEC(hook, duration);
 	self.teleport_time = time;
 	self.dmg_last = 1;
 	self.movetype = MOVETYPE_NONE;
@@ -97,37 +124,37 @@ void W_Hook_Attack2()
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage);
+	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(hook, ammo), FALSE);
+	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = autocvar_g_balance_hook_secondary_damage;
+	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
-	gren.nextthink = time + autocvar_g_balance_hook_secondary_lifetime;
+	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
 	
 	gren.takedamage = DAMAGE_YES;
-	gren.health = autocvar_g_balance_hook_secondary_health;
-	gren.damageforcescale = autocvar_g_balance_hook_secondary_damageforcescale;
+	gren.health = WEP_CVAR_SEC(hook, health);
+	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	gren.velocity = '0 0 1' * autocvar_g_balance_hook_secondary_speed;
+	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);
 	if(autocvar_g_projectiles_newton_style)
 		gren.velocity = gren.velocity + self.velocity;
 
-	gren.gravity = autocvar_g_balance_hook_secondary_gravity;
+	gren.gravity = WEP_CVAR_SEC(hook, gravity);
 	//W_SetupProjectileVelocity(gren); // just falling down!
 
 	gren.angles = '0 0 0';
@@ -159,25 +186,25 @@ float w_hook(float req)
 				if (time > self.hook_refire)
 				if (weapon_prepareattack(0, -1))
 				{
-					W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_hook_primary_fuel, FALSE);
+					W_DecreaseAmmo(ammo_fuel, WEP_CVAR_PRI(hook, ammo), FALSE);
 					self.hook_state |= HOOK_FIRING;
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hook_primary_animtime, w_ready);				
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);				
 				}
 			}
 
 			if (self.BUTTON_ATCK2)
 			{
-				if (weapon_prepareattack(1, autocvar_g_balance_hook_secondary_refire))
+				if (weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hook_secondary_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
 
 			if(self.hook)
 			{
 				// if hooked, no bombs, and increase the timer
-				self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
+				self.hook_refire = max(self.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor());
 
 				// hook also inhibits health regeneration, but only for 1 second
 				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -186,14 +213,14 @@ float w_hook(float req)
 
 			if(self.hook && self.hook.state == 1)
 			{
-				hooked_time_max = autocvar_g_balance_hook_primary_hooked_time_max;			
+				hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);			
 				if (hooked_time_max > 0)
 				{
 					if ( time > self.hook_time_hooked + hooked_time_max )
 						self.hook_state |= HOOK_REMOVING;
 				}
 				
-				hooked_fuel = autocvar_g_balance_hook_primary_hooked_fuel;
+				hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
 				if (hooked_fuel > 0)
 				{
 					if ( time > self.hook_time_fueldecrease )
@@ -219,7 +246,7 @@ float w_hook(float req)
 			else
 			{
 				self.hook_time_hooked = time;				
-				self.hook_time_fueldecrease = time + autocvar_g_balance_hook_primary_hooked_time_free;
+				self.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
 			if (self.BUTTON_CROUCH)
@@ -258,6 +285,11 @@ float w_hook(float req)
 			precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 			precache_sound ("weapons/hook_fire.wav");
 			precache_sound ("weapons/hookbomb_fire.wav");
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_HOOK,weapon,prop,name)
+			HOOK_SETTINGS(hook)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -272,11 +304,11 @@ float w_hook(float req)
 			if(self.hook)
 				return self.ammo_fuel > 0;
 			else
-				return self.ammo_fuel >= autocvar_g_balance_hook_primary_fuel;
+				return self.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 		}
 		case WR_CHECKAMMO2:
 		{
-			return self.ammo_cells >= autocvar_g_balance_hook_secondary_ammo;
+			return self.ammo_cells >= WEP_CVAR_SEC(hook, ammo);
 		}
 		case WR_RESETPLAYER:
 		{
