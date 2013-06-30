@@ -20,21 +20,21 @@ float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators a
 float MAX_SHOT_DISTANCE = 32768;
 
 // weapon requests // WEAPONTODO
-float WR_SETUP		= 1; // (SVQC) setup weapon data
-float WR_THINK		= 2; // (SVQC) logic to run every frame
-float WR_CHECKAMMO1	= 3; // (SVQC) checks ammo for weapon
-float WR_CHECKAMMO2	= 4; // (SVQC) checks ammo for weapon
-float WR_AIM		= 5; // (SVQC) runs bot aiming code for this weapon
-float WR_INIT	= 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // (SVQC) notification number for suicide message (may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // (SVQC) notification number for kill message (may inspect w_deathtype for details)
-float WR_RELOAD         = 9; // (SVQC) does not need to do anything
-float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
-float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
-float WR_SWITCHABLE	= 12; // (CSQC) impact effect
-float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
-float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
-float WR_CONFIG = 15;
+#define WR_SETUP          1 // (SERVER) setup weapon data
+#define WR_THINK          2 // (SERVER) logic to run every frame
+#define WR_CHECKAMMO1     3 // (SERVER) checks ammo for weapon
+#define WR_CHECKAMMO2     4 // (SERVER) checks ammo for weapon
+#define WR_AIM            5 // (SERVER) runs bot aiming code for this weapon
+#define WR_INIT           6 // (BOTH) precaches models/sounds used by this weapon
+#define WR_SUICIDEMESSAGE 7 // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
+#define WR_KILLMESSAGE    8 // (SERVER) notification number for kill message (may inspect w_deathtype for details)
+#define WR_RELOAD         9 // (SERVER) does not need to do anything
+#define WR_RESETPLAYER    10 // (SERVER) does not need to do anything
+#define WR_IMPACTEFFECT   11 // (CLIENT) impact effect
+#define WR_SWITCHABLE     12 // (CLIENT) impact effect
+#define WR_PLAYERDEATH    13 // (SERVER) does not need to do anything
+#define WR_GONETHINK      14 // (SERVER) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
+#define WR_CONFIG         15 // (ALL) 
 
 // WEAPONTODO
 float	IT_UNLIMITED_WEAPON_AMMO     = 1;
