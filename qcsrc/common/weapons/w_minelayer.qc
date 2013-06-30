@@ -10,17 +10,44 @@ REGISTER_WEAPON(
 /* netname  */ "minelayer",
 /* fullname */ _("Mine Layer")
 );
-#else
+#define MINELAYER_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_NONE, ammo) \
+	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, damage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, damageforcescale) \
+	WEP_ADD_CVAR(weapon, MO_NONE, detonatedelay) \
+	WEP_ADD_CVAR(weapon, MO_NONE, edgedamage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, force) \
+	WEP_ADD_CVAR(weapon, MO_NONE, health) \
+	WEP_ADD_CVAR(weapon, MO_NONE, lifetime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, lifetime_countdown) \
+	WEP_ADD_CVAR(weapon, MO_NONE, limit) \
+	WEP_ADD_CVAR(weapon, MO_NONE, protection) \
+	WEP_ADD_CVAR(weapon, MO_NONE, proximityradius) \
+	WEP_ADD_CVAR(weapon, MO_NONE, radius) \
+	WEP_ADD_CVAR(weapon, MO_NONE, refire) \
+	WEP_ADD_CVAR(weapon, MO_NONE, remote_damage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, remote_edgedamage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, remote_force) \
+	WEP_ADD_CVAR(weapon, MO_NONE, remote_radius) \
+	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
+	WEP_ADD_CVAR(weapon, MO_NONE, time) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+MINELAYER_SETTINGS(minelayer)
+void spawnfunc_weapon_minelayer() { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
+
 void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 .vector mine_orientation;
-
-void spawnfunc_weapon_minelayer (void)
-{
-	weapon_defaultspawnfunc(WEP_MINE_LAYER);
-}
+#endif
+#else
+#ifdef SVQC
 
 void W_Mine_Stick (entity to)
 {
@@ -81,7 +108,7 @@ void W_Mine_Explode ()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), world, world, WEP_CVAR(minelayer, force), self.projectiledeathtype, other);
 
 	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
@@ -108,7 +135,7 @@ void W_Mine_DoRemoteExplode ()
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		self.velocity = self.mine_orientation; // particle fx and decals need .velocity
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage (self, self.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), world, world, WEP_CVAR(minelayer, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
 	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
@@ -132,7 +159,7 @@ void W_Mine_RemoteExplode ()
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > autocvar_g_balance_minelayer_remote_radius) // safety device
+			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(minelayer, remote_radius)) // safety device
 		)
 		{
 			W_Mine_DoRemoteExplode();
@@ -142,10 +169,10 @@ void W_Mine_RemoteExplode ()
 void W_Mine_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
-	if(autocvar_g_balance_minelayer_protection && self.mine_explodeanyway == 0)
+	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
 	{
 		entity head;
-		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
+		head = findradius(self.origin, WEP_CVAR(minelayer, radius));
 		while(head)
 		{
 			if(head == self.realowner || !IsDifferentTeam(head, self.realowner))
@@ -187,9 +214,9 @@ void W_Mine_Think (void)
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if ((time > self.cnt) && (!self.mine_time))
 	{
-		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
+		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
 			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
-		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
+		self.mine_time = time + WEP_CVAR(minelayer, lifetime_countdown);
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
@@ -204,7 +231,7 @@ void W_Mine_Think (void)
 	}
 
 	// set the mine for detonation when a foe gets close enough
-	head = findradius(self.origin, autocvar_g_balance_minelayer_proximityradius);
+	head = findradius(self.origin, WEP_CVAR(minelayer, proximityradius));
 	while(head)
 	{
 		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
@@ -212,7 +239,7 @@ void W_Mine_Think (void)
 		if(!self.mine_time)
 		{
 			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
-			self.mine_time = time + autocvar_g_balance_minelayer_time;
+			self.mine_time = time + WEP_CVAR(minelayer, time);
 		}
 		head = head.chain;
 	}
@@ -277,35 +304,35 @@ void W_Mine_Attack (void)
 	entity flash;
 
 	// scan how many mines we placed, and return if we reached our limit
-	if(autocvar_g_balance_minelayer_limit)
+	if(WEP_CVAR(minelayer, limit))
 	{
-		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+		if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
 		{
 			// the refire delay keeps this message from being spammed
-			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
+			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(WEP_CVAR(minelayer, limit)), " ^7mines at a time\n") );
 			play2(self, "weapons/unavailable.wav");
 			return;
 		}
 	}
 
-	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo);
+	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(minelayer, ammo), autocvar_g_balance_minelayer_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, autocvar_g_balance_minelayer_damage);
+	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
 	mine.owner = mine.realowner = self;
-	if(autocvar_g_balance_minelayer_detonatedelay >= 0)
-		mine.spawnshieldtime = time + autocvar_g_balance_minelayer_detonatedelay;
+	if(WEP_CVAR(minelayer, detonatedelay) >= 0)
+		mine.spawnshieldtime = time + WEP_CVAR(minelayer, detonatedelay);
 	else
 		mine.spawnshieldtime = -1;
 	mine.classname = "mine";
 	mine.bot_dodge = TRUE;
-	mine.bot_dodgerating = autocvar_g_balance_minelayer_damage * 2; // * 2 because it can detonate inflight which makes it even more dangerous
+	mine.bot_dodgerating = WEP_CVAR(minelayer, damage) * 2; // * 2 because it can detonate inflight which makes it even more dangerous
 
 	mine.takedamage = DAMAGE_YES;
-	mine.damageforcescale = autocvar_g_balance_minelayer_damageforcescale;
-	mine.health = autocvar_g_balance_minelayer_health;
+	mine.damageforcescale = WEP_CVAR(minelayer, damageforcescale);
+	mine.health = WEP_CVAR(minelayer, health);
 	mine.event_damage = W_Mine_Damage;
 	mine.damagedbycontents = TRUE;
 
@@ -315,13 +342,13 @@ void W_Mine_Attack (void)
 	setsize (mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
 	setorigin (mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
-	W_SetupProjectileVelocity(mine, autocvar_g_balance_minelayer_speed, 0);
+	W_SetupProjectileVelocity(mine, WEP_CVAR(minelayer, speed), 0);
 	mine.angles = vectoangles (mine.velocity);
 
 	mine.touch = W_Mine_Touch;
 	mine.think = W_Mine_Think;
 	mine.nextthink = time;
-	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
+	mine.cnt = time + (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
 	mine.flags = FL_PROJECTILE;
 	mine.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
@@ -371,19 +398,19 @@ float w_minelayer(float req)
 		case WR_AIM:
 		{
 			// aim and decide to fire if appropriate
-			if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+			if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
 				self.BUTTON_ATCK = FALSE;
 			else
-				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), FALSE);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 			{
 				// decide whether to detonate mines
 				entity targetlist, targ;
 				float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
 				float selfdamage, teamdamage, enemydamage;
-				edgedamage = autocvar_g_balance_minelayer_edgedamage;
-				coredamage = autocvar_g_balance_minelayer_damage;
-				edgeradius = autocvar_g_balance_minelayer_radius;
+				edgedamage = WEP_CVAR(minelayer, edgedamage);
+				coredamage = WEP_CVAR(minelayer, damage);
+				edgeradius = WEP_CVAR(minelayer, radius);
 				recipricoledgeradius = 1 / edgeradius;
 				selfdamage = 0;
 				teamdamage = 0;
@@ -470,18 +497,18 @@ float w_minelayer(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
+			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+				if not (W_PlacedMines(FALSE) && self.ammo_rockets < WEP_CVAR(minelayer, ammo))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else if (self.BUTTON_ATCK)
 			{
-				if(weapon_prepareattack(0, autocvar_g_balance_minelayer_refire))
+				if(weapon_prepareattack(0, WEP_CVAR(minelayer, refire)))
 				{
 					W_Mine_Attack();
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minelayer_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
@@ -504,6 +531,11 @@ float w_minelayer(float req)
 			precache_sound ("weapons/mine_fire.wav");
 			precache_sound ("weapons/mine_stick.wav");
 			precache_sound ("weapons/mine_trigger.wav");
+			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_MINE_LAYER,weapon,prop,name)
+			MINELAYER_SETTINGS(minelayer)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -517,8 +549,8 @@ float w_minelayer(float req)
 			// don't switch while placing a mine
 			if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 			{
-				ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
-				ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= autocvar_g_balance_minelayer_ammo;
+				ammo_amount = self.ammo_rockets >= WEP_CVAR(minelayer, ammo);
+				ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= WEP_CVAR(minelayer, ammo);
 				return ammo_amount;
 			}
 			return TRUE;
@@ -537,7 +569,7 @@ float w_minelayer(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+			W_Reload(WEP_CVAR(minelayer, ammo), autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
