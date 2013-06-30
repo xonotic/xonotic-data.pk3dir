@@ -2,14 +2,16 @@
 //  Balance Config Generator
 // ==========================
 
-void Dump_Weapon_Settings(float fh, float alsoprint)
+void Dump_Weapon_Settings(void)
 {
 	float i;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		WEP_ACTION(i, WR_CONFIG)
+		WEP_CONFIG_WRITE(sprintf("// {{{ #%d: %s\n", i, W_Name(i)))
+		WEP_ACTION(i, WR_CONFIG);
+		WEP_CONFIG_WRITE("// }}}\n")
 	}
-
+}
 	/*
 	#define WEP_BAL_WRITE(a) { \
 		fputs(fh, a); \
@@ -107,5 +109,5 @@ void Dump_Weapon_Settings(float fh, float alsoprint)
 	return;
 	#undef NOTIF_WRITE_HARDCODED
 	#undef NOTIF_WRITE_ENTITY
-	#undef NOTIF_WRITE*/
-}
+	#undef NOTIF_WRITE
+}*/

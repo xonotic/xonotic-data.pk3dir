@@ -143,6 +143,7 @@ weapons/hitplot.qc
 weapons/main.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO
+../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
 
 t_items.qc

@@ -317,7 +317,7 @@ float W_Devastator(float req)
 	float ammo_amount;
 	switch(req)
 	{
-		case WR_AIM:
+		case WR_AIM: // WEAPONTODO: rewrite this, it's WAY too complicated for what it should be
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), FALSE);
@@ -475,8 +475,8 @@ float W_Devastator(float req)
 		case WR_CONFIG:
 		{
 			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,mode,name)
-			ARC_SETTINGS(devastator)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			DEVASTATOR_SETTINGS(devastator)
 			#undef WEP_ADD_CVAR
 			#undef WEP_ADD_PROP
 			return TRUE;
