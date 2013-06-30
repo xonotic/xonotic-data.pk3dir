@@ -305,7 +305,7 @@ float w_uzi(float req)
 			precache_model ("models/weapons/h_uzi.iqm");
 			precache_sound ("weapons/uzi_fire.wav");
 			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_UZI).##prop = autocvar_g_balance_##weapon##_##name;
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_UZI,weapon,prop,name)
 			UZI_SETTINGS(uzi)
 			#undef WEP_ADD_CVAR
 			#undef WEP_ADD_PROP

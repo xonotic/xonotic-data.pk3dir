@@ -294,7 +294,7 @@ void ArcInit()
 	arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
 
 	#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-	#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_ARC).##prop = autocvar_g_balance_##weapon##_##name;
+	#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_ARC,weapon,prop,name)
 	ARC_SETTINGS(arc)
 	#undef WEP_ADD_CVAR
 	#undef WEP_ADD_PROP

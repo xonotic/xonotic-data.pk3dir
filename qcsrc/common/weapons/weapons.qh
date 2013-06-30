@@ -292,6 +292,8 @@ float WEP_LAST;
 	.float ##prop; \
 	float autocvar_g_balance_##weapon##_##name;
 
+#define WEP_SET_PROP(wepid,weapon,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##weapon##_##name;
+
 #include "all.qh"
 
 #undef WEP_ADD_CVAR

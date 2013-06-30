@@ -465,7 +465,7 @@ float W_Devastator(float req)
 			}
 
 			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) get_weaponinfo(WEP_DEVASTATOR).##prop = autocvar_g_balance_##weapon##_##name;
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_DEVASTATOR,weapon,prop,name)
 			ARC_SETTINGS(devastator)
 			#undef WEP_ADD_CVAR
 			#undef WEP_ADD_PROP
