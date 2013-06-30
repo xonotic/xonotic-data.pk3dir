@@ -236,7 +236,7 @@ float w_arc(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_arc.md3");
 			precache_model ("models/weapons/v_arc.md3");
@@ -287,7 +287,7 @@ float w_arc(float req)
 
 void ArcInit()
 {
-	WEP_ACTION(WEP_ARC, WR_PRECACHE);
+	WEP_ACTION(WEP_ARC, WR_INIT);
 	arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
 	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
 	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
@@ -325,7 +325,7 @@ float w_arc(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/arc_impact.wav");
 			precache_sound("weapons/arc_impact_combo.wav");

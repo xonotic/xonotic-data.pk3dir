@@ -368,7 +368,7 @@ void W_Electro_Attack3 (void)
 
 void ElectroInit()
 {
-	WEP_ACTION(WEP_ELECTRO, WR_PRECACHE);
+	WEP_ACTION(WEP_ELECTRO, WR_INIT);
 	electro_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 1);
 	electro_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 2);
 	electro_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ELECTRO), FALSE, FALSE, 3);
@@ -504,7 +504,7 @@ float w_electro(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_electro.md3");
 			precache_model ("models/weapons/v_electro.md3");
@@ -626,7 +626,7 @@ float w_electro(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/electro_impact.wav");
 			precache_sound("weapons/electro_impact_combo.wav");

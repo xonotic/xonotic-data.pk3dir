@@ -236,7 +236,7 @@ float w_shotgun(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
 			precache_model ("models/weapons/g_shotgun.md3");
@@ -307,7 +307,7 @@ float w_shotgun(float req)
 			}
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");

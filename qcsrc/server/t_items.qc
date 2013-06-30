@@ -1373,7 +1373,7 @@ void spawnfunc_target_items (void)
 					{
 						WEPSET_OR_EW(self, j);
 						if(self.spawnflags == 0 || self.spawnflags == 2)
-							WEP_ACTION(e.weapon, WR_PRECACHE);
+							WEP_ACTION(e.weapon, WR_INIT);
 						break;
 					}
 				}
@@ -1445,7 +1445,7 @@ void spawnfunc_target_items (void)
 			e = get_weaponinfo(j);
 			if(argv(i) == e.netname)
 			{
-				WEP_ACTION(e.weapon, WR_PRECACHE);
+				WEP_ACTION(e.weapon, WR_INIT);
 				break;
 			}
 		}
@@ -1771,7 +1771,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
 			if not(WEPSET_CONTAINS_AW(save_weapons, j))
 				if(WEPSET_CONTAINS_EW(e, j))
-					WEP_ACTION(wi.weapon, WR_PRECACHE);
+					WEP_ACTION(wi.weapon, WR_INIT);
 		}
 	}
 	POSTGIVE_VALUE(e, strength_finished, 1, "misc/powerup.wav", "misc/poweroff.wav");

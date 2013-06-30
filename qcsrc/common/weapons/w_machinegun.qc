@@ -297,7 +297,7 @@ float w_uzi(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
 			precache_model ("models/weapons/g_uzi.md3");
@@ -389,7 +389,7 @@ float w_uzi(float req)
 					
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");

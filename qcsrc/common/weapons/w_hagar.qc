@@ -435,7 +435,7 @@ float w_hagar(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_hagar.md3");
 			precache_model ("models/weapons/v_hagar.md3");
@@ -533,7 +533,7 @@ float w_hagar(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/hagexp1.wav");
 			precache_sound("weapons/hagexp2.wav");

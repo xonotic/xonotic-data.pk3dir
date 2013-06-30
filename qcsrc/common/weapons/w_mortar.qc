@@ -373,7 +373,7 @@ float w_glauncher(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_gl.md3");
 			precache_model ("models/weapons/v_gl.md3");
@@ -450,7 +450,7 @@ float w_glauncher(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/grenade_impact.wav");
 			return TRUE;

@@ -38,7 +38,7 @@ void register_weapon(float id, float(float) func, float ammotype, float i, float
 		e.ammo_field = ammo_batteries;
 
 	#ifndef MENUQC
-	func(WR_PRECACHE);
+	func(WR_INIT);
 	#endif
 }
 float w_null(float dummy)

@@ -389,7 +389,7 @@ float w_tuba(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_tuba.md3");
 			precache_model ("models/weapons/v_tuba.md3");

@@ -627,7 +627,7 @@ float w_crylink(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_crylink.md3");
 			precache_model ("models/weapons/v_crylink.md3");
@@ -709,7 +709,7 @@ float w_crylink(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/crylink_impact2.wav");
 			precache_sound("weapons/crylink_impact.wav");

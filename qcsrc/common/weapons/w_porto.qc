@@ -356,7 +356,7 @@ float w_porto(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_porto.md3");
 			precache_model ("models/weapons/v_porto.md3");
@@ -395,7 +395,7 @@ float w_porto(float req)
 			print("Since when does Porto send DamageInfo?\n");
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			// nothing to do
 			return TRUE;

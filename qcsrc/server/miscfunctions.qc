@@ -866,7 +866,7 @@ void readplayerstartcvars()
 	{
 		e = get_weaponinfo(i);
 		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
-			WEP_ACTION(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);

@@ -202,7 +202,7 @@ float w_hlac(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_hlac.md3");
 			precache_model ("models/weapons/v_hlac.md3");
@@ -260,7 +260,7 @@ float w_hlac(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/laserimpact.wav");
 			return TRUE;

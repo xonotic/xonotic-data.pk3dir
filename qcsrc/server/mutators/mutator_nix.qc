@@ -60,7 +60,7 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		//WEP_ACTION(nix_weapon, WR_PRECACHE); // forget it, too slow
+		//WEP_ACTION(nix_weapon, WR_INIT); // forget it, too slow
 	}
 
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
@@ -152,7 +152,7 @@ void NIX_precache()
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		if (NIX_CanChooseWeapon(i))
-			WEP_ACTION(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_INIT);
 }
 
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)

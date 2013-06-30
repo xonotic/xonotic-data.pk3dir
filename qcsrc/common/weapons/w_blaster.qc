@@ -503,7 +503,7 @@ float W_Laser(float request)
 			return TRUE;
 		}
 		
-		case WR_PRECACHE: 
+		case WR_INIT: 
 		{
 			precache_model("models/weapons/g_laser.md3");
 			precache_model("models/weapons/v_laser.md3");
@@ -559,7 +559,7 @@ float W_Laser(float request)
 			return TRUE;
 		}
 		
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/laserimpact.wav");
 			return TRUE;

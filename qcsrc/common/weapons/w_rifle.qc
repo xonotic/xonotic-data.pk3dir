@@ -182,7 +182,7 @@ float w_rifle(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_campingrifle.md3");
 			precache_model ("models/weapons/v_campingrifle.md3");
@@ -266,7 +266,7 @@ float w_rifle(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");

@@ -833,7 +833,7 @@ float w_nexball_weapon(float req)
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_PRECACHE)
+	else if(req == WR_INIT)
 	{
 		precache_model("models/weapons/g_porto.md3");
 		precache_model("models/weapons/v_porto.md3");

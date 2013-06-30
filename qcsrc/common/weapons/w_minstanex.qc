@@ -145,7 +145,7 @@ float w_minstanex(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/nexflash.md3");
 			precache_model ("models/weapons/g_minstanex.md3");
@@ -155,7 +155,7 @@ float w_minstanex(float req)
 			precache_sound ("weapons/nexwhoosh1.wav");
 			precache_sound ("weapons/nexwhoosh2.wav");
 			precache_sound ("weapons/nexwhoosh3.wav");
-			W_Laser(WR_PRECACHE);
+			W_Laser(WR_INIT);
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -222,7 +222,7 @@ float w_minstanex(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/neximpact.wav");
 			return TRUE;

@@ -451,7 +451,7 @@ float W_Devastator(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			if(autocvar_sv_precacheweapons)
 			{
@@ -550,7 +550,7 @@ float W_Devastator(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/rocket_impact.wav");
 			return TRUE;

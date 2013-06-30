@@ -598,7 +598,7 @@ float w_seeker(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_seeker.md3");
 			precache_model ("models/weapons/v_seeker.md3");
@@ -710,7 +710,7 @@ float w_seeker(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/seekerexp1.wav");
 			precache_sound("weapons/seekerexp2.wav");

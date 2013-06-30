@@ -493,7 +493,7 @@ float w_minelayer(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/flash.md3");
 			precache_model ("models/mine.md3");
@@ -567,7 +567,7 @@ float w_minelayer(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/mine_exp.wav");
 			return TRUE;

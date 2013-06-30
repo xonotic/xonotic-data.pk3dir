@@ -358,7 +358,7 @@ float w_fireball(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_fireball.md3");
 			precache_model ("models/weapons/v_fireball.md3");
@@ -425,7 +425,7 @@ float w_fireball(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/fireball_impact2.wav");
 			return TRUE;

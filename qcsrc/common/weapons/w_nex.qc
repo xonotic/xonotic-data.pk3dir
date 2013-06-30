@@ -230,7 +230,7 @@ float w_nex(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/nexflash.md3");
 			precache_model ("models/weapons/g_nex.md3");
@@ -306,7 +306,7 @@ float w_nex(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/neximpact.wav");
 			return TRUE;

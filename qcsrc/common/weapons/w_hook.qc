@@ -250,7 +250,7 @@ float w_hook(float req)
 			
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_model ("models/weapons/g_hookgun.md3");
 			precache_model ("models/weapons/v_hookgun.md3");
@@ -310,7 +310,7 @@ float w_hook(float req)
 				
 			return TRUE;
 		}
-		case WR_PRECACHE:
+		case WR_INIT:
 		{
 			precache_sound("weapons/hookbomb_impact.wav");
 			return TRUE;

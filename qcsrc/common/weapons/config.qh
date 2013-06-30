@@ -13,36 +13,36 @@ float wep_config_alsoprint;
 #define WEP_CONFIG_WRITE_CVARS(weapon,mode,name) \
 	#if mode == MO_PRI \
 		{ WEP_CONFIG_WRITE(sprintf( \
-			"set g_balance_%s_primary_%s %f\n", \
+			"set g_balance_%s_primary_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_primary_##name)) } \
 	#endif \
 	#if mode == MO_SEC \
-		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_secondary_%s %f\n", \
+		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_secondary_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_secondary_##name)) } \
 	#endif \
 	#if mode == MO_BOTH \
-		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_primary_%s %f\n", \
+		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_primary_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_primary_##name)) } \
-		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_secondary_%s %f\n", \
+		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_secondary_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_secondary_##name)) } \
 	#endif \
 	#if mode == MO_NONE \
-		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_%s %f\n", \
+		{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_##name)) } \
 	#endif
 	
 #define WEP_CONFIG_WRITE_PROPS(weapon,prop,name) \
-	{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_%s %f\n", \
+	{ WEP_CONFIG_WRITE(sprintf("set g_balance_%s_%s %g\n", \
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_##name)) } 

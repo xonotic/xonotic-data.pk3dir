@@ -662,5 +662,5 @@ void weapon_defaultspawnfunc(float wpn)
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
-		WEP_ACTION(e.weapon, WR_PRECACHE);
+		WEP_ACTION(e.weapon, WR_INIT);
 }
