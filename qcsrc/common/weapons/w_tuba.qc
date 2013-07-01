@@ -10,9 +10,24 @@ REGISTER_WEAPON(
 /* netname  */ "tuba",
 /* fullname */ _("@!#%'n Tuba")
 );
-#else
+
+#define TUBA_SETTINGS(weapon) \
+	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
+	WEP_ADD_CVAR(weapon, MO_NONE, attenuation) \
+	WEP_ADD_CVAR(weapon, MO_NONE, damage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, edgedamage) \
+	WEP_ADD_CVAR(weapon, MO_NONE, force) \
+	WEP_ADD_CVAR(weapon, MO_NONE, radius) \
+	WEP_ADD_CVAR(weapon, MO_NONE, refire) \
+	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
+	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
+	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
+	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
-//#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
+TUBA_SETTINGS(tuba)
+void spawnfunc_weapon_tuba (void) { weapon_defaultspawnfunc(WEP_TUBA); }
+
 .entity tuba_note;
 .float tuba_smoketime;
 .float tuba_instrument;
@@ -21,6 +36,9 @@ REGISTER_WEAPON(
 .float tuba_lastnotes_last;
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
+#endif
+#else
+#ifdef SVQC
 
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
 {
@@ -261,7 +279,7 @@ void W_Tuba_NoteThink()
 		return;
 	}
 	self.nextthink = time;
-	dist_mult = autocvar_g_balance_tuba_attenuation / autocvar_snd_soundradius;
+	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
 	FOR_EACH_REALCLIENT(e)
 	if(e != self.realowner)
 	{
@@ -291,7 +309,7 @@ void W_Tuba_NoteOn(float hittype)
 	vector o;
 	float n;
 
-	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
+	W_SetupShot(self, FALSE, 2, "", 0, WEP_CVAR(tuba, damage));
 
 	n = Tuba_GetNote(self, hittype);
 
@@ -324,10 +342,10 @@ void W_Tuba_NoteOn(float hittype)
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
-	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
+	self.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
 
 	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
+	RadiusDamage(self, self, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), world, world, WEP_CVAR(tuba, force), hittype | WEP_TUBA, world);
 
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)
@@ -335,11 +353,6 @@ void W_Tuba_NoteOn(float hittype)
 		pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 		self.tuba_smoketime = time + 0.25;
 	}
-}
-
-void spawnfunc_weapon_tuba (void)
-{
-	weapon_defaultspawnfunc(WEP_TUBA);
 }
 
 float w_tuba(float req)
@@ -350,7 +363,7 @@ float w_tuba(float req)
 		{
 			// bots cannot play the Tuba well yet
 			// I think they should start with the recorder first
-			if(vlen(self.origin - self.enemy.origin) < autocvar_g_balance_tuba_radius)
+			if(vlen(self.origin - self.enemy.origin) < WEP_CVAR(tuba, radius))
 			{
 				if(random() > 0.5)
 					self.BUTTON_ATCK = 1;
@@ -363,18 +376,18 @@ float w_tuba(float req)
 		case WR_THINK:
 		{
 			if (self.BUTTON_ATCK)
-			if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
+			if (weapon_prepareattack(0, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if (self.BUTTON_ATCK2)
-			if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
+			if (weapon_prepareattack(1, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
 				//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(self.tuba_note)
 			{
@@ -398,7 +411,7 @@ float w_tuba(float req)
 			precache_model ("models/weapons/h_akordeon.iqm");
 			precache_model ("models/weapons/v_kleinbottle.md3");
 			precache_model ("models/weapons/h_kleinbottle.iqm");
-			
+			WEP_SET_PROPS(TUBA_SETTINGS(tuba), WEP_TUBA)
 			return TRUE;
 		}
 		case WR_SETUP:
