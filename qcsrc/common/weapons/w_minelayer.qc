@@ -532,11 +532,7 @@ float w_minelayer(float req)
 			precache_sound ("weapons/mine_fire.wav");
 			precache_sound ("weapons/mine_stick.wav");
 			precache_sound ("weapons/mine_trigger.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_MINE_LAYER,weapon,prop,name)
-			MINELAYER_SETTINGS(minelayer)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(MINELAYER_SETTINGS(minelayer), WEP_MINE_LAYER)
 			return TRUE;
 		}
 		case WR_SETUP:

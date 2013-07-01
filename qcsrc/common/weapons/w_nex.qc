@@ -241,11 +241,7 @@ float w_nex(float req)
 			precache_sound ("weapons/nexwhoosh1.wav");
 			precache_sound ("weapons/nexwhoosh2.wav");
 			precache_sound ("weapons/nexwhoosh3.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_NEX,weapon,prop,name)
-			NEX_SETTINGS(nex)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(NEX_SETTINGS(nex), WEP_NEX)
 			return TRUE;
 		}
 		case WR_SETUP:

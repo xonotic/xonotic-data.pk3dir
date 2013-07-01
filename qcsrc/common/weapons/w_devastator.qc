@@ -464,12 +464,7 @@ float W_Devastator(float req)
 				precache_sound("weapons/rocket_fire.wav");
 				precache_sound("weapons/rocket_mode.wav");
 			}
-
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_DEVASTATOR,weapon,prop,name)
-			ARC_SETTINGS(devastator)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(DEVASTATOR_SETTINGS(devastator), WEP_DEVASTATOR)
 			return TRUE;
 		}
 		case WR_SETUP:

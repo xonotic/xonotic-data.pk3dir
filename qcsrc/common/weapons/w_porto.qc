@@ -372,11 +372,7 @@ float w_porto(float req)
 			precache_sound ("porto/explode.wav");
 			precache_sound ("porto/fire.wav");
 			precache_sound ("porto/unsupported.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_PORTO,weapon,prop,name)
-			PORTO_SETTINGS(porto)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(PORTO_SETTINGS(porto), WEP_PORTO)
 			return TRUE;
 		}
 		case WR_SETUP:

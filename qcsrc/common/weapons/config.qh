@@ -50,7 +50,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 	#endif
 
 // WEAPONTODO: remove prop
-#define WEP_CONFIG_WRITE_PROPS(weapon,prop,name) \
+#define WEP_CONFIG_WRITE_PROPS(weapon,name) \
 	{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_%s %g\n", \
 			#weapon, \
 			#name, \
@@ -58,7 +58,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 
 #define WEP_CONFIG_SETTINGS(wepsettings) \
 	#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name) \
-	#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name) \
+	#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,name) \
 	wepsettings \
 	#undef WEP_ADD_CVAR \
 	#undef WEP_ADD_PROP

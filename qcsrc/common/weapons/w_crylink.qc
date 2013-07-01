@@ -635,11 +635,7 @@ float w_crylink(float req)
 			precache_sound ("weapons/crylink_fire.wav");
 			precache_sound ("weapons/crylink_fire2.wav");
 			precache_sound ("weapons/crylink_linkjoin.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_CRYLINK,weapon,prop,name)
-			CRYLINK_SETTINGS(crylink)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(CRYLINK_SETTINGS(crylink), WEP_CRYLINK)
 			return TRUE;
 		}
 		case WR_SETUP:

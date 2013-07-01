@@ -286,11 +286,7 @@ float w_hook(float req)
 			precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 			precache_sound ("weapons/hook_fire.wav");
 			precache_sound ("weapons/hookbomb_fire.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_HOOK,weapon,prop,name)
-			HOOK_SETTINGS(hook)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(HOOK_SETTINGS(hook), WEP_HOOK)
 			return TRUE;
 		}
 		case WR_SETUP:

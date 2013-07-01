@@ -297,12 +297,7 @@ void ArcInit()
 	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
 	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
 	arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
-
-	#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-	#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_ARC,weapon,prop,name)
-	ARC_SETTINGS(arc)
-	#undef WEP_ADD_CVAR
-	#undef WEP_ADD_PROP
+	WEP_SET_PROPS(ARC_SETTINGS(arc), WEP_ARC)
 }
 #endif
 #ifdef CSQC

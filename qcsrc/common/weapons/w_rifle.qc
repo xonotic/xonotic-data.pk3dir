@@ -205,11 +205,7 @@ float w_rifle(float req)
 			precache_model ("models/weapons/h_campingrifle.iqm");
 			precache_sound ("weapons/campingrifle_fire.wav");
 			precache_sound ("weapons/campingrifle_fire2.wav");
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_RIFLE,weapon,prop,name)
-			RIFLE_SETTINGS(rifle)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(RIFLE_SETTINGS(rifle), WEP_RIFLE)
 			return TRUE;
 		}
 		case WR_SETUP:

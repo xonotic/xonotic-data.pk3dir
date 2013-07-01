@@ -386,12 +386,7 @@ float w_glauncher(float req)
 			precache_sound ("weapons/grenade_bounce6.wav");
 			precache_sound ("weapons/grenade_stick.wav");
 			precache_sound ("weapons/grenade_fire.wav");
-
-			#define WEP_ADD_CVAR(weapon,mode,name) /*nothing*/
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(WEP_GRENADE_LAUNCHER,weapon,prop,name)
-			MORTAR_SETTINGS(mortar)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_SET_PROPS(MORTAR_SETTINGS(mortar), WEP_GRENADE_LAUNCHER)
 			return TRUE;
 		}
 		case WR_SETUP:
