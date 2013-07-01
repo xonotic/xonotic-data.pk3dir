@@ -477,11 +477,7 @@ float w_hagar(float req)
 		}
 		case WR_CONFIG:
 		{
-			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
-			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
-			HAGAR_SETTINGS(hagar)
-			#undef WEP_ADD_CVAR
-			#undef WEP_ADD_PROP
+			WEP_CONFIG_SETTINGS(HAGAR_SETTINGS(hagar))
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

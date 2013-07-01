@@ -14,7 +14,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 	wep_config_queue[WEP_CONFIG_COUNT] = a; \
 	++WEP_CONFIG_COUNT; }
 
-#define WEP_CONFIG_WRITE(a) { \
+#define WEP_CONFIG_WRITETOFILE(a) { \
 	fputs(wep_config_file, a); \
 	if(wep_config_alsoprint) { print(a); } }
 
@@ -55,3 +55,10 @@ string wep_config_queue[MAX_WEP_CONFIG];
 			#weapon, \
 			#name, \
 			autocvar_g_balance_##weapon##_##name)) } 
+
+#define WEP_CONFIG_SETTINGS(wepsettings) \
+	#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name) \
+	#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name) \
+	wepsettings \
+	#undef WEP_ADD_CVAR \
+	#undef WEP_ADD_PROP

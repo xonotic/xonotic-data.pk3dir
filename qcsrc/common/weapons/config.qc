@@ -42,10 +42,10 @@ void Dump_Weapon_Settings(void)
 		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
 		
 		// step 4: write queue
-		WEP_CONFIG_WRITE(sprintf("// {{{ #%d: %s\n// %d settings\n", i, W_Name(i), WEP_CONFIG_COUNT))
+		WEP_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n// %d settings\n", i, W_Name(i), WEP_CONFIG_COUNT))
 		for(x = 0; x <= WEP_CONFIG_COUNT; ++x)
-			{ WEP_CONFIG_WRITE(wep_config_queue[x]) }
-		WEP_CONFIG_WRITE("// }}}\n")
+			{ WEP_CONFIG_WRITETOFILE(wep_config_queue[x]) }
+		WEP_CONFIG_WRITETOFILE("// }}}\n")
 	}
 }
 	/*
