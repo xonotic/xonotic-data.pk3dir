@@ -20,11 +20,9 @@ string wep_config_queue[MAX_WEP_CONFIG];
 
 #define WEP_CONFIG_WRITE_CVARS(weapon,mode,name) \
 	#if mode == MO_PRI \
-		{ WEP_CONFIG_QUEUE(sprintf( \
-			"set g_balance_%s_primary_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_primary_##name)) } \
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_primary_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_primary_%s", #weapon, #name)))) } \
 	#endif \
 	#if mode == MO_SEC \
 		{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_secondary_%s %g\n", \
