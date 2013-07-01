@@ -43,10 +43,10 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 HAGAR_SETTINGS(hagar)
-void spawnfunc_weapon_hagar() { weapon_defaultspawnfunc(WEP_HAGAR); }
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_hagar() { weapon_defaultspawnfunc(WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 

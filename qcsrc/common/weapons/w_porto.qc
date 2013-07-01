@@ -24,8 +24,6 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 PORTO_SETTINGS(porto)
-void spawnfunc_weapon_porto (void) { weapon_defaultspawnfunc(WEP_PORTO); }
-
 .entity porto_current;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
@@ -33,6 +31,7 @@ void spawnfunc_weapon_porto (void) { weapon_defaultspawnfunc(WEP_PORTO); }
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_porto (void) { weapon_defaultspawnfunc(WEP_PORTO); }
 
 void W_Porto_Success (void)
 {

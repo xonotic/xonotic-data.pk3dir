@@ -11,15 +11,11 @@ sys-post.qh
 ../warpzonelib/common.qh
 ../warpzonelib/util_server.qh
 ../warpzonelib/server.qh
-
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/test.qh
 ../common/counting.qh
-weapons/cl_weapons.qh
-../common/weapons/config.qh
-../common/weapons/weapons.qh // WEAPONTODO
 ../common/urllib.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -27,6 +23,20 @@ weapons/cl_weapons.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
+
+../common/weapons/config.qh
+../common/weapons/weapons.qh // TODO
+weapons/accuracy.qh
+weapons/common.qh
+weapons/csqcprojectile.qh // TODO
+weapons/hitplot.qh
+weapons/selection.qh
+weapons/spawning.qh
+weapons/throwing.qh
+weapons/tracing.qh
+weapons/weaponsystem.qh
+
+t_items.qh
 
 autocvars.qh
 constants.qh
@@ -64,9 +74,7 @@ command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
-weapons/hitplot.qh
-weapons/accuracy.qh
-weapons/csqcprojectile.qh // TODO
+
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/sv_model.qh
@@ -139,15 +147,19 @@ g_models.qc
 item_key.qc
 secret.qc
 
-weapons/hitplot.qc
-weapons/main.qc
+weapons/accuracy.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO
+weapons/hitplot.qc
+weapons/selection.qc
+weapons/spawning.qc
+weapons/throwing.qc
+weapons/tracing.qc
+weapons/weaponsystem.qc
 ../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
 
 t_items.qc
-weapons/cl_weapons.qc // TODO
 cl_impulse.qc
 
 ent_cs.qc
@@ -156,8 +168,6 @@ cl_player.qc
 cl_client.qc
 t_plats.qc
 antilag.qc
-
-weapons/accuracy.qc // TODO
 
 //ctf.qc
 //domination.qc

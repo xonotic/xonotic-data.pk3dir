@@ -555,9 +555,6 @@ string deathmessage;
 
 .float just_joined;
 
-.float cvar_cl_accuracy_data_share;
-.float cvar_cl_accuracy_data_receive;
-
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
 

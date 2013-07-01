@@ -12,15 +12,12 @@ REGISTER_WEAPON(
 );
 
 #ifdef SVQC
-void spawnfunc_weapon_minstanex (void)
-{
-	weapon_defaultspawnfunc(WEP_MINSTANEX);
-}
+.float minstanex_lasthit;
+.float jump_interval;
 #endif
 #else
 #ifdef SVQC
-.float minstanex_lasthit;
-.float jump_interval;
+void spawnfunc_weapon_minstanex (void) { weapon_defaultspawnfunc(WEP_MINSTANEX); }
 
 void W_MinstaNex_Attack (void)
 {

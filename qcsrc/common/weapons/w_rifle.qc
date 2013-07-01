@@ -35,16 +35,13 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 RIFLE_SETTINGS(rifle)
-void spawnfunc_weapon_rifle (void) { weapon_defaultspawnfunc(WEP_RIFLE); }
-
-// compatibility aliases
-void spawnfunc_weapon_campingrifle (void) { spawnfunc_weapon_rifle(); }
-void spawnfunc_weapon_sniperrifle (void) { spawnfunc_weapon_rifle(); }
-
 .float rifle_accumulator;
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_rifle (void) { weapon_defaultspawnfunc(WEP_RIFLE); }
+void spawnfunc_weapon_campingrifle (void) { spawnfunc_weapon_rifle(); }
+void spawnfunc_weapon_sniperrifle (void) { spawnfunc_weapon_rifle(); }
 
 void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant, float pTracer, float pShots, string pSound)
 {

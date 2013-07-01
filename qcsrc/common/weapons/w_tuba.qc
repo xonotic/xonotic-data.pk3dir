@@ -26,8 +26,6 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 TUBA_SETTINGS(tuba)
-void spawnfunc_weapon_tuba (void) { weapon_defaultspawnfunc(WEP_TUBA); }
-
 .entity tuba_note;
 .float tuba_smoketime;
 .float tuba_instrument;
@@ -39,6 +37,7 @@ void spawnfunc_weapon_tuba (void) { weapon_defaultspawnfunc(WEP_TUBA); }
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_tuba (void) { weapon_defaultspawnfunc(WEP_TUBA); }
 
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
 {

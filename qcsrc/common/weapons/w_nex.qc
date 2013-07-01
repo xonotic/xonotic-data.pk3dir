@@ -44,10 +44,10 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 NEX_SETTINGS(nex)
-void spawnfunc_weapon_nex (void) { weapon_defaultspawnfunc(WEP_NEX); }
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_nex (void) { weapon_defaultspawnfunc(WEP_NEX); }
 
 void SendCSQCNexBeamParticle(float charge) {
 	vector v;

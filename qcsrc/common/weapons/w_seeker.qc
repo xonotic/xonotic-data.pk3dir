@@ -60,13 +60,12 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 SEEKER_SETTINGS(seeker)
-void spawnfunc_weapon_seeker (void) { weapon_defaultspawnfunc(WEP_SEEKER); }
-
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_seeker (void) { weapon_defaultspawnfunc(WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
@@ -578,10 +577,6 @@ void Seeker_Fire_Tag()
 // ============================
 // Begin: Genereal weapon functions
 // ============================
-void spawnfunc_weapon_seeker (void)
-{
-	weapon_defaultspawnfunc(WEP_SEEKER);
-}
 
 float w_seeker(float req)
 {

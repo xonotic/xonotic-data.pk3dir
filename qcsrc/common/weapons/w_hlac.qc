@@ -35,10 +35,10 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 HLAC_SETTINGS(hlac)
-void spawnfunc_weapon_hlac() { weapon_defaultspawnfunc(WEP_HLAC); }
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_hlac() { weapon_defaultspawnfunc(WEP_HLAC); }
 
 void W_HLAC_Touch (void)
 {

@@ -1,8 +1,3 @@
-.float accuracy_hit[WEP_MAXCOUNT];
-.float accuracy_fired[WEP_MAXCOUNT];
-.float accuracy_cnt_hit[WEP_MAXCOUNT];
-.float accuracy_cnt_fired[WEP_MAXCOUNT];
-
 float accuracy_byte(float n, float d)
 {
 	//print(sprintf("accuracy: %d / %d\n", n, d));

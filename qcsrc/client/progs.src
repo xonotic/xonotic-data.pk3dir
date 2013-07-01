@@ -58,6 +58,7 @@ player_skeleton.qh
 
 sortlist.qc
 miscfunctions.qc
+../server/t_items.qh
 ../server/t_items.qc
 
 teamradar.qc

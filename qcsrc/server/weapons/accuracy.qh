@@ -1,4 +1,14 @@
 .float cvar_cl_accuracy_data_share;
+.float cvar_cl_accuracy_data_receive;
+
+.entity accuracy;
+.float accuracy_frags[WEP_MAXCOUNT];
+
+.float accuracy_hit[WEP_MAXCOUNT];
+.float accuracy_fired[WEP_MAXCOUNT];
+.float accuracy_cnt_hit[WEP_MAXCOUNT];
+.float accuracy_cnt_fired[WEP_MAXCOUNT];
+
 
 // init/free
 void accuracy_init(entity e);

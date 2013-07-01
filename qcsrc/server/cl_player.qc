@@ -1,6 +1,3 @@
-.entity accuracy;
-.float accuracy_frags[WEP_MAXCOUNT];
-
 float weaponstats_buffer;
 
 void WeaponStats_Init()

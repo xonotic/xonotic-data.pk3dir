@@ -40,8 +40,6 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 MINELAYER_SETTINGS(minelayer)
-void spawnfunc_weapon_minelayer() { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
-
 void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
@@ -49,6 +47,7 @@ void W_Mine_Think (void);
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_minelayer() { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
 
 void W_Mine_Stick (entity to)
 {

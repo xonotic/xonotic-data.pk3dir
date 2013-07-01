@@ -1,32 +1,4 @@
-#define ISF_LOCATION 2
-#define ISF_MODEL    4
-#define ISF_STATUS   8
-    #define ITS_STAYWEP   1
-    #define ITS_ANIMATE1  2
-    #define ITS_ANIMATE2  4
-    #define ITS_AVAILABLE 8
-    #define ITS_ALLOWFB   16
-    #define ITS_ALLOWSI   32
-    #define ITS_POWERUP   64
-#define ISF_COLORMAP 16
-#define ISF_DROP 32
-#define ISF_ANGLES 64
-
-.float ItemStatus;
-
 #ifdef CSQC
-
-var float  autocvar_cl_animate_items = 1;
-var float  autocvar_cl_ghost_items = 0.45;
-var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
-var float  autocvar_cl_fullbright_items = 0;
-var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
-var float  autocvar_cl_weapon_stay_alpha = 0.75;
-var float  autocvar_cl_simple_items = 0;
-var string autocvr_cl_simpleitems_postfix = "_simple";
-.float  spawntime;
-.float  gravity;
-.vector colormod;
 void ItemDraw()
 {    
     if(self.gravity)
@@ -216,7 +188,6 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-float autocvar_sv_simple_items;
 float ItemSend(entity to, float sf)
 {
     if(self.gravity)
@@ -297,13 +268,6 @@ float have_pickup_item(void)
 	return TRUE;
 }
 
-#define ITEM_RESPAWN_TICKS 10
-
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
-	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
-	// range: 10 .. respawntime + respawntimejitter
-
 floatfield Item_CounterField(float it)
 {
 	switch(it)
@@ -346,8 +310,6 @@ string Item_CounterFieldName(float it)
 #endif
 }
 
-.float max_armorvalue;
-.float pickup_anyway;
 /*
 float Item_Customize()
 {
@@ -539,10 +501,6 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
 float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
 {
 	if (!item.ammofield)
@@ -925,7 +883,6 @@ void Item_Damage(entity inflictor, entity attacker, float damage, float deathtyp
 		RemoveItem();
 }
 
-.float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
 {
 	startitem_failed = FALSE;
@@ -1302,7 +1259,6 @@ void spawnfunc_item_invincible (void) {
 // compatibility:
 void spawnfunc_item_quad (void) {self.classname = "item_strength";spawnfunc_item_strength();}
 
-float GiveItems(entity e, float beginarg, float endarg);
 void target_items_use (void)
 {
 	if(activator.classname == "droppedweapon")
@@ -1485,13 +1441,6 @@ void spawnfunc_item_jetpack(void)
 	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
 
-
-#define OP_SET 0
-#define OP_MIN 1
-#define OP_MAX 2
-#define OP_PLUS 3
-#define OP_MINUS 4
-
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	float v0, v1;
@@ -1601,13 +1550,6 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.regenfield = max(e.regenfield, time + regentime);
 }
-
-#define PREGIVE_WEAPONS(e) WEPSET_DECLARE_A(save_weapons); WEPSET_COPY_AE(save_weapons, e)
-#define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), WEPSET_CONTAINS_AW(save_weapons, b), WEPSET_CONTAINS_EW(e, b), 0, snd_incr, snd_decr)
-#define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
-#define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
-#define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 
 float GiveItems(entity e, float beginarg, float endarg)
 {

@@ -38,14 +38,13 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 FIREBALL_SETTINGS(fireball)
-void spawnfunc_weapon_fireball() { weapon_defaultspawnfunc(WEP_FIREBALL); }
-
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_fireball() { weapon_defaultspawnfunc(WEP_FIREBALL); }
 
 void W_Fireball_Explode (void)
 {
