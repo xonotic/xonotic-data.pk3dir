@@ -716,7 +716,6 @@ void W_WeaponFrame()
 			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
 			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname))));
-			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_DROP)
 		{
@@ -739,7 +738,6 @@ void W_WeaponFrame()
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
 			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname))));
-			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}
 #endif
@@ -805,10 +803,6 @@ void W_WeaponFrame()
 #endif
 }
 
-void weapon_boblayer1(float spd, vector org)
-{
-	// VorteX: haste can be added here
-}
 void W_AttachToShotorg(entity flash, vector offset)
 {
 	entity xflash;

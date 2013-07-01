@@ -191,10 +191,6 @@ void w_ready();
 .float weapon_nextthink;
 .void() weapon_think;
 
-//float	PLAYER_WEAPONSELECTION_DELAY = );
-float	PLAYER_WEAPONSELECTION_SPEED = 18;
-vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
-
 // weapon states (self.weaponentity.state)
 float WS_CLEAR			= 0; // no weapon selected
 float WS_RAISE			= 1; // raise frame
