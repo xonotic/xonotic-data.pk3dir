@@ -640,7 +640,6 @@ float w_crylink(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_CRYLINK);
 			self.current_ammo = ammo_cells;
 			return TRUE;
 		}

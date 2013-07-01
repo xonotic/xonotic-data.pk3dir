@@ -401,7 +401,6 @@ float w_fireball(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_FIREBALL);
 			self.current_ammo = ammo_none;
 			return TRUE;
 		}

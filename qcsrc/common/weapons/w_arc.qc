@@ -249,11 +249,6 @@ float w_arc(float req)
 			//precache_sound ("weapons/W_Arc_Beam_fire.wav");
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			weapon_setup(WEP_ARC);
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
 			return !WEP_CVAR_PRI(arc, ammo) || (self.ammo_cells > 0);

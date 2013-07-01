@@ -212,7 +212,6 @@ float w_hlac(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_HLAC);
 			self.current_ammo = ammo_cells;
 			return TRUE;
 		}

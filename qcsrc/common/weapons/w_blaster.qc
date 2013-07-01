@@ -514,7 +514,6 @@ float W_Laser(float request)
 		
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_LASER);
 			self.current_ammo = ammo_none;
 			return TRUE;
 		}

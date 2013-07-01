@@ -160,7 +160,6 @@ float w_minstanex(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_MINSTANEX);
 			self.current_ammo = ammo_cells;
 			self.minstanex_lasthit = 0;
 			return TRUE;

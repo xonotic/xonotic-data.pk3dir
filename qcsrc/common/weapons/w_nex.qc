@@ -246,7 +246,6 @@ float w_nex(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_NEX);
 			self.current_ammo = ammo_cells;
 			return TRUE;
 		}

@@ -610,7 +610,6 @@ float w_seeker(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_SEEKER);
 			self.current_ammo = ammo_rockets;
 			return TRUE;
 		}

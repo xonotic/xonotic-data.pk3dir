@@ -703,21 +703,6 @@ void w_ready()
 	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
 }
 
-// Setup weapon for client (after this raise frame will be launched)
-void weapon_setup(float windex)
-{
-	entity e;
-	e = get_weaponinfo(windex);
-	self.items &~= IT_AMMO;
-	self.items = self.items | (e.items & IT_AMMO);
-
-	// the two weapon entities will notice this has changed and update their models
-	self.weapon = windex;
-	self.switchingweapon = windex; // to make sure
-	self.weaponname = e.mdl;
-	self.bulletcounter = 0;
-}
-
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl)
 {

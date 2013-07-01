@@ -403,7 +403,6 @@ float w_tuba(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_TUBA);
 			self.current_ammo = ammo_none;
 			self.tuba_instrument = 0;
 			return TRUE;

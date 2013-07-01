@@ -522,7 +522,6 @@ float w_electro(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_ELECTRO);
 			self.current_ammo = ammo_cells;
 			return TRUE;
 		}

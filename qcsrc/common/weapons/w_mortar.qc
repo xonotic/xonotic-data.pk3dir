@@ -391,7 +391,6 @@ float w_glauncher(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_GRENADE_LAUNCHER);
 			self.current_ammo = ammo_rockets;
 			return TRUE;
 		}

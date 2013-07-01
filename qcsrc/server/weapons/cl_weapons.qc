@@ -402,12 +402,17 @@ void W_WeaponFrame()
 		{
 			// end switching!
 			self.switchingweapon = self.switchweapon;
-
 			entity newwep = get_weaponinfo(self.switchweapon);
 
-			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
-			self.weaponentity.state = WS_RAISE;
+			self.items &~= IT_AMMO;
+			self.items = self.items | (newwep.items & IT_AMMO);
+
+			// the two weapon entities will notice this has changed and update their models
+			self.weapon = self.switchweapon;
+			self.weaponname = newwep.mdl;
+			self.bulletcounter = 0; // WEAPONTODO
 			WEP_ACTION(self.switchweapon, WR_SETUP);
+			self.weaponentity.state = WS_RAISE;
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
 			if(newwep.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"))) // prevent accessing undefined cvars

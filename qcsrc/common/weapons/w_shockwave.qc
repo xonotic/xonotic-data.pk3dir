@@ -249,7 +249,6 @@ float w_shotgun(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_SHOTGUN);
 			self.current_ammo = ammo_shells;
 			return TRUE;
 		}

@@ -469,7 +469,6 @@ float W_Devastator(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_DEVASTATOR);
 			self.current_ammo = ammo_rockets;
 			self.rl_release = 1;
 			return TRUE;

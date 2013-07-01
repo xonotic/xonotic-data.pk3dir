@@ -210,7 +210,6 @@ float w_rifle(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_RIFLE);
 			self.current_ammo = ammo_nails;
 			return TRUE;
 		}

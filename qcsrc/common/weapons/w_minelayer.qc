@@ -537,7 +537,6 @@ float w_minelayer(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_MINE_LAYER);
 			self.current_ammo = ammo_rockets;
 			return TRUE;
 		}

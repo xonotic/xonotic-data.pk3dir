@@ -845,7 +845,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;

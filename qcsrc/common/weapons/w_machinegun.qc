@@ -309,7 +309,6 @@ float w_uzi(float req)
 		}
 		case WR_SETUP:
 		{
-			weapon_setup(WEP_UZI);
 			self.current_ammo = ammo_nails;
 			return TRUE;
 		}
