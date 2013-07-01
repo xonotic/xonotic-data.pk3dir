@@ -17,15 +17,6 @@ float W_WeaponRateFactor()
 	return t;
 }
 
-void W_SwitchWeapon_Force(entity e, float w)
-{
-	e.cnt = e.switchweapon;
-	e.switchweapon = w;
-	e.selectweapon = w;
-}
-
-.float antilag_debug;
-
 // VorteX: static frame globals
 float WFRAME_DONTCHANGE = -1;
 float WFRAME_FIRE1 = 0;
@@ -35,10 +26,6 @@ float WFRAME_RELOAD = 3;
 .float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
-
-vector w_shotorg;
-vector w_shotdir;
-vector w_shotend;
 
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
@@ -53,131 +40,6 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 		}
 		player.prevstrengthsoundattempt = time;
 }
-
-// this function calculates w_shotorg and w_shotdir based on the weapon model
-// offset, trueaim and antilag, and won't put w_shotorg inside a wall.
-// make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
-{
-	float nudge = 1; // added to traceline target and subtracted from result
-	float oldsolid;
-	vector vecs, dv;
-	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_RIFLE)
-		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	else
-		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	if(antilag)
-		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-		// passing world, because we do NOT want it to touch dphitcontentsmask
-	else
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
-	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-
-	vector vf, vr, vu;
-	vf = v_forward;
-	vr = v_right;
-	vu = v_up;
-	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
-	v_forward = vf;
-	v_right = vr;
-	v_up = vu;
-
-	// un-adjust trueaim if shotend is too close
-	if(vlen(w_shotend - (ent.origin + ent.view_ofs)) < autocvar_g_trueaim_minrange)
-		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
-
-	// track max damage
-	if(accuracy_canbegooddamage(ent))
-		accuracy_add(ent, ent.weapon, maxdamage, 0);
-
-	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
-
-	if(ent.weaponentity.movedir_x > 0)
-		vecs = ent.weaponentity.movedir;
-	else
-		vecs = '0 0 0';
-
-	dv = v_right * -vecs_y + v_up * vecs_z;
-	w_shotorg = ent.origin + ent.view_ofs + dv;
-
-	// now move the shotorg forward as much as requested if possible
-	if(antilag)
-	{
-		if(ent.antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
-		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-	}
-	else
-		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
-	w_shotorg = trace_endpos - v_forward * nudge;
-	// calculate the shotdir from the chosen shotorg
-	w_shotdir = normalize(w_shotend - w_shotorg);
-
-	if (antilag)
-	if (!ent.cvar_cl_noantilag)
-	{
-		if (autocvar_g_antilag == 1) // switch to "ghost" if not hitting original
-		{
-			traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
-			if (!trace_ent.takedamage)
-			{
-				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
-				{
-					entity e;
-					e = trace_ent;
-					traceline(w_shotorg, e.origin, MOVE_NORMAL, ent);
-					if(trace_ent == e)
-						w_shotdir = normalize(trace_ent.origin - w_shotorg);
-				}
-			}
-		}
-		else if(autocvar_g_antilag == 3) // client side hitscan
-		{
-			// this part MUST use prydon cursor
-			if (ent.cursor_trace_ent)                 // client was aiming at someone
-			if (ent.cursor_trace_ent != ent)         // just to make sure
-			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
-			{
-				// verify that the shot would miss without antilag
-				// (avoids an issue where guns would always shoot at their origin)
-				traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
-				if (!trace_ent.takedamage)
-				{
-					// verify that the shot would hit if altered
-					traceline(w_shotorg, ent.cursor_trace_ent.origin, MOVE_NORMAL, ent);
-					if (trace_ent == ent.cursor_trace_ent)
-						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
-					else
-						print("antilag fail\n");
-				}
-			}
-		}
-	}
-
-	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
-
-	if (!g_norecoil)
-		ent.punchangle_x = recoil * -1;
-
-	if (snd != "")
-	{
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
-		W_PlayStrengthSound(ent);
-	}
-
-	// nudge w_shotend so a trace to w_shotend hits
-	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
-}
-
-#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {
@@ -947,23 +809,6 @@ void weapon_boblayer1(float spd, vector org)
 {
 	// VorteX: haste can be added here
 }
-
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
-{
-	vector mdirection;
-	float mspeed;
-	vector outvelocity;
-
-	mvelocity = mvelocity * g_weaponspeedfactor;
-
-	mdirection = normalize(mvelocity);
-	mspeed = vlen(mvelocity);
-
-	outvelocity = get_shotvelocity(pvelocity, mdirection, mspeed, (forceAbsolute ? 0 : autocvar_g_projectiles_newton_style), autocvar_g_projectiles_newton_style_2_minfactor, autocvar_g_projectiles_newton_style_2_maxfactor);
-
-	return outvelocity;
-}
-
 void W_AttachToShotorg(entity flash, vector offset)
 {
 	entity xflash;
@@ -995,47 +840,6 @@ void W_AttachToShotorg(entity flash, vector offset)
 		setorigin(xflash, offset);
 	}
 }
-
-#if 0
-float mspercallsum;
-float mspercallsstyle;
-float mspercallcount;
-#endif
-void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
-{
-	if(missile.owner == world)
-		error("Unowned missile");
-
-	dir = dir + upDir * (pUpSpeed / pSpeed);
-	dir_z += pZSpeed / pSpeed;
-	pSpeed *= vlen(dir);
-	dir = normalize(dir);
-
-#if 0
-	if(autocvar_g_projectiles_spread_style != mspercallsstyle)
-	{
-		mspercallsum = mspercallcount = 0;
-		mspercallsstyle = autocvar_g_projectiles_spread_style;
-	}
-	mspercallsum -= gettime(GETTIME_HIRES);
-#endif
-	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
-#if 0
-	mspercallsum += gettime(GETTIME_HIRES);
-	mspercallcount += 1;
-	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
-#endif
-
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
-}
-
-void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
-{
-	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
-}
-
-#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
-#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload) // WEAPONTODO: why does this have ammo_type?
 {
