@@ -9,7 +9,6 @@ void Send_WeaponComplain(entity e, float wpn, string wpnname, float type)
 	WriteByte(MSG_ONE, type);
 }
 
-.float hasweapon_complain_spam;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
 	float f;
@@ -106,7 +105,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	return FALSE;
 }
 
-.float weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
 {
 	// We cannot tokenize in this function, as GiveItems calls this
@@ -185,8 +183,6 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	}
 	return 0;
 }
-
-#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE)
 
 void W_SwitchWeapon_Force(entity e, float w)
 {

@@ -1,9 +1,3 @@
-.float antilag_debug;
-
-vector w_shotorg;
-vector w_shotdir;
-vector w_shotend;
-
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
@@ -123,12 +117,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
 }
 
-#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
-#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
-#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
-
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
@@ -178,21 +166,16 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
-void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
+void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread) // WEAPONTODO
 {
 	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
 }
-
-#define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
-#define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
 
 // ====================
 //  Ballistics Tracing
 // ====================
 
-.float railgundistance;
-.vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
 	vector hitloc, force, endpoint, dir;
@@ -336,10 +319,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	trace_dphitq3surfaceflags = endq3surfaceflags;
 }
 
-.float dmg_force;
-.float dmg_radius;
-.float dmg_total;
-//.float last_yoda;
 void W_BallisticBullet_Hit (void)
 {
 	float f, q, g;
@@ -378,11 +357,6 @@ void W_BallisticBullet_Hit (void)
 
 	self.enemy = other; // don't hit the same player twice with the same bullet
 }
-
-.void(void) W_BallisticBullet_LeaveSolid_think_save;
-.float W_BallisticBullet_LeaveSolid_nextthink_save;
-.vector W_BallisticBullet_LeaveSolid_origin;
-.vector W_BallisticBullet_LeaveSolid_velocity;
 
 void W_BallisticBullet_LeaveSolid_think()
 {
@@ -545,13 +519,11 @@ void W_BallisticBullet_Touch (void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void endFireBallisticBullet()
+void endFireBallisticBullet() // WEAPONTODO
 {
 	endzcurveparticles();
 }
 
-entity fireBallisticBullet_trace_callback_ent;
-float fireBallisticBullet_trace_callback_eff;
 void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)

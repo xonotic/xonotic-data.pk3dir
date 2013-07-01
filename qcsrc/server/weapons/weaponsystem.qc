@@ -27,20 +27,6 @@ float WFRAME_RELOAD = 3;
 
 void(float fr, float t, void() func) weapon_thinkf;
 
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
-void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
-{
-	if((player.items & IT_STRENGTH)
-		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
-		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-			player.prevstrengthsound = time;
-		}
-		player.prevstrengthsoundattempt = time;
-}
-
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = self.owner;

@@ -1,4 +1,3 @@
-.float savenextthink;
 void thrown_wep_think()
 {
 	self.owner = world;
