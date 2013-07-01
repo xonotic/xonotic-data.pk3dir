@@ -573,114 +573,6 @@ void CL_SpawnWeaponentity()
 	}
 }
 
-void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
-{
-	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
-	WriteByte(MSG_ONE, wpn);
-	WriteString(MSG_ONE, wpnname);
-	WriteByte(MSG_ONE, type);
-}
-
-.float hasweapon_complain_spam;
-
-float client_hasweapon(entity cl, float wpn, float andammo, float complain)
-{
-	float f;
-	entity oldself;
-
-	if(time < self.hasweapon_complain_spam)
-		complain = 0;
-	if(complain)
-		self.hasweapon_complain_spam = time + 0.2;
-
-	if (wpn < WEP_FIRST || wpn > WEP_LAST)
-	{
-		if (complain)
-			sprint(self, "Invalid weapon\n");
-		return FALSE;
-	}
-	if (WEPSET_CONTAINS_EW(cl, wpn))
-	{
-		if (andammo)
-		{
-			if(cl.items & IT_UNLIMITED_WEAPON_AMMO)
-			{
-				f = 1;
-			}
-			else
-			{
-				oldself = self;
-				self = cl;
-				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
-				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
-
-				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				entity mine;
-				if(wpn == WEP_MINE_LAYER)
-				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-					f = 1;
-
-				self = oldself;
-			}
-			if (!f)
-			{
-				if (complain)
-				if(IS_REAL_CLIENT(cl))
-				{
-					play2(cl, "weapons/unavailable.wav");
-					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
-				}
-				return FALSE;
-			}
-		}
-		return TRUE;
-	}
-	if (complain)
-	{
-		// DRESK - 3/16/07
-		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
-		{
-			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
-
-			if(autocvar_g_showweaponspawns)
-			{
-				entity e;
-				string s;
-
-				e = get_weaponinfo(wpn);
-				s = e.model2;
-
-				for(e = world; (e = findfloat(e, weapon, wpn)); )
-				{
-					if(e.classname == "droppedweapon")
-						continue;
-					if not(e.flags & FL_ITEM)
-						continue;
-					WaypointSprite_Spawn(
-						s,
-						1, 0,
-						world, e.origin,
-						self, 0,
-						world, enemy,
-						0,
-						RADARICON_NONE, '0 0 0'
-					);
-				}
-			}
-		}
-		else
-		{
-			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
-		}
-
-		play2(cl, "weapons/unavailable.wav");
-	}
-	return FALSE;
-}
-
 // Weapon subs
 void w_clear()
 {
@@ -701,24 +593,6 @@ void w_ready()
 	if (self.weaponentity)
 		self.weaponentity.state = WS_READY;
 	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
-}
-
-// perform weapon to attack (weaponstate and attack_finished check is here)
-void W_SwitchToOtherWeapon(entity pl)
-{
-	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
-	float w, ww;
-	w = pl.weapon;
-	if(WEPSET_CONTAINS_EW(pl, w))
-	{
-		WEPSET_ANDNOT_EW(pl, w);
-		ww = w_getbestweapon(pl);
-		WEPSET_OR_EW(pl, w);
-	}
-	else
-		ww = w_getbestweapon(pl);
-	if(ww)
-		W_SwitchWeapon_Force(pl, ww);
 }
 
 .float prevdryfire;
