@@ -453,6 +453,11 @@ float w_tuba(float req)
 		{
 			return TRUE; // tuba has infinite ammo
 		}
+		case WR_CONFIG:
+		{
+			WEP_CONFIG_SETTINGS(TUBA_SETTINGS(tuba))
+			return TRUE;
+		}
 		case WR_SUICIDEMESSAGE:
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
