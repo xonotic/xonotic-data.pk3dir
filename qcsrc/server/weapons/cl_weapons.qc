@@ -1,8 +1,3 @@
-void W_TriggerReload()
-{
-    WEP_ACTION(self.weapon, WR_RELOAD);
-}
-
 // switch between weapons
 void W_SwitchWeapon(float imp)
 {
@@ -15,7 +10,7 @@ void W_SwitchWeapon(float imp)
 	}
 	else
 	{
-		W_TriggerReload();
+		WEP_ACTION(self.weapon, WR_RELOAD);
 	}
 }
 
