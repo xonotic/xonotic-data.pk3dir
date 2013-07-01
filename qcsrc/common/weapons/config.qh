@@ -11,7 +11,6 @@ float WEP_CONFIG_COUNT;
 string wep_config_queue[MAX_WEP_CONFIG];
 
 #define WEP_CONFIG_QUEUE(a) { \
-	print(sprintf("foobar: %g: %s\n", WEP_CONFIG_COUNT, a)); \
 	wep_config_queue[WEP_CONFIG_COUNT] = a; \
 	++WEP_CONFIG_COUNT; }
 
@@ -49,7 +48,8 @@ string wep_config_queue[MAX_WEP_CONFIG];
 			#name, \
 			autocvar_g_balance_##weapon##_##name)) } \
 	#endif
-	
+
+// WEAPONTODO: remove prop
 #define WEP_CONFIG_WRITE_PROPS(weapon,prop,name) \
 	{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_%s %g\n", \
 			#weapon, \

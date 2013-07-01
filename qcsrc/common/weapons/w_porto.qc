@@ -297,6 +297,15 @@ float w_porto(float req)
 					
 			return TRUE;
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			PORTO_SETTINGS(porto)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_THINK:
 		{
 			if(WEP_CVAR(porto, secondary))

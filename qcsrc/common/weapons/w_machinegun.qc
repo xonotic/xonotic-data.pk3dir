@@ -349,6 +349,15 @@ float w_uzi(float req)
 			}
 			return ammo_amount;
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			UZI_SETTINGS(uzi)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo)), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");

@@ -563,6 +563,15 @@ float w_minelayer(float req)
 			else
 				return FALSE;
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			MINELAYER_SETTINGS(minelayer)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RESETPLAYER:
 		{
 			self.minelayer_mines = 0;

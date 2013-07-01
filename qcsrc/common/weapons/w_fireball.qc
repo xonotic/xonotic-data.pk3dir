@@ -414,6 +414,15 @@ float w_fireball(float req)
 		{
 			return TRUE; // fireball has infinite ammo
 		}
+		case WR_CONFIG:
+		{
+			#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name)
+			#define WEP_ADD_PROP(weapon,prop,name) WEP_CONFIG_WRITE_PROPS(weapon,prop,name)
+			FIREBALL_SETTINGS(fireball)
+			#undef WEP_ADD_CVAR
+			#undef WEP_ADD_PROP
+			return TRUE;
+		}
 		case WR_RESETPLAYER:
 		{
 			self.fireball_primarytime = time;
