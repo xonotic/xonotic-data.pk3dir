@@ -51,5 +51,12 @@ void Dump_Weapon_Settings(void)
 		print(sprintf("#%d: %s: %d settings...\n", i, W_Name(i), WEP_CONFIG_COUNT));
 		totalsettings += WEP_CONFIG_COUNT;
 	}
+
+	// clear queue now that we're finished
+	WEP_CONFIG_COUNT = 0;
+	for(x = 0; x <= MAX_WEP_CONFIG; ++x)
+		{ wep_config_queue[x] = string_null; }
+
+	// extra information
 	print(sprintf("Totals: %d weapons, %d settings\n", (i - 1), totalsettings));
 }
