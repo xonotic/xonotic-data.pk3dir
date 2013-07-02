@@ -25,34 +25,29 @@ string wep_config_queue[MAX_WEP_CONFIG];
 			cvar(sprintf("g_balance_%s_primary_%s", #weapon, #name)))) } \
 	#endif \
 	#if mode == MO_SEC \
-		{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_secondary_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_secondary_##name)) } \
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_secondary_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_secondary_%s", #weapon, #name)))) } \
 	#endif \
 	#if mode == MO_BOTH \
-		{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_primary_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_primary_##name)) } \
-		{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_secondary_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_secondary_##name)) } \
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_primary_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_primary_%s", #weapon, #name)))) } \
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_secondary_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_secondary_%s", #weapon, #name)))) } \
 	#endif \
 	#if mode == MO_NONE \
-		{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_##name)) } \
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_%s", #weapon, #name)))) } \
 	#endif
 
 // WEAPONTODO: remove prop
 #define WEP_CONFIG_WRITE_PROPS(weapon,name) \
-	{ WEP_CONFIG_QUEUE(sprintf("set g_balance_%s_%s %g\n", \
-			#weapon, \
-			#name, \
-			autocvar_g_balance_##weapon##_##name)) } 
+		{ WEP_CONFIG_QUEUE( \
+			sprintf("set g_balance_%s_%s %g\n", #weapon, #name, \
+			cvar(sprintf("g_balance_%s_%s", #weapon, #name)))) }
 
 #define WEP_CONFIG_SETTINGS(wepsettings) \
 	#define WEP_ADD_CVAR(weapon,mode,name) WEP_CONFIG_WRITE_CVARS(weapon,mode,name) \

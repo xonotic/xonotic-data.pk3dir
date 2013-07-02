@@ -35,7 +35,6 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
 	WEP_ADD_CVAR(weapon, MO_NONE, speedaccel) \
 	WEP_ADD_CVAR(weapon, MO_NONE, speedstart) \
-	WEP_ADD_CVAR(weapon, MO_NONE, foobarsdfsd) \
 	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
 	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
 	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
