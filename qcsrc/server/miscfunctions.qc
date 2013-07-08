@@ -1416,6 +1416,8 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTN_NONE);
     }
 #endif
+
+    PrecacheForCSQC();
 }
 
 // WARNING: this kills the trace globals

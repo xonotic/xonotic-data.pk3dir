@@ -60,8 +60,11 @@ FILES_CSPROGS = $(shell find client common warpzonelib csqcmodellib -type f -not
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(QCC) $(QCCFLAGS)
 
+server/precache-for-csqc.qc: $(FILES_CSPROGS)
+	sh collect-precache.sh
+
 FILES_PROGS = $(shell find server common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
-../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
+../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE) server/precache-for-csqc.qc
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(QCC) $(QCCFLAGS)
 
