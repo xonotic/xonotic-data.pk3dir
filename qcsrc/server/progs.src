@@ -100,7 +100,6 @@ secret.qh
 
 scores_rules.qc
 
-precache-for-csqc.qc
 miscfunctions.qc
 
 waypointsprites.qc

@@ -49,7 +49,7 @@ qc-recursive: ../menu.dat ../progs.dat ../csprogs.dat
 
 .PHONY: clean
 clean:
-	rm -f ../progs.dat ../menu.dat ../csprogs.dat
+	rm -f ../progs.dat ../menu.dat ../csprogs.dat server/precache-for-csqc.inc
 
 $(QCCVERSIONFILE):
 	$(RM) qccversion.*
@@ -60,11 +60,11 @@ FILES_CSPROGS = $(shell find client common warpzonelib csqcmodellib -type f -not
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(QCC) $(QCCFLAGS)
 
-server/precache-for-csqc.qc: $(FILES_CSPROGS)
+server/precache-for-csqc.inc: $(FILES_CSPROGS)
 	sh collect-precache.sh
 
 FILES_PROGS = $(shell find server common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
-../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE) server/precache-for-csqc.qc
+../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE) server/precache-for-csqc.inc
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(QCC) $(QCCFLAGS)
 

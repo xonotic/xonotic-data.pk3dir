@@ -1417,7 +1417,7 @@ void precache()
     }
 #endif
 
-    PrecacheForCSQC();
+#include "precache-for-csqc.inc"
 }
 
 // WARNING: this kills the trace globals
