@@ -8,6 +8,7 @@ QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git ha
 QCCFLAGS ?= \
 	-std=fteqcc \
 	-Werror -Wall \
+	-Wcpp \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
 	-Wno-uninitialized-global \
