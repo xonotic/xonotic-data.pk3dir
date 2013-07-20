@@ -471,7 +471,7 @@ float TD_CheckTeams()
 	ready_needed_factor = bound(0.5, cvar("g_td_majority_factor"), 0.999);
 	ready_needed_count = floor(num_players * ready_needed_factor) + 1;
 	
-	if(readycount >= ready_needed_count)
+	if(readycount >= ready_needed_count || time >= ready_timeout)
 		return TRUE;
 	
 	allowed_to_spawn = TRUE;
@@ -575,6 +575,8 @@ void td_Initialize()
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
 	
 	readyrestart_happened = TRUE; // disable normal ready command
+	
+	ready_timeout = time + 30;
 	
 	round_handler_Spawn(TD_CheckTeams, TD_CheckWinner, TD_RoundStart);
 	round_handler_Init(5, 10, 180);

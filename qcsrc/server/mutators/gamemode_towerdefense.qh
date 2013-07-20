@@ -26,3 +26,5 @@ float last_check;
 
 .float level;
 .float last_trace;
+
+float ready_timeout;
