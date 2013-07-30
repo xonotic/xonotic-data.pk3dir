@@ -33,6 +33,7 @@
 #include "xonotic/dialog_settings_video.c"
 #include "xonotic/dialog_settings_effects.c"
 #include "xonotic/dialog_settings_audio.c"
+#include "xonotic/dialog_settings_game.c"
 #include "xonotic/dialog_settings_user.c"
 #include "xonotic/dialog_settings_misc.c"
 #include "xonotic/dialog_multiplayer.c"
