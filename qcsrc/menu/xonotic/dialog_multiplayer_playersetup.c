@@ -55,6 +55,33 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
+	
+	// Statistic Stuff -Debugger
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player Statistics:")));
+	me.TR(me);
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Total playing time:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Last played:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Games played:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Win / Losses:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Kills / Deaths:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("CTF elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DM elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("TDM elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DUEL elo:")));
+	me.TR(me);
+	
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
