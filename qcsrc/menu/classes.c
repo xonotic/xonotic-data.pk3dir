@@ -111,3 +111,4 @@
 #include "xonotic/dialog_hudpanel_physics.c"
 #include "xonotic/dialog_hudpanel_centerprint.c"
 #include "xonotic/slider_picmip.c"
+#include "xonotic/dialog_multiplayer_playersetup_notification.c"

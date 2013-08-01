@@ -58,7 +58,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	
 	// Statistic Stuff -Debugger
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player Statistics:")));
+	me.TDempty(me, 0.5);
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Player Statistics:")));
 	me.TR(me);
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
