@@ -43,8 +43,8 @@ void XonoticGameSettingsTab_fill(entity me)
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Notification"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.modelDialog;
-		// TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
+			e.onClickEntity = main.notificationDialog;
+		// TODO: Show all the notification stuff here
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Playermodel"), '0 0 0'));
