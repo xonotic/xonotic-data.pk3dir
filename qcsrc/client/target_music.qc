@@ -42,7 +42,11 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(e.noise == "")
+#ifdef COMPAT_XON070_BGMVOLUME
+				cvar_settemp("bgmvolume", ftos(vol));
+#else
 				cvar_set("bgmvolume", ftos(vol));
+#endif
 			else if(vol0 < 0)
 				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTN_NONE); // restart
 			else
@@ -52,10 +56,10 @@ void TargetMusic_Advance()
 	}
 	music_trigger = world;
 
-	if(best)
-		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
-	else
+	if(best.noise == "")
 		bgmtime = gettime(GETTIME_CDTRACK);
+	else
+		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
 }
 
 void Init_TargetMusic()

@@ -35,6 +35,7 @@ float __engine_check;
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
+void Init_TargetMusic();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
@@ -151,6 +152,7 @@ void CSQC_Init(void)
 	minimapname = strzone(minimapname);
 
 	WarpZone_Init();
+	Init_TargetMusic();
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
 	hud_configure_prev = -1;
