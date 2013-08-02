@@ -1080,7 +1080,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "cdtrack")
 		{
-			t = car(s); s = cdr(s); a = stof(t);
+			t = car(s); s = cdr(s);
 			if(pGametypeToSet) // FIXME is this check right here?
 			{
 				if not(cvar_value_issafe(t))
