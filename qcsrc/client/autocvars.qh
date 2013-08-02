@@ -3,7 +3,7 @@ float autocvar__hud_configure;
 string autocvar__hud_panelorder;
 float autocvar__menu_alpha;
 string autocvar_accuracy_color_levels;
-float autocvar_bgmvolume;
+float autocvar_musicvolume;
 float autocvar_camera_chase_smoothly;
 float autocvar_camera_enable;
 float autocvar_camera_forward_follows;

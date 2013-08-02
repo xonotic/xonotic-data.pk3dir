@@ -1,8 +1,6 @@
-float music_disabled;
 entity music_default;
 entity music_target;
 entity music_trigger;
-// FIXME also control bgmvolume here, to not require a target_music for the default track.
 
 .float state;
 .float lastvol;
@@ -40,10 +38,12 @@ void TargetMusic_Advance()
 			else
 				e.state = 0;
 		}
-		vol = e.state * e.volume * autocvar_bgmvolume;
+		vol = e.state * e.volume * autocvar_musicvolume;
 		if(vol != vol0)
 		{
-			if(vol0 < 0)
+			if(e.noise == "")
+				cvar_set("bgmvolume", ftos(vol));
+			else if(vol0 < 0)
 				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTN_NONE); // restart
 			else
 				sound(e, CH_BGM_SINGLE, "", vol, ATTN_NONE);
@@ -56,6 +56,18 @@ void TargetMusic_Advance()
 		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
 	else
 		bgmtime = gettime(GETTIME_CDTRACK);
+}
+
+void Init_TargetMusic()
+{
+	music_default = spawn();
+	music_default.enttype = ENT_CLIENT_TRIGGER_MUSIC;
+	music_default.count = 0;
+	music_default.noise = "";
+	music_default.volume = 1;
+	music_default.fade_time = 2;
+	music_default.fade_rate = 2;
+	music_default.state = 2;
 }
 
 void Net_TargetMusic()
@@ -104,13 +116,6 @@ void Net_TargetMusic()
 		if(tim == 0)
 		{
 			music_default = e;
-			if(!music_disabled)
-			{
-				e.state = 2;
-				cvar_settemp("music_playlist_index", "-1"); // don't use playlists
-				localcmd("cd stop\n"); // just in case
-				music_disabled = 1;
-			}
 		}
 		else
 		{

@@ -28,8 +28,10 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "bgmvolume");
-		makeMulti(s, "snd_channel8volume");
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "musicvolume");
+#ifdef COMPAT_XON070_BGMVOLUME
+		makeMulti(s, "bgmvolume");
+#endif
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Music:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
