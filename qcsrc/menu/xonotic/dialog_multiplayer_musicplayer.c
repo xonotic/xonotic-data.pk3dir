@@ -21,19 +21,15 @@ entity makeXonoticMusicPlayerTab()
 void XonoticMusicPlayerTab_fill(entity me)
 {
 	entity e;
-	entity btn;
 	entity soundList, playList;
 	float columns_nospacing = (me.columns - 0.2);
 
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, 0.5, btn = makeXonoticButton(_("Clear"), '0 0 0'));
-			btn.onClick = InputBox_Clear_Click;
-		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 2.5, e = makeXonoticInputBox(0, string_null));
 			soundList = makeXonoticSoundList();
 			e.onChange = SoundList_Filter_Change;
 			e.onChangeEntity = soundList;
-			btn.onClickEntity = e;
 			soundList.controlledTextbox = e;
 			playList = makeXonoticPlayList();
 			soundList.playlist = playList;
