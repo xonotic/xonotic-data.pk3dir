@@ -59,13 +59,12 @@ string XonoticSoundList_soundName(entity me, float i )
 void XonoticSoundList_getSounds(entity me)
 {
 	string s;
-	float i;
 
 	if(me.filterString)
 		//subdirectory in filterString allowed
-		s=strcat("sound/cdtracks/*", me.filterString, "*.ogg");
+		s = strcat("sound/cdtracks/*", me.filterString, "*.ogg");
 	else
-		s="sound/cdtracks/*.ogg";
+		s = "sound/cdtracks/*.ogg";
 
 	if(me.listSound >= 0)
 		search_end(me.listSound);
