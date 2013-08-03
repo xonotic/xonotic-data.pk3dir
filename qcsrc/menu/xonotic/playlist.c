@@ -19,6 +19,8 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayList, columnNameOrigin, float, 0)
 	ATTRIB(XonoticPlayList, columnNameSize, float, 0)
+	ATTRIB(XonoticPlayList, columnNumberOrigin, float, 0)
+	ATTRIB(XonoticPlayList, columnNumberSize, float, 0)
 	ATTRIB(XonoticPlayList, realUpperMargin, float, 0)
 	ATTRIB(XonoticPlayList, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayList, itemAbsSize, vector, '0 0 0')
@@ -60,8 +62,11 @@ void XonoticPlayList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnNameSize = 1 - 2 * me.realFontSize_x;
+	me.columnNumberOrigin = 0;
+	me.columnNumberSize = 3 * me.realFontSize_x;
+
+	me.columnNameOrigin = me.columnNumberSize + me.realFontSize_x;
+	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize_x;
 }
 
 void XonoticPlayList_addToPlayList(entity me, string track)
@@ -143,12 +148,13 @@ void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float i
 	{
 		float f = cvar("music_playlist_sampleposition0");
 		if(f == 0 || (((time * 2) & 1) && f > 0))
-			draw_Text(me.realUpperMargin * eY, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
 
-	s = argv(i);
-	s = strcat(ftos(i+1), ") ", s);
-	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
+	s = ftos(i+1);
+	draw_CenterText(me.realUpperMargin * eY + (me.columnNumberOrigin + 0.5 * me.columnNumberSize) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+
+	s = draw_TextShortenToWidth(argv(i), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
