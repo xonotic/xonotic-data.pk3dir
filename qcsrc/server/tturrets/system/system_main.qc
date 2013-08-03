@@ -145,7 +145,7 @@ void turret_projectile_explode()
 {
     
     self.takedamage = DAMAGE_NO;
-    self.event_damage = SUB_Null;    
+    self.event_damage = func_null;    
 #ifdef TURRET_DEBUG
     float d;
     d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
@@ -605,7 +605,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -6;
 
     // player
-    if (e_target.flags & FL_CLIENT)
+    if (IS_CLIENT(e_target))
     {
         if not (validate_flags & TFL_TARGETSELECT_PLAYERS)
             return -7;
@@ -718,9 +718,7 @@ entity turret_select_target()
     float  m_score;  // currently best scoreing target's score
 
     m_score = 0;
-    if(self.enemy)
-	if(self.enemy.takedamage)
-    if(turret_validate_target(self,self.enemy,self.target_validate_flags) > 0)
+    if(self.enemy && self.enemy.takedamage && turret_validate_target(self,self.enemy,self.target_validate_flags) > 0)
     {
         e_enemy = self.enemy;
         m_score = self.turret_score_target(self,e_enemy) * self.target_select_samebias;
@@ -871,7 +869,7 @@ void turret_think()
         // Check if we have a vailid enemy, and try to find one if we dont.
 
         // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
-        float do_target_scan;
+        float do_target_scan = 0;
         if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
             do_target_scan = 1;
 
@@ -1018,7 +1016,7 @@ void turrets_manager_think()
 */
 float turret_stdproc_init (string cvar_base_name, string base, string head, float _turret_type)
 {
-	entity e, ee;
+	entity e, ee = world;
 
     // Are turrets allowed?
     if (autocvar_g_turrets == 0)
@@ -1062,12 +1060,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     self.effects = EF_NODRAW;
     
     // Handle turret teams.
-    if (autocvar_g_assault != 0)
-    {
-        if not (self.team)
-            self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
-    }
-    else if not (teamplay)
+    if not (teamplay)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team, so they dont kill eachother.
 	else if(g_onslaught && self.targetname)
 	{

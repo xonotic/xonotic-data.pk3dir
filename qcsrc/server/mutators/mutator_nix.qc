@@ -96,7 +96,7 @@ void NIX_GiveCurrentWeapon()
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
-			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 0, 0);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
 		weapon_action(nix_weapon, WR_RESETPLAYER);
 
@@ -118,7 +118,7 @@ void NIX_GiveCurrentWeapon()
 	{
 		self.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
 		if(dt >= 1 && dt <= 5)
-			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^3%d^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon)), 1, dt);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
 	}
 
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
@@ -205,7 +205,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 {
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 		NIX_GiveCurrentWeapon();
 	return 0;
 }
@@ -245,6 +245,11 @@ MUTATOR_DEFINITION(mutator_nix)
 		nix_nextweapon = 0;
 
 		NIX_precache();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
 	}
 
 	MUTATOR_ONREMOVE

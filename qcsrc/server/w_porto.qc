@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(PORTO, w_porto, 0, 0, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON, 0, "porto" , "porto", _("Port-O-Launch"))
+REGISTER_WEAPON(
+/* WEP_##id  */ PORTO,
+/* function  */ w_porto,
+/* ammotype  */ 0,
+/* impulse   */ 0,
+/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
+/* rating    */ 0,
+/* model     */ "porto" ,
+/* shortname */ "porto",
+/* fullname  */ _("Port-O-Launch")
+);
 #else
 #ifdef SVQC
 .entity porto_current;
@@ -141,7 +151,7 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.realowner, "^1Out^7-portal created.");
+			centerprint(self.realowner, "^4Out^7-portal created.");
 			W_Porto_Success();
 		}
 		else
@@ -272,7 +282,7 @@ void spawnfunc_weapon_porto (void)
 float w_nexball_weapon(float req);
 float w_porto(float req)
 {
-	vector v_angle_save;
+	//vector v_angle_save;
 
 	if (g_nexball) { return w_nexball_weapon(req); }
 	if (req == WR_AIM)
@@ -326,7 +336,6 @@ float w_porto(float req)
 					ClientData_Touch(self);
 				}
 			}
-			v_angle_save = self.v_angle;
 			if(self.porto_v_angle_held)
 				makevectors(self.porto_v_angle); // override the previously set angles
 
@@ -376,10 +385,6 @@ float w_porto(float req)
 	{
 		// nothing to do
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s felt %s doing the impossible to him");
 	return TRUE;
 }
 #endif

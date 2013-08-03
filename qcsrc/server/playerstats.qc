@@ -5,7 +5,7 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
-void PlayerStats_Init()
+void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
 	playerstats_db = -1;
@@ -20,10 +20,12 @@ void PlayerStats_Init()
 	serverflags |= SERVERFLAG_PLAYERSTATS;	
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
+	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 	PlayerStats_AddEvent(PLAYERSTATS_RANK);
 
     // accuracy stats
@@ -66,12 +68,12 @@ void PlayerStats_AddPlayer(entity e)
 	s = string_null;
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		s = e.crypto_idfp;
-	else if(clienttype(e) == CLIENTTYPE_BOT)
+	else if(IS_BOT_CLIENT(e))
 		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
-	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			s = sprintf("bot#%d", e.playerid);
 		else
 			s = sprintf("player#%d", e.playerid);
@@ -97,7 +99,7 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_AddTeam(float t) // TODO: doesn't this remain unused?
+void PlayerStats_AddTeam(float t)
 {
 	if(playerstats_db < 0)
 		return;
@@ -143,10 +145,10 @@ void PlayerStats_AddEvent(string event_id)
 	}
 }
 
-void PlayerStats_Event(entity e, string event_id, float value)
+float PlayerStats_Event(entity e, string event_id, float value)
 {
-	if(!e.playerstats_id || playerstats_db < 0)
-		return;
+	if((e.playerstats_id == "") || playerstats_db < 0)
+		return 0;
 	
 	string key;
 	float val;
@@ -154,16 +156,21 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
+float PlayerStats_TeamScore(float t, string event_id, float value)
 {
+	if(playerstats_db < 0)
+		return 0;
+
 	string key;
 	float val;
 	key = sprintf("team#%d:%s", t, event_id);
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
 /*
@@ -174,7 +181,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 
 	The following keys are defined:
 
-	V: format version (always 1) - this MUST be the first line!
+	V: format version (always a fixed number) - this MUST be the first line!
 	#: comment (MUST be ignored by any parser)
 	R: release information on the server
 	T: time at which the game ended
@@ -187,28 +194,35 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
 	n: nickname of the player (optional)
 	t: team ID
+	i: player index
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
+			avglatency: average network latency compounded throughout the match
 			wins: number of games won (can only be set if matches is set)
 			matches: number of matches played to the end (not aborted by map switch)
 			joins: number of matches joined (always 1 unless player never played during the match)
 			scoreboardvalid: set to 1 if the player was there at the end of the match
 			total-<scoreboardname>: total score of that scoreboard item
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
-			achievement-<achievementname>: achievement counters
+			achievement-<achievementname>: achievement counters (their "count" is usually 1 if nonzero at all)
+			kills-<index>: number of kills against the indexed player
 			rank <number>: rank of player
 			acc-<weapon netname>-hit: total damage dealt
 			acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
 			acc-<weapon netname>-cnt-hit: amount of shots that actually hit
 			acc-<weapon netname>-cnt-fired: amount of fired shots
 			acc-<weapon netname>-frags: amount of frags dealt by weapon
+
+	Response format (not used yet): see https://gist.github.com/4284222
 */
 
 void PlayerStats_ready(entity fh, entity pass, float status)
 {
+	string t, tn;
 	string p, pn;
 	string e, en;
 	string nn, tt;
@@ -217,9 +231,9 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 1\n");
+			url_fputs(fh, "V 7\n");
 #ifdef WATERMARK
-			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));
@@ -230,6 +244,20 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+			if(teamplay)
+			{
+				for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
+				{
+					url_fputs(fh, sprintf("Q team#%s\n", t));
+					for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+					{
+						float v;
+						v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
+						if(v != 0)
+							url_fputs(fh, sprintf("e %s %g\n", e, v));
+					}
+				}
+			}
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
@@ -325,13 +353,14 @@ void PlayerStats_Accuracy(entity p)
 
         PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
     }
+    //backtrace(strcat("adding player stat accuracy for ", p.netname, ".\n"));
 }
 
 void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
 		return;
-	if(!p.playerstats_id || playerstats_db < 0)
+	if((p.playerstats_id == "") || playerstats_db < 0)
 		return;
 	p.playerstats_addedglobalinfo = TRUE;
 
@@ -343,11 +372,11 @@ void PlayerStats_AddGlobalInfo(entity p)
 	}
 
 	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
-	
-	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
+
+	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
-    if(teamplay)
+	if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
@@ -355,34 +384,49 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	PlayerStats_Accuracy(p);
 
+	if(IS_REAL_CLIENT(p))
+	{
+		if(p.latency_cnt)
+		{
+			float latency = (p.latency_sum / p.latency_cnt);
+			if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		}
+	}
+
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
 }
 
+.float scoreboard_pos;
 void PlayerStats_EndMatch(float finished)
 {
-	entity p, winner;
-	winner = PlayerScore_Sort(score_dummyfield);
-	FOR_EACH_CLIENT(p) // spectators intentionally not included
+	entity p;
+	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
+	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	if(teamplay)
+		PlayerScore_TeamStats();
+	FOR_EACH_CLIENT(p)
 	{
-		PlayerStats_Accuracy(p);
-		if(g_arena || g_lms || g_ca)
-		{
-			if(p.alivetime <= 0)
-				continue;
-		}
-		else
-		{
-			if(p.classname != "player")
-				continue;
-		}
-		PlayerScore_PlayerStats(p);
+		// add personal score rank
+		PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
+
+		if(!p.scoreboard_pos)
+			continue;
+
+		// scoreboard is valid!
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+
+		// add scoreboard position
+		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+
+		// add scoreboard data
+		PlayerScore_PlayerStats(p);
+
+		// if the match ended normally, add winning info
 		if(finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
-			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 		}
 	}
 }

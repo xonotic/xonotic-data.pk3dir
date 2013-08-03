@@ -1,12 +1,22 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", _("Hagar"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HAGAR,
+/* function  */ w_hagar,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 8,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "hagar",
+/* shortname */ "hagar",
+/* fullname  */ _("Hagar")
+);
 #else
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
 
 void W_Hagar_Explode (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_primary_damage, autocvar_g_balance_hagar_primary_edgedamage, autocvar_g_balance_hagar_primary_radius, world, autocvar_g_balance_hagar_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -14,7 +24,7 @@ void W_Hagar_Explode (void)
 
 void W_Hagar_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_secondary_damage, autocvar_g_balance_hagar_secondary_edgedamage, autocvar_g_balance_hagar_secondary_radius, world, autocvar_g_balance_hagar_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -101,6 +111,7 @@ void W_Hagar_Attack (void)
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
 
@@ -144,6 +155,7 @@ void W_Hagar_Attack2 (void)
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 
@@ -197,6 +209,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
+		missile.missile_flags = MIF_SPLASH; 
 		
 		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
 		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
@@ -233,6 +246,9 @@ void W_Hagar_Attack2_Load_Release (void)
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
+	
+	if(time < game_starttime)
+		return;
 
 	float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
@@ -348,7 +364,7 @@ float w_hagar(float req)
 	else if (req == WR_THINK)
 	{
 		float loadable_secondary;
-		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+		loadable_secondary = (autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary);
 
 		if (loadable_secondary)
 			W_Hagar_Attack2_Load(); // must always run each frame
@@ -429,6 +445,17 @@ float w_hagar(float req)
 		if not(self.hagar_load) // require releasing loaded rockets first
 			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_HAGAR_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_HAGAR_MURDER_BURST;
+		else
+			return WEAPON_HAGAR_MURDER_SPRAY;
+	}
 	return TRUE;
 }
 #endif
@@ -455,15 +482,6 @@ float w_hagar(float req)
 		precache_sound("weapons/hagexp1.wav");
 		precache_sound("weapons/hagexp2.wav");
 		precache_sound("weapons/hagexp3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny hagar rockets");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = _("%s was pummeled with a burst of hagar rockets by %s");
-		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = _("%s was pummeled with hagar rockets by %s");
 	}
 	return TRUE;
 }

@@ -214,7 +214,7 @@ float edge_show(vector point,float fsize)
 #endif
 
 var vector pathlib_movenode(vector start,vector end,float doedge);
-vector pathlib_wateroutnode(vector start,vector end)
+vector pathlib_wateroutnode(vector start,vector end,float doedge)
 {
     vector surface;
 
@@ -248,7 +248,7 @@ vector pathlib_wateroutnode(vector start,vector end)
     return end;
 }
 
-vector pathlib_swimnode(vector start,vector end)
+vector pathlib_swimnode(vector start,vector end,float doedge)
 {
     pathlib_movenode_goodnode = 0;
 

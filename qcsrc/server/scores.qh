@@ -25,8 +25,9 @@ float PlayerScore_Add(entity player, float scorefield, float score);
  * Initialize the score of this player if needed.
  * Does nothing in teamplay.
  * Use that when a spectator becomes a player.
+ * Returns whether clearing has been performed
  */
-void PlayerScore_Clear(entity player);
+float PlayerScore_Clear(entity player);
 
 /**
  * Adds a score to the player's team's scores.
@@ -117,5 +118,8 @@ string GetTeamScoreString(float tm, float shortString);
  * Sorts the players and stores their place in the given field, starting with
  * 1. Non-players get 0 written into that field.
  * Returns the beginning of a sorted chain of the non-spectators.
+ * teams: >0: sort by teams first (always strict ordering); <0: sort by teams only (respects strict flag)
+ * strict: return a strict ordering
+ * nospectators: exclude spectators
  */
-entity PlayerScore_Sort(.float field);
+entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);

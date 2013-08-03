@@ -60,7 +60,6 @@ void beam_think()
     entity oldself;
     oldself = self;
     self = self.owner;
-    //w_deathtypestring = "was phased out of existence";
     FireImoBeam (   self.tur_shotorg,
                     self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
                     '-1 -1 -1' * self.shot_radius,

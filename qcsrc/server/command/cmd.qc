@@ -81,7 +81,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 		{
 			if(argv(1) != "")
 			{
-				if(self.flags & FL_CLIENT)
+				if(IS_CLIENT(self))
 				{
 					self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 					
@@ -90,7 +90,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 						self.version_mismatch = 1;
 						ClientKill_TeamChange(-2); // observe
 					} 
-					else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
+					else if(autocvar_g_campaign || autocvar_g_balance_teams) 
 					{
 						//JoinBestTeam(self, FALSE, TRUE);
 					} 
@@ -148,24 +148,24 @@ void ClientCommand_join(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
-				if(self.classname != "player" && !lockteams && !g_arena)
+				if(!IS_PLAYER(self) && !lockteams && !g_arena)
 				{
 					if(nJoinAllowed(self)) 
 					{
-						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
-						
+
 						self.classname = "player";
 						PlayerScore_Clear(self);
-						bprint ("^4", self.netname, "^4 is playing now\n");
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						centerprint(self, PREVENT_JOIN_TEXT);
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 					}
 				}
 			}
@@ -188,12 +188,14 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
 				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
+						if(time < game_starttime) // game is already restarting
+							return;
 						if (self.ready) // toggle
 						{
 							self.ready = FALSE;
@@ -221,40 +223,6 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 		{
 			sprint(self, "\nUsage:^3 cmd ready\n");
 			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_reportcvar(float request, float argc, string command)
-{	
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(argv(1) != "")
-			{
-				float tokens;
-				string s;
-				
-				if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
-				{
-					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-					tokens = tokenize_console(s);
-				}
-				
-				GetCvars(1);
-				
-				return;
-			}
-		}
-			
-		default:
-			sprint(self, "Incorrect parameters for ^2reportcvar^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd reportcvar <cvar>\n");
-			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 		}
 	}
@@ -308,7 +276,7 @@ void ClientCommand_selectteam(float request, float argc)
 		{
 			if(argv(1) != "")
 			{
-				if(self.flags & FL_CLIENT)
+				if(IS_CLIENT(self))
 				{
 					if(teamplay)
 						if not(self.team_forced > 0) 
@@ -318,10 +286,10 @@ void ClientCommand_selectteam(float request, float argc)
 								
 								switch(argv(1))
 								{
-									case "red": selection = COLOR_TEAM1; break;
-									case "blue": selection = COLOR_TEAM2; break;
-									case "yellow": selection = COLOR_TEAM3; break;
-									case "pink": selection = COLOR_TEAM4; break;
+									case "red": selection = NUM_TEAM_1; break;
+									case "blue": selection = NUM_TEAM_2; break;
+									case "yellow": selection = NUM_TEAM_3; break;
+									case "pink": selection = NUM_TEAM_4; break;
 									case "auto": selection = (-1); break;
 									
 									default: selection = 0; break;
@@ -392,13 +360,13 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 		{
 			if(argv(1) != "")
 			{
-				float tokens;
+				//float tokens;
 				string s;
 				
 				if(argc == 2) // undefined cvar: use the default value on the server then
 				{
 					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-					tokens = tokenize_console(s);
+					tokenize_console(s);
 				}
 				
 				GetCvars(1);
@@ -424,13 +392,15 @@ void ClientCommand_spectate(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
 				if(g_arena) { return; } 
 				if(g_lms)
 				{
 					if(self.lms_spectate_warning)
 					{
+						// for the forfeit message...
+						self.lms_spectate_warning = 2;
 						// mark player as spectator
 						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
 					}
@@ -442,12 +412,12 @@ void ClientCommand_spectate(float request)
 					}
 				}
 				
-				if(self.classname == "player" && autocvar_sv_spectate == 1) 
+				if(IS_PLAYER(self) && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
-				
+
 				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
+				if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
 				{
 					sprint(self, "WARNING: you will spectate in the next round.\n");
 					self.caplayer = 0;
@@ -595,7 +565,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
@@ -683,7 +652,6 @@ void SV_ParseClientCommand(string command)
 		case "mv_getpicture": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
-		case "reportcvar": break; // handled by server in this file
 		case "sentcvar": break; // handled by server in this file
 		case "spawn": break; // handled by engine in host_cmd.c
 		

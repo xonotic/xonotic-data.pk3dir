@@ -30,23 +30,18 @@ const float AS_FLOAT		= 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_SPAWN = 102;
-const float TE_CSQC_ZCURVEPARTICLES = 103;
-const float TE_CSQC_NEXGUNBEAMPARTICLE = 104;
-const float TE_CSQC_LIGHTNINGARC = 105;
-const float TE_CSQC_TEAMNAGGER = 106;
-const float TE_CSQC_PINGPLREPORT = 107;
-const float TE_CSQC_ANNOUNCE = 110;
-const float TE_CSQC_TARGET_MUSIC = 111;
-const float TE_CSQC_KILLNOTIFY = 112;
-const float TE_CSQC_KILLCENTERPRINT = 113;
-const float TE_CSQC_CENTERPRINT_GENERIC = 114;
-const float TE_CSQC_WEAPONCOMPLAIN = 115;
-const float TE_CSQC_NEX_SCOPE = 116;
-const float TE_CSQC_MINELAYER_MAXMINES = 117;
-const float TE_CSQC_HAGAR_MAXROCKETS = 118;
-const float TE_CSQC_VEHICLESETUP = 119;
-const float TE_CSQC_SVNOTICE = 120;
+const float TE_CSQC_ZCURVEPARTICLES = 102;
+const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
+const float TE_CSQC_LIGHTNINGARC = 104;
+const float TE_CSQC_TEAMNAGGER = 105;
+const float TE_CSQC_PINGPLREPORT = 106;
+const float TE_CSQC_TARGET_MUSIC = 107;
+const float TE_CSQC_WEAPONCOMPLAIN = 108;
+const float TE_CSQC_NEX_SCOPE = 109;
+const float TE_CSQC_MINELAYER_MAXMINES = 110;
+const float TE_CSQC_HAGAR_MAXROCKETS = 111;
+const float TE_CSQC_VEHICLESETUP = 112;
+const float TE_CSQC_SVNOTICE = 113;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -97,6 +92,11 @@ const float ENT_CLIENT_ACCURACY = 30;
 const float ENT_CLIENT_SHOWNAMES = 31;
 const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
 const float ENT_CLIENT_MODEL = 33;
+const float ENT_CLIENT_ITEM = 34;
+const float ENT_CLIENT_BUMBLE_RAYGUN = 35;
+const float ENT_CLIENT_SPAWNPOINT = 36;
+const float ENT_CLIENT_SPAWNEVENT = 37;
+const float ENT_CLIENT_NOTIFICATION = 38;
 
 const float ENT_CLIENT_TURRET = 40;
 const float ENT_CLIENT_AUXILIARYXHAIR = 50;
@@ -127,6 +127,8 @@ const float KEY_LEFT		=	4;
 const float KEY_RIGHT		=	8;
 const float KEY_JUMP		=	16;
 const float KEY_CROUCH		=	32;
+const float KEY_ATCK		=	64;
+const float KEY_ATCK2		=	128;
 
 ///////////////////////////
 // cvar constants
@@ -164,6 +166,40 @@ const float STAT_HAGAR_LOAD = 57;
 const float STAT_SWITCHINGWEAPON = 58;
 const float STAT_SUPERWEAPONS_FINISHED = 59;
 
+const float STAT_VEHICLESTAT_HEALTH  = 60;
+const float STAT_VEHICLESTAT_SHIELD  = 61;
+const float STAT_VEHICLESTAT_ENERGY  = 62;
+const float STAT_VEHICLESTAT_AMMO1   = 63;
+const float STAT_VEHICLESTAT_RELOAD1 = 64;
+const float STAT_VEHICLESTAT_AMMO2   = 65;
+const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+const float STAT_SECRETS_TOTAL = 70;
+const float STAT_SECRETS_FOUND = 71;
+
+const float STAT_RESPAWN_TIME = 72;
+const float STAT_ROUNDSTARTTIME = 73;
+
+// mod stats (1xx)
+const float STAT_REDALIVE = 100;
+const float STAT_BLUEALIVE = 101;
+const float STAT_YELLOWALIVE = 102;
+const float STAT_PINKALIVE = 103;
+
+// freeze tag
+const float STAT_FROZEN = 104;
+const float STAT_REVIVE_PROGRESS = 105;
+
+// domination
+const float STAT_DOM_TOTAL_PPS = 100;
+const float STAT_DOM_PPS_RED = 101;
+const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_PPS_PINK = 103;
+const float STAT_DOM_PPS_YELLOW = 104;
+
+//const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
+//const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
+
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
@@ -180,42 +216,12 @@ const float HUD_SPIDERBOT       = 10;
 const float HUD_WAKIZASHI       = 11;
 const float HUD_RAPTOR          = 12;
 const float HUD_BUMBLEBEE       = 13;
-const float HUD_VEHICLE_LAST    = 13;
+const float HUD_BUMBLEBEE_GUN   = 14;
+const float HUD_VEHICLE_LAST    = 14;
 
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';
-
-const float STAT_VEHICLESTAT_HEALTH  = 60;
-const float STAT_VEHICLESTAT_SHIELD  = 61;
-const float STAT_VEHICLESTAT_ENERGY  = 62;
-const float STAT_VEHICLESTAT_AMMO1   = 63;
-const float STAT_VEHICLESTAT_RELOAD1 = 64;
-const float STAT_VEHICLESTAT_AMMO2   = 65;
-const float STAT_VEHICLESTAT_RELOAD2 = 66;
-
-const float STAT_SECRETS_TOTAL = 70;
-const float STAT_SECRETS_FOUND = 71;
-
-// mod stats (1xx)
-const float STAT_REDALIVE = 100;
-const float STAT_BLUEALIVE = 101;
-const float STAT_YELLOWALIVE = 102;
-const float STAT_PINKALIVE = 103;
-
-// freeze tag
-const float STAT_FROZEN = 104;
-const float STAT_REVIVE_PROGRESS = 105;
-
-
-const float STAT_DOM_TOTAL_PPS = 100;
-const float STAT_DOM_PPS_RED = 101;
-const float STAT_DOM_PPS_BLUE = 102;
-const float STAT_DOM_PPS_PINK = 103;
-const float STAT_DOM_PPS_YELLOW = 104;
-
-//const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
-//const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
@@ -346,6 +352,9 @@ float PROJECTILE_SPIDERROCKET   = 27;
 float PROJECTILE_WAKIROCKET     = 28;
 float PROJECTILE_WAKICANNON     = 29;
 
+float PROJECTILE_BUMBLE_GUN     = 30;
+float PROJECTILE_BUMBLE_BEAM    = 31;
+
 float SPECIES_HUMAN        =  0;
 float SPECIES_ROBOT_SOLID  =  1;
 float SPECIES_ALIEN        =  2;
@@ -353,81 +362,6 @@ float SPECIES_ANIMAL       =  3;
 float SPECIES_ROBOT_RUSTY  =  4;
 float SPECIES_ROBOT_SHINY  =  5;
 float SPECIES_RESERVED     = 15;
-
-// Deathtypes (weapon deathtypes are the IT_* constants below)
-// NOTE: when adding death types, please add an explanation to Docs/spamlog.txt too.
-float DEATH_SPECIAL_START = 10000;
-float DEATH_FALL = 10000;
-float DEATH_TELEFRAG = 10001;
-float DEATH_DROWN = 10002;
-float DEATH_HURTTRIGGER = 10003;
-float DEATH_LAVA = 10004;
-float DEATH_SLIME = 10005;
-float DEATH_KILL = 10006;
-float DEATH_NOAMMO = 10007;
-float DEATH_SWAMP = 10008;
-float DEATH_TEAMCHANGE = 10009;
-float DEATH_AUTOTEAMCHANGE = 10010;
-float DEATH_CAMP = 10011;
-float DEATH_SHOOTING_STAR = 10012;
-float DEATH_ROT = 10013;
-float DEATH_MIRRORDAMAGE = 10014;
-float DEATH_TOUCHEXPLODE = 10015;
-float DEATH_CHEAT = 10016;
-float DEATH_FIRE = 10017;
-float DEATH_QUIET = 10021;
-
-float  DEATH_VHFIRST       = 10030;
-float  DEATH_VHCRUSH       = 10030;
-float  DEATH_SBMINIGUN     = 10031;
-float  DEATH_SBROCKET      = 10032;
-float  DEATH_SBBLOWUP      = 10033;
-float  DEATH_WAKIGUN       = 10034;
-float  DEATH_WAKIROCKET    = 10035;
-float  DEATH_WAKIBLOWUP    = 10036;
-float  DEATH_RAPTOR_CANNON = 10037;
-float  DEATH_RAPTOR_BOMB   = 10038;
-float  DEATH_RAPTOR_BOMB_SPLIT = 10039;
-float  DEATH_RAPTOR_DEATH  = 10040;
-float  DEATH_VHLAST        = 10040;
-#define DEATH_ISVEHICLE(t)  ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
-
-float DEATH_GENERIC = 10050;
-
-float DEATH_WEAPON = 10100;
-
-float DEATH_CUSTOM = 10300;
-
-float DEATH_TURRET                  = 10500;
-float DEATH_TURRET_EWHEEL           = 10501;
-float DEATH_TURRET_FLAC             = 10502;
-float DEATH_TURRET_MACHINEGUN       = 10503;
-float DEATH_TURRET_WALKER_GUN       = 10504;
-float DEATH_TURRET_WALKER_MEELE     = 10505;
-float DEATH_TURRET_WALKER_ROCKET    = 10506;
-float DEATH_TURRET_HELLION          = 10507;
-float DEATH_TURRET_HK               = 10508;
-float DEATH_TURRET_MLRS             = 10509;
-float DEATH_TURRET_PLASMA           = 10510;
-float DEATH_TURRET_PHASER           = 10511;
-float DEATH_TURRET_TESLA            = 10512;
-float DEATH_TURRET_LAST            = 10512;
-
-float DEATH_WEAPONMASK = 0xFF;
-float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
-float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
-float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus is set)
-float HITTYPE_RESERVED = 0x1000; // unused yet
-
-// macros to access these
-#define DEATH_ISTURRET(t)            ((t) >= DEATH_TURRET && (t) <= DEATH_TURRET_LAST)
-#define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
-#define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
-#define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
-#define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
-#define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
 
 #define FRAGS_PLAYER 0
 #define FRAGS_SPECTATOR -666
@@ -443,62 +377,6 @@ float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
 
-//centerprint ID list
-float CPID_TEAMCHANGE = 1;
-float CPID_CTF_CAPTURESHIELD = 2;
-float CPID_MINSTA_FINDAMMO = 3;
-float CPID_NIX_WPNCHANGE = 4;
-float CPID_DISCONNECT_IDLING = 5;
-float CPID_ROUND_STARTING = 6;
-float CPID_GAME_STARTING = 7;
-float CPID_TIMEOUT_COUNTDOWN = 8;
-float CPID_MOTD = 9;
-float CPID_KH_MSG = 10;
-float CPID_PREVENT_JOIN = 11;
-
-// CSQC centerprint/notify message types
-float MSG_SUICIDE = 0;
-float MSG_KILL = 1;
-float MSG_SPREE = 2;
-float MSG_KILL_ACTION = 3;
-float MSG_KILL_ACTION_SPREE = 4;
-float MSG_INFO = 5;
-float MSG_KA = 6;
-float MSG_RACE = 10;
-
-float KILL_TEAM_RED = 12001;
-float KILL_TEAM_BLUE = 12002;
-float KILL_TEAM_SPREE = 12003;
-float KILL_FIRST_BLOOD = 12004;
-float KILL_FIRST_VICTIM = 12005;
-float KILL_TYPEFRAG = 12006;
-float KILL_TYPEFRAGGED = 12007;
-float KILL_FRAG = 12008;
-float KILL_FRAGGED = 12009;
-float KILL_SPREE = 12010;
-float KILL_END_SPREE = 12011;
-float KILL_SPREE_3 = 12012;
-float KILL_SPREE_5 = 12013;
-float KILL_SPREE_10 = 12014;
-float KILL_SPREE_15 = 12015;
-float KILL_SPREE_20 = 12016;
-float KILL_SPREE_25 = 12017;
-float KILL_SPREE_30 = 12018;
-
-float INFO_GOTFLAG = 13001;
-float INFO_PICKUPFLAG = 13002;
-float INFO_LOSTFLAG = 13003;
-float INFO_RETURNFLAG = 13004;
-float INFO_CAPTUREFLAG = 13005;
-
-float KA_PICKUPBALL = 14001;
-float KA_DROPBALL = 14002;
-
-float RACE_SERVER_RECORD = 15001;
-float RACE_NEW_TIME = 15002;
-float RACE_NEW_RANK = 15003;
-float RACE_FAIL = 15004;
-
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data
 float WR_THINK		= 2; // (SVQC) logic to run every frame
@@ -506,51 +384,14 @@ float WR_CHECKAMMO1	= 3; // (SVQC) checks ammo for weapon
 float WR_CHECKAMMO2	= 4; // (SVQC) checks ammo for weapon
 float WR_AIM		= 5; // (SVQC) runs bot aiming code for this weapon
 float WR_PRECACHE	= 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
-float WR_SUICIDEMESSAGE = 7; // (CSQC) sets w_deathtypestring or leaves it alone (and may inspect w_deathtype for details)
-float WR_KILLMESSAGE    = 8; // (CSQC) sets w_deathtypestring or leaves it alone
+float WR_SUICIDEMESSAGE = 7; // (SVQC) notification number for suicide message (may inspect w_deathtype for details)
+float WR_KILLMESSAGE    = 8; // (SVQC) notification number for kill message (may inspect w_deathtype for details)
 float WR_RELOAD         = 9; // (SVQC) does not need to do anything
 float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
 float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
-
-float HUD_PANEL_WEAPONS		= 0;
-float HUD_PANEL_AMMO		= 1;
-float HUD_PANEL_POWERUPS	= 2;
-float HUD_PANEL_HEALTHARMOR	= 3;
-float HUD_PANEL_NOTIFY		= 4;
-float HUD_PANEL_TIMER		= 5;
-float HUD_PANEL_RADAR		= 6;
-float HUD_PANEL_SCORE		= 7;
-float HUD_PANEL_RACETIMER	= 8;
-float HUD_PANEL_VOTE		= 9;
-float HUD_PANEL_MODICONS	= 10;
-float HUD_PANEL_PRESSEDKEYS	= 11;
-float HUD_PANEL_CHAT		= 12;
-float HUD_PANEL_ENGINEINFO	= 13;
-float HUD_PANEL_INFOMESSAGES	= 14;
-float HUD_PANEL_PHYSICS	= 15;
-float HUD_PANEL_CENTERPRINT	= 16;
-float HUD_PANEL_NUM		= 17; // always last panel id + 1, please increment when adding a new panel
-
-string HUD_PANELNAME_WEAPONS 		= "weapons";
-string HUD_PANELNAME_AMMO	 	= "ammo";
-string HUD_PANELNAME_POWERUPS	 	= "powerups";
-string HUD_PANELNAME_HEALTHARMOR 	= "healtharmor";
-string HUD_PANELNAME_NOTIFY	 	= "notify";
-string HUD_PANELNAME_TIMER	 	= "timer";
-string HUD_PANELNAME_RADAR	 	= "radar";
-string HUD_PANELNAME_SCORE	 	= "score";
-string HUD_PANELNAME_RACETIMER	 	= "racetimer";
-string HUD_PANELNAME_VOTE	 	= "vote";
-string HUD_PANELNAME_MODICONS	 	= "modicons";
-string HUD_PANELNAME_PRESSEDKEYS 	= "pressedkeys";
-string HUD_PANELNAME_CHAT	 	= "chat";
-string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
-string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
-string HUD_PANELNAME_PHYSICS	= "physics";
-string HUD_PANELNAME_CENTERPRINT	= "centerprint";
 
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2

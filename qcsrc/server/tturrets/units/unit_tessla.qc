@@ -47,7 +47,7 @@ entity toast(entity from, float range, float damage)
 float turret_tesla_firecheck()
 {
     // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
-    float do_target_scan;
+    float do_target_scan = 0;
     
     if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
         do_target_scan = 1;
@@ -85,8 +85,6 @@ void turret_tesla_fire()
 {
     entity e, t;
     float d, r, i;
-
-    //w_deathtypestring = "discoverd how a tesla coil works";
 
     d = self.shot_dmg;
     r = self.target_range;

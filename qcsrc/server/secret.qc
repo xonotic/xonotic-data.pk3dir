@@ -10,7 +10,7 @@ void secrets_setstatus() {
  */
 void trigger_secret_touch() {
 	// only a player can trigger this
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	
 	// update secrets found counter
@@ -71,6 +71,6 @@ void spawnfunc_trigger_secret() {
 	// take over the touch() function, so we can mark secret as found
 	self.touch = trigger_secret_touch;
 	// ignore triggering;
-	self.use = SUB_Null;
+	self.use = func_null;
 }
 

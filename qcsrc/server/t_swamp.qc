@@ -54,7 +54,7 @@ void swamp_touch(void)
 {
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if((other.classname != "player")||(other.deadflag != DEAD_NO))
+	if(!IS_PLAYER(other) || other.deadflag != DEAD_NO)
 		return;
 
 	EXACTTRIGGER_TOUCH;
