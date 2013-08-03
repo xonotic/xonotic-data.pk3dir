@@ -15,6 +15,8 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticSoundList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticSoundList, columnNameOrigin, float, 0)
 	ATTRIB(XonoticSoundList, columnNameSize, float, 0)
+	ATTRIB(XonoticSoundList, columnNumberOrigin, float, 0)
+	ATTRIB(XonoticSoundList, columnNumberSize, float, 0)
 	ATTRIB(XonoticSoundList, realUpperMargin, float, 0)
 	ATTRIB(XonoticSoundList, origin, vector, '0 0 0')
 	ATTRIB(XonoticSoundList, itemAbsSize, vector, '0 0 0')
@@ -91,8 +93,11 @@ void XonoticSoundList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnNameSize = 1 - 2 * me.realFontSize_x;
+	me.columnNumberOrigin = 0;
+	me.columnNumberSize = me.realFontSize_x * 3;
+
+	me.columnNameOrigin = me.columnNumberSize;
+	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize_x;
 }
 
 void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
@@ -102,10 +107,11 @@ void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float 
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	s = me.soundName(me,i);
-	if(s == cvar_defstring("menu_cdtrack"))
-		s = strcat(s, " [default menu track]");
-	else if(s == cvar_string("menu_cdtrack"))
-		s = strcat(s, " [current menu track]");
+	if(s == cvar_string("menu_cdtrack")) // current menu track
+		draw_CenterText((me.columnNumberOrigin + 0.5 * me.columnNumberSize) * eX + me.realUpperMargin * eY, "[C]", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	else if(s == cvar_defstring("menu_cdtrack")) // default menu track
+		draw_CenterText((me.columnNumberOrigin + 0.5 * me.columnNumberSize) * eX + me.realUpperMargin * eY, "[D]", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
