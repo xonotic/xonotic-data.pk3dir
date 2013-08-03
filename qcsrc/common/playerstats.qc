@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 float playerstats_db;
 string teamstats_last;
 string playerstats_last;
@@ -17,7 +19,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;	
+	serverflags |= SERVERFLAG_PLAYERSTATS;
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -83,7 +85,7 @@ void PlayerStats_AddPlayer(entity e)
 
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -106,7 +108,7 @@ void PlayerStats_AddTeam(float t)
 
 	string key;
 	key = sprintf("%d", t);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -126,10 +128,10 @@ void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
 		return;
-	
+
 	string key;
 	key = sprintf("*:%s", event_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -149,7 +151,7 @@ float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
 		return 0;
-	
+
 	string key;
 	float val;
 	key = sprintf("%s:%s", e.playerstats_id, event_id);
@@ -194,7 +196,7 @@ float PlayerStats_TeamScore(float t, string event_id, float value)
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
-	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
 	n: nickname of the player (optional)
 	t: team ID
 	i: player index
@@ -430,3 +432,106 @@ void PlayerStats_EndMatch(float finished)
 		}
 	}
 }
+
+
+//// WIP -zykure
+
+/*
+	format spec:
+
+	A collection of lines of the format <key> SPACE <value> NEWLINE, where
+	<key> is always a single character.
+
+	The following keys are defined:
+
+	V: format version (always a fixed number) - this MUST be the first line!
+	#: comment (MUST be ignored by any parser)
+	R: release information on the server
+	T: time at which the game ended
+	G: game type
+	O: mod name (icon request) as in server browser
+	M: map name
+	I: match ID (see "matchid" in g_world.qc
+	S: "hostname" of the server
+	C: number of "unpure" cvar changes
+	U: UDP port number of the server
+	D: duration of the match
+	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
+	n: nickname of the player (optional)
+	t: team ID
+	i: player index
+	e: followed by an event name, a space, and the event count/score
+		event names can be:
+			alivetime: total playing time of the player
+			avglatency: average network latency compounded throughout the match
+			wins: number of games won (can only be set if matches is set)
+			matches: number of matches played to the end (not aborted by map switch)
+			joins: number of matches joined (always 1 unless player never played during the match)
+			scoreboardvalid: set to 1 if the player was there at the end of the match
+			total-<scoreboardname>: total score of that scoreboard item
+			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
+			achievement-<achievementname>: achievement counters (their "count" is usually 1 if nonzero at all)
+			kills-<index>: number of kills against the indexed player
+			rank <number>: rank of player
+			acc-<weapon netname>-hit: total damage dealt
+			acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+			acc-<weapon netname>-cnt-hit: amount of shots that actually hit
+			acc-<weapon netname>-cnt-fired: amount of fired shots
+			acc-<weapon netname>-frags: amount of frags dealt by weapon
+
+	Response format (not used yet): see https://gist.github.com/4284222
+*/
+/*
+void PlayerStatsEntity_ready(entity fh, entity player_stats, float status)
+{
+	string s;
+	string key, value;
+
+	switch(status)
+	{
+		case URL_READY_CANREAD:
+			print("Got response from player stats server:\n");
+			while((s = url_fgets(fh)))
+			{
+				print("  ", s, "\n");
+
+				key = substring(s, 0, 1);
+				value = substring(s, 2, -1);
+				if (key == "#")
+					continue;
+				else if (key == "V")
+					// version
+					continue;
+				else if (key == "P")
+					player_stats.playerid = stof(value);
+				else if (key == "n")
+					player_stats.playernick = value;
+			}
+			print("End of response.\n");
+			url_fclose(fh);
+			break;
+		case URL_READY_CLOSED:
+			// url_fclose has finished
+			print("Player stats received from server\n");
+			break;
+		case URL_READY_ERROR:
+		default:
+			print("Receiving player stats failed: ", ftos(status), "\n");
+			break;
+	}
+}
+
+void PlayerStats_GetPlayerInfo(entity p)
+{
+	string uri;
+
+	uri = autocvar_g_playerstats_uri;
+	if(uri != "")
+	{
+		url_single_fopen(strcat(uri, "/"), FILE_READ, PlayerStatsEntity_ready, p.player_stats);
+	}
+}
+*/
+
+#endif // SVQC

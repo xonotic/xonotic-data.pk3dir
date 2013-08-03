@@ -43,7 +43,7 @@ mutators/gamemode_ctf.qh
 mutators/gamemode_domination.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
 mutators/gamemode_keepaway.qh
-mutators/gamemode_nexball.qh 
+mutators/gamemode_nexball.qh
 mutators/gamemode_lms.qh
 mutators/mutator_dodging.qh
 
@@ -72,7 +72,7 @@ csqceffects.qc
 
 anticheat.qh
 cheats.qh
-playerstats.qh
+../common/playerstats.qh
 
 portals.qh
 
@@ -219,7 +219,7 @@ playerdemo.qc
 
 anticheat.qc
 cheats.qc
-playerstats.qc
+../common/playerstats.qc
 
 round_handler.qc
 

@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 // time the player was alive and kicking
 string PLAYERSTATS_ALIVETIME  = "alivetime";
 string PLAYERSTATS_AVGLATENCY = "avglatency";
@@ -46,8 +48,17 @@ float PlayerStats_TeamScore(float t, string event_id, float value);
 // call at game over
 void PlayerStats_Shutdown(); // send stats to the server
 
+void PlayerStats_Accuracy(entity p);
+
 // call this whenever a player leaves
 void PlayerStats_AddGlobalInfo(entity p);
 
 // call this at the end of the match
 void PlayerStats_EndMatch(float finished);
+
+
+//// WIP -zykure
+
+//void PlayerStats_GetPlayerInfo(entity p);
+
+#endif //SVQC
