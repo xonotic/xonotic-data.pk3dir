@@ -173,7 +173,7 @@ void XonoticPlayList_stopSound(entity me)
 {
 	// STOP: list 0 is disabled by setting the index to -1
 	// we set sampleposition0 to -1 to indicate that music is stopped
-	if(cvar("music_playlist_index") != -1) // == 0 doesn't work when paused
+	if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 	{
 		cvar_set("music_playlist_index", "-1");
 		localcmd("\nwait; music_playlist_sampleposition0 -1\n");
@@ -192,6 +192,8 @@ void XonoticPlayList_startSound(entity me, float offset)
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
 	if(offset)
 	{
+		if(cvar("music_playlist_index") == -1)
+			return;
 		f = bound(0, cvar("music_playlist_current0") + offset, me.nItems - 1);
 		if(f == cvar("music_playlist_current0"))
 			return;
@@ -232,7 +234,7 @@ void XonoticPlayList_pauseSound(entity me)
 	// (we reset sampleposition0 to 0 to mark the track as in playing back state)
 	if(cvar("music_playlist_index") == 0)
 		localcmd("\nmusic_playlist_index 999\n");
-	else
+	else if(cvar("music_playlist_index") == 999)
 		localcmd("\nmusic_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
 }
 
