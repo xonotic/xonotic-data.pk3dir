@@ -14,7 +14,8 @@ void M_Item_Touch ()
 
 void monster_item_spawn()
 {
-	self.monster_loot();
+	if(self.monster_loot)
+		self.monster_loot();
 	
 	self.gravity = 1;
 	self.velocity = randomvec() * 175 + '0 0 325';
@@ -124,7 +125,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	
 	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.flags & FL_NOTARGET)
-		return FALSE; // enemy can't be targetted
+		return FALSE; // enemy can't be targeted
 	
 	if not(autocvar_g_monsters_typefrag)
 	if(targ.BUTTON_CHAT)
@@ -662,8 +663,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			monsters_setframe(manim_idle);
 	}
 	
-	if(self.enemy)
-		monster_checkattack(self, self.enemy);
+	monster_checkattack(self, self.enemy);
 		
 	self.SendFlags |= MSF_ANG;
 	self.SendFlags |= MSF_MOVE;
@@ -882,7 +882,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	self.SendFlags |= MSF_STATUS;
 }
 
-// used to hook into monster post death functions without a mutator
+// post-death functions
 void monster_hook_death()
 {
 	WaypointSprite_Kill(self.sprite);
@@ -920,7 +920,7 @@ void monster_hook_death()
 	totalspawned -= 1;
 }
 
-// used to hook into monster post spawn functions without a mutator
+// post-spawn functions
 void monster_hook_spawn()
 {
 	if not(self.monster_respawned)

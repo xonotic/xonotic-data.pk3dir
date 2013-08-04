@@ -32,9 +32,9 @@ float MONSTER_CERBERUS		= 8;
 float MONSTER_SLIME 		= 9;
 float MONSTER_KNIGHT 		= 10;
 float MONSTER_STINGRAY 		= 11;
-float MONSTER_MAGE 			= 12;
+float MONSTER_MAGE		= 12;
 float MONSTER_SPIDER 		= 13;
-float MONSTER_LAST 			= 14;
+float MONSTER_LAST		= 14;
 
 // id-string converters (TODO: remove these!)
 string monster_id2string(float mnster)
