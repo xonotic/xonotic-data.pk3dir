@@ -29,6 +29,8 @@ ENDCLASS(XonoticSoundList)
 
 entity makeXonoticSoundList();
 void SoundList_Filter_Change(entity box, entity me);
+void SoundList_Add(entity box, entity me);
+void SoundList_Add_All(entity box, entity me);
 void SoundList_Menu_Track_Change(entity box, entity me);
 void SoundList_Menu_Track_Reset(entity box, entity me);
 #endif
@@ -142,6 +144,18 @@ void SoundList_Filter_Change(entity box, entity me)
 		me.filterString = string_null;
 
 	me.getSounds(me);
+}
+
+void SoundList_Add(entity box, entity me)
+{
+	me.playlist.addToPlayList(me.playlist, me.soundName(me, me.selectedItem));
+}
+
+void SoundList_Add_All(entity box, entity me)
+{
+	float i;
+	for(i = 0; i < me.nItems; ++i)
+		me.playlist.addToPlayList(me.playlist, me.soundName(me, i));
 }
 
 void XonoticSoundList_clickListBoxItem(entity me, float i, vector where)
