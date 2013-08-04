@@ -97,6 +97,8 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 	{
 		if(argv(i) == track)
 		{
+			if(i == me.nItems - 1)
+				me.setSelected(me, me.selectedItem - 1);
 			if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 			{
 				if(cvar("music_playlist_current0") == i)
