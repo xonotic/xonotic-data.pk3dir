@@ -13,7 +13,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	METHOD(XonoticPlayList, mouseDrag, float(entity, vector))
 
 	METHOD(XonoticPlayList, addToPlayList, void(entity, string))
-	METHOD(XonoticPlayList, removeFromPlayList, void(entity, string))
+	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity))
 	ATTRIB(XonoticPlayList, playingTrack, string, string_null)
 
 	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')
@@ -30,6 +30,8 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 ENDCLASS(XonoticPlayList)
 
 entity makeXonoticPlayList();
+void PlayList_Remove(entity btn, entity me);
+void PlayList_Remove_All(entity btn, entity me);
 void StopSound_Click(entity btn, entity me);
 void StartSound_Click(entity btn, entity me);
 void PauseSound_Click(entity btn, entity me);
@@ -86,7 +88,7 @@ void XonoticPlayList_addToPlayList(entity me, string track)
 	cvar_set("music_playlist_list0", strcat(cvar_string("music_playlist_list0"), " ", track));
 }
 
-void XonoticPlayList_removeFromPlayList(entity me, string track)
+void XonoticPlayList_removeSelectedFromPlayList(entity me)
 {
 	float i, cpt = FALSE;
 	string s = "";
@@ -95,7 +97,7 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 		return;
 	for(i = 0; i < me.nItems; ++i)
 	{
-		if(argv(i) == track)
+		if(i == me.selectedItem)
 		{
 			if(i == me.nItems - 1)
 				me.setSelected(me, me.selectedItem - 1);
@@ -119,6 +121,18 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); //remove initial space
 	if(cpt)
 		me.startSound(me, 0); // stop current playing track otherwise pause/play button will resume from another track
+}
+
+void PlayList_Remove(entity btn, entity me)
+{
+	me.removeSelectedFromPlayList(me);
+}
+
+void PlayList_Remove_All(entity btn, entity me)
+{
+	cvar_set("music_playlist_list0", "");
+	me.stopSound(me);
+	me.selectedItem = 0;
 }
 
 float XonoticPlayList_mouseDrag(entity me, vector pos)
@@ -267,8 +281,7 @@ float XonoticPlayList_keyDown(entity me, float scan, float ascii, float shift)
 		return 1;
 	}
 	else if(scan == K_DEL || scan == K_KP_DEL || scan == K_BACKSPACE || scan == K_MOUSE3) {
-		me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
-		me.removeFromPlayList(me, argv(me.selectedItem));
+		me.removeSelectedFromPlayList(me);
 		return 1;
 	}
 	else

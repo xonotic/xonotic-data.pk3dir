@@ -35,7 +35,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 			soundList.playlist = playList;
 
 	me.TR(me);
-		me.TD(me, me.rows - 4, columns_nospacing / 2, soundList);
+		me.TD(me, me.rows - 5, columns_nospacing / 2, soundList);
 
 	me.gotoRC(me, me.rows - 4, 0);
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticButton(ZCTX(_("MUSICPL^Add")), '0 0 0'));
@@ -58,9 +58,9 @@ void XonoticMusicPlayerTab_fill(entity me)
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticTextLabel(0, _("Playlist:")));
 		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticCheckBox(0, "music_playlist_random0", _("Random order")));
 	me.TR(me);
-		me.TD(me, me.rows - 3, columns_nospacing / 2, playList);
+		me.TD(me, me.rows - 4, columns_nospacing / 2, playList);
 
-	me.gotoRC(me, me.rows - 2, columns_nospacing / 2 + 0.2);
+	me.gotoRC(me, me.rows - 3, columns_nospacing / 2 + 0.2);
 		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Stop")), '0 0 0'));
 			e.onClick = StopSound_Click;
 			e.onClickEntity = playList;
@@ -75,6 +75,13 @@ void XonoticMusicPlayerTab_fill(entity me)
 			e.onClickEntity = playList;
 		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Next")), '0 0 0'));
 			e.onClick = NextSound_Click;
+			e.onClickEntity = playList;
+	me.TR(me);
+		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticButton(ZCTX(_("MUSICPL^Remove")), '0 0 0'));
+			e.onClick = PlayList_Remove;
+			e.onClickEntity = playList;
+		me.TD(me, 1, columns_nospacing / 4, e = makeXonoticButton(ZCTX(_("MUSICPL^Remove all")), '0 0 0'));
+			e.onClick = PlayList_Remove_All;
 			e.onClickEntity = playList;
 }
 #endif

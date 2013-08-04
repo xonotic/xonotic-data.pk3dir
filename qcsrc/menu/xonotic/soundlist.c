@@ -177,10 +177,6 @@ float XonoticSoundList_keyDown(entity me, float scan, float ascii, float shift)
 		me.playlist.addToPlayList(me.playlist, me.soundName(me, me.selectedItem));
 		return 1;
 	}
-	else if(scan == K_DEL || scan == K_KP_DEL) {
-		me.playlist.removeFromPlayList(me.playlist, me.soundName(me, me.selectedItem));
-		return 1;
-	}
 	else
 		return SUPER(XonoticSoundList).keyDown(me, scan, ascii, shift);
 }
