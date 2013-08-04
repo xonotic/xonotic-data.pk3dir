@@ -11,10 +11,10 @@ config.qh
 ../warpzonelib/mathlib.qh
 ../common/util.qh
 ../common/test.qh
-../common/playerstats.qh
 
 oo/base.h
 
+../common/playerstats.qh
 ../common/teams.qh
 ../common/constants.qh
 ../common/mapinfo.qh

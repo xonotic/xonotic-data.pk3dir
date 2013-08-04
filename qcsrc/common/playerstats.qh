@@ -56,9 +56,11 @@ void PlayerStats_AddGlobalInfo(entity p);
 // call this at the end of the match
 void PlayerStats_EndMatch(float finished);
 
+#endif //SVQC
+
 
 //// WIP -zykure
 
-//void PlayerStats_GetPlayerInfo(entity p);
-
-#endif //SVQC
+string PlayerInfo_GetItem(entity e, string item_id);
+void PlayerInfo_Init();
+void PlayerInfo_Retrieve(entity p);

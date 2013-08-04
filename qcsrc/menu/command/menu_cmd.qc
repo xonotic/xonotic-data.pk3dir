@@ -110,5 +110,14 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "debugstats")
+	{
+		entity p = spawn();
+		//p.crypto_idfp = "pQBWJrkNzHCMtndkICJacPENGctTNR59rmFS4x91FFo="; // Antibody's hashkey
+		PlayerInfo_Init();
+		PlayerInfo_Retrieve(p);
+		return;
+	}
+
 	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }
