@@ -88,7 +88,7 @@ void XonoticPlayList_addToPlayList(entity me, string track)
 
 void XonoticPlayList_removeFromPlayList(entity me, string track)
 {
-	float i;
+	float i, cpt = FALSE;
 	string s = "";
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
 	if(me.nItems == 0)
@@ -96,10 +96,17 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 	for(i = 0; i < me.nItems; ++i)
 	{
 		if(argv(i) == track)
-		if(cvar("music_playlist_current0") != i) // forbid removing the current playing track, otherwise pause button will resume from another track
 		{
-			if(cvar("music_playlist_current0") > i)
-				cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
+			if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
+			{
+				if(cvar("music_playlist_current0") == i)
+					cpt = TRUE; // current playing track (we can't start next track here because startSound calls tokenize_console)
+				else
+				{
+					if(cvar("music_playlist_current0") > i)
+						cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
+				}
+			}
 			continue;
 		}
 		s = strcat(s, " ", argv(i));
@@ -108,6 +115,8 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 		cvar_set("music_playlist_list0", "");
 	else
 		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); //remove initial space
+	if(cpt)
+		me.startSound(me, 0); // stop current playing track otherwise pause/play button will resume from another track
 }
 
 float XonoticPlayList_mouseDrag(entity me, vector pos)
