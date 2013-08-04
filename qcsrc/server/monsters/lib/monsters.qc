@@ -609,7 +609,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		turny = 20;
 		
-	if(g_td || self.flags & FL_SWIM)
+	if(self.flags & FL_SWIM)
 		turny = vlen(self.angles - self.moveto);
 	
 	if(turny)
@@ -819,10 +819,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 	if(time < self.spawnshieldtime)
 		return;
-		
-	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
-	if(monster_isvalidtarget(attacker, self))
-		self.enemy = attacker;
 		
 	if(deathtype != DEATH_KILL)
 		damage *= self.armorvalue;

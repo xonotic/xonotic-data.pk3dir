@@ -38,7 +38,6 @@
 #include "xonotic/dialog_settings_misc.c"
 #include "xonotic/dialog_multiplayer.c"
 #include "xonotic/dialog_multiplayer_playersetup.c"
-#include "xonotic/dialog_towerdefense.c"
 #include "xonotic/tabcontroller.c"
 #include "xonotic/textlabel.c"
 #include "xonotic/slider.c"

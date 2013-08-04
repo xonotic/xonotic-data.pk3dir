@@ -46,7 +46,6 @@ mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/gamemode_lms.qh
 mutators/mutator_dodging.qh
-mutators/gamemode_towerdefense.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -245,7 +244,6 @@ mutators/gamemode_keyhunt.qc
 mutators/gamemode_keepaway.qc
 mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
-mutators/gamemode_towerdefense.qc
 mutators/gamemode_lms.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc
