@@ -14,7 +14,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 
 	METHOD(XonoticPlayList, addToPlayList, void(entity, string))
 	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity))
-	ATTRIB(XonoticPlayList, playingTrack, string, string_null)
+	ATTRIB(XonoticPlayList, playingTrack, float, -1)
 
 	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayList, columnNameOrigin, float, 0)
@@ -165,6 +165,10 @@ float XonoticPlayList_mouseDrag(entity me, vector pos)
 void XonoticPlayList_draw(entity me)
 {
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
+		me.playingTrack = cvar("music_playlist_current0");
+	else
+		me.playingTrack = -1;
 	SUPER(XonoticPlayList).draw(me);
 }
 
@@ -174,10 +178,10 @@ void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float i
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	if(argv(i) == me.playingTrack)
+	if(i == me.playingTrack)
 	{
 		float f = cvar("music_playlist_sampleposition0");
-		if(f == 0 || (((time * 2) & 1) && f > 0))
+		if(f <= 0 || (((time * 2) & 1) && f > 0))
 			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
 
@@ -219,9 +223,6 @@ void XonoticPlayList_startSound(entity me, float offset)
 	}
 	else
 		f = me.selectedItem;
-	if(me.playingTrack)
-		strunzone(me.playingTrack);
-	me.playingTrack = strzone(argv(f));
 	// START: list 0 is disabled by setting the index to 999
 	// we set current0 to the selected track and sampleposition0 to 0 to forget value saved by the engine
 	// then we switch back to list 0
