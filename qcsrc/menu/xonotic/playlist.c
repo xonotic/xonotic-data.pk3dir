@@ -195,11 +195,11 @@ void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float i
 void XonoticPlayList_stopSound(entity me)
 {
 	// STOP: list 0 is disabled by setting the index to -1
-	// we set sampleposition0 to -1 to indicate that music is stopped
+	// we set sampleposition0 to 0 to forget the position that the engine saves in this frame (for this reason we need to wait a frame)
 	if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 	{
 		cvar_set("music_playlist_index", "-1");
-		localcmd("\nwait; music_playlist_sampleposition0 -1\n");
+		localcmd("\nwait; music_playlist_sampleposition0 0\n");
 		localcmd("\ndefer 3 \"cd play $menu_cdtrack\"\n");
 	}
 }
@@ -224,7 +224,7 @@ void XonoticPlayList_startSound(entity me, float offset)
 	else
 		f = me.selectedItem;
 	// START: list 0 is disabled by setting the index to 999
-	// we set current0 to the selected track and sampleposition0 to 0 to forget value saved by the engine
+	// we set current0 to the selected track and sampleposition0 to 0 to forget the position that the engine saves in this frame (for this reason we need to wait a frame)
 	// then we switch back to list 0
 	cvar_set("music_playlist_index", "999");
 	cvar_set("music_playlist_current0", ftos(f));
