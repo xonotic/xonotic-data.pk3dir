@@ -105,22 +105,27 @@ void XonoticPlayList_removeSelectedFromPlayList(entity me)
 			{
 				if(cvar("music_playlist_current0") == i)
 					cpt = TRUE; // current playing track (we can't start next track here because startSound calls tokenize_console)
-				else
-				{
-					if(cvar("music_playlist_current0") > i)
-						cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
-				}
+				else if(cvar("music_playlist_current0") > i)
+					cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
 			}
 			continue;
 		}
 		s = strcat(s, " ", argv(i));
 	}
+	// we must stop the current playing track if it has been removed
+	// otherwise pause/play button will resume from another track
 	if(s == "")
+	{
 		cvar_set("music_playlist_list0", "");
+		if(cpt)
+			me.stopSound(me);
+	}
 	else
-		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); //remove initial space
-	if(cpt)
-		me.startSound(me, 0); // stop current playing track otherwise pause/play button will resume from another track
+	{
+		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); // remove initial space
+		if(cpt)
+			me.startSound(me, 0);
+	}
 }
 
 void PlayList_Remove(entity btn, entity me)
