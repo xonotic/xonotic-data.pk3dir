@@ -47,23 +47,10 @@ void XonoticNotificationDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_CENTER_TEAMCHANGE_AUTO", _("Print teamchanges")));
 			makeMulti(e, "notification_CENTER_TEAMCHANGE_AUTO notification_CENTER_TEAMCHANGE_SUICIDE notification_CENTER_TEAMCHANGE_SPECTATE notification_CENTER_TEAMCHANGE_BLUE notification_CENTER_TEAMCHANGE_RED notification_CENTER_TEAMCHANGE_YELLOW notification_CENTER_TEAMCHANGE_PINK");
-
-	// Item notifications
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Item Notifications:")));
-		
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Weapon notifications:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 3, 1, "notification_INFO_ITEM_WEAPON_DONTHAVE"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_CENTER_POWERDOWN_INVISIBILITY", _("Print powerup notifications")));
-				makeMulti(e, "notification_CENTER_POWERDOWN_INVISIBILITY notification_CENTER_POWERDOWN_STRENGTH notification_CENTER_POWERDOWN_SHIELD notification_CENTER_POWERDOWN_SPEED notification_CENTER_POWERUP_INVISIBILITY notification_CENTER_POWERUP_STRENGTH notification_CENTER_POWERUP_SHIELD notification_CENTER_POWERUP_SPEED notification_CENTER_POWERDOWN_INVISIBILITY notification_CENTER_POWERDOWN_STRENGTH notification_CENTER_POWERDOWN_SHIELD notification_CENTER_SUPERWEAPON_LOST notification_CENTER_POWERDOWN_INVISIBILITY notification_CENTER_POWERDOWN_STRENGTH notification_CENTER_POWERDOWN_SHIELD notification_CENTER_SUPERWEAPON_PICKUP");
 		
 	// Gamemode dependent notifications
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gamemode Notifications:")));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Gamemode specific Notifications:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Keyhunt notifications:")));
@@ -73,18 +60,23 @@ void XonoticNotificationDialog_fill(entity me)
 	// Information on killingsprees
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Information on killingsprees:")));
-		
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_sprees", _("Print information on sprees")));
+		//me.TDempty(me, 0.1);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "notification_show_sprees", _("Print information on sprees")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
+		//me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show spree information:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 3, 1, "notification_show_sprees_info"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("notification_show_sprees_info"));
+			e.addValue(e, ZCTX(_("off")), "0");
+			e.addValue(e, ZCTX(_("target")), "1");
+			e.addValue(e, ZCTX(_("attacker")), "2");
+			e.addValue(e, ZCTX(_("target and attacker")), "3");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_sprees_info_newline", _("Show spree information in a seperate line")));
+		//me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_show_sprees_info_newline", _("Print spree information in a new line")));
 		
+	// Close this dialog
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
