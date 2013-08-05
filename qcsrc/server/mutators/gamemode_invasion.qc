@@ -142,7 +142,7 @@ void Invasion_RoundStart()
 	numkilled = 0;
 		
 	if(roundcnt > 1)
-		maxspawned = rint(autocvar_g_invasion_monster_count * roundcnt / 0.7);
+		maxspawned = rint(autocvar_g_invasion_monster_count * (roundcnt * 0.5));
 	else
 		maxspawned = autocvar_g_invasion_monster_count;
 	
