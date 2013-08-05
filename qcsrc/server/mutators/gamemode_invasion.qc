@@ -102,11 +102,15 @@ float Invasion_CheckWinner()
 	
 	FOR_EACH_PLAYER(head)
 	{
-		if(PlayerScore_Add(head, SP_INVASION_KILLS, 0) > winning_score)
+		float cs = PlayerScore_Add(head, SP_INVASION_KILLS, 0);
+		if(cs > winning_score)
+		{
+			winning_score = cs;
 			winner = head;
+		}
 	}
 
-	if(winner != world)
+	if(winner)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, winner.netname);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
