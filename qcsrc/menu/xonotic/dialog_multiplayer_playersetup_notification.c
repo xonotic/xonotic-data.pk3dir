@@ -24,30 +24,40 @@ void XonoticNotificationDialog_fill(entity me)
 {
 	entity e;
 	
-	// Make a proper structure of this... 
-	
-	me.TD(me, 8, 3, e = makeXonoticGametypeList());
-	
 	// General settings for the player
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("General Settings:")));
 		
 	me.TR(me);
-		me.TDempty(me, 0.2);
+		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Centerprint time:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 3, 0.1, "notification_item_centerprinttime"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_allow_chatboxprint", _("Print all notifications into the chatbox")));
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_allow_chatboxprint", _("Print all notifications into the chatbox")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Notice joining players:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 1, "notifications_INFO_JOIN_CONNECT"));
-			makeMulti(me, "notifications_INFO_JOIN_CONNECT notifications_INFO_JOIN_CONNECT_TEAM_BLUE notifications_INFO_JOIN_CONNECt_TEAM_RED notifications_INFO_JOIN_CONNECT_TEAM_YELLOW notifications_INFO_JOIN_CONNECT_TEAM_PINK");
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_MOTD", _("Centerprint the MOTD")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_CENTER_TEAMCHANGE_AUTO", _("Print teamchanges")));
-			makeMulti(e, "notification_CENTER_TEAMCHANGE_AUTO notification_CENTER_TEAMCHANGE_SUICIDE notification_CENTER_TEAMCHANGE_SPECTATE notification_CENTER_TEAMCHANGE_BLUE notification_CENTER_TEAMCHANGE_RED notification_CENTER_TEAMCHANGE_YELLOW notification_CENTER_TEAMCHANGE_PINK");
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Notice joining/quiting players:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("notification_INFO_QUIT_DISCONNECT"));
+			//makeMulti(me, "notification_INFO_QUIT_KICK_IDLING notification_INFO_QUIT_KICK_SPECTATING notification_INFO_JOIN_PLAY notification_INFO_JOIN_CONNECT_TEAM_BLUE notification_INFO_JOIN_CONNECT_TEAM_PINK notification_INFO_JOIN_CONNECT_TEAM_RED notification_INFO_JOIN_CONNECT_TEAM_YELLOW");
+			e.addValue(e, ZCTX(_("off")), "0");
+			e.addValue(e, ZCTX(_("only console")), "1");
+			e.addValue(e, ZCTX(_("console & chat")), "2");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_TEAMCHANGE_AUTO", _("Centerprint teamchanges")));
+			//makeMulti(e, "notification_CENTER_TEAMCHANGE_BLUE notification_CENTER_TEAMCHANGE_PINK notification_CENTER_TEAMCHANGE_RED notification_CENTER_TEAMCHANGE_SPECTATE notification_CENTER_TEAMCHANGE_SUICIDE notification_CENTER_TEAMCHANGE_YELLOW");
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_ITEM_WEAPON_DONTHAVE", _("Item notifications")));
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_POWERUP_INVISIBILITY", _("Powerup notifications")));
+			//makeMulti(e, "notification_CENTER_POWERUP_SHIELD notification_CENTER_POWERUP_SPEED notification_CENTER_POWERUP_STRENGTH notification_CENTER_POWERDOWN_INVISIBILITY notification_CENTER_POWERDOWN_SHIELD notification_CENTER_POWERDOWN_SPEED notification_CENTER_POWERDOWN_STRENGTH notification_CENTER_SUPERWEAPON_BROKEN notification_CENTER_SUPERWEAPON_LOST notification_CENTER_SUPERWEAPON_PICKUP");
 			
 	me.TR(me);
 		
