@@ -148,6 +148,7 @@ void Invasion_RoundStart()
 		
 	roundcnt += 1;
 	
+	maxcurrent = 0;
 	numspawned = 0;
 	numkilled = 0;
 		
