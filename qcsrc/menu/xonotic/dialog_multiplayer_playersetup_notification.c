@@ -25,7 +25,8 @@ void XonoticNotificationDialog_fill(entity me)
 	entity e;
 	
 	// Make a proper structure of this... 
-	// Like, go through all notifications and strip out useless ones, then write down the plan and group things properly
+	
+	me.TD(me, 8, 3, e = makeXonoticGametypeList());
 	
 	// General settings for the player
 	me.TR(me);
@@ -47,15 +48,68 @@ void XonoticNotificationDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_CENTER_TEAMCHANGE_AUTO", _("Print teamchanges")));
 			makeMulti(e, "notification_CENTER_TEAMCHANGE_AUTO notification_CENTER_TEAMCHANGE_SUICIDE notification_CENTER_TEAMCHANGE_SPECTATE notification_CENTER_TEAMCHANGE_BLUE notification_CENTER_TEAMCHANGE_RED notification_CENTER_TEAMCHANGE_YELLOW notification_CENTER_TEAMCHANGE_PINK");
+			
+	me.TR(me);
 		
 	// Gamemode dependent notifications
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Gamemode specific Notifications:")));
 	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Arena notifications:")));
+	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Keyhunt notifications:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 3, 1, "Keyhunt notifications in the infopanel"));
-			makeMulti(e, "notification_INFO_KEYHUNT_CAPTURE_BLUE notification_INFO_KEYHUNT_DROP_BLUE notification_INFO_KEYHUNT_LOST_BLUE notification_INFO_KEYHUNT_PICKUP_BLUE notification_INFO_KEYHUNT_CAPTURE_RED notification_INFO_KEYHUNT_DROP_RED notification_INFO_KEYHUNT_LOST_RED notification_INFO_KEYHUNT_PICKUP_RED notification_INFO_KEYHUNT_CAPTURE_PINK notification_INFO_KEYHUNT_DROP_PINK notification_INFO_KEYHUNT_LOST_PINK notification_INFO_KEYHUNT_PICKUP_PINK notification_INFO_KEYHUNT_CAPTURE_YELLOW notification_INFO_KEYHUNT_DROP_YELLOW notification_INFO_KEYHUNT_LOST_YELLOW notification_INFO_KEYHUNT_PICKUP_YELLOW");
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_ARENA_BEGIN", _("Centerprint information for arena")));
+			//makeMulti(me, "notification_CENTER_ARENA_NEEDPLAYER notification_CENTER_ARENA_ROUNDSTART");
+		
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Assault notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_ASSAULT_ATTACKING", _("Centerprint information for assault")));
+			//makeMulti(me, "notification_CENTER_ASSAULT_DEFENDING");
+		
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("CTF notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_CTF_PICKUP_BLUE", _("Centerprint information for ctf")));
+			//makeMulti(me, "notification_CENTER_CTF_PICKUP_ENEMY notification_CENTER_CTF_PICKUP_RED notification_CENTER_CTF_PICKUP_TEAM");
+		
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Freezetag notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_FREEZETAG_FREEZE", _("Centerprint information for freezetag")));
+			//makeMulti(me, "notification_CENTER_FREEZETAG_FROZEN notification_CENTER_FREEZETAG_REVIVE notification_CENTER_FREEZETAG_REVIVED notification_CENTER_FREEZETAG_ROUND_WIN_BLUE notification_CENTER_FREEZETAG_ROUND_WIN_PINK notification_CENTER_FREEZETAG_ROUND_WIN_RED notification_CENTER_FREEZETAG_ROUND_WIN_YELLOW notification_CENTER_FREEZETAG_SELF notification_CENTER_FREEZETAG_SPAWN_LATE");
+		
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Keepaway notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_KEEPAWAY_DROPPED", _("Centerprint information for keepaway")));
+			//makeMulti(me, "notification_CENTER_KEEPAWAY_PICKUP notification_CENTER_KEEPAWAY_WARN");
+			
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Keyhunt notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_KEYHUNT_HELP", _("Centerprint information for keyhunt")));
+			//makeMulti(me, "notification_CENTER_KEYHUNT_INTERFERE_BLUE notification_CENTER_KEYHUNT_INTERFERE_PINK notification_CENTER_KEYHUNT_INTERFERE_RED notification_CENTER_KEYHUNT_INTERFERE_YELLOW notification_CENTER_KEYHUNT_MEET notification_CENTER_KEYHUNT_SCAN notification_CENTER_KEYHUNT_START_BLUE notification_CENTER_KEYHUNT_START_PINK notification_CENTER_KEYHUNT_START_RED notification_CENTER_KEYHUNT_START_YELLOW notification_CENTER_KEYHUNT_WAIT");
+			
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("LMS notifications:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_CENTER_LMS_CAMPCHECK", _("Centerprint information for LMS")));
+	
+	me.TR(me);
 	
 	// Information on killingsprees
 	me.TR(me);
