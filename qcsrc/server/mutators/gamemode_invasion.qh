@@ -5,4 +5,3 @@ float maxrounds;
 float numkilled;
 float last_check;
 
-#define SP_INVASION_KILLS 0

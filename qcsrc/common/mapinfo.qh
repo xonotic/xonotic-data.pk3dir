@@ -78,7 +78,7 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointli
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
-REGISTER_GAMETYPE(_("Invasion"),invasion,g_invasion,INVASION,"timelimit=20 pointlimit=30")
+REGISTER_GAMETYPE(_("Invasion"),invasion,g_invasion,INVASION,"pointlimit=5")
 #define g_invasion IS_GAMETYPE(INVASION)
 
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps

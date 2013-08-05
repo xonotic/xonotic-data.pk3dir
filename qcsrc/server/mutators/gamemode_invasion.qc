@@ -107,7 +107,7 @@ float Invasion_CheckWinner()
 	
 	FOR_EACH_PLAYER(head)
 	{
-		float cs = PlayerScore_Add(head, SP_INVASION_KILLS, 0);
+		float cs = PlayerScore_Add(head, SP_KILLS, 0);
 		if(cs > winning_score)
 		{
 			winning_score = cs;
@@ -151,7 +151,7 @@ void Invasion_RoundStart()
 	else
 		maxspawned = autocvar_g_invasion_monster_count;
 	
-	monster_skill += 0.01 * numplayers;
+	monster_skill += 0.1 * numplayers;
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
@@ -159,7 +159,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 	numkilled += 1;
 	
 	if(IS_PLAYER(frag_attacker))
-		PlayerScore_Add(frag_attacker, SP_INVASION_KILLS, +1);
+		PlayerScore_Add(frag_attacker, SP_KILLS, +1);
 	
 	return FALSE;
 }
@@ -222,6 +222,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 		sprint(self, strcat("roundcnt = ", ftos(roundcnt), "\n"));
 		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
 		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
+		sprint(self, strcat("monster_skill = ", ftos(monster_skill), "\n"));
 		
 		return TRUE;
 	}
@@ -231,21 +232,25 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 void invasion_ScoreRules()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_SECONDARY, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_INVASION_KILLS, "kills", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics(0, 0, 0, FALSE);
+	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
 
 void invasion_Initialize()
 {
+	independent_players = 1; // to disable extra useless scores
+
 	invasion_ScoreRules();
+	
+	independent_players = 0;
 
 	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 	
 	allowed_to_spawn = TRUE;
 	
-	monster_skill = 0;
+	monster_skill = 0.5;
 	
 	roundcnt = 0;
 }
