@@ -5,7 +5,7 @@ void invasion_spawnpoint()
 	self.classname = "invasion_spawnpoint";
 }
 
-float invasion_PickMonster()
+float invasion_PickMonster(float have_shamblers)
 {
 	if(autocvar_g_invasion_zombies_only)
 		return MONSTER_ZOMBIE;
@@ -16,7 +16,7 @@ float invasion_PickMonster()
 	
 	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
 	{
-		if(i == MONSTER_STINGRAY || i == MONSTER_WYVERN)
+		if(i == MONSTER_STINGRAY || i == MONSTER_WYVERN || (i == MONSTER_SHAMBLER && have_shamblers >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);
@@ -52,9 +52,9 @@ void invasion_SpawnChosenMonster(float mon)
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, 2);
 }
 
-void invasion_SpawnMonsters()
+void invasion_SpawnMonsters(float have_shamblers)
 {
-	float chosen_monster = invasion_PickMonster();
+	float chosen_monster = invasion_PickMonster(have_shamblers);
 	
 	invasion_SpawnChosenMonster(chosen_monster);
 }
@@ -78,16 +78,20 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 	
-	float total_alive_monsters = 0;
+	float total_alive_monsters = 0, shamblers = 0;
 	
 	FOR_EACH_MONSTER(head) if(head.health > 0)
+	{
+		if(head.monsterid == MONSTER_SHAMBLER)
+			++shamblers;
 		++total_alive_monsters;
+	}
 
-	if((total_alive_monsters + numkilled) < maxspawned)
+	if((total_alive_monsters + numkilled) < maxspawned && maxcurrent < 10) // 10 at a time should be plenty
 	{
 		if(time >= last_check)
 		{
-			invasion_SpawnMonsters();
+			invasion_SpawnMonsters(shamblers);
 			last_check = time + 2;
 		}
 		
@@ -158,6 +162,7 @@ void Invasion_RoundStart()
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
 	numkilled += 1;
+	maxcurrent -= 1;
 	
 	if(IS_PLAYER(frag_attacker))
 		PlayerScore_Add(frag_attacker, SP_KILLS, +1);
@@ -177,6 +182,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	}
 	
 	numspawned += 1;
+	maxcurrent += 1;
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
@@ -232,6 +238,13 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
+{
+	start_armorvalue = 100;
+	
+	return FALSE;
+}
+
 void invasion_ScoreRules()
 {
 	ScoreRules_basics(0, 0, 0, FALSE);
@@ -265,6 +278,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
