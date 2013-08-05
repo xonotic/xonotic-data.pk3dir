@@ -61,9 +61,9 @@ void invasion_SpawnMonsters()
 
 float Invasion_CheckWinner()
 {
+	entity head;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		entity head;
 		FOR_EACH_MONSTER(head)
 		{
 			WaypointSprite_Kill(head.sprite);
@@ -77,28 +77,40 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 
-	if((numspawned - numkilled) < maxspawned)
+	if((numspawned + numkilled) < maxspawned)
 	{
 		if(time >= last_check)
 		{
 			invasion_SpawnMonsters();
-			last_check = time + 0.5;
+			last_check = time + 2;
 		}
 		
 		return 0;
 	}
 	
-	if(numspawned > 1)
-		return 0;
+	if(numspawned < 1 || numkilled < numspawned)
+		return 0; // nothing has spawned yet, or there are still alive monsters
 	
 	if(roundcnt >= maxrounds)
 	{
 		NextLevel();
 		return 1;
 	}
+	
+	entity winner = world;
+	float winning_score = 0;
+	
+	FOR_EACH_PLAYER(head)
+	{
+		if(PlayerScore_Add(head, SP_INVASION_KILLS, 0) > winning_score)
+			winner = head;
+	}
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+	if(winner != world)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, winner.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
+	}
 	
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
@@ -168,6 +180,12 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
+{
+	self.bot_attack = FALSE;
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
@@ -208,6 +226,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
