@@ -76,8 +76,13 @@ float Invasion_CheckWinner()
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 		return 1;
 	}
+	
+	float total_alive_monsters = 0;
+	
+	FOR_EACH_MONSTER(head) if(head.health > 0)
+		++total_alive_monsters;
 
-	if((numspawned + numkilled) < maxspawned)
+	if((total_alive_monsters + numkilled) < maxspawned)
 	{
 		if(time >= last_check)
 		{
@@ -88,7 +93,7 @@ float Invasion_CheckWinner()
 		return 0;
 	}
 	
-	if(numspawned < 1 || numkilled < numspawned)
+	if(numspawned < 1 || numkilled < maxspawned)
 		return 0; // nothing has spawned yet, or there are still alive monsters
 	
 	if(roundcnt >= maxrounds)
@@ -132,8 +137,8 @@ void Invasion_RoundStart()
 	float numplayers = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		++numplayers;
 		e.player_blocked = 0;
+		++numplayers;
 	}
 		
 	roundcnt += 1;
@@ -192,14 +197,34 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 {
-	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
+	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker != frag_target)
 	{
 		frag_damage = 0;
 		frag_force = '0 0 0';
 	}
 	
-	if(frag_attacker.flags & FL_MONSTER && frag_target.flags & FL_MONSTER)
+	if(frag_attacker.flags & FL_MONSTER && frag_target.flags & FL_MONSTER && frag_attacker != frag_target)
 		frag_damage = 0;
+	
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return FALSE;
+	
+	if(cmd_name == "debuginvasion")
+	{
+		sprint(self, strcat("maxspawned = ", ftos(maxspawned), "\n"));
+		sprint(self, strcat("numspawned = ", ftos(numspawned), "\n"));
+		sprint(self, strcat("numkilled = ", ftos(numkilled), "\n"));
+		sprint(self, strcat("roundcnt = ", ftos(roundcnt), "\n"));
+		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
+		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
+		
+		return TRUE;
+	}
 	
 	return FALSE;
 }
@@ -220,7 +245,7 @@ void invasion_Initialize()
 	
 	allowed_to_spawn = TRUE;
 	
-	monster_skill = 0.01;
+	monster_skill = 0;
 	
 	roundcnt = 0;
 }
@@ -232,6 +257,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
