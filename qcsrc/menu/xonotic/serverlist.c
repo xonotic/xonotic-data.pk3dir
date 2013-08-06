@@ -606,18 +606,24 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
-	print(sprintf("time: %f, category_drawn: %d, i: %d\n", time, category_drawn, i));
-	if(category_drawn) { i -= 1; }
+	float cache = i;
+
+	if(category_drawn)
+	{
+		cache -= 1;
+		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
+	}
 	else
 	{
 		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
 		category_drawn = TRUE;
 		return;
 	}
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	s = gethostcachestring(SLIST_FIELD_QCSTATUS, cache);
 	m = tokenizebyseparator(s, ":");
 	typestr = "";
 	if(m >= 2)
@@ -652,7 +658,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	/*
 	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
-	s = gethostcachestring(SLIST_FIELD_MOD, i);
+	s = gethostcachestring(SLIST_FIELD_MOD, cache);
 	if(s != "data")
 		if(modname == "Xonotic")
 			modname = s;
@@ -666,16 +672,16 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(modname != "NewToys")
 		pure = 0;
 
-	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
+	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, cache) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
 	else if(freeslots == 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
-	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
+	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, cache))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
 		theAlpha = 1;
 
-	p = gethostcachenumber(SLIST_FIELD_PING, i);
+	p = gethostcachenumber(SLIST_FIELD_PING, cache);
 #define PING_LOW 75
 #define PING_MED 200
 #define PING_HIGH 500
@@ -694,13 +700,13 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		theAlpha *= SKINALPHA_SERVERLIST_HIGHPING;
 	}
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
+	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, cache))
 	{
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
 
-	s = gethostcachestring(SLIST_FIELD_CNAME, i);
+	s = gethostcachestring(SLIST_FIELD_CNAME, cache);
 
 	isv4 = isv6 = 0;
 	if(substring(s, 0, 1) == "[")
@@ -807,13 +813,13 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	s = ftos(p);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_NAME, i), me.columnNameSize, 0, me.realFontSize);
+	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_NAME, cache), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize, 0, me.realFontSize);
+	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, cache), me.columnMapSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = draw_TextShortenToWidth(typestr, me.columnTypeSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
+	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, cache)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, cache)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
