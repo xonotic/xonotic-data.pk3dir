@@ -56,7 +56,7 @@ void Image_draw(entity me)
 }
 void Image_updateAspect(entity me)
 {
-	float asp;
+	float asp = 0;
 	if(me.size_x <= 0 || me.size_y <= 0)
 		return;
 	if(me.forcedAspect == 0)
@@ -66,9 +66,9 @@ void Image_updateAspect(entity me)
 	}
 	else
 	{
+		vector sz = '0 0 0';
 		if(me.forcedAspect < 0)
 		{
-			vector sz;
 			sz = draw_PictureSize(me.src);
 			asp = sz_x / sz_y;
 		}
