@@ -43,14 +43,14 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			e.onChangeEntity = slist;
 			slist.screenshotViewerDialog = main.screenshotViewerDialog;
 			main.screenshotViewerDialog.scrList = slist;
-		me.TD(me, 1, 0.5, e = makeXonoticButton("Refresh", '0 0 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;
 	me.TR(me);
 		me.TD(me, slist_height, me.columns, slist);
 
 	me.gotoRC(me, slist_height + 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton("Open in the viewer", '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Open in the viewer"), '0 0 0'));
 			e.onClick = StartScreenshot_Click;
 			e.onClickEntity = slist;
 /*
