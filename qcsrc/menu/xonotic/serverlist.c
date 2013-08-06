@@ -214,8 +214,8 @@ void XonoticServerList_setSelected(entity me, float i)
 	*/
 	if(me.nItems == 0)
 		return;
-	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
-		return; // sorry, it would be wrong
+	//if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
+	//	return; // sorry, it would be wrong
 
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
@@ -319,6 +319,7 @@ void XonoticServerList_focusEnter(entity me)
 	me.nextRefreshTime = time + 10;
 	me.refreshServerList(me, 1);
 }
+float category_drawn;
 void XonoticServerList_draw(entity me)
 {
 	float i, found, owned;
@@ -347,7 +348,7 @@ void XonoticServerList_draw(entity me)
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) + 1;
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
@@ -395,6 +396,7 @@ void XonoticServerList_draw(entity me)
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
+	category_drawn = 0;
 	SUPER(XonoticServerList).draw(me);
 }
 void ServerList_PingSort_Click(entity btn, entity me)
@@ -593,6 +595,7 @@ void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 	me.lastClickedServer = i;
 	me.lastClickedTime = time;
 }
+float category_drawn;
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
@@ -603,6 +606,14 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
+	print(sprintf("time: %f, category_drawn: %d, i: %d\n", time, category_drawn, i));
+	if(category_drawn) { i -= 1; }
+	else
+	{
+		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+		category_drawn = TRUE;
+		return;
+	}
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
