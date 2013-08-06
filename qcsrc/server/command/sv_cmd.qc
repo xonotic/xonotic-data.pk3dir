@@ -118,7 +118,7 @@ void GameCommand_adminmsg(float request, float argc)
 				if(successful)
 					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
 				else
-					print("No players given (", original_targets, ") could recieve the message.\n");
+					print("No players given (", original_targets, ") could receive the message.\n");
 					
 				return;
 			}
@@ -316,7 +316,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc)
+void GameCommand_bot_cmd(float request, float argc, string command)
 {
 	switch(request)
 	{
@@ -327,6 +327,17 @@ void GameCommand_bot_cmd(float request, float argc)
 			if(argv(1) == "reset")
 			{
 				bot_resetqueues();
+				return;
+			}
+			else if(argv(1) == "setbots")
+			{
+				cvar_settemp("bot_vs_human", "0");
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", "0");
+				bot_fixcount();
+				cvar_settemp("bot_number", argv(2));
+				if(!bot_fixcount())
+					print("Sorry, could not set requested bot count\n");
 				return;
 			}
 			else if(argv(1) == "load" && argc == 3)
@@ -353,7 +364,10 @@ void GameCommand_bot_cmd(float request, float argc)
 						}
 						else if(argv(2) == "setbots")
 						{
+							cvar_settemp("bot_vs_human", "0");
 							cvar_settemp("minplayers", "0");
+							cvar_settemp("bot_number", "0");
+							bot_fixcount();
 							cvar_settemp("bot_number", argv(3));
 							if(!bot_fixcount())
 								print("Sorry, could not set requested bot count\n");
@@ -365,7 +379,7 @@ void GameCommand_bot_cmd(float request, float argc)
 							if(bot == world)
 								bot = find_bot_by_name(argv(2));
 							if(bot)
-								bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+								bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
 						}
 					}
 					else
@@ -392,8 +406,8 @@ void GameCommand_bot_cmd(float request, float argc)
 					bot = find_bot_by_name(argv(1));
 				if(bot)
 				{
-					print(strcat("Command '", strcat(argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
-					bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
+					print(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+					bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
 					return;
 				}
 				else
@@ -809,6 +823,62 @@ void GameCommand_gettaginfo(float request, float argc)
 	}
 }
 
+void GameCommand_animbench(float request, float argc) 
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity tmp_entity;
+
+			if(argc >= 4)
+			{
+				tmp_entity = spawn();
+				if(argv(1) == "w")
+					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+				else
+				{
+					precache_model(argv(1));
+					setmodel(tmp_entity, argv(1));
+				}
+				float f1 = stof(argv(2));
+				float f2 = stof(argv(3));
+				float t0;
+				float t1 = 0;
+				float t2 = 0;
+				float n = 0;
+
+				while(t1 + t2 < 1)
+				{
+					tmp_entity.frame = f1;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t1 += gettime(GETTIME_HIRES) - t0;
+					tmp_entity.frame = f2;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t2 += gettime(GETTIME_HIRES) - t0;
+					n += 1;
+				}
+				print("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
+				print("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
+
+				remove(tmp_entity);
+				return;
+			}
+		}
+
+		default:
+			print("Incorrect parameters for ^2gettaginfo^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			print("See also: ^2bbox, trace^7\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
@@ -902,7 +972,6 @@ void GameCommand_moveplayer(float request, float argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
-			string notify = argv(3);
 			
 			string successful, t;
 			successful = string_null;
@@ -927,7 +996,7 @@ void GameCommand_moveplayer(float request, float argc)
 					// Where are we putting this player?
 					if(destination == "spec" || destination == "spectator") 
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							self = client;
 							PutObserverInServer();
@@ -942,26 +1011,26 @@ void GameCommand_moveplayer(float request, float argc)
 					}
 					else
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if(teamplay)
 							{
 								// set up
-								float team_color;
+								float team_id;
 								float save = client.team_forced;
 								client.team_forced = 0;
 
 								// find the team to move the player to
-								team_color = ColourToNumber(destination);
-								if(team_color == client.team) // already on the destination team
+								team_id = Team_ColorToTeam(destination);
+								if(team_id == client.team) // already on the destination team
 								{
 									// keep the forcing undone
-									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (targets ? ", skipping to next player.\n" : ".\n"));
+									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								} 
-								else if(team_color == 0)  // auto team
+								else if(team_id == 0)  // auto team
 								{
-									team_color = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
 								{
@@ -970,21 +1039,21 @@ void GameCommand_moveplayer(float request, float argc)
 								client.team_forced = save;
 								
 								// Check to see if the destination team is even available
-								switch(team_color) 
+								switch(team_id) 
 								{
-									case COLOR_TEAM1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
 									
 									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}
 								
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_color, 6, stof(notify));
+								MoveToTeam(client, team_id, 6);
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else
@@ -1014,13 +1083,10 @@ void GameCommand_moveplayer(float request, float argc)
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd moveplayer clients destination [notify]\n");
+			print("\nUsage:^3 sv_cmd moveplayer clients destination\n");
 			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
 			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
-			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
-			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
-			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
 			print("Examples: sv_cmd moveplayer 1,3,5 red 3\n");
 			print("          sv_cmd moveplayer 2 spec \n");
 			print("See also: ^2allspec, shuffleteams^7\n");
@@ -1039,10 +1105,10 @@ void GameCommand_nospectators(float request)
 			entity plr;
 			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			{
-				if(plr.classname == "spectator" || plr.classname == "observer")
+				if(IS_SPEC(plr) || IS_OBSERVER(plr))
 				{
 					plr.spectatortime = time;
-					sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+					Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
 			}
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
@@ -1284,7 +1350,7 @@ void GameCommand_shuffleteams(float request)
 					x = (t_players / t_teams);
 					x = ((i == 1) ? ceil(x) : floor(x));
 					
-					team_color = NumberToTeamNumber(i);
+					team_color = Team_NumberToTeam(i);
 					
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
@@ -1298,7 +1364,7 @@ void GameCommand_shuffleteams(float request)
 								self = edict_num(shuffleteams_players[z]);
 
 							if(self.team != team_color) 
-								MoveToTeam(self, team_color, 6, 0);
+								MoveToTeam(self, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
@@ -1343,15 +1409,16 @@ void GameCommand_stuffto(float request, float argc)
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
-	
+
 	#ifdef STUFFTO_ENABLED
+	#message "stuffto command enabled"
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			if(argv(2))
 			{
-				entity client = GetIndexedEntity(argc, 1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
 				if(accepted > 0)
@@ -1521,10 +1588,10 @@ void GameCommand_trace(float request, float argc)
 				
 				case "walk":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
 						e = nextent(world);
-						if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
+						if(tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL))
 							print("can walk\n");
 						else
 							print("cannot walk\n");
@@ -1534,10 +1601,10 @@ void GameCommand_trace(float request, float argc)
 				
 				case "showline":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
-						vv = stov(argv(1));
-						dv = stov(argv(2));
+						vv = stov(argv(2));
+						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
 						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
@@ -1617,8 +1684,9 @@ void GameCommand_warp(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd level\n");
+			print("\nUsage:^3 sv_cmd warp [level]\n");
 			print("  'level' is the level to change campaign mode to.\n");
+			print("  if 'level' is not provided it will change to the next level.\n");
 			return;
 		}
 	}
@@ -1653,14 +1721,14 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// Common commands have double indentation to separate them a bit.
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
+	SERVER_COMMAND("animbench", GameCommand_animbench(request, arguments), "Benchmark model animation (LAGS)") \
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
-	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
+	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments, command), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \

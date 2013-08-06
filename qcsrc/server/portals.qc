@@ -146,7 +146,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	//print(vtos(to), "\n");
 
 	// ang_x stuff works around weird quake angles
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 		ang = Portal_ApplyTransformToPlayerAngle(transform, player.v_angle);
 	else
 		ang = AnglesTransform_ApplyToAngles(transform, player.angles);
@@ -154,8 +154,11 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
-	if(player.flagcarried)
-		DropFlag(player.flagcarried, player, world);
+	entity oldself = self;
+	self = player;
+	MUTATOR_CALLHOOK(PortalTeleport);
+	player = self;
+	self = oldself;
 
 	if not(teleporter.enemy)
 	{
@@ -169,7 +172,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	{
 		// telefrag within 1 second of portal creation = amazing
 		if(time < teleporter.teleport_time + 1)
-			AnnounceTo(player, "amazing");
+			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
 	}
 
 	if not(teleporter.enemy)
@@ -241,7 +244,7 @@ void Portal_Touch()
 	if(self.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		return; // handled by think
 #endif
 
@@ -274,11 +277,11 @@ void Portal_Touch()
 			return;
 		}
 	if(other != self.aiment)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
 				return; // cannot go through someone else's portal
 	if(other.aiment != self.aiment)
-		if(other.aiment.classname == "player")
+		if(IS_PLAYER(other.aiment))
 			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
 				return; // cannot go through someone else's portal
 	fixedmakevectors(self.mangle);
@@ -306,8 +309,8 @@ void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = 0;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_NO;
@@ -317,8 +320,8 @@ void Portal_MakeWaitingPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = EF_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -339,8 +342,8 @@ void Portal_MakeOutPortal(entity portal)
 {
 	portal.skin = 1;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = EF_STARDUST | EF_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -476,7 +479,7 @@ void Portal_Think()
 
 float Portal_Customize()
 {
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		other = other.enemy;
 	if(other == self.aiment)
 	{

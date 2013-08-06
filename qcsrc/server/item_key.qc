@@ -63,7 +63,7 @@ item_key
  * Key touch handler.
  */
 void item_key_touch(void) {
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 		
 	// player already picked up this key
@@ -186,7 +186,7 @@ void spawnfunc_item_key() {
 		_netname = "FLUFFY PINK keycard";
 		_colormod = '1 1 1';
 
-		if (!self.netname) {
+		if (self.netname == "") {
 			objerror("item_key doesn't have a default name for this key and a custom one was not specified!");
 			remove(self);
 			return;
@@ -196,18 +196,21 @@ void spawnfunc_item_key() {
 	}
 	
 	// find default model
+#ifdef GMQCC
+	_model = string_null;
+#endif
 	if (self.itemkeys <= ITEM_KEY_BIT(2)) {
 		_model = "models/keys/key.md3";
 	} else if (self.itemkeys >= ITEM_KEY_BIT(3) && self.itemkeys <= ITEM_KEY_BIT(5)) {
 		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
-	} else if (!self.model) {
+	} else if (self.model == "") {
 		objerror("item_key doesn't have a default model for this key and a custom one was not specified!");
 		remove(self);
 		return;
 	}
 	
 	// set defailt netname
-	if (!self.netname)
+	if (self.netname == "")
 		self.netname = _netname;
 	
 	// set default colormod
@@ -215,14 +218,14 @@ void spawnfunc_item_key() {
 		self.colormod = _colormod;
 	
 	// set default model
-	if (!self.model)
+	if (self.model == "")
 		self.model = _model;
 	
 	// set default pickup message
-	if (!self.message)
+	if (self.message == "")
 		self.message = strzone(strcat("You've picked up the ", self.netname, "!"));
 
-	if (!self.noise)
+	if (self.noise == "")
 		self.noise = "misc/itempickup.wav";
 	
 	// save the name for later
@@ -315,7 +318,7 @@ void trigger_keylock_touch(void) {
 	started_delay = FALSE;
 	
 	// only player may trigger the lock
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	
 	
@@ -388,11 +391,11 @@ void spawnfunc_trigger_keylock(void) {
 	}
 
 	// set unlocked message	
-	if (!self.message)
+	if (self.message == "")
 		self.message = "Unlocked!";
 	
 	// set default unlock noise
-	if (!self.noise) {
+	if (self.noise == "") {
 		if (self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if (self.sounds == 2)
@@ -402,11 +405,11 @@ void spawnfunc_trigger_keylock(void) {
 	}
 	
 	// set default use key sound
-	if (!self.noise1)
+	if (self.noise1 == "")
 		self.noise1 = "misc/decreasevalue.wav";
 	
 	// set closed sourd
-	if (!self.noise2)
+	if (self.noise2 == "")
 		self.noise2 = "misc/talk.wav";
 	
 	// delay between triggering message2 and trigger2

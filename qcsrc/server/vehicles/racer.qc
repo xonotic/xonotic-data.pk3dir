@@ -6,6 +6,8 @@ void racer_exit(float eject);
 void racer_enter();
 
 // Auto cvars
+float autocvar_g_vehicle_racer;
+
 float autocvar_g_vehicle_racer_speed_afterburn;
 float autocvar_g_vehicle_racer_afterburn_cost;
 
@@ -72,6 +74,7 @@ float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
+void racer_spawn_default();
 
 void racer_align4point(float _delta)
 {
@@ -126,7 +129,7 @@ void racer_fire_cannon(string tagname)
     bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE);
+                           DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
@@ -240,7 +243,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE);
+                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
@@ -333,7 +336,7 @@ float racer_frame()
     if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
     {
         if(time - racer.wait > 0.2)
-            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin, '0 0 0', 1);
+            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
@@ -423,20 +426,20 @@ float racer_frame()
     player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(racer.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
+        vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
 
     if(racer.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
+        vehicles_regen(racer.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
 
     if(racer.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
+        vehicles_regen(racer.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
 
 
-    VEHICLE_UPDATE_PLAYER(health, racer);
-    VEHICLE_UPDATE_PLAYER(energy, racer);
+    VEHICLE_UPDATE_PLAYER(player, health, racer);
+    VEHICLE_UPDATE_PLAYER(player, energy, racer);
 
     if(racer.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, racer);
+        VEHICLE_UPDATE_PLAYER(player, shield, racer);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
     setorigin(player,racer.origin + '0 0 32');
@@ -530,26 +533,6 @@ void racer_impact()
         vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
-void racer_spawn()
-{
-    self.think          = racer_think;
-    self.nextthink      = time;
-    self.vehicle_health = autocvar_g_vehicle_racer_health;
-    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-
-    self.movetype       = MOVETYPE_TOSS;
-    self.solid          = SOLID_SLIDEBOX;
-    self.delay          = time;
-    self.scale          = 0.5;
-
-    setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
-    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
-    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
-    self.vehicle_impact = racer_impact;
-    //self.destvec = autocvar_g_vehicle_racer_bouncepain;
-}
-
-
 void racer_blowup()
 {
     self.deadflag    = DEAD_DEAD;
@@ -559,10 +542,10 @@ void racer_blowup()
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_WAKIBLOWUP, world);
+					DEATH_VH_WAKI_DEATH, world);
 
     self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-    self.think      = racer_spawn;
+    self.think      = racer_spawn_default;
     self.movetype   = MOVETYPE_NONE;
     self.effects    = EF_NODRAW;
 
@@ -571,8 +554,6 @@ void racer_blowup()
     self.velocity  = '0 0 0';
 
     setorigin(self, self.pos1);
-	self.think     = racer_spawn;
-	self.nextthink = time + autocvar_g_vehicle_racer_respawntime;
 }
 
 void racer_deadtouch()
@@ -586,7 +567,7 @@ void racer_deadtouch()
 void racer_die()
 {
     self.health       = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = func_null;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
@@ -609,44 +590,55 @@ void racer_die()
 	self.think     = racer_blowup;
 	self.nextthink = 2 + time + random() * 3;
 }
-
-void racer_dinit()
+void racer_spawn(float _spawnflag)
 {
-    if not (vehicle_initialize(
-             "Wakizashi",
-             "models/vehicles/wakizashi.dpm",
-             "null", // we need this so tur_head is networked and usable for sounds
-             "models/vehicles/wakizashi_cockpit.dpm",
-             "", "", "tag_viewport",
-             HUD_WAKIZASHI,
-             0.5 * RACER_MIN, 0.5 * RACER_MAX,
-             FALSE,
-             racer_spawn, autocvar_g_vehicle_racer_respawntime,
-             racer_frame,
-             racer_enter, racer_exit,
-             racer_die,   racer_think,
-             TRUE, 
-             autocvar_g_vehicle_racer_health))
+    if(self.scale != 0.5)
     {
-        remove(self);
-        return;
+        if(autocvar_g_vehicle_racer_hovertype != 0)
+            racer_force_from_tag = vehicles_force_fromtag_maglev;
+        else
+            racer_force_from_tag = vehicles_force_fromtag_hover;
+
+        // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
+        self.scale = 0.5;
+        setattachment(self.vehicle_hudmodel, self, "");
+        setattachment(self.vehicle_viewport, self, "tag_viewport");
+
+        self.mass               = 900;
     }
 
-    if(autocvar_g_vehicle_racer_hovertype != 0)
-        racer_force_from_tag = vehicles_force_fromtag_maglev;
-    else
-        racer_force_from_tag = vehicles_force_fromtag_hover;
+    self.think          = racer_think;
+    self.nextthink      = time;
+    self.vehicle_health = autocvar_g_vehicle_racer_health;
+    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-    // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
-    self.scale = 0.5;
-    setattachment(self.vehicle_hudmodel, self, "");
-    setattachment(self.vehicle_viewport, self, "tag_viewport");
+    self.movetype       = MOVETYPE_TOSS;
+    self.solid          = SOLID_SLIDEBOX;
+    self.delay          = time;
+    self.scale          = 0.5;
 
-    self.mass               = 900;
+    setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
+    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
+    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
+    self.vehicle_impact = racer_impact;
+    self.damageforcescale = 0.5;
+    //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
+void racer_spawn_default()
+{
+	racer_spawn(0);
+}
+
+
 
 void spawnfunc_vehicle_racer()
 {
+    if(!autocvar_g_vehicle_racer)
+    {
+        remove(self);
+        return;
+    }        
+    
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
@@ -661,7 +653,6 @@ void spawnfunc_vehicle_racer()
     precache_model ("models/vehicles/wakizashi.dpm");
     precache_model ("models/vehicles/wakizashi_cockpit.dpm");
 
-    vehicles_configcheck("vehicle_racer.cfg", autocvar_g_vehicle_racer_health);
     if(autocvar_g_vehicle_racer_energy)
         if(autocvar_g_vehicle_racer_energy_regen)
             self.vehicle_flags |= VHF_ENERGYREGEN;
@@ -675,11 +666,25 @@ void spawnfunc_vehicle_racer()
     if(autocvar_g_vehicle_racer_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.think = racer_dinit;
-
-    if(g_assault)
-        self.nextthink = time + 0.5;
-    else
-        self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_racer_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
+    if not (vehicle_initialize(
+             "Wakizashi",
+             "models/vehicles/wakizashi.dpm",
+             "null", // we need this so tur_head is networked and usable for sounds
+             "models/vehicles/wakizashi_cockpit.dpm",
+             "", "", "tag_viewport",
+             HUD_WAKIZASHI,
+             0.5 * RACER_MIN, 0.5 * RACER_MAX,
+             FALSE,
+             racer_spawn, autocvar_g_vehicle_racer_respawntime,
+             racer_frame,
+             racer_enter, racer_exit,
+             racer_die,   racer_think,
+             TRUE, 
+             autocvar_g_vehicle_racer_health,
+             autocvar_g_vehicle_racer_shield))
+    {
+        remove(self);
+        return;
+    }
 }
 #endif // SVQC

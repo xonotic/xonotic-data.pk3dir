@@ -1,6 +1,4 @@
-void SUB_Null() {}
-float SUB_True() { return 1; }
-float SUB_False() { return 0; }
+void SUB_NullThink(void) { }
 
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
@@ -58,19 +56,6 @@ void updateanim(entity e)
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
 }
 
-vector animfixfps(entity e, vector a)
-{
-	// multi-frame anim: keep as-is
-	if(a_y == 1)
-	{
-		float dur;
-		dur = frameduration(e.modelindex, a_x);
-		if(dur > 0)
-			a_z = 1.0 / dur;
-	}
-	return a;
-}
-
 /*
 ==================
 SUB_Remove
@@ -107,7 +92,7 @@ Makes client invisible or removes non-client
 */
 void SUB_VanishOrRemove (entity ent)
 {
-	if (ent.flags & FL_CLIENT)
+	if (IS_CLIENT(ent))
 	{
 		// vanish
 		ent.alpha = -1;
@@ -144,9 +129,6 @@ Fade 'ent' out when time >= 'when'
 */
 void SUB_SetFade (entity ent, float when, float fadetime)
 {
-	//if (ent.flags & FL_CLIENT) // && ent.deadflag != DEAD_NO)
-	//	return;
-	//ent.alpha = 1;
 	ent.fade_rate = 1/fadetime;
 	ent.think = SUB_SetFade_Think;
 	ent.nextthink = when;
@@ -280,7 +262,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	controller.think1 = self.think;
 
 	// the thinking is now done by the controller
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 	self.nextthink = self.ltime + traveltime;
 	
 	// invoke controller
@@ -431,7 +413,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
-	if (clienttype(forent) != CLIENTTYPE_REAL)
+	if not(IS_REAL_CLIENT(forent))
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
@@ -799,7 +781,15 @@ void SetBrushEntityModel()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -811,7 +801,15 @@ void SetBrushEntityModelNoLOD()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);

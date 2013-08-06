@@ -335,7 +335,7 @@ void(entity e, vector o) setorigin = #2;
 void(entity e, string m) setmodel = #3;
 void(entity e, vector min, vector max) setsize = #4;
 
-void() break = #6;
+void() break_builtin = #6;
 float() random = #7;
 void(entity e, float chan, string samp) sound = #8;
 vector(vector v) normalize = #9;
@@ -1403,6 +1403,39 @@ void() example_skel_player_delete =
 // END OF EXAMPLES FOR FTE_CSQC_SKELETONOBJECTS
 //
 
+//DP_QC_ENTITYDATA
+//idea: KrimZon
+//darkplaces implementation: KrimZon
+//builtin definitions:
+float() numentityfields = #496;
+string(float fieldnum) entityfieldname = #497;
+float(float fieldnum) entityfieldtype = #498;
+string(float fieldnum, entity ent) getentityfieldstring = #499;
+float(float fieldnum, entity ent, string s) putentityfieldstring = #500;
+//constants:
+//Returned by entityfieldtype
+float FIELD_STRING   = 1;
+float FIELD_FLOAT    = 2;
+float FIELD_VECTOR   = 3;
+float FIELD_ENTITY   = 4;
+float FIELD_FUNCTION = 6;
+//description:
+//Versatile functions intended for storing data from specific entities between level changes, but can be customized for some kind of partial savegame.
+//WARNING: .entity fields cannot be saved and restored between map loads as they will leave dangling pointers.
+//numentityfields returns the number of entity fields. NOT offsets. Vectors comprise 4 fields: v, v_x, v_y and v_z.
+//entityfieldname returns the name as a string, eg. "origin" or "classname" or whatever.
+//entityfieldtype returns a value that the constants represent, but the field may be of another type in more exotic progs.dat formats or compilers.
+//getentityfieldstring returns data as would be written to a savegame, eg... "0.05" (float), "0 0 1" (vector), or "Hello World!" (string). Function names can also be returned.
+//putentityfieldstring puts the data returned by getentityfieldstring back into the entity.
+
+//DP_QC_ENTITYSTRING
+void(string s) loadfromdata = #529;
+void(string s) loadfromfile = #530;
+void(string s) callfunction = #605;
+void(float fh, entity e) writetofile = #606;
+float(string s) isfunction = #607;
+void(entity e, string s) parseentitydata = #608;
+
 // assorted builtins
 const float		STAT_MOVEVARS_TICRATE           = 240;
 const float		STAT_MOVEVARS_TIMESCALE         = 241;
@@ -1414,6 +1447,9 @@ float PARTICLES_USEALPHA = 1;
 float particles_alphamin, particles_alphamax;
 float PARTICLES_USECOLOR = 2;
 vector particles_colormin, particles_colormax;
+float PARTICLES_USEFADE = 4;  // fades the COUNT (fade alpha using alphamin/alphamax)
+float particles_fade;
+float PARTICLES_DRAWASTRAIL = 128;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags) boxparticles = #502;
 float trace_networkentity;
 const float RF_FULLBRIGHT	= 256;

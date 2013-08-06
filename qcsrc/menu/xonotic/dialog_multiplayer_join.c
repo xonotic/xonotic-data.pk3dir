@@ -20,18 +20,15 @@ entity makeXonoticServerListTab()
 }
 void XonoticServerListTab_fill(entity me)
 {
-	entity e, slist, btn;
+	entity e, slist;
 
 	slist  = makeXonoticServerList();
 
 	me.TR(me);
 		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, 0.6, btn = makeXonoticButton(_("Clear"), '0 0 0'));
-			btn.onClick = InputBox_Clear_Click;
-		me.TD(me, 1, me.columns - 0.6 * 4 - 0.4, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 0.6 * 3 - 0.4, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
-			btn.onClickEntity = e;
 			slist.controlledTextbox = e;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
 			slist.filterShowEmpty = e.checked;

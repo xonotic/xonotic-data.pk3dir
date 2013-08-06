@@ -2,6 +2,8 @@ const vector SPIDERBOT_MIN = '-75 -75 10';
 const vector SPIDERBOT_MAX  = '75 75 125';
 
 #ifdef SVQC
+float autocvar_g_vehicle_spiderbot;
+
 float autocvar_g_vehicle_spiderbot_respawntime;
 
 float autocvar_g_vehicle_spiderbot_speed_stop;
@@ -62,7 +64,7 @@ vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 void spiderbot_exit(float eject);
 void spiderbot_enter();
-void spiderbot_spawn();
+void spiderbot_spawn(float);
 #define SBRM_FIRST 0
 #define SBRM_VOLLY 0
 #define SBRM_GUIDE 1
@@ -208,7 +210,7 @@ void spiderbot_rocket_do()
 {
 
     vector v;
-    entity rocket;
+    entity rocket = world;
 
     if (self.wait != -10)
     {        
@@ -255,7 +257,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             crosshair_trace(self.owner);
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
@@ -269,7 +271,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE, self.owner);
             crosshair_trace(self.owner);
             rocket.pos1       = trace_endpos;
             rocket.nextthink  = time;
@@ -281,14 +283,21 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE);
+                                   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             
             crosshair_trace(self.owner);
+            
             rocket.pos1       = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z       = trace_endpos_z;
-            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);     
             
-            rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, (0.75 * vlen(v - trace_endpos)));
+            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);             
+            float h1 = 0.75 * vlen(v - trace_endpos);
+            
+            //v = trace_endpos;
+            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self); 
+            float h2 = 0.75 * vlen(rocket.pos1 - v);
+            
+            rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
             rocket.movetype  = MOVETYPE_TOSS;            
             rocket.gravity   = 1;
             //rocket.think     = spiderbot_rocket_artillery;   
@@ -305,6 +314,11 @@ void spiderbot_rocket_do()
         self.attack_finished_single = ((self.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
 
     self.gun2.cnt = time + self.attack_finished_single;
+}
+
+float spiderbot_aiframe()
+{
+    return FALSE;
 }
 
 float spiderbot_frame()
@@ -325,11 +339,6 @@ float spiderbot_frame()
     player.BUTTON_ZOOM      = 0;
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
-
-    if(player.impulse == 12)
-    {
-        dprint("WOOOOOOOOOOOtotototototOOOOOOOOOOOOttt\n");
-    }
     
 
 #if 1 // 0 to enable per-gun impact aux crosshairs
@@ -486,14 +495,15 @@ float spiderbot_frame()
             v_forward = normalize(v_forward);
             v += v_forward * 50;
 
-//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 
             fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
-                                5, autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_SBMINIGUN, 0, 1, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
+                                5, autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0, 1, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
+
             endFireBallisticBullet();
 
 //            fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
-//                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
+//                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_VH_SPID_MINIGUN, 0);
 
             sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
             //trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -514,7 +524,7 @@ float spiderbot_frame()
         }
     }
     else
-        vehicles_regen(cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
+        vehicles_regen(spider.cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, FALSE);
         
@@ -522,10 +532,10 @@ float spiderbot_frame()
     spiderbot_rocket_do();
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, TRUE);
+        vehicles_regen(spider.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, TRUE);
 
     if(self.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, FALSE);
+        vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, FALSE);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
     player.vehicle_ammo2 = spider.tur_head.frame;
@@ -538,10 +548,10 @@ float spiderbot_frame()
     setorigin(player, spider.origin + '0 0 1' * SPIDERBOT_MAX_z);
     player.velocity = spider.velocity;
 
-    VEHICLE_UPDATE_PLAYER(health, spiderbot);
+    VEHICLE_UPDATE_PLAYER(player, health, spiderbot);
 
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, spiderbot);
+        VEHICLE_UPDATE_PLAYER(player, shield, spiderbot);
 
     self = player;
     return 1;    
@@ -556,6 +566,7 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
+    self.vehicle_weapon2mode = SBRM_GUIDE;
     self.movetype   = MOVETYPE_WALK;
     CSQCVehicleSetup(self.owner, 0);
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
@@ -584,7 +595,7 @@ void spiderbot_exit(float eject)
         e = e.chain;
     }
 
-    self.velocity   = '0 0 0';
+    //self.velocity   = '0 0 0';
     self.think      = spiderbot_think;
     self.nextthink  = time;
     self.frame      = 5;
@@ -604,36 +615,32 @@ void spiderbot_exit(float eject)
 	}
 	else
 	{
-	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
-	    self.owner.oldvelocity = self.owner.velocity;	    
-	    spot = self.origin - v_forward * 200 + '0 0 64';
-	    spot = vehicles_findgoodexit(spot);
+		if(vlen(self.velocity) > autocvar_g_vehicle_spiderbot_speed_strafe)
+		{
+			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
+			self.owner.velocity_z += 200;
+			spot = self.origin + v_forward * 128 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
+		else
+		{
+			self.owner.velocity = self.velocity * 0.5;
+			self.owner.velocity_z += 10;
+			spot = self.origin + v_forward * 256 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
+	    self.owner.oldvelocity = self.owner.velocity;
 	    setorigin(self.owner , spot);
 	}
-    antilag_clear(self.owner);
+	
+	antilag_clear(self.owner);
     self.owner = world;
 }
+
 void spider_impact()
 {
     if(autocvar_g_vehicle_spiderbot_bouncepain_x)
         vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
-}
-void spiderbot_spawn()
-{
-    self.frame              = 5;
-    self.tur_head.frame     = 1;
-    self.think              = spiderbot_think;
-    self.nextthink          = time;
-    self.vehicle_health     = autocvar_g_vehicle_spiderbot_health;
-    self.vehicle_shield     = autocvar_g_vehicle_spiderbot_shield;
-    self.movetype           = MOVETYPE_WALK;
-    self.solid              = SOLID_SLIDEBOX;
-    self.alpha              = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
-    self.tur_head.angles    = '0 0 0';
-
-    setorigin(self, self.pos1 + '0 0 128');
-    self.angles = self.pos2;
-    self.vehicle_impact = spider_impact;
 }
 
 void spiderbot_headfade()
@@ -716,7 +723,7 @@ void spiderbot_blowup()
     SUB_SetFade(g1, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
     SUB_SetFade(g2, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_SBBLOWUP, world);
+    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.movetype   = MOVETYPE_NONE;
@@ -729,9 +736,9 @@ void spiderbot_blowup()
 void spiderbot_die()
 {
     self.health             = 0;
-    self.event_damage       = SUB_Null;
+    self.event_damage       = func_null;
     self.takedamage         = DAMAGE_NO;
-    self.touch              = SUB_Null;
+    self.touch              = func_null;
     self.cnt                = 3.4 + time + random() * 2;
     self.think              = spiderbot_blowup;
     self.nextthink          = time;
@@ -778,46 +785,46 @@ float spiderbot_impulse(float _imp)
     return FALSE;
 }
 
-void vewhicle_spiderbot_dinit()
+void spiderbot_spawn(float _f)
 {
-    if not (vehicle_initialize(
-             "Spiderbot",
-             "models/vehicles/spiderbot.dpm",
-             "models/vehicles/spiderbot_top.dpm",
-             "models/vehicles/spiderbot_cockpit.dpm",
-             "tag_head", "tag_hud", "",
-             HUD_SPIDERBOT,
-             SPIDERBOT_MIN, SPIDERBOT_MAX,
-             FALSE,
-             spiderbot_spawn, autocvar_g_vehicle_spiderbot_respawntime,
-             spiderbot_frame,
-             spiderbot_enter, spiderbot_exit,
-             spiderbot_die,   spiderbot_think,
-             FALSE, 
-             autocvar_g_vehicle_spiderbot_health))
-    {
-        remove(self);
-        return;
+    if(!self.gun1)
+    {        
+        self.vehicles_impusle   = spiderbot_impulse;
+        self.gun1               = spawn();
+        self.gun2               = spawn();    
+        setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
+        setmodel(self.gun2, "models/vehicles/spiderbot_barrels.dpm");
+        setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
+        setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
+        self.gravity            = 2;
+        self.mass               = 5000;
     }
 
+    self.frame              = 5;
+    self.tur_head.frame     = 1;
+    self.think              = spiderbot_think;
+    self.nextthink          = time;
+    self.vehicle_health     = autocvar_g_vehicle_spiderbot_health;
+    self.vehicle_shield     = autocvar_g_vehicle_spiderbot_shield;
+    self.movetype           = MOVETYPE_WALK;
+    self.solid              = SOLID_SLIDEBOX;
+    self.alpha              = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
+    self.tur_head.angles    = '0 0 0';    
 
-    self.gun1               = spawn();
-    self.gun2               = spawn();
-    
-    self.vehicles_impusle   = spiderbot_impulse;
-    
-    setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
-    setmodel(self.gun2, "models/vehicles/spiderbot_barrels.dpm");
-
-    setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
-    setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
-
-    self.gravity            = 2;
-    self.mass               = 5000;
+    setorigin(self, self.pos1 + '0 0 128');
+    self.angles = self.pos2;
+    self.vehicle_impact = spider_impact;
+    self.damageforcescale = 0.03;
 }
 
 void spawnfunc_vehicle_spiderbot()
 {
+    if(!autocvar_g_vehicle_spiderbot)
+    {
+        remove(self);
+        return;
+    }        
+
     self.vehicle_flags |= VHF_DMGSHAKE;
     //self.vehicle_flags |= VHF_DMGROLL;
     //self.vehicle_flags |= VHF_DMGHEADROLL;
@@ -839,7 +846,6 @@ void spawnfunc_vehicle_spiderbot()
     precache_sound ( "vehicles/spiderbot_walk.wav");
     precache_sound ( "vehicles/spiderbot_land.wav");
 
-    vehicles_configcheck("vehicle_spiderbot.cfg", autocvar_g_vehicle_spiderbot_health);
     if(autocvar_g_vehicle_spiderbot_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 
@@ -848,12 +854,26 @@ void spawnfunc_vehicle_spiderbot()
 
     if(autocvar_g_vehicle_spiderbot_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
-    
-    self.think = vewhicle_spiderbot_dinit;
-    
-    if(g_assault)
-        self.nextthink = time + 0.5;
-    else
-        self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_spiderbot_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
+        
+    if not (vehicle_initialize(
+             "Spiderbot",
+             "models/vehicles/spiderbot.dpm",
+             "models/vehicles/spiderbot_top.dpm",
+             "models/vehicles/spiderbot_cockpit.dpm",
+             "tag_head", "tag_hud", "",
+             HUD_SPIDERBOT,
+             SPIDERBOT_MIN, SPIDERBOT_MAX,
+             FALSE,
+             spiderbot_spawn, autocvar_g_vehicle_spiderbot_respawntime,
+             spiderbot_frame,
+             spiderbot_enter, spiderbot_exit,
+             spiderbot_die,   spiderbot_think,
+             FALSE, 
+             autocvar_g_vehicle_spiderbot_health,
+             autocvar_g_vehicle_spiderbot_shield))
+    {
+        remove(self);
+        return;
+    }
 }
 #endif // SVQC

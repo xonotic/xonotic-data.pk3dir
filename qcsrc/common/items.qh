@@ -31,16 +31,16 @@ float   IT_STRENGTH                  = 8192;
 float   IT_INVINCIBLE                = 16384;
 float   IT_HEALTH                    = 32768;
 // union:
-        // for items:
-        float   IT_KEY1              = 131072;
-        float   IT_KEY2              = 262144;
-        // for players:
-        float   IT_RED_FLAG_TAKEN    = 32768;
-        float   IT_RED_FLAG_LOST     = 65536;
-        float   IT_RED_FLAG_CARRING  = 98304;
-        float   IT_BLUE_FLAG_TAKEN   = 131072;
-        float   IT_BLUE_FLAG_LOST    = 262144;
-        float   IT_BLUE_FLAG_CARRING = 393216;
+	// for items:
+	float	IT_KEY1					= 131072;
+	float	IT_KEY2					= 262144;
+	// for players:
+	float	IT_RED_FLAG_TAKEN		= 32768;
+	float	IT_RED_FLAG_LOST		= 65536;
+	float	IT_RED_FLAG_CARRYING		= 98304;
+	float	IT_BLUE_FLAG_TAKEN		= 131072;
+	float	IT_BLUE_FLAG_LOST		= 262144;
+	float	IT_BLUE_FLAG_CARRYING	= 393216;
 // end
 float   IT_5HP                       = 524288;
 float   IT_25HP                      = 1048576;
@@ -242,3 +242,7 @@ string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 
 void W_RandomWeapons(entity e, float n);
+
+string W_Name(float weaponid);
+
+float W_AmmoItemCode(float wpn);

@@ -1,10 +1,21 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
+REGISTER_WEAPON(
+/* WEP_##id  */ MINE_LAYER,
+/* function  */ w_minelayer,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "minelayer",
+/* shortname */ "minelayer",
+/* fullname  */ _("Mine Layer")
+);
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
+.vector mine_orientation;
 
 void spawnfunc_weapon_minelayer (void)
 {
@@ -31,7 +42,7 @@ void W_Mine_Stick (entity to)
 	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
-	newmine.oldvelocity = self.velocity;
+	newmine.mine_orientation = -trace_plane_normal;
 
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
@@ -45,7 +56,7 @@ void W_Mine_Stick (entity to)
 
 	newmine.mine_time = self.mine_time;
 
-	newmine.touch = SUB_Null;
+	newmine.touch = func_null;
 	newmine.think = W_Mine_Think;
 	newmine.nextthink = time;
 	newmine.cnt = self.cnt;
@@ -61,13 +72,13 @@ void W_Mine_Stick (entity to)
 void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
@@ -91,11 +102,11 @@ void W_Mine_Explode ()
 
 void W_Mine_DoRemoteExplode ()
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
-		self.velocity = self.oldvelocity;
+		self.velocity = self.mine_orientation; // particle fx and decals need .velocity
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
@@ -153,7 +164,7 @@ float W_Mine_Count(entity e)
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
-		
+
 	return minecount;
 }
 
@@ -184,7 +195,7 @@ void W_Mine_Think (void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(self.realowner.classname != "player" || self.realowner.deadflag != DEAD_NO)
+	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -196,7 +207,7 @@ void W_Mine_Think (void)
 	head = findradius(self.origin, autocvar_g_balance_minelayer_proximityradius);
 	while(head)
 	{
-		if(head.classname == "player" && head.deadflag == DEAD_NO)
+		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
 		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
@@ -225,9 +236,14 @@ void W_Mine_Touch (void)
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
-	PROJECTILE_TOUCH;
+	if(WarpZone_Projectile_Touch())
+	{
+		if(wasfreed(self))
+			self.realowner.minelayer_mines -= 1;
+		return;
+	}
 
-	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
+	if(other && IS_PLAYER(other) && other.deadflag == DEAD_NO)
 	{
 		// hit a player
 		// don't stick
@@ -263,8 +279,7 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(autocvar_g_balance_minelayer_limit)
 	{
-	
-		if(W_Mine_Count(self) >= autocvar_g_balance_minelayer_limit)
+		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
@@ -355,7 +370,10 @@ float w_minelayer(float req)
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
-		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
+		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+			self.BUTTON_ATCK = FALSE;
+		else
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
 		if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 		{
 			// decide whether to detonate mines
@@ -427,7 +445,7 @@ float w_minelayer(float req)
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
 					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
@@ -505,9 +523,21 @@ float w_minelayer(float req)
 		else
 			return FALSE;
 	}
+	else if (req == WR_RESETPLAYER)
+	{
+		self.minelayer_mines = 0;
+	}
 	else if (req == WR_RELOAD)
 	{
 		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_MINELAYER_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_MINELAYER_MURDER;
 	}
 	return TRUE;
 }
@@ -526,20 +556,6 @@ float w_minelayer(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/mine_exp.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s blew themself up with their minelayer");
-		else
-			w_deathtypestring = _("%s forgot about their mine");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s got too close to %s's mine");
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s almost dodged %s's mine");
-		else
-			w_deathtypestring = _("%s stepped on %s's mine");
 	}
 	return TRUE;
 }

@@ -43,7 +43,18 @@ void CreatureFrame (void)
 			{
 				self.dmgtime = time + autocvar_g_balance_contents_damagerate; 
 				
-				if (!projectile)
+				if (projectile)
+				{
+					if (self.watertype == CONTENT_LAVA)
+					{
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+					}
+					else if (self.watertype == CONTENT_SLIME)
+					{
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					}
+				}
+				else
 				{
 					if (self.watertype == CONTENT_LAVA)
 					{
@@ -63,10 +74,6 @@ void CreatureFrame (void)
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
-				}
-				else if ((self.watertype == CONTENT_LAVA) || (self.watertype == CONTENT_SLIME))
-				{
-					Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 				}
 			}
 		}
@@ -146,7 +153,6 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
-void RuneMatchGivePoints();
 float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
@@ -169,9 +175,9 @@ void StartFrame (void)
 		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
 		{
-			if(clienttype(cl) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(cl))
 				++c_seeing;
-			if(cl.classname == "player")
+			if(IS_PLAYER(cl))
 				++c_seen;
 		}
 		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
@@ -203,19 +209,13 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
-	count_players();
-	if(g_ca || g_freezetag)
-		count_alive_players();
-	Arena_Warmup();
-	Spawnqueue_Check();
-
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;
 
 	if(game_delay_last == TRUE)
 	if(game_delay == FALSE)
 	if(autocvar_sv_eventlog)
-			GameLogEcho(":startdelay_ended");
+		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
@@ -231,9 +231,6 @@ void StartFrame (void)
 	CreatureFrame ();
 	CheckRules_World ();
 
-	AuditTeams();
-
-	RuneMatchGivePoints();
 	bot_serverframe();
 
 	FOR_EACH_PLAYER(self)
