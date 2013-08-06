@@ -439,7 +439,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_TIED,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound tied"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_OVER,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, there's no winner"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag(s)\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 4,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_FLAG_THROW_PUNISH,       0, 1, "f1secs",       CPID_CTF_LOWPRIO,    "0 0", _("^BGToo many flag throws! Throwing disabled for %s."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_OTHER_, 4,          2, 0, "s1 s2",        CPID_CTF_PASS,       "0 0", _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \
@@ -450,8 +450,8 @@ void Send_Notification_WOVA(
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY,            1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,    2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM,             1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_VERBOSE,     2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
+	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_, 4,         1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"), "") \
+	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_RETURN_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou returned the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_CARRIER,       0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_OTHER,         0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
