@@ -18,8 +18,24 @@ ENDCLASS(XonoticScreenshotViewerDialog)
 #endif
 
 #ifdef IMPLEMENTATION
+float music_playlist_index_backup;
 void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 {
+	// disable music as it can lag depending on image loading time
+	if(!cvar("menu_screenshotviewer_enablemusic"))
+	if(cvar("music_playlist_index") != 999) // if the playlist isn't paused
+	{
+		// pause music
+		if(cvar("music_playlist_index") != -1)
+		{
+			music_playlist_index_backup = cvar("music_playlist_index");
+			cvar_set("music_playlist_sampleposition0", "0");
+			cvar_set("music_playlist_index", "999");
+		}
+		else
+			localcmd("\ncd pause\n");
+	}
+
 	if (me.currentScrPath == scrImage)
 		return;
 	if (me.currentScrPath)
@@ -106,6 +122,15 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 }
 void XonoticScreenshotViewerDialog_close(entity me)
 {
+	// resume music
+	if(!cvar("menu_screenshotviewer_enablemusic"))
+	if(cvar("music_playlist_index") == 999)
+	{
+		cvar_set("music_playlist_index", ftos(music_playlist_index_backup));
+	}
+	else
+		localcmd("\ncd resume\n");
+
 	me.scrList.stopSlideShow(me.scrList);
 	me.slideShowButton.forcePressed = 0;
 	SUPER(XonoticScreenshotViewerDialog).close(me);
