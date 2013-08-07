@@ -2940,7 +2940,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		default:
 		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
-		case 3: fs = 1; fs2 = 0.35; fs3 = autocvar_fs3; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
 		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
 	
