@@ -71,6 +71,12 @@ float Invasion_CheckWinner()
 			if(head.iceblock) remove(head.iceblock);
 			remove(head);
 		}
+		
+		if(roundcnt >= maxrounds)
+		{
+			NextLevel();
+			return 1;
+		}
 	
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
