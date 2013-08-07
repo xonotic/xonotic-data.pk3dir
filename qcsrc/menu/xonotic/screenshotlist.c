@@ -111,12 +111,14 @@ void XonoticScreenshotList_getScreenshots(entity me)
 	getScreenshots_for_ext(me, ".tga", TRUE);
 	getScreenshots_for_ext(me, ".png", TRUE);
 	me.nItems = buf_getsize(me.listScreenshot);
-	buf_sort(me.listScreenshot, 128, FALSE);
+	if(me.nItems > 0)
+		buf_sort(me.listScreenshot, 128, FALSE);
 }
 
 void XonoticScreenshotList_destroy(entity me)
 {
-	buf_del(me.listScreenshot);
+	if(me.nItems > 0)
+		buf_del(me.listScreenshot);
 }
 
 void XonoticScreenshotList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
