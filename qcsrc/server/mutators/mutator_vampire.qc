@@ -1,19 +1,14 @@
 MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 {
-	if(time < self.spawnshieldtime)
-		return 0;
-	if(g_minstagib)
+	if(time >= frag_target.spawnshieldtime)
+	if(frag_target != frag_attacker)
+	if(frag_target.deadflag == DEAD_NO)
 	{
-		// minstagib: each hit means +1 ammo
-		if(frag_attacker != frag_target)
-			frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
+		frag_attacker.health += bound(0, damage_take, frag_target.health);
+		frag_attacker.health = bound(0, frag_attacker.health, autocvar_g_balance_health_limit);
 	}
-	else
-	{
-		// otherwise: each hit gets damage back
-		frag_attacker.health = frag_attacker.health + bound(0, damage_take, self.health);
-	}
-	return 0;
+		
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsString)
