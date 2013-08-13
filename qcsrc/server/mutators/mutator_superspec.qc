@@ -409,19 +409,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			superspec_msg("", "", self, "No active flag carrier\n", 1);
 		return TRUE;
 	}
-	
-	if(cmd_name == "followkiller")
-	{
-		entity _player;
-		FOR_EACH_PLAYER(_player)
-		{
-			if(_player.deadflag)
-				return _spectate(frag_attacker);
-		}
-
-		superspec_msg("", "", self, "Following the killer\n", 1);
-		return TRUE;
-	}
 
 	return FALSE;
 #undef OPTIONINFO
@@ -497,6 +484,25 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
+{
+	entity _old_self = self;
+
+	FOR_EACH_SPEC(self)
+	{
+		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == _old_self)
+		{
+			if(self.autospec_flags & ASF_SHOWWHAT)
+				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
+
+			_spectate(frag_attacker);
+		}
+	}
+
+	self = _old_self;
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(superspec_ClientDisconnect)
 {
 	superspec_save_client_conf();
@@ -512,6 +518,7 @@ MUTATOR_DEFINITION(mutator_superspec)
 	MUTATOR_HOOK(ItemTouch, superspec_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, superspec_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, superspec_ClientDisconnect, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, superspec_PlayerDies, CBC_ORDER_ANY);
 
 	return 0;
 }
