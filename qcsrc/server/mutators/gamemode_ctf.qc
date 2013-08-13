@@ -536,7 +536,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 			else
 				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PICKUP_TEAM_), Team_ColorCode(player.team));
 		}
-		else if(ctf_IsDifferentTeam(tmp_player, player) && !ctf_IsDifferentTeam(flag, tmp_player))
+		else if(IsDifferentTeam(tmp_player, player) && !ctf_IsDifferentTeam(flag, tmp_player))
 		{
 			if(tmp_player.PICKUP_ENEMY_VERBOSE)
 				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_VERBOSE, Team_ColorCode(player.team), player.netname);
