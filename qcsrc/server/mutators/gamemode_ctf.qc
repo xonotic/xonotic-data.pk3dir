@@ -1772,13 +1772,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		switch(flag.team)
-		{
-			case NUM_TEAM_1: t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; break;
-			case NUM_TEAM_2: t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; break;
-			case NUM_TEAM_3: t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; break;
-			case NUM_TEAM_4: t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; break;
-		}
+		if(flag.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_3) { t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_4) { t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; }
 	
 		switch(flag.ctf_status)
 		{
