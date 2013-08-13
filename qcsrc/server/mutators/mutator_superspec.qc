@@ -9,6 +9,7 @@
 #define ASF_OBSERVER_ONLY   32
 #define ASF_SHOWWHAT        64
 #define ASF_SSIM            128
+#define ASF_FOLLOWKILLER    256
 #define ASF_ALL             0xFFFFFF
 .float autospec_flags;
 
@@ -118,9 +119,9 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 
 		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
 				(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-				(self.autospec_flags& ASF_MEGA_AR && _item.classname == "item_armor_large") ||
-				(self.autospec_flags& ASF_MEGA_HP && _item.classname == "item_health_mega") ||
-				(self.autospec_flags& ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
+				(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
+				(self.autospec_flags & ASF_MEGA_HP && _item.classname == "item_health_mega") ||
+				(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{
 
 			if((self.enemy != other) || IS_OBSERVER(self))
@@ -279,6 +280,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				_aspeco = strcat(_aspeco, "^3 observer_only ^7(short^5 oo^7) for automatic spectate only if in observer mode\n");
 				_aspeco = strcat(_aspeco, "^3 show_what ^7(short^5 sw^7) to display what event triggered autospectate\n");
 				_aspeco = strcat(_aspeco, "^3 item_msg ^7(short^5 im^7) to autospec when item_message in superspectate is triggered\n");
+				_aspeco = strcat(_aspeco, "^3 followkiller ^7(short ^5fk^7) to autospec the killer/off\n");
 				_aspeco = strcat(_aspeco, "^3 all ^7(short ^5aa^7) to turn everything on/off\n");
 				superspec_msg("^2Available Auto Spectate ^3options:\n\n\n", "\n^2Available Auto Spectate ^3options:\n", self, _aspeco, 1);
 				return TRUE;
@@ -315,6 +317,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 					if((argv(i) == "observer_only") || (argv(i) == "oo")) _bits |= ASF_OBSERVER_ONLY;
 					if((argv(i) == "show_what") || (argv(i) == "sw")) _bits |= ASF_SHOWWHAT;
 					if((argv(i) == "item_msg") || (argv(i) == "im")) _bits |= ASF_SSIM;
+					if((argv(i) == "followkiller") || (argv(i) == "fk")) _bits |= ASF_FOLLOWKILLER;
 					if((argv(i) == "all") || (argv(i) == "aa")) _bits |= ASF_ALL;
 				}
 			}
@@ -329,6 +332,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_OBSERVER_ONLY, "Only switch if observer", "observer_only", "oo");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHOWWHAT, "Show what item triggered spectate", "show_what", "sw");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SSIM, "Switch on superspec item message", "item_msg", "im");
+		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FOLLOWKILLER, "Followkiller", "followkiller", "fk");
 
 		superspec_msg("^3Current auto spectate options are:\n\n\n\n\n", "\n^3Current auto spectate options are:\n", self, _aspeco, 1);
 		return TRUE;
@@ -403,6 +407,19 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 
 		if(!found)
 			superspec_msg("", "", self, "No active flag carrier\n", 1);
+		return TRUE;
+	}
+	
+	if(cmd_name == "followkiller")
+	{
+		entity _player;
+		FOR_EACH_PLAYER(_player)
+		{
+			if(_player.deadflag)
+				return _spectate(frag_attacker);
+		}
+
+		superspec_msg("", "", self, "Following the killer\n", 1);
 		return TRUE;
 	}
 
