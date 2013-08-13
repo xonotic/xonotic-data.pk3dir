@@ -486,13 +486,12 @@ void CSQC_UpdateView(float w, float h)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
 
 			// detect maximum viewoffset and use it
-			WarpZone_TraceLine(current_view_origin, current_view_origin + autocvar_cl_eventchase_viewoffset + ('0 0 1' * autocvar_cl_eventchase_maxs_z), MOVE_WORLDONLY, self);
-			current_view_origin_z +=
-				max(0,
-					(trace_fraction * autocvar_cl_eventchase_viewoffset_z)
-					-
-					autocvar_cl_eventchase_maxs_z
-				);
+			if(autocvar_cl_eventchase_viewoffset)
+			{
+				WarpZone_TraceLine(current_view_origin, current_view_origin + autocvar_cl_eventchase_viewoffset + ('0 0 1' * autocvar_cl_eventchase_maxs_z), MOVE_WORLDONLY, self);
+				if(trace_fraction == 1) { current_view_origin += autocvar_cl_eventchase_viewoffset; }
+				else { current_view_origin_z += max(0, (trace_endpos_z - current_view_origin_z) - autocvar_cl_eventchase_maxs_z); }
+			}
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
