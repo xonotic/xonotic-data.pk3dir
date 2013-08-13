@@ -313,7 +313,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
-		else if(!ctf_IsDifferentTeam(tmp_player, sender))
+		else if(!IsDifferentTeam(tmp_player, sender))
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
@@ -888,7 +888,7 @@ void ctf_FlagTouch()
 		{
 			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
 			{
-				if(ctf_IsDifferentTeam(toucher, self.pass_sender))
+				if(IsDifferentTeam(toucher, self.pass_sender))
 					ctf_Handle_Return(self, toucher);
 				else
 					ctf_Handle_Retrieve(self, toucher);
@@ -1898,7 +1898,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			while(head) // find the closest acceptable target to pass to
 			{
 				if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
-				if(head != player && !ctf_IsDifferentTeam(head, player))
+				if(head != player && !IsDifferentTeam(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
 					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
