@@ -1128,7 +1128,7 @@ entity havocbot_ctf_find_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (bot.team == f.team)
+		if (!ctf_IsDifferentTeam(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1141,7 +1141,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (bot.team != f.team)
+		if (ctf_IsDifferentTeam(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1174,7 +1174,7 @@ void havocbot_goalrating_ctf_ourflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team == head.team)
+		if (!ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1188,7 +1188,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team == head.team)
+		if (!ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1204,7 +1204,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team != head.team)
+		if (ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
