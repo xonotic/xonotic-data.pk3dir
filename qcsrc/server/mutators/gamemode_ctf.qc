@@ -1050,7 +1050,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		//flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
 		switch(teamnumber)
 		{
 			case NUM_TEAM_1: flag.glow_color = 251; break; // red
@@ -1066,7 +1065,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
 	if(autocvar_g_ctf_dynamiclights)
 	{
-		// flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE);
 		switch(teamnumber)
 		{
 			case NUM_TEAM_1: flag.effects |= EF_RED; break;
