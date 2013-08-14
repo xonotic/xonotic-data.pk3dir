@@ -259,22 +259,9 @@ void player_anim (void)
 
 void SpawnThrownWeapon (vector org, float w)
 {
-	if(g_pinata)
-	{
-		float j;
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			if(WEPSET_CONTAINS_EW(self, j))
-				if(W_IsWeaponThrowable(j))
-					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
-		}
-	}
-	else
-	{
-		if(WEPSET_CONTAINS_EW(self, self.weapon))
-			if(W_IsWeaponThrowable(self.weapon))
-				W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
-	}
+	if(WEPSET_CONTAINS_EW(self, self.weapon))
+		if(W_IsWeaponThrowable(self.weapon))
+			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -494,9 +481,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-
-	if(g_ca && self != attacker && IS_PLAYER(attacker))
-		PlayerTeamScore_Add(attacker, SP_SCORE, ST_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
 	float abot, vbot, awep;
 	abot = (IS_BOT_CLIENT(attacker));

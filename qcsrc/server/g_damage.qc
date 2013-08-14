@@ -626,13 +626,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
-							if(complainteamdamage > 0 && !g_ca) // FIXME why is g_ca ruled out here? Why not just g_mirrordamage 0 on CA servers?
+							if(complainteamdamage > 0)
 								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
 							mirrorforce = autocvar_g_mirrordamage * vlen(force);
-							if(g_ca)
-								damage = 0;
-							else
-								damage = autocvar_g_friendlyfire * damage;
+							damage = autocvar_g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 
 							if(autocvar_g_mirrordamage_virtual)
@@ -708,7 +705,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 		if (targ == attacker)
 		{
-			if(g_ca || (g_cts && !autocvar_g_cts_selfdamage))
+			if(g_cts && !autocvar_g_cts_selfdamage)
 				damage = 0;
 			else
 				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
@@ -772,7 +769,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || g_midair)
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime)
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
