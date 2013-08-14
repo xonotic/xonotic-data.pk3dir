@@ -523,7 +523,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 {
 	if(self.freezetag_frozen)
 	{
-		if(autocvar_sv_dodging_frozen)
+		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
 		{
 			self.movement_x = bound(-5, self.movement_x, 5);
 			self.movement_y = bound(-5, self.movement_y, 5);
