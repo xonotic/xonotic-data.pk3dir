@@ -336,6 +336,22 @@ float w_glauncher(float req)
 			
 			return TRUE;
 		}
+		/*case WR_CALCINFO:
+		{
+			wepinfo_pri_refire = max3(sys_frametime, WEP_CVAR_PRI(mortar, refire), WEP_CVAR_PRI(mortar, animtime));
+			wepinfo_pri_dps = (WEP_CVAR_PRI(mortar, damage) * (1 / wepinfo_pri_refire));
+			wepinfo_pri_speed = (1 / max(1, (10000 / max(1, WEP_CVAR_PRI(mortar, speed)))));
+
+			// for the range calculation, closer to 1 is better
+			wepinfo_pri_range_max = 2000 * wepinfo_pri_speed;
+			wepinfo_pri_range = wepinfo_pri_speed * WEP_CVAR_PRI(mortar, 
+			
+			wepinfo_sec_refire = max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime));
+			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / wepinfo_sec_refire));
+			
+			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
+			wepinfo_ter_dps = 0;
+			*/
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
