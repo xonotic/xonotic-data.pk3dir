@@ -151,5 +151,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.cvarsDialog;
 	me.TR(me);
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Factory reset"), '0 0 0'));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.resetDialog;
+	me.TR(me);
 }
 #endif

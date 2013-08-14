@@ -114,3 +114,4 @@
 #include "xonotic/dialog_hudpanel_buffs.c"
 #include "xonotic/slider_picmip.c"
 #include "xonotic/slider_particles.c"
+#include "xonotic/dialog_settings_misc_reset.c"
