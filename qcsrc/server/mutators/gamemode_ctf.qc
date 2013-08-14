@@ -1015,12 +1015,12 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence
-	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
-	if(flag.model == "") 		{ flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
-	if(flag.toucheffect == "") 	{ flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
-	if(flag.passeffect == "") 	{ flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
-	if(flag.capeffect == "") 	{ flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
-	if(!flag.skin) 				{ flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
+	if(flag.model == "")       { flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
+	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
+	if(!flag.skin)             { flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
+	if(flag.toucheffect == "") { flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
+	if(flag.passeffect == "")  { flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
+	if(flag.capeffect == "")   { flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
 	
 	// sound 
 	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_taken.wav")); }
