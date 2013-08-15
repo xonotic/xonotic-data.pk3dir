@@ -805,6 +805,10 @@ void ctf_FlagThink()
 					wpforenemy_nextthink = time + WPFE_THINKRATE; // waypoint for enemy think rate (to reduce unnecessary spam of this check)
 				}
 			}
+			if(!ctf_IsDifferentTeam(self, self.owner))
+			{
+				ctf_Handle_Throw(self.owner, world, DROP_THROW);
+			}
 			return;
 		}
 		
