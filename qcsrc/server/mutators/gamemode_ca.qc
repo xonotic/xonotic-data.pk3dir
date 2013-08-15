@@ -234,6 +234,53 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
+{
+	if(IS_PLAYER(frag_target))
+	if(frag_target.deadflag == DEAD_NO)
+	if(frag_target == frag_attacker || !IsDifferentTeam(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
+		frag_damage = 0;
+		
+	frag_mirrordamage = 0;
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_FilterItem)
+{
+	if(autocvar_g_powerups <= 0)
+	if(self.flags & FL_POWERUP)
+		return TRUE;
+		
+	if(autocvar_g_pickup_items <= 0)
+		return TRUE;
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
+{
+	float excess = max(0, frag_damage - damage_take - damage_save);
+	
+	if(frag_target != frag_attacker && IS_PLAYER(frag_attacker))
+		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		
+	return FALSE;
+}
+
+// scoreboard setup
+void ca_ScoreRules()
+{
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_CA_ROUNDS,    "rounds",    SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
+
+void ca_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+{
+	ca_ScoreRules();
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
@@ -268,6 +315,9 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(SetStartItems, ca_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
