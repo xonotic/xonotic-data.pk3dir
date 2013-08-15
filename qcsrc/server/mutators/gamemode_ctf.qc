@@ -137,6 +137,19 @@ float ctf_IsDifferentTeam(entity a, entity b)
 	return (autocvar_g_ctf_reverse) ? !f : f;
 }
 
+float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
+{
+	// team waypoints
+	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
+	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
+	if(!IsDifferentTeam(self.owner, e))
+		return FALSE;
+	if not(IS_PLAYER(e))
+		return FALSE;
+
+	return TRUE;
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -657,7 +670,10 @@ void ctf_CheckStalemate(void)
 		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
-				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, tmp_entity.team, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+			{
+				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+				tmp_entity.owner.wps_enemyflagcarrier.waypointsprite_visible_for_player = ctf_Stalemate_waypointsprite_visible_for_player;
+			}
 		}
 		
 		if not(wpforenemy_announced)
