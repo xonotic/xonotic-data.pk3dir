@@ -16,7 +16,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_bloodloss;
+float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -549,7 +549,6 @@ float client_cefc_accumulatortime;
 
 .float spectatee_status;
 .float zoomstate;
-.float bloodloss_timer;
 .float restriction;
 
 .entity clientdata;

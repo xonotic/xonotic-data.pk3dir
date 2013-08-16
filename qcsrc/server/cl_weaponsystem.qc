@@ -233,7 +233,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
 
-	if (!g_norecoil)
+	if (!autocvar_g_norecoil)
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
@@ -667,6 +667,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		complain = 0;
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
+		
+	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !WEPSET_CONTAINS_EW(cl, wpn) && !WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+		complain = 0;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST)
 	{

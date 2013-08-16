@@ -16,3 +16,4 @@ turrets
 weapons
 barricade
 monsters
+ok_nade_counter
