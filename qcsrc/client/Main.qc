@@ -156,12 +156,6 @@ void CSQC_Init(void)
 	hud_configure_prev = -1;
 
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
-
-
-	//// WIP - zykure
-
-	PlayerInfo_Init();
-	PlayerInfo_Retrieve(self.owner);
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)

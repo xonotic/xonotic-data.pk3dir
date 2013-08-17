@@ -110,12 +110,19 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if(argv(0) == "debugstats")
+	if(argv(0) == "debugstats_details")
 	{
-		entity p = spawn();
-		//p.crypto_idfp = "pQBWJrkNzHCMtndkICJacPENGctTNR59rmFS4x91FFo="; // Antibody's hashkey
 		PlayerInfo_Init();
-		PlayerInfo_Retrieve(p);
+		PlayerInfo_Details();
+		return;
+	}
+
+	if(argv(0) == "debugstats_basic")
+	{
+                entity p = spawn();
+                p.playerid = 0;
+		PlayerInfo_Init();
+		PlayerInfo_Basic(p);
 		return;
 	}
 

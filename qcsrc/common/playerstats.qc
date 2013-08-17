@@ -436,7 +436,12 @@ void PlayerStats_EndMatch(float finished)
 #endif // SVQC
 
 
-//// WIP -zykure
+
+
+//// WIP -zykure /////////////////////////////////////////////////////
+
+
+
 
 float playerinfo_db;
 string playerinfo_last;
@@ -445,15 +450,11 @@ string playerinfo_events_last;
 
 void PlayerInfo_AddPlayer(entity e)
 {
-	string s;
-
 	if(playerinfo_db < 0)
 		return;
 
-	s = sprintf("#%d", e.playerid);
-
 	string key;
-	key = sprintf("%s:*", s);
+	key = sprintf("#%d:*", e.playerid); // TODO: use hashkey instead?
 
 	string p;
 	p = db_get(playerinfo_db, key);
@@ -467,7 +468,7 @@ void PlayerInfo_AddPlayer(entity e)
 		else
 			db_put(playerinfo_db, key, "#");
 		playerinfo_last = strzone(ftos(e.playerid));
-		print("  Added player ", s, " to playerinfo_db\n");
+		print("  Added player ", ftos(e.playerid), " to playerinfo_db\n");//DEBUG//
 	}
 }
 
@@ -496,7 +497,7 @@ void PlayerInfo_AddItem(entity e, string item_id, string val)
 	key = sprintf("#%d:%s", e.playerid, item_id);
 	db_put(playerinfo_db, key, val);
 
-	print("Added event ", key, "=", val, " to playerinfo_db\n");
+	print("  Added item ", key, "=", val, " to playerinfo_db\n");//DEBUG//
 }
 
 string PlayerInfo_GetItem(entity e, string item_id)
@@ -622,34 +623,43 @@ void PlayerInfo_Init()
 	playerinfo_db = db_create();
 }
 
-void PlayerInfo_Retrieve(entity p)
+//#ifdef SVQC
+void PlayerInfo_Basic(entity p)
 {
 	if(playerinfo_db < 0)
 		return;
 
-	string uri = "", hash = "";
-/*
-#ifdef SVQC
-	uri = autocvar_g_playerstats_uri;
-	hash = p.crypto_idfp;
-#endif
-#ifdef CSQC
-	uri = "http://stats.xonotic.org"; // FIXME!
-	hash = "pQBWJrkNzHCMtndkICJacPENGctTNR59rmFS4x91FFo="; // FIXME!
-#endif
-*/
-#ifdef MENUQC
-	uri = "http://stats.xonotic.org"; // FIXME!
-	hash = crypto_getmyidfp(0);
-	if (hash == "")
-		print("Error: could not retrive hashkey for player (status: ", ftos(crypto_getmyidstatus(0)), ")\n");
-#endif
-	print("Checking for player hashkey: <", hash, "> (playerid=", ftos(p.playerid), ")\n");
+        string uri, hash;
+	//uri = "http://stats.xonotic.org"; // FIXME!
+        uri = "http://localhost:6543";
+        hash = "pQBWJrkNzHCMtndkICJacPENGctTNR59rmFS4x91FFo=";
 
-	if(uri != "" && hash != "")
+	if(uri != "")
 	{
-		uri = strcat(uri, "/hashkey/", uri_escape(hash));
+		uri = strcat(uri, "/elo/", uri_escape(hash));
 		print("Retrieving playerstats from URL: ", uri, "\n");
 		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
 	}
 }
+//#endif
+
+#ifdef MENUQC
+void PlayerInfo_Details()
+{
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+	//uri = "http://stats.xonotic.org"; // FIXME!
+        uri = "http://localhost:6543";
+
+	if(uri != "")
+	{
+                entity p = spawn();
+                p.playerid = -1; // TODO: okay to use -1 for local player? or does local player already has an entity in MENUQC?
+		uri = strcat(uri, "/player/me");
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+	}
+}
+#endif

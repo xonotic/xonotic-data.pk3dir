@@ -59,8 +59,18 @@ void PlayerStats_EndMatch(float finished);
 #endif //SVQC
 
 
-//// WIP -zykure
+
+
+//// WIP -zykure /////////////////////////////////////////////////////
+
+
+
 
 string PlayerInfo_GetItem(entity e, string item_id);
 void PlayerInfo_Init();
-void PlayerInfo_Retrieve(entity p);
+//#ifdef SVQC
+void PlayerInfo_Basic(entity p);
+//#endif
+#ifdef MENUQC
+void PlayerInfo_Details();
+#endif
