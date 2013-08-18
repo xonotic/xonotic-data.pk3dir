@@ -4,7 +4,7 @@ CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticServerCreateTab, rows, float, 22)
+	ATTRIB(XonoticServerCreateTab, rows, float, 23)
 	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
@@ -30,6 +30,7 @@ void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
 
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));
 	me.TR(me);
@@ -98,12 +99,12 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClickEntity = main.advancedDialog;
 			main.advancedDialog.refilterEntity = me.mapListBox;
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 1, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Map list:")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, me.mapListBox);
+		me.TD(me, me.rows - 5, 3, me.mapListBox);
 	me.gotoRC(me, me.rows - 3, 3.5);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));

@@ -4,7 +4,7 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticPlayerSettingsTab, draw, void(entity))
 	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Profile"))
 	ATTRIB(XonoticPlayerSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticPlayerSettingsTab, rows, float, 22)
+	ATTRIB(XonoticPlayerSettingsTab, rows, float, 23)
 	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabel, entity, NULL)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
@@ -33,6 +33,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	entity e, pms, label, box;
 	float i;
 
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
@@ -84,7 +85,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 1, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model:")));
 	me.TR(me);
@@ -97,7 +98,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 
-	me.gotoRC(me, 14, 3.533); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 15, 3.533); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color:")));
 		for(i = 0; i < 15; ++i)
@@ -106,7 +107,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 				me.TR(me);
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
 		}
-	me.gotoRC(me, 14, 4.866); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 15, 4.866); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color:")));
 		for(i = 0; i < 15; ++i)

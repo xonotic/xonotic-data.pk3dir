@@ -13,7 +13,7 @@ ENDCLASS(XonoticMultiplayerDialog)
 void XonoticMultiplayerDialog_fill(entity me)
 {
 	entity mc, e;
-	mc = makeXonoticTabController(me.rows - 2);
+	mc = makeXonoticTabController(me.rows - 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"), makeXonoticServerListTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"), makeXonoticServerCreateTab()));
@@ -24,7 +24,6 @@ void XonoticMultiplayerDialog_fill(entity me)
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Profile"), makeXonoticPlayerSettingsTab()));
 
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, me.rows - 2, me.columns, mc);
+		me.TD(me, me.rows - 1, me.columns, mc);
 }
 #endif
