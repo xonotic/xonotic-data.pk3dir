@@ -2,7 +2,7 @@
 CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticPlayerSettingsTab, fill, void(entity))
 	METHOD(XonoticPlayerSettingsTab, draw, void(entity))
-	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Player Setup"))
+	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Profile"))
 	ATTRIB(XonoticPlayerSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticPlayerSettingsTab, rows, float, 22)
 	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space 
@@ -55,20 +55,49 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
+	
+	// Statistic Stuff -Debugger
+	me.TR(me);
+	me.TDempty(me, 0.5);
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Player Statistics:")));
+	me.TR(me);
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Total playing time:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Last played:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Games played:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Win / Losses:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Kills / Deaths:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("CTF elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DM elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("TDM elo:")));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DUEL elo:")));
+	me.TR(me);
+	
 
-	me.TR(me);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Model:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model:")));
 	me.TR(me);
-		me.TDempty(me, 1);
 		pms = makeXonoticPlayerModelSelector();
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - (me.currentRow + 2), 1.4, pms);
+		me.TD(me, 13, 2.4, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
+
+	me.gotoRC(me, 14, 3.533); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color:")));
 		for(i = 0; i < 15; ++i)
@@ -77,7 +106,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 				me.TR(me);
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
 		}
-	me.TR(me);
+	me.gotoRC(me, 14, 4.866); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color:")));
 		for(i = 0; i < 15; ++i)
@@ -87,6 +116,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
 
+	/*
 	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
 	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
@@ -176,6 +206,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.onClickEntity = main.hudDialog;
 		// TODO: show hud config name with text here 
 
+	*/
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
 }
