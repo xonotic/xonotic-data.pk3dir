@@ -15,6 +15,7 @@
 	DEATHTYPE(DEATH_KILL,                   DEATH_SELF_SUICIDE,                 NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_LAVA,                   DEATH_SELF_LAVA,                    DEATH_MURDER_LAVA,             NORMAL_POS) \
 	DEATHTYPE(DEATH_MIRRORDAMAGE,           DEATH_SELF_BETRAYAL,                NO_MSG,                        NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE,					DEATH_SELF_NADE,					DEATH_MURDER_NADE,	   		   NORMAL_POS) \
 	DEATHTYPE(DEATH_NOAMMO,                 DEATH_SELF_NOAMMO,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_ROT,                    DEATH_SELF_ROT,                     NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_SHOOTING_STAR,          DEATH_SELF_SHOOTING_STAR,           DEATH_MURDER_SHOOTING_STAR,    NORMAL_POS) \

@@ -16,16 +16,10 @@
 // and to ramp up the dodge acceleration in the physics hook.
 .float last_dodging_time;
 
-// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
-.float dodging_action;
-
 // This is the velocity gain to be added over the ramp time.
 // It will decrease from frame to frame during dodging_action = 1
 // until it's 0.
 .float dodging_velocity_gain;
-
-// the jump part of the dodge cannot be ramped
-.float dodging_single_action;
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
@@ -39,6 +33,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float new_velocity_gain;
 	float velocity_difference;
 	float clean_up_and_do_nothing;
+	float horiz_speed = autocvar_sv_dodging_horiz_speed;
+	
+	if(self.freezetag_frozen)
+		horiz_speed = autocvar_sv_dodging_horiz_speed_frozen;
 
     if (self.deadflag != DEAD_NO)
         return 0;
@@ -72,7 +70,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (common_factor > 1) 
 		common_factor = 1;
 
-	new_velocity_gain = self.dodging_velocity_gain - (common_factor * autocvar_sv_dodging_horiz_speed);
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * horiz_speed);
 	if (new_velocity_gain < 0)
 		new_velocity_gain = 0;
 
@@ -170,6 +168,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	tap_direction_x = 0;
 	tap_direction_y = 0;
+	
+	float frozen_dodging;
+	frozen_dodging = (self.freezetag_frozen && autocvar_sv_dodging_frozen);
 
 	float dodge_detected;
 	if (g_dodging == 0)
@@ -187,7 +188,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_x > 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_FORWARD)) {
+		if (!(self.pressedkeys & KEY_FORWARD) || frozen_dodging) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				tap_direction_x = 1.0;
 				dodge_detected = 1;
@@ -198,7 +199,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_x < 0) {
 		// is this a state change?
- 		if (!(self.pressedkeys & KEY_BACKWARD)) {
+ 		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_dodging) {
 			tap_direction_x = -1.0;
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
@@ -209,7 +210,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_y > 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_RIGHT)) {
+		if (!(self.pressedkeys & KEY_RIGHT) || frozen_dodging) {
 			tap_direction_y = 1.0;
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
@@ -220,7 +221,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_y < 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_LEFT)) {
+		if (!(self.pressedkeys & KEY_LEFT) || frozen_dodging) {
 			tap_direction_y = -1.0;
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
