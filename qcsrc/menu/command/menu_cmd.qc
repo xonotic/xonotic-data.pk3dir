@@ -110,19 +110,10 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if(argv(0) == "debugstats_details")
+	if(argv(0) == "debugstats")
 	{
 		PlayerInfo_Init();
 		PlayerInfo_Details();
-		return;
-	}
-
-	if(argv(0) == "debugstats_basic")
-	{
-                entity p = spawn();
-                p.playerid = 0;
-		PlayerInfo_Init();
-		PlayerInfo_Basic(p);
 		return;
 	}
 

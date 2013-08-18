@@ -623,43 +623,66 @@ void PlayerInfo_Init()
 	playerinfo_db = db_create();
 }
 
-//#ifdef SVQC
+#ifdef SVQC
 void PlayerInfo_Basic(entity p)
 {
-	if(playerinfo_db < 0)
-		return;
+        print("-- Getting basic PlayerInfo for player ",ftos(p.playerid)," (SVQC)\n");
 
-        string uri, hash;
-	//uri = "http://stats.xonotic.org"; // FIXME!
-        uri = "http://localhost:6543";
-        hash = "pQBWJrkNzHCMtndkICJacPENGctTNR59rmFS4x91FFo=";
-
-	if(uri != "")
-	{
-		uri = strcat(uri, "/elo/", uri_escape(hash));
-		print("Retrieving playerstats from URL: ", uri, "\n");
-		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
-	}
-}
-//#endif
-
-#ifdef MENUQC
-void PlayerInfo_Details()
-{
 	if(playerinfo_db < 0)
 		return;
 
         string uri;
-	//uri = "http://stats.xonotic.org"; // FIXME!
-        uri = "http://localhost:6543";
-
-	if(uri != "")
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && p.crypto_idfp != "")
 	{
-                entity p = spawn();
-                p.playerid = -1; // TODO: okay to use -1 for local player? or does local player already has an entity in MENUQC?
-		uri = strcat(uri, "/player/me");
+		uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
 		print("Retrieving playerstats from URL: ", uri, "\n");
 		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
 	}
 }
+#endif
+
+#ifdef MENUQC
+void PlayerInfo_Details()
+{
+        print("-- Getting detailed PlayerInfo for local player (MENUQC)\n");
+
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && crypto_getmyidstatus(0) > 0)
+	{
+                entity p = spawn();
+                p.playerid = 0; // TODO: okay to use 0 for local player? or does local player already has an entity in MENUQC?
+		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+	}
+}
+#endif
+
+#ifdef CSQC
+/*
+ * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qc:885)
+void PlayerInfo_Details()
+{
+        print("-- Getting detailed PlayerInfo for local player (CSQC)\n");
+
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && crypto_getmyidstatus(0) > 0)
+	{
+                entity p = spawn();
+                p.playerid = 0; // TODO: okay to use -1 for local player? or does local player already has an entity in MENUQC?
+		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+	}
+}
+*/
 #endif
