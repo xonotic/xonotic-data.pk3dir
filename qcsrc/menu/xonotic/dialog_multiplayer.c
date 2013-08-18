@@ -20,7 +20,7 @@ void XonoticMultiplayerDialog_fill(entity me)
 		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
 		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
 		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Players"), makeXonoticDemoBrowserTab()));
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Media"), makeXonoticDemoBrowserTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Media"), makeXonoticMediaTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Profile"), makeXonoticPlayerSettingsTab()));
 
 	me.TR(me);
