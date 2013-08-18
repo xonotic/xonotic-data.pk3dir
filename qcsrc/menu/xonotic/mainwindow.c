@@ -11,6 +11,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, winnerDialog, entity, NULL)
 	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
+	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
 	ATTRIB(MainWindow, viewDialog, entity, NULL)
 	ATTRIB(MainWindow, modelDialog, entity, NULL)
 	ATTRIB(MainWindow, crosshairDialog, entity, NULL)
@@ -116,8 +117,12 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticHUDInfoMessagesDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
+	
 	i = spawnXonoticHUDPhysicsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.screenshotViewerDialog = i = spawnXonoticScreenshotViewerDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
