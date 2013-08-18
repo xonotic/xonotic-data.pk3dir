@@ -148,7 +148,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
-	
+
 	// remove the component in line direction
 	p = p - (p * ldir) * ldir;
 
@@ -265,7 +265,7 @@ void db_save(float db, string pFilename)
 {
 	float fh, i, n;
 	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0) 
+	if(fh < 0)
 	{
 		print(strcat("^1Can't write DB to ", pFilename));
 		return;
@@ -409,6 +409,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -459,7 +475,7 @@ string ScoreString(float pFlags, float pValue)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
 		valstr = ftos(pValue);
-	
+
 	return valstr;
 }
 
@@ -665,7 +681,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 				neworder = strcat(neworder, ftos(w), " ");
 		}
 	}
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -678,7 +694,7 @@ string mapPriorityList(string order, string(string) mapfunc)
 	neworder = "";
 	for(i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -703,7 +719,7 @@ string swapInPriorityList(string order, float i, float j)
 		}
 		return substring(s, 0, strlen(s) - 1);
 	}
-	
+
 	return order;
 }
 
@@ -1101,7 +1117,7 @@ vector rgb_to_hsv(vector rgb)
 		hsv_y = 0;
 	else
 		hsv_y = 1 - mi/ma;
-	
+
 	return hsv;
 }
 
@@ -1119,7 +1135,7 @@ vector rgb_to_hsl(vector rgb)
 	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	
+
 	hsl_z = 0.5 * (mi + ma);
 	if(mi == ma)
 		hsl_y = 0;
@@ -1127,7 +1143,7 @@ vector rgb_to_hsl(vector rgb)
 		hsl_y = (ma - mi) / (2*hsl_z);
 	else // if(hsl_z > 0.5)
 		hsl_y = (ma - mi) / (2 - 2*hsl_z);
-	
+
 	return hsl;
 }
 
@@ -1139,7 +1155,7 @@ vector hsl_to_rgb(vector hsl)
 		maminusmi = hsl_y * 2 * hsl_z;
 	else
 		maminusmi = hsl_y * (2 - 2 * hsl_z);
-	
+
 	// hsl_z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
 	mi = hsl_z - 0.5 * maminusmi;
@@ -1200,7 +1216,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1228,7 +1244,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1264,7 +1280,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1292,7 +1308,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1339,7 +1355,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -1385,7 +1401,7 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -2291,12 +2307,12 @@ float InterpretBoolean(string input)
 		case "true":
 		case "on":
 			return TRUE;
-		
+
 		case "no":
 		case "false":
 		case "off":
 			return FALSE;
-		
+
 		default: return stof(input);
 	}
 }
@@ -2427,7 +2443,7 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	/*
 	// if this is the case, the possible zeros of the first derivative are outside
 	// 0..1
-	We can calculate this condition as condition 
+	We can calculate this condition as condition
 	if(se <= 3)
 		return TRUE;
 	*/
@@ -2533,12 +2549,12 @@ void backtrace(string msg)
 string CCR(string input)
 {
 	// See the autocvar declarations in util.qh for default values
-	
+
 	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
 
 	// "kill" colors
 	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
