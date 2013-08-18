@@ -1,34 +1,34 @@
 #ifdef INTERFACE
-CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
-	METHOD(XonoticPlayerSettingsTab, fill, void(entity))
-	METHOD(XonoticPlayerSettingsTab, draw, void(entity))
-	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Profile"))
-	ATTRIB(XonoticPlayerSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticPlayerSettingsTab, rows, float, 23)
-	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space 
-	ATTRIB(XonoticPlayerSettingsTab, playerNameLabel, entity, NULL)
-	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
-ENDCLASS(XonoticPlayerSettingsTab)
-entity makeXonoticPlayerSettingsTab();
+CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
+	METHOD(XonoticProfileTab, fill, void(entity))
+	METHOD(XonoticProfileTab, draw, void(entity))
+	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
+	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticProfileTab, rows, float, 23)
+	ATTRIB(XonoticProfileTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticProfileTab, playerNameLabel, entity, NULL)
+	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, 0)
+ENDCLASS(XonoticProfileTab)
+entity makeXonoticProfileTab();
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticPlayerSettingsTab()
+entity makeXonoticProfileTab()
 {
 	entity me;
-	me = spawnXonoticPlayerSettingsTab();
+	me = spawnXonoticProfileTab();
 	me.configureDialog(me);
 	return me;
 }
-void XonoticPlayerSettingsTab_draw(entity me)
+void XonoticProfileTab_draw(entity me)
 {
 	if(cvar_string("_cl_name") == "Player")
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;
-	SUPER(XonoticPlayerSettingsTab).draw(me);
+	SUPER(XonoticProfileTab).draw(me);
 }
-void XonoticPlayerSettingsTab_fill(entity me)
+void XonoticProfileTab_fill(entity me)
 {
 	entity e, pms, label, box;
 	float i;
