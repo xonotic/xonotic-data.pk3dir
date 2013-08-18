@@ -67,6 +67,8 @@ void PlayerStats_EndMatch(float finished);
 const string playerinfo_uri = "http://localhost:6543"; // FIXME
 
 string PlayerInfo_GetItem(entity e, string item_id);
+string PlayerInfo_GetItemLocal(string item_id);
+
 void PlayerInfo_Init();
 #ifdef SVQC
 void PlayerInfo_Basic(entity p);

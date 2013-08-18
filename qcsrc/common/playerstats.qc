@@ -503,11 +503,18 @@ void PlayerInfo_AddItem(entity e, string item_id, string val)
 string PlayerInfo_GetItem(entity e, string item_id)
 {
 	if(playerinfo_db < 0)
-		return string_null;
+		return "";
 
 	string key;
 	key = sprintf("#%d:%s",  e.playerid, item_id);
 	return db_get(playerinfo_db, key);
+}
+
+string PlayerInfo_GetItemLocal(string item_id)
+{
+        entity p = spawn();
+        p.playerid = 0;
+        return PlayerInfo_GetItem(p, item_id);
 }
 
 void PlayerInfo_ready(entity fh, entity p, float status)
@@ -521,7 +528,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 	{
 		case URL_READY_CANREAD:
 			print("-- Got response from player stats server:\n");
-			float in_group = FALSE;
 			string gametype = string_null;
 			while((s = url_fgets(fh)))
 			{
@@ -531,10 +537,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 
 				n = tokenizebyseparator(s, " "); // key (value) data
 				if (n == 1)
-				{
-					if (argv(0) == "}")
-						in_group = FALSE;
-				}
+                                        continue;
 				else if (n == 2)
 				{
 					key = argv(0);
@@ -542,18 +545,9 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 				}
 				else if (n == 3)
 				{
-					if (argv(0) == "{")
-					{
-						in_group = TRUE;
-						key = argv(1);
-						data = argv(2);
-					}
-					else
-					{
-						key = argv(0);
-						value = argv(1);
-						data = argv(2);
-					}
+                                        key = argv(0);
+                                        value = argv(1);
+                                        data = argv(2);
 				}
 				else if (n == 4)
 				{
@@ -591,14 +585,14 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 				else if (key == "i")
 					// xonstats id
 					PlayerInfo_AddItem(p, "_playerid", data);
-				else if (key == "G" && in_group)
+				else if (key == "G")
 					gametype = data;
 				else if (key == "e" && value != "")
 				{
 					if (gametype == "")
 						PlayerInfo_AddItem(p, value, data);
 					else
-						PlayerInfo_AddItem(p, sprintf("%s-%s", gametype, value), data);
+						PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
 				}
 				else
 					continue;
