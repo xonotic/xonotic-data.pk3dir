@@ -27,7 +27,7 @@ void XonoticDemoBrowserTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, 3.5, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 6, e = makeXonoticInputBox(0, string_null));
 			dlist = makeXonoticDemoList();
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = dlist;
