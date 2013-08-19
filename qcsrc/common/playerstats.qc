@@ -496,7 +496,6 @@ void PlayerInfo_AddItem(entity e, string item_id, string val)
 
 	key = sprintf("#%d:%s", e.playerid, item_id);
 	db_put(playerinfo_db, key, val);
-
 	print("  Added item ", key, "=", val, " to playerinfo_db\n");//DEBUG//
 }
 
@@ -517,6 +516,7 @@ string PlayerInfo_GetItemLocal(string item_id)
         return PlayerInfo_GetItem(p, item_id);
 }
 
+.string crypto_idfp;
 void PlayerInfo_ready(entity fh, entity p, float status)
 {
 	float n;
@@ -526,12 +526,30 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 
 	switch(status)
 	{
-		case URL_READY_CANREAD:
+                case URL_READY_CANWRITE:
+			url_fputs(fh, "V 1\n");
+#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+#endif
+			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
+#ifdef MENUQC
+                        url_fputs(fh, sprintf("P %s\n", p.crypto_idfp));
+                        url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
+                        url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
+                        url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+                        url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
+                        url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
+#endif
+			url_fputs(fh, "\n");
+			url_fclose(fh);
+                        print("-- Transmitted data to player stats server:\n");
+                        break;
+                case URL_READY_CANREAD:
 			print("-- Got response from player stats server:\n");
 			string gametype = string_null;
 			while((s = url_fgets(fh)))
 			{
-				print("  >> ", s, "\n");
+				print("  ", s, "\n");
 
 				string key = string_null, value = string_null, data = string_null;
 
@@ -602,7 +620,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished
-			print("Player stats received from server\n");
+			print("Player stats synchronized with server\n");
 			break;
 		case URL_READY_ERROR:
 		default:
@@ -650,9 +668,10 @@ void PlayerInfo_Details()
 	{
                 entity p = spawn();
                 p.playerid = 0; // TODO: okay to use 0 for local player? or does local player already has an entity in MENUQC?
-		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+                p.crypto_idfp = crypto_getmyidfp(0);
+		uri = strcat(uri, "/player/", uri_escape(p.crypto_idfp));
 		print("Retrieving playerstats from URL: ", uri, "\n");
-		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, p);
 	}
 }
 #endif
