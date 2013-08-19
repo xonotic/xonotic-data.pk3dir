@@ -53,6 +53,9 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
+		float i;
+		entity e;
+		string s;
 		string filter = string_null;
 		if(argv(0) == "directpanelhudmenu")
 			filter = strzone("HUD");
@@ -60,9 +63,6 @@ void GameCommand(string theCommand)
 		if(argc == 1)
 		{
 			print(_("Available options:\n"));
-			float i;
-			entity e;
-			string s;
 
 			for(i = 0, e = world; (e = nextent(e)); )
 				if(e.classname != "vtbl" && e.name != "")
@@ -80,6 +80,16 @@ void GameCommand(string theCommand)
 		}
 		else if(argc == 2 && !isdemo()) // don't allow this command in demos
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
+		else if(argc > 2 && !isdemo())
+		{
+			for(i = 0, e = world; (e = nextent(e)); )
+				if(e.classname != "vtbl" && e.name == strcat(filter, argv(1)))
+					if(e.readInputArgs)
+					{
+						e.readInputArgs(e, 2, argc - 1);
+						m_goto(strcat(filter, argv(1)));
+					}
+		}
 		if(filter)
 			strunzone(filter);
 		return;

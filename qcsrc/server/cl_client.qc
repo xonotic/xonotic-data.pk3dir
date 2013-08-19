@@ -726,6 +726,17 @@ void DecodeLevelParms (void)
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
 }
 
+void MOTD_send()
+{
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_SERVERINFO);
+	WriteString(MSG_ONE, "128.03.192.999"); // FIXME: send the real server ip
+	WriteString(MSG_ONE, autocvar_hostname);
+	//WriteString(MSG_ONE, getwelcomemessage());
+	WriteString(MSG_ONE, "Welcome to this server. Have fun!");
+}
+
 /*
 =============
 ClientKill
@@ -1225,7 +1236,10 @@ void ClientConnect (void)
 	self.model_randomizer = random();
 
 	if(IS_REAL_CLIENT(self))
+	{
+		MOTD_send();
 		sv_notice_join();
+	}
 
 	MUTATOR_CALLHOOK(ClientConnect);
 }
