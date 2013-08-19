@@ -516,7 +516,6 @@ string PlayerInfo_GetItemLocal(string item_id)
         return PlayerInfo_GetItem(p, item_id);
 }
 
-.string crypto_idfp;
 void PlayerInfo_ready(entity fh, entity p, float status)
 {
 	float n;
@@ -527,13 +526,13 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 	switch(status)
 	{
                 case URL_READY_CANWRITE:
+                        print("-- Sending data to player stats server\n");
 			url_fputs(fh, "V 1\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 #ifdef MENUQC
-                        url_fputs(fh, sprintf("P %s\n", p.crypto_idfp));
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
                         url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
@@ -542,7 +541,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #endif
 			url_fputs(fh, "\n");
 			url_fclose(fh);
-                        print("-- Transmitted data to player stats server:\n");
                         break;
                 case URL_READY_CANREAD:
 			print("-- Got response from player stats server:\n");
@@ -666,12 +664,9 @@ void PlayerInfo_Details()
         uri = playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
-                entity p = spawn();
-                p.playerid = 0; // TODO: okay to use 0 for local player? or does local player already has an entity in MENUQC?
-                p.crypto_idfp = crypto_getmyidfp(0);
-		uri = strcat(uri, "/player/", uri_escape(p.crypto_idfp));
+		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
 		print("Retrieving playerstats from URL: ", uri, "\n");
-		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, p);
+		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, world);
 	}
 }
 #endif
