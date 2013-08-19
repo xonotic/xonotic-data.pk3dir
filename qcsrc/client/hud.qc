@@ -4593,7 +4593,7 @@ void HUD_Main (void)
 				hud_panel[panel_order[i]].update_time = time;
 		}
 	}
-	else if (hud_configure_prev && autocvar_hud_cursormode)
+	else if(hud_configure_prev && hud_configure_prev != -1 && autocvar_hud_cursormode)
 		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;
