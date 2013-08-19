@@ -55,7 +55,7 @@ float team1_score, team2_score, team3_score, team4_score;
 float maxclients;
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
-float server_is_dedicated; 
+float server_is_dedicated;
 
 // Fields
 
@@ -473,7 +473,7 @@ void target_voicescript_clear(entity pl);
 .float target_random;
 .float trigger_reverse;
 
-// Nexball 
+// Nexball
 .entity ballcarried; // Also used for keepaway
 .float metertime;
 float g_nexball_meter_period;
@@ -514,8 +514,8 @@ string matchid;
 
 .float last_pickup;
 
-.float hit_time; 
-.float typehit_time; 
+.float hit_time;
+.float typehit_time;
 
 .float stat_leadlimit;
 
@@ -613,3 +613,12 @@ string modname;
 #define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
+
+
+////
+
+.entity player_stats;
+//.float playerid;
+.string playernick;
+.float elos;
+.float ranks;

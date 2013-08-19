@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 float playerstats_db;
 string teamstats_last;
 string playerstats_last;
@@ -17,7 +19,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;	
+	serverflags |= SERVERFLAG_PLAYERSTATS;
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -83,7 +85,7 @@ void PlayerStats_AddPlayer(entity e)
 
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -106,7 +108,7 @@ void PlayerStats_AddTeam(float t)
 
 	string key;
 	key = sprintf("%d", t);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -126,10 +128,10 @@ void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
 		return;
-	
+
 	string key;
 	key = sprintf("*:%s", event_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -149,7 +151,7 @@ float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
 		return 0;
-	
+
 	string key;
 	float val;
 	key = sprintf("%s:%s", e.playerstats_id, event_id);
@@ -194,7 +196,7 @@ float PlayerStats_TeamScore(float t, string event_id, float value)
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
-	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
 	n: nickname of the player (optional)
 	t: team ID
 	i: player index
@@ -430,3 +432,265 @@ void PlayerStats_EndMatch(float finished)
 		}
 	}
 }
+
+#endif // SVQC
+
+
+
+
+//// WIP -zykure /////////////////////////////////////////////////////
+
+
+
+
+float playerinfo_db;
+string playerinfo_last;
+string playerinfo_events_last;
+.float playerid;
+
+void PlayerInfo_AddPlayer(entity e)
+{
+	if(playerinfo_db < 0)
+		return;
+
+	string key;
+	key = sprintf("#%d:*", e.playerid); // TODO: use hashkey instead?
+
+	string p;
+	p = db_get(playerinfo_db, key);
+	if(p == "")
+	{
+		if(playerinfo_last)
+		{
+			db_put(playerinfo_db, key, playerinfo_last);
+			strunzone(playerinfo_last);
+		}
+		else
+			db_put(playerinfo_db, key, "#");
+		playerinfo_last = strzone(ftos(e.playerid));
+		print("  Added player ", ftos(e.playerid), " to playerinfo_db\n");//DEBUG//
+	}
+}
+
+void PlayerInfo_AddItem(entity e, string item_id, string val)
+{
+	if(playerinfo_db < 0)
+		return;
+
+	string key;
+	key = sprintf("*:%s", item_id);
+
+	string p;
+	p = db_get(playerinfo_db, key);
+	if(p == "")
+	{
+		if(playerinfo_events_last)
+		{
+			db_put(playerinfo_db, key, playerinfo_events_last);
+			strunzone(playerinfo_events_last);
+		}
+		else
+			db_put(playerinfo_db, key, "#");
+		playerinfo_events_last = strzone(item_id);
+	}
+
+	key = sprintf("#%d:%s", e.playerid, item_id);
+	db_put(playerinfo_db, key, val);
+	print("  Added item ", key, "=", val, " to playerinfo_db\n");//DEBUG//
+}
+
+string PlayerInfo_GetItem(entity e, string item_id)
+{
+	if(playerinfo_db < 0)
+		return "";
+
+	string key;
+	key = sprintf("#%d:%s",  e.playerid, item_id);
+	return db_get(playerinfo_db, key);
+}
+
+string PlayerInfo_GetItemLocal(string item_id)
+{
+        entity p = spawn();
+        p.playerid = 0;
+        return PlayerInfo_GetItem(p, item_id);
+}
+
+void PlayerInfo_ready(entity fh, entity p, float status)
+{
+	float n;
+	string s;
+
+	PlayerInfo_AddPlayer(p);
+
+	switch(status)
+	{
+                case URL_READY_CANWRITE:
+                        print("-- Sending data to player stats server\n");
+			url_fputs(fh, "V 1\n");
+#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+#endif
+			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
+#ifdef MENUQC
+                        url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
+                        url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
+                        url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+                        url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
+                        url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
+#endif
+			url_fputs(fh, "\n");
+			url_fclose(fh);
+                        break;
+                case URL_READY_CANREAD:
+			print("-- Got response from player stats server:\n");
+			string gametype = string_null;
+			while((s = url_fgets(fh)))
+			{
+				print("  ", s, "\n");
+
+				string key = string_null, value = string_null, data = string_null;
+
+				n = tokenizebyseparator(s, " "); // key (value) data
+				if (n == 1)
+                                        continue;
+				else if (n == 2)
+				{
+					key = argv(0);
+					data = argv(1);
+				}
+				else if (n == 3)
+				{
+                                        key = argv(0);
+                                        value = argv(1);
+                                        data = argv(2);
+				}
+				else if (n == 4)
+				{
+					key = argv(0);
+					value = argv(1);
+					data = argv(2);
+				}
+				else
+					continue;
+
+				if (data == "")
+					continue;
+
+				if (key == "#")
+					// comment
+					continue;
+				else if (key == "V")
+					// version
+					PlayerInfo_AddItem(p, "_version", data);
+				else if (key == "R")
+					// watermark
+					PlayerInfo_AddItem(p, "_release", data);
+				else if (key == "T")
+					// timestamp
+					PlayerInfo_AddItem(p, "_time", data);
+				else if (key == "S")
+					// stats page URL
+					PlayerInfo_AddItem(p, "_statsurl", data);
+				else if (key == "P")
+					// player hashkey
+					PlayerInfo_AddItem(p, "_hashkey", data);
+				else if (key == "n")
+					// player nick
+					PlayerInfo_AddItem(p, "_playernick", data);
+				else if (key == "i")
+					// xonstats id
+					PlayerInfo_AddItem(p, "_playerid", data);
+				else if (key == "G")
+					gametype = data;
+				else if (key == "e" && value != "")
+				{
+					if (gametype == "")
+						PlayerInfo_AddItem(p, value, data);
+					else
+						PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
+				}
+				else
+					continue;
+			}
+			print("-- End of response.\n");
+			url_fclose(fh);
+			break;
+		case URL_READY_CLOSED:
+			// url_fclose has finished
+			print("Player stats synchronized with server\n");
+			break;
+		case URL_READY_ERROR:
+		default:
+			print("Receiving player stats failed: ", ftos(status), "\n");
+			break;
+	}
+}
+
+void PlayerInfo_Init()
+{
+	playerinfo_db = -1;
+	playerinfo_db = db_create();
+}
+
+#ifdef SVQC
+void PlayerInfo_Basic(entity p)
+{
+        print("-- Getting basic PlayerInfo for player ",ftos(p.playerid)," (SVQC)\n");
+
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && p.crypto_idfp != "")
+	{
+		uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+	}
+}
+#endif
+
+#ifdef MENUQC
+void PlayerInfo_Details()
+{
+        print("-- Getting detailed PlayerInfo for local player (MENUQC)\n");
+
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && crypto_getmyidstatus(0) > 0)
+	{
+		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, world);
+	}
+}
+#endif
+
+#ifdef CSQC
+/*
+ * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qc:885)
+void PlayerInfo_Details()
+{
+        print("-- Getting detailed PlayerInfo for local player (CSQC)\n");
+
+	if(playerinfo_db < 0)
+		return;
+
+        string uri;
+        uri = playerinfo_uri; // FIXME
+	if(uri != "" && crypto_getmyidstatus(0) > 0)
+	{
+                entity p = spawn();
+                p.playerid = 0; // TODO: okay to use -1 for local player? or does local player already has an entity in MENUQC?
+		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		print("Retrieving playerstats from URL: ", uri, "\n");
+		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+	}
+}
+*/
+#endif

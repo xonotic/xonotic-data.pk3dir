@@ -89,6 +89,8 @@ void m_init()
 			m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+
+        PlayerInfo_Details();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -441,7 +443,7 @@ float m_allocatetooltipbox(vector pos)
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// bottom center
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
@@ -461,12 +463,12 @@ float m_allocatetooltipbox(vector pos)
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// top right
 	v_x = pos_x + avoidplus_x;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	return FALSE;
 }
 entity m_findtooltipitem(entity root, vector pos)

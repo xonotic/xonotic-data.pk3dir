@@ -110,5 +110,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "debugstats")
+	{
+		PlayerInfo_Init();
+		PlayerInfo_Details();
+		return;
+	}
+
 	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }

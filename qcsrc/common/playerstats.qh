@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 // time the player was alive and kicking
 string PLAYERSTATS_ALIVETIME  = "alivetime";
 string PLAYERSTATS_AVGLATENCY = "avglatency";
@@ -46,8 +48,34 @@ float PlayerStats_TeamScore(float t, string event_id, float value);
 // call at game over
 void PlayerStats_Shutdown(); // send stats to the server
 
+void PlayerStats_Accuracy(entity p);
+
 // call this whenever a player leaves
 void PlayerStats_AddGlobalInfo(entity p);
 
 // call this at the end of the match
 void PlayerStats_EndMatch(float finished);
+
+#endif //SVQC
+
+
+
+
+//// WIP -zykure /////////////////////////////////////////////////////
+
+
+const string playerinfo_uri = "http://localhost:6543"; // FIXME
+
+string PlayerInfo_GetItem(entity e, string item_id);
+string PlayerInfo_GetItemLocal(string item_id);
+
+void PlayerInfo_Init();
+#ifdef SVQC
+void PlayerInfo_Basic(entity p);
+#endif
+#ifdef MENUQC
+void PlayerInfo_Details();
+#endif
+#ifdef CSQC
+//void PlayerInfo_Details();
+#endif
