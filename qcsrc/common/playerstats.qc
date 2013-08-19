@@ -186,7 +186,6 @@ float PlayerStats_TeamScore(float t, string event_id, float value)
 	V: format version (always a fixed number) - this MUST be the first line!
 	#: comment (MUST be ignored by any parser)
 	R: release information on the server
-	T: time at which the game ended
 	G: game type
 	O: mod name (icon request) as in server browser
 	M: map name
@@ -233,11 +232,10 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 7\n");
+			url_fputs(fh, "V 8\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
-			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));
 			url_fputs(fh, sprintf("O %s\n", modname));
 			url_fputs(fh, sprintf("M %s\n", GetMapname()));
@@ -531,7 +529,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
-			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 #ifdef MENUQC
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
