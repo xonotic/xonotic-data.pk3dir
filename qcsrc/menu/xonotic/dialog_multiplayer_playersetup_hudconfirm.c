@@ -13,7 +13,7 @@ ENDCLASS(XonoticHUDConfirmDialog)
 void HUDSetup_Start(entity me, entity btn)
 {
 	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
-		localcmd("map hudsetup/hudsetup", "\n");
+		localcmd("map hudsetup", "\n");
 	else
 		localcmd("togglemenu 0\n");
 		
