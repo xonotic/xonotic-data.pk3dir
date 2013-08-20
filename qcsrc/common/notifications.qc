@@ -787,6 +787,17 @@ void Dump_Notifications(float fh, float alsoprint)
 		);
 	}
 
+	NOTIF_WRITE(sprintf("\n// MSG_CHOICE notifications (count = %d):\n", NOTIF_CHOICE_COUNT));
+	for(i = 1; i <= NOTIF_CHOICE_COUNT; ++i)
+	{
+		e = Get_Notif_Ent(MSG_CHOICE, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		
+		NOTIF_WRITE_ENTITY(
+			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall"
+		);
+	}
+
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
 	
@@ -901,18 +912,20 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE(sprintf(
 		strcat(
 			"\n// Notification counts (total = %d): ",
-			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
+			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
 		),
 		(
 			NOTIF_ANNCE_COUNT +
 			NOTIF_INFO_COUNT +
 			NOTIF_CENTER_COUNT +
-			NOTIF_MULTI_COUNT
+			NOTIF_MULTI_COUNT +
+			NOTIF_CHOICE_COUNT
 		),
 		NOTIF_ANNCE_COUNT,
 		NOTIF_INFO_COUNT,
 		NOTIF_CENTER_COUNT,
-		NOTIF_MULTI_COUNT
+		NOTIF_MULTI_COUNT,
+		NOTIF_CHOICE_COUNT
 	));
 	
 	return;
