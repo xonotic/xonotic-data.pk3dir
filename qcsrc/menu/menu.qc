@@ -93,7 +93,8 @@ void m_init()
 
 float MENU_ASPECT = 1.25; // 1280x1024
 float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, realconwidth,
+      realconheight, screenconwidth, screenconheight;
 void draw_reset_cropped()
 {
 	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
@@ -102,8 +103,16 @@ void draw_reset_full()
 {
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
-void UpdateConWidthHeight()
+
+void UpdateConWidthHeight(float w, float h)
 {
+	if (w != vidwidth_s || h != vidheight_s)
+	{
+		initConwidths(w, h);
+		updateConwidths();
+		vidwidth_s = w;
+		vidheight_s = h;
+	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
@@ -149,7 +158,7 @@ void m_init_delayed()
 	string s;
 
 	conwidth = conheight = -1;
-	UpdateConWidthHeight();
+	UpdateConWidthHeight(cvar("vid_width"), cvar("vid_height"));
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -658,7 +667,7 @@ void m_tooltip(vector pos)
 	}
 }
 
-void m_draw()
+void m_draw(float width, float height)
 {
 	float t;
 	float realFrametime;
@@ -673,7 +682,13 @@ void m_draw()
 		anim.tickAll(anim);
 
 	if(main)
-		UpdateConWidthHeight();
+	{
+#ifdef COMPAT_XON070_OLD_M_DRAW
+		UpdateConWidthHeight(width ? width : cvar("vid_width"), height ? height : cvar("vid_height"));
+#else
+		UpdateConWidthHeight(width, height);
+#endif
+	}
 
 	if(!menuInitialized)
 	{

@@ -11,10 +11,10 @@ void updateConwidths();
 #endif
 
 #ifdef IMPLEMENTATION
-void initConwidths()
+void initConwidths(float width, float height)
 {
-	cvar_set("_menu_vid_width", cvar_string("vid_width"));
-	cvar_set("_menu_vid_height", cvar_string("vid_height"));
+	cvar_set("_menu_vid_width", ftos(width));
+	cvar_set("_menu_vid_height", ftos(height));
 	cvar_set("_menu_vid_pixelheight", cvar_string("vid_pixelheight"));
 }
 void updateConwidths()
