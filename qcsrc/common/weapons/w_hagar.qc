@@ -491,7 +491,7 @@ float w_hagar(float req)
 		case WR_RELOAD:
 		{
 			if not(self.hagar_load) // require releasing loaded rockets first
-				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
+				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), "weapons/reload.wav");
 				
 			return TRUE;
 		}

@@ -429,7 +429,7 @@ float w_glauncher(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), autocvar_g_balance_mortar_reload_ammo, autocvar_g_balance_mortar_reload_time, "weapons/reload.wav"); // WEAPONTODO
+			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), "weapons/reload.wav"); // WEAPONTODO
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

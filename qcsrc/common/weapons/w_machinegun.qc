@@ -351,8 +351,7 @@ float w_uzi(float req)
 		}
 		case WR_RELOAD:
 		{
-			entity weapon = get_weaponinfo(WEP_UZI);
-			W_Reload(min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo)), weapon.reloading_ammo, weapon.reloading_time, "weapons/reload.wav");
+			W_Reload(min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo)), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

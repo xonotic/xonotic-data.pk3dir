@@ -870,19 +870,16 @@ void W_ReloadedAndReady()
 	w_ready();
 }
 
-void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
+void W_Reload(float sent_ammo_min, string sent_sound)
 {
 	// set global values to work with
-
-	self.reload_ammo_min = sent_ammo_min;
-	self.reload_ammo_amount = sent_ammo_amount;
-	self.reload_time = sent_time;
-	self.reload_sound = sent_sound;
-
-	// check if we meet the necessary conditions to reload
-
 	entity e;
 	e = get_weaponinfo(self.weapon);
+
+	self.reload_ammo_min = sent_ammo_min;
+	self.reload_ammo_amount = e.reloading_ammo;;
+	self.reload_time = e.reloading_time;
+	self.reload_sound = sent_sound;
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
@@ -929,7 +926,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// now begin the reloading process
 
-	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

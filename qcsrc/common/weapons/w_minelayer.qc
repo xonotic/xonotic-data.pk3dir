@@ -569,7 +569,7 @@ float w_minelayer(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(minelayer, ammo), autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+			W_Reload(WEP_CVAR(minelayer, ammo), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

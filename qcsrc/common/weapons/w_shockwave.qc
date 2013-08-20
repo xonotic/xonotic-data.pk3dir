@@ -265,7 +265,7 @@ float w_shotgun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
+			W_Reload(autocvar_g_balance_shotgun_primary_ammo, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

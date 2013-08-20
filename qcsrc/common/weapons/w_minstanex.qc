@@ -188,7 +188,7 @@ float w_minstanex(float req)
 			else
 				used_ammo = minstanex_ammo;
 
-			W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+			W_Reload(used_ammo, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

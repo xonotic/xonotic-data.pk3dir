@@ -276,7 +276,7 @@ float w_nex(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(nex, ammo), WEP_CVAR_SEC(nex, ammo)), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(nex, ammo), WEP_CVAR_SEC(nex, ammo)), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

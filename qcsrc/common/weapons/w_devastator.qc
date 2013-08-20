@@ -506,7 +506,7 @@ float W_Devastator(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(devastator, ammo), WEP_CVAR(devastator, reload_ammo), WEP_CVAR(devastator, reload_time), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(devastator, ammo), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
