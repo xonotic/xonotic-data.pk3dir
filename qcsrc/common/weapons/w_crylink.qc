@@ -31,7 +31,6 @@ REGISTER_WEAPON(
 	WEP_ADD_CVAR(weapon, MO_BOTH, linkexplode) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, joindelay) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, joinspread) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, jointime) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_damage) \
 	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_edgedamage) \
@@ -130,10 +129,9 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 // stored in w_crylink_linkjoin_time.
 // could possibly network this origin and time, and display a special particle
 // effect when projectiles meet there :P
-// jspeed: MINIMUM jing speed
-// jtime: MAXIMUM jing time (0: none)
+// jspeed: joining speed (calculate this as join spread * initial speed)
 float w_crylink_linkjoin_time;
-vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
+vector W_Crylink_LinkJoin(entity e, float jspeed)
 {
 	vector avg_origin, avg_velocity;
 	vector targ_origin;
@@ -170,7 +168,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	if(avg_dist == 0)
 		return avg_origin; // no change needed
 
-	if(jspeed == 0 && jtime == 0)
+	if(jspeed == 0)
 	{
 		e.velocity = avg_velocity;
 		UpdateCSQCProjectile(e);
@@ -183,15 +181,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	}
 	else
 	{
-		if(jtime)
-		{
-			if(jspeed)
-				w_crylink_linkjoin_time = min(jtime, avg_dist / jspeed);
-			else
-				w_crylink_linkjoin_time = jtime;
-		}
-		else
-			w_crylink_linkjoin_time = avg_dist / jspeed;
+		w_crylink_linkjoin_time = avg_dist / jspeed;
 		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
 
 		e.velocity = (targ_origin - e.origin) * (1.0 / w_crylink_linkjoin_time);
@@ -431,7 +421,7 @@ void W_Crylink_Attack (void)
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
-	if(WEP_CVAR_PRI(crylink, joinspread) != 0 || WEP_CVAR_PRI(crylink, jointime) != 0)
+	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
 	{
 		self.crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -547,7 +537,7 @@ void W_Crylink_Attack2 (void)
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
-	if(WEP_CVAR_SEC(crylink, joinspread) != 0 || WEP_CVAR_SEC(crylink, jointime) != 0)
+	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
 	{
 		self.crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -605,7 +595,7 @@ float w_crylink(float req)
 						entity linkjoineffect;
 						float isprimary = (self.crylink_waitrelease == 1);
 						
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed), WEP_CVAR_BOTH(crylink, isprimary, jointime));
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
 						linkjoineffect = spawn();
 						linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
