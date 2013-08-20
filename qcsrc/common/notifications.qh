@@ -195,6 +195,15 @@ void Send_Notification_WOVA(
       If you send a notification with mismatching arguments, Send_Notification() will error.
 */
 
+#define MULTITEAM_ANNCE(default,prefix,teams,channel,sound,volume,position) \
+	MSG_ANNCE_NOTIF(default, prefix##RED, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), volume, position) \
+	MSG_ANNCE_NOTIF(default, prefix##BLUE, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), volume, position) \
+	#if teams >= 3 \
+		MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position) \
+	#endif \
+	#if teams >= 4 \
+		MSG_ANNCE_NOTIF(default, prefix##PINK, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), volume, position) \
+	#endif
 #define MSG_ANNCE_NOTIFICATIONS \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTN_NONE) \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AMAZING,       CH_INFO, "amazing",           VOL_BASEVOICE, ATTN_NONE) \
