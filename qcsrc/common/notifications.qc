@@ -12,6 +12,7 @@ string Get_Notif_TypeName(float net_type)
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_CENTER_CPID: return "MSG_CENTER_CPID";
 		case MSG_MULTI: return "MSG_MULTI";
+		case MSG_CHOICE: return "MSG_CHOICE";
 	}
 	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
 	return "";
@@ -25,6 +26,7 @@ entity Get_Notif_Ent(float net_type, float net_name)
 		case MSG_INFO: return msg_info_notifs[net_name - 1];
 		case MSG_CENTER: return msg_center_notifs[net_name - 1];
 		case MSG_MULTI: return msg_multi_notifs[net_name - 1];
+		case MSG_CHOICE: return msg_choice_notifs[net_name - 1];
 	}
 	backtrace(sprintf("Get_Notif_Ent(%d, %d): Improper net type!\n", net_type, net_name));
 	return world;
@@ -43,6 +45,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 		CHECKARG_TYPENAME(INFO)
 		CHECKARG_TYPENAME(CENTER)
 		CHECKARG_TYPENAME(MULTI)
+		CHECKARG_TYPENAME(CHOICE)
 		default: { checkargs = sprintf("Improper type: %d!", checkargs, net_type); break; }
 	}
 	#undef CHECKARG_TYPENAME
@@ -141,20 +144,21 @@ void Destroy_All_Notifications(void)
 	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT)
 	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
 	DESTROY_LOOP(MSG_MULTI, NOTIF_MULTI_COUNT)
+	DESTROY_LOOP(MSG_CHOICE, NOTIF_CHOICE_COUNT)
 	#undef DESTROY_LOOP
 }
 
 string Process_Notif_Line(
-	float msg_is_info,
+	float typeid,
 	float chat,
 	string input,
 	string notiftype,
 	string notifname,
 	string stringtype)
 {
-	if(msg_is_info)
+	#ifdef CSQC
+	if(typeid == MSG_INFO)
 	{
-		#ifdef CSQC
 		if((chat && autocvar_notification_allow_chatboxprint)
 			|| (autocvar_notification_allow_chatboxprint == 2))
 		{
@@ -169,22 +173,25 @@ string Process_Notif_Line(
 			if(substring(input, (strlen(input) - 1), 1) == "\{3}")
 				{ input = substring(input, 0, (strlen(input) - 1)); }
 		}
-		#endif
-		if(substring(input, (strlen(input) - 1), 1) == "\n")
-		{
-			print(sprintf(
-				strcat(
-					"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
-					"^7net_type = %s, net_name = %s, string = %s.\n"
-				),
-				notiftype,
-				notifname,
-				stringtype
-			));
-			notif_error = TRUE;
-			return substring(input, 1, (strlen(input) - 1));
-		}
 	}
+	#endif
+
+	// done to both MSG_INFO and MSG_CENTER
+	if(substring(input, (strlen(input) - 1), 1) == "\n")
+	{
+		print(sprintf(
+			strcat(
+				"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
+				"^7net_type = %s, net_name = %s, string = %s.\n"
+			),
+			notiftype,
+			notifname,
+			stringtype
+		));
+		notif_error = TRUE;
+		input = substring(input, 1, (strlen(input) - 1));
+	}
+
 	return input;
 }
 
@@ -360,8 +367,9 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
-	float msg_is_info,
-	float msg_is_multi)
+	float chtype,
+	float optiona,
+	float optionb)
 {
 	// =====================
 	//  Global Entity Setup
@@ -395,7 +403,14 @@ void Create_Notification_Entity(
 		{
 			typestring = "MSG_MULTI";
 			msg_multi_notifs[nameid - 1] = notif;
-			notif.classname = "MSG_MULTI_notification";
+			notif.classname = "msg_multi_notification";
+			break;
+		}
+		case MSG_CHOICE:
+		{
+			typestring = "MSG_CHOICE";
+			msg_choice_notifs[nameid - 1] = notif;
+			notif.classname = "msg_choice_notification";
 			break;
 		}
 
@@ -423,147 +438,124 @@ void Create_Notification_Entity(
 	// ====================
 	//  Notification Setup
 	// ====================
-	if(msg_is_multi)
+	switch(typeid)
 	{
-		// Set MSG_MULTI string/float counts
-		if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
+		case MSG_ANNCE:
 		{
-			print(sprintf(
-				strcat(
-					"^1NOTIFICATION WITH NO SUBCALLS: ",
-					"^7net_type = %s, net_name = %s.\n"
-				),
-				typestring,
-				namestring
-			));
-			notif_error = TRUE;
-		}
-		else
-		{
-			// announcements don't actually need any arguments, so lets not even count them.
-			if(anncename != NO_MSG) { notif.nent_msgannce = msg_annce_notifs[anncename - 1]; }
-			
-			float infoname_stringcount = 0, infoname_floatcount = 0;
-			float centername_stringcount = 0, centername_floatcount = 0;
-			
-			if(infoname != NO_MSG)
+			// Set MSG_ANNCE information and handle precaching
+			#ifdef CSQC
+			if not(GENTLE && (var_cvar == 1))
 			{
-				notif.nent_msginfo = msg_info_notifs[infoname - 1];
-				infoname_stringcount = notif.nent_msginfo.nent_stringcount;
-				infoname_floatcount = notif.nent_msginfo.nent_floatcount;
-			}
-			
-			if(centername != NO_MSG)
-			{
-				notif.nent_msgcenter = msg_center_notifs[centername - 1];
-				centername_stringcount = notif.nent_msgcenter.nent_stringcount;
-				centername_floatcount = notif.nent_msgcenter.nent_floatcount;
-			}
-			
-			// set the requirements of THIS notification to the totals of its subcalls
-			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount);
-			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount);
-		}
-	}
-	else if(typeid == MSG_ANNCE)
-	{
-		// Set MSG_ANNCE information and handle precaching
-		#ifdef CSQC
-		if not(GENTLE && (var_cvar == 1))
-		{
-			if(snd != "")
-			{
-				if(notif.nent_enabled)
+				if(snd != "")
 				{
-					precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
-					notif.nent_channel = channel;
-					notif.nent_snd = strzone(snd);
-					notif.nent_vol = vol;
-					notif.nent_position = position;
+					if(notif.nent_enabled)
+					{
+						precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+						notif.nent_channel = channel;
+						notif.nent_snd = strzone(snd);
+						notif.nent_vol = vol;
+						notif.nent_position = position;
+					}
+				}
+				else
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION WITH NO SOUND: ",
+							"^7net_type = %s, net_name = %s.\n"
+						),
+						typestring,
+						namestring
+					));
+					notif_error = TRUE;
 				}
 			}
-			else
-			{
-				print(sprintf(
-					strcat(
-						"^1NOTIFICATION WITH NO SOUND: ",
-						"^7net_type = %s, net_name = %s.\n"
-					),
-					typestring,
-					namestring
-				));
-				notif_error = TRUE;
-			}
+			else { notif.nent_enabled = FALSE; }
+			#else
+			notif.nent_enabled = FALSE;
+			#endif
+
+			break;
 		}
-		else { notif.nent_enabled = FALSE; }
-		#else
-		notif.nent_enabled = FALSE;
-		#endif
-	}
-	else
-	{
-		// Set MSG_INFO and MSG_CENTER string/float counts
-		notif.nent_stringcount = strnum;
-		notif.nent_floatcount = flnum;
-
-		// Only initialize arguments if we're either a client or on a dedicated server
-		#ifdef SVQC
-		float should_process_args = server_is_dedicated;
-		#else
-		float should_process_args = TRUE;
-		#endif
-
-		if(should_process_args)
+		
+		case MSG_INFO:
+		case MSG_CENTER:
 		{
-			// ========================
-			//  Process Main Arguments
-			// ========================
-			if(strnum + flnum)
+			// Set MSG_INFO and MSG_CENTER string/float counts
+			notif.nent_stringcount = strnum;
+			notif.nent_floatcount = flnum;
+
+			// Only initialize arguments if we're either a client or on a dedicated server
+			#ifdef SVQC
+			float should_process_args = server_is_dedicated;
+			#else
+			float should_process_args = TRUE;
+			#endif
+
+			if(should_process_args)
 			{
-				if(args != "")
+				// ========================
+				//  Process Main Arguments
+				// ========================
+				if(strnum + flnum)
+				{
+					if(args != "")
+					{
+						notif.nent_args = strzone(
+							Process_Notif_Args(1, args, typestring, namestring));
+					}
+					else if((hudargs == "") && (durcnt ==""))
+					{
+						print(sprintf(
+							strcat(
+								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
+								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
+							),
+							typestring,
+							namestring,
+							strnum,
+							flnum
+						));
+						notif_error = TRUE;
+					}
+				}
+				else if(args != "")
 				{
 					notif.nent_args = strzone(
 						Process_Notif_Args(1, args, typestring, namestring));
 				}
-				else if((hudargs == "") && (durcnt ==""))
+
+
+				// =======================================
+				//  Process HUD and Centerprint Arguments
+				//    Only processed on CSQC, as these
+				//    args are only for HUD features.
+				// =======================================
+				#ifdef CSQC
+				if(hudargs != "")
 				{
-					print(sprintf(
-						strcat(
-							"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
-							"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
-						),
-						typestring,
-						namestring,
-						strnum,
-						flnum
-					));
-					notif_error = TRUE;
+					notif.nent_hudargs = strzone(
+						Process_Notif_Args(2, hudargs, typestring, namestring));
+						
+					if(icon != "") { notif.nent_icon = strzone(icon); }
+					else
+					{
+						print(sprintf(
+							strcat(
+								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
+								"^7net_type = %s, net_name = %s.\n"
+							),
+							typestring,
+							namestring
+						));
+						notif_error = TRUE;
+					}
 				}
-			}
-			else if(args != "")
-			{
-				notif.nent_args = strzone(
-					Process_Notif_Args(1, args, typestring, namestring));
-			}
-
-
-			// =======================================
-			//  Process HUD and Centerprint Arguments
-			//    Only processed on CSQC, as these
-			//    args are only for HUD features.
-			// =======================================
-			#ifdef CSQC
-			if(hudargs != "")
-			{
-				notif.nent_hudargs = strzone(
-					Process_Notif_Args(2, hudargs, typestring, namestring));
-					
-				if(icon != "") { notif.nent_icon = strzone(icon); }
-				else
+				else if(icon != "")
 				{
 					print(sprintf(
 						strcat(
-							"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
+							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
@@ -571,73 +563,80 @@ void Create_Notification_Entity(
 					));
 					notif_error = TRUE;
 				}
-			}
-			else if(icon != "")
-			{
-				print(sprintf(
-					strcat(
-						"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
-						"^7net_type = %s, net_name = %s.\n"
-					),
-					typestring,
-					namestring
-				));
-				notif_error = TRUE;
-			}
 
-			if(durcnt != "")
-			{
-				notif.nent_durcnt = strzone(
-					Process_Notif_Args(3, durcnt, typestring, namestring));
-					
-				if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
-				else
+				if(durcnt != "")
 				{
-					print(sprintf(
-						strcat(
-							"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
-							"^7net_type = %s, net_name = %s.\n"
-						),
-						typestring,
-						namestring
-					));
-					notif_error = TRUE;
+					notif.nent_durcnt = strzone(
+						Process_Notif_Args(3, durcnt, typestring, namestring));
+						
+					if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+					else
+					{
+						print(sprintf(
+							strcat(
+								"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
+								"^7net_type = %s, net_name = %s.\n"
+							),
+							typestring,
+							namestring
+						));
+						notif_error = TRUE;
+					}
+				} 
+				else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+				#endif
+
+
+				// ======================
+				//  Process Notif String
+				// ======================
+				#define SET_NOTIF_STRING(string,stringname) \
+					notif.nent_string = strzone(CCR( \
+						Process_Notif_Line( \
+							typeid, \
+							(var_cvar > 1), \
+							string, \
+							typestring, \
+							namestring, \
+							stringname \
+						)) \
+					);
+
+				if(GENTLE)
+				{
+					if(gentle != "") { SET_NOTIF_STRING(gentle, "GENTLE") }
+					else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
 				}
-			} 
-			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
-			#endif
-
-
-			// ======================
-			//  Process Notif String
-			// ======================
-			#define SET_NOTIF_STRING(string,stringname) \
-				notif.nent_string = strzone(CCR( \
-					Process_Notif_Line( \
-						msg_is_info, \
-						(var_cvar > 1), \
-						string, \
-						typestring, \
-						namestring, \
-						stringname \
-					)) \
-				);
-
-			if(GENTLE)
-			{
-				if(gentle != "") { SET_NOTIF_STRING(gentle, "GENTLE") }
 				else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
-			}
-			else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
-			
-			#undef SET_NOTIF_STRING
+				
+				#undef SET_NOTIF_STRING
 
-			// Check to make sure a string was chosen
-			if(notif.nent_string == "")
+				// Check to make sure a string was chosen
+				if(notif.nent_string == "")
+				{
+					print(sprintf(
+						strcat(
+							"^1EMPTY NOTIFICATION: ",
+							"^7net_type = %s, net_name = %s.\n"
+						),
+						typestring,
+						namestring
+					));
+					notif_error = TRUE;
+				}
+			}
+
+			break;
+		}
+
+		case MSG_MULTI:
+		{
+			// Set MSG_MULTI string/float counts
+			if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 			{
 				print(sprintf(
 					strcat(
-						"^1EMPTY NOTIFICATION: ",
+						"^1NOTIFICATION WITH NO SUBCALLS: ",
 						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
@@ -645,7 +644,42 @@ void Create_Notification_Entity(
 				));
 				notif_error = TRUE;
 			}
+			else
+			{
+				// announcements don't actually need any arguments, so lets not even count them.
+				if(anncename != NO_MSG) { notif.nent_msgannce = msg_annce_notifs[anncename - 1]; }
+				
+				float infoname_stringcount = 0, infoname_floatcount = 0;
+				float centername_stringcount = 0, centername_floatcount = 0;
+				
+				if(infoname != NO_MSG)
+				{
+					notif.nent_msginfo = msg_info_notifs[infoname - 1];
+					infoname_stringcount = notif.nent_msginfo.nent_stringcount;
+					infoname_floatcount = notif.nent_msginfo.nent_floatcount;
+				}
+				
+				if(centername != NO_MSG)
+				{
+					notif.nent_msgcenter = msg_center_notifs[centername - 1];
+					centername_stringcount = notif.nent_msgcenter.nent_stringcount;
+					centername_floatcount = notif.nent_msgcenter.nent_floatcount;
+				}
+				
+				// set the requirements of THIS notification to the totals of its subcalls
+				notif.nent_stringcount = max(infoname_stringcount, centername_stringcount);
+				notif.nent_floatcount = max(infoname_floatcount, centername_floatcount);
+			}
+			
+			break;
 		}
+
+		case MSG_CHOICE:
+		{
+			break;
+		}
+		
+		default: print("DAFUQ?\n"); notif_error = TRUE; break;
 	}
 
 	// now check to see if any errors happened 
