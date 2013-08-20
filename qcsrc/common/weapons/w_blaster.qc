@@ -173,7 +173,6 @@ void W_Laser_Shockwave()
 
 		if(head.takedamage)
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
 			center = PLAYER_CENTER(head);
 
 			float distance_to_head = vlen(attack_hitpos - head.WarpZone_findradius_nearest);

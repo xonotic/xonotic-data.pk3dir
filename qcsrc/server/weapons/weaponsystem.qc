@@ -690,10 +690,10 @@ void W_WeaponFrame()
 			self.weaponentity.state = WS_RAISE;
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
-			if(newwep.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"))) // prevent accessing undefined cvars
+			if(newwep.spawnflags & WEP_FLAG_RELOADABLE && newwep.reloading_ammo) // prevent accessing undefined cvars
 			{
 				self.clip_load = self.(weapon_load[self.switchweapon]);
-				self.clip_size = cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"));
+				self.clip_size = newwep.reloading_ammo;
 			}
 			else
 				self.clip_load = self.clip_size = 0;

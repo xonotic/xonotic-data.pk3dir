@@ -43,8 +43,7 @@ void Dump_Weapon_Settings(void)
 		
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, W_Name(i)))
-		for(x = 0; x <= WEP_CONFIG_COUNT; ++x)
-			{ WEP_CONFIG_WRITETOFILE(wep_config_queue[x]) }
+		for(x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(wep_config_queue[x]) }
 		WEP_CONFIG_WRITETOFILE("// }}}\n")
 
 		// step 5: debug info
