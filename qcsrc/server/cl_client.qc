@@ -564,7 +564,7 @@ void PutClientInServer (void)
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.(weapon_load[j]) = e.reloading_ammo;
 		}
 
 		oldself = self;
