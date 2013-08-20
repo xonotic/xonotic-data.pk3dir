@@ -952,7 +952,7 @@ string Local_Notification_sprintf(
 			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
-	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
+	return sprintf(strcat(input, "\n"), arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 }
 
 #ifdef CSQC
