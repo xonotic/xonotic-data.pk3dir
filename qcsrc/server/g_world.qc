@@ -1177,7 +1177,6 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 void Maplist_Init()
 {
 	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	float working = 0;
 	float i;
 	for (i = 0; i < Map_Count; ++i)
 		if (Map_Check(i, 2))
@@ -1289,7 +1288,6 @@ void GotoNextMap(float reinit)
 	alreadychangedlevel = TRUE;
 
 	string nextMap;
-	float allowReset;
 
 	nextMap = GetNextMap();
 	if(nextMap == "")
