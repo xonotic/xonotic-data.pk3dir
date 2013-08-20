@@ -563,6 +563,16 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
+
+#define MULTITEAM_MULTI(default,prefix,teams,anncepre,infopre,centerpre) \
+	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
+	MSG_MULTI_NOTIF(default, prefix##BLUE, anncepre##BLUE, infopre##BLUE, centerpre##BLUE) \
+	#if teams >= 3 \
+		MSG_MULTI_NOTIF(default, prefix##YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW) \
+	#endif \
+	#if teams >= 4 \
+		MSG_MULTI_NOTIF(default, prefix##PINK, anncepre##PINK, infopre##PINK, centerpre##PINK) \
+	#endif
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   NO_MSG,        INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
@@ -686,12 +696,21 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
 
-#define MSG_ANNCE_NOTIFICATIONS \
-	MSG_ANNCE_NOTIF(1, CHOICE_FRAG,         MSG_CENTER, CENTER_DEATH_MURDER_FRAG,      MSG_CENTER, CENTER_DEATH_MURDER_FRAG_VERBOSE) \
-	MSG_ANNCE_NOTIF(1, CHOICE_FRAGGED,      MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED,   MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
-	MSG_ANNCE_NOTIF(1, CHOICE_TYPEFRAG,     MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG,  MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
-	MSG_ANNCE_NOTIF(1, CHOICE_TYPERFRAGGED, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE) \
-	MSG_ANNCE_NOTIF(2, CHOICE_)
+#define MULTITEAM_CHOICE(default,prefix,teams,type,opa,opb) \
+	MSG_CHOICE_NOTIF(default, prefix##RED, type, opa##RED, opb##RED) \
+	MSG_CHOICE_NOTIF(default, prefix##BLUE, type, opa##BLUE, opb##BLUE) \
+	#if teams >= 3 \
+		MSG_CHOICE_NOTIF(default, prefix##YELLOW, type, opa##YELLOW, opb##YELLOW) \
+	#endif \
+	#if teams >= 4 \
+		MSG_CHOICE_NOTIF(default, prefix##PINK, type, opa##PINK, opb##PINK) \
+	#endif
+#define MSG_CHOICE_NOTIFICATIONS \
+	MSG_CHOICE_NOTIF(1, CHOICE_FRAG,          MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, CHOICE_FRAGGED,       MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, CHOICE_TYPEFRAG,      MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, CHOICE_TYPERFRAGGED,  MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAGGED,  CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE) \
+	MSG_CHOICE_NOTIF(2, CHOICE_)
 
 
 // ===========================
