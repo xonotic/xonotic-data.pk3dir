@@ -8,9 +8,24 @@ CLASS(XonoticDemoBrowserTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser")	
 ENDCLASS(XonoticDemoBrowserTab)
 entity makeXonoticDemoBrowserTab();
+void Demo_Confirm(entity me, entity btn);
 #endif
 
 #ifdef IMPLEMENTATION
+void DemoConfirm_Check_Gamestatus(entity me, entity btn)
+{
+	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, lets watch the demo
+	{
+		//TimeDemo_Click;
+		//StartDemo_Click;
+		return;
+	}
+	else // already in a match, player has to confirm
+	{
+		Demo_Confirm(me, btn);
+	}
+}
+
 entity makeXonoticDemoBrowserTab()
 {
 	entity me;
@@ -38,10 +53,10 @@ void XonoticDemoBrowserTab_fill(entity me)
 		
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Timedemo"), '0 0 0'));
-			e.onClick = TimeDemo_Click;
+			e.onClick = DemoConfirm_Check_Gamestatus;
 			e.onClickEntity = dlist;
 		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(ZCTX(_("DEMO^Play")), '0 0 0'));
-			e.onClick = StartDemo_Click;
+			e.onClick = DemoConfirm_Check_Gamestatus;
 			e.onClickEntity = dlist;
 }
 #endif

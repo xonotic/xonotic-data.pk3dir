@@ -21,6 +21,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
 	ATTRIB(MainWindow, notificationDialog, entity, NULL)
+	ATTRIB(MainWindow, democonfirmDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 
@@ -150,6 +151,10 @@ void MainWindow_configureMainWindow(entity me)
 	
 	// dialog used by multiplayer/join
 	me.serverInfoDialog = i = spawnXonoticServerInfoDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.democonfirmDialog = i = spawnXonoticDemoConfirmDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
