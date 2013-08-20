@@ -170,11 +170,11 @@ string Process_Notif_Line(
 				{ input = substring(input, 0, (strlen(input) - 1)); }
 		}
 		#endif
-		if(substring(input, (strlen(input) - 1), 1) != "\n")
+		if(substring(input, (strlen(input) - 1), 1) == "\n")
 		{
 			print(sprintf(
 				strcat(
-					"^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ",
+					"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
 					"^7net_type = %s, net_name = %s, string = %s.\n"
 				),
 				notiftype,
@@ -182,7 +182,7 @@ string Process_Notif_Line(
 				stringtype
 			));
 			notif_error = TRUE;
-			return strcat(input, "\n");
+			return substring(input, 1, (strlen(input) - 1));
 		}
 	}
 	return input;
