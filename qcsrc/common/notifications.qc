@@ -160,7 +160,6 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 		case NOTIF_ALL: // send to everyone
 		{
 			return TRUE;
-			break;
 		}
 		case NOTIF_ALL_EXCEPT: // send to everyone except X person and their spectators
 		{
@@ -175,8 +174,8 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 			) { return TRUE; }
 			break;
 		}
-		default: { return FALSE; }
 	}
+	return FALSE;
 }
 
 #endif
@@ -1690,54 +1689,40 @@ void Send_Notification(
 	{
 		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)
 		// and then do an individual NOTIF_ONE_ONLY recursive call for each one depending on their option...
-		// It's slow, but it's better than the alternatives
+		// It's slow, but it's better than the alternatives:
+		//   1. Constantly networking all info and letting client decide
+		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice; 
-		
+
+		#define RECURSE_FROM_CHOICE(ent,action) \
+			switch(ent.msg_choice_choices[net_name]) \
+			{ \
+				case 1: found_choice = notif.nent_choicea; \
+				case 2: found_choice = notif.nent_choiceb; \
+				default: action; \
+			} \
+			Send_Notification_WOVA( \
+				NOTIF_ONE_ONLY, \
+				ent, \
+				found_choice.nent_net_type, \
+				found_choice.nent_net_name, \
+				s1, s2, s3, s4, \
+				f1, f2, f3, f4);
+
 		switch(broadcast)
 		{
 			case NOTIF_ONE_ONLY: // we can potentially save processing power with this broadcast method
 			{
 				if(IS_REAL_CLIENT(client))
-				{
-					switch(client.msg_choice_choices[net_name])
-					{
-						case 1: found_choice = notif.nent_choicea;
-						case 2: found_choice = notif.nent_choiceb;
-						default: return; // nothing to do here, client disables this
-					}
-					Send_Notification_WOVA(
-						NOTIF_ONE_ONLY,
-						client,
-						found_choice.nent_net_type,
-						found_choice.nent_net_name,
-						s1, s2, s3, s4,
-						f1, f2, f3, f4);
-				}
+					{ RECURSE_FROM_CHOICE(client, return) }
 				break;
 			}
-			
 			default:
 			{
 				entity to;
 				FOR_EACH_REALCLIENT(to)
-				{
-					if(Notification_ShouldSend(broadcast, to, client))
-					{
-						switch(client.msg_choice_choices[net_name])
-						{
-							case 1: found_choice = notif.nent_choicea;
-							case 2: found_choice = notif.nent_choiceb;
-							default: continue; // nothing to do here, client disables this
-						}
-						Send_Notification_WOVA(
-							NOTIF_ONE_ONLY,
-							to,
-							found_choice.nent_net_type,
-							found_choice.nent_net_name,
-							s1, s2, s3, s4,
-							f1, f2, f3, f4);
-					}
-				}
+					{ if(Notification_ShouldSend(broadcast, to, client))
+						{ RECURSE_FROM_CHOICE(to, continue) } }
 				break;
 			}
 		}

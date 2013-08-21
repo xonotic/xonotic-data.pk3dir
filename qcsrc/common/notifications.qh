@@ -1065,18 +1065,25 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 // ====================================
 
 #define NOTIF_FIRST 1
-#define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
+
+// notification limits
+#define NOTIF_ANNCE_MAX 64
+#define NOTIF_INFO_MAX 512
+#define NOTIF_CENTER_MAX 512
+#define NOTIF_MULTI_MAX 256
+#define NOTIF_CHOICE_MAX 64
+#define NOTIF_CPID_MAX 128
 
 // error detection
 float notif_error;
 float notif_global_error;
 
 // notification entities
-entity msg_annce_notifs[NOTIF_MAX];
-entity msg_info_notifs[NOTIF_MAX];
-entity msg_center_notifs[NOTIF_MAX];
-entity msg_multi_notifs[NOTIF_MAX];
-entity msg_choice_notifs[NOTIF_MAX];
+entity msg_annce_notifs[NOTIF_ANNCE_MAX];
+entity msg_info_notifs[NOTIF_INFO_MAX];
+entity msg_center_notifs[NOTIF_CENTER_MAX];
+entity msg_multi_notifs[NOTIF_MULTI_MAX];
+entity msg_choice_notifs[NOTIF_CHOICE_MAX];
 
 // notification counts
 float NOTIF_ANNCE_COUNT;
@@ -1106,10 +1113,8 @@ float NOTIF_CPID_COUNT;
 .float nent_cpid;
 .string nent_durcnt;
 .string nent_string;
-
-.float nent_msgchtype;
-.string nent_msgopa;
-.string nent_msgopb;
+.entity nent_choicea;
+.entity nent_choiceb;
 
 // networked notification values
 .float nent_broadcast;
@@ -1119,13 +1124,16 @@ float NOTIF_CPID_COUNT;
 .string nent_strings[4];
 .float nent_floats[4];
 
+// other notification properties
+.float msg_choice_choices[NOTIF_CHOICE_MAX]; // set on each player containing MSG_CHOICE choices
+
 #define MSG_ANNCE_NOTIF(default,name,channel,sound,volume,position) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_ANNCE_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_ANNCE_COUNT, "notifications") \
+		CHECK_MAX_COUNT(name, NOTIF_ANNCE_MAX, NOTIF_ANNCE_COUNT, "MSG_ANNCE") \
 		Create_Notification_Entity( \
 			default,                       /* var_default */ \
 			autocvar_notification_##name,  /* var_cvar */ \
@@ -1160,7 +1168,7 @@ float NOTIF_CPID_COUNT;
 	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
+		CHECK_MAX_COUNT(name, NOTIF_INFO_MAX, NOTIF_INFO_COUNT, "MSG_INFO") \
 		Create_Notification_Entity( \
 			default,                       /* var_default */ \
 			autocvar_notification_##name,  /* var_cvar */ \
@@ -1197,7 +1205,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
+		CHECK_MAX_COUNT(name, NOTIF_CENTER_MAX, NOTIF_CENTER_COUNT, "MSG_CENTER") \
 		Create_Notification_Entity( \
 			default,                       /* var_default */ \
 			autocvar_notification_##name,  /* var_cvar */ \
@@ -1232,7 +1240,7 @@ float NOTIF_CPID_COUNT;
 	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_MULTI_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_MULTI_COUNT, "notifications") \
+		CHECK_MAX_COUNT(name, NOTIF_MULTI_MAX, NOTIF_MULTI_COUNT, "MSG_MULTI") \
 		Create_Notification_Entity( \
 			default,                       /* var_default */ \
 			autocvar_notification_##name,  /* var_cvar */ \
@@ -1267,7 +1275,7 @@ float NOTIF_CPID_COUNT;
 	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CHOICE_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CHOICE_COUNT, "notifications") \
+		CHECK_MAX_COUNT(name, NOTIF_CHOICE_MAX, NOTIF_CHOICE_COUNT, "MSG_CHOICE") \
 		Create_Notification_Entity( \
 			default,                       /* var_default */ \
 			autocvar_notification_##name,  /* var_cvar */ \
