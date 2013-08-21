@@ -829,10 +829,30 @@ void Create_Notification_Entity(
 }
 
 
-// =========================================
-//  Cvar Handling With 'dumpnotifs' Command
-// =========================================
+// ===============
+//  Cvar Handling
+// ===============
 
+// used by MSG_CHOICE to build list of choices
+#ifdef SVQC
+void Notification_GetCvars(void)
+{
+	float i;
+	for(i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
+	{
+		GetCvars_handleFloat(
+			get_cvars_s,
+			get_cvars_f,
+			msg_choice_choices[i],
+			sprintf("notification_%s", msg_choice_notifs[i].nent_name)
+		);
+	}
+
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, FRAG_VERBOSE, "notification_frag_verbose");
+}
+#endif
+
+// used to output notifications.cfg file
 void Dump_Notifications(float fh, float alsoprint)
 {
 	#define NOTIF_WRITE(a) { \
@@ -1071,13 +1091,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	#undef NOTIF_WRITE_ENTITY
 	#undef NOTIF_WRITE
 }
-
-#ifdef SVQC
-void Notification_GetCvars()
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, FRAG_VERBOSE, "notification_frag_verbose");
-}
-#endif
 
 
 // ===============================
@@ -1765,6 +1778,7 @@ void Send_Notification(
 
 	if(net_type == MSG_CHOICE)
 	{
+		// float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || inWarmupStage));
 		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)
 		// and then do an individual NOTIF_ONE_ONLY recursive call for each one depending on their option...
 		// It's slow, but it's better than the alternatives:
