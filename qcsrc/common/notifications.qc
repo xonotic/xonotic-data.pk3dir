@@ -458,35 +458,30 @@ void Create_Notification_Entity(
 	{
 		case MSG_ANNCE:
 		{
-			typestring = "MSG_ANNCE";
 			msg_annce_notifs[nameid - 1] = notif;
 			notif.classname = "msg_annce_notification";
 			break;
 		}
 		case MSG_INFO:
 		{
-			typestring = "MSG_INFO";
 			msg_info_notifs[nameid - 1] = notif;
 			notif.classname = "msg_info_notification";
 			break;
 		}
 		case MSG_CENTER:
 		{
-			typestring = "MSG_CENTER";
 			msg_center_notifs[nameid - 1] = notif;
 			notif.classname = "msg_center_notification";
 			break;
 		}
 		case MSG_MULTI:
 		{
-			typestring = "MSG_MULTI";
 			msg_multi_notifs[nameid - 1] = notif;
 			notif.classname = "msg_multi_notification";
 			break;
 		}
 		case MSG_CHOICE:
 		{
-			typestring = "MSG_CHOICE";
 			msg_choice_notifs[nameid - 1] = notif;
 			notif.classname = "msg_choice_notification";
 			break;
@@ -507,8 +502,11 @@ void Create_Notification_Entity(
 	}
 	notif.nent_default = var_default;
 	notif.nent_name = strzone(namestring);
+	notif.nent_type = typeid;
 	notif.nent_id = nameid;
 	notif.nent_enabled = (1 <= var_cvar);
+
+	typestring = Get_Notif_TypeName(typeid);
 
 	// Other pre-notif-setup requisites
 	notif_error = FALSE;
@@ -754,6 +752,68 @@ void Create_Notification_Entity(
 
 		case MSG_CHOICE:
 		{
+			if((chtype == NO_MSG) || (optiona == NO_MSG) || (optionb == NO_MSG))
+			{
+				print(sprintf(
+					strcat(
+						"^1NOTIFICATION IS MISSING CHOICE PARAMS: ",
+						"^7net_type = %s, net_name = %s.\n"
+					),
+					typestring,
+					namestring
+				));
+				notif_error = TRUE;
+			}
+			else
+			{
+				switch(chtype)
+				{
+					case MSG_ANNCE:
+					{
+						notif.nent_optiona = msg_annce_notifs[optiona - 1];
+						notif.nent_optionb = msg_annce_notifs[optionb - 1];
+						break;
+					}
+					case MSG_INFO:
+					{
+						notif.nent_optiona = msg_info_notifs[optiona - 1];
+						notif.nent_optionb = msg_info_notifs[optionb - 1];
+						break;
+					}
+					case MSG_CENTER:
+					{
+						notif.nent_optiona = msg_center_notifs[optiona - 1];
+						notif.nent_optionb = msg_center_notifs[optionb - 1];
+						break;
+					}
+					case MSG_MULTI:
+					{
+						notif.nent_optiona = msg_multi_notifs[optiona - 1];
+						notif.nent_optionb = msg_multi_notifs[optionb - 1];
+						break;
+					}
+					case MSG_CHOICE: // should we REALLY allow nested options?... 
+					{
+						notif.nent_optiona = msg_choice_notifs[optiona - 1];
+						notif.nent_optionb = msg_choice_notifs[optionb - 1];
+						break;
+					}
+
+					default:
+					{
+						error(sprintf(
+							strcat(
+								"^1NOTIFICATION WITH IMPROPER TYPE: ",
+								"^7net_type = %d, net_name = %s.\n"
+							),
+							typeid,
+							namestring
+						));
+						notif_error = TRUE;
+						break;
+					}
+				}
+			}
 			break;
 		}
 		
@@ -1375,6 +1435,24 @@ void Local_Notification(float net_type, float net_name, ...count)
 			#endif
 			break;
 		}
+
+		case MSG_CHOICE:
+		{
+			entity found_choice; 
+			switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
+			{
+				case 1: found_choice = notif.nent_optiona; break;
+				case 2: found_choice = notif.nent_optionb; break;
+				default: return; // not enabled anyway
+			}
+			Local_Notification_WOVA(
+				found_choice.nent_type,
+				found_choice.nent_id, 
+				found_choice.nent_stringcount, 
+				found_choice.nent_floatcount, 
+				s1, s2, s3, s4,
+				f1, f2, f3, f4); 
+		}
 	}
 }
 
@@ -1697,15 +1775,15 @@ void Send_Notification(
 		#define RECURSE_FROM_CHOICE(ent,action) \
 			switch(ent.msg_choice_choices[net_name]) \
 			{ \
-				case 1: found_choice = notif.nent_choicea; \
-				case 2: found_choice = notif.nent_choiceb; \
+				case 1: found_choice = notif.nent_optiona; break; \
+				case 2: found_choice = notif.nent_optionb; break; \
 				default: action; \
 			} \
 			Send_Notification_WOVA( \
 				NOTIF_ONE_ONLY, \
 				ent, \
-				found_choice.nent_net_type, \
-				found_choice.nent_net_name, \
+				found_choice.nent_type, \
+				found_choice.nent_id, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4);
 

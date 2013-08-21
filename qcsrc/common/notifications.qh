@@ -1096,6 +1096,7 @@ float NOTIF_CPID_COUNT;
 // notification entity values
 .float nent_default;
 .string nent_name;
+.float nent_type;
 .float nent_id;
 .float nent_enabled;
 .entity nent_msgannce;
@@ -1113,8 +1114,8 @@ float NOTIF_CPID_COUNT;
 .float nent_cpid;
 .string nent_durcnt;
 .string nent_string;
-.entity nent_choicea;
-.entity nent_choiceb;
+.entity nent_optiona;
+.entity nent_optionb;
 
 // networked notification values
 .float nent_broadcast;
