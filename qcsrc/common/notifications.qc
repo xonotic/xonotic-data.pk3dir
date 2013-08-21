@@ -813,6 +813,8 @@ void Create_Notification_Entity(
 						break;
 					}
 				}
+				notif.nent_stringcount = max(notif.nent_optiona.nent_stringcount, notif.nent_optionb.nent_stringcount);
+				notif.nent_floatcount = max(notif.nent_optiona.nent_floatcount, notif.nent_optionb.nent_floatcount);
 			}
 			break;
 		}
