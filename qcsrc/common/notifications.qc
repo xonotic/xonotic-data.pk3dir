@@ -100,6 +100,85 @@ string Notification_CheckArgs(
 	}
 	return checkargs;
 }
+
+float Notification_ShouldSend(float broadcast, entity to_client, entity other_client)
+{
+	switch(broadcast)
+	{
+		case NOTIF_ONE: // send to one client and their spectator
+		{
+			if(
+				(to_client == other_client)
+				||
+				(
+					IS_SPEC(to_client)
+					&&
+					(to_client.enemy == other_client)
+				)
+			) { return TRUE; }
+			break;
+		}
+		case NOTIF_ONE_ONLY: // send ONLY to one client
+		{
+			if(to_client == other_client) { return TRUE; }
+			break;
+		}
+		case NOTIF_TEAM: // send only to X team and their spectators
+		{
+			if(
+				(to_client.team == other_client.team)
+				||
+				(
+					IS_SPEC(to_client)
+					&&
+					(to_client.enemy.team == other_client.team)
+				)
+			) { return TRUE; }
+			break;
+		}
+		case NOTIF_TEAM_EXCEPT: // send only to X team and their spectators, except for Y person and their spectators
+		{
+			if(
+				(to_client != other_client)
+				&&
+				(
+					(to_client.team == other_client.team)
+					||
+					(
+						IS_SPEC(to_client)
+						&&
+						(
+							(to_client.enemy != other_client)
+							&&
+							(to_client.enemy.team == other_client.team)
+						)
+					)
+				)
+			) { return TRUE; }
+			break;
+		}
+		case NOTIF_ALL: // send to everyone
+		{
+			return TRUE;
+			break;
+		}
+		case NOTIF_ALL_EXCEPT: // send to everyone except X person and their spectators
+		{
+			if(
+				(to_client != other_client)
+				&&
+				!(
+					IS_SPEC(to_client)
+					&&
+					(to_client.enemy == other_client)
+				)
+			) { return TRUE; }
+			break;
+		}
+		default: { return FALSE; }
+	}
+}
+
 #endif
 
 // ===============================
@@ -1417,93 +1496,17 @@ void Net_Notification_Remove()
 
 float Net_Write_Notification(entity client, float sf)
 {
-	float i, send = FALSE;
-	
-	switch(self.nent_broadcast)
+	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
-		case NOTIF_ONE: // send to one client and their spectator
-		{
-			if(
-				(client == self.nent_client)
-				||
-				(
-					IS_SPEC(client)
-					&&
-					(client.enemy == self.nent_client)
-				)
-			) { send = TRUE; }
-			break;
-		}
-		case NOTIF_ONE_ONLY: // send ONLY to one client
-		{
-			if(client == self.nent_client) { send = TRUE; }
-			break;
-		}
-		case NOTIF_TEAM: // send only to X team and their spectators
-		{
-			if(
-				(client.team == self.nent_client.team)
-				||
-				(
-					IS_SPEC(client)
-					&&
-					(client.enemy.team == self.nent_client.team)
-				)
-			) { send = TRUE; }
-			break;
-		}
-		case NOTIF_TEAM_EXCEPT: // send only to X team and their spectators, except for Y person and their spectators
-		{
-			if(
-				(client != self.nent_client)
-				&&
-				(
-					(client.team == self.nent_client.team)
-					||
-					(
-						IS_SPEC(client)
-						&&
-						(
-							(client.enemy != self.nent_client)
-							&&
-							(client.enemy.team == self.nent_client.team)
-						)
-					)
-				)
-			) { send = TRUE; }
-			break;
-		}
-		case NOTIF_ALL: // send to everyone
-		{
-			send = TRUE;
-			break;
-		}
-		case NOTIF_ALL_EXCEPT: // send to everyone except X person and their spectators
-		{
-			if(
-				(client != self.nent_client)
-				&&
-				!(
-					IS_SPEC(client)
-					&&
-					(client.enemy == self.nent_client)
-				)
-			) { send = TRUE; }
-			break;
-		}
-		default: { send = FALSE; break; }
-	}
-
-	if(send)
-	{		
+		float i;
 		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
 		for(i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); } 
 		for(i = 0; i < self.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[i]); }
+		return TRUE;
 	}
-
-	return send; 
+	else { return FALSE; }
 }
 
 void Kill_Notification(
@@ -1639,7 +1642,6 @@ void Send_Notification(
 		return;
 	}
 
-	#ifdef NOTIFICATIONS_DEBUG
 	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
 	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
 	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
@@ -1648,6 +1650,8 @@ void Send_Notification(
 	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
+
+	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
 		"Send_Notification(%d, %s, %s, %s, %s);\n",
 		broadcast,
@@ -1657,33 +1661,6 @@ void Send_Notification(
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
 	#endif
-
-	entity net_notif = spawn();
-	net_notif.owner = notif;
-	net_notif.classname = "net_notification";
-	net_notif.nent_broadcast = broadcast;
-	net_notif.nent_client = client;
-	net_notif.nent_net_type = net_type;
-	net_notif.nent_net_name = net_name;
-	net_notif.nent_stringcount = notif.nent_stringcount;
-	net_notif.nent_floatcount = notif.nent_floatcount;
-	
-	float i;
-	for(i = 0; i < net_notif.nent_stringcount; ++i)
-		{ net_notif.nent_strings[i] = strzone(...(i, string)); }
-	for(i = 0; i < net_notif.nent_floatcount; ++i)
-		{ net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
-
-	net_notif.think = Net_Notification_Remove;
-	net_notif.nextthink =
-		((time > autocvar_notification_lifetime_mapload)
-		?
-			(time + autocvar_notification_lifetime_runtime)
-			:
-			autocvar_notification_lifetime_mapload
-		); 
-
-	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
 	if(
 		server_is_dedicated
@@ -1705,8 +1682,94 @@ void Send_Notification(
 			net_type, net_name,
 			notif.nent_stringcount,
 			notif.nent_floatcount,
-			IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3),
-			IFFL(0), IFFL(1), IFFL(2), IFFL(3));
+			s1, s2, s3, s4,
+			f1, f2, f3, f4);
+	}
+
+	if(net_type == MSG_CHOICE)
+	{
+		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)
+		// and then do an individual NOTIF_ONE_ONLY recursive call for each one depending on their option...
+		// It's slow, but it's better than the alternatives
+		entity found_choice; 
+		
+		switch(broadcast)
+		{
+			case NOTIF_ONE_ONLY: // we can potentially save processing power with this broadcast method
+			{
+				if(IS_REAL_CLIENT(client))
+				{
+					switch(client.msg_choice_choices[net_name])
+					{
+						case 1: found_choice = notif.nent_choicea;
+						case 2: found_choice = notif.nent_choiceb;
+						default: return; // nothing to do here, client disables this
+					}
+					Send_Notification_WOVA(
+						NOTIF_ONE_ONLY,
+						client,
+						found_choice.nent_net_type,
+						found_choice.nent_net_name,
+						s1, s2, s3, s4,
+						f1, f2, f3, f4);
+				}
+				break;
+			}
+			
+			default:
+			{
+				entity to;
+				FOR_EACH_REALCLIENT(to)
+				{
+					if(Notification_ShouldSend(broadcast, to, client))
+					{
+						switch(client.msg_choice_choices[net_name])
+						{
+							case 1: found_choice = notif.nent_choicea;
+							case 2: found_choice = notif.nent_choiceb;
+							default: continue; // nothing to do here, client disables this
+						}
+						Send_Notification_WOVA(
+							NOTIF_ONE_ONLY,
+							to,
+							found_choice.nent_net_type,
+							found_choice.nent_net_name,
+							s1, s2, s3, s4,
+							f1, f2, f3, f4);
+					}
+				}
+				break;
+			}
+		}
+	}
+	else
+	{
+		entity net_notif = spawn();
+		net_notif.owner = notif;
+		net_notif.classname = "net_notification";
+		net_notif.nent_broadcast = broadcast;
+		net_notif.nent_client = client;
+		net_notif.nent_net_type = net_type;
+		net_notif.nent_net_name = net_name;
+		net_notif.nent_stringcount = notif.nent_stringcount;
+		net_notif.nent_floatcount = notif.nent_floatcount;
+		
+		float i;
+		for(i = 0; i < net_notif.nent_stringcount; ++i)
+			{ net_notif.nent_strings[i] = strzone(...(i, string)); }
+		for(i = 0; i < net_notif.nent_floatcount; ++i)
+			{ net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
+
+		net_notif.think = Net_Notification_Remove;
+		net_notif.nextthink =
+			((time > autocvar_notification_lifetime_mapload)
+			?
+				(time + autocvar_notification_lifetime_runtime)
+				:
+				autocvar_notification_lifetime_mapload
+			); 
+
+		Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 	}
 }
 

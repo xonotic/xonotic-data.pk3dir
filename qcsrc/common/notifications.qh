@@ -1107,6 +1107,7 @@ float NOTIF_CPID_COUNT;
 .string nent_durcnt;
 .string nent_string;
 
+.float nent_msgchtype;
 .string nent_msgopa;
 .string nent_msgopb;
 
