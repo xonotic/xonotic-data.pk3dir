@@ -445,7 +445,8 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
-	float challow,
+	float challow_def,
+	float challow_var,
 	float chtype,
 	float optiona,
 	float optionb)
@@ -814,15 +815,27 @@ void Create_Notification_Entity(
 						break;
 					}
 				}
-				notif.nent_challow = challow; // 0: never allowed, 1: allowed in warmup, 2: always allowed
+				notif.nent_challow_def = challow_def; // 0: never allowed, 1: allowed in warmup, 2: always allowed
+				notif.nent_challow_var = challow_var; // 0: never allowed, 1: allowed in warmup, 2: always allowed
 				notif.nent_stringcount = max(notif.nent_optiona.nent_stringcount, notif.nent_optionb.nent_stringcount);
 				notif.nent_floatcount = max(notif.nent_optiona.nent_floatcount, notif.nent_optionb.nent_floatcount);
-				print(sprintf("INIT NOTIF DEBUG: %d %d\n", notif.nent_stringcount, notif.nent_floatcount));
-				print(sprintf("^ optiona: %s %s : %d %d\n",
+				
+				#ifdef NOTIFICATIONS_DEBUG
+				Debug_Notification(sprintf(
+					"Create_Notification_Entity(...): MSG_CHOICE: %s\n"
+					"^ optiona: %s %s : %d %d\n"
+					"^ optionb: %s %s : %d %d\n",
+					notif.nent_name,
 					Get_Notif_TypeName(notif.nent_optiona.nent_type),
 					notif.nent_optiona.nent_name,
 					notif.nent_optiona.nent_stringcount,
-					notif.nent_optiona.nent_floatcount));
+					notif.nent_optiona.nent_floatcount,
+					Get_Notif_TypeName(notif.nent_optiona.nent_type),
+					notif.nent_optiona.nent_name,
+					notif.nent_optiona.nent_stringcount,
+					notif.nent_optiona.nent_floatcount
+				));
+				#endif
 			}
 			break;
 		}
@@ -873,6 +886,15 @@ void Dump_Notifications(float fh, float alsoprint)
 			sprintf( \
 				"seta notification_%s \"%d\" \"%s\"\n", \
 				e.nent_name, e.nent_default, description \
+			); \
+		NOTIF_WRITE(notif_msg) }
+	#define NOTIF_WRITE_ENTITY_CHOICE(descriptiona,descriptionb) { \
+		notif_msg = \
+			sprintf( \
+				"seta notification_%s \"%d\" \"%s\"\n" \
+				"seta notification_%s_ALLOWED \"%d\" \"%s\"\n", \
+				e.nent_name, e.nent_default, descriptiona, \
+				e.nent_name, e.nent_challow_def, descriptionb \
 			); \
 		NOTIF_WRITE(notif_msg) }
 	#define NOTIF_WRITE_HARDCODED(cvar,default,description) { \
@@ -961,8 +983,9 @@ void Dump_Notifications(float fh, float alsoprint)
 		e = Get_Notif_Ent(MSG_CHOICE, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
-		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall"
+		NOTIF_WRITE_ENTITY_CHOICE(
+			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
+			"Notification control cvar: 0 = off, 1 = allowed in warmup mode, 2 = always allowed"
 		);
 	}
 
@@ -1472,7 +1495,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 		{
 			entity found_choice;
 			
-			if(notif.nent_challow && (warmup_stage || (notif.nent_challow == 2)))
+			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2)))
 			{
 				switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
 				{
@@ -1803,8 +1826,7 @@ void Send_Notification(
 
 	if(net_type == MSG_CHOICE)
 	{
-		// float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || warmup_stage));
-		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)nent_challow
+		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)
 		// and then do an individual NOTIF_ONE_ONLY recursive call for each one depending on their option...
 		// It's slow, but it's better than the alternatives:
 		//   1. Constantly networking all info and letting client decide
@@ -1812,7 +1834,7 @@ void Send_Notification(
 		entity found_choice; 
 
 		#define RECURSE_FROM_CHOICE(ent,action) \
-			if(notif.nent_challow && (warmup_stage || (notif.nent_challow == 2))) \
+			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
 				switch(ent.msg_choice_choices[net_name]) \
 				{ \

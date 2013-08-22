@@ -62,7 +62,8 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
-	float challow,
+	float challow_def,
+	float challow_var,
 	float chtype,
 	float optiona,
 	float optionb);
@@ -1073,13 +1074,13 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 
 #define NOTIF_FIRST 1
 
-// notification limits
-#define NOTIF_ANNCE_MAX 64
-#define NOTIF_INFO_MAX 512
-#define NOTIF_CENTER_MAX 512
-#define NOTIF_MULTI_MAX 256
-#define NOTIF_CHOICE_MAX 64
-#define NOTIF_CPID_MAX 128
+// notification limits -- INCREASE AS NECESSARY
+#define NOTIF_ANNCE_MAX   64
+#define NOTIF_INFO_MAX    256
+#define NOTIF_CENTER_MAX  256
+#define NOTIF_MULTI_MAX   128
+#define NOTIF_CHOICE_MAX  8
+#define NOTIF_CPID_MAX    256 // should match NOTIF_CENTER_MAX
 
 // error detection
 float notif_error;
@@ -1121,7 +1122,8 @@ float NOTIF_CPID_COUNT;
 .float nent_cpid;
 .string nent_durcnt;
 .string nent_string;
-.float nent_challow;
+.float nent_challow_def;
+.float nent_challow_var;
 .entity nent_optiona;
 .entity nent_optionb;
 
@@ -1165,7 +1167,8 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			"",                            /* normal */ \
 			"",                            /* gentle */ \
-			NO_MSG,                        /* challow */ \
+			NO_MSG,                        /* challow_def */ \
+			NO_MSG,                        /* challow_var */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1201,7 +1204,8 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			normal,                        /* normal */ \
 			gentle,                        /* gentle */ \
-			NO_MSG,                        /* challow */ \
+			NO_MSG,                        /* challow_def */ \
+			NO_MSG,                        /* challow_var */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1239,7 +1243,8 @@ float NOTIF_CPID_COUNT;
 			durcnt,                        /* durcnt */ \
 			normal,                        /* normal */ \
 			gentle,                        /* gentle */ \
-			NO_MSG,                        /* challow */ \
+			NO_MSG,                        /* challow_def */ \
+			NO_MSG,                        /* challow_var */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1275,7 +1280,8 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			"",                            /* normal */ \
 			"",                            /* gentle */ \
-			NO_MSG,                        /* challow */ \
+			NO_MSG,                        /* challow_def */ \
+			NO_MSG,                        /* challow_var */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1312,7 +1318,8 @@ float NOTIF_CPID_COUNT;
 			"",                                      /* durcnt */ \
 			"",                                      /* normal */ \
 			"",                                      /* gentle */ \
-			autocvar_notification_##name##_ALLOWED,  /* challow */ \
+			challow,                                 /* challow_def */ \
+			autocvar_notification_##name##_ALLOWED,  /* challow_var */ \
 			chtype,                                  /* chtype */ \
 			optiona,                                 /* optiona */ \
 			optionb);                                /* optionb */ \
