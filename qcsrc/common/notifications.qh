@@ -62,6 +62,7 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
+	float challow,
 	float chtype,
 	float optiona,
 	float optionb);
@@ -104,6 +105,12 @@ void Send_Notification(
 	float net_type, float net_name,
 	...count);
 void Send_Notification_WOVA(
+	float broadcast, entity client,
+	float net_type, float net_name,
+	float stringcount, float floatcount,
+	string s1, string s2, string s3, string s4,
+	float f1, float f2, float f3, float f4);
+void Send_Notification_WOCOVA(
 	float broadcast, entity client,
 	float net_type, float net_name,
 	string s1, string s2, string s3, string s4,
@@ -705,20 +712,20 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
 
-#define MULTITEAM_CHOICE(default,prefix,teams,chtype,optiona,optionb) \
-	MSG_CHOICE_NOTIF(default, prefix##RED, chtype, optiona##RED, optionb##RED) \
-	MSG_CHOICE_NOTIF(default, prefix##BLUE, chtype, optiona##BLUE, optionb##BLUE) \
+#define MULTITEAM_CHOICE(default,challow,prefix,teams,chtype,optiona,optionb) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##RED, chtype, optiona##RED, optionb##RED) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##BLUE, chtype, optiona##BLUE, optionb##BLUE) \
 	#if teams >= 3 \
-		MSG_CHOICE_NOTIF(default, prefix##YELLOW, chtype, optiona##YELLOW, optionb##YELLOW) \
+		MSG_CHOICE_NOTIF(default, challow, prefix##YELLOW, chtype, optiona##YELLOW, optionb##YELLOW) \
 	#endif \
 	#if teams >= 4 \
-		MSG_CHOICE_NOTIF(default, prefix##PINK, chtype, optiona##PINK, optionb##PINK) \
+		MSG_CHOICE_NOTIF(default, challow, prefix##PINK, chtype, optiona##PINK, optionb##PINK) \
 	#endif
 #define MSG_CHOICE_NOTIFICATIONS \
-	MSG_CHOICE_NOTIF(1, CHOICE_FRAG,          MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
-	MSG_CHOICE_NOTIF(1, CHOICE_FRAGGED,       MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
-	MSG_CHOICE_NOTIF(1, CHOICE_TYPEFRAG,      MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
-	MSG_CHOICE_NOTIF(1, CHOICE_TYPEFRAGGED,   MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAGGED,  CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)
+	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAG,          MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAGGED,       MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAG,      MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAGGED,   MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAGGED,  CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)
 	//MSG_CHOICE_NOTIF(2, CHOICE_)
 
 
@@ -1114,6 +1121,7 @@ float NOTIF_CPID_COUNT;
 .float nent_cpid;
 .string nent_durcnt;
 .string nent_string;
+.float nent_challow;
 .entity nent_optiona;
 .entity nent_optionb;
 
@@ -1157,6 +1165,7 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			"",                            /* normal */ \
 			"",                            /* gentle */ \
+			NO_MSG,                        /* challow */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1192,6 +1201,7 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			normal,                        /* normal */ \
 			gentle,                        /* gentle */ \
+			NO_MSG,                        /* challow */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1229,6 +1239,7 @@ float NOTIF_CPID_COUNT;
 			durcnt,                        /* durcnt */ \
 			normal,                        /* normal */ \
 			gentle,                        /* gentle */ \
+			NO_MSG,                        /* challow */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
@@ -1264,44 +1275,47 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			"",                            /* normal */ \
 			"",                            /* gentle */ \
+			NO_MSG,                        /* challow */ \
 			NO_MSG,                        /* chtype */ \
 			NO_MSG,                        /* optiona */ \
 			NO_MSG);                       /* optionb */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_CHOICE_NOTIF(default,name,chtype,optiona,optionb) \
+#define MSG_CHOICE_NOTIF(default,challow,name,chtype,optiona,optionb) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(name##_ALLOWED, challow) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CHOICE_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_CHOICE_MAX, NOTIF_CHOICE_COUNT, "MSG_CHOICE") \
 		Create_Notification_Entity( \
-			default,                       /* var_default */ \
-			autocvar_notification_##name,  /* var_cvar */ \
-			MSG_CHOICE,                    /* typeid */ \
-			name,                          /* nameid */ \
-			strtoupper(#name),             /* namestring */ \
-			NO_MSG,                        /* anncename */ \
-			NO_MSG,                        /* infoname */ \
-			NO_MSG,                        /* centername */ \
-			NO_MSG,                        /* channel */ \
-			"",                            /* snd */ \
-			NO_MSG,                        /* vol */ \
-			NO_MSG,                        /* position */ \
-			NO_MSG,                        /* strnum */ \
-			NO_MSG,                        /* flnum */ \
-			"",                            /* args */ \
-			"",                            /* hudargs */ \
-			"",                            /* icon */ \
-			NO_MSG,                        /* cpid */ \
-			"",                            /* durcnt */ \
-			"",                            /* normal */ \
-			"",                            /* gentle */ \
-			chtype,                        /* chtype */ \
-			optiona,                       /* optiona */ \
-			optionb);                      /* optionb */ \
+			default,                                 /* var_default */ \
+			autocvar_notification_##name,            /* var_cvar */ \
+			MSG_CHOICE,                              /* typeid */ \
+			name,                                    /* nameid */ \
+			strtoupper(#name),                       /* namestring */ \
+			NO_MSG,                                  /* anncename */ \
+			NO_MSG,                                  /* infoname */ \
+			NO_MSG,                                  /* centername */ \
+			NO_MSG,                                  /* channel */ \
+			"",                                      /* snd */ \
+			NO_MSG,                                  /* vol */ \
+			NO_MSG,                                  /* position */ \
+			NO_MSG,                                  /* strnum */ \
+			NO_MSG,                                  /* flnum */ \
+			"",                                      /* args */ \
+			"",                                      /* hudargs */ \
+			"",                                      /* icon */ \
+			NO_MSG,                                  /* cpid */ \
+			"",                                      /* durcnt */ \
+			"",                                      /* normal */ \
+			"",                                      /* gentle */ \
+			autocvar_notification_##name##_ALLOWED,  /* challow */ \
+			chtype,                                  /* chtype */ \
+			optiona,                                 /* optiona */ \
+			optionb);                                /* optionb */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 

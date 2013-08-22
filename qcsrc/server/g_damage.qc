@@ -143,7 +143,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
 			}
 
-			if(inWarmupStage)
+			if(warmup_stage)
 				WEPSET_COPY_EA(GiveFrags_randomweapons, warmup_start_weapons);
 			else
 				WEPSET_COPY_EA(GiveFrags_randomweapons, start_weapons);
@@ -247,7 +247,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgmurder)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -255,7 +255,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -269,7 +269,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgself)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -277,7 +277,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -308,7 +308,7 @@ float Obituary_WeaponDeath(
 
 		if(death_message)
 		{
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ONE,
 				notif_target,
 				MSG_MULTI,
@@ -316,7 +316,7 @@ float Obituary_WeaponDeath(
 				s1, s2, s3, "",
 				f1, f2, 0, 0
 			);
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ALL_EXCEPT,
 				notif_target,
 				MSG_INFO,

@@ -445,6 +445,7 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
+	float challow,
 	float chtype,
 	float optiona,
 	float optionb)
@@ -813,8 +814,15 @@ void Create_Notification_Entity(
 						break;
 					}
 				}
+				notif.nent_challow = challow; // 0: never allowed, 1: allowed in warmup, 2: always allowed
 				notif.nent_stringcount = max(notif.nent_optiona.nent_stringcount, notif.nent_optionb.nent_stringcount);
 				notif.nent_floatcount = max(notif.nent_optiona.nent_floatcount, notif.nent_optionb.nent_floatcount);
+				print(sprintf("INIT NOTIF DEBUG: %d %d\n", notif.nent_stringcount, notif.nent_floatcount));
+				print(sprintf("^ optiona: %s %s : %d %d\n",
+					Get_Notif_TypeName(notif.nent_optiona.nent_type),
+					notif.nent_optiona.nent_name,
+					notif.nent_optiona.nent_stringcount,
+					notif.nent_optiona.nent_floatcount));
 			}
 			break;
 		}
@@ -1152,7 +1160,16 @@ string Local_Notification_sprintf(
 			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
-	return sprintf(strcat(input, "\n"), arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
+	return sprintf(
+		strcat(input, "\n"),
+		arg_slot[0],
+		arg_slot[1],
+		arg_slot[2],
+		arg_slot[3],
+		arg_slot[4],
+		arg_slot[5],
+		arg_slot[6]
+	);
 }
 
 #ifdef CSQC
@@ -1453,13 +1470,19 @@ void Local_Notification(float net_type, float net_name, ...count)
 
 		case MSG_CHOICE:
 		{
-			entity found_choice; 
-			switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
+			entity found_choice;
+			
+			if(notif.nent_challow && (warmup_stage || (notif.nent_challow == 2)))
 			{
-				case 1: found_choice = notif.nent_optiona; break;
-				case 2: found_choice = notif.nent_optionb; break;
-				default: return; // not enabled anyway
+				switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
+				{
+					case 1: found_choice = notif.nent_optiona; break;
+					case 2: found_choice = notif.nent_optionb; break;
+					default: return; // not enabled anyway
+				}
 			}
+			else { found_choice = notif.nent_optiona; }
+			
 			Local_Notification_WOVA(
 				found_choice.nent_type,
 				found_choice.nent_id, 
@@ -1707,6 +1730,26 @@ void Send_Notification(
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { backtrace("Send_Notification: Could not find notification entity!\n"); return; }
 
+	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
+	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
+	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
+	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
+	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
+	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
+	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
+	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
+
+	#ifdef NOTIFICATIONS_DEBUG
+	Debug_Notification(sprintf(
+		"Send_Notification(%d, %s, %s, %s, %s);\n",
+		broadcast,
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
+	#endif
+
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
 		backtrace(sprintf(
@@ -1734,26 +1777,6 @@ void Send_Notification(
 		return;
 	}
 
-	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
-	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
-	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
-	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
-	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
-	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
-	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
-	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
-
-	#ifdef NOTIFICATIONS_DEBUG
-	Debug_Notification(sprintf(
-		"Send_Notification(%d, %s, %s, %s, %s);\n",
-		broadcast,
-		Get_Notif_TypeName(net_type),
-		notif.nent_name,
-		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
-	));
-	#endif
-
 	if(
 		server_is_dedicated
 		&&
@@ -1780,8 +1803,8 @@ void Send_Notification(
 
 	if(net_type == MSG_CHOICE)
 	{
-		// float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || inWarmupStage));
-		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)
+		// float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || warmup_stage));
+		// THIS GETS TRICKY... now we have to cycle through each possible player (checking broadcast)nent_challow
 		// and then do an individual NOTIF_ONE_ONLY recursive call for each one depending on their option...
 		// It's slow, but it's better than the alternatives:
 		//   1. Constantly networking all info and letting client decide
@@ -1789,17 +1812,23 @@ void Send_Notification(
 		entity found_choice; 
 
 		#define RECURSE_FROM_CHOICE(ent,action) \
-			switch(ent.msg_choice_choices[net_name]) \
+			if(notif.nent_challow && (warmup_stage || (notif.nent_challow == 2))) \
 			{ \
-				case 1: found_choice = notif.nent_optiona; break; \
-				case 2: found_choice = notif.nent_optionb; break; \
-				default: action; \
+				switch(ent.msg_choice_choices[net_name]) \
+				{ \
+					case 1: found_choice = notif.nent_optiona; break; \
+					case 2: found_choice = notif.nent_optionb; break; \
+					default: action; \
+				} \
 			} \
+			else { found_choice = notif.nent_optiona; } \
 			Send_Notification_WOVA( \
 				NOTIF_ONE_ONLY, \
 				ent, \
 				found_choice.nent_type, \
 				found_choice.nent_id, \
+				found_choice.nent_stringcount, \
+				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4);
 
@@ -1856,6 +1885,36 @@ void Send_Notification(
 void Send_Notification_WOVA(
 	float broadcast, entity client,
 	float net_type, float net_name,
+	float stringcount, float floatcount,
+	string s1, string s2, string s3, string s4,
+	float f1, float f2, float f3, float f4)
+{
+	#ifdef NOTIFICATIONS_DEBUG
+	entity notif = Get_Notif_Ent(net_type, net_name);
+	Debug_Notification(sprintf(
+		"Send_Notification_WOVA(%d, %s, %d, %d, %d, %s, %s);\n",
+		broadcast,
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		stringcount,
+		floatcount,
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
+	#endif
+	
+	#define VARITEM(stringc,floatc,args) \
+		if((stringcount == stringc) && (floatcount == floatc)) \
+			{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
+	EIGHT_VARS_TO_VARARGS_VARLIST
+	#undef VARITEM
+	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
+}
+
+// WOCOVA = Without Counts Or Variable Arguments 
+void Send_Notification_WOCOVA(
+	float broadcast, entity client,
+	float net_type, float net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
@@ -1863,7 +1922,7 @@ void Send_Notification_WOVA(
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification_WOVA(%d, %s, %s, %s, %s);\n",
+		"Send_Notification_WOCOVA(%d, %s, %s, %s, %s);\n",
 		broadcast,
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,

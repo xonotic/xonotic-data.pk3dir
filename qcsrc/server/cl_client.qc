@@ -170,7 +170,7 @@ void PutObserverInServer (void)
 	
 	if(self.alivetime)
 	{
-		if(!inWarmupStage)
+		if(!warmup_stage)
 			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
@@ -424,7 +424,7 @@ void PutClientInServer (void)
 			self.nex_charge = autocvar_g_balance_nex_charge_start;
 		}
 
-		if(inWarmupStage)
+		if(warmup_stage)
 		{
 			self.ammo_shells = warmup_start_ammo_shells;
 			self.ammo_nails = warmup_start_ammo_nails;
@@ -593,7 +593,7 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!inWarmupStage)
+		if(!warmup_stage)
 			if(!self.alivetime)
 				self.alivetime = time;
 
