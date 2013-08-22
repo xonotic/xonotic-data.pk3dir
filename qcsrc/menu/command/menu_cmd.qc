@@ -82,13 +82,23 @@ void GameCommand(string theCommand)
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		else if(argc > 2 && !isdemo())
 		{
+			float argsbuf = 0;
+			s = strzone(argv(1)); // dialog name
 			for(i = 0, e = world; (e = nextent(e)); )
-				if(e.classname != "vtbl" && e.name == strcat(filter, argv(1)))
+				if(e.classname != "vtbl" && e.name == strcat(filter, s))
+				{
+					argsbuf = buf_create();
+					if(argsbuf >= 0)
 					if(e.readInputArgs)
 					{
-						e.readInputArgs(e, 2, argc - 1);
-						m_goto(strcat(filter, argv(1)));
+						for(i = 2; i < argc; ++i)
+							bufstr_add(argsbuf, argv(i), 1);
+						e.readInputArgs(e, argsbuf);
+						m_goto(strcat(filter, s));
 					}
+					if(argsbuf >= 0)
+						buf_del(argsbuf);
+				}
 		}
 		if(filter)
 			strunzone(filter);

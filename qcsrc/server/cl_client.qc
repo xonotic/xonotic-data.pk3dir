@@ -733,8 +733,7 @@ void MOTD_send()
 	WriteByte(MSG_ONE, TE_CSQC_SERVERINFO);
 	WriteString(MSG_ONE, "128.03.192.999"); // FIXME: send the real server ip
 	WriteString(MSG_ONE, autocvar_hostname);
-	//WriteString(MSG_ONE, getwelcomemessage());
-	WriteString(MSG_ONE, "Welcome to this server. Have fun!");
+	WriteString(MSG_ONE, getwelcomemessage());
 }
 
 /*

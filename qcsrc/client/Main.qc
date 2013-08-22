@@ -1189,7 +1189,10 @@ void Net_WeaponComplain()
 
 void Net_ReadServerInfo()
 {
-	localcmd("\nmenu_cmd directmenu Welcome serverinfo_name \"", ReadString() , "\" serverinfo_ip \"", ReadString(), "\" serverinfo_MOTD \"", ReadString(), "\"\n");
+	localcmd("\nmenu_cmd directmenu Welcome serverinfo_name \"", ReadString(),
+		"\" serverinfo_ip \"", ReadString(),
+		"\" serverinfo_MOTD \"", strreplace("\n", "\\n", ReadString()),
+		"\"\n");
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

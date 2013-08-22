@@ -54,6 +54,7 @@
 #include "xonotic/dialog_multiplayer_join_serverinfo.c"
 #include "xonotic/playerlist.c"
 #include "xonotic/listbox.c"
+#include "xonotic/textlistbox.c"
 #include "xonotic/serverlist.c"
 #include "xonotic/inputbox.c"
 #include "xonotic/dialog_quit.c"
