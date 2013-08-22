@@ -32,6 +32,25 @@ entity Get_Notif_Ent(float net_type, float net_name)
 	return world;
 }
 
+#ifdef SVQC
+#ifdef NOTIFICATIONS_DEBUG
+string Get_Notif_BroadcastName(float broadcast)
+{
+	switch(broadcast)
+	{
+		case NOTIF_ONE: return "NOTIF_ONE";
+		case NOTIF_ONE_ONLY: return "NOTIF_ONE_ONLY";
+		case NOTIF_ALL_EXCEPT: return "NOTIF_ALL_EXCEPT";
+		case NOTIF_ALL: return "NOTIF_ALL";
+		case NOTIF_TEAM: return "NOTIF_TEAM";
+		case NOTIF_TEAM_EXCEPT: return "NOTIF_TEAM_EXCEPT";
+	}
+	backtrace(sprintf("Get_Notif_BroadcastName(%d): Improper broadcast!\n", broadcast));
+	return "";
+}
+#endif
+#endif
+
 string Notification_CheckArgs_TypeName(float net_type, float net_name)
 {
 	// check supplied type and name for errors
@@ -1656,8 +1675,8 @@ void Kill_Notification(
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Kill_Notification(%d, '%s', %s, %d);\n",
-		broadcast,
+		"Kill_Notification(%s, '%s', %s, %d);\n",
+		Get_Notif_BroadcastName(broadcast),
 		client.netname,
 		(net_type ? Get_Notif_TypeName(net_type) : "0"),
 		net_name
@@ -1764,8 +1783,8 @@ void Send_Notification(
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification(%d, %s, %s, %s, %s);\n",
-		broadcast,
+		"Send_Notification(%s, %s, %s, %s, %s);\n",
+		Get_Notif_BroadcastName(broadcast),
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
@@ -1777,11 +1796,12 @@ void Send_Notification(
 	{
 		backtrace(sprintf(
 			strcat(
-				"Not enough arguments for Send_Notification(%d, %s, %s, ...)! ",
+				"Not enough arguments for Send_Notification(%s, %s, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			broadcast, Get_Notif_TypeName(net_type), notif.nent_name,
+			Get_Notif_BroadcastName(broadcast),
+			Get_Notif_TypeName(net_type), notif.nent_name,
 			notif.nent_stringcount, notif.nent_floatcount, count
 		));
 		return;
@@ -1790,11 +1810,12 @@ void Send_Notification(
 	{
 		backtrace(sprintf(
 			strcat(
-				"Too many arguments for Send_Notification(%d, %s, %s, ...)! ",
+				"Too many arguments for Send_Notification(%s, %s, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			broadcast, Get_Notif_TypeName(net_type), notif.nent_name,
+			Get_Notif_BroadcastName(broadcast),
+			Get_Notif_TypeName(net_type), notif.nent_name,
 			notif.nent_stringcount, notif.nent_floatcount, count
 		));
 		return;
@@ -1914,8 +1935,8 @@ void Send_Notification_WOVA(
 	#ifdef NOTIFICATIONS_DEBUG
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	Debug_Notification(sprintf(
-		"Send_Notification_WOVA(%d, %s, %d, %d, %d, %s, %s);\n",
-		broadcast,
+		"Send_Notification_WOVA(%s, %s, %d, %d, %d, %s, %s);\n",
+		Get_Notif_BroadcastName(broadcast),
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
 		stringcount,
@@ -1944,8 +1965,8 @@ void Send_Notification_WOCOVA(
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification_WOCOVA(%d, %s, %s, %s, %s);\n",
-		broadcast,
+		"Send_Notification_WOCOVA(%s, %s, %s, %s, %s);\n",
+		Get_Notif_BroadcastName(broadcast),
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
