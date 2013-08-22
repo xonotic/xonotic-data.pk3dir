@@ -52,15 +52,32 @@ void XonoticTextListBox_resizeNotify(entity me, vector relOrigin, vector relSize
 void XonoticTextListBox_setText(entity me, string theText)
 {
 	float i, k;
+	string ts;
 	if(me.textbuf >= 0)
 		buf_del(me.textbuf);
 	me.textbuf = buf_create();
 	string s = strzone(theText);
+	me.nItems = 0;
 	k = tokenizebyseparator(s, "\\n");
 	for(i = 0; i < k; ++i)
-		bufstr_add(me.textbuf, argv(i), 1);
+	{
+		getWrappedLine_remaining = argv(i);
+		if(!getWrappedLine_remaining)
+		{
+			bufstr_add(me.textbuf, "", 1);
+			++me.nItems;
+		}
+		else while(getWrappedLine_remaining)
+		{
+			ts = getWrappedLine(1 - me.controlWidth, me.realFontSize, draw_TextWidth_WithColors);
+			if (ts != "")
+			{
+				bufstr_add(me.textbuf, ts, 1);
+				++me.nItems;
+			}
+		}
+	}
 	strunzone(s);
-	me.nItems = k;
 }
 void XonoticTextListBox_destroy(entity me)
 {
