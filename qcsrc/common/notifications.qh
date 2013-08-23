@@ -129,9 +129,11 @@ void Send_Notification_WOCOVA(
 /*
  List of all notifications (including identifiers and display information)
  Possible Tokens:
-    default, name, channel, sound, volume, position,
-    anncename, infoname, centername, strnum, flnum, args,
-    hudargs, icon, cpid, durcnt, normal, gentle
+    default, name, strnum, flnum,
+    channel, sound, volume, position,
+    args, hudargs, icon, cpid, durcnt, normal, gentle,
+    anncename, infoname, centername,
+    challow, chtype, optiona, optionb
  Format Specifications:
     MSG_ANNCE:
       default: FLOAT: Default setting for whether the notification is enabled or not
@@ -170,6 +172,15 @@ void Send_Notification_WOCOVA(
       anncename: VAR: Name of announcer notification for reference
       infoname: VAR: Name of info notification for reference
       centername: VAR: Name of centerprint notification for reference
+    MSG_CHOICE:
+      default: FLOAT: Default setting for whether the notification is enabled or not
+         ^-> 0 = disabled, 1 = select option A, 2 = selection option B
+      challow: FLOAT: Default setting for server allowing choices other than A
+         ^-> 0 = no choice, 1 = allowed in warmup, 2 = always allowed
+      name: VAR: Name of choice notification
+      chtype: VAR: Notification message type for options
+      optiona: VAR: Name of choice "A" notification for reference
+      optionb: VAR: Name of choice "B" notification for reference
 
  Messages with ^F1, ^BG, ^TC, etc etc in them will replace those strings
  with colors according to the cvars the user has chosen. This allows for
@@ -188,9 +199,8 @@ void Send_Notification_WOCOVA(
     -ALWAYS reset a color after a name (this way they don't set it for the whole string).
     -NEVER re-declare an event twice.
     -NEVER add or remove tokens from the format, it SHOULD already work.
-    -MSG_INFO messages must ALWAYS end with a new line: \n
     -MSG_INFO hudargs must always be ATTACKER -> VICTIM
-    -MSG_CENTER should NOT end with a new line
+    -MSG_INFO and MSG_CENTER should NOT end with a new line
 
  General rules:
     -Be clean and simple with your notification naming,
