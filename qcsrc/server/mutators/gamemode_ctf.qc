@@ -22,34 +22,14 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 
 void ctf_CaptureRecord(entity flag, entity player)
 {
-	entity tmp_entity;
 	float cap_record = ctf_captimerecord;
 	float cap_time = (time - flag.ctf_pickuptime);
 	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 	
 	// notify about shit
-	FOR_EACH_REALCLIENT(tmp_entity)
-	{
-		if(tmp_entity.CAPTURE_VERBOSE)
-		{
-			if(!ctf_captimerecord) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
-			else if(cap_time < cap_record) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-			else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-		}
-		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
-	}
-
-	// the previous notification broadcast is only sent to real clients, this will notify server log too
-	if(server_is_dedicated)
-	{
-		if(autocvar_notification_ctf_capture_verbose)
-		{
-			if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
-			else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-			else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-		}
-		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
-	}
+	if(!ctf_captimerecord) { Send_Notification(NOTIF_ALL, world, MSG_CHOICE, APP_TEAM_ENT_2(flag, CHOICE_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+	else if(cap_time < cap_record) { Send_Notification(NOTIF_ALL, world, MSG_CHOICE, APP_TEAM_ENT_2(flag, CHOICE_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+	else { Send_Notification(NOTIF_ALL, world, MSG_CHOICE, APP_TEAM_ENT_2(flag, CHOICE_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
 	
 	// write that shit in the database
 	if((!ctf_captimerecord) || (cap_time < cap_record))
@@ -500,10 +480,13 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname);
+	
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
-	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CENTER, CHOICE_CTF_PICKUP_TEAM, Team_ColorCode(player.team), player.netname);
-	Send_Notification(NOTIF_TEAM, flag, MSG_CENTER, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
+	
+	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, CHOICE_CTF_PICKUP_TEAM, Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
+	
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	
 	// scoring
@@ -2001,12 +1984,6 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, CAPTURE_VERBOSE, "notification_ctf_capture_verbose");
-	return TRUE;
-}
-
 
 // ==========
 // Spawnfuncs
@@ -2191,7 +2168,6 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetCvars, ctf_GetCvars, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
