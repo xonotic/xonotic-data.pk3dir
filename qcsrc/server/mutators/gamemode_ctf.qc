@@ -476,7 +476,6 @@ void ctf_Handle_Return(entity flag, entity player)
 void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
-	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	float pickup_dropped_score; // used to calculate dropped pickup score
 	
 	// attach the flag to the player
@@ -501,30 +500,11 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname);
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
+	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
+	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CENTER, CHOICE_CTF_PICKUP_TEAM, Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM, flag, MSG_CENTER, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
-
-	FOR_EACH_REALPLAYER(tmp_player)
-	{
-		if(tmp_player == player)
-		{
-			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
-			if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
-		}
-		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
-		{
-			if(tmp_player.PICKUP_TEAM_VERBOSE)
-				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM_VERBOSE, Team_ColorCode(player.team), player.netname);
-			else
-				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM, Team_ColorCode(player.team));
-		}
-		else if(IsDifferentTeam(tmp_player, player))
-		{
-			if(tmp_player.PICKUP_ENEMY_VERBOSE)
-				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_VERBOSE, Team_ColorCode(player.team), player.netname);
-			else
-				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY, Team_ColorCode(player.team));
-		}
-	}
 	
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
@@ -2024,8 +2004,6 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 MUTATOR_HOOKFUNCTION(ctf_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, CAPTURE_VERBOSE, "notification_ctf_capture_verbose");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_ctf_pickup_team_verbose");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_ctf_pickup_enemy_verbose");
 	return TRUE;
 }
 
