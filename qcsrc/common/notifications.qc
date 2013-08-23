@@ -106,7 +106,7 @@ string Notification_CheckArgs(
 		case NOTIF_TEAM:
 		{
 			if not(teamplay) { checkargs = sprintf("%sTeamplay not active!", checkargs); }
-			else if not(client.team) { checkargs = sprintf("%sNo team provided!", checkargs); }
+			//else if not(client.team) { checkargs = sprintf("%sNo team provided!", checkargs); }
 			break;
 		}
 		
