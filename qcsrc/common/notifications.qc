@@ -478,7 +478,6 @@ void Create_Notification_Entity(
 	//  Global Entity Setup
 	// =====================
 	entity notif = spawn();
-	string typestring = "";
 	switch(typeid)
 	{
 		case MSG_ANNCE:
@@ -526,12 +525,12 @@ void Create_Notification_Entity(
 		}
 	}
 	notif.nent_default = var_default;
-	notif.nent_name = strzone(namestring);
+	notif.nent_enabled = (1 <= var_cvar);
 	notif.nent_type = typeid;
 	notif.nent_id = nameid;
-	notif.nent_enabled = (1 <= var_cvar);
-
-	typestring = Get_Notif_TypeName(typeid);
+	notif.nent_name = strzone(namestring);
+	
+	string typestring = Get_Notif_TypeName(typeid);
 
 	// Other pre-notif-setup requisites
 	notif_error = FALSE;
