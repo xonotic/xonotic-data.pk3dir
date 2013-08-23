@@ -1,6 +1,6 @@
 // ================================================
 //  Unified notification system, written by Samual
-//  Last updated: June, 2013
+//  Last updated: August, 2013
 // ================================================
 
 string Get_Notif_TypeName(float net_type)
