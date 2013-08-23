@@ -139,12 +139,16 @@ float ctf_IsDifferentTeam(entity a, entity b)
 
 float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
 {
+	// personal waypoints
+	if(self.enemy)
+		if(self.enemy != e)
+			return FALSE;
+			
 	// team waypoints
+	if(self.rule == SPRITERULE_DEFAULT)
 	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
 	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
-	if(!IsDifferentTeam(self.owner, e))
-		return FALSE;
-	if not(IS_PLAYER(e))
+	if(!IsDifferentTeam(self.owner, e) || !IS_PLAYER(e))
 		return FALSE;
 
 	return TRUE;
@@ -648,20 +652,23 @@ void ctf_CheckStalemate(void)
 			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
 			ctf_staleflaglist = tmp_entity;
 			
-			if(tmp_entity.team == NUM_TEAM_1) { ++stale_red_flags; }
-			if(tmp_entity.team == NUM_TEAM_2) { ++stale_blue_flags; }
-			if(tmp_entity.team == NUM_TEAM_3) { ++stale_yellow_flags; }
-			if(tmp_entity.team == NUM_TEAM_4) { ++stale_pink_flags; }
+			switch(tmp_entity.team)
+			{
+				case NUM_TEAM_1: ++stale_red_flags; break;
+				case NUM_TEAM_2: ++stale_blue_flags; break;
+				case NUM_TEAM_3: ++stale_yellow_flags; break;
+				case NUM_TEAM_4: ++stale_pink_flags; break;
+			}
 		}
 	}
 	
 	stale_flags = (stale_red_flags > 0) + (stale_blue_flags > 0) + (stale_yellow_flags > 0) + (stale_pink_flags > 0);
 	
-	if(stale_flags >= ctf_teams)
+	if(stale_flags == ctf_teams)
 		ctf_stalemate = TRUE;
-	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 2)
+	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-	else if(stale_flags > 0 && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < ctf_teams && stale_flags > 0 && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
@@ -807,6 +814,7 @@ void ctf_FlagThink()
 			}
 			if(!ctf_IsDifferentTeam(self, self.owner))
 			{
+				// drop the flag if reverse status has changed
 				ctf_Handle_Throw(self.owner, world, DROP_THROW);
 			}
 			return;
@@ -1790,10 +1798,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		if(flag.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_3) { t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; }
-		if(flag.team == NUM_TEAM_4) { t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING; 	t2 = IT_RED_FLAG_TAKEN; 	t3 = IT_RED_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING; 	t2 = IT_BLUE_FLAG_TAKEN; 	t3 = IT_BLUE_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_3) { t = IT_YELLOW_FLAG_CARRYING; 	t2 = IT_YELLOW_FLAG_TAKEN; 	t3 = IT_YELLOW_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_4) { t = IT_PINK_FLAG_CARRYING; 	t2 = IT_PINK_FLAG_TAKEN; 	t3 = IT_PINK_FLAG_LOST; }
 	
 		switch(flag.ctf_status)
 		{
@@ -2321,7 +2329,6 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 			ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
 	}
 	
-	ret_float = ctf_teams;
 	ctf_ScoreRules(ctf_teams);
 }
 
