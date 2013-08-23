@@ -753,7 +753,6 @@ var float autocvar_notification_debug = FALSE;
 #ifdef SVQC
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
-var float autocvar_notification_server_allows_frag_verbose = 1; // 0 = no, 1 = warmup only, 2 = all the time
 var float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
 var float autocvar_notification_item_centerprinttime = 1.5;
@@ -764,7 +763,6 @@ var float autocvar_notification_allow_chatboxprint = 0;
 
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
-var float autocvar_notification_frag_verbose = TRUE;
 #endif
 
 

@@ -1045,11 +1045,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	);
 	
 	NOTIF_WRITE_HARDCODED(
-		"frag_verbose", "1",
-		"Show extra information when you frag someone (or when you are fragged"
-	);
-	
-	NOTIF_WRITE_HARDCODED(
 		"item_centerprinttime", "1.5",
 		"How long to show item information centerprint messages (like 'You got the Electro' or such)"
 	);
@@ -1063,12 +1058,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE_HARDCODED(
 		"lifetime_runtime", "0.5",
 		"Amount of time that notification entities last on the server during runtime (In seconds)"
-	);
-	
-	NOTIF_WRITE_HARDCODED(
-		"server_allows_frag_verbose", "1",
-		"Server side cvar for showing extra information in frag messages... 0 = no extra frag information, "
-		"1 = frag information only in warmup, 2 = frag information allowed all the time"
 	);
 	
 	NOTIF_WRITE_HARDCODED(
