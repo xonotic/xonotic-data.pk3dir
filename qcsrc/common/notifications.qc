@@ -1027,21 +1027,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	);
 	
 	NOTIF_WRITE_HARDCODED(
-		"ctf_capture_verbose", "0",
-		"Show extra information when someone captures a flag"
-	);
-	
-	NOTIF_WRITE_HARDCODED(
-		"ctf_pickup_enemy_verbose", "0",
-		"Show extra information if an enemy picks up a flag"
-	);
-	
-	NOTIF_WRITE_HARDCODED(
-		"ctf_pickup_team_verbose", "0",
-		"Show extra information if a team mate picks up a flag"
-	);
-	
-	NOTIF_WRITE_HARDCODED(
 		"debug", "0",
 		"Print extra debug information on all notification function calls "
 		"(Requires -DNOTIFICATIONS_DEBUG flag to be enabled on QCSRC compilation)... "
