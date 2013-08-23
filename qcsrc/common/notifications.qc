@@ -448,15 +448,14 @@ void Create_Notification_Entity(
 	float typeid,
 	float nameid,
 	string namestring,
-	float anncename,
-	float infoname,
-	float centername,
-	float channel,
+	float strnum,
+	float flnum,
+	/* MSG_ANNCE */
+	float channel, 
 	string snd,
 	float vol,
 	float position,
-	float strnum,
-	float flnum,
+	/* MSG_INFO & MSG_CENTER */
 	string args,
 	string hudargs,
 	string icon,
@@ -464,6 +463,11 @@ void Create_Notification_Entity(
 	string durcnt,
 	string normal,
 	string gentle,
+	/* MSG_MULTI */
+	float anncename,
+	float infoname,
+	float centername,
+	/* MSG_CHOICE */
 	float challow_def,
 	float challow_var,
 	float chtype,
