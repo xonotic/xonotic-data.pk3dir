@@ -846,18 +846,22 @@ void Create_Notification_Entity(
 				
 				#ifdef NOTIFICATIONS_DEBUG
 				Debug_Notification(sprintf(
-					"Create_Notification_Entity(...): MSG_CHOICE: %s\n"
-					"^ optiona: %s %s : %d %d\n"
-					"^ optionb: %s %s : %d %d\n",
+					"Create_Notification_Entity(...): MSG_CHOICE: %s\n%s\n%s\n",
 					notif.nent_name,
-					Get_Notif_TypeName(notif.nent_optiona.nent_type),
-					notif.nent_optiona.nent_name,
-					notif.nent_optiona.nent_stringcount,
-					notif.nent_optiona.nent_floatcount,
-					Get_Notif_TypeName(notif.nent_optiona.nent_type),
-					notif.nent_optiona.nent_name,
-					notif.nent_optiona.nent_stringcount,
-					notif.nent_optiona.nent_floatcount
+					sprintf(
+						"^ optiona: %s %s : %d %d",
+						Get_Notif_TypeName(notif.nent_optiona.nent_type),
+						notif.nent_optiona.nent_name,
+						notif.nent_optiona.nent_stringcount,
+						notif.nent_optiona.nent_floatcount
+					),
+					sprintf(
+						"^ optionb: %s %s : %d %d",
+						Get_Notif_TypeName(notif.nent_optionb.nent_type),
+						notif.nent_optionb.nent_name,
+						notif.nent_optionb.nent_stringcount,
+						notif.nent_optionb.nent_floatcount
+					)
 				));
 				#endif
 			}
@@ -1338,7 +1342,8 @@ void Local_Notification_centerprint_generic(
 		MakeConsoleSafe(input),
 		durcnt,
 		f1, f2,
-		stof(arg_slot[0]), stof(arg_slot[1])
+		stof(arg_slot[0]),
+		stof(arg_slot[1])
 	));
 	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
@@ -1373,8 +1378,11 @@ void Local_Notification(float net_type, float net_name, ...count)
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_TypeName(net_type), notif.nent_name,
-			notif.nent_stringcount, notif.nent_floatcount, count
+			Get_Notif_TypeName(net_type),
+			notif.nent_name,
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			count
 		));
 		return;
 	}
@@ -1386,8 +1394,11 @@ void Local_Notification(float net_type, float net_name, ...count)
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_TypeName(net_type), notif.nent_name,
-			notif.nent_stringcount, notif.nent_floatcount, count
+			Get_Notif_TypeName(net_type),
+			notif.nent_name,
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			count
 		));
 		return;
 	}
@@ -1803,11 +1814,14 @@ void Send_Notification(
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification(%s, '%s', %s, %s, %s, %s);\n",
-		Get_Notif_BroadcastName(broadcast),
-		client.classname,
-		Get_Notif_TypeName(net_type),
-		notif.nent_name,
+		"Send_Notification(%s, %s, %s);\n",
+		sprintf(
+			"%s, '%s', %s, %s",
+			Get_Notif_BroadcastName(broadcast),
+			client.classname,
+			Get_Notif_TypeName(net_type),
+			notif.nent_name
+		),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
@@ -1817,14 +1831,20 @@ void Send_Notification(
 	{
 		backtrace(sprintf(
 			strcat(
-				"Not enough arguments for Send_Notification(%s, '%s', %s, %s, ...)! ",
+				"Not enough arguments for Send_Notification(%s, ...)! ",
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_BroadcastName(broadcast),
-			client.classname,
-			Get_Notif_TypeName(net_type), notif.nent_name,
-			notif.nent_stringcount, notif.nent_floatcount, count
+			sprintf(
+				"%s, '%s', %s, %s",
+				Get_Notif_BroadcastName(broadcast),
+				client.classname,
+				Get_Notif_TypeName(net_type),
+				notif.nent_name
+			),
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			count
 		));
 		return;
 	}
@@ -1832,14 +1852,20 @@ void Send_Notification(
 	{
 		backtrace(sprintf(
 			strcat(
-				"Too many arguments for Send_Notification(%s, '%s', %s, %s, ...)! ",
+				"Too many arguments for Send_Notification(%s, ...)! ",
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_BroadcastName(broadcast),
-			client.classname,
-			Get_Notif_TypeName(net_type), notif.nent_name,
-			notif.nent_stringcount, notif.nent_floatcount, count
+			sprintf(
+				"%s, '%s', %s, %s",
+				Get_Notif_BroadcastName(broadcast),
+				client.classname,
+				Get_Notif_TypeName(net_type),
+				notif.nent_name
+			),
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			count
 		));
 		return;
 	}
@@ -1958,11 +1984,14 @@ void Send_Notification_WOVA(
 	#ifdef NOTIFICATIONS_DEBUG
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	Debug_Notification(sprintf(
-		"Send_Notification_WOVA(%s, '%s', %s, %s, %d, %d, %s, %s);\n",
-		Get_Notif_BroadcastName(broadcast),
-		client.classname,
-		Get_Notif_TypeName(net_type),
-		notif.nent_name,
+		"Send_Notification_WOVA(%s, %d, %d, %s, %s);\n",
+		sprintf(
+			"%s, '%s', %s, %s",
+			Get_Notif_BroadcastName(broadcast),
+			client.classname,
+			Get_Notif_TypeName(net_type),
+			notif.nent_name
+		),
 		stringcount,
 		floatcount,
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
@@ -1989,11 +2018,14 @@ void Send_Notification_WOCOVA(
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification_WOCOVA(%s, '%s', %s, %s, %s, %s);\n",
-		Get_Notif_BroadcastName(broadcast),
-		client.classname,
-		Get_Notif_TypeName(net_type),
-		notif.nent_name,
+		"Send_Notification_WOCOVA(%s, %s, %s);\n",
+		sprintf(
+			"%s, '%s', %s, %s",
+			Get_Notif_BroadcastName(broadcast),
+			client.classname,
+			Get_Notif_TypeName(net_type),
+			notif.nent_name
+		),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
