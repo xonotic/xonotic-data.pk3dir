@@ -913,8 +913,6 @@ void Notification_GetCvars(void)
 			sprintf("notification_%s", msg_choice_notifs[i].nent_name)
 		);
 	}
-
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, FRAG_VERBOSE, "notification_frag_verbose");
 }
 #endif
 
