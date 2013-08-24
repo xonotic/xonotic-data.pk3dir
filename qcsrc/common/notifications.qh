@@ -1151,12 +1151,11 @@ float NOTIF_CHOICE_COUNT;
 float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
-#define NOTIF_ANNCE_MAX   200
-#define NOTIF_INFO_MAX    256
-#define NOTIF_CENTER_MAX  256
-#define NOTIF_MULTI_MAX   128
-#define NOTIF_CHOICE_MAX  16
-#define NOTIF_CPID_MAX    256 // should match NOTIF_CENTER_MAX
+#define NOTIF_ANNCE_MAX   100
+#define NOTIF_INFO_MAX    300
+#define NOTIF_CENTER_MAX  200
+#define NOTIF_MULTI_MAX   200
+#define NOTIF_CHOICE_MAX  20
 
 // notification entities
 entity msg_annce_notifs[NOTIF_ANNCE_MAX];
