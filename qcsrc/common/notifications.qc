@@ -1340,23 +1340,80 @@ void Local_Notification_centerprint_generic(
 
 void Local_Notification(float net_type, float net_name, ...count)
 {
+	// check if this should be aborted
+	if(net_name == NOTIF_ABORT)
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		Debug_Notification(sprintf(
+			"Local_Notification(%s, %s, ...);\n",
+			Get_Notif_TypeName(net_type),
+			"NOTIF_ABORT"
+		));
+		#endif
+		return;
+	}
+	
 	// check supplied type and name for errors
 	string checkargs = Notification_CheckArgs_TypeName(net_type, net_name);
-	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Local_Notification: %s\n", checkargs)); return; }
+	if(checkargs != "")
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		Debug_Notification(sprintf(
+			"Local_Notification(%s, %d, ...);\n",
+			Get_Notif_TypeName(net_type),
+			Get_Notif_Ent(net_type, net_name).nent_name
+		));
+		#endif
+		backtrace(sprintf("Incorrect usage of Local_Notification: %s\n", checkargs));
+		return;
+	}
 
+	// retreive entity of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif) { backtrace("Local_Notification: Could not find notification entity!\n"); return; }
+	if not(notif)
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		Debug_Notification(sprintf(
+			"Local_Notification(%s, %d, ...);\n",
+			Get_Notif_TypeName(net_type),
+			net_name
+		));
+		#endif
+		backtrace("Local_Notification: Could not find notification entity!\n");
+		return;
+	}
+
+	// check if the notification is enabled
 	if not(notif.nent_enabled)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
-			"Local_Notification(%s, %s): Entity was disabled...\n",
+			"Local_Notification(%s, %s, ...): Entity was disabled...\n",
 			Get_Notif_TypeName(net_type),
 			notif.nent_name
 		));
 		#endif
 		return;
 	}
+
+	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
+	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
+	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
+	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
+	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
+	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
+	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
+	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
+
+	#ifdef NOTIFICATIONS_DEBUG
+	Debug_Notification(sprintf(
+		"Local_Notification(%s, %s, %s, %s);\n",
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
+	#endif
 	
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
@@ -1390,25 +1447,6 @@ void Local_Notification(float net_type, float net_name, ...count)
 		));
 		return;
 	}
-
-	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
-	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
-	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
-	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
-	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
-	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
-	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
-	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
-
-	#ifdef NOTIFICATIONS_DEBUG
-	Debug_Notification(sprintf(
-		"Local_Notification(%s, %s, %s, %s);\n",
-		Get_Notif_TypeName(net_type),
-		notif.nent_name,
-		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
-	));
-	#endif
 	
 	switch(net_type)
 	{
@@ -1663,9 +1701,6 @@ void Kill_Notification(
 	float broadcast, entity client,
 	float net_type, float net_name)
 {
-	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
-	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
-
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
 		"Kill_Notification(%s, '%s', %s, %d);\n",
@@ -1675,6 +1710,9 @@ void Kill_Notification(
 		net_name
 	));
 	#endif
+	
+	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
+	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
 	entity notif, net_notif;
 	float killed_cpid = NO_CPID;
@@ -1757,13 +1795,28 @@ void Send_Notification(
 	float net_type, float net_name,
 	...count)
 {
+	// check if this should be aborted
+	if(net_name == NOTIF_ABORT)
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		Debug_Notification(sprintf(
+			"Send_Notification(%s, '%s', %s, %s, ...);\n",
+			Get_Notif_BroadcastName(broadcast),
+			client.classname,
+			Get_Notif_TypeName(net_type),
+			"NOTIF_ABORT"
+		));
+		#endif
+		return;
+	}
+	
 	// check supplied broadcast, target, type, and name for errors
 	string checkargs = Notification_CheckArgs(broadcast, client, net_type, net_name);
 	if(checkargs != "")
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
-			"Send_Notification(%s, '%s', %s, %d, ...);\n",
+			"Send_Notification(%s, '%s', %s, %s, ...);\n",
 			Get_Notif_BroadcastName(broadcast),
 			client.classname,
 			Get_Notif_TypeName(net_type),
@@ -1774,7 +1827,7 @@ void Send_Notification(
 		return;
 	}
 
-	// retreive counts for the arguments of this notification
+	// retreive entity of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif)
 	{

@@ -28,15 +28,14 @@ void Announcer_Countdown()
 	else // countdown is still going
 	{
 		if(roundstarttime == starttime)
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
-		else
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
-
-		switch(countdown_rounded)
 		{
-			case 1: Local_Notification(MSG_ANNCE, ANNCE_NUM_1); break;
-			case 2: Local_Notification(MSG_ANNCE, ANNCE_NUM_2); break;
-			case 3: Local_Notification(MSG_ANNCE, ANNCE_NUM_3); break;
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded));
+		}
+		else
+		{
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
+			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_GAMESTART, countdown_rounded));
 		}
 
 		self.nextthink = (starttime - (countdown - 1));

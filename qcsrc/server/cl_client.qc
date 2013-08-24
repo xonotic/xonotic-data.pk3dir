@@ -811,7 +811,7 @@ void KillIndicator_Think()
 		if(IS_REAL_CLIENT(self.owner))
 		{
 			if(self.cnt <= 10)
-				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(self.cnt)); }
+				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(CNT_KILL, self.cnt)); }
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -1910,7 +1910,7 @@ void ShowRespawnCountdown()
 		{
 			self.respawn_countdown = number - 1;
 			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(number)); 
+				{ Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(CNT_RESPAWN, number)); }
 		}
 	}
 }
@@ -2541,7 +2541,7 @@ void PlayerPostThink (void)
 			else if(timeleft <= 10)
 			{
 				if(timeleft != self.idlekick_lasttimeleft)
-					Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(timeleft));
+					{ Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft)); }
 				self.idlekick_lasttimeleft = timeleft;
 			}
 		}
