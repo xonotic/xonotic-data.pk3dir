@@ -1189,9 +1189,9 @@ void Net_WeaponComplain()
 
 void Net_ReadServerInfo()
 {
-	localcmd("\nmenu_cmd directmenu Welcome serverinfo_name \"", ReadString(),
-		"\" serverinfo_ip \"", ReadString(),
-		"\" serverinfo_MOTD \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())),
+	localcmd("\nmenu_cmd directmenu Welcome name \"", ReadString(),
+		"\" ip \"", ReadString(),
+		"\" motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())),
 		"\"\n");
 }
 

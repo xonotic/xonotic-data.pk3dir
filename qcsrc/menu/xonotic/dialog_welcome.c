@@ -46,21 +46,21 @@ void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 	welcomeDialog_resetStrings(me);
 	while((s = bufstr_get(argsbuf, i)) != "")
 	{
-		if(s == "serverinfo_name")
+		if(s == "name")
 		{
 			if(me.serverinfo_name)
 				strunzone(me.serverinfo_name);
 			me.serverinfo_name = strzone(bufstr_get(argsbuf, i + 1));
 			++i;
 		}
-		else if(s == "serverinfo_ip")
+		else if(s == "ip")
 		{
 			if(me.serverinfo_ip)
 				strunzone(me.serverinfo_ip);
 			me.serverinfo_ip = strzone(bufstr_get(argsbuf, i + 1));
 			++i;
 		}
-		else if(s == "serverinfo_MOTD")
+		else if(s == "motd")
 		{
 			if(me.serverinfo_MOTD)
 				strunzone(me.serverinfo_MOTD);
