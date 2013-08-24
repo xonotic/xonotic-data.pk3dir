@@ -830,7 +830,7 @@ void Create_Notification_Entity(
 
 					default:
 					{
-						error(sprintf(
+						print(sprintf(
 							strcat(
 								"^1NOTIFICATION WITH IMPROPER TYPE: ",
 								"^7net_type = %d, net_name = %s.\n"
@@ -871,7 +871,19 @@ void Create_Notification_Entity(
 			break;
 		}
 		
-		default: print("DAFUQ?\n"); notif_error = TRUE; break;
+		default:
+		{
+			print(sprintf(
+				strcat(
+					"^1NOTIFICATION WITH IMPROPER TYPE: ",
+					"^7net_type = %d, net_name = %s.\n"
+				),
+				typeid,
+				namestring
+			));
+			notif_error = TRUE;
+			break;
+		}
 	}
 
 	// now check to see if any errors happened 
