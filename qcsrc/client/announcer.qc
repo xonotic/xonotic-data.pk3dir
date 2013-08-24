@@ -1,16 +1,3 @@
-void Announcer_Play(string announcement)
-{
-	/*if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
-	{
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
-
-		if(previous_announcement) { strunzone(previous_announcement); }
-		
-		previous_announcement = strzone(announcement);
-		previous_announcement_time = time;
-	}*/
-}
-
 float announcer_1min;
 float announcer_5min;
 void Announcer_Countdown() 
