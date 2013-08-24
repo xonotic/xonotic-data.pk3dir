@@ -847,7 +847,7 @@ void Create_Notification_Entity(
 				notif.nent_stringcount = max(notif.nent_optiona.nent_stringcount, notif.nent_optionb.nent_stringcount);
 				notif.nent_floatcount = max(notif.nent_optiona.nent_floatcount, notif.nent_optionb.nent_floatcount);
 				
-				#ifdef NOTIFICATIONS_DEBUG
+				/*#ifdef NOTIFICATIONS_DEBUG
 				Debug_Notification(sprintf(
 					"Create_Notification_Entity(...): MSG_CHOICE: %s\n%s\n%s\n",
 					notif.nent_name,
@@ -866,7 +866,7 @@ void Create_Notification_Entity(
 						notif.nent_optionb.nent_floatcount
 					)
 				));
-				#endif
+				#endif*/
 			}
 			break;
 		}
