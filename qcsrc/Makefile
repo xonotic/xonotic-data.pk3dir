@@ -34,7 +34,6 @@ QCCFLAGS ?= \
 	-funtyped-nil \
 	-fno-permissive \
 	-fvariadic-args \
-	-DNOTIFICATIONS_DEBUG \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
