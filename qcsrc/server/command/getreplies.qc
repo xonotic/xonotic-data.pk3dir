@@ -286,53 +286,52 @@ string getladder()
 		return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
 }
 
-string getlsmaps()
+string getmaplist()
 {
-	print("^1================= Executing getlsmaps()! =================\n");
+	//print("^1================= Executing getmaplist()! =================\n");
 
-	string lsmaps, lsnewmaps, col;
-	float i, j, n;
-	lsmaps = "^7Maps available: ";
-	lsnewmaps = "^7Maps without a record set: ";
-	for(i = 0, j = 0; i < MapInfo_count; ++i)
-	{
-		if(MapInfo_Get_ByID(i))
-			if not(MapInfo_Map_flags & MapInfo_ForbiddenFlags())
-			{
-				if(mod(i, 2))
-					col = "^2";
-				else
-					col = "^3";
-
-				++j;
-
-				lsmaps = strcat(lsmaps, col, MapInfo_Map_bspname, " ");
-
-				if(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
-					lsnewmaps = strcat(lsnewmaps, col, MapInfo_Map_bspname, " ");
-				else if(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-					lsnewmaps = strcat(lsnewmaps, col, MapInfo_Map_bspname, " ");
-			}
-	}
-
-	lsmaps = strzone(strcat(lsmaps, "\n"));
-	lsnewmaps = strzone(strcat(((!g_race && !g_cts) ? "Need to be playing race or CTS for lsnewmaps to work." : lsnewmaps), "\n"));
-
-	maplist_reply = "^7Maps in list: ";
-	n = tokenize_console(autocvar_g_maplist);
-	for(i = 0, j = 0; i < n; ++i)
+	string maplist = "", col;
+	float i, argc;
+	
+	argc = tokenize_console(autocvar_g_maplist);
+	for(i = 0; i < argc; ++i)
 	{
 		if(MapInfo_CheckMap(argv(i)))
 		{
-			if(mod(j, 2))
-				col = "^2";
-			else
-				col = "^3";
-			maplist_reply = strcat(maplist_reply, col, argv(i), " ");
-			++j;
+			if(mod(i, 2)) { col = "^2"; }
+			else { col = "^3"; }
+			maplist = sprintf("%s%s%s ", maplist, col, argv(i));
 		}
 	}
-	maplist_reply = strzone(strcat(maplist_reply, "\n"));
+
 	MapInfo_ClearTemps();
-	return lsmaps;
+	return sprintf("^7Maps in list: %s\n", maplist);
+}
+
+	
+string getlsmaps()
+{
+	//print("^1================= Executing getlsmaps()! =================\n");
+
+	string lsmaps = "", col;
+	float i;
+	
+	for(i = 0; i < MapInfo_count; ++i)
+	{
+		if((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
+		{
+			if(mod(i, 2)) { col = "^2"; }
+			else if(
+				(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
+				||
+				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
+			) { col = "^5*"; }
+			else { col = "^3"; }
+
+			lsmaps = sprintf("%s%s%s ", lsmaps, col, MapInfo_Map_bspname);
+		}
+	}
+
+	MapInfo_ClearTemps();
+	return sprintf("^7Maps available: %s\n", lsmaps);
 }

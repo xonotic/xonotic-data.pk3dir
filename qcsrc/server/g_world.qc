@@ -814,6 +814,7 @@ void spawnfunc_worldspawn (void)
 	detect_maptype();
 
 	// set up information replies for clients and server to use
+	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	for(i = 0; i < 10; ++i)
 	{
