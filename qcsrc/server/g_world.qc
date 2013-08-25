@@ -1539,10 +1539,6 @@ void NextLevel()
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
 
-	// update lsmaps in case the gametype changed, this way people can easily list maps for it
-	if(lsmaps_reply != "") { strunzone(lsmaps_reply); }
-	lsmaps_reply = strzone(getlsmaps());
-
 	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
