@@ -320,6 +320,7 @@ string getlsmaps()
 	{
 		if((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
 		{
+			// todo: Check by play count of maps for other game types?
 			if(
 				(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
 				||
