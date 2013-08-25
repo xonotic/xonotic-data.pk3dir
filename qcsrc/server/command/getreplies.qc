@@ -320,13 +320,20 @@ string getlsmaps()
 	{
 		if((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
 		{
-			if(mod(i, 2)) { col = "^2"; }
-			else if(
+			if(
 				(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
 				||
 				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-			) { col = "^5*"; }
-			else { col = "^3"; }
+			)
+			{
+				if(mod(i, 2)) { col = "^4*"; }
+				else { col = "^5*"; }
+			}
+			else
+			{
+				if(mod(i, 2)) { col = "^2"; }
+				else { col = "^3"; }
+			}
 
 			lsmaps = sprintf("%s%s%s ", lsmaps, col, MapInfo_Map_bspname);
 		}
