@@ -305,7 +305,7 @@ string getmaplist()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps in list: %s\n", maplist);
+	return sprintf(_("^7Maps in list: %s\n"), maplist);
 }
 
 	
@@ -314,7 +314,7 @@ string getlsmaps()
 	//print("^1================= Executing getlsmaps()! =================\n");
 
 	string lsmaps = "", col;
-	float i;
+	float i, newmaps;
 	
 	for(i = 0; i < MapInfo_count; ++i)
 	{
@@ -326,6 +326,7 @@ string getlsmaps()
 				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 			)
 			{
+				newmaps = TRUE;
 				if(mod(i, 2)) { col = "^4*"; }
 				else { col = "^5*"; }
 			}
@@ -340,5 +341,5 @@ string getlsmaps()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available: %s\n", lsmaps);
+	return sprintf(_("^7Maps available%s: %s\n"), (newmaps ? _(" (New maps have asterisks marked in blue)") : ""), lsmaps);
 }
