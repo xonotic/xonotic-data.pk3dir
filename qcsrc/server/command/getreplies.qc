@@ -288,8 +288,6 @@ string getladder()
 
 string getmaplist()
 {
-	//print("^1================= Executing getmaplist()! =================\n");
-
 	string maplist = "", col;
 	float i, argc;
 	
@@ -311,8 +309,6 @@ string getmaplist()
 	
 string getlsmaps()
 {
-	//print("^1================= Executing getlsmaps()! =================\n");
-
 	string lsmaps = "", col;
 	float i, newmaps;
 	
