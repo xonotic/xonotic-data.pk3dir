@@ -310,7 +310,7 @@ string getmaplist()
 string getlsmaps()
 {
 	string lsmaps = "", col;
-	float i, newmaps;
+	float i, newmaps = 0;
 	
 	for(i = 0; i < MapInfo_count; ++i)
 	{
