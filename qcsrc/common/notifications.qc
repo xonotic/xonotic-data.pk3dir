@@ -1887,8 +1887,13 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
+				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
 				Get_Notif_BroadcastName(broadcast),
+				#else
+				"%d, '%s', %s, %s",
+				broadcast,
+				#endif
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -1908,8 +1913,13 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
+				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
 				Get_Notif_BroadcastName(broadcast),
+				#else
+				"%d, '%s', %s, %s",
+				broadcast,
+				#endif
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name

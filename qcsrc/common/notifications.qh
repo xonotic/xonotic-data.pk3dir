@@ -101,9 +101,6 @@ float prev_soundtime;
 #define NOTIF_ALL 5
 #define NOTIF_ALL_EXCEPT 6
 
-#define IFSTR(num) ((num < notif.nent_stringcount) ? ...(num, string) : "")
-#define IFFL(num) ((((notif.nent_stringcount-1) + num) < count) ? ...(((notif.nent_stringcount-1) + num), float) : 0)
-
 void Kill_Notification(
 	float broadcast, entity client,
 	float net_type, float net_name);
