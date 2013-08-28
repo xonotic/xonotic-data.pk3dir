@@ -11,7 +11,7 @@ const float MONSTER_ATTACK_RANGED 	= 2;
 .string oldtarget2;
 .float lastshielded;
 
-const float MONSTER_RESPAWN_DEATHPOINT = 8; // re-spawn where we died
+.vector oldangles;
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
@@ -39,7 +39,6 @@ const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
 .string msound_pain;
 
 .void() monster_spawnfunc;
-.void() monster_die;
 
 .float monster_movestate; // used to tell what the monster is currently doing
 const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still

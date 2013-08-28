@@ -8,15 +8,15 @@ void invasion_spawnpoint()
 float invasion_PickMonster(float have_shamblers)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MONSTER_ZOMBIE;
+		return MON_ZOMBIE;
 
 	float i;
 	
 	RandomSelection_Init();
 	
-	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
-		if(i == MONSTER_STINGRAY || i == MONSTER_WYVERN || (i == MONSTER_SHAMBLER && have_shamblers >= 1))
+		if(i == MON_STINGRAY || i == MON_WYVERN || (i == MON_SHAMBLER && have_shamblers >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);
@@ -88,7 +88,7 @@ float Invasion_CheckWinner()
 	
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
-		if(head.monsterid == MONSTER_SHAMBLER)
+		if(head.monsterid == MON_SHAMBLER)
 			++shamblers;
 		++total_alive_monsters;
 	}

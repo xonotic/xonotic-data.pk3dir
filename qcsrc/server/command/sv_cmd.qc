@@ -146,6 +146,7 @@ void GameCommand_butcher(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
+			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
 		
             float removed_count = 0;
 			entity montokill, head;

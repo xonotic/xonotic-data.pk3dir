@@ -119,7 +119,7 @@ MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
 MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
 {
 	// always refill ammo
-	if(self.monsterid == MONSTER_MAGE)
+	if(self.monsterid == MON_MAGE)
 		self.skin = 1;
 	
 	return FALSE;

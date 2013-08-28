@@ -1,8 +1,15 @@
-const vector MAGE_MIN = '-36 -36 -24';
-const vector MAGE_MAX = '36 36 50';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ MAGE,
+/* function   */ m_mage,
+/* spawnflags */ 0,
+/* mins,maxs  */ '-36 -36 -24', '36 36 50',
+/* model      */ "mage.dpm",
+/* netname    */ "mage",
+/* fullname   */ _("Mage")
+);
 
-string MAGE_MODEL = "models/monsters/mage.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_mage;
 float autocvar_g_monster_mage_health;
@@ -84,47 +91,6 @@ float friend_needshelp(entity e)
 	}
 	
 	return FALSE;
-}
-
-void mage_think()
-{
-	entity head;
-	float need_help = FALSE;
-	
-	FOR_EACH_PLAYER(head)
-	if(friend_needshelp(head))
-	{
-		need_help = TRUE;
-		break; // found 1 player near us who is low on health
-	}
-	if(!need_help)
-	FOR_EACH_MONSTER(head)
-	if(head != self)
-	if(friend_needshelp(head))
-	{
-		need_help = TRUE;
-		break; // found 1 player near us who is low on health
-	}
-	
-	self.think = mage_think;
-	self.nextthink = time + self.ticrate;
-	
-	if(self.weaponentity)
-	if(time >= self.weaponentity.ltime)
-		mage_shield_die();
-		
-	if(self.health < autocvar_g_monster_mage_heal_minhealth || need_help)
-	if(time >= self.attack_finished_single)
-	if(random() < 0.5)
-		mage_heal();
-		
-	if(self.enemy)
-	if(self.health < self.max_health)
-	if(time >= self.lastshielded)
-	if(random() < 0.5)
-		mage_shield();
-	
-	monster_move(autocvar_g_monster_mage_speed, autocvar_g_monster_mage_speed, 50, mage_anim_walk, mage_anim_run, mage_anim_idle);
 }
 
 void mageattack_melee()
@@ -375,57 +341,109 @@ float mage_attack(float attack_type)
 	return FALSE;
 }
 
-void mage_die()
-{
-	Monster_CheckDropCvars ("mage");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(mage_anim_death);
-	
-	monster_hook_death(); // for post-death mods
-}
-
-void mage_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_mage_health;
-
-	self.damageforcescale   = 0.003;
-	self.classname			= "monster_mage";
-	self.monster_attackfunc	= mage_attack;
-	self.nextthink		  	= time + random() * 0.5 + 0.1;
-	self.think			  	= mage_think;
-	
-	monsters_setframe(mage_anim_walk);
-	
-	monster_setupsounds("mage");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_mage()
 {
 	if not(autocvar_g_monster_mage) { remove(self); return; }
+	
+	self.classname = "monster_mage";
 	
 	self.monster_spawnfunc = spawnfunc_monster_mage;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Mage", MONSTER_MAGE,
-			 MAGE_MIN, MAGE_MAX,
-			 FALSE,
-			 mage_die, mage_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
 
+float m_mage(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			entity head;
+			float need_help = FALSE;
+			
+			FOR_EACH_PLAYER(head)
+			if(friend_needshelp(head))
+			{
+				need_help = TRUE;
+				break; // found 1 player near us who is low on health
+			}
+			if(!need_help)
+			FOR_EACH_MONSTER(head)
+			if(head != self)
+			if(friend_needshelp(head))
+			{
+				need_help = TRUE;
+				break; // found 1 player near us who is low on health
+			}
+			
+			if(self.weaponentity)
+			if(time >= self.weaponentity.ltime)
+				mage_shield_die();
+				
+			if(self.health < autocvar_g_monster_mage_heal_minhealth || need_help)
+			if(time >= self.attack_finished_single)
+			if(random() < 0.5)
+				mage_heal();
+				
+			if(self.enemy)
+			if(self.health < self.max_health)
+			if(time >= self.lastshielded)
+			if(random() < 0.5)
+				mage_shield();
+			
+			monster_move(autocvar_g_monster_mage_speed, autocvar_g_monster_mage_speed, 50, mage_anim_walk, mage_anim_run, mage_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(mage_anim_death);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_mage_health;
+				
+			self.monster_attackfunc	= mage_attack;
+			monsters_setframe(mage_anim_walk);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
 #endif // SVQC
+#ifdef CSQC
+float m_mage(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/mage.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

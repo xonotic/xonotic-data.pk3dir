@@ -1,8 +1,15 @@
-const vector ANIMUS_MIN = '-41 -41 -31';
-const vector ANIMUS_MAX = '41 41 31';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ ANIMUS,
+/* function   */ m_animus,
+/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* mins,maxs  */ '-41 -41 -31', '41 41 31',
+/* model      */ "demon.mdl",
+/* netname    */ "animus",
+/* fullname   */ _("Animus")
+);
 
-string ANIMUS_MODEL = "models/monsters/demon.mdl";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_animus;
 float autocvar_g_monster_animus_health;
@@ -18,14 +25,6 @@ const float animus_anim_leap	= 3;
 const float animus_anim_pain	= 4;
 const float animus_anim_death	= 5;
 const float animus_anim_attack	= 6;
-
-void animus_think()
-{
-	self.think = animus_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_animus_speed_run, autocvar_g_monster_animus_speed_walk, 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
-}
 
 void animus_touch_jump()
 {
@@ -68,60 +67,77 @@ float animus_attack(float attack_type)
 	return FALSE;
 }
 
-void animus_die()
-{
-	Monster_CheckDropCvars ("animus");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(animus_anim_death);
-	
-	monster_hook_death(); // for post-death mods
-}
-
-void animus_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_animus_health;
-
-	self.damageforcescale   = 0;
-	self.classname			= "monster_animus";
-	self.monster_attackfunc	= animus_attack;
-	self.nextthink		 	= time + random() * 0.5 + 0.1;
-	self.think			  	= animus_think;
-	
-	monsters_setframe(animus_anim_stand);
-	
-	monster_setupsounds("animus");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_animus()
 {
 	if not(autocvar_g_monster_animus) { remove(self); return; }
+	
+	self.classname = "monster_animus";
 	
 	self.monster_spawnfunc = spawnfunc_monster_animus;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	self.scale = 1.3;
-	
-	if not (monster_initialize(
-			 "Animus", MONSTER_ANIMUS,
-			 ANIMUS_MIN, ANIMUS_MAX,
-			 FALSE,
-			 animus_die, animus_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_ANIMUS, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
 void spawnfunc_monster_demon1() { spawnfunc_monster_animus(); }
 void spawnfunc_monster_demon() { spawnfunc_monster_animus(); }
 
+float m_animus(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_animus_speed_run, autocvar_g_monster_animus_speed_walk, 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(animus_anim_death);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_animus_health;
+				
+			self.monster_attackfunc = animus_attack;
+			monsters_setframe(animus_anim_stand);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
 #endif // SVQC
+#ifdef CSQC
+float m_animus(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/demon.mdl");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

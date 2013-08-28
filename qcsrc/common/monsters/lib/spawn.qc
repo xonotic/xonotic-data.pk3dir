@@ -16,24 +16,32 @@ entity spawnmonster (string monster, float mnster, entity spawnedby, entity own,
 	setorigin(e, orig);
 	
 	if(monster != "")
-	if not(monster_string2id(monster))
-		monster = "bruiser";
+	{
+		float i, found = 0;
+		entity mon;
+		for(i = MON_FIRST; i <= MON_LAST; ++i)
+		{
+			mon = get_monsterinfo(i);
+			if(mon.netname == monster)
+			{
+				found = TRUE;
+				break;
+			}
+		}
+		if not(found)
+			monster = (get_monsterinfo(MON_FIRST)).netname;
+	}
 		
 	if(monster == "")
 	if(mnster)
-		monster = monster_id2string(mnster);
+		monster = (get_monsterinfo(mnster)).netname;
 	
 	e.realowner = spawnedby;
 	
 	if(moveflag)
 		e.monster_moveflags = moveflag;
 	
-	if (spawnedby.classname == "td_spawnpoint")
-	{
-		e.monster_owner = own;
-		e.team = spawnedby.team;
-	}
-	else if(IS_PLAYER(spawnedby))
+	if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code

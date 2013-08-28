@@ -1,8 +1,15 @@
-const vector BRUTE_MIN = '-36 -36 -20';
-const vector BRUTE_MAX = '36 36 50';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ BRUTE,
+/* function   */ m_brute,
+/* spawnflags */ 0,
+/* mins,maxs  */ '-36 -36 -20', '36 36 50',
+/* model      */ "ogre.dpm",
+/* netname    */ "brute",
+/* fullname   */ _("Brute")
+);
 
-string BRUTE_MODEL = "models/monsters/ogre.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_brute;
 float autocvar_g_monster_brute_health;
@@ -26,14 +33,6 @@ const float brute_anim_swing 		= 4;
 const float brute_anim_die 			= 5;
 
 .float brute_cycles;
-
-void brute_think()
-{
-	self.think = brute_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_brute_speed_run, autocvar_g_monster_brute_speed_walk, 300, brute_anim_run, brute_anim_walk, brute_anim_idle);
-}
 
 void brute_blade()
 {
@@ -183,55 +182,74 @@ float brute_attack(float attack_type)
 	return FALSE;
 }
 
-void brute_die()
-{
-	Monster_CheckDropCvars ("brute");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(brute_anim_die);
-		
-	monster_hook_death(); // for post-death mods
-}
-
-void brute_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_brute_health;
-
-	self.damageforcescale	= 0.003;
-	self.classname			= "monster_brute";
-	self.monster_attackfunc	= brute_attack;
-	self.nextthink			= time + random() * 0.5 + 0.1;
-	self.think				= brute_think;
-	self.weapon				= WEP_GRENADE_LAUNCHER;
-	
-	monsters_setframe(brute_anim_idle);
-	
-	monster_setupsounds("brute");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_brute()
 {
 	if not(autocvar_g_monster_brute) { remove(self); return; }
+	
+	self.classname = "monster_brute";
 	
 	self.monster_spawnfunc = spawnfunc_monster_brute;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Brute", MONSTER_BRUTE,
-			 BRUTE_MIN, BRUTE_MAX,
-			 FALSE,
-			 brute_die, brute_spawn))
+	if not(monster_initialize(MON_BRUTE, FALSE)) { remove(self); return; }
+}
+
+float m_brute(float req)
+{
+	switch(req)
 	{
-		remove(self);
-		return;
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_brute_speed_run, autocvar_g_monster_brute_speed_walk, 300, brute_anim_run, brute_anim_walk, brute_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(brute_anim_die);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_brute_health;
+				
+			self.monster_attackfunc	= brute_attack;
+			monsters_setframe(brute_anim_idle);
+			self.weapon = WEP_GRENADE_LAUNCHER;
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
 	}
+	
+	return TRUE;
 }
 
 #endif // SVQC
+#ifdef CSQC
+float m_brute(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/ogre.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

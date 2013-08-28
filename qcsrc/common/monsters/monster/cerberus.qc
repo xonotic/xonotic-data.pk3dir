@@ -1,8 +1,15 @@
-const vector CERBERUS_MIN = '-16 -16 -24';
-const vector CERBERUS_MAX = '16 16 12';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ CERBERUS,
+/* function   */ m_cerberus,
+/* spawnflags */ 0,
+/* mins,maxs  */ '-16 -16 -24', '16 16 12',
+/* model      */ "dog.dpm",
+/* netname    */ "cerberus",
+/* fullname   */ _("Cerberus")
+);
 
-string CERBERUS_MODEL = "models/monsters/dog.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_cerberus;
 float autocvar_g_monster_cerberus_health;
@@ -11,20 +18,12 @@ float autocvar_g_monster_cerberus_attack_jump_damage;
 float autocvar_g_monster_cerberus_speed_walk;
 float autocvar_g_monster_cerberus_speed_run;
 
-const float cerberus_anim_idle	= 0;
-const float cerberus_anim_walk	= 1;
-const float cerberus_anim_run	= 2;
+const float cerberus_anim_idle		= 0;
+const float cerberus_anim_walk		= 1;
+const float cerberus_anim_run		= 2;
 const float cerberus_anim_attack	= 3;
-const float cerberus_anim_die	= 4;
-const float cerberus_anim_pain	= 5;
-
-void cerberus_think()
-{
-	self.think = cerberus_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_cerberus_speed_run, autocvar_g_monster_cerberus_speed_walk, 50, cerberus_anim_run, cerberus_anim_walk, cerberus_anim_idle);
-}
+const float cerberus_anim_die		= 4;
+const float cerberus_anim_pain		= 5;
 
 void cerberus_touch_jump()
 {
@@ -62,57 +61,76 @@ float cerberus_attack(float attack_type)
 	return FALSE;
 }
 
-void cerberus_die()
-{
-	Monster_CheckDropCvars ("cerberus");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(cerberus_anim_die);
-	
-	monster_hook_death(); // for post-death mods
-}
-
-void cerberus_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_cerberus_health;
-
-	self.damageforcescale   = 0;
-	self.classname			= "monster_cerberus";
-	self.monster_attackfunc	= cerberus_attack;
-	self.nextthink		  	= time + random() * 0.5 + 0.1;
-	self.think			  	= cerberus_think;
-	
-	monsters_setframe(cerberus_anim_idle);
-	
-	monster_setupsounds("cerberus");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_cerberus()
 {
 	if not(autocvar_g_monster_cerberus) { remove(self); return; }
+	
+	self.classname = "monster_cerberus";
 	
 	self.monster_spawnfunc = spawnfunc_monster_cerberus;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Cerberus", MONSTER_CERBERUS,
-			 CERBERUS_MIN, CERBERUS_MAX,
-			 FALSE,
-			 cerberus_die, cerberus_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_CERBERUS, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
 void spawnfunc_monster_dog() { spawnfunc_monster_cerberus(); }
 
+float m_cerberus(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_cerberus_speed_run, autocvar_g_monster_cerberus_speed_walk, 50, cerberus_anim_run, cerberus_anim_walk, cerberus_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(cerberus_anim_die);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_cerberus_health;
+				
+			self.monster_attackfunc	= cerberus_attack;
+			monsters_setframe(cerberus_anim_idle);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
 #endif // SVQC
+#ifdef CSQC
+float m_cerberus(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/dog.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

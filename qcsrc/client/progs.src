@@ -27,6 +27,7 @@ Defs.qc
 ../common/command/shared_defs.qh
 ../common/urllib.qh
 ../common/animdecide.qh
+../common/monsters/monsters.qh
 command/cl_cmd.qh
 
 autocvars.qh
@@ -48,7 +49,7 @@ noise.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
 monsters.qh
-../server/monsters/lib/monsters_early.qh
+../common/monsters/lib/monsters_early.qh
 ../server/movelib.qc
 ../server/generator.qh
 main.qh
@@ -114,6 +115,7 @@ noise.qc
 ../server/w_all.qc
 ../common/explosion_equation.qc
 ../common/urllib.qc
+../common/monsters/monsters.qc
 command/cl_cmd.qc
 
 ../warpzonelib/anglestransform.qc
@@ -124,7 +126,6 @@ tturrets.qc
 
 ../server/generator.qc
 
-../server/monsters/monsters.qh
 monsters.qc
 
 player_skeleton.qc

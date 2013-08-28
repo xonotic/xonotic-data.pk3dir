@@ -500,7 +500,12 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(self.revive_progress >= 1)
 			Unfreeze(self); // wait for next think before attacking
 			
-		self.SendFlags |= MSF_MOVE;
+		// don't bother updating angles here?
+		if(self.origin != self.oldorigin)
+		{
+			self.oldorigin = self.origin;
+			self.SendFlags |= MSF_MOVE;
+		}
 			
 		return; // no moving while frozen
 	}
@@ -664,9 +669,18 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	
 	monster_checkattack(self, self.enemy);
-		
-	self.SendFlags |= MSF_ANG;
-	self.SendFlags |= MSF_MOVE;
+	
+	if(self.angles != self.oldangles)
+	{
+		self.oldangles = self.angles;
+		self.SendFlags |= MSF_ANG;
+	}
+	
+	if(self.origin != self.oldorigin)
+	{
+		self.oldorigin = self.origin;
+		self.SendFlags |= MSF_MOVE;
+	}
 }
 
 void monster_dead_think()
@@ -809,6 +823,51 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	}
 }
 
+void monster_die()
+{
+	self.think = monster_dead_think;
+	self.nextthink = self.ticrate;
+	self.ltime = time + 5;
+	
+	Monster_CheckDropCvars(self.netname);
+
+	WaypointSprite_Kill(self.sprite);
+		
+	if(self.weaponentity)
+	{
+		remove(self.weaponentity);
+		self.weaponentity = world;
+	}
+		
+	monster_sound(self.msound_death, 0, FALSE);
+		
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
+		monsters_killed += 1;
+		
+	if(self.candrop && self.weapon)
+		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');	
+		
+	if(IS_CLIENT(self.realowner))
+		self.realowner.monstercount -= 1;
+		
+	self.event_damage 	= monsters_corpse_damage;
+	self.solid		  	= SOLID_CORPSE;
+	self.takedamage	 	= DAMAGE_AIM;
+	self.enemy		  	= world;
+	self.movetype		= MOVETYPE_TOSS;
+	self.moveto			= self.origin;
+	self.touch			= MonsterTouch; // reset incase monster was pouncing
+	
+	if not(self.flags & FL_FLY)
+		self.velocity = '0 0 0';
+	
+	self.SendFlags |= MSF_MOVE;
+		
+	totalspawned -= 1;
+	
+	MON_ACTION(self.monsterid, MR_DEATH);
+}
+
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.frozen && deathtype != DEATH_KILL)
@@ -864,7 +923,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		SUB_UseTargets();
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 	
-		self.monster_die();
+		monster_die();
 		
 		frag_attacker = attacker;
 		frag_target = self;
@@ -882,47 +941,18 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	self.SendFlags |= MSF_STATUS;
 }
 
-// post-death functions
-void monster_hook_death()
+void monster_think()
 {
-	WaypointSprite_Kill(self.sprite);
-		
-	if(self.weaponentity)
-	{
-		remove(self.weaponentity);
-		self.weaponentity = world;
-	}
-		
-	monster_sound(self.msound_death, 0, FALSE);
-		
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
-		monsters_killed += 1;
-		
-	if(self.candrop && self.weapon)
-		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');	
-		
-	if(IS_CLIENT(self.realowner))
-		self.realowner.monstercount -= 1;
-		
-	self.event_damage 	= monsters_corpse_damage;
-	self.solid		  	= SOLID_CORPSE;
-	self.takedamage	 	= DAMAGE_AIM;
-	self.enemy		  	= world;
-	self.movetype		= MOVETYPE_TOSS;
-	self.moveto			= self.origin;
-	self.touch			= MonsterTouch; // reset incase monster was pouncing
+	self.think = monster_think;
+	self.nextthink = self.ticrate;
 	
-	if not(self.flags & FL_FLY)
-		self.velocity = '0 0 0';
-	
-	self.SendFlags |= MSF_MOVE;
-		
-	totalspawned -= 1;
+	MON_ACTION(self.monsterid, MR_THINK);
 }
 
-// post-spawn functions
-void monster_hook_spawn()
+void monster_spawn()
 {
+	MON_ACTION(self.monsterid, MR_SETUP);
+
 	if not(self.monster_respawned)
 		Monster_CheckMinibossFlag();
 	
@@ -942,6 +972,8 @@ void monster_hook_spawn()
 		self.skin = rint(random() * 4);
 	
 	self.pos1 = self.origin;
+	
+	monster_setupsounds(self.netname);
 
 	monster_precachesounds(self);
 	
@@ -950,7 +982,7 @@ void monster_hook_spawn()
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(strzone(strdecolorize(self.netname)), 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(strzone(strdecolorize(self.monster_name)), 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
@@ -959,19 +991,20 @@ void monster_hook_spawn()
 
 	MUTATOR_CALLHOOK(MonsterSpawn);
 	
+	self.think = monster_think;
+	self.nextthink = time + self.ticrate;
+	
 	self.SendFlags = MSF_SETUP;
 }
 
-float monster_initialize(string  net_name, float mon_id,
-						 vector  min_s,
-						 vector  max_s,
-						 float   nodrop,
-						 void() dieproc,
-						 void() spawnproc)
+float monster_initialize(float mon_id, float nodrop)
 {
 	if not(autocvar_g_monsters)
 		return FALSE;
 		
+	vector min_s, max_s;
+	entity mon = get_monsterinfo(mon_id);
+	
 	// support for quake style removing monsters based on skill
 	if(monster_skill <= autocvar_g_monsters_skill_easy && (self.spawnflags & MONSTERSKILL_NOTEASY)) { return FALSE; }
 	if(monster_skill == autocvar_g_monsters_skill_normal && (self.spawnflags & MONSTERSKILL_NOTMEDIUM)) { return FALSE; }
@@ -979,8 +1012,8 @@ float monster_initialize(string  net_name, float mon_id,
 	if(monster_skill == autocvar_g_monsters_skill_insane && (self.spawnflags & MONSTERSKILL_NOTINSANE)) { return FALSE; }
 	if(monster_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
 
-	if(self.netname == "")
-		self.netname = ((net_name == "") ? self.classname : net_name);
+	if(self.monster_name == "")
+		self.monster_name = M_NAME(mon_id);
 	
 	if(self.team && !teamplay)
 		self.team = 0;
@@ -990,6 +1023,11 @@ float monster_initialize(string  net_name, float mon_id,
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED) // naturally spawned monster
 	if not(self.monster_respawned)
 		monsters_total += 1;
+		
+	min_s = mon.mins;
+	max_s = mon.maxs;
+	
+	self.netname = mon.netname;
 
 	setsize(self, min_s, max_s);
 	self.takedamage		 	= DAMAGE_AIM;
@@ -998,13 +1036,11 @@ float monster_initialize(string  net_name, float mon_id,
 	self.teleportable	   	= TRUE;
 	self.damagedbycontents	= TRUE;
 	self.monsterid			= mon_id;
-	self.damageforcescale   = 0.003;
-	self.monster_die		= dieproc;
+	self.damageforcescale   = 0;
 	self.event_damage	   	= monsters_damage;
 	self.touch			  	= MonsterTouch;
 	self.use				= monster_use;
 	self.solid				= SOLID_BBOX;
-	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	monsters_spawned	   += 1;
@@ -1016,11 +1052,23 @@ float monster_initialize(string  net_name, float mon_id,
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
-	self.deadflag			= DEAD_NO; // UNDEAD
+	self.deadflag			= DEAD_NO;
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
 	self.gravity			= 1;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+	
+	if(mon.spawnflags & MONSTER_TYPE_SWIM)
+		self.flags |= FL_SWIM;
+		
+	if(mon.spawnflags & MONSTER_TYPE_FLY)
+	{
+		self.flags |= FL_FLY;
+		self.movetype = MOVETYPE_FLY;
+	}
+	
+	if not(self.scale)
+		self.scale = 1;
 	
 	if not(self.attack_range)
 		self.attack_range = 120;
@@ -1042,7 +1090,7 @@ float monster_initialize(string  net_name, float mon_id,
 	if not(self.monster_moveflags)
 		self.monster_moveflags = MONSTER_MOVE_WANDER;
 	
-	monster_link(spawnproc);
+	monster_link(monster_spawn);
 
 	return TRUE;
 }

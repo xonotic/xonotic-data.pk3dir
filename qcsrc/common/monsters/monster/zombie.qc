@@ -1,8 +1,15 @@
-const vector ZOMBIE_MIN = '-18 -18 -25';
-const vector ZOMBIE_MAX = '18 18 47';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ ZOMBIE,
+/* function   */ m_zombie,
+/* spawnflags */ MONSTER_RESPAWN_DEATHPOINT,
+/* mins,maxs  */ '-18 -18 -25', '18 18 47',
+/* model      */ "zombie.dpm",
+/* netname    */ "zombie",
+/* fullname   */ _("Zombie")
+);
 
-string ZOMBIE_MODEL = "models/monsters/zombie.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_zombie;
 float autocvar_g_monster_zombie_stopspeed;
@@ -47,14 +54,6 @@ const float zombie_anim_runforward			= 27;
 const float zombie_anim_runforwardleft	 	= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn			  	= 30;
-
-void zombie_think()
-{
-	self.think = zombie_think;
-	self.nextthink = time + self.ticrate;
-
-	monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
-}
 
 void zombie_attack_leap_touch()
 {
@@ -109,57 +108,76 @@ float zombie_attack(float attack_type)
 	return FALSE;
 }
 
-void zombie_die()
-{
-	Monster_CheckDropCvars ("zombie");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
-		
-	monster_hook_death(); // for post-death mods
-}
-
-void zombie_spawn() 
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_zombie_health;
-	
-	self.classname			= "monster_zombie";
-	self.spawn_time	  		= time + 2.1;
-	self.nextthink			= time + random() * 0.5 + 0.1;
-	self.think		  		= zombie_think;
-	self.monster_attackfunc	= zombie_attack;
-	self.spawnshieldtime	= self.spawn_time;
-	self.respawntime		= 0.1;
-	self.spawnflags		   |= MONSTER_RESPAWN_DEATHPOINT; // always enabled for zombie
-	
-	monsters_setframe(zombie_anim_spawn);
-	
-	monster_setupsounds("zombie");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_zombie() 
 {
 	if not(autocvar_g_monster_zombie) { remove(self); return; }
+	
+	self.classname = "monster_zombie";
 	
 	self.monster_spawnfunc = spawnfunc_monster_zombie;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Zombie", MONSTER_ZOMBIE,
-			 ZOMBIE_MIN, ZOMBIE_MAX,
-			 FALSE,
-			 zombie_die, zombie_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_ZOMBIE, FALSE)) { remove(self); return; }
 }
 
-#endif //SVQC
+float m_zombie(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_zombie_health;
+				
+			self.monster_attackfunc	= zombie_attack;
+			monsters_setframe(zombie_anim_spawn);
+			self.spawn_time = time + 2.1;
+			self.spawnshieldtime = self.spawn_time;
+			self.respawntime = 0.1;
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // SVQC
+#ifdef CSQC
+float m_zombie(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/zombie.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

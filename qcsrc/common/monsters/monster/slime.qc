@@ -1,8 +1,15 @@
-const vector SLIME_MIN = '-16 -16 -24';
-const vector SLIME_MAX = '16 16 16';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ SLIME,
+/* function   */ m_slime,
+/* spawnflags */ 0,
+/* mins,maxs  */ '-16 -16 -24', '16 16 16',
+/* model      */ "slime.dpm",
+/* netname    */ "slime",
+/* fullname   */ _("Slime")
+);
 
-string SLIME_MODEL = "models/monsters/slime.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_slime;
 float autocvar_g_monster_slime_health;
@@ -15,14 +22,6 @@ const float slime_anim_jump		= 2;
 const float slime_anim_fly		= 3;
 const float slime_anim_die		= 4;
 const float slime_anim_pain		= 5;
-
-void slime_think()
-{
-	self.think = slime_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_slime_speed_run, autocvar_g_monster_slime_speed_walk, 20, slime_anim_walk, slime_anim_walk, slime_anim_idle);
-}
 
 void slime_touch_jump()
 {
@@ -73,69 +72,92 @@ void slime_dead()
 	self.health = -100; // gibbed
 	slime_explode();
 	
-	Monster_CheckDropCvars ("slime"); // drop items after exploding to prevent player picking up item before dying
+	Monster_CheckDropCvars ("slime"); // TODO: add a special function to drop items after death
 	
 	self.deadflag = DEAD_DEAD;
 	self.think = Monster_Fade;
 	self.nextthink = time + 0.1;
-	
-	monster_hook_death();
-	
-	self.event_damage = func_null; // reset by monster_hook_death
-	self.takedamage = DAMAGE_NO;
-}
-
-void slime_die()
-{
-	self.think			= slime_dead;
-	self.nextthink		= time;
-	self.event_damage   = func_null;
-	self.movetype		= MOVETYPE_NONE;
-	self.enemy		  	= world;
-	self.health			= 0;
-	
-	self.SendFlags |= MSF_MOVE | MSF_STATUS;
-}
-
-void slime_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_slime_health;
-	
-	self.damageforcescale   = 0.003;
-	self.classname			= "monster_slime";
-	self.monster_attackfunc	= slime_attack;
-	self.nextthink		  	= time + random() * 0.5 + 0.1;
-	self.think			  	= slime_think;
-	
-	monsters_setframe(slime_anim_idle);
-	
-	monster_setupsounds("slime");
-	
-	monster_hook_spawn(); // for post-spawn mods
 }
 
 void spawnfunc_monster_slime()
 {
 	if not(autocvar_g_monster_slime) { remove(self); return; }
 	
+	self.classname = "monster_slime";
+	
 	self.monster_spawnfunc = spawnfunc_monster_slime;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Slime", MONSTER_SLIME,
-			 SLIME_MIN, SLIME_MAX,
-			 FALSE,
-			 slime_die, slime_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_SLIME, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
 void spawnfunc_monster_tarbaby() { spawnfunc_monster_slime(); }
 
+float m_slime(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_slime_speed_run, autocvar_g_monster_slime_speed_walk, 20, slime_anim_walk, slime_anim_walk, slime_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			self.think			= slime_dead;
+			self.nextthink		= time;
+			self.event_damage   = func_null;
+			self.movetype		= MOVETYPE_NONE;
+			self.takedamage 	= DAMAGE_NO;
+			self.enemy		  	= world;
+			self.health			= 0;
+			
+			self.SendFlags |= MSF_MOVE | MSF_STATUS;
+			
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_slime_health;
+				
+			self.monster_attackfunc	= slime_attack;
+			monsters_setframe(slime_anim_idle);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
 #endif // SVQC
+#ifdef CSQC
+float m_slime(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/slime.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

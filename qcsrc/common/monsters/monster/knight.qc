@@ -1,8 +1,15 @@
-const vector KNIGHT_MIN = '-20 -20 -32';
-const vector KNIGHT_MAX = '20 20 41';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ KNIGHT,
+/* function   */ m_knight,
+/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* mins,maxs  */ '-20 -20 -32', '20 20 41',
+/* model      */ "hknight.mdl",
+/* netname    */ "knight",
+/* fullname   */ _("Knight")
+);
 
-string KNIGHT_MODEL = "models/monsters/hknight.mdl";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_knight;
 float autocvar_g_monster_knight_health;
@@ -42,14 +49,6 @@ const float knight_anim_wattack = 12;
 const float knight_anim_magic3 	= 13;
 
 .float knight_cycles;
-
-void knight_think()
-{
-	self.think = knight_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_knight_speed_run, autocvar_g_monster_knight_speed_walk, 100, knight_anim_run, knight_anim_walk, knight_anim_stand);
-}
 
 void knight_inferno()
 {
@@ -253,67 +252,83 @@ float knight_attack(float attack_type)
 	return FALSE;
 }
 
-void knight_die()
-{
-	float chance = random();
-	Monster_CheckDropCvars ("knight");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe((random() > 0.5) ? knight_anim_death1 : knight_anim_death2);
-	
-	if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
-	if(self.candrop)
-	{
-		self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon
-		self.weapon = WEP_FIREBALL;
-	}
-		
-	monster_hook_death(); // for post-death mods
-}
-
-void knight_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_knight_health;
-
-	self.damageforcescale   = 0.003;
-	self.classname			= "monster_knight";
-	self.monster_attackfunc	= knight_attack;
-	self.nextthink		  	= time + random() * 0.5 + 0.1;
-	self.think			  	= knight_think;
-	
-	monsters_setframe(knight_anim_stand);
-	
-	monster_setupsounds("knight");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_knight()
 {
 	if not(autocvar_g_monster_knight) { remove(self); return; }
+	
+	self.classname = "monster_knight";
 	
 	self.monster_spawnfunc = spawnfunc_monster_knight;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	self.scale = 1.3;
-	
-	if not (monster_initialize(
-			 "Knight", MONSTER_KNIGHT,
-			 KNIGHT_MIN, KNIGHT_MAX,
-			 FALSE,
-			 knight_die, knight_spawn))
-	{
-		remove(self);
-		return;
-	}
+	if not(monster_initialize(MON_KNIGHT, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
 void spawnfunc_monster_hell_knight() { spawnfunc_monster_knight(); }
 
+float m_knight(float req)
+{
+	switch(req)
+	{
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_knight_speed_run, autocvar_g_monster_knight_speed_walk, 100, knight_anim_run, knight_anim_walk, knight_anim_stand);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			float chance = random();
+			monsters_setframe((random() > 0.5) ? knight_anim_death1 : knight_anim_death2);
+			if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
+			if(self.candrop)
+			{
+				self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon
+				self.weapon = WEP_FIREBALL;
+			}
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_knight_health;
+				
+			self.monster_attackfunc	= knight_attack;
+			monsters_setframe(knight_anim_stand);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_sound ("player/lava.wav");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
 #endif // SVQC
+#ifdef CSQC
+float m_knight(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/hknight.mdl");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

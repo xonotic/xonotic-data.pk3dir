@@ -1,2 +1,1 @@
 void ent_monster();
-void Monsters_Precache();

@@ -1,207 +1,3 @@
-string mid2info_model;
-string mid2info_name;
-vector mid2info_min;
-vector mid2info_max;
-
-float monster_precached[MONSTER_LAST];
-void monster_mid2info(float _mid);
-
-void monster_precache(float _mid)
-{    
-    monster_mid2info(_mid);
-    if(monster_precached[_mid])
-        return;
-
-    switch(_mid)
-    {
-        case MONSTER_ZOMBIE:
-		{
-			precache_model(ZOMBIE_MODEL);
-			break;
-		}
-		case MONSTER_BRUTE:
-		{
-			precache_model(BRUTE_MODEL);
-			break;
-		}
-		case MONSTER_ANIMUS:
-		{
-			precache_model(ANIMUS_MODEL);
-			break;
-		}
-		case MONSTER_SHAMBLER:
-		{
-			precache_model(SHAMBLER_MODEL);
-			break;
-		}
-		case MONSTER_BRUISER:
-		{
-			precache_model(BRUISER_MODEL);
-			break;
-		}
-		case MONSTER_WYVERN:
-		{
-			precache_model(WYVERN_MODEL);
-			break;
-		}
-		case MONSTER_CERBERUS:
-		{
-			precache_model(CERBERUS_MODEL);
-			break;
-		}
-		case MONSTER_SLIME:
-		{
-			precache_model(SLIME_MODEL);
-			precache_sound("weapons/rocket_impact.wav");
-			break;
-		}
-		case MONSTER_KNIGHT:
-		{
-			precache_model(KNIGHT_MODEL);
-			break;
-		}
-		case MONSTER_STINGRAY:
-		{
-			precache_model(STINGRAY_MODEL);
-			break;
-		}
-		case MONSTER_MAGE:
-		{
-			precache_model(MAGE_MODEL);
-			break;
-		}
-		case MONSTER_SPIDER:
-		{
-			precache_model(SPIDER_MODEL);
-
-			break;
-		}
-    }
-	
-    monster_precached[_mid] = TRUE;
-}
-
-void Monsters_Precache()
-{
-	float i;
-	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
-		monster_precache(i);
-}
-
-void monster_mid2info(float _mid)
-{
-	switch(_mid)
-	{
-		case MONSTER_ZOMBIE:
-		{
-			mid2info_model = ZOMBIE_MODEL;
-			mid2info_name = "Zombie";
-			mid2info_min = ZOMBIE_MIN;
-			mid2info_max = ZOMBIE_MAX;
-			break;
-		}
-		case MONSTER_BRUTE:
-		{
-			mid2info_model = BRUTE_MODEL;
-			mid2info_name = "Brute";
-			mid2info_min = BRUTE_MIN;
-			mid2info_max = BRUTE_MAX;
-			break;
-		}
-		case MONSTER_ANIMUS:
-		{
-			mid2info_model = ANIMUS_MODEL;
-			mid2info_name = "Animus";
-			mid2info_min = ANIMUS_MIN;
-			mid2info_max = ANIMUS_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_SHAMBLER:
-		{
-			mid2info_model = SHAMBLER_MODEL;
-			mid2info_name = "Shambler";
-			mid2info_min = SHAMBLER_MIN;
-			mid2info_max = SHAMBLER_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_BRUISER:
-		{
-			mid2info_model = BRUISER_MODEL;
-			mid2info_name = "Bruiser";
-			mid2info_min = BRUISER_MIN;
-			mid2info_max = BRUISER_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_WYVERN:
-		{
-			mid2info_model = WYVERN_MODEL;
-			mid2info_name = "Wyvern";
-			mid2info_min = WYVERN_MIN;
-			mid2info_max = WYVERN_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_CERBERUS:
-		{
-			mid2info_model = CERBERUS_MODEL;
-			mid2info_name = "Cerberus";
-			mid2info_min = CERBERUS_MIN;
-			mid2info_max = CERBERUS_MAX;
-			break;
-		}
-		case MONSTER_SLIME:
-		{
-			mid2info_model = SLIME_MODEL;
-			mid2info_name = "Slime";
-			mid2info_min = SLIME_MIN;
-			mid2info_max = SLIME_MAX;
-			break;
-		}
-		case MONSTER_KNIGHT:
-		{
-			mid2info_model = KNIGHT_MODEL;
-			mid2info_name = "Knight";
-			mid2info_min = KNIGHT_MIN;
-			mid2info_max = KNIGHT_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_STINGRAY:
-		{
-			mid2info_model = STINGRAY_MODEL;
-			mid2info_name = "Stingray";
-			mid2info_min = STINGRAY_MIN;
-			mid2info_max = STINGRAY_MAX;
-			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_MAGE:
-		{
-			mid2info_model = MAGE_MODEL;
-			mid2info_name = "Mage";
-			mid2info_min = MAGE_MIN;
-			mid2info_max = MAGE_MAX;
-			break;
-		}
-		case MONSTER_SPIDER:
-		{
-			mid2info_model = SPIDER_MODEL;
-			mid2info_name = "Spider";
-			mid2info_min = SPIDER_MIN;
-			mid2info_max = SPIDER_MAX;
-			break;
-		}
-		default:
-		{
-			dprint("WARNING: Unknown monster in CSQC\n");
-			break;
-		}
-	}	
-}
-
 .vector glowmod;
 void monster_changeteam()
 {
@@ -216,8 +12,7 @@ void monster_changeteam()
 
 void monster_die()
 {
-	if(self.monsterid == MONSTER_SPIDER)
-		self.angles += '180 0 0';
+	MON_ACTION(self.monsterid, MR_DEATH);
 		
 	self.solid = SOLID_CORPSE;
 }
@@ -238,13 +33,21 @@ void monster_draw()
 }
 
 void monster_construct()
-{	
-	monster_mid2info(self.monsterid);
-	self.netname = mid2info_name;
+{
+	vector min_s, max_s;
+	entity mon = get_monsterinfo(self.monsterid);
+	
+	min_s = mon.mins;
+	max_s = mon.maxs;
+	
+	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+		self.scale = 1.3;
+	
+	self.netname = M_NAME(self.monsterid);
 
 	setorigin(self, self.origin);
-	setmodel(self, mid2info_model);
-	setsize(self, mid2info_min, mid2info_max);
+	setmodel(self, mon.model);
+	setsize(self, min_s, max_s);
 	
 	self.move_movetype	= MOVETYPE_BOUNCE;
 	self.health			= 255;
@@ -277,7 +80,6 @@ void ent_monster()
 		self.skin = ReadByte();
 		self.team = ReadByte();
 		
-		monster_precache(self.monsterid);
 		monster_construct();
 		monster_changeteam();
 	}

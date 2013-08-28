@@ -1,8 +1,15 @@
-const vector SHAMBLER_MIN = '-41 -41 -31';
-const vector SHAMBLER_MAX = '41 41 65';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ SHAMBLER,
+/* function   */ m_shambler,
+/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* mins,maxs  */ '-41 -41 -31', '41 41 65',
+/* model      */ "shambler.mdl",
+/* netname    */ "shambler",
+/* fullname   */ _("Shambler")
+);
 
-string SHAMBLER_MODEL = "models/monsters/shambler.mdl";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_shambler;
 float autocvar_g_monster_shambler_health;
@@ -21,14 +28,6 @@ const float shambler_anim_swingl 	= 5;
 const float shambler_anim_magic 	= 6;
 const float shambler_anim_pain 		= 7;
 const float shambler_anim_death 	= 8;
-
-void shambler_think()
-{
-	self.think = shambler_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
-}
 
 void shambler_smash()
 {
@@ -103,57 +102,74 @@ float shambler_attack(float attack_type)
 	return FALSE;
 }
 
-void shambler_die()
-{
-	Monster_CheckDropCvars ("shambler");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(shambler_anim_death);
-	
-	monster_hook_death(); // for post-death mods
-}
-
-void shambler_spawn()
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_shambler_health;
-
-	self.damageforcescale   = 0.003;
-	self.classname			= "monster_shambler";
-	self.monster_attackfunc	= shambler_attack;
-	self.nextthink		 	= time + random() * 0.5 + 0.1;
-	self.think			  	= shambler_think;
-	self.weapon				= WEP_NEX;
-	
-	monsters_setframe(shambler_anim_stand);
-	
-	monster_setupsounds("shambler");
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_shambler()
 {
 	if not(autocvar_g_monster_shambler) { remove(self); return; }
+	
+	self.classname = "monster_shambler";
 	
 	self.monster_spawnfunc = spawnfunc_monster_shambler;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	self.scale = 1.3;
-	
-	if not (monster_initialize(
-			 "Shambler", MONSTER_SHAMBLER,
-			 SHAMBLER_MIN, SHAMBLER_MAX,
-			 FALSE,
-			 shambler_die, shambler_spawn))
+	if not(monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+}
+
+float m_shambler(float req)
+{
+	switch(req)
 	{
-		remove(self);
-		return;
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(shambler_anim_death);
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_shambler_health;
+				
+			self.monster_attackfunc	= shambler_attack;
+			monsters_setframe(shambler_anim_stand);
+			self.weapon = WEP_NEX;
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
 	}
+	
+	return TRUE;
 }
 
 #endif // SVQC
+#ifdef CSQC
+float m_shambler(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			// nothing
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/shambler.mdl");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER

@@ -26,6 +26,7 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
+../common/monsters/monsters.qh
 
 autocvars.qh
 constants.qh
@@ -53,7 +54,7 @@ mutators/mutator_nades.qh
 tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
 
-monsters/lib/monsters_early.qh
+../common/monsters/lib/monsters_early.qh
 
 generator.qh
 
@@ -233,7 +234,7 @@ round_handler.qc
 
 ../common/explosion_equation.qc
 
-monsters/monsters.qh
+../common/monsters/monsters.qc
 
 mutators/base.qc
 mutators/gamemode_assault.qc

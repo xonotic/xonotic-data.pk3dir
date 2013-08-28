@@ -1,8 +1,15 @@
-const vector SPIDER_MIN = '-18 -18 -25';
-const vector SPIDER_MAX = '18 18 30';
+#ifdef REGISTER_MONSTER
+REGISTER_MONSTER(
+/* MON_##id   */ SPIDER,
+/* function   */ m_spider,
+/* spawnflags */ 0,
+/* mins,maxs  */ '-18 -18 -25', '18 18 30',
+/* model      */ "spider.dpm",
+/* netname    */ "spider",
+/* fullname   */ _("Spider")
+);
 
-string SPIDER_MODEL = "models/monsters/spider.dpm";
-
+#else
 #ifdef SVQC
 float autocvar_g_monster_spider;
 float autocvar_g_monster_spider_stopspeed;
@@ -23,14 +30,6 @@ const float spider_anim_attack2		= 3;
 .float spider_type; // used to switch between fire & ice attacks
 const float SPIDER_TYPE_ICE		= 0;
 const float SPIDER_TYPE_FIRE	= 1;
-
-void spider_think()
-{
-	self.think = spider_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
-}
 
 void spider_web_explode()
 {
@@ -161,57 +160,75 @@ float spider_attack(float attack_type)
 	return FALSE;
 }
 
-void spider_die()
-{
-	Monster_CheckDropCvars ("spider");
-	
-	self.think = monster_dead_think;
-	self.nextthink = time + self.ticrate;
-	self.ltime = time + 5;
-	monsters_setframe(spider_anim_attack);
-	self.angles += '180 0 0';
-	
-	monster_hook_death(); // for post-death mods
-}
-
-void spider_spawn() 
-{
-	if not(self.health)
-		self.health = autocvar_g_monster_spider_health;
-	
-	self.classname			= "monster_spider";
-	self.nextthink	  		= time + random() * 0.5 + 0.1;
-	self.monster_attackfunc	= spider_attack;
-	self.think		  		= spider_think;
-	
-	monsters_setframe(spider_anim_idle);
-	
-	monster_setupsounds("spider");
-	
-	if not(self.spider_type)
-		self.spider_type = autocvar_g_monster_spider_attack_type;
-	
-	monster_hook_spawn(); // for post-spawn mods
-}
-
 void spawnfunc_monster_spider() 
 {
 	if not(autocvar_g_monster_spider) { remove(self); return; }
+	
+	self.classname = "monster_spider";
 	
 	self.monster_spawnfunc = spawnfunc_monster_spider;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not (monster_initialize(
-			 "Spider", MONSTER_SPIDER,
-			 SPIDER_MIN, SPIDER_MAX,
-			 FALSE,
-			 spider_die, spider_spawn))
+	if not(monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
+}
+
+float m_spider(float req)
+{
+	switch(req)
 	{
-		remove(self);
-		return;
+		case MR_THINK:
+		{
+			monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
+			return TRUE;
+		}
+		case MR_DEATH:
+		{
+			monsters_setframe(spider_anim_attack);
+			self.angles += '180 0 0';
+			return TRUE;
+		}
+		case MR_SETUP:
+		{
+			if not(self.health) self.health = autocvar_g_monster_spider_health;
+			if not(self.spider_type) self.spider_type = autocvar_g_monster_spider_attack_type;
+				
+			self.monster_attackfunc	= spider_attack;
+			monsters_setframe(spider_anim_idle);
+			
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			// nothing
+			return TRUE;
+		}
 	}
+	
+	return TRUE;
 }
 
 #endif // SVQC
+#ifdef CSQC
+float m_spider(float req)
+{
+	switch(req)
+	{
+		case MR_DEATH:
+		{
+			self.angles += '180 0 0'; // TODO: use the server side angles instead?
+			return TRUE;
+		}
+		case MR_INIT:
+		{
+			precache_model ("models/monsters/spider.dpm");
+			return TRUE;
+		}
+	}
+	
+	return TRUE;
+}
+
+#endif // CSQC
+#endif // REGISTER_MONSTER
