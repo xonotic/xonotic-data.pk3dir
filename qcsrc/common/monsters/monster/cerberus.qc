@@ -29,6 +29,45 @@ const float cerberus_anim_attack	= 3;
 const float cerberus_anim_die		= 4;
 const float cerberus_anim_pain		= 5;
 
+.float cerberus_last_trace;
+
+void cerberus_findowner()
+{
+	if(time < self.cerberus_last_trace || self.monster_owner)
+		return;
+		
+	entity head;
+	
+	FOR_EACH_MONSTER(head)
+	if(head.health > 0)
+	if(head.monsterid == MON_BRUISER)
+	if(findentity(world, monster_owner, head) == world)
+	if(vlen(head.origin - self.origin) < self.target_range)
+	if(!IsDifferentTeam(head, self))
+	if(head.enemy == world)
+	{
+		self.monster_owner = head;
+		break;
+	}
+		
+	self.cerberus_last_trace = time + 3;
+}
+
+void cerberus_checkowner()
+{
+	if(time < self.cerberus_last_trace)
+		return;
+
+	if(vlen(self.origin - self.monster_owner.origin) > self.target_range)
+		self.monster_owner = world;
+	if(self.monster_owner.health < 1)
+		self.monster_owner = world;
+	if(IsDifferentTeam(self.monster_owner, self))
+		self.monster_owner = world;
+		
+	self.cerberus_last_trace = time + 3;
+}
+
 void cerberus_touch_jump()
 {
 	if (other.takedamage)
@@ -86,11 +125,17 @@ float m_cerberus(float req)
 	{
 		case MR_THINK:
 		{
+			if(self.monster_owner)
+				cerberus_checkowner();
+			else
+				cerberus_findowner();
 			monster_move(MON_CVAR(cerberus, speed_run), MON_CVAR(cerberus, speed_walk), MON_CVAR(cerberus, speed_stop), cerberus_anim_run, cerberus_anim_walk, cerberus_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
 		{
+			if(self.monster_owner.flags & FL_MONSTER)
+				self.monster_owner = world;
 			monsters_setframe(cerberus_anim_die);
 			return TRUE;
 		}

@@ -75,7 +75,16 @@ float m_bruiser(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(bruiser, speed_run), MON_CVAR(bruiser, speed_walk), MON_CVAR(bruiser, speed_stop), bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
+			entity pet = world;
+			pet = findentity(pet, monster_owner, self);
+			float rspeed = MON_CVAR(bruiser, speed_run);
+			
+			if(pet)
+			if(self.enemy)
+			if(vlen(self.enemy.origin - pet.origin) < vlen(self.enemy.origin - self.origin))
+				rspeed = 0;
+				
+			monster_move(rspeed, MON_CVAR(bruiser, speed_walk), MON_CVAR(bruiser, speed_stop), bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:

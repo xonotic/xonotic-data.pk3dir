@@ -651,7 +651,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
+		if(vlen(self.velocity) > 0)
 			monsters_setframe((self.enemy) ? manim_run : manim_walk);
+		else
+			monsters_setframe(manim_idle);
 	}
 	else
 	{
