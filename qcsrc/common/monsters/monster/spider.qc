@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPIDER,
 /* function   */ m_spider,
-/* spawnflags */ 0,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
@@ -171,7 +170,7 @@ void spawnfunc_monster_spider()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_SPIDER, FALSE, 0)) { remove(self); return; }
 }
 
 float m_spider(float req)
@@ -187,6 +186,7 @@ float m_spider(float req)
 		{
 			monsters_setframe(spider_anim_attack);
 			self.angles += '180 0 0';
+			self.SendFlags |= MSF_ANG;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -217,7 +217,7 @@ float m_spider(float req)
 	{
 		case MR_DEATH:
 		{
-			self.angles += '180 0 0'; // TODO: use the server side angles instead?
+			// nothing
 			return TRUE;
 		}
 		case MR_INIT:

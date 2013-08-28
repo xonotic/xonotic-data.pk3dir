@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUTE,
 /* function   */ m_brute,
-/* spawnflags */ 0,
 /* mins,maxs  */ '-36 -36 -20', '36 36 50',
 /* model      */ "ogre.dpm",
 /* netname    */ "brute",
@@ -193,7 +192,7 @@ void spawnfunc_monster_brute()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_BRUTE, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_BRUTE, FALSE, 0)) { remove(self); return; }
 }
 
 float m_brute(float req)

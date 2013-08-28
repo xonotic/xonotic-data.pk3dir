@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SHAMBLER,
 /* function   */ m_shambler,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
@@ -113,7 +112,7 @@ void spawnfunc_monster_shambler()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_SHAMBLER, FALSE, MONSTER_SIZE_BROKEN)) { remove(self); return; }
 }
 
 float m_shambler(float req)

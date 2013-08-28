@@ -10,7 +10,7 @@
 entity monster_info[MON_MAXCOUNT];
 entity dummy_monster_info;
 
-void register_monster(float id, float(float) func, float monstertype, vector min_s, vector max_s, string modelname, string shortname, string mname)
+void register_monster(float id, float(float) func, vector min_s, vector max_s, string modelname, string shortname, string mname)
 {
 	entity e;
 	monster_info[id - 1] = e = spawn();
@@ -23,7 +23,6 @@ void register_monster(float id, float(float) func, float monstertype, vector min
 	e.mins = min_s;
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/monsters/", modelname));
-	e.spawnflags = monstertype;
 	
 	func(MR_INIT);
 }
@@ -40,7 +39,6 @@ void register_monsters_done()
 	dummy_monster_info.mins = '-0 -0 -0';
 	dummy_monster_info.maxs = '0 0 0';
 	dummy_monster_info.model = "";
-	dummy_monster_info.spawnflags = 0;
 }
 entity get_monsterinfo(float id)
 {

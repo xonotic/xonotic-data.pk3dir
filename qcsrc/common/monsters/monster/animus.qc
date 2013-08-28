@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ANIMUS,
 /* function   */ m_animus,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-41 -41 -31', '41 41 31',
 /* model      */ "demon.mdl",
 /* netname    */ "animus",
@@ -78,7 +77,7 @@ void spawnfunc_monster_animus()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_ANIMUS, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_ANIMUS, FALSE, MONSTER_SIZE_BROKEN)) { remove(self); return; }
 }
 
 // compatibility with old spawns

@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ CERBERUS,
 /* function   */ m_cerberus,
-/* spawnflags */ 0,
 /* mins,maxs  */ '-16 -16 -24', '16 16 12',
 /* model      */ "dog.dpm",
 /* netname    */ "cerberus",
@@ -72,7 +71,7 @@ void spawnfunc_monster_cerberus()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_CERBERUS, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_CERBERUS, FALSE, 0)) { remove(self); return; }
 }
 
 // compatibility with old spawns

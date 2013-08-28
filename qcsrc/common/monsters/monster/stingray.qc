@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ STINGRAY,
 /* function   */ m_stingray,
-/* spawnflags */ MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-20 -20 -31', '20 20 20',
 /* model      */ "fish.mdl",
 /* netname    */ "stingray",
@@ -51,7 +50,7 @@ void spawnfunc_monster_stingray()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_STINGRAY, TRUE)) { remove(self); return; }
+	if not(monster_initialize(MON_STINGRAY, TRUE, MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN)) { remove(self); return; }
 }
 
 float m_stingray(float req)
@@ -65,7 +64,7 @@ float m_stingray(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(stingray_anim_swim);
+			monsters_setframe(stingray_anim_death);
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -73,7 +72,7 @@ float m_stingray(float req)
 			if not(self.health) self.health = autocvar_g_monster_stingray_health;
 				
 			self.monster_attackfunc	= stingray_attack;
-			monsters_setframe(stingray_anim_death);
+			monsters_setframe(stingray_anim_swim);
 			
 			return TRUE;
 		}

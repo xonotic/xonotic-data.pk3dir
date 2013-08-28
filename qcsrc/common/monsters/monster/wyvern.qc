@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ WYVERN,
 /* function   */ m_wyvern,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",
@@ -103,7 +102,7 @@ void spawnfunc_monster_wyvern()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_WYVERN, TRUE)) { remove(self); return; }
+	if not(monster_initialize(MON_WYVERN, TRUE, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -158,7 +157,7 @@ float m_wyvern(float req)
 		}
 		case MR_INIT:
 		{
-			precache_model ("models/monsters/knight.mdl");
+			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}

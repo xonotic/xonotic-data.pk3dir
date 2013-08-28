@@ -26,32 +26,26 @@ entity get_monsterinfo(float id);
 // =====================
 
 float m_null(float dummy);
-void register_monster(float id, float(float) func, float monstertype, vector min_s, vector max_s, string modelname, string shortname, string mname);
+void register_monster(float id, float(float) func, vector min_s, vector max_s, string modelname, string shortname, string mname);
 void register_monsters_done();
-
-// special spawn flags
-const float MONSTER_RESPAWN_DEATHPOINT = 699; // re-spawn where we died
-const float MONSTER_TYPE_FLY = 700;
-const float MONSTER_TYPE_SWIM = 701;
-const float MONSTER_SIZE_BROKEN = 702; // TODO: remove when bad models are replaced
 
 const float MON_MAXCOUNT = 24;
 #define MON_FIRST 1
 float MON_COUNT;
 float MON_LAST;
 
-#define REGISTER_MONSTER_2(id,func,monstertype,min_s,max_s,modelname,shortname,mname) \
+#define REGISTER_MONSTER_2(id,func,min_s,max_s,modelname,shortname,mname) \
 	float id; \
 	float func(float); \
 	void RegisterMonsters_##id() \
 	{ \
 		MON_LAST = (id = MON_FIRST + MON_COUNT); \
 		++MON_COUNT; \
-		register_monster(id,func,monstertype,min_s,max_s,modelname,shortname,mname); \
+		register_monster(id,func,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#define REGISTER_MONSTER(id,func,monstertype,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,func,monstertype,min_s,max_s,modelname,shortname,mname)
+#define REGISTER_MONSTER(id,func,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,func,min_s,max_s,modelname,shortname,mname)
 
 #define MON_DUPECHECK(dupecheck,cvar) \
 	#ifndef dupecheck \

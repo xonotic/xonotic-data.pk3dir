@@ -2,7 +2,6 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUISER,
 /* function   */ m_bruiser,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-20 -20 -31', '20 20 53',
 /* model      */ "knight.mdl",
 /* netname    */ "bruiser",
@@ -64,7 +63,7 @@ void spawnfunc_monster_bruiser()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_BRUISER, FALSE)) { remove(self); return; }
+	if not(monster_initialize(MON_BRUISER, FALSE, MONSTER_SIZE_BROKEN)) { remove(self); return; }
 }
 
 float m_bruiser(float req)

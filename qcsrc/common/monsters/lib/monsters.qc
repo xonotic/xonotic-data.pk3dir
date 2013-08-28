@@ -757,6 +757,7 @@ float monster_send(entity to, float sf)
 		
 		WriteByte(MSG_ENTITY, self.skin);
 		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, self.scale);
     }
     
     if(sf & MSF_ANG)
@@ -997,7 +998,7 @@ void monster_spawn()
 	self.SendFlags = MSF_SETUP;
 }
 
-float monster_initialize(float mon_id, float nodrop)
+float monster_initialize(float mon_id, float nodrop, float sflags)
 {
 	if not(autocvar_g_monsters)
 		return FALSE;
@@ -1058,10 +1059,10 @@ float monster_initialize(float mon_id, float nodrop)
 	self.gravity			= 1;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
-	if(mon.spawnflags & MONSTER_TYPE_SWIM)
+	if(sflags & MONSTER_TYPE_SWIM)
 		self.flags |= FL_SWIM;
 		
-	if(mon.spawnflags & MONSTER_TYPE_FLY)
+	if(sflags & MONSTER_TYPE_FLY)
 	{
 		self.flags |= FL_FLY;
 		self.movetype = MOVETYPE_FLY;
@@ -1069,6 +1070,9 @@ float monster_initialize(float mon_id, float nodrop)
 	
 	if not(self.scale)
 		self.scale = 1;
+		
+	if(sflags & MONSTER_SIZE_BROKEN)
+		self.scale = 1.3;
 	
 	if not(self.attack_range)
 		self.attack_range = 120;
