@@ -9,14 +9,19 @@ REGISTER_MONSTER(
 /* fullname   */ _("Stingray")
 );
 
+#define STINGRAY_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_bite_damage) \
+	MON_ADD_CVAR(monster, attack_bite_delay) \
+	MON_ADD_CVAR(monster, speed_stop) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+STINGRAY_SETTINGS(stingray)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_stingray;
-float autocvar_g_monster_stingray_health;
-float autocvar_g_monster_stingray_damage;
-float autocvar_g_monster_stingray_speed_walk;
-float autocvar_g_monster_stingray_speed_run;
-
 const float stingray_anim_attack = 0;
 const float stingray_anim_death  = 1;
 const float stingray_anim_swim   = 2;
@@ -29,8 +34,8 @@ float stingray_attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			monsters_setframe(stingray_anim_attack);
-			self.attack_finished_single = time + 0.5;
-			monster_melee(self.enemy, autocvar_g_monster_stingray_damage, 0.1, DEATH_MONSTER_STINGRAY, FALSE);
+			self.attack_finished_single = time + MON_CVAR(stingray, attack_bite_delay);
+			monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), 0.1, DEATH_MONSTER_STINGRAY, FALSE);
 			
 			return TRUE;
 		}
@@ -42,8 +47,6 @@ float stingray_attack(float attack_type)
 
 void spawnfunc_monster_stingray()
 {
-	if not(autocvar_g_monster_stingray) { remove(self); return; }
-	
 	self.classname = "monster_stingray";
 	
 	self.monster_spawnfunc = spawnfunc_monster_stingray;
@@ -60,7 +63,7 @@ float m_stingray(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_stingray_speed_run, autocvar_g_monster_stingray_speed_walk, 10, stingray_anim_swim, stingray_anim_swim, stingray_anim_swim);
+			monster_move(MON_CVAR(stingray, speed_run), MON_CVAR(stingray, speed_walk), MON_CVAR(stingray, speed_stop), stingray_anim_swim, stingray_anim_swim, stingray_anim_swim);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -70,7 +73,7 @@ float m_stingray(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_stingray_health;
+			if not(self.health) self.health = MON_CVAR(stingray, health);
 				
 			self.monster_attackfunc	= stingray_attack;
 			monsters_setframe(stingray_anim_swim);
@@ -80,6 +83,11 @@ float m_stingray(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(STINGRAY_SETTINGS(stingray))
 			return TRUE;
 		}
 	}

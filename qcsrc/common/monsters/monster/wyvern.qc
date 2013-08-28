@@ -9,19 +9,23 @@ REGISTER_MONSTER(
 /* fullname   */ _("Wyvern")
 );
 
+#define WYVERN_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_fireball_damage) \
+	MON_ADD_CVAR(monster, attack_fireball_edgedamage) \
+	MON_ADD_CVAR(monster, attack_fireball_damagetime) \
+	MON_ADD_CVAR(monster, attack_fireball_force) \
+	MON_ADD_CVAR(monster, attack_fireball_radius) \
+	MON_ADD_CVAR(monster, attack_fireball_speed) \
+	MON_ADD_CVAR(monster, speed_stop) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+WYVERN_SETTINGS(wyvern)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_wyvern;
-float autocvar_g_monster_wyvern_health;
-float autocvar_g_monster_wyvern_speed_walk;
-float autocvar_g_monster_wyvern_speed_run;
-float autocvar_g_monster_wyvern_fireball_damage;
-float autocvar_g_monster_wyvern_fireball_force;
-float autocvar_g_monster_wyvern_fireball_radius;
-float autocvar_g_monster_wyvern_fireball_edgedamage;
-float autocvar_g_monster_wyvern_fireball_damagetime;
-float autocvar_g_monster_wyvern_fireball_speed;
-
 const float wyvern_anim_hover 	= 0;
 const float wyvern_anim_fly 	= 1;
 const float wyvern_anim_magic 	= 2;
@@ -35,10 +39,10 @@ void wyvern_fireball_explode()
 	{
 		pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
 		
-		RadiusDamage(self, self.realowner, autocvar_g_monster_wyvern_fireball_damage, autocvar_g_monster_wyvern_fireball_edgedamage, autocvar_g_monster_wyvern_fireball_force, world, autocvar_g_monster_wyvern_fireball_radius, self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, MON_CVAR(wyvern, attack_fireball_damage), MON_CVAR(wyvern, attack_fireball_edgedamage), MON_CVAR(wyvern, attack_fireball_force), world, MON_CVAR(wyvern, attack_fireball_radius), self.projectiledeathtype, world);
 		
-		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= autocvar_g_monster_wyvern_fireball_radius)
-			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_wyvern_fireball_damagetime, self.projectiledeathtype);
+		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= MON_CVAR(wyvern, attack_fireball_radius))
+			Fire_AddDamage(e, self, 5 * monster_skill, MON_CVAR(wyvern, attack_fireball_damagetime), self.projectiledeathtype);
 		
 		remove(self);
 	}
@@ -65,7 +69,7 @@ void wyvern_fireball()
 	setsize(missile, '-6 -6 -6', '6 6 6');		
 	setorigin(missile, self.origin + self.view_ofs + v_forward * 14);
 	missile.flags = FL_PROJECTILE;
-	missile.velocity = dir * autocvar_g_monster_wyvern_fireball_speed;
+	missile.velocity = dir * MON_CVAR(wyvern, attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
 	missile.think = wyvern_fireball_explode;
@@ -94,8 +98,6 @@ float wyvern_attack(float attack_type)
 
 void spawnfunc_monster_wyvern()
 {
-	if not(autocvar_g_monster_wyvern) { remove(self); return; }
-	
 	self.classname = "monster_wyvern";
 	
 	self.monster_spawnfunc = spawnfunc_monster_wyvern;
@@ -115,7 +117,7 @@ float m_wyvern(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_wyvern_speed_run, autocvar_g_monster_wyvern_speed_walk, 300, wyvern_anim_fly, wyvern_anim_hover, wyvern_anim_hover);
+			monster_move(MON_CVAR(wyvern, speed_run), MON_CVAR(wyvern, speed_walk), MON_CVAR(wyvern, speed_stop), wyvern_anim_fly, wyvern_anim_hover, wyvern_anim_hover);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -128,7 +130,7 @@ float m_wyvern(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_wyvern_health;
+			if not(self.health) self.health = MON_CVAR(wyvern, health);
 				
 			self.monster_attackfunc	= wyvern_attack;
 			monsters_setframe(wyvern_anim_hover);
@@ -138,6 +140,11 @@ float m_wyvern(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(WYVERN_SETTINGS(wyvern))
 			return TRUE;
 		}
 	}

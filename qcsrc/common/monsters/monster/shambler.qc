@@ -9,16 +9,19 @@ REGISTER_MONSTER(
 /* fullname   */ _("Shambler")
 );
 
+#define SHAMBLER_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_smash_damage) \
+	MON_ADD_CVAR(monster, attack_claw_damage) \
+	MON_ADD_CVAR(monster, attack_lightning_damage) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+SHAMBLER_SETTINGS(shambler)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_shambler;
-float autocvar_g_monster_shambler_health;
-float autocvar_g_monster_shambler_damage;
-float autocvar_g_monster_shambler_attack_lightning_damage;
-float autocvar_g_monster_shambler_attack_claw_damage;
-float autocvar_g_monster_shambler_speed_walk;
-float autocvar_g_monster_shambler_speed_run;
-
 const float shambler_anim_stand 	= 0;
 const float shambler_anim_walk 		= 1;
 const float shambler_anim_run 		= 2;
@@ -31,7 +34,7 @@ const float shambler_anim_death 	= 8;
 
 void shambler_smash()
 {
-	monster_melee(self.enemy, autocvar_g_monster_shambler_damage, 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
 void shambler_delayedsmash()
@@ -45,7 +48,7 @@ void shambler_swing()
 {
 	float r = (random() < 0.5);
 	monsters_setframe((r) ? shambler_anim_swingr : shambler_anim_swingl);
-	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
 	if(r)
 		defer(0.5, shambler_swing);
@@ -65,7 +68,7 @@ void CastLightning()
 
 	traceline (org, self.origin + dir * 1000, TRUE, self);
 		
-	FireRailgunBullet (org, org + dir * 1000, autocvar_g_monster_shambler_attack_lightning_damage * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
+	FireRailgunBullet (org, org + dir * 1000, MON_CVAR(shambler, attack_lightning_damage) * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
 	
 	// teamcolor / hit beam effect
 	//v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
@@ -104,8 +107,6 @@ float shambler_attack(float attack_type)
 
 void spawnfunc_monster_shambler()
 {
-	if not(autocvar_g_monster_shambler) { remove(self); return; }
-	
 	self.classname = "monster_shambler";
 	
 	self.monster_spawnfunc = spawnfunc_monster_shambler;
@@ -122,7 +123,7 @@ float m_shambler(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
+			monster_move(MON_CVAR(shambler, speed_run), MON_CVAR(shambler, speed_walk), 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -132,7 +133,7 @@ float m_shambler(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_shambler_health;
+			if not(self.health) self.health = MON_CVAR(shambler, health);
 				
 			self.monster_attackfunc	= shambler_attack;
 			monsters_setframe(shambler_anim_stand);
@@ -143,6 +144,11 @@ float m_shambler(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(SHAMBLER_SETTINGS(shambler))
 			return TRUE;
 		}
 	}

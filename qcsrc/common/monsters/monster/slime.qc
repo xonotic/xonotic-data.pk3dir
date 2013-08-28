@@ -9,13 +9,17 @@ REGISTER_MONSTER(
 /* fullname   */ _("Slime")
 );
 
+#define SLIME_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_explode_damage) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+SLIME_SETTINGS(slime)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_slime;
-float autocvar_g_monster_slime_health;
-float autocvar_g_monster_slime_speed_walk;
-float autocvar_g_monster_slime_speed_run;
-
 const float slime_anim_walk		= 0;
 const float slime_anim_idle		= 1;
 const float slime_anim_jump		= 2;
@@ -30,7 +34,7 @@ void slime_touch_jump()
 	if(other.takedamage)
 	if(vlen(self.velocity) > 200)
 	{
-		Damage (self, world, world, self.health + self.max_health + 200, DEATH_MONSTER_SLIME, self.origin, '0 0 0');
+		Damage (self, world, world, MON_CVAR(slime, attack_explode_damage), DEATH_MONSTER_SLIME, self.origin, '0 0 0');
 			
 		return;
 	}
@@ -60,7 +64,7 @@ float slime_attack(float attack_type)
 
 void slime_explode()
 {
-	RadiusDamage(self, self, 250 * monster_skill, 15, 250 * (monster_skill * 0.7), world, 250, DEATH_MONSTER_SLIME, world);
+	RadiusDamage(self, self, MON_CVAR(slime, attack_explode_damage), 15, MON_CVAR(slime, attack_explode_damage) * 0.7, world, 250, DEATH_MONSTER_SLIME, world);
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
@@ -72,7 +76,7 @@ void slime_dead()
 	self.health = -100; // gibbed
 	slime_explode();
 	
-	Monster_CheckDropCvars ("slime"); // TODO: add a special function to drop items after death
+	Monster_CheckDropCvars (self.netname); // TODO: add a special function to drop items after death
 	
 	self.deadflag = DEAD_DEAD;
 	self.think = Monster_Fade;
@@ -81,8 +85,6 @@ void slime_dead()
 
 void spawnfunc_monster_slime()
 {
-	if not(autocvar_g_monster_slime) { remove(self); return; }
-	
 	self.classname = "monster_slime";
 	
 	self.monster_spawnfunc = spawnfunc_monster_slime;
@@ -102,7 +104,7 @@ float m_slime(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_slime_speed_run, autocvar_g_monster_slime_speed_walk, 20, slime_anim_walk, slime_anim_walk, slime_anim_idle);
+			monster_move(MON_CVAR(slime, speed_run), MON_CVAR(slime, speed_walk), 20, slime_anim_walk, slime_anim_walk, slime_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -121,7 +123,7 @@ float m_slime(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_slime_health;
+			if not(self.health) self.health = MON_CVAR(slime, health);
 				
 			self.monster_attackfunc	= slime_attack;
 			monsters_setframe(slime_anim_idle);
@@ -131,6 +133,11 @@ float m_slime(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(SLIME_SETTINGS(slime))
 			return TRUE;
 		}
 	}

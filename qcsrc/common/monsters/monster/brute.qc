@@ -9,22 +9,27 @@ REGISTER_MONSTER(
 /* fullname   */ _("Brute")
 );
 
+#define BRUTE_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_chainsaw_damage) \
+	MON_ADD_CVAR(monster, attack_uzi_bullets) \
+	MON_ADD_CVAR(monster, attack_uzi_damage) \
+	MON_ADD_CVAR(monster, attack_uzi_force) \
+	MON_ADD_CVAR(monster, attack_uzi_chance) \
+	MON_ADD_CVAR(monster, attack_grenade_damage) \
+	MON_ADD_CVAR(monster, attack_grenade_edgedamage) \
+	MON_ADD_CVAR(monster, attack_grenade_force) \
+	MON_ADD_CVAR(monster, attack_grenade_radius) \
+	MON_ADD_CVAR(monster, attack_grenade_speed) \
+	MON_ADD_CVAR(monster, attack_grenade_speed_up) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+BRUTE_SETTINGS(brute)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_brute;
-float autocvar_g_monster_brute_health;
-float autocvar_g_monster_brute_chainsaw_damage;
-float autocvar_g_monster_brute_speed_walk;
-float autocvar_g_monster_brute_speed_run;
-float autocvar_g_monster_brute_attack_uzi_bullets;
-float autocvar_g_monster_brute_attack_uzi_damage;
-float autocvar_g_monster_brute_attack_uzi_force;
-float autocvar_g_monster_brute_attack_uzi_chance;
-float autocvar_g_monster_brute_attack_grenade_damage;
-float autocvar_g_monster_brute_attack_grenade_edgedamage;
-float autocvar_g_monster_brute_attack_grenade_force;
-float autocvar_g_monster_brute_attack_grenade_radius;
-
 const float brute_anim_idle 		= 0;
 const float brute_anim_walk 		= 1;
 const float brute_anim_run 			= 2;
@@ -39,7 +44,7 @@ void brute_blade()
 	self.brute_cycles += 1;
 	self.angles_y = self.angles_y + random()* 25;
 	
-	monster_melee(self.enemy, autocvar_g_monster_brute_chainsaw_damage, 0.3, DEATH_MONSTER_BRUTE_BLADE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(brute, attack_chainsaw_damage), 0.3, DEATH_MONSTER_BRUTE_BLADE, TRUE);
 	
 	if(self.brute_cycles <= 4)
 		defer(0.2, brute_blade);
@@ -51,11 +56,11 @@ void brute_uzi()
 	
 	monster_makevectors(self.enemy);
 	
-	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_monster_brute_attack_uzi_damage);
-	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_brute_attack_uzi_damage, autocvar_g_monster_brute_attack_uzi_force, DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
+	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, MON_CVAR(brute, attack_uzi_damage));
+	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, MON_CVAR(brute, attack_uzi_damage), MON_CVAR(brute, attack_uzi_force), DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
 	
-	if(self.brute_cycles <= autocvar_g_monster_brute_attack_uzi_bullets)
+	if(self.brute_cycles <= MON_CVAR(brute, attack_uzi_bullets))
 		defer(0.1, brute_uzi);
 }
 
@@ -70,7 +75,7 @@ void brute_grenade_explode()
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, autocvar_g_monster_brute_attack_grenade_damage, autocvar_g_monster_brute_attack_grenade_edgedamage, autocvar_g_monster_brute_attack_grenade_radius, world, autocvar_g_monster_brute_attack_grenade_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, MON_CVAR(brute, attack_grenade_damage), MON_CVAR(brute, attack_grenade_edgedamage), MON_CVAR(brute, attack_grenade_radius), world, MON_CVAR(brute, attack_grenade_force), self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -111,14 +116,14 @@ void brute_grenade()
 {
 	entity gren;
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_monster_brute_attack_grenade_damage);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, MON_CVAR(brute, attack_grenade_damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = autocvar_g_monster_brute_attack_grenade_damage;
+	gren.bot_dodgerating = MON_CVAR(brute, attack_grenade_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_BRUTE_GRENADE;
@@ -132,12 +137,12 @@ void brute_grenade()
 	gren.touch = brute_grenade_touch;
 
 	gren.takedamage = DAMAGE_YES;
-	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
-	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
+	gren.health = 50;
+	gren.damageforcescale = 0;
 	gren.event_damage = brute_grenade_damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
+	W_SetupProjectileVelocityEx(gren, w_shotdir, v_up, MON_CVAR(brute, attack_grenade_speed), MON_CVAR(brute, attack_grenade_speed_up), 0, 0, FALSE);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -161,7 +166,7 @@ float brute_attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			self.brute_cycles = 0;
-			if(random() <= autocvar_g_monster_brute_attack_uzi_chance)
+			if(random() <= MON_CVAR(brute, attack_uzi_chance))
 			{
 				monsters_setframe(brute_anim_pain);
 				self.attack_finished_single = time + 0.8;
@@ -184,8 +189,6 @@ float brute_attack(float attack_type)
 
 void spawnfunc_monster_brute()
 {
-	if not(autocvar_g_monster_brute) { remove(self); return; }
-	
 	self.classname = "monster_brute";
 	
 	self.monster_spawnfunc = spawnfunc_monster_brute;
@@ -202,7 +205,7 @@ float m_brute(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_brute_speed_run, autocvar_g_monster_brute_speed_walk, 300, brute_anim_run, brute_anim_walk, brute_anim_idle);
+			monster_move(MON_CVAR(brute, speed_run), MON_CVAR(brute, speed_walk), 300, brute_anim_run, brute_anim_walk, brute_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -212,7 +215,7 @@ float m_brute(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_brute_health;
+			if not(self.health) self.health = MON_CVAR(brute, health);
 				
 			self.monster_attackfunc	= brute_attack;
 			monsters_setframe(brute_anim_idle);
@@ -223,6 +226,11 @@ float m_brute(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(BRUTE_SETTINGS(brute))
 			return TRUE;
 		}
 	}

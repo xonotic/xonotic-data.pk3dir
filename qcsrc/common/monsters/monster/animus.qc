@@ -9,15 +9,18 @@ REGISTER_MONSTER(
 /* fullname   */ _("Animus")
 );
 
+#define ANIMUS_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_jump_damage) \
+	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+ANIMUS_SETTINGS(animus)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_animus;
-float autocvar_g_monster_animus_health;
-float autocvar_g_monster_animus_attack_jump_damage;
-float autocvar_g_monster_animus_damage;
-float autocvar_g_monster_animus_speed_walk;
-float autocvar_g_monster_animus_speed_run;
-
 const float animus_anim_stand	= 0;
 const float animus_anim_walk	= 1;
 const float animus_anim_run		= 2;
@@ -35,7 +38,7 @@ void animus_touch_jump()
 	{
 		if (vlen(self.velocity) > 300)
 		{
-			Damage(other, self, self, autocvar_g_monster_animus_attack_jump_damage * monster_skill, DEATH_MONSTER_ANIMUS, other.origin, normalize(other.origin - self.origin));
+			Damage(other, self, self, MON_CVAR(animus, attack_jump_damage) * monster_skill, DEATH_MONSTER_ANIMUS, other.origin, normalize(other.origin - self.origin));
 			self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 		}
 	}
@@ -52,7 +55,7 @@ float animus_attack(float attack_type)
 		{
 			monsters_setframe(animus_anim_attack);
 			self.attack_finished_single = time + 1;
-			monster_melee(self.enemy, autocvar_g_monster_animus_damage, 0.3, DEATH_MONSTER_ANIMUS, TRUE);
+			monster_melee(self.enemy, MON_CVAR(animus, attack_melee_damage), 0.3, DEATH_MONSTER_ANIMUS, TRUE);
 			
 			return TRUE;
 		}
@@ -69,8 +72,6 @@ float animus_attack(float attack_type)
 
 void spawnfunc_monster_animus()
 {
-	if not(autocvar_g_monster_animus) { remove(self); return; }
-	
 	self.classname = "monster_animus";
 	
 	self.monster_spawnfunc = spawnfunc_monster_animus;
@@ -91,7 +92,7 @@ float m_animus(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_animus_speed_run, autocvar_g_monster_animus_speed_walk, 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
+			monster_move(MON_CVAR(animus, speed_run), MON_CVAR(animus, speed_walk), 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -101,7 +102,7 @@ float m_animus(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_animus_health;
+			if not(self.health) self.health = MON_CVAR(animus, health);
 				
 			self.monster_attackfunc = animus_attack;
 			monsters_setframe(animus_anim_stand);
@@ -111,6 +112,11 @@ float m_animus(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(ANIMUS_SETTINGS(animus))
 			return TRUE;
 		}
 	}

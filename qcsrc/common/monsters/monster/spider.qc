@@ -9,19 +9,24 @@ REGISTER_MONSTER(
 /* fullname   */ _("Spider")
 );
 
+#define SPIDER_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_bite_damage) \
+	MON_ADD_CVAR(monster, attack_bite_delay) \
+	MON_ADD_CVAR(monster, attack_web_damagetime) \
+	MON_ADD_CVAR(monster, attack_web_speed) \
+	MON_ADD_CVAR(monster, attack_web_speed_up) \
+	MON_ADD_CVAR(monster, attack_web_delay) \
+	MON_ADD_CVAR(monster, attack_type) \
+	MON_ADD_CVAR(monster, speed_stop) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+SPIDER_SETTINGS(spider)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_spider;
-float autocvar_g_monster_spider_stopspeed;
-float autocvar_g_monster_spider_attack_leap_delay;
-float autocvar_g_monster_spider_attack_stand_damage;
-float autocvar_g_monster_spider_attack_stand_delay;
-float autocvar_g_monster_spider_attack_fire_time;
-float autocvar_g_monster_spider_health;
-float autocvar_g_monster_spider_speed_walk;
-float autocvar_g_monster_spider_speed_run;
-float autocvar_g_monster_spider_attack_type;
-
 const float spider_anim_idle		= 0;
 const float spider_anim_walk		= 1;
 const float spider_anim_attack		= 2;
@@ -61,7 +66,7 @@ void spider_web_explode()
 					Freeze(e, 0.3, 2, FALSE);
 					break;
 				case SPIDER_TYPE_FIRE:
-					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
+					Fire_AddDamage(e, self.realowner, 5 * monster_skill, MON_CVAR(spider, attack_web_damagetime), DEATH_MONSTER_SPIDER_FIRE);
 					break;
 			}
 		}
@@ -114,7 +119,7 @@ void spider_shootweb(float ptype)
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SETUPPROJECTILEVELOCITY_UP(proj, g_monster_spider_attack_web);
+	W_SetupProjectileVelocityEx(proj, w_shotdir, v_up, MON_CVAR(spider, attack_web_speed), MON_CVAR(spider, attack_web_speed_up), 0, 0, FALSE);
 	proj.touch = spider_web_touch;
 	setsize(proj, fmins, fmaxs);
 	proj.takedamage = DAMAGE_NO;
@@ -137,9 +142,9 @@ float spider_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monster_melee(self.enemy, autocvar_g_monster_spider_attack_stand_damage, 0.3, DEATH_MONSTER_SPIDER, TRUE);
+			monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), 0.3, DEATH_MONSTER_SPIDER, TRUE);
 			monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
-			self.attack_finished_single = time + autocvar_g_monster_spider_attack_stand_delay;
+			self.attack_finished_single = time + MON_CVAR(spider, attack_bite_delay);
 			
 			return TRUE;
 		}
@@ -149,7 +154,7 @@ float spider_attack(float attack_type)
 				return FALSE;
 			
 			monsters_setframe(spider_anim_attack2);
-			self.attack_finished_single = time + autocvar_g_monster_spider_attack_leap_delay;
+			self.attack_finished_single = time + MON_CVAR(spider, attack_web_delay);
 			monster_makevectors(self.enemy);
 			spider_shootweb(self.spider_type);
 			
@@ -162,8 +167,6 @@ float spider_attack(float attack_type)
 
 void spawnfunc_monster_spider() 
 {
-	if not(autocvar_g_monster_spider) { remove(self); return; }
-	
 	self.classname = "monster_spider";
 	
 	self.monster_spawnfunc = spawnfunc_monster_spider;
@@ -180,7 +183,7 @@ float m_spider(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
+			monster_move(MON_CVAR(spider, speed_run), MON_CVAR(spider, speed_walk), MON_CVAR(spider, speed_stop), spider_anim_walk, spider_anim_walk, spider_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -192,8 +195,8 @@ float m_spider(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_spider_health;
-			if not(self.spider_type) self.spider_type = autocvar_g_monster_spider_attack_type;
+			if not(self.health) self.health = MON_CVAR(spider, health);
+			if not(self.spider_type) self.spider_type = MON_CVAR(spider, attack_type);
 				
 			self.monster_attackfunc	= spider_attack;
 			monsters_setframe(spider_anim_idle);
@@ -203,6 +206,11 @@ float m_spider(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(SPIDER_SETTINGS(spider))
 			return TRUE;
 		}
 	}

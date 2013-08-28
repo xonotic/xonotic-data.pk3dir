@@ -64,24 +64,10 @@ float MON_LAST;
 #define MON_ADD_CVAR(monster,name) \
 		MON_DUPECHECK(MON_CVAR_##monster##_##name, autocvar_g_monster_##monster##_##name)
 
-#define MON_CVAR(monster,name) autocvar_g_balance_##monster##_##name
-
-#define MON_ADD_PROP(monster,prop,name) \
-	.float ##prop; \
-	MON_DUPECHECK(MON_CVAR_##monster##_##name, autocvar_g_monster_##monster##_##name)
-
-#define MON_SET_PROP(wepid,monster,prop,name) get_monsterinfo(##wepid).##prop = autocvar_g_monster_##monster##_##name;
-
-#define MON_SET_PROPS(monsettings,wepid) \
-	#define MON_ADD_CVAR(monster,mode,name) \
-	#define MON_ADD_PROP(monster,prop,name) MON_SET_PROP(wepid,monster,prop,name) \
-	monsettings \
-	#undef MON_ADD_CVAR \
-	#undef MON_ADD_PROP
+#define MON_CVAR(monster,name) autocvar_g_monster_##monster##_##name
 
 #include "all.qh"
 
 #undef MON_ADD_CVAR
-#undef MON_ADD_PROP
 #undef REGISTER_MONSTER
 ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done)

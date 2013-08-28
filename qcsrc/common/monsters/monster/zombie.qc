@@ -9,20 +9,23 @@ REGISTER_MONSTER(
 /* fullname   */ _("Zombie")
 );
 
+#define ZOMBIE_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, attack_melee_delay) \
+	MON_ADD_CVAR(monster, attack_leap_damage) \
+	MON_ADD_CVAR(monster, attack_leap_force) \
+	MON_ADD_CVAR(monster, attack_leap_speed) \
+	MON_ADD_CVAR(monster, attack_leap_delay) \
+	MON_ADD_CVAR(monster, speed_stop) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+ZOMBIE_SETTINGS(zombie)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_zombie;
-float autocvar_g_monster_zombie_stopspeed;
-float autocvar_g_monster_zombie_attack_leap_damage;
-float autocvar_g_monster_zombie_attack_leap_delay;
-float autocvar_g_monster_zombie_attack_leap_force;
-float autocvar_g_monster_zombie_attack_leap_speed;
-float autocvar_g_monster_zombie_attack_stand_damage;
-float autocvar_g_monster_zombie_attack_stand_delay;
-float autocvar_g_monster_zombie_health;
-float autocvar_g_monster_zombie_speed_walk;
-float autocvar_g_monster_zombie_speed_run;
-
 const float zombie_anim_attackleap			= 0;
 const float zombie_anim_attackrun1			= 1;
 const float zombie_anim_attackrun2			= 2;
@@ -65,8 +68,8 @@ void zombie_attack_leap_touch()
 	if(other.takedamage)
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
-		angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
-		Damage(other, self, self, autocvar_g_monster_zombie_attack_leap_damage * monster_skill, DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
+		angles_face = normalize(angles_face) * MON_CVAR(zombie, attack_leap_force);
+		Damage(other, self, self, MON_CVAR(zombie, attack_leap_damage) * monster_skill, DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
 		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 	}
 
@@ -91,16 +94,16 @@ float zombie_attack(float attack_type)
 				
 			monsters_setframe(chosen_anim);
 
-			self.attack_finished_single = time + autocvar_g_monster_zombie_attack_stand_delay;
+			self.attack_finished_single = time + MON_CVAR(zombie, attack_melee_delay);
 			
-			monster_melee(self.enemy, autocvar_g_monster_zombie_attack_stand_damage, 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
 			
 			return TRUE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * autocvar_g_monster_zombie_attack_leap_speed + '0 0 200', autocvar_g_monster_zombie_attack_leap_delay))
+			if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * MON_CVAR(zombie, attack_leap_speed) + '0 0 200', MON_CVAR(zombie, attack_leap_delay)))
 				return TRUE;
 		}
 	}
@@ -110,8 +113,6 @@ float zombie_attack(float attack_type)
 
 void spawnfunc_monster_zombie() 
 {
-	if not(autocvar_g_monster_zombie) { remove(self); return; }
-	
 	self.classname = "monster_zombie";
 	
 	self.monster_spawnfunc = spawnfunc_monster_zombie;
@@ -130,7 +131,7 @@ float m_zombie(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
+			monster_move(MON_CVAR(zombie, speed_run), MON_CVAR(zombie, speed_walk), MON_CVAR(zombie, speed_stop), zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -140,7 +141,7 @@ float m_zombie(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_zombie_health;
+			if not(self.health) self.health = MON_CVAR(zombie, health);
 				
 			self.monster_attackfunc	= zombie_attack;
 			monsters_setframe(zombie_anim_spawn);
@@ -153,6 +154,11 @@ float m_zombie(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(ZOMBIE_SETTINGS(zombie))
 			return TRUE;
 		}
 	}

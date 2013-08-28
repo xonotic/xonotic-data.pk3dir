@@ -9,31 +9,37 @@ REGISTER_MONSTER(
 /* fullname   */ _("Mage")
 );
 
+#define MAGE_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_spike_damage) \
+	MON_ADD_CVAR(monster, attack_spike_radius) \
+	MON_ADD_CVAR(monster, attack_spike_delay) \
+	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, attack_melee_delay) \
+	MON_ADD_CVAR(monster, attack_grenade_damage) \
+	MON_ADD_CVAR(monster, attack_grenade_edgedamage) \
+	MON_ADD_CVAR(monster, attack_grenade_force) \
+	MON_ADD_CVAR(monster, attack_grenade_radius) \
+	MON_ADD_CVAR(monster, attack_grenade_lifetime) \
+	MON_ADD_CVAR(monster, attack_grenade_chance) \
+	MON_ADD_CVAR(monster, attack_grenade_speed) \
+	MON_ADD_CVAR(monster, attack_grenade_speed_up) \
+	MON_ADD_CVAR(monster, heal_self) \
+	MON_ADD_CVAR(monster, heal_allies) \
+	MON_ADD_CVAR(monster, heal_minhealth) \
+	MON_ADD_CVAR(monster, heal_range) \
+	MON_ADD_CVAR(monster, heal_delay) \
+	MON_ADD_CVAR(monster, shield_time) \
+	MON_ADD_CVAR(monster, shield_delay) \
+	MON_ADD_CVAR(monster, shield_blockpercent) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+MAGE_SETTINGS(mage)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_mage;
-float autocvar_g_monster_mage_health;
-float autocvar_g_monster_mage_speed;
-float autocvar_g_monster_mage_attack_spike_damage;
-float autocvar_g_monster_mage_attack_spike_radius;
-float autocvar_g_monster_mage_attack_spike_delay;
-float autocvar_g_monster_mage_attack_melee_damage;
-float autocvar_g_monster_mage_attack_melee_delay;
-float autocvar_g_monster_mage_heal_self;
-float autocvar_g_monster_mage_heal_friends;
-float autocvar_g_monster_mage_heal_minhealth;
-float autocvar_g_monster_mage_heal_range;
-float autocvar_g_monster_mage_heal_delay;
-float autocvar_g_monster_mage_shield_time;
-float autocvar_g_monster_mage_shield_delay;
-float autocvar_g_monster_mage_shield_blockpercent;
-float autocvar_g_monster_mage_attack_grenade_damage;
-float autocvar_g_monster_mage_attack_grenade_edgedamage;
-float autocvar_g_monster_mage_attack_grenade_radius;
-float autocvar_g_monster_mage_attack_grenade_lifetime;
-float autocvar_g_monster_mage_attack_grenade_force;
-float autocvar_g_monster_mage_attack_grenade_chance;
-
 const float mage_anim_idle		= 0;
 const float mage_anim_walk 		= 1;
 const float mage_anim_attack 	= 2;
@@ -51,7 +57,7 @@ float friend_needshelp(entity e)
 		return FALSE;
 	if(e.health <= 0)
 		return FALSE;
-	if(vlen(e.origin - self.origin) > autocvar_g_monster_mage_heal_range)
+	if(vlen(e.origin - self.origin) > MON_CVAR(mage, heal_range))
 		return FALSE;
 	if(IsDifferentTeam(e, self))
 		return FALSE;
@@ -95,7 +101,7 @@ float friend_needshelp(entity e)
 
 void mageattack_melee()
 {
-	monster_melee(self.enemy, autocvar_g_monster_mage_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), 0.3, DEATH_MONSTER_MAGE, TRUE);
 }
 
 void mage_grenade_explode()
@@ -103,7 +109,7 @@ void mage_grenade_explode()
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	
 	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_mage_attack_grenade_damage, autocvar_g_monster_mage_attack_grenade_edgedamage, autocvar_g_monster_mage_attack_grenade_radius, world, autocvar_g_monster_mage_attack_grenade_force, DEATH_MONSTER_MAGE, other);
+	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_grenade_damage), MON_CVAR(mage, attack_grenade_edgedamage), MON_CVAR(mage, attack_grenade_radius), world, MON_CVAR(mage, attack_grenade_force), DEATH_MONSTER_MAGE, other);
 	remove(self);
 }
 
@@ -121,7 +127,7 @@ void mage_throw_itemgrenade()
 {
 	makevectors(self.angles);
 
-	W_SetupShot_ProjectileSize (self, '-64 -64 -64', '64 64 64', FALSE, 4, "", CH_WEAPON_A, autocvar_g_monster_mage_attack_grenade_damage);
+	W_SetupShot_ProjectileSize (self, '-64 -64 -64', '64 64 64', FALSE, 4, "", CH_WEAPON_A, MON_CVAR(mage, attack_grenade_damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	entity gren = spawn ();
@@ -134,13 +140,13 @@ void mage_throw_itemgrenade()
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-64 -64 -64', '64 64 64');
 
-	gren.nextthink = time + autocvar_g_monster_mage_attack_grenade_lifetime;
+	gren.nextthink = time + MON_CVAR(mage, attack_grenade_lifetime);
 	gren.think = mage_grenade_explode;
 	gren.use = mage_grenade_explode;
 	gren.touch = mage_grenade_touch;
 
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_monster_mage_attack_grenade);
+	W_SetupProjectileVelocityEx(gren, w_shotdir, v_up, MON_CVAR(mage, attack_grenade_speed), MON_CVAR(mage, attack_grenade_speed_up), 0, 0, FALSE);
 	
 	gren.flags = FL_PROJECTILE;
 	
@@ -154,7 +160,7 @@ void mage_spike_explode()
 	self.event_damage = func_null;
 
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_mage_attack_spike_damage, autocvar_g_monster_mage_attack_spike_damage * 0.5, autocvar_g_monster_mage_attack_spike_radius, world, 0, DEATH_MONSTER_MAGE, other);
+	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_spike_damage), MON_CVAR(mage, attack_spike_damage) * 0.5, MON_CVAR(mage, attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
 }
@@ -226,7 +232,7 @@ void mage_heal()
 			switch(self.skin)
 			{
 				case 0:
-					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, autocvar_g_balance_health_regenstable);
+					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), autocvar_g_balance_health_regenstable);
 					fx = "healing_fx";
 					break;
 				case 1:
@@ -239,12 +245,12 @@ void mage_heal()
 				case 2:
 					if(head.armorvalue < autocvar_g_balance_armor_regenstable)
 					{
-						head.armorvalue = bound(0, head.armorvalue + autocvar_g_monster_mage_heal_friends, autocvar_g_balance_armor_regenstable);
+						head.armorvalue = bound(0, head.armorvalue + MON_CVAR(mage, heal_allies), autocvar_g_balance_armor_regenstable);
 						fx = "armorrepair_fx";
 					}
 					break;
 				case 3:
-					head.health = bound(0, head.health - ((head == self)  ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_friends), autocvar_g_balance_health_regenstable);
+					head.health = bound(0, head.health - ((head == self)  ? MON_CVAR(mage, heal_self) : MON_CVAR(mage, heal_allies)), autocvar_g_balance_health_regenstable);
 					fx = "rage";
 					break;
 			}
@@ -254,7 +260,7 @@ void mage_heal()
 		else
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
-			head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, head.max_health);
+			head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), head.max_health);
 			WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
@@ -262,7 +268,7 @@ void mage_heal()
 	if(washealed)
 	{
 		monsters_setframe(mage_anim_attack);
-		self.attack_finished_single = time + autocvar_g_monster_mage_heal_delay;
+		self.attack_finished_single = time + MON_CVAR(mage, heal_delay);
 	}
 }
 
@@ -287,7 +293,7 @@ void mage_shield()
 
 	shield.owner = self;
 	shield.team = self.team;
-	shield.ltime = time + autocvar_g_monster_mage_shield_time;
+	shield.ltime = time + MON_CVAR(mage, shield_time);
 	shield.health = 70;
 	shield.classname = "shield";
 	shield.effects = EF_ADDITIVE;
@@ -302,12 +308,12 @@ void mage_shield()
 	
 	self.weaponentity = shield;
 	
-	self.lastshielded = time + autocvar_g_monster_mage_shield_delay;
+	self.lastshielded = time + MON_CVAR(mage, shield_delay);
 	
 	monsters_setframe(mage_anim_attack);
 	self.attack_finished_single = time + 1;
 	
-	self.armorvalue = autocvar_g_monster_mage_shield_blockpercent / 100;
+	self.armorvalue = MON_CVAR(mage, shield_blockpercent) / 100;
 }
 
 float mage_attack(float attack_type)
@@ -317,21 +323,21 @@ float mage_attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			monsters_setframe(mage_anim_attack);
-			self.attack_finished_single = time + autocvar_g_monster_mage_attack_melee_delay;
+			self.attack_finished_single = time + MON_CVAR(mage, attack_melee_delay);
 			defer(0.2, mageattack_melee);
 			
 			return TRUE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(random() < autocvar_g_monster_mage_attack_grenade_chance / 100)
+			if(random() < MON_CVAR(mage, attack_grenade_chance) / 100)
 			{
 				mage_throw_itemgrenade();
 				return TRUE;
 			}
 	
 			monsters_setframe(mage_anim_attack);
-			self.attack_finished_single = time + autocvar_g_monster_mage_attack_spike_delay;
+			self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
 			defer(0.2, mage_spike);
 			
 			return TRUE;
@@ -343,8 +349,6 @@ float mage_attack(float attack_type)
 
 void spawnfunc_monster_mage()
 {
-	if not(autocvar_g_monster_mage) { remove(self); return; }
-	
 	self.classname = "monster_mage";
 	
 	self.monster_spawnfunc = spawnfunc_monster_mage;
@@ -386,7 +390,7 @@ float m_mage(float req)
 			if(time >= self.weaponentity.ltime)
 				mage_shield_die();
 				
-			if(self.health < autocvar_g_monster_mage_heal_minhealth || need_help)
+			if(self.health < MON_CVAR(mage, heal_minhealth) || need_help)
 			if(time >= self.attack_finished_single)
 			if(random() < 0.5)
 				mage_heal();
@@ -397,7 +401,7 @@ float m_mage(float req)
 			if(random() < 0.5)
 				mage_shield();
 			
-			monster_move(autocvar_g_monster_mage_speed, autocvar_g_monster_mage_speed, 50, mage_anim_walk, mage_anim_run, mage_anim_idle);
+			monster_move(MON_CVAR(mage, speed_run), MON_CVAR(mage, speed_walk), 50, mage_anim_walk, mage_anim_run, mage_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -407,7 +411,7 @@ float m_mage(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_mage_health;
+			if not(self.health) self.health = MON_CVAR(mage, health);
 				
 			self.monster_attackfunc	= mage_attack;
 			monsters_setframe(mage_anim_walk);
@@ -417,6 +421,11 @@ float m_mage(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(MAGE_SETTINGS(mage))
 			return TRUE;
 		}
 	}

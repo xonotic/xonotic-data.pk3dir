@@ -9,30 +9,34 @@ REGISTER_MONSTER(
 /* fullname   */ _("Knight")
 );
 
+#define KNIGHT_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, attack_inferno_damage) \
+	MON_ADD_CVAR(monster, attack_inferno_damagetime) \
+	MON_ADD_CVAR(monster, attack_inferno_chance) \
+	MON_ADD_CVAR(monster, attack_fireball_damage) \
+	MON_ADD_CVAR(monster, attack_fireball_edgedamage) \
+	MON_ADD_CVAR(monster, attack_fireball_damagetime) \
+	MON_ADD_CVAR(monster, attack_fireball_force) \
+	MON_ADD_CVAR(monster, attack_fireball_radius) \
+	MON_ADD_CVAR(monster, attack_fireball_chance) \
+	MON_ADD_CVAR(monster, attack_spike_damage) \
+	MON_ADD_CVAR(monster, attack_spike_edgedamage) \
+	MON_ADD_CVAR(monster, attack_spike_force) \
+	MON_ADD_CVAR(monster, attack_spike_radius) \
+	MON_ADD_CVAR(monster, attack_spike_chance) \
+	MON_ADD_CVAR(monster, attack_jump_damage) \
+	MON_ADD_CVAR(monster, attack_jump_distance) \
+	MON_ADD_CVAR(monster, attack_jump_chance) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+KNIGHT_SETTINGS(knight)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_knight;
-float autocvar_g_monster_knight_health;
-float autocvar_g_monster_knight_melee_damage;
-float autocvar_g_monster_knight_inferno_damage;
-float autocvar_g_monster_knight_inferno_damagetime;
-float autocvar_g_monster_knight_inferno_chance;
-float autocvar_g_monster_knight_speed_walk;
-float autocvar_g_monster_knight_speed_run;
-float autocvar_g_monster_knight_fireball_damage;
-float autocvar_g_monster_knight_fireball_force;
-float autocvar_g_monster_knight_fireball_radius;
-float autocvar_g_monster_knight_fireball_chance;
-float autocvar_g_monster_knight_fireball_edgedamage;
-float autocvar_g_monster_knight_spike_chance;
-float autocvar_g_monster_knight_spike_force;
-float autocvar_g_monster_knight_spike_radius;
-float autocvar_g_monster_knight_spike_edgedamage;
-float autocvar_g_monster_knight_spike_damage;
-float autocvar_g_monster_knight_jump_chance;
-float autocvar_g_monster_knight_jump_damage;
-float autocvar_g_monster_knight_jump_dist;
-
 const float knight_anim_stand 	= 0;
 const float knight_anim_walk 	= 1;
 const float knight_anim_run 	= 2;
@@ -63,7 +67,7 @@ void knight_inferno()
 	sound(self.enemy, CHAN_AUTO, "player/lava.wav", 1, ATTN_NORM);
 	
 	if(vlen(self.enemy.origin - self.origin) <= 2000)
-		Fire_AddDamage(self.enemy, self, autocvar_g_monster_knight_inferno_damage * monster_skill, autocvar_g_monster_knight_inferno_damagetime, DEATH_MONSTER_KNIGHT_INFERNO);
+		Fire_AddDamage(self.enemy, self, MON_CVAR(knight, attack_inferno_damage) * monster_skill, MON_CVAR(knight, attack_inferno_damagetime), DEATH_MONSTER_KNIGHT_INFERNO);
 }
 
 void knight_fireball_explode()
@@ -73,10 +77,10 @@ void knight_fireball_explode()
 	{
 		pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
 		
-		RadiusDamage(self, self.realowner, autocvar_g_monster_knight_fireball_damage, autocvar_g_monster_knight_fireball_edgedamage, autocvar_g_monster_knight_fireball_force, world, autocvar_g_monster_knight_fireball_radius, self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, MON_CVAR(knight, attack_fireball_damage), MON_CVAR(knight, attack_fireball_edgedamage), MON_CVAR(knight, attack_fireball_force), world, MON_CVAR(knight, attack_fireball_radius), self.projectiledeathtype, world);
 		
-		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= autocvar_g_monster_knight_fireball_radius)
-			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_knight_inferno_damagetime, self.projectiledeathtype);
+		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= MON_CVAR(knight, attack_inferno_damage))
+			Fire_AddDamage(e, self, 5 * monster_skill, MON_CVAR(knight, attack_fireball_damagetime), self.projectiledeathtype);
 		
 		remove(self);
 	}
@@ -121,7 +125,7 @@ void knight_spike_explode()
 	{
 		pointparticles(particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 		
-		RadiusDamage (self, self.realowner, autocvar_g_monster_knight_spike_damage, autocvar_g_monster_knight_spike_edgedamage, autocvar_g_monster_knight_spike_force, world, autocvar_g_monster_knight_spike_radius, DEATH_MONSTER_KNIGHT_SPIKE, other);
+		RadiusDamage (self, self.realowner, MON_CVAR(knight, attack_spike_damage), MON_CVAR(knight, attack_spike_edgedamage), MON_CVAR(knight, attack_spike_force), world, MON_CVAR(knight, attack_spike_radius), DEATH_MONSTER_KNIGHT_SPIKE, other);
 		remove(self);
 	}
 }
@@ -174,10 +178,10 @@ float knight_attack_ranged()
 	self.knight_cycles = 0;
 	
 	RandomSelection_Init();
-	RandomSelection_Add(world, 1, "", autocvar_g_monster_knight_fireball_chance, 1);
-	RandomSelection_Add(world, 2, "", autocvar_g_monster_knight_inferno_chance, 1);
-	RandomSelection_Add(world, 3, "", autocvar_g_monster_knight_spike_chance, 1);
-	if(self.health >= 100) RandomSelection_Add(world, 4, "", ((vlen(self.enemy.origin - self.origin) > autocvar_g_monster_knight_jump_dist) ? 1 : autocvar_g_monster_knight_jump_chance), 1);
+	RandomSelection_Add(world, 1, "", MON_CVAR(knight, attack_fireball_chance), 1);
+	RandomSelection_Add(world, 2, "", MON_CVAR(knight, attack_inferno_chance), 1);
+	RandomSelection_Add(world, 3, "", MON_CVAR(knight, attack_spike_chance), 1);
+	if(self.health >= 100) RandomSelection_Add(world, 4, "", ((vlen(self.enemy.origin - self.origin) > MON_CVAR(knight, attack_jump_distance)) ? 1 : MON_CVAR(knight, attack_jump_chance)), 1);
 	
 	switch(RandomSelection_chosen_float)
 	{
@@ -211,7 +215,7 @@ float knight_attack_ranged()
 			if(findtrajectorywithleading(self.origin, self.mins, self.maxs, self.enemy, 1000, 0, 10, 0, self))
 			{
 				self.velocity = findtrajectory_velocity;
-				Damage(self.enemy, self, self, autocvar_g_monster_knight_jump_damage * monster_skill, DEATH_MONSTER_KNIGHT_CRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+				Damage(self.enemy, self, self, MON_CVAR(knight, attack_jump_damage) * monster_skill, DEATH_MONSTER_KNIGHT_CRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 				self.attack_finished_single = time + 2;
 				return TRUE;
 			}
@@ -238,7 +242,7 @@ float knight_attack(float attack_type)
 			
 			monsters_setframe(anim);
 			self.attack_finished_single = time + 0.7;
-			monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 0.3, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
+			monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), 0.3, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
 			
 			return TRUE;
 		}
@@ -254,8 +258,6 @@ float knight_attack(float attack_type)
 
 void spawnfunc_monster_knight()
 {
-	if not(autocvar_g_monster_knight) { remove(self); return; }
-	
 	self.classname = "monster_knight";
 	
 	self.monster_spawnfunc = spawnfunc_monster_knight;
@@ -275,7 +277,7 @@ float m_knight(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_knight_speed_run, autocvar_g_monster_knight_speed_walk, 100, knight_anim_run, knight_anim_walk, knight_anim_stand);
+			monster_move(MON_CVAR(knight, speed_run), MON_CVAR(knight, speed_walk), 100, knight_anim_run, knight_anim_walk, knight_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -292,7 +294,7 @@ float m_knight(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_knight_health;
+			if not(self.health) self.health = MON_CVAR(knight, health);
 				
 			self.monster_attackfunc	= knight_attack;
 			monsters_setframe(knight_anim_stand);
@@ -302,6 +304,11 @@ float m_knight(float req)
 		case MR_INIT:
 		{
 			precache_sound ("player/lava.wav");
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(KNIGHT_SETTINGS(knight))
 			return TRUE;
 		}
 	}

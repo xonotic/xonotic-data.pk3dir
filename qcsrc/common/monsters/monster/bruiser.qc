@@ -9,14 +9,17 @@ REGISTER_MONSTER(
 /* fullname   */ _("Bruiser")
 );
 
+#define BRUISER_SETTINGS(monster) \
+	MON_ADD_CVAR(monster, health) \
+	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, speed_run) \
+	MON_ADD_CVAR(monster, speed_walk) 
+
+#ifdef SVQC
+BRUISER_SETTINGS(bruiser)
+#endif // SVQC
 #else
 #ifdef SVQC
-float autocvar_g_monster_bruiser;
-float autocvar_g_monster_bruiser_health;
-float autocvar_g_monster_bruiser_melee_damage;
-float autocvar_g_monster_bruiser_speed_walk;
-float autocvar_g_monster_bruiser_speed_run;
-
 const float bruiser_anim_stand 		= 0;
 const float bruiser_anim_run 		= 1;
 const float bruiser_anim_runattack 	= 2;
@@ -39,7 +42,7 @@ float bruiser_attack(float attack_type)
 			monsters_setframe((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack);
 			self.attack_finished_single = time + 1.25;
 			
-			monster_melee(self.enemy, autocvar_g_monster_bruiser_melee_damage, 0.3, DEATH_MONSTER_BRUISER, FALSE);
+			monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), 0.3, DEATH_MONSTER_BRUISER, FALSE);
 			
 			return TRUE;
 		}
@@ -55,8 +58,6 @@ float bruiser_attack(float attack_type)
 
 void spawnfunc_monster_bruiser()
 {
-	if not(autocvar_g_monster_bruiser) { remove(self); return; }
-	
 	self.classname = "monster_bruiser";
 	
 	self.monster_spawnfunc = spawnfunc_monster_bruiser;
@@ -73,7 +74,7 @@ float m_bruiser(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(autocvar_g_monster_bruiser_speed_run, autocvar_g_monster_bruiser_speed_walk, 50, bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
+			monster_move(MON_CVAR(bruiser, speed_run), MON_CVAR(bruiser, speed_walk), 50, bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -83,7 +84,7 @@ float m_bruiser(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = autocvar_g_monster_bruiser_health;
+			if not(self.health) self.health = MON_CVAR(bruiser, health);
 				
 			self.monster_attackfunc	= bruiser_attack;
 			monsters_setframe(bruiser_anim_stand);
@@ -93,6 +94,11 @@ float m_bruiser(float req)
 		case MR_INIT:
 		{
 			// nothing
+			return TRUE;
+		}
+		case MR_CONFIG:
+		{
+			MON_CONFIG_SETTINGS(BRUISER_SETTINGS(bruiser))
 			return TRUE;
 		}
 	}
