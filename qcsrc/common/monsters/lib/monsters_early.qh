@@ -17,12 +17,6 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
-// special spawn flags
-const float MONSTER_RESPAWN_DEATHPOINT = 128; // re-spawn where we died
-const float MONSTER_TYPE_FLY = 256;
-const float MONSTER_TYPE_SWIM = 512;
-const float MONSTER_SIZE_BROKEN = 1024; // TODO: remove when bad models are replaced
-
 #endif // SVQC
 
 #ifndef MENUQC

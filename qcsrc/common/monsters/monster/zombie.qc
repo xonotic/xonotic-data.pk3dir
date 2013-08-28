@@ -2,6 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ZOMBIE,
 /* function   */ m_zombie,
+/* spawnflags */ 0,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
@@ -115,10 +116,12 @@ void spawnfunc_monster_zombie()
 	
 	self.monster_spawnfunc = spawnfunc_monster_zombie;
 	
+	self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
+	
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_ZOMBIE, FALSE, MONSTER_RESPAWN_DEATHPOINT)) { remove(self); return; }
+	if not(monster_initialize(MON_ZOMBIE, FALSE)) { remove(self); return; }
 }
 
 float m_zombie(float req)

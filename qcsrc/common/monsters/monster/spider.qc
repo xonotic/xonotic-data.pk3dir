@@ -2,6 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPIDER,
 /* function   */ m_spider,
+/* spawnflags */ 0,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
@@ -170,7 +171,7 @@ void spawnfunc_monster_spider()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SPIDER, FALSE, 0)) { remove(self); return; }
+	if not(monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
 }
 
 float m_spider(float req)

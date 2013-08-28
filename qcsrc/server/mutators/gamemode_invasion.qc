@@ -11,12 +11,14 @@ float invasion_PickMonster(float have_shamblers)
 		return MON_ZOMBIE;
 
 	float i;
+	entity mon;
 	
 	RandomSelection_Init();
 	
 	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
-		if(i == MON_STINGRAY || i == MON_WYVERN || (i == MON_SHAMBLER && have_shamblers >= 1))
+		mon = get_monsterinfo(i);
+		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || (i == MON_SHAMBLER && have_shamblers >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);

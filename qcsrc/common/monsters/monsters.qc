@@ -10,7 +10,7 @@
 entity monster_info[MON_MAXCOUNT];
 entity dummy_monster_info;
 
-void register_monster(float id, float(float) func, vector min_s, vector max_s, string modelname, string shortname, string mname)
+void register_monster(float id, float(float) func, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
 {
 	entity e;
 	monster_info[id - 1] = e = spawn();
@@ -20,6 +20,7 @@ void register_monster(float id, float(float) func, vector min_s, vector max_s, s
 	e.monster_name = mname;
 	e.monster_func = func;
 	e.mdl = modelname;
+	e.spawnflags = monsterflags;
 	e.mins = min_s;
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/monsters/", modelname));

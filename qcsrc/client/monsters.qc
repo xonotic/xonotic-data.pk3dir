@@ -40,6 +40,9 @@ void monster_construct()
 	min_s = mon.mins;
 	max_s = mon.maxs;
 	
+	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+		self.scale = 1.3;
+	
 	self.netname = M_NAME(self.monsterid);
 
 	setorigin(self, self.origin);
@@ -76,7 +79,6 @@ void ent_monster()
 		
 		self.skin = ReadByte();
 		self.team = ReadByte();
-		self.scale = ReadByte();
 		
 		monster_construct();
 		monster_changeteam();

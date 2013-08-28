@@ -2,6 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ MAGE,
 /* function   */ m_mage,
+/* spawnflags */ 0,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
 /* netname    */ "mage",
@@ -351,7 +352,7 @@ void spawnfunc_monster_mage()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_MAGE, FALSE, 0)) { remove(self); return; }
+	if not(monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns

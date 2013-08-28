@@ -2,6 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ KNIGHT,
 /* function   */ m_knight,
+/* spawnflags */ MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-20 -20 -32', '20 20 41',
 /* model      */ "hknight.mdl",
 /* netname    */ "knight",
@@ -262,7 +263,7 @@ void spawnfunc_monster_knight()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_KNIGHT, FALSE, MONSTER_SIZE_BROKEN)) { remove(self); return; }
+	if not(monster_initialize(MON_KNIGHT, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns

@@ -2,6 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SLIME,
 /* function   */ m_slime,
+/* spawnflags */ 0,
 /* mins,maxs  */ '-16 -16 -24', '16 16 16',
 /* model      */ "slime.dpm",
 /* netname    */ "slime",
@@ -89,7 +90,7 @@ void spawnfunc_monster_slime()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SLIME, FALSE, 0)) { remove(self); return; }
+	if not(monster_initialize(MON_SLIME, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
