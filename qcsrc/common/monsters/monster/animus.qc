@@ -13,6 +13,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, health) \
 	MON_ADD_CVAR(monster, attack_jump_damage) \
 	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -92,7 +93,7 @@ float m_animus(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(animus, speed_run), MON_CVAR(animus, speed_walk), 100, animus_anim_run, animus_anim_walk, animus_anim_stand);
+			monster_move(MON_CVAR(animus, speed_run), MON_CVAR(animus, speed_walk), MON_CVAR(animus, speed_stop), animus_anim_run, animus_anim_walk, animus_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:

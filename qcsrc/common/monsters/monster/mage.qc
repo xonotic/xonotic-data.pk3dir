@@ -32,6 +32,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, shield_time) \
 	MON_ADD_CVAR(monster, shield_delay) \
 	MON_ADD_CVAR(monster, shield_blockpercent) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -401,7 +402,7 @@ float m_mage(float req)
 			if(random() < 0.5)
 				mage_shield();
 			
-			monster_move(MON_CVAR(mage, speed_run), MON_CVAR(mage, speed_walk), 50, mage_anim_walk, mage_anim_run, mage_anim_idle);
+			monster_move(MON_CVAR(mage, speed_run), MON_CVAR(mage, speed_walk), MON_CVAR(mage, speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:

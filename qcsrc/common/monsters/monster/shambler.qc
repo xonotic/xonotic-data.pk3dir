@@ -14,6 +14,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_smash_damage) \
 	MON_ADD_CVAR(monster, attack_claw_damage) \
 	MON_ADD_CVAR(monster, attack_lightning_damage) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -123,7 +124,7 @@ float m_shambler(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(shambler, speed_run), MON_CVAR(shambler, speed_walk), 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
+			monster_move(MON_CVAR(shambler, speed_run), MON_CVAR(shambler, speed_walk), MON_CVAR(shambler, speed_stop), shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:

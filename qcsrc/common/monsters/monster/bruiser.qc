@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #define BRUISER_SETTINGS(monster) \
 	MON_ADD_CVAR(monster, health) \
 	MON_ADD_CVAR(monster, attack_melee_damage) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -74,7 +75,7 @@ float m_bruiser(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(bruiser, speed_run), MON_CVAR(bruiser, speed_walk), 50, bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
+			monster_move(MON_CVAR(bruiser, speed_run), MON_CVAR(bruiser, speed_walk), MON_CVAR(bruiser, speed_stop), bruiser_anim_run, bruiser_anim_walk, bruiser_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:

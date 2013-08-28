@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #define SLIME_SETTINGS(monster) \
 	MON_ADD_CVAR(monster, health) \
 	MON_ADD_CVAR(monster, attack_explode_damage) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -104,7 +105,7 @@ float m_slime(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(slime, speed_run), MON_CVAR(slime, speed_walk), 20, slime_anim_walk, slime_anim_walk, slime_anim_idle);
+			monster_move(MON_CVAR(slime, speed_run), MON_CVAR(slime, speed_walk), MON_CVAR(slime, speed_stop), slime_anim_walk, slime_anim_walk, slime_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:

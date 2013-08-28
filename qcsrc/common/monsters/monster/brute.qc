@@ -22,6 +22,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_grenade_radius) \
 	MON_ADD_CVAR(monster, attack_grenade_speed) \
 	MON_ADD_CVAR(monster, attack_grenade_speed_up) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -205,7 +206,7 @@ float m_brute(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(brute, speed_run), MON_CVAR(brute, speed_walk), 300, brute_anim_run, brute_anim_walk, brute_anim_idle);
+			monster_move(MON_CVAR(brute, speed_run), MON_CVAR(brute, speed_walk), MON_CVAR(brute, speed_stop), brute_anim_run, brute_anim_walk, brute_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:

@@ -29,6 +29,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_jump_damage) \
 	MON_ADD_CVAR(monster, attack_jump_distance) \
 	MON_ADD_CVAR(monster, attack_jump_chance) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -277,7 +278,7 @@ float m_knight(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(knight, speed_run), MON_CVAR(knight, speed_walk), 100, knight_anim_run, knight_anim_walk, knight_anim_stand);
+			monster_move(MON_CVAR(knight, speed_run), MON_CVAR(knight, speed_walk), MON_CVAR(knight, speed_stop), knight_anim_run, knight_anim_walk, knight_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:

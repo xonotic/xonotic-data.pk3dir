@@ -13,6 +13,7 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, health) \
 	MON_ADD_CVAR(monster, attack_bite_damage) \
 	MON_ADD_CVAR(monster, attack_jump_damage) \
+	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
 
@@ -85,7 +86,7 @@ float m_cerberus(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(cerberus, speed_run), MON_CVAR(cerberus, speed_walk), 50, cerberus_anim_run, cerberus_anim_walk, cerberus_anim_idle);
+			monster_move(MON_CVAR(cerberus, speed_run), MON_CVAR(cerberus, speed_walk), MON_CVAR(cerberus, speed_stop), cerberus_anim_run, cerberus_anim_walk, cerberus_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
