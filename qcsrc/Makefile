@@ -12,6 +12,7 @@ QCCFLAGS ?= \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
 	-Wno-uninitialized-global \
+	-Wno-parenthesis \
 	-O3 \
 	-fadjust-vector-fields \
 	-fftepp \
