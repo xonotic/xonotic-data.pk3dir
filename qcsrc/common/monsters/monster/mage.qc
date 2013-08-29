@@ -79,30 +79,10 @@ float friend_needshelp(entity e)
 
 	switch(self.skin)
 	{
-		case 0:
-		{
-			if(e.health < autocvar_g_balance_health_regenstable)
-				return TRUE;
-			break;
-		}
-		case 1:
-		{
-			if((e.ammo_cells && e.ammo_cells < g_pickup_cells_max) || (e.ammo_rockets && e.ammo_rockets < g_pickup_rockets_max) || (e.ammo_nails && e.ammo_nails < g_pickup_nails_max) || (e.ammo_shells && e.ammo_shells < g_pickup_shells_max))
-				return TRUE;
-			break;
-		}
-		case 2:
-		{
-			if(e.armorvalue < autocvar_g_balance_armor_regenstable)
-				return TRUE;
-			break;
-		}
-		case 3:
-		{
-			if(e.health > 0)
-				return TRUE;
-			break;
-		}
+		case 0: return (e.health < autocvar_g_balance_health_regenstable);
+		case 1: return ((e.ammo_cells && e.ammo_cells < g_pickup_cells_max) || (e.ammo_rockets && e.ammo_rockets < g_pickup_rockets_max) || (e.ammo_nails && e.ammo_nails < g_pickup_nails_max) || (e.ammo_shells && e.ammo_shells < g_pickup_shells_max));
+		case 2: return (e.armorvalue < autocvar_g_balance_armor_regenstable);
+		case 3: return (e.health > 0);
 	}
 	
 	return FALSE;
