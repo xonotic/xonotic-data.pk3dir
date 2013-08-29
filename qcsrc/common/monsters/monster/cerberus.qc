@@ -142,7 +142,8 @@ float m_cerberus(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(cerberus, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_small;
 			self.monster_attackfunc	= cerberus_attack;
 			monsters_setframe(cerberus_anim_idle);
 			

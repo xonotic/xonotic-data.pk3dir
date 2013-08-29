@@ -131,7 +131,8 @@ float m_wyvern(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(wyvern, health);
-				
+			
+			self.monster_loot = spawnfunc_item_cells;
 			self.monster_attackfunc	= wyvern_attack;
 			monsters_setframe(wyvern_anim_hover);
 			

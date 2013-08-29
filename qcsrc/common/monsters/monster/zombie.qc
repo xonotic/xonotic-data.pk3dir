@@ -142,7 +142,8 @@ float m_zombie(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(zombie, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= zombie_attack;
 			monsters_setframe(zombie_anim_spawn);
 			self.spawn_time = time + 2.1;

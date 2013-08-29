@@ -135,7 +135,8 @@ float m_shambler(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(shambler, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
 			monsters_setframe(shambler_anim_stand);
 			self.weapon = WEP_NEX;

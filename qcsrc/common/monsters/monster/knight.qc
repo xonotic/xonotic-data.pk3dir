@@ -296,7 +296,8 @@ float m_knight(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(knight, health);
-				
+			
+			self.monster_loot = spawnfunc_item_armor_big;
 			self.monster_attackfunc	= knight_attack;
 			monsters_setframe(knight_anim_stand);
 			

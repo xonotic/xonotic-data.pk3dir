@@ -413,7 +413,8 @@ float m_mage(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(mage, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_large;
 			self.monster_attackfunc	= mage_attack;
 			monsters_setframe(mage_anim_walk);
 			

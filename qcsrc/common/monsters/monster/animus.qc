@@ -104,7 +104,8 @@ float m_animus(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(animus, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc = animus_attack;
 			monsters_setframe(animus_anim_stand);
 			

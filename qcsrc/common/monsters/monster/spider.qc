@@ -197,7 +197,8 @@ float m_spider(float req)
 		{
 			if not(self.health) self.health = MON_CVAR(spider, health);
 			if not(self.spider_type) self.spider_type = MON_CVAR(spider, attack_type);
-				
+			
+			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= spider_attack;
 			monsters_setframe(spider_anim_idle);
 			

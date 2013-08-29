@@ -74,7 +74,8 @@ float m_stingray(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(stingray, health);
-				
+			
+			self.monster_loot = spawnfunc_item_health_small;
 			self.monster_attackfunc	= stingray_attack;
 			monsters_setframe(stingray_anim_swim);
 			

@@ -77,8 +77,6 @@ void slime_dead()
 	self.health = -100; // gibbed
 	slime_explode();
 	
-	Monster_CheckDropCvars (self.netname); // TODO: add a special function to drop items after death
-	
 	self.deadflag = DEAD_DEAD;
 	self.think = Monster_Fade;
 	self.nextthink = time + 0.1;
@@ -125,7 +123,8 @@ float m_slime(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(slime, health);
-				
+			
+			self.monster_loot = spawnfunc_item_rockets;
 			self.monster_attackfunc	= slime_attack;
 			monsters_setframe(slime_anim_idle);
 			

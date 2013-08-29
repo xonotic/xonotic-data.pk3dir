@@ -217,7 +217,8 @@ float m_brute(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(brute, health);
-				
+			
+			self.monster_loot = spawnfunc_item_bullets;
 			self.monster_attackfunc	= brute_attack;
 			monsters_setframe(brute_anim_idle);
 			self.weapon = WEP_GRENADE_LAUNCHER;

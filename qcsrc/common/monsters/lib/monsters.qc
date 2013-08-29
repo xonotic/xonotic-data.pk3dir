@@ -24,57 +24,24 @@ void monster_item_spawn()
 	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
 }
 
-void Monster_DropItem (string itype, string itemsize)
+void monster_dropitem()
 {
+	if(!self.candrop || !self.monster_loot)
+		return;
+
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
 	entity e = spawn();
 	
 	setorigin(e, org);
 	
-	switch(itype)
-	{
-		case "armor":
-		{
-			switch(itemsize)
-			{
-				case "mega": e.monster_loot = spawnfunc_item_armor_large; break;
-				case "large": e.monster_loot = spawnfunc_item_armor_big; break;
-				case "medium": e.monster_loot = spawnfunc_item_armor_medium; break;
-				case "small": e.monster_loot = spawnfunc_item_armor_small; break;
-			}
-			break;
-		}
-		case "health":
-		{
-			switch(itemsize)
-			{
-				case "mega": e.monster_loot = spawnfunc_item_health_mega; break;
-				case "large": e.monster_loot = spawnfunc_item_health_large; break;
-				case "medium": e.monster_loot = spawnfunc_item_health_medium; break;
-				case "small": e.monster_loot = spawnfunc_item_health_small; break;
-			}
-			break;
-		}
-		case "ammo":
-		{
-			switch(itemsize)
-			{
-				case "shells": e.monster_loot = spawnfunc_item_shells; break;
-				case "cells": e.monster_loot = spawnfunc_item_cells; break;
-				case "rockets": e.monster_loot = spawnfunc_item_rockets; break;
-				case "bullets":
-				case "nails": e.monster_loot = spawnfunc_item_bullets; break;
-			}
-			break;
-		}
-	}
+	e.monster_loot = self.monster_loot;
 	
 	other = e;
 	MUTATOR_CALLHOOK(MonsterDropItem);
 	e = other;
-		
+	
 	e.think = monster_item_spawn;
-	e.nextthink = time + 0.1;
+	e.nextthink = time + 0.3;
 }
 
 void monsters_setframe(float _frame)
@@ -229,25 +196,6 @@ float monster_melee (entity targ, float damg, float er, float deathtype, float d
 		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
 		
 	return TRUE;
-}
-
-void Monster_CheckDropCvars (string mon)
-{
-	if not(self.candrop)
-		return; // forced off
-	
-	string dropitem;
-	string dropsize;
-	
-	dropitem = cvar_string(strcat("g_monster_", mon, "_drop"));
-	dropsize = cvar_string(strcat("g_monster_", mon, "_drop_size"));
-	
-	if(autocvar_g_monsters_forcedrop)
-		Monster_DropItem(autocvar_g_monsters_drop_type, autocvar_g_monsters_drop_size);
-	else if(dropitem != "")
-		Monster_DropItem(dropitem, dropsize);	   
-	else
-		Monster_DropItem("armor", "medium");
 }
 
 void Monster_CheckMinibossFlag ()
@@ -832,7 +780,7 @@ void monster_die()
 	self.nextthink = self.ticrate;
 	self.ltime = time + 5;
 	
-	Monster_CheckDropCvars(self.netname);
+	monster_dropitem();
 
 	WaypointSprite_Kill(self.sprite);
 		

@@ -95,7 +95,8 @@ float m_bruiser(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(bruiser, health);
-				
+			
+			self.monster_loot = spawnfunc_item_armor_medium;
 			self.monster_attackfunc	= bruiser_attack;
 			monsters_setframe(bruiser_anim_stand);
 			
