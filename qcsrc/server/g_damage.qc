@@ -552,10 +552,7 @@ void Ice_Think()
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
-	float monster = (targ.flags & FL_MONSTER);
-	float player = (targ.flags & FL_CLIENT);
-	
-	if(!player && !monster) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
 		return;
 		
 	if(targ.frozen)
@@ -595,18 +592,19 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
-	if not(targ.frozen)
-		return; // not even frozen?
-		
+	if(targ.frozen) // only reset health if target was frozen
+		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
 	targ.frozen = 0;
 	targ.revive_progress = 0;
-	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
 	
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
 	// remove the ice block
-	remove(targ.iceblock);
-	targ.iceblock = world;
+	if(targ.iceblock)
+	{
+		remove(targ.iceblock);
+		targ.iceblock = world;
+	}
 }
 
 // these are updated by each Damage call for use in button triggering and such

@@ -88,7 +88,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 	vector org;
 	float lag;
 
-	if(player.hitplotfh >= 0 && !(player.flags & FL_MONSTER))
+	if(player.hitplotfh >= 0)
 	{
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
@@ -1017,8 +1017,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 
 void W_AttachToShotorg(entity flash, vector offset)
 {
-	if(self.flags & FL_MONSTER)
-		return; // no flash for monsters
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
@@ -1282,9 +1280,6 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 {
-	if(self.flags & FL_MONSTER) // no ammo for monsters... yet
-		return;
-		
 	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
 		return;
 

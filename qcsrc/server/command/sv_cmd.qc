@@ -149,21 +149,21 @@ void GameCommand_butcher(float request)
 			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
 		
             float removed_count = 0;
-			entity montokill, head;
+			entity head;
 			
-            FOR_EACH_MONSTER(montokill)
-            {
-				WaypointSprite_Kill(montokill.sprite);
+			FOR_EACH_MONSTER(head)
+			{
+				WaypointSprite_Kill(head.sprite);
 				
-				if(montokill.weaponentity)
-					remove(montokill.weaponentity);
+				if(head.weaponentity)
+					remove(head.weaponentity);
 					
-				if(montokill.iceblock)
-					remove(montokill.iceblock);
-                    
-                remove(montokill);
-                removed_count += 1;
-            }
+				if(head.iceblock)
+					remove(head.iceblock);
+					
+				remove(head);
+				++removed_count;
+			}
 			
 			FOR_EACH_PLAYER(head)
 				head.monstercount = 0;
@@ -1780,7 +1780,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-    	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
+	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

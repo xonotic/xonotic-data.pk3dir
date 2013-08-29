@@ -182,11 +182,8 @@ const float STAT_SECRETS_FOUND = 71;
 const float STAT_RESPAWN_TIME = 72;
 const float STAT_ROUNDSTARTTIME = 73;
 
-const float STAT_CURRENT_WAVE = 73;
-const float STAT_TOTALWAVES = 74;
-
-const float STAT_MONSTERS_TOTAL = 75;
-const float STAT_MONSTERS_KILLED = 76;
+const float STAT_MONSTERS_TOTAL = 73;
+const float STAT_MONSTERS_KILLED = 74;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;

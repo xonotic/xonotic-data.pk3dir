@@ -196,7 +196,7 @@ void ClientCommand_mobedit(float request, float argc)
 			
 			switch(argv(1))
 			{
-				case "name": trace_ent.netname = strzone(strdecolorize(argv(2))); if(trace_ent.sprite) WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.netname, "", ""); return;
+				case "name": trace_ent.monster_name = strzone(strdecolorize(argv(2))); if(trace_ent.sprite) WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.monster_name, "", ""); return;
 				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; } return;
 				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
 			}
@@ -228,7 +228,7 @@ void ClientCommand_mobkill(float request)
 					sprint(self, "That monster does not belong to you.\n");
 					return;
 				}
-				sprint(self, strcat("Your pet '", trace_ent.netname, "' has been brutally mutilated.\n"));
+				sprint(self, strcat("Your pet '", trace_ent.monster_name, "' has been brutally mutilated.\n"));
 				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health + 200, DEATH_KILL, trace_ent.origin, '0 0 0');
 				return;
 			}

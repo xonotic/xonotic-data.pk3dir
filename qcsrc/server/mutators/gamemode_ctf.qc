@@ -814,8 +814,6 @@ void ctf_FlagTouch()
 	
 	entity toucher = other;
 	
-	if(toucher.frozen) { return; }
-	
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
@@ -825,7 +823,8 @@ void ctf_FlagTouch()
 	}
 	
 	// special touch behaviors
-	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	if(toucher.frozen) { return; }
+	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
