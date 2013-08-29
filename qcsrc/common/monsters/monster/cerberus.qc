@@ -57,6 +57,8 @@ void cerberus_checkowner()
 {
 	if(time < self.cerberus_last_trace)
 		return;
+	if(IS_PLAYER(self.monster_owner))
+		return; // don't check player masters
 
 	if(vlen(self.origin - self.monster_owner.origin) > self.target_range)
 		self.monster_owner = world;

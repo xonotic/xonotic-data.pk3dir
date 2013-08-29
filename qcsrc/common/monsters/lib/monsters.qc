@@ -86,9 +86,12 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if not(targ.vehicle_flags & VHF_ISVEHICLE) // vehicles dont count as alive?
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return FALSE; // enemy/self is dead
-	
-	if(targ.monster_owner == ent || ent.monster_owner == targ)
-		return FALSE; // enemy owns us, or we own them
+		
+	if(ent.monster_owner == targ)
+		return FALSE; // don't attack our master
+		
+	if(targ.monster_owner == ent)
+		return FALSE; // don't attack our pet
 	
 	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.flags & FL_NOTARGET)
@@ -515,7 +518,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	targ = monster_target;
 	runspeed = monster_speed_run;
 	walkspeed = monster_speed_walk;
-		
+	
+	if(teamplay)
+	if(autocvar_g_monsters_teams)
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
