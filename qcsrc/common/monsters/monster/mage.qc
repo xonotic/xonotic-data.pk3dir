@@ -135,7 +135,7 @@ void mage_throw_itemgrenade()
 	gren.movetype = MOVETYPE_BOUNCE;
 	gren.solid = SOLID_TRIGGER;
 	gren.projectiledeathtype = DEATH_MONSTER_MAGE;
-	setorigin(gren, w_shotorg);
+	setorigin(gren, CENTER_OR_VIEWOFS(self));
 	setsize(gren, '-64 -64 -64', '64 64 64');
 
 	gren.nextthink = time + MON_CVAR(mage, attack_grenade_lifetime);
