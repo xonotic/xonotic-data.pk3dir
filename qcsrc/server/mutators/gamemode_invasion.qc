@@ -249,7 +249,8 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 {
-	start_armorvalue = 100;
+	start_health = 200;
+	start_armorvalue = 200;
 	
 	return FALSE;
 }
