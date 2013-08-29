@@ -127,10 +127,7 @@ void mage_grenade_touch()
 void mage_throw_itemgrenade()
 {
 	makevectors(self.angles);
-
-	W_SetupShot_ProjectileSize (self, '-64 -64 -64', '64 64 64', FALSE, 4, "", CH_WEAPON_A, MON_CVAR(mage, attack_grenade_damage));
-	w_shotdir = v_forward; // no TrueAim for grenades please
-
+	
 	entity gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
@@ -147,7 +144,7 @@ void mage_throw_itemgrenade()
 	gren.touch = mage_grenade_touch;
 
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, w_shotdir, v_up, MON_CVAR(mage, attack_grenade_speed), MON_CVAR(mage, attack_grenade_speed_up), 0, 0, FALSE);
+	W_SetupProjectileVelocityEx(gren, v_forward, v_up, MON_CVAR(mage, attack_grenade_speed), MON_CVAR(mage, attack_grenade_speed_up), 0, 0, FALSE);
 	
 	gren.flags = FL_PROJECTILE;
 	

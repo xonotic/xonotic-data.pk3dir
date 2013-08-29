@@ -212,7 +212,6 @@ void Monster_CheckMinibossFlag ()
 	if ((self.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
 		self.health += autocvar_g_monsters_miniboss_healthboost;
-		self.flags |= MONSTERFLAG_MINIBOSS;
 		if not(self.weapon)
 			self.weapon = WEP_NEX;
 	}

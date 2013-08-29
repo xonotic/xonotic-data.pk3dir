@@ -57,8 +57,8 @@ void brute_uzi()
 	
 	monster_makevectors(self.enemy);
 	
-	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, MON_CVAR(brute, attack_uzi_damage));
-	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, MON_CVAR(brute, attack_uzi_damage), MON_CVAR(brute, attack_uzi_force), DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
+	sound(self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+	fireBallisticBullet(CENTER_OR_VIEWOFS(self), v_forward, 0.02, 18000, 5, MON_CVAR(brute, attack_uzi_damage), MON_CVAR(brute, attack_uzi_force), DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
 	
 	if(self.brute_cycles <= MON_CVAR(brute, attack_uzi_bullets))
@@ -116,9 +116,10 @@ void brute_grenade_think()
 void brute_grenade()
 {
 	entity gren;
-
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, MON_CVAR(brute, attack_grenade_damage));
-	w_shotdir = v_forward; // no TrueAim for grenades please
+	
+	monster_makevectors(self.enemy);
+	
+	sound(self, CH_WEAPON_A, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
@@ -128,7 +129,7 @@ void brute_grenade()
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_BRUTE_GRENADE;
-	setorigin(gren, w_shotorg);
+	setorigin(gren, CENTER_OR_VIEWOFS(self));
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.cnt = time + 5;
@@ -143,7 +144,7 @@ void brute_grenade()
 	gren.event_damage = brute_grenade_damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, w_shotdir, v_up, MON_CVAR(brute, attack_grenade_speed), MON_CVAR(brute, attack_grenade_speed_up), 0, 0, FALSE);
+	W_SetupProjectileVelocityEx(gren, v_forward, v_up, MON_CVAR(brute, attack_grenade_speed), MON_CVAR(brute, attack_grenade_speed_up), 0, 0, FALSE);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;

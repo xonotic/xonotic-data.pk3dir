@@ -285,7 +285,7 @@ float m_knight(float req)
 		{
 			float chance = random();
 			monsters_setframe((random() > 0.5) ? knight_anim_death1 : knight_anim_death2);
-			if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
+			if(chance < 0.10 || self.spawnflags & MONSTERFLAG_MINIBOSS)
 			if(self.candrop)
 			{
 				self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon

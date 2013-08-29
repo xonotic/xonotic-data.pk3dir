@@ -99,10 +99,10 @@ void spider_shootweb(float ptype)
 	}
 	
 	vector fmins = '-4 -4 -4', fmaxs = '4 4 4';
-
-	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0);
-
-	w_shotdir = v_forward; // no TrueAim for grenades please
+	
+	monster_makevectors(self.enemy);
+	
+	sound(self, CH_SHOTS, snd, VOL_BASE, ATTN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
@@ -114,12 +114,12 @@ void spider_shootweb(float ptype)
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = DEATH_MONSTER_SPIDER_FIRE;
-	setorigin(proj, w_shotorg);
+	setorigin(proj, CENTER_OR_VIEWOFS(self));
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SetupProjectileVelocityEx(proj, w_shotdir, v_up, MON_CVAR(spider, attack_web_speed), MON_CVAR(spider, attack_web_speed_up), 0, 0, FALSE);
+	W_SetupProjectileVelocityEx(proj, v_forward, v_up, MON_CVAR(spider, attack_web_speed), MON_CVAR(spider, attack_web_speed_up), 0, 0, FALSE);
 	proj.touch = spider_web_touch;
 	setsize(proj, fmins, fmaxs);
 	proj.takedamage = DAMAGE_NO;
@@ -155,7 +155,6 @@ float spider_attack(float attack_type)
 			
 			monsters_setframe(spider_anim_attack2);
 			self.attack_finished_single = time + MON_CVAR(spider, attack_web_delay);
-			monster_makevectors(self.enemy);
 			spider_shootweb(self.spider_type);
 			
 			return TRUE;
