@@ -563,7 +563,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.health = 1;
 	targ.revive_speed = freeze_time;
 
-	entity ice;
+	entity ice, head;
 	ice = spawn();
 	ice.owner = targ;
 	ice.classname = "ice";
@@ -585,6 +585,10 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	RemoveGrapplingHook(targ);
 	
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
+	
 	// add waypoint
 	if(show_waypoint)	
 		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
@@ -594,17 +598,21 @@ void Unfreeze (entity targ)
 {
 	if(targ.frozen) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
+
+	entity head;
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	
 	WaypointSprite_Kill(targ.waypointsprite_attached);
+	
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
 
 	// remove the ice block
 	if(targ.iceblock)
-	{
 		remove(targ.iceblock);
-		targ.iceblock = world;
-	}
+	targ.iceblock = world;
 }
 
 // these are updated by each Damage call for use in button triggering and such
@@ -743,7 +751,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
-        frag_deathtype = deathtype;
+		frag_deathtype = deathtype;
 		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
