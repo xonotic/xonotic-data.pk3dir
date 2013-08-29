@@ -164,7 +164,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if(accuracy_canbegooddamage(ent))
 		accuracy_add(ent, ent.weapon, maxdamage, 0);
 
-	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
+	if not(ent.flags & FL_MONSTER)
+		W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	if(ent.weaponentity.movedir_x > 0)
 		vecs = ent.weaponentity.movedir;
