@@ -5,7 +5,7 @@ void invasion_spawnpoint()
 	self.classname = "invasion_spawnpoint";
 }
 
-float invasion_PickMonster(float have_shamblers)
+float invasion_PickMonster(float supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
 		return MON_ZOMBIE;
@@ -18,7 +18,7 @@ float invasion_PickMonster(float have_shamblers)
 	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		mon = get_monsterinfo(i);
-		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || (i == MON_SHAMBLER && have_shamblers >= 1))
+		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || (mon.spawnflags & MON_FLAG_SUPERMONSTER && supermonster_count >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);
@@ -54,9 +54,9 @@ void invasion_SpawnChosenMonster(float mon)
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, 2);
 }
 
-void invasion_SpawnMonsters(float have_shamblers)
+void invasion_SpawnMonsters(float supermonster_count)
 {
-	float chosen_monster = invasion_PickMonster(have_shamblers);
+	float chosen_monster = invasion_PickMonster(supermonster_count);
 	
 	invasion_SpawnChosenMonster(chosen_monster);
 }
@@ -86,12 +86,12 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 	
-	float total_alive_monsters = 0, shamblers = 0;
+	float total_alive_monsters = 0, supermonster_count = 0;
 	
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
-		if(head.monsterid == MON_SHAMBLER)
-			++shamblers;
+		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+			++supermonster_count;
 		++total_alive_monsters;
 	}
 
@@ -99,7 +99,7 @@ float Invasion_CheckWinner()
 	{
 		if(time >= last_check)
 		{
-			invasion_SpawnMonsters(shamblers);
+			invasion_SpawnMonsters(supermonster_count);
 			last_check = time + 2;
 		}
 		
