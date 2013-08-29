@@ -1084,8 +1084,6 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	// get number of rows
 	if(stat_secrets_total)
 		rows += 1;
-	if(stat_totalwaves)
-		rows += 1;
 	if(stat_monsters_total)
 		rows += 1;
 
