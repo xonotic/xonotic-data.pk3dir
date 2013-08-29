@@ -201,6 +201,9 @@ void spawnfunc_monster_brute()
 	if not(monster_initialize(MON_BRUTE, FALSE)) { remove(self); return; }
 }
 
+// compatibility with old spawns
+void spawnfunc_monster_ogre() { spawnfunc_monster_brute(); }
+
 float m_brute(float req)
 {
 	switch(req)
