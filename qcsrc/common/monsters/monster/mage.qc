@@ -14,6 +14,14 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_spike_damage) \
 	MON_ADD_CVAR(monster, attack_spike_radius) \
 	MON_ADD_CVAR(monster, attack_spike_delay) \
+	MON_ADD_CVAR(monster, attack_spike_accel) \
+	MON_ADD_CVAR(monster, attack_spike_decel) \
+	MON_ADD_CVAR(monster, attack_spike_turnrate) \
+	MON_ADD_CVAR(monster, attack_spike_speed_max) \
+	MON_ADD_CVAR(monster, attack_spike_smart) \
+	MON_ADD_CVAR(monster, attack_spike_smart_trace_min) \
+	MON_ADD_CVAR(monster, attack_spike_smart_trace_max) \
+	MON_ADD_CVAR(monster, attack_spike_smart_mindist) \
 	MON_ADD_CVAR(monster, attack_melee_damage) \
 	MON_ADD_CVAR(monster, attack_melee_delay) \
 	MON_ADD_CVAR(monster, attack_grenade_damage) \
@@ -156,7 +164,9 @@ void mage_throw_itemgrenade()
 void mage_spike_explode()
 {
 	self.event_damage = func_null;
-
+	
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_spike_damage), MON_CVAR(mage, attack_spike_damage) * 0.5, MON_CVAR(mage, attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
 
@@ -170,25 +180,76 @@ void mage_spike_touch()
 	mage_spike_explode();
 }
 
+// copied from W_Seeker_Think
 void mage_spike_think()
 {
-	if(self.enemy.health <= 0 || self.owner.health <= 0 || time >= self.ltime)
+	entity e;
+	vector desireddir, olddir, newdir, eorg;
+	float turnrate;
+	float dist;
+	float spd;
+
+	if (time > self.ltime)
 	{
+		self.projectiledeathtype |= HITTYPE_SPLASH;
 		mage_spike_explode();
+	}
+
+	spd = vlen(self.velocity);
+	spd = bound(
+		spd - MON_CVAR(mage, attack_spike_decel) * frametime,
+		MON_CVAR(mage, attack_spike_speed_max),
+		spd + MON_CVAR(mage, attack_spike_accel) * frametime
+	);
+
+	if (self.enemy != world)
+		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+			self.enemy = world;
+
+	if (self.enemy != world)
+	{
+		e               = self.enemy;
+		eorg            = 0.5 * (e.absmin + e.absmax);
+		turnrate        = MON_CVAR(mage, attack_spike_turnrate); // how fast to turn
+		desireddir      = normalize(eorg - self.origin);
+		olddir          = normalize(self.velocity); // get my current direction
+		dist            = vlen(eorg - self.origin);
+
+		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
+		if (MON_CVAR(mage, attack_spike_smart) && (dist > MON_CVAR(mage, attack_spike_smart_mindist)))
+		{
+			// Is it a better idea (shorter distance) to trace to the target itself?
+			if ( vlen(self.origin + olddir * self.wait) < dist)
+				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+			else
+				traceline(self.origin, eorg, FALSE, self);
+
+			// Setup adaptive tracelength
+			self.wait = bound(MON_CVAR(mage, attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = MON_CVAR(mage, attack_spike_smart_trace_max));
+
+			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
+			desireddir  = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
+		}
+		
+		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
+	}
+	else
+		dist = 0;
+		
+	///////////////
+
+	if (self.enemy.deadflag != DEAD_NO || self.owner.health < 1)
+	{
+		self.enemy = world;
+		self.ltime = time + 1 + (random() * 4);
+		self.nextthink = self.ltime;
 		return;
 	}
-	
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	
+
+	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
+	self.nextthink = time;// + 0.05; // csqc projectiles
 	UpdateCSQCProjectile(self);
-	
-	if (monster_skill == 3)
-		self.velocity = dir * 350;
-	else
-		self.velocity = dir * 250;
-		
-	self.nextthink = time + 0.2;
-	self.think = mage_spike_think;	
 }
 
 void mage_spike()
