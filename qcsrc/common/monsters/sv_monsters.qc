@@ -818,7 +818,8 @@ void monster_die()
 		self.velocity = '0 0 0';
 	
 	self.SendFlags |= MSF_MOVE;
-		
+	
+	// number of monsters spawned with mobspawn command
 	totalspawned -= 1;
 	
 	MON_ACTION(self.monsterid, MR_DEATH);

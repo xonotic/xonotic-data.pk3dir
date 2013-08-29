@@ -189,7 +189,7 @@ void mage_spike_think()
 	float dist;
 	float spd;
 
-	if (time > self.ltime)
+	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
 	{
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 		mage_spike_explode();
@@ -238,14 +238,6 @@ void mage_spike_think()
 		dist = 0;
 		
 	///////////////
-
-	if (self.enemy.deadflag != DEAD_NO || self.owner.health < 1)
-	{
-		self.enemy = world;
-		self.ltime = time + 1 + (random() * 4);
-		self.nextthink = self.ltime;
-		return;
-	}
 
 	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
 	self.nextthink = time;// + 0.05; // csqc projectiles
