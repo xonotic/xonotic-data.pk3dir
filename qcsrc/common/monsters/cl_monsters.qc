@@ -1,3 +1,8 @@
+// =========================
+//  CSQC Monster Properties
+// =========================
+
+
 .vector glowmod;
 void monster_changeteam()
 {

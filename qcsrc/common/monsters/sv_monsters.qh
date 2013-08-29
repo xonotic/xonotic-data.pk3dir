@@ -1,3 +1,19 @@
+.string spawnmob;
+.float monster_attack;
+
+float monster_skill;
+float spawncode_first_load; // used to tell the player the monster database is loading (TODO: fix this?)
+
+.entity monster_owner; // new monster owner entity, fixes non-solid monsters
+.float monstercount; // per player monster count
+
+.float stat_monsters_killed; // stats
+.float stat_monsters_total;
+float monsters_total;
+float monsters_killed;
+void monsters_setstatus(); // monsters.qc
+.float monster_moveflags; // checks where to move when not attacking
+
 .float(float attack_type) monster_attackfunc;
 const float MONSTER_ATTACK_MELEE 	= 1;
 const float MONSTER_ATTACK_RANGED 	= 2;
@@ -49,3 +65,4 @@ const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
 
 const float MONSTER_STATE_ATTACK_LEAP = 1;
 const float MONSTER_STATE_ATTACK_MELEE = 2;
+

@@ -1,6 +1,7 @@
-// TODO: clean up this file?
+// =========================
+//  SVQC Monster Properties
+// =========================
 
-void() spawnfunc_item_minst_cells;
 
 void M_Item_Touch ()
 {

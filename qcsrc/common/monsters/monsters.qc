@@ -1,9 +1,3 @@
-#ifdef SVQC
-#include "lib/defs.qh"
-#include "lib/monsters.qc"
-#include "lib/spawn.qc"
-#endif
-
 #include "all.qh"
 
 // MONSTER PLUGIN SYSTEM
