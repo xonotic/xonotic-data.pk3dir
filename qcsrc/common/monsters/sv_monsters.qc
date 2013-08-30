@@ -176,9 +176,9 @@ void monster_setupsounds(string mon)
 	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
 }
 
-float monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
+float monster_melee(entity targ, float damg, float er, float deathtype, float dostop)
 {
-	float dot, rdmg = damg * random();
+	float rdmg = damg * random();
 
 	if (self.health <= 0)
 		return FALSE;
@@ -194,9 +194,10 @@ float monster_melee (entity targ, float damg, float er, float deathtype, float d
 	}
 
 	makevectors (self.angles);
-	dot = normalize (targ.origin - self.origin) * v_forward;
 	
-	if(dot > er)
+	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
+	
+	if(trace_ent.takedamage)
 		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
 		
 	return TRUE;
@@ -319,6 +320,7 @@ void monster_checkattack(entity e, entity targ)
 		return;
 	}
 	
+	if(vlen(targ.origin - e.origin) > e.attack_range)
 	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED))
 	{
 		monster_sound(e.msound_attack_ranged, 0, FALSE);
@@ -927,6 +929,9 @@ void monster_spawn()
 	if not(self.monster_respawned)
 	if not(self.skin)
 		self.skin = rint(random() * 4);
+		
+	if not(self.attack_range)
+		self.attack_range = autocvar_g_monsters_attack_range;
 	
 	self.pos1 = self.origin;
 	
@@ -1029,9 +1034,6 @@ float monster_initialize(float mon_id, float nodrop)
 		
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 		self.scale = 1.3;
-	
-	if not(self.attack_range)
-		self.attack_range = 120;
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

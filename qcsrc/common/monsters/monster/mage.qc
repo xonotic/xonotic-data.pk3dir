@@ -90,7 +90,7 @@ float friend_needshelp(entity e)
 
 void mageattack_melee()
 {
-	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), 0.3, DEATH_MONSTER_MAGE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), self.attack_range, DEATH_MONSTER_MAGE, TRUE);
 }
 
 void mage_grenade_explode()

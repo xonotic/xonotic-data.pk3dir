@@ -142,7 +142,7 @@ float spider_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), 0.3, DEATH_MONSTER_SPIDER, TRUE);
+			monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), self.attack_range, DEATH_MONSTER_SPIDER, TRUE);
 			monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
 			self.attack_finished_single = time + MON_CVAR(spider, attack_bite_delay);
 			

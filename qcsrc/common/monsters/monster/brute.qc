@@ -45,7 +45,7 @@ void brute_blade()
 	self.brute_cycles += 1;
 	self.angles_y = self.angles_y + random()* 25;
 	
-	monster_melee(self.enemy, MON_CVAR(brute, attack_chainsaw_damage), 0.3, DEATH_MONSTER_BRUTE_BLADE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(brute, attack_chainsaw_damage), self.attack_range, DEATH_MONSTER_BRUTE_BLADE, TRUE);
 	
 	if(self.brute_cycles <= 4)
 		defer(0.2, brute_blade);

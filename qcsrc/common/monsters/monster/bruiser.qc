@@ -43,7 +43,7 @@ float bruiser_attack(float attack_type)
 			monsters_setframe((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack);
 			self.attack_finished_single = time + 1.25;
 			
-			monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), 0.3, DEATH_MONSTER_BRUISER, FALSE);
+			monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), self.attack_range, DEATH_MONSTER_BRUISER, FALSE);
 			
 			return TRUE;
 		}

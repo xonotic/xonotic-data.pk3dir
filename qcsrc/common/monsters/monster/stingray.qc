@@ -35,7 +35,7 @@ float stingray_attack(float attack_type)
 		{
 			monsters_setframe(stingray_anim_attack);
 			self.attack_finished_single = time + MON_CVAR(stingray, attack_bite_delay);
-			monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), 0.1, DEATH_MONSTER_STINGRAY, FALSE);
+			monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), self.attack_range, DEATH_MONSTER_STINGRAY, FALSE);
 			
 			return TRUE;
 		}

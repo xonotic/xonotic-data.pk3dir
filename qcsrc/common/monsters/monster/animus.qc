@@ -56,7 +56,7 @@ float animus_attack(float attack_type)
 		{
 			monsters_setframe(animus_anim_attack);
 			self.attack_finished_single = time + 1;
-			monster_melee(self.enemy, MON_CVAR(animus, attack_melee_damage), 0.3, DEATH_MONSTER_ANIMUS, TRUE);
+			monster_melee(self.enemy, MON_CVAR(animus, attack_melee_damage), self.attack_range, DEATH_MONSTER_ANIMUS, TRUE);
 			
 			return TRUE;
 		}

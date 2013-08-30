@@ -96,7 +96,7 @@ float zombie_attack(float attack_type)
 
 			self.attack_finished_single = time + MON_CVAR(zombie, attack_melee_delay);
 			
-			monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), self.attack_range, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
 			
 			return TRUE;
 		}

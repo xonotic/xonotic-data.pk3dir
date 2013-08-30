@@ -91,7 +91,7 @@ float cerberus_attack(float attack_type)
 		{
 			monsters_setframe(cerberus_anim_attack);
 			self.attack_finished_single = time + 0.7;
-			monster_melee(self.enemy, MON_CVAR(cerberus, attack_bite_damage), 0.2, DEATH_MONSTER_CERBERUS_BITE, TRUE);
+			monster_melee(self.enemy, MON_CVAR(cerberus, attack_bite_damage), self.attack_range, DEATH_MONSTER_CERBERUS_BITE, TRUE);
 			
 			return TRUE;
 		}

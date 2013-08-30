@@ -35,7 +35,7 @@ const float shambler_anim_death 	= 8;
 
 void shambler_smash()
 {
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), self.attack_range, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
 void shambler_delayedsmash()
@@ -49,7 +49,7 @@ void shambler_swing()
 {
 	float r = (random() < 0.5);
 	monsters_setframe((r) ? shambler_anim_swingr : shambler_anim_swingl);
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), self.attack_range, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
 	if(r)
 		defer(0.5, shambler_swing);
@@ -135,6 +135,7 @@ float m_shambler(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(shambler, health);
+			if not(self.attack_range) self.attack_range = 150;
 			
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;

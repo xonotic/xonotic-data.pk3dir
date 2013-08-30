@@ -243,7 +243,7 @@ float knight_attack(float attack_type)
 			
 			monsters_setframe(anim);
 			self.attack_finished_single = time + 0.7;
-			monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), 0.3, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
+			monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), self.attack_range, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
 			
 			return TRUE;
 		}
