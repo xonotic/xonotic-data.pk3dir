@@ -60,6 +60,9 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(!targ || !ent)
 		return FALSE; // someone doesn't exist
 		
+	if(targ == ent)
+		return FALSE; // don't attack ourselves
+		
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started
 		
@@ -120,13 +123,32 @@ float monster_isvalidtarget (entity targ, entity ent)
 entity FindTarget (entity ent) 
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
-	entity e;
 	
-	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
-	if(monster_isvalidtarget(e, ent))
-		return e;
-
-	return world;
+	entity head, closest_target = world;
+	head = findradius(ent.origin, ent.target_range);
+			
+	while(head) // find the closest acceptable target to pass to
+	{
+		if(monster_isvalidtarget(head, ent))
+		{
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
+			vector head_center = CENTER_OR_VIEWOFS(head);
+			vector ent_center = CENTER_OR_VIEWOFS(ent);
+					
+			//if(ctf_CheckPassDirection(head_center, ent_center, ent.v_angle, head.WarpZone_findradius_nearest))
+			if(closest_target)
+			{
+				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
+				if(vlen(ent_center - head_center) < vlen(ent_center - closest_target_center))
+					{ closest_target = head; }
+			}
+			else { closest_target = head; }
+		}
+		
+		head = head.chain;
+	}
+	
+	return closest_target;
 }
 
 void MonsterTouch ()
@@ -348,20 +370,6 @@ void monster_use ()
 	self.enemy = activator;
 }
 
-float trace_path(vector from, vector to)
-{
-	vector dir = normalize(to - from) * 15, offset = '0 0 0';
-	float trace1 = trace_fraction;
-	
-	offset_x = dir_y;
-	offset_y = -dir_x;
-	traceline (from+offset, to+offset, TRUE, self);
-	
-	traceline(from-offset, to-offset, TRUE, self);
-		
-	return ((trace1 < trace_fraction) ? trace1 : trace_fraction);
-}
-
 .float last_trace;
 .float last_enemycheck; // for checking enemy
 vector monster_pickmovetarget(entity targ)
@@ -521,22 +529,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(autocvar_g_monsters_teams)
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
+	
+	if(self.enemy && self.enemy.health < 1)
+		self.enemy = world; // enough!
 		
 	if(time >= self.last_enemycheck)
 	{
 		if not(monster_isvalidtarget(self.enemy, self))
 			self.enemy = world;
+			
+		if not(self.enemy)
+		{
+			self.enemy = FindTarget(self);
+			if(self.enemy)
+				monster_sound(self.msound_sight, 0, FALSE);
+		}
+			
 		self.last_enemycheck = time + 2;
-	}
-		
-	if(self.enemy && self.enemy.health < 1)
-		self.enemy = world; // enough!
-		
-	if not(self.enemy)
-	{
-		self.enemy = FindTarget(self);
-		if(self.enemy)
-			monster_sound(self.msound_sight, 0, FALSE);
 	}
 	
 	if(self.state == MONSTER_STATE_ATTACK_MELEE && time >= self.attack_finished_single)
@@ -583,16 +592,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
 		self.moveto_z = self.origin_z; 
 	
-	float l = vlen(self.moveto - self.origin);
-	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
-	float t2 = trace_path(self.origin-'0 0 15', self.moveto-'0 0 15'); 
-	
 	if(self.flags & FL_FLY || self.flags & FL_SWIM)
 		v_forward = normalize(self.moveto - self.origin);
-	
-	if(t1*l-t2*l>50 && (t1*l > 100 || t1 > 0.8))
-	if(self.flags & FL_ONGROUND)
-		movelib_jump_simple(100);
 
 	if(vlen(self.origin - self.moveto) > 64)
 	{
