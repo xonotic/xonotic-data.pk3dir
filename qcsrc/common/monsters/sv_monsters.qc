@@ -67,8 +67,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	
 	if(vlen(targ.origin - ent.origin) >= ent.target_range)
 		return FALSE; // enemy is too far away
-		
-	if not(targ.vehicle_flags & VHF_ISVEHICLE)
+	
 	if(trace_ent != targ)
 		return FALSE; // we can't see the enemy
 		
@@ -84,7 +83,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return FALSE; // enemy is a spectator
 	
-	if not(targ.vehicle_flags & VHF_ISVEHICLE) // vehicles dont count as alive?
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return FALSE; // enemy/self is dead
 		
@@ -94,7 +92,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return FALSE; // don't attack our pet
 	
-	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.flags & FL_NOTARGET)
 		return FALSE; // enemy can't be targeted
 	
