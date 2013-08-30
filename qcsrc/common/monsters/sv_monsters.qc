@@ -266,10 +266,9 @@ void Monster_Fade ()
 		
 		self.SendFlags |= MSF_MOVE;
 		self.SendFlags |= MSF_STATUS;
-		
-		return;
 	}
-	SUB_SetFade(self, time + 3, 1);
+	else
+		SUB_SetFade(self, time + 3, 1);
 }
 
 float Monster_CanJump (vector vel)
@@ -956,7 +955,7 @@ void monster_spawn()
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
 	
-	self.SendFlags = MSF_SETUP;
+	self.SendFlags |= MSF_SETUP;
 }
 
 float monster_initialize(float mon_id, float nodrop)

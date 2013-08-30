@@ -143,12 +143,15 @@ float m_zombie(float req)
 		{
 			if not(self.health) self.health = MON_CVAR(zombie, health);
 			
+			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
+				self.spawnflags &~= MONSTERFLAG_NORESPAWN; // zombies always respawn
+			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= zombie_attack;
 			monsters_setframe(zombie_anim_spawn);
 			self.spawn_time = time + 2.1;
 			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.1;
+			self.respawntime = 0.2;
 			
 			return TRUE;
 		}
