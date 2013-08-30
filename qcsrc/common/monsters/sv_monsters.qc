@@ -281,7 +281,7 @@ void Monster_Fade ()
 		self.takedamage = DAMAGE_NO;
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
-		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
+		self.health = self.max_health;
 		
 		self.SendFlags |= MSF_MOVE;
 		self.SendFlags |= MSF_STATUS;
@@ -863,12 +863,10 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	}
 		
 	if(self.health <= 0)
-	{	 
+	{
+		// Update one more time to avoid waypoint fading without emptying healthbar
 		if(self.sprite)
-		{
-			// Update one more time to avoid waypoint fading without emptying healthbar
 			WaypointSprite_UpdateHealth(self.sprite, 0);
-		}
 		
 		if(deathtype == DEATH_KILL)
 			self.candrop = FALSE; // killed by mobkill command

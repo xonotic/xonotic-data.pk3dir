@@ -1,10 +1,7 @@
 entity spawnmonster (string monster, float mnster, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
 {
-	if(!spawncode_first_load)
-	{
-		initialize_field_db();
-		spawncode_first_load = TRUE;
-	}
+	// ensure spawnfunc database is initialized
+	initialize_field_db();
 	
 	entity e = spawn();
 	
