@@ -51,7 +51,7 @@ void PingPLReport_Spawn()
 	pingplreport.nextthink = time;
 }
 
-float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
+const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
@@ -769,7 +769,7 @@ void spawnfunc_worldspawn (void)
 
 	WeaponStats_Init();
 
-	WEPSET_ADDSTAT();
+	WepSet_AddStat();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -1569,10 +1569,10 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
-float WINNING_NO = 0; // no winner, but time limits may terminate the game
-float WINNING_YES = 1; // winner found
-float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+const float WINNING_NO = 0; // no winner, but time limits may terminate the game
+const float WINNING_YES = 1; // winner found
+const float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
 
 float InitiateSuddenDeath()
 {
@@ -2399,7 +2399,7 @@ float MapVote_SendEntity(entity to, float sf)
 	float i;
 
 	if(sf & 1)
-		sf &~= 2; // if we send 1, we don't need to also send 2
+		sf &= ~2; // if we send 1, we don't need to also send 2
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);

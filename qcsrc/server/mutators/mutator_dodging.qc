@@ -91,7 +91,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	// the up part of the dodge is a single shot action
 	if (self.dodging_single_action == 1) {
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		self.velocity = 
 			  self.velocity 
