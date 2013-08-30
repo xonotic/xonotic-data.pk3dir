@@ -97,7 +97,7 @@ void mage_grenade_explode()
 {
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_grenade_damage), MON_CVAR(mage, attack_grenade_edgedamage), MON_CVAR(mage, attack_grenade_radius), world, MON_CVAR(mage, attack_grenade_force), DEATH_MONSTER_MAGE, other);
 	remove(self);
 }
@@ -145,7 +145,7 @@ void mage_spike_explode()
 {
 	self.event_damage = func_null;
 	
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_spike_damage), MON_CVAR(mage, attack_spike_damage) * 0.5, MON_CVAR(mage, attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);

@@ -108,7 +108,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 					superspec_msg("", "", self, sprintf("Player %s^7 just picked up ^3%s\n", other.netname, _item.netname), 1);
 				else
 					superspec_msg("", "", self, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
-				if(self.autospec_flags& ASF_SSIM && self.enemy != other)
+				if((self.autospec_flags & ASF_SSIM) && self.enemy != other)
 				{
 					_spectate(other);
 
@@ -239,7 +239,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				else if(argv(i) == "off" || argv(i) == "0")
 				{
 					if(_start == 1)
-						self.superspec_flags &~= _bits;
+						self.superspec_flags &= ~_bits;
 
 					_bits = 0;
 				}
@@ -303,7 +303,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				else if(argv(i) == "off" || argv(i) == "0")
 				{
 					if(_start == 1)
-						self.autospec_flags &~= _bits;
+						self.autospec_flags &= ~_bits;
 
 					_bits = 0;
 				}

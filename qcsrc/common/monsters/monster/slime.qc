@@ -67,7 +67,7 @@ void slime_explode()
 {
 	RadiusDamage(self, self, MON_CVAR(slime, attack_explode_damage), 15, MON_CVAR(slime, attack_explode_damage) * 0.7, world, 250, DEATH_MONSTER_SLIME, world);
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	
 	setmodel(self, "");
 }

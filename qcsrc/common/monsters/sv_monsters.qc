@@ -170,7 +170,7 @@ void monster_sound(string msound, float sound_delay, float delaytoo)
 	if(msound == "")
 		return; // sound doesn't exist
 
-	sound(self, CHAN_AUTO, msound, VOL_BASE, ATTN_NORM);
+	sound(self, CHAN_AUTO, msound, VOL_BASE, ATTEN_NORM);
 
 	self.msound_delay = time + sound_delay;
 }
@@ -322,7 +322,7 @@ float monster_leap (float anm, void() touchfunc, vector vel, float anim_finished
 	self.touch = touchfunc;
 	self.origin_z += 1;
 	self.velocity = vel;
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 		
 	self.attack_finished_single = time + anim_finished;
 	
@@ -663,7 +663,7 @@ void monsters_setstatus()
 void Monster_Appear()
 {
 	self.enemy = activator;
-	self.spawnflags &~= MONSTERFLAG_APPEAR;
+	self.spawnflags &= ~MONSTERFLAG_APPEAR;
 	self.monster_spawnfunc();
 }
 
@@ -849,7 +849,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	self.dmg_time = time;
 
 	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
-		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 	
 	self.velocity += force * self.damageforcescale;
 		

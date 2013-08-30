@@ -176,7 +176,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 {
     entity proj;
 
-    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
     proj                 = spawn ();
     setorigin(proj, self.tur_shotorg);
     setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);

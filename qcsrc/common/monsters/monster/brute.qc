@@ -57,7 +57,7 @@ void brute_uzi()
 	
 	monster_makevectors(self.enemy);
 	
-	sound(self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
 	fireBallisticBullet(CENTER_OR_VIEWOFS(self), v_forward, 0.02, 18000, 5, MON_CVAR(brute, attack_uzi_damage), MON_CVAR(brute, attack_uzi_force), DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
 	
@@ -68,7 +68,7 @@ void brute_uzi()
 void brute_grenade_explode()
 {
 	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -119,7 +119,7 @@ void brute_grenade()
 	
 	monster_makevectors(self.enemy);
 	
-	sound(self, CH_WEAPON_A, "weapons/grenade_fire.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, "weapons/grenade_fire.wav", VOL_BASE, ATTEN_NORM);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;

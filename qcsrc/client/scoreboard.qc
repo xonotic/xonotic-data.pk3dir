@@ -9,7 +9,7 @@ float scoreboard_alpha_name_self;
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
 
-float SCOREBOARD_OFFSET = 50;
+const float SCOREBOARD_OFFSET = 50;
 
 // wrapper to put all possible scores titles through gettext
 string TranslateScoresLabel(string l)

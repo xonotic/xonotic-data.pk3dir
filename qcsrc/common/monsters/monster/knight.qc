@@ -65,7 +65,7 @@ void knight_inferno()
 		return; // not visible
 	
 	self.enemy.effects |= EF_MUZZLEFLASH;
-	sound(self.enemy, CHAN_AUTO, "player/lava.wav", 1, ATTN_NORM);
+	sound(self.enemy, CHAN_AUTO, "player/lava.wav", 1, ATTEN_NORM);
 	
 	if(vlen(self.enemy.origin - self.origin) <= 2000)
 		Fire_AddDamage(self.enemy, self, MON_CVAR(knight, attack_inferno_damage) * monster_skill, MON_CVAR(knight, attack_inferno_damagetime), DEATH_MONSTER_KNIGHT_INFERNO);
@@ -102,7 +102,7 @@ void knight_fireball()
 	monster_makevectors(self.enemy);
 	
 	self.effects |= EF_MUZZLEFLASH;
-	sound(self, CHAN_WEAPON, "weapons/fireball2.wav", 1, ATTN_NORM);
+	sound(self, CHAN_WEAPON, "weapons/fireball2.wav", 1, ATTEN_NORM);
 
 	missile.owner = missile.realowner = self;
 	missile.solid = SOLID_TRIGGER;

@@ -102,7 +102,7 @@ void spider_shootweb(float ptype)
 	
 	monster_makevectors(self.enemy);
 	
-	sound(self, CH_SHOTS, snd, VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, snd, VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
