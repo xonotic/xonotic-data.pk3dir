@@ -176,6 +176,17 @@ void monster_setupsounds(string mon)
 	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
 }
 
+void monster_makevectors(entity e)
+{
+	vector v;
+		
+	v = CENTER_OR_VIEWOFS(e);
+	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
+	self.v_angle_x = -self.v_angle_x;
+	
+	makevectors(self.v_angle);
+}
+
 float monster_melee(entity targ, float damg, float er, float deathtype, float dostop)
 {
 	float rdmg = damg * random();
@@ -193,7 +204,7 @@ float monster_melee(entity targ, float damg, float er, float deathtype, float do
 		self.SendFlags |= MSF_MOVE;
 	}
 
-	makevectors (self.angles);
+	monster_makevectors(targ);
 	
 	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
 	
@@ -326,17 +337,6 @@ void monster_checkattack(entity e, entity targ)
 		monster_sound(e.msound_attack_ranged, 0, FALSE);
 		return;
 	}
-}
-
-void monster_makevectors(entity e)
-{
-	vector v;
-		
-	v = CENTER_OR_VIEWOFS(e);
-	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-	self.v_angle_x = -self.v_angle_x;
-	
-	makevectors(self.v_angle);
 }
 
 void monster_use ()
@@ -968,11 +968,14 @@ float monster_initialize(float mon_id, float nodrop)
 	entity mon = get_monsterinfo(mon_id);
 	
 	// support for quake style removing monsters based on skill
-	if(monster_skill <= autocvar_g_monsters_skill_easy && (self.spawnflags & MONSTERSKILL_NOTEASY)) { return FALSE; }
-	if(monster_skill == autocvar_g_monsters_skill_normal && (self.spawnflags & MONSTERSKILL_NOTMEDIUM)) { return FALSE; }
-	if(monster_skill == autocvar_g_monsters_skill_hard && (self.spawnflags & MONSTERSKILL_NOTHARD)) { return FALSE; }
-	if(monster_skill == autocvar_g_monsters_skill_insane && (self.spawnflags & MONSTERSKILL_NOTINSANE)) { return FALSE; }
-	if(monster_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
+	switch(monster_skill)
+	{
+		case 1: if(self.spawnflags & MONSTERSKILL_NOTEASY) 		return FALSE; break;
+		case 2: if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) 	return FALSE; break;
+		case 3: if(self.spawnflags & MONSTERSKILL_NOTHARD) 		return FALSE; break;
+		case 4: if(self.spawnflags & MONSTERSKILL_NOTINSANE) 	return FALSE; break;
+		case 5: if(self.spawnflags & MONSTERSKILL_NOTNIGHTMARE) return FALSE; break;
+	}
 
 	if(self.monster_name == "")
 		self.monster_name = M_NAME(mon_id);
