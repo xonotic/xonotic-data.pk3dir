@@ -9,13 +9,13 @@
 entity get_monsterinfo(float id);
 
 // special spawn flags
-const float MONSTER_RESPAWN_DEATHPOINT = 2; // re-spawn where we died
-const float MONSTER_TYPE_FLY = 4;
-const float MONSTER_TYPE_SWIM = 8;
-const float MONSTER_SIZE_BROKEN = 16; // TODO: remove when bad models are replaced
-const float MON_FLAG_SUPERMONSTER = 32; // incredibly powerful monster
-const float MON_FLAG_RANGED = 64; // monster shoots projectiles
-const float MON_FLAG_MELEE = 128;
+const float MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
+const float MONSTER_TYPE_FLY = 32;
+const float MONSTER_TYPE_SWIM = 64;
+const float MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
+const float MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
+const float MON_FLAG_RANGED = 512; // monster shoots projectiles
+const float MON_FLAG_MELEE = 1024;
 
 // entity properties of monsterinfo:
 .float monsterid; // MON_...
