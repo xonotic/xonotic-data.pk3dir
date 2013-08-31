@@ -389,7 +389,7 @@ vector monster_pickmovetarget(entity targ)
 		makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
-		return self.enemy.origin * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
+		return self.enemy.origin;
 	}
 	
 	switch(self.monster_moveflags)
@@ -604,11 +604,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy && self.enemy.vehicle)
 		runspeed = 0;
 	
-	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
-		self.moveto_z = self.origin_z; 
-	
-	if(self.flags & FL_FLY || self.flags & FL_SWIM)
+	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
 		v_forward = normalize(self.moveto - self.origin);
+	else
+		self.moveto_z = self.origin_z; 
 
 	if(vlen(self.origin - self.moveto) > 64)
 	{
@@ -616,9 +615,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
 			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
+			
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
-		if(vlen(self.velocity) > 0)
+		if(vlen(self.velocity) > 10)
 			monsters_setframe((self.enemy) ? manim_run : manim_walk);
 		else
 			monsters_setframe(manim_idle);
@@ -659,7 +659,8 @@ void monster_dead_think()
 	self.nextthink = time + 0.3; // don't need to update so often now
 	
 	self.deadflag = DEAD_DEAD;
-
+	
+	if(self.ltime != 0)
 	if(time >= self.ltime)
 	{
 		Monster_Fade();
