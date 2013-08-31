@@ -61,7 +61,7 @@ void W_Shotgun_Attack (void)
 void shotgun_meleethink (void)
 {
 	// declarations
-	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
+	float i, f, swing, swing_factor, swing_damage, meleetime, is_player, is_monster;
 	entity target_victim;
 	vector targpos;
 
@@ -102,15 +102,16 @@ void shotgun_meleethink (void)
 		//te_customflash(targpos, 40,  2, '1 1 1');
 		
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
+		is_monster = (trace_ent.flags & FL_MONSTER);
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
+			&& ((is_player || is_monster) || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 			
-			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
+			if(is_player || is_monster) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
 				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
 			else
 				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
