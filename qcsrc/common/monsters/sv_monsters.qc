@@ -63,16 +63,25 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ == ent)
 		return FALSE; // don't attack ourselves
 		
+	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
+		
+	if(trace_ent != targ)
+	{
+		if(trace_ent != world)
+			targ = trace_ent;
+		else
+			return FALSE;
+	}
+		
+	if(targ.vehicle_flags & VHF_ISVEHICLE)
+	if not((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED)
+		return FALSE; // melee attacks are useless against vehicles
+		
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started
-		
-	WarpZone_TraceLine(ent.origin, targ.origin, MOVE_NORMAL, ent);
 	
 	if(vlen(targ.origin - ent.origin) >= ent.target_range)
 		return FALSE; // enemy is too far away
-	
-	if(trace_ent != targ)
-		return FALSE; // we can't see the enemy
 		
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
@@ -86,6 +95,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return FALSE; // enemy is a spectator
 	
+	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return FALSE; // enemy/self is dead
 		
@@ -95,6 +105,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return FALSE; // don't attack our pet
 	
+	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.flags & FL_NOTARGET)
 		return FALSE; // enemy can't be targeted
 	
@@ -380,9 +391,10 @@ vector monster_pickmovetarget(entity targ)
 	// enemy is always preferred target
 	if(self.enemy)
 	{
+		makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
-		return self.enemy.origin;
+		return self.enemy.origin * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
 	}
 	
 	switch(self.monster_moveflags)
@@ -589,8 +601,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
 		self.moveto = self.origin;
-	else if(self.enemy)
-		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
+		
+	if(self.enemy && self.enemy.vehicle)
+		runspeed = 0;
 	
 	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
 		self.moveto_z = self.origin_z; 

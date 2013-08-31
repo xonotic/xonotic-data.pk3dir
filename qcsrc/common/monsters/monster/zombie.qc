@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ZOMBIE,
 /* function   */ m_zombie,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",

@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUTE,
 /* function   */ m_brute,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -20', '36 36 50',
 /* model      */ "ogre.dpm",
 /* netname    */ "brute",

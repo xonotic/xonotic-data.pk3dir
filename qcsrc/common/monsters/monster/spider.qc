@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPIDER,
 /* function   */ m_spider,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",

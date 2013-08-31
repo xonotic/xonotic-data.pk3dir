@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUISER,
 /* function   */ m_bruiser,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE,
 /* mins,maxs  */ '-20 -20 -31', '20 20 53',
 /* model      */ "knight.mdl",
 /* netname    */ "bruiser",

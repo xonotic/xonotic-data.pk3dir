@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ANIMUS,
 /* function   */ m_animus,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE,
 /* mins,maxs  */ '-41 -41 -31', '41 41 31',
 /* model      */ "demon.mdl",
 /* netname    */ "animus",
