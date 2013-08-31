@@ -206,7 +206,7 @@ void monster_makevectors(entity e)
 	makevectors(self.v_angle);
 }
 
-float monster_melee(entity targ, float damg, float er, float deathtype, float dostop)
+float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
 {
 	float rdmg = damg * random();
 
@@ -222,6 +222,11 @@ float monster_melee(entity targ, float damg, float er, float deathtype, float do
 		self.state = MONSTER_STATE_ATTACK_MELEE;
 		self.SendFlags |= MSF_MOVE;
 	}
+	
+	monsters_setframe(anim);
+	
+	if(anim_finished != 0)
+		self.attack_finished_single = time + anim_finished;
 
 	monster_makevectors(targ);
 	

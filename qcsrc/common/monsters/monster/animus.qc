@@ -54,17 +54,18 @@ float animus_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monsters_setframe(animus_anim_attack);
-			self.attack_finished_single = time + 1;
-			monster_melee(self.enemy, MON_CVAR(animus, attack_melee_damage), self.attack_range, DEATH_MONSTER_ANIMUS, TRUE);
+			if(monster_melee(self.enemy, MON_CVAR(animus, attack_melee_damage), animus_anim_attack, self.attack_range, 1, DEATH_MONSTER_ANIMUS, TRUE))
+				return TRUE;
 			
-			return TRUE;
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
 			if(monster_leap(animus_anim_leap, animus_touch_jump, v_forward * 700 + '0 0 300', 0.8))
 				return TRUE;
+				
+			return FALSE;
 		}
 	}
 	
