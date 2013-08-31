@@ -196,7 +196,6 @@ void ClientCommand_mobedit(float request, float argc)
 			
 			switch(argv(1))
 			{
-				case "name": trace_ent.monster_name = strzone(strdecolorize(argv(2))); if(trace_ent.sprite) WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.monster_name, "", ""); return;
 				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; } return;
 				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
 			}
@@ -206,7 +205,7 @@ void ClientCommand_mobedit(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
-			sprint(self, "  Where 'argument' can be name, color or movetarget.\n");
+			sprint(self, "  Where 'argument' can be skin or movetarget.\n");
 			return;
 		}
 	}
@@ -256,12 +255,11 @@ void ClientCommand_mobspawn(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity e;
-			string tospawn, mname;
+			string tospawn;
 			float moveflag;
 			
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
-			mname = argv(3);
 			
 			if(tospawn == "list")
 			{
@@ -295,7 +293,6 @@ void ClientCommand_mobspawn(float request, float argc)
 				//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 			
 				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
-				if(mname) e.monster_name = strzone(mname);
 				
 				sprint(self, strcat("Spawned ", e.monster_name, "\n"));
 			}

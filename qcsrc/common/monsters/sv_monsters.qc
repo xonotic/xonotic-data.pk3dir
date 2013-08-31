@@ -449,7 +449,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.max_health * self.revive_progress);
 		
-		if(self.sprite) WaypointSprite_UpdateHealth(self.sprite, self.health);
+		self.SendFlags |= MSF_STATUS;
 			
 		movelib_beak_simple(stopspeed);
 			
@@ -695,7 +695,7 @@ void monsters_reset()
 	self.attack_finished_single = 0;
 	self.moveto = self.origin;
 	
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	self.SendFlags |= MSF_STATUS;
 }
 
 float monster_send(entity to, float sf)
@@ -788,8 +788,6 @@ void monster_die()
 	self.ltime = time + 5;
 	
 	monster_dropitem();
-
-	WaypointSprite_Kill(self.sprite);
 		
 	if(self.weaponentity)
 	{
@@ -845,9 +843,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		self.weaponentity.health -= damage;
 		
 	self.health -= damage;
-	
-	if(self.sprite)
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 	self.dmg_time = time;
 
@@ -867,10 +862,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 	if(self.health <= 0)
 	{
-		// Update one more time to avoid waypoint fading without emptying healthbar
-		if(self.sprite)
-			WaypointSprite_UpdateHealth(self.sprite, 0);
-		
 		if(deathtype == DEATH_KILL)
 			self.candrop = FALSE; // killed by mobkill command
 			
@@ -939,13 +930,6 @@ void monster_spawn()
 	
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
-		
-	if(autocvar_g_monsters_healthbars)
-	{
-		WaypointSprite_Spawn(strzone(strdecolorize(self.monster_name)), 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
-		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
-	}
 	
 	monster_sound(self.msound_spawn, 0, FALSE);
 

@@ -292,7 +292,7 @@ void mage_heal()
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), head.max_health);
-			WaypointSprite_UpdateHealth(head.sprite, head.health);
+			self.SendFlags |= MSF_STATUS;
 		}
 	}
 	

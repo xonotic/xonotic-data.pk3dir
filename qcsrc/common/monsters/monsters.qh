@@ -28,12 +28,12 @@ const float MON_FLAG_SUPERMONSTER = 2048; // incredibly powerful monster
 #ifndef MENUQC
 .float anim_start_time;
 
-float MSF_UPDATE       = 2;
-float MSF_STATUS       = 4;
-float MSF_SETUP        = 8;
-float MSF_ANG          = 16;
-float MSF_MOVE         = 32;
-float MSF_ANIM         = 64;
+float MSF_UPDATE		= 2;
+float MSF_STATUS		= 4;
+float MSF_SETUP			= 8;
+float MSF_ANG			= 16;
+float MSF_MOVE			= 32;
+float MSF_ANIM			= 64;
 
 float MSF_FULL_UPDATE  = 16777215;
 #endif
