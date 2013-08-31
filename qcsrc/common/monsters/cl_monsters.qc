@@ -7,12 +7,17 @@
 void monster_changeteam()
 {
 	self.glowmod = Team_ColorRGB(self.team - 1);
-	self.teamradar_color = Team_ColorRGB(self.team - 1);
 	
 	if(self.team)
+	{
+		self.teamradar_color = Team_ColorRGB(self.team - 1);
 		self.colormap = 1024 + (self.team - 1) * 17;
+	}
 	else
+	{
+		self.teamradar_color = '1 0 0';
 		self.colormap = 1024;
+	}
 }
 
 void monster_die()
@@ -46,7 +51,7 @@ void monster_draw2d()
 	if(dist < 10240 && t != self.team)
 	{
 		// TODO: Vehicle tactical hud
-		o = project_3d_to_2d(self.origin + '0 0 1' * (self.maxs_z + 10));
+		o = project_3d_to_2d(self.origin + '0 0 1' * ((self.maxs_z + self.mins_z) * 0.5));
 		if(o_z < 0 
 		|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
 		|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
