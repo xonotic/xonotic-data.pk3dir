@@ -15,6 +15,7 @@
 	DEATHTYPE(DEATH_KILL,                   DEATH_SELF_SUICIDE,                 NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_LAVA,                   DEATH_SELF_LAVA,                    DEATH_MURDER_LAVA,             NORMAL_POS) \
 	DEATHTYPE(DEATH_MIRRORDAMAGE,           DEATH_SELF_BETRAYAL,                NO_MSG,                        NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE,					DEATH_SELF_NADE,					DEATH_MURDER_NADE,	   		   NORMAL_POS) \
 	DEATHTYPE(DEATH_NOAMMO,                 DEATH_SELF_NOAMMO,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_ROT,                    DEATH_SELF_ROT,                     NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_SHOOTING_STAR,          DEATH_SELF_SHOOTING_STAR,           DEATH_MURDER_SHOOTING_STAR,    NORMAL_POS) \
@@ -103,10 +104,10 @@ string Deathtype_Name(float deathtype)
 	else { return ftos(deathtype); }
 }
 
-float DEATH_WEAPONMASK = 0xFF;
-float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
-float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
-float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_RESERVED2 = 0x800;
-float HITTYPE_RESERVED = 0x1000; // unused yet
+const float DEATH_WEAPONMASK = 0xFF;
+const float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
+const float HITTYPE_SECONDARY = 0x100;
+const float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
+const float HITTYPE_BOUNCE = 0x400;
+const float HITTYPE_RESERVED2 = 0x800;
+const float HITTYPE_RESERVED = 0x1000; // unused yet
