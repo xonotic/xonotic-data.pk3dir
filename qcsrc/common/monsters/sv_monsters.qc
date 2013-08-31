@@ -373,15 +373,10 @@ void monster_checkattack(entity e, entity targ)
 
 void monster_use ()
 {
-	if (self.enemy)
-		return;
-	if (self.health <= 0)
-		return;
-
-	if(!monster_isvalidtarget(activator, self))
-		return;
-
-	self.enemy = activator;
+	if not(self.enemy)
+	if(self.health > 0)
+	if(monster_isvalidtarget(activator, self))
+		self.enemy = activator;
 }
 
 .float last_trace;

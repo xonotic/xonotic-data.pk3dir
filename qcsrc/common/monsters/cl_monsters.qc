@@ -212,7 +212,6 @@ void monster_construct()
 	self.draw			= monster_draw;
 	self.draw2d			= monster_draw2d;
 	self.maxdistance	= autocvar_g_waypointsprite_monsters_maxdist;
-	self.teamradar_color = '1 0 0';
 }
 
 void ent_monster()
