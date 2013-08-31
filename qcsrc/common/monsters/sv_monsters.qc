@@ -211,9 +211,7 @@ float monster_melee(entity targ, float damg, float anim, float er, float anim_fi
 	float rdmg = damg * random();
 
 	if (self.health <= 0)
-		return FALSE;
-	if (targ == world)
-		return FALSE;
+		return FALSE; // attacking while dead?!
 		
 	if(dostop)
 	{
@@ -233,7 +231,7 @@ float monster_melee(entity targ, float damg, float anim, float er, float anim_fi
 	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
 	
 	if(trace_ent.takedamage)
-		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
+		Damage(trace_ent, self, self, rdmg * monster_skill, deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 		
 	return TRUE;
 }
