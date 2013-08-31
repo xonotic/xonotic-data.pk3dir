@@ -46,7 +46,7 @@ void monster_draw2d()
 	if(dist < 10240 && t != self.team)
 	{
 		// TODO: Vehicle tactical hud
-		o = project_3d_to_2d(self.origin + '0 0 32');
+		o = project_3d_to_2d(self.origin + '0 0 1' * (self.maxs_z + 10));
 		if(o_z < 0 
 		|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
 		|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
@@ -108,7 +108,7 @@ void monster_draw2d()
 		
 	rgb = fixrgbexcess(rgb);
 
-	o = project_3d_to_2d(self.origin + '0 0 64');
+	o = project_3d_to_2d(self.origin + '0 0 1' * (self.maxs_z + 15));
 	if(o_z < 0 
 	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
 	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
