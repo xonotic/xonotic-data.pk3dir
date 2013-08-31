@@ -532,7 +532,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time >= self.spawn_time)
 			monsters_setframe(manim_idle);
 		movelib_beak_simple(stopspeed);
-		self.SendFlags |= MSF_MOVE;
+		if(self.oldorigin != self.origin)
+		{
+			self.oldorigin = self.origin;
+			self.SendFlags |= MSF_MOVE;
+		}
 		return;
 	}
 	
@@ -667,7 +671,11 @@ void monster_dead_think()
 		return;
 	}
 	
-	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+	if(self.oldorigin != self.origin)
+	{
+		self.oldorigin = self.origin;
+		self.SendFlags |= MSF_MOVE;
+	}
 }
 
 void monsters_setstatus()
