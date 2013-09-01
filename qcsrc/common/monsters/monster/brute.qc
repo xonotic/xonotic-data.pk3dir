@@ -257,6 +257,9 @@ float m_brute(float req)
 		case MR_INIT:
 		{
 			precache_model ("models/monsters/ogre.dpm");
+			precache_sound ("weapons/uzi_fire.wav");
+			precache_sound ("weapons/grenade_impact.wav");
+			precache_sound ("weapons/grenade_fire.wav");
 			return TRUE;
 		}
 	}

@@ -327,6 +327,8 @@ float m_knight(float req)
 		case MR_INIT:
 		{
 			precache_model ("models/monsters/hknight.mdl");
+			precache_sound ("player/lava.wav");
+			precache_sound ("weapons/fireball2.wav");
 			return TRUE;
 		}
 	}

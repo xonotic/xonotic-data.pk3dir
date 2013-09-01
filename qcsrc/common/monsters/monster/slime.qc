@@ -158,6 +158,7 @@ float m_slime(float req)
 		case MR_INIT:
 		{
 			precache_model ("models/monsters/slime.dpm");
+			precache_sound ("weapons/rocket_impact.wav");
 			return TRUE;
 		}
 	}
