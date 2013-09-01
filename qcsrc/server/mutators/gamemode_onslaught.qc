@@ -832,8 +832,8 @@ void onslaught_generator_reset()
 	self.enemy.solid = SOLID_NOT;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
-	setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	//setmodel(self, "models/onslaught/generator.md3");
+	//setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	
 	self.SendFlags |= GSF_STATUS;
 
@@ -896,7 +896,7 @@ void spawnfunc_onslaught_generator()
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	setmodel(self, "models/onslaught/generator.md3");
+	//setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
@@ -1039,8 +1039,9 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 
 		self.owner.waslinked = self.owner.islinked;
-		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
-			setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
+		self.owner.SendFlags |= CPSF_STATUS;
+		//if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
+			//setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
 		//setsize(self, '-32 -32 0', '32 32 8');
 
 		remove(self);
@@ -1230,8 +1231,9 @@ void onslaught_controlpoint_icon_buildthink()
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
-	if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
-		setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
+	self.owner.SendFlags |= CPSF_STATUS;
+	//if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
+		//setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	if(random() < 0.9 - self.health / self.max_health)
@@ -1292,12 +1294,14 @@ void onslaught_controlpoint_reset()
 	self.enemy.colormap = self.colormap;
 	self.think = self.enemy.think = func_null;
 	self.nextthink = 0; // don't like func_null :P
-	setmodel(self, "models/onslaught/controlpoint_pad.md3");
+	//setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 
 	onslaught_updatelinks();
+	
+	self.SendFlags |= CPSF_STATUS;
 
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
@@ -1322,8 +1326,8 @@ void spawnfunc_onslaught_controlpoint()
 		remove(self);
 		return;
 	}
-	precache_model("models/onslaught/controlpoint_pad.md3");
-	precache_model("models/onslaught/controlpoint_pad2.md3");
+	//precache_model("models/onslaught/controlpoint_pad.md3");
+	//precache_model("models/onslaught/controlpoint_pad2.md3");
 	precache_model("models/onslaught/controlpoint_shield.md3");
 	precache_model("models/onslaught/controlpoint_icon.md3");
 	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
@@ -1342,8 +1346,8 @@ void spawnfunc_onslaught_controlpoint()
 
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	setmodel(self, "models/onslaught/controlpoint_pad.md3");
-	//setsize(self, '-32 -32 0', '32 32 8');
+	//setmodel(self, "models/onslaught/controlpoint_pad.md3");
+	setsize(self, CONTROLPOINT_MIN, CONTROLPOINT_MAX);
 	if(!self.noalign)
 	{
 		setorigin(self, self.origin + '0 0 20');
@@ -1374,6 +1378,8 @@ void spawnfunc_onslaught_controlpoint()
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
+	
+	controlpoint_link();
 
 	onslaught_updatelinks();
 

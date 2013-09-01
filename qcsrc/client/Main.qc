@@ -827,6 +827,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		case ENT_CLIENT_MONSTER: ent_monster(); break;
 		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT: ent_controlpoint(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;

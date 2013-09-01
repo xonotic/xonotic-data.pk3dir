@@ -60,6 +60,7 @@ tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
 
 generator.qh
+controlpoint.qh
 
 campaign.qh
 ../common/campaign_common.qh
@@ -215,6 +216,7 @@ spawnpoints.qc
 portals.qc
 
 generator.qc
+controlpoint.qc
 
 target_spawn.qc
 func_breakable.qc
