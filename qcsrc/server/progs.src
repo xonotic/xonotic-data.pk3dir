@@ -59,9 +59,6 @@ mutators/mutator_nades.qh
 tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
 
-generator.qh
-controlpoint.qh
-
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
@@ -214,9 +211,6 @@ scores.qc
 spawnpoints.qc
 
 portals.qc
-
-generator.qc
-controlpoint.qc
 
 target_spawn.qc
 func_breakable.qc

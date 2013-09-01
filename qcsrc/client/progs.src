@@ -51,8 +51,6 @@ noise.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
 ../server/movelib.qc
-../server/generator.qh
-../server/controlpoint.qh
 main.qh
 vehicles/vehicles.qh
 ../common/csqcmodel_settings.qh
@@ -126,9 +124,6 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 tturrets.qc
-
-../server/generator.qc
-../server/controlpoint.qc
 
 player_skeleton.qc
 ../common/animdecide.qc

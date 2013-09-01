@@ -639,6 +639,28 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		onslaught_updatelinks();
 	}
 
+	if(self.health <= 0)
+		setmodel(self, "models/onslaught/generator_dead.md3");
+	else if(self.health < self.max_health * 0.10)
+		setmodel(self, "models/onslaught/generator_dmg9.md3");
+	else if(self.health < self.max_health * 0.20)
+		setmodel(self, "models/onslaught/generator_dmg8.md3");
+	else if(self.health < self.max_health * 0.30)
+		setmodel(self, "models/onslaught/generator_dmg7.md3");
+	else if(self.health < self.max_health * 0.40)
+		setmodel(self, "models/onslaught/generator_dmg6.md3");
+	else if(self.health < self.max_health * 0.50)
+		setmodel(self, "models/onslaught/generator_dmg5.md3");
+	else if(self.health < self.max_health * 0.60)
+		setmodel(self, "models/onslaught/generator_dmg4.md3");
+	else if(self.health < self.max_health * 0.70)
+		setmodel(self, "models/onslaught/generator_dmg3.md3");
+	else if(self.health < self.max_health * 0.80)
+		setmodel(self, "models/onslaught/generator_dmg2.md3");
+	else if(self.health < self.max_health * 0.90)
+		setmodel(self, "models/onslaught/generator_dmg1.md3");
+	setsize(self, '-52 -52 -14', '52 52 75');
+
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
@@ -667,8 +689,6 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
-			
-	self.SendFlags |= GSF_STATUS;
 }
 
 // update links after a delay
@@ -676,9 +696,8 @@ void onslaught_generator_delayed()
 {
 	onslaught_updatelinks();
 	// now begin normal thinking
-	generator_link(onslaught_generator_think);
-	
-	self.SendFlags = GSF_SETUP;
+	self.think = onslaught_generator_think;
+	self.nextthink = time;
 }
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
@@ -832,10 +851,8 @@ void onslaught_generator_reset()
 	self.enemy.solid = SOLID_NOT;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
-	//setmodel(self, "models/onslaught/generator.md3");
-	//setsize(self, GENERATOR_MIN, GENERATOR_MAX);
-	
-	self.SendFlags |= GSF_STATUS;
+	setmodel(self, "models/onslaught/generator.md3");
+	setsize(self, '-52 -52 -14', '52 52 75');
 
 	if(!self.noalign)
 	{
@@ -867,6 +884,16 @@ void spawnfunc_onslaught_generator()
 	//entity e;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
+	precache_model("models/onslaught/generator_dmg1.md3");
+	precache_model("models/onslaught/generator_dmg2.md3");
+	precache_model("models/onslaught/generator_dmg3.md3");
+	precache_model("models/onslaught/generator_dmg4.md3");
+	precache_model("models/onslaught/generator_dmg5.md3");
+	precache_model("models/onslaught/generator_dmg6.md3");
+	precache_model("models/onslaught/generator_dmg7.md3");
+	precache_model("models/onslaught/generator_dmg8.md3");
+	precache_model("models/onslaught/generator_dmg9.md3");
+	precache_model("models/onslaught/generator_dead.md3");
 	precache_model("models/onslaught/shockwave.md3");
 	precache_model("models/onslaught/shockwavetransring.md3");
 	precache_model("models/onslaught/gen_gib1.md3");
@@ -881,7 +908,6 @@ void spawnfunc_onslaught_generator()
 	precache_sound("onslaught/ons_hit1.wav");
 	precache_sound("onslaught/ons_hit2.wav");
 	precache_sound("onslaught/electricity_explode.wav");
-	precache_sound("onslaught/generator_underattack.wav");
 	if (!self.team)
 		objerror("team must be set");
 	
@@ -896,8 +922,8 @@ void spawnfunc_onslaught_generator()
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	//setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	setmodel(self, "models/onslaught/generator.md3");
+	setsize(self, '-52 -52 -14', '52 52 75');
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
 	self.bot_attack = TRUE;
@@ -1039,9 +1065,8 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 
 		self.owner.waslinked = self.owner.islinked;
-		self.owner.SendFlags |= CPSF_STATUS;
-		//if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
-			//setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
+		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
+			setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
 		//setsize(self, '-32 -32 0', '32 32 8');
 
 		remove(self);
@@ -1231,9 +1256,8 @@ void onslaught_controlpoint_icon_buildthink()
 	self.alpha = self.health / self.max_health;
 	// colormod flash when shot
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
-	self.owner.SendFlags |= CPSF_STATUS;
-	//if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
-		//setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
+	if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
+		setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	if(random() < 0.9 - self.health / self.max_health)
@@ -1294,14 +1318,12 @@ void onslaught_controlpoint_reset()
 	self.enemy.colormap = self.colormap;
 	self.think = self.enemy.think = func_null;
 	self.nextthink = 0; // don't like func_null :P
-	//setmodel(self, "models/onslaught/controlpoint_pad.md3");
+	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 
 	onslaught_updatelinks();
-	
-	self.SendFlags |= CPSF_STATUS;
 
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
@@ -1326,8 +1348,8 @@ void spawnfunc_onslaught_controlpoint()
 		remove(self);
 		return;
 	}
-	//precache_model("models/onslaught/controlpoint_pad.md3");
-	//precache_model("models/onslaught/controlpoint_pad2.md3");
+	precache_model("models/onslaught/controlpoint_pad.md3");
+	precache_model("models/onslaught/controlpoint_pad2.md3");
 	precache_model("models/onslaught/controlpoint_shield.md3");
 	precache_model("models/onslaught/controlpoint_icon.md3");
 	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
@@ -1346,8 +1368,8 @@ void spawnfunc_onslaught_controlpoint()
 
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	//setmodel(self, "models/onslaught/controlpoint_pad.md3");
-	setsize(self, CONTROLPOINT_MIN, CONTROLPOINT_MAX);
+	setmodel(self, "models/onslaught/controlpoint_pad.md3");
+	//setsize(self, '-32 -32 0', '32 32 8');
 	if(!self.noalign)
 	{
 		setorigin(self, self.origin + '0 0 20');
@@ -1378,8 +1400,6 @@ void spawnfunc_onslaught_controlpoint()
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
-	
-	controlpoint_link();
 
 	onslaught_updatelinks();
 
