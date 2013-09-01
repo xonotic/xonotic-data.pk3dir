@@ -92,18 +92,12 @@ float zombie_attack(float attack_type)
 			else
 				chosen_anim = zombie_anim_attackstanding3;
 			
-			if(monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), chosen_anim, self.attack_range, MON_CVAR(zombie, attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE))
-				return TRUE;
-				
-			return FALSE;
+			return monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), chosen_anim, self.attack_range, MON_CVAR(zombie, attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * MON_CVAR(zombie, attack_leap_speed) + '0 0 200', MON_CVAR(zombie, attack_leap_delay)))
-				return TRUE;
-				
-			return FALSE;
+			return monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * MON_CVAR(zombie, attack_leap_speed) + '0 0 200', MON_CVAR(zombie, attack_leap_delay));
 		}
 	}
 	
