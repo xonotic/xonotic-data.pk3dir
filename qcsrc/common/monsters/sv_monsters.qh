@@ -32,6 +32,23 @@ const float MONSTER_ATTACK_RANGED 	= 2;
 
 .float m_armor_blockpercent;
 
+// monster sounds
+// copied from player sounds
+#define ALLMONSTERSOUNDS \
+		_MSOUND(death) \
+		_MSOUND(sight) \
+		_MSOUND(ranged) \
+		_MSOUND(melee) \
+		_MSOUND(pain) \
+		_MSOUND(spawn) \
+		_MSOUND(idle) 
+
+#define _MSOUND(m) .string monstersound_##m;
+ALLMONSTERSOUNDS
+#undef _MSOUND
+
+float GetMonsterSoundSampleField_notFound;
+
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
 const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1

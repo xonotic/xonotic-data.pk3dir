@@ -173,37 +173,125 @@ void MonsterTouch ()
 		self.enemy = other;
 }
 
-void monster_sound(string msound, float sound_delay, float delaytoo)
+string get_monster_model_datafilename(string m, float sk, string fil)
+{
+	if(m)
+		m = strcat(m, "_");
+	else
+		m = "models/monsters/*_";
+	if(sk >= 0)
+		m = strcat(m, ftos(sk));
+	else
+		m = strcat(m, "*");
+	return strcat(m, ".", fil);
+}
+
+void PrecacheMonsterSounds(string f)
+{
+	float fh;
+	string s;
+	fh = fopen(f, FILE_READ);
+	if(fh < 0)
+		return;
+	while((s = fgets(fh)))
+	{
+		if(tokenize_console(s) != 3)
+		{
+			dprint("Invalid sound info line: ", s, "\n");
+			continue;
+		}
+		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
+	}
+	fclose(fh);
+}
+
+void precache_monstersounds()
+{
+	string m = (get_monsterinfo(self.monsterid)).model;
+	float globhandle, n, i;
+	string f;
+	
+	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		PrecacheMonsterSounds(f);
+	}
+	search_end(globhandle);
+}
+
+void ClearMonsterSounds()
+{
+#define _MSOUND(m) if(self.monstersound_##m) { strunzone(self.monstersound_##m); self.monstersound_##m = string_null; }
+	ALLMONSTERSOUNDS
+#undef _MSOUND
+}
+
+.string GetMonsterSoundSampleField(string type)
+{
+	GetMonsterSoundSampleField_notFound = 0;
+	switch(type)
+	{
+#define _MSOUND(m) case #m: return monstersound_##m;
+		ALLMONSTERSOUNDS
+#undef _MSOUND
+	}
+	GetMonsterSoundSampleField_notFound = 1;
+	return string_null;
+}
+
+float LoadMonsterSounds(string f, float first)
+{
+	float fh;
+	string s;
+	var .string field;
+	fh = fopen(f, FILE_READ);
+	if(fh < 0)
+	{
+		dprint("Monster sound file not found: ", f, "\n");
+		return 0;
+	}
+	while((s = fgets(fh)))
+	{
+		if(tokenize_console(s) != 3)
+			continue;
+		field = GetMonsterSoundSampleField(argv(0));
+		if(GetMonsterSoundSampleField_notFound)
+			continue;
+		if(self.field)
+			strunzone(self.field);
+		self.field = strzone(strcat(argv(1), " ", argv(2)));
+	}
+	fclose(fh);
+	return 1;
+}
+
+.float skin_for_monstersound;
+void UpdateMonsterSounds()
+{
+	entity mon = get_monsterinfo(self.monsterid);
+	
+	if(self.skin == self.skin_for_monstersound)
+		return;
+	self.skin_for_monstersound = self.skin;
+	ClearMonsterSounds();
+	//LoadMonsterSounds("sound/monsters/default.sounds", 1);
+	if(!autocvar_g_debug_defaultsounds)
+	if(!LoadMonsterSounds(get_monster_model_datafilename(mon.model, self.skin, "sounds"), 0))
+		LoadMonsterSounds(get_monster_model_datafilename(mon.model, 0, "sounds"), 0);
+}
+
+void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float chan)
 {
 	if(delaytoo && time < self.msound_delay)
 		return; // too early
-		
-	if(msound == "")
-		return; // sound doesn't exist
-
-	sound(self, CHAN_AUTO, msound, VOL_BASE, ATTEN_NORM);
-
+	GlobalSound(self.samplefield, chan, VOICETYPE_PLAYERSOUND);
+	
 	self.msound_delay = time + sound_delay;
-}
-
-void monster_precachesounds(entity e)
-{
-	precache_sound(e.msound_idle);
-	precache_sound(e.msound_death);
-	precache_sound(e.msound_attack_melee);
-	precache_sound(e.msound_attack_ranged);
-	precache_sound(e.msound_sight);
-	precache_sound(e.msound_pain);
-}
-
-void monster_setupsounds(string mon)
-{
-	if(self.msound_idle == "") self.msound_idle = strzone(strcat("monsters/", mon, "_idle.wav"));
-	if(self.msound_death == "") self.msound_death = strzone(strcat("monsters/", mon, "_death.wav"));
-	if(self.msound_pain == "") self.msound_pain = strzone(strcat("monsters/", mon, "_pain.wav"));
-	if(self.msound_attack_melee == "") self.msound_attack_melee = strzone(strcat("monsters/", mon, "_melee.wav"));
-	if(self.msound_attack_ranged == "") self.msound_attack_ranged = strzone(strcat("monsters/", mon, "_attack.wav"));
-	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
 }
 
 void monster_makevectors(entity e)
@@ -359,14 +447,16 @@ void monster_checkattack(entity e, entity targ)
 	if(vlen(targ.origin - e.origin) <= e.attack_range)
 	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE))
 	{
-		monster_sound(e.msound_attack_melee, 0, FALSE);
+		//monster_sound(e.msound_attack_melee, 0, FALSE);
+		MonsterSound(monstersound_melee, 0, FALSE, CH_VOICE);
 		return;
 	}
 	
 	if(vlen(targ.origin - e.origin) > e.attack_range)
 	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED))
 	{
-		monster_sound(e.msound_attack_ranged, 0, FALSE);
+		//monster_sound(e.msound_attack_ranged, 0, FALSE);
+		MonsterSound(monstersound_ranged, 0, FALSE, CH_VOICE);
 		return;
 	}
 }
@@ -559,7 +649,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		{
 			self.enemy = FindTarget(self);
 			if(self.enemy)
-				monster_sound(self.msound_sight, 0, FALSE);
+				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
+				//monster_sound(self.msound_sight, 0, FALSE);
 		}
 			
 		self.last_enemycheck = time + 2;
@@ -573,7 +664,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.moveto = monster_pickmovetarget(targ);
 
 	if not(self.enemy)
-		monster_sound(self.msound_idle, 5, TRUE);
+		MonsterSound(monstersound_idle, 5, TRUE, CH_VOICE);
+		//monster_sound(self.msound_idle, 5, TRUE);
 	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
@@ -808,8 +900,9 @@ void monster_die()
 	self.ltime = time + 5;
 	
 	monster_dropitem();
-		
-	monster_sound(self.msound_death, 0, FALSE);
+	
+	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
+	//monster_sound(self.msound_death, 0, FALSE);
 		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
@@ -939,14 +1032,16 @@ void monster_spawn()
 	
 	self.pos1 = self.origin;
 	
-	monster_setupsounds(self.netname);
-
-	monster_precachesounds(self);
+	//monster_setupsounds(self.netname);
+	precache_monstersounds();
+	UpdateMonsterSounds();
+	//monster_precachesounds(self);
 	
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
 	
-	monster_sound(self.msound_spawn, 0, FALSE);
+	//monster_sound(self.msound_spawn, 0, FALSE);
+	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 	
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
