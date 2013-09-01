@@ -807,12 +807,6 @@ void monster_die()
 	
 	monster_dropitem();
 		
-	if(self.weaponentity)
-	{
-		remove(self.weaponentity);
-		self.weaponentity = world;
-	}
-		
 	monster_sound(self.msound_death, 0, FALSE);
 		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
@@ -854,13 +848,14 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(time < self.spawnshieldtime)
 		return;
 		
-	if(deathtype != DEATH_KILL)
-		damage *= self.armorvalue;
+	vector v;
+	float take, save;
 		
-	if(self.weaponentity && self.weaponentity.classname == "shield")
-		self.weaponentity.health -= damage;
+	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, damage);
+	take = v_x;
+	save = v_y;
 		
-	self.health -= damage;
+	self.health -= take;
 		
 	self.dmg_time = time;
 
@@ -871,10 +866,10 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 	if(deathtype != DEATH_DROWN)
 	{
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
-		if (damage > 50)
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, take, 200) / 16, self, attacker);
+		if (take > 50)
 			Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
-		if (damage > 100)
+		if (take > 100)
 			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 	}
 		
@@ -950,21 +945,20 @@ void monster_spawn()
 		self.monster_attack = TRUE; // we can have monster enemies in team games
 	
 	monster_sound(self.msound_spawn, 0, FALSE);
-
-	MUTATOR_CALLHOOK(MonsterSpawn);
 	
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
 	
 	self.SendFlags |= MSF_SETUP;
+	
+	MUTATOR_CALLHOOK(MonsterSpawn);
 }
 
 float monster_initialize(float mon_id, float nodrop)
 {
 	if not(autocvar_g_monsters)
 		return FALSE;
-		
-	vector min_s, max_s;
+	
 	entity mon = get_monsterinfo(mon_id);
 	
 	// support for quake style removing monsters based on skill
@@ -979,20 +973,13 @@ float monster_initialize(float mon_id, float nodrop)
 	
 	if(self.team && !teamplay)
 		self.team = 0;
-
-	self.flags = FL_MONSTER;
-		
+	
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED) // naturally spawned monster
 	if not(self.monster_respawned)
 		monsters_total += 1;
-		
-	min_s = mon.mins;
-	max_s = mon.maxs;
 	
-	self.netname = mon.netname;
-	self.monster_name = M_NAME(mon_id);
-
-	setsize(self, min_s, max_s);
+	setsize(self, mon.mins, mon.maxs);
+	self.flags				= FL_MONSTER;
 	self.takedamage		 	= DAMAGE_AIM;
 	self.bot_attack		 	= TRUE;
 	self.iscreature		 	= TRUE;
@@ -1006,12 +993,13 @@ float monster_initialize(float mon_id, float nodrop)
 	self.solid				= SOLID_BBOX;
 	self.movetype			= MOVETYPE_WALK;
 	self.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
-	monsters_spawned	   += 1;
 	self.enemy				= world;
 	self.velocity			= '0 0 0';
 	self.moveto				= self.origin;
 	self.pos2				= self.angles;
 	self.reset				= monsters_reset;
+	self.netname			= mon.netname;
+	self.monster_name		= M_NAME(mon_id);
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
@@ -1039,8 +1027,8 @@ float monster_initialize(float mon_id, float nodrop)
 		
 	self.ticrate = bound(sys_frametime, self.ticrate, 60);
 	
-	if not(self.armorvalue)
-		self.armorvalue = 1; // multiplier
+	if not(self.m_armor_blockpercent)
+		self.m_armor_blockpercent = 0.5;
 	
 	if not(self.target_range)
 		self.target_range = autocvar_g_monsters_target_range;

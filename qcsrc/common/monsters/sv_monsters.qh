@@ -28,9 +28,9 @@ const float MONSTER_ATTACK_RANGED 	= 2;
 
 .vector oldangles;
 
-.float monster_respawned; // used to make sure we're not recounting respawned monster stats
+.float m_armor_blockpercent;
 
-float monsters_spawned;
+.float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
 const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
 const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
