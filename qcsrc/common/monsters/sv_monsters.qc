@@ -1015,6 +1015,7 @@ float monster_initialize(float mon_id, float nodrop)
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO;
+	self.scale				= 1;
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
 	self.gravity			= 1;
@@ -1028,9 +1029,6 @@ float monster_initialize(float mon_id, float nodrop)
 		self.flags |= FL_FLY;
 		self.movetype = MOVETYPE_FLY;
 	}
-	
-	if not(self.scale)
-		self.scale = 1;
 		
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 		self.scale = 1.3;
