@@ -448,7 +448,9 @@ float m_mage(float req)
 		}
 		case MR_INIT:
 		{
-			// nothing
+			precache_model ("models/items/g_h50.md3");
+			precache_model ("models/ctf/shield.md3");
+			precache_sound ("weapons/grenade_impact.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -475,9 +477,6 @@ float m_mage(float req)
 		case MR_INIT:
 		{
 			precache_model ("models/monsters/mage.dpm");
-			precache_model ("models/items/g_h50.md3");
-			precache_model ("models/ctf/shield.md3");
-			precache_sound ("weapons/grenade_impact.wav");
 			return TRUE;
 		}
 	}
