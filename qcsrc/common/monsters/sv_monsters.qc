@@ -420,11 +420,12 @@ vector monster_pickmovetarget(entity targ)
 			self.monster_movestate = MONSTER_MOVE_WANDER;
 			self.last_trace = time + 2;
 				
-			self.angles_y = random() * 500;
+			self.angles_y = rint(random() * 500);
 			makevectors(self.angles);
 			pos = self.origin + v_forward * 600;
 			
 			if(self.flags & FL_FLY || self.flags & FL_SWIM)
+			if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
 			{
 				pos_z = random() * 200;
 				if(random() >= 0.5)
