@@ -17,6 +17,8 @@ void monsters_setstatus(); // monsters.qc
 const float MONSTER_ATTACK_MELEE 	= 1;
 const float MONSTER_ATTACK_RANGED 	= 2;
 
+.float fish_wasdrowning; // used to reset a drowning fish's angles if it reaches water again
+
 .float candrop;
 
 .float attack_range;

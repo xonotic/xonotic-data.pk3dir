@@ -484,6 +484,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		{
 			if(time >= self.last_trace)
 			{
+				self.fish_wasdrowning = TRUE;
 				self.last_trace = time + 0.4;
 				
 				Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
@@ -509,9 +510,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			
 			return;
 		}
-		else
+		else if(self.fish_wasdrowning)
 		{
-			self.angles = '0 0 0';
+			self.fish_wasdrowning = FALSE;
+			self.angles_x = 0;
 			self.movetype = MOVETYPE_WALK;
 		}
 	}
