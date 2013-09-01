@@ -969,15 +969,12 @@ float monster_initialize(float mon_id, float nodrop)
 	// support for quake style removing monsters based on skill
 	switch(monster_skill)
 	{
+		case 0:
 		case 1: if(self.spawnflags & MONSTERSKILL_NOTEASY) 		return FALSE; break;
 		case 2: if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) 	return FALSE; break;
+		default:
 		case 3: if(self.spawnflags & MONSTERSKILL_NOTHARD) 		return FALSE; break;
-		case 4: if(self.spawnflags & MONSTERSKILL_NOTINSANE) 	return FALSE; break;
-		case 5: if(self.spawnflags & MONSTERSKILL_NOTNIGHTMARE) return FALSE; break;
 	}
-
-	if(self.monster_name == "")
-		self.monster_name = M_NAME(mon_id);
 	
 	if(self.team && !teamplay)
 		self.team = 0;
@@ -992,6 +989,7 @@ float monster_initialize(float mon_id, float nodrop)
 	max_s = mon.maxs;
 	
 	self.netname = mon.netname;
+	self.monster_name = M_NAME(mon_id);
 
 	setsize(self, min_s, max_s);
 	self.takedamage		 	= DAMAGE_AIM;

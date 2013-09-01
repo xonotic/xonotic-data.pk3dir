@@ -32,11 +32,9 @@ const float MONSTER_ATTACK_RANGED 	= 2;
 
 float monsters_spawned;
 
-const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 2
-const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 3
-const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill 4
-const float MONSTERSKILL_NOTINSANE = 2048; // monster will not spawn on skill 5
-const float MONSTERSKILL_NOTNIGHTMARE = 4096; // monster will not spawn on skill >= 6
+const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
+const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
+const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
 
 // new flags
 const float MONSTERFLAG_MINIBOSS = 1;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
@@ -44,7 +42,7 @@ const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
 const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
 const float MONSTERFLAG_INFRONT = 16; // only check for enemies infront of us
-const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
+const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
 
 .float msound_delay; // restricts some monster sounds
 .string msound_idle;
