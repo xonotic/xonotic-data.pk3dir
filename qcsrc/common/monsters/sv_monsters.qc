@@ -116,7 +116,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if not(IsDifferentTeam(targ, ent))
 		return FALSE; // enemy is on our team
 		
-	if(autocvar_g_monsters_target_infront)
+	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
 	if(ent.enemy != targ)
 	{
 		float dot;

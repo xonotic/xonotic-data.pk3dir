@@ -43,6 +43,7 @@ const float MONSTERFLAG_MINIBOSS = 1;  // monster spawns as mini-boss (also has 
 const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
 const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
+const float MONSTERFLAG_INFRONT = 16; // only check for enemies infront of us
 const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
 
 .float msound_delay; // restricts some monster sounds
