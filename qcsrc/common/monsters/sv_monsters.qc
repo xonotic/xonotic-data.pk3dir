@@ -66,9 +66,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
 
 	if(trace_ent != targ)
-	if(trace_ent)
-		targ = trace_ent;
-	else
 		return FALSE;
 
 	if(targ.vehicle_flags & VHF_ISVEHICLE)
@@ -138,6 +135,7 @@ entity FindTarget (entity ent)
 
 	while(head) // find the closest acceptable target to pass to
 	{
+		if(head.monster_attack)
 		if(monster_isvalidtarget(head, ent))
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
@@ -917,6 +915,7 @@ void monster_die()
 	self.movetype		= MOVETYPE_TOSS;
 	self.moveto			= self.origin;
 	self.touch			= MonsterTouch; // reset incase monster was pouncing
+	self.reset			= func_null;
 
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';

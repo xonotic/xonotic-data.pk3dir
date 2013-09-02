@@ -218,9 +218,6 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 		frag_force = '0 0 0';
 	}
 	
-	if(frag_attacker.flags & FL_MONSTER && frag_target.flags & FL_MONSTER && frag_attacker != frag_target)
-		frag_damage = 0;
-	
 	return FALSE;
 }
 
