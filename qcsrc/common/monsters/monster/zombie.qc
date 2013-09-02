@@ -91,7 +91,7 @@ float zombie_block()
 {
 	monsters_setframe(zombie_anim_blockstart);
 	self.armorvalue = 100;
-	self.m_armor_blockpercent = 0.7;
+	self.m_armor_blockpercent = 0.9;
 	self.state = MONSTER_STATE_ATTACK_MELEE; // freeze monster
 	self.attack_finished_single = time + 2.1;
 	
