@@ -169,11 +169,14 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
-	numkilled += 1;
-	maxcurrent -= 1;
+	if not(self.monster_respawned)
+	{
+		numkilled += 1;
+		maxcurrent -= 1;
 	
-	if(IS_PLAYER(frag_attacker))
-		PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+		if(IS_PLAYER(frag_attacker))
+			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+	}
 	
 	return FALSE;
 }
@@ -188,8 +191,11 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 		return FALSE;
 	}
 	
-	numspawned += 1;
-	maxcurrent += 1;
+	if not(self.monster_respawned)
+	{
+		numspawned += 1;
+		maxcurrent += 1;
+	}
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
