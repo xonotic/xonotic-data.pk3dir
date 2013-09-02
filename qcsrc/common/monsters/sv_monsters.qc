@@ -66,12 +66,10 @@ float monster_isvalidtarget (entity targ, entity ent)
 	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
 		
 	if(trace_ent != targ)
-	{
-		if(trace_ent != world)
-			targ = trace_ent;
-		else
-			return FALSE;
-	}
+	if(trace_ent)
+		targ = trace_ent;
+	else
+		return FALSE;
 		
 	if(targ.vehicle_flags & VHF_ISVEHICLE)
 	if not((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED)
@@ -653,7 +651,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 				//monster_sound(self.msound_sight, 0, FALSE);
 		}
 			
-		self.last_enemycheck = time + 2;
+		self.last_enemycheck = time + 0.5;
 	}
 	
 	if(self.state == MONSTER_STATE_ATTACK_MELEE && time >= self.attack_finished_single)
