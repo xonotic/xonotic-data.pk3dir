@@ -77,6 +77,29 @@ void zombie_attack_leap_touch()
 		self.touch = MonsterTouch;
 }
 
+void zombie_blockend()
+{
+	if(self.health <= 0)
+		return;
+
+	monsters_setframe(zombie_anim_blockend);
+	self.armorvalue = 0;
+	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+}
+
+float zombie_block()
+{
+	monsters_setframe(zombie_anim_blockstart);
+	self.armorvalue = 100;
+	self.m_armor_blockpercent = 0.7;
+	self.state = MONSTER_STATE_ATTACK_MELEE; // freeze monster
+	self.attack_finished_single = time + 2.1;
+	
+	defer(2, zombie_blockend);
+	
+	return TRUE;
+}
+
 float zombie_attack(float attack_type)
 {
 	switch(attack_type)
@@ -91,6 +114,9 @@ float zombie_attack(float attack_type)
 				chosen_anim = zombie_anim_attackstanding2;
 			else
 				chosen_anim = zombie_anim_attackstanding3;
+			
+			if(random() < 0.3 && self.health < 75)
+				return zombie_block();
 			
 			return monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), chosen_anim, self.attack_range, MON_CVAR(zombie, attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
 		}
@@ -129,6 +155,8 @@ float m_zombie(float req)
 		}
 		case MR_DEATH:
 		{
+			self.armorvalue = 0;
+			self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
 			monsters_setframe((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
 			return TRUE;
 		}

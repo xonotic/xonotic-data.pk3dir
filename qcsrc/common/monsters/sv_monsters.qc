@@ -916,6 +916,8 @@ void monster_die()
 	self.moveto			= self.origin;
 	self.touch			= MonsterTouch; // reset incase monster was pouncing
 	self.reset			= func_null;
+	self.state			= 0;
+	self.attack_finished_single = 0;
 
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';
