@@ -650,7 +650,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
 				//monster_sound(self.msound_sight, 0, FALSE);
 		}
-			
+		
 		self.last_enemycheck = time + 0.5;
 	}
 	
@@ -749,7 +749,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 void monster_dead_think()
 {
 	self.think = monster_dead_think;
-	self.nextthink = time + 0.3; // don't need to update so often now
+	self.nextthink = time + self.ticrate;
 	
 	self.deadflag = DEAD_DEAD;
 	
