@@ -809,70 +809,70 @@ void monsters_reset()
 
 float monster_send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MONSTER);    
+	WriteByte(MSG_ENTITY, ENT_CLIENT_MONSTER);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & MSF_SETUP)
 	{
-	    WriteByte(MSG_ENTITY, self.monsterid);
-	    
-	    WriteCoord(MSG_ENTITY, self.origin_x);
-	    WriteCoord(MSG_ENTITY, self.origin_y);
-	    WriteCoord(MSG_ENTITY, self.origin_z);
-	    
-	    WriteAngle(MSG_ENTITY, self.angles_x);
-	    WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteByte(MSG_ENTITY, self.monsterid);
+		
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+		
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
 		
 		WriteByte(MSG_ENTITY, self.skin);
 		WriteByte(MSG_ENTITY, self.team);
-    }
-    
-    if(sf & MSF_ANG)
-    {
-        WriteShort(MSG_ENTITY, rint(self.angles_x));
-        WriteShort(MSG_ENTITY, rint(self.angles_y));
-    }
-    
-    if(sf & MSF_MOVE)
-    {
-        WriteShort(MSG_ENTITY, rint(self.origin_x));
-        WriteShort(MSG_ENTITY, rint(self.origin_y));
-        WriteShort(MSG_ENTITY, rint(self.origin_z));
-
-        WriteShort(MSG_ENTITY, rint(self.velocity_x));
-        WriteShort(MSG_ENTITY, rint(self.velocity_y));
-        WriteShort(MSG_ENTITY, rint(self.velocity_z));        
-        
-        WriteShort(MSG_ENTITY, rint(self.angles_y));        
-    }
-    
-    if(sf & MSF_ANIM)
-    {
-        WriteCoord(MSG_ENTITY, self.anim_start_time);
-        WriteByte(MSG_ENTITY, self.frame);
-    }
-    
-    if(sf & MSF_STATUS)
-    {
+	}
+	
+	if(sf & MSF_ANG)
+	{
+		WriteShort(MSG_ENTITY, rint(self.angles_x));
+		WriteShort(MSG_ENTITY, rint(self.angles_y));
+	}
+	
+	if(sf & MSF_MOVE)
+	{
+		WriteShort(MSG_ENTITY, rint(self.origin_x));
+		WriteShort(MSG_ENTITY, rint(self.origin_y));
+		WriteShort(MSG_ENTITY, rint(self.origin_z));
+		
+		WriteShort(MSG_ENTITY, rint(self.velocity_x));
+		WriteShort(MSG_ENTITY, rint(self.velocity_y));
+		WriteShort(MSG_ENTITY, rint(self.velocity_z));
+		
+		WriteShort(MSG_ENTITY, rint(self.angles_y));
+	}
+	
+	if(sf & MSF_ANIM)
+	{
+		WriteCoord(MSG_ENTITY, self.anim_start_time);
+		WriteByte(MSG_ENTITY, self.frame);
+	}
+	
+	if(sf & MSF_STATUS)
+	{
 		WriteByte(MSG_ENTITY, self.skin);
 		
-        WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, self.team);
 		
 		WriteByte(MSG_ENTITY, self.deadflag);
-        
-        if(self.health <= 0)
-            WriteByte(MSG_ENTITY, 0);
-        else
-            WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
-    }
-    
+		
+		if(self.health <= 0)
+			WriteByte(MSG_ENTITY, 0);
+		else
+			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
+	}
+	
 	return TRUE;
 }
 
 void monster_link(void() spawnproc)
 {
-    Net_LinkEntity(self, TRUE, 0, monster_send);
-    self.think      = spawnproc;
-    self.nextthink  = time;
+	Net_LinkEntity(self, TRUE, 0, monster_send);
+	self.think	  = spawnproc;
+	self.nextthink  = time;
 }
 
 void monsters_corpse_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
