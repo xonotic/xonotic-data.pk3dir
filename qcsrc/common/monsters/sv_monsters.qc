@@ -443,7 +443,6 @@ void monster_checkattack(entity e, entity targ)
 	if(vlen(targ.origin - e.origin) <= e.attack_range)
 	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE))
 	{
-		//monster_sound(e.msound_attack_melee, 0, FALSE);
 		MonsterSound(monstersound_melee, 0, FALSE, CH_VOICE);
 		return;
 	}
@@ -451,7 +450,6 @@ void monster_checkattack(entity e, entity targ)
 	if(vlen(targ.origin - e.origin) > e.attack_range)
 	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED))
 	{
-		//monster_sound(e.msound_attack_ranged, 0, FALSE);
 		MonsterSound(monstersound_ranged, 0, FALSE, CH_VOICE);
 		return;
 	}
@@ -645,7 +643,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			self.enemy = FindTarget(self);
 			if(self.enemy)
 				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
-				//monster_sound(self.msound_sight, 0, FALSE);
 		}
 
 		self.last_enemycheck = time + 0.5;
@@ -660,7 +657,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if not(self.enemy)
 		MonsterSound(monstersound_idle, 5, TRUE, CH_VOICE);
-		//monster_sound(self.msound_idle, 5, TRUE);
 
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
@@ -897,7 +893,6 @@ void monster_die()
 	monster_dropitem();
 
 	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
-	//monster_sound(self.msound_death, 0, FALSE);
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
@@ -1037,8 +1032,7 @@ void monster_spawn()
 
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
-
-	//monster_sound(self.msound_spawn, 0, FALSE);
+		
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 
 	self.think = monster_think;

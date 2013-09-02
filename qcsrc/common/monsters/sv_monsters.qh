@@ -34,6 +34,7 @@ const float MONSTER_ATTACK_RANGED 	= 2;
 
 // monster sounds
 // copied from player sounds
+.float msound_delay; // temporary antilag system
 #define ALLMONSTERSOUNDS \
 		_MSOUND(death) \
 		_MSOUND(sight) \
@@ -62,15 +63,6 @@ const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
 const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
 const float MONSTERFLAG_MINIBOSS = 64;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
 const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
-
-.float msound_delay; // restricts some monster sounds
-.string msound_idle;
-.string msound_death;
-.string msound_attack_melee;
-.string msound_attack_ranged;
-.string msound_spawn;
-.string msound_sight;
-.string msound_pain;
 
 .void() monster_spawnfunc;
 
