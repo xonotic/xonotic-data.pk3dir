@@ -4,6 +4,7 @@
 
 
 .vector glowmod;
+.float miniboss;
 void monster_changeteam()
 {
 	self.glowmod = Team_ColorRGB(self.team - 1);
@@ -190,15 +191,35 @@ void monster_draw()
 void monster_construct()
 {
 	entity mon = get_monsterinfo(self.monsterid);
+	vector min_s, max_s;
 
-	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
-		self.scale = 1.3;
+	if(self.miniboss)
+	{
+		if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+			self.scale = 1.95;
+		else
+			self.scale = 1.5;
+			
+		min_s = mon.mins * 1.5;
+		max_s = mon.maxs * 1.5;
+		
+	}
+	else
+	{
+		if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+			self.scale = 1.3;
+		else
+			self.scale = 1;
+			
+		min_s = mon.mins;
+		max_s = mon.maxs;
+	}
 
 	self.netname = M_NAME(self.monsterid);
 
 	setorigin(self, self.origin);
 	setmodel(self, mon.model);
-	setsize(self, mon.mins, mon.maxs);
+	setsize(self, min_s, max_s);
 
 	self.move_movetype	= MOVETYPE_BOUNCE;
 	self.health			= 255;
@@ -233,6 +254,8 @@ void ent_monster()
 
 		self.skin = ReadByte();
 		self.team = ReadByte();
+		
+		self.miniboss = ReadByte();
 
 		monster_construct();
 		monster_changeteam();

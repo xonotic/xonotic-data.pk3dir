@@ -344,6 +344,16 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		if not(self.weapon)
 			self.weapon = WEP_NEX;
+		
+		entity mon = get_monsterinfo(self.monsterid);
+		
+		if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+			self.scale = 1.95;
+		else
+			self.scale = 1.5;
+			
+		setsize(self, mon.mins * 1.5, mon.maxs * 1.5);
+		setorigin(self, self.origin + '0 0 25'); // offset so we don't fall through the floor
 	}
 }
 
@@ -822,6 +832,7 @@ float monster_send(entity to, float sf)
 
 		WriteByte(MSG_ENTITY, self.skin);
 		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, (self.spawnflags & MONSTERFLAG_MINIBOSS));
 	}
 
 	if(sf & MSF_ANG)
@@ -1070,7 +1081,7 @@ float monster_initialize(float mon_id, float nodrop)
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED) // naturally spawned monster
 	if not(self.monster_respawned)
 		monsters_total += 1;
-
+	
 	setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.takedamage			= DAMAGE_AIM;
@@ -1093,11 +1104,11 @@ float monster_initialize(float mon_id, float nodrop)
 	self.reset				= monsters_reset;
 	self.netname			= mon.netname;
 	self.monster_name		= M_NAME(mon_id);
+	self.scale				= 1;
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO;
-	self.scale				= 1;
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
 	self.gravity			= 1;
@@ -1111,7 +1122,7 @@ float monster_initialize(float mon_id, float nodrop)
 		self.flags |= FL_FLY;
 		self.movetype = MOVETYPE_FLY;
 	}
-
+	
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 		self.scale = 1.3;
 
