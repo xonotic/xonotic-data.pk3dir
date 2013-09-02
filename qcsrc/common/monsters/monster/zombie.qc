@@ -115,7 +115,7 @@ float zombie_attack(float attack_type)
 			else
 				chosen_anim = zombie_anim_attackstanding3;
 			
-			if(random() < 0.3 && self.health < 75)
+			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
 				return zombie_block();
 			
 			return monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), chosen_anim, self.attack_range, MON_CVAR(zombie, attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
