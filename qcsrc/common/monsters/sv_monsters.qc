@@ -31,8 +31,11 @@ void monster_dropitem()
 	MUTATOR_CALLHOOK(MonsterDropItem);
 	e = other;
 
-	e.think = monster_item_spawn;
-	e.nextthink = time + 0.3;
+	if(e)
+	{
+		e.think = monster_item_spawn;
+		e.nextthink = time + 0.3;
+	}
 }
 
 void monsters_setframe(float _frame)
