@@ -1,47 +1,56 @@
-float previous_announcement_time;
-float previous_game_starttime;
-string previous_announcement;
-
-// remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
-
 void Announcer_Play(string announcement)
 {
-	if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+	/*if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
 	{
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTEN_NONE);
 
 		if(previous_announcement) { strunzone(previous_announcement); }
 		
 		previous_announcement = strzone(announcement);
 		previous_announcement_time = time;
-	}
+	}*/
 }
 
+float announcer_1min;
+float announcer_5min;
 void Announcer_Countdown() 
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(roundstarttime == -1)
+	{
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
+		remove(self);
+		return;
+	}
+	if(roundstarttime >= starttime)
+		starttime = roundstarttime;
+	if(starttime <= time && roundstarttime != starttime) // game start time has passed
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
+
 	float countdown = (starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
-	
+
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
-		if (!spectatee_status)
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
-
-		Announcer_Play("begin");
-		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
+		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN); 
 		remove(self);
 		return;
 	}
 	else // countdown is still going
 	{
-		if (!spectatee_status)
+		if(roundstarttime == starttime)
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+		else
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 
-		if(countdown_rounded <= 3 && countdown_rounded >= 1) 
-			Announcer_Play(ftos(countdown_rounded));
+		switch(countdown_rounded)
+		{
+			case 1: Local_Notification(MSG_ANNCE, ANNCE_NUM_1); break;
+			case 2: Local_Notification(MSG_ANNCE, ANNCE_NUM_2); break;
+			case 3: Local_Notification(MSG_ANNCE, ANNCE_NUM_3); break;
+		}
 
 		self.nextthink = (starttime - (countdown - 1));
 	}
@@ -54,20 +63,28 @@ void Announcer_Countdown()
  * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
  * and STAT_FRAGLIMIT to be auto-sent)
  */
+ float previous_game_starttime;
 void Announcer_Gamestart() 
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
-	
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(roundstarttime > startTime)
+		startTime = roundstarttime;
+
 	if(previous_game_starttime != startTime) 
 	{
 		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			Announcer_Play("prepareforbattle");
-		
+			Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+
 		if(time < startTime) 
 		{
-			entity e;
-			e = spawn();
-			e.think = Announcer_Countdown;
+			entity e = find(world, classname, "announcer_countdown");
+			if not(e)
+			{
+				e = spawn();
+				e.classname = "announcer_countdown";
+				e.think = Announcer_Countdown;
+			}
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
@@ -106,7 +123,7 @@ void Announcer_Time()
 				if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
 				{
 					announcer_5min = TRUE;
-					Announcer_Play("5minutesremain");
+					Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
 				}
 			}
 		}
@@ -128,7 +145,7 @@ void Announcer_Time()
 			if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
 			{
 				announcer_1min = TRUE;
-				Announcer_Play("1minuteremains");
+				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_1);
 			}
 		}
 	}
@@ -138,51 +155,4 @@ void Announcer()
 {
 	Announcer_Gamestart();
 	Announcer_Time();
-}
-
-void Announcer_Precache () 
-{
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/electrobitch.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/airshot.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/03kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/05kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/15kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/20kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/25kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/30kills.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/botlike.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/yoda.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/amazing.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/awesome.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/impressive.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/begin.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/timeoutcalled.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1fragleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2fragsleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3fragsleft.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/terminated.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/2.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/3.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/4.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/6.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/7.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/8.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/9.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/10.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/lastsecond.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/narrowly.wav"));
-
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/voteaccept.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votecall.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/votefail.wav"));
 }

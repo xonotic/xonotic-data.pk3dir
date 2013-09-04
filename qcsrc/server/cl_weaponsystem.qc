@@ -27,11 +27,11 @@ void W_SwitchWeapon_Force(entity e, float w)
 .float antilag_debug;
 
 // VorteX: static frame globals
-float WFRAME_DONTCHANGE = -1;
-float WFRAME_FIRE1 = 0;
-float WFRAME_FIRE2 = 1;
-float WFRAME_IDLE = 2;
-float WFRAME_RELOAD = 3;
+const float WFRAME_DONTCHANGE = -1;
+const float WFRAME_FIRE1 = 0;
+const float WFRAME_FIRE2 = 1;
+const float WFRAME_IDLE = 2;
+const float WFRAME_RELOAD = 3;
 .float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
@@ -93,12 +93,12 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(player) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(trace_ent.flags & FL_CLIENT)
+		if(IS_CLIENT(trace_ent))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
@@ -117,12 +117,11 @@ vector w_shotend;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-		if((!g_minstagib)
-			&& (player.items & IT_STRENGTH)
-			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+	if((player.items & IT_STRENGTH)
+		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;
@@ -198,7 +197,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (!trace_ent.takedamage)
 			{
 				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-				if (trace_ent.takedamage && trace_ent.classname == "player")
+				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
 					entity e;
 					e = trace_ent;
@@ -214,7 +213,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 			if (ent.cursor_trace_ent)                 // client was aiming at someone
 			if (ent.cursor_trace_ent != ent)         // just to make sure
 			if (ent.cursor_trace_ent.takedamage)      // and that person is killable
-			if (ent.cursor_trace_ent.classname == "player") // and actually a player
+			if (IS_PLAYER(ent.cursor_trace_ent)) // and actually a player
 			{
 				// verify that the shot would miss without antilag
 				// (avoids an issue where guns would always shoot at their origin)
@@ -234,12 +233,12 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
 
-	if (!g_norecoil)
+	if (!autocvar_g_norecoil)
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
 	{
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		sound (ent, chan, snd, VOL_BASE, ATTEN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -256,7 +255,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 float CL_Weaponentity_CustomizeEntityForClient()
 {
 	self.viewmodelforclient = self.owner;
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
 			self.viewmodelforclient = other;
 	return TRUE;
@@ -518,10 +517,10 @@ void CL_Weaponentity_Think()
 
 	tb = (self.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
 	self.effects = self.owner.effects & EFMASK_CHEAP;
-	self.effects &~= EF_LOWPRECISION;
-	self.effects &~= EF_FULLBRIGHT; // can mask team color, so get rid of it
-	self.effects &~= EF_TELEPORT_BIT;
-	self.effects &~= EF_RESTARTANIM_BIT;
+	self.effects &= ~EF_LOWPRECISION;
+	self.effects &= ~EF_FULLBRIGHT; // can mask team color, so get rid of it
+	self.effects &= ~EF_TELEPORT_BIT;
+	self.effects &= ~EF_RESTARTANIM_BIT;
 	self.effects |= tb;
 
 	if(self.owner.alpha == default_player_alpha)
@@ -542,15 +541,20 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	float f;
+	
+	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
-		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity newwep = get_weaponinfo(self.owner.switchweapon);
+		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
-		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
+		entity oldwep = get_weaponinfo(self.owner.weapon);
+		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
+		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)
@@ -663,6 +667,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		complain = 0;
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
+		
+	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+		complain = 0;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST)
 	{
@@ -670,7 +677,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	if (WEPSET_CONTAINS_EW(cl, wpn))
+	if (cl.weapons & WepSet_FromWeapon(wpn))
 	{
 		if (andammo)
 		{
@@ -696,7 +703,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			if (!f)
 			{
 				if (complain)
-				if(clienttype(cl) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(cl))
 				{
 					play2(cl, "weapons/unavailable.wav");
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
@@ -710,7 +717,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
@@ -777,7 +784,7 @@ void weapon_setup(float windex)
 {
 	entity e;
 	e = get_weaponinfo(windex);
-	self.items &~= IT_AMMO;
+	self.items &= ~IT_AMMO;
 	self.items = self.items | (e.items & IT_AMMO);
 
 	// the two weapon entities will notice this has changed and update their models
@@ -793,11 +800,11 @@ void W_SwitchToOtherWeapon(entity pl)
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
 	w = pl.weapon;
-	if(WEPSET_CONTAINS_EW(pl, w))
+	if(pl.weapons & WepSet_FromWeapon(w))
 	{
-		WEPSET_ANDNOT_EW(pl, w);
+		pl.weapons &= ~WepSet_FromWeapon(w);
 		ww = w_getbestweapon(pl);
-		WEPSET_OR_EW(pl, w);
+		pl.weapons |= WepSet_FromWeapon(w);
 	}
 	else
 		ww = w_getbestweapon(pl);
@@ -820,7 +827,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1353,7 +1360,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		if(clienttype(self) == CLIENTTYPE_REAL && self.reload_complain < time)
+		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
 			play2(self, "weapons/unavailable.wav");
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
@@ -1379,7 +1386,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// now begin the reloading process
 
-	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTEN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

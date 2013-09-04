@@ -264,7 +264,7 @@ HUD panels
 
 // draw the background/borders
 #define HUD_Panel_DrawBg(theAlpha)\
-if(panel_bg != "0")\
+if(panel_bg != "0" && panel_bg != "")\
 	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
@@ -447,8 +447,7 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	WEPSET_DECLARE_A(weapons_stat);
-	WEPSET_COPY_AS(weapons_stat);
+	WepSet weapons_stat = WepSet_GetFromStat();
 	float i, f, a;
 	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
@@ -487,11 +486,9 @@ void HUD_Weapons(void)
 			return;
 		}
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_WEAPONS;
 
 	// update generic hud functions
-	HUD_Panel_UpdateCvars(weapons);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -534,9 +531,9 @@ void HUD_Weapons(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (WEPSET_EMPTY_A(weapons_stat))
+			if (!weapons_stat)
 				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					WEPSET_OR_AW(weapons_stat, i);
+					weapons_stat |= WepSet_FromWeapon(i);
 
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
@@ -545,7 +542,7 @@ void HUD_Weapons(void)
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
+			if(weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon))
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
@@ -737,7 +734,7 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if not(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) || (self.weapon == complain_weapon))
+		if not((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon))
 			continue;
 
 		// figure out the drawing position of weapon
@@ -761,7 +758,7 @@ void HUD_Weapons(void)
 		}
 
 		// drawing all the weapon items
-		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
+		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -950,10 +947,8 @@ void HUD_Ammo(void)
 		if(!autocvar_hud_panel_ammo) return;
 		if(spectatee_status == -1) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_AMMO;
 
-	HUD_Panel_UpdateCvars(ammo);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -1154,14 +1149,12 @@ void HUD_Powerups(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_POWERUPS;
-
 		strength_time = 15;
 		shield_time = 27;
 		superweapons_time = 13;
 	}
 
-	HUD_Panel_UpdateCvars(powerups);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -1397,14 +1390,12 @@ void HUD_HealthArmor(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_HEALTHARMOR;
-
 		health = 150;
 		armor = 75;
 		fuel = 20;
 	}
 
-	HUD_Panel_UpdateCvars(healtharmor);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -1656,10 +1647,8 @@ void HUD_Notify(void)
 	{
 		if(!autocvar_hud_panel_notify) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_NOTIFY;
 
-	HUD_Panel_UpdateCvars(notify);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -1795,10 +1784,8 @@ void HUD_Timer(void)
 	{
 		if(!autocvar_hud_panel_timer) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_TIMER;
 
-	HUD_Panel_UpdateCvars(timer);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -1865,12 +1852,10 @@ void HUD_Radar(void)
 			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
 		}
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_RADAR;
 
-	HUD_Panel_UpdateCvars(radar);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
-	
+
 	float f = 0;
 
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
@@ -2159,10 +2144,8 @@ void HUD_Score(void)
 		if(!autocvar_hud_panel_score) return;
 		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_SCORE;
 
-	HUD_Panel_UpdateCvars(score);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -2356,10 +2339,8 @@ void HUD_RaceTimer (void)
 		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_RACETIMER;
 
-	HUD_Panel_UpdateCvars(racetimer);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -2508,7 +2489,7 @@ float vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
 
-void HUD_VoteWindow(void) 
+void HUD_Vote(void)
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
@@ -2540,8 +2521,6 @@ void HUD_VoteWindow(void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_VOTE;
-
 		vote_yescount = 3;
 		vote_nocount = 2;
 		vote_needed = 4;
@@ -2562,7 +2541,7 @@ void HUD_VoteWindow(void)
 	if(!vote_alpha)
 		return;
 
-	HUD_Panel_UpdateCvars(vote);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	if(uid2name_dialog)
@@ -2653,32 +2632,100 @@ void HUD_VoteWindow(void)
 
 float mod_active; // is there any active mod icon?
 
-// Clan Arena HUD modicons
-void HUD_Mod_CA(vector pos, vector mySize)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
 {
-	mod_active = 1; // CA should never hide the mod icons panel
-	float redalive, bluealive;
-	redalive = getstati(STAT_REDALIVE);
-	bluealive = getstati(STAT_BLUEALIVE);
-
-	vector redpos, bluepos;
-	if(mySize_x > mySize_y)
+	float stat;
+	string pic;
+	vector color;
+#ifdef GMQCC
+	stat = -1;
+	pic = "";
+	color = '0 0 0';
+#endif
+	switch(i)
 	{
-		redpos = pos;
-		bluepos = pos + eY * 0.5 * mySize_y;
-		drawpic_aspect_skin(redpos, "player_red.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(redpos + eX * 0.5 * mySize_x, ftos(redalive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bluepos, "player_blue.tga", 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(bluepos + eX * 0.5 * mySize_x, ftos(bluealive), 0.5 * mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		case 0:
+			stat = getstati(STAT_REDALIVE);
+			pic = "player_red.tga";
+			color = '1 0 0';
+			break;
+		case 1:
+			stat = getstati(STAT_BLUEALIVE);
+			pic = "player_blue.tga";
+			color = '0 0 1';
+			break;
+		case 2:
+			stat = getstati(STAT_YELLOWALIVE);
+			pic = "player_yellow.tga";
+			color = '1 1 0';
+			break;
+		default:
+		case 3:
+			stat = getstati(STAT_PINKALIVE);
+			pic = "player_pink.tga";
+			color = '1 0 1';
+			break;
+	}
+
+	if(mySize_x/mySize_y > aspect_ratio)
+	{
+		i = aspect_ratio * mySize_y;
+		myPos_x = myPos_x + (mySize_x - i) / 2;
+		mySize_x = i;
 	}
 	else
 	{
-		redpos = pos;
-		bluepos = pos + eY * 0.5 * mySize_y;
-		drawpic_aspect_skin(redpos, "player_red.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(redpos + eY * 0.3 * mySize_y, ftos(redalive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(bluepos, "player_blue.tga", eX * mySize_x + eY * 0.3 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(bluepos + eY * 0.3 * mySize_y, ftos(bluealive), eX * mySize_x + eY * 0.2 * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		i = 1/aspect_ratio * mySize_x;
+		myPos_y = myPos_y + (mySize_y - i) / 2;
+		mySize_y = i;
+	}
+
+	if(layout)
+	{
+		drawpic_aspect_skin(myPos, pic, eX * 0.7 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.7 * mySize_x, ftos(stat), eX * 0.3 * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+	else
+		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+// Clan Arena and Freeze Tag HUD modicons
+void HUD_Mod_CA(vector myPos, vector mySize)
+{
+	mod_active = 1; // required in each mod function that always shows something
+	entity tm;
+	float teams_count = 0;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+		if(tm.team != NUM_SPECTATOR)
+			++teams_count;
+
+	float layout;
+	if(gametype == MAPINFO_TYPE_CA)
+		layout = autocvar_hud_panel_modicons_ca_layout;
+	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
+		layout = autocvar_hud_panel_modicons_freezetag_layout;
+	float rows, columns, aspect_ratio;
+	rows = mySize_y/mySize_x;
+	aspect_ratio = (layout) ? 2 : 1;
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
+	columns = ceil(teams_count/rows);
+
+	int i;
+	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	for(i=0; i<teams_count; ++i)
+	{
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
+
+		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			++column;
+		}
 	}
 }
 
@@ -3092,7 +3139,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
 			f = autocvar_cl_autodemo_delete;
-			f &~= 1;
+			f &= ~1;
 			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
 		}
 	}
@@ -3292,11 +3339,11 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 	int i;
 	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for(i=0; i<teams_count; ++i)
 	{
-		vector pos, itemSize;
-		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
 		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -3320,10 +3367,8 @@ void HUD_ModIcons(void)
 		if(!autocvar_hud_panel_modicons) return;
 		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_MODICONS;
 
-	HUD_Panel_UpdateCvars(modicons);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -3372,18 +3417,15 @@ void HUD_ModIcons(void)
 
 // Draw pressed keys (#11)
 //
-void HUD_DrawPressedKeys(void)
+void HUD_PressedKeys(void)
 {
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_PRESSEDKEYS;
 
-
-	HUD_Panel_UpdateCvars(pressedkeys);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -3454,10 +3496,8 @@ void HUD_Chat(void)
 		if(autocvar__con_chat_maximized)
 			if(!hud_draw_maximized) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_CHAT;
 
-	HUD_Panel_UpdateCvars(chat);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
@@ -3530,10 +3570,8 @@ void HUD_EngineInfo(void)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_ENGINEINFO;
 
-	HUD_Panel_UpdateCvars(engineinfo);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -3593,10 +3631,8 @@ void HUD_InfoMessages(void)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_INFOMESSAGES;
 
-	HUD_Panel_UpdateCvars(infomessages);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
@@ -3656,7 +3692,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
-				s = sprintf(_("^1Press ^3%s^1 for another player"), getcommandkey("primary fire", "+fire"));
+				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -3784,10 +3820,8 @@ void HUD_Physics(void)
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
 		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
-	else
-		hud_configure_active_panel = HUD_PANEL_PHYSICS;
 
-	HUD_Panel_UpdateCvars(physics);
+	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
@@ -4167,8 +4201,6 @@ void HUD_CenterPrint (void)
 	}
 	else
 	{
-		hud_configure_active_panel = HUD_PANEL_CENTERPRINT;
-
 		if (!hud_configure_prev)
 			reset_centerprint_messages();
 		if (time > hud_configure_cp_generation_time)
@@ -4176,7 +4208,7 @@ void HUD_CenterPrint (void)
 			float r;
 			r = random();
 			if (r > 0.9)
-				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: %d"), 1, 10);
+				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
 			else if (r > 0.8)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
@@ -4185,7 +4217,7 @@ void HUD_CenterPrint (void)
 		}
 	}
 
-	HUD_Panel_UpdateCvars(centerprint);
+	HUD_Panel_UpdateCvars();
 
 	// this panel doesn't fade when showing the scoreboard
 	if(autocvar__menu_alpha)
@@ -4373,44 +4405,6 @@ void HUD_Reset (void)
 		HUD_Mod_CTF_Reset();
 }
 
-#define HUD_DrawPanel(id)\
-switch (id) {\
-	case (HUD_PANEL_RADAR):\
-		HUD_Radar(); break;\
-	case (HUD_PANEL_WEAPONS):\
-		HUD_Weapons(); break;\
-	case (HUD_PANEL_AMMO):\
-		HUD_Ammo(); break;\
-	case (HUD_PANEL_POWERUPS):\
-		HUD_Powerups(); break;\
-	case (HUD_PANEL_HEALTHARMOR):\
-		HUD_HealthArmor(); break;\
-	case (HUD_PANEL_NOTIFY):\
-		HUD_Notify(); break;\
-	case (HUD_PANEL_TIMER):\
-		HUD_Timer(); break;\
-	case (HUD_PANEL_SCORE):\
-		HUD_Score(); break;\
-	case (HUD_PANEL_RACETIMER):\
-		HUD_RaceTimer(); break;\
-	case (HUD_PANEL_VOTE):\
-		HUD_VoteWindow(); break;\
-	case (HUD_PANEL_MODICONS):\
-		HUD_ModIcons(); break;\
-	case (HUD_PANEL_PRESSEDKEYS):\
-		HUD_DrawPressedKeys(); break;\
-	case (HUD_PANEL_CHAT):\
-		HUD_Chat(); break;\
-	case (HUD_PANEL_ENGINEINFO):\
-		HUD_EngineInfo(); break;\
-	case (HUD_PANEL_INFOMESSAGES):\
-		HUD_InfoMessages(); break;\
-	case (HUD_PANEL_PHYSICS):\
-		HUD_Physics(); break;\
-	case (HUD_PANEL_CENTERPRINT):\
-		HUD_CenterPrint(); break;\
-} ENDS_WITH_CURLY_BRACE
-
 void HUD_Main (void)
 {
 	float i;
@@ -4440,7 +4434,7 @@ void HUD_Main (void)
 	// they must call HUD_Panel_ApplyFadeAlpha(); only when showing the menu
 	if(scoreboard_fade_alpha == 1)
 	{
-		HUD_CenterPrint();
+		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
 		return;
 	}
 
@@ -4489,7 +4483,10 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			color = colormapPaletteColor(myteam, 1) * hud_dock_color_team;
+			if(autocvar__hud_configure && myteam == NUM_SPECTATOR)
+				color = '1 0 0' * hud_dock_color_team;
+			else
+				color = myteamcolors * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
 			color = '1 0 0' * hud_dock_color_team;
@@ -4564,34 +4561,38 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		HUD_DrawPanel(panel_order[i]);
+		(panel = hud_panel[panel_order[i]]).panel_draw();
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		HUD_Radar();
+		(panel = HUD_PANEL(RADAR)).panel_draw();
 	if(autocvar__con_chat_maximized)
-		HUD_Chat();
+		(panel = HUD_PANEL(CHAT)).panel_draw();
 
 	if(autocvar__hud_configure)
 	{
-		if(tab_panel != -1)
+		if(tab_panel)
 		{
-			HUD_Panel_UpdatePosSizeForId(tab_panel)
+			panel = tab_panel;
+			HUD_Panel_UpdatePosSize()
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
 		}
-		if(highlightedPanel != -1)
+		if(highlightedPanel)
 		{
-			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
+			panel = highlightedPanel;
+			HUD_Panel_UpdatePosSize()
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
 		if(!hud_configure_prev || hud_configure_prev == -1)
 		{
 			if(autocvar_hud_cursormode) { setcursormode(1); }
 			hudShiftState = 0;
+			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+				hud_panel[panel_order[i]].update_time = time;
 		}
 	}
-	else if (hud_configure_prev && autocvar_hud_cursormode)
+	else if(hud_configure_prev && hud_configure_prev != -1 && autocvar_hud_cursormode)
 		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;

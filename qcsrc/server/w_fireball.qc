@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(
+/* WEP_##id  */ FIREBALL,
+/* function  */ w_fireball,
+/* ammotype  */ 0,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "fireball",
+/* shortname */ "fireball",
+/* fullname  */ _("Fireball")
+);
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -28,7 +38,7 @@ void W_Fireball_Explode (void)
 		// 2. bfg effect
 		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
 		for(e = findradius(self.origin, autocvar_g_balance_fireball_primary_bfgradius); e; e = e.chain)
-		if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
+		if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || IsDifferentTeam(e, self))
 		{
 			// can we see fireball?
 			traceline(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
@@ -73,7 +83,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
-	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
+	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || IsDifferentTeam(e, self))
 	{
 		p = e.origin;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
@@ -200,7 +210,7 @@ void W_Fireball_Attack1_Frame1()
 void W_Fireball_Attack1_Frame0()
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_fireball_primary_animtime, W_Fireball_Attack1_Frame1);
 }
 
@@ -410,7 +420,7 @@ float w_fireball(float req)
 			org2 = w_org + w_backoff * 16;
 			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 		}
 	}
 	else if(req == WR_PRECACHE)

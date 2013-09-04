@@ -31,6 +31,7 @@ void turret_machinegun_std_init()
     }
 
     self.damage_flags |= TFL_DMG_HEADSHAKE;
+	self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
 
     // Our fire routine
     self.turret_firefunc  = turret_machinegun_attack;

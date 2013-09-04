@@ -44,17 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// LMS stuff
-#define SP_LMS_LIVES 4
-#define SP_LMS_RANK 5
-void ScoreRules_lms()
-{
-	ScoreRules_basics(0, 0, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
-	ScoreRules_basics_end();
-}
-
 // Key hunt stuff
 #define ST_KH_CAPS 1
 #define SP_KH_CAPS 4
@@ -101,17 +90,6 @@ void ScoreRules_race()
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
-	ScoreRules_basics_end();
-}
-
-// Assault stuff
-#define ST_ASSAULT_OBJECTIVES 1
-#define SP_ASSAULT_OBJECTIVES 4
-void ScoreRules_assault()
-{
-	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
 

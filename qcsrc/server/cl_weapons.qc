@@ -188,7 +188,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, wpn))
+	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -198,8 +198,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, i))
-					if(WEPSET_CONTAINS_EW(own, i))
+				if(WepSet_FromWeapon(i) & WEPSET_SUPERWEAPONS)
+					if(own.weapons & WepSet_FromWeapon(i))
 						++superweapons;
 			if(superweapons <= 1)
 			{
@@ -301,10 +301,6 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_weaponarena)
 		return 0;
-	if (g_lms)
-		return 0;
-	if (g_ca)
-		return 0;
 	if (g_cts)
 		return 0;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
@@ -313,7 +309,7 @@ float W_IsWeaponThrowable(float w)
         return 0;
 	
 	wa = W_AmmoItemCode(w);
-	if(WEPSET_CONTAINS_AW(start_weapons, w))
+	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
@@ -343,9 +339,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	if(!WEPSET_CONTAINS_EW(self, w))
+	if(!(self.weapons & WepSet_FromWeapon(w)))
 		return;
-	WEPSET_ANDNOT_EW(self, w);
+	self.weapons &= ~WepSet_FromWeapon(w);
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
@@ -354,7 +350,19 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
-// Bringed back weapon frame
+float forbidWeaponUse()
+{
+	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
+		return 1;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return 1;
+	if(self.player_blocked)
+		return 1;
+	if(self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 void W_WeaponFrame()
 {
 	vector fo, ri, up;
@@ -362,14 +370,15 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
-		return;
-
-	if(self.freezetag_frozen == 1)
-		return;
-
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
+
+	if(forbidWeaponUse())
+	if(self.weaponentity.state != WS_CLEAR)
+	{
+		w_ready();
+		return;
+	}
 
 	if(!self.switchweapon)
 	{
@@ -377,7 +386,7 @@ void W_WeaponFrame()
 		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
-		self.items &~= IT_AMMO;
+		self.items &= ~IT_AMMO;
 		return;
 	}
 
@@ -394,24 +403,25 @@ void W_WeaponFrame()
 			// end switching!
 			self.switchingweapon = self.switchweapon;
 
+			entity newwep = get_weaponinfo(self.switchweapon);
+
 			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
-			entity e;
-			e = get_weaponinfo(self.switchweapon);
-			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
+			if(newwep.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"))) // prevent accessing undefined cvars
 			{
 				self.clip_load = self.(weapon_load[self.switchweapon]);
-				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.clip_size = cvar(strcat("g_balance_", newwep.netname, "_reload_ammo"));
 			}
 			else
 				self.clip_load = self.clip_size = 0;
 
 			// VorteX: add player model weapon select frame here
 			// setcustomframe(PlayerWeaponRaise);
-			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_weaponswitchdelay, w_ready);
+			weapon_thinkf(WFRAME_IDLE, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), w_ready);
+			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname))));
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, '0 0 0');
 		}
 		else if (self.weaponentity.state == WS_DROP)
@@ -424,14 +434,17 @@ void W_WeaponFrame()
 			// start switching!
 			self.switchingweapon = self.switchweapon;
 
+			entity oldwep = get_weaponinfo(self.weapon);
+			
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTEN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_weaponswitchdelay, w_clear);
+			weapon_thinkf(WFRAME_DONTCHANGE, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), w_clear);
+			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname))));
 			weapon_boblayer1(PLAYER_WEAPONSELECTION_SPEED, PLAYER_WEAPONSELECTION_RANGE);
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			}
@@ -454,7 +467,7 @@ void W_WeaponFrame()
 	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
-		if(w && !WEPSET_CONTAINS_EW(self, w))
+		if(w && !(self.weapons & WepSet_FromWeapon(w)))
 		{
 			if(self.weapon == self.switchweapon)
 				W_SwitchWeapon_Force(self, w_getbestweapon(self));

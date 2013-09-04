@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
+REGISTER_WEAPON(
+/* WEP_##id  */ SHOTGUN,
+/* function  */ w_shotgun,
+/* ammotype  */ IT_SHELLS,
+/* impulse   */ 2,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_LOW,
+/* model     */ "shotgun",
+/* shortname */ "shotgun",
+/* fullname  */ _("Shotgun")
+);
 #else
 #ifdef SVQC
 
@@ -85,13 +95,13 @@ void shotgun_meleethink (void)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
 		
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
 		//te_customflash(targpos, 40,  2, '1 1 1');
 		
-		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
@@ -146,12 +156,12 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = meleetemp.realowner = self;
+	meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -264,11 +274,11 @@ float w_shotgun(float req)
 		if(!w_issilent && time - self.prevric > 0.25)
 		{
 			if(w_random < 0.0165)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.033)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 			self.prevric = time;
 		}
 	}

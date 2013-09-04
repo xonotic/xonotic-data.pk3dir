@@ -14,11 +14,6 @@ void generic_plat_blocked()
 }
 
 
-float	STATE_TOP		= 0;
-float	STATE_BOTTOM	= 1;
-float	STATE_UP		= 2;
-float	STATE_DOWN		= 3;
-
 .entity trigger_field;
 
 void() plat_center_touch;
@@ -27,7 +22,7 @@ void() plat_trigger_use;
 void() plat_go_up;
 void() plat_go_down;
 void() plat_crush;
-float PLAT_LOW_TRIGGER = 1;
+const float PLAT_LOW_TRIGGER = 1;
 
 void plat_spawn_inside_trigger()
 {
@@ -72,7 +67,7 @@ void plat_spawn_inside_trigger()
 
 void plat_hit_top()
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
@@ -80,20 +75,20 @@ void plat_hit_top()
 
 void plat_hit_bottom()
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 2;
 }
 
 void plat_go_down()
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, self.speed, plat_hit_bottom);
 }
 
 void plat_go_up()
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
+	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, self.speed, plat_hit_top);
 }
@@ -294,7 +289,7 @@ void train_next()
 		SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
 
 	if(self.noise != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 }
 
 void func_train_find()
@@ -375,7 +370,7 @@ void spawnfunc_func_rotating()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		ambientsound(self.origin, self.noise, VOL_BASE, ATTN_IDLE);
+		ambientsound(self.origin, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
 	
 	self.active = ACTIVE_ACTIVE;
@@ -454,7 +449,7 @@ void spawnfunc_func_bobbing()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
 	if (!self.speed)
 		self.speed = 4;
@@ -531,7 +526,7 @@ void spawnfunc_func_pendulum()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	self.active = ACTIVE_ACTIVE;
@@ -624,7 +619,7 @@ void button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, button_wait);
@@ -642,12 +637,6 @@ void button_reset()
 
 void button_use()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" triggered a button\n");
-//	}
-
 	if not (self.active == ACTIVE_ACTIVE)
 		return;
 
@@ -657,11 +646,6 @@ void button_use()
 
 void button_touch()
 {
-//	if (activator.classname != "player")
-//	{
-//		dprint(activator.classname);
-//		dprint(" touched a button\n");
-//	}
 	if (!other)
 		return;
 	if not(other.iscreature)
@@ -682,11 +666,6 @@ void button_damage(entity inflictor, entity attacker, float damage, float deatht
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
-	//	if (activator.classname != "player")
-	//	{
-	//		dprint(activator.classname);
-	//		dprint(" killed a button\n");
-	//	}
 		self.enemy = damage_attacker;
 		button_fire ();
 	}
@@ -750,9 +729,9 @@ void spawnfunc_func_button()
 }
 
 
-float DOOR_START_OPEN = 1;
-float DOOR_DONT_LINK = 4;
-float DOOR_TOGGLE = 32;
+const float DOOR_START_OPEN = 1;
+const float DOOR_DONT_LINK = 4;
+const float DOOR_TOGGLE = 32;
 
 /*
 
@@ -835,7 +814,7 @@ void door_blocked()
 void door_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -852,14 +831,14 @@ void door_hit_top()
 void door_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_BOTTOM;
 }
 
 void door_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -882,7 +861,7 @@ void door_go_up()
 	}
 
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, door_hit_top);
 
@@ -918,7 +897,7 @@ float door_check_keys(void) {
 
 	// this door require a key
 	// only a player can have a key
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return FALSE;
 	
 	if (item_keys_usekey(door, other)) {
@@ -1079,7 +1058,7 @@ Prints messages
 */
 void door_touch()
 {
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1088,7 +1067,7 @@ void door_touch()
 
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
@@ -1138,7 +1117,7 @@ void door_generic_plat_blocked()
 void door_rotating_hit_top()
 {
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -1149,7 +1128,7 @@ void door_rotating_hit_top()
 void door_rotating_hit_bottom()
 {
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
 	{
 		self.pos2 = '0 0 0' - self.pos2;
@@ -1161,7 +1140,7 @@ void door_rotating_hit_bottom()
 void door_rotating_go_down()
 {
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -1183,7 +1162,7 @@ void door_rotating_go_up()
 		return;
 	}
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcAngleMove (self.pos2, self.speed, door_rotating_hit_top);
 
@@ -1609,11 +1588,11 @@ void() fd_secret_move5;
 void() fd_secret_move6;
 void() fd_secret_done;
 
-float SECRET_OPEN_ONCE = 1;		// stays open
-float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
-float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
-float SECRET_NO_SHOOT = 8;		// only opened by trigger
-float SECRET_YES_SHOOT = 16;	// shootable even if targeted
+const float SECRET_OPEN_ONCE = 1;		// stays open
+const float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
+const float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
+const float SECRET_NO_SHOOT = 8;		// only opened by trigger
+const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
 void fd_secret_use()
 {
@@ -1637,7 +1616,7 @@ void fd_secret_use()
 	// Make a sound, wait a little...
 
 	if (self.noise1 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.nextthink = self.ltime + 0.1;
 
 	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
@@ -1662,7 +1641,7 @@ void fd_secret_use()
 	self.dest2 = self.dest1 + v_forward * self.t_length;
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 }
 
 void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -1676,14 +1655,14 @@ void fd_secret_move1()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 // Start moving sideways w/sound...
 void fd_secret_move2()
 {
 	if (self.noise2 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest2, self.speed, fd_secret_move3);
 }
 
@@ -1691,7 +1670,7 @@ void fd_secret_move2()
 void fd_secret_move3()
 {
 	if (self.noise3 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
 	{
 		self.nextthink = self.ltime + self.wait;
@@ -1703,7 +1682,7 @@ void fd_secret_move3()
 void fd_secret_move4()
 {
 	if (self.noise2 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);
 }
 
@@ -1713,13 +1692,13 @@ void fd_secret_move5()
 	self.nextthink = self.ltime + 1.0;
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 void fd_secret_move6()
 {
 	if (self.noise2 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.oldorigin, self.speed, fd_secret_done);
 }
 
@@ -1732,7 +1711,7 @@ void fd_secret_done()
 		//self.th_pain = fd_secret_use;
 	}
 	if (self.noise3 != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 void secret_blocked()
@@ -1761,7 +1740,7 @@ void secret_touch()
 
 	if (self.message)
 	{
-		if (other.flags & FL_CLIENT)
+		if (IS_CLIENT(other))
 			centerprint (other, self.message);
 		play2(other, "misc/talk.wav");
 	}
@@ -1882,7 +1861,7 @@ void spawnfunc_func_fourier()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	if (!self.speed)
@@ -2028,7 +2007,7 @@ void spawnfunc_func_vectormamamam()
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
+		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
 	if(!self.targetfactor)
@@ -2110,7 +2089,7 @@ void conveyor_think()
 
 		for(e = world; (e = findentity(e, conveyor, self)); )
 		{
-			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
+			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics
 
 			setorigin(e, e.origin + self.movedir * sys_frametime);

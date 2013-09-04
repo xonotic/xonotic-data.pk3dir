@@ -120,10 +120,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
-	if(g_arena || g_ca)
-		if(autocvar_g_arena_roundbased)
-			return;
-
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
@@ -132,7 +128,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		culprit = DEATH_WEAPONOF(deathtype);
 		if(!culprit)
 			culprit = attacker.weapon;
-		else if(!WEPSET_CONTAINS_EW(attacker, culprit))
+		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
 		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
@@ -148,26 +144,26 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 
 			if(inWarmupStage)
-				WEPSET_COPY_EA(GiveFrags_randomweapons, warmup_start_weapons);
+				GiveFrags_randomweapons.weapons = warmup_start_weapons;
 			else
-				WEPSET_COPY_EA(GiveFrags_randomweapons, start_weapons);
+				GiveFrags_randomweapons.weapons = start_weapons;
 
 			// all others (including the culprit): remove
-			WEPSET_ANDNOT_EE(GiveFrags_randomweapons, attacker);
-			WEPSET_ANDNOT_EW(GiveFrags_randomweapons, culprit);
+			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
+			GiveFrags_randomweapons.weapons &= ~WepSet_FromWeapon(culprit);
 
 			// among the remaining ones, choose one by random
 			W_RandomWeapons(GiveFrags_randomweapons, 1);
 
-			if(!WEPSET_EMPTY_E(GiveFrags_randomweapons))
+			if(GiveFrags_randomweapons.weapons)
 			{
-				WEPSET_OR_EE(attacker, GiveFrags_randomweapons);
-				WEPSET_ANDNOT_EW(attacker, culprit);
+				attacker.weapons |= GiveFrags_randomweapons.weapons;
+				attacker.weapons &= ~WepSet_FromWeapon(culprit);
 			}
 		}
 
 		// after a frag, choose another random weapon set
-		if not(WEPSET_CONTAINS_EW(attacker, attacker.weapon))
+		if not(attacker.weapons & WepSet_FromWeapon(attacker.weapon))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
@@ -186,24 +182,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	else
 	{
 		self = oldself;
-		if(g_lms)
-		{
-			// remove a life
-			float tl;
-			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-			if(tl < lms_lowest_lives)
-				lms_lowest_lives = tl;
-			if(tl <= 0)
-			{
-				if(!lms_next_place)
-					lms_next_place = player_count;
-				else
-					lms_next_place = min(lms_next_place, player_count);
-				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-				--lms_next_place;
-			}
-			f = 0;
-		}
 	}
 
 	attacker.totalfrags += f;
@@ -262,7 +240,7 @@ void Obituary_SpecialDeath(
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = deathtypes[(deathtype - DT_FIRST) - 1];
+		entity deathent = deathtypes[(deathtype - DT_FIRST)];
 		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
@@ -376,7 +354,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
+	Debug_Notification(
 		sprintf(
 			"Obituary(%s, %s, %s, %s = %d);\n",
 			attacker.netname,
@@ -440,7 +418,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, targ.killcount);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -456,7 +434,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
-					AnnounceTo(attacker, strcat(#countb, "kills")); \
+					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
@@ -557,7 +535,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
 		{
-			AnnounceTo(targ, "botlike");
+			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 	}
@@ -591,7 +569,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
         damage_attacker = attacker;
 		attacker_save = attacker;
 
-	if(targ.classname == "player")
+	if(IS_PLAYER(targ))
 		if(targ.hook)
 			if(targ.hook.aiment)
 				if(targ.hook.aiment == attacker)
@@ -600,7 +578,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
-		if(targ.classname == "player")
+		if(IS_PLAYER(targ))
 			if not(IsDifferentTeam(targ, attacker))
 			{
 				self = oldself;
@@ -625,20 +603,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
-		/*
-		skill based bot damage? gtfo. (tZork)
-		if (targ.classname == "player")
-		if (attacker.classname == "player")
-		if (!targ.isbot)
-		if (attacker.isbot)
-			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-        */
-        
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
-		if(attacker.classname == "player")
+		if(IS_PLAYER(attacker))
 		{
-			if(targ.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
 			{
 				damage = 0;
 				force = '0 0 0';
@@ -653,22 +622,14 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
-						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
+						if(IS_PLAYER(targ) && targ.deadflag == DEAD_NO)
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
-							if(complainteamdamage > 0 && !g_ca) // FIXME why is g_ca ruled out here? Why not just g_mirrordamage 0 on CA servers?
+							if(complainteamdamage > 0)
 								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
 							mirrorforce = autocvar_g_mirrordamage * vlen(force);
-							if(g_minstagib)
-							{
-								if(autocvar_g_friendlyfire == 0)
-									damage = 0;
-							}
-							else if(g_ca)
-								damage = 0;
-							else
-								damage = autocvar_g_friendlyfire * damage;
+							damage = autocvar_g_friendlyfire * damage;
 							// mirrordamage will be used LATER
 
 							if(autocvar_g_mirrordamage_virtual)
@@ -699,52 +660,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if(targ.classname == "player")
-		if(attacker.classname == "player")
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-		}
-
-		if(targ.classname == "player")
-		if (g_minstagib)
-		{
-			if ((deathtype == DEATH_FALL)  ||
-				(deathtype == DEATH_DROWN) ||
-				(deathtype == DEATH_SLIME) ||
-				(deathtype == DEATH_LAVA)  ||
-				(!DEATH_ISWEAPON(deathtype, WEP_LASER) && damage > 0 && damage < 100))
-			{
-				self = oldself;
-				return;
-			}
-			if(damage > 0)
-			    damage = 10000;
-			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
-			{
-				targ.armorvalue -= 1;
-				centerprint(targ, strcat("^3Remaining extra lives: ",ftos(targ.armorvalue)));
-				damage = 0;
-				targ.hitsound += 1;
-				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
-			}
-			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-			{
-				damage = 0;
-				mirrordamage = 0;
-				complainteamdamage = 0;
-				if (targ != attacker)
-				{
-					if ((targ.health >= 1) && (targ.classname == "player"))
-						centerprint(attacker, "Secondary fire inflicts no damage!");
-					force = '0 0 0';
-					// keep mirrorforce
-					attacker = targ;
-				}
-			}
-		}
-
 		if not(DEATH_ISSPECIAL(deathtype))
 		{
 			damage *= g_weapondamagefactor;
@@ -760,32 +675,37 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_damage = damage;
 		frag_force = force;
         frag_deathtype = deathtype;
+		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
+		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 		
-		// apply strength multiplier
-		if ((attacker.items & IT_STRENGTH) && !g_minstagib)
+		if not(g_minstagib)
 		{
-			if(targ == attacker)
+			// apply strength multiplier
+			if (attacker.items & IT_STRENGTH)
 			{
-				damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-				force = force * autocvar_g_balance_powerup_strength_selfforce;
+				if(targ == attacker)
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
+					force = force * autocvar_g_balance_powerup_strength_selfforce;
+				}
+				else
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_damage;
+					force = force * autocvar_g_balance_powerup_strength_force;
+				}
 			}
-			else
-			{
-				damage = damage * autocvar_g_balance_powerup_strength_damage;
-				force = force * autocvar_g_balance_powerup_strength_force;
-			}
-		}
 
-		// apply invincibility multiplier
-		if (targ.items & IT_INVINCIBLE && !g_minstagib)
-			damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+			// apply invincibility multiplier
+			if (targ.items & IT_INVINCIBLE)
+				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+		}
 
 		if (targ == attacker)
 		{
-			if(g_ca || (g_cts && !autocvar_g_cts_selfdamage))
+			if(g_cts && !autocvar_g_cts_selfdamage)
 				damage = 0;
 			else
 				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
@@ -803,7 +723,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
 				if(IsDifferentTeam(victim, attacker))
 				{
@@ -822,13 +742,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
-							if(targ.classname == "player") // don't do this for vehicles
-							if(!g_minstagib)
+							if(IS_PLAYER(targ)) // don't do this for vehicles
 							if(IsFlying(victim))
-								yoda = 1;
-
-							if(g_minstagib)
-							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 						}
 					}
@@ -854,7 +769,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime)
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
@@ -873,7 +788,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 		else
 			self.velocity = self.velocity + farce;
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
 	// apply damage
@@ -886,18 +801,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;
-		if(g_minstagib)
-		if(mirrordamage > 0)
-		{
-			// just lose extra LIVES, don't kill the player for mirror damage
-			if(attacker.armorvalue > 0)
-			{
-				attacker.armorvalue = attacker.armorvalue - 1;
-				centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
-				attacker.hitsound += 1;
-			}
-			mirrordamage = 0;
-		}
 
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);
@@ -1019,7 +922,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							if(autocvar_g_throughfloor_debug)
 								print(sprintf(" steps=%f", total));
 
-							if (targ.classname == "player")
+							if (IS_PLAYER(targ))
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
 							else
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
@@ -1155,7 +1058,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
 
-	if(e.classname == "player")
+	if(IS_PLAYER(e))
 	{
 		if(e.deadflag)
 			return -1;
@@ -1279,7 +1182,7 @@ void Fire_ApplyDamage(entity e)
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
-	if(clienttype(o) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
 
 	// water and slime stop fire
@@ -1307,7 +1210,7 @@ void Fire_ApplyDamage(entity e)
 	if not(IS_INDEPENDENT_PLAYER(e))
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 		if(other.deadflag == DEAD_NO)
 		if not(IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
@@ -1324,7 +1227,7 @@ void Fire_ApplyEffect(entity e)
 	if(Fire_IsBurning(e))
 		e.effects |= EF_FLAME;
 	else
-		e.effects &~= EF_FLAME;
+		e.effects &= ~EF_FLAME;
 }
 
 void fireburner_think()

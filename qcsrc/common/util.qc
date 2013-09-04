@@ -203,7 +203,6 @@ string ftos_decimals(float number, float decimals)
 	return sprintf("%.*f", decimals, number);
 }
 
-float time;
 vector colormapPaletteColor(float c, float isPants)
 {
 	switch(c)
@@ -1884,12 +1883,39 @@ float ReadInt24_t()
 	v += ReadByte(); // note: this is unsigned
 	return v;
 }
+vector ReadInt48_t()
+{
+	vector v;
+	v_x = ReadInt24_t();
+	v_y = ReadInt24_t();
+	v_z = 0;
+	return v;
+}
+vector ReadInt72_t()
+{
+	vector v;
+	v_x = ReadInt24_t();
+	v_y = ReadInt24_t();
+	v_z = ReadInt24_t();
+	return v;
+}
 #else
 void WriteInt24_t(float dst, float val)
 {
 	float v;
 	WriteShort(dst, (v = floor(val / 256)));
 	WriteByte(dst, val - v * 256); // 0..255
+}
+void WriteInt48_t(float dst, vector val)
+{
+	WriteInt24_t(dst, val_x);
+	WriteInt24_t(dst, val_y);
+}
+void WriteInt72_t(float dst, vector val)
+{
+	WriteInt24_t(dst, val_x);
+	WriteInt24_t(dst, val_y);
+	WriteInt24_t(dst, val_z);
 }
 #endif
 #endif
@@ -2254,11 +2280,11 @@ float xdecode(string s)
 
 float lowestbit(float f)
 {
-	f &~= f * 2;
-	f &~= f * 4;
-	f &~= f * 16;
-	f &~= f * 256;
-	f &~= f * 65536;
+	f &= ~(f * 2);
+	f &= ~(f * 4);
+	f &= ~(f * 16);
+	f &= ~(f * 256);
+	f &= ~(f * 65536);
 	return f;
 }
 
@@ -2584,5 +2610,25 @@ vector animfixfps(entity e, vector a, vector b)
 void dedicated_print(string input) // print(), but only print if the server is not local
 {
 	if(server_is_dedicated) { print(input); }
+}
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num)
+{
+	switch(num)
+	{
+		case 10: num = ANNCE_NUM_10; break;
+		case 9:  num = ANNCE_NUM_9;  break;
+		case 8:  num = ANNCE_NUM_8;  break;
+		case 7:  num = ANNCE_NUM_7;  break;
+		case 6:  num = ANNCE_NUM_6;  break;
+		case 5:  num = ANNCE_NUM_5;  break;
+		case 4:  num = ANNCE_NUM_4;  break;
+		case 3:  num = ANNCE_NUM_3;  break;
+		case 2:  num = ANNCE_NUM_2;  break;
+		case 1:  num = ANNCE_NUM_1;  break;
+	}
+	return num;
 }
 #endif

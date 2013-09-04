@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(NEX, w_nex, IT_CELLS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "nex", "nex", _("Nex"))
+REGISTER_WEAPON(
+/* WEP_##id  */ NEX,
+/* function  */ w_nex,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "nex",
+/* shortname */ "nex",
+/* fullname  */ _("Nex")
+);
 #else
 #ifdef SVQC
 
@@ -59,14 +69,14 @@ void W_Nex_Attack (float issecondary)
 	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
 	if(charge > autocvar_g_balance_nex_charge_animlimit && autocvar_g_balance_nex_charge_animlimit) // if the Nex is overcharged, we play an extra sound
 	{
-		sound (self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTN_NORM);
+		sound (self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTEN_NORM);
 	}
 
 	yoda = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
 
 	if(yoda && flying)
-		AnnounceTo(self, "yoda");
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
 
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
@@ -253,7 +263,7 @@ float w_nex(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

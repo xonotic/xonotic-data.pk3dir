@@ -69,7 +69,7 @@ void CSQCPlayer_LOD_Apply(void)
 	}
 }
 
-// FEATURE: forcemodel (MUST be called BEFORE LOD!)
+// FEATURE: forcemodel and model color selection (MUST be called BEFORE LOD!)
 string forceplayermodels_model;
 float forceplayermodels_modelisgoodmodel;
 float forceplayermodels_modelindex;
@@ -92,14 +92,17 @@ float forceplayermodels_attempted;
 string forceplayermodels_goodmodel;
 float forceplayermodels_goodmodelindex;
 
-void CSQCPlayer_ForceModel_PreUpdate(void)
+.vector glowmod;
+.vector old_glowmod; 
+
+void CSQCPlayer_ModelAppearance_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
 	self.colormap = self.forceplayermodels_savecolormap;
 }
-void CSQCPlayer_ForceModel_PostUpdate(void)
+void CSQCPlayer_ModelAppearance_PostUpdate(void)
 {
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
@@ -114,8 +117,9 @@ void CSQCPlayer_ForceModel_PostUpdate(void)
 			print(sprintf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel));
 	}
 }
-void CSQCPlayer_ForceModel_Apply(float islocalplayer)
+void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
+	// FORCEMODEL
 	// which one is ALWAYS good?
 	if not(forceplayermodels_goodmodel)
 	{
@@ -265,6 +269,30 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		else if(autocvar_cl_forceplayercolors)
 			self.colormap = player_localnum + 1;
 	}
+
+	// GLOWMOD AND DEATH FADING
+	if(self.colormap > 0)
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(autocvar_cl_deathglow > 0)
+	{
+		if(self.csqcmodel_isdead)
+		{
+			// Fade out to black now...
+			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
+			self.colormap = 0;
+			
+			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
+		}
+		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
+	}
+
+	//print(sprintf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod)));
 }
 
 // FEATURE: fallback frames
@@ -312,6 +340,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 #endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
+}
+void CSQCPlayer_AnimDecide_PostUpdate(float isnew)
+{
+	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -420,22 +452,22 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-float EF_BRIGHTFIELD	= 1;
-float EF_BRIGHTLIGHT 	= 4;
-float EF_DIMLIGHT 	= 8;
-float EF_DOUBLESIDED = 32768;
-float EF_NOSELFSHADOW = 65536;
-float EF_DYNAMICMODELLIGHT = 131072;
-float EF_RESTARTANIM_BIT = 1048576;
-float EF_TELEPORT_BIT = 2097152;
-float MF_ROCKET  =   1; // leave a trail
-float MF_GRENADE =   2; // leave a trail
-float MF_GIB     =   4; // leave a trail
-float MF_ROTATE  =   8; // rotate (bonus items)
-float MF_TRACER  =  16; // green split trail
-float MF_ZOMGIB  =  32; // small blood trail
-float MF_TRACER2 =  64; // orange split trail
-float MF_TRACER3 = 128; // purple trail
+const float EF_BRIGHTFIELD	= 1;
+const float EF_BRIGHTLIGHT 	= 4;
+const float EF_DIMLIGHT 	= 8;
+const float EF_DOUBLESIDED = 32768;
+const float EF_NOSELFSHADOW = 65536;
+const float EF_DYNAMICMODELLIGHT = 131072;
+const float EF_RESTARTANIM_BIT = 1048576;
+const float EF_TELEPORT_BIT = 2097152;
+const float MF_ROCKET  =   1; // leave a trail
+const float MF_GRENADE =   2; // leave a trail
+const float MF_GIB     =   4; // leave a trail
+const float MF_ROTATE  =   8; // rotate (bonus items)
+const float MF_TRACER  =  16; // green split trail
+const float MF_ZOMGIB  =  32; // small blood trail
+const float MF_TRACER2 =  64; // orange split trail
+const float MF_TRACER3 = 128; // purple trail
 .float csqcmodel_effects;
 .float csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)
@@ -456,9 +488,9 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
+	eff &= ~CSQCMODEL_EF_RESPAWNGHOST;
 
-	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
+	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
 	                
@@ -548,31 +580,6 @@ void CSQCPlayer_Precache()
 	precache_sound("misc/jetpack_fly.wav");
 }
 
-// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	float cm = self.colormap;
-
-	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
-		cm = 1024;
-
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
-
-	if(autocvar_cl_deathglow > 0)
-		if(self.csqcmodel_isdead)
-		{
-			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			// prevent the zero vector
-			self.glowmod_x = max(self.glowmod_x, 0.0001);
-			self.glowmod_y = max(self.glowmod_y, 0.0001);
-			self.glowmod_z = max(self.glowmod_z, 0.0001);
-		}
-}
-
 // general functions
 .float csqcmodel_predraw_run;
 .float anim_frame;
@@ -600,8 +607,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
-		CSQCPlayer_GlowMod_Apply();
+		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_Apply();
@@ -679,7 +685,7 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 	{
 		if(!isplayer)
 			CSQCPlayer_FallbackFrame_PreUpdate();
-		CSQCPlayer_ForceModel_PreUpdate();
+		CSQCPlayer_ModelAppearance_PreUpdate();
 	}
 }
 
@@ -691,8 +697,10 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	// save values set by server
 	if(self.isplayermodel)
 	{
-		CSQCPlayer_ForceModel_PostUpdate();
-		if(!isplayer)
+		CSQCPlayer_ModelAppearance_PostUpdate();
+		if(isplayer)
+			CSQCPlayer_AnimDecide_PostUpdate(isnew);
+		else
 			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();

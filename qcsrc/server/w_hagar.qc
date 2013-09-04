@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hagar", "hagar", _("Hagar"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HAGAR,
+/* function  */ w_hagar,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 8,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "hagar",
+/* shortname */ "hagar",
+/* fullname  */ _("Hagar")
+);
 #else
 #ifdef SVQC
 // NO bounce protection, as bounces are limited!
@@ -236,6 +246,9 @@ void W_Hagar_Attack2_Load_Release (void)
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
+	
+	if(time < game_starttime)
+		return;
 
 	float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
@@ -256,7 +269,7 @@ void W_Hagar_Attack2_Load (void)
 				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
@@ -275,7 +288,7 @@ void W_Hagar_Attack2_Load (void)
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
-					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
+					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTEN_NORM); // sound is too loud according to most
 
 					if (self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
 						self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_hold * W_WeaponRateFactor();
@@ -286,7 +299,7 @@ void W_Hagar_Attack2_Load (void)
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 				self.hagar_loadbeep = TRUE;
 			}
 		}
@@ -305,7 +318,7 @@ void W_Hagar_Attack2_Load (void)
 			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 				self.hagar_warning = TRUE;
 			}
 		}
@@ -457,11 +470,11 @@ float w_hagar(float req)
 		if(!w_issilent)
 		{
 			if (w_random<0.15)
-				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTEN_NORM);
 			else if (w_random<0.7)
-				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTEN_NORM);
 			else
-				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

@@ -379,7 +379,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)
 	if(!spawnplaces)
 	{
-		MapInfo_Map_supportedGametypes &~= MAPINFO_TYPE_RACE;
+		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE;
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
 	}
 
@@ -476,6 +476,22 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 
+	if(pWantedType == MAPINFO_TYPE_CA)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_ca_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_FREEZETAG)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_freezetag_teams", sa);
+		s = cdr(s);
+	}
+
 	if(pWantedType == MAPINFO_TYPE_CTF)
 	{
 		sa = car(s);
@@ -566,6 +582,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("leadlimit", cvar_defstring("leadlimit"));
 	cvar_set("fraglimit", cvar_defstring("fraglimit"));
 	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
+	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
+	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -613,6 +631,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		else if(k == "teams")
 		{
 			cvar_set("g_tdm_teams", v);
+			cvar_set("g_ca_teams", v);
+			cvar_set("g_freezetag_teams", v);
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
 		}
@@ -1053,20 +1073,21 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(t))
+			if not(cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
 		}
 		else if(t == "cdtrack")
 		{
-			if(pGametypeToSet)
+			t = car(s); s = cdr(s);
+			if(pGametypeToSet) // FIXME is this check right here?
 			{
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
-						MapInfo_Map_clientstuff, "cd loop \"", s, "\"\n"
+						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 					);
 			}
 		}

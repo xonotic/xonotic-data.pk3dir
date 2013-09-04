@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", _("Rocket Launcher"))
+REGISTER_WEAPON(
+/* WEP_##id  */ ROCKET_LAUNCHER,
+/* function  */ w_rlauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "rl",
+/* shortname */ "rocketlauncher",
+/* fullname  */ _("Rocket Launcher")
+);
 #else
 #ifdef SVQC
 .float rl_release;
@@ -19,11 +29,11 @@ void W_Rocket_Explode ()
 	W_Rocket_Unregister();
 
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -168,7 +178,7 @@ void W_Rocket_Think (void)
 			{
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTEN_NORM);
 				self.count = 1;
 			}
 		}
@@ -348,7 +358,7 @@ float w_rlauncher(float req)
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
 					if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
@@ -399,7 +409,7 @@ float w_rlauncher(float req)
 					}
 				}
 				if(rockfound)
-					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -469,7 +479,7 @@ float w_rlauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

@@ -61,7 +61,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
@@ -70,7 +70,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
@@ -82,7 +82,7 @@ void CreatureFrame (void)
 			if (self.flags & FL_INWATER)
 			{
 				// play leave water sound
-				self.flags &~= FL_INWATER;
+				self.flags &= ~FL_INWATER;
 				self.dmgtime = 0;
 			}
 			self.air_finished = time + 12;
@@ -93,7 +93,7 @@ void CreatureFrame (void)
 		{
 			// check for falling damage
 			float velocity_len = vlen(self.velocity);
-			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
+			if(!self.hook.state && !(g_cts && !autocvar_g_cts_selfdamage))
 			{
 				dm = vlen(self.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
@@ -175,9 +175,9 @@ void StartFrame (void)
 		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
 		{
-			if(clienttype(cl) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(cl))
 				++c_seeing;
-			if(cl.classname == "player")
+			if(IS_PLAYER(cl))
 				++c_seen;
 		}
 		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
@@ -209,19 +209,13 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
-	count_players();
-	if(g_ca || g_freezetag)
-		count_alive_players();
-	Arena_Warmup();
-	Spawnqueue_Check();
-
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;
 
 	if(game_delay_last == TRUE)
 	if(game_delay == FALSE)
 	if(autocvar_sv_eventlog)
-			GameLogEcho(":startdelay_ended");
+		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 

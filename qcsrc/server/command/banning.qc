@@ -107,6 +107,41 @@ void BanCommand_kickban(float request, float argc, string command)
 	}
 }
 
+void BanCommand_mute(float request, float argc, string command) // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argc >= 2)
+			{
+				entity client = GetFilteredEntity(argv(1));
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted > 0) 
+				{
+					client.muted = TRUE;
+					return;
+				}
+				else
+				{
+					print("mute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				}
+			}
+		}
+			
+		default:
+			print("Incorrect parameters for ^2mute^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd mute client\n");
+			print("  'client' is the entity number or name of the player to mute.\n");
+			print("See also: ^2unmute^7\n");
+			return;
+		}
+	}
+}
+
 void BanCommand_unban(float request, float argc)
 {
 	switch(request)
@@ -160,6 +195,41 @@ void BanCommand_unban(float request, float argc)
 	}
 }
 
+void BanCommand_unmute(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argc >= 2)
+			{
+				entity client = GetFilteredEntity(argv(1));
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted > 0) 
+				{
+					client.muted = FALSE;
+					return;
+				}
+				else
+				{
+					print("unmute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				}
+			}
+		}
+			
+		default:
+			print("Incorrect parameters for ^2mute^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd unmute client\n");
+			print("  'client' is the entity number or name of the player to unmute.\n");
+			print("See also: ^2mute^7\n");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void BanCommand_(float request)
@@ -189,13 +259,13 @@ void BanCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// but for 0.5 compat, we need "bans" here as it was replaced... REMOVE IT AFTER 0.6 RELEASE!!!!
 #define BAN_COMMANDS(request,arguments,command) \
 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("bans", BanCommand_banlist(request), "") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
+	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
+	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") \
 	/* nothing */
 
 void BanCommand_macro_help()
