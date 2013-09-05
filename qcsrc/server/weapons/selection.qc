@@ -17,7 +17,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !WEPSET_CONTAINS_EW(cl, wpn) && !WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 		
 	if(complain)
@@ -29,7 +29,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	if (WEPSET_CONTAINS_EW(cl, wpn))
+	if (cl.weapons & WepSet_FromWeapon(wpn))
 	{
 		if (andammo)
 		{
@@ -69,7 +69,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
@@ -201,11 +201,11 @@ void W_SwitchToOtherWeapon(entity pl)
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
 	w = pl.weapon;
-	if(WEPSET_CONTAINS_EW(pl, w))
+	if(pl.weapons & WepSet_FromWeapon(w))
 	{
-		WEPSET_ANDNOT_EW(pl, w);
+		pl.weapons &= ~WepSet_FromWeapon(w);
 		ww = w_getbestweapon(pl);
-		WEPSET_OR_EW(pl, w);
+		pl.weapons |= WepSet_FromWeapon(w);
 	}
 	else
 		ww = w_getbestweapon(pl);

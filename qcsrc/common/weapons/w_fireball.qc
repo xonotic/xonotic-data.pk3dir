@@ -240,7 +240,7 @@ void W_Fireball_Attack1_Frame1()
 void W_Fireball_Attack1_Frame0()
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
@@ -453,7 +453,7 @@ float w_fireball(float req)
 				org2 = w_org + w_backoff * 16;
 				pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
 			
 			return TRUE;

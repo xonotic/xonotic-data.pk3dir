@@ -18,11 +18,11 @@ float W_WeaponRateFactor()
 }
 
 // VorteX: static frame globals
-float WFRAME_DONTCHANGE = -1;
-float WFRAME_FIRE1 = 0;
-float WFRAME_FIRE2 = 1;
-float WFRAME_IDLE = 2;
-float WFRAME_RELOAD = 3;
+const float WFRAME_DONTCHANGE = -1;
+const float WFRAME_FIRE1 = 0;
+const float WFRAME_FIRE2 = 1;
+const float WFRAME_IDLE = 2;
+const float WFRAME_RELOAD = 3;
 .float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
@@ -292,10 +292,10 @@ void CL_Weaponentity_Think()
 
 	tb = (self.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
 	self.effects = self.owner.effects & EFMASK_CHEAP;
-	self.effects &~= EF_LOWPRECISION;
-	self.effects &~= EF_FULLBRIGHT; // can mask team color, so get rid of it
-	self.effects &~= EF_TELEPORT_BIT;
-	self.effects &~= EF_RESTARTANIM_BIT;
+	self.effects &= ~EF_LOWPRECISION;
+	self.effects &= ~EF_FULLBRIGHT; // can mask team color, so get rid of it
+	self.effects &= ~EF_TELEPORT_BIT;
+	self.effects &= ~EF_RESTARTANIM_BIT;
 	self.effects |= tb;
 
 	if(self.owner.alpha == default_player_alpha)
@@ -458,7 +458,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -661,7 +661,7 @@ void W_WeaponFrame()
 		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
-		self.items &~= IT_AMMO;
+		self.items &= ~IT_AMMO;
 		return;
 	}
 
@@ -679,7 +679,7 @@ void W_WeaponFrame()
 			self.switchingweapon = self.switchweapon;
 			entity newwep = get_weaponinfo(self.switchweapon);
 
-			self.items &~= IT_AMMO;
+			self.items &= ~IT_AMMO;
 			self.items = self.items | (newwep.items & IT_AMMO);
 
 			// the two weapon entities will notice this has changed and update their models
@@ -745,7 +745,7 @@ void W_WeaponFrame()
 	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
-		if(w && !WEPSET_CONTAINS_EW(self, w))
+		if(w && !(self.weapons & WepSet_FromWeapon(w)))
 		{
 			if(self.weapon == self.switchweapon)
 				W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -926,7 +926,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 
 	// now begin the reloading process
 
-	sound(self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTEN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

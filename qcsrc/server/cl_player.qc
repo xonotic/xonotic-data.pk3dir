@@ -259,7 +259,7 @@ void player_anim (void)
 
 void SpawnThrownWeapon (vector org, float w)
 {
-	if(WEPSET_CONTAINS_EW(self, self.weapon))
+	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
 }
@@ -280,11 +280,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);
 	}
 
 	if (take > 50)
@@ -412,11 +412,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -610,7 +610,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.solid = SOLID_CORPSE;
 		self.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
@@ -1093,15 +1093,15 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			{
 				msg_entity = self;
 				if(IS_REAL_CLIENT(msg_entity))
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
 			msg_entity = self;
 			if(msg_entity.cvar_cl_voice_directional == 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			break;
 		case VOICETYPE_AUTOTAUNT:
 			if(!sv_autotaunt)
@@ -1115,9 +1115,9 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			if (tauntrand < msg_entity.cvar_cl_autotaunt)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TAUNT:
@@ -1130,13 +1130,13 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 				break;
 			msg_entity = self;
 			if (msg_entity.cvar_cl_voice_directional >= 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			break;
 		case VOICETYPE_PLAYERSOUND:
 			msg_entity = self;
-			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NORM);
+			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");
@@ -1168,9 +1168,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			}
 			break;
@@ -1181,13 +1181,13 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 				msg_entity = self;
 				if(IS_REAL_CLIENT(msg_entity))
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
@@ -1195,9 +1195,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			break;
 		case VOICETYPE_AUTOTAUNT:
@@ -1212,9 +1212,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if (tauntrand < msg_entity.cvar_cl_autotaunt)
 				{
 					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			break;
 		case VOICETYPE_TAUNT:
@@ -1228,13 +1228,13 @@ void GlobalSound(string sample, float chan, float voicetype)
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTN_NORM);
+			sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");

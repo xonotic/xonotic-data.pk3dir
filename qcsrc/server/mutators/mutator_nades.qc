@@ -64,8 +64,8 @@ void nade_boom()
 		default: 		 expef = "nade_explode"; break;
 	}
 	
-	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
 	
 	Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
@@ -84,7 +84,7 @@ void nade_touch()
 	//UpdateCSQCProjectile(self);
 	if(self.health == self.max_health)
 	{
-		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTN_NORM);
+		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 
@@ -94,7 +94,7 @@ void nade_touch()
 
 void nade_beep()
 {
-	sound(self, CH_SHOTS_SINGLE, "overkill/grenadebip.ogg", VOL_BASE, 0.5 *(ATTN_LARGE + ATTN_MAX));
+	sound(self, CH_SHOTS_SINGLE, "overkill/grenadebip.ogg", VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 	self.think = nade_boom;
 	self.nextthink = max(self.wait, time);
 }
@@ -129,7 +129,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 
 	if(self.health == self.max_health)
 	{
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, 0.5 *(ATTN_LARGE + ATTN_MAX));
+		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 		self.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
 		self.think = nade_beep;
 	}
@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
-	float key_pressed = ((g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || WEPSET_CONTAINS_AW(weaponsInMap, WEP_HOOK)) ? self.button16 : self.BUTTON_HOOK);
+	float key_pressed = ((g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK)) ? self.button16 : self.BUTTON_HOOK);
 	
 	if(self.nade)
 		if(self.nade.wait - 0.1 <= time)

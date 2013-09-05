@@ -104,7 +104,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	if(!self.respawntime)
 	{
-		if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		if(e.weapons & WEPSET_SUPERWEAPONS)
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -116,7 +116,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
-	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if(e.weapons & WEPSET_SUPERWEAPONS)
 		if(!self.superweapons_finished)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
@@ -140,7 +140,7 @@ void weapon_defaultspawnfunc(float wpn)
 	f = FL_WEAPON;
 
 	// no weapon-stay on superweapons
-	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if(e.weapons & WEPSET_SUPERWEAPONS)
 		f |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons

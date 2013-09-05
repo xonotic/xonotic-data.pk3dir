@@ -27,7 +27,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, wpn))
+	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -37,8 +37,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, i))
-					if(WEPSET_CONTAINS_EW(own, i))
+				if(WepSet_FromWeapon(i) & WEPSET_SUPERWEAPONS)
+					if(own.weapons & WepSet_FromWeapon(i))
 						++superweapons;
 			if(superweapons <= 1)
 			{
@@ -148,7 +148,7 @@ float W_IsWeaponThrowable(float w)
         return 0;
 	
 	wa = W_AmmoItemCode(w);
-	if(WEPSET_CONTAINS_AW(start_weapons, w))
+	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
@@ -178,9 +178,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	if(!WEPSET_CONTAINS_EW(self, w))
+	if(!(self.weapons & WepSet_FromWeapon(w)))
 		return;
-	WEPSET_ANDNOT_EW(self, w);
+	self.weapons &= ~WepSet_FromWeapon(w);
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);

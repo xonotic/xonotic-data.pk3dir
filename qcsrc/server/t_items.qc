@@ -103,7 +103,7 @@ void ItemRead(float _IsNew)
             if(self.ItemStatus & ITS_AVAILABLE)
                 self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 self.effects &~= (EF_ADDITIVE | EF_FULLBRIGHT);
+                 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
     
@@ -193,7 +193,7 @@ float ItemSend(entity to, float sf)
     if(self.gravity)
         sf |= ISF_DROP;
     else
-        sf &~= ISF_DROP;
+        sf &= ~ISF_DROP;
 	
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);	
 	WriteByte(MSG_ENTITY, sf);
@@ -256,7 +256,7 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items == 0)
 			return FALSE;
 		if(g_weaponarena)
-			if(!WEPSET_EMPTY_E(self) || (self.items & IT_AMMO))
+			if(self.weapons || (self.items & IT_AMMO))
 				return FALSE;
 	}
 	return TRUE;
@@ -309,7 +309,7 @@ float Item_Customize()
 {
 	if(self.spawnshieldtime)
 		return TRUE;
-	if(!WEPSET_CONTAINS_ALL_EE(other, self))
+	if(self.weapons & ~other.weapons)
 	{
 		self.colormod = '0 0 0';
 		self.glowmod = self.colormod;
@@ -333,8 +333,8 @@ float Item_Customize()
 
 void Item_Show (entity e, float mode)
 {    
-	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
-	e.ItemStatus &~= ITS_STAYWEP;
+	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
+	e.ItemStatus &= ~ITS_STAYWEP;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -349,7 +349,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		e.spawnshieldtime = 1;
-		e.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
@@ -367,7 +367,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.spawnshieldtime = 1;
-		e.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 	
 	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
@@ -393,11 +393,11 @@ void Item_Respawn (void)
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == IT_STRENGTH)
-		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else if(self.items == IT_INVINCIBLE)
-		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -454,7 +454,7 @@ void Item_RespawnCountdown (void)
 				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
 			}
 		}
-		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -465,7 +465,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -555,7 +555,7 @@ float Item_GiveTo(entity item, entity player)
 	if (player.switchweapon == w_getbestweapon(player))
 		_switchweapon = TRUE;
 
-	if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
+	if not(player.weapons & WepSet_FromWeapon(player.switchweapon))
 		_switchweapon = TRUE;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -568,15 +568,15 @@ float Item_GiveTo(entity item, entity player)
 
 	if (item.flags & FL_WEAPON)
 	{
-		WEPSET_DECLARE_A(it);
-		WEPSET_COPY_AE(it, item);
-		WEPSET_ANDNOT_AE(it, player);
+		WepSet it;
+		it = item.weapons;
+		it &= ~player.weapons;
 
-		if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && item.pickup_anyway))
+		if (it || (item.spawnshieldtime && item.pickup_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(WEPSET_CONTAINS_AW(it, i))
+			if(it & WepSet_FromWeapon(i))
 				W_GiveWeapon(player, i);
 		}
 	}
@@ -673,7 +673,7 @@ void Item_Touch (void)
 	other.last_pickup = time;
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
-	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
@@ -714,7 +714,7 @@ void Item_Reset()
 		if(self.waypointsprite_attached)
 			WaypointSprite_Kill(self.waypointsprite_attached);
 
-		if((self.flags & FL_POWERUP) | WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+		if((self.flags & FL_POWERUP) || (self.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
 			Item_ScheduleInitialRespawn(self);
 	}
 }
@@ -742,7 +742,7 @@ void Item_FindTeam()
 				Item_Show(head, -1);
 				head.state = 1; // state 1 = initially hidden item
 			}
-			head.effects &~= EF_NODRAW;
+			head.effects &= ~EF_NODRAW;
 		}
 
 		Item_Reset();
@@ -766,7 +766,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	float c, j, position;
 
 	// See if I have it already
-	if(!WEPSET_CONTAINS_ALL_EE(player, item))
+	if(item.weapons & ~player.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -823,7 +823,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if not(WEPSET_CONTAINS_EW(player, i))
+		if not(player.weapons & WepSet_FromWeapon(i))
 			continue;
 
 		if(wi.items & IT_SHELLS)
@@ -903,7 +903,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.weapon = weaponid;
 
 	if(weaponid)
-		WEPSET_COPY_EW(self, weaponid);
+		self.weapons = WepSet_FromWeapon(weaponid);
 	
 	self.flags = FL_ITEM | itemflags;
 
@@ -931,7 +931,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
 		if(self.items == 0)
-		if(WEPSET_CONTAINS_ALL_AE(WEPBIT_SUPERWEAPONS, self)) // only superweapons
+		if(!(self.weapons & ~WEPSET_SUPERWEAPONS)) // only superweapons
 		if(self.ammo_nails == 0)
 		if(self.ammo_cells == 0)
 		if(self.ammo_rockets == 0)
@@ -1019,7 +1019,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		WEPSET_OR_AW(weaponsInMap, weaponid);
+		weaponsInMap |= WepSet_FromWeapon(weaponid);
 
 		precache_model (self.model);
 		precache_sound (self.item_pickupsound);
@@ -1096,7 +1096,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		return;
 	}
 }
-
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
@@ -1321,7 +1320,7 @@ void spawnfunc_target_items (void)
 					e = get_weaponinfo(j);
 					if(argv(i) == e.netname)
 					{
-						WEPSET_OR_EW(self, j);
+						self.weapons |= WepSet_FromWeapon(j);
 						if(self.spawnflags == 0 || self.spawnflags == 2)
 							WEP_ACTION(e.weapon, WR_INIT);
 						break;
@@ -1381,7 +1380,7 @@ void spawnfunc_target_items (void)
 		{
 			e = get_weaponinfo(j);
 			if(e.weapon)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, WEPSET_CONTAINS_EW(self, j), e.netname);
+				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & WepSet_FromWeapon(j)), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1437,31 +1436,31 @@ void spawnfunc_item_jetpack(void)
 
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
-	float v0, v1;
-	v0 = WEPSET_CONTAINS_EW(e, wpn);
+	WepSet v0, v1;
+	v0 = (e.weapons & WepSet_FromWeapon(wpn));
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				WEPSET_OR_EW(e, wpn);
+				e.weapons |= WepSet_FromWeapon(wpn);
 			else
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				WEPSET_OR_EW(e, wpn);
+				e.weapons |= WepSet_FromWeapon(wpn);
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 	}
-	v1 = WEPSET_CONTAINS_EW(e, wpn);
+	v1 = (e.weapons & WepSet_FromWeapon(wpn));
 	return (v0 != v1);
 }
 
@@ -1475,7 +1474,7 @@ float GiveBit(entity e, .float fld, float bit, float op, float val)
 			if(val > 0)
 				e.fld |= bit;
 			else
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
@@ -1484,11 +1483,11 @@ float GiveBit(entity e, .float fld, float bit, float op, float val)
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 	}
 	v1 = (e.fld & bit);
@@ -1528,12 +1527,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1544,7 +1543,6 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.regenfield = max(e.regenfield, time + regentime);
 }
-
 float GiveItems(entity e, float beginarg, float endarg)
 {
 	float got, i, j, val, op;
@@ -1705,8 +1703,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 		if(wi.weapon)
 		{
 			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
-			if not(WEPSET_CONTAINS_AW(save_weapons, j))
-				if(WEPSET_CONTAINS_EW(e, j))
+			if not(save_weapons & WepSet_FromWeapon(j))
+				if(e.weapons & WepSet_FromWeapon(j))
 					WEP_ACTION(wi.weapon, WR_INIT);
 		}
 	}
@@ -1721,7 +1719,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
 
 	if(e.superweapons_finished <= 0)
-		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+		if(self.weapons & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)
@@ -1737,7 +1735,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if not(WEPSET_CONTAINS_EW(e, e.switchweapon))
+	if not(e.weapons & WepSet_FromWeapon(e.switchweapon))
 		_switchweapon = TRUE;
 	if(_switchweapon)
 		W_SwitchWeapon_Force(e, w_getbestweapon(e));
