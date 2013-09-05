@@ -894,6 +894,7 @@ void monster_die()
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 
 	if(IS_CLIENT(self.realowner))
+	if not(self.monster_respawned)
 		self.realowner.monstercount -= 1;
 
 	self.event_damage	= monsters_corpse_damage;
