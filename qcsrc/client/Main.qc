@@ -1187,12 +1187,20 @@ void Net_WeaponComplain()
 	}
 }
 
+string welcomedialog_args;
 void Net_ReadServerInfo()
 {
-	localcmd("\nmenu_cmd directmenu Welcome name \"", ReadString(),
-		"\" ip \"", ReadString(),
-		"\" motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())),
-		"\"\n");
+	if(welcomedialog_args)
+		strunzone(welcomedialog_args);
+	welcomedialog_args = strcat("name \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, "ip \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, "motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
+	string pic = ReadString();
+	if(pic != "")
+		welcomedialog_args = strcat(welcomedialog_args, "pic \"", pic, "\"");
+	localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+	welcomedialog_args = string_null;
+	return;
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

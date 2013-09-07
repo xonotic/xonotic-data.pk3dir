@@ -16,6 +16,8 @@ CLASS(XonoticWelcomeDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticWelcomeDialog, serverinfo_ip_ent, entity, world)
 	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD, string, string_null)
 	ATTRIB(XonoticWelcomeDialog, serverinfo_MOTD_ent, entity, world)
+	ATTRIB(XonoticWelcomeDialog, serverinfo_pic, string, string_null)
+	ATTRIB(XonoticWelcomeDialog, serverinfo_pic_ent, entity, NULL)
 ENDCLASS(XonoticWelcomeDialog)
 #endif
 
@@ -33,6 +35,10 @@ void welcomeDialog_resetStrings(entity me)
 	if(me.serverinfo_MOTD)
 		strunzone(me.serverinfo_MOTD);
 	me.serverinfo_MOTD = strzone(_("<NO MOTD>"));
+
+	if(me.serverinfo_pic)
+		strunzone(me.serverinfo_pic);
+	me.serverinfo_pic = strzone("nopic");
 }
 void XonoticWelcomeDialog_configureDialog(entity me)
 {
@@ -67,11 +73,22 @@ void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 			me.serverinfo_MOTD = strzone(bufstr_get(argsbuf, i + 1));
 			++i;
 		}
+		else if(s == "pic")
+		{
+			if(me.serverinfo_pic)
+				strunzone(me.serverinfo_pic);
+			me.serverinfo_pic = strzone(strcat("/", bufstr_get(argsbuf, i + 1)));
+			++i;
+		}
 		++i;
 	}
 	me.serverinfo_name_ent.setText(me.serverinfo_name_ent, me.serverinfo_name);
 	me.serverinfo_ip_ent.setText(me.serverinfo_ip_ent, me.serverinfo_ip);
 	me.serverinfo_MOTD_ent.setText(me.serverinfo_MOTD_ent, me.serverinfo_MOTD);
+
+	if(me.serverinfo_pic_ent.src)
+		strunzone(me.serverinfo_pic_ent.src);
+	me.serverinfo_pic_ent.src = strzone(me.serverinfo_pic);
 }
 
 void XonoticWelcomeDialog_fill(entity me)
@@ -79,12 +96,15 @@ void XonoticWelcomeDialog_fill(entity me)
 	entity e;
 
 	me.TR(me);
-		me.TD(me, 1, 4, me.serverinfo_name_ent = makeXonoticTextLabel(0.5, ""));
-	me.TR(me);
-		me.TD(me, 1, 4, me.serverinfo_ip_ent = makeXonoticTextLabel(0.5, ""));
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 10, 4, me.serverinfo_MOTD_ent = makeXonoticTextListBox());
+		me.TD(me, 4, 2, me.serverinfo_pic_ent = makeXonoticImage(string_null, 4.0/3.0));
+
+	me.gotoRC(me, 1, 2);
+		me.TD(me, 1, 2, me.serverinfo_name_ent = makeXonoticTextLabel(0, ""));
+	me.gotoRC(me, 2, 2);
+		me.TD(me, 1, 2, me.serverinfo_ip_ent = makeXonoticTextLabel(0, ""));
+
+	me.gotoRC(me, 4, 0);
+		me.TD(me, me.rows - 4 - 1, 4, me.serverinfo_MOTD_ent = makeXonoticTextListBox());
 			me.serverinfo_MOTD_ent.allowColors = 1;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 1);
