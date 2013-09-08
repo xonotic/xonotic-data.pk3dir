@@ -1,57 +1,57 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ SHOTGUN,
-/* function */ w_shotgun,
+/* WEP_##id */ SHOCKWAVE,
+/* function */ w_shockwave,
 /* ammotype */ IT_SHELLS,
 /* impulse  */ 2,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_LOW,
 /* model    */ "shotgun",
-/* netname  */ "shotgun",
-/* fullname */ _("Shotgun")
+/* netname  */ "shockwave",
+/* fullname */ _("Shockwave")
 );
 #else
 #ifdef SVQC
-void spawnfunc_weapon_shotgun()
+void spawnfunc_weapon_shockwave()
 {
-	if(autocvar_sv_q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshockwaveswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_UZI);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOTGUN);
+	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 }
 
 
-void W_Shotgun_Attack (void)
+void W_Shockwave_Pellets(void)
 {
-	float	sc;
-	float	ammoamount;
-	float	bullets;
-	float	d;
-	float	f;
-	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
+	float sc;
+	float ammoamount;
+	float bullets;
+	float d;
+	float f;
+	float spread;
+	float bulletspeed;
+	float bulletconstant;
 	entity flash;
 
-	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
-	bullets = autocvar_g_balance_shotgun_primary_bullets;
-	d = autocvar_g_balance_shotgun_primary_damage;
-	f = autocvar_g_balance_shotgun_primary_force;
-	spread = autocvar_g_balance_shotgun_primary_spread;
-	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
-	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+	ammoamount = autocvar_g_balance_shockwave_primary_ammo;
+	bullets = autocvar_g_balance_shockwave_primary_bullets;
+	d = autocvar_g_balance_shockwave_primary_damage;
+	f = autocvar_g_balance_shockwave_primary_force;
+	spread = autocvar_g_balance_shockwave_primary_spread;
+	bulletspeed = autocvar_g_balance_shockwave_primary_speed;
+	bulletconstant = autocvar_g_balance_shockwave_primary_bulletconstant;
 
-	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
+	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shockwave_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
+	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOTGUN, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOCKWAVE, 0, 1, bulletconstant);
 	endFireBallisticBullet();
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
+	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shockwave_primary_ammo);
 
 	// casing code
 	if (autocvar_g_casings >= 1)
@@ -69,7 +69,7 @@ void W_Shotgun_Attack (void)
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void shotgun_meleethink (void)
+void shockwave_meleethink (void)
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -85,12 +85,12 @@ void shotgun_meleethink (void)
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
 	
 	// calculate swing percentage based on time
-	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
+	meleetime = autocvar_g_balance_shockwave_secondary_melee_time * W_WeaponRateFactor();
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
+	f = ((1 - swing) * autocvar_g_balance_shockwave_secondary_melee_traces);
 	
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)
+	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shockwave_secondary_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
@@ -99,12 +99,12 @@ void shotgun_meleethink (void)
 	// if okay, perform the traces needed for this frame 
 	for(i=self.swing_prev; i < f; ++i)
 	{
-		swing_factor = ((1 - (i / autocvar_g_balance_shotgun_secondary_melee_traces)) * 2 - 1);
+		swing_factor = ((1 - (i / autocvar_g_balance_shockwave_secondary_melee_traces)) * 2 - 1);
 		
 		targpos = (self.realowner.origin + self.realowner.view_ofs 
-			+ (v_forward * autocvar_g_balance_shotgun_secondary_melee_range)
-			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
-			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
+			+ (v_forward * autocvar_g_balance_shockwave_secondary_melee_range)
+			+ (v_up * swing_factor * autocvar_g_balance_shockwave_secondary_melee_swing_up)
+			+ (v_right * swing_factor * autocvar_g_balance_shockwave_secondary_melee_swing_side));
 
 		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
 		
@@ -117,28 +117,28 @@ void shotgun_meleethink (void)
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
+			&& (is_player || autocvar_g_balance_shockwave_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 			
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_shockwave_secondary_damage * min(1, swing_factor + 1));
 			else
-				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_shockwave_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
 			
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 			
 			Damage(target_victim, self.realowner, self.realowner, 
-				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY, 
+				swing_damage, WEP_SHOCKWAVE | HITTYPE_SECONDARY, 
 				self.realowner.origin + self.realowner.view_ofs, 
-				v_forward * autocvar_g_balance_shotgun_secondary_force);
+				v_forward * autocvar_g_balance_shockwave_secondary_force);
 				
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
+			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
 				
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 			
-			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
+			if(autocvar_g_balance_shockwave_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				self.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
@@ -165,24 +165,24 @@ void shotgun_meleethink (void)
 	}
 }
 
-void W_Shotgun_Attack2 (void)
+void W_Shockwave_Attack2 (void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
-	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
+	sound (self, CH_WEAPON_A, "weapons/shockwave_melee.wav", VOL_BASE, ATTEN_NORM);
+	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shockwave_secondary_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
 	meleetemp.realowner = self;
-	meleetemp.think = shotgun_meleethink;
-	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
-	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
+	meleetemp.think = shockwave_meleethink;
+	meleetemp.nextthink = time + autocvar_g_balance_shockwave_secondary_melee_delay * W_WeaponRateFactor();
+	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shockwave_secondary_damage, autocvar_g_balance_shockwave_secondary_melee_range);
 }
 
-void spawnfunc_weapon_shotgun(); // defined in t_items.qc
+void spawnfunc_weapon_shockwave(); // defined in t_items.qc
 
-.float shotgun_primarytime;
+.float shockwave_primarytime;
 
-float w_shotgun(float req)
+float w_shockwave(float req)
 {
 	float ammo_amount;
 	
@@ -190,48 +190,48 @@ float w_shotgun(float req)
 	{
 		case WR_AIM:
 		{
-			if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
+			if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shockwave_secondary_melee_range)
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 			else
 			{
 				if(autocvar_g_antilag_bullets)
 					self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 				else
-					self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shotgun_primary_speed, 0, 0.001, FALSE);
+					self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shockwave_primary_speed, 0, 0.001, FALSE);
 			}
 			
 			return TRUE;
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
+			if(autocvar_g_balance_shockwave_reload_ammo && self.clip_load < autocvar_g_balance_shockwave_primary_ammo) // forced reload
 			{
-				// don't force reload an empty shotgun if its melee attack is active
-				if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
+				// don't force reload an empty shockwave if its melee attack is active
+				if not(autocvar_g_balance_shockwave_secondary && self.ammo_shells < autocvar_g_balance_shockwave_primary_ammo)
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
 			{
 				if (self.BUTTON_ATCK)
 				{
-					if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+					if (time >= self.shockwave_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+						if(weapon_prepareattack(0, autocvar_g_balance_shockwave_primary_animtime))
 						{
-							W_Shotgun_Attack();
-							self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire * W_WeaponRateFactor();
-							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_primary_animtime, w_ready);
+							W_Shockwave_Attack();
+							self.shockwave_primarytime = time + autocvar_g_balance_shockwave_primary_refire * W_WeaponRateFactor();
+							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shockwave_primary_animtime, w_ready);
 						}
 					}
 				}
 			}
 			if (self.clip_load >= 0) // we are not currently reloading
 			if (!self.crouch) // no crouchmelee please
-			if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
-			if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
+			if (self.BUTTON_ATCK2 && autocvar_g_balance_shockwave_secondary)
+			if (weapon_prepareattack(1, autocvar_g_balance_shockwave_secondary_refire))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
+				weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Attack2);
 			}
 			
 			return TRUE;
@@ -239,12 +239,12 @@ float w_shotgun(float req)
 		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
-			precache_model ("models/weapons/g_shotgun.md3");
-			precache_model ("models/weapons/v_shotgun.md3");
-			precache_model ("models/weapons/h_shotgun.iqm");
+			precache_model ("models/weapons/g_shockwave.md3");
+			precache_model ("models/weapons/v_shockwave.md3");
+			precache_model ("models/weapons/h_shockwave.iqm");
 			precache_sound ("misc/itempickup.wav");
-			precache_sound ("weapons/shotgun_fire.wav");
-			precache_sound ("weapons/shotgun_melee.wav");
+			precache_sound ("weapons/shockwave_fire.wav");
+			precache_sound ("weapons/shockwave_melee.wav");
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -254,8 +254,8 @@ float w_shotgun(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= autocvar_g_balance_shotgun_primary_ammo;
+			ammo_amount = self.ammo_shells >= autocvar_g_balance_shockwave_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_SHOCKWAVE]) >= autocvar_g_balance_shockwave_primary_ammo;
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -265,7 +265,7 @@ float w_shotgun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(autocvar_g_balance_shotgun_primary_ammo, "weapons/reload.wav");
+			W_Reload(autocvar_g_balance_shockwave_primary_ammo, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -275,9 +275,9 @@ float w_shotgun(float req)
 		case WR_KILLMESSAGE:
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_SHOTGUN_MURDER_SLAP;
+				return WEAPON_SHOCKWAVE_MURDER_SLAP;
 			else
-				return WEAPON_SHOTGUN_MURDER;
+				return WEAPON_SHOCKWAVE_MURDER;
 		}
 	}
 	return TRUE;
@@ -285,7 +285,7 @@ float w_shotgun(float req)
 #endif
 #ifdef CSQC
 .float prevric;
-float w_shotgun(float req)
+float w_shockwave(float req)
 {
 	switch(req)
 	{
@@ -293,7 +293,7 @@ float w_shotgun(float req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("shotgun_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum("shockwave_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
 				if(w_random < 0.0165)
