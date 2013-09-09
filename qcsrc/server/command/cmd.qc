@@ -116,6 +116,26 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 	}
 }
 
+void ClientCommand_getserverpic(float request) // internal command, used only by code
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			serverinfo_pic_send();
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd getserverpic\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_mv_getpicture(float request, float argc) // internal command, used only by code
 {
 	switch(request)
@@ -563,6 +583,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("getserverpic", ClientCommand_getserverpic(request), "Retrieve server banner from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
@@ -649,6 +670,7 @@ void SV_ParseClientCommand(string command)
 		// exempt commands which are not subject to floodcheck
 		case "begin": break; // handled by engine in host_cmd.c
 		case "download": break; // handled by engine in cl_parse.c
+		case "getserverpic": break; // handled by server in this file
 		case "mv_getpicture": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c

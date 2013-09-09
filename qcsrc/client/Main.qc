@@ -1193,14 +1193,33 @@ void Net_ReadServerInfo()
 	if(welcomedialog_args)
 		strunzone(welcomedialog_args);
 	welcomedialog_args = strcat("name \"", ReadString(), "\"");
-	welcomedialog_args = strcat(welcomedialog_args, "ip \"", ReadString(), "\"");
-	welcomedialog_args = strcat(welcomedialog_args, "motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, " ip \"", ReadString(), "\"");
+	welcomedialog_args = strcat(welcomedialog_args, " motd \"", MakeConsoleSafe(strreplace("\n", "\\n", ReadString())), "\"");
 	string pic = ReadString();
-	if(pic != "")
-		welcomedialog_args = strcat(welcomedialog_args, "pic \"", pic, "\"");
-	localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
-	welcomedialog_args = string_null;
-	return;
+	if(pic == "" || PreviewExists(pic) )
+	{
+		if(pic != "")
+			welcomedialog_args = strcat(welcomedialog_args, " pic \"", pic, "\"");
+		localcmd("\nmenu_cmd directmenu Welcome ", welcomedialog_args, "\n");
+		welcomedialog_args = string_null;
+		return;
+	} else {
+		welcomedialog_args = strzone(welcomedialog_args);
+		print(_("Requesting server banner...\n"));
+		localcmd("\ncmd getserverpic\n");
+	}
+}
+
+void Net_ReadServerInfo_Pic()
+{
+	if(welcomedialog_args)
+	{
+		localcmd("\nmenu_cmd directmenu Welcome ", strcat(welcomedialog_args, " pic \"", ReadPicture(), "\""), "\n");
+		strunzone(welcomedialog_args);
+		welcomedialog_args = string_null;
+	}
+	else // just get the image, we don't want to display the welcome dialog
+		ReadPicture();
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1266,6 +1285,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SERVERINFO:
 			Net_ReadServerInfo();
+			bHandled = true;
+			break;
+		case TE_CSQC_SERVERINFO_PIC:
+			Net_ReadServerInfo_Pic();
 			bHandled = true;
 			break;
 		default:

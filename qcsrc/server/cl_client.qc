@@ -726,7 +726,7 @@ void DecodeLevelParms (void)
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
 }
 
-void MOTD_send()
+void serverinfo_welcomemessage_send()
 {
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -734,6 +734,15 @@ void MOTD_send()
 	WriteString(MSG_ONE, "128.03.192.999"); // FIXME: send the real server ip
 	WriteString(MSG_ONE, autocvar_hostname);
 	WriteString(MSG_ONE, getwelcomemessage());
+	WriteString(MSG_ONE, strcat("128.03.192.999", "/banner"));
+}
+
+void serverinfo_pic_send()
+{
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_SERVERINFO_PIC);
+	WritePicture(MSG_ONE, strcat("128.03.192.999", "/banner"), 3072);
 }
 
 /*
@@ -1236,7 +1245,7 @@ void ClientConnect (void)
 
 	if(IS_REAL_CLIENT(self))
 	{
-		MOTD_send();
+		serverinfo_welcomemessage_send();
 		sv_notice_join();
 	}
 
