@@ -905,7 +905,7 @@ void readlevelcvars(void)
 		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
 		
 	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
-	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
+	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
 	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
@@ -924,7 +924,6 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
-	CHECK_MUTATOR_ADD("g_spawnsystem", mutator_spawnsystem, teamplay);
 	
 	#undef CHECK_MUTATOR_ADD
 	
