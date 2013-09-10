@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(RIFLE, w_rifle, IT_NAILS, 7, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "rifle", _("Rifle"))
+REGISTER_WEAPON(
+/* WEP_##id  */ RIFLE,
+/* function  */ w_rifle,
+/* ammotype  */ IT_NAILS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "campingrifle",
+/* shortname */ "rifle",
+/* fullname  */ _("Rifle")
+);
 #else
 #ifdef SVQC
 
@@ -235,11 +245,11 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.4)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.5)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

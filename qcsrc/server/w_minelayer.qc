@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
+REGISTER_WEAPON(
+/* WEP_##id  */ MINE_LAYER,
+/* function  */ w_minelayer,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "minelayer",
+/* shortname */ "minelayer",
+/* fullname  */ _("Mine Layer")
+);
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
@@ -14,7 +24,7 @@ void spawnfunc_weapon_minelayer (void)
 
 void W_Mine_Stick (entity to)
 {
-	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTEN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -62,11 +72,11 @@ void W_Mine_Stick (entity to)
 void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -178,14 +188,14 @@ void W_Mine_Think (void)
 	if ((time > self.cnt) && (!self.mine_time))
 	{
 		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(self.realowner.classname != "player" || self.realowner.deadflag != DEAD_NO)
+	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -197,11 +207,11 @@ void W_Mine_Think (void)
 	head = findradius(self.origin, autocvar_g_balance_minelayer_proximityradius);
 	while(head)
 	{
-		if(head.classname == "player" && head.deadflag == DEAD_NO)
+		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
 		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
 			self.mine_time = time + autocvar_g_balance_minelayer_time;
 		}
 		head = head.chain;
@@ -233,7 +243,7 @@ void W_Mine_Touch (void)
 		return;
 	}
 
-	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
+	if(other && IS_PLAYER(other) && other.deadflag == DEAD_NO)
 	{
 		// hit a player
 		// don't stick
@@ -435,7 +445,7 @@ float w_minelayer(float req)
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
 					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
@@ -475,7 +485,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -541,7 +551,7 @@ float w_minelayer(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

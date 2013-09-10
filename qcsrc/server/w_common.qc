@@ -6,13 +6,12 @@ void W_GiveWeapon (entity e, float wep)
 	if (!wep)
 		return;
 
-	WEPSET_OR_EW(e, wep);
+	e.weapons |= WepSet_FromWeapon(wep);
 
 	oldself = self;
 	self = e;
 
-	if not(g_minstagib)
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
 	self = oldself;
@@ -105,7 +104,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
 	{
-		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(msg_entity.classname == "spectator" && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
+		FOR_EACH_REALCLIENT(msg_entity) if(msg_entity != self) if(!msg_entity.railgunhit) if not(IS_SPEC(msg_entity) && msg_entity.enemy == self) // we use realclient, so spectators can hear the whoosh too
 		{
 			// nearest point on the beam
 			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
@@ -118,7 +117,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTN_NONE);
+			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
 		}
 
 		if(pseudoprojectile)
@@ -166,6 +165,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_force;
 .float dmg_radius;
 .float dmg_total;
+//.float last_yoda;
 void W_BallisticBullet_Hit (void)
 {
 	float f, q, g;
@@ -186,8 +186,11 @@ void W_BallisticBullet_Hit (void)
 		g = accuracy_isgooddamage(self.realowner, other);
 		Damage(other, self, self.realowner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 
-		if(yoda)
-			AnnounceTo(self.realowner, "awesome");
+		/*if(yoda && (time > (self.last_yoda + 5)))
+		{
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+			self.last_yoda = time; 
+		}*/
 
 		// calculate hits for ballistic weapons
 		if(g)
@@ -216,7 +219,7 @@ void W_BallisticBullet_LeaveSolid_think()
 	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
 	self.W_BallisticBullet_LeaveSolid_think_save = func_null;
 
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 
 	if(self.enemy.solid == SOLID_BSP)
 	{
@@ -441,7 +444,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		lag = ANTILAG_LATENCY(self);
 		if(lag < 0.001)
 			lag = 0;
-		if(clienttype(self) != CLIENTTYPE_REAL)
+		if not(IS_REAL_CLIENT(self))
 			lag = 0;
 		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 			lag = 0; // only do hitscan, but no antilag
@@ -614,7 +617,7 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
 	
-	if((attacker.flags & FL_CLIENT) && !autocvar_g_projectiles_keep_owner)
+	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		self.owner = attacker;
 		self.realowner = attacker;

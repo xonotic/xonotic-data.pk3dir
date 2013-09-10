@@ -176,7 +176,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 {
     entity proj;
 
-    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
     proj                 = spawn ();
     setorigin(proj, self.tur_shotorg);
     setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
@@ -605,7 +605,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -6;
 
     // player
-    if (e_target.flags & FL_CLIENT)
+    if (IS_CLIENT(e_target))
     {
         if not (validate_flags & TFL_TARGETSELECT_PLAYERS)
             return -7;
@@ -1060,12 +1060,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     self.effects = EF_NODRAW;
     
     // Handle turret teams.
-    if (autocvar_g_assault != 0)
-    {
-        if not (self.team)
-            self.team = 14; // Assume turrets are on the defending side if not explicitly set otehrwize
-    }
-    else if not (teamplay)
+    if not (teamplay)
 		self.team = MAX_SHOT_DISTANCE; // Group all turrets into the same team, so they dont kill eachother.
 	else if(g_onslaught && self.targetname)
 	{

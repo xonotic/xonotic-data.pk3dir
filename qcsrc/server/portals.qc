@@ -146,7 +146,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	//print(vtos(to), "\n");
 
 	// ang_x stuff works around weird quake angles
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 		ang = Portal_ApplyTransformToPlayerAngle(transform, player.v_angle);
 	else
 		ang = AnglesTransform_ApplyToAngles(transform, player.angles);
@@ -172,7 +172,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	{
 		// telefrag within 1 second of portal creation = amazing
 		if(time < teleporter.teleport_time + 1)
-			AnnounceTo(player, "amazing");
+			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
 	}
 
 	if not(teleporter.enemy)
@@ -244,7 +244,7 @@ void Portal_Touch()
 	if(self.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		return; // handled by think
 #endif
 
@@ -277,11 +277,11 @@ void Portal_Touch()
 			return;
 		}
 	if(other != self.aiment)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
 				return; // cannot go through someone else's portal
 	if(other.aiment != self.aiment)
-		if(other.aiment.classname == "player")
+		if(IS_PLAYER(other.aiment))
 			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
 				return; // cannot go through someone else's portal
 	fixedmakevectors(self.mangle);
@@ -398,14 +398,14 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTEN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }
@@ -479,7 +479,7 @@ void Portal_Think()
 
 float Portal_Customize()
 {
-	if(other.classname == "spectator")
+	if(IS_SPEC(other))
 		other = other.enemy;
 	if(other == self.aiment)
 	{

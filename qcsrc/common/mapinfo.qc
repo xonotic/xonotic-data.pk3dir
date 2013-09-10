@@ -313,8 +313,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
-				else if(v == "runematch_spawn_point")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -364,7 +362,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	else
 	{
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;       // Rune always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
 
@@ -382,7 +379,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)
 	if(!spawnplaces)
 	{
-		MapInfo_Map_supportedGametypes &~= MAPINFO_TYPE_RACE;
+		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE;
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
 	}
 
@@ -418,7 +415,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
 		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
 		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_RUNEMATCH:       return "200 20 0";
 		case MAPINFO_TYPE_LMS:             return "9 20 0";
 		case MAPINFO_TYPE_ARENA:           return "10 20 0";
 		case MAPINFO_TYPE_CA:              return "10 20 0";
@@ -477,6 +473,22 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		sa = car(s);
 		if(sa != "")
 			cvar_set("g_keyhunt_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_CA)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_ca_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_FREEZETAG)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_freezetag_teams", sa);
 		s = cdr(s);
 	}
 
@@ -570,6 +582,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("leadlimit", cvar_defstring("leadlimit"));
 	cvar_set("fraglimit", cvar_defstring("fraglimit"));
 	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
+	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
+	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -617,6 +631,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		else if(k == "teams")
 		{
 			cvar_set("g_tdm_teams", v);
+			cvar_set("g_ca_teams", v);
+			cvar_set("g_freezetag_teams", v);
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
 		}
@@ -1057,20 +1073,21 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(t))
+			if not(cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
 		}
 		else if(t == "cdtrack")
 		{
-			if(pGametypeToSet)
+			t = car(s); s = cdr(s);
+			if(pGametypeToSet) // FIXME is this check right here?
 			{
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
-						MapInfo_Map_clientstuff, "cd loop \"", s, "\"\n"
+						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 					);
 			}
 		}

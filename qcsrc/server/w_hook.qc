@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HOOK, w_hook, IT_CELLS|IT_FUEL, 0, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "hookgun", "hook", _("Grappling Hook"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HOOK,
+/* function  */ w_hook,
+/* ammotype  */ IT_CELLS|IT_FUEL,
+/* impulse   */ 0,
+/* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ 0,
+/* model     */ "hookgun",
+/* shortname */ "hook",
+/* fullname  */ _("Grappling Hook")
+);
 #else
 #ifdef SVQC
 .float dmg;
@@ -211,16 +221,16 @@ float w_hook(float req)
 
 		if (self.BUTTON_CROUCH)
 		{
-			self.hook_state &~= HOOK_PULLING;
+			self.hook_state &= ~HOOK_PULLING;
 			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
-				self.hook_state &~= HOOK_RELEASING;
+				self.hook_state &= ~HOOK_RELEASING;
 			else
 				self.hook_state |= HOOK_RELEASING;
 		}
 		else
 		{
 			self.hook_state |= HOOK_PULLING;
-			self.hook_state &~= HOOK_RELEASING;
+			self.hook_state &= ~HOOK_RELEASING;
 
 			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 			{
@@ -231,7 +241,7 @@ float w_hook(float req)
 			else
 			{
 				self.hook_state |= HOOK_REMOVING;
-				self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+				self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 		}
 	}
@@ -248,7 +258,7 @@ float w_hook(float req)
 	{
 		weapon_setup(WEP_HOOK);
 		self.current_ammo = ammo_fuel;
-		self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+		self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
@@ -285,7 +295,7 @@ float w_hook(float req)
 		org2 = w_org + w_backoff * 2;
 		pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

@@ -68,12 +68,12 @@ void PlayerStats_AddPlayer(entity e)
 	s = string_null;
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		s = e.crypto_idfp;
-	else if(clienttype(e) == CLIENTTYPE_BOT)
+	else if(IS_BOT_CLIENT(e))
 		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
 	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			s = sprintf("bot#%d", e.playerid);
 		else
 			s = sprintf("player#%d", e.playerid);
@@ -99,7 +99,7 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_AddTeam(float t) // TODO: doesn't this remain unused?
+void PlayerStats_AddTeam(float t)
 {
 	if(playerstats_db < 0)
 		return;
@@ -159,14 +159,18 @@ float PlayerStats_Event(entity e, string event_id, float value)
 	return val;
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
+float PlayerStats_TeamScore(float t, string event_id, float value)
 {
+	if(playerstats_db < 0)
+		return 0;
+
 	string key;
 	float val;
 	key = sprintf("team#%d:%s", t, event_id);
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
 /*
@@ -190,6 +194,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
 	n: nickname of the player (optional)
 	t: team ID
 	i: player index
@@ -217,6 +222,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 
 void PlayerStats_ready(entity fh, entity pass, float status)
 {
+	string t, tn;
 	string p, pn;
 	string e, en;
 	string nn, tt;
@@ -225,7 +231,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 6\n");
+			url_fputs(fh, "V 7\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
@@ -238,6 +244,20 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+			if(teamplay)
+			{
+				for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
+				{
+					url_fputs(fh, sprintf("Q team#%s\n", t));
+					for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+					{
+						float v;
+						v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
+						if(v != 0)
+							url_fputs(fh, sprintf("e %s %g\n", e, v));
+					}
+				}
+			}
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
@@ -353,7 +373,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
+	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
 	if(teamplay)
@@ -364,7 +384,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	PlayerStats_Accuracy(p);
 
-	if(clienttype(p) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(p))
 	{
 		if(p.latency_cnt)
 		{
@@ -383,6 +403,8 @@ void PlayerStats_EndMatch(float finished)
 	entity p;
 	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	if(teamplay)
+		PlayerScore_TeamStats();
 	FOR_EACH_CLIENT(p)
 	{
 		// add personal score rank

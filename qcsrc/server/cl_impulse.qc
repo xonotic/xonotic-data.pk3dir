@@ -46,6 +46,10 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
+	// forbid impulses when not in round time
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return;
+
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
     
@@ -94,8 +98,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (2);
 					break;
 				case 17:
-					if (!g_minstagib)
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
+					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
 					W_NextWeapon (1);
@@ -269,7 +272,7 @@ void ImpulseCommands (void)
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						e.colormod = '0.5 0.5 0.5';
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
 					navigation_markroutes(e2);
@@ -315,7 +318,7 @@ void ImpulseCommands (void)
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{
 							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST;
+							e.effects &= ~EF_NODEPTHTEST;
 							e.model = "";
 						}
 						else
@@ -338,7 +341,7 @@ void ImpulseCommands (void)
 					start = findchainflags(flags, FL_ITEM);
 					for(e = start; e; e = e.chain)
 					{
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 						e.colormod = '0.5 0.5 0.5';
 					}
 					for(e = start; e; e = e.chain)

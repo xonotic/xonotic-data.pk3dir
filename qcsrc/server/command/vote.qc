@@ -43,7 +43,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		nags |= 128;
 
 	if(!(nags & 4)) // no vote called? send no string
-		nags &~= (64 | 128);
+		nags &= ~(64 | 128);
 
 	WriteByte(MSG_ENTITY, nags);
 
@@ -63,7 +63,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-				if(clienttype(e) != CLIENTTYPE_REAL || e.ready)
+				if(!IS_REAL_CLIENT(e) || e.ready)
 					f |= b;
 			WriteByte(MSG_ENTITY, f);
 		}
@@ -148,21 +148,21 @@ void VoteAccept()
 	if(vote_caller) { vote_caller.vote_waittime = 0; } // people like your votes, you don't need to wait to vote again
 
 	VoteReset();
-	Announce("voteaccept");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
 }
 
 void VoteReject() 
 {
 	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 was rejected\n");
 	VoteReset();
-	Announce("votefail");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout() 
 {
 	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 timed out\n");
 	VoteReset();
-	Announce("votefail");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteSpam(float notvoters, float mincount, string result)
@@ -194,7 +194,7 @@ void VoteCount(float first_count)
 				|| ((autocvar_sv_vote_nospectators == 1) && (inWarmupStage || gameover))
 				|| (autocvar_sv_vote_nospectators == 0));
 				
-	float vote_player_count = 0, is_player, notvoters = 0;
+	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
 	float vote_real_reject_count = 0, vote_real_abstain_count = 0;
 	float vote_needed_of_voted, final_needed_votes;
@@ -207,16 +207,14 @@ void VoteCount(float first_count)
 	// add up all the votes from each connected client
 	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		is_player = (tmp_player.classname == "player");
-		
 		++vote_player_count;
-		if(is_player) { ++vote_real_player_count; }
+		if(IS_PLAYER(tmp_player)) { ++vote_real_player_count; }
 		
 		switch(tmp_player.vote_selection)
 		{
-			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(is_player) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(is_player) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(is_player) ++vote_real_abstain_count; } break; }
+			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break; }
 			default: break;
 		}
 	}
@@ -319,6 +317,79 @@ void VoteThink()
 //  Game logic for warmup
 // =======================
 
+// Resets the state of all clients, items, weapons, waypoints, ... of the map.
+void reset_map(float dorespawn)
+{
+	entity oldself;
+	oldself = self;
+
+	if(time <= game_starttime && round_handler_IsActive())
+		round_handler_Reset(game_starttime);
+
+	if(g_race || g_cts)
+		race_ReadyRestart();
+	else MUTATOR_CALLHOOK(reset_map_global);
+
+	for(self = world; (self = nextent(self)); )
+	if(IS_NOT_A_CLIENT(self))
+	{
+		if(self.reset)
+		{
+			self.reset();
+			continue;
+		}
+
+		if(self.team_saved)
+			self.team = self.team_saved;
+
+		if(self.flags & FL_PROJECTILE) // remove any projectiles left
+			remove(self);
+	}
+
+	// Waypoints and assault start come LAST
+	for(self = world; (self = nextent(self)); )
+	if(IS_NOT_A_CLIENT(self))
+	{
+		if(self.reset2)
+		{
+			self.reset2();
+			continue;
+		}
+	}
+
+	// Moving the player reset code here since the player-reset depends
+	// on spawnpoint entities which have to be reset first --blub
+	if(dorespawn)
+	if(!MUTATOR_CALLHOOK(reset_map_players))
+	FOR_EACH_CLIENT(self) // reset all players
+	{
+		/*
+		only reset players if a restart countdown is active
+		this can either be due to cvar sv_ready_restart_after_countdown having set
+		restart_mapalreadyrestarted to 1 after the countdown ended or when
+		sv_ready_restart_after_countdown is not used and countdown is still running
+		*/
+		if (restart_mapalreadyrestarted || (time < game_starttime))
+		{
+			//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
+			if (IS_PLAYER(self)) {
+				//PlayerScore_Clear(self);
+				self.killcount = 0;
+				//stop the player from moving so that he stands still once he gets respawned
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.movement = '0 0 0';
+				PutClientInServer();
+			}
+		}
+	}
+
+	if(g_keyhunt)
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
+
+	self = oldself;
+}
+
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think() 
 {
@@ -345,13 +416,13 @@ void ReadyRestart_force()
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 
 	readyrestart_happened = 1;
-	game_starttime = time;
-	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
+	game_starttime = time + RESTART_COUNTDOWN;
 
-	// clear alivetime
+	// clear player attributes
 	FOR_EACH_CLIENT(tmp_player)
 	{
 		tmp_player.alivetime = 0;
+		tmp_player.killcount = 0;
 		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
@@ -361,19 +432,19 @@ void ReadyRestart_force()
 	inWarmupStage = 0; // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOR_EACH_CLIENTSLOT(tmp_player) { tmp_player.ready = 0; }
+	FOR_EACH_REALCLIENT(tmp_player) { tmp_player.ready = 0; }
 	readycount = 0;
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	// lock teams with lockonrestart
-	if(autocvar_teamplay_lockonrestart && teamplay) 
+	if(autocvar_teamplay_lockonrestart && teamplay)
 	{
 		lockteams = 1;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
+	if(autocvar_sv_ready_restart_after_countdown)
 	{
 		restart_timer = spawn();
 		restart_timer.think = ReadyRestart_think;
@@ -413,10 +484,13 @@ void ReadyCount()
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOR_EACH_REALPLAYER(tmp_player)
+	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		++t_players;
-		if(tmp_player.ready) { ++t_ready; }
+		if(IS_PLAYER(tmp_player) || tmp_player.caplayer == 1)
+		{
+			++t_players;
+			if(tmp_player.ready) { ++t_ready; }
+		}
 	}
 
 	readycount = t_ready;
@@ -594,6 +668,18 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	
 	first_command = argv(startpos);
 
+	/*dprint(sprintf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
+		substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)),
+		strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)))
+	));*/
+
+	if(
+		(autocvar_sv_vote_limit > 0)
+		&&
+		(strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos))) > autocvar_sv_vote_limit)
+	)
+		return FALSE;
+
 	if not(VoteCommand_checkinlist(first_command, vote_list))
 		return FALSE;
 
@@ -610,7 +696,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 			
 			if(accepted > 0)
 			{
-				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)) : "No reason provided");
+				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), strlen(vote_command) - argv_start_index(next_token)) : "No reason provided");
 				string command_arguments;
 				
 				if(first_command == "kickban")
@@ -703,7 +789,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
-			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
 			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
@@ -725,7 +811,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 				
 				FOR_EACH_REALCLIENT(tmp_player) { ++tmp_playercount; }
-				if(tmp_playercount > 1) { Announce("votecall"); } // don't announce a "vote now" sound if player is alone
+				if(tmp_playercount > 1) { Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL); } // don't announce a "vote now" sound if player is alone
 				
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
@@ -802,7 +888,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
-						else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+						else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 						else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 						
 						else // everything went okay, continue with creating vote
@@ -993,8 +1079,8 @@ void VoteCommand_(float request)
 void VoteCommand_macro_help(entity caller, float argc)
 {
 	string command_origin = GetCommandPrefix(caller);
-	
-	if(argc == 2) // help display listing all commands
+
+	if(argc == 2 || argv(2) == "help") // help display listing all commands
 	{
 		print_to(caller, "\nVoting commands:\n");
 		#define VOTE_COMMAND(name,function,description,assignment) \

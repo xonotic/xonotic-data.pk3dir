@@ -23,7 +23,7 @@ void vehicles_setreturn();
 /** AuxiliaryXhair*
     Send additional points of interest to be drawn, to vehicle owner
 **/
-float MAX_AXH = 4;
+const float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
 
 float SendAuxiliaryXhair(entity to, float sf)
@@ -46,7 +46,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
-    if (clienttype(own) != CLIENTTYPE_REAL)
+    if not(IS_REAL_CLIENT(own))
         return;
 
     entity axh;
@@ -101,7 +101,7 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 **/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
-    if (clienttype(own) != CLIENTTYPE_REAL)
+    if not(IS_REAL_CLIENT(own))
         return;
 	
 	msg_entity = own;
@@ -131,7 +131,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
-float	DAMAGE_TARGETDRONE = 10;
+const float	DAMAGE_TARGETDRONE = 10;
 
 vector targetdrone_getnewspot()
 {
@@ -442,7 +442,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
@@ -503,10 +503,10 @@ void vehicles_spawn()
 // Better way of determening whats crushable needed! (fl_crushable?)
 float vehicles_crushable(entity e)
 {
-    if(e.classname == "player")
+    if(IS_PLAYER(e))
         return TRUE;
 
-    if(e.classname == "monster_zombie")
+    if(e.flags & FL_MONSTER)
         return TRUE;
 
     return FALSE;
@@ -537,6 +537,9 @@ void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
 .void() vehicle_impact;
 void vehicles_touch()
 {
+	if(MUTATOR_CALLHOOK(VehicleTouch))
+		return;
+	
     // Vehicle currently in use
     if(self.owner)
     {
@@ -556,7 +559,7 @@ void vehicles_touch()
         return;
     }
 
-    if(other.classname != "player")
+    if not(IS_PLAYER(other))
         return;
 
     if(other.deadflag != DEAD_NO)
@@ -572,7 +575,7 @@ void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
    
-    if (clienttype(other) == CLIENTTYPE_BOT)    
+    if (IS_BOT_CLIENT(other))    
         if (autocvar_g_vehicles_allow_bots)
             dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
         else
@@ -628,13 +631,13 @@ void vehicles_enter()
     //self.exteriormodeltoclient = self.owner;
     //self.tur_head.exteriormodeltoclient = self.owner;
 
-    other.flags &~= FL_ONGROUND;
-    self.flags  &~= FL_ONGROUND;
+    other.flags &= ~FL_ONGROUND;
+    self.flags  &= ~FL_ONGROUND;
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
     
-    if (clienttype(other) == CLIENTTYPE_REAL)
+    if (IS_REAL_CLIENT(other))
     {
         msg_entity = other;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
@@ -740,7 +743,7 @@ void vehicles_exit(float eject)
     }
     
     vehicles_exit_running = TRUE;
-    if(self.flags & FL_CLIENT)
+    if(IS_CLIENT(self))
     {
         _vehicle = self.vehicle;
             
@@ -761,7 +764,7 @@ void vehicles_exit(float eject)
 
     if (_player)
     {
-        if (clienttype(_player) == CLIENTTYPE_REAL)
+        if (IS_REAL_CLIENT(_player))
         {
             msg_entity = _player;
             WriteByte (MSG_ONE, SVC_SETVIEWPORT);
@@ -778,7 +781,7 @@ void vehicles_exit(float eject)
         _player.takedamage     = DAMAGE_AIM;
         _player.solid          = SOLID_SLIDEBOX;
         _player.movetype       = MOVETYPE_WALK;
-        _player.effects        &~= EF_NODRAW;
+        _player.effects        &= ~EF_NODRAW;
         _player.alpha          = 1;
         _player.PlayerPhysplug = func_null;
         _player.vehicle        = world;
@@ -798,7 +801,6 @@ void vehicles_exit(float eject)
     
     if(!teamplay)
         _vehicle.team = 0;
-    else
 
     vh_player = _player;
     vh_vehicle = _vehicle;
@@ -808,7 +810,7 @@ void vehicles_exit(float eject)
 
     _vehicle.team = _vehicle.tur_head.team;
         
-    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
     _vehicle.phase = time + 1;
     
@@ -914,7 +916,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
         self.vehicle_shieldent.nextthink   = time;
-        self.vehicle_shieldent.effects &~= EF_NODRAW;
+        self.vehicle_shieldent.effects &= ~EF_NODRAW;
 
         self.vehicle_shield -= damage;
 
@@ -926,11 +928,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.alpha    = 0.75;
 
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
         }
         else
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
     }
     else
@@ -938,7 +940,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_health -= damage;
 
         if(sound_allowed(MSG_BROADCAST, attacker))
-            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
     }
     
 	if(self.damageforcescale < 1 && self.damageforcescale > 0)
@@ -1268,18 +1270,21 @@ float vehicle_initialize(string  net_name,
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
     self.PlayerPhysplug      = physproc;
-    self.event_damage        = vehicles_damage;
+    self.event_damage        = func_null;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
     self.nextthink           = time;
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
-    if(g_assault || !autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + 0.5;
+	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
+    if(!autocvar_g_vehicles_delayspawn)
+        self.nextthink = time + game_starttime;
     else
         self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 
+	if(autocvar_g_playerclip_collisions)
+		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
@@ -1315,6 +1320,9 @@ float vehicle_initialize(string  net_name,
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
+	
+	if(MUTATOR_CALLHOOK(VehicleSpawn))
+		return FALSE;
 
     return TRUE;
 }
@@ -1339,7 +1347,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 
 void vehicles_gib_explode()
 {
-	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	remove(self);
 }

@@ -24,11 +24,11 @@ string GetCallerName(entity caller)
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if not(client.flags & FL_CLIENT)
+	if not(IS_CLIENT(client))
 		return CLIENT_DOESNT_EXIST;
-	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
+	else if(must_be_real && !IS_REAL_CLIENT(client))
 		return CLIENT_NOT_REAL;
-	else if(must_be_bots && (clienttype(client) != CLIENTTYPE_BOT))
+	else if(must_be_bots && !IS_BOT_CLIENT(client))
 		return CLIENT_NOT_BOT;
 		
 	return CLIENT_ACCEPTABLE;
@@ -182,7 +182,7 @@ void timeout_handler_think()
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
-					Announce("prepareforbattle");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 
 				self.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
 				timeout_time -= 1; // decrease the time counter
@@ -354,26 +354,6 @@ void CommonCommand_lsmaps(float request, entity caller)
 		case CMD_REQUEST_USAGE:
 		{
 			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsmaps"));
-			print_to(caller, "  No arguments required.");
-			return;
-		}
-	}
-}
-
-void CommonCommand_lsnewmaps(float request, entity caller)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			print_to(caller, lsnewmaps_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsnewmaps"));
 			print_to(caller, "  No arguments required.");
 			return;
 		}
@@ -557,7 +537,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
 				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
 				else if(caller && (caller.allowed_timeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
-				else if(caller && (caller.classname != "player")) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
+				else if(caller && !IS_PLAYER(caller)) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
 				else if((autocvar_timelimit) && (last_possible_timeout < time - game_starttime)) { print_to(caller, "^7Error: It is too late to call a timeout now!"); }
 				
 				else // everything should be okay, proceed with starting the timeout
@@ -575,7 +555,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 					timeout_handler.think = timeout_handler_think;
 					timeout_handler.nextthink = time; // always let the entity think asap
 
-					Announce("timeoutcalled");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}
 			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }
@@ -613,7 +593,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 			total_listed_players = 0;
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				is_bot = (IS_BOT_CLIENT(tmp_player));
 				
 				if(is_bot)
 				{
@@ -693,7 +673,6 @@ void CommonCommand_(float request, entity caller)
 	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
 	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
-	COMMON_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, caller), "List maps which have no records or are seemingly unplayed yet") \
 	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
 	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
 	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \

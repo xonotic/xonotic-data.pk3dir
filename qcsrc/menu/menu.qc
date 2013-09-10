@@ -91,8 +91,8 @@ void m_init()
 	}
 }
 
-float MENU_ASPECT = 1.25; // 1280x1024
-float MENU_MINHEIGHT = 600;
+const float MENU_ASPECT = 1.25; // 1280x1024
+const float MENU_MINHEIGHT = 600;
 float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
 void draw_reset_cropped()
 {
@@ -257,6 +257,19 @@ void m_keydown(float key, float ascii)
 		return;
 	if(!Menu_Active)
 		return;
+
+	if(menuMouseMode)
+	if(key >= K_MOUSE1 && key <= K_MOUSE3)
+	{
+		// detect a click outside of the game window
+		vector p = getmousepos();
+		if(p_x < 0 || p_x > realconwidth || p_y < 0 || p_y > realconheight)
+		{
+			++mouseButtonsPressed;
+			return;
+		}
+	}
+
 	if(keyGrabber)
 	{
 		entity e;
@@ -289,11 +302,11 @@ void m_keydown(float key, float ascii)
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
 }
 
-float SCALEMODE_CROP = 0;
-float SCALEMODE_LETTERBOX = 1;
-float SCALEMODE_WIDTH = 2;
-float SCALEMODE_HEIGHT = 3;
-float SCALEMODE_STRETCH = 4;
+const float SCALEMODE_CROP = 0;
+const float SCALEMODE_LETTERBOX = 1;
+const float SCALEMODE_WIDTH = 2;
+const float SCALEMODE_HEIGHT = 3;
+const float SCALEMODE_STRETCH = 4;
 void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 {
 	vector sz, org, isz, isz_w, isz_h;
@@ -687,7 +700,7 @@ void m_draw()
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
@@ -784,7 +797,12 @@ void m_draw()
 
 	draw_alpha *= menuAlpha;
 
-	if(menuMouseMode)
+	if(!Menu_Active)
+	{
+		// do not update mouse position
+		// it prevents mouse jumping to '0 0 0' when menu is fading out
+	}
+	else if(menuMouseMode)
 	{
 		vector newMouse;
 		newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);

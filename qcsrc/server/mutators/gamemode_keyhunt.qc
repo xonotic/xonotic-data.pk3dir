@@ -4,21 +4,21 @@
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
-vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
-vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
-vector KH_PLAYER_ATTACHMENT = '0 0 0';
-vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
-string KH_PLAYER_ATTACHMENT_BONE = "";
+const vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
+const vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
+const vector KH_PLAYER_ATTACHMENT = '0 0 0';
+const vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
+const string KH_PLAYER_ATTACHMENT_BONE = "";
 #else
-float KH_KEY_ZSHIFT = 22;
-float KH_KEY_XYDIST = 24;
-float KH_KEY_XYSPEED = 45;
+const float KH_KEY_ZSHIFT = 22;
+const float KH_KEY_XYDIST = 24;
+const float KH_KEY_XYSPEED = 45;
 #endif
-float KH_KEY_WP_ZSHIFT = 20;
+const float KH_KEY_WP_ZSHIFT = 20;
 
-vector KH_KEY_MIN = '-10 -10 -46';
-vector KH_KEY_MAX = '10 10 3';
-float KH_KEY_BRIGHTNESS = 2;
+const vector KH_KEY_MIN = '-10 -10 -46';
+const vector KH_KEY_MAX = '10 10 3';
+const float KH_KEY_BRIGHTNESS = 2;
 
 float kh_no_radar_circles;
 
@@ -69,7 +69,7 @@ float kh_key_dropped, kh_key_carried;
 
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
 {
-	if(e.classname != "player" || self.team != e.team)
+	if(!IS_PLAYER(e) || self.team != e.team)
 		if(!kh_tracking_enabled)
 			return FALSE;
 
@@ -391,13 +391,13 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 	if(vlen(force) <= 0)
 		return;
 	if(time > self.pushltime)
-		if(attacker.classname == "player")
+		if(IS_PLAYER(attacker))
 			self.team = attacker.team;
 }
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTEN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -426,7 +426,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		// maybe start a shorter countdown?
 	}
 
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if(other.deadflag != DEAD_NO)
 		return;
@@ -479,7 +479,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 }
 
@@ -555,7 +555,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 	attacker = world;
 	if(lostkey.pusher)
 		if(lostkey.pusher.team != teem)
-			if(lostkey.pusher.classname == "player")
+			if(IS_PLAYER(lostkey.pusher))
 				attacker = lostkey.pusher;
 
 	players = keys = 0;
@@ -662,7 +662,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTEN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -700,7 +700,7 @@ void key_reset()
 	kh_Key_Remove(self);
 }
 
-string STR_ITEM_KH_KEY = "item_kh_key";
+const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
 	entity key;
@@ -798,7 +798,7 @@ void kh_Key_DropOne(entity key)
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -824,7 +824,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -857,7 +857,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
 	if not(p1 || p2 || p3 || p4)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
@@ -1012,7 +1012,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
 		kh_Key_DropAll(self, TRUE);
-	else if(other.classname == "player")
+	else if(IS_PLAYER(other))
 		kh_Key_DropAll(self, FALSE);
 	else
 		kh_Key_DropAll(self, TRUE);

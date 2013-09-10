@@ -19,7 +19,7 @@ float item_keys_usekey(entity l, entity p) {
 		return TRUE;
 	} else {
 		// only some of the needed keys were given
-		l.itemkeys &~= valid;
+		l.itemkeys &= ~valid;
 		return TRUE;
 	}
 }
@@ -63,7 +63,7 @@ item_key
  * Key touch handler.
  */
 void item_key_touch(void) {
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 		
 	// player already picked up this key
@@ -318,7 +318,7 @@ void trigger_keylock_touch(void) {
 	started_delay = FALSE;
 	
 	// only player may trigger the lock
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	
 	
