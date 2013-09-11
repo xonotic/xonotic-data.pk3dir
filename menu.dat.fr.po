@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-04 18:02-0400\n"
-"PO-Revision-Date: 2013-06-04 22:29+0000\n"
-"Last-Translator: we prefer <calinou9999spam@gmail.com>\n"
+"POT-Creation-Date: 2013-08-24 21:59-0400\n"
+"PO-Revision-Date: 2013-09-02 17:51+0000\n"
+"Last-Translator: SpiKe <leguen.yannick@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.0\n"
-"X-POOTLE-MTIME: 1370384972.0\n"
+"X-POOTLE-MTIME: 1378144278.0\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:35
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
@@ -29,7 +29,8 @@ msgstr "  sync - recharge toutes les cvars sur la page de menu actuelle\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:37
 msgid "  directmenu ITEM - select a menu item as main item\n"
-msgstr "directmenu OBJET - sélectionne un objet du menu en tant qu'élément principal\n"
+msgstr "  directmenu OBJET - sélectionne un objet du menu en tant qu'élément "
+"principal\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:62
 msgid "Available options:\n"
@@ -93,7 +94,7 @@ msgstr "privé"
 
 #: qcsrc/menu/xonotic/cvarlist.c:91
 msgid "engine setting"
-msgstr "paramètres du moteur"
+msgstr "paramètre du moteur"
 
 #: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
@@ -129,7 +130,7 @@ msgid ""
 msgstr ""
 "Bienvenue dans Xonotic, veuillez choisir votre langue et rentrer votre "
 "pseudonyme avant de commencer.  Vous pourrez changer ces options plus tard "
-"dans les options du jeu."
+"dans le menu du jeu."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:37
@@ -257,7 +258,7 @@ msgstr "Information de version :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
-msgstr "Informations de Version :"
+msgstr "Utiliser un algorithme de moyenne pour les FPS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:4
 msgid "Health/Armor Panel"
@@ -561,7 +562,7 @@ msgstr "Panneau de Chronomètre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:22
 msgid "Timer:"
-msgstr "Chronomètre"
+msgstr "Chronomètre :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:25
 msgid "Show elapsed time"
@@ -759,7 +760,7 @@ msgstr "Démos"
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
 msgid "Player Setup"
-msgstr "Configuration du Joueur"
+msgstr "Configuration du joueur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:34
 msgid "Game type:"
@@ -882,7 +883,7 @@ msgstr "Nombre de buts :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
 msgid "Frag limit:"
-msgstr "Limite de frags :"
+msgstr "Limite de tués :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:6
 msgid "Advanced server settings"
@@ -966,7 +967,7 @@ msgstr "8 choix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:76
 msgid "9 choices"
-msgstr "9 Choix"
+msgstr "9 choix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:79
 msgid "Simple majority wins vcall"
@@ -1060,7 +1061,7 @@ msgstr "Projectiles Invincibles"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:266
 msgid "No start weapons"
-msgstr "Pas d'armes au démarrage"
+msgstr "Pas d'armes prééquipées"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:189
@@ -1263,23 +1264,23 @@ msgstr "Non supporté (impossible de se connecter)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "Not supported (won't encrypt)"
-msgstr "Non supporté (pas de chiffrage)"
+msgstr "Non supporté (pas de chiffrement)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:215
 msgid "Supported (will encrypt)"
-msgstr "Supporté (chiffrage activé)"
+msgstr "Supporté (chiffrement activé)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "Supported (won't encrypt)"
-msgstr "Supporté (pas de chiffrage)"
+msgstr "Supporté (pas de chiffrement)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:221
 msgid "Requested (will encrypt)"
-msgstr "Requis (chiffrage activé)"
+msgstr "Requis (chiffrement activé)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "Requested (won't encrypt)"
-msgstr "Requis (pas de chiffrage)"
+msgstr "Requis (pas de chiffrement)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:227
 msgid "Required (can't connect)"
@@ -1287,7 +1288,7 @@ msgstr "Requis (impossible de se connecter)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:229
 msgid "Required (will encrypt)"
-msgstr "Requis (chiffrage activé)"
+msgstr "Requis (chiffrement activé)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:249
 msgid "Hostname:"
@@ -1413,7 +1414,7 @@ msgid "HUD settings"
 msgstr "Paramètres du HUD"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:184
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:200
 #: qcsrc/menu/xonotic/dialog_settings_input.c:90
 #: qcsrc/menu/xonotic/dialog_settings_user.c:88
@@ -1545,7 +1546,7 @@ msgstr "Non"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:28
 msgid "Body fading:"
-msgstr "Effacement modèle :"
+msgstr "Effacement des corps :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:31
 msgid "Gibs:"
@@ -1629,7 +1630,7 @@ msgstr "Vitesse"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:72
 msgid "Allow passing through walls while spectating"
-msgstr "Permettre aux spectateurs de traverser les murs"
+msgstr "Passer à travers les murs en mode spectateur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:75
 msgid "1st person perspective"
@@ -1877,168 +1878,168 @@ msgstr "Autres"
 msgid "Master:"
 msgstr "Général :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:35
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:33
 msgid "Music:"
 msgstr "Musique :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:45
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:41
 msgid "VOL^Ambient:"
 msgstr "Ambiance :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:54
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
 msgstr "Info :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:63
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:55
 msgid "Items:"
 msgstr "Objets :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:72
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:62
 msgid "Pain:"
 msgstr "Douleur :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:81
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:69
 msgid "Player:"
 msgstr "Joueur :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:90
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:76
 msgid "Shots:"
 msgstr "Tirs :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:99
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:83
 msgid "Voice:"
 msgstr "Voix :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:109
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:91
 msgid "Weapons:"
 msgstr "Armes :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:117
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:97
 msgid "New style sound attenuation"
 msgstr "Atténuation de son améliorée"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:119
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:99
 msgid "Mute sounds when not active"
 msgstr "Couper le son en cas d'inactivité"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:122
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:176
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:102
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
 msgid "Frequency:"
 msgstr "Fréquence :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:124
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:104
 msgid "8 kHz"
 msgstr "8 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:125
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:105
 msgid "11.025 kHz"
 msgstr "11.025 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:126
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:106
 msgid "16 kHz"
 msgstr "16 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:127
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:107
 msgid "22.05 kHz"
 msgstr "22.05 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:128
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:108
 msgid "24 kHz"
 msgstr "24 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:129
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:109
 msgid "32 kHz"
 msgstr "32 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:130
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:110
 msgid "44.1 kHz"
 msgstr "44.1 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:131
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:111
 msgid "48 kHz"
 msgstr "48 kHz"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:134
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:114
 msgid "Channels:"
 msgstr "Canaux :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:136
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:116
 msgid "Mono"
 msgstr "Mono"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:117
 msgid "Stereo"
 msgstr "Stéréo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:138
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:118
 msgid "2.1"
 msgstr "2.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "4"
 msgstr "4"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:140
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:120
 msgid "5"
 msgstr "5"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:141
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:121
 msgid "5.1"
 msgstr "5.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 msgid "6.1"
 msgstr "6.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:143
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:123
 msgid "7.1"
 msgstr "7.1"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:146
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:126
 msgid "Swap Stereo"
 msgstr "Échanger les canaux Stéréo"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:148
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:128
 msgid "Headphone friendly mode"
 msgstr "Mode casque audio"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:152
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:132
 msgid "Hit indication sound"
 msgstr "Son de tir réussi"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:154
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:134
 msgid "Chat message sound"
 msgstr "Son de discussion"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:136
 msgid "Menu sounds"
 msgstr "Sons du menu"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:159
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
 msgid "Time announcer:"
 msgstr "Avertissement de temps :"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:161
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:141
 msgid "WRN^Disabled"
 msgstr "Désactivé"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:162
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "1 minute"
 msgstr "1 minute"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:163
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:143
 msgid "5 minutes"
 msgstr "5 minutes"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:144
 msgid "WRN^Both"
 msgstr "Les deux"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:171
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:151
 msgid "Automatic taunts"
 msgstr "Railleries automatiques"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:181
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:161
 msgid "Debug info about sounds"
 msgstr "Infos de débogage à propos du son"
 
@@ -2104,7 +2105,7 @@ msgstr "Ahurissant"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Player detail:"
-msgstr ""
+msgstr "Détails joueur :"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "Texture resolution:"
@@ -2210,7 +2211,7 @@ msgstr "Tout"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:142
 msgid "Particle effects for spawnpoints"
-msgstr ""
+msgstr "Effets de particules des points de spawn"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:146
 msgid "No dynamic lighting"
@@ -2243,7 +2244,7 @@ msgstr "Ombres douces"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:167
 msgid "Fade corona according to visibility"
-msgstr ""
+msgstr "Utiliser l'occlusion du rendu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:171
 msgid "Bloom"
@@ -2371,7 +2372,7 @@ msgstr "ADSL rapide"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
 msgid "Broadband"
-msgstr "Débit"
+msgstr "Haut débit"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:39
 msgid "Input packets/s:"
@@ -2790,7 +2791,7 @@ msgstr "Couleurs psychédéliques (bonus)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:136
 msgid "Trippy vertices (easter egg)"
-msgstr "Verticales délirantes (bonus)"
+msgstr "Points délirants (bonus)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:139
 msgid "Flip view horizontally"
@@ -2798,11 +2799,11 @@ msgstr "Inverser la vue horizontale"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr "Monojoueur"
+msgstr "Partie solo"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:116
 msgid "Instant action! (random map with bots)"
-msgstr "Action instantanée !  (cartes aléatoires avec des bots)"
+msgstr "Action instantanée ! (cartes aléatoires avec des bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:137
 msgid "Campaign Difficulty:"
@@ -2858,7 +2859,7 @@ msgstr "mode spectateur"
 
 #: qcsrc/menu/xonotic/mainwindow.c:39 qcsrc/menu/xonotic/mainwindow.c:42
 msgid "Do not press this button again!"
-msgstr "Arrêtez d'appuyer sur ce bouton !"
+msgstr "N'appuyez pas à nouveau sur ce bouton !"
 
 #: qcsrc/menu/xonotic/maplist.c:280
 msgid ""
@@ -2923,20 +2924,35 @@ msgstr "<TITRE>"
 msgid "<AUTHOR>"
 msgstr "<AUTEUR>"
 
-#: qcsrc/menu/xonotic/skinlist.c:166 qcsrc/common/mapinfo.qc:1103
+#: qcsrc/menu/xonotic/skinlist.c:166 qcsrc/common/mapinfo.qc:1104
 #, c-format
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: qcsrc/menu/xonotic/slider_decibels.c:62
+#: qcsrc/menu/xonotic/slider_decibels.c:77
 msgid "VOL^MAX"
 msgstr "MAX"
 
-#: qcsrc/menu/xonotic/slider_decibels.c:64
+#: qcsrc/menu/xonotic/slider_decibels.c:79
 msgid "VOL^OFF"
 msgstr "OFF"
 
-#: qcsrc/menu/xonotic/slider_decibels.c:65
+#: qcsrc/menu/xonotic/slider_decibels.c:81
+#, c-format
+msgid "%d %%"
+msgstr ""
+
+#: qcsrc/menu/xonotic/slider_decibels.c:83
+#, c-format
+msgid "%.1f"
+msgstr ""
+
+#: qcsrc/menu/xonotic/slider_decibels.c:85
+#, c-format
+msgid "%.2f %%"
+msgstr ""
+
+#: qcsrc/menu/xonotic/slider_decibels.c:87
 #, c-format
 msgid "%s dB"
 msgstr "%s dB"
@@ -3001,7 +3017,7 @@ msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
-"^1ERREUR : La compression des textures est requises mais non supportée.\n"
+"^1ERREUR : La compression des textures est requise mais non supportée.\n"
 "^1Attendez-vous à des problèmes d'affichage.\n"
 
 #: qcsrc/menu/xonotic/util.qc:696
@@ -3310,7 +3326,7 @@ msgstr "Gardez-la-balle"
 
 #: qcsrc/common/net_notice.qc:89
 msgid "^1Server notices:"
-msgstr "^1Notifications du serveur:"
+msgstr "^1Notifications du serveur :"
 
 #: qcsrc/common/net_notice.qc:95
 #, c-format
@@ -3412,7 +3428,7 @@ msgstr "^BG%s%s^K1 a été cuit à point par ^BG%s^K1%s%s\n"
 #: qcsrc/common/notifications.qh:264
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a senti la chaleur de ^BG%s^K1^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:265
 #, c-format
@@ -3421,534 +3437,549 @@ msgstr "^BG%s%s^K1 a été cuisiné par ^BG%s^K1%s%s\n"
 
 #: qcsrc/common/notifications.qh:266
 #, c-format
+msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s\n"
+msgstr "^BG%s%s^K1 a été mis en miettes par la Grenade de ^BG%s^K1%s%s\n"
+
+#: qcsrc/common/notifications.qh:267
+#, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été projeté dans l'espace par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:267
+#: qcsrc/common/notifications.qh:268
 #, c-format
 #, c-format, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été réduit en poussière par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:268
+#: qcsrc/common/notifications.qh:269
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été écrasé par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:269
+#: qcsrc/common/notifications.qh:270
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été téléfraggé par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:269
+#: qcsrc/common/notifications.qh:270
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a essayé de se téléporter au même endroit que ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:270
+#: qcsrc/common/notifications.qh:271
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 est mort dans un accident avec ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:271
+#: qcsrc/common/notifications.qh:272
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s\n"
 msgstr "^BG%s%s^K1 a été soufflé par l'explosion du Bumblebee de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:272
+#: qcsrc/common/notifications.qh:273
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s\n"
 msgstr "^BG%s%s^K1 a vu les jolies lumières du canon du Bumblebee de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:273
+#: qcsrc/common/notifications.qh:274
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été écrasé par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:274
+#: qcsrc/common/notifications.qh:275
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s\n"
 msgstr "^BG%s%s^K1 a été bombardé par le Raptor de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:275
+#: qcsrc/common/notifications.qh:276
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s\n"
 msgstr "^BG%s%s^K1 n'a pas pu résister aux boules violettes de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:276
+#: qcsrc/common/notifications.qh:277
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s\n"
 msgstr "^BG%s%s^K1 a été soufflé par l'explosion du Raptor de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:277
+#: qcsrc/common/notifications.qh:278
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s\n"
 msgstr "^BG%s%s^K1 a été soufflé dans l'explosion du Spiderbot de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:278
+#: qcsrc/common/notifications.qh:279
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s\n"
 msgstr "^BG%s%s^K1 a été déchiqueté par le Spiderbot de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:279
+#: qcsrc/common/notifications.qh:280
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s\n"
 msgstr "^BG%s%s^K1 a été mis en pièces par le Spiderbot de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:280
+#: qcsrc/common/notifications.qh:281
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s\n"
 msgstr "^BG%s%s^K1 a été soufflé par l'explosion du Racer de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:281
+#: qcsrc/common/notifications.qh:282
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s\n"
 msgstr "^BG%s%s^K1 a été mis à terre par le Racer de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:282
+#: qcsrc/common/notifications.qh:283
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s\n"
 msgstr "^BG%s%s^K1 n'a pas pu échapper au Racer de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:283
+#: qcsrc/common/notifications.qh:284
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été projeté dans un monde de souffrances par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:284
+#: qcsrc/common/notifications.qh:285
 #, c-format
 msgid "^BG%s^K1 was moved into the %s%s\n"
 msgstr "^BG%s^K1 a été expédié dans le %s%s\n"
 
-#: qcsrc/common/notifications.qh:285
+#: qcsrc/common/notifications.qh:286
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s\n"
 msgstr "^BG%s^K1 est devenu fâché avec le Seigneur du Jeu en Équipe%s%s\n"
 
-#: qcsrc/common/notifications.qh:286
+#: qcsrc/common/notifications.qh:287
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s\n"
 msgstr "^BG%s^K1 ont pensé qu'ils avaient trouvé un bel endroit pour camper%s%s\n"
 
-#: qcsrc/common/notifications.qh:287
+#: qcsrc/common/notifications.qh:288
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s\n"
 msgstr "^BG%s^K1 se sont injustement suicidés%s%s\n"
 
-#: qcsrc/common/notifications.qh:288
+#: qcsrc/common/notifications.qh:289
 #, c-format
 msgid "^BG%s^K1 %s^K1%s%s\n"
 msgstr "^BG%s^K1 %s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:289
+#: qcsrc/common/notifications.qh:290
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s\n"
 msgstr "^BG%s^K1 n'a pas pu retenir sa respiration%s%s\n"
 
-#: qcsrc/common/notifications.qh:289
+#: qcsrc/common/notifications.qh:290
 #, c-format
 msgid "^BG%s^K1 was in the water for too long%s%s\n"
 msgstr "^BG%s^K1 est resté trop longtemps sous l'eau%s%s\n"
 
-#: qcsrc/common/notifications.qh:290
+#: qcsrc/common/notifications.qh:291
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s\n"
 msgstr "^BG%s^K1 a heurté le sol avec un craquement sinistre%s%s\n"
 
-#: qcsrc/common/notifications.qh:290
+#: qcsrc/common/notifications.qh:291
 #, c-format
 msgid "^BG%s^K1 hit the ground with a bit too much force%s%s\n"
 msgstr "^BG%s^K1 a atterri un peu trop brutalement%s%s\n"
 
-#: qcsrc/common/notifications.qh:291
+#: qcsrc/common/notifications.qh:292
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s\n"
 msgstr "^BG%s^K1 est devenu un peu trop croustillant%s%s\n"
 
-#: qcsrc/common/notifications.qh:291
+#: qcsrc/common/notifications.qh:292
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s\n"
 msgstr "^BG%s^K1 a eu un coup de chaud%s%s\n"
 
-#: qcsrc/common/notifications.qh:292
+#: qcsrc/common/notifications.qh:293
 #, c-format
 msgid "^BG%s^K1 died%s%s\n"
 msgstr "^BG%s^K1 est mort%s%s\n"
 
-#: qcsrc/common/notifications.qh:293
+#: qcsrc/common/notifications.qh:294
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s\n"
 msgstr "^BG%s^K1 s'est transformé en merguez%s%s\n"
 
-#: qcsrc/common/notifications.qh:293
+#: qcsrc/common/notifications.qh:294
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s\n"
 msgstr "^BG%s^K1 a trouvé un endoit au chaud%s%s\n"
 
-#: qcsrc/common/notifications.qh:294
+#: qcsrc/common/notifications.qh:295
+#, c-format
+msgid "^BG%s^K1 mastered the art of self-nading%s%s\n"
+msgstr "^BG%s^K1 est passé maître dans l'art d'exploser tout seul%s%s\n"
+
+#: qcsrc/common/notifications.qh:296
 #, c-format
 msgid "^BG%s^K1 died%s%s. What's the point of living without ammo?\n"
 msgstr "^BG%s^K1 est mort%s%s. Quel est l'intérêt de vivre sans munitions ?\n"
 
-#: qcsrc/common/notifications.qh:294
+#: qcsrc/common/notifications.qh:296
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s\n"
 msgstr "^BG%s^K1 était à court de munitions%s%s\n"
 
-#: qcsrc/common/notifications.qh:295
+#: qcsrc/common/notifications.qh:297
 #, c-format
 msgid "^BG%s^K1 rotted away%s%s\n"
 msgstr "^BG%s^K1 s'est décomposé%s%s\n"
 
-#: qcsrc/common/notifications.qh:296
+#: qcsrc/common/notifications.qh:298
 #, c-format
 msgid "^BG%s^K1 became a shooting star%s%s\n"
 msgstr "^BG%s^K1 est devenu une étoile filante%s%s\n"
 
-#: qcsrc/common/notifications.qh:297
+#: qcsrc/common/notifications.qh:299
 #, c-format
 #, c-format, c-format
 msgid "^BG%s^K1 was slimed%s%s\n"
 msgstr "^BG%s^K1 a été réduit en miettes%s%s\n"
 
-#: qcsrc/common/notifications.qh:298
+#: qcsrc/common/notifications.qh:300
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s\n"
 msgstr "^BG%s^K1 n'en pouvait plus%s%s\n"
 
-#: qcsrc/common/notifications.qh:299
+#: qcsrc/common/notifications.qh:301
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s\n"
 msgstr "^BG%s^K1 est maintenant préservé pour les siècles à venir%s%s\n"
 
-#: qcsrc/common/notifications.qh:300
+#: qcsrc/common/notifications.qh:302
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s\n"
 msgstr "^BG%s^K1 a changé vers l'équipe %s%s\n"
 
-#: qcsrc/common/notifications.qh:301
+#: qcsrc/common/notifications.qh:303
 #, c-format
 msgid "^BG%s^K1 died in an accident%s%s\n"
 msgstr "^BG%s^K1 est mort dans un accident%s%s\n"
 
-#: qcsrc/common/notifications.qh:302
+#: qcsrc/common/notifications.qh:304
 #, c-format
 msgid "^BG%s^K1 ran into a turret%s%s\n"
 msgstr "^BG%s^K1 a foncé dans une tourelle%s%s\n"
 
-#: qcsrc/common/notifications.qh:303
+#: qcsrc/common/notifications.qh:305
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s\n"
 msgstr "^BG%s^K1 a été réduit en poussière par une tourelle eWheel%s%s\n"
 
-#: qcsrc/common/notifications.qh:304
+#: qcsrc/common/notifications.qh:306
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s\n"
 msgstr "^BG%s^K1 a été pris dans les tirs d'une tourelle FLAC%s%s\n"
 
-#: qcsrc/common/notifications.qh:305
+#: qcsrc/common/notifications.qh:307
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s\n"
 msgstr "^BG%s^K1 a été réduit en poussière par une tourelle Hellion%s%s\n"
 
-#: qcsrc/common/notifications.qh:306
+#: qcsrc/common/notifications.qh:308
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s\n"
 msgstr "^BG%s^K1 n'a pas pu échapper à une tourelle Hunter%s%s\n"
 
-#: qcsrc/common/notifications.qh:307
+#: qcsrc/common/notifications.qh:309
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s\n"
 msgstr "^BG%s^K1 a été criblé de balles par une tourelle Mitrailleuse%s%s\n"
 
-#: qcsrc/common/notifications.qh:308
+#: qcsrc/common/notifications.qh:310
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s\n"
 msgstr "^BG%s^K1 a été transformé en gigot par une tourelle MLRS%s%s\n"
 
-#: qcsrc/common/notifications.qh:309
+#: qcsrc/common/notifications.qh:311
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s\n"
 msgstr "^BG%s^K1 a été éclipsé par une tourelle%s%s\n"
 
-#: qcsrc/common/notifications.qh:310
+#: qcsrc/common/notifications.qh:312
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s\n"
 msgstr "^BG%s^K1 a reçu du plasma surchauffé d'une tourelle%s%s\n"
 
-#: qcsrc/common/notifications.qh:311
+#: qcsrc/common/notifications.qh:313
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s\n"
 msgstr "^BG%s^K1 a été électrocuté par une tourelle Tesla%s%s\n"
 
-#: qcsrc/common/notifications.qh:312
+#: qcsrc/common/notifications.qh:314
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s\n"
 msgstr "^BG%s^K1 a été enrichi de plomb par une tourelle Walker%s%s\n"
 
-#: qcsrc/common/notifications.qh:313
+#: qcsrc/common/notifications.qh:315
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s\n"
 msgstr "^BG%s^K1 a été empalé par une tourelle Marcheuse%s%s\n"
 
-#: qcsrc/common/notifications.qh:314
+#: qcsrc/common/notifications.qh:316
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s\n"
 msgstr "^BG%s^K1 a été réduit en poussière par une tourelle Walker%s%s\n"
 
-#: qcsrc/common/notifications.qh:315
+#: qcsrc/common/notifications.qh:317
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s\n"
 msgstr "^BG%s^K1 a été pris dans l'explosion d'un Bumblebee%s%s\n"
 
-#: qcsrc/common/notifications.qh:316
+#: qcsrc/common/notifications.qh:318
 #, c-format
 msgid "^BG%s^K1 was crushed by a vehicle%s%s\n"
 msgstr "^BG%s^K1 a été renversé par un véhicule%s%s\n"
 
-#: qcsrc/common/notifications.qh:317
+#: qcsrc/common/notifications.qh:319
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s\n"
 msgstr "^BG%s^K1 a été pris dans le bombardement d'un Raptor%s%s\n"
 
-#: qcsrc/common/notifications.qh:318
+#: qcsrc/common/notifications.qh:320
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s\n"
 msgstr "^BG%s^K1 a été pris dans l'explosion d'un Raptor%s%s\n"
 
-#: qcsrc/common/notifications.qh:319
+#: qcsrc/common/notifications.qh:321
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s\n"
 msgstr "^BG%s^K1 a été pris dans l'explosion d'un Spiderbot%s%s\n"
 
-#: qcsrc/common/notifications.qh:320
+#: qcsrc/common/notifications.qh:322
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s\n"
 msgstr "^BG%s^K1 a été réduit en miettes par une roquette de Spiderbot%s%s\n"
 
-#: qcsrc/common/notifications.qh:321
+#: qcsrc/common/notifications.qh:323
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s\n"
 msgstr "^BG%s^K1 a été pris dans l'explosion d'un Racer%s%s\n"
 
-#: qcsrc/common/notifications.qh:322
+#: qcsrc/common/notifications.qh:324
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s\n"
 msgstr "^BG%s^K1 n'a pas pu se cacher d'une roquette de Racer%s%s\n"
 
-#: qcsrc/common/notifications.qh:323
+#: qcsrc/common/notifications.qh:325
 #, c-format
 msgid "^BG%s^K1 was in the wrong place%s%s\n"
 msgstr "^BG%s^K1 était au mauvais endroit%s%s\n"
 
-#: qcsrc/common/notifications.qh:324
+#: qcsrc/common/notifications.qh:326
 #, c-format
 msgid "^BG%s^K1 was betrayed by ^BG%s^K1%s%s\n"
 msgstr "^BG%s^K1 a été trahi par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:325
+#: qcsrc/common/notifications.qh:327
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s\n"
 msgstr "^BG%s^K1 a été gelé par ^BG%s\n"
 
-#: qcsrc/common/notifications.qh:326
+#: qcsrc/common/notifications.qh:328
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s\n"
 msgstr "^BG%s^K3 a été ressuscité par ^BG%s\n"
 
-#: qcsrc/common/notifications.qh:327
+#: qcsrc/common/notifications.qh:329
+#, c-format
+msgid "^BG%s^K3 was revived by falling\n"
+msgstr "^BG%s^K3 a été ranimé en chutant ^BG%s\n"
+
+#: qcsrc/common/notifications.qh:330
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)\n"
 msgstr "^BG%s^K3 a ressuscité automatiquement après %s seconde(s)\n"
 
-#: qcsrc/common/notifications.qh:328
+#: qcsrc/common/notifications.qh:331
 msgid "^TC^TT^BG team wins the round\n"
-msgstr "l'équipe ^TC^TT^BG remporte la manche\n"
+msgstr "L'équipe ^TC^TT^BG remporte la manche\n"
 
-#: qcsrc/common/notifications.qh:329
+#: qcsrc/common/notifications.qh:332
 #, c-format
 msgid "^BG%s^BG wins the round\n"
 msgstr "^BG%s^BG remporte la manche\n"
 
-#: qcsrc/common/notifications.qh:330
+#: qcsrc/common/notifications.qh:333
 msgid "^BGRound tied\n"
 msgstr "^BGManche ex-aequo\n"
 
-#: qcsrc/common/notifications.qh:331
+#: qcsrc/common/notifications.qh:334
 msgid "^BGRound over, there's no winner\n"
 msgstr "^BGManche terminée, il n'y a pas de gagnant\n"
 
-#: qcsrc/common/notifications.qh:332
+#: qcsrc/common/notifications.qh:335
 #, c-format
 msgid "^BG%s^K1 froze themself\n"
 msgstr "^BG%s^K1 se sont gelés tous seuls\n"
 
-#: qcsrc/common/notifications.qh:333
+#: qcsrc/common/notifications.qh:336
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!\n"
 msgstr "^BGLe mode dieu vous a protégé contre %s points de dégâts, tricheur !\n"
 
-#: qcsrc/common/notifications.qh:334
+#: qcsrc/common/notifications.qh:337
 #, c-format
 msgid "^BGYou do not have the ^F1%s\n"
 msgstr "^BGVous n'avez pas le ^F1%s\n"
 
-#: qcsrc/common/notifications.qh:335
+#: qcsrc/common/notifications.qh:338
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s\n"
 msgstr "^BGVous avez lâché le ^F1%s^BG%s\n"
 
-#: qcsrc/common/notifications.qh:336
+#: qcsrc/common/notifications.qh:339
 #, c-format
 msgid "^BGYou got the ^F1%s\n"
 msgstr "^BGVous avez le ^F1%s\n"
 
-#: qcsrc/common/notifications.qh:337
+#: qcsrc/common/notifications.qh:340
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s\n"
 msgstr "^BGVous n'avez pas assez de munitions pour le ^F1%s\n"
 
-#: qcsrc/common/notifications.qh:338
+#: qcsrc/common/notifications.qh:341
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can\n"
 msgstr "^F1%s %s^BG ne peut pas tirer, mais son ^F1%s^BG le peut\n"
 
-#: qcsrc/common/notifications.qh:339
+#: qcsrc/common/notifications.qh:342
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map\n"
 msgstr "^F1%s^BG n'est ^F4pas disponible^BG dans cette map\n"
 
-#: qcsrc/common/notifications.qh:340
+#: qcsrc/common/notifications.qh:343
 #, c-format
 msgid "^BG%s^F3 connected%s\n"
 msgstr "^BG%s^F3 s'est connecté%s\n"
 
-#: qcsrc/common/notifications.qh:341
+#: qcsrc/common/notifications.qh:344
 #, c-format
-msgid "^BG%s^F3 connected and joined the ^TC^TT\n"
-msgstr "^BG%s^F3 s'est connecté et a rejoint les ^TC^TT\n"
+msgid "^BG%s^F3 connected and joined the ^TC^TT team\n"
+msgstr "^BG%s^F3 s'est connecté et a rejoint l'équipe ^TC^TT\n"
 
-#: qcsrc/common/notifications.qh:342
+#: qcsrc/common/notifications.qh:345
 #, c-format
 msgid "^BG%s^F3 is now playing\n"
 msgstr "^BG%s^F3 est maintenant en train de jouer\n"
 
-#: qcsrc/common/notifications.qh:343
+#: qcsrc/common/notifications.qh:346
 #, c-format
 msgid "^BG%s^BG has dropped the ball!\n"
 msgstr "^BG%s^BG a lâché la balle !\n"
 
-#: qcsrc/common/notifications.qh:344
+#: qcsrc/common/notifications.qh:347
 #, c-format
 msgid "^BG%s^BG has picked up the ball!\n"
 msgstr "^BG%s^BG a pris la balle !\n"
 
-#: qcsrc/common/notifications.qh:345
+#: qcsrc/common/notifications.qh:348
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team\n"
 msgstr "^BG%s^BG a rassemblé les clefs pour l'équipe ^TC^TT\n"
 
-#: qcsrc/common/notifications.qh:346
+#: qcsrc/common/notifications.qh:349
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key\n"
 msgstr "^BG%s^BG a laché la clef ^TC^TT\n"
 
-#: qcsrc/common/notifications.qh:347
+#: qcsrc/common/notifications.qh:350
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key\n"
 msgstr "^BG%s^BG a perdu la clef ^TC^TT\n"
 
-#: qcsrc/common/notifications.qh:348
+#: qcsrc/common/notifications.qh:351
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key\n"
 msgstr "^BG%s^BG a pris la Clef ^TC^TT\n"
 
-#: qcsrc/common/notifications.qh:349
+#: qcsrc/common/notifications.qh:352
 #, c-format
 msgid "^BG%s^F3 forfeited\n"
 msgstr "^BG%s^F3 a déclaré forfait\n"
 
-#: qcsrc/common/notifications.qh:350
+#: qcsrc/common/notifications.qh:353
 #, c-format
 msgid "^BG%s^F3 has no more lives left\n"
 msgstr "^BG%s^F3 n'a plus aucune vie\n"
 
-#: qcsrc/common/notifications.qh:351
+#: qcsrc/common/notifications.qh:354
 #, c-format
 msgid "^BG%s^K1 picked up Invisibility\n"
 msgstr "^BG%s^K1 a ramassé l'Invisibilité\n"
 
-#: qcsrc/common/notifications.qh:352
+#: qcsrc/common/notifications.qh:355
 #, c-format
 msgid "^BG%s^K1 picked up Shield\n"
 msgstr "^BG%s^K1 a ramassé le Bouclier\n"
 
-#: qcsrc/common/notifications.qh:353
+#: qcsrc/common/notifications.qh:356
 #, c-format
 msgid "^BG%s^K1 picked up Speed\n"
 msgstr "^BG%s^K1 a ramassé la Vitesse\n"
 
-#: qcsrc/common/notifications.qh:354
+#: qcsrc/common/notifications.qh:357
 #, c-format
 msgid "^BG%s^K1 picked up Strength\n"
 msgstr "^BG%s^K1 a ramassé la Force\n"
 
-#: qcsrc/common/notifications.qh:355
+#: qcsrc/common/notifications.qh:358
 #, c-format
 msgid "^BG%s^F3 disconnected\n"
 msgstr "^BG%s^F3 s'est déconnecté\n"
 
-#: qcsrc/common/notifications.qh:356
+#: qcsrc/common/notifications.qh:359
 #, c-format
 msgid "^BG%s^F3 was kicked for idling\n"
 msgstr "^BG%s^F3 a été kické pour cause d'inactivité\n"
 
-#: qcsrc/common/notifications.qh:357
+#: qcsrc/common/notifications.qh:360
 msgid ""
 "^F2You were kicked from the server because you are a spectator and "
 "spectators aren't allowed at the moment.\n"
 msgstr "^F2Vous avez été kické du serveur parce que vous êtes un spectateur et les "
 "spectateurs ne sont pas autorisés pour le moment.\n"
 
-#: qcsrc/common/notifications.qh:358
+#: qcsrc/common/notifications.qh:361
 #, c-format
 msgid "^BG%s^F3 is now spectating\n"
 msgstr "^BG%s^F3 est maintenant spectateur\n"
 
-#: qcsrc/common/notifications.qh:359
+#: qcsrc/common/notifications.qh:362
 #, c-format
 msgid "^BG%s^BG has abandoned the race\n"
 msgstr "^BG%s^BG est sorti de la course\n"
 
-#: qcsrc/common/notifications.qh:360
+#: qcsrc/common/notifications.qh:363
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s\n"
 msgstr "^BG%s^BG n'a pas pu battre son record de %s%s^BG place de %s%s %s\n"
 
-#: qcsrc/common/notifications.qh:361
+#: qcsrc/common/notifications.qh:364
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s\n"
 msgstr "^BG%s^BG n'a pas pu battre le record de %s%s^BG place de %s%s %s\n"
 
-#: qcsrc/common/notifications.qh:362
+#: qcsrc/common/notifications.qh:365
 #, c-format
 msgid "^BG%s^BG has finished the race\n"
 msgstr "^BG%s^BG a terminé la course\n"
 
-#: qcsrc/common/notifications.qh:363
+#: qcsrc/common/notifications.qh:366
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s\n"
 msgstr "^BG%s^BG a battu le record de %s^BG's de %s%s^BG place avec %s%s %s\n"
 
-#: qcsrc/common/notifications.qh:364
+#: qcsrc/common/notifications.qh:367
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s\n"
 msgstr "^BG%s^BG a amélioré son record de %s%s^BG place avec %s%s %s\n"
 
-#: qcsrc/common/notifications.qh:365
+#: qcsrc/common/notifications.qh:368
 #, c-format
 msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
@@ -3956,16 +3987,16 @@ msgid ""
 msgstr "^BG%s^BG a fait un nouveau record avec ^F2%s^BG, mais il n'a malheureusement "
 "pas d'UID et sera perdu.\n"
 
-#: qcsrc/common/notifications.qh:366
+#: qcsrc/common/notifications.qh:369
 #, c-format
 msgid "^BG%s^BG set the %s%s^BG place record with %s%s\n"
 msgstr "^BG%s^BG a défini le record de %s%s^BG place avec %s%s\n"
 
-#: qcsrc/common/notifications.qh:367
+#: qcsrc/common/notifications.qh:370
 msgid "^TC^TT ^BGteam scores!\n"
 msgstr "L'équipe ^TC^TT ^BG marque !\n"
 
-#: qcsrc/common/notifications.qh:368
+#: qcsrc/common/notifications.qh:371
 #, c-format
 msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
@@ -3973,12 +4004,12 @@ msgid ""
 msgstr "^F2Vous devez rejoindre la partie avant les prochaines %s, autrement vous "
 "serez expulsé, car il n'est pas permis d'être en spectateur actuellement !\n"
 
-#: qcsrc/common/notifications.qh:369
+#: qcsrc/common/notifications.qh:372
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon\n"
 msgstr "^BG%s^K1 a ramassé une Super-Arme\n"
 
-#: qcsrc/common/notifications.qh:370
+#: qcsrc/common/notifications.qh:373
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
@@ -3986,13 +4017,13 @@ msgid ""
 msgstr "^F4NOTE: ^BGLe serveur utilise ^F1Xonotic %s (beta)^BG, vous avez ^F2Xonotic "
 "%s\n"
 
-#: qcsrc/common/notifications.qh:371
+#: qcsrc/common/notifications.qh:374
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"
 msgstr "^F4NOTE: ^BGLe serveur utilise ^F1Xonotic %s^BG, vous avez ^F2Xonotic %s\n"
 
-#: qcsrc/common/notifications.qh:372
+#: qcsrc/common/notifications.qh:375
 #, c-format
 msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
@@ -4000,291 +4031,297 @@ msgid ""
 msgstr "^F4NOTE: ^F1Xonotic %s^BG est disponible, et vous avez toujours ^F2Xonotic %"
 "s^BG - téléchargez la mise à jour depuis ^F3http://www.xonotic.org/^BG !\n"
 
-#: qcsrc/common/notifications.qh:373
+#: qcsrc/common/notifications.qh:376
 #, c-format
 #, c-format, c-format
 msgid "^F3SVQC Build information: ^F4%s\n"
 msgstr "^F3SVQC Informations de version : ^F4%s\n"
 
-#: qcsrc/common/notifications.qh:374
+#: qcsrc/common/notifications.qh:377
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s\n"
-msgstr "^BG%s%s^K1 est mort de la très bonne musique du @!#%%'n Accordeon de ^BG%"
-"s^K1%s%s\n"
+msgstr "^BG%s%s^K1 a succombé à la très bonne musique du @!#%% Accordéon de ^BG%s^K1"
+"%s%s\n"
 
-#: qcsrc/common/notifications.qh:375
+#: qcsrc/common/notifications.qh:378
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s\n"
-msgstr "^BG%s^K1 s'est cassé les oreilles avec son @!#%% d'Accordéon %s%s\n"
+msgstr "^BG%s^K1 s'est cassé les oreilles avec son @!#%% Accordéon %s%s\n"
 
-#: qcsrc/common/notifications.qh:376
+#: qcsrc/common/notifications.qh:379
 #, c-format
 msgid "^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s\n"
 msgstr "^BG%s%s^K1 a senti le Crylink de ^BG%s^K1 l'attirer%s%s\n"
 
-#: qcsrc/common/notifications.qh:377
+#: qcsrc/common/notifications.qh:380
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s\n"
 msgstr "^BG%s^K1 a senti son Crylink le tirer%s%s\n"
 
-#: qcsrc/common/notifications.qh:378
+#: qcsrc/common/notifications.qh:381
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s\n"
 msgstr "^BG%s%s^K1 a été pulverisé par le tir d'Electro de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:379
+#: qcsrc/common/notifications.qh:382
 #, c-format
 msgid "^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été électrisé par le combo Electro de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:380
+#: qcsrc/common/notifications.qh:383
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro plasma%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 s'est approché trop près de l'Electro-plasma de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:381
+#: qcsrc/common/notifications.qh:384
 #, c-format
 msgid "^BG%s^K1 played with Electro plasma%s%s\n"
 msgstr "^BG%s^K1 a joué avec l'Electro-plasma%s%s\n"
 
-#: qcsrc/common/notifications.qh:382
+#: qcsrc/common/notifications.qh:385
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro plasma%s%s\n"
 msgstr "^BG%s^K1 ne se souvenait plus où il avait laissé traîner son Electro-plasma%"
 "s%s\n"
 
-#: qcsrc/common/notifications.qh:383
+#: qcsrc/common/notifications.qh:386
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 s'est approché trop près de la mine de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:384
+#: qcsrc/common/notifications.qh:387
 #, c-format
 msgid "^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été brûlé par la mine de feu de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:385
+#: qcsrc/common/notifications.qh:388
 #, c-format
 #, c-format, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s\n"
 msgstr "^BG%s^K1 aurait dû utiliser une arme plus petite%s%s\n"
 
-#: qcsrc/common/notifications.qh:386
+#: qcsrc/common/notifications.qh:389
 #, c-format
 msgid "^BG%s^K1 forgot about their firemine%s%s\n"
-msgstr ""
+msgstr "^BG%s^K1 a oublié sa propre mine%s%s\n"
 
-#: qcsrc/common/notifications.qh:387
+#: qcsrc/common/notifications.qh:390
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été détruit par une rafale de roquettes du Hagar de ^BG%s^K1%s%"
+"s\n"
 
-#: qcsrc/common/notifications.qh:388
+#: qcsrc/common/notifications.qh:391
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été détruit par les roquettes du Hagar de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:389
+#: qcsrc/common/notifications.qh:392
 #, c-format
 msgid "^BG%s^K1 played with tiny Hagar rockets%s%s\n"
 msgstr "^BG%s^K1 a joué avec des mini-roquettes de Hagar%s%s\n"
 
-#: qcsrc/common/notifications.qh:390
+#: qcsrc/common/notifications.qh:393
 #, c-format
 msgid "^BG%s%s^K1 was cut down with ^BG%s^K1's HLAC%s%s\n"
 msgstr "^BG%s%s^K1 a été abattu par le HLAC de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:391
+#: qcsrc/common/notifications.qh:394
 #, c-format
 msgid "^BG%s^K1 got a little jumpy with their HLAC%s%s\n"
 msgstr "^BG%s^K1 s'est un peu trop agité avec son HLAC%s%s\n"
 
-#: qcsrc/common/notifications.qh:392
+#: qcsrc/common/notifications.qh:395
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été pris dans la bombe gravitationnellle du Grappin de ^BG%s^K1"
+"%s%s\n"
 
-#: qcsrc/common/notifications.qh:393
+#: qcsrc/common/notifications.qh:396
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a succombé à la musique du @!#%% Klein Bottle de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:394
+#: qcsrc/common/notifications.qh:397
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s\n"
-msgstr "^BG%s^K1 s'est lui-même cassé les oreilles avec son @!#%% d'Accordéon%s%s\n"
+msgstr "^BG%s^K1 s'est lui-même cassé les oreilles avec son @!#%% Klein Bottle%s%s\n"
 
-#: qcsrc/common/notifications.qh:395
+#: qcsrc/common/notifications.qh:398
 #, c-format
 msgid "^BG%s%s^K1 was shot to death by ^BG%s^K1's Laser%s%s\n"
 msgstr "^BG%s%s^K1 a été blessé à mort par le Laser de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:396
+#: qcsrc/common/notifications.qh:399
 #, c-format
 msgid "^BG%s^K1 shot themself to hell with their Laser%s%s\n"
 msgstr "^BG%s^K1 s'est brûlé jusqu'à la mort avec son Laser%s%s\n"
 
-#: qcsrc/common/notifications.qh:397
+#: qcsrc/common/notifications.qh:400
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s\n"
 msgstr "^BG%s%s^K1 s'est approché trop près de la mine de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:398
+#: qcsrc/common/notifications.qh:401
 #, c-format
 msgid "^BG%s^K1 forgot about their mine%s%s\n"
 msgstr "^BG%s^K1 a oublié sa propre mine%s%s\n"
 
-#: qcsrc/common/notifications.qh:399
+#: qcsrc/common/notifications.qh:402
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Minstanex%s%s\n"
 msgstr "^BG%s%s^K1 a été vaporisé par le Minstanex de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:400
+#: qcsrc/common/notifications.qh:403
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s\n"
 msgstr "^BG%s%s^K1 s'est approché trop près de l'obus de Mortier de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:401
+#: qcsrc/common/notifications.qh:404
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s\n"
 msgstr "^BG%s%s^K1 a mangé l'obus de Mortier de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:402
+#: qcsrc/common/notifications.qh:405
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s\n"
 msgstr "^BG%s^K1 n'a pu vu son propre obus de Mortier%s%s\n"
 
-#: qcsrc/common/notifications.qh:403
+#: qcsrc/common/notifications.qh:406
 #, c-format
 msgid "^BG%s^K1 blew themself up with their own Mortar%s%s\n"
 msgstr "^BG%s^K1 s'est explosé avec son propre Mortier%s%s\n"
 
-#: qcsrc/common/notifications.qh:404
+#: qcsrc/common/notifications.qh:407
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Nex%s%s\n"
 msgstr "^BG%s%s^K1 a été vaporisé par le Nex de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:405
+#: qcsrc/common/notifications.qh:408
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s\n"
 msgstr "^BG%s%s^K1 a été snipé avec un Rifle par ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:406
+#: qcsrc/common/notifications.qh:409
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s\n"
 msgstr "^BG%s%s^K1 est mort dans la pluie de balles de Rifle de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:407
+#: qcsrc/common/notifications.qh:410
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s\n"
 msgstr "^BG%s%s^K1 n'a pas pu se cacher de la pluie de balles de Rifle de ^BG%s^K1%s"
 "%s\n"
 
-#: qcsrc/common/notifications.qh:408
+#: qcsrc/common/notifications.qh:411
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s\n"
 msgstr "^BG%s%s^K1 n'a pas pu se cacher du Rifle de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:409
+#: qcsrc/common/notifications.qh:412
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s\n"
 msgstr "^BG%s%s^K1 a mangé la roquette de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:410
+#: qcsrc/common/notifications.qh:413
 #, c-format
 msgid "^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s\n"
 msgstr "^BG%s%s^K1 était trop près de la roquette de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:411
+#: qcsrc/common/notifications.qh:414
 #, c-format
 msgid "^BG%s^K1 blew themself up with their Rocketlauncher%s%s\n"
 msgstr "^BG%s^K1 s'est explosé avec son propre Rocket Launcher%s%s\n"
 
-#: qcsrc/common/notifications.qh:412
+#: qcsrc/common/notifications.qh:415
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s\n"
 msgstr "^BG%s%s^K1 a été détruit par les roquettes de Seeker de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:413
+#: qcsrc/common/notifications.qh:416
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s\n"
 msgstr "^BG%s%s^K1 a été tagué par le Seeker de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:414
+#: qcsrc/common/notifications.qh:417
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s\n"
 msgstr "^BG%s^K1 a joué avec des mini-roquettes de Seeker%s%s\n"
 
-#: qcsrc/common/notifications.qh:415
+#: qcsrc/common/notifications.qh:418
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s\n"
 msgstr "^BG%s%s^K1a été mortellement blessé par le Shotgun de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:416
+#: qcsrc/common/notifications.qh:419
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s\n"
 msgstr "^BG%s%s^K1 a giflé ^BG%s^K1 avec un gros Shotgun%s%s\n"
 
-#: qcsrc/common/notifications.qh:417
+#: qcsrc/common/notifications.qh:420
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s\n"
 msgstr "^BG%s^K1 pense désormais avec des portails%s%s\n"
 
-#: qcsrc/common/notifications.qh:418
+#: qcsrc/common/notifications.qh:421
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a succombé à la musique du @!#%%'n Tuba de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:419
+#: qcsrc/common/notifications.qh:422
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s\n"
-msgstr "^BG%s^K1 s'est cassé les oreilles avec son propre Tuba de @!#%% !%s%s\n"
+msgstr "^BG%s^K1 s'est cassé les oreilles avec son propre @!#%% Tuba%s%s\n"
 
-#: qcsrc/common/notifications.qh:420
+#: qcsrc/common/notifications.qh:423
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s\n"
-msgstr ""
+msgstr "^BG%s%s^K1 a été canardé par la Mitrailleuse de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:421
+#: qcsrc/common/notifications.qh:424
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"
 msgstr "^BG%s%s^K1 a été criblé de balles par le Machine Gun de ^BG%s^K1%s%s\n"
 
-#: qcsrc/common/notifications.qh:433
+#: qcsrc/common/notifications.qh:436
 msgid "^BGYou are attacking!"
 msgstr "^BGVous êtes en attaque !"
 
-#: qcsrc/common/notifications.qh:434
+#: qcsrc/common/notifications.qh:437
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGVous êtes en défense !"
 
-#: qcsrc/common/notifications.qh:435
+#: qcsrc/common/notifications.qh:438
 msgid "^F4Begin!"
 msgstr "^F4C'est parti !"
 
-#: qcsrc/common/notifications.qh:436
+#: qcsrc/common/notifications.qh:439
 msgid "^F4Game starts in ^COUNT"
 msgstr "^F4La partie commence dans ^COUNT"
 
-#: qcsrc/common/notifications.qh:437
+#: qcsrc/common/notifications.qh:440
 msgid "^F4Round starts in ^COUNT"
-msgstr "^F4Le round début dans ^COUNT"
+msgstr "^F4La manche démarre dans ^COUNT"
 
-#: qcsrc/common/notifications.qh:438
+#: qcsrc/common/notifications.qh:441
 msgid "^F4Round cannot start"
-msgstr "^F4Le round ne peut pas commencer"
+msgstr "^F4La manche ne peut pas démarrer"
 
-#: qcsrc/common/notifications.qh:439
+#: qcsrc/common/notifications.qh:442
 msgid "^BGRound tied"
 msgstr "^BGManche ex-aequo"
 
-#: qcsrc/common/notifications.qh:440
+#: qcsrc/common/notifications.qh:443
 msgid "^BGRound over, there's no winner"
 msgstr "^BGManche terminée, il n'y a pas de gagnant"
 
-#: qcsrc/common/notifications.qh:441
+#: qcsrc/common/notifications.qh:444
+msgid "^F2Don't camp!"
+msgstr "^F2Ne campez pas !"
+
+#: qcsrc/common/notifications.qh:445
 msgid ""
 "^BGYou are now free.\n"
 "^BGFeel free to ^F2try to capture^BG the flag again\n"
@@ -4294,441 +4331,465 @@ msgstr ""
 "^BGN'hésitez pas à ^F2essayer de capturer^BGle drapeau à nouveau\n"
 "^BGsi vous pensez que vous en êtes capable."
 
-#: qcsrc/common/notifications.qh:442
+#: qcsrc/common/notifications.qh:446
 msgid ""
 "^BGYou are now ^F1shielded^BG from the flag\n"
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
+"^BGVous êtes maintenant ^F1assigné^BG au drapeau\n"
+"^BGen raison ^F2d'un trop grand nombre de tentatives^BG de captures.\n"
+"^BGFaites vos preuves en défense avant d'essayer à nouveau."
 
-#: qcsrc/common/notifications.qh:443
+#: qcsrc/common/notifications.qh:447
 msgid "^BGYou captured the ^TC^TT^BG flag!"
 msgstr "^BG a capturé le drapeau ^TC^TT^BG !"
 
-#: qcsrc/common/notifications.qh:444
+#: qcsrc/common/notifications.qh:448
 #, c-format
 msgid "^BGToo many flag throws! Throwing disabled for %s."
 msgstr ""
 "^BGDrapeau jeté trop souvent ! Impossible de jeter le drapeau pendant %s."
 
-#: qcsrc/common/notifications.qh:445
+#: qcsrc/common/notifications.qh:449
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
 msgstr "^BG%s^BG a passé le drapeau ^TC^TT^BG à %s"
 
-#: qcsrc/common/notifications.qh:446
+#: qcsrc/common/notifications.qh:450
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
 msgstr "^BGVous avez reçu le drapeau ^TC^TT^BG de %s"
 
-#: qcsrc/common/notifications.qh:447
+#: qcsrc/common/notifications.qh:451
 #, c-format
 msgid "^BG%s^BG requests you to pass the flag%s"
-msgstr ""
+msgstr "^BG%s^BG vous demande de passer le drapeau%s"
 
-#: qcsrc/common/notifications.qh:448
+#: qcsrc/common/notifications.qh:452
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr ""
+msgstr "^BGDemande à %s^BG de vous passer le drapeau"
 
-#: qcsrc/common/notifications.qh:449
+#: qcsrc/common/notifications.qh:453
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
 msgstr "^BGVous avez passé le drapeau ^TC^TT^BG à %s"
 
-#: qcsrc/common/notifications.qh:450
+#: qcsrc/common/notifications.qh:454
 msgid "^BGYou got the ^TC^TT^BG flag!"
 msgstr "^BGVous avez le drapeau ^TC^TT^BG !"
 
-#: qcsrc/common/notifications.qh:451
+#: qcsrc/common/notifications.qh:455
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BGL'ennemi %s^BG a votre drapeau ! Récupérez-le !"
 
-#: qcsrc/common/notifications.qh:452
+#: qcsrc/common/notifications.qh:456
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
 msgstr "^BGL'ennemi %s (^BG%s%s)^BG a votre drapeau ! Récupérez-le !"
 
-#: qcsrc/common/notifications.qh:453
+#: qcsrc/common/notifications.qh:457
 #, c-format
 msgid "^BGYour %steam mate^BG got the flag! Protect them!"
 msgstr "^BGVotre équipier %s ^BG a le drapeau ! Protégez-le !"
 
-#: qcsrc/common/notifications.qh:454
+#: qcsrc/common/notifications.qh:458
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr "^BGVotre %séquipier (^BG%s%s)^BG a le drapeau ! Protégez-le !"
 
-#: qcsrc/common/notifications.qh:455
+#: qcsrc/common/notifications.qh:459
 msgid "^BGYou returned the ^TC^TT^BG flag!"
 msgstr "^BGVous avez retourné le drapeau ^TC^TT^BG !"
 
-#: qcsrc/common/notifications.qh:456
+#: qcsrc/common/notifications.qh:460
 msgid "^BGStalemate! Enemies can now see you on radar!"
 msgstr ""
 "^BGChasse à l'homme ! Les ennemis peuvent maintenant vous voir sur le radar "
 "!"
 
-#: qcsrc/common/notifications.qh:457
+#: qcsrc/common/notifications.qh:461
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
 msgstr ""
 "^BGChasse à l'homme ! Les porteurs de drapeau peuvent maintenant être vus "
 "par les ennemis sur le radar !"
 
 # Quelle traduction pour "fragged" ?
-#: qcsrc/common/notifications.qh:458
+#: qcsrc/common/notifications.qh:462
 #, c-format
-#, c-format, fuzzy
+#, c-format, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr "^K3%sVous avez fraggé ^BG%s"
+msgstr "^K3%sVous avez tué ^BG%s"
 
-#: qcsrc/common/notifications.qh:458
+#: qcsrc/common/notifications.qh:462
 #, c-format
 msgid "^K3%sYou scored against ^BG%s"
 msgstr "^K3%sVous avez marqué contre ^BG%s"
 
-#: qcsrc/common/notifications.qh:459
+#: qcsrc/common/notifications.qh:463
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sYVous avez été tué par ^BG%s"
 
-#: qcsrc/common/notifications.qh:459
+#: qcsrc/common/notifications.qh:463
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
 msgstr "^K1%s^BG%s a marqué contre vous"
 
-#: qcsrc/common/notifications.qh:460
+#: qcsrc/common/notifications.qh:464
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s^BG%s"
-msgstr ""
+msgstr "^K1%sVous avez été tué par ^BG%s^BG%s"
 
-#: qcsrc/common/notifications.qh:460
+#: qcsrc/common/notifications.qh:464
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^BG%s"
-msgstr ""
+msgstr "^K1%s^BG%s a marqué contre vous^BG%s"
 
 # Quelle traduction pour "fragged" ?
-#: qcsrc/common/notifications.qh:461
+#: qcsrc/common/notifications.qh:465
 #, c-format
 msgid "^K3%sYou fragged ^BG%s^BG%s"
-msgstr "^K3%sVous avez fraggé ^BG%s^BG%s"
+msgstr "^K3%sVous avez tué ^BG%s^BG%s"
 
-#: qcsrc/common/notifications.qh:461
+#: qcsrc/common/notifications.qh:465
 #, c-format
 msgid "^K3%sYou scored against ^BG%s^BG%s"
 msgstr "^K3%sVous avez marqué contre ^BG%s^BG%s"
 
-#: qcsrc/common/notifications.qh:462
+# Quelle traduction pour "typefragged" ?
+#: qcsrc/common/notifications.qh:466
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr ""
+msgstr "^K1%sVous avez type-tué ^BG%s"
 
-#: qcsrc/common/notifications.qh:462
+#: qcsrc/common/notifications.qh:466
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr ""
+msgstr "^K1%sVous avez marqué contre ^BG%s^K1 pendant qu'il tapait au clavier"
 
-#: qcsrc/common/notifications.qh:463
+#: qcsrc/common/notifications.qh:467
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sVous avez été type-tué par ^BG%s"
 
-#: qcsrc/common/notifications.qh:463
+#: qcsrc/common/notifications.qh:467
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing!"
-msgstr ""
+msgstr "^K1%s^BG%s^K1 a marqué contre vous alors que vous tapiez au clavier !"
 
-#: qcsrc/common/notifications.qh:464
+#: qcsrc/common/notifications.qh:468
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s^BG%s"
-msgstr ""
+msgstr "^K1%sVous avez été téléfraggé par ^BG%s^BG%s"
 
-#: qcsrc/common/notifications.qh:464
+#: qcsrc/common/notifications.qh:468
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s"
 msgstr ""
+"^K1%s^BG%s^K1 a marqué contre vous alors que vous tapiez au clavier^BG%s"
 
-#: qcsrc/common/notifications.qh:465
+# Quelle traduction pour "fragged" ?
+#: qcsrc/common/notifications.qh:469
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s^BG%s"
-msgstr ""
+msgstr "^K1%sVous avez type-tué ^BG%s^BG%s"
 
-#: qcsrc/common/notifications.qh:465
+#: qcsrc/common/notifications.qh:469
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s"
 msgstr ""
+"^K1%sVous avez marqué contre ^BG%s^K1 alors qu'il tapait au clavier^BG%s"
 
-#: qcsrc/common/notifications.qh:466
+#: qcsrc/common/notifications.qh:470
+msgid "^BGPress ^F2DROPWEAPON^BG again to toss the nade!"
+msgstr "^BGAppuyez sur ^F2LÂCHER L'ARME^BG à nouveau pour lancer la grenade !"
+
+#: qcsrc/common/notifications.qh:471
 #, c-format
 msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
-"^BGVous avez été déplacé dans une équipe différente\n"
-"Vous êtes maintenant sur : %s"
+"^K1%sVous avez marqué contre ^BG%s^K1 alors qu'il tapait au clavier^BG%s"
 
-#: qcsrc/common/notifications.qh:467
+#: qcsrc/common/notifications.qh:472
 msgid "^K1Don't shoot your team mates!"
 msgstr "^K1Ne tirez pas sur vos équipiers !"
 
-#: qcsrc/common/notifications.qh:467
+#: qcsrc/common/notifications.qh:472
 msgid "^K1Don't go against your team mates!"
 msgstr "^K1N'agressez pas vos équipiers !"
 
-#: qcsrc/common/notifications.qh:468
+#: qcsrc/common/notifications.qh:473
 msgid "^K1Die camper!"
 msgstr "^K1Meurs, campeur !"
 
-#: qcsrc/common/notifications.qh:468
+#: qcsrc/common/notifications.qh:473
 msgid "^K1Reconsider your tactics, camper!"
 msgstr "^K1Révise tes tactiques, campeur !"
 
-#: qcsrc/common/notifications.qh:469
+#: qcsrc/common/notifications.qh:474
 msgid "^K1You unfairly eliminated yourself!"
-msgstr ""
+msgstr "^K1Vous vous êtes injustement supprimé vous-même !"
 
-#: qcsrc/common/notifications.qh:470
+#: qcsrc/common/notifications.qh:475
 #, c-format
 msgid "^K1You were %s"
 msgstr "^K1Vous avez été %s"
 
-#: qcsrc/common/notifications.qh:471
+#: qcsrc/common/notifications.qh:476
 msgid "^K1You couldn't catch your breath!"
 msgstr "^K1Vous n'avez pas pu retenir votre respiration !"
 
-#: qcsrc/common/notifications.qh:472
+#: qcsrc/common/notifications.qh:477
 msgid "^K1You hit the ground with a crunch!"
-msgstr ""
+msgstr "^K1Vous avez heurté le sol dans un craquement sinistre !"
 
-#: qcsrc/common/notifications.qh:473
+#: qcsrc/common/notifications.qh:478
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1Vous êtes devenu un peu trop croustillant !"
 
-#: qcsrc/common/notifications.qh:473
+#: qcsrc/common/notifications.qh:478
 msgid "^K1You felt a little too hot!"
 msgstr "^K1Vous avez eu un peu trop chaud !"
 
-#: qcsrc/common/notifications.qh:474
+#: qcsrc/common/notifications.qh:479
 msgid "^K1You killed your own dumb self!"
 msgstr "^K1Vous vous êtes suicidé !"
 
-#: qcsrc/common/notifications.qh:474
+#: qcsrc/common/notifications.qh:479
 msgid "^K1You need to be more careful!"
 msgstr "^K1Vous devez faire plus attention !"
 
-#: qcsrc/common/notifications.qh:475
+#: qcsrc/common/notifications.qh:480
 msgid "^K1You couldn't stand the heat!"
 msgstr "^K1Vous n'avez pas pu supporter la chaleur !"
 
-#: qcsrc/common/notifications.qh:476
+#: qcsrc/common/notifications.qh:481
+msgid "^K1You forgot to put the pin back in!"
+msgstr "^K1Vous avez oublié de remettre la goupille !"
+
+#: qcsrc/common/notifications.qh:481
+msgid "^K1Tastes like chicken!"
+msgstr "^K1A comme un goût de poulet !"
+
+#: qcsrc/common/notifications.qh:482
 msgid "^K1You were killed for running out of ammo..."
 msgstr "^K1Vous avez été tué car vous étiez à cours de munitions..."
 
-#: qcsrc/common/notifications.qh:476
+#: qcsrc/common/notifications.qh:482
 msgid "^K1You are respawning for running out of ammo..."
-msgstr ""
+msgstr "^K1Vous avez été tué car vous étiez à cours de munitions..."
 
-#: qcsrc/common/notifications.qh:477
+#: qcsrc/common/notifications.qh:483
 msgid "^K1You grew too old without taking your medicine"
-msgstr ""
+msgstr "^K1Vous êtes devenu trop vieux et vous avez oublié vos médicaments"
 
-#: qcsrc/common/notifications.qh:477
+#: qcsrc/common/notifications.qh:483
 msgid "^K1You need to preserve your health"
 msgstr "^K1Vous devez préserver votre santé"
 
-#: qcsrc/common/notifications.qh:478
+#: qcsrc/common/notifications.qh:484
 msgid "^K1You became a shooting star!"
 msgstr "^K1Vous êtes devenu une étoile filante !"
 
-#: qcsrc/common/notifications.qh:479
+#: qcsrc/common/notifications.qh:485
 msgid "^K1You melted away in slime!"
 msgstr "^K1Vous avez fondu dans de l'acide !"
 
-#: qcsrc/common/notifications.qh:480
+#: qcsrc/common/notifications.qh:486
 msgid "^K1You committed suicide!"
 msgstr "^K1Vous vous êtes suicidé !"
 
-#: qcsrc/common/notifications.qh:480
+#: qcsrc/common/notifications.qh:486
 msgid "^K1You ended it all!"
 msgstr "^K1Vous avez mis fin à tout !"
 
-#: qcsrc/common/notifications.qh:481
+#: qcsrc/common/notifications.qh:487
 msgid "^K1You got stuck in a swamp!"
 msgstr "^K1Vous avez été submergé !"
 
-#: qcsrc/common/notifications.qh:482
+#: qcsrc/common/notifications.qh:488
 #, c-format
 msgid "^BGYou are now on: %s"
-msgstr ""
+msgstr "^BGVous êtes maintenant dans : %s"
 
-#: qcsrc/common/notifications.qh:483
+#: qcsrc/common/notifications.qh:489
 msgid "^K1You died in an accident!"
 msgstr "^K1Vous êtes mort dans un accident !"
 
-#: qcsrc/common/notifications.qh:484
+#: qcsrc/common/notifications.qh:490
 msgid "^K1You were fragged by a turret!"
-msgstr ""
+msgstr "^K1Vous avez été tué par une tourelle !"
 
-#: qcsrc/common/notifications.qh:484
+#: qcsrc/common/notifications.qh:490
 msgid "^K1You had an unfortunate run in with a turret!"
-msgstr ""
+msgstr "^K1Vous avez terminé votre course dans une tourelle !"
 
-#: qcsrc/common/notifications.qh:485
+#: qcsrc/common/notifications.qh:491
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr ""
+msgstr "^K1Vous avez été tué par une tourelle eWheel !"
 
-#: qcsrc/common/notifications.qh:485
+#: qcsrc/common/notifications.qh:491
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr ""
+msgstr "^K1Vous avez terminé votre course dans une tourelle eWheel !"
 
-#: qcsrc/common/notifications.qh:486
+#: qcsrc/common/notifications.qh:492
 msgid "^K1You were fragged by a Walker turret!"
-msgstr ""
+msgstr "^K1Vous avez été tué par une tourelle Marcheuse !"
 
-#: qcsrc/common/notifications.qh:486
+#: qcsrc/common/notifications.qh:492
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr ""
+msgstr "^K1Vous avez terminé votre course dans une tourelle Marcheuse !"
 
-#: qcsrc/common/notifications.qh:487
+#: qcsrc/common/notifications.qh:493
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
-msgstr ""
+msgstr "^K1Vous avez été pris dans l'explosion d'un Bumblebee !"
 
-#: qcsrc/common/notifications.qh:488
+#: qcsrc/common/notifications.qh:494
 msgid "^K1You were crushed by a vehicle!"
 msgstr "^K1Vous avez été renversé par un véhicule !"
 
-#: qcsrc/common/notifications.qh:489
-msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:490
-msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:491
-msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:492
-msgid "^K1You were blasted to bits by a Spiderbot rocket!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:493
-msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:494
-msgid "^K1You couldn't find shelter from a Racer rocket!"
-msgstr ""
-
 #: qcsrc/common/notifications.qh:495
+msgid "^K1You were caught in a Raptor cluster bomb!"
+msgstr "^K1Vous avez été pris dans un bombardement de Raptor !"
+
+#: qcsrc/common/notifications.qh:496
+msgid "^K1You got caught in the blast of a Raptor explosion!"
+msgstr "^K1Vous avez été pris dans l'explosion d'un Raptor !"
+
+#: qcsrc/common/notifications.qh:497
+msgid "^K1You got caught in the blast of a Spiderbot explosion!"
+msgstr "^K1Vous avez été pris dans l'explosion d'un Spiderbot !"
+
+#: qcsrc/common/notifications.qh:498
+msgid "^K1You were blasted to bits by a Spiderbot rocket!"
+msgstr "^K1Vous avez été réduit en morceaux par une roquette de Spiderbot !"
+
+#: qcsrc/common/notifications.qh:499
+msgid "^K1You got caught in the blast of a Racer explosion!"
+msgstr "^K1Vous avez été pris dans l'explosion d'un Racer !"
+
+#: qcsrc/common/notifications.qh:500
+msgid "^K1You couldn't find shelter from a Racer rocket!"
+msgstr "^K1Vous n'avez pas pu échapper à la roquette d'un Racer !"
+
+#: qcsrc/common/notifications.qh:501
 msgid "^K1Watch your step!"
 msgstr "^K1Attention à la marche !"
 
-#: qcsrc/common/notifications.qh:496
+#: qcsrc/common/notifications.qh:502
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
 msgstr "^K1Idiot ! Vous avez tué ^BG%s^K1, un équipier !"
 
-#: qcsrc/common/notifications.qh:496
+#: qcsrc/common/notifications.qh:502
 #, c-format
 msgid "^K1Moron! You went against ^BG%s^K1, a team mate!"
 msgstr "^K1Idiot ! Vous avez scoré ^BG%s^K1, un équipier !"
 
-#: qcsrc/common/notifications.qh:497
+#: qcsrc/common/notifications.qh:503
 #, c-format
 msgid "^K1You were fragged by ^BG%s^K1, a team mate"
-msgstr ""
+msgstr "^K1Vous avez été tué par ^BG%s^K1, un équipier"
 
-#: qcsrc/common/notifications.qh:497
+#: qcsrc/common/notifications.qh:503
 #, c-format
 msgid "^K1You were scored against by ^BG%s^K1, a team mate"
-msgstr ""
+msgstr "^K1Votre équipier ^BG%s^K1 a marqué contre vous"
 
-#: qcsrc/common/notifications.qh:498
+#: qcsrc/common/notifications.qh:504
 msgid ""
 "^K1Stop idling!\n"
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
+"^K1Ne restez pas inactif !\n"
+"^BGDéconnexion dans ^COUNT..."
 
-#: qcsrc/common/notifications.qh:499
+#: qcsrc/common/notifications.qh:505
 msgid "^F2You picked up some extra lives"
-msgstr ""
+msgstr "^F2Vous avez ramassé quelques vies supplémentaires"
 
-#: qcsrc/common/notifications.qh:500
+#: qcsrc/common/notifications.qh:506
 #, c-format
 msgid "^K3You froze ^BG%s"
-msgstr ""
+msgstr "^K3Vous avez gelé ^BG%s"
 
-#: qcsrc/common/notifications.qh:501
+#: qcsrc/common/notifications.qh:507
 #, c-format
 msgid "^K1You were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1Vous avez été gelé par ^BG%s"
 
-#: qcsrc/common/notifications.qh:502
+#: qcsrc/common/notifications.qh:508
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr ""
+msgstr "^K3Vous avez ressuscité ^BG%s"
 
-#: qcsrc/common/notifications.qh:503
+#: qcsrc/common/notifications.qh:509
+msgid "^K3You revived yourself"
+msgstr "^K3Vous vous êtes ravivé"
+
+#: qcsrc/common/notifications.qh:510
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr ""
+msgstr "^K3Vous avez été ressuscité par ^BG%s"
 
-#: qcsrc/common/notifications.qh:504
+#: qcsrc/common/notifications.qh:511
 #, c-format
 msgid "^K3You were automatically revived after %s second(s)"
 msgstr "^K3Vous avez ressuscité automatiquement après %s seconde(s)"
 
-#: qcsrc/common/notifications.qh:505
+#: qcsrc/common/notifications.qh:512
 msgid "^TC^TT^BG team wins the round"
 msgstr "^TC^TT^BG remporte la manche"
 
-#: qcsrc/common/notifications.qh:506
+#: qcsrc/common/notifications.qh:513
 #, c-format
 msgid "^BG%s^BG wins the round"
 msgstr "^BG%s^BG remporte la manche"
 
-#: qcsrc/common/notifications.qh:507
+#: qcsrc/common/notifications.qh:514
 msgid "^K1You froze yourself"
 msgstr "^K1Vous vous êtes gelé tout seul"
 
-#: qcsrc/common/notifications.qh:508
+#: qcsrc/common/notifications.qh:515
 msgid "^K1Round already started, you spawn as frozen"
-msgstr ""
+msgstr "^K1La manche a déjà démarré, vous apparaissez comme gelé"
 
-#: qcsrc/common/notifications.qh:509
+#: qcsrc/common/notifications.qh:516
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
 msgstr "^BGYVous n'avez pas le ^F1%s"
 
-#: qcsrc/common/notifications.qh:510
+#: qcsrc/common/notifications.qh:517
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
 msgstr "^BGVous avez lâché le ^F1%s^BG%s"
 
-#: qcsrc/common/notifications.qh:511
+#: qcsrc/common/notifications.qh:518
 #, c-format
 msgid "^BGYou got the ^F1%s"
 msgstr "^BGVous avez le ^F1%s"
 
-#: qcsrc/common/notifications.qh:512
+#: qcsrc/common/notifications.qh:519
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
 msgstr "^BGYVous n'avez pas assez de munitions pour le ^F1%s"
 
-#: qcsrc/common/notifications.qh:513
+#: qcsrc/common/notifications.qh:520
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
 msgstr "^F1%s %s^BG ne peut pas tirer, mais son ^F1%s^BG le peut"
 
-#: qcsrc/common/notifications.qh:514
+#: qcsrc/common/notifications.qh:521
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
 msgstr "^F1%s^BG n'est ^F4pas disponible^BG dans cette carte"
 
-#: qcsrc/common/notifications.qh:515
+#: qcsrc/common/notifications.qh:522
 msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
@@ -4736,7 +4797,7 @@ msgstr ""
 "^K1Aucun point d'apparition disponible !\n"
 "En espérant que votre équipe remédiera à ce problème..."
 
-#: qcsrc/common/notifications.qh:516
+#: qcsrc/common/notifications.qh:523
 msgid ""
 "^K1You may not join the game at this time.\n"
 "The player limit reached maximum capacity."
@@ -4744,409 +4805,432 @@ msgstr ""
 "^K1Vous ne pouvez pas rejoindre le serveur actuellement.\n"
 "La limite de joueurs a atteint sa capacité maximale."
 
-#: qcsrc/common/notifications.qh:517
+#: qcsrc/common/notifications.qh:524
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
 msgstr "^BG%s^BG a lâché la balle !"
 
-#: qcsrc/common/notifications.qh:518
+#: qcsrc/common/notifications.qh:525
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
 msgstr "^BG%s^BG a pris la balle !"
 
-#: qcsrc/common/notifications.qh:519
+#: qcsrc/common/notifications.qh:526
 msgid "^BGKilling people while you don't have the ball gives no points!"
 msgstr ""
+"^BGTuer des gens lorsque vous n'avez pas la balle ne fait gagner aucun point "
+"!"
 
-#: qcsrc/common/notifications.qh:520
+#: qcsrc/common/notifications.qh:527
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Help the key carriers to meet!"
 msgstr ""
+"^BGToutes les clefs sont entre les mains de votre équipe !\n"
+"Aidez les porteurs de clef à se rassembler !"
 
-#: qcsrc/common/notifications.qh:521
+#: qcsrc/common/notifications.qh:528
 msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
+"^BGToutes les clefs sont entre les mains de l'équipe ^TC^TT !\n"
+"Interposez-vous ^F4TOUT DE SUITE^BG !"
 
-#: qcsrc/common/notifications.qh:522
+#: qcsrc/common/notifications.qh:529
 msgid ""
 "^BGAll keys are in your team's hands!\n"
 "Meet the other key carriers ^F4NOW^BG!"
 msgstr ""
+"^BGToutes les clefs sont entre les mains de votre équipe !\n"
+"Rejoignez les autres porteurs de clef ^F4TOUT DE SUITE^BG !"
 
-#: qcsrc/common/notifications.qh:523
+#: qcsrc/common/notifications.qh:530
 msgid "^F4Round will start in ^COUNT"
-msgstr ""
+msgstr "^F4La manche démarre dans"
 
-#: qcsrc/common/notifications.qh:524
+#: qcsrc/common/notifications.qh:531
 msgid "^BGScanning frequency range..."
-msgstr ""
+msgstr "^BGBalayage de la gamme de fréquence..."
 
-#: qcsrc/common/notifications.qh:525
+#: qcsrc/common/notifications.qh:532
 msgid "^BGYou are starting with the ^TC^TT Key"
-msgstr ""
+msgstr "^BGVous débutez avec la clef ^TC^TT"
 
-#: qcsrc/common/notifications.qh:526 qcsrc/common/notifications.qh:527
+#: qcsrc/common/notifications.qh:533 qcsrc/common/notifications.qh:534
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
 "Need active players for: %s"
 msgstr ""
+"^BGEn attente de joueurs...\n"
+"A besoin de joueurs actifs pour : %s"
 
-#: qcsrc/common/notifications.qh:528
+#: qcsrc/common/notifications.qh:535
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
-msgstr ""
+msgstr "^BGEn attente de %s joueur(s)..."
 
-#: qcsrc/common/notifications.qh:529
-msgid "^F2Don't camp!"
-msgstr "^F2Ne campez pas !"
-
-#: qcsrc/common/notifications.qh:530
+#: qcsrc/common/notifications.qh:536
 msgid "^F4^COUNT^BG left to find some ammo!"
-msgstr ""
+msgstr "^F4^COUNT^BG restantes pour trouver des munitions !"
 
-#: qcsrc/common/notifications.qh:531
+#: qcsrc/common/notifications.qh:537
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr ""
+msgstr "^BGRamassez des munitions ou vous serez mort dans ^F4^COUNT^BG !"
 
-#: qcsrc/common/notifications.qh:531
+#: qcsrc/common/notifications.qh:537
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
-msgstr ""
+msgstr "^BGRamassez des munitions ! ^F4^COUNT^BG restantes !"
 
-#: qcsrc/common/notifications.qh:532
+#: qcsrc/common/notifications.qh:538
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2Vies supplémentaires restantes : ^K1%s"
 
-#: qcsrc/common/notifications.qh:533
+#: qcsrc/common/notifications.qh:539
 msgid "^BGSecondary fire inflicts no damage!"
-msgstr ""
+msgstr "^BGLe tir secondaire n'inflige aucun dégât !"
 
-#: qcsrc/common/notifications.qh:534
+# Should not be translated
+#: qcsrc/common/notifications.qh:540
 #, c-format
 msgid "^BG%s"
-msgstr ""
+msgstr "^BG%s"
 
-#: qcsrc/common/notifications.qh:535
+#: qcsrc/common/notifications.qh:541
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
 "Next weapon: ^F1%s"
 msgstr ""
+"^F2^COUNT^BG jusqu'au prochain changement d'arme...\n"
+"Prochaine arme : ^F1%s"
 
-#: qcsrc/common/notifications.qh:536
+#: qcsrc/common/notifications.qh:542
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
-msgstr ""
+msgstr "^F2Arme active : ^F1%s"
 
-#: qcsrc/common/notifications.qh:537
+#: qcsrc/common/notifications.qh:543
+msgid "^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"
+msgstr "^BGAppuyez sur ^F2LÂCHER L'ARME^BG à nouveau pour lancer la grenade !"
+
+#: qcsrc/common/notifications.qh:544
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
 msgstr ""
+"^F2^F4PROLONGATIONS ^F2commencées !\n"
+"Continuez de jouer jusqu'à ce qu'il y ait un gagnant !"
 
-#: qcsrc/common/notifications.qh:537
+#: qcsrc/common/notifications.qh:544
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
 msgstr ""
+"^F2^F4PROLONGATIONS ^F2commencées !\n"
+"Continuez de jouer jusqu'à ce qu'il y ait un gagnant !"
 
-#: qcsrc/common/notifications.qh:538
+#: qcsrc/common/notifications.qh:545
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-
-#: qcsrc/common/notifications.qh:539
-msgid "^F2Invisibility has worn off"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:540
-msgid "^F2Shield has worn off"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:541
-msgid "^F2Speed has worn off"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:542
-msgid "^F2Strength has worn off"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:543
-msgid "^F2You are invisible"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:544
-msgid "^F2Shield surrounds you"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:545
-msgid "^F2You are on speed"
-msgstr ""
+"^F2^F4PROLONGATIONS ^F2commencées !\n"
+"^BG^F4%s^BG de jeu supplémentaires !"
 
 #: qcsrc/common/notifications.qh:546
-msgid "^F2Strength infuses your weapons with devastating power"
-msgstr ""
+msgid "^F2Invisibility has worn off"
+msgstr "^F2Le pouvoir d'invisibilité a expiré"
 
 #: qcsrc/common/notifications.qh:547
-msgid "^F2The race is over, finish your lap!"
-msgstr ""
+msgid "^F2Shield has worn off"
+msgstr "^F2Le pouvoir de bouclier a expiré"
 
 #: qcsrc/common/notifications.qh:548
-msgid "^F2Superweapons have broken down"
-msgstr ""
+msgid "^F2Speed has worn off"
+msgstr "^F2Le pouvoir de vitesse a expiré"
 
 #: qcsrc/common/notifications.qh:549
-msgid "^F2Superweapons have been lost"
-msgstr ""
+msgid "^F2Strength has worn off"
+msgstr "^F2Le pouvoir de force a expiré"
 
 #: qcsrc/common/notifications.qh:550
-msgid "^F2You now have a superweapon"
-msgstr ""
+msgid "^F2You are invisible"
+msgstr "^F2Vous êtes Invisible"
 
 #: qcsrc/common/notifications.qh:551
-msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
-msgstr ""
+msgid "^F2Shield surrounds you"
+msgstr "^F2Le bouclier vous entoure"
 
 #: qcsrc/common/notifications.qh:552
-msgid "^K1Changing team in ^COUNT"
-msgstr ""
+msgid "^F2You are on speed"
+msgstr "^F2Vous êtes rapide comme l'éclair"
 
 #: qcsrc/common/notifications.qh:553
-msgid "^K1Spectating in ^COUNT"
-msgstr ""
+msgid "^F2Strength infuses your weapons with devastating power"
+msgstr "^F2Le pouvoir de Force dote vos armes d'un pouvoir dévastateur"
 
 #: qcsrc/common/notifications.qh:554
-msgid "^K1Suicide in ^COUNT"
-msgstr ""
+msgid "^F2The race is over, finish your lap!"
+msgstr "^F2La course est terminée, finissez votre tour !"
 
 #: qcsrc/common/notifications.qh:555
-msgid "^F4Timeout begins in ^COUNT"
-msgstr ""
+msgid "^F2Superweapons have broken down"
+msgstr "^F2Les super-armes se sont décomposées"
 
 #: qcsrc/common/notifications.qh:556
-msgid "^F4Timeout ends in ^COUNT"
-msgstr ""
+msgid "^F2Superweapons have been lost"
+msgstr "^F2Les super-armes ont été égarées"
 
-#: qcsrc/common/notifications.qh:788 qcsrc/common/notifications.qh:789
+#: qcsrc/common/notifications.qh:557
+msgid "^F2You now have a superweapon"
+msgstr "^F2Vous avez maintenant une super-arme"
+
+#: qcsrc/common/notifications.qh:558
+msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
+msgstr "^K1Change d'équipe pour ^TC^TT^K1 dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:559
+msgid "^K1Changing team in ^COUNT"
+msgstr "^K1Change d'équipe dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:560
+msgid "^K1Spectating in ^COUNT"
+msgstr "^K1Passe en spectateur dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:561
+msgid "^K1Suicide in ^COUNT"
+msgstr "^K1Suicide dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:562
+msgid "^F4Timeout begins in ^COUNT"
+msgstr "^F4Le temps mort commence dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:563
+msgid "^F4Timeout ends in ^COUNT"
+msgstr "^F4Le temps mort prend fin dans ^COUNT"
+
+#: qcsrc/common/notifications.qh:797 qcsrc/common/notifications.qh:798
 #, c-format
 msgid " (near %s)"
-msgstr ""
+msgstr " (près de %s)"
 
-#: qcsrc/common/notifications.qh:796 qcsrc/common/notifications.qh:797
+#: qcsrc/common/notifications.qh:805 qcsrc/common/notifications.qh:806
 msgid "secondary"
 msgstr "secondaire"
 
-#: qcsrc/common/notifications.qh:796 qcsrc/common/notifications.qh:797
+#: qcsrc/common/notifications.qh:805 qcsrc/common/notifications.qh:806
 msgid "primary"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:807
-#, c-format
-msgid " ^F1(Press %s)"
-msgstr ""
+msgstr "principal"
 
 #: qcsrc/common/notifications.qh:816
 #, c-format
+msgid " ^F1(Press %s)"
+msgstr " ^F1(Appuyez sur %s)"
+
+#: qcsrc/common/notifications.qh:825
+#, c-format
 msgid " with %s"
-msgstr ""
+msgstr " avec %s"
 
-#: qcsrc/common/notifications.qh:825
+#: qcsrc/common/notifications.qh:834
 msgid "TRIPLE FRAG! "
-msgstr ""
+msgstr "TRIPLE TUERIE !"
 
-#: qcsrc/common/notifications.qh:825
+#: qcsrc/common/notifications.qh:834
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
-msgstr ""
+msgstr "%s^K1 a fait une TRIPLE TUERIE ! %s^BG"
 
-#: qcsrc/common/notifications.qh:825
+#: qcsrc/common/notifications.qh:834
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
-msgstr ""
+msgstr "%s^K1 a marqué TROIS FOIS ! %s^BG"
 
-#: qcsrc/common/notifications.qh:826
+#: qcsrc/common/notifications.qh:835
 msgid "RAGE! "
-msgstr ""
+msgstr "RAGE ! "
 
-#: qcsrc/common/notifications.qh:826
+#: qcsrc/common/notifications.qh:835
 #, c-format
 msgid "%s^K1 unlocked RAGE! %s^BG"
-msgstr ""
+msgstr "%s^K1 a libéré sa RAGE! %s^BG"
 
-#: qcsrc/common/notifications.qh:826
+#: qcsrc/common/notifications.qh:835
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 a marqué CINQ FOIS DE SUITE ! %s^BG"
 
-#: qcsrc/common/notifications.qh:827
+#: qcsrc/common/notifications.qh:836
 msgid "MASSACRE! "
-msgstr ""
+msgstr "MASSACRE ! "
 
-#: qcsrc/common/notifications.qh:827
+#: qcsrc/common/notifications.qh:836
 #, c-format
 msgid "%s^K1 started a MASSACRE! %s^BG"
-msgstr ""
+msgstr "%s^K1 a commencé un MASSACRE! %s^BG"
 
-#: qcsrc/common/notifications.qh:827
+#: qcsrc/common/notifications.qh:836
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "%s^K1 a marqué DIX FOIS DE SUITE ! %s^BG"
 
-#: qcsrc/common/notifications.qh:828
+#: qcsrc/common/notifications.qh:837
 msgid "MAYHEM! "
-msgstr ""
-
-#: qcsrc/common/notifications.qh:828
-#, c-format
-msgid "%s^K1 executed MAYHEM! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:828
-#, c-format
-msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:829
-msgid "BERSERKER! "
-msgstr ""
-
-#: qcsrc/common/notifications.qh:829
-#, c-format
-msgid "%s^K1 is a BERSERKER! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:829
-#, c-format
-msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:830
-msgid "CARNAGE! "
-msgstr ""
-
-#: qcsrc/common/notifications.qh:830
-#, c-format
-msgid "%s^K1 inflicts CARNAGE! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:830
-#, c-format
-msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:831
-msgid "ARMAGEDDON! "
-msgstr ""
-
-#: qcsrc/common/notifications.qh:831
-#, c-format
-msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:831
-#, c-format
-msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
-msgstr ""
+msgstr "GRABUGE ! "
 
 #: qcsrc/common/notifications.qh:837
 #, c-format
-msgid "%s(^F1Bot^BG)"
-msgstr ""
+msgid "%s^K1 executed MAYHEM! %s^BG"
+msgstr "%s^K1 fait du GRABUGE ! %s^BG"
+
+#: qcsrc/common/notifications.qh:837
+#, c-format
+msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
+msgstr "%s^K1 a marqué QUINZE FOIS DE SUITE ! %s^BG"
+
+#: qcsrc/common/notifications.qh:838
+msgid "BERSERKER! "
+msgstr "FOU FURIEUX ! "
+
+#: qcsrc/common/notifications.qh:838
+#, c-format
+msgid "%s^K1 is a BERSERKER! %s^BG"
+msgstr "%s^K1 est un FOU FURIEUX ! %s^BG"
+
+#: qcsrc/common/notifications.qh:838
+#, c-format
+msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
+msgstr "%s^K1 a marqué VINGT FOIS DE SUITE ! %s^BG"
+
+#: qcsrc/common/notifications.qh:839
+msgid "CARNAGE! "
+msgstr "CARNAGE ! "
 
 #: qcsrc/common/notifications.qh:839
 #, c-format
-msgid "%s(Ping ^F1%d^BG)"
-msgstr ""
+msgid "%s^K1 inflicts CARNAGE! %s^BG"
+msgstr "%s^K1 est en plein CARNAGE ! %s^BG"
 
-#: qcsrc/common/notifications.qh:845
+#: qcsrc/common/notifications.qh:839
+#, c-format
+msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
+msgstr "%s^K1 a marqué VINGT-CINQ FOIS DE SUITE ! %s^BG"
+
+#: qcsrc/common/notifications.qh:840
+msgid "ARMAGEDDON! "
+msgstr "ARMAGEDDON ! "
+
+#: qcsrc/common/notifications.qh:840
+#, c-format
+msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
+msgstr "%s^K1 est en mode ARMAGEDDON ! %s^BG"
+
+#: qcsrc/common/notifications.qh:840
+#, c-format
+msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
+msgstr "%s^K1 a marqué TRENTE FOIS DE SUITE ! %s^BG"
+
+#: qcsrc/common/notifications.qh:846
+#, c-format
+msgid "%s(^F1Bot^BG)"
+msgstr "%s(^F1Bot^BG)"
+
+#: qcsrc/common/notifications.qh:848
+#, c-format
+msgid "%s(Ping ^F1%d^BG)"
+msgstr "%s(Ping ^F1%d^BG)"
+
+#: qcsrc/common/notifications.qh:854
 #, c-format
 msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
+"\n"
+"(Santé ^1%d^BG / Armure ^2%d^BG)%s"
 
-#: qcsrc/common/notifications.qh:847
+#: qcsrc/common/notifications.qh:856
 #, c-format
 msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
+"\n"
+"(^F4Mort^BG)%s"
 
-#: qcsrc/common/notifications.qh:884 qcsrc/common/notifications.qh:897
+#: qcsrc/common/notifications.qh:893 qcsrc/common/notifications.qh:906
 #, c-format
 msgid "%d score spree! "
-msgstr ""
+msgstr "Série de %d scores ! "
 
-#: qcsrc/common/notifications.qh:896
+#: qcsrc/common/notifications.qh:905
 #, c-format
 msgid "%d frag spree! "
-msgstr ""
+msgstr "%d folie meurtrière ! "
 
-#: qcsrc/common/notifications.qh:909
+#: qcsrc/common/notifications.qh:918
 msgid "First blood! "
-msgstr ""
+msgstr "Premier sang ! "
 
-#: qcsrc/common/notifications.qh:909
+#: qcsrc/common/notifications.qh:918
 msgid "First score! "
-msgstr ""
+msgstr "Premier score ! "
 
-#: qcsrc/common/notifications.qh:913
+#: qcsrc/common/notifications.qh:922
 msgid "First victim! "
-msgstr ""
+msgstr "Première victime ! "
 
-#: qcsrc/common/notifications.qh:913
+#: qcsrc/common/notifications.qh:922
 msgid "First casualty! "
-msgstr ""
+msgstr "Première victime ! "
 
-#: qcsrc/common/notifications.qh:954
+#: qcsrc/common/notifications.qh:963
 #, c-format
 msgid "%s^K1 has %d frags in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 a fait %d tués à la suite ! %s^BG"
 
-#: qcsrc/common/notifications.qh:955
+#: qcsrc/common/notifications.qh:964
 #, c-format
 msgid "%s^K1 made %d scores in a row! %s^BG"
-msgstr ""
+msgstr "%s^K1 a marqué %d fois d'affilée ! %s^BG"
 
-#: qcsrc/common/notifications.qh:973
+#: qcsrc/common/notifications.qh:982
 #, c-format
 msgid "%s^K1 drew first blood! %s^BG"
-msgstr ""
+msgstr "%s^K1 a versé le premier sang ! %s^BG"
 
-#: qcsrc/common/notifications.qh:974
+#: qcsrc/common/notifications.qh:983
 #, c-format
 msgid "%s^K1 got the first score! %s^BG"
-msgstr ""
+msgstr "%s^K1 a marqué le premier ! %s^BG"
 
-#: qcsrc/common/notifications.qh:990
+#: qcsrc/common/notifications.qh:999
 #, c-format
 msgid ", ending their %d frag spree"
-msgstr ""
+msgstr ", mettant fin à sa série de %d tués"
 
-#: qcsrc/common/notifications.qh:991
+#: qcsrc/common/notifications.qh:1000
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ""
+msgstr ", mettant fin à sa série de %d scores"
 
-#: qcsrc/common/notifications.qh:1005
+#: qcsrc/common/notifications.qh:1014
 #, c-format
 msgid ", losing their %d frag spree"
-msgstr ""
+msgstr ", perdant sa série de %d tués"
 
-#: qcsrc/common/notifications.qh:1006
+#: qcsrc/common/notifications.qh:1015
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ""
+msgstr ", perdant sa série de %d scores"
 
 #: qcsrc/common/teams.qh:26
 msgid "Red"
-msgstr ""
+msgstr "Rouge"
 
 #: qcsrc/common/teams.qh:27
 msgid "Blue"
@@ -5162,11 +5246,15 @@ msgstr "Rose"
 
 #: qcsrc/common/teams.qh:30
 msgid "Team"
-msgstr ""
+msgstr "Équipe"
 
 #: qcsrc/common/teams.qh:31
 msgid "Neutral"
-msgstr ""
+msgstr "Neutre"
+
+#, c-format
+#~ msgid "^BG%s^F3 connected and joined the ^TC^TT\n"
+#~ msgstr "^BG%s^F3 s'est connecté et a rejoint les ^TC^TT\n"
 
 #~ msgid "Playermodel LOD:"
 #~ msgstr "Qualité modèle personnage :"
