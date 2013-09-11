@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 21:59-0400\n"
+"POT-Creation-Date: 2013-09-10 21:25-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2866,31 +2866,31 @@ msgstr ""
 msgid "<no model found>"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:186
+#: qcsrc/menu/xonotic/serverlist.c:190
 msgid "Remove"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:188
+#: qcsrc/menu/xonotic/serverlist.c:192
 msgid "Bookmark"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:549
+#: qcsrc/menu/xonotic/serverlist.c:553
 msgid "Ping"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:550
+#: qcsrc/menu/xonotic/serverlist.c:554
 msgid "Host name"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:551
+#: qcsrc/menu/xonotic/serverlist.c:555
 msgid "Map"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:552
+#: qcsrc/menu/xonotic/serverlist.c:556
 msgid "Type"
 msgstr ""
 
-#: qcsrc/menu/xonotic/serverlist.c:553
+#: qcsrc/menu/xonotic/serverlist.c:557
 msgid "Players"
 msgstr ""
 

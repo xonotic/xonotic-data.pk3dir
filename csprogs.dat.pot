@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 21:59-0400\n"
+"POT-Creation-Date: 2013-09-10 21:25-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,213 +50,213 @@ msgstr ""
 msgid "%s (%s %s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:830
+#: qcsrc/client/hud.qc:829
 msgid "Out of ammo"
 msgstr ""
 
-#: qcsrc/client/hud.qc:834
+#: qcsrc/client/hud.qc:833
 msgid "Don't have"
 msgstr ""
 
-#: qcsrc/client/hud.qc:838
+#: qcsrc/client/hud.qc:837
 msgid "Unavailable"
 msgstr ""
 
-#: qcsrc/client/hud.qc:1705 qcsrc/client/hud.qc:1706 qcsrc/client/hud.qc:2069
+#: qcsrc/client/hud.qc:1704 qcsrc/client/hud.qc:1705 qcsrc/client/hud.qc:2068
 #, c-format
 msgid "Player %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2385
+#: qcsrc/client/hud.qc:2384
 msgid "^1Intermediate 1 (+15.42)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2387 qcsrc/client/hud.qc:2429 qcsrc/client/hud.qc:2470
+#: qcsrc/client/hud.qc:2386 qcsrc/client/hud.qc:2428 qcsrc/client/hud.qc:2469
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2472
+#: qcsrc/client/hud.qc:2471
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2502
+#: qcsrc/client/hud.qc:2501
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2507
+#: qcsrc/client/hud.qc:2506
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2587
+#: qcsrc/client/hud.qc:2586
 msgid "A vote has been called for:"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2589
+#: qcsrc/client/hud.qc:2588
 msgid "Allow servers to store and display your name?"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2593
+#: qcsrc/client/hud.qc:2592
 msgid "^1Configure the HUD"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2597
+#: qcsrc/client/hud.qc:2596
 #, c-format
 msgid "Yes (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2599
+#: qcsrc/client/hud.qc:2598
 #, c-format
 msgid "No (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3170 qcsrc/client/hud.qc:3173 qcsrc/client/hud.qc:3175
+#: qcsrc/client/hud.qc:3169 qcsrc/client/hud.qc:3172 qcsrc/client/hud.qc:3174
 msgid "Personal best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3188 qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3193
+#: qcsrc/client/hud.qc:3187 qcsrc/client/hud.qc:3190 qcsrc/client/hud.qc:3192
 msgid "Server best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3553
+#: qcsrc/client/hud.qc:3552
 msgid "^3Player^7: This is the chat area."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3619
+#: qcsrc/client/hud.qc:3618
 #, c-format
 msgid "FPS: %.*f"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3684
+#: qcsrc/client/hud.qc:3683
 msgid "^1Observing"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3687 qcsrc/client/hud.qc:3689
+#: qcsrc/client/hud.qc:3686 qcsrc/client/hud.qc:3688
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3694
+#: qcsrc/client/hud.qc:3693
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3696
+#: qcsrc/client/hud.qc:3695
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3700
+#: qcsrc/client/hud.qc:3699
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3702
+#: qcsrc/client/hud.qc:3701
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3705
+#: qcsrc/client/hud.qc:3704
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3709
+#: qcsrc/client/hud.qc:3708
 msgid "^1Wait for your turn to join"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3715
+#: qcsrc/client/hud.qc:3714
 msgid "^1Match has already begun"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3717
+#: qcsrc/client/hud.qc:3716
 msgid "^1You have no more lives left"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3719 qcsrc/client/hud.qc:3722
+#: qcsrc/client/hud.qc:3718 qcsrc/client/hud.qc:3721
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3730
+#: qcsrc/client/hud.qc:3729
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3737
+#: qcsrc/client/hud.qc:3736
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3752
+#: qcsrc/client/hud.qc:3751
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3754
+#: qcsrc/client/hud.qc:3753
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3759
+#: qcsrc/client/hud.qc:3758
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3761
+#: qcsrc/client/hud.qc:3760
 msgid "^2Waiting for others to ready up..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3767
+#: qcsrc/client/hud.qc:3766
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3788
+#: qcsrc/client/hud.qc:3787
 msgid "Teamnumbers are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3793
+#: qcsrc/client/hud.qc:3792
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3801
+#: qcsrc/client/hud.qc:3800
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3803
+#: qcsrc/client/hud.qc:3802
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3805
+#: qcsrc/client/hud.qc:3804
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3807
+#: qcsrc/client/hud.qc:3806
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3855
+#: qcsrc/client/hud.qc:3854
 msgid " qu/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3859
+#: qcsrc/client/hud.qc:3858
 msgid " m/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3863
+#: qcsrc/client/hud.qc:3862
 msgid " km/h"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3867
+#: qcsrc/client/hud.qc:3866
 msgid " mph"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3871
+#: qcsrc/client/hud.qc:3870
 msgid " knots"
 msgstr ""
 
-#: qcsrc/client/hud.qc:4548
+#: qcsrc/client/hud.qc:4547
 msgid "Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"
 msgstr ""
 
@@ -437,211 +437,219 @@ msgid "SCO^name"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:39
-msgid "SCO^nick"
+msgid "SCO^sum"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:40
-msgid "SCO^objectives"
+msgid "SCO^nick"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:41
-msgid "SCO^pickups"
+msgid "SCO^objectives"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:42
-msgid "SCO^ping"
+msgid "SCO^pickups"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:43
-msgid "SCO^pl"
+msgid "SCO^ping"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:44
-msgid "SCO^pushes"
+msgid "SCO^pl"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:45
-msgid "SCO^rank"
+msgid "SCO^pushes"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:46
-msgid "SCO^returns"
+msgid "SCO^rank"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:47
-msgid "SCO^revivals"
+msgid "SCO^returns"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:48
-msgid "SCO^score"
+msgid "SCO^revivals"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:49
-msgid "SCO^suicides"
+msgid "SCO^score"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:50
-msgid "SCO^takes"
+msgid "SCO^suicides"
 msgstr ""
 
 #: qcsrc/client/scoreboard.qc:51
+msgid "SCO^takes"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:52
 msgid "SCO^ticks"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:250
+#: qcsrc/client/scoreboard.qc:251
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:251
+#: qcsrc/client/scoreboard.qc:252
 msgid "^3|---------------------------------------------------------------|\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:252
+#: qcsrc/client/scoreboard.qc:253
 msgid "Usage:\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:253
+#: qcsrc/client/scoreboard.qc:254
 msgid "^2scoreboard_columns_set default\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:254
+#: qcsrc/client/scoreboard.qc:255
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:255
+#: qcsrc/client/scoreboard.qc:256
 msgid "The following field names are recognized (case insensitive):\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:256
+#: qcsrc/client/scoreboard.qc:257
 msgid ""
 "You can use a ^3|^7 to start the right-aligned fields.\n"
 "\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:258
+#: qcsrc/client/scoreboard.qc:259
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:259
+#: qcsrc/client/scoreboard.qc:260
 msgid "^3ping^7                     Ping time\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:260
+#: qcsrc/client/scoreboard.qc:261
 msgid "^3pl^7                       Packet loss\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:261
+#: qcsrc/client/scoreboard.qc:262
 msgid "^3kills^7                    Number of kills\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:262
+#: qcsrc/client/scoreboard.qc:263
 msgid "^3deaths^7                   Number of deaths\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:263
+#: qcsrc/client/scoreboard.qc:264
 msgid "^3suicides^7                 Number of suicides\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:264
+#: qcsrc/client/scoreboard.qc:265
 msgid "^3frags^7                    kills - suicides\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:265
+#: qcsrc/client/scoreboard.qc:266
 msgid "^3kd^7                       The kill-death ratio\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:266
+#: qcsrc/client/scoreboard.qc:267
+msgid "^3sum^7                      frags - deaths\n"
+msgstr ""
+
+#: qcsrc/client/scoreboard.qc:268
 msgid ""
 "^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was "
 "captured\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:267
+#: qcsrc/client/scoreboard.qc:269
 msgid ""
 "^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a "
 "ball (Keepaway) was picked up\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:268
+#: qcsrc/client/scoreboard.qc:270
 msgid "^3captime^7                  Time of fastest cap (CTF)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:269
+#: qcsrc/client/scoreboard.qc:271
 msgid "^3fckills^7                  Number of flag carrier kills\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:270
+#: qcsrc/client/scoreboard.qc:272
 msgid "^3returns^7                  Number of flag returns\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:271
+#: qcsrc/client/scoreboard.qc:273
 msgid "^3drops^7                    Number of flag drops\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:272
+#: qcsrc/client/scoreboard.qc:274
 msgid "^3lives^7                    Number of lives (LMS)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:273
+#: qcsrc/client/scoreboard.qc:275
 msgid "^3rank^7                     Player rank\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:274
+#: qcsrc/client/scoreboard.qc:276
 msgid "^3pushes^7                   Number of players pushed into void\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:275
+#: qcsrc/client/scoreboard.qc:277
 msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:276
+#: qcsrc/client/scoreboard.qc:278
 msgid "^3kckills^7                  Number of keys carrier kills\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:277
+#: qcsrc/client/scoreboard.qc:279
 msgid "^3losses^7                   Number of times a key was lost\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:278
+#: qcsrc/client/scoreboard.qc:280
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:279
+#: qcsrc/client/scoreboard.qc:281
 msgid "^3time^7                     Total time raced (race/cts)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:280
+#: qcsrc/client/scoreboard.qc:282
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:281
+#: qcsrc/client/scoreboard.qc:283
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:282
+#: qcsrc/client/scoreboard.qc:284
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:283
+#: qcsrc/client/scoreboard.qc:285
 msgid "^3bckills^7                  Number of ball carrier kills\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:284
+#: qcsrc/client/scoreboard.qc:286
 msgid ""
 "^3bctime^7                   Total amount of time holding the ball in "
 "Keepaway\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:285
+#: qcsrc/client/scoreboard.qc:287
 msgid ""
 "^3score^7                    Total score\n"
 "\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:287
+#: qcsrc/client/scoreboard.qc:289
 msgid ""
 "Before a field you can put a + or - sign, then a comma separated list\n"
 "of game types, then a slash, to make the field show up only in these\n"
@@ -650,118 +658,118 @@ msgid ""
 "\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:292
+#: qcsrc/client/scoreboard.qc:294
 msgid ""
 "The special game type names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams game modes.\n"
 "\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:295
+#: qcsrc/client/scoreboard.qc:297
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:296
+#: qcsrc/client/scoreboard.qc:298
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right.\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:298
+#: qcsrc/client/scoreboard.qc:300
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM.\n"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:529 qcsrc/client/scoreboard.qc:536
+#: qcsrc/client/scoreboard.qc:534 qcsrc/client/scoreboard.qc:541
 msgid "N/A"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:966
+#: qcsrc/client/scoreboard.qc:984
 #, c-format
 msgid "Accuracy stats (average %d%%)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1029
+#: qcsrc/client/scoreboard.qc:1047
 #, c-format
 msgid "%d%%"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1087
+#: qcsrc/client/scoreboard.qc:1105
 msgid "Map stats:"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1103
+#: qcsrc/client/scoreboard.qc:1121
 msgid "Secrets found:"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1130
+#: qcsrc/client/scoreboard.qc:1148
 msgid "Rankings"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1226
+#: qcsrc/client/scoreboard.qc:1244
 msgid "Scoreboard"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1285
+#: qcsrc/client/scoreboard.qc:1303
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1289
+#: qcsrc/client/scoreboard.qc:1307
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1323
+#: qcsrc/client/scoreboard.qc:1341
 msgid "Spectators"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1330
+#: qcsrc/client/scoreboard.qc:1348
 #, c-format
 msgid "playing on ^2%s^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1337 qcsrc/client/scoreboard.qc:1342
+#: qcsrc/client/scoreboard.qc:1355 qcsrc/client/scoreboard.qc:1360
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1346 qcsrc/client/scoreboard.qc:1365
+#: qcsrc/client/scoreboard.qc:1364 qcsrc/client/scoreboard.qc:1383
 msgid " or"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1349 qcsrc/client/scoreboard.qc:1356
+#: qcsrc/client/scoreboard.qc:1367 qcsrc/client/scoreboard.qc:1374
 #, c-format
 msgid " until ^3%s %s^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1350 qcsrc/client/scoreboard.qc:1357
-#: qcsrc/client/scoreboard.qc:1369 qcsrc/client/scoreboard.qc:1376
+#: qcsrc/client/scoreboard.qc:1368 qcsrc/client/scoreboard.qc:1375
+#: qcsrc/client/scoreboard.qc:1387 qcsrc/client/scoreboard.qc:1394
 msgid "SCO^points"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1351 qcsrc/client/scoreboard.qc:1358
-#: qcsrc/client/scoreboard.qc:1370 qcsrc/client/scoreboard.qc:1377
+#: qcsrc/client/scoreboard.qc:1369 qcsrc/client/scoreboard.qc:1376
+#: qcsrc/client/scoreboard.qc:1388 qcsrc/client/scoreboard.qc:1395
 msgid "SCO^is beaten"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1368 qcsrc/client/scoreboard.qc:1375
+#: qcsrc/client/scoreboard.qc:1386 qcsrc/client/scoreboard.qc:1393
 #, c-format
 msgid " until a lead of ^3%s %s^7"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1396
+#: qcsrc/client/scoreboard.qc:1414
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1406
+#: qcsrc/client/scoreboard.qc:1424
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr ""
 
-#: qcsrc/client/scoreboard.qc:1415
+#: qcsrc/client/scoreboard.qc:1433
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr ""
@@ -788,7 +796,7 @@ msgstr ""
 msgid "No left gunner!"
 msgstr ""
 
-#: qcsrc/client/View.qc:1097
+#: qcsrc/client/View.qc:1096
 msgid "Revival progress"
 msgstr ""
 
