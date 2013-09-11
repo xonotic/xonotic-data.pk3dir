@@ -143,7 +143,7 @@ float ctf_Stalemate_customizeentityforclient()
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
 	wp_owner = self.owner;
-		
+	
 	// team waypoints
 	if(!ctf_IsDifferentTeam(wp_owner.flagcarried, wp_owner))
 		return FALSE;
@@ -668,7 +668,7 @@ void ctf_CheckStalemate(void)
 		ctf_stalemate = TRUE;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-	else if(stale_flags < ctf_teams && stale_flags >= 1 && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
