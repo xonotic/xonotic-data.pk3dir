@@ -137,20 +137,20 @@ float ctf_IsDifferentTeam(entity a, entity b)
 	return (autocvar_g_ctf_reverse) ? !f : f;
 }
 
-float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
+float ctf_Stalemate_customizeentityforclient()
 {
-	// personal waypoints
-	if(self.enemy)
-		if(self.enemy != e)
-			return FALSE;
-			
+	// make spectators see what the player would see
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+		
 	// team waypoints
-	if(self.rule == SPRITERULE_DEFAULT)
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
-	if(!IsDifferentTeam(self.owner, e) || !IS_PLAYER(e))
+	if(!ctf_IsDifferentTeam(wp_owner.flagcarried, wp_owner))
 		return FALSE;
-
+		
+	if not(IS_PLAYER(e))
+		return FALSE;
+		
 	return TRUE;
 }
 
@@ -679,7 +679,7 @@ void ctf_CheckStalemate(void)
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
-				tmp_entity.owner.wps_enemyflagcarrier.waypointsprite_visible_for_player = ctf_Stalemate_waypointsprite_visible_for_player;
+				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_customizeentityforclient;
 			}
 		}
 		
@@ -1409,7 +1409,7 @@ void havocbot_role_ctf_carrier()
 		{
 			// Can't navigate to my own base, suicide!
 			// TODO: drop it and wander around
-			Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+			//Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 			return;
 		}
 	}
