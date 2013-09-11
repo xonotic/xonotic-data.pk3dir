@@ -662,13 +662,13 @@ void ctf_CheckStalemate(void)
 		}
 	}
 	
-	stale_flags = (stale_red_flags > 0) + (stale_blue_flags > 0) + (stale_yellow_flags > 0) + (stale_pink_flags > 0);
+	stale_flags = (stale_red_flags >= 1) + (stale_blue_flags >= 1) + (stale_yellow_flags >= 1) + (stale_pink_flags >= 1);
 	
 	if(stale_flags == ctf_teams)
 		ctf_stalemate = TRUE;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-	else if(stale_flags < ctf_teams && stale_flags > 0 && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < ctf_teams && stale_flags >= 1 && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
@@ -869,7 +869,7 @@ void ctf_FlagTouch()
 	// special touch behaviors
 	if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
-		if(autocvar_g_ctf_allow_vehicle_touch)
+		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
@@ -938,9 +938,7 @@ void ctf_RespawnFlag(entity flag)
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
-		if(flag.owner.wps_enemyflagcarrier)
-			WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);
-			
+		WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);	
 		WaypointSprite_Kill(flag.wps_flagcarrier);
 		
 		flag.owner.flagcarried = world;
@@ -949,7 +947,7 @@ void ctf_RespawnFlag(entity flag)
 			ctf_FakeTimeLimit(flag.owner, -1);
 	}
 
-	if((flag.ctf_status == FLAG_DROPPED) && (flag.wps_flagdropped))
+	if(flag.ctf_status == FLAG_DROPPED)
 		{ WaypointSprite_Kill(flag.wps_flagdropped); }
 
 	// reset the flag
@@ -2303,16 +2301,9 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	
 	entity tmp_entity;
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	if(tmp_entity.team == NUM_TEAM_3)
 	{
-		++ctf_teams;
-		break; // found 1 flag for this team
-	}
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	if(tmp_entity.team == NUM_TEAM_4)
-	{
-		++ctf_teams;
-		break; // found 1 flag for this team
+		if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
+		if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
 	}
 	
 	ctf_teams = bound(2, ctf_teams, 4);
