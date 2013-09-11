@@ -52,7 +52,7 @@ void turret_stdproc_respawn()
     // this function doubles as "teamchange" function.
     self.tur_head.team 	= self.team;
 
-    self.effects             &~= EF_NODRAW;
+    self.effects             &= ~EF_NODRAW;
     self.deadflag           = DEAD_NO;
     self.effects            = EF_LOWPRECISION;
     self.solid              = SOLID_BBOX;

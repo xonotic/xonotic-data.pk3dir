@@ -51,7 +51,7 @@ void PingPLReport_Spawn()
 	pingplreport.nextthink = time;
 }
 
-float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
+const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
@@ -417,7 +417,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADCVAR("g_spawnshieldtime");
@@ -563,7 +562,7 @@ void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
-	string s, col;
+	string s;
 
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
@@ -769,7 +768,7 @@ void spawnfunc_worldspawn (void)
 
 	WeaponStats_Init();
 
-	WEPSET_ADDSTAT();
+	WepSet_AddStat();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -814,58 +813,15 @@ void spawnfunc_worldspawn (void)
 	detect_maptype();
 
 	// set up information replies for clients and server to use
-	lsmaps_reply = "^7Maps available: ";
-	lsnewmaps_reply = "^7Maps without a record set: ";
-	for(i = 0, j = 0; i < MapInfo_count; ++i)
-	{
-		if(MapInfo_Get_ByID(i))
-			if not(MapInfo_Map_flags & MapInfo_ForbiddenFlags())
-			{
-				if(mod(i, 2))
-					col = "^2";
-				else
-					col = "^3";
-
-				++j;
-
-				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
-
-				if(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
-					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
-				else if(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
-			}
-	}
-
-	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
-	lsnewmaps_reply = strzone(strcat(((!g_race && !g_cts) ? "Need to be playing race or CTS for lsnewmaps to work." : lsnewmaps_reply), "\n"));
-
-	maplist_reply = "^7Maps in list: ";
-	n = tokenize_console(autocvar_g_maplist);
-	for(i = 0, j = 0; i < n; ++i)
-	{
-		if(MapInfo_CheckMap(argv(i)))
-		{
-			if(mod(j, 2))
-				col = "^2";
-			else
-				col = "^3";
-			maplist_reply = strcat(maplist_reply, col, argv(i), " ");
-			++j;
-		}
-	}
-	maplist_reply = strzone(strcat(maplist_reply, "\n"));
-	MapInfo_ClearTemps();
-
+	maplist_reply = strzone(getmaplist());
+	lsmaps_reply = strzone(getlsmaps());
 	for(i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
 		if (s)
 			records_reply[i] = strzone(s);
 	}
-
 	ladder_reply = strzone(getladder());
-
 	rankings_reply = strzone(getrankings());
 
 	// begin other init
@@ -1612,10 +1568,10 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
-float WINNING_NO = 0; // no winner, but time limits may terminate the game
-float WINNING_YES = 1; // winner found
-float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+const float WINNING_NO = 0; // no winner, but time limits may terminate the game
+const float WINNING_YES = 1; // winner found
+const float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
 
 float InitiateSuddenDeath()
 {
@@ -2442,7 +2398,7 @@ float MapVote_SendEntity(entity to, float sf)
 	float i;
 
 	if(sf & 1)
-		sf &~= 2; // if we send 1, we don't need to also send 2
+		sf &= ~2; // if we send 1, we don't need to also send 2
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);

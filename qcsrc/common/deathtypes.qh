@@ -104,10 +104,10 @@ string Deathtype_Name(float deathtype)
 	else { return ftos(deathtype); }
 }
 
-float DEATH_WEAPONMASK = 0xFF;
-float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
-float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
-float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_RESERVED2 = 0x800;
-float HITTYPE_RESERVED = 0x1000; // unused yet
+const float DEATH_WEAPONMASK = 0xFF;
+const float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
+const float HITTYPE_SECONDARY = 0x100;
+const float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
+const float HITTYPE_BOUNCE = 0x400;
+const float HITTYPE_RESERVED2 = 0x800;
+const float HITTYPE_RESERVED = 0x1000; // unused yet

@@ -275,7 +275,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_LOST_), player.netname);
-	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
+	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
@@ -321,7 +321,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTEN_NORM);
 	ctf_EventLog("receive", flag.team, player);
 	
 	FOR_EACH_REALPLAYER(tmp_player)
@@ -388,7 +388,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			flag.ctf_status = FLAG_PASSING;
 			
 			// other
-			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
+			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
@@ -447,7 +447,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
 	
 	switch(capturetype)
 	{
@@ -489,7 +489,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_RETURN_));
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_), player.netname);
-	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
@@ -537,7 +537,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_PICKUP_), player.netname);
-	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
@@ -627,7 +627,7 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 				case RETURN_TIMEOUT:
 					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_TIMEOUT_)); break; }
 			}
-			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
+			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
 			ctf_EventLog("returned", flag.team, world);
 			ctf_RespawnFlag(flag);
 		}
@@ -879,7 +879,7 @@ void ctf_FlagTouch()
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
 			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
-			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
 		return;
@@ -1789,10 +1789,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	float t = 0, t2 = 0, t3 = 0;
 	
 	// initially clear items so they can be set as necessary later.
-	self.items &~= (IT_RED_FLAG_CARRYING | IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST 
-				  | IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST
-				  | IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN | IT_YELLOW_FLAG_LOST
-				  | IT_PINK_FLAG_CARRYING | IT_PINK_FLAG_TAKEN | IT_PINK_FLAG_LOST
+	self.items &= ~(IT_RED_FLAG_CARRYING 	| IT_RED_FLAG_TAKEN 	| IT_RED_FLAG_LOST 
+				  | IT_BLUE_FLAG_CARRYING 	| IT_BLUE_FLAG_TAKEN 	| IT_BLUE_FLAG_LOST
+				  | IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN 	| IT_YELLOW_FLAG_LOST
+				  | IT_PINK_FLAG_CARRYING 	| IT_PINK_FLAG_TAKEN 	| IT_PINK_FLAG_LOST
 				  | IT_CTF_SHIELDED);
 
 	// scan through all the flags and notify the client about them 
