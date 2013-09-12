@@ -806,7 +806,7 @@ void readplayerstartcvars()
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
-	if (inWarmupStage)
+	if (warmup_stage)
 	{
 		warmup_start_ammo_shells = start_ammo_shells;
 		warmup_start_ammo_nails = start_ammo_nails;
@@ -961,13 +961,13 @@ void readlevelcvars(void)
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
 
-	inWarmupStage = cvar("g_warmup");
+	warmup_stage = cvar("g_warmup");
 	g_warmup_limit = cvar("g_warmup_limit");
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
 	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
-		inWarmupStage = 0; // these modes cannot work together, sorry
+		warmup_stage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
@@ -1033,7 +1033,7 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(inWarmupStage)
+	if not(warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
 	readplayerstartcvars();
