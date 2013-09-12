@@ -303,14 +303,14 @@ string getmaplist()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf(_("^7Maps in list: %s\n"), maplist);
+	return sprintf("^7Maps in list: %s\n", maplist);
 }
 
 	
 string getlsmaps()
 {
 	string lsmaps = "", col;
-	float i, newmaps;
+	float i, newmaps = 0;
 	
 	for(i = 0; i < MapInfo_count; ++i)
 	{
@@ -338,5 +338,5 @@ string getlsmaps()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf(_("^7Maps available%s: %s\n"), (newmaps ? _(" (New maps have asterisks marked in blue)") : ""), lsmaps);
+	return sprintf("^7Maps available%s: %s\n", (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
 }

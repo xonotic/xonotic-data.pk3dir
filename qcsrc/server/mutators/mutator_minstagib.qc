@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		{
 			self.alpha = default_player_alpha;
 			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &~= IT_STRENGTH;
+			self.items &= ~IT_STRENGTH;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
@@ -168,7 +168,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
 		if (time > self.invincible_finished)
 		{
-			self.items &~= IT_INVINCIBLE;
+			self.items &= ~IT_INVINCIBLE;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
 	}
@@ -275,8 +275,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 	
 	start_health = 100;
 	start_armorvalue = 0;
-	WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-	WEPSET_COPY_AW(warmup_start_weapons, WEP_MINSTANEX);
+	start_weapons = WEPSET_MINSTANEX;
+	warmup_start_weapons = WEPSET_MINSTANEX;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 		
 	return FALSE;

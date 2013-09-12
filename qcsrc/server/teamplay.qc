@@ -54,7 +54,7 @@ void InitGameplayMode()
 
 	MapInfo_LoadMapSettings(mapname);
 	teamplay = 0;
-	serverflags &~= SERVERFLAG_TEAMPLAY;
+	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
 	if not(cvar_value_issafe(world.fog))
 	{
