@@ -58,7 +58,7 @@ void W_Porto_Fail (float failhard)
 			if(vlen(trace_endpos - self.realowner.origin) < 128)
 			{
 				W_ThrowNewWeapon(self.realowner, WEP_PORTO, 0, self.origin, self.velocity);
-				centerprint(self.realowner, "^1Portal deployment failed.\n\n^2Catch it to try again!");
+				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}
 	}
@@ -134,7 +134,7 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.realowner, "^1In^7-portal created.");
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
 			W_Porto_Success();
 		}
 		else
@@ -151,7 +151,7 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.realowner, "^4Out^7-portal created.");
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
 			W_Porto_Success();
 		}
 		else
@@ -168,7 +168,7 @@ void W_Porto_Touch (void)
 		{
 			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
-			centerprint(self.realowner, "^1In^7-portal created.");
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
 			self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * norm));
 			CSQCProjectile(self, TRUE, PROJECTILE_PORTO_BLUE, TRUE); // change type
@@ -189,7 +189,7 @@ void W_Porto_Touch (void)
 			{
 				sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
 				trace_plane_normal = norm;
-				centerprint(self.realowner, "^4Out^7-portal created.");
+				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
 				W_Porto_Success();
 			}
 			else

@@ -245,6 +245,8 @@ void Send_Notification_WOVA(
 		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
+	MSG_INFO_NOTIF(2, INFO_ADMINMESSAGE,                   2, 0, "s1 s2", "",                       "",                     _("^F2%s^BG: %s\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_COINTOSS,                       1, 0, "s1", "",                          "",                     _("^F2Throwing coin... Result: %s^F2!\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 2,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 2,         2, 2, "s1 f1p2dec s2 f2p2dec", "s1",     "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_TIME_, 2,           1, 1, "s1 f1p2dec", "s1",                "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds\n"), "") \
@@ -369,6 +371,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s\n"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_SUPERSPEC_MISSING_UID,          0, 0, "", "",                            "",                     _("^F2You lack a UID, superspec options will not be saved/restored\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
@@ -433,6 +436,7 @@ void Send_Notification_WOVA(
 		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
+	MSG_CENTER_NOTIF(1, CENTER_ADMINMESSAGE,                2, 0, "s1 s2",        NO_CPID,             "3 0", _("^F2%s^BG:\n^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,             0, 0, "",             CPID_ROUND,          "2 0", _("^F4Begin!"), "") \
@@ -442,6 +446,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_TIED,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound tied"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_OVER,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, there's no winner"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CAMPCHECK,                   0, 0, "",             CPID_CAMPCHECK,      "0 0", _("^F2Don't camp!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_COINTOSS,                    1, 0, "s1",           NO_CPID,             "0 0", _("^F2Throwing coin... Result: %s^F2!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 2,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
@@ -502,6 +507,9 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,         1, 0, "s1",           NO_CPID,             "0 0", _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,      1, 0, "s1",           NO_CPID,             "0 0", _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,           0, 1, "",             CPID_IDLING,         "1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_LOCKED_NEED,            0, 0, "",             NO_CPID,             "0 0", _("^BGYou need %s^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_LOCKED_ALSONEED,        0, 0, "",             NO_CPID,             "0 0", _("^BGYou also need %s^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_UNLOCKED,               0, 0, "",             NO_CPID,             "0 0", _("^BGDoor unlocked!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_EXTRALIVES,             		0, 0, "",             NO_CPID,             "0 0", _("^F2You picked up some extra lives"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FREEZE,            1, 0, "s1",           NO_CPID,             "0 0", _("^K3You froze ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FROZEN,            1, 0, "s1",           NO_CPID,             "0 0", _("^K1You were frozen by ^BG%s"), "") \
@@ -541,8 +549,13 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NADE,            			0, 0, "",              NO_CPID,		          "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED,             0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture controlpoints to shield it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "3 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^K1Portal deployment failed.\n\n^F2Catch it to try again!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_IN,            0, 0, "",              NO_CPID,               "0 0", _("^K1In^BG-portal created"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_OUT,           0, 0, "",              NO_CPID,               "0 0", _("^F3Out^BG-portal created"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield has worn off"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,             0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Speed has worn off"), "") \
@@ -552,6 +565,9 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have been lost"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You now have a superweapon"), "") \
@@ -560,7 +576,8 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TRIGGER,                     1, 0, "s1",            NO_CPID,               "0 0",  _("^BG%s"), "") 
 
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
@@ -568,7 +585,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FALL,                    NO_MSG,        INFO_DEATH_MURDER_FALL,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FIRE,                    NO_MSG,        INFO_DEATH_MURDER_FIRE,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_LAVA,                    NO_MSG,        INFO_DEATH_MURDER_LAVA,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE,                    NO_MSG,        INFO_DEATH_MURDER_NADE,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE,                    NO_MSG,        INFO_DEATH_MURDER_NADE,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           NO_MSG,        INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   NO_MSG,        INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   NO_MSG,        INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
@@ -634,6 +651,8 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,                   NO_MSG,        INFO_ITEM_WEAPON_NOAMMO,                   CENTER_ITEM_WEAPON_NOAMMO) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                NO_MSG,        INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
+	MSG_MULTI_NOTIF(1, MULTI_ADMINMESSAGE,                   NO_MSG,        INFO_ADMINMESSAGE,                         CENTER_ADMINMESSAGE) \
+	MSG_MULTI_NOTIF(1, MULTI_COINTOSS,                       NO_MSG,        INFO_COINTOSS,                             CENTER_COINTOSS) \
 	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
