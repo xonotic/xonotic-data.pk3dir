@@ -75,6 +75,7 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
 	float i;
+	float autocvar_menu_vid_allowdualscreenresolution = 0;
 	vector r0, r;
 
 	me.configureXonoticTextSlider(me, "_menu_vid_width");
@@ -93,7 +94,9 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 		if(r_x < 640 || r_y < 480)
 			continue;
 		if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
-			continue;
+			if(autocvar_menu_vid_allowdualscreenresolution == 0)
+				continue;
+			
 		me.addResolution(me, r_x, r_y, r_z);
 	}
 
