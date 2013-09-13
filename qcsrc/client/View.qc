@@ -199,6 +199,17 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
+vector GetOrthoviewFOV(void)
+{
+	float fovx, fovy;
+	float width = (mi_picmax_x - mi_picmin_x);
+	float height = (mi_picmax_y - mi_picmin_y);
+	float distance_to_middle_of_world = vlen(view_origin);
+	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
+	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
 // this function must match W_SetupShot!
 float zoomscript_caught;
 
@@ -548,6 +559,14 @@ void CSQC_UpdateView(float w, float h)
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
 
+	if(autocvar_cl_orthoview)
+	{
+		float width = (mi_picmax_x - mi_picmin_x);
+		float height = (mi_picmax_y - mi_picmin_y);
+		setproperty(VF_ORIGIN, '0 0 1' * (512 * max(width, height)));
+		setproperty(VF_ANGLES, '90 0 0');
+	}
+
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
@@ -689,7 +708,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	setproperty(VF_FOV, GetCurrentFov(fov));
+	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV()); }
+	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
 	if(camera_active)
