@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-13 10:31+0200\n"
-"PO-Revision-Date: 2013-09-13 08:36+0000\n"
+"PO-Revision-Date: 2013-09-13 08:58+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
@@ -973,7 +973,7 @@ msgstr "Hagar"
 
 #: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_rocketlauncher.qc:11
 msgid "Rocket Launcher"
-msgstr ""
+msgstr "Raketenwerfer"
 
 #: qcsrc/client/waypointsprites.qc:300 qcsrc/server/w_porto.qc:11
 msgid "Port-O-Launch"
@@ -1065,6 +1065,8 @@ msgstr "Kommando für Hinweisausgabe funktioniert nur mit cl_cmd und sv_cmd.\n"
 #: qcsrc/common/command/generic.qc:457
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
 msgstr ""
+"Benachrichtigungskommando zum Neustart funktioniert nur mit cl_cmd und "
+"sv_cmd.\n"
 
 #: qcsrc/common/counting.qh:5
 #, c-format
@@ -1134,7 +1136,7 @@ msgstr "CI_DEC^%s Tage"
 #: qcsrc/common/counting.qh:23
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%d Tage"
 
 #: qcsrc/common/counting.qh:24
 #, c-format
@@ -1164,7 +1166,7 @@ msgstr "CI_DEC^%s Stunden"
 #: qcsrc/common/counting.qh:31
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%d Stunden"
 
 #: qcsrc/common/counting.qh:32
 #, c-format
@@ -1338,12 +1340,12 @@ msgstr "Keepaway"
 
 #: qcsrc/common/net_notice.qc:89
 msgid "^1Server notices:"
-msgstr ""
+msgstr "^1Serverbenachrichtigungen:"
 
 #: qcsrc/common/net_notice.qc:95
 #, c-format
 msgid "^7%s (^3%d sec left)"
-msgstr ""
+msgstr "^7%s (^3%d Sek. verbleibend)"
 
 #: qcsrc/common/notifications.qh:330
 #, c-format
@@ -1360,7 +1362,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:332
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert"
 
 #: qcsrc/common/notifications.qh:333
 #, c-format
@@ -1568,7 +1570,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:371
 #, c-format
 msgid "^BG%s^K1 %s^K1%s%s"
-msgstr ""
+msgstr "^BG%s^K1 %s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:372
 #, c-format
@@ -1603,7 +1605,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:375
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 starb%s%s"
 
 #: qcsrc/common/notifications.qh:376
 #, c-format
