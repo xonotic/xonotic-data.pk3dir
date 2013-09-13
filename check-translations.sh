@@ -27,7 +27,7 @@ esac
 if [ x"$mode" = x"pot" ]; then
 	{
 		find qcsrc -type f -name \*.\* -not -name \*.po -not -name \*.txt
-	} | xgettext -LC -k_ -f- --from-code utf-8 -o common.pot >&2
+	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot >&2
 fi
 
 if [ x"$mode" = x"po" ]; then
