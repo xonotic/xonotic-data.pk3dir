@@ -23,30 +23,27 @@ for f in common.*.po; do
 	gnewfile=common.$lang.po
 	if [ -f "$tcurfile" ]; then
 		git show "$mergebase":"$gnewfile" > "$goldfile"
-		msgcat -s --no-location --strict "$tcurfile" | grep -v "^#" > "$tcurfile.sorted"
-		msgcat -s --no-location --strict "$goldfile" | grep -v "^#" > "$goldfile.sorted"
-		msgcat -s --no-location --strict "$gnewfile" | grep -v "^#" > "$gnewfile.sorted"
-		if diff -u "$goldfile.sorted" "$gnewfile.sorted" >/dev/null; then
+		msgmerge -F -U "$tcurfile" common.pot
+		msgmerge -F -U "$goldfile" common.pot
+		msgmerge -F -U "$gnewfile" common.pot
+		if diff -u "$goldfile" "$gnewfile" >/dev/null; then
 			# no change on git, changed on tx only
 			msgmerge -F -U "$tcurfile" common.pot
 			cp "$tcurfile" "$gnewfile"
 		else
-			if ! diff -u "$goldfile.sorted" "$gnewfile.sorted" | patch "$tcurfile.sorted"; then
+			if ! diff -u "$goldfile" "$gnewfile" | patch "$tcurfile"; then
 				while :; do
-					vim -o "$tcurfile.sorted.rej" "$tcurfile.sorted"
+					vim -o "$tcurfile.rej" "$tcurfile"
 					echo "OK?"
 					read -r OK || exit 1
 					[ x"$OK" != x"y" ] || break
 				done
-				rm -f "$tcurfile.sorted.rej"
+				rm -f "$tcurfile.rej"
 			fi
-			mv "$tcurfile.sorted" "$tcurfile"
 			msgmerge -F -U "$tcurfile" common.pot
 			cp "$tcurfile" "$gnewfile"
-			rm "$goldfile.sorted"
-			rm "$gnewfile.sorted"
-			rm "$goldfile"
 		fi
+		rm "$goldfile"
 	else
 		msgmerge -F -U "$gnewfile" common.pot
 		cp "$gnewfile" "$tcurfile"
