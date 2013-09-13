@@ -4390,7 +4390,8 @@ void HUD_CenterPrint (void)
 	}
 }
 
-
+// QuickMenu (#17)
+//
 // QUICKMENU_MAXLINES must be <= 10
 #define QUICKMENU_MAXLINES 10
 #define QUICKMENU_MAXENTRIES 256
