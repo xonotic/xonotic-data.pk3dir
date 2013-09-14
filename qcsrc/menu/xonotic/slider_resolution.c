@@ -72,10 +72,10 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 	me.addValue(me, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
+float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
 	float i;
-	float autocvar_menu_vid_allowdualscreenresolution = 0;
 	vector r0, r;
 
 	me.configureXonoticTextSlider(me, "_menu_vid_width");
@@ -94,7 +94,7 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 		if(r_x < 640 || r_y < 480)
 			continue;
 		if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
-			if(autocvar_menu_vid_allowdualscreenresolution == 0)
+			if(autocvar_menu_vid_allowdualscreenresolution <= 0)
 				continue;
 			
 		me.addResolution(me, r_x, r_y, r_z);
