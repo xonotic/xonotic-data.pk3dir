@@ -191,7 +191,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 float ctf_CaptureShield_Customize()
 {
 	if(!other.ctf_captureshielded) { return FALSE; }
-	if(SAME_TEAM(self, other)) { return FALSE; }
+	if(CTF_SAMETEAM(self, other)) { return FALSE; }
 	
 	return TRUE;
 }
@@ -199,7 +199,7 @@ float ctf_CaptureShield_Customize()
 void ctf_CaptureShield_Touch()
 {
 	if(!other.ctf_captureshielded) { return; }
-	if(SAME_TEAM(self, other)) { return; }
+	if(CTF_SAMETEAM(self, other)) { return; }
 	
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
@@ -421,7 +421,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, ((CTF_DIFFTEAM(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
+	sound(player, CH_TRIGGER, ((DIFF_TEAM(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
 	
 	switch(capturetype)
 	{
@@ -487,6 +487,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
 	float pickup_dropped_score; // used to calculate dropped pickup score
+	entity tmp_entity; // temporary entity
 	
 	// attach the flag to the player
 	flag.owner = player;
@@ -514,7 +515,10 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 	
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
-	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
+	
+	FOR_EACH_PLAYER(tmp_entity)
+	if(CTF_SAMETEAM(flag, tmp_entity))
+		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
 	
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 	
@@ -846,16 +850,16 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if(SAME_TEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self))
+			if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self))
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(DIFF_TEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
+			else if(CTF_DIFFTEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(SAME_TEAM(toucher, self))
+			if(CTF_SAMETEAM(toucher, self))
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if((!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -894,7 +898,7 @@ void ctf_RespawnFlag(entity flag)
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
-		WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);	
+		WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);
 		WaypointSprite_Kill(flag.wps_flagcarrier);
 		
 		flag.owner.flagcarried = world;
@@ -1365,7 +1369,7 @@ void havocbot_role_ctf_carrier()
 		{
 			// Can't navigate to my own base, suicide!
 			// TODO: drop it and wander around
-			//Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+			Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 			return;
 		}
 	}
@@ -1802,7 +1806,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && DIFF_TEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
 		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
