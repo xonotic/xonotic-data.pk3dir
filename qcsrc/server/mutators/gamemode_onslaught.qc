@@ -576,7 +576,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	float i;
 	if (damage <= 0)
 		return;
-	if(inWarmupStage)
+	if(warmup_stage)
 		return;
 	if (attacker != self)
 	{
@@ -614,7 +614,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 #endif
 		self.lasthealth = self.health;
 	}
-	else if not(inWarmupStage)
+	else if not(warmup_stage)
 	{
 		if (attacker == self)
 			bprint(Team_ColoredFullName(self.team), " generator spontaneously exploded due to overtime!\n");

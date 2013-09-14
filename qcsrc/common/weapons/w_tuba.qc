@@ -8,7 +8,8 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* model    */ "tuba",
 /* netname  */ "tuba",
-/* fullname */ _("@!#%'n Tuba")
+/* xgettext:no-c-format */
+/* fullname  */ _("@!#%'n Tuba")
 );
 
 #define TUBA_SETTINGS(weapon) \
