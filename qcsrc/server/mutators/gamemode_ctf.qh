@@ -133,12 +133,7 @@ float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
 
-// client notification stuff
-.float CAPTURE_VERBOSE;
-.float PICKUP_TEAM_VERBOSE;
-.float PICKUP_ENEMY_VERBOSE;
-#else
-var float autocvar_notification_ctf_pickup_team_verbose = FALSE;
-var float autocvar_notification_ctf_pickup_enemy_verbose = FALSE;
+// team checking
+#define CTF_SAMETEAM(a,b) (autocvar_g_ctf_reverse ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
+#define CTF_DIFFTEAM(a,b) (autocvar_g_ctf_reverse ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
 #endif
-var float autocvar_notification_ctf_capture_verbose = FALSE;
