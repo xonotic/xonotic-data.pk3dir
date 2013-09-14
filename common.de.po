@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-13 10:31+0200\n"
-"PO-Revision-Date: 2013-09-13 08:58+0000\n"
+"PO-Revision-Date: 2013-09-13 19:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
@@ -765,7 +765,7 @@ msgstr "Höchstgeschwindigkeit: %d ^7(%s^7)"
 #: qcsrc/client/scoreboard.qc:1307
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
-msgstr ""
+msgstr "Rekord: %d ^7(%s^7)"
 
 #: qcsrc/client/scoreboard.qc:1341
 msgid "Spectators"
@@ -1052,11 +1052,11 @@ msgstr "%s braucht Hilfe!"
 #: qcsrc/common/command/generic.qc:31
 #, c-format
 msgid "error: status is %d\n"
-msgstr ""
+msgstr "Fehler: Status ist %d\n"
 
 #: qcsrc/common/command/generic.qc:159
 msgid "error creating curl handle\n"
-msgstr ""
+msgstr "Fehler beim Erstellen des curl-Handles\n"
 
 #: qcsrc/common/command/generic.qc:263
 msgid "Notification dump command only works with cl_cmd and sv_cmd.\n"
@@ -1350,7 +1350,7 @@ msgstr "^7%s (^3%d Sek. verbleibend)"
 #: qcsrc/common/notifications.qh:330
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge erobert"
 
 #: qcsrc/common/notifications.qh:331
 #, c-format
@@ -1358,6 +1358,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
+"^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, und damit ^BG"
+"%s^BG's Rekord von ^F2%s^BG Sekunden gebrochen"
 
 #: qcsrc/common/notifications.qh:332
 #, c-format
@@ -1370,24 +1372,31 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG hat die ^TC^TT^BG Flagge in ^F1%s^BG Sekunden erobert, konnte "
+"jedoch nicht ^BG%s^BG's Rekord von ^F2%s^BG Sekunden brechen"
 
 #: qcsrc/common/notifications.qh:334
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
 msgstr ""
+"^BGDie ^TC^TT^BG Flagge wurde von ihrem Besitzer zur Basis zurückgebracht"
 
 #: qcsrc/common/notifications.qh:335
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGDie ^TC^TT^BG Flagge wurde zerstört und zur Basis zurückgebracht"
 
 #: qcsrc/common/notifications.qh:336
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
 msgstr ""
+"^BGDie ^TC^TT^BG Flagge fühlte sich in der Basis vernachlässigt und ist "
+"einfach nach Hause gerannt"
 
 #: qcsrc/common/notifications.qh:337
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
+"^BGDie ^TC^TT^BG Flagge fiel an einen unerreichbaren Ort und ist daher aus "
+"Langeweile heimgeflogen"
 
 #: qcsrc/common/notifications.qh:338
 #, c-format
@@ -1395,35 +1404,37 @@ msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
 msgstr ""
+"^BGDie ^TC^TT^BG Flagge hatte nach ^F1%.2f^BG Sekunden einfach keine Geduld "
+"mehr und ist nach Hause gegangen"
 
 #: qcsrc/common/notifications.qh:339
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr ""
+msgstr "^BGDie ^TC^TT^BG Flagge ist zur Basis zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:340
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge verloren"
 
 #: qcsrc/common/notifications.qh:341
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge genommen"
 
 #: qcsrc/common/notifications.qh:342
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge zurückgebracht"
 
 #: qcsrc/common/notifications.qh:343
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde unfair aus dem Spiel geworfen von ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:344
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1 ertränkt%s%s"
 
 #: qcsrc/common/notifications.qh:345
 #, c-format
