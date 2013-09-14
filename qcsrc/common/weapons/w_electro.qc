@@ -14,6 +14,7 @@ REGISTER_WEAPON(
 #ifdef SVQC
 void ElectroInit();
 vector electro_shotorigin[4];
+var float autocvar_g_balance_electro_combo_comboradius_thruwall = 200;
 #endif
 #else
 #ifdef SVQC
@@ -27,17 +28,22 @@ void W_Plasma_Explode_Combo (void);
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
 	entity e;
-	e = WarpZone_FindRadius(org, rad, TRUE);
+	e = WarpZone_FindRadius(org, rad, !autocvar_g_balance_electro_combo_comboradius_thruwall);
 	while (e)
 	{
 		if (e.classname == "plasma")
 		{
 			// change owner to whoever caused the combo explosion
-			e.realowner = own;
-			e.takedamage = DAMAGE_NO;
-			e.classname = "plasma_chain";
-			e.think = W_Plasma_Explode_Combo;
-			e.nextthink = time + vlen(e.WarpZone_findradius_dist) / autocvar_g_balance_electro_combo_speed; // delay combo chains, looks cooler
+			WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
+
+			if((trace_fraction == 1) || (autocvar_g_balance_electro_combo_comboradius_thruwall > e.WarpZone_findradius_dist))
+			{
+				e.realowner = own;
+				e.takedamage = DAMAGE_NO;
+				e.classname = "plasma_chain";
+				e.think = W_Plasma_Explode_Combo;
+				e.nextthink = time + vlen(e.WarpZone_findradius_dist) / autocvar_g_balance_electro_combo_speed; // delay combo chains, looks cooler
+			}
 		}
 		e = e.chain;
 	}
