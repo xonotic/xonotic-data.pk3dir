@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
-	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 		
 	if(IS_PLAYER(frag_target))
@@ -324,7 +324,7 @@ MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
 	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
-	if(IsDifferentTeam(self.owner, e))
+	if(DIFF_TEAM(self.owner, e))
 		return TRUE;
 	
 	return FALSE;
