@@ -103,6 +103,9 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
+		
+	if (targ.frozen == 1 || (targ.frozen == 2 && ent.monsterid != MON_SPIDER))
+		return FALSE; // ignore frozen
 
 	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
 	if(ent.enemy != targ)
@@ -287,7 +290,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 
-	v = CENTER_OR_VIEWOFS(e);
+	v = e.origin + (e.mins + e.maxs) * 0.5;
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 
@@ -783,6 +786,8 @@ void monsters_reset()
 {
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
+	
+	Unfreeze(self); // remove any icy remains
 
 	self.health = self.max_health;
 	self.velocity = '0 0 0';
@@ -882,6 +887,9 @@ void monster_die()
 	self.think = monster_dead_think;
 	self.nextthink = self.ticrate;
 	self.ltime = time + 5;
+	
+	Unfreeze(self); // remove any icy remains
+	self.health = 0; // reset by Unfreeze
 
 	monster_dropitem();
 
@@ -988,6 +996,13 @@ void monster_think()
 {
 	self.think = monster_think;
 	self.nextthink = self.ticrate;
+	
+	if(self.ltime)
+	if(time >= self.ltime)
+	{
+		Damage(self, self, self, self.health + self.max_health, DEATH_KILL, self.origin, self.origin);
+		return;
+	}
 
 	MON_ACTION(self.monsterid, MR_THINK);
 }
