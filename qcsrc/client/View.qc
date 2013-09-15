@@ -396,7 +396,7 @@ float checkfail[16];
 
 float rainbow_last_flicker;
 vector rainbow_prev_color;
-
+float autocvar_cl_orthoview_distanceoverride;
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
@@ -561,9 +561,38 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar_cl_orthoview)
 	{
-		float width = (mi_picmax_x - mi_picmin_x);
-		float height = (mi_picmax_y - mi_picmin_y);
-		setproperty(VF_ORIGIN, '0 0 1' * (512 * max(width, height)));
+		float ov_width = (mi_picmax_x - mi_picmin_x);
+		float ov_height = (mi_picmax_y - mi_picmin_y);
+		float ov_distance = (512 * max(ov_width, ov_height));
+		if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
+		vector ov_org = ('0 0 1' * ov_distance);
+		
+		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
+
+		float ov_nearest = vlen(ov_org - FL2VEC(
+			bound(mi_picmin_x, ov_org_x, mi_picmax_x),
+			bound(mi_picmin_y, ov_org_y, mi_picmax_y),
+			bound(mi_picmin_z, ov_org_z, mi_picmax_z)
+		));
+
+		float ov_furthest = 0;
+		float dist = 0;
+
+		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmin_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmin_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmax_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmin_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmax_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmax_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmin_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmax_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		
+		cvar_set("r_nearclip", ftos(ov_nearest));
+		cvar_set("r_farclip_base", ftos(ov_furthest));
+		cvar_set("r_farclip_world", "0");
+		cvar_set("r_useinfinitefarclip", "0");
+		
+		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
 	}
 
