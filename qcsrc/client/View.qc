@@ -396,7 +396,7 @@ float checkfail[16];
 
 float rainbow_last_flicker;
 vector rainbow_prev_color;
-float autocvar_cl_orthoview_distanceoverride;
+//float autocvar_cl_orthoview_distanceoverride;
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
@@ -562,13 +562,14 @@ void CSQC_UpdateView(float w, float h)
 	vector ov_org = '0 0 0';
 	if(autocvar_cl_orthoview)
 	{
+		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
+		
 		float ov_width = (mi_picmax_x - mi_picmin_x);
 		float ov_height = (mi_picmax_y - mi_picmin_y);
 		float ov_distance = (512 * max(ov_width, ov_height));
-		if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
-		ov_org = ('0 0 1' * ov_distance);
-		
-		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
+		//if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
+		ov_org = ((mi_picmax + mi_picmin) * 0.5);
+		ov_org = FL2VEC(ov_org_x, ov_org_y, (ov_org_z * ov_distance));
 
 		float ov_nearest = vlen(ov_org - FL2VEC(
 			bound(mi_picmin_x, ov_org_x, mi_picmax_x),
