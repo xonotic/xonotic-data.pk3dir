@@ -199,12 +199,12 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
-vector GetOrthoviewFOV(vector ov_org)
+vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
 {
 	float fovx, fovy;
-	float width = (mi_picmax_x - mi_picmin_x);
-	float height = (mi_picmax_y - mi_picmin_y);
-	float distance_to_middle_of_world = vlen(ov_org);
+	float width = (ov_worldmax_x - ov_worldmin_x);
+	float height = (ov_worldmax_y - ov_worldmin_y);
+	float distance_to_middle_of_world = vlen(ov_mid - ov_org);
 	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
 	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
 	return '1 0 0' * fovx + '0 1 0' * fovy;
@@ -490,7 +490,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission)
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -560,34 +560,40 @@ void CSQC_UpdateView(float w, float h)
 	//WarpZone_FixPMove();
 
 	vector ov_org = '0 0 0';
+	vector ov_mid = '0 0 0';
+	vector ov_worldmin = '0 0 0';
+	vector ov_worldmax = '0 0 0';
 	if(autocvar_cl_orthoview)
 	{
 		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
+
+		ov_worldmin = mi_picmin;
+		ov_worldmax = mi_picmax;
 		
-		float ov_width = (mi_picmax_x - mi_picmin_x);
-		float ov_height = (mi_picmax_y - mi_picmin_y);
+		float ov_width = (ov_worldmax_x - ov_worldmin_x);
+		float ov_height = (ov_worldmax_y - ov_worldmin_y);
 		float ov_distance = (512 * max(ov_width, ov_height));
 		if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
-		ov_org = ((mi_picmax + mi_picmin) * 0.5);
-		ov_org = FL2VEC(ov_org_x, ov_org_y, (ov_org_z * ov_distance));
+		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
+		ov_org = FL2VEC(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
 
 		float ov_nearest = vlen(ov_org - FL2VEC(
-			bound(mi_picmin_x, ov_org_x, mi_picmax_x),
-			bound(mi_picmin_y, ov_org_y, mi_picmax_y),
-			bound(mi_picmin_z, ov_org_z, mi_picmax_z)
+			bound(ov_worldmin_x, ov_org_x, ov_worldmax_x),
+			bound(ov_worldmin_y, ov_org_y, ov_worldmax_y),
+			bound(ov_worldmin_z, ov_org_z, ov_worldmax_z)
 		));
 
 		float ov_furthest = 0;
 		float dist = 0;
 
-		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmin_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmin_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmax_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmin_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmax_y, mi_picmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmin_x, mi_picmax_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmin_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(mi_picmax_x, mi_picmax_y, mi_picmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		
 		cvar_set("r_nearclip", ftos(ov_nearest));
 		cvar_set("r_farclip_base", ftos(ov_furthest));
@@ -596,6 +602,16 @@ void CSQC_UpdateView(float w, float h)
 		
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
+
+		/*if(autocvar_cl_orthoview_debug)
+		{
+			print(sprintf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+				vtos(ov_org),
+				vtos(getpropertyvec(VF_ANGLES)),
+				ov_distance,
+				ov_nearest,
+				ov_furthest));
+		}*/
 	}
 
 	// Render the Scene
@@ -739,7 +755,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_org)); }
+	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
