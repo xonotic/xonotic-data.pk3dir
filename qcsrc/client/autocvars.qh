@@ -55,6 +55,8 @@ float autocvar_cl_hidewaypoints;
 float autocvar_cl_lockview;
 float autocvar_cl_nogibs;
 var float autocvar_cl_orthoview = TRUE;
+var float autocvar_cl_orthoview_nofog = TRUE;
+float autocvar_cl_orthoview_distanceoverride;
 float autocvar_cl_particlegibs;
 float autocvar_cl_particles_oldnexbeam;
 float autocvar_cl_particles_quality;

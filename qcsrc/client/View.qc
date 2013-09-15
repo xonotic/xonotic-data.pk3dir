@@ -396,7 +396,7 @@ float checkfail[16];
 
 float rainbow_last_flicker;
 vector rainbow_prev_color;
-float autocvar_cl_orthoview_distanceoverride;
+
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
