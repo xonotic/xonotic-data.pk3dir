@@ -541,12 +541,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		movelib_beak_simple(stopspeed);
 		
 		monsters_setframe(manim_idle);
-
-		if(vlen(self.velocity) > 0)
-		{
-			self.velocity = '0 0 0';
-			self.SendFlags |= MSF_MOVE;
-		}
+		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
 
