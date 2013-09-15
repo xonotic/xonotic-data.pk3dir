@@ -199,12 +199,12 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
-vector GetOrthoviewFOV(void)
+vector GetOrthoviewFOV(vector ov_org)
 {
 	float fovx, fovy;
 	float width = (mi_picmax_x - mi_picmin_x);
 	float height = (mi_picmax_y - mi_picmin_y);
-	float distance_to_middle_of_world = vlen(view_origin);
+	float distance_to_middle_of_world = vlen(ov_org);
 	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
 	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
 	return '1 0 0' * fovx + '0 1 0' * fovy;
@@ -559,13 +559,14 @@ void CSQC_UpdateView(float w, float h)
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
 
+	vector ov_org = '0 0 0';
 	if(autocvar_cl_orthoview)
 	{
 		float ov_width = (mi_picmax_x - mi_picmin_x);
 		float ov_height = (mi_picmax_y - mi_picmin_y);
 		float ov_distance = (512 * max(ov_width, ov_height));
 		if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
-		vector ov_org = ('0 0 1' * ov_distance);
+		ov_org = ('0 0 1' * ov_distance);
 		
 		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
 
@@ -737,7 +738,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV()); }
+	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_org)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
