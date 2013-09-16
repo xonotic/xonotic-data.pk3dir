@@ -100,7 +100,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-	if(inWarmupStage)
+	if(warmup_stage)
 		allowed_to_spawn = TRUE;
 	else
 		allowed_to_spawn = FALSE;
@@ -222,7 +222,7 @@ MUTATOR_HOOKFUNCTION(ca_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 {
-	start_items &~= IT_UNLIMITED_AMMO;
+	start_items &= ~IT_UNLIMITED_AMMO;
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
 	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
 	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
@@ -232,6 +232,40 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
 	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
+{
+	if(IS_PLAYER(frag_target))
+	if(frag_target.deadflag == DEAD_NO)
+	if(frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
+		frag_damage = 0;
+		
+	frag_mirrordamage = 0;
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_FilterItem)
+{
+	if(autocvar_g_powerups <= 0)
+	if(self.flags & FL_POWERUP)
+		return TRUE;
+		
+	if(autocvar_g_pickup_items <= 0)
+		return TRUE;
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
+{
+	float excess = max(0, frag_damage - damage_take - damage_save);
+	
+	if(frag_target != frag_attacker && IS_PLAYER(frag_attacker))
+		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
+		
+	return FALSE;
 }
 
 void ca_Initialize()
@@ -268,6 +302,9 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(SetStartItems, ca_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

@@ -40,8 +40,8 @@ void Projectile_DrawTrail(vector to)
 
 	if (self.traileffect)
 	{
-		particles_alphamin = particles_alphamax = sqrt(self.alpha);
-		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
+		particles_alphamin = particles_alphamax = particles_fade = sqrt(self.alpha);
+		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
@@ -58,7 +58,7 @@ void Projectile_Draw()
 
 	if(self.count & 0x80)
 	{
-		//self.move_flags &~= FL_ONGROUND;
+		//self.move_flags &= ~FL_ONGROUND;
 		if(self.move_movetype == MOVETYPE_NONE || self.move_movetype == MOVETYPE_FLY)
 			Movetype_Physics_NoMatchServer();
 			// the trivial movetypes do not have to match the
@@ -101,6 +101,18 @@ void Projectile_Draw()
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+			case PROJECTILE_NADE_YELLOW_BURN:
+			case PROJECTILE_NADE_YELLOW:
+			case PROJECTILE_NADE_PINK_BURN:
+			case PROJECTILE_NADE_PINK:
+			case PROJECTILE_NADE_BURN:
+			case PROJECTILE_NADE:
+				rot = self.avelocity; 
+				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
 				break;
@@ -124,6 +136,18 @@ void Projectile_Draw()
 	trailorigin = self.origin;
 	switch(self.cnt)
 	{
+	    case PROJECTILE_NADE_RED_BURN:
+		case PROJECTILE_NADE_RED:
+		case PROJECTILE_NADE_BLUE_BURN:
+		case PROJECTILE_NADE_BLUE:
+		case PROJECTILE_NADE_YELLOW_BURN:
+		case PROJECTILE_NADE_YELLOW:
+		case PROJECTILE_NADE_PINK_BURN:
+		case PROJECTILE_NADE_PINK:
+		case PROJECTILE_NADE_BURN:
+		case PROJECTILE_NADE:
+			trailorigin += v_up * 4;
+			break;
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
@@ -202,7 +226,7 @@ void Ent_Projectile()
 	if(f & 0x40)
 		self.move_flags |= FL_ONGROUND;
 	else
-		self.move_flags &~= FL_ONGROUND;
+		self.move_flags &= ~FL_ONGROUND;
 
 	if(!self.move_time)
 	{
@@ -300,6 +324,17 @@ void Ent_Projectile()
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			
+			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
+			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
+			case PROJECTILE_NADE_YELLOW: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
+			case PROJECTILE_NADE_YELLOW_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow_burn"); break;
+			case PROJECTILE_NADE_PINK: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink"); break;
+			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
+			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
+			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -317,7 +352,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -326,13 +361,24 @@ void Ent_Projectile()
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
 			case PROJECTILE_ROCKET:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
 			case PROJECTILE_GRENADE:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
+				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
 				self.mins = '-3 -3 -3';
@@ -341,6 +387,23 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
+				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+			case PROJECTILE_NADE_YELLOW_BURN:
+			case PROJECTILE_NADE_YELLOW:
+			case PROJECTILE_NADE_PINK_BURN:
+			case PROJECTILE_NADE_PINK:
+			case PROJECTILE_NADE_BURN:
+			case PROJECTILE_NADE:
+				self.mins = '-16 -16 -16';
+				self.maxs = '16 16 16';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_MINE:
 				self.mins = '-4 -4 -4';
@@ -367,12 +430,12 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				break;
 			case PROJECTILE_FIREBALL:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
@@ -387,7 +450,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -400,17 +463,17 @@ void Ent_Projectile()
             case PROJECTILE_RAPTORCANNON:
 				break;
             case PROJECTILE_SPIDERROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
             case PROJECTILE_WAKIROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;            
             /*
             case PROJECTILE_WAKICANNON:
 				break;
 			case PROJECTILE_BUMBLE_GUN:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -460,6 +523,8 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	
+	precache_model("models/weapons/v_ok_grenade.md3");
 
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
