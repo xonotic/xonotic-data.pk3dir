@@ -58,7 +58,7 @@ void Projectile_Draw()
 
 	if(self.count & 0x80)
 	{
-		//self.move_flags &~= FL_ONGROUND;
+		//self.move_flags &= ~FL_ONGROUND;
 		if(self.move_movetype == MOVETYPE_NONE || self.move_movetype == MOVETYPE_FLY)
 			Movetype_Physics_NoMatchServer();
 			// the trivial movetypes do not have to match the
@@ -226,7 +226,7 @@ void Ent_Projectile()
 	if(f & 0x40)
 		self.move_flags |= FL_ONGROUND;
 	else
-		self.move_flags &~= FL_ONGROUND;
+		self.move_flags &= ~FL_ONGROUND;
 
 	if(!self.move_time)
 	{
@@ -352,7 +352,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -361,7 +361,7 @@ void Ent_Projectile()
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
 			case PROJECTILE_ROCKET:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
@@ -430,12 +430,12 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				break;
 			case PROJECTILE_FIREBALL:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
@@ -450,7 +450,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -463,17 +463,17 @@ void Ent_Projectile()
             case PROJECTILE_RAPTORCANNON:
 				break;
             case PROJECTILE_SPIDERROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
             case PROJECTILE_WAKIROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;            
             /*
             case PROJECTILE_WAKICANNON:
 				break;
 			case PROJECTILE_BUMBLE_GUN:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;

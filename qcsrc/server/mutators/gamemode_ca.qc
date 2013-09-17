@@ -100,7 +100,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-	if(inWarmupStage)
+	if(warmup_stage)
 		allowed_to_spawn = TRUE;
 	else
 		allowed_to_spawn = FALSE;
@@ -233,7 +233,7 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	start_ammo_cells = cvar("g_lms_start_ammo_cells");
 	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
 	
-	start_items &~= IT_UNLIMITED_AMMO;
+	start_items &= ~IT_UNLIMITED_AMMO;
 
 	return 0;
 }
@@ -242,7 +242,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 {
 	if(IS_PLAYER(frag_target))
 	if(frag_target.deadflag == DEAD_NO)
-	if(frag_target == frag_attacker || !IsDifferentTeam(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
+	if(frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
 		frag_damage = 0;
 		
 	frag_mirrordamage = 0;
