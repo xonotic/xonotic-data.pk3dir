@@ -6,7 +6,7 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
-void initConwidths();
+void initConwidths(float width, float height);
 void updateConwidths();
 #endif
 

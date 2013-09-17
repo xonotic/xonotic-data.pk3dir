@@ -79,7 +79,6 @@ void m_init()
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
-	initConwidths();
 
 	if(!restarting)
 	{
