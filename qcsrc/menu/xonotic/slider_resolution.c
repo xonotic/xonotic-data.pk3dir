@@ -27,6 +27,7 @@ void updateConwidths(float width, float height, float pixelheight)
 	cvar_set("_menu_vid_width", ftos(width));
 	cvar_set("_menu_vid_height", ftos(height));
 	cvar_set("_menu_vid_pixelheight", ftos(pixelheight));
+	cvar_set("_menu_vid_desktopfullscreen", cvar_string("vid_desktopfullscreen"));
 
 	r_x = width;
 	r_y = height;
@@ -71,7 +72,7 @@ entity makeXonoticResolutionSlider()
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }
-void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
+void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight, float desktopfullscreen)
 {
 	if (pixelheight != 1)
 	{
@@ -113,19 +114,26 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		{
 			r = getresolution(i);
 			if(r_x == 0 && r_y == 0)
+			{
+				i = -1;
+				r = getresolution(i);
+			}
+			if(r_x == 0 && r_y == 0)
 				break;
-			if(r_z == 0)
-				r_z = 1; // compat
 			if(r == r0)
 				continue;
 			r0 = r;
 			if(r_x < 640 || r_y < 480)
 				continue;
-			if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
-				if(autocvar_menu_vid_allowdualscreenresolution <= 0)
-					continue;
-				
+			if(i != -1)
+				if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
+					if(autocvar_menu_vid_allowdualscreenresolution <= 0)
+						continue;
+
 			me.addResolution(me, r_x, r_y, r_z);
+
+			if (i == -1)
+				break;
 		}
 	}
 
@@ -162,6 +170,11 @@ void XonoticResolutionSlider_saveCvars(entity me)
 		cvar_set("_menu_vid_width", argv(0));
 		cvar_set("_menu_vid_height", argv(1));
 		cvar_set("_menu_vid_pixelheight", argv(2));
+		vector r = getresolution(-1);
+		if (stof(argv(0)) == r_x && stof(argv(1)) == r_y && fabs(stof(argv(2)) - r_z) < 0.01)
+			cvar_set("_menu_vid_desktopfullscreen", "1");
+		else
+			cvar_set("_menu_vid_desktopfullscreen", "0");
 	}
 }
 void XonoticResolutionSlider_draw(entity me)
