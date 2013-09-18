@@ -6,7 +6,7 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, loadCvars, void(entity))
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
 	METHOD(XonoticResolutionSlider, draw, void(entity))
-	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float)
+	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
 void updateConwidths(float width, float height, float pixelheight);
@@ -79,7 +79,7 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 		float bestdenom = rint(aspect);
 		float bestnum = 1;
 		float denom;
-		for (denom = 2; i < 10; ++i) {
+		for (denom = 2; denom < 10; ++denom) {
 			float num = rint(aspect * denom);
 			if (fabs(num / denom - aspect) < fabs(bestnum / bestdenom - aspect))
 			{
@@ -96,15 +96,15 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
-	float i;
-	vector r0, r;
-
 	me.configureXonoticTextSlider(me, "_menu_vid_width");
 	me.loadResolutions(me, cvar("vid_fullscreen"));
 }
 void XonoticTextSlider_loadResolutions(entity me, float fullscreen)
 {
-	me.clearValues();
+	float i;
+	vector r0, r;
+
+	me.clearValues(me);
 
 	if (fullscreen)
 	{
