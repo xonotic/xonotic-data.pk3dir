@@ -72,7 +72,7 @@ entity makeXonoticResolutionSlider()
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }
-void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight, float desktopfullscreen)
+void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
 	if (pixelheight != 1)
 	{
