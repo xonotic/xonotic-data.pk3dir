@@ -297,7 +297,13 @@ void FixPlayermodel()
 
 		n = tokenize_console(defaultmodel);
 		if(n > 0)
+		{
 			defaultmodel = argv(floor(n * self.model_randomizer));
+			// However, do NOT randomize if the player-selected model is in the list.
+			for (i = 0; i < n; ++i)
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
+					defaultmodel = argv(i);
+		}
 
 		i = strstrofs(defaultmodel, ":", 0);
 		if(i >= 0)
