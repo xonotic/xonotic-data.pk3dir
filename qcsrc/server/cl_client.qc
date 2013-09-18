@@ -301,7 +301,7 @@ void FixPlayermodel()
 			defaultmodel = argv(floor(n * self.model_randomizer));
 			// However, do NOT randomize if the player-selected model is in the list.
 			for (i = 0; i < n; ++i)
-				if ((argv(i) == self.playermodel && defaultskin == self.playerskin) || argv(i) == strcat(self.playermodel, ":", ftos(self.playerskin)))
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
 					defaultmodel = argv(i);
 		}
 
