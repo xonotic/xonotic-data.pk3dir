@@ -4,12 +4,16 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float))
 	METHOD(XonoticResolutionSlider, loadCvars, void(entity))
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
+	METHOD(XonoticResolutionSlider, draw, void(entity))
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
 void updateConwidths(float width, float height, float pixelheight);
 #endif
 
 #ifdef IMPLEMENTATION
+
+/* private static */ float XonoticResolutionSlider_DataHasChanged;
+
 // Updates cvars (to be called by menu.qc at startup or on detected res change)
 void updateConwidths(float width, float height, float pixelheight)
 {
@@ -56,6 +60,7 @@ void updateConwidths(float width, float height, float pixelheight)
 
 	cvar_set("vid_conwidth", ftos(rint(c_x)));
 	cvar_set("vid_conheight", ftos(rint(c_y)));
+	XonoticResolutionSlider_DataHasChanged = TRUE;
 }
 entity makeXonoticResolutionSlider()
 {
@@ -123,5 +128,14 @@ void XonoticResolutionSlider_saveCvars(entity me)
 		cvar_set("_menu_vid_height", argv(1));
 		cvar_set("_menu_vid_pixelheight", argv(2));
 	}
+}
+void XonoticResolutionSlider_draw(entity me)
+{
+	if (XonoticResolutionSlider_DataHasChanged)
+	{
+		XonoticResolutionSlider_DataHasChanged = FALSE;
+		me.loadCvars(me);
+	}
+	SUPER(XonoticResolutionSlider).draw(me);
 }
 #endif

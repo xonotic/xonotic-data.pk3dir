@@ -22,7 +22,7 @@ float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
 void m_sync()
 {
 	updateCompression();
-	vidwidth_s = vidheight_s = vidpixelheight_s = 0;
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw.
 
 	loadAllCvars(main);
 }
