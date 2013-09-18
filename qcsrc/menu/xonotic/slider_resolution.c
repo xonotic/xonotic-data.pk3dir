@@ -99,7 +99,7 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 	me.configureXonoticTextSlider(me, "_menu_vid_width");
 	me.loadResolutions(me, cvar("vid_fullscreen"));
 }
-void XonoticTextSlider_loadResolutions(entity me, float fullscreen)
+void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 {
 	float i;
 	vector r0, r;
