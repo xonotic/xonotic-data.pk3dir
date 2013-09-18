@@ -16,10 +16,13 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
+      realconwidth, realconheight, screenconwidth, screenconheight;
+
 void m_sync()
 {
 	updateCompression();
-	updateConwidths();
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;
 
 	loadAllCvars(main);
 }
@@ -92,8 +95,7 @@ void m_init()
 
 const float MENU_ASPECT = 1.25; // 1280x1024
 const float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, vidwidth_s, vidheight_s, realconwidth,
-      realconheight, screenconwidth, screenconheight;
+
 void draw_reset_cropped()
 {
 	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
@@ -103,14 +105,14 @@ void draw_reset_full()
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
 
-void UpdateConWidthHeight(float w, float h)
+void UpdateConWidthHeight(float w, float h, float p)
 {
-	if (w != vidwidth_s || h != vidheight_s)
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
 	{
-		initConwidths(w, h);
-		updateConwidths();
+		updateConwidths(w, h, p);
 		vidwidth_s = w;
 		vidheight_s = h;
+		vidpixelheight_s = p;
 	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
@@ -148,6 +150,10 @@ void UpdateConWidthHeight(float w, float h)
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
 	}
+	else
+	{
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
+	}
 }
 
 string m_goto_buffer;
@@ -156,8 +162,6 @@ void m_init_delayed()
 	float fh, glob, n, i;
 	string s;
 
-	conwidth = conheight = -1;
-	UpdateConWidthHeight(cvar("vid_width"), cvar("vid_height"));
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -693,14 +697,7 @@ void m_draw(float width, float height)
 	if (anim)
 		anim.tickAll(anim);
 
-	if(main)
-	{
-#ifdef COMPAT_XON070_OLD_M_DRAW
-		UpdateConWidthHeight(width ? width : cvar("vid_width"), height ? height : cvar("vid_height"));
-#else
-		UpdateConWidthHeight(width, height);
-#endif
-	}
+	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
 	if(!menuInitialized)
 	{

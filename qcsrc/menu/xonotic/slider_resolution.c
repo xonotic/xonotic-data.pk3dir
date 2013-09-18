@@ -6,25 +6,25 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
-void initConwidths(float width, float height);
-void updateConwidths();
+void updateConwidths(float width, float height, float pixelheight);
 #endif
 
 #ifdef IMPLEMENTATION
-void initConwidths(float width, float height)
-{
-	cvar_set("_menu_vid_width", ftos(width));
-	cvar_set("_menu_vid_height", ftos(height));
-	cvar_set("_menu_vid_pixelheight", cvar_string("vid_pixelheight"));
-}
-void updateConwidths()
+// Updates cvars (to be called by menu.qc at startup or on detected res change)
+void updateConwidths(float width, float height, float pixelheight)
 {
 	vector r, c;
 	float minfactor, maxfactor;
 	float sz, f;
-	r_x = cvar("_menu_vid_width");
-	r_y = cvar("_menu_vid_height");
-	r_z = cvar("_menu_vid_pixelheight");
+
+	// Save off current settings.
+	cvar_set("_menu_vid_width", ftos(width));
+	cvar_set("_menu_vid_height", ftos(height));
+	cvar_set("_menu_vid_pixelheight", ftos(pixelheight));
+
+	r_x = width;
+	r_y = height;
+	r_z = pixelheight;
 	sz = cvar("menu_vid_scale");
 
 	// calculate the base resolution
@@ -54,9 +54,6 @@ void updateConwidths()
 		f = 1;
 	c = c * f; // fteqcc fail
 
-	cvar_set("vid_width", ftos(rint(r_x)));
-	cvar_set("vid_height", ftos(rint(r_y)));
-	cvar_set("vid_pixelheight", ftos(rint(r_z)));
 	cvar_set("vid_conwidth", ftos(rint(c_x)));
 	cvar_set("vid_conheight", ftos(rint(c_y)));
 }
