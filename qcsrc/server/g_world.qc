@@ -323,7 +323,6 @@ void cvar_changes_init()
 		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
-		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
