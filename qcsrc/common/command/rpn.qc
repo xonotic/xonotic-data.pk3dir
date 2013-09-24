@@ -46,8 +46,8 @@ void rpn_set(string s)
 
 float rpn_getf() { return stof(rpn_get()); }
 float rpn_popf() { return stof(rpn_pop()); }
-void rpn_pushf(float f) { return rpn_push(ftos(f)); }
-void rpn_setf(float f) { return rpn_set(ftos(f)); }
+void rpn_pushf(float f) { return rpn_push(sprintf("%.9g", f)); }
+void rpn_setf(float f) { return rpn_set(sprintf("%.9g", f)); }
 
 void GenericCommand_rpn(float request, float argc, string command)
 {
