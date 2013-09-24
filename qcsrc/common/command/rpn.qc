@@ -203,6 +203,10 @@ void GenericCommand_rpn(float request, float argc, string command)
 						rpn_setf(exp(rpn_getf()));
 					} else if(rpncmd == "log") {
 						rpn_setf(exp(rpn_getf()));
+					} else if(rpncmd == "sin") {
+						rpn_setf(sin(rpn_getf()));
+					} else if(rpncmd == "cos") {
+						rpn_setf(cos(rpn_getf()));
 					} else if(rpncmd == "max") {
 						f = rpn_popf();
 						f2 = rpn_getf();
@@ -562,7 +566,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    f f eq|ne|gt|ge|lt|le|max|min -----> f   : compares two numbers\n");
 			print("    f neg|abs|sgn|rand|floor|ceil------> f   : negates/... a number\n");
 			print("    f not|bitnot ----------------------> f   : logical and bitwise negation\n");
-			print("    f exp|log -------------------------> f   : exponential function & Co.\n");
+			print("    f exp|log|sin|cos -----------------> f   : exponential function & Co.\n");
 			print("    f f f bound -----------------------> f   : bounds the middle number\n");
 			print("    f1 f2 b when ----------------------> f   : f1 if b, f2 otherwise\n");
 			print("    s s union|intersection|difference -> s   : set operations\n");
