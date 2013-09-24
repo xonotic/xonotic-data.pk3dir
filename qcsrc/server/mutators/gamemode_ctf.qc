@@ -122,6 +122,9 @@ float ctf_Stalemate_customizeentityforclient()
 	if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner))
 		return FALSE;
 		
+	if(SAME_TEAM(wp_owner, e))
+		return FALSE;
+		
 	if not(IS_PLAYER(e))
 		return FALSE;
 		
