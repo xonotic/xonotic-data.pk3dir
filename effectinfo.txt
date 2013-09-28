@@ -7692,7 +7692,7 @@ effect pinkflag_touch
 count 35
 type spark
 tex 40 40
-color 0xFFFFFF 0xFFFFFF
+color 0xFF0FFF 0xFF0FFF
 size 1 3
 alpha 0 256 556
 gravity 1
