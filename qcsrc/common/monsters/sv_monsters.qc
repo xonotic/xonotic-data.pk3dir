@@ -365,6 +365,7 @@ void Monster_Fade ()
 		self.monster_respawned = TRUE;
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
+		self.ltime = 0;
 		self.deadflag = DEAD_RESPAWNING;
 		if(self.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
 		{
@@ -381,7 +382,13 @@ void Monster_Fade ()
 		self.SendFlags |= MSF_STATUS;
 	}
 	else
+	{
+		if(IS_CLIENT(self.realowner))
+		if not(self.monster_respawned)
+			self.realowner.monstercount -= 1;
+		
 		SUB_SetFade(self, time + 3, 1);
+	}
 }
 
 float Monster_CanJump (vector vel)
@@ -883,7 +890,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	}
 }
 
-void monster_die()
+void monster_die(entity attacker)
 {
 	self.think = monster_dead_think;
 	self.nextthink = self.ticrate;
@@ -898,13 +905,15 @@ void monster_die()
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
+		
+	if(IS_PLAYER(attacker))
+	if( autocvar_g_monsters_score_spawned || 
+			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
+		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
+
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
-
-	if(IS_CLIENT(self.realowner))
-	if not(self.monster_respawned)
-		self.realowner.monstercount -= 1;
 
 	self.event_damage	= monsters_corpse_damage;
 	self.solid			= SOLID_CORPSE;
@@ -942,7 +951,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	vector v;
 	float take, save;
 
-	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, damage);
+	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, damage, deathtype);
 	take = v_x;
 	save = v_y;
 
@@ -975,8 +984,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		SUB_UseTargets();
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
-		monster_die();
-
+		monster_die(attacker);
+		
 		frag_attacker = attacker;
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
