@@ -1649,8 +1649,6 @@ MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 	entity e = find(world, targetname, self.target);
 	if (e != world)
 		self.team = e.team;
-		
-	self.SendFlags |= MSF_STATUS; // update team
 
 	return FALSE;
 }
@@ -1665,7 +1663,6 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 		if(e != world)
 		{
 			self.team = e.team;
-			self.SendFlags |= MSF_STATUS;
 			ee = e;
 		}
 	}

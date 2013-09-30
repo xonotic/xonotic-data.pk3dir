@@ -115,8 +115,6 @@ float m_slime(float req)
 			self.enemy		  	= world;
 			self.health			= 0;
 			
-			self.SendFlags |= MSF_MOVE | MSF_STATUS;
-			
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -125,12 +123,13 @@ float m_slime(float req)
 			
 			self.monster_loot = spawnfunc_item_rockets;
 			self.monster_attackfunc	= slime_attack;
-			monsters_setframe(slime_anim_idle);
+			self.frame = slime_anim_idle;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
+			precache_model ("models/monsters/slime.dpm");
 			precache_sound ("weapons/rocket_impact.wav");
 			return TRUE;
 		}
@@ -150,12 +149,7 @@ float m_slime(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/slime.dpm");
 			return TRUE;
