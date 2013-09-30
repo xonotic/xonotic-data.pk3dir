@@ -68,7 +68,7 @@ void slime_explode()
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	
-	setmodel(self, "");
+	setmodel(self, "null");
 }
 
 void slime_dead()
@@ -79,6 +79,8 @@ void slime_dead()
 	self.deadflag = DEAD_DEAD;
 	self.think = Monster_Fade;
 	self.nextthink = time + 0.1;
+	
+	CSQCMODEL_AUTOUPDATE(); // called now to update model
 }
 
 void spawnfunc_monster_slime()
