@@ -61,7 +61,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
+							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
@@ -70,7 +70,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
+							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
@@ -82,7 +82,7 @@ void CreatureFrame (void)
 			if (self.flags & FL_INWATER)
 			{
 				// play leave water sound
-				self.flags &~= FL_INWATER;
+				self.flags &= ~FL_INWATER;
 				self.dmgtime = 0;
 			}
 			self.air_finished = time + 12;
@@ -93,7 +93,7 @@ void CreatureFrame (void)
 		{
 			// check for falling damage
 			float velocity_len = vlen(self.velocity);
-			if(!self.hook.state && !g_ca && !(g_cts && !autocvar_g_cts_selfdamage))
+			if(!self.hook.state && !(g_cts && !autocvar_g_cts_selfdamage))
 			{
 				dm = vlen(self.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
@@ -220,7 +220,7 @@ void StartFrame (void)
 	game_delay_last = game_delay;
 
 	// if in warmup stage and limit for warmup is hit start match
-	if (inWarmupStage)
+	if (warmup_stage)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
 	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{
