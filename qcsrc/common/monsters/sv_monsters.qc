@@ -532,6 +532,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.max_health * self.revive_progress);
 		
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		
 		movelib_beak_simple(stopspeed);
 		
 		self.frame = manim_idle;
@@ -771,6 +773,10 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	if(self.health <= -100) // 100 health until gone?
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		
+		if(IS_CLIENT(self.realowner))
+		if not(self.monster_respawned)
+			self.realowner.monstercount -= 1;
 
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
@@ -882,6 +888,10 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
+			
+			if(IS_CLIENT(self.realowner))
+			if not(self.monster_respawned)
+				self.realowner.monstercount -= 1;
 
 			self.think = SUB_Remove;
 			self.nextthink = time + 0.1;
