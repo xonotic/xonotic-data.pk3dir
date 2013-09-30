@@ -1247,6 +1247,7 @@ void GotoNextMap(float reinit)
 	nextMap = GetNextMap();
 	if(nextMap == "")
 		error("Everything is broken - cannot find a next map. Please report this to the developers.");
+	Map_Goto(reinit);
 }
 
 
