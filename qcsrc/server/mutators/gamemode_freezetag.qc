@@ -523,7 +523,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 {
 	if(self.freezetag_frozen)
 	{
-		self.movement = '0 0 0';
+		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
+		{
+			self.movement_x = bound(-5, self.movement_x, 5);
+			self.movement_y = bound(-5, self.movement_y, 5);
+			self.movement_z = bound(-5, self.movement_z, 5);
+		}
+		else
+			self.movement = '0 0 0';
+			
 		self.disableclientprediction = 1;
 	}
 	return 1;
@@ -533,10 +541,29 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 {
 	if(frag_target.freezetag_frozen && frag_deathtype != DEATH_HURTTRIGGER)
 	{
+		if(autocvar_g_freezetag_revive_falldamage > 0)
+		if(frag_deathtype == DEATH_FALL)
+		if(frag_damage >= autocvar_g_freezetag_revive_falldamage)
+		{
+			freezetag_Unfreeze(frag_target);
+			frag_target.health = autocvar_g_freezetag_revive_falldamage_health;
+			pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
+		}
+	
 		frag_damage = 0;
 		frag_force = frag_force * autocvar_g_freezetag_frozen_force;
 	}
 	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_PlayerJump)
+{
+	if(self.freezetag_frozen)
+		return TRUE; // no jumping in freezetag when frozen
+	
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
@@ -619,6 +646,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerJump, freezetag_PlayerJump, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, freezetag_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);

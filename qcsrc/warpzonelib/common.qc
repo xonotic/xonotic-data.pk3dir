@@ -474,7 +474,7 @@ void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, v
 	WarpZone_TrailParticles_trace_callback_own = own;
 	WarpZone_TrailParticles_trace_callback_eff = eff;
 	WarpZone_TrailParticles_trace_callback_f = f;
-	WarpZone_TrailParticles_trace_callback_flags = boxflags;
+	WarpZone_TrailParticles_trace_callback_flags = boxflags | PARTICLES_DRAWASTRAIL;
 	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_WithMultiplier_trace_callback);
 }
 #endif

@@ -9,7 +9,7 @@ float scoreboard_alpha_name_self;
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
 
-float SCOREBOARD_OFFSET = 50;
+const float SCOREBOARD_OFFSET = 50;
 
 // wrapper to put all possible scores titles through gettext
 string TranslateScoresLabel(string l)
@@ -36,6 +36,7 @@ string TranslateScoresLabel(string l)
 		case "lives": return CTX(_("SCO^lives"));
 		case "losses": return CTX(_("SCO^losses"));
 		case "name": return CTX(_("SCO^name"));
+		case "sum": return CTX(_("SCO^sum"));
 		case "nick": return CTX(_("SCO^nick"));
 		case "objectives": return CTX(_("SCO^objectives"));
 		case "pickups": return CTX(_("SCO^pickups"));
@@ -263,6 +264,7 @@ void Cmd_HUD_Help()
 	print(_("^3suicides^7                 Number of suicides\n"));
 	print(_("^3frags^7                    kills - suicides\n"));
 	print(_("^3kd^7                       The kill-death ratio\n"));
+	print(_("^3sum^7                      frags - deaths\n"));
 	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
 	print(_("^3captime^7                  Time of fastest cap (CTF)\n"));
@@ -304,6 +306,7 @@ string HUD_DefaultColumnLayout()
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
+		"+tdm/kills +tdm/deaths +tdm/suicides ",
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
@@ -387,6 +390,8 @@ void Cmd_HUD_SetFields(float argc)
 			hud_field[hud_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			hud_field[hud_num_fields] = SP_KDRATIO;
+		} else if(str == "sum" || str == "diff" || str == "f-d") {
+			hud_field[hud_num_fields] = SP_SUM;
 		} else if(str == "name" || str == "nick") {
 			hud_field[hud_num_fields] = SP_NAME;
 			have_name = 1;
@@ -581,6 +586,19 @@ string HUD_GetField(entity pl, float field)
 			} else
 				str = sprintf("%.1f", num/denom);
 			return str;
+			
+		case SP_SUM:
+			f = pl.(scores[SP_KILLS]);
+			f -= pl.(scores[SP_DEATHS]);
+
+			if(f > 0) {
+				hud_field_rgb = '0 1 0';
+			} else if(f == 0) {
+				hud_field_rgb = '1 1 1';
+			} else {
+				hud_field_rgb = '1 0 0';
+			}
+			return ftos(f);
 
 		default:
 			tmp = pl.(scores[field]);

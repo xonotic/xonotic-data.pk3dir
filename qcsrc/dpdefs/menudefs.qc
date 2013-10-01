@@ -15,7 +15,7 @@ void		end_sys_fields;
 
 void() m_init;
 void(float keynr, float ascii) m_keydown;
-void() m_draw;
+void(float width, float height) m_draw;
 void(float mode) m_toggle;
 void() m_shutdown;
 
@@ -96,7 +96,7 @@ float ERR_BADFILENAME 			= -4; // fopen
 float ERR_NULLSTRING			= -1;
 float ERR_BADDRAWFLAG			= -2;
 float ERR_BADSCALE				= -3;
-float ERR_BADSIZE				= ERR_BADSCALE;
+float ERR_BADSIZE				= -3; // same as ERR_BADSCALE
 float ERR_NOTCACHED				= -4;
 
 // server list stuff

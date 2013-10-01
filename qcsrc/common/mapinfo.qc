@@ -379,7 +379,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)
 	if(!spawnplaces)
 	{
-		MapInfo_Map_supportedGametypes &~= MAPINFO_TYPE_RACE;
+		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE;
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
 	}
 
@@ -708,6 +708,7 @@ string MapInfo_Type_ToText(float t)
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.message;
+	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
 
@@ -991,6 +992,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
 		}
+		else if(t == "noautomaplist")
+		{
+			MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
+		}
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
@@ -1073,20 +1078,21 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(t))
+			if not(cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
 		}
 		else if(t == "cdtrack")
 		{
-			if(pGametypeToSet)
+			t = car(s); s = cdr(s);
+			if(pGametypeToSet) // FIXME is this check right here?
 			{
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
-						MapInfo_Map_clientstuff, "cd loop \"", s, "\"\n"
+						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 					);
 			}
 		}
