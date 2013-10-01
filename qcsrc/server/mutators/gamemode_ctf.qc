@@ -44,8 +44,8 @@ void ctf_CaptureRecord(entity flag, entity player)
 void ctf_FlagcarrierWaypoints(entity player)
 {
 	WaypointSprite_Spawn("flagcarrier", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_FLAGCARRIER(player.team));
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
+	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 }
 
@@ -132,7 +132,7 @@ float ctf_CaptureShield_CheckStatus(entity p)
 	players_total = players_worseeq = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		if(IsDifferentTeam(e, p))
+		if(DIFF_TEAM(e, p))
 			continue;
 		se = PlayerScore_Add(e, SP_SCORE, 0);
 		if(se <= s)
@@ -162,7 +162,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 float ctf_CaptureShield_Customize()
 {
 	if(!other.ctf_captureshielded) { return FALSE; }
-	if(!IsDifferentTeam(self, other)) { return FALSE; }
+	if(SAME_TEAM(self, other)) { return FALSE; }
 	
 	return TRUE;
 }
@@ -170,7 +170,7 @@ float ctf_CaptureShield_Customize()
 void ctf_CaptureShield_Touch()
 {
 	if(!other.ctf_captureshielded) { return; }
-	if(!IsDifferentTeam(self, other)) { return; }
+	if(SAME_TEAM(self, other)) { return; }
 	
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
@@ -275,7 +275,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
-		else if(!IsDifferentTeam(tmp_player, sender))
+		else if(SAME_TEAM(tmp_player, sender))
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
@@ -803,16 +803,16 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if(!IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self))
+			if(SAME_TEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self))
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
+			else if(DIFF_TEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(!IsDifferentTeam(toucher, self))
+			if(SAME_TEAM(toucher, self))
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if((!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -829,7 +829,7 @@ void ctf_FlagTouch()
 		{
 			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
 			{
-				if(IsDifferentTeam(toucher, self.pass_sender))
+				if(DIFF_TEAM(toucher, self.pass_sender))
 					ctf_Handle_Return(self, toucher);
 				else
 					ctf_Handle_Retrieve(self, toucher);
@@ -1708,7 +1708,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	
 	// update the health of the flag carrier waypointsprite
 	if(self.wps_flagcarrier) 
-		WaypointSprite_UpdateHealth(self.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	
 	return FALSE;
 }
@@ -1728,9 +1728,9 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && DIFF_TEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
-		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)))
 		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
 		{
 			frag_target.wps_helpme_time = time;
@@ -1804,7 +1804,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			while(head) // find the closest acceptable target to pass to
 			{
 				if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
-				if(head != player && !IsDifferentTeam(head, player))
+				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
 					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 

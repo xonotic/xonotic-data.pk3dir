@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-12 12:34-0400\n"
+"POT-Creation-Date: 2013-09-13 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,48 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: qcsrc/client/Main.qc:21
+msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
+msgstr ""
+
+#: qcsrc/client/Main.qc:46
+msgid ""
+"^3Your engine build is outdated\n"
+"^3This Server uses a newer QC VM. Please update!\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:56
+#, c-format
+msgid "^4CSQC Build information: ^1%s\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:216 qcsrc/client/Main.qc:232
+#, c-format
+msgid "trying to switch to unsupported team %d\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:835
+#, c-format
+msgid ""
+"Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
+"%s)\n"
+msgstr ""
+
+#: qcsrc/client/Main.qc:1295
+#, c-format
+msgid "%s (not bound)"
+msgstr ""
+
+#: qcsrc/client/Main.qc:1300 qcsrc/client/hud.qc:221
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:157
+#, c-format
+msgid "%s (%s)"
+msgstr ""
+
+#: qcsrc/client/View.qc:1096
+msgid "Revival progress"
+msgstr ""
 
 #: qcsrc/client/hud.qc:186
 #, c-format
@@ -38,12 +80,6 @@ msgstr ""
 #: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
-
-#: qcsrc/client/hud.qc:221 qcsrc/client/Main.qc:1300
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:157
-#, c-format
-msgid "%s (%s)"
 msgstr ""
 
 #: qcsrc/client/hud.qc:223
@@ -271,38 +307,6 @@ msgstr ""
 msgid "^1Couldn't write to %s\n"
 msgstr ""
 
-#: qcsrc/client/Main.qc:21
-msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr ""
-
-#: qcsrc/client/Main.qc:46
-msgid ""
-"^3Your engine build is outdated\n"
-"^3This Server uses a newer QC VM. Please update!\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:56
-#, c-format
-msgid "^4CSQC Build information: ^1%s\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:216 qcsrc/client/Main.qc:232
-#, c-format
-msgid "trying to switch to unsupported team %d\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:835
-#, c-format
-msgid ""
-"Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
-"%s)\n"
-msgstr ""
-
-#: qcsrc/client/Main.qc:1295
-#, c-format
-msgid "%s (not bound)"
-msgstr ""
-
 #: qcsrc/client/mapvoting.qc:28
 msgid " (1 vote)"
 msgstr ""
@@ -340,11 +344,6 @@ msgstr ""
 
 #: qcsrc/client/miscfunctions.qc:98
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr ""
-
-#: qcsrc/client/miscfunctions.qc:604 qcsrc/menu/xonotic/util.qc:283
-#, c-format
-msgid "Received HTTP request data for an invalid id %d.\n"
 msgstr ""
 
 #: qcsrc/client/movetypes.qc:163
@@ -801,10 +800,6 @@ msgstr ""
 msgid "No left gunner!"
 msgstr ""
 
-#: qcsrc/client/View.qc:1096
-msgid "Revival progress"
-msgstr ""
-
 #: qcsrc/client/waypointsprites.qc:254
 msgid "Push"
 msgstr ""
@@ -1229,12 +1224,12 @@ msgstr ""
 msgid "%dth"
 msgstr ""
 
-#: qcsrc/common/mapinfo.qc:711
-#, c-format
+#: qcsrc/common/mapinfo.qc:712
+#, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr ""
 
-#: qcsrc/common/mapinfo.qc:1104 qcsrc/menu/xonotic/skinlist.c:166
+#: qcsrc/common/mapinfo.qc:1105 qcsrc/menu/xonotic/skinlist.c:166
 #, c-format
 msgid "%s: %s"
 msgstr ""
@@ -1393,12 +1388,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:346
 #, c-format
-msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:346
 #, c-format
-msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
+msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:347
@@ -1428,12 +1423,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:352
 #, c-format
-msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
+msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:352
 #, c-format
-msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
+msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:353
@@ -1545,12 +1540,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:373
 #, c-format
-msgid "^BG%s^K1 hit the ground with a crunch%s%s"
+msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:373
 #, c-format
-msgid "^BG%s^K1 hit the ground with a bit too much force%s%s"
+msgid "^BG%s^K1 hit the ground with a crunch%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:374
@@ -1570,12 +1565,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:376
 #, c-format
-msgid "^BG%s^K1 turned into hot slag%s%s"
+msgid "^BG%s^K1 found a hot place%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:376
 #, c-format
-msgid "^BG%s^K1 found a hot place%s%s"
+msgid "^BG%s^K1 turned into hot slag%s%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:377
@@ -2395,17 +2390,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:548
 #, c-format
-msgid "^K1%sYou typefragged ^BG%s"
+msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:548
 #, c-format
-msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:549
-#, c-format
-msgid "^K1%sYou were typefragged by ^BG%s"
+msgid "^K1%sYou typefragged ^BG%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:549
@@ -2413,9 +2403,9 @@ msgstr ""
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing!"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:550
+#: qcsrc/common/notifications.qh:549
 #, c-format
-msgid "^K1%sYou were typefragged by ^BG%s^BG%s"
+msgid "^K1%sYou were typefragged by ^BG%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:550
@@ -2423,14 +2413,19 @@ msgstr ""
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:551
+#: qcsrc/common/notifications.qh:550
 #, c-format
-msgid "^K1%sYou typefragged ^BG%s^BG%s"
+msgid "^K1%sYou were typefragged by ^BG%s^BG%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:551
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:551
+#, c-format
+msgid "^K1%sYou typefragged ^BG%s^BG%s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:552
@@ -2445,11 +2440,11 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/notifications.qh:554
-msgid "^K1Don't shoot your team mates!"
+msgid "^K1Don't go against your team mates!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:554
-msgid "^K1Don't go against your team mates!"
+msgid "^K1Don't shoot your team mates!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:555
@@ -2478,11 +2473,11 @@ msgid "^K1You hit the ground with a crunch!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:560
-msgid "^K1You got a little bit too crispy!"
+msgid "^K1You felt a little too hot!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:560
-msgid "^K1You felt a little too hot!"
+msgid "^K1You got a little bit too crispy!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:561
@@ -2498,19 +2493,19 @@ msgid "^K1You couldn't stand the heat!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:563
-msgid "^K1You forgot to put the pin back in!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:563
 msgid "^K1Tastes like chicken!"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:564
-msgid "^K1You were killed for running out of ammo..."
+#: qcsrc/common/notifications.qh:563
+msgid "^K1You forgot to put the pin back in!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:564
 msgid "^K1You are respawning for running out of ammo..."
+msgstr ""
+
+#: qcsrc/common/notifications.qh:564
+msgid "^K1You were killed for running out of ammo..."
 msgstr ""
 
 #: qcsrc/common/notifications.qh:565
@@ -2551,27 +2546,27 @@ msgid "^K1You died in an accident!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:572
-msgid "^K1You were fragged by a turret!"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:572
 msgid "^K1You had an unfortunate run in with a turret!"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:573
-msgid "^K1You were fragged by an eWheel turret!"
+#: qcsrc/common/notifications.qh:572
+msgid "^K1You were fragged by a turret!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:573
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:574
-msgid "^K1You were fragged by a Walker turret!"
+#: qcsrc/common/notifications.qh:573
+msgid "^K1You were fragged by an eWheel turret!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:574
 msgid "^K1You had an unfortunate run in with a Walker turret!"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:574
+msgid "^K1You were fragged by a Walker turret!"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:575
@@ -2874,11 +2869,11 @@ msgid " (near %s)"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:915 qcsrc/common/notifications.qh:916
-msgid "secondary"
+msgid "primary"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:915 qcsrc/common/notifications.qh:916
-msgid "primary"
+msgid "secondary"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:926
@@ -2892,10 +2887,6 @@ msgid " with %s"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:944
-msgid "TRIPLE FRAG! "
-msgstr ""
-
-#: qcsrc/common/notifications.qh:944
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG! %s^BG"
 msgstr ""
@@ -2905,8 +2896,13 @@ msgstr ""
 msgid "%s^K1 made a TRIPLE SCORE! %s^BG"
 msgstr ""
 
+#: qcsrc/common/notifications.qh:944
+msgid "TRIPLE FRAG! "
+msgstr ""
+
 #: qcsrc/common/notifications.qh:945
-msgid "RAGE! "
+#, c-format
+msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:945
@@ -2915,12 +2911,12 @@ msgid "%s^K1 unlocked RAGE! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:945
-#, c-format
-msgid "%s^K1 made FIVE SCORES IN A ROW! %s^BG"
+msgid "RAGE! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:946
-msgid "MASSACRE! "
+#, c-format
+msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:946
@@ -2929,12 +2925,7 @@ msgid "%s^K1 started a MASSACRE! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:946
-#, c-format
-msgid "%s^K1 made TEN SCORES IN A ROW! %s^BG"
-msgstr ""
-
-#: qcsrc/common/notifications.qh:947
-msgid "MAYHEM! "
+msgid "MASSACRE! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:947
@@ -2947,8 +2938,8 @@ msgstr ""
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:948
-msgid "BERSERKER! "
+#: qcsrc/common/notifications.qh:947
+msgid "MAYHEM! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:948
@@ -2961,8 +2952,8 @@ msgstr ""
 msgid "%s^K1 made TWENTY SCORES IN A ROW! %s^BG"
 msgstr ""
 
-#: qcsrc/common/notifications.qh:949
-msgid "CARNAGE! "
+#: qcsrc/common/notifications.qh:948
+msgid "BERSERKER! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:949
@@ -2975,8 +2966,13 @@ msgstr ""
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG"
 msgstr ""
 
+#: qcsrc/common/notifications.qh:949
+msgid "CARNAGE! "
+msgstr ""
+
 #: qcsrc/common/notifications.qh:950
-msgid "ARMAGEDDON! "
+#, c-format
+msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:950
@@ -2985,8 +2981,7 @@ msgid "%s^K1 unleashes ARMAGEDDON! %s^BG"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:950
-#, c-format
-msgid "%s^K1 made THIRTY SCORES IN A ROW! %s^BG"
+msgid "ARMAGEDDON! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:956
@@ -3032,11 +3027,11 @@ msgid "First score! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:1032
-msgid "First victim! "
+msgid "First casualty! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:1032
-msgid "First casualty! "
+msgid "First victim! "
 msgstr ""
 
 #: qcsrc/common/notifications.qh:1073
@@ -4294,12 +4289,12 @@ msgid "Default"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
-msgid "Official"
+#, c-format
+msgid "%d modified"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
-#, c-format
-msgid "%d modified"
+msgid "Official"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:201
@@ -6078,7 +6073,7 @@ msgstr ""
 msgid "T.A.G. Seeker"
 msgstr ""
 
-#: qcsrc/server/w_tuba.qc:11
-#, c-format
+#: qcsrc/server/w_tuba.qc:12
+#, no-c-format
 msgid "@!#%'n Tuba"
 msgstr ""

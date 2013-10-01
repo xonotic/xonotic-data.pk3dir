@@ -56,22 +56,6 @@ float damage_gooddamage;
 .float istypefrag;
 .float taunt_soundtime;
 
-
-float IsDifferentTeam(entity a, entity b)
-{
-	if(teamplay)
-	{
-		if(a.team == b.team)
-			return 0;
-	}
-	else
-	{
-		if(a == b)
-			return 0;
-	}
-	return 1;
-}
-
 float IsFlying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
@@ -409,7 +393,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// ======
 	else if(IS_PLAYER(attacker))
 	{
-		if(!IsDifferentTeam(attacker, targ))
+		if(SAME_TEAM(attacker, targ))
 		{
 			LogDeath("tk", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, -1, deathtype);
@@ -600,7 +584,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		if(IS_PLAYER(targ))
-			if not(IsDifferentTeam(targ, attacker))
+			if(SAME_TEAM(targ, attacker))
 			{
 				self = oldself;
 				return;
@@ -609,6 +593,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
+		// exit the vehicle before killing (fixes a crash)
+		if(IS_PLAYER(targ) && targ.vehicle)
+			vehicles_exit(VHEF_RELESE);
+	
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -633,7 +621,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(!IsDifferentTeam(attacker, targ))
+			else if(SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -655,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -665,7 +653,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
@@ -746,7 +734,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
-				if(IsDifferentTeam(victim, attacker))
+				if(DIFF_TEAM(victim, attacker))
 				{
 					if(damage > 0)
 					{

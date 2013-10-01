@@ -297,7 +297,13 @@ void FixPlayermodel()
 
 		n = tokenize_console(defaultmodel);
 		if(n > 0)
+		{
 			defaultmodel = argv(floor(n * self.model_randomizer));
+			// However, do NOT randomize if the player-selected model is in the list.
+			for (i = 0; i < n; ++i)
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
+					defaultmodel = argv(i);
+		}
 
 		i = strstrofs(defaultmodel, ":", 0);
 		if(i >= 0)
@@ -2039,7 +2045,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
@@ -2591,7 +2597,7 @@ void PlayerPostThink (void)
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	playerdemo_write();
 
