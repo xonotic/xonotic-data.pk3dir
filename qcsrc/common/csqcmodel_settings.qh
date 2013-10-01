@@ -48,6 +48,7 @@
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(!isplayer) \
 		CSQCMODEL_PROPERTY(2048, float, ReadByte, WriteByte, monsterid) \
+		CSQCMODEL_PROPERTY(4096, float, ReadByte, WriteByte, scale) \
 	CSQCMODEL_ENDIF
 // TODO get rid of colormod/glowmod here, find good solution for nex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
