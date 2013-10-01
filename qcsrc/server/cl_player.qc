@@ -276,7 +276,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v_x;
 	save = v_y;
 
@@ -372,7 +372,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v_x;
 	save = v_y;
 
@@ -495,7 +495,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(vbot || IS_REAL_CLIENT(self))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && self != attacker)
-	if(IsDifferentTeam(self, attacker))
+	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.weapon;
@@ -857,7 +857,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if not(IS_PLAYER(source))
 	{
 		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
 
