@@ -535,6 +535,10 @@ void GenericCommand_rpn(float request, float argc, string command)
 					} else if(rpncmd == "sprintf1s") {
 						s = rpn_pop();
 						rpn_set(sprintf(s, rpn_get()));
+					} else if(rpncmd == "eval") {
+						s = rpn_pop();
+						tokenize_console(strcat(s, substring(command, argv_end_index(rpnpos), -1)));
+						rpnpos = -1;
 					} else {
 						rpn_push(cvar_string(rpncmd));
 					}
@@ -587,6 +591,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    s /MD4 digest ---------------------> s   : MD4 digest\n");
 			print("    s /SHA256 digest ------------------> s   : SHA256 digest\n");
 			print("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)\n");
+			print("    s eval ---------------------------->     : does something eval\n");
 			print("    Set operations operate on 'such''strings'.\n");
 			print("    Unknown tokens insert their cvar value.\n");
 			return;
