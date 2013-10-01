@@ -220,8 +220,10 @@ string RandomSelection_chosen_string;
 void RandomSelection_Init();
 void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
 
-vector healtharmor_maxdamage(float h, float a, float armorblock); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, float damage); // returns vector: take, save, 0
+#ifndef MENUQC
+vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
+vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage); // returns vector: take, save, 0
+#endif
 
 string getcurrentmod();
 
@@ -413,5 +415,11 @@ void dedicated_print(string input);
 #endif
 
 #ifndef MENUQC
-float Announcer_PickNumber(float num);
+#define CNT_NORMAL 1
+#define CNT_GAMESTART 2
+#define CNT_IDLE 3
+#define CNT_KILL 4
+#define CNT_RESPAWN 5
+#define CNT_ROUNDSTART 6
+float Announcer_PickNumber(float type, float num);
 #endif

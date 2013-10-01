@@ -56,22 +56,6 @@ float damage_gooddamage;
 .float istypefrag;
 .float taunt_soundtime;
 
-
-float IsDifferentTeam(entity a, entity b)
-{
-	if(teamplay)
-	{
-		if(a.team == b.team)
-			return 0;
-	}
-	else
-	{
-		if(a == b)
-			return 0;
-	}
-	return 1;
-}
-
 float IsFlying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
@@ -143,7 +127,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
 			}
 
-			if(inWarmupStage)
+			if(warmup_stage)
 				GiveFrags_randomweapons.weapons = warmup_start_weapons;
 			else
 				GiveFrags_randomweapons.weapons = start_weapons;
@@ -247,7 +231,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgmurder)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -255,7 +239,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -269,7 +253,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgself)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -277,7 +261,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -308,7 +292,7 @@ float Obituary_WeaponDeath(
 
 		if(death_message)
 		{
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ONE,
 				notif_target,
 				MSG_MULTI,
@@ -316,7 +300,7 @@ float Obituary_WeaponDeath(
 				s1, s2, s3, "",
 				f1, f2, 0, 0
 			);
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ALL_EXCEPT,
 				notif_target,
 				MSG_INFO,
@@ -409,7 +393,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// ======
 	else if(IS_PLAYER(attacker))
 	{
-		if(!IsDifferentTeam(attacker, targ))
+		if(SAME_TEAM(attacker, targ))
 		{
 			LogDeath("tk", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, -1, deathtype);
@@ -462,30 +446,51 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				kill_count_to_target = 0;
 			}
 
-			float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || inWarmupStage));
 			if(targ.istypefrag)
 			{
-				if(attacker.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
-				else
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG, targ.netname, kill_count_to_attacker);
-
-				if(targ.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
-				else
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED, attacker.netname, kill_count_to_target);
+				Send_Notification(
+					NOTIF_ONE,
+					attacker,
+					MSG_CHOICE,
+					CHOICE_TYPEFRAG,
+					targ.netname,
+					kill_count_to_attacker,
+					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+				);
+				Send_Notification(
+					NOTIF_ONE,
+					targ,
+					MSG_CHOICE,
+					CHOICE_TYPEFRAGGED,
+					attacker.netname,
+					kill_count_to_target,
+					attacker.health,
+					attacker.armorvalue,
+					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+				);
 			}
 			else
 			{
-				if(attacker.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
-				else
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG, targ.netname, kill_count_to_attacker);
-
-				if(targ.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
-				else
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED, attacker.netname, kill_count_to_target);
+				Send_Notification(
+					NOTIF_ONE,
+					attacker,
+					MSG_CHOICE,
+					CHOICE_FRAG,
+					targ.netname,
+					kill_count_to_attacker,
+					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+				);
+				Send_Notification(
+					NOTIF_ONE,
+					targ,
+					MSG_CHOICE,
+					CHOICE_FRAGGED,
+					attacker.netname,
+					kill_count_to_target,
+					attacker.health,
+					attacker.armorvalue,
+					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+				);
 			}
 
 			if not(Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
@@ -579,7 +584,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		if(IS_PLAYER(targ))
-			if not(IsDifferentTeam(targ, attacker))
+			if(SAME_TEAM(targ, attacker))
 			{
 				self = oldself;
 				return;
@@ -588,6 +593,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
+		// exit the vehicle before killing (fixes a crash)
+		if(IS_PLAYER(targ) && targ.vehicle)
+			vehicles_exit(VHEF_RELESE);
+	
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -612,7 +621,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(!IsDifferentTeam(attacker, targ))
+			else if(SAME_TEAM(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -634,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -644,7 +653,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
@@ -725,7 +734,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
-				if(IsDifferentTeam(victim, attacker))
+				if(DIFF_TEAM(victim, attacker))
 				{
 					if(damage > 0)
 					{

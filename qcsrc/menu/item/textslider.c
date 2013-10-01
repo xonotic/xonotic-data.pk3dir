@@ -6,6 +6,7 @@ CLASS(TextSlider) EXTENDS(Slider)
 	METHOD(TextSlider, valueToIdentifier, string(entity, float))
 	METHOD(TextSlider, setValueFromIdentifier, void(entity, string))
 	METHOD(TextSlider, getIdentifier, string(entity))
+	METHOD(TextSlider, clearValues, void(entity))
 	METHOD(TextSlider, addValue, void(entity, string, string))
 	METHOD(TextSlider, configureTextSliderValues, void(entity, string))
 	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
@@ -45,6 +46,10 @@ void TextSlider_setValueFromIdentifier(entity me, string id)
 string TextSlider_getIdentifier(entity me)
 {
 	return me.valueToIdentifier(me, me.value);
+}
+void TextSlider_clearValues(entity me)
+{
+	me.nValues = 0;
 }
 void TextSlider_addValue(entity me, string theString, string theIdentifier)
 {

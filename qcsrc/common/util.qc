@@ -1831,10 +1831,13 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 	}
 }
 
-vector healtharmor_maxdamage(float h, float a, float armorblock)
+#ifndef MENUQC
+vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+		armorblock = 0;
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
@@ -1853,14 +1856,17 @@ vector healtharmor_maxdamage(float h, float a, float armorblock)
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float damage)
+vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
 {
 	vector v;
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+		armorblock = 0;
 	v_y = bound(0, damage * armorblock, a); // save
 	v_x = bound(0, damage - v_y, damage); // take
 	v_z = 0;
 	return v;
 }
+#endif
 
 string getcurrentmod()
 {
@@ -2614,21 +2620,113 @@ void dedicated_print(string input) // print(), but only print if the server is n
 #endif
 
 #ifndef MENUQC
-float Announcer_PickNumber(float num)
+float Announcer_PickNumber(float type, float num)
 {
-	switch(num)
+	switch(type)
 	{
-		case 10: num = ANNCE_NUM_10; break;
-		case 9:  num = ANNCE_NUM_9;  break;
-		case 8:  num = ANNCE_NUM_8;  break;
-		case 7:  num = ANNCE_NUM_7;  break;
-		case 6:  num = ANNCE_NUM_6;  break;
-		case 5:  num = ANNCE_NUM_5;  break;
-		case 4:  num = ANNCE_NUM_4;  break;
-		case 3:  num = ANNCE_NUM_3;  break;
-		case 2:  num = ANNCE_NUM_2;  break;
-		case 1:  num = ANNCE_NUM_1;  break;
+		case CNT_GAMESTART:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_GAMESTART_10;
+				case 9:  return ANNCE_NUM_GAMESTART_9; 
+				case 8:  return ANNCE_NUM_GAMESTART_8; 
+				case 7:  return ANNCE_NUM_GAMESTART_7; 
+				case 6:  return ANNCE_NUM_GAMESTART_6; 
+				case 5:  return ANNCE_NUM_GAMESTART_5; 
+				case 4:  return ANNCE_NUM_GAMESTART_4; 
+				case 3:  return ANNCE_NUM_GAMESTART_3; 
+				case 2:  return ANNCE_NUM_GAMESTART_2; 
+				case 1:  return ANNCE_NUM_GAMESTART_1; 
+			}
+			break;
+		}
+		case CNT_IDLE:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_IDLE_10;
+				case 9:  return ANNCE_NUM_IDLE_9; 
+				case 8:  return ANNCE_NUM_IDLE_8; 
+				case 7:  return ANNCE_NUM_IDLE_7; 
+				case 6:  return ANNCE_NUM_IDLE_6; 
+				case 5:  return ANNCE_NUM_IDLE_5; 
+				case 4:  return ANNCE_NUM_IDLE_4; 
+				case 3:  return ANNCE_NUM_IDLE_3; 
+				case 2:  return ANNCE_NUM_IDLE_2; 
+				case 1:  return ANNCE_NUM_IDLE_1; 
+			}
+			break;
+		}
+		case CNT_KILL:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_KILL_10;
+				case 9:  return ANNCE_NUM_KILL_9; 
+				case 8:  return ANNCE_NUM_KILL_8; 
+				case 7:  return ANNCE_NUM_KILL_7; 
+				case 6:  return ANNCE_NUM_KILL_6; 
+				case 5:  return ANNCE_NUM_KILL_5; 
+				case 4:  return ANNCE_NUM_KILL_4; 
+				case 3:  return ANNCE_NUM_KILL_3; 
+				case 2:  return ANNCE_NUM_KILL_2; 
+				case 1:  return ANNCE_NUM_KILL_1; 
+			}
+			break;
+		}
+		case CNT_RESPAWN:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_RESPAWN_10;
+				case 9:  return ANNCE_NUM_RESPAWN_9; 
+				case 8:  return ANNCE_NUM_RESPAWN_8; 
+				case 7:  return ANNCE_NUM_RESPAWN_7; 
+				case 6:  return ANNCE_NUM_RESPAWN_6; 
+				case 5:  return ANNCE_NUM_RESPAWN_5; 
+				case 4:  return ANNCE_NUM_RESPAWN_4; 
+				case 3:  return ANNCE_NUM_RESPAWN_3; 
+				case 2:  return ANNCE_NUM_RESPAWN_2; 
+				case 1:  return ANNCE_NUM_RESPAWN_1; 
+			}
+			break;
+		}
+		case CNT_ROUNDSTART:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_ROUNDSTART_10;
+				case 9:  return ANNCE_NUM_ROUNDSTART_9; 
+				case 8:  return ANNCE_NUM_ROUNDSTART_8; 
+				case 7:  return ANNCE_NUM_ROUNDSTART_7; 
+				case 6:  return ANNCE_NUM_ROUNDSTART_6; 
+				case 5:  return ANNCE_NUM_ROUNDSTART_5; 
+				case 4:  return ANNCE_NUM_ROUNDSTART_4; 
+				case 3:  return ANNCE_NUM_ROUNDSTART_3; 
+				case 2:  return ANNCE_NUM_ROUNDSTART_2; 
+				case 1:  return ANNCE_NUM_ROUNDSTART_1; 
+			}
+			break;
+		}
+		default:
+		{
+			switch(num)
+			{
+				case 10: return ANNCE_NUM_10;
+				case 9:  return ANNCE_NUM_9; 
+				case 8:  return ANNCE_NUM_8; 
+				case 7:  return ANNCE_NUM_7; 
+				case 6:  return ANNCE_NUM_6; 
+				case 5:  return ANNCE_NUM_5; 
+				case 4:  return ANNCE_NUM_4; 
+				case 3:  return ANNCE_NUM_3; 
+				case 2:  return ANNCE_NUM_2; 
+				case 1:  return ANNCE_NUM_1; 
+			}
+			break;
+		}
 	}
-	return num;
+	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif

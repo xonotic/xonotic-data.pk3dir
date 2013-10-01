@@ -708,6 +708,7 @@ string MapInfo_Type_ToText(float t)
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.message;
+	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
 
@@ -990,6 +991,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		else if(t == "frustrating")
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
+		}
+		else if(t == "noautomaplist")
+		{
+			MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
 		}
 		else if(t == "type")
 		{

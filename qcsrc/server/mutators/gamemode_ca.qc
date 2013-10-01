@@ -100,7 +100,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-	if(inWarmupStage)
+	if(warmup_stage)
 		allowed_to_spawn = TRUE;
 	else
 		allowed_to_spawn = FALSE;
@@ -242,7 +242,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 {
 	if(IS_PLAYER(frag_target))
 	if(frag_target.deadflag == DEAD_NO)
-	if(frag_target == frag_attacker || !IsDifferentTeam(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
+	if(frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
 		frag_damage = 0;
 		
 	frag_mirrordamage = 0;
