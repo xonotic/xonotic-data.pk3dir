@@ -96,14 +96,12 @@ entity deathtypes[DT_MAX];
 		deathtypes[(name - DT_FIRST)] = deathent; \
 		deathent.classname = "deathtype"; \
 		deathent.nent_name = #name; \
-		#if (msg_death != NO_MSG) \
+		if (msg_death != NO_MSG) \
 			deathent.death_msgself = msg_multi_notifs[msg_death - 1]; \
-		#endif \
-		#if (msg_death_by != NO_MSG) \
+		if (msg_death_by != NO_MSG) \
 			deathent.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
-		#endif \
 	} \
-	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
+	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name);
 
 DEATHTYPES
 #undef DEATHTYPE
