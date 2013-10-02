@@ -679,7 +679,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
-			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
+			movelib_move(v_forward, ((self.enemy) ? runspeed : walkspeed), 0, 200, 0.6);
 
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
@@ -962,14 +962,9 @@ float monster_initialize(float mon_id, float nodrop)
 	entity mon = get_monsterinfo(mon_id);
 
 	// support for quake style removing monsters based on skill
-	switch(monster_skill)
-	{
-		case 0:
-		case 1: if(self.spawnflags & MONSTERSKILL_NOTEASY)		return FALSE; break;
-		case 2: if(self.spawnflags & MONSTERSKILL_NOTMEDIUM)	return FALSE; break;
-		default:
-		case 3: if(self.spawnflags & MONSTERSKILL_NOTHARD)		return FALSE; break;
-	}
+	if(monster_skill <= 1) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
+	if(monster_skill == 2) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
+	if(monster_skill >= 3) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
 
 	if(self.team && !teamplay)
 		self.team = 0;
