@@ -170,6 +170,9 @@ void movelib_move_simple(vector newdir,float velo,float blendrate)
 */
 #define movelib_move_simple(newdir,velo,blendrate) \
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
+	
+#define movelib_move_simple_gravity(newdir,velo,blendrate) \
+    if(self.flags & FL_ONGROUND) self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
 
 void movelib_beak_simple(float force)
 {

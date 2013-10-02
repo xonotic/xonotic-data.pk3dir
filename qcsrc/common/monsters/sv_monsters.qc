@@ -679,7 +679,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
-			movelib_move(v_forward, ((self.enemy) ? runspeed : walkspeed), 0, 200, 0.6);
+			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
