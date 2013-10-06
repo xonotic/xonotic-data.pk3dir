@@ -10,10 +10,6 @@
 .float wasFlying;
 .float spectatorspeed;
 
-.float multijump_count;
-.float multijump_ready;
-.float prevjumpbutton;
-
 /*
 =============
 PlayerJump
@@ -23,13 +19,16 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(self.freezetag_frozen)
-		return; // no jumping in freezetag when frozen
+	float doublejump = FALSE;
+
+	player_multijump = doublejump;
+	if(MUTATOR_CALLHOOK(PlayerJump))
+		return;
+		
+	doublejump = player_multijump;
 
 	float mjumpheight;
-	float doublejump;
-
-	doublejump = FALSE;
+	
 	if (autocvar_sv_doublejump)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
@@ -52,56 +51,6 @@ void PlayerJump (void)
 		return;
 	}
 
-	if (autocvar_g_multijump)
-	{
-		if (self.prevjumpbutton == FALSE && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
-			self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
-		else
-			self.multijump_ready = FALSE;
-	}
-
-	if(!doublejump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
-	{
-		// doublejump = FALSE; // checked above in the if
-		if (autocvar_g_multijump)
-		{
-			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
-			{
-				if (self.velocity_z < mjumpheight)
-				{
-					doublejump = TRUE;
-					self.velocity_z = 0;
-				}
-			}
-			else
-				doublejump = TRUE;
-
-			if(doublejump)
-			{
-				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
-				{
-					float curspeed;
-					vector wishvel, wishdir;
-
-					curspeed = max(
-						vlen(vec2(self.velocity)), // current xy speed
-						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
-					);
-					makevectors(self.v_angle_y * '0 1 0');
-					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
-					wishdir = normalize(wishvel);
-
-					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
-					self.velocity_y = wishdir_y * curspeed;
-					// keep velocity_z unchanged!
-				}
-				if (autocvar_g_multijump > 0)
-					self.multijump_count += 1;
-			}
-		}
-		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
-	}
-
 	if (!doublejump)
 		if (!(self.flags & FL_ONGROUND))
 			return;
@@ -109,9 +58,6 @@ void PlayerJump (void)
 	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
-
-	if(self.health <= g_bloodloss)
-		return;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -160,12 +106,12 @@ void PlayerJump (void)
 	self.velocity_z = self.velocity_z + mjumpheight;
 	self.oldvelocity_z = self.velocity_z;
 
-	self.flags &~= FL_ONGROUND;
-	self.flags &~= FL_JUMPRELEASED;
+	self.flags &= ~FL_ONGROUND;
+	self.flags &= ~FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
-
-	if(g_jump_grunt)
+	
+	if(autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
@@ -193,7 +139,7 @@ void CheckWaterJump()
 		{	// open at eye level
 			self.flags |= FL_WATERJUMP;
 			self.velocity_z = 225;
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.teleport_time = time + 2;	// safety net
 			return;
 		}
@@ -201,14 +147,6 @@ void CheckWaterJump()
 }
 void CheckPlayerJump()
 {
-	if(self.flags & FL_ONGROUND)
-	{
-		if (autocvar_g_multijump > 0)
-			self.multijump_count = 0;
-		else
-			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-	}
-
 	if (self.BUTTON_JUMP)
 		PlayerJump ();
 	else
@@ -216,7 +154,6 @@ void CheckPlayerJump()
 
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump ();
-	self.prevjumpbutton = self.BUTTON_JUMP;
 }
 
 float racecar_angle(float forward, float down)
@@ -390,7 +327,7 @@ void RaceCarPhysics()
 		else
 		{
 			// now set angles_x so that the car points forward, but is tilted in velocity direction
-			self.flags &~= FL_ONGROUND;
+			self.flags &= ~FL_ONGROUND;
 		}
 
 		self.velocity = (neworigin - self.origin) * (1.0 / frametime);
@@ -811,7 +748,7 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
-	self.items &~= IT_USING_JETPACK;
+	self.items &= ~IT_USING_JETPACK;
 
 	if(IS_PLAYER(self))
 	{
@@ -872,15 +809,15 @@ void SV_PlayerPhysics()
 		maxspd_mod = autocvar_sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
 			self.spectatorspeed = maxspd_mod;
-		if(self.impulse && self.impulse <= 19 || self.impulse >= 200 && self.impulse <= 209 || self.impulse >= 220 && self.impulse <= 229)
+		if(self.impulse && self.impulse <= 19 || (self.impulse >= 200 && self.impulse <= 209) || (self.impulse >= 220 && self.impulse <= 229))
 		{
 			if(self.lastclassname != "player")
 			{
-				if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || self.impulse >= 200 && self.impulse <= 209)
+				if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209))
 					self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
 				else if(self.impulse == 11)
 					self.spectatorspeed = maxspd_mod;
-				else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || self.impulse >= 220 && self.impulse <= 229)
+				else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229))
 					self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
 				else if(self.impulse >= 1 && self.impulse <= 9)
 					self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
@@ -950,7 +887,7 @@ void SV_PlayerPhysics()
 		self.velocity_y = self.movedir_y;
 		if (time > self.teleport_time || self.waterlevel == WATERLEVEL_NONE)
 		{
-			self.flags &~= FL_WATERJUMP;
+			self.flags &= ~FL_WATERJUMP;
 			self.teleport_time = 0;
 		}
 	}
@@ -961,7 +898,7 @@ void SV_PlayerPhysics()
 	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
 	{
 		// noclipping or flying
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		self.velocity = self.velocity * (1 - frametime * autocvar_sv_friction);
 		makevectors(self.v_angle);
@@ -978,7 +915,7 @@ void SV_PlayerPhysics()
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		// swimming
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		makevectors(self.v_angle);
 		//wishvel = v_forward * self.movement_x + v_right * self.movement_y + v_up * self.movement_z;
@@ -1001,7 +938,7 @@ void SV_PlayerPhysics()
 	else if (time < self.ladder_time)
 	{
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		float g;
 		g = autocvar_sv_gravity * frametime;
@@ -1141,7 +1078,7 @@ void SV_PlayerPhysics()
 			self.velocity = self.velocity + wishvel * f * frametime;
 			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 				self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime * fvel * f;
-			self.flags &~= FL_ONGROUND;
+			self.flags &= ~FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;
 
 			// jetpack also inhibits health regeneration, but only for 1 second

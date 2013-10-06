@@ -4,7 +4,8 @@
 #endif
 
 // FTEQCC can do this
-#define HAVE_YO_DAWG_CPP
+// #define HAVE_YO_DAWG_CPP
+// No, this is an ex-"feature" and non-C11.
 
 #ifndef NOCOMPAT
 //# define WORKAROUND_XON010
@@ -16,7 +17,7 @@
 
 #ifdef FTEQCC
 #ifdef WATERMARK
-string FTEQCC_SUCKS_WATERMARKS_THROUGH_C60_FULLERENES = WATERMARK();
+const string FTEQCC_SUCKS_WATERMARKS_THROUGH_C60_FULLERENES = WATERMARK();
 #undef WATERMARK
 #define WATERMARK FTEQCC_SUCKS_WATERMARKS_THROUGH_C60_FULLERENES
 #endif

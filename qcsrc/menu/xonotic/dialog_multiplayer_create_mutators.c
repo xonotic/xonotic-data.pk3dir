@@ -80,7 +80,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
-	if(cvar("sv_gravity") < 800)
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
 	if(cvar("g_cloaked"))
 		s = strcat(s, ", ", _("Cloaked"));
@@ -232,7 +232,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		w = get_weaponinfo(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
-		if(j & 1 == 0)
+		if((j & 1) == 0)
 			me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.message)));

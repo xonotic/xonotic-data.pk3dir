@@ -736,7 +736,12 @@ void GameCommand_gametype(float request, float argc)
 					MapInfo_SwitchGameType(t);
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					if(MapInfo_count > 0)
+					{
+						// update lsmaps in case the gametype changed, this way people can easily list maps for it
+						if(lsmaps_reply != "") { strunzone(lsmaps_reply); }
+						lsmaps_reply = strzone(getlsmaps());
 						bprint("Game type successfully switched to ", s, "\n");
+					}
 					else
 					{
 						bprint("Cannot use this game type: no map for it found\n");
