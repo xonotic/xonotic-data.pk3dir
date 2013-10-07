@@ -1,0 +1,3 @@
+.vector ok_deathloc;
+.float  ok_spawnsys_timer;
+.float  ok_lastwep;
