@@ -1,5 +1,8 @@
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER) && frag_target == frag_attacker)
+		frag_damage = 0;
+
 	if(!IS_PLAYER(frag_target) || frag_target == frag_attacker)
 		return FALSE;
 
@@ -11,7 +14,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 		Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
 
 	frag_force = '0 0 0';
-	//frag_attacker = frag_target;
 
 	return FALSE;
 }
@@ -39,14 +41,16 @@ void ok_Item_Touch()
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
-	entity oldself = self;
-	float gpi = autocvar_g_pickup_items;
-
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
+
+	entity oldself = self;
+	float gpi = autocvar_g_pickup_items;
+	
 	cvar_set("g_pickup_items", "1");
 	self = spawn();
 	self.noalign = TRUE;
+	self.ok_item = TRUE;
 	spawnfunc_item_armor_small();
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
@@ -189,6 +193,7 @@ void start_hmg()
 	float gpi = autocvar_g_pickup_items;
 	cvar_set("g_pickup_items", "1");
 	self.classname = "weapon_hmg";
+	self.ok_item = TRUE;
 	//self.weapons = WEP_HMG;
 	//self.flags |= FL_POWERUP;
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
@@ -204,6 +209,7 @@ void start_rpc()
 	cvar_set("g_pickup_items", "1");
 	self.classname = "weapon_rpc";
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
+	self.ok_item = TRUE;
 	//self.weapons = WEP_RPC;
 	//self.flags |= FL_POWERUP;
 	setmodel(self, "models/weapons/g_ok_rl.md3");
@@ -215,6 +221,7 @@ void start_mh_anyway()
 {
 	cvar_set("g_pickup_items", "1");
 	self.classname = "item_health_mega";
+	self.ok_item = TRUE;
 	spawnfunc_item_health_mega();
 	cvar_set("g_pickup_items", "0");
 }
@@ -223,6 +230,7 @@ void start_ma_anyway()
 {
 	cvar_set("g_pickup_items", "1");
 	self.classname = "item_armor_large";
+	self.ok_item = TRUE;
 	spawnfunc_item_armor_large();
 	cvar_set("g_pickup_items", "0");
 }
@@ -256,6 +264,9 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 {
+	if(self.ok_item)
+		return FALSE;
+
 	switch(self.items)
 	{
 		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
