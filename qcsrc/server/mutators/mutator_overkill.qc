@@ -104,8 +104,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 {
-	nades_CheckThrow();
-
 	return TRUE;
 }
 

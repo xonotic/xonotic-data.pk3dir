@@ -286,6 +286,12 @@ void nades_CheckThrow()
 	}
 }
 
+MUTATOR_HOOKFUNCTION(nades_CheckThrow)
+{
+	if(MUTATOR_RETURNVALUE) { nades_CheckThrow(); }
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
 	if(other.nade)
@@ -369,6 +375,7 @@ MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_nades)
 {
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_CheckThrow, CBC_ORDER_LAST);
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
