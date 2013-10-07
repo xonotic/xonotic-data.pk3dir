@@ -1371,6 +1371,10 @@ void CSQC_UpdateView(float w, float h)
 					float nex_charge, nex_chargepool;
 					nex_charge = getstatf(STAT_NEX_CHARGE);
 					nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
+					
+					float ok_ammo_charge, ok_ammo_chargepool;
+					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
+					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
 
 					if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 						nex_charge_movingavg = nex_charge;
@@ -1411,8 +1415,14 @@ void CSQC_UpdateView(float w, float h)
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring.tga";
 					}
-
-					if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
+					else if (ok_ammo_charge)
+					{
+						ring_value = ok_ammo_chargepool;
+						ring_alpha = autocvar_crosshair_ring_reload_alpha;
+						ring_rgb = wcross_color;
+						ring_image = "gfx/crosshair_ring.tga";
+					}
+					else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
 					{
 						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
 						ring_scale = autocvar_crosshair_ring_reload_size;

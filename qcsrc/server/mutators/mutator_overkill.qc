@@ -1,3 +1,41 @@
+void ok_DecreaseCharge(entity ent, float wep)
+{
+	if not(autocvar_g_overkill_ammo_charge) return;
+
+	entity wepent = get_weaponinfo(wep);
+
+	if(wepent.netname == "")
+		return; // dummy
+
+	ent.ammo_charge[wep] -= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname));
+}
+
+void ok_IncreaseCharge(entity ent, float wep)
+{
+	entity wepent = get_weaponinfo(wep);
+
+	if(wepent.netname == "")
+		return; // dummy
+
+	if(autocvar_g_overkill_ammo_charge)
+	if not(ent.BUTTON_ATCK)
+	if(ent.ammo_charge[wep] <= autocvar_g_overkill_ammo_charge_limit)
+		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
+}
+
+float ok_CheckWeaponCharge(entity ent, float wep, float swep)
+{
+	if not(autocvar_g_overkill_ammo_charge) return TRUE;
+	//if(wep != swep) return TRUE; // switching, don't even bother checking
+
+	entity wepent = get_weaponinfo(wep);
+
+	if(wepent.netname == "")
+		return 0; // dummy
+
+	return !(ent.ammo_charge[wep] < cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
+}
+
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER) && frag_target == frag_attacker)
@@ -49,8 +87,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	
 	cvar_set("g_pickup_items", "1");
 	self = spawn();
-	self.noalign = TRUE;
 	self.ok_item = TRUE;
+	self.noalign = TRUE;
 	spawnfunc_item_armor_small();
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
@@ -66,6 +104,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 {
+	nades_CheckThrow();
+
 	return TRUE;
 }
 
@@ -80,6 +120,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(self.freezetag_frozen)
 		return FALSE;
 
+	ok_IncreaseCharge(self, self.weapon);
+
 	if(self.BUTTON_ATCK2)
 		if(self.jump_interval <= time)
 		{
@@ -91,12 +133,45 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			self.weapon = w;
 		}
 
+	self.weapon_blocked = FALSE;
+
+	self.ok_ammo_charge = self.ammo_charge[self.weapon];
+
+	if(autocvar_g_overkill_ammo_charge)
+	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
+	{
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
+			self.ok_notice_time = time + 2;
+			play2(self, "weapons/dryfire.wav");
+		}
+		if(self.weaponentity.state != WS_CLEAR)
+			w_ready();
+
+		self.weapon_blocked = TRUE;
+	}
+
 	self.BUTTON_ATCK2 = 0;
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 {
+	if(autocvar_g_overkill_ammo_charge)
+	{
+		float i;
+
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			self.ammo_charge[i] = autocvar_g_overkill_ammo_charge_limit;
+
+		self.ok_use_ammocharge = 1;
+		self.ok_notice_time = time;
+	}
+	else
+		self.ok_use_ammocharge = 0;
+
 	if(autocvar_g_overkill_spawnsystem_delay_death)
 		self.ok_spawnsys_timer = time + autocvar_g_overkill_spawnsystem_delay_death;
 
@@ -237,23 +312,25 @@ void start_ma_anyway()
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
-	if(autocvar_g_powerups != 0)
+	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
 	if(self.classname == "item_strength")
 	{
 		entity wep = spawn();
 		setorigin(wep, self.origin);
+		wep.ok_item = TRUE;
 		wep.think = start_hmg;
 		wep.nextthink = time + 0.1;
 		return TRUE;
 	}
 
-	if(autocvar_g_powerups != 0)
+	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
 	if(self.classname == "item_invincible")
 	{
 		entity wep = spawn();
 		setorigin(wep, self.origin);
+		wep.ok_item = TRUE;
 		wep.think = start_rpc;
 		wep.nextthink = time + 0.1;
 		return TRUE;
@@ -274,6 +351,14 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 	}
 	
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
+{
+	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
+	self.ok_use_ammocharge = other.ok_use_ammocharge;
+
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_SetModname)
@@ -318,6 +403,11 @@ void ok_Initialize()
 	precache_model("models/weapons/v_ok_sniper.md3");
 	precache_model("models/weapons/g_ok_sniper.md3");
 
+	precache_sound("weapons/dryfire.wav");
+	
+	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
+	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
+
 	w_uzi(WR_PRECACHE);
 	w_nex(WR_PRECACHE);
 	w_shotgun(WR_PRECACHE);
@@ -358,6 +448,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

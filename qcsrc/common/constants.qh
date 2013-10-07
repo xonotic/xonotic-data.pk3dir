@@ -183,6 +183,9 @@ const float STAT_ROUNDSTARTTIME = 73;
 const float STAT_WEAPONS2 = 74;
 const float STAT_WEAPONS3 = 75;
 
+const float STAT_OK_AMMO_CHARGE = 76;
+const float STAT_OK_AMMO_CHARGEPOOl = 77;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;

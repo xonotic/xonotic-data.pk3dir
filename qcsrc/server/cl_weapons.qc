@@ -358,6 +358,8 @@ float forbidWeaponUse()
 		return 1;
 	if(self.player_blocked)
 		return 1;
+	if(self.weapon_blocked)
+		return 1;
 	if(self.freezetag_frozen)
 		return 1;
 	return 0;
