@@ -19,3 +19,6 @@
 #include "w_rifle.qc"
 #include "w_fireball.qc"
 #include "w_seeker.qc"
+#include "w_hmg.qc"
+#include "w_rpc.qc"
+

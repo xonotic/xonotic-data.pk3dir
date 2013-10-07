@@ -515,7 +515,12 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER,                   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") 
+	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_HMG_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhmg",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Heavy Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_HMG_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhmg",              _("^BG%s%s^K1 was torn to bits by ^BG%s^K1's Heavy Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_DIRECT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 got sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_SPLASH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 almost dodged ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_SUICIDE,                   2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",              _("^BG%s^K1 blew themself up with their Rocket Propelled Chainsaw%s%s"), "") 
 
 #define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -798,7 +803,12 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_TUBA_MURDER,                   NO_MSG,        INFO_WEAPON_TUBA_MURDER,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_TUBA_SUICIDE,                  NO_MSG,        INFO_WEAPON_TUBA_SUICIDE,                  CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
+	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_HMG_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_HMG_MURDER_SNIPE,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_HMG_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_HMG_MURDER_SPRAY,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RPC_MURDER_DIRECT,             NO_MSG,        INFO_WEAPON_RPC_MURDER_DIRECT,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RPC_MURDER_SPLASH,             NO_MSG,        INFO_WEAPON_RPC_MURDER_SPLASH,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RPC_SUICIDE,                   NO_MSG,        INFO_WEAPON_RPC_SUICIDE,                   NO_MSG)
 
 #define MULTITEAM_CHOICE2(default,challow,prefix,chtype,optiona,optionb) \
 	MSG_CHOICE_NOTIF(default, challow, prefix##RED, chtype, optiona##RED, optionb##RED) \

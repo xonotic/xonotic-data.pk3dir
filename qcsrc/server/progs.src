@@ -47,6 +47,7 @@ mutators/gamemode_nexball.qh
 mutators/gamemode_lms.qh
 mutators/mutator_dodging.qh
 mutators/mutator_nades.qh
+mutators/mutator_overkill.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -244,6 +245,7 @@ mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc
 mutators/mutator_vampire.qc
+mutators/mutator_overkill.qc
 mutators/mutator_spawn_near_teammate.qc
 mutators/mutator_physical_items.qc
 mutators/sandbox.qc

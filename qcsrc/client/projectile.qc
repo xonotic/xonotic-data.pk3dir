@@ -335,6 +335,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
 			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
+			
+			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -360,6 +362,7 @@ void Ent_Projectile()
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
+			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
@@ -368,17 +371,6 @@ void Ent_Projectile()
 			case PROJECTILE_GRENADE:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
-				break;
-			case PROJECTILE_NADE_RED_BURN:
-			case PROJECTILE_NADE_RED:
-			case PROJECTILE_NADE_BLUE_BURN:
-			case PROJECTILE_NADE_BLUE:
-				self.mins = '-3 -3 -3';
-				self.maxs = '3 3 3';
-				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = func_null;
-				self.scale = 1.5;
-				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
 				self.mins = '-3 -3 -3';
@@ -525,6 +517,7 @@ void Projectile_Precache()
 	precache_model("models/tracer.mdl");
 	
 	precache_model("models/weapons/v_ok_grenade.md3");
+	precache_model("models/weapons/ok_rocket.md3");
 
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
