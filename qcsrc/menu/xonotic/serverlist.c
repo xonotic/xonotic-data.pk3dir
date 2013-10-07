@@ -81,7 +81,11 @@ float SLIST_FIELD_PROTOCOL;
 float SLIST_FIELD_FREESLOTS;
 float SLIST_FIELD_PLAYERS;
 float SLIST_FIELD_QCSTATUS;
+float SLIST_FIELD_CATEGORY;
 float SLIST_FIELD_ISFAVORITE;
+float SLSF_DESCENDING = 1;
+float SLSF_FAVORITES = 2;
+float SLSF_CATEGORIES = 3;
 #endif
 
 #endif
@@ -103,6 +107,7 @@ void ServerList_UpdateFieldIDs()
 	SLIST_FIELD_FREESLOTS = gethostcacheindexforkey( "freeslots" );
 	SLIST_FIELD_PLAYERS = gethostcacheindexforkey( "players" );
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
+	SLIST_FIELD_CATEGORY = gethostcacheindexforkey( "category" );
 	SLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
 }
 
@@ -243,7 +248,8 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 	}
 	else */
 	{
-		float m, o, i, n; // moin moin
+		float m, i, n;
+		float listflags = 0;
 		string s, typestr, modstr;
 		s = me.filterString;
 
@@ -304,10 +310,13 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
 		}
-		o = 2; // favorites first
-		if(me.currentSortOrder < 0)
-			o |= 1; // descending
-		sethostcachesort(me.currentSortField, o);
+
+		// sorting flags
+		listflags |= SLSF_FAVORITES;
+		listflags |= SLSF_CATEGORIES;
+		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
+		sethostcachesort(me.currentSortField, listflags);
+		
 		resorthostcache();
 		if(mode >= 1)
 			refreshhostcache();
