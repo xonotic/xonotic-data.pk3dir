@@ -87,19 +87,27 @@ float SLSF_DESCENDING = 1;
 float SLSF_FAVORITES = 2;
 float SLSF_CATEGORIES = 4;
 
-#define SLIST_MAX_CATEGORIES 4
+#define SLIST_MAX_CATEGORIES 9
 float category_name[SLIST_MAX_CATEGORIES];
 float category_item[SLIST_MAX_CATEGORIES];
 float totcat; 
 #define CATEGORIES \
 	SLIST_CATEGORY(1, SLIST_CAT_FAVORITED, 1, _("Favorites")) \
 	SLIST_CATEGORY(1, SLIST_CAT_RECOMMENDED, 2, _("Recommended")) \
-	SLIST_CATEGORY(1, SLIST_CAT_CORE, 3, _("Core")) \
-	SLIST_CATEGORY(1, SLIST_CAT_MODIFIED, 4, _("Modified"))
+	SLIST_CATEGORY(1, SLIST_CAT_NORMAL, 3, _("Normal Servers")) \
+	SLIST_CATEGORY(1, SLIST_CAT_SERVERS, 4, _("Servers")) \
+	SLIST_CATEGORY(1, SLIST_CAT_XPM, 5, _("Competitive Mode")) \
+	SLIST_CATEGORY(1, SLIST_CAT_MODIFIED, 6, _("Modified Servers")) \
+	SLIST_CATEGORY(1, SLIST_CAT_OVERKILL, 7, _("Overkill Mode")) \
+	SLIST_CATEGORY(1, SLIST_CAT_MINSTAGIB, 8, _("MinstaGib Mode")) \
+	SLIST_CATEGORY(1, SLIST_CAT_DEFRAG, 9, _("Defrag Mode")) 
 
 #define SLIST_CATEGORY(default,name,num,string) const float name = num;
 CATEGORIES
 #undef SLIST_CATEGORY
+
+var float autocvar_menu_serverlist_purethreshold = 10;
+var float autocvar_menu_serverlist_xpm_is_normal = TRUE; 
 #endif
 
 #endif
@@ -107,11 +115,8 @@ CATEGORIES
 #ifdef IMPLEMENTATION
 float m_getserverlistentrycategory(float entry)
 {
-	//print("m_getserverlistentrycategory\n"); 
-	string modtype = gethostcachestring(SLIST_FIELD_MOD, entry);
-
-	string s, k, v;
-	float j, m, pure;
+	string s, k, v, modtype = "";
+	float j, m, impure;
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
 	m = tokenizebyseparator(s, ":");
 	//typestr = "";
@@ -123,19 +128,50 @@ float m_getserverlistentrycategory(float entry)
 	//freeslots = -1;
 	//sflags = -1;
 	//modname = "";
-	pure = 0;
+	impure = 0;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
 			break;
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		if(k == "P") { pure = stof(v); }
+		if(k == "P") { impure = stof(v); }
+		else if(k == "M") { modtype = strtolower(v); }
 	}
 
+	//print(sprintf("modtype = %s\n", modtype)); 
+
+	if(impure > autocvar_menu_serverlist_purethreshold) { impure = TRUE; }
+	else { impure = FALSE; }
+
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return SLIST_CAT_FAVORITED; }
-	else if((modtype != "data") || (pure)) { return SLIST_CAT_MODIFIED; }
-	else { return SLIST_CAT_CORE; } 
+	else if(modtype != "xonotic")
+	{
+		switch(modtype)
+		{
+			// old servers which don't report their mod name are considered modified now
+			case "": { return SLIST_CAT_MODIFIED; }
+			
+			case "xpm": { return (autocvar_menu_serverlist_xpm_is_normal ? SLIST_CAT_NORMAL : SLIST_CAT_XPM); } 
+			case "minstagib": { return SLIST_CAT_MINSTAGIB; }
+			case "overkill": { return SLIST_CAT_OVERKILL; }
+
+			// "cts" is allowed as compat, xdf is replacement
+			case "cts": 
+			case "xdf": { return SLIST_CAT_DEFRAG; }
+			
+			//if(modname != "CTS")
+			//if(modname != "NIX")
+			//if(modname != "NewToys")
+			
+			default: { print(sprintf("Found strange mod type: %s\n", modtype)); return SLIST_CAT_MODIFIED; }
+		}
+	}
+	else { return (impure ? SLIST_CAT_MODIFIED : SLIST_CAT_NORMAL); }
+
+	// should never hit this point
+	error("wtf m_getserverlistentrycategory fail?");
+	return FALSE;
 }
 
 float XonoticServerList_MapItems(float num)
@@ -152,8 +188,9 @@ float XonoticServerList_MapItems(float num)
 		else if((num - i) <= category_item[n]) { /*print("next item... \\/\n");*/ return (num - n); }
 	}
 
-	error("wtf mapitems fail?"); // should not really be hit
-	return FALSE; // so compiler shuts up
+	// should never hit this point
+	error("wtf XonoticServerList_MapItems fail?");
+	return FALSE;
 }
 
 void ServerList_UpdateFieldIDs()
@@ -464,7 +501,7 @@ void XonoticServerList_draw(entity me)
 		}
 	}
 
-	print(sprintf("^1SERVERLIST_DRAW^7: servercount: %d, nitems: %d\n", itemcount, me.nItems));
+	//print(sprintf("^1SERVERLIST_DRAW^7: servercount: %d, nitems: %d\n", itemcount, me.nItems));
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
@@ -730,7 +767,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	string s, typestr, versionstr, k, v, modname;
 
 	float cache = XonoticServerList_MapItems(i);
-	print(sprintf("time: %f, i: %d, cache: %d, nitems: %d\n", time, i, cache, me.nItems));
+	//print(sprintf("time: %f, i: %d, cache: %d, nitems: %d\n", time, i, cache, me.nItems));
 	
 	if(cache < 0)
 	{
