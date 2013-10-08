@@ -47,13 +47,31 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, getItemAtPos, float(entity, float))
 	METHOD(ListBox, getItemStart, float(entity, float))
 	METHOD(ListBox, getItemHeight, float(entity, float))
+	// NOTE: if getItemAt* are overridden, it may make sense to cache the
+	// start and height of the last item returned by getItemAtPos and fast
+	// track returning their properties for getItemStart and getItemHeight.
+	// The "hot" code path calls getItemAtPos first, then will query
+	// getItemStart and getItemHeight on it soon.
+	// When overriding, the following consistency rules must hold:
+	// getTotalHeight() == SUM(getItemHeight(i), i, 0, me.nItems-1)
+	// getItemStart(i+1) == getItemStart(i) + getItemHeight(i)
+	//   for 0 <= i < me.nItems-1
+	// getItemStart(0) == 0
+	// getItemStart(getItemAtPos(p)) <= p
+	//   if p >= 0
+	// getItemAtPos(p) == 0
+	//   if p < 0
+	// getItemStart(getItemAtPos(p)) + getItemHeight(getItemAtPos(p)) > p
+	//   if p < getTotalHeigt()
+	// getItemAtPos(p) == me.nItems - 1
+	//   if p >= getTotalHeight()
 ENDCLASS(ListBox)
 #endif
 
 #ifdef IMPLEMENTATION
 void ListBox_setSelected(entity me, float i)
 {
-	me.selectedItem = floor(0.5 + bound(0, i, me.nItems - 1));
+	me.selectedItem = bound(0, i, me.nItems - 1);
 }
 void ListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
