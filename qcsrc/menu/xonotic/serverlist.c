@@ -85,12 +85,45 @@ float SLIST_FIELD_CATEGORY;
 float SLIST_FIELD_ISFAVORITE;
 float SLSF_DESCENDING = 1;
 float SLSF_FAVORITES = 2;
-float SLSF_CATEGORIES = 3;
+float SLSF_CATEGORIES = 4;
+
+#define SLIST_MAX_CATEGORIES 4
+float category_name[SLIST_MAX_CATEGORIES];
+float category_item[SLIST_MAX_CATEGORIES];
+float totcat; 
+#define CATEGORIES \
+	SLIST_CATEGORY(1, SLIST_CAT_FAVORITED, 1, _("Favorites")) \
+	SLIST_CATEGORY(1, SLIST_CAT_RECOMMENDED, 2, _("Recommended")) \
+	SLIST_CATEGORY(1, SLIST_CAT_CORE, 3, _("Core")) \
+	SLIST_CATEGORY(1, SLIST_CAT_MODIFIED, 4, _("Modified"))
+
+#define SLIST_CATEGORY(default,name,num,string) const float name = num;
+CATEGORIES
+#undef SLIST_CATEGORY
 #endif
 
 #endif
 
 #ifdef IMPLEMENTATION
+float XonoticServerList_MapItems(float num)
+{
+	float i, n;
+
+	if not(totcat) { return num; } // there are no categories to process
+
+	//if(num == 0) { print("FIRST vvv\n"); return -category_name[0]; }
+	for(i = 0, n = 1; n <= totcat; ++i, ++n)
+	{
+		//print(sprintf("num: %d, i: %d, totcat: %d, category_item[i]: %d\n", num, i, totcat, category_item[i])); 
+		if(category_item[i] == (num - i)) { return -category_name[i]; }
+		else if(num <= category_item[n]) { return (num - n); }
+		else if(n == totcat) { return (num - n); }
+		//else if(num < category_item[n]) { print("hit next vvv\n"); return (num - n); }
+	}
+
+	return -100; // should not really be hit
+}
+
 void ServerList_UpdateFieldIDs()
 {
 	SLIST_FIELD_CNAME = gethostcacheindexforkey( "cname" );
@@ -214,7 +247,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 }
 void XonoticServerList_setSelected(entity me, float i)
 {
-	float save;
+	float save, num;
 	save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
 	/*
@@ -223,16 +256,20 @@ void XonoticServerList_setSelected(entity me, float i)
 	*/
 	if(me.nItems == 0)
 		return;
-	//if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != me.nItems)
-	//	return; // sorry, it would be wrong
+	//if(XonoticServerList_MapItems(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT)) != me.nItems)
+	//	{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
 
-	if(me.selectedServer)
-		strunzone(me.selectedServer);
-	me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+	num = XonoticServerList_MapItems(me.selectedItem);
+	if(num >= 0)
+	{
+		if(me.selectedServer)
+			strunzone(me.selectedServer);
+		me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, num));
 
-	me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
-	me.ipAddressBox.cursorPos = strlen(me.selectedServer);
-	me.ipAddressBoxFocused = -1;
+		me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
+		me.ipAddressBox.cursorPos = strlen(me.selectedServer);
+		me.ipAddressBoxFocused = -1;
+	}
 }
 void XonoticServerList_refreshServerList(entity me, float mode)
 {
@@ -332,10 +369,10 @@ void XonoticServerList_focusEnter(entity me)
 	me.nextRefreshTime = time + 10;
 	me.refreshServerList(me, 1);
 }
-float category_drawn;
+
 void XonoticServerList_draw(entity me)
 {
-	float i, found, owned;
+	float i, found, owned, num;
 
 	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
 	{
@@ -361,7 +398,44 @@ void XonoticServerList_draw(entity me)
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) + 1;
+	for(i = 0; i < SLIST_MAX_CATEGORIES; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	totcat = 0;
+
+	float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+	//float visible = floor(me.scrollPos / me.itemHeight);
+	me.nItems = itemcount;
+
+	float favorites_drawn = 0, core_drawn = 0;
+
+	for(i = 0; i < itemcount; ++i)
+	{
+		if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
+		{
+			if not(favorites_drawn)
+			if(category_name[totcat] == -1)
+			{
+				category_name[totcat] = SLIST_CAT_FAVORITED;
+				category_item[totcat] = i;
+				++totcat;
+				++favorites_drawn;
+				++me.nItems; // we just inserted a category, increase number of items
+			}
+		}
+		else
+		{
+			if not(core_drawn)
+			if(category_name[totcat] == -1)
+			{
+				category_name[totcat] = SLIST_CAT_CORE;
+				category_item[totcat] = i;
+				++totcat;
+				++core_drawn;
+				++me.nItems; // we just inserted a category, increase number of items
+			}
+		}
+	}
+
+	print(sprintf("^1SERVERLIST_DRAW^7: servercount: %d, nitems: %d\n", itemcount, me.nItems));
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
@@ -371,27 +445,35 @@ void XonoticServerList_draw(entity me)
 	if(me.selectedServer)
 	{
 		for(i = 0; i < me.nItems; ++i)
-			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
+		{
+			num = XonoticServerList_MapItems(i);
+			if(num >= 0)
 			{
-				if(i != me.selectedItem)
+				if(gethostcachestring(SLIST_FIELD_CNAME, num) == me.selectedServer)
 				{
-					me.lastClickedServer = -1;
-					me.selectedItem = i;
+					if(i != me.selectedItem)
+					{
+						me.lastClickedServer = -1;
+						me.selectedItem = i;
+					}
+					found = 1;
+					break;
 				}
-				found = 1;
-				break;
 			}
+		}
 	}
 	if(!found)
+	{
 		if(me.nItems > 0)
 		{
-			if(me.selectedItem >= me.nItems)
-				me.selectedItem = me.nItems - 1;
-			if(me.selectedServer)
-				strunzone(me.selectedServer);
-			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
-		}
+			if(me.selectedItem >= me.nItems) { me.selectedItem = me.nItems - 1; }
+			if(me.selectedServer) { strunzone(me.selectedServer); }
 
+			num = XonoticServerList_MapItems(me.selectedItem);
+			if(num >= 0) { me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, num)); }
+		}
+	}
+	
 	if(owned)
 	{
 		if(me.selectedServer != me.ipAddressBox.text)
@@ -409,7 +491,6 @@ void XonoticServerList_draw(entity me)
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
-	category_drawn = 0;
 	SUPER(XonoticServerList).draw(me);
 }
 void ServerList_PingSort_Click(entity btn, entity me)
@@ -594,21 +675,21 @@ void ServerList_Favorite_Click(entity btn, entity me)
 }
 void ServerList_Info_Click(entity btn, entity me)
 {
-	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, XonoticServerList_MapItems(me.selectedItem));
 	DialogOpenButton_Click(me, main.serverInfoDialog);
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedServer)
+	float num = XonoticServerList_MapItems(i);
+	if(num == me.lastClickedServer)
 		if(time < me.lastClickedTime + 0.3)
 		{
 			// DOUBLE CLICK!
 			ServerList_Connect_Click(NULL, me);
 		}
-	me.lastClickedServer = i;
+	me.lastClickedServer = num;
 	me.lastClickedTime = time;
 }
-float category_drawn;
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
@@ -619,9 +700,33 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
-	float cache = i;
+	float cache = XonoticServerList_MapItems(i);
+	print(sprintf("time: %f, i: %d, cache: %d, nitems: %d\n", time, i, cache, me.nItems));
+	
+	if(cache < 0)
+	{
+		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+		return;
+	}
+	
+	/*float n;
+	for(n = 0; n < SLIST_MAX_CATEGORIES; ++n)
+	{
+		if(categories[n] == i)
+		{
+			if(categories_drawn[n] == -1)
+			{
+				draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+				categories_drawn[n] = TRUE;
+				++total_categories_drawn;
+				return;
+			}
+		}
+	}
 
-	if(category_drawn)
+	cache -= total_categories_drawn; */
+
+/*	if(category_drawn)
 	{
 		cache -= 1;
 		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
@@ -632,7 +737,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
 		category_drawn = TRUE;
 		return;
-	}
+	}*/
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
@@ -838,7 +943,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float i;
+	float i = XonoticServerList_MapItems(me.selectedItem);
 	vector org, sz;
 
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
@@ -851,9 +956,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_MOUSE2 || scan == K_SPACE)
 	{
-		if(me.nItems != 0)
+		if((me.nItems != 0) && (i >= 0))
 		{
-			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, i);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 			return 1;
 		}
@@ -861,8 +966,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
-		i = me.selectedItem;
-		if(i < me.nItems)
+		if((me.nItems != 0) && (i >= 0))
 		{
 			ToggleFavorite(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
