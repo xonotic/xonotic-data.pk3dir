@@ -105,6 +105,39 @@ CATEGORIES
 #endif
 
 #ifdef IMPLEMENTATION
+float m_getserverlistentrycategory(float entry)
+{
+	//print("m_getserverlistentrycategory\n"); 
+	string modtype = gethostcachestring(SLIST_FIELD_MOD, entry);
+
+	string s, k, v;
+	float j, m, pure;
+	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
+	m = tokenizebyseparator(s, ":");
+	//typestr = "";
+	//if(m >= 2)
+	//{
+	//	typestr = argv(0);
+	//	versionstr = argv(1);
+	//}
+	//freeslots = -1;
+	//sflags = -1;
+	//modname = "";
+	pure = 0;
+	for(j = 2; j < m; ++j)
+	{
+		if(argv(j) == "")
+			break;
+		k = substring(argv(j), 0, 1);
+		v = substring(argv(j), 1, -1);
+		if(k == "P") { pure = stof(v); }
+	}
+
+	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return SLIST_CAT_FAVORITED; }
+	else if((modtype != "data") || (pure)) { return SLIST_CAT_MODIFIED; }
+	else { return SLIST_CAT_CORE; } 
+}
+
 float XonoticServerList_MapItems(float num)
 {
 	float i, n;
@@ -114,9 +147,9 @@ float XonoticServerList_MapItems(float num)
 	for(i = 0, n = 1; n <= totcat; ++i, ++n)
 	{
 		//print(sprintf("num: %d, i: %d, totcat: %d, category_item[i]: %d\n", num, i, totcat, category_item[i])); 
-		if(category_item[i] == (num - i)) { return -category_name[i]; }
-		else if(num <= category_item[n]) { return (num - n); }
-		else if(n == totcat) { return (num - n); }
+		if(category_item[i] == (num - i)) { /*print("inserting cat... \\/\n");*/ return -category_name[i]; }
+		else if(n == totcat) { /*print("end item... \\/\n");*/ return (num - n); }
+		else if((num - i) <= category_item[n]) { /*print("next item... \\/\n");*/ return (num - n); }
 	}
 
 	error("wtf mapitems fail?"); // should not really be hit
@@ -283,80 +316,79 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		me.needsRefresh = 1; // net_slist kills sort order, so we need to restore it later
 	}
 	else */
+	
+	float m, i, n;
+	float listflags = 0;
+	string s, typestr, modstr;
+	s = me.filterString;
+
+	m = strstrofs(s, ":", 0);
+	if(m >= 0)
 	{
-		float m, i, n;
-		float listflags = 0;
-		string s, typestr, modstr;
-		s = me.filterString;
-
-		m = strstrofs(s, ":", 0);
-		if(m >= 0)
-		{
-			typestr = substring(s, 0, m);
-			s = substring(s, m + 1, strlen(s) - m - 1);
-			while(substring(s, 0, 1) == " ")
-				s = substring(s, 1, strlen(s) - 1);
-		}
-		else
-			typestr = "";
-
-		modstr = cvar_string("menu_slist_modfilter");
-
-		m = SLIST_MASK_AND - 1;
-		resethostcachemasks();
-
-		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
-		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
-
-		// show full button
-		if(!me.filterShowFull)
-		{
-			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
-		}
-
-		// show empty button
-		if(!me.filterShowEmpty)
-			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
-
-		// gametype filtering
-		if(typestr != "")
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
-
-		// mod filtering
-		if(modstr != "")
-		{
-			if(substring(modstr, 0, 1) == "!")
-				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(substring(modstr, 1, strlen(modstr) - 1)), SLIST_TEST_NOTEQUAL);
-			else
-				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
-		}
-
-		// server banning
-		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
-		for(i = 0; i < n; ++i)
-			if(argv(i) != "")
-				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
-
-		m = SLIST_MASK_OR - 1;
-		if(s != "")
-		{
-			sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
-			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
-		}
-
-		// sorting flags
-		//listflags |= SLSF_FAVORITES;
-		listflags |= SLSF_CATEGORIES;
-		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
-		sethostcachesort(me.currentSortField, listflags);
-		
-		resorthostcache();
-		if(mode >= 1)
-			refreshhostcache();
+		typestr = substring(s, 0, m);
+		s = substring(s, m + 1, strlen(s) - m - 1);
+		while(substring(s, 0, 1) == " ")
+			s = substring(s, 1, strlen(s) - 1);
 	}
+	else
+		typestr = "";
+
+	modstr = cvar_string("menu_slist_modfilter");
+
+	m = SLIST_MASK_AND - 1;
+	resethostcachemasks();
+
+	// ping: reject negative ping (no idea why this happens in the first place, engine bug)
+	sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
+
+	// show full button
+	if(!me.filterShowFull)
+	{
+		sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
+		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
+	}
+
+	// show empty button
+	if(!me.filterShowEmpty)
+		sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+
+	// gametype filtering
+	if(typestr != "")
+		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+
+	// mod filtering
+	if(modstr != "")
+	{
+		if(substring(modstr, 0, 1) == "!")
+			sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(substring(modstr, 1, strlen(modstr) - 1)), SLIST_TEST_NOTEQUAL);
+		else
+			sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
+	}
+
+	// server banning
+	n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+	for(i = 0; i < n; ++i)
+		if(argv(i) != "")
+			sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
+
+	m = SLIST_MASK_OR - 1;
+	if(s != "")
+	{
+		sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
+		sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
+		sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
+		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
+	}
+
+	// sorting flags
+	//listflags |= SLSF_FAVORITES;
+	listflags |= SLSF_CATEGORIES;
+	if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
+	sethostcachesort(me.currentSortField, listflags);
+	
+	resorthostcache();
+	if(mode >= 1)
+		refreshhostcache();
 }
 void XonoticServerList_focusEnter(entity me)
 {
@@ -404,32 +436,30 @@ void XonoticServerList_draw(entity me)
 	//float visible = floor(me.scrollPos / me.itemHeight);
 	me.nItems = itemcount;
 
-	float favorites_drawn = 0, core_drawn = 0;
-
+	float cat, x;
 	for(i = 0; i < itemcount; ++i)
 	{
-		if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
+		cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
+		if(cat)
 		{
-			if not(favorites_drawn)
-			if(category_name[totcat] == -1)
+			if(totcat == 0)
 			{
-				category_name[totcat] = SLIST_CAT_FAVORITED;
+				category_name[totcat] = cat;
 				category_item[totcat] = i;
 				++totcat;
-				++favorites_drawn;
-				++me.nItems; // we just inserted a category, increase number of items
+				++me.nItems;
 			}
-		}
-		else
-		{
-			if not(core_drawn)
-			if(category_name[totcat] == -1)
+			else
 			{
-				category_name[totcat] = SLIST_CAT_CORE;
-				category_item[totcat] = i;
-				++totcat;
-				++core_drawn;
-				++me.nItems; // we just inserted a category, increase number of items
+				found = 0;
+				for(x = 0; x < totcat; ++x) { if(cat == category_name[x]) { found = 1; } }
+				if not(found)
+				{
+					category_name[totcat] = cat;
+					category_item[totcat] = i;
+					++totcat;
+					++me.nItems;
+				}
 			}
 		}
 	}
