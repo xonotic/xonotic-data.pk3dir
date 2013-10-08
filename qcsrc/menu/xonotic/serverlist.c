@@ -111,17 +111,16 @@ float XonoticServerList_MapItems(float num)
 
 	if not(totcat) { return num; } // there are no categories to process
 
-	//if(num == 0) { print("FIRST vvv\n"); return -category_name[0]; }
 	for(i = 0, n = 1; n <= totcat; ++i, ++n)
 	{
 		//print(sprintf("num: %d, i: %d, totcat: %d, category_item[i]: %d\n", num, i, totcat, category_item[i])); 
 		if(category_item[i] == (num - i)) { return -category_name[i]; }
 		else if(num <= category_item[n]) { return (num - n); }
 		else if(n == totcat) { return (num - n); }
-		//else if(num < category_item[n]) { print("hit next vvv\n"); return (num - n); }
 	}
 
-	return -100; // should not really be hit
+	error("wtf mapitems fail?"); // should not really be hit
+	return FALSE; // so compiler shuts up
 }
 
 void ServerList_UpdateFieldIDs()
@@ -349,7 +348,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		}
 
 		// sorting flags
-		listflags |= SLSF_FAVORITES;
+		//listflags |= SLSF_FAVORITES;
 		listflags |= SLSF_CATEGORIES;
 		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
 		sethostcachesort(me.currentSortField, listflags);
@@ -705,39 +704,15 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	
 	if(cache < 0)
 	{
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
-		return;
-	}
-	
-	/*float n;
-	for(n = 0; n < SLIST_MAX_CATEGORIES; ++n)
-	{
-		if(categories[n] == i)
+		switch(-cache)
 		{
-			if(categories_drawn[n] == -1)
-			{
-				draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
-				categories_drawn[n] = TRUE;
-				++total_categories_drawn;
-				return;
-			}
+			#define SLIST_CATEGORY(default,name,num,string) case num: { draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(string, 0, me.realFontSize)) * 0.5) * eX, string, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0); return; }
+			CATEGORIES
+			#undef SLIST_CATEGORY
+			default: return;
 		}
 	}
-
-	cache -= total_categories_drawn; */
-
-/*	if(category_drawn)
-	{
-		cache -= 1;
-		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
-	}
-	else
-	{
-		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth("category", 0, me.realFontSize)) * 0.5) * eX, "category", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
-		print(sprintf("time: %f, category_drawn: %d, i: %d, cache: %d, nitems: %d\n", time, category_drawn, i, cache, me.nItems));
-		category_drawn = TRUE;
-		return;
-	}*/
+	
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
