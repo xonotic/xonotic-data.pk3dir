@@ -106,13 +106,33 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	}
 	else if(key == K_PGUP || key == K_KP_PGUP)
 	{
-		me.scrollPos = max(me.scrollPos - 1, 0);
-		me.setSelected(me, min(me.selectedItem, me.getLastFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+		float i = me.selectedItem;
+		float a = me.getItemHeight(me, i);
+		for(;;)
+		{
+			--i;
+			if (i < 0)
+				break;
+			a += me.getItemHeight(me, i);
+			if (a >= 1)
+				break;
+		}
+		me.setSelected(me, i + 1);
 	}
 	else if(key == K_PGDN || key == K_KP_PGDN)
 	{
-		me.scrollPos = min(me.scrollPos + 1, me.getTotalHeight(me) - 1);
-		me.setSelected(me, max(me.selectedItem, me.getFirstFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+		float i = me.selectedItem;
+		float a = me.getItemHeight(me, i);
+		for(;;)
+		{
+			++i;
+			if (i >= me.nItems)
+				break;
+			a += me.getItemHeight(me, i);
+			if (a >= 1)
+				break;
+		}
+		me.setSelected(me, i - 1);
 	}
 	else if(key == K_UPARROW || key == K_KP_UPARROW)
 		me.setSelected(me, me.selectedItem - 1);
@@ -325,7 +345,7 @@ void ListBox_draw(entity me)
 		absSize = boxToGlobalSize(relSize, me.size);
 		draw_scale = boxToGlobalSize(relSize, oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
-		y += absSize_y;
+		y += relSize_y;
 	}
 	draw_ClearClip();
 
