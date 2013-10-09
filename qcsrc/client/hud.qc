@@ -3704,9 +3704,7 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == MAPINFO_TYPE_ARENA)
-				s = _("^1Wait for your turn to join");
-			else if(gametype == MAPINFO_TYPE_LMS)
+			if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];

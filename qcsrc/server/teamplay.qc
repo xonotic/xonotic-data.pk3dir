@@ -115,13 +115,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_lms);
 	}
 
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
-	}
-
 	if(g_ca)
 	{
 		ActivateTeamplay();
