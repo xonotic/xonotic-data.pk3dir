@@ -150,7 +150,7 @@ const float TNSF_FULL_UPDATE  = 16777215;
 //  Turret Registration
 // =====================
 
-float m_null(float dummy);
+float t_null(float dummy);
 void register_turret(float id, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname);
 void register_turrets_done();
 
@@ -171,7 +171,7 @@ float TUR_LAST;
 	ACCUMULATE_FUNCTION(RegisterTurrets, RegisterTurrets_##id)
 #ifdef MENUQC
 #define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
-	REGISTER_TURRET_2(TUR_##id,m_null,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
+	REGISTER_TURRET_2(TUR_##id,t_null,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #else
 #define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
 	REGISTER_TURRET_2(TUR_##id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
