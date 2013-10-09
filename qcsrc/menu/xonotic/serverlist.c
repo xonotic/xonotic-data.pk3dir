@@ -58,48 +58,62 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
-void ServerList_Connect_Click(entity btn, entity me);
-void ServerList_ShowEmpty_Click(entity box, entity me);
-void ServerList_ShowFull_Click(entity box, entity me);
-void ServerList_Filter_Change(entity box, entity me);
-void ServerList_Favorite_Click(entity btn, entity me);
-void ServerList_Info_Click(entity btn, entity me);
-void ServerList_Update_favoriteButton(entity btn, entity me);
-
 #ifndef IMPLEMENTATION
-float SLIST_FIELD_CNAME;
-float SLIST_FIELD_PING;
-float SLIST_FIELD_GAME;
-float SLIST_FIELD_MOD;
-float SLIST_FIELD_MAP;
-float SLIST_FIELD_NAME;
-float SLIST_FIELD_MAXPLAYERS;
-float SLIST_FIELD_NUMPLAYERS;
-float SLIST_FIELD_NUMHUMANS;
-float SLIST_FIELD_NUMBOTS;
-float SLIST_FIELD_PROTOCOL;
-float SLIST_FIELD_FREESLOTS;
-float SLIST_FIELD_PLAYERS;
-float SLIST_FIELD_QCSTATUS;
-float SLIST_FIELD_CATEGORY;
-float SLIST_FIELD_ISFAVORITE;
+var float autocvar_menu_serverlist_categories = TRUE;
+var float autocvar_menu_serverlist_purethreshold = 10;
+var string autocvar_menu_serverlist_recommended = "76.124.107.5:26004";
+
+// server cache fields
+#define SLIST_FIELDS \
+	SLIST_FIELD(CNAME,       "cname") \
+	SLIST_FIELD(PING,        "ping") \
+	SLIST_FIELD(GAME,        "game") \
+	SLIST_FIELD(MOD,         "mod") \
+	SLIST_FIELD(MAP,         "map") \
+	SLIST_FIELD(NAME,        "name") \
+	SLIST_FIELD(MAXPLAYERS,  "maxplayers") \
+	SLIST_FIELD(NUMPLAYERS,  "numplayers") \
+	SLIST_FIELD(NUMHUMANS,   "numhumans") \
+	SLIST_FIELD(NUMBOTS,     "numbots") \
+	SLIST_FIELD(PROTOCOL,    "protocol") \
+	SLIST_FIELD(FREESLOTS,   "freeslots") \
+	SLIST_FIELD(PLAYERS,     "players") \
+	SLIST_FIELD(QCSTATUS,    "qcstatus") \
+	SLIST_FIELD(CATEGORY,    "category") \
+	SLIST_FIELD(ISFAVORITE,  "isfavorite")
+
+#define SLIST_FIELD(suffix,name) float SLIST_FIELD_##suffix;
+SLIST_FIELDS
+#undef SLIST_FIELD
+
+// sort flags
 float SLSF_DESCENDING = 1;
 float SLSF_FAVORITES = 2;
 float SLSF_CATEGORIES = 4;
 
-#define CATEGORY_FIRST 1
+float Get_Cat_Num_FromString(string input);
+entity Get_Cat_Ent(float catnum);
+
+float IsServerInList(string list, string srv);
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsRecommended(srv) IsServerInList(cvar_string("menu_serverlist_recommended"), srv) // todo: use update notification instead of cvar
+
+float CheckCategoryOverride(float cat);
+
+// fields for category entities
 #define MAX_CATEGORIES 9
+#define CATEGORY_FIRST 1
 entity categories[MAX_CATEGORIES];
 float category_ent_count;
-
-float category_name[MAX_CATEGORIES];
-float category_item[MAX_CATEGORIES];
-float totcat;
-
 .string cat_name;
 .string cat_string;
 .string cat_override_string;
 .float cat_override;
+
+// fields for drawing categories
+float category_name[MAX_CATEGORIES];
+float category_item[MAX_CATEGORIES];
+float totcat;
 
 #define CATEGORIES \
 	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             _("Favorites")) \
@@ -111,77 +125,6 @@ float totcat;
 	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  _("Overkill Mode")) \
 	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  _("MinstaGib Mode")) \
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  _("Defrag Mode"))
-	
-void RegisterSLCategories_First()
-{
-	/*notif_global_error = FALSE;
-
-	#ifdef SVQC
-	#define dedi (server_is_dedicated ? "a dedicated " : "")
-	#else
-	#define dedi ""
-	#endif
-	
-	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));*/
-	
-	// maybe do another implementation of this with checksums? for now, we don't need versioning
-	/*if(autocvar_notification_version != NOTIF_VERSION)
-	{
-		#ifdef CSQC
-		if(autocvar_notification_version_mismatch_client_error)
-		#else
-		if(autocvar_notification_version_mismatch_server_error)
-		#endif
-			notif_global_error = TRUE;
-
-		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
-			PROGNAME, autocvar_notification_version, NOTIF_VERSION));
-	}*/
-}
-
-float Get_Cat_Num_FromString(string input)
-{
-	float i;
-	for(i = 0; i < category_ent_count; ++i) { if(categories[i].cat_name == input) { return (i + 1); } }
-	print(sprintf("Get_Cat_Num_FromString('%s'): Improper category name!\n", input));
-	return 0;
-}
-entity Get_Cat_Ent(float catnum)
-{
-	if((catnum > 0) && (catnum <= category_ent_count))
-	{
-		return categories[catnum - 1];
-	}
-	else
-	{
-		error(sprintf("Get_Cat_Ent(%d): Improper category number!\n", catnum));
-		return world;
-	}
-}
-
-void RegisterSLCategories_Done()
-{
-	float i, catnum;
-	string s;
-	for(i = 0; i < category_ent_count; ++i)
-	{
-		s = categories[i].cat_override_string;
-		if((s != "") && (s != categories[i].cat_name))
-		{
-			catnum = Get_Cat_Num_FromString(s);
-			if(catnum)
-			{
-				strunzone(categories[i].cat_override_string);
-				categories[i].cat_override = catnum;
-				continue;
-			}
-		}
-		strunzone(categories[i].cat_override_string);
-		categories[i].cat_override = 0;
-	}
-}
-
-var float autocvar_menu_serverlist_categories = TRUE;
 
 // C is stupid, must use extra macro for concatenation
 #define SLIST_ADD_CAT_CVAR(name,default) var string autocvar_menu_serverlist_categories_##name##_override = default;
@@ -204,19 +147,69 @@ var float autocvar_menu_serverlist_categories = TRUE;
 	} \
 	ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategory_##name);
 
-ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategories_First);
 CATEGORIES
+
+void RegisterSLCategories_Done()
+{
+	float i, catnum;
+	string s;
+	for(i = 0; i < category_ent_count; ++i)
+	{
+		s = categories[i].cat_override_string;
+		if((s != "") && (s != categories[i].cat_name))
+		{
+			catnum = Get_Cat_Num_FromString(s);
+			if(catnum)
+			{
+				strunzone(categories[i].cat_override_string);
+				categories[i].cat_override = catnum;
+				continue;
+			}
+		}
+		strunzone(categories[i].cat_override_string);
+		categories[i].cat_override = 0;
+	}
+}
 ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategories_Done);
+
 #undef SLIST_ADD_CAT_CVAR
 #undef SLIST_CATEGORY
+#undef CATEGORIES
 
-var float autocvar_menu_serverlist_purethreshold = 10;
-var string autocvar_menu_serverlist_recommended = "76.124.107.5:26004";
+void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_ShowEmpty_Click(entity box, entity me);
+void ServerList_ShowFull_Click(entity box, entity me);
+void ServerList_Filter_Change(entity box, entity me);
+void ServerList_Favorite_Click(entity btn, entity me);
+void ServerList_Info_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
+
 #endif
-
 #endif
-
 #ifdef IMPLEMENTATION
+
+// Supporting Functions
+float Get_Cat_Num_FromString(string input)
+{
+	float i;
+	for(i = 0; i < category_ent_count; ++i) { if(categories[i].cat_name == input) { return (i + 1); } }
+	print(sprintf("Get_Cat_Num_FromString('%s'): Improper category name!\n", input));
+	return 0;
+}
+entity Get_Cat_Ent(float catnum)
+{
+	if((catnum > 0) && (catnum <= category_ent_count))
+	{
+		return categories[catnum - 1];
+	}
+	else
+	{
+		error(sprintf("Get_Cat_Ent(%d): Improper category number!\n", catnum));
+		return world;
+	}
+}
+
+
 float IsServerInList(string list, string srv)
 {
 	string p;
@@ -245,10 +238,7 @@ float IsServerInList(string list, string srv)
 	return FALSE;
 }
 
-#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
-#define IsRecommended(srv) IsServerInList(cvar_string("menu_serverlist_recommended"), srv) // todo: use update notification instead of cvar
-
-float cat_checkoverride(float cat)
+float CheckCategoryOverride(float cat)
 {
 	entity catent = Get_Cat_Ent(cat);
 	if(catent)
@@ -258,7 +248,7 @@ float cat_checkoverride(float cat)
 	}
 	else
 	{
-		error(sprintf("cat_checkoverride(%d): Improper category number!\n", cat));
+		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
 		return cat;
 	}
 }
@@ -294,31 +284,31 @@ float m_getserverlistentrycategory(float entry)
 	if(impure > autocvar_menu_serverlist_purethreshold) { impure = TRUE; }
 	else { impure = FALSE; }
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return cat_checkoverride(CAT_FAVORITED); }
-	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return cat_checkoverride(CAT_RECOMMENDED); }
+	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CheckCategoryOverride(CAT_FAVORITED); }
+	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return CheckCategoryOverride(CAT_RECOMMENDED); }
 	else if(modtype != "xonotic")
 	{
 		switch(modtype)
 		{
 			// old servers which don't report their mod name are considered modified now
-			case "": { return cat_checkoverride(CAT_MODIFIED); }
+			case "": { return CheckCategoryOverride(CAT_MODIFIED); }
 			
-			case "xpm": { return cat_checkoverride(CAT_XPM); } 
-			case "minstagib": { return cat_checkoverride(CAT_MINSTAGIB); }
-			case "overkill": { return cat_checkoverride(CAT_OVERKILL); }
+			case "xpm": { return CheckCategoryOverride(CAT_XPM); } 
+			case "minstagib": { return CheckCategoryOverride(CAT_MINSTAGIB); }
+			case "overkill": { return CheckCategoryOverride(CAT_OVERKILL); }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts": 
-			case "xdf": { return cat_checkoverride(CAT_DEFRAG); }
+			case "xdf": { return CheckCategoryOverride(CAT_DEFRAG); }
 			
 			//if(modname != "CTS")
 			//if(modname != "NIX")
 			//if(modname != "NewToys")
 			
-			default: { print(sprintf("Found strange mod type: %s\n", modtype)); return cat_checkoverride(CAT_MODIFIED); }
+			default: { print(sprintf("Found strange mod type: %s\n", modtype)); return CheckCategoryOverride(CAT_MODIFIED); }
 		}
 	}
-	else { return cat_checkoverride((impure ? CAT_MODIFIED : CAT_NORMAL)); }
+	else { return CheckCategoryOverride((impure ? CAT_MODIFIED : CAT_NORMAL)); }
 
 	// should never hit this point
 	error("wtf m_getserverlistentrycategory fail?");
@@ -346,22 +336,9 @@ float XonoticServerList_MapItems(float num)
 
 void ServerList_UpdateFieldIDs()
 {
-	SLIST_FIELD_CNAME = gethostcacheindexforkey( "cname" );
-	SLIST_FIELD_PING = gethostcacheindexforkey( "ping" );
-	SLIST_FIELD_GAME = gethostcacheindexforkey( "game" );
-	SLIST_FIELD_MOD = gethostcacheindexforkey( "mod" );
-	SLIST_FIELD_MAP = gethostcacheindexforkey( "map" );
-	SLIST_FIELD_NAME = gethostcacheindexforkey( "name" );
-	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey( "maxplayers" );
-	SLIST_FIELD_NUMPLAYERS = gethostcacheindexforkey( "numplayers" );
-	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey( "numhumans" );
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey( "numbots" );
-	SLIST_FIELD_PROTOCOL = gethostcacheindexforkey( "protocol" );
-	SLIST_FIELD_FREESLOTS = gethostcacheindexforkey( "freeslots" );
-	SLIST_FIELD_PLAYERS = gethostcacheindexforkey( "players" );
-	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
-	SLIST_FIELD_CATEGORY = gethostcacheindexforkey( "category" );
-	SLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
+	#define SLIST_FIELD(suffix,name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
+	SLIST_FIELDS
+	#undef SLIST_FIELD
 }
 
 void ToggleFavorite(string srv)
