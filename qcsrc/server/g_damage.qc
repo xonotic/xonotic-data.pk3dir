@@ -732,7 +732,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || victim.turret_flags & TUR_FLAG_ISTURRET)
 			{
 				if(DIFF_TEAM(victim, attacker))
 				{

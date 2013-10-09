@@ -569,7 +569,7 @@ float bumb_pilot_frame()
 
 							trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
 						}
-						else if(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+						else if(trace_ent.turret_flags & TUR_FLAG_ISTURRET)
 						{
 							if(trace_ent.health  <= trace_ent.tur_health && autocvar_g_vehicle_bumblebee_healgun_hps)
 								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.tur_health);

@@ -1298,11 +1298,6 @@ void precache()
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
 
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
-
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
     {
