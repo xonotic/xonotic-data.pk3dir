@@ -334,13 +334,6 @@ float XonoticServerList_MapItems(float num)
 	return FALSE;
 }
 
-void ServerList_UpdateFieldIDs()
-{
-	#define SLIST_FIELD(suffix,name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
-	SLIST_FIELDS
-	#undef SLIST_FIELD
-}
-
 void ToggleFavorite(string srv)
 {
 	string s, s0, s1, s2, srv_resolved, p;
@@ -410,8 +403,12 @@ void XonoticServerList_configureXonoticServerList(entity me)
 {
 	me.configureXonoticListBox(me);
 
-	ServerList_UpdateFieldIDs();
+	// update field ID's
+	#define SLIST_FIELD(suffix,name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
+	SLIST_FIELDS
+	#undef SLIST_FIELD
 
+	// clear list
 	me.nItems = 0;
 }
 void XonoticServerList_setSelected(entity me, float i)
@@ -425,8 +422,10 @@ void XonoticServerList_setSelected(entity me, float i)
 	*/
 	if(me.nItems == 0)
 		return;
+
 	//if(XonoticServerList_MapItems(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT)) != me.nItems)
 	//	{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
+	// todo: make this work somehow? ^
 
 	num = XonoticServerList_MapItems(me.selectedItem);
 	if(num >= 0)
