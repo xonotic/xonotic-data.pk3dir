@@ -41,18 +41,18 @@ WALKER_SETTINGS(walker)
 #else
 #ifdef SVQC
 
-const float walker_anim_stop = 0;
-const float walker_anim_turn = 1;
-const float walker_anim_walk = 2;
-const float walker_anim_run = 3;
-const float walker_anim_strafeleft = 4;
-const float walker_anim_straferight = 5;
-const float walker_anim_jump = 6;
-const float walker_anim_land = 7;
-const float walker_anim_pain = 8;
-const float walker_anim_melee = 9;
-const float walker_anim_swim = 10;
-const float walker_anim_roam = 11;
+#define ANIM_NO         0
+#define ANIM_TURN       1
+#define ANIM_WALK       2
+#define ANIM_RUN        3
+#define ANIM_STRAFE_L   4
+#define ANIM_STRAFE_R   5
+#define ANIM_JUMP       6
+#define ANIM_LAND       7
+#define ANIM_PAIN       8
+#define ANIM_MELEE      9
+#define ANIM_SWIM       10
+#define ANIM_ROAM       11
 
 .float animflag;
 .float idletime;
@@ -61,7 +61,7 @@ const float walker_anim_roam = 11;
 
 float walker_firecheck()
 {
-	if (self.animflag == walker_anim_melee)
+	if (self.animflag == ANIM_MELEE)
 		return 0;
 
 	return turret_firecheck();
@@ -88,7 +88,7 @@ void walker_melee_do_dmg()
 
 void walker_setnoanim()
 {
-	turrets_setframe(walker_anim_stop, FALSE);
+	turrets_setframe(ANIM_NO, FALSE);
 	self.animflag = self.frame;
 }
 void walker_rocket_explode()
@@ -268,20 +268,20 @@ void walker_move_to(vector _target, float _dist)
 {
 	switch (self.waterlevel)
 	{
-	case WATERLEVEL_NONE:
-		if (_dist > 500)
-			self.animflag = walker_anim_run;
-		else
-			self.animflag = walker_anim_walk;
-	case WATERLEVEL_WETFEET:
-	case WATERLEVEL_SWIMMING:
-		if (self.animflag != walker_anim_swim)
-			self.animflag = walker_anim_walk;
-		else
-			self.animflag = walker_anim_swim;
-		break;
-	case WATERLEVEL_SUBMERGED:
-		self.animflag = walker_anim_swim;
+		case WATERLEVEL_NONE:
+			if (_dist > 500)
+				self.animflag = ANIM_RUN;
+			else
+				self.animflag = ANIM_WALK;
+		case WATERLEVEL_WETFEET:
+		case WATERLEVEL_SWIMMING:
+			if (self.animflag != ANIM_SWIM)
+				self.animflag = ANIM_WALK;
+			else
+				self.animflag = ANIM_SWIM;
+			break;
+		case WATERLEVEL_SUBMERGED:
+			self.animflag = ANIM_SWIM;
 	}
 
 	self.moveto = _target;
@@ -377,7 +377,7 @@ float t_walker(float req)
 					}
 					else
 					{
-						if(self.animflag != walker_anim_stop)
+						if(self.animflag != ANIM_NO)
 						{
 							traceline(self.origin + '0 0 64', self.origin + '0 0 64' + v_forward * 128, MOVE_NORMAL, self);
 
@@ -407,11 +407,11 @@ float t_walker(float req)
 							{
 								self.idletime = time + 1 + random() * 5;
 								self.moveto = self.origin;
-								self.animflag = walker_anim_stop;
+								self.animflag = ANIM_NO;
 							}
 							else
 							{
-								self.animflag = walker_anim_walk;
+								self.animflag = ANIM_WALK;
 								self.idletime = time + 4 + random() * 2;
 								self.moveto = self.origin + randomvec() * 256;
 								self.tur_head.moveto = self.moveto;
@@ -423,24 +423,24 @@ float t_walker(float req)
 			}
 			else
 			{
-				if (self.tur_dist_enemy < TUR_CVAR(walker, melee_range) && self.animflag != walker_anim_melee)
+				if (self.tur_dist_enemy < TUR_CVAR(walker, melee_range) && self.animflag != ANIM_MELEE)
 				{
 					vector wish_angle;
 
 					wish_angle = angleofs(self, self.enemy);
-					if (self.animflag != walker_anim_swim)
+					if (self.animflag != ANIM_SWIM)
 					if (fabs(wish_angle_y) < 15)
 					{
 						self.moveto   = self.enemy.origin;
 						self.steerto  = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-						self.animflag = walker_anim_melee;
+						self.animflag = ANIM_MELEE;
 					}
 				}
 				else if (self.tur_head.attack_finished_single < time)
 				{
 					if(self.tur_head.shot_volly)
 					{
-						self.animflag = walker_anim_stop;
+						self.animflag = ANIM_NO;
 
 						self.tur_head.shot_volly = self.tur_head.shot_volly -1;
 						if(self.tur_head.shot_volly == 0)
@@ -462,7 +462,7 @@ float t_walker(float req)
 				}
 				else
 				{
-					if (self.animflag != walker_anim_melee)
+					if (self.animflag != ANIM_MELEE)
 						walker_move_to(self.enemy.origin, self.tur_dist_enemy);
 				}
 			}
@@ -470,57 +470,57 @@ float t_walker(float req)
 			{
 				vector real_angle;
 				float turny = 0, turnx = 0;
-				float  vz;
+				float vz;
 
 				real_angle = vectoangles(self.steerto) - self.angles;
-				vz		 = self.velocity_z;
+				vz = self.velocity_z;
 
 				switch (self.animflag)
 				{
-					case walker_anim_stop:
+					case ANIM_NO:
 						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
 						break;
 
-					case walker_anim_turn:
+					case ANIM_TURN:
 						turny = TUR_CVAR(walker, turn);
 						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
 						break;
 
-					case walker_anim_walk:
+					case ANIM_WALK:
 						turny = TUR_CVAR(walker, turn_walk);
 						movelib_move_simple(v_forward, TUR_CVAR(walker, speed_walk), 0.6);
 						break;
 
-					case walker_anim_run:
+					case ANIM_RUN:
 						turny = TUR_CVAR(walker, turn_run);
 						movelib_move_simple(v_forward, TUR_CVAR(walker, speed_run), 0.6);
 						break;
 
-					case walker_anim_strafeleft:
+					case ANIM_STRAFE_L:
 						turny = TUR_CVAR(walker, turn_strafe);
 						movelib_move_simple(v_right * -1, TUR_CVAR(walker, speed_walk), 0.8);
 						break;
 
-					case walker_anim_straferight:
+					case ANIM_STRAFE_R:
 						turny = TUR_CVAR(walker, turn_strafe);
 						movelib_move_simple(v_right, TUR_CVAR(walker, speed_walk), 0.8);
 						break;
 
-					case walker_anim_jump:
+					case ANIM_JUMP:
 						self.velocity += '0 0 1' * TUR_CVAR(walker, speed_jump);
 						break;
 
-					case walker_anim_land:
+					case ANIM_LAND:
 						break;
 
-					case walker_anim_pain:
-						if(self.frame != walker_anim_pain)
+					case ANIM_PAIN:
+						if(self.frame != ANIM_PAIN)
 							defer(0.25, walker_setnoanim);
 
 						break;
 
-					case walker_anim_melee:
-						if(self.frame != walker_anim_melee)
+					case ANIM_MELEE:
+						if(self.frame != ANIM_MELEE)
 						{
 							defer(0.41, walker_setnoanim);
 							defer(0.21, walker_melee_do_dmg);
@@ -529,7 +529,7 @@ float t_walker(float req)
 						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
 						break;
 
-					case walker_anim_swim:
+					case ANIM_SWIM:
 						turny = TUR_CVAR(walker, turn_swim);
 						turnx = TUR_CVAR(walker, turn_swim);
 
@@ -538,7 +538,7 @@ float t_walker(float req)
 						vz = self.velocity_z + sin(time * 4) * 8;
 						break;
 
-					case walker_anim_roam:
+					case ANIM_ROAM:
 						turny = TUR_CVAR(walker, turn_walk);
 						movelib_move_simple(v_forward ,TUR_CVAR(walker, speed_roam), 0.5);
 						break;
