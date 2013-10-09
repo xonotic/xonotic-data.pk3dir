@@ -107,12 +107,44 @@ CATEGORIES
 #undef SLIST_CATEGORY
 
 var float autocvar_menu_serverlist_purethreshold = 10;
-var float autocvar_menu_serverlist_xpm_is_normal = TRUE; 
+var float autocvar_menu_serverlist_xpm_is_normal = TRUE;
+var string autocvar_menu_serverlist_recommended = "76.124.107.5:26004";
 #endif
 
 #endif
 
 #ifdef IMPLEMENTATION
+float IsServerInList(string list, string srv)
+{
+	string p;
+	float i, n;
+	if(srv == "")
+		return FALSE;
+	srv = netaddress_resolve(srv, 26000);
+	if(srv == "")
+		return FALSE;
+	p = crypto_getidfp(srv);
+	n = tokenize_console(list);
+	for(i = 0; i < n; ++i)
+	{
+		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
+		{
+			if(p)
+				if(argv(i) == p)
+					return TRUE;
+		}
+		else
+		{
+			if(srv == netaddress_resolve(argv(i), 26000))
+				return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsRecommended(srv) IsServerInList(cvar_string("menu_serverlist_recommended"), srv)
+
 float m_getserverlistentrycategory(float entry)
 {
 	string s, k, v, modtype = "";
@@ -145,6 +177,7 @@ float m_getserverlistentrycategory(float entry)
 	else { impure = FALSE; }
 
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return SLIST_CAT_FAVORITED; }
+	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return SLIST_CAT_RECOMMENDED; }
 	else if(modtype != "xonotic")
 	{
 		switch(modtype)
@@ -211,34 +244,6 @@ void ServerList_UpdateFieldIDs()
 	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
 	SLIST_FIELD_CATEGORY = gethostcacheindexforkey( "category" );
 	SLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
-}
-
-float IsFavorite(string srv)
-{
-	string p;
-	float i, n;
-	if(srv == "")
-		return FALSE;
-	srv = netaddress_resolve(srv, 26000);
-	if(srv == "")
-		return FALSE;
-	p = crypto_getidfp(srv);
-	n = tokenize_console(cvar_string("net_slist_favorites"));
-	for(i = 0; i < n; ++i)
-	{
-		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
-		{
-			if(p)
-				if(argv(i) == p)
-					return TRUE;
-		}
-		else
-		{
-			if(srv == netaddress_resolve(argv(i), 26000))
-				return TRUE;
-		}
-	}
-	return FALSE;
 }
 
 void ToggleFavorite(string srv)
