@@ -842,13 +842,6 @@ void ServerList_Filter_Change(entity box, entity me)
 void ServerList_Categories_Click(entity box, entity me)
 {
 	box.setChecked(box, autocvar_menu_slist_categories = !autocvar_menu_slist_categories);
-	///refreshhostcache(TRUE);
-
-	//cvar_set("net_slist_pause", "0");
-	//Destroy_Category_Entities();
-	//CALL_ACCUMULATED_FUNCTION(RegisterSLCategories);
-	//me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
-
 	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
