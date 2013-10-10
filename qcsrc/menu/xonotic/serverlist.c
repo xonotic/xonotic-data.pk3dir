@@ -1020,76 +1020,90 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 4: AES recommended and will be used
 	// 5: AES required
 
+	// --------------
+	//  RENDER ICONS
+	// --------------
+	vector iconSize = '0 0 0';
+	iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
+	iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
+
+	vector iconPos = '0 0 0';
+	iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
+	iconPos_y = (1 - iconSize_y) * 0.5;
+
+	string n;
+
+	if not(me.seenIPv4 && me.seenIPv6)
 	{
-		vector iconSize = '0 0 0';
-		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
-		iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
-
-		vector iconPos = '0 0 0';
-		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
-		iconPos_y = (1 - iconSize_y) * 0.5;
-
-		string n;
-
-		if not(me.seenIPv4 && me.seenIPv6)
-		{
-			iconPos_x += iconSize_x * 0.5;
-		}
-		else if(me.seenIPv4 && me.seenIPv6)
-		{
-			n = string_null;
-			if(isv6)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
-			else if(isv4)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
-			if(n)
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			iconPos_x += iconSize_x;
-		}
-
-		if(q > 0)
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
+		iconPos_x += iconSize_x * 0.5;
+	}
+	else if(me.seenIPv4 && me.seenIPv6)
+	{
+		n = string_null;
+		if(isv6)
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
+		else if(isv4)
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
+		if(n)
 			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
-		iconPos_x += iconSize_x;
-
-		if(modname == "Xonotic")
-		{
-			if(pure == 0)
-			{
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			}
-		}
-		else
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
-			if(draw_PictureSize(n) == '0 0 0')
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
-			if(pure == 0)
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			else
-				draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
-		}
-		iconPos_x += iconSize_x;
-
-		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
 		iconPos_x += iconSize_x;
 	}
 
+	if(q > 0)
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
+		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+	}
+	iconPos_x += iconSize_x;
+
+	if(modname == "Xonotic")
+	{
+		if(pure == 0)
+		{
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		}
+	}
+	else
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
+		if(draw_PictureSize(n) == '0 0 0')
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
+		if(pure == 0)
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		else
+			draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
+	}
+	iconPos_x += iconSize_x;
+
+	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
+		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+	}
+	iconPos_x += iconSize_x;
+	
+	// --------------
+	//  RENDER TEXT
+	// --------------
+	
+	// ping
 	s = ftos(p);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server name
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_NAME, item), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server map
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, item), me.columnMapSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server gametype
 	s = draw_TextShortenToWidth(typestr, me.columnTypeSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server playercount
 	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, item)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, item)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
