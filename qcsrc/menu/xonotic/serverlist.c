@@ -100,6 +100,8 @@ float IsServerInList(string list, string srv);
 #define IsRecommended(srv) IsServerInList(cvar_string("menu_serverlist_recommended"), srv) // todo: use update notification instead of cvar
 
 float CheckCategoryOverride(float cat);
+float CheckCategoryForEntry(float entry); 
+float m_getserverlistentrycategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
 
 // fields for category entities
 #define MAX_CATEGORIES 9
@@ -254,7 +256,7 @@ float CheckCategoryOverride(float cat)
 	}
 }
 
-float m_getserverlistentrycategory(float entry)
+float CheckCategoryForEntry(float entry)
 {
 	string s, k, v, modtype = "";
 	float j, m, impure;
@@ -285,34 +287,34 @@ float m_getserverlistentrycategory(float entry)
 	if(impure > autocvar_menu_serverlist_purethreshold) { impure = TRUE; }
 	else { impure = FALSE; }
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CheckCategoryOverride(CAT_FAVORITED); }
-	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return CheckCategoryOverride(CAT_RECOMMENDED); }
+	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
+	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return CAT_RECOMMENDED; }
 	else if(modtype != "xonotic")
 	{
 		switch(modtype)
 		{
 			// old servers which don't report their mod name are considered modified now
-			case "": { return CheckCategoryOverride(CAT_MODIFIED); }
+			case "": { return CAT_MODIFIED; }
 			
-			case "xpm": { return CheckCategoryOverride(CAT_XPM); } 
-			case "minstagib": { return CheckCategoryOverride(CAT_MINSTAGIB); }
-			case "overkill": { return CheckCategoryOverride(CAT_OVERKILL); }
+			case "xpm": { return CAT_XPM; } 
+			case "minstagib": { return CAT_MINSTAGIB; }
+			case "overkill": { return CAT_OVERKILL; }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts": 
-			case "xdf": { return CheckCategoryOverride(CAT_DEFRAG); }
+			case "xdf": { return CAT_DEFRAG; }
 			
 			//if(modname != "CTS")
 			//if(modname != "NIX")
 			//if(modname != "NewToys")
 			
-			default: { print(sprintf("Found strange mod type: %s\n", modtype)); return CheckCategoryOverride(CAT_MODIFIED); }
+			default: { dprint(sprintf("Found strange mod type: %s\n", modtype)); return CAT_MODIFIED; }
 		}
 	}
-	else { return CheckCategoryOverride((impure ? CAT_MODIFIED : CAT_NORMAL)); }
+	else { return (impure ? CAT_MODIFIED : CAT_NORMAL); }
 
 	// should never hit this point
-	error("wtf m_getserverlistentrycategory fail?");
+	error(sprintf("CheckCategoryForEntry(%d): Function fell through without normal return!\n", entry));
 	return FALSE;
 }
 
