@@ -60,10 +60,10 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
-var float autocvar_menu_serverlist_categories = TRUE;
-var float autocvar_menu_serverlist_categories_onlyifmultiple = TRUE; 
-var float autocvar_menu_serverlist_purethreshold = 10;
-var string autocvar_menu_serverlist_recommended = "76.124.107.5:26004";
+var float autocvar_menu_slist_categories = TRUE;
+var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
+var float autocvar_menu_slist_purethreshold = 10;
+var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
 // server cache fields
 #define SLIST_FIELDS \
@@ -98,7 +98,7 @@ entity Get_Cat_Ent(float catnum);
 
 float IsServerInList(string list, string srv);
 #define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
-#define IsRecommended(srv) IsServerInList(cvar_string("menu_serverlist_recommended"), srv) // todo: use update notification instead of cvar
+#define IsRecommended(srv) IsServerInList(cvar_string("menu_slist_recommended"), srv) // todo: use update notification instead of cvar
 
 float CheckCategoryOverride(float cat);
 float CheckCategoryForEntry(float entry); 
@@ -131,7 +131,7 @@ float category_draw_count;
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  _("Defrag Mode"))
 
 // C is stupid, must use extra macro for concatenation
-#define SLIST_ADD_CAT_CVAR(name,default) var string autocvar_menu_serverlist_categories_##name##_override = default;
+#define SLIST_ADD_CAT_CVAR(name,default) var string autocvar_menu_slist_categories_##name##_override = default;
 #define SLIST_CATEGORY(name,enoverride,deoverride,string) \
 	SLIST_ADD_CAT_CVAR(name, enoverride) \
 	float name; \
@@ -143,8 +143,8 @@ float category_draw_count;
 		categories[name - 1] = cat; \
 		cat.classname = "slist_category"; \
 		cat.cat_name = strzone(#name); \
-		cat.cat_override_string = strzone((autocvar_menu_serverlist_categories ? \
-			autocvar_menu_serverlist_categories_##name##_override \
+		cat.cat_override_string = strzone((autocvar_menu_slist_categories ? \
+			autocvar_menu_slist_categories_##name##_override \
 			: \
 			deoverride)); \
 		cat.cat_string = strzone(string); \
@@ -181,6 +181,7 @@ ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategories_Done);
 #undef CATEGORIES
 
 void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Categories_Click(entity box, entity me);
 void ServerList_ShowEmpty_Click(entity box, entity me);
 void ServerList_ShowFull_Click(entity box, entity me);
 void ServerList_Filter_Change(entity box, entity me);
@@ -276,7 +277,7 @@ float CheckCategoryForEntry(float entry)
 
 	//print(sprintf("modtype = %s\n", modtype)); 
 
-	if(impure > autocvar_menu_serverlist_purethreshold) { impure = TRUE; }
+	if(impure > autocvar_menu_slist_purethreshold) { impure = TRUE; }
 	else { impure = FALSE; }
 
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
@@ -598,7 +599,7 @@ void XonoticServerList_draw(entity me)
 	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
 	category_draw_count = 0;
 
-	if(autocvar_menu_serverlist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
+	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
 	{
 		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
 		me.nItems = itemcount;
@@ -634,7 +635,7 @@ void XonoticServerList_draw(entity me)
 				}
 			}
 		}
-		if(autocvar_menu_serverlist_categories_onlyifmultiple && (category_draw_count == 1))
+		if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
 		{
 			category_name[0] = category_name[1] = -1;
 			category_item[0] = category_item[1] = -1;
@@ -770,6 +771,15 @@ void ServerList_Filter_Change(entity box, entity me)
 		me.filterString = strzone(box.text);
 	else
 		me.filterString = string_null;
+	me.refreshServerList(me, 0);
+
+	me.ipAddressBox.setText(me.ipAddressBox, "");
+	me.ipAddressBox.cursorPos = 0;
+	me.ipAddressBoxFocused = -1;
+}
+void ServerList_Categories_Click(entity box, entity me)
+{
+	box.setChecked(box, autocvar_menu_slist_categories = !autocvar_menu_slist_categories);
 	me.refreshServerList(me, 0);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
