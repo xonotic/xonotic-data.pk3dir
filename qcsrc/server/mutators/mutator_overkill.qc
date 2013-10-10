@@ -36,6 +36,38 @@ float ok_CheckWeaponCharge(entity ent, float wep)
 	return !(ent.ammo_charge[wep] < cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
+void start_hmg()
+{
+	self.classname = "weapon_hmg";
+	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
+	self.ok_item = TRUE;
+	setmodel(self, "models/weapons/g_ok_hmg.md3");
+	spawnfunc_weapon_hmg();
+}
+
+void start_rpc()
+{
+	self.classname = "weapon_rpc";
+	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
+	self.ok_item = TRUE;
+	setmodel(self, "models/weapons/g_ok_rl.md3");
+	spawnfunc_weapon_rpc();
+}
+
+void start_mh_anyway()
+{
+	self.classname = "item_health_mega";
+	self.ok_item = TRUE;
+	spawnfunc_item_health_mega();
+}
+
+void start_ma_anyway()
+{
+	self.classname = "item_armor_large";
+	self.ok_item = TRUE;
+	spawnfunc_item_armor_large();
+}
+
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER) && frag_target == frag_attacker)
@@ -74,9 +106,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.ok_deathloc = self.origin;
 
 	entity oldself = self;
-	float gpi = autocvar_g_pickup_items;
 	
-	cvar_set("g_pickup_items", "1");
 	self = spawn();
 	self.ok_item = TRUE;
 	self.noalign = TRUE;
@@ -89,7 +119,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
-	cvar_set("g_pickup_items", ftos(gpi));
 
 	return FALSE;
 }
@@ -164,49 +193,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 		self.ok_use_ammocharge = 0;
 
 	return FALSE;
-}
-
-void start_hmg()
-{
-	float gpi = autocvar_g_pickup_items;
-	cvar_set("g_pickup_items", "1");
-	self.classname = "weapon_hmg";
-	self.ok_item = TRUE;
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	setmodel(self, "models/weapons/g_ok_hmg.md3");
-	spawnfunc_weapon_hmg();
-
-	cvar_set("g_pickup_items", ftos(gpi));
-}
-
-void start_rpc()
-{
-	float gpi = autocvar_g_pickup_items;
-	cvar_set("g_pickup_items", "1");
-	self.classname = "weapon_rpc";
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	self.ok_item = TRUE;
-	setmodel(self, "models/weapons/g_ok_rl.md3");
-	spawnfunc_weapon_rpc();
-	cvar_set("g_pickup_items", ftos(gpi));
-}
-
-void start_mh_anyway()
-{
-	cvar_set("g_pickup_items", "1");
-	self.classname = "item_health_mega";
-	self.ok_item = TRUE;
-	spawnfunc_item_health_mega();
-	cvar_set("g_pickup_items", "0");
-}
-
-void start_ma_anyway()
-{
-	cvar_set("g_pickup_items", "1");
-	self.classname = "item_armor_large";
-	self.ok_item = TRUE;
-	spawnfunc_item_armor_large();
-	cvar_set("g_pickup_items", "0");
 }
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
