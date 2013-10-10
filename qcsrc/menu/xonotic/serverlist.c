@@ -100,8 +100,7 @@ const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying serve
 const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
 
 // function declarations
-float Get_Cat_Num_FromString(string input);
-entity Get_Cat_Ent(float catnum);
+entity RetrieveCategoryEnt(float catnum);
 
 float IsServerInList(string list, string srv);
 #define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
@@ -177,7 +176,7 @@ void RegisterSLCategories()
 	SLIST_CATEGORIES
 	#undef SLIST_CATEGORY
 
-	float i, catnum;
+	float i, x, catnum;
 	string s;
 
 	#define PROCESS_OVERRIDE(override_string,override_field) \
@@ -186,12 +185,25 @@ void RegisterSLCategories()
 			s = categories[i].override_string; \
 			if((s != "") && (s != categories[i].cat_name)) \
 			{ \
-				catnum = Get_Cat_Num_FromString(s); \
+				catnum = 0; \
+				for(x = 0; x < category_ent_count; ++x) \
+				{ if(categories[x].cat_name == s) { \
+					catnum = (x+1); \
+					break; \
+				} } \
 				if(catnum) \
 				{ \
 					strunzone(categories[i].override_string); \
 					categories[i].override_field = catnum; \
 					continue; \
+				} \
+				else \
+				{ \
+					print(sprintf( \
+						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
+						s, \
+						categories[i].cat_name \
+					)); \
 				} \
 			} \
 			strunzone(categories[i].override_string); \
@@ -203,14 +215,7 @@ void RegisterSLCategories()
 }
 
 // Supporting Functions
-float Get_Cat_Num_FromString(string input)
-{
-	float i;
-	for(i = 0; i < category_ent_count; ++i) { if(categories[i].cat_name == input) { return (i + 1); } }
-	print(sprintf("Get_Cat_Num_FromString('%s'): Improper category name!\n", input));
-	return 0;
-}
-entity Get_Cat_Ent(float catnum)
+entity RetrieveCategoryEnt(float catnum)
 {
 	if((catnum > 0) && (catnum <= category_ent_count))
 	{
@@ -218,7 +223,7 @@ entity Get_Cat_Ent(float catnum)
 	}
 	else
 	{
-		error(sprintf("Get_Cat_Ent(%d): Improper category number!\n", catnum));
+		error(sprintf("RetrieveCategoryEnt(%d): Improper category number!\n", catnum));
 		return world;
 	}
 }
@@ -253,7 +258,7 @@ float IsServerInList(string list, string srv)
 
 float CheckCategoryOverride(float cat)
 {
-	entity catent = Get_Cat_Ent(cat);
+	entity catent = RetrieveCategoryEnt(cat);
 	if(catent)
 	{
 		float override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride); 
@@ -936,7 +941,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	
 	if(item < 0)
 	{
-		entity catent = Get_Cat_Ent(-item);
+		entity catent = RetrieveCategoryEnt(-item);
 		if(catent)
 		{
 			draw_Text(
