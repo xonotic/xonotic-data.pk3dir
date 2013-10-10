@@ -48,6 +48,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, infoButton, entity, NULL)
 	ATTRIB(XonoticServerList, currentSortOrder, float, 0)
 	ATTRIB(XonoticServerList, currentSortField, float, -1)
+	ATTRIB(XonoticServerList, lastBumpSelectTime, float, 0)
 	ATTRIB(XonoticServerList, lastClickedServer, float, -1)
 	ATTRIB(XonoticServerList, lastClickedTime, float, 0)
 
@@ -259,19 +260,10 @@ float CheckCategoryOverride(float cat)
 float CheckCategoryForEntry(float entry)
 {
 	string s, k, v, modtype = "";
-	float j, m, impure;
+	float j, m, impure = 0;
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
 	m = tokenizebyseparator(s, ":");
-	//typestr = "";
-	//if(m >= 2)
-	//{
-	//	typestr = argv(0);
-	//	versionstr = argv(1);
-	//}
-	//freeslots = -1;
-	//sflags = -1;
-	//modname = "";
-	impure = 0;
+
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -428,28 +420,36 @@ void XonoticServerList_setSelected(entity me, float i)
 	if(me.nItems == 0)
 		return;
 
-	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != XonoticServerList_MapItems(me.nItems))
-		{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
+	//if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != XonoticServerList_MapItems(me.nItems))
+	//	{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
+	// ^ todo: make this work somehow?
 
 	#define SET_SELECTED_SERVER(cachenum) \
 		if(me.selectedServer) { strunzone(me.selectedServer); } \
 		me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, cachenum)); \
 		me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer); \
 		me.ipAddressBox.cursorPos = strlen(me.selectedServer); \
-		me.ipAddressBoxFocused = -1;
-	
+		me.ipAddressBoxFocused = -1; \
+		return;
+
 	num = XonoticServerList_MapItems(me.selectedItem);
-	
-	if(num >= 0) { SET_SELECTED_SERVER(num) return; }
+
+	if(num >= 0) { SET_SELECTED_SERVER(num); }
 	else if(save > me.selectedItem)
 	{
 		if(me.selectedItem == 0) { return; }
 		else
 		{
-			SUPER(XonoticServerList).setSelected(me, me.selectedItem - 1);
-			num = XonoticServerList_MapItems(me.selectedItem);
-			if(num >= 0) { SET_SELECTED_SERVER(num); return; }
-			else { return; }
+			if(me.lastClickedTime >= me.lastBumpSelectTime)
+			{
+				SUPER(XonoticServerList).setSelected(me, me.selectedItem - 1);
+				num = XonoticServerList_MapItems(me.selectedItem);
+				if(num >= 0)
+				{
+					me.lastBumpSelectTime = time;
+					SET_SELECTED_SERVER(num);
+				}
+			}
 		}
 	}
 	else if(save < me.selectedItem)
@@ -457,13 +457,18 @@ void XonoticServerList_setSelected(entity me, float i)
 		if(me.selectedItem == me.nItems) { return; }
 		else
 		{
-			SUPER(XonoticServerList).setSelected(me, me.selectedItem + 1);
-			num = XonoticServerList_MapItems(me.selectedItem);
-			if(num >= 0) { SET_SELECTED_SERVER(num); return; }
-			else { return; }
+			if(me.lastClickedTime >= me.lastBumpSelectTime)
+			{
+				SUPER(XonoticServerList).setSelected(me, me.selectedItem + 1);
+				num = XonoticServerList_MapItems(me.selectedItem);
+				if(num >= 0)
+				{
+					me.lastBumpSelectTime = time;
+					SET_SELECTED_SERVER(num);
+				}
+			}
 		}
 	}
-	//else { error("how the fuck did this happen?\n"); } 
 }
 void XonoticServerList_refreshServerList(entity me, float mode)
 {
@@ -883,6 +888,8 @@ void ServerList_Info_Click(entity btn, entity me)
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
+	me.lastBumpSelectTime = 0; // must reset this for new clicks
+	
 	float num = XonoticServerList_MapItems(i);
 	if(num >= 0)
 	{
@@ -1152,6 +1159,8 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+
+	if(scan != K_MOUSE1 && scan != K_MOUSE2) { me.lastBumpSelectTime = 0; }
 
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
