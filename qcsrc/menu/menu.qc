@@ -77,8 +77,6 @@ void m_init()
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
-	CALL_ACCUMULATED_FUNCTION(RegisterSLCategories);
-
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();

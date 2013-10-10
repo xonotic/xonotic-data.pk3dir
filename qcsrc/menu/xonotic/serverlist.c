@@ -61,11 +61,6 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
-const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
-const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
-const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
-const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
-
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
@@ -95,10 +90,16 @@ SLIST_FIELDS
 #undef SLIST_FIELD
 
 // sort flags
-float SLSF_DESCENDING = 1;
-float SLSF_FAVORITES = 2;
-float SLSF_CATEGORIES = 4;
+const float SLSF_DESCENDING = 1;
+const float SLSF_FAVORITES = 2;
+const float SLSF_CATEGORIES = 4;
 
+const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
+const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
+const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
+const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
+
+// function declarations
 float Get_Cat_Num_FromString(string input);
 entity Get_Cat_Ent(float catnum);
 
@@ -109,6 +110,17 @@ float IsServerInList(string list, string srv);
 float CheckCategoryOverride(float cat);
 float CheckCategoryForEntry(float entry); 
 float m_getserverlistentrycategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+
+void RegisterSLCategories();
+
+void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Categories_Click(entity box, entity me);
+void ServerList_ShowEmpty_Click(entity box, entity me);
+void ServerList_ShowFull_Click(entity box, entity me);
+void ServerList_Filter_Change(entity box, entity me);
+void ServerList_Favorite_Click(entity btn, entity me);
+void ServerList_Info_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
 
 // fields for category entities
 #define MAX_CATEGORIES 9
@@ -138,23 +150,12 @@ float category_draw_count;
 	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  _("MinstaGib Mode")) \
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  _("Defrag Mode"))
 
-// C is stupid, must use extra macro for concatenation
 #define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
 #define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 	float name; \
 	var string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
 SLIST_CATEGORIES
 #undef SLIST_CATEGORY
-void RegisterSLCategories();
-
-void ServerList_Connect_Click(entity btn, entity me);
-void ServerList_Categories_Click(entity box, entity me);
-void ServerList_ShowEmpty_Click(entity box, entity me);
-void ServerList_ShowFull_Click(entity box, entity me);
-void ServerList_Filter_Change(entity box, entity me);
-void ServerList_Favorite_Click(entity btn, entity me);
-void ServerList_Info_Click(entity btn, entity me);
-void ServerList_Update_favoriteButton(entity btn, entity me);
 
 #endif
 #endif
@@ -163,7 +164,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me);
 void RegisterSLCategories()
 {
 	entity cat;
-#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
+	#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
 		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
 		cat = spawn(); \
@@ -174,12 +175,12 @@ void RegisterSLCategories()
 		cat.cat_dioverride_string = strzone(dioverride); \
 		cat.cat_string = strzone(str);
 	SLIST_CATEGORIES
-#undef SLIST_CATEGORY
+	#undef SLIST_CATEGORY
 
 	float i, catnum;
 	string s;
 
-#define PROCESS_OVERRIDE(override_string,override_field) \
+	#define PROCESS_OVERRIDE(override_string,override_field) \
 		for(i = 0; i < category_ent_count; ++i) \
 		{ \
 			s = categories[i].override_string; \
@@ -198,7 +199,7 @@ void RegisterSLCategories()
 		}
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
 	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
-#undef PROCESS_OVERRIDE
+	#undef PROCESS_OVERRIDE
 }
 
 // Supporting Functions
@@ -416,6 +417,9 @@ void XonoticServerList_configureXonoticServerList(entity me)
 
 	// clear list
 	me.nItems = 0;
+
+	// build categories
+	RegisterSLCategories();
 }
 void XonoticServerList_setSelected(entity me, float i)
 {
