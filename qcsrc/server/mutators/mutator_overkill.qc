@@ -68,15 +68,6 @@ MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
 	return FALSE;
 }
 
-void ok_Item_Touch()
-{
-	if(IS_PLAYER(other) && other.deadflag == DEAD_NO && !other.freezetag_frozen)
-	{
-		Item_Touch();
-		remove(self);
-	}
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	self.ok_lastwep = self.weapon;
@@ -92,9 +83,10 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	spawnfunc_item_armor_small();
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
+	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
 	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
-	self.touch = ok_Item_Touch;
+	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
 	cvar_set("g_pickup_items", ftos(gpi));
@@ -121,19 +113,20 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	ok_IncreaseCharge(self, self.weapon);
 
 	if(self.BUTTON_ATCK2)
-		if(self.jump_interval <= time)
-		{
-			self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
-			makevectors(self.v_angle);
-			float w = self.weapon;
-			self.weapon = WEP_LASER;
-			W_Laser_Attack(3);
-			self.weapon = w;
-		}
+	if(!forbidWeaponUse() || self.weapon_blocked) // allow if weapon is blocked
+	if(self.jump_interval <= time)
+	{
+		self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
+		makevectors(self.v_angle);
+		float w = self.weapon;
+		self.weapon = WEP_LASER;
+		W_Laser_Attack(3);
+		self.weapon = w;
+	}
 
 	self.weapon_blocked = FALSE;
 
-	self.ok_ammo_charge = self.ammo_charge[self.weapon];
+	self.stat_ok_ammo_charge = self.ammo_charge[self.weapon];
 
 	if(autocvar_g_overkill_ammo_charge)
 	if(!ok_CheckWeaponCharge(self, self.weapon))
@@ -179,8 +172,6 @@ void start_hmg()
 	cvar_set("g_pickup_items", "1");
 	self.classname = "weapon_hmg";
 	self.ok_item = TRUE;
-	//self.weapons = WEP_HMG;
-	//self.flags |= FL_POWERUP;
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
 	setmodel(self, "models/weapons/g_ok_hmg.md3");
 	spawnfunc_weapon_hmg();
@@ -195,8 +186,6 @@ void start_rpc()
 	self.classname = "weapon_rpc";
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
 	self.ok_item = TRUE;
-	//self.weapons = WEP_RPC;
-	//self.flags |= FL_POWERUP;
 	setmodel(self, "models/weapons/g_ok_rl.md3");
 	spawnfunc_weapon_rpc();
 	cvar_set("g_pickup_items", ftos(gpi));
@@ -231,6 +220,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		wep.ok_item = TRUE;
 		wep.think = start_hmg;
 		wep.nextthink = time + 0.1;
+		wep.noalign = self.noalign;
 		return TRUE;
 	}
 
@@ -243,6 +233,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		wep.ok_item = TRUE;
 		wep.think = start_rpc;
 		wep.nextthink = time + 0.1;
+		wep.noalign = self.noalign;
 		return TRUE;
 	}
 
@@ -316,7 +307,7 @@ void ok_Initialize()
 	precache_sound("weapons/dryfire.wav");
 	
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
-	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
+	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, stat_ok_ammo_charge);
 
 	w_uzi(WR_PRECACHE);
 	w_nex(WR_PRECACHE);
