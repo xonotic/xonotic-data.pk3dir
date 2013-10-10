@@ -667,7 +667,7 @@ void XonoticServerList_draw(entity me)
 	found = 0;
 	if(me.selectedServer)
 	{
-		for(i = 0; i < me.nItems; ++i)
+		for(i = 0; i < me.nItems; ++i) // FIXME looping through all servers from draw is NOT ALLOWED.
 		{
 			num = CheckItemNumber(i);
 			if(num >= 0)
