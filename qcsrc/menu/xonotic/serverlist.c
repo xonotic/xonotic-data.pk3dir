@@ -61,10 +61,10 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
-const float REFRESHSERVERLIST_RESORT = 0;
-const float REFRESHSERVERLIST_REFILTER = 1;
-const float REFRESHSERVERLIST_ASK = 2;
-const float REFRESHSERVERLIST_RESET = 3;
+const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
+const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
+const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
+const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
 
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
