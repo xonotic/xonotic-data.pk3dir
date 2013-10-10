@@ -45,3 +45,5 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 
 string _Nex_ExtResponseSystem_BannedServers;
 float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;
+string _Nex_ExtResponseSystem_RecommendedServers;
+float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;

@@ -347,6 +347,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 				_Nex_ExtResponseSystem_PacksStep = 1;
 			}
 		}
+
+		if(n >= 6)
+		{
+			_Nex_ExtResponseSystem_RecommendedServers = strzone(argv(5));
+			_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
+		}
 	}
 }
 

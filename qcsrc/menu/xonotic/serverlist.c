@@ -64,7 +64,7 @@ entity makeXonoticServerList();
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
-var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
+//var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
 // server cache fields
 #define SLIST_FIELDS \
@@ -99,7 +99,7 @@ entity RetrieveCategoryEnt(float catnum);
 
 float IsServerInList(string list, string srv);
 #define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
-#define IsRecommended(srv) IsServerInList(cvar_string("menu_slist_recommended"), srv) // todo: use update notification instead of cvar
+#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
 
 float CheckCategoryOverride(float cat);
 float CheckCategoryForEntry(float entry); 
@@ -582,6 +582,13 @@ void XonoticServerList_draw(entity me)
 		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
 	}
 
+	if(_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 3;
+		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 0;
+	}
+
 	if(me.currentSortField == -1)
 	{
 		me.setSortOrder(me, SLIST_FIELD_PING, +1);
@@ -595,6 +602,11 @@ void XonoticServerList_draw(entity me)
 	{
 		me.needsRefresh = 0;
 		me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
+	}
+	else if(me.needsRefresh == 3)
+	{
+		me.needsRefresh = 0;
+		me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 	}
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
