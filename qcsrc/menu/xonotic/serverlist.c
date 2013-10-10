@@ -89,11 +89,6 @@ var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 SLIST_FIELDS
 #undef SLIST_FIELD
 
-// sort flags
-const float SLSF_DESCENDING = 1;
-const float SLSF_FAVORITES = 2;
-const float SLSF_CATEGORIES = 4;
-
 const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
 const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
 const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
