@@ -624,7 +624,7 @@ void XonoticServerList_draw(entity me)
 		// entire list, otherwise there is no way to know which item is first in its category.
 
 		float cat, x;
-		for(i = 0; i < itemcount; ++i)
+		for(i = 0; i < itemcount; ++i) // FIXME this loop is TOTALLY unacceptable (O(servers)). Make it O(categories * log(servers)). Yes, that is possible.
 		{
 			cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
 			if(cat)
