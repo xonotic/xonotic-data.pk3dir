@@ -616,6 +616,7 @@ void XonoticServerList_draw(entity me)
 			me.nItems = itemcount;
 		}
 	}
+	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
