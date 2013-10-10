@@ -103,7 +103,7 @@ float IsServerInList(string list, string srv);
 
 float CheckCategoryOverride(float cat);
 float CheckCategoryForEntry(float entry); 
-float m_getserverlistentrycategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
 
 void RegisterSLCategories();
 
