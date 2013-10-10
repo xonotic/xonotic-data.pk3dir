@@ -428,21 +428,42 @@ void XonoticServerList_setSelected(entity me, float i)
 	if(me.nItems == 0)
 		return;
 
-	//if(XonoticServerList_MapItems(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT)) != me.nItems)
-	//	{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
-	// todo: make this work somehow? ^
+	if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != XonoticServerList_MapItems(me.nItems))
+		{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
 
-	num = XonoticServerList_MapItems(me.selectedItem);
-	if(num >= 0)
-	{
-		if(me.selectedServer)
-			strunzone(me.selectedServer);
-		me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, num));
-
-		me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer);
-		me.ipAddressBox.cursorPos = strlen(me.selectedServer);
+	#define SET_SELECTED_SERVER(cachenum) \
+		if(me.selectedServer) { strunzone(me.selectedServer); } \
+		me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, cachenum)); \
+		me.ipAddressBox.setText(me.ipAddressBox, me.selectedServer); \
+		me.ipAddressBox.cursorPos = strlen(me.selectedServer); \
 		me.ipAddressBoxFocused = -1;
+	
+	num = XonoticServerList_MapItems(me.selectedItem);
+	
+	if(num >= 0) { SET_SELECTED_SERVER(num) return; }
+	else if(save > me.selectedItem)
+	{
+		if(me.selectedItem == 0) { return; }
+		else
+		{
+			SUPER(XonoticServerList).setSelected(me, me.selectedItem - 1);
+			num = XonoticServerList_MapItems(me.selectedItem);
+			if(num >= 0) { SET_SELECTED_SERVER(num); return; }
+			else { return; }
+		}
 	}
+	else if(save < me.selectedItem)
+	{
+		if(me.selectedItem == me.nItems) { return; }
+		else
+		{
+			SUPER(XonoticServerList).setSelected(me, me.selectedItem + 1);
+			num = XonoticServerList_MapItems(me.selectedItem);
+			if(num >= 0) { SET_SELECTED_SERVER(num); return; }
+			else { return; }
+		}
+	}
+	//else { error("how the fuck did this happen?\n"); } 
 }
 void XonoticServerList_refreshServerList(entity me, float mode)
 {
@@ -863,14 +884,17 @@ void ServerList_Info_Click(entity btn, entity me)
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
 	float num = XonoticServerList_MapItems(i);
-	if(num == me.lastClickedServer)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			ServerList_Connect_Click(NULL, me);
-		}
-	me.lastClickedServer = num;
-	me.lastClickedTime = time;
+	if(num >= 0)
+	{
+		if(num == me.lastClickedServer)
+			if(time < me.lastClickedTime + 0.3)
+			{
+				// DOUBLE CLICK!
+				ServerList_Connect_Click(NULL, me);
+			}
+		me.lastClickedServer = num;
+		me.lastClickedTime = time;
+	}
 }
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
