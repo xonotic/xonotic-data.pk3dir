@@ -64,6 +64,7 @@ entity makeXonoticServerList();
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
+var float autocvar_menu_slist_recommendations = 2; 
 //var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
 // server cache fields
@@ -287,9 +288,35 @@ float CheckCategoryForEntry(float entry)
 	if(impure > autocvar_menu_slist_purethreshold) { impure = TRUE; }
 	else { impure = FALSE; }
 
+	// check if this server is favorited
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
-	if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry))) { return CAT_RECOMMENDED; }
-	else if(modtype != "xonotic")
+
+	// now check if it's recommended
+	switch(autocvar_menu_slist_recommendations)
+	{
+		case 1:
+		{
+			if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry)))
+				{ return CAT_RECOMMENDED; }
+				
+			break;
+		}
+		
+		case 2:
+		{
+			if(
+				gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
+				&&
+				(gethostcachenumber(SLIST_FIELD_PING, entry) < 200)
+			)
+				{ return CAT_RECOMMENDED; }
+				
+			break;
+		}
+	}
+
+	// if not favorited or recommended, check modname
+	if(modtype != "xonotic")
 	{
 		switch(modtype)
 		{
@@ -309,11 +336,9 @@ float CheckCategoryForEntry(float entry)
 			default: { dprint(sprintf("Found strange mod type: %s\n", modtype)); return CAT_MODIFIED; }
 		}
 	}
-	else { return (impure ? CAT_MODIFIED : CAT_NORMAL); }
 
-	// should never hit this point
-	error(sprintf("CheckCategoryForEntry(%d): Function fell through without normal return!\n", entry));
-	return FALSE;
+	// must be normal or impure server
+	return (impure ? CAT_MODIFIED : CAT_NORMAL);
 }
 
 float CheckItemNumber(float num)
