@@ -127,7 +127,7 @@ float category_name[MAX_CATEGORIES];
 float category_item[MAX_CATEGORIES];
 float category_draw_count;
 
-#define CATEGORIES \
+#define SLIST_CATEGORIES \
 	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             _("Favorites")) \
 	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "CAT_SERVERS",  _("Recommended")) \
 	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  _("Normal Servers")) \
@@ -139,32 +139,47 @@ float category_draw_count;
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  _("Defrag Mode"))
 
 // C is stupid, must use extra macro for concatenation
-#define SLIST_ADD_CAT_CVAR(name,default) var string autocvar_menu_slist_categories_##name##_override = default;
-#define SLIST_CATEGORY(name,enoverride,dioverride,string) \
-	SLIST_ADD_CAT_CVAR(name, enoverride) \
+#define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
+#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 	float name; \
-	void RegisterSLCategory_##name() \
-	{ \
+	var string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
+SLIST_CATEGORIES
+#undef SLIST_CATEGORY
+void RegisterSLCategories();
+
+void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Categories_Click(entity box, entity me);
+void ServerList_ShowEmpty_Click(entity box, entity me);
+void ServerList_ShowFull_Click(entity box, entity me);
+void ServerList_Filter_Change(entity box, entity me);
+void ServerList_Favorite_Click(entity btn, entity me);
+void ServerList_Info_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
+
+#endif
+#endif
+#ifdef IMPLEMENTATION
+
+void RegisterSLCategories()
+{
+	entity cat;
+#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
 		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
-		entity cat = spawn(); \
+		cat = spawn(); \
 		categories[name - 1] = cat; \
 		cat.classname = "slist_category"; \
 		cat.cat_name = strzone(#name); \
-		cat.cat_enoverride_string = strzone(autocvar_menu_slist_categories_##name##_override); \
+		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
 		cat.cat_dioverride_string = strzone(dioverride); \
-		cat.cat_string = strzone(string); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategory_##name);
+		cat.cat_string = strzone(str);
+	SLIST_CATEGORIES
+#undef SLIST_CATEGORY
 
-CATEGORIES
-
-void RegisterSLCategories_Done()
-{
 	float i, catnum;
 	string s;
 
-	#define PROCESS_OVERRIDE(override_string,override_field) \
+#define PROCESS_OVERRIDE(override_string,override_field) \
 		for(i = 0; i < category_ent_count; ++i) \
 		{ \
 			s = categories[i].override_string; \
@@ -181,29 +196,10 @@ void RegisterSLCategories_Done()
 			strunzone(categories[i].override_string); \
 			categories[i].override_field = 0; \
 		}
-
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
 	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
-	#undef PROCESS_OVERRIDE
+#undef PROCESS_OVERRIDE
 }
-ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategories_Done);
-
-#undef SLIST_ADD_CAT_CVAR
-#undef SLIST_CATEGORY
-#undef CATEGORIES
-
-void ServerList_Connect_Click(entity btn, entity me);
-void ServerList_Categories_Click(entity box, entity me);
-void ServerList_ShowEmpty_Click(entity box, entity me);
-void ServerList_ShowFull_Click(entity box, entity me);
-void ServerList_Filter_Change(entity box, entity me);
-void ServerList_Favorite_Click(entity btn, entity me);
-void ServerList_Info_Click(entity btn, entity me);
-void ServerList_Update_favoriteButton(entity btn, entity me);
-
-#endif
-#endif
-#ifdef IMPLEMENTATION
 
 // Supporting Functions
 float Get_Cat_Num_FromString(string input)
