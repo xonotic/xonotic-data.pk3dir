@@ -321,7 +321,7 @@ float CheckCategoryForEntry(float entry)
 	return FALSE;
 }
 
-float XonoticServerList_MapItems(float num)
+float CheckItemNumber(float num)
 {
 	float i, n;
 
@@ -329,14 +329,13 @@ float XonoticServerList_MapItems(float num)
 
 	for(i = 0, n = 1; n <= category_draw_count; ++i, ++n)
 	{
-		//print(sprintf("num: %d, i: %d, category_draw_count: %d, category_item[i]: %d\n", num, i, category_draw_count, category_item[i])); 
-		if(category_item[i] == (num - i)) { /*print("inserting cat... \\/\n");*/ return -category_name[i]; }
-		else if(n == category_draw_count) { /*print("end item... \\/\n");*/ return (num - n); }
-		else if((num - i) <= category_item[n]) { /*print("next item... \\/\n");*/ return (num - n); }
+		if(category_item[i] == (num - i)) { return -category_name[i]; }
+		else if(n == category_draw_count) { return (num - n); }
+		else if((num - i) <= category_item[n]) { return (num - n); }
 	}
 
 	// should never hit this point
-	error("wtf XonoticServerList_MapItems fail?");
+	error(sprintf("CheckItemNumber(%d): Function fell through without normal return!\n", num));
 	return FALSE;
 }
 
@@ -434,7 +433,7 @@ void XonoticServerList_setSelected(entity me, float i)
 	if(me.nItems == 0)
 		return;
 
-	//if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != XonoticServerList_MapItems(me.nItems))
+	//if(gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT) != CheckItemNumber(me.nItems))
 	//	{ error("^1XonoticServerList_setSelected(); ERROR: ^7Host cache viewcount mismatches nItems!\n"); return; } // sorry, it would be wrong
 	// ^ todo: make this work somehow?
 
@@ -446,7 +445,7 @@ void XonoticServerList_setSelected(entity me, float i)
 		me.ipAddressBoxFocused = -1; \
 		return;
 
-	num = XonoticServerList_MapItems(me.selectedItem);
+	num = CheckItemNumber(me.selectedItem);
 
 	if(num >= 0) { SET_SELECTED_SERVER(num); }
 	else if(save > me.selectedItem)
@@ -457,7 +456,7 @@ void XonoticServerList_setSelected(entity me, float i)
 			if(me.lastClickedTime >= me.lastBumpSelectTime)
 			{
 				SUPER(XonoticServerList).setSelected(me, me.selectedItem - 1);
-				num = XonoticServerList_MapItems(me.selectedItem);
+				num = CheckItemNumber(me.selectedItem);
 				if(num >= 0)
 				{
 					me.lastBumpSelectTime = time;
@@ -474,7 +473,7 @@ void XonoticServerList_setSelected(entity me, float i)
 			if(me.lastClickedTime >= me.lastBumpSelectTime)
 			{
 				SUPER(XonoticServerList).setSelected(me, me.selectedItem + 1);
-				num = XonoticServerList_MapItems(me.selectedItem);
+				num = CheckItemNumber(me.selectedItem);
 				if(num >= 0)
 				{
 					me.lastBumpSelectTime = time;
@@ -663,7 +662,7 @@ void XonoticServerList_draw(entity me)
 	{
 		for(i = 0; i < me.nItems; ++i)
 		{
-			num = XonoticServerList_MapItems(i);
+			num = CheckItemNumber(i);
 			if(num >= 0)
 			{
 				if(gethostcachestring(SLIST_FIELD_CNAME, num) == me.selectedServer)
@@ -686,7 +685,7 @@ void XonoticServerList_draw(entity me)
 			if(me.selectedItem >= me.nItems) { me.selectedItem = me.nItems - 1; }
 			if(me.selectedServer) { strunzone(me.selectedServer); }
 
-			num = XonoticServerList_MapItems(me.selectedItem);
+			num = CheckItemNumber(me.selectedItem);
 			if(num >= 0) { me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, num)); }
 		}
 	}
@@ -909,12 +908,12 @@ void ServerList_Favorite_Click(entity btn, entity me)
 }
 void ServerList_Info_Click(entity btn, entity me)
 {
-	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, XonoticServerList_MapItems(me.selectedItem));
+	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, CheckItemNumber(me.selectedItem));
 	DialogOpenButton_Click(me, main.serverInfoDialog);
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
-	float num = XonoticServerList_MapItems(i);
+	float num = CheckItemNumber(i);
 	if(num >= 0)
 	{
 		if(num == me.lastClickedServer)
@@ -937,7 +936,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
-	float item = XonoticServerList_MapItems(i);
+	float item = CheckItemNumber(i);
 	//print(sprintf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems));
 	
 	if(item < 0)
@@ -1178,7 +1177,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float i = XonoticServerList_MapItems(me.selectedItem);
+	float i = CheckItemNumber(me.selectedItem);
 	vector org, sz;
 
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
