@@ -7,6 +7,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	METHOD(XonoticServerList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticServerList, toggleFavorite, void(entity, string))
 
 	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
 
@@ -35,7 +36,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, ipAddressBox, entity, NULL)
 	ATTRIB(XonoticServerList, favoriteButton, entity, NULL)
 	ATTRIB(XonoticServerList, nextRefreshTime, float, 0)
-	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: 0 = just reparametrize, 1 = send new requests, 2 = clear
+	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: REFRESHSERVERLIST_*
 	ATTRIB(XonoticServerList, needsRefresh, float, 1)
 	METHOD(XonoticServerList, focusEnter, void(entity))
 	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)))
@@ -60,6 +61,11 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
+const float REFRESHSERVERLIST_RESORT = 0;
+const float REFRESHSERVERLIST_REFILTER = 1;
+const float REFRESHSERVERLIST_ASK = 2;
+const float REFRESHSERVERLIST_RESET = 3;
+
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
@@ -337,7 +343,7 @@ float XonoticServerList_MapItems(float num)
 	return FALSE;
 }
 
-void ToggleFavorite(string srv)
+void XonoticServerList_toggleFavorite(entity me, string srv)
 {
 	string s, s0, s1, s2, srv_resolved, p;
 	float i, n, f;
@@ -384,7 +390,7 @@ void ToggleFavorite(string srv)
 			cvar_set("net_slist_favorites", strcat(s, s1, srv));
 	}
 
-	resorthostcache();
+	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 }
 
 void ServerList_Update_favoriteButton(entity btn, entity me)
@@ -478,91 +484,87 @@ void XonoticServerList_setSelected(entity me, float i)
 		}
 	}
 }
+
 void XonoticServerList_refreshServerList(entity me, float mode)
 {
-	// 0: just reparametrize
-	// 1: also ask for new servers
-	// 2: clear
 	//print("refresh of type ", ftos(mode), "\n");
-	/* if(mode == 2) // borken
+
+	if(mode >= REFRESHSERVERLIST_REFILTER)
 	{
-		// clear list
-		localcmd("net_slist\n");
-		me.needsRefresh = 1; // net_slist kills sort order, so we need to restore it later
-	}
-	else */
-	
-	float m, i, n;
-	float listflags = 0;
-	string s, typestr, modstr;
-	s = me.filterString;
+		float m, i, n;
+		float listflags = 0;
+		string s, typestr, modstr;
 
-	m = strstrofs(s, ":", 0);
-	if(m >= 0)
-	{
-		typestr = substring(s, 0, m);
-		s = substring(s, m + 1, strlen(s) - m - 1);
-		while(substring(s, 0, 1) == " ")
-			s = substring(s, 1, strlen(s) - 1);
-	}
-	else
-		typestr = "";
+		s = me.filterString;
 
-	modstr = cvar_string("menu_slist_modfilter");
-
-	m = SLIST_MASK_AND - 1;
-	resethostcachemasks();
-
-	// ping: reject negative ping (no idea why this happens in the first place, engine bug)
-	sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
-
-	// show full button
-	if(!me.filterShowFull)
-	{
-		sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
-		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
-	}
-
-	// show empty button
-	if(!me.filterShowEmpty)
-		sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
-
-	// gametype filtering
-	if(typestr != "")
-		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
-
-	// mod filtering
-	if(modstr != "")
-	{
-		if(substring(modstr, 0, 1) == "!")
-			sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(substring(modstr, 1, strlen(modstr) - 1)), SLIST_TEST_NOTEQUAL);
+		m = strstrofs(s, ":", 0);
+		if(m >= 0)
+		{
+			typestr = substring(s, 0, m);
+			s = substring(s, m + 1, strlen(s) - m - 1);
+			while(substring(s, 0, 1) == " ")
+				s = substring(s, 1, strlen(s) - 1);
+		}
 		else
-			sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
+			typestr = "";
+
+		modstr = cvar_string("menu_slist_modfilter");
+
+		m = SLIST_MASK_AND - 1;
+		resethostcachemasks();
+
+		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
+		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
+
+		// show full button
+		if(!me.filterShowFull)
+		{
+			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
+			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
+		}
+
+		// show empty button
+		if(!me.filterShowEmpty)
+			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+
+		// gametype filtering
+		if(typestr != "")
+			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+
+		// mod filtering
+		if(modstr != "")
+		{
+			if(substring(modstr, 0, 1) == "!")
+				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(substring(modstr, 1, strlen(modstr) - 1)), SLIST_TEST_NOTEQUAL);
+			else
+				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
+		}
+
+		// server banning
+		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+		for(i = 0; i < n; ++i)
+			if(argv(i) != "")
+				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
+
+		m = SLIST_MASK_OR - 1;
+		if(s != "")
+		{
+			sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
+			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
+		}
+
+		// sorting flags
+		//listflags |= SLSF_FAVORITES;
+		listflags |= SLSF_CATEGORIES;
+		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
+		sethostcachesort(me.currentSortField, listflags);
 	}
-
-	// server banning
-	n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
-	for(i = 0; i < n; ++i)
-		if(argv(i) != "")
-			sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
-
-	m = SLIST_MASK_OR - 1;
-	if(s != "")
-	{
-		sethostcachemaskstring(++m, SLIST_FIELD_NAME, s, SLIST_TEST_CONTAINS);
-		sethostcachemaskstring(++m, SLIST_FIELD_MAP, s, SLIST_TEST_CONTAINS);
-		sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
-		sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
-	}
-
-	// sorting flags
-	//listflags |= SLSF_FAVORITES;
-	listflags |= SLSF_CATEGORIES;
-	if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
-	sethostcachesort(me.currentSortField, listflags);
 	
 	resorthostcache();
-	if(mode >= 1) { refreshhostcache(FALSE); }
+	if(mode >= REFRESHSERVERLIST_ASK)
+		refreshhostcache(mode >= REFRESHSERVERLIST_RESET);
 }
 void XonoticServerList_focusEnter(entity me)
 {
@@ -572,7 +574,7 @@ void XonoticServerList_focusEnter(entity me)
 		return;
 	}
 	me.nextRefreshTime = time + 10;
-	me.refreshServerList(me, 1);
+	me.refreshServerList(me, REFRESHSERVERLIST_ASK);
 }
 
 void XonoticServerList_draw(entity me)
@@ -589,7 +591,7 @@ void XonoticServerList_draw(entity me)
 	if(me.currentSortField == -1)
 	{
 		me.setSortOrder(me, SLIST_FIELD_PING, +1);
-		me.refreshServerList(me, 2);
+		me.refreshServerList(me, REFRESHSERVERLIST_RESET);
 	}
 	else if(me.needsRefresh == 1)
 	{
@@ -598,7 +600,7 @@ void XonoticServerList_draw(entity me)
 	else if(me.needsRefresh == 2)
 	{
 		me.needsRefresh = 0;
-		me.refreshServerList(me, 0);
+		me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 	}
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
@@ -778,7 +780,7 @@ void ServerList_Filter_Change(entity box, entity me)
 		me.filterString = strzone(box.text);
 	else
 		me.filterString = string_null;
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -792,9 +794,9 @@ void ServerList_Categories_Click(entity box, entity me)
 	//cvar_set("net_slist_pause", "0");
 	//Destroy_Category_Entities();
 	//CALL_ACCUMULATED_FUNCTION(RegisterSLCategories);
-	//me.refreshServerList(me, 0);
+	//me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
-	resorthostcache();
+	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -803,7 +805,7 @@ void ServerList_Categories_Click(entity box, entity me)
 void ServerList_ShowEmpty_Click(entity box, entity me)
 {
 	box.setChecked(box, me.filterShowEmpty = !me.filterShowEmpty);
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -812,7 +814,7 @@ void ServerList_ShowEmpty_Click(entity box, entity me)
 void ServerList_ShowFull_Click(entity box, entity me)
 {
 	box.setChecked(box, me.filterShowFull = !me.filterShowFull);
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -833,7 +835,7 @@ void XonoticServerList_setSortOrder(entity me, float fld, float direction)
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
 	me.selectedServer = string_null;
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
@@ -901,7 +903,7 @@ void ServerList_Favorite_Click(entity btn, entity me)
 	ipstr = netaddress_resolve(me.ipAddressBox.text, 26000);
 	if(ipstr != "")
 	{
-		ToggleFavorite(me.ipAddressBox.text);
+		me.toggleFavorite(me, me.ipAddressBox.text);
 		me.ipAddressBoxFocused = -1;
 	}
 }
@@ -1203,7 +1205,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		if((me.nItems != 0) && (i >= 0))
 		{
-			ToggleFavorite(me.selectedServer);
+			me.toggleFavorite(me, me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 			return 1;
 		}
