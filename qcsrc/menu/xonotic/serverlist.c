@@ -140,15 +140,15 @@ float category_item[MAX_CATEGORIES];
 float category_draw_count;
 
 #define SLIST_CATEGORIES \
-	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             _("Favorites")) \
-	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "CAT_SERVERS",  _("Recommended")) \
-	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  _("Normal Servers")) \
-	SLIST_CATEGORY(CAT_SERVERS,      "CAT_NORMAL",  "CAT_SERVERS",  _("Servers")) \
-	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  _("Competitive Mode")) \
-	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  _("Modified Servers")) \
-	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  _("Overkill Mode")) \
-	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  _("MinstaGib Mode")) \
-	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  _("Defrag Mode"))
+	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             ZCTX(_("SLCAT^Favorites"))) \
+	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Recommended"))) \
+	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Normal Servers"))) \
+	SLIST_CATEGORY(CAT_SERVERS,      "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Servers"))) \
+	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Competitive Mode"))) \
+	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Modified Servers"))) \
+	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Overkill Mode"))) \
+	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  ZCTX(_("SLCAT^MinstaGib Mode"))) \
+	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Defrag Mode")))
 
 #define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
 #define SLIST_CATEGORY(name,enoverride,dioverride,str) \
