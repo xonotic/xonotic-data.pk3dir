@@ -54,20 +54,6 @@ void start_rpc()
 	spawnfunc_weapon_rpc();
 }
 
-void start_mh_anyway()
-{
-	self.classname = "item_health_mega";
-	self.ok_item = TRUE;
-	spawnfunc_item_health_mega();
-}
-
-void start_ma_anyway()
-{
-	self.classname = "item_armor_large";
-	self.ok_item = TRUE;
-	spawnfunc_item_armor_large();
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER) && frag_target == frag_attacker)
@@ -226,15 +212,15 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ok_ItemRemove)
+MUTATOR_HOOKFUNCTION(ok_FilterItem)
 {
 	if(self.ok_item)
 		return FALSE;
 
-	switch(self.items)
+	switch(self.classname)
 	{
-		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
-		case IT_ARMOR: return !(autocvar_g_overkill_100a_anyway);
+		case "item_health_mega": return !(autocvar_g_overkill_100h_anyway);
+		case "item_armor_large": return !(autocvar_g_overkill_100a_anyway);
 	}
 	
 	return TRUE;
@@ -334,7 +320,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, ok_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
 
