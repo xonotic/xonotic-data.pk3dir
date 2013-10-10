@@ -912,8 +912,6 @@ void ServerList_Info_Click(entity btn, entity me)
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
-	me.lastBumpSelectTime = 0; // must reset this for new clicks
-	
 	float num = XonoticServerList_MapItems(i);
 	if(num >= 0)
 	{
@@ -1184,7 +1182,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 
-	if(scan != K_MOUSE1 && scan != K_MOUSE2) { me.lastBumpSelectTime = 0; }
+	me.lastBumpSelectTime = 0;
 
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
