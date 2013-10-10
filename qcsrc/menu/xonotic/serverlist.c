@@ -60,6 +60,7 @@ entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
 var float autocvar_menu_serverlist_categories = TRUE;
+var float autocvar_menu_serverlist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_serverlist_purethreshold = 10;
 var string autocvar_menu_serverlist_recommended = "76.124.107.5:26004";
 
@@ -113,7 +114,7 @@ float category_ent_count;
 // fields for drawing categories
 float category_name[MAX_CATEGORIES];
 float category_item[MAX_CATEGORIES];
-float totcat;
+float category_draw_count;
 
 #define CATEGORIES \
 	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             _("Favorites")) \
@@ -319,13 +320,13 @@ float XonoticServerList_MapItems(float num)
 {
 	float i, n;
 
-	if not(totcat) { return num; } // there are no categories to process
+	if not(category_draw_count) { return num; } // there are no categories to process
 
-	for(i = 0, n = 1; n <= totcat; ++i, ++n)
+	for(i = 0, n = 1; n <= category_draw_count; ++i, ++n)
 	{
-		//print(sprintf("num: %d, i: %d, totcat: %d, category_item[i]: %d\n", num, i, totcat, category_item[i])); 
+		//print(sprintf("num: %d, i: %d, category_draw_count: %d, category_item[i]: %d\n", num, i, category_draw_count, category_item[i])); 
 		if(category_item[i] == (num - i)) { /*print("inserting cat... \\/\n");*/ return -category_name[i]; }
-		else if(n == totcat) { /*print("end item... \\/\n");*/ return (num - n); }
+		else if(n == category_draw_count) { /*print("end item... \\/\n");*/ return (num - n); }
 		else if((num - i) <= category_item[n]) { /*print("next item... \\/\n");*/ return (num - n); }
 	}
 
@@ -386,10 +387,11 @@ void ToggleFavorite(string srv)
 
 void ServerList_Update_favoriteButton(entity btn, entity me)
 {
-	if(IsFavorite(me.ipAddressBox.text))
-		me.favoriteButton.setText(me.favoriteButton, _("Remove"));
-	else
-		me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
+	me.favoriteButton.setText(me.favoriteButton,
+		(IsFavorite(me.ipAddressBox.text) ?
+			_("Remove") : _("Bookmark")
+		)
+	);
 }
 
 entity makeXonoticServerList()
@@ -413,6 +415,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 }
 void XonoticServerList_setSelected(entity me, float i)
 {
+	// todo: add logic to skip categories
 	float save, num;
 	save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
@@ -564,42 +567,53 @@ void XonoticServerList_draw(entity me)
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	for(i = 0; i < totcat; ++i) { category_name[i] = -1; category_item[i] = -1; }
-	totcat = 0;
+	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	category_draw_count = 0;
 
-	float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
-	//float visible = floor(me.scrollPos / me.itemHeight);
-	me.nItems = itemcount;
-
-	float cat, x;
-	for(i = 0; i < itemcount; ++i)
+	if(autocvar_menu_serverlist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
 	{
-		cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
-		if(cat)
+		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+		me.nItems = itemcount;
+		
+		//float visible = floor(me.scrollPos / me.itemHeight);
+		// ^ unfortunately no such optimization can be made-- we must process through the
+		// entire list, otherwise there is no way to know which item is first in its category.
+
+		float cat, x;
+		for(i = 0; i < itemcount; ++i)
 		{
-			if(totcat == 0)
+			cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
+			if(cat)
 			{
-				category_name[totcat] = cat;
-				category_item[totcat] = i;
-				++totcat;
-				++me.nItems;
-			}
-			else
-			{
-				found = 0;
-				for(x = 0; x < totcat; ++x) { if(cat == category_name[x]) { found = 1; } }
-				if not(found)
+				if(category_draw_count == 0)
 				{
-					category_name[totcat] = cat;
-					category_item[totcat] = i;
-					++totcat;
+					category_name[category_draw_count] = cat;
+					category_item[category_draw_count] = i;
+					++category_draw_count;
 					++me.nItems;
+				}
+				else
+				{
+					found = 0;
+					for(x = 0; x < category_draw_count; ++x) { if(cat == category_name[x]) { found = 1; } }
+					if not(found)
+					{
+						category_name[category_draw_count] = cat;
+						category_item[category_draw_count] = i;
+						++category_draw_count;
+						++me.nItems;
+					}
 				}
 			}
 		}
+		if(autocvar_menu_serverlist_categories_onlyifmultiple && (category_draw_count == 1))
+		{
+			category_name[0] = category_name[1] = -1;
+			category_item[0] = category_item[1] = -1;
+			category_draw_count = 0;
+			me.nItems = itemcount;
+		}
 	}
-
-	//print(sprintf("^1SERVERLIST_DRAW^7: servercount: %d, nitems: %d\n", itemcount, me.nItems));
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
