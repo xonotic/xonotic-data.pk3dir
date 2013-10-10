@@ -64,10 +64,12 @@ entity makeXonoticServerList();
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
+var float autocvar_menu_slist_modimpurity = 10;
 var float autocvar_menu_slist_recommendations = 2;
+var float autocvar_menu_slist_recommendations_maxping = 150;
 var float autocvar_menu_slist_recommendations_minfreeslots = 1; 
 var float autocvar_menu_slist_recommendations_minhumans = 1;
-var float autocvar_menu_slist_recommendations_maxping = 150;
+var float autocvar_menu_slist_recommendations_purethreshold = -1; 
 //var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
 // server cache fields
@@ -292,8 +294,7 @@ float CheckCategoryForEntry(float entry)
 		}
 	}
 
-	if(impure > autocvar_menu_slist_purethreshold) { impure = TRUE; }
-	else { impure = FALSE; }
+	if(modtype != "xonotic") { impure += autocvar_menu_slist_modimpurity; }
 
 	// check if this server is favorited
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
@@ -313,6 +314,12 @@ float CheckCategoryForEntry(float entry)
 		{
 			if(
 				(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
+				&&
+				(
+					(autocvar_menu_slist_recommendations_purethreshold < 0)
+					||
+					(impure <= autocvar_menu_slist_recommendations_purethreshold)
+				)
 				&&
 				(
 					gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
@@ -356,7 +363,7 @@ float CheckCategoryForEntry(float entry)
 	}
 
 	// must be normal or impure server
-	return (impure ? CAT_MODIFIED : CAT_NORMAL);
+	return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
 }
 
 float CheckItemNumber(float num)
