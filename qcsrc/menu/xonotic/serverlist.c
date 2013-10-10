@@ -64,7 +64,10 @@ entity makeXonoticServerList();
 var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
-var float autocvar_menu_slist_recommendations = 2; 
+var float autocvar_menu_slist_recommendations = 2;
+var float autocvar_menu_slist_recommendations_minfreeslots = 1; 
+var float autocvar_menu_slist_recommendations_minhumans = 1;
+var float autocvar_menu_slist_recommendations_maxping = 150;
 //var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
 // server cache fields
@@ -271,18 +274,22 @@ float CheckCategoryOverride(float cat)
 float CheckCategoryForEntry(float entry)
 {
 	string s, k, v, modtype = "";
-	float j, m, impure = 0;
+	float j, m, impure = 0, freeslots = 0, sflags = 0;
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
 	m = tokenizebyseparator(s, ":");
 
 	for(j = 2; j < m; ++j)
 	{
-		if(argv(j) == "")
-			break;
+		if(argv(j) == "") { break; }
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		if(k == "P") { impure = stof(v); }
-		else if(k == "M") { modtype = strtolower(v); }
+		switch(k)
+		{
+			case "P": { impure = stof(v); break; }
+			case "S": { freeslots = stof(v); break; }
+			case "F": { sflags = stof(v); break; }
+			case "M": { modtype = strtolower(v); break; }
+		}
 	}
 
 	if(impure > autocvar_menu_slist_purethreshold) { impure = TRUE; }
@@ -292,27 +299,38 @@ float CheckCategoryForEntry(float entry)
 	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
 
 	// now check if it's recommended
-	switch(autocvar_menu_slist_recommendations)
+	if(autocvar_menu_slist_recommendations)
 	{
-		case 1:
+		float recommended = 0;
+		if(autocvar_menu_slist_recommendations & 1)
 		{
 			if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry)))
-				{ return CAT_RECOMMENDED; }
-				
-			break;
+				{ ++recommended; }
+			else
+				{ --recommended; }
 		}
-		
-		case 2:
+		if(autocvar_menu_slist_recommendations & 2)
 		{
 			if(
-				gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
+				(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
 				&&
-				(gethostcachenumber(SLIST_FIELD_PING, entry) < 200)
+				(
+					gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
+					>=
+					autocvar_menu_slist_recommendations_minhumans
+				)
+				&&
+				(
+					gethostcachenumber(SLIST_FIELD_PING, entry)
+					<=
+					autocvar_menu_slist_recommendations_maxping
+				)
 			)
-				{ return CAT_RECOMMENDED; }
-				
-			break;
+				{ ++recommended; }
+			else
+				{ --recommended; }
 		}
+		if(recommended > 0) { return CAT_RECOMMENDED; }
 	}
 
 	// if not favorited or recommended, check modname
