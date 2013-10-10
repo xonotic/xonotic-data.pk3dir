@@ -111,8 +111,10 @@ entity categories[MAX_CATEGORIES];
 float category_ent_count;
 .string cat_name;
 .string cat_string;
-.string cat_override_string;
-.float cat_override;
+.string cat_enoverride_string;
+.string cat_dioverride_string;
+.float cat_enoverride;
+.float cat_dioverride;
 
 // fields for drawing categories
 float category_name[MAX_CATEGORIES];
@@ -132,7 +134,7 @@ float category_draw_count;
 
 // C is stupid, must use extra macro for concatenation
 #define SLIST_ADD_CAT_CVAR(name,default) var string autocvar_menu_slist_categories_##name##_override = default;
-#define SLIST_CATEGORY(name,enoverride,deoverride,string) \
+#define SLIST_CATEGORY(name,enoverride,dioverride,string) \
 	SLIST_ADD_CAT_CVAR(name, enoverride) \
 	float name; \
 	void RegisterSLCategory_##name() \
@@ -143,10 +145,8 @@ float category_draw_count;
 		categories[name - 1] = cat; \
 		cat.classname = "slist_category"; \
 		cat.cat_name = strzone(#name); \
-		cat.cat_override_string = strzone((autocvar_menu_slist_categories ? \
-			autocvar_menu_slist_categories_##name##_override \
-			: \
-			deoverride)); \
+		cat.cat_enoverride_string = strzone(autocvar_menu_slist_categories_##name##_override); \
+		cat.cat_dioverride_string = strzone(dioverride); \
 		cat.cat_string = strzone(string); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategory_##name);
@@ -157,22 +157,28 @@ void RegisterSLCategories_Done()
 {
 	float i, catnum;
 	string s;
-	for(i = 0; i < category_ent_count; ++i)
-	{
-		s = categories[i].cat_override_string;
-		if((s != "") && (s != categories[i].cat_name))
-		{
-			catnum = Get_Cat_Num_FromString(s);
-			if(catnum)
-			{
-				strunzone(categories[i].cat_override_string);
-				categories[i].cat_override = catnum;
-				continue;
-			}
+
+	#define PROCESS_OVERRIDE(override_string,override_field) \
+		for(i = 0; i < category_ent_count; ++i) \
+		{ \
+			s = categories[i].override_string; \
+			if((s != "") && (s != categories[i].cat_name)) \
+			{ \
+				catnum = Get_Cat_Num_FromString(s); \
+				if(catnum) \
+				{ \
+					strunzone(categories[i].override_string); \
+					categories[i].override_field = catnum; \
+					continue; \
+				} \
+			} \
+			strunzone(categories[i].override_string); \
+			categories[i].override_field = 0; \
 		}
-		strunzone(categories[i].cat_override_string);
-		categories[i].cat_override = 0;
-	}
+
+	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
+	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
+	#undef PROCESS_OVERRIDE
 }
 ACCUMULATE_FUNCTION(RegisterSLCategories, RegisterSLCategories_Done);
 
@@ -248,7 +254,8 @@ float CheckCategoryOverride(float cat)
 	entity catent = Get_Cat_Ent(cat);
 	if(catent)
 	{
-		if(catent.cat_override) { return catent.cat_override; }
+		float override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride); 
+		if(override) { return override; }
 		else { return cat; }
 	}
 	else
@@ -555,7 +562,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 	sethostcachesort(me.currentSortField, listflags);
 	
 	resorthostcache();
-	if(mode >= 1) { refreshhostcache(); }
+	if(mode >= 1) { refreshhostcache(FALSE); }
 }
 void XonoticServerList_focusEnter(entity me)
 {
@@ -780,7 +787,14 @@ void ServerList_Filter_Change(entity box, entity me)
 void ServerList_Categories_Click(entity box, entity me)
 {
 	box.setChecked(box, autocvar_menu_slist_categories = !autocvar_menu_slist_categories);
-	me.refreshServerList(me, 0);
+	///refreshhostcache(TRUE);
+
+	//cvar_set("net_slist_pause", "0");
+	//Destroy_Category_Entities();
+	//CALL_ACCUMULATED_FUNCTION(RegisterSLCategories);
+	//me.refreshServerList(me, 0);
+
+	resorthostcache();
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
