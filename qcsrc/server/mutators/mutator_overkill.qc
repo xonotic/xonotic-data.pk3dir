@@ -23,7 +23,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
-float ok_CheckWeaponCharge(entity ent, float wep, float swep)
+float ok_CheckWeaponCharge(entity ent, float wep)
 {
 	if not(autocvar_g_overkill_ammo_charge) return TRUE;
 	//if(wep != swep) return TRUE; // switching, don't even bother checking
@@ -136,7 +136,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	self.ok_ammo_charge = self.ammo_charge[self.weapon];
 
 	if(autocvar_g_overkill_ammo_charge)
-	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
+	if(!ok_CheckWeaponCharge(self, self.weapon))
 	{
 		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
 		{
