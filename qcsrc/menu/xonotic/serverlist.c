@@ -436,9 +436,6 @@ void XonoticServerList_configureXonoticServerList(entity me)
 
 	// clear list
 	me.nItems = 0;
-
-	// build categories
-	RegisterSLCategories();
 }
 void XonoticServerList_setSelected(entity me, float i)
 {
