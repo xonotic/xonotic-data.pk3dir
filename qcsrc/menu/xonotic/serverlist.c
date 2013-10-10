@@ -223,7 +223,6 @@ entity Get_Cat_Ent(float catnum)
 	}
 }
 
-
 float IsServerInList(string list, string srv)
 {
 	string p;
@@ -285,8 +284,6 @@ float CheckCategoryForEntry(float entry)
 		else if(k == "M") { modtype = strtolower(v); }
 	}
 
-	//print(sprintf("modtype = %s\n", modtype)); 
-
 	if(impure > autocvar_menu_slist_purethreshold) { impure = TRUE; }
 	else { impure = FALSE; }
 
@@ -302,14 +299,12 @@ float CheckCategoryForEntry(float entry)
 			case "xpm": { return CAT_XPM; } 
 			case "minstagib": { return CAT_MINSTAGIB; }
 			case "overkill": { return CAT_OVERKILL; }
+			//case "nix": { return CAT_NIX; }
+			//case "newtoys": { return CAT_NEWTOYS; }
 
 			// "cts" is allowed as compat, xdf is replacement
 			case "cts": 
 			case "xdf": { return CAT_DEFRAG; }
-			
-			//if(modname != "CTS")
-			//if(modname != "NIX")
-			//if(modname != "NewToys")
 			
 			default: { dprint(sprintf("Found strange mod type: %s\n", modtype)); return CAT_MODIFIED; }
 		}
@@ -645,8 +640,8 @@ void XonoticServerList_draw(entity me)
 		}
 		if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
 		{
-			category_name[0] = category_name[1] = -1;
-			category_item[0] = category_item[1] = -1;
+			category_name[0] = -1;
+			category_item[0] = -1;
 			category_draw_count = 0;
 			me.nItems = itemcount;
 		}
