@@ -888,7 +888,20 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(item < 0)
 	{
 		entity catent = Get_Cat_Ent(-item);
-		if(catent) { draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(catent.cat_string, 0, me.realFontSize)) * 0.5) * eX, catent.cat_string, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0); return; }
+		if(catent)
+		{
+			draw_Text(
+				eY * me.realUpperMargin
+				+
+				eX * (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(catent.cat_string, 0, me.realFontSize)) * 0.5),
+				catent.cat_string,
+				me.realFontSize,
+				'1 1 1',
+				SKINALPHA_TEXT,
+				0
+			);
+			return;
+		}
 	}
 	
 	if(isSelected)
