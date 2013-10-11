@@ -702,6 +702,11 @@ void XonoticServerList_draw(entity me)
 				// invariant in the binary search and thus has
 				// to be handled separately.
 				print(sprintf("hit: x='%d', dc='%d', first='%d', last='%d', catf='%d', catl='%d'.\n", x, category_draw_count, first, last, catf, catl));
+				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != x)
+					error("Category mismatch I");
+				if(first > 0)
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == x)
+						error("Category mismatch II");
 				category_name[category_draw_count] = x;
 				category_item[category_draw_count] = first;
 				++category_draw_count;
@@ -730,12 +735,19 @@ void XonoticServerList_draw(entity me)
 				}
 				if (catl == x) {
 					print(sprintf("hit: x='%d', dc='%d', first='%d', last='%d', catf='%d', catl='%d'.\n", x, category_draw_count, first, last, catf, catl));
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != x)
+						error("Category mismatch III");
+					if(last > 0)
+						if(gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == x)
+							error("Category mismatch IV");
 					category_name[category_draw_count] = x;
 					category_item[category_draw_count] = last;
 					++category_draw_count;
 					++me.nItems;
+					begin = last + 1; // already scanned through these, skip 'em
 				}
-				begin = last + 1; // already scanned through these, skip 'em
+				else
+					begin = last; // already scanned through these, skip 'em
 			}
 		}
 
