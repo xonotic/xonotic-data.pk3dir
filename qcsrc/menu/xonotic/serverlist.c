@@ -1327,38 +1327,51 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 }
 
 float XonoticServerList_getTotalHeight(entity me) {
-	float height_of_normal_rows = me.nItems - category_draw_count;
-	float height_of_category_headers = me.categoriesHeight * category_draw_count;
-	return me.itemHeight * (height_of_normal_rows + height_of_category_headers);
+	float num_normal_rows = me.nItems - category_draw_count;
+	float num_headers = category_draw_count;
+	return me.itemHeight * (num_normal_rows + me.categoriesHeight * num_headers);
 }
 float XonoticServerList_getItemAtPos(entity me, float pos) {
-	float i;
-	float ret;
 	pos = pos / me.itemHeight;
-	ret = floor(pos);
-	for (i = 0; i < category_draw_count; ++i) {
-		float first = i + category_item[i];
-		float firstPos = i * me.categoriesHeight + category_item[i];
-		if (pos >= firstPos)
-			ret = first;
-		if (pos >= firstPos + me.categoriesHeight)
-			ret = first + 1 + floor(pos - firstPos - me.categoriesHeight);
+	// TODO when item+category merging is done, manually expand these macros
+#define ITEM_STARTPOS_SINGLE(itemidx, itempos) \
+	if (pos >= itempos) \
+		return itemidx
+#define ITEM_STARTPOS_MULTI(itemidx, itempos) \
+	if (pos >= itempos) \
+		return itemidx + floor(pos - (itempos))
+	float i;
+	for (i = category_draw_count - 1; i >= 0; --i) {
+		ITEM_STARTPOS_MULTI((i + 1) + category_item[i], (i + 1) * me.categoriesHeight + category_item[i]);
+		ITEM_STARTPOS_SINGLE(i + category_item[i], i * me.categoriesHeight + category_item[i]);
 	}
-	return ret;
+#undef ITEM_STARTPOS_MULTI
+#undef ITEM_STARTPOS_SINGLE
+	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
+	return floor(pos);
 }
 float XonoticServerList_getItemStart(entity me, float item) {
+	// TODO when item+category merging is done, manually expand these macros
+#define ITEM_STARTPOS_SINGLE(itemidx, itempos) \
+	if (item >= itemidx) \
+		return (itempos) * me.itemHeight
+#define ITEM_STARTPOS_MULTI(itemidx, itempos) \
+	if (item >= itemidx) \
+		return ((itempos) + (item - (itemidx))) * me.itemHeight
 	float i;
-	float start = item;
-	for (i = 0; i < category_draw_count; ++i) {
-		float first = i + category_item[i];
-		if (item > first)
-			start += me.categoriesHeight - 1;
+	for (i = category_draw_count - 1; i >= 0; --i) {
+		ITEM_STARTPOS_MULTI((i + 1) + category_item[i], (i + 1) * me.categoriesHeight + category_item[i]);
+		ITEM_STARTPOS_SINGLE(i + category_item[i], i * me.categoriesHeight + category_item[i]);
 	}
-	return me.itemHeight * start;
+#undef ITEM_STARTPOS_MULTI
+#undef ITEM_STARTPOS_SINGLE
+	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
+	return item * me.itemHeight;
 }
 float XonoticServerList_getItemHeight(entity me, float item) {
 	float i;
 	for (i = 0; i < category_draw_count; ++i) {
+		// Matches exactly the headings with increased height.
 		float first = i + category_item[i];
 		if (item == first)
 			return me.itemHeight * me.categoriesHeight;
