@@ -1027,12 +1027,20 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	float item = CheckItemNumber(i);
 	//print(sprintf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems));
-	
+
+	vector oldscale = draw_scale;
+	vector oldshift = draw_shift;
+#define SET_YRANGE(start,end) \
+	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
+	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
+
 	if(item < 0)
 	{
 		entity catent = RetrieveCategoryEnt(-item);
 		if(catent)
 		{
+			float delta = (1 - 1 / me.categoriesHeight);
+			SET_YRANGE(delta, 1); // bottom align
 			draw_Text(
 				eY * me.realUpperMargin
 				+
@@ -1043,6 +1051,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 				SKINALPHA_TEXT,
 				0
 			);
+			SET_YRANGE(0, 1);
 			return;
 		}
 	}
