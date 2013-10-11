@@ -336,8 +336,8 @@ void train_wait()
 
 void train_next()
 {
-	entity targ, cp;
-	vector cp_org;
+	entity targ, cp = world;
+	vector cp_org = '0 0 0';
 
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
@@ -348,8 +348,6 @@ void train_next()
 			cp = find(world, targetname, targ.curvetarget); // get its second target (the control point)
 			cp_org = cp.origin - self.view_ofs; // no control point found, assume a straight line to the destination
 		}
-		else
-			cp = world; // no cp
 	}
 	if (self.target == "")
 		objerror("train_next: no next target");

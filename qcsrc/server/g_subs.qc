@@ -188,6 +188,7 @@ void SUB_CalcMove_controller_think (void)
 			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
 			angloc = destangle - self.owner.angles;
 			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
+			self.owner.avelocity = angloc;
 		}
 		if(nexttick < self.animstate_endtime)
 			veloc = nextpos - self.owner.origin;
@@ -196,7 +197,6 @@ void SUB_CalcMove_controller_think (void)
 		veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 
 		self.owner.velocity = veloc;
-		self.owner.avelocity = angloc;
 		self.nextthink = nexttick;
 	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
