@@ -57,6 +57,12 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticServerList, seenIPv4, float, 0)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
+	ATTRIB(XonoticServerList, categoriesHeight, float, 1.5)
+
+	METHOD(XonoticServerList, getTotalHeight, float(entity))
+	METHOD(XonoticServerList, getItemAtPos, float(entity, float))
+	METHOD(XonoticServerList, getItemStart, float(entity, float))
+	METHOD(XonoticServerList, getItemHeight, float(entity, float))
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
@@ -1300,4 +1306,45 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
 }
+
+float XonoticServerList_getTotalHeight(entity me) {
+	float height_of_normal_rows = me.nItems - category_draw_count;
+	float height_of_category_headers = me.categoriesHeight * category_draw_count;
+	return me.itemHeight * (height_of_normal_rows + height_of_category_headers);
+}
+float XonoticServerList_getItemAtPos(entity me, float pos) {
+	float i;
+	float ret;
+	pos = pos / me.itemHeight;
+	ret = floor(pos);
+	for (i = 0; i < category_draw_count; ++i) {
+		float first = i + category_item[i];
+		float firstPos = i * me.categoriesHeight + category_item[i];
+		if (pos >= firstPos)
+			ret = first;
+		if (pos >= firstPos + me.categoriesHeight)
+			ret = first + 1 + floor(pos - firstPos - me.categoriesHeight);
+	}
+	return ret;
+}
+float XonoticServerList_getItemStart(entity me, float item) {
+	float i;
+	float start = item;
+	for (i = 0; i < category_draw_count; ++i) {
+		float first = i + category_item[i];
+		if (item >= first)
+			start += me.categoriesHeight - 1;
+	}
+	return me.itemHeight * start;
+}
+float XonoticServerList_getItemHeight(entity me, float item) {
+	float i;
+	for (i = 0; i < category_draw_count; ++i) {
+		float first = i + category_item[i];
+		if (item == first)
+			return me.itemHeight * me.categoriesHeight;
+	}
+	return me.itemHeight;
+}
+
 #endif
