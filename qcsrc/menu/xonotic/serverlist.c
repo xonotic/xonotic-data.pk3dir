@@ -672,6 +672,53 @@ void XonoticServerList_draw(entity me)
 
 		if(itemcount)
 		{
+			// binary search method suggested by div
+			/*float cat = 0, x;
+			float first, middle, last;
+			float newfirst = 0;
+			float catf = 0, catl = 0;
+			for(x = 1; x <= category_ent_count; ++x)
+			{
+				first = newfirst;
+				last = (itemcount - 1);
+				middle = floor((first + last) / 2);
+
+				if(
+					((catf = gethostcachenumber(SLIST_FIELD_CATEGORY, first)) < x)
+					&&
+					((catl = gethostcachenumber(SLIST_FIELD_CATEGORY, last)) >= x)
+				)
+				{
+					for(;;)
+					{
+						cat = gethostcachenumber(SLIST_FIELD_CATEGORY, middle);
+						if(cat >= x) { last = middle; }
+						else if(cat < x) { first = middle; }
+						if((last - middle) == 1)
+						{
+							print(sprintf("highhit: x='%d', dc='%d', first='%d', middle='%d', last='%d', cat='%d'.\n", x, category_draw_count, first, middle, last, cat));
+							category_name[category_draw_count] = x;
+							category_item[category_draw_count] = last;
+							++category_draw_count;
+							++me.nItems;
+							newfirst = last; // already scanned through these, skip 'em
+							break;
+						}
+						middle = floor((first + last) / 2);
+					}
+				}
+				else if(catf == x)
+				{
+					print(sprintf("lowhit: x='%d', dc='%d', first='%d', middle='%d', last='%d', cat='%d'.\n", x, category_draw_count, first, middle, last, catf));
+					category_name[category_draw_count] = x;
+					category_item[category_draw_count] = first;
+					++category_draw_count;
+					++me.nItems;
+					newfirst = first + 1; // already scanned through these, skip 'em
+				}
+			}*/
+
+			// my binary search method
 			float cat = 0, x;
 			float first, middle, last;
 			float newfirst = 0;
@@ -703,7 +750,8 @@ void XonoticServerList_draw(entity me)
 					middle = floor((first + last) / 2);
 				}
 			}
-		
+
+			// old linear search method
 			/*float cat = 0, i = 0, x = 0; 
 			for(i = 0; i < itemcount; ++i) // FIXME this loop is TOTALLY unacceptable (O(servers)). Make it O(categories * log(servers)). Yes, that is possible.
 			{
