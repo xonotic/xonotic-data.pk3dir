@@ -177,8 +177,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 		_nade.velocity = _velocity;
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, TRUE);
-
-	//_nade.solid = SOLID_BBOX; // TODO: remember why this was needed
+		
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;
