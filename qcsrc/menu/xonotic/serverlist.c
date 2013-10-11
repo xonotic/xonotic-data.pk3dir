@@ -701,7 +701,6 @@ void XonoticServerList_draw(entity me)
 				// Starts at first. This breaks the loop
 				// invariant in the binary search and thus has
 				// to be handled separately.
-				print(sprintf("hit: x='%d', dc='%d', first='%d', last='%d', catf='%d', catl='%d'.\n", x, category_draw_count, first, last, catf, catl));
 				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != x)
 					error("Category mismatch I");
 				if(first > 0)
@@ -734,7 +733,6 @@ void XonoticServerList_draw(entity me)
 					}
 				}
 				if (catl == x) {
-					print(sprintf("hit: x='%d', dc='%d', first='%d', last='%d', catf='%d', catl='%d'.\n", x, category_draw_count, first, last, catf, catl));
 					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != x)
 						error("Category mismatch III");
 					if(last > 0)
@@ -1353,7 +1351,7 @@ float XonoticServerList_getItemStart(entity me, float item) {
 	float start = item;
 	for (i = 0; i < category_draw_count; ++i) {
 		float first = i + category_item[i];
-		if (item >= first)
+		if (item > first)
 			start += me.categoriesHeight - 1;
 	}
 	return me.itemHeight * start;
