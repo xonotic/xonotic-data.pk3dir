@@ -670,39 +670,76 @@ void XonoticServerList_draw(entity me)
 		// ^ unfortunately no such optimization can be made-- we must process through the
 		// entire list, otherwise there is no way to know which item is first in its category.
 
-		float cat, x;
-		for(i = 0; i < itemcount; ++i) // FIXME this loop is TOTALLY unacceptable (O(servers)). Make it O(categories * log(servers)). Yes, that is possible.
+		if(itemcount)
 		{
-			cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
-			if(cat)
+			float cat = 0, x;
+			float first, middle, last;
+			float newfirst = 0;
+			for(x = 1; x <= category_ent_count; ++x)
 			{
-				if(category_draw_count == 0)
+				first = newfirst;
+				last = (itemcount - 1);
+				middle = floor((first + last) / 2);
+
+				while(first <= last)
 				{
-					category_name[category_draw_count] = cat;
-					category_item[category_draw_count] = i;
-					++category_draw_count;
-					++me.nItems;
-				}
-				else
-				{
-					found = 0;
-					for(x = 0; x < category_draw_count; ++x) { if(cat == category_name[x]) { found = 1; } }
-					if not(found)
+					cat = gethostcachenumber(SLIST_FIELD_CATEGORY, middle);
+					if(cat > x) { last = middle - 1; }
+					else if(cat == x)
 					{
+						if(middle == 0 || (gethostcachenumber(SLIST_FIELD_CATEGORY, middle - 1) != x)) // check if middle is the first of its category
+						{
+							//print(sprintf("hit: x='%d', dc='%d', first='%d', middle='%d', last='%d', cat='%d'.\n", x, category_draw_count, first, middle, last, cat));
+							category_name[category_draw_count] = cat;
+							category_item[category_draw_count] = middle;
+							++category_draw_count;
+							++me.nItems;
+							newfirst = middle + 1; // already scanned through these, skip 'em
+							break;
+						}
+						else { last = middle - 1; } // nope, try again
+					}
+					else { first = middle + 1; }
+					middle = floor((first + last) / 2);
+				}
+			}
+		
+			/*float cat = 0, i = 0, x = 0; 
+			for(i = 0; i < itemcount; ++i) // FIXME this loop is TOTALLY unacceptable (O(servers)). Make it O(categories * log(servers)). Yes, that is possible.
+			{
+				cat = gethostcachenumber(SLIST_FIELD_CATEGORY, i);
+				if(cat)
+				{
+					if(category_draw_count == 0)
+					{
+						print(sprintf("hit: i='%d', dc='%d', cat='%d'.\n", i, category_draw_count, cat));
 						category_name[category_draw_count] = cat;
 						category_item[category_draw_count] = i;
 						++category_draw_count;
 						++me.nItems;
 					}
+					else
+					{
+						found = 0;
+						for(x = 0; x < category_draw_count; ++x) { if(cat == category_name[x]) { found = 1; } }
+						if not(found)
+						{
+							print(sprintf("hit: i='%d', dc='%d', cat='%d'.\n", i, category_draw_count, cat));
+							category_name[category_draw_count] = cat;
+							category_item[category_draw_count] = i;
+							++category_draw_count;
+							++me.nItems;
+						}
+					}
 				}
+			}*/
+			if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
+			{
+				category_name[0] = -1;
+				category_item[0] = -1;
+				category_draw_count = 0;
+				me.nItems = itemcount;
 			}
-		}
-		if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
-		{
-			category_name[0] = -1;
-			category_item[0] = -1;
-			category_draw_count = 0;
-			me.nItems = itemcount;
 		}
 	}
 	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
