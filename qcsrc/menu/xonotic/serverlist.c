@@ -111,6 +111,7 @@ entity RetrieveCategoryEnt(float catnum);
 
 float IsServerInList(string list, string srv);
 #define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
 #define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
 
 float CheckCategoryOverride(float cat);
@@ -308,42 +309,50 @@ float CheckCategoryForEntry(float entry)
 	// now check if it's recommended
 	if(autocvar_menu_slist_recommendations)
 	{
-		float recommended = 0;
-		if(autocvar_menu_slist_recommendations & 1)
+		string cname = gethostcachestring(SLIST_FIELD_CNAME, entry);
+		
+		if(IsPromoted(cname)) { return CAT_RECOMMENDED; }
+		else
 		{
-			if(IsRecommended(gethostcachestring(SLIST_FIELD_CNAME, entry)))
-				{ ++recommended; }
-			else
-				{ --recommended; }
+			float recommended = 0;
+			if(autocvar_menu_slist_recommendations & 1)
+			{
+				if(IsRecommended(cname)) { ++recommended; }
+				else { --recommended; }
+			}
+			if(autocvar_menu_slist_recommendations & 2)
+			{
+				if(
+					///// check for minimum free slots
+					(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
+					
+					&& // check for purity requirement
+					(
+						(autocvar_menu_slist_recommendations_purethreshold < 0)
+						||
+						(impure <= autocvar_menu_slist_recommendations_purethreshold)
+					)
+					
+					&& // check for minimum amount of humans
+					(
+						gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
+						>=
+						autocvar_menu_slist_recommendations_minhumans
+					)
+					
+					&& // check for maximum latency
+					(
+						gethostcachenumber(SLIST_FIELD_PING, entry)
+						<=
+						autocvar_menu_slist_recommendations_maxping
+					)
+				)
+					{ ++recommended; }
+				else
+					{ --recommended; }
+			}
+			if(recommended > 0) { return CAT_RECOMMENDED; }
 		}
-		if(autocvar_menu_slist_recommendations & 2)
-		{
-			if(
-				(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
-				&&
-				(
-					(autocvar_menu_slist_recommendations_purethreshold < 0)
-					||
-					(impure <= autocvar_menu_slist_recommendations_purethreshold)
-				)
-				&&
-				(
-					gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
-					>=
-					autocvar_menu_slist_recommendations_minhumans
-				)
-				&&
-				(
-					gethostcachenumber(SLIST_FIELD_PING, entry)
-					<=
-					autocvar_menu_slist_recommendations_maxping
-				)
-			)
-				{ ++recommended; }
-			else
-				{ --recommended; }
-		}
-		if(recommended > 0) { return CAT_RECOMMENDED; }
 	}
 
 	// if not favorited or recommended, check modname
@@ -573,6 +582,13 @@ void XonoticServerList_draw(entity me)
 		if(!me.needsRefresh)
 			me.needsRefresh = 2;
 		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
+	}
+
+	if(_Nex_ExtResponseSystem_PromotedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 3;
+		_Nex_ExtResponseSystem_PromotedServersNeedsRefresh = 0;
 	}
 
 	if(_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh)
