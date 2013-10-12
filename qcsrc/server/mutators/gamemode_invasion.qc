@@ -166,7 +166,7 @@ void Invasion_RoundStart()
 		
 	roundcnt += 1;
 	
-	invasion_monsterskill = roundcnt + max(1, numplayers * 0.3);
+	invasion_monsterskill = roundcnt + (numplayers * 0.3);
 	
 	maxcurrent = 0;
 	numspawned = 0;

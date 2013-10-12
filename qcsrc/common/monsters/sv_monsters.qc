@@ -43,9 +43,7 @@ void monster_dropitem()
 
 float Monster_SkillModifier()
 {
-	float t = 1;
-	
-	t *= (self.monster_skill * 0.5);
+	float t = 1.0 * (self.monster_skill * 0.15);
 	
 	return t;
 }
@@ -605,8 +603,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 
 	targ = monster_target;
-	runspeed = monster_speed_run;
-	walkspeed = monster_speed_walk;
+	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
+	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
@@ -925,6 +923,29 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	}
 }
 
+void monster_setupcolors()
+{
+	if(IS_PLAYER(self.monster_owner))
+		self.colormap = self.monster_owner.colormap;
+	else if(teamplay && self.team)
+		self.colormap = 1024 + self.team * 17;
+	else
+	{
+		if(self.monster_skill <= MONSTER_SKILL_EASY)
+			self.colormap = 1029;
+		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
+			self.colormap = 1027;
+		else if(self.monster_skill <= MONSTER_SKILL_HARD)
+			self.colormap = 1038;
+		else if(self.monster_skill <= MONSTER_SKILL_INSANE)
+			self.colormap = 1028;
+		else if(self.monster_skill <= MONSTER_SKILL_NIGHTMARE)
+			self.colormap = 1032;
+		else
+			self.colormap = 1024;
+	}
+}
+
 void monster_think()
 {
 	self.think = monster_think;
@@ -942,12 +963,15 @@ void monster_think()
 	CSQCMODEL_AUTOUPDATE();
 }
 
-void monster_spawn()
+float monster_spawn()
 {
 	MON_ACTION(self.monsterid, MR_SETUP);
 
 	if not(self.monster_respawned)
+	{
 		Monster_CheckMinibossFlag();
+		self.health *= Monster_SkillModifier();
+	}
 
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
@@ -976,25 +1000,11 @@ void monster_spawn()
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
-
-	MUTATOR_CALLHOOK(MonsterSpawn);
 	
-	// TODO: fix this mess
-	if(IS_PLAYER(self.monster_owner))
-		self.colormap = self.monster_owner.colormap;
-	else if(teamplay && self.team)
-		self.colormap = 1024 + self.team * 17;
-	else
-	{
-		if(self.monster_skill <= MONSTER_SKILL_EASY)
-			self.colormap = 1027;
-		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
-			self.colormap = 1038;
-		else if(self.monster_skill <= MONSTER_SKILL_HARD)
-			self.colormap = 1028;
-		else
-			self.colormap = 1024;
-	}
+	if(MUTATOR_CALLHOOK(MonsterSpawn))
+		return FALSE;
+	
+	return TRUE;
 }
 
 float monster_initialize(float mon_id, float nodrop)
@@ -1095,7 +1105,10 @@ float monster_initialize(float mon_id, float nodrop)
 		setorigin(self, trace_endpos);
 	}
 		
-	monster_spawn();
+	if not(monster_spawn())
+		return FALSE;
+		
+	monster_setupcolors();
 	
 	CSQCMODEL_AUTOINIT();
 
