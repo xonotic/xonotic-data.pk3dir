@@ -928,7 +928,7 @@ void monster_setupcolors()
 	if(IS_PLAYER(self.monster_owner))
 		self.colormap = self.monster_owner.colormap;
 	else if(teamplay && self.team)
-		self.colormap = 1024 + self.team * 17;
+		self.colormap = 1024 + (self.team - 1) * 17;
 	else
 	{
 		if(self.monster_skill <= MONSTER_SKILL_EASY)
