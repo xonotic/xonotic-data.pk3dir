@@ -67,16 +67,15 @@ ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
-var float autocvar_menu_slist_categories = TRUE;
-var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
-var float autocvar_menu_slist_purethreshold = 10;
-var float autocvar_menu_slist_modimpurity = 10;
-var float autocvar_menu_slist_recommendations = 3;
-var float autocvar_menu_slist_recommendations_maxping = 150;
-var float autocvar_menu_slist_recommendations_minfreeslots = 1; 
-var float autocvar_menu_slist_recommendations_minhumans = 0;
-var float autocvar_menu_slist_recommendations_purethreshold = -1; 
-//var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
+float autocvar_menu_slist_categories;
+float autocvar_menu_slist_categories_onlyifmultiple; 
+float autocvar_menu_slist_purethreshold;
+float autocvar_menu_slist_modimpurity;
+float autocvar_menu_slist_recommendations;
+float autocvar_menu_slist_recommendations_maxping;
+float autocvar_menu_slist_recommendations_minfreeslots; 
+float autocvar_menu_slist_recommendations_minhumans;
+float autocvar_menu_slist_recommendations_purethreshold; 
 
 // server cache fields
 #define SLIST_FIELDS \
@@ -107,12 +106,12 @@ const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying serve
 const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
 
 // function declarations
-entity RetrieveCategoryEnt(float catnum);
-
 float IsServerInList(string list, string srv);
 #define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
 #define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
 #define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
+
+entity RetrieveCategoryEnt(float catnum);
 
 float CheckCategoryOverride(float cat);
 float CheckCategoryForEntry(float entry); 
