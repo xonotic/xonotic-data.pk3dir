@@ -71,10 +71,10 @@ var float autocvar_menu_slist_categories = TRUE;
 var float autocvar_menu_slist_categories_onlyifmultiple = TRUE; 
 var float autocvar_menu_slist_purethreshold = 10;
 var float autocvar_menu_slist_modimpurity = 10;
-var float autocvar_menu_slist_recommendations = 2;
+var float autocvar_menu_slist_recommendations = 3;
 var float autocvar_menu_slist_recommendations_maxping = 150;
 var float autocvar_menu_slist_recommendations_minfreeslots = 1; 
-var float autocvar_menu_slist_recommendations_minhumans = 1;
+var float autocvar_menu_slist_recommendations_minhumans = 0;
 var float autocvar_menu_slist_recommendations_purethreshold = -1; 
 //var string autocvar_menu_slist_recommended = "76.124.107.5:26004";
 
