@@ -141,7 +141,7 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 			r = getresolution(i);
 			if(r_x == 0 && r_y == 0)
 				break;
-			if(r_x < 800 || r_y < 600)
+			if(r_x < 640 || r_y < 480)
 				continue;
 			if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
 				if(autocvar_menu_vid_allowdualscreenresolution <= 0)
@@ -156,6 +156,12 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 
 	if(me.nValues == 0)
 	{
+		me.addResolution(me, 640, 480, 1); // pc res
+		me.addResolution(me, 720, 480, 1.125); // DVD NTSC 4:3
+		me.addResolution(me, 720, 576, 0.9375); // DVD PAL 4:3
+		me.addResolution(me, 720, 480, 0.84375); // DVD NTSC 16:9
+		me.addResolution(me, 720, 576, 0.703125); // DVD PAL 16:9
+		me.addResolution(me, 800, 480, 1); // 480p at 1:1 pixel aspect
 		me.addResolution(me, 800, 600, 1); // pc res
 		me.addResolution(me, 1024, 600, 1); // notebook res
 		me.addResolution(me, 1024, 768, 1); // pc res
