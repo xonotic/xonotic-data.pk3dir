@@ -43,7 +43,7 @@ void monster_dropitem()
 
 float Monster_SkillModifier()
 {
-	float t = 1.0 * (self.monster_skill * 0.15);
+	float t = 0.5+self.monster_skill*((1.2-0.3)/10);
 	
 	return t;
 }
@@ -1108,7 +1108,8 @@ float monster_initialize(float mon_id, float nodrop)
 	if not(monster_spawn())
 		return FALSE;
 		
-	monster_setupcolors();
+	if not(self.monster_respawned)
+		monster_setupcolors();
 	
 	CSQCMODEL_AUTOINIT();
 
