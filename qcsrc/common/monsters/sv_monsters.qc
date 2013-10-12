@@ -41,6 +41,15 @@ void monster_dropitem()
 	}
 }
 
+float Monster_SkillModifier()
+{
+	float t = 1;
+	
+	t *= (self.monster_skill * 0.5);
+	
+	return t;
+}
+
 float monster_isvalidtarget (entity targ, entity ent)
 {
 	if(!targ || !ent)
@@ -292,8 +301,6 @@ void monster_makevectors(entity e)
 
 float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
 {
-	float rdmg = damg * random();
-
 	if (self.health <= 0)
 		return FALSE; // attacking while dead?!
 
@@ -314,7 +321,7 @@ float monster_melee(entity targ, float damg, float anim, float er, float anim_fi
 	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, self, self, rdmg * monster_skill, deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
+		Damage(trace_ent, self, self, damg * Monster_SkillModifier(), deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 
 	return TRUE;
 }
@@ -971,6 +978,23 @@ void monster_spawn()
 	self.nextthink = time + self.ticrate;
 
 	MUTATOR_CALLHOOK(MonsterSpawn);
+	
+	// TODO: fix this mess
+	if(IS_PLAYER(self.monster_owner))
+		self.colormap = self.monster_owner.colormap;
+	else if(teamplay && self.team)
+		self.colormap = 1024 + self.team * 17;
+	else
+	{
+		if(self.monster_skill <= MONSTER_SKILL_EASY)
+			self.colormap = 1027;
+		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
+			self.colormap = 1038;
+		else if(self.monster_skill <= MONSTER_SKILL_HARD)
+			self.colormap = 1028;
+		else
+			self.colormap = 1024;
+	}
 }
 
 float monster_initialize(float mon_id, float nodrop)
@@ -979,11 +1003,14 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	entity mon = get_monsterinfo(mon_id);
+	
+	if not(self.monster_skill)
+		self.monster_skill = cvar("g_monsters_skill");
 
 	// support for quake style removing monsters based on skill
-	if(monster_skill <= 1) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
-	if(monster_skill == 2) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
-	if(monster_skill >= 3) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_EASY) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_MEDIUM) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_HARD) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
 
 	if(self.team && !teamplay)
 		self.team = 0;

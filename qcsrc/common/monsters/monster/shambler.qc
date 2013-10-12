@@ -67,7 +67,7 @@ void CastLightning()
 
 	traceline (org, self.origin + dir * 1000, TRUE, self);
 		
-	FireRailgunBullet (org, org + dir * 1000, MON_CVAR(shambler, attack_lightning_damage) * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
+	FireRailgunBullet (org, org + dir * 1000, MON_CVAR(shambler, attack_lightning_damage) * Monster_SkillModifier(), 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
 	
 	// teamcolor / hit beam effect
 	//v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);

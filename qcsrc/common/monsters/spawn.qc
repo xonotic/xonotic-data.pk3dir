@@ -37,11 +37,6 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	
 	if(moveflag)
 		e.monster_moveflags = moveflag;
-		
-	if(e.team || !IS_PLAYER(spawnedby))
-		e.colormap = 1024;
-	else
-		e.colormap = spawnedby.colormap;
 	
 	if(IS_PLAYER(spawnedby))
 	{
