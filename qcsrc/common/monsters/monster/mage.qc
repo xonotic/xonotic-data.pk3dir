@@ -263,46 +263,60 @@ void mage_teleport()
 void mage_shield_think()
 {
 	self.nextthink = time;
+	setorigin(self, self.owner.origin);
 
 	if(time >= self.ltime || self.owner.health <= 0)
 	{
 		self.owner.armorvalue = 0;
 		self.owner.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+		self.owner.weaponentity = world;
 		remove(self);
 		return;
 	}
+}
+
+void mage_shield_touch()
+{
+	if(other == self.realowner)
+		return;
+		
+	vector mymid = (self.absmin + self.absmax) * 0.5;
+	vector othermid = (other.absmin + other.absmax) * 0.5;
+
+	Damage(other, self, self.realowner, 1, DEATH_MONSTER_MAGE, mymid, normalize(othermid - mymid) * 100);
 }
 
 void mage_shield()
 {
 	if(self.weaponentity)
 		return; // already have a shield
-		
-	entity shield = spawn();
 
-	shield.owner = self;
+	entity shield = spawn();
+	
+	shield.owner = shield.realowner = self;
+	shield.enemy = self;
 	shield.team = self.team;
-	shield.ltime = time + MON_CVAR(mage, shield_time);
+	shield.touch = mage_shield_touch;
 	shield.classname = "shield";
+	shield.ltime = time + MON_CVAR(mage, shield_time);
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
-	shield.scale = self.scale * 0.6;
+	shield.scale = self.scale * 0.5;
 	shield.think = mage_shield_think;
 	shield.nextthink = time;
 	
-	setattachment(shield, self, "");
-	setmodel(shield, "models/ctf/shield.md3");
-	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
-	
 	self.lastshielded = time + MON_CVAR(mage, shield_delay);
-	
+	self.weaponentity = shield;
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
-	
 	self.m_armor_blockpercent = MON_CVAR(mage, shield_blockpercent);
 	self.armorvalue = self.health;
+	
+	setorigin(shield, self.origin);
+	setmodel(shield, "models/ctf/shield.md3");
+	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
 float mage_attack(float attack_type)
@@ -311,8 +325,9 @@ float mage_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			// mage currently has no melee attacks
-			return FALSE;
+			mage_shield();
+				
+			return TRUE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
