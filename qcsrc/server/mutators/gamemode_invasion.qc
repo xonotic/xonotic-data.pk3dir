@@ -305,16 +305,11 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	
 	MUTATOR_ONADD
 	{
-		float i;
-		
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		invasion_Initialize();
 		
 		cvar_settemp("g_monsters", "1");
-		
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			get_monsterinfo(i).spawnflags &= ~MON_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

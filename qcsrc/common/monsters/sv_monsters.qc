@@ -979,12 +979,6 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	entity mon = get_monsterinfo(mon_id);
-	
-	if(mon.spawnflags & MON_FLAG_MUTATORBLOCKED && !(self.spawnflags & MONSTERFLAG_SPAWNED))
-	{
-		dprint("Attempted to spawn a mutator-blocked monster rejected");
-		return FALSE;
-	}
 
 	// support for quake style removing monsters based on skill
 	if(monster_skill <= 1) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }

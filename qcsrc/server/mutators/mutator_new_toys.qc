@@ -81,33 +81,16 @@ MUTATOR_HOOKFUNCTION(nt_SetModname)
 
 float nt_IsNewToy(float w)
 {
-	if((get_weaponinfo(w)).weapon)
+	switch(w)
 	{
-		switch(w)
-		{
-			case WEP_SEEKER:
-			case WEP_MINE_LAYER:
-			case WEP_HLAC:
-			case WEP_RIFLE:
-				return TRUE;
-		}
+		case WEP_SEEKER:
+		case WEP_MINE_LAYER:
+		case WEP_HLAC:
+		case WEP_RIFLE:
+			return TRUE;
+		default:
+			return FALSE;
 	}
-	else
-	{
-		switch(w)
-		{
-			case MON_ANIMUS:
-			case MON_BRUISER:
-			case MON_BRUTE:
-			case MON_CERBERUS:
-			case MON_KNIGHT:
-			case MON_SLIME:
-			case MON_STINGRAY:
-				return TRUE;
-		}
-	}
-	
-	return FALSE;
 }
 
 string nt_GetFullReplacement(string w)
@@ -224,10 +207,6 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
 				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-				
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-		if(nt_IsNewToy(i))
-			get_monsterinfo(i).spawnflags &= ~MON_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -236,10 +215,6 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
 				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-				
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-		if(nt_IsNewToy(i))
-			get_monsterinfo(i).spawnflags |= MON_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONREMOVE
