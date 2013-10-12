@@ -749,7 +749,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 		
-		if(((targ.frozen == 2 && attacker.monsterid != MON_SPIDER) || (targ.frozen == 1)) && deathtype != DEATH_HURTTRIGGER)
+		if(targ.frozen && deathtype != DEATH_HURTTRIGGER)
 		{
 			damage = 0;
 			force *= 0.2;
