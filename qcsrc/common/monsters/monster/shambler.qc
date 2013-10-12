@@ -38,6 +38,8 @@ const float shambler_anim_magic 	= 6;
 const float shambler_anim_pain 		= 7;
 const float shambler_anim_death 	= 8;
 
+.float shambler_lastattack; // delay attacks separately
+
 void shambler_smash()
 {
 	makevectors(self.angles);
@@ -170,20 +172,25 @@ float shambler_attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
+			if(time >= self.shambler_lastattack) // shambler doesn't attack much
 			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
 			{
 				self.frame = shambler_anim_smash;
 				defer(0.7, shambler_smash);
 				self.attack_finished_single = time + 1.1;
+				self.shambler_lastattack = time + 3;
+				return TRUE;
 			}
-			else
+			else if(random() <= 0.1) // small chance, don't want this spammed
 			{
 				self.frame = shambler_anim_magic;
 				self.attack_finished_single = time + 1.1;
+				self.shambler_lastattack = time + 3;
 				defer(0.6, shambler_lightning);
+				return TRUE;
 			}
 			
-			return TRUE;
+			return FALSE;
 		}
 	}
 	
