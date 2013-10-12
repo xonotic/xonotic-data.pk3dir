@@ -637,7 +637,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.moveto = monster_pickmovetarget(targ);
 
 	if not(self.enemy)
-		MonsterSound(monstersound_idle, 5, TRUE, CH_VOICE);
+		MonsterSound(monstersound_idle, 7, TRUE, CH_VOICE);
 
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
