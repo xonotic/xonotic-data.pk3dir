@@ -57,7 +57,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticServerList, seenIPv4, float, 0)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
-	ATTRIB(XonoticServerList, categoriesHeight, float, 1.5)
+	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25)
 
 	METHOD(XonoticServerList, getTotalHeight, float(entity))
 	METHOD(XonoticServerList, getItemAtPos, float(entity, float))
@@ -986,20 +986,24 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		{
 			SET_YRANGE(
 				(me.categoriesHeight - 1) / (me.categoriesHeight + 1),
-				me.categoriesHeight / (me.categoriesHeight + 1));
+				me.categoriesHeight / (me.categoriesHeight + 1)
+			);
 			draw_Text(
 				eY * me.realUpperMargin
 				+
+#if 0
 				eX * (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(catent.cat_string, 0, me.realFontSize)) * 0.5),
 				catent.cat_string,
+#else
+				eX * (me.columnNameOrigin),
+				strcat(catent.cat_string, ":"),
+#endif
 				me.realFontSize,
 				'1 1 1',
 				SKINALPHA_TEXT,
 				0
 			);
-			SET_YRANGE(
-				me.categoriesHeight / (me.categoriesHeight + 1),
-				1);
+			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
 		}
 	}
 	
