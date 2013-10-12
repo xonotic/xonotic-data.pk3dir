@@ -61,8 +61,16 @@ void updateConwidths(float width, float height, float pixelheight)
 		f = 1;
 	c = c * f; // fteqcc fail
 
-	cvar_set("vid_conwidth", ftos(rint(c_x)));
-	cvar_set("vid_conheight", ftos(rint(c_y)));
+	c_x = rint(c_x);
+	c_y = rint(c_y);
+
+	if (c_x != cvar("vid_conwidth") || c_y != cvar("vid_conheight"))
+	{
+		cvar_set("vid_conwidth", ftos(c_x));
+		cvar_set("vid_conheight", ftos(c_y));
+		localcmd("\nr_restart\n");
+	}
+
 	XonoticResolutionSlider_DataHasChanged = TRUE;
 }
 entity makeXonoticResolutionSlider()
