@@ -411,8 +411,6 @@ void Ent_Projectile()
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				self.mins = '-8 -8 -8';
 				self.maxs = '8 8 8';
-				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = func_null;
 				self.scale = 2.5;
 				self.avelocity = randomvec() * 720;
 				break;

@@ -74,14 +74,13 @@ void shambler_lightning_explode()
 	self.takedamage = DAMAGE_NO;
 	self.movetype = MOVETYPE_NONE;
 	self.velocity = '0 0 0';
-	UpdateCSQCProjectile(self);
 
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
 	RadiusDamage (self, self.realowner, MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_radius), world, MON_CVAR(shambler, attack_lightning_force), self.projectiledeathtype, other);
 	
-	for(head = findradius(self.origin, MON_CVAR(shambler, attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner)
+	for(head = findradius(self.origin, MON_CVAR(shambler, attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
 		te_csqc_lightningarc(self.origin, head.origin);
 		Damage(head, self, self.realowner, MON_CVAR(shambler, attack_lightning_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
