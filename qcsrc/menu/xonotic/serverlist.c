@@ -426,7 +426,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 {
 	me.favoriteButton.setText(me.favoriteButton,
 		(IsFavorite(me.ipAddressBox.text) ?
-			_("Remove") : _("Bookmark")
+			_("Remove") : _("Favorite")
 		)
 	);
 }
