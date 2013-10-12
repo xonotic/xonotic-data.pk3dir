@@ -49,7 +49,6 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, infoButton, entity, NULL)
 	ATTRIB(XonoticServerList, currentSortOrder, float, 0)
 	ATTRIB(XonoticServerList, currentSortField, float, -1)
-	ATTRIB(XonoticServerList, lastBumpSelectTime, float, 0)
 	ATTRIB(XonoticServerList, lastClickedServer, float, -1)
 	ATTRIB(XonoticServerList, lastClickedTime, float, 0)
 
@@ -1241,13 +1240,10 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float i = me.selectedItem;
 	vector org, sz;
 
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
 	sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
-
-	me.lastBumpSelectTime = 0;
 
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
@@ -1258,7 +1254,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		if(me.nItems != 0)
 		{
-			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, i);
+			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 			return 1;
 		}
