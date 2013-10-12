@@ -189,28 +189,6 @@ void mage_attack_spike()
 	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
 }
 
-void mage_attack_beam()
-{
-	if(self.health <= 0 || self.enemy.health <= 0)
-		return;
-		
-	traceline(self.origin + self.view_ofs, self.enemy.origin, FALSE, self);
-	
-	if(vlen(self.origin - trace_endpos) > 500)
-	{
-		self.attack_finished_single = time;
-		return;
-	}
-	
-	if(trace_ent)
-		Damage(trace_ent, self, self, 10, DEATH_MONSTER_MAGE, trace_ent.origin, '0 0 0');
-		
-	trailparticles(self, particleeffectnum("TE_TEI_G3RED_HIT"), self.origin + self.view_ofs, trace_ent.origin);
-	
-	if(time < self.attack_finished_single)
-		defer(0.1, mage_attack_beam);
-}
-
 void mage_heal()
 {
 	entity head;
@@ -265,6 +243,23 @@ void mage_heal()
 	}
 }
 
+void mage_teleport()
+{
+	if(vlen(self.enemy.origin - self.origin) >= 500)
+		return;
+
+	makevectors(self.enemy.angles);
+	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin - '0 0 5', MOVE_NORMAL, self);
+	
+	if(trace_fraction <= 1)
+	{
+		pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
+		setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
+	}
+	
+	self.attack_finished_single = time + 0.2;
+}
+
 void mage_shield_think()
 {
 	self.nextthink = time;
@@ -315,16 +310,17 @@ float mage_attack(float attack_type)
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
+		{
+			// mage currently has no melee attacks
+			return FALSE;
+		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if not(self.mage_spike)
 			{
-				if(random() <= 0.5)
+				if(random() <= 0.4)
 				{
-					self.frame = mage_anim_attack;
-					self.attack_finished_single = time + 1.5; // 0.3 seconds of beam
-					defer(1.2, mage_attack_beam);
-					
+					mage_teleport();
 					return TRUE;
 				}
 				else
@@ -332,7 +328,6 @@ float mage_attack(float attack_type)
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
 					defer(0.2, mage_attack_spike);
-					
 					return TRUE;
 				}
 			}
