@@ -313,47 +313,94 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		n = 0;
 	else
 		n = tokenizebyseparator(data, "\n");
+
+	float i;
+	string s; 
 	
-	if(n >= 1)
+	string un_version = "";
+	string un_download = "";
+	string un_url = "";
+	string un_bannedservers = "";
+	string un_emergency_pk3s = "";
+	string un_promoted = "";
+	string un_recommended = "";
+	
+	for(i = 0; i < n; ++i)
 	{
-		_Nex_ExtResponseSystem_UpdateTo = argv(0);
-
-		if(vercmp(cvar_string("g_xonoticversion"), _Nex_ExtResponseSystem_UpdateTo) >= 0)
+		s = substring(argv(i), 2, -1);
+		if(s == "") { continue; } // ignore empty lines
+		
+		switch(substring(argv(i), 0, 1))
 		{
-			_Nex_ExtResponseSystem_UpdateTo = ""; // no update needed
-		}
-		else
-		{
-			// update needed
-			if(n >= 2)
-				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
-			if(n >= 3)
-				_Nex_ExtResponseSystem_UpdateToURL = strzone(argv(2));
-		}
-
-		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
-
-		if(n >= 4)
-		{
-			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
-			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
-		}
-
-		if(n >= 5)
-		{
-			if(cvar("menu_updatecheck_getpacks"))
+			#define APPEND_STRING(list,sep,add) list = ((list != "") ? strcat(list, sep, add) : add);
+			case "V":
 			{
-				_Nex_ExtResponseSystem_Packs = strzone(argv(4));
-				_Nex_ExtResponseSystem_PacksStep = 1;
+				un_version = s;
+				break;
+			}
+			case "D":
+			{
+				un_download = s;
+				break;
+			}
+			case "U":
+			{
+				un_url = s;
+				break;
+			}
+			case "B":
+			{
+				APPEND_STRING(un_bannedservers, " ", s)
+				break;
+			}
+			case "E":
+			{
+				if(cvar("menu_updatecheck_getpacks"))
+					{ APPEND_STRING(un_emergency_pk3s, " ", s) }
+				break;
+			}
+			case "P":
+			{
+				APPEND_STRING(un_promoted, " ", s)
+				break;
+			}
+			case "R":
+			{
+				APPEND_STRING(un_recommended, " ", s)
+				break;
 			}
 		}
+	}
 
-		if(n >= 6)
+	if(un_version != "")
+	{
+		if(vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
 		{
-			_Nex_ExtResponseSystem_RecommendedServers = strzone(argv(5));
-			_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
+			// update needed
+			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
+			if(un_download) { print(sprintf(_("Update can be downloaded at:\n%s\n"), un_download)); }
+			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 		}
 	}
+	
+	if(un_emergency_pk3s != "")
+	{
+		_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+		_Nex_ExtResponseSystem_PacksStep = 1;
+	}
+
+	if(un_promoted != "")
+	{
+		_Nex_ExtResponseSystem_PromotedServers = strzone(un_promoted);
+		_Nex_ExtResponseSystem_PromotedServersNeedsRefresh = 1;
+	}
+
+	if(un_recommended != "")
+	{
+		_Nex_ExtResponseSystem_RecommendedServers = strzone(un_recommended);
+		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
+	}
+
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
@@ -372,7 +419,7 @@ void updateCheck()
 
 			// for privacy, munge the start count a little
 			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?format=keys&version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
 
 #ifdef CVAR_POPCON
 			float cvar_handle, popcon_handle;
