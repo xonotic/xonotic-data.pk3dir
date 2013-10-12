@@ -256,7 +256,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		{
 			entity e;
 			string tospawn;
-			float moveflag;
+			float moveflag, i;
 			
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
@@ -265,6 +265,15 @@ void ClientCommand_mobspawn(float request, float argc)
 			{
 				sprint(self, monsterlist_reply);
 				return;
+			}
+			
+			if(tospawn == "random")
+			{
+				RandomSelection_Init();
+				for(i = MON_FIRST; i <= MON_LAST; ++i)
+					RandomSelection_Add(world, 0, (get_monsterinfo(i)).netname, 1, 1);
+				
+				tospawn = RandomSelection_chosen_string;
 			}
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
@@ -299,6 +308,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		{
 			sprint(self, "\nUsage:^3 cmd mobspawn monster\n");
 			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
+			sprint(self, "  Argument 'random' spawns a randomly selected monster.\n");
 			return;
 		}
 	}
