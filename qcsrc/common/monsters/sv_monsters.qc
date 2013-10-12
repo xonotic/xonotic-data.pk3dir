@@ -605,6 +605,12 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	targ = monster_target;
 	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
+	
+	if(time < self.spider_slowness)
+	{
+		runspeed *= 0.5;
+		walkspeed *= 0.5;
+	}
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
