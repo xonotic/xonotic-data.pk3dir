@@ -153,15 +153,7 @@ void GameCommand_butcher(float request)
 			
 			FOR_EACH_MONSTER(head)
 			{
-				if(head.weaponentity)
-					remove(head.weaponentity);
-					
-				if(head.iceblock)
-					remove(head.iceblock);
-					
-				WaypointSprite_Kill(head.sprite);
-					
-				remove(head);
+				monster_remove(head);
 				++removed_count;
 			}
 			

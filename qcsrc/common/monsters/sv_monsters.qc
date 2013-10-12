@@ -703,6 +703,24 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	monster_checkattack(self, self.enemy);
 }
 
+void monster_remove(entity mon)
+{
+	if not(mon)
+		return; // nothing to remove
+		
+	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
+		
+	if(mon.weaponentity)
+		remove(mon.weaponentity);
+					
+	if(mon.iceblock)
+		remove(mon.iceblock);
+					
+	WaypointSprite_Kill(mon.sprite);
+					
+	remove(mon);
+}
+
 void monster_dead_think()
 {
 	self.nextthink = time + self.ticrate;
@@ -961,6 +979,12 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	entity mon = get_monsterinfo(mon_id);
+	
+	if(mon.spawnflags & MON_FLAG_MUTATORBLOCKED)
+	{
+		dprint("Attempted to spawn a mutator-blocked monster rejected");
+		return FALSE;
+	}
 
 	// support for quake style removing monsters based on skill
 	if(monster_skill <= 1) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }

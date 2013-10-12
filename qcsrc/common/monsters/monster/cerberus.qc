@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ CERBERUS,
 /* function   */ m_cerberus,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_MUTATORBLOCKED,
 /* mins,maxs  */ '-16 -16 -24', '16 16 12',
 /* model      */ "dog.dpm",
 /* netname    */ "cerberus",

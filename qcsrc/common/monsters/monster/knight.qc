@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ KNIGHT,
 /* function   */ m_knight,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE | MON_FLAG_RANGED,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_MUTATORBLOCKED,
 /* mins,maxs  */ '-20 -20 -32', '20 20 41',
 /* model      */ "hknight.mdl",
 /* netname    */ "knight",

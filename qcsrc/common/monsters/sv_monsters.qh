@@ -13,6 +13,8 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
+void monster_remove(entity mon); // removes a monster
+
 .float(float attack_type) monster_attackfunc;
 const float MONSTER_ATTACK_MELEE 	= 1;
 const float MONSTER_ATTACK_RANGED 	= 2;

@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SLIME,
 /* function   */ m_slime,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MUTATORBLOCKED,
 /* mins,maxs  */ '-16 -16 -24', '16 16 16',
 /* model      */ "slime.dpm",
 /* netname    */ "slime",

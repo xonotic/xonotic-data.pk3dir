@@ -70,12 +70,7 @@ float Invasion_CheckWinner()
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		FOR_EACH_MONSTER(head)
-		{
-			if(head.weaponentity) remove(head.weaponentity);
-			if(head.iceblock) remove(head.iceblock);
-			WaypointSprite_Kill(head.sprite);
-			remove(head);
-		}
+			monster_remove(head);
 		
 		if(roundcnt >= maxrounds)
 		{
@@ -201,10 +196,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
 	{
-		if(self.weaponentity) remove(self.weaponentity);
-		if(self.iceblock) remove(self.iceblock);
-		WaypointSprite_Kill(self.sprite);
-		remove(self);
+		monster_remove(self);
 		return FALSE;
 	}
 	

@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ STINGRAY,
 /* function   */ m_stingray,
-/* spawnflags */ MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN | MON_FLAG_MELEE,
+/* spawnflags */ MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN | MON_FLAG_MELEE | MON_FLAG_MUTATORBLOCKED,
 /* mins,maxs  */ '-20 -20 -31', '20 20 20',
 /* model      */ "fish.mdl",
 /* netname    */ "stingray",
