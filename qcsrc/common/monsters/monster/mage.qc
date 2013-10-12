@@ -22,16 +22,6 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_spike_smart_trace_min) \
 	MON_ADD_CVAR(monster, attack_spike_smart_trace_max) \
 	MON_ADD_CVAR(monster, attack_spike_smart_mindist) \
-	MON_ADD_CVAR(monster, attack_melee_damage) \
-	MON_ADD_CVAR(monster, attack_melee_delay) \
-	MON_ADD_CVAR(monster, attack_grenade_damage) \
-	MON_ADD_CVAR(monster, attack_grenade_edgedamage) \
-	MON_ADD_CVAR(monster, attack_grenade_force) \
-	MON_ADD_CVAR(monster, attack_grenade_radius) \
-	MON_ADD_CVAR(monster, attack_grenade_lifetime) \
-	MON_ADD_CVAR(monster, attack_grenade_chance) \
-	MON_ADD_CVAR(monster, attack_grenade_speed) \
-	MON_ADD_CVAR(monster, attack_grenade_speed_up) \
 	MON_ADD_CVAR(monster, heal_self) \
 	MON_ADD_CVAR(monster, heal_allies) \
 	MON_ADD_CVAR(monster, heal_minhealth) \
@@ -59,20 +49,20 @@ const float mage_anim_run		= 5;
 void() mage_heal;
 void() mage_shield;
 
+.entity mage_spike;
+
 float friend_needshelp(entity e)
 {
 	if(e == world)
 		return FALSE;
 	if(e.health <= 0)
 		return FALSE;
-	if(vlen(e.origin - self.origin) > MON_CVAR(mage, heal_range))
-		return FALSE;
 	if(DIFF_TEAM(e, self) && e != self.monster_owner)
 		return FALSE;
 	if(e.frozen)
 		return FALSE;
 	if(!IS_PLAYER(e))
-		return (e.health < e.max_health);
+		return (e.flags & FL_MONSTER && e.health < e.max_health);
 	if(e.items & IT_INVINCIBLE)
 		return FALSE;
 
@@ -87,64 +77,13 @@ float friend_needshelp(entity e)
 	return FALSE;
 }
 
-void mageattack_melee()
-{
-	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), mage_anim_attack, self.attack_range, MON_CVAR(mage, attack_melee_delay) - 0.2, DEATH_MONSTER_MAGE, TRUE);
-}
-
-void mage_grenade_explode()
-{
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
-	
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
-	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_grenade_damage), MON_CVAR(mage, attack_grenade_edgedamage), MON_CVAR(mage, attack_grenade_radius), world, MON_CVAR(mage, attack_grenade_force), DEATH_MONSTER_MAGE, other);
-	remove(self);
-}
-
-void mage_grenade_touch()
-{
-	if(IS_PLAYER(other))
-	{
-		PROJECTILE_TOUCH;
-		mage_grenade_explode();
-		return;
-	}
-}
-
-void mage_throw_itemgrenade()
-{
-	makevectors(self.angles);
-	
-	entity gren = spawn ();
-	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
-	gren.bot_dodge = FALSE;
-	gren.movetype = MOVETYPE_BOUNCE;
-	gren.solid = SOLID_TRIGGER;
-	gren.projectiledeathtype = DEATH_MONSTER_MAGE;
-	setorigin(gren, CENTER_OR_VIEWOFS(self));
-	setsize(gren, '-64 -64 -64', '64 64 64');
-
-	gren.nextthink = time + MON_CVAR(mage, attack_grenade_lifetime);
-	gren.think = mage_grenade_explode;
-	gren.use = mage_grenade_explode;
-	gren.touch = mage_grenade_touch;
-
-	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, v_forward, v_up, MON_CVAR(mage, attack_grenade_speed), MON_CVAR(mage, attack_grenade_speed_up), 0, 0, FALSE);
-	
-	gren.flags = FL_PROJECTILE;
-	
-	setmodel(gren, "models/items/g_h50.md3");
-	
-	self.attack_finished_single = time + 1.5;
-}
-
 void mage_spike_explode()
 {
 	self.event_damage = func_null;
 	
 	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+	
+	self.realowner.mage_spike = world;
 	
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_spike_damage), MON_CVAR(mage, attack_spike_damage) * 0.5, MON_CVAR(mage, attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
@@ -223,7 +162,7 @@ void mage_spike_think()
 	UpdateCSQCProjectile(self);
 }
 
-void mage_spike()
+void mage_attack_spike()
 {
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
@@ -245,7 +184,31 @@ void mage_spike()
 	missile.enemy = self.enemy;
 	missile.touch = mage_spike_touch;
 	
+	self.mage_spike = missile;
+	
 	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
+}
+
+void mage_attack_beam()
+{
+	if(self.health <= 0 || self.enemy.health <= 0)
+		return;
+		
+	traceline(self.origin + self.view_ofs, self.enemy.origin, FALSE, self);
+	
+	if(vlen(self.origin - trace_endpos) > 500)
+	{
+		self.attack_finished_single = time;
+		return;
+	}
+	
+	if(trace_ent)
+		Damage(trace_ent, self, self, 10, DEATH_MONSTER_MAGE, trace_ent.origin, '0 0 0');
+		
+	trailparticles(self, particleeffectnum("TE_TEI_G3RED_HIT"), self.origin + self.view_ofs, trace_ent.origin);
+	
+	if(time < self.attack_finished_single)
+		defer(0.1, mage_attack_beam);
 }
 
 void mage_heal()
@@ -253,7 +216,7 @@ void mage_heal()
 	entity head;
 	float washealed = FALSE;
 	
-	for(head = world; (head = findfloat(head, monster_attack, TRUE)); ) if(friend_needshelp(head))
+	for(head = findradius(self.origin, MON_CVAR(mage, heal_range)); head; head = head.chain) if(friend_needshelp(head))
 	{
 		washealed = TRUE;
 		string fx = "";
@@ -352,26 +315,32 @@ float mage_attack(float attack_type)
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		{
-			self.frame = mage_anim_attack;
-			self.attack_finished_single = time + MON_CVAR(mage, attack_melee_delay);
-			defer(0.2, mageattack_melee);
-			
-			return TRUE;
-		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(random() < MON_CVAR(mage, attack_grenade_chance) / 100)
+			if not(self.mage_spike)
 			{
-				mage_throw_itemgrenade();
-				return TRUE;
+				if(random() <= 0.5)
+				{
+					self.frame = mage_anim_attack;
+					self.attack_finished_single = time + 1.5; // 0.3 seconds of beam
+					defer(1.2, mage_attack_beam);
+					
+					return TRUE;
+				}
+				else
+				{
+					self.frame = mage_anim_attack;
+					self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
+					defer(0.2, mage_attack_spike);
+					
+					return TRUE;
+				}
 			}
-	
-			self.frame = mage_anim_attack;
-			self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
-			defer(0.2, mage_spike);
 			
-			return TRUE;
+			if(self.mage_spike)
+				return TRUE;
+			else
+				return FALSE;
 		}
 	}
 	
@@ -402,19 +371,12 @@ float m_mage(float req)
 			entity head;
 			float need_help = FALSE;
 			
-			FOR_EACH_PLAYER(head)
-			if(friend_needshelp(head))
-			{
-				need_help = TRUE;
-				break; // found 1 player near us who is low on health
-			}
-			if(!need_help)
-			FOR_EACH_MONSTER(head)
+			for(head = findradius(self.origin, MON_CVAR(mage, heal_range)); head; head = head.chain)
 			if(head != self)
 			if(friend_needshelp(head))
 			{
 				need_help = TRUE;
-				break; // found 1 player near us who is low on health
+				break;
 			}
 				
 			if(self.health < MON_CVAR(mage, heal_minhealth) || need_help)
@@ -449,7 +411,6 @@ float m_mage(float req)
 		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/mage.dpm");
-			precache_model ("models/items/g_h50.md3");
 			precache_model ("models/ctf/shield.md3");
 			precache_sound ("weapons/grenade_impact.wav");
 			return TRUE;
