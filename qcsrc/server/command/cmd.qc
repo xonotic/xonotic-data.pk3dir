@@ -263,21 +263,14 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(tospawn == "list")
 			{
-				float i;
-				string list = "Available monsters:";
-				
-				for(i = MON_FIRST; i <= MON_LAST; ++i)
-					list = strcat(list, " ", (get_monsterinfo(i)).netname);
-				
-				sprint(self, strcat(list, "\n"));
-				
+				sprint(self, monsterlist_reply);
 				return;
 			}
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
 			else if(g_invasion) { sprint(self, "You can't spawn monsters during an invasion!\n"); }
-			else if not(autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
+			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); }
 			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); }

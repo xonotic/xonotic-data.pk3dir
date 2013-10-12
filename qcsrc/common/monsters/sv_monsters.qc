@@ -980,7 +980,7 @@ float monster_initialize(float mon_id, float nodrop)
 
 	entity mon = get_monsterinfo(mon_id);
 	
-	if(mon.spawnflags & MON_FLAG_MUTATORBLOCKED)
+	if(mon.spawnflags & MON_FLAG_MUTATORBLOCKED && !(self.spawnflags & MONSTERFLAG_SPAWNED))
 	{
 		dprint("Attempted to spawn a mutator-blocked monster rejected");
 		return FALSE;
