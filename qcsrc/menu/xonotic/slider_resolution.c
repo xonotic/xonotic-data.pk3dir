@@ -74,6 +74,18 @@ entity makeXonoticResolutionSlider()
 }
 void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
+	float i;
+	for (i = 0; i < me.nValues; ++i)
+	{
+		tokenize_console(me.valueToIdentifier(me, i));
+		if (w > stof(argv(0))) continue;
+		if (w < stof(argv(0))) break;
+		if (h > stof(argv(1))) continue;
+		if (h < stof(argv(1))) break;
+		if (pixelheight > stof(argv(2)) + 0.01) continue;
+		if (pixelheight < stof(argv(2)) - 0.01) break;
+		return;  // already there
+	}
 	if (pixelheight != 1)
 	{
 		float aspect = w / (h * pixelheight);
@@ -88,11 +100,10 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 				bestdenom = denom;
 			}
 		}
-		me.addValue(me, strzone(sprintf(_("%dx%d (%d:%d)"), w, h, bestnum, bestdenom)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+		me.insertValue(me, i, strzone(sprintf(_("%dx%d (%d:%d)"), w, h, bestnum, bestdenom)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	}
 	else
-		me.addValue(me, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
-	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
+		me.insertValue(me, i, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 }
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
@@ -103,38 +114,36 @@ void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 {
 	float i;
-	vector r0, r;
+	vector r;
 
+	// HACK: text slider assumes the strings are constants, so clearValues
+	// will not unzone them
+	for(i = 0; i < me.nValues; ++i)
+	{
+		strunzone(me.valueToIdentifier(me, i));
+		strunzone(me.valueToText(me, i));
+	}
+	// NOW we can safely clear.
 	me.clearValues(me);
 
 	if (fullscreen)
 	{
-		r0 = '0 0 0';
 		for(i = 0;; ++i)
 		{
 			r = getresolution(i);
 			if(r_x == 0 && r_y == 0)
-			{
-				i = -1;
-				r = getresolution(i);
-			}
-			if(r_x == 0 && r_y == 0)
 				break;
-			if(r == r0)
-				continue;
-			r0 = r;
 			if(r_x < 640 || r_y < 480)
 				continue;
-			if(i != -1)
-				if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
-					if(autocvar_menu_vid_allowdualscreenresolution <= 0)
-						continue;
-
+			if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
+				if(autocvar_menu_vid_allowdualscreenresolution <= 0)
+					continue;
 			me.addResolution(me, r_x, r_y, r_z);
-
-			if (i == -1)
-				break;
 		}
+		r = getresolution(-1);
+		if(r_x != 0 || r_y != 0)
+			me.addResolution(me, r_x, r_y, r_z);
+		dprint("Added system resolutions.\n");
 	}
 
 	if(me.nValues == 0)
@@ -152,7 +161,9 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		me.addResolution(me, 1280, 960, 1); // pc res
 		me.addResolution(me, 1280, 1024, 1); // pc res
 		me.addResolution(me, 1920, 1080, 1); // 1080p
+		dprint("Added default resolutions.\n");
 	}
+	dprint("Total number of resolutions detected: ", ftos(me.nValues), "\n");
 
 	me.vid_fullscreen = fullscreen;
 
