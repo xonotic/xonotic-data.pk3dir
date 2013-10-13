@@ -22,6 +22,10 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_spike_smart_trace_min) \
 	MON_ADD_CVAR(monster, attack_spike_smart_trace_max) \
 	MON_ADD_CVAR(monster, attack_spike_smart_mindist) \
+	MON_ADD_CVAR(monster, attack_push_damage) \
+	MON_ADD_CVAR(monster, attack_push_radius) \
+	MON_ADD_CVAR(monster, attack_push_delay) \
+	MON_ADD_CVAR(monster, attack_push_force) \
 	MON_ADD_CVAR(monster, heal_self) \
 	MON_ADD_CVAR(monster, heal_allies) \
 	MON_ADD_CVAR(monster, heal_minhealth) \
@@ -50,6 +54,7 @@ void() mage_heal;
 void() mage_shield;
 
 .entity mage_spike;
+.float shield_ltime;
 
 float friend_needshelp(entity e)
 {
@@ -243,6 +248,16 @@ void mage_heal()
 	}
 }
 
+void mage_push()
+{
+	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+	RadiusDamage (self, self, MON_CVAR(mage, attack_push_damage), MON_CVAR(mage, attack_push_damage), MON_CVAR(mage, attack_push_radius), world, MON_CVAR(mage, attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
+	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	
+	self.frame = mage_anim_attack;
+	self.attack_finished_single = time + MON_CVAR(mage, attack_push_delay);
+}
+
 void mage_teleport()
 {
 	if(vlen(self.enemy.origin - self.origin) >= 500)
@@ -260,63 +275,22 @@ void mage_teleport()
 	self.attack_finished_single = time + 0.2;
 }
 
-void mage_shield_think()
+void mage_shield_remove()
 {
-	self.nextthink = time;
-	setorigin(self, self.owner.origin);
-
-	if(time >= self.ltime || self.owner.health <= 0)
-	{
-		self.owner.armorvalue = 0;
-		self.owner.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
-		self.owner.weaponentity = world;
-		remove(self);
-		return;
-	}
-}
-
-void mage_shield_touch()
-{
-	if(other == self.realowner)
-		return;
-		
-	vector mymid = (self.absmin + self.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
-
-	Damage(other, self, self.realowner, 1, DEATH_MONSTER_MAGE, mymid, normalize(othermid - mymid) * 100);
+	self.effects &= ~(EF_ADDITIVE | EF_BLUE);
+	self.armorvalue = 0;
+	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
 }
 
 void mage_shield()
 {
-	if(self.weaponentity)
-		return; // already have a shield
-
-	entity shield = spawn();
-	
-	shield.owner = shield.realowner = self;
-	shield.enemy = self;
-	shield.team = self.team;
-	shield.touch = mage_shield_touch;
-	shield.classname = "shield";
-	shield.ltime = time + MON_CVAR(mage, shield_time);
-	shield.effects = EF_ADDITIVE;
-	shield.movetype = MOVETYPE_NOCLIP;
-	shield.solid = SOLID_TRIGGER;
-	shield.avelocity = '7 0 11';
-	shield.scale = self.scale * 0.5;
-	shield.think = mage_shield_think;
-	shield.nextthink = time;
-	
+	self.effects |= (EF_ADDITIVE | EF_BLUE);
 	self.lastshielded = time + MON_CVAR(mage, shield_delay);
-	self.weaponentity = shield;
-	self.frame = mage_anim_attack;
-	self.attack_finished_single = time + 1;
 	self.m_armor_blockpercent = MON_CVAR(mage, shield_blockpercent);
 	self.armorvalue = self.health;
-	
-	setorigin(shield, self.origin);
-	setmodel(shield, "models/ctf/shield.md3");
-	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
+	self.shield_ltime = time + MON_CVAR(mage, shield_time);
+	self.frame = mage_anim_attack;
+	self.attack_finished_single = time + 1;
 }
 
 float mage_attack(float attack_type)
@@ -325,9 +299,13 @@ float mage_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			mage_shield();
+			if(random() <= 0.7)
+			{
+				mage_push();
+				return TRUE;
+			}
 				
-			return TRUE;
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -394,6 +372,9 @@ float m_mage(float req)
 			if(random() < 0.5)
 				mage_heal();
 				
+			if(time >= self.shield_ltime && self.armorvalue)
+				mage_shield_remove();
+				
 			if(self.enemy)
 			if(self.health < self.max_health)
 			if(time >= self.lastshielded)
@@ -421,8 +402,8 @@ float m_mage(float req)
 		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/mage.dpm");
-			precache_model ("models/ctf/shield.md3");
 			precache_sound ("weapons/grenade_impact.wav");
+			precache_sound ("weapons/tagexp1.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:
