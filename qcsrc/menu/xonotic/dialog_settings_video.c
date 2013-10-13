@@ -49,6 +49,8 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", _("Vertical Synchronization")));
 		
 	me.TR(me);
+		if(cvar("developer"))
+			{ me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally"))); }
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
@@ -135,8 +137,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TR(me);
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_trippy", _("Trippy vertices (easter egg)")));
 				setDependent(e, "vid_gl20", 1, 1);
-		me.TR(me);
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally")));
 	}
 
 	me.gotoRC(me, me.rows - 1, 0);
