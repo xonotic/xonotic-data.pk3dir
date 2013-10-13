@@ -249,13 +249,13 @@ void mage_teleport()
 		return;
 
 	makevectors(self.enemy.angles);
-	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin - '0 0 5', MOVE_NORMAL, self);
+	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 	
-	if(trace_fraction <= 1)
-	{
-		pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
-		setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
-	}
+	if(trace_fraction < 1)
+		return;
+		
+	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
+	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
 	
 	self.attack_finished_single = time + 0.2;
 }
