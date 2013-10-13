@@ -118,3 +118,4 @@
 #include "xonotic/slider_picmip.c"
 #include "xonotic/dialog_settings_game_notification.c"
 #include "xonotic/dialog_multiplayer_media_demo_democonfirm.c"
+#include "xonotic/slider_particles.c"
