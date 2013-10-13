@@ -157,10 +157,12 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 	if(me.nValues == 0)
 	{
 		me.addResolution(me, 640, 480, 1); // pc res
+#if 0
 		me.addResolution(me, 720, 480, 1.125); // DVD NTSC 4:3
 		me.addResolution(me, 720, 576, 0.9375); // DVD PAL 4:3
 		me.addResolution(me, 720, 480, 0.84375); // DVD NTSC 16:9
 		me.addResolution(me, 720, 576, 0.703125); // DVD PAL 16:9
+#endif
 		me.addResolution(me, 800, 480, 1); // 480p at 1:1 pixel aspect
 		me.addResolution(me, 800, 600, 1); // pc res
 		me.addResolution(me, 1024, 600, 1); // notebook res
