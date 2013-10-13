@@ -20,10 +20,22 @@ entity makeXonoticGameSettingsTab()
 
 void XonoticGameSettingsTab_fill(entity me)
 {
-	entity e;
-
-
+	entity mc;
+	mc = makeXonoticTabController(me.rows - 3);
 	me.TR(me);
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("View"),       makeXonoticGameViewSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("General"),    makeXonoticGameGeneralSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Crosshair"),  makeXonoticGameCrosshairSettingsTab()));
+	me.TR(me);
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Weapon"),        makeXonoticGameWeaponSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Playermodel"),   makeXonoticGamePlayermodelSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("HUD"),           makeXonoticGameHUDSettingsTab()));
+		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Notification"),  makeXonoticGameNotificationSettingsTab()));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, me.rows - 3, me.columns, mc);
+		
+	/*me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects and harsh language"))); // also set sv_gentle
 		
 	me.gotoRC(me, 2, 3); me.setFirstColumn(me, me.currentColumn);
@@ -70,7 +82,7 @@ void XonoticGameSettingsTab_fill(entity me)
 
 	//me.gotoRC(me, me.rows - 1, 0);
 	//	me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
-
+*/
 
 
 	me.gotoRC(me, me.rows - 1, 0);
