@@ -22,12 +22,12 @@ void XonoticMediaTab_fill(entity me)
 {
 	entity mc, e;
 	mc = makeXonoticTabController(me.rows - 2);
-	me.TR(me);
+
+	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
 
-	me.TR(me);
-	me.TR(me);
+	me.gotoRC(me, 3, 0);
 		me.TD(me, me.rows - 2, me.columns, mc);
 }
 #endif

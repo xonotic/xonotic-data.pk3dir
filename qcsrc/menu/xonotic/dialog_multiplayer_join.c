@@ -24,13 +24,17 @@ void XonoticServerListTab_fill(entity me)
 
 	slist  = makeXonoticServerList();
 
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, me.columns - 0.6 * 3 - 0.5, e = makeXonoticInputBox(0, string_null));
+	me.gotoRC(me, 0.5, 0);
+		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.TD(me, 1, 2.8, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
 			slist.controlledTextbox = e;
+
+	me.gotoRC(me, 0.5, 3.6);
+		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
+			e.onClickEntity = slist;
+			e.onClick = ServerList_Categories_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
 			slist.filterShowEmpty = e.checked;
 			e.onClickEntity = slist;
@@ -41,7 +45,7 @@ void XonoticServerListTab_fill(entity me)
 			e.onClick = ServerList_ShowFull_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "net_slist_pause", _("Pause")));
 
-	me.TR(me);
+	me.gotoRC(me, 2, 0);
 		me.TD(me, 1, 1, slist.sortButton1 = makeXonoticButton(string_null, '0 0 0'));
 		me.TD(me, 1, 1, slist.sortButton2 = makeXonoticButton(string_null, '0 0 0'));
 		me.TD(me, 1, 1, slist.sortButton3 = makeXonoticButton(string_null, '0 0 0'));
