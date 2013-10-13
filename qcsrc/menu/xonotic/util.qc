@@ -385,7 +385,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	
 	if(un_emergency_pk3s != "")
 	{
-		_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);
 		_Nex_ExtResponseSystem_PacksStep = 1;
 	}
 
