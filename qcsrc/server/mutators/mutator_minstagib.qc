@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		{
 			self.alpha = default_player_alpha;
 			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &~= IT_STRENGTH;
+			self.items &= ~IT_STRENGTH;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
@@ -168,7 +168,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
 		if (time > self.invincible_finished)
 		{
-			self.items &~= IT_INVINCIBLE;
+			self.items &= ~IT_INVINCIBLE;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
 	}
@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
-	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 		
 	if(IS_PLAYER(frag_target))
@@ -275,8 +275,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 	
 	start_health = 100;
 	start_armorvalue = 0;
-	WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-	WEPSET_COPY_AW(warmup_start_weapons, WEP_MINSTANEX);
+	start_weapons = WEPSET_MINSTANEX;
+	warmup_start_weapons = WEPSET_MINSTANEX;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 		
 	return FALSE;
@@ -324,7 +324,7 @@ MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
 	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
-	if(IsDifferentTeam(self.owner, e))
+	if(DIFF_TEAM(self.owner, e))
 		return TRUE;
 	
 	return FALSE;
@@ -405,6 +405,12 @@ MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsPrettyString)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_SetModname)
+{
+	modname = "MinstaGib";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(mutator_minstagib)
 {
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
@@ -425,6 +431,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, minstagib_SetModname, CBC_ORDER_ANY);
 
 	return FALSE;
 }

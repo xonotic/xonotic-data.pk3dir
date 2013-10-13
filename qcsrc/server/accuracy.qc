@@ -109,17 +109,17 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 	if(IS_CLIENT(targ))
 	if(targ.deadflag == DEAD_NO)
-	if(IsDifferentTeam(attacker, targ))
+	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;
 }
 
 float accuracy_canbegooddamage(entity attacker)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 		return TRUE;
 	return FALSE;
 }

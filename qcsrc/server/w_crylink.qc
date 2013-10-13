@@ -236,10 +236,10 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 	{
 		if((head.takedamage != DAMAGE_NO) && (head.deadflag == DEAD_NO))
 		{
-			if(IsDifferentTeam(head, projectile.realowner))
-				++hit_enemy;
-			else
+			if(SAME_TEAM(head, projectile.realowner))
 				++hit_friendly;
+			else
+				++hit_enemy;
 		}
 			
 		head = head.chain;
@@ -707,13 +707,13 @@ float w_crylink(float req)
 		{
 			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTEN_NORM);
 		}
 		else
 		{
 			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
