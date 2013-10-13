@@ -3,7 +3,7 @@ CLASS(XonoticVideoSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticVideoSettingsTab, rows, float, 17)
+	ATTRIB(XonoticVideoSettingsTab, rows, float, 16)
 	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 	ATTRIB(XonoticVideoSettingsTab, name, string, "videosettings")
 ENDCLASS(XonoticVideoSettingsTab)

@@ -3,7 +3,7 @@ CLASS(XonoticGameSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameSettingsTab, fill, void(entity))
 	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameSettingsTab, rows, float, 17)
+	ATTRIB(XonoticGameSettingsTab, rows, float, 16)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6)
 ENDCLASS(XonoticGameSettingsTab)
 entity makeXonoticGameSettingsTab();
