@@ -137,6 +137,9 @@ float Invasion_CheckWinner()
 			winner = head;
 		}
 	}
+	
+	FOR_EACH_MONSTER(head)
+		monster_remove(head);
 
 	if(winner)
 	{
