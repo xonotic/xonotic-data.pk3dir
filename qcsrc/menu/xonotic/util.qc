@@ -332,7 +332,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		
 		switch(substring(argv(i), 0, 1))
 		{
-			#define APPEND_STRING(list,sep,add) list = ((list != "") ? strcat(list, sep, add) : add);
+			#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
 			case "V":
 			{
 				un_version = s;
@@ -350,23 +350,23 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			}
 			case "B":
 			{
-				APPEND_STRING(un_bannedservers, " ", s)
+				APPEND_TO_STRING(un_bannedservers, " ", s);
 				break;
 			}
 			case "E":
 			{
 				if(cvar("menu_updatecheck_getpacks"))
-					{ APPEND_STRING(un_emergency_pk3s, " ", s) }
+					APPEND_TO_STRING(un_emergency_pk3s, " ", s);
 				break;
 			}
 			case "P":
 			{
-				APPEND_STRING(un_promoted, " ", s)
+				APPEND_TO_STRING(un_promoted, " ", s);
 				break;
 			}
 			case "R":
 			{
-				APPEND_STRING(un_recommended, " ", s)
+				APPEND_TO_STRING(un_recommended, " ", s);
 				break;
 			}
 		}
