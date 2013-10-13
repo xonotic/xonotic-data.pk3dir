@@ -1066,6 +1066,7 @@ float monster_initialize(float mon_id, float nodrop)
 	self.scale				= 1;
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
+	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	

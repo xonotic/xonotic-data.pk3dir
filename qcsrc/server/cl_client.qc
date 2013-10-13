@@ -541,6 +541,8 @@ void PutClientInServer (void)
 
 		self.bot_attack = TRUE;
 		self.monster_attack = TRUE;
+		
+		self.spider_slowness = 0;
 
 		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
