@@ -284,6 +284,11 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 }
 
+void DisableServerBackwardsCompatibility()
+{
+	cvar_set("gameversion_min", ftos(100 * floor(cvar("gameversion") / 100)));
+}
+
 void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 {
 	float n;
@@ -324,6 +329,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string un_emergency_pk3s = "";
 	string un_promoted = "";
 	string un_recommended = "";
+	string un_compatexpire = "";
 	
 	for(i = 0; i < n; ++i)
 	{
@@ -336,6 +342,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "C":
+			{
+				un_compatexpire = s;
 				break;
 			}
 			case "D":
@@ -380,6 +391,16 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
 			if(un_download) { print(sprintf(_("Update can be downloaded at:\n%s\n"), un_download)); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
+			DisableServerBackwardsCompatibility();
+		}
+		else if(cvar_string("g_xonoticversion") == un_version)
+		{
+			if(un_compatexpire != "")
+			{
+				string curdate = strftime(FALSE, "%Y%m%d%H%M%S");
+				if (strcmp(curdate, un_compatexpire) >= 0)
+					DisableServerBackwardsCompatibility();
+			}
 		}
 	}
 	
@@ -400,7 +421,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		_Nex_ExtResponseSystem_RecommendedServers = strzone(un_recommended);
 		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
 	}
-
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
