@@ -3,8 +3,8 @@ CLASS(XonoticGameSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameSettingsTab, fill, void(entity))
 	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameSettingsTab, rows, float, 16)
-	ATTRIB(XonoticGameSettingsTab, columns, float, 6)
+	ATTRIB(XonoticGameSettingsTab, rows, float, 17)
+	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)
 ENDCLASS(XonoticGameSettingsTab)
 entity makeXonoticGameSettingsTab();
 #endif
@@ -22,20 +22,32 @@ void XonoticGameSettingsTab_fill(entity me)
 {
 	entity mc;
 	mc = makeXonoticTabController(me.rows - 3);
-	me.TR(me);
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("View"),       makeXonoticGameViewSettingsTab()));
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("General"),    makeXonoticGameGeneralSettingsTab()));
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Crosshair"),  makeXonoticGameCrosshairSettingsTab()));
-	me.TR(me);
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Weapon"),        makeXonoticGameWeaponSettingsTab()));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Playermodel"),   makeXonoticGamePlayermodelSettingsTab()));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("HUD"),           makeXonoticGameHUDSettingsTab()));
-		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Notification"),  makeXonoticGameNotificationSettingsTab()));
-	me.TR(me);
-	me.TR(me);
+	
+	me.gotoRC(me, 0.5, 0.25);
+		//me.TD(me, 1, 1, mc.makeTabButton(mc, _("General"),      makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Crosshair"),      makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("HUD"),            makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Messages"),       makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Weapons"),        makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Playermodels"),   makeXonoticGameCrosshairSettingsTab()));
+
+	me.gotoRC(me, 3, 0);
 		me.TD(me, me.rows - 3, me.columns, mc);
 		
-	/*me.TR(me);
+	/*
+
+		//me.TD(me, 1, 2, mc.makeTabButton(mc, _("View"),       makeXonoticGameViewSettingsTab()));
+		//me.TD(me, 1, 2, mc.makeTabButton(mc, _("General"),    makeXonoticGameGeneralSettingsTab()));
+		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Crosshair"),  makeXonoticGameCrosshairSettingsTab()));
+	me.TR(me);
+		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Weapon"),        makeXonoticGameWeaponSettingsTab()));
+		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Playermodel"),   makeXonoticGamePlayermodelSettingsTab()));
+		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("HUD"),           makeXonoticGameHUDSettingsTab()));
+		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Notification"),  makeXonoticGameNotificationSettingsTab()));
+
+
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects and harsh language"))); // also set sv_gentle
 		
 	me.gotoRC(me, 2, 3); me.setFirstColumn(me, me.currentColumn);

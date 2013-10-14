@@ -13,7 +13,7 @@ ENDCLASS(XonoticSettingsDialog)
 void XonoticSettingsDialog_fill(entity me)
 {
 	entity mc;
-	mc = makeXonoticTabController(me.rows - 3);
+	mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
 		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Video"),   makeXonoticVideoSettingsTab()));
 		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Effects"), makeXonoticEffectsSettingsTab()));
@@ -24,7 +24,6 @@ void XonoticSettingsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("User"),    makeXonoticUserSettingsTab()));
 		me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Misc"),    makeXonoticMiscSettingsTab()));
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, me.rows - 3, me.columns, mc);
+		me.TD(me, me.rows - 2, me.columns, mc);
 }
 #endif
