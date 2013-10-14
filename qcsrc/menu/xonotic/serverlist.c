@@ -146,7 +146,7 @@ float category_draw_count;
 
 #define SLIST_CATEGORIES \
 	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             ZCTX(_("SLCAT^Favorites"))) \
-	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Recommended"))) \
+	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "",             ZCTX(_("SLCAT^Recommended"))) \
 	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Normal Servers"))) \
 	SLIST_CATEGORY(CAT_SERVERS,      "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Servers"))) \
 	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Competitive Mode"))) \
