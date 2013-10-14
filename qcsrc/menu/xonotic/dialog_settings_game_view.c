@@ -1,32 +1,37 @@
 #ifdef INTERFACE
-CLASS(XonoticViewDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticViewDialog, toString, string(entity))
-	METHOD(XonoticViewDialog, fill, void(entity))
-	METHOD(XonoticViewDialog, showNotify, void(entity))
-	ATTRIB(XonoticViewDialog, title, string, _("View settings"))
-	ATTRIB(XonoticViewDialog, color, vector, SKINCOLOR_DIALOG_VIEW)
-	ATTRIB(XonoticViewDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticViewDialog, rows, float, 11)
-	ATTRIB(XonoticViewDialog, columns, float, 6.2) // added extra .2 for center space 
-ENDCLASS(XonoticViewDialog)
+CLASS(XonoticGameViewSettingsTab) EXTENDS(XonoticTab)
+	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
+	METHOD(XonoticGameViewSettingsTab, fill, void(entity))
+	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity))
+	ATTRIB(XonoticGameViewSettingsTab, title, string, _("View"))
+	ATTRIB(XonoticGameViewSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticGameViewSettingsTab, rows, float, 15)
+	ATTRIB(XonoticGameViewSettingsTab, columns, float, 6.2)
+ENDCLASS(XonoticGameViewSettingsTab)
+entity makeXonoticGameViewSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticViewDialog_showNotify(entity me)
+void XonoticGameViewSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-string XonoticViewDialog_toString(entity me)
+entity makeXonoticGameViewSettingsTab()
 {
-	return "hi"; // TODO: show fov and other settings with text here
+	entity me;
+	me = spawnXonoticGameViewSettingsTab();
+	me.configureDialog(me);
+	return me;
 }
-void XonoticViewDialog_fill(entity me)
+
+void XonoticGameViewSettingsTab_fill(entity me)
 {
 	entity e;
 	
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Zoom:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_reticle"));
@@ -67,9 +72,6 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VZOOM^Speed"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.2, "cl_velocityzoom"));
 		setDependent(e, "cl_velocityzoom_type", 1, 3);
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 	
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
@@ -108,10 +110,8 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
-		
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
+		// todo: onclick, do sendcvar if connected
 }
 #endif

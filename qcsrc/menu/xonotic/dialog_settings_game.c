@@ -21,30 +21,30 @@ entity makeXonoticGameSettingsTab()
 void XonoticGameSettingsTab_fill(entity me)
 {
 	entity mc;
-	mc = makeXonoticTabController(me.rows - 3);
+	mc = makeXonoticTabController(me.rows - 2);
 	
 	me.gotoRC(me, 0.5, 0.25);
 		//me.TD(me, 1, 1, mc.makeTabButton(mc, _("General"),      makeXonoticGameCrosshairSettingsTab()));
-		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameViewSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Crosshair"),      makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("HUD"),            makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Messages"),       makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Weapons"),        makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Playermodels"),   makeXonoticGameCrosshairSettingsTab()));
 
-	me.gotoRC(me, 3, 0);
-		me.TD(me, me.rows - 3, me.columns, mc);
+	me.gotoRC(me, 2, 0);
+		me.TD(me, me.rows - 2, me.columns, mc);
 		
 	/*
 
-		//me.TD(me, 1, 2, mc.makeTabButton(mc, _("View"),       makeXonoticGameViewSettingsTab()));
-		//me.TD(me, 1, 2, mc.makeTabButton(mc, _("General"),    makeXonoticGameGeneralSettingsTab()));
-		me.TD(me, 1, 2, mc.makeTabButton(mc, _("Crosshair"),  makeXonoticGameCrosshairSettingsTab()));
-	me.TR(me);
-		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Weapon"),        makeXonoticGameWeaponSettingsTab()));
-		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Playermodel"),   makeXonoticGamePlayermodelSettingsTab()));
-		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("HUD"),           makeXonoticGameHUDSettingsTab()));
-		//me.TD(me, 1, 1.5, mc.makeTabButton(mc, _("Notification"),  makeXonoticGameNotificationSettingsTab()));
+	  makeXonoticGameViewSettingsTab()));
+	  makeXonoticGameGeneralSettingsTab()));
+	makeXonoticGameCrosshairSettingsTab()));
+	
+	       makeXonoticGameWeaponSettingsTab()));
+	l"),   makeXonoticGamePlayermodelSettingsTab()));
+	       makeXonoticGameHUDSettingsTab()));
+	on"),  makeXonoticGameNotificationSettingsTab()));
 
 
 	me.TR(me);

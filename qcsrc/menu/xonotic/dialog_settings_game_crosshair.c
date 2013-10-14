@@ -5,8 +5,8 @@ CLASS(XonoticGameCrosshairSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
 	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 14)
-	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6)
+	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 15)
+	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
 #endif
