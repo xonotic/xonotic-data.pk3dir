@@ -9,7 +9,7 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
-void updateConwidths(float width, float height, float pixelheight);
+float updateConwidths(float width, float height, float pixelheight);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -17,11 +17,15 @@ void updateConwidths(float width, float height, float pixelheight);
 /* private static */ float XonoticResolutionSlider_DataHasChanged;
 
 // Updates cvars (to be called by menu.qc at startup or on detected res change)
-void updateConwidths(float width, float height, float pixelheight)
+float updateConwidths(float width, float height, float pixelheight)
 {
 	vector r, c;
 	float minfactor, maxfactor;
 	float sz, f;
+
+	sz = cvar("menu_vid_scale");
+	if (sz < -1)
+		return 0;  // No recalculation.
 
 	// Save off current settings.
 	cvar_set("_menu_vid_width", ftos(width));
@@ -32,7 +36,6 @@ void updateConwidths(float width, float height, float pixelheight)
 	r_x = width;
 	r_y = height;
 	r_z = pixelheight;
-	sz = cvar("menu_vid_scale");
 
 	// calculate the base resolution
 	c_z = 0;
@@ -64,14 +67,16 @@ void updateConwidths(float width, float height, float pixelheight)
 	c_x = rint(c_x);
 	c_y = rint(c_y);
 
+	// Please reload resolutions list and such stuff.
+	XonoticResolutionSlider_DataHasChanged = TRUE;
+
 	if (c_x != cvar("vid_conwidth") || c_y != cvar("vid_conheight"))
 	{
 		cvar_set("vid_conwidth", ftos(c_x));
 		cvar_set("vid_conheight", ftos(c_y));
-		localcmd("\nr_restart\n");
+		return 1;
 	}
-
-	XonoticResolutionSlider_DataHasChanged = TRUE;
+	return 0;
 }
 entity makeXonoticResolutionSlider()
 {

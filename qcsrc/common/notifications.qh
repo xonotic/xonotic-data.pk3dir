@@ -230,7 +230,7 @@ void Send_Notification_WOCOVA(
 	MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position) \
 	MSG_ANNCE_NOTIF(default, prefix##PINK, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), volume, position)
 #define MULTITEAM_ANNCE(default,prefix,teams,channel,sound,volume,position) \
-	MSG_ANNCE_NOTIF_##teams(default,prefix,channel,sound,volume,position) \
+	MULTITEAM_ANNCE##teams(default,prefix,channel,sound,volume,position)
 
 #define MSG_ANNCE_NOTIFICATIONS \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTEN_NONE) \
