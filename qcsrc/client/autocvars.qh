@@ -113,6 +113,7 @@ string autocvar_crosshair_hitindication_per_weapon_color;
 float autocvar_crosshair_hitindication_speed;
 float autocvar_crosshair_hittest;
 float autocvar_crosshair_hittest_blur;
+var float autocvar_crosshair_hittest_scale = 1.25;
 float autocvar_crosshair_hittest_showimpact;
 float autocvar_crosshair_per_weapon;
 float autocvar_crosshair_pickup;
