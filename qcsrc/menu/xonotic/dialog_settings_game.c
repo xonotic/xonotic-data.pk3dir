@@ -3,7 +3,7 @@ CLASS(XonoticGameSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameSettingsTab, fill, void(entity))
 	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameSettingsTab, rows, float, 17)
+	ATTRIB(XonoticGameSettingsTab, rows, float, 16.5)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)
 ENDCLASS(XonoticGameSettingsTab)
 entity makeXonoticGameSettingsTab();
@@ -21,9 +21,10 @@ entity makeXonoticGameSettingsTab()
 void XonoticGameSettingsTab_fill(entity me)
 {
 	entity mc;
-	mc = makeXonoticTabController(me.rows - 2);
+	mc = makeXonoticTabController(me.rows - 1.5);
 	
-	me.gotoRC(me, 0.5, 0.25);
+	me.TR(me);
+		me.TDempty(me, 0.25);
 		//me.TD(me, 1, 1, mc.makeTabButton(mc, _("General"),      makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameViewSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Crosshair"),      makeXonoticGameCrosshairSettingsTab()));
@@ -32,8 +33,8 @@ void XonoticGameSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Weapons"),        makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Playermodels"),   makeXonoticGameCrosshairSettingsTab()));
 
-	me.gotoRC(me, 2, 0);
-		me.TD(me, me.rows - 2, me.columns, mc);
+	me.gotoRC(me, 1.5, 0);
+		me.TD(me, me.rows - 1.5, me.columns, mc);
 		
 	/*
 

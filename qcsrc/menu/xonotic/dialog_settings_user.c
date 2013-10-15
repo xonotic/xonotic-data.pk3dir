@@ -3,7 +3,7 @@ CLASS(XonoticUserSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
 	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
 	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticUserSettingsTab, rows, float, 17)
+	ATTRIB(XonoticUserSettingsTab, rows, float, 16.5)
 	ATTRIB(XonoticUserSettingsTab, columns, float, 5)
 ENDCLASS(XonoticUserSettingsTab)
 entity makeXonoticUserSettingsTab();
