@@ -3,7 +3,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticEffectsSettingsTab, rows, float, 16.5)
+	ATTRIB(XonoticEffectsSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
@@ -47,8 +47,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		if(cvar("developer"))
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0.5 0 0', "exec effects-ultimate.cfg", 0));
 
-	me.TR(me);
-	me.TR(me);
+	me.gotoRC(me, 1.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_subdivisions_tolerance"));
 			e.addValue(e, ZCTX(_("DET^Lowest")), "16");
@@ -142,7 +141,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_time"));
 	        setDependent(e, "cl_decals", 1, 1);
 
-	me.gotoRC(me, 2, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 1.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "r_coronas", "0", _("No dynamic lighting")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "gl_flashblend", string_null, _("Fake corona lighting")));
@@ -191,7 +190,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticParticlesSlider());
 			setDependent(e, "cl_particles", 1, 1);
 
-	me.gotoRC(me, me.rows - 1, 0);
+	me.gotoRC(me, me.rows - 1.25, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));
 }
 #endif

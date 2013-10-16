@@ -5,7 +5,7 @@ CLASS(XonoticGameViewSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity))
 	ATTRIB(XonoticGameViewSettingsTab, title, string, _("View"))
 	ATTRIB(XonoticGameViewSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameViewSettingsTab, rows, float, 15)
+	ATTRIB(XonoticGameViewSettingsTab, rows, float, 14)
 	ATTRIB(XonoticGameViewSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameViewSettingsTab)
 entity makeXonoticGameViewSettingsTab();
@@ -33,18 +33,12 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Zoom:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_reticle"));
-			e.addValue(e, ZCTX(_("RETICLE^Fullscreen")), "0");
-			e.addValue(e, ZCTX(_("RETICLE^With reticle")), "1");
-			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Factor:"))));
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom factor:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(2, 16, 0.5, "cl_zoomfactor"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Speed:"))));
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom speed:"))));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_zoomspeed"));
 			e.addValue(e, "1", "1"); // Samual: for() loop doesn't work here, even though it would make sense.
 			e.addValue(e, "2", "2");
@@ -57,21 +51,31 @@ void XonoticGameViewSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("ZOOM^Instant")), "-1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Sensitivity:"))));
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_zoomsensitivity"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Velocity zoom:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_velocityzoom_type"));
-			e.addValue(e, ZCTX(_("VZOOM^Disabled")), "0");
-			e.addValue(e, ZCTX(_("VZOOM^Forward only")), "2");
-			e.addValue(e, ZCTX(_("VZOOM^All directions")), "1");
-			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom", _("Velocity zoom")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(3, 1, "cl_velocityzoom_type", _("Forward movement only")));
+			setDependent(e, "cl_velocityzoom", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VZOOM^Speed"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.2, "cl_velocityzoom"));
-		setDependent(e, "cl_velocityzoom_type", 1, 3);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VZOOM^Factor"))));
+			setDependentAND(e, "cl_velocityzoom", 1, 1, "cl_velocityzoom_type", 1, 3);
+		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.1, "cl_velocityzoom_factor"));
+			setDependentAND(e, "cl_velocityzoom", 1, 1, "cl_velocityzoom_type", 1, 3);
+	me.TR(me);
+	me.TR(me);
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_reticle", _("Display reticle 2D overlay while zooming")));
+	me.TR(me);
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn")));
+			makeMulti(e, "cl_unpress_zoom_on_spawn");
+	me.TR(me);
+		//me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_weapon_switch", _("Release zoom when you switch weapons")));
 	
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
@@ -110,6 +114,9 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_eventchase_death", _("Fade to third person perspective upon death")));
+		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 		// todo: onclick, do sendcvar if connected

@@ -3,7 +3,7 @@ CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticInputSettingsTab, rows, float, 16.5)
+	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticInputSettingsTab)
 entity makeXonoticInputSettingsTab();
@@ -86,7 +86,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 		
 	
-	me.gotoRC(me, me.rows - 1, 0);
+	me.gotoRC(me, me.rows - 1.25, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_movement_track_canjump", COMMANDBUTTON_APPLY));
 }
 #endif

@@ -5,7 +5,7 @@ CLASS(XonoticGameCrosshairSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
 	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 15)
+	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 14)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
@@ -95,8 +95,8 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	//	me.TD(me, 1, 2, e = makeXonoticSlider(2, 4, 0.1, "crosshair_ring_size"));
 	//		setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Ring alpha:")));
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Ring alpha:")));
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1, 0.1, "crosshair_ring_alpha"));
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);

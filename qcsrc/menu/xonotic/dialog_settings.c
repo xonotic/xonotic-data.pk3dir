@@ -4,7 +4,7 @@ CLASS(XonoticSettingsDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))
 	ATTRIB(XonoticSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(XonoticSettingsDialog, intendedWidth, float, 0.96)
-	ATTRIB(XonoticSettingsDialog, rows, float, 19)
+	ATTRIB(XonoticSettingsDialog, rows, float, 18)
 	ATTRIB(XonoticSettingsDialog, columns, float, 6)
 ENDCLASS(XonoticSettingsDialog)
 #endif

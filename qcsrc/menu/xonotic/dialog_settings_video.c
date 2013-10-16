@@ -3,7 +3,7 @@ CLASS(XonoticVideoSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticVideoSettingsTab, rows, float, 16.5)
+	ATTRIB(XonoticVideoSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 	ATTRIB(XonoticVideoSettingsTab, name, string, "videosettings")
 ENDCLASS(XonoticVideoSettingsTab)
@@ -139,7 +139,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 				setDependent(e, "vid_gl20", 1, 1);
 	}
 
-	me.gotoRC(me, me.rows - 1, 0);
+	me.gotoRC(me, me.rows - 1.25, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_width $_menu_vid_width; vid_height $_menu_vid_height; vid_pixelheight $_menu_vid_pixelheight; vid_desktopfullscreen $_menu_vid_desktopfullscreen; menu_cmd update_conwidths_before_vid_restart; vid_restart; menu_cmd sync", COMMANDBUTTON_APPLY));
 }
 #endif

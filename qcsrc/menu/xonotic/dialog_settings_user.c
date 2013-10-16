@@ -3,7 +3,7 @@ CLASS(XonoticUserSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
 	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
 	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticUserSettingsTab, rows, float, 16.5)
+	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticUserSettingsTab, columns, float, 5)
 ENDCLASS(XonoticUserSettingsTab)
 entity makeXonoticUserSettingsTab();
@@ -26,8 +26,8 @@ void XonoticUserSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Menu skins:")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, 2, sk = makeXonoticSkinList());
-	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, me.rows - 2.5, 2, sk = makeXonoticSkinList());
+	me.gotoRC(me, me.rows - 1.5, 0);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Set skin"), '0 0 0'));
 			e.onClick = SetSkin_Click;
 			e.onClickEntity = sk;
