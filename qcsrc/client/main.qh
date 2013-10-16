@@ -147,3 +147,7 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 float hud;
 float view_quality;
 float framecount;
+
+float num_spectators;
+#define MAX_SPECTATORS 7
+float spectatorlist[MAX_SPECTATORS];

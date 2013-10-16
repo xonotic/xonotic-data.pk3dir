@@ -1254,3 +1254,4 @@ float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
 float autocvar_g_jump_grunt;
+float autocvar_sv_showspectators;

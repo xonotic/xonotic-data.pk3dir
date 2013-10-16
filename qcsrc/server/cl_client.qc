@@ -136,6 +136,7 @@ putting a client as observer in the server
 =============
 */
 void FixPlayermodel();
+void UpdateSpectators(entity is_spec, entity is_player);
 void PutObserverInServer (void)
 {
 	entity	spot;
@@ -153,6 +154,8 @@ void PutObserverInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
+	
+	UpdateSpectators(self, self); // don't update spectators or spectatees
 
 	if((g_race && g_race_qualifying) || g_cts)
 	{
@@ -609,6 +612,8 @@ void PutClientInServer (void)
 	{
 		PutObserverInServer ();
 	}
+	
+	UpdateSpectators(((IS_PLAYER(self)) ? world : self), ((IS_SPEC(self) || IS_OBSERVER(self)) ? self : world));
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1246,6 +1251,8 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	UpdateSpectators(self, world);
+
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
@@ -1767,13 +1774,42 @@ float SpectateUpdate() {
 		return 0;
 
 	if not(IS_PLAYER(self.enemy))
+	{
+		self.enemy = world;
 		return 0;
+	}
 
 	SpectateCopy(self.enemy);
 
 	return 1;
 }
 
+void UpdateSpectators(entity is_spec, entity is_player)
+{
+	entity head, spec;
+	float specs = 0;
+	FOR_EACH_REALCLIENT(head)
+	{
+		msg_entity = head;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
+		
+		specs = 0;
+		
+		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec && spec != is_player)
+			++specs;
+	
+		if(IS_SPEC(head) || IS_OBSERVER(head) || head == is_spec || !autocvar_sv_showspectators)
+		{
+			WriteByte(MSG_ONE, 0);
+			continue;
+		}
+		
+		WriteByte(MSG_ONE, specs);
+		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec)
+			WriteByte(MSG_ONE, num_for_edict(spec));
+	}
+}
 
 float SpectateSet()
 {
@@ -1852,7 +1888,10 @@ float SpectateNext()
 	}
 
 	if (other)
+	{
 		self.enemy = other;
+		UpdateSpectators(world, world);
+	}
 
 	return SpectateSet();
 }
@@ -1892,6 +1931,7 @@ float SpectatePrev()
 			other = first;
 	}
 	self.enemy = other;
+	UpdateSpectators(world, world);
 	return SpectateSet();
 }
 
