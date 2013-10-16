@@ -145,6 +145,8 @@ void WarpZone_Camera_Read(float isnew)
 }
 
 void CL_RotateMoves(vector ang) = #638;
+float autocvar_in_pitch_min;
+float autocvar_in_pitch_max;
 void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
@@ -155,7 +157,7 @@ void WarpZone_Teleported_Read(float isnew)
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
-	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
+	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES), autocvar_in_pitch_min, autocvar_in_pitch_max));
 	if(checkextension("DP_CSQC_ROTATEMOVES"))
 		CL_RotateMoves(v);
 		//CL_RotateMoves('0 90 0');
@@ -226,7 +228,7 @@ void WarpZone_FixPMove()
 	if(e)
 	{
 		pmove_org = WarpZone_TransformOrigin(e, pmove_org);
-		input_angles = WarpZone_TransformVAngles(e, input_angles);
+		input_angles = WarpZone_TransformVAngles(e, input_angles, autocvar_in_pitch_min, autocvar_in_pitch_max);
 	}
 }
 
@@ -250,7 +252,7 @@ void WarpZone_FixView()
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
-		ang = WarpZone_TransformVAngles(e, ang);
+		ang = WarpZone_TransformVAngles(e, ang, autocvar_in_pitch_min, autocvar_in_pitch_max);
 #ifdef WORKAROUND_XON010
 		dirty = 1;
 #endif

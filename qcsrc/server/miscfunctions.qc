@@ -508,6 +508,8 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
+	GetCvars_handleFloat(s, f, cvar_in_pitch_min, "in_pitch_min");
+	GetCvars_handleFloat(s, f, cvar_in_pitch_max, "in_pitch_max");
 
 	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
 	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);

@@ -504,7 +504,7 @@ vector WarpZone_TransformAngles(entity wz, vector v)
 	return AnglesTransform_ApplyToAngles(wz.warpzone_transform, v);
 }
 
-vector WarpZone_TransformVAngles(entity wz, vector ang)
+vector WarpZone_TransformVAngles(entity wz, vector ang, float pitchmin, float pitchmax)
 {
 #ifdef KEEP_ROLL
 	float roll;
@@ -515,11 +515,11 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 	ang = AnglesTransform_ApplyToVAngles(wz.warpzone_transform, ang);
 
 #ifdef KEEP_ROLL
-	ang = AnglesTransform_Normalize(ang, TRUE);
+	ang = AnglesTransform_Normalize(ang, TRUE, pitchmin, pitchmax);
 	ang = AnglesTransform_CancelRoll(ang);
 	ang_z = roll;
 #else
-	ang = AnglesTransform_Normalize(ang, FALSE);
+	ang = AnglesTransform_Normalize(ang, FALSE, pitchmin, pitchmax);
 #endif
 
 	return ang;
@@ -548,7 +548,7 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	ang_z = 0;
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
-	ang = AnglesTransform_Normalize(ang, TRUE);
+	ang = AnglesTransform_Normalize(ang, TRUE, -90, 90);
 	ang = AnglesTransform_CancelRoll(ang);
 
 	ang_z = roll;
@@ -742,7 +742,7 @@ vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang)
 	if(from.WarpZone_refsys)
 		ang = WarpZone_UnTransformVAngles(from.WarpZone_refsys, ang);
 	if(to.WarpZone_refsys)
-		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
+		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang, -90, 90);
 	return ang;
 }
 void WarpZone_RefSys_Copy(entity me, entity from)

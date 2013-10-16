@@ -55,7 +55,7 @@ float WarpZone_TargetPlaneDist(entity wz, vector v);
 vector WarpZone_TransformOrigin(entity wz, vector v);
 vector WarpZone_TransformVelocity(entity wz, vector v);
 vector WarpZone_TransformAngles(entity wz, vector v);
-vector WarpZone_TransformVAngles(entity wz, vector v);
+vector WarpZone_TransformVAngles(entity wz, vector v, float pitchmin, float pitchmax);
 vector WarpZone_UnTransformOrigin(entity wz, vector v);
 vector WarpZone_UnTransformVelocity(entity wz, vector v);
 vector WarpZone_UnTransformAngles(entity wz, vector v);

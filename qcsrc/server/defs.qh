@@ -271,6 +271,9 @@ float default_weapon_alpha;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
+.float cvar_in_pitch_min;
+.float cvar_in_pitch_max;
+
 .string weaponorder_byimpulse;
 
 .float cvar_cl_allow_uid2name;
