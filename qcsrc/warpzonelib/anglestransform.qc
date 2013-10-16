@@ -108,7 +108,25 @@ vector AnglesTransform_Normalize(vector t, float pitchmin, float pitchmax)
 	if (t_z > 90 || t_z <= -90)
 	{
 		// Roll is bad. Prefer flipping, but let's end up in the good range.
-		need_flip = (t_x >= pitchmin + 180 || t_x <= pitchmax - 180);
+
+		// Want to achieve:
+		// after t_x' = 180 - t_x or -180:
+		// t_x' <= pitchmax && t_x' >= pitchmin
+		// ASSUME t_x >= 0:
+		//   180 - t_x <= pitchmax && 180 - t_x >= pitchmin
+		//   t_x >= 180-pitchmax && t_x <= 180-pitchmin
+		//                          GUARANTEED
+		//   t_x >= 180-pitchmax
+		// ASSUME t_x < 0:
+		//   -180 - t_x <= pitchmax && -180 - t_x >= pitchmin
+		//   t_x >= -180-pitchmax && t_x <= -180-pitchmin
+		//   GUARANTEED
+		//   t_x <= -180-pitchmin
+		// So good after flip means:
+		//   t_x >= 0 ? t_x >= 180-pitchmax : t_x <= -180-pitchmin
+		//   t_x outside -180-pitchmin .. 180-pitchmax
+
+		need_flip = (t_x <= -180 - pitchmin || t_x >= 180 - pitchmax);
 		// NOTE: Is this the right decision or should it be > and <?
 		// This will in the equality case prefer the output with less roll.
 		// Is that right?
