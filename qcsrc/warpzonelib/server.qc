@@ -57,7 +57,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
 	if not(IS_NOT_A_CLIENT(player))
-		a1 = WarpZone_TransformVAngles(wz, player.v_angle, -player.cvar_in_pitch_max, -player.cvar_in_pitch_min);
+		a1 = WarpZone_TransformVAngles(wz, player.v_angle, player.cvar_in_pitch_min, player.cvar_in_pitch_max);
 	else
 		a1 = WarpZone_TransformAngles(wz, a0);
 
@@ -897,7 +897,7 @@ void WarpZone_PlayerPhysics_FixVAngle(void)
 	if(self.v_angle_z <= 360) // if not already adjusted
 	if(time - self.ping * 0.001 < self.warpzone_teleport_time)
 	{
-		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle, -self.cvar_in_pitch_max, -self.cvar_in_pitch_min);
+		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle, self.cvar_in_pitch_min, self.cvar_in_pitch_max);
 		self.v_angle_z += 720; // mark as adjusted
 	}
 #endif
