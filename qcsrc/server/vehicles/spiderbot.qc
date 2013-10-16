@@ -365,7 +365,7 @@ float spiderbot_frame()
     crosshair_trace(player);
     ad = vectoangles(normalize(trace_endpos - ad));
     ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(spider.angles), AnglesTransform_FromAngles(ad))) - spider.tur_head.angles;
-    ad = AnglesTransform_Normalize(ad, TRUE, -90, 90);
+    ad = AnglesTransform_Normalize(ad, -360, 360);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
     
     // Rotate head

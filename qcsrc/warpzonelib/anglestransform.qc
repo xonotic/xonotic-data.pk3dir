@@ -94,35 +94,30 @@ vector AnglesTransform_LeftDivide(vector from_transform, vector to_transform)
 	return AnglesTransform_Multiply(AnglesTransform_Invert(from_transform), to_transform);
 }
 
-vector AnglesTransform_Normalize(vector t, float minimize_roll, float pitchmin, float pitchmax)
+vector AnglesTransform_Normalize(vector t, float pitchmin, float pitchmax)
 {
 	float need_flip;
 	// first, bring all angles in their range...
 	t_x = t_x - 360 * rint(t_x / 360);
 	t_y = t_y - 360 * rint(t_y / 360);
 	t_z = t_z - 360 * rint(t_z / 360);
-	if(minimize_roll)
-		need_flip = (t_z > 90 || t_z <= -90);
+	// Smaller values break the math.
+	pitchmin = min(-90, pitchmin);
+	pitchmax = max(90, pitchmax);
+	// And...
+	if (t_z > 90 || t_z <= -90)
+	{
+		// Roll is bad. Prefer flipping, but let's end up in the good range.
+		need_flip = (t_x >= pitchmin + 180 || t_x <= pitchmax - 180);
+		// NOTE: Is this the right decision or should it be > and <?
+		// This will in the equality case prefer the output with less roll.
+		// Is that right?
+	}
 	else
 	{
-		// Smaller values break the math.
-		pitchmin = min(-90, pitchmin);
-		pitchmax = max(90, pitchmax);
-		// And...
-		if (t_z > 90 || t_z <= -90)
-		{
-			// Roll is bad. Prefer flipping, but let's end up in the good range.
-			need_flip = (t_x >= pitchmin + 180 || t_x <= pitchmax - 180);
-			// NOTE: Is this the right decision or should it be > and <?
-			// This will in the equality case prefer the output with less roll.
-			// Is that right?
-		}
-		else
-		{
-			// Roll is ok. Prefer not flipping.
-			need_flip = (t_x > pitchmax || t_x < pitchmin);
-			// for pitch we prefer to allow exactly the border angles degrees for looking straight down
-		}
+		// Roll is ok. Prefer not flipping.
+		need_flip = (t_x > pitchmax || t_x < pitchmin);
+		// for pitch we prefer to allow exactly the border angles degrees for looking straight down
 	}
 	if(need_flip)
 	{

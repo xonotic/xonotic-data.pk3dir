@@ -1336,7 +1336,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
     vtmp = vectoangles(normalize(_target - vtag));
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
-    vtmp = AnglesTransform_Normalize(vtmp, TRUE, _pichlimit_min, _pichlimit_max);
+    vtmp = AnglesTransform_Normalize(vtmp, -360, 360);
     ftmp = _aimspeed * frametime;
     vtmp_y = bound(-ftmp, vtmp_y, ftmp);
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);

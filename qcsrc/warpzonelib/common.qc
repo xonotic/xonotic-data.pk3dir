@@ -515,11 +515,11 @@ vector WarpZone_TransformVAngles(entity wz, vector ang, float pitchmin, float pi
 	ang = AnglesTransform_ApplyToVAngles(wz.warpzone_transform, ang);
 
 #ifdef KEEP_ROLL
-	ang = AnglesTransform_Normalize(ang, TRUE, pitchmin, pitchmax);
+	ang = AnglesTransform_Normalize(ang, -360, 360);
 	ang = AnglesTransform_CancelRoll(ang);
 	ang_z = roll;
 #else
-	ang = AnglesTransform_Normalize(ang, FALSE, pitchmin, pitchmax);
+	ang = AnglesTransform_Normalize(ang, pitchmin, pitchmax);
 #endif
 
 	return ang;
@@ -548,7 +548,7 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	ang_z = 0;
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
-	ang = AnglesTransform_Normalize(ang, TRUE, -90, 90);
+	ang = AnglesTransform_Normalize(ang, -360, 360);
 	ang = AnglesTransform_CancelRoll(ang);
 
 	ang_z = roll;
