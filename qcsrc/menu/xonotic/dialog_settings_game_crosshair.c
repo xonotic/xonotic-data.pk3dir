@@ -135,10 +135,10 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_effect_scalefade", _("Smooth effects of crosshairs")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "crosshair_hittest_blur", _("Blur crosshair if the shot is obstructed")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_hittest_blur", _("Blur crosshair if the shot is obstructed")));
 			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(1.25, 0, "crosshair_hittest_scale", _("Enlarge crosshair if targeting an enemy")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(1.25, 0, "crosshair_hittest_scale", _("Enlarge crosshair if targeting an enemy")));
 			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.5, 0, "crosshair_hitindication", _("Animate crosshair when hitting an enemy")));

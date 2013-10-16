@@ -122,13 +122,13 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_reticle", _("Display reticle 2D overlay while zooming")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_reticle", _("Display reticle 2D overlay while zooming")));
 	me.TR(me);
 		//me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn")));
 			makeMulti(e, "cl_unpress_zoom_on_spawn");
 	me.TR(me);
 		//me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_weapon_switch", _("Release zoom when you switch weapons")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_weapon_switch", _("Release zoom when you switch weapons")));
 }
 #endif
