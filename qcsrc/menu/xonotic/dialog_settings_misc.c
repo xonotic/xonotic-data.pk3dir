@@ -26,8 +26,13 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Network:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_rate"));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Client UDP port:")));
+		me.TD(me, 1, 1.5, e = makeXonoticInputBox(0, "cl_port"));
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth:")));
+		me.TD(me, 1, 1.8, e = makeXonoticTextSlider("_cl_rate"));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
 			e.addValue(e, _("Slow ADSL"), "15000");
@@ -36,8 +41,21 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Input packets/s:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Input packets/s:")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Server queries/s:")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(20, 100, 10, "net_slist_queriespersecond"));
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Downloads:")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
+	me.TR(me);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(10, 2000, 50, "cl_curl_maxspeed"));
 	me.TR(me);
 		if(cvar("developer"))
 		{
@@ -47,18 +65,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		}
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, _("Client UDP port:")));
-		me.TD(me, 1, 1, e = makeXonoticInputBox(0, "cl_port"));
-			e.enableClearButton = 0;
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		if(cvar_type("crypto_aeslevel") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
-	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
@@ -67,17 +74,9 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
 		setDependent(e, "cl_movement", 1, 1);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Downloads:")));
-	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Maximum:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(10, 1500, 10, "cl_curl_maxspeed"));
-	me.TR(me);
+		if(cvar_type("crypto_aeslevel") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Framerate:")));
