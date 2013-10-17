@@ -439,7 +439,11 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			
+			if(g_warmup_allguns == 2)
+				self.weapons = warmup_start_weapons;
+			else if(g_warmup_allguns == 1)
+				self.weapons = (warmup_start_weapons & (weaponsInMap | start_weapons));
 		}
 		else
 		{
