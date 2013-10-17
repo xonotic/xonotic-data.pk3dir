@@ -27,6 +27,7 @@ float item_ammo_type(float i)
 	}
 	return 0;
 };
+float item_ammo_mincount[ITEM_AMMO_COUNT];
 float item_ammo_count[ITEM_AMMO_COUNT];
 .float item_ammo_weight[ITEM_AMMO_COUNT];
 .float item_ammo_priority[ITEM_AMMO_COUNT];
@@ -35,6 +36,7 @@ float item_ammo_count[ITEM_AMMO_COUNT];
 float autocvar_g_balance_ammodistribution_nudgevalue = 0;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
+float autocvar_g_balance_ammodistribution_outer_nonmatch_exponent = -2;
 float autocvar_g_balance_ammodistribution_p3distance = 96;
 float autocvar_g_balance_ammodistribution_p2distance = 512;
 
@@ -45,21 +47,63 @@ void item_ammo_pick()
 		return;
 	item_ammo_picked = 1;
 
-	entity ammos = findchain(classname, "item_ammo");
-	entity weapons = findchainflags(flags, FL_WEAPON);
+	entity ammolist = findchain(classname, "item_ammo");
+	entity weaponlist = findchainflags(flags, FL_WEAPON);
 
 	entity w, a;
-	float i;
+	float i, j;
 
 	float n_w = 0;
-	for (w = weapons; w; w = w.chain)
+	for (w = weaponlist; w; w = w.chain)
 		++n_w;
 	float n_a = 0;
-	for (a = ammos; a; a = a.chain)
+	for (a = ammolist; a; a = a.chain)
 		++n_a;
 
+	// Find out how many we want of each item.
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+	{
+		item_ammo_count[i] = 0;
+		item_ammo_mincount[i] = 0;
+	}
+	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		if (start_weapons & get_weaponinfo(i).weapons)
+			for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+					item_ammo_mincount[i] = 1;
+	for (w = weaponlist; w; w = w.chain)
+	{
+		float c = 0;
+		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+				++c;
+		if (!c)
+		{
+			// Ammoless weapon is not a weapon.
+			--n_w;
+			// No need to remove it from the list though - no other
+			// loop will do anything with it.
+			continue;
+		}
+		c = 1.0 / c;
+		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+			{
+				item_ammo_count[i] += c;
+				item_ammo_mincount[i] = 1;
+			}
+	}
+	float n_mincount = 0;
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+		if (item_ammo_mincount[i])
+			n_mincount += item_ammo_mincount[i];
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+		item_ammo_count[i] = item_ammo_mincount[i] + max(0, ceil(item_ammo_count[i] * (n_a - n_mincount) / n_w + autocvar_g_balance_ammodistribution_nudgevalue));
+
 	// Find the weights and priorities.
-	for (a = ammos; a; a = a.chain)
+	for (a = ammolist; a; a = a.chain)
+	{
+		float totalsum = 0;
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
 		{
 			float weight = a.(Item_CounterField(item_ammo_type(i)));
@@ -70,7 +114,7 @@ void item_ammo_pick()
 				weight = fabs(weight);
 			float sum = 0;
 			float mindist = -1;
-			for (w = weapons; w; w = w.chain)
+			for (w = weaponlist; w; w = w.chain)
 				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
 				{
 					float dist = vlen(w.origin - a.origin);
@@ -78,7 +122,10 @@ void item_ammo_pick()
 						mindist = dist;
 					sum += pow(dist, autocvar_g_balance_ammodistribution_inner_exponent);
 				}
-			a.item_ammo_weight[i] = pow(sum, autocvar_g_balance_ammodistribution_outer_exponent) * weight;
+			if (sum == 0)
+				a.item_ammo_weight[i] = 0;
+			else
+				a.item_ammo_weight[i] = pow(sum, autocvar_g_balance_ammodistribution_outer_exponent) * weight;
 			if (forbid || mindist < 0)
 				a.item_ammo_priority[i] = 0;
 			else if (mindist <= autocvar_g_balance_ammodistribution_p3distance)
@@ -87,64 +134,59 @@ void item_ammo_pick()
 				a.item_ammo_priority[i] = 2;
 			else
 				a.item_ammo_priority[i] = 1;
+			totalsum += sum;
 		}
-
-	// Find out how many we want of each item.
-	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-		item_ammo_count[i] = 0;
-	for (w = weapons; w; w = w.chain)
-	{
-		float c = 0;
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
-				++c;
-		if (!c)
 		{
-			// Ammoless weapon is not a weapon.
-			--n_w;
-			continue;
+			float weight = a.(Item_CounterField(item_ammo_type(i)));
+			if (a.item_ammo_priority[i] == 0)
+				a.item_ammo_weight[i] = pow(totalsum, autocvar_g_balance_ammodistribution_outer_nonmatch_exponent) * weight;
 		}
-		c = 1.0 / c;
-		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
-				item_ammo_count[i] += c;
 	}
-	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-		item_ammo_count[i] = ceil(item_ammo_count[i] * n_a / n_w + autocvar_g_balance_ammodistribution_nudgevalue);
 
 	// Make sure the selected item types are cleared.
-	for (a = ammos; a; a = a.chain)
+	for (a = ammolist; a; a = a.chain)
 		a.item_ammo_chosen_type = -1;
 
 	// Distribute them properly.
-	while (n_a > 0)
+	float matchmode;
+	for (matchmode = 0; matchmode < 2; ++matchmode)
 	{
-		// Randomly pick one of the remaining item spawn points, and a
-		// corresponding item type. Honor priorities and weights.
-		RandomSelection_Init();
-		for (a = ammos; a; a = a.chain)
-			if (a.item_ammo_chosen_type == -1)
-				for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-					if (item_ammo_count[i] > 0)
-						RandomSelection_Add(a, i, string_null, a.item_ammo_weight[i], a.item_ammo_priority[i]);
-		a = RandomSelection_chosen_ent;
-		i = RandomSelection_chosen_float;
+		while (n_a > 0)
+		{
+			// Randomly pick one of the remaining item spawn points, and a
+			// corresponding item type. Honor priorities and weights.
+			RandomSelection_Init();
+			for (a = ammolist; a; a = a.chain)
+				if (a.item_ammo_chosen_type == -1)
+					for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+						if ((matchmode ? item_ammo_count[i] : item_ammo_mincount[i]) > 0)
+							RandomSelection_Add(a, i, string_null, a.item_ammo_weight[i], a.item_ammo_priority[i]);
+			a = RandomSelection_chosen_ent;
+			i = RandomSelection_chosen_float;
 
-		if (!a)
-			error("Nothing to select.");
+			if (!a)
+			{
+				// First round: just go to second round.
+				if (matchmode == 0)
+					continue;
+				error("Nothing to select.");
+			}
 
-		// Assign the selected item type to the selected item.
-		a.item_ammo_chosen_type = i;
+			// Assign the selected item type to the selected item.
+			a.item_ammo_chosen_type = i;
 
-		print(sprintf("%v: %s -> %s\n", a.origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
+			print(sprintf("%v: %s -> %s\n", a.origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
 
-		// Decrease the count of remaining items.
-		--item_ammo_count[i];
-		--n_a;
+			// Decrease the count of remaining items.
+			--item_ammo_mincount[i];
+			--item_ammo_count[i];
+			--n_a;
+		}
 	}
 
 	// SPAWN SPAWN SPAWN
-	for (a = ammos; a; a = a.chain)
+	for (a = ammolist; a; a = a.chain)
 	{
 		if (a.item_ammo_chosen_type == -1)
 			error("item_ammo_wtf");
