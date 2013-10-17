@@ -245,8 +245,25 @@ void StartFrame (void)
 .string gametypefilter;
 .string cvarfilter;
 float DoesQ3ARemoveThisEntity();
+.string save_classname;
 void SV_OnEntityPreSpawnFunction()
 {
+	self.save_classname = self.classname;
+
+	if (autocvar_g_balance_ammodistribution_force)
+	{
+		if (self.classname == "item_shells")
+			self.classname = "item_ammo";
+		if (self.classname == "item_bullets")
+			self.classname = "item_ammo";
+		if (self.classname == "item_cells")
+			self.classname = "item_ammo";
+		if (self.classname == "item_rockets")
+			self.classname = "item_ammo";
+		if (self.classname == "item_fuel")
+			self.classname = "item_ammo";
+	}
+
 	if (self)
 	if (self.gametypefilter != "")
 	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))

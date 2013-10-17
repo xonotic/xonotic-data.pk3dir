@@ -146,6 +146,7 @@ w_common.qc
 w_all.qc
 
 t_items.qc
+item_ammo.qc
 cl_weapons.qc
 cl_impulse.qc
 
