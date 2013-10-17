@@ -5,33 +5,33 @@
 // NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 
 // SG -> SG
-void spawnfunc_ammo_shells()         { spawnfunc_item_shells();         }
+void spawnfunc_ammo_shells()         { spawnfunc_item_ammo();           }
 
 // MG -> MG
 void spawnfunc_weapon_machinegun()   { spawnfunc_weapon_uzi();          }
-void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
+void spawnfunc_ammo_bullets()        { spawnfunc_item_ammo();           }
 
 // GL -> Mortar
-void spawnfunc_ammo_grenades()       { spawnfunc_item_rockets();        }
+void spawnfunc_ammo_grenades()       { spawnfunc_item_ammo();           }
 
 // LG -> Electro
 void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
-void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
+void spawnfunc_ammo_lightning()      { spawnfunc_item_ammo();           }
 
 // Plasma -> Hagar
 void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
-void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
+void spawnfunc_ammo_cells()          { spawnfunc_item_ammo();           }
 
 // Rail -> Nex
 void spawnfunc_weapon_railgun()      { spawnfunc_weapon_nex();          }
-void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
+void spawnfunc_ammo_slugs()          { spawnfunc_item_ammo();           }
 
 // BFG -> Crylink
 void spawnfunc_weapon_bfg()          { spawnfunc_weapon_crylink();      }
-void spawnfunc_ammo_bfg()            { spawnfunc_item_cells();          }
+void spawnfunc_ammo_bfg()            { spawnfunc_item_ammo();           }
 
 // RL -> RL
-void spawnfunc_ammo_rockets()        { spawnfunc_item_rockets();        }
+void spawnfunc_ammo_rockets()        { spawnfunc_item_ammo();           }
 
 // Armor
 void spawnfunc_item_armor_body()     { spawnfunc_item_armor_large();    }
