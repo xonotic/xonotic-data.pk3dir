@@ -128,7 +128,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 
 			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = warmup_start_weapons;
+				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
 			else
 				GiveFrags_randomweapons.weapons = start_weapons;
 

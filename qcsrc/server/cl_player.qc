@@ -353,7 +353,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		ear1 += v_right * -10;
 		ear2 += v_right * +10;
 		d = inflictor.origin - self.origin;
-		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if (d)
+			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		else
+			f = 0;  // Assum ecenter.
 		force = v_right * vlen(force);
 		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
 		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
