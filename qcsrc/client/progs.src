@@ -121,5 +121,3 @@ tturrets.qc
 
 player_skeleton.qc
 ../common/animdecide.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
