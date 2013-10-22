@@ -1,7 +1,8 @@
 typedef void(float id, float itemtype, void() spawnfunc) item_ammo_acceptor;
 
 // TODO define them in the balance configs
-float autocvar_g_balance_ammodistribution_nudgevalue = 0;
+float autocvar_g_balance_ammodistribution_nudgefactor_min = 0.7;
+float autocvar_g_balance_ammodistribution_nudgefactor_max = 1.4;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
 float autocvar_g_balance_ammodistribution_outer_nonmatch_exponent = -2;
@@ -154,7 +155,14 @@ void item_ammo_pick()
 		n_mincount += item_ammo_mincount[i];
 	}
 	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-		item_ammo_count[i] = item_ammo_mincount[i] + max(0, ceil(item_ammo_count[i] * (n_a - n_mincount) / n_count + autocvar_g_balance_ammodistribution_nudgevalue));
+	{
+		float c_i = item_ammo_count[i];
+		float m_i = item_ammo_mincount[i];
+		item_ammo_count[i]    = m_i + max(0,  ceil(c_i * (n_a - n_mincount) / n_count * autocvar_g_balance_ammodistribution_nudgefactor_max));
+		// Obviously >=
+		item_ammo_mincount[i] = m_i + max(0, floor(c_i * (n_a - n_mincount) / n_count * autocvar_g_balance_ammodistribution_nudgefactor_min));
+		dprint(sprintf("Item %s distribution: at least %d, at most %d, distribution input %d %f\n", Item_CounterFieldName(item_ammo_type(i)), item_ammo_mincount[i], item_ammo_count[i], m_i, c_i));
+	}
 
 	// Find the weights and priorities.
 	for (a = ammolist; a; a = a.chain)
@@ -234,7 +242,7 @@ void item_ammo_pick()
 		// Assign the selected item type to the selected item.
 		a.item_ammo_chosen_type = i;
 
-		print(sprintf("%v (%v): %s -> %s\n", a.origin, a.item_ammo_origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
+		dprint(sprintf("%v (%v): %s -> %s\n", a.origin, a.item_ammo_origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
 
 		// Decrease the count of remaining items.
 		if (item_ammo_mincount[i] > 0)
@@ -242,6 +250,17 @@ void item_ammo_pick()
 		--item_ammo_mincount[i];
 		--item_ammo_count[i];
 		--n_a;
+	}
+
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+	{
+		if (item_ammo_count[i] - item_ammo_mincount[i] >= 2)
+		{
+			if (item_ammo_mincount[i] == 0)
+				print(sprintf("WARNING: map might not have enough item_ammo near %s weapons\n", Item_CounterFieldName(item_ammo_type(i))));
+			if (item_ammo_count[i] == 0)
+				print(sprintf("WARNING: map might have too many item_ammo near %s weapons\n", Item_CounterFieldName(item_ammo_type(i))));
+		}
 	}
 
 	// SPAWN SPAWN SPAWN
