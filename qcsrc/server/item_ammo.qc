@@ -168,6 +168,8 @@ void item_ammo_pick()
 	for (a = ammolist; a; a = a.chain)
 	{
 		float totalsum = 0;
+		float maxprio = -1;
+		float maxprio_count = 0;
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
 		{
 			float weight = a.(Item_CounterField(item_ammo_type(i)));
@@ -200,6 +202,13 @@ void item_ammo_pick()
 				a.item_ammo_priority[i] = 3;
 			else
 				a.item_ammo_priority[i] = 2;
+			if (a.item_ammo_priority[i] > maxprio)
+			{
+				maxprio = a.item_ammo_priority[i];
+				maxprio_count = 1;
+			}
+			else if (a.item_ammo_priority[i] == maxprio)
+				++maxprio_count;
 			totalsum += sum;
 		}
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
@@ -207,6 +216,8 @@ void item_ammo_pick()
 			float weight = a.(Item_CounterField(item_ammo_type(i)));
 			if (a.item_ammo_weight[i] == 0)
 				a.item_ammo_weight[i] = pow(totalsum, autocvar_g_balance_ammodistribution_outer_nonmatch_exponent) * weight;
+			if (a.item_ammo_priority[i] == maxprio && maxprio_count == 1)
+				a.item_ammo_priority[i] += 0.5;
 		}
 	}
 
