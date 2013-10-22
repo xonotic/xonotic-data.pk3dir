@@ -1,5 +1,6 @@
 typedef void(float id, float itemtype, void() spawnfunc) item_ammo_acceptor;
 
+// TODO define them in the balance configs
 float autocvar_g_balance_ammodistribution_nudgevalue = 0;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
