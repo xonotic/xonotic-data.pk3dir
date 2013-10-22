@@ -4,8 +4,8 @@ float autocvar_g_balance_ammodistribution_nudgevalue = 0;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
 float autocvar_g_balance_ammodistribution_outer_nonmatch_exponent = -2;
-float autocvar_g_balance_ammodistribution_p3distance = 96;
-float autocvar_g_balance_ammodistribution_p2distance = 512;
+float autocvar_g_balance_ammodistribution_p3distance = 97;
+float autocvar_g_balance_ammodistribution_p2distance = 513;
 // NOTE: these also exist per weapon
 float autocvar_g_balance_ammodistribution_modifier_shells = 1;
 float autocvar_g_balance_ammodistribution_modifier_bullets = 1;
