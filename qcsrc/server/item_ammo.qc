@@ -123,7 +123,7 @@ void item_ammo_pick()
 		if (start_weapons & get_weaponinfo(i).weapons)
 			for (i = 0; i < ITEM_AMMO_COUNT; ++i)
 				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
-					item_ammo_mincount[i] = 1;
+					item_ammo_mincount[i] = n_teams;
 	for (w = weaponlist; w; w = w.chain)
 	{
 		float c = 0;
@@ -143,7 +143,7 @@ void item_ammo_pick()
 			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
 			{
 				item_ammo_count[i] += item_ammo_modifier(i) * item_ammo_weaponmodifier(w.weapon) * c;
-				item_ammo_mincount[i] = n_teams;
+				// item_ammo_mincount[i] = n_teams;  // Not needed, weapons serve as ammo pickups too.
 			}
 	}
 	float n_count = 0;
