@@ -222,7 +222,6 @@ void item_ammo_pick()
 	{
 		// Randomly pick one of the remaining item spawn points, and a
 		// corresponding item type. Honor priorities and weights.
-		print(sprintf("%d %d\n", n_a, n_mincount));
 		RandomSelection_Init();
 		for (a = ammolist; a; a = a.chain)
 			if (a.item_ammo_chosen_type == -1)
