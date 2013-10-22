@@ -95,7 +95,7 @@ void item_ammo_pick()
 		++n_a;
 
 	float n_teams = 1;
-	if (teamplay)
+	if (have_team_spawns > 0)
 	{
 		CheckAllowedTeams(world);
 		n_teams = (c1 >= 0) + (c2 >= 0) + (c3 >= 0) + (c4 >= 0);
