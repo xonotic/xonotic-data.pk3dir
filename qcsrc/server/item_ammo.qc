@@ -215,10 +215,14 @@ void item_ammo_pick()
 		a.item_ammo_chosen_type = -1;
 
 	// Distribute them properly.
+	n_mincount = 0;
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+		n_mincount += item_ammo_mincount[i];
 	while (n_a > 0)
 	{
 		// Randomly pick one of the remaining item spawn points, and a
 		// corresponding item type. Honor priorities and weights.
+		print(sprintf("%d %d\n", n_a, n_mincount));
 		RandomSelection_Init();
 		for (a = ammolist; a; a = a.chain)
 			if (a.item_ammo_chosen_type == -1)
@@ -262,6 +266,13 @@ void item_ammo_pick()
 				print(sprintf("WARNING: map might have too many item_ammo near %s weapons\n", Item_CounterFieldName(item_ammo_type(i))));
 		}
 	}
+
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+		item_ammo_count[i] = 0;
+	for (a = ammolist; a; a = a.chain)
+		++item_ammo_count[a.item_ammo_chosen_type];
+	for (i = 0; i < ITEM_AMMO_COUNT; ++i)
+		dprint(sprintf("Item %s distribution: spawning %d\n", Item_CounterFieldName(item_ammo_type(i)), item_ammo_count[i]));
 
 	// SPAWN SPAWN SPAWN
 	for (a = ammolist; a; a = a.chain)
