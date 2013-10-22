@@ -143,7 +143,7 @@ void item_ammo_pick()
 			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
 			{
 				item_ammo_count[i] += item_ammo_modifier(i) * item_ammo_weaponmodifier(w.weapon) * c;
-				// item_ammo_mincount[i] = n_teams;  // Not needed, weapons serve as ammo pickups too.
+				item_ammo_mincount[i] = 0;  // n_teams;  // Not needed, weapons serve as ammo pickups too.
 			}
 	}
 	float n_count = 0;
