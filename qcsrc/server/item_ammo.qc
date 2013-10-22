@@ -5,8 +5,8 @@ float autocvar_g_balance_ammodistribution_nudgevalue = 0;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
 float autocvar_g_balance_ammodistribution_outer_nonmatch_exponent = -2;
-float autocvar_g_balance_ammodistribution_p3distance = 97;
-float autocvar_g_balance_ammodistribution_p2distance = 513;
+float autocvar_g_balance_ammodistribution_p3distance = 64 * 3 + 1;
+float autocvar_g_balance_ammodistribution_p2distance = 1024 + 1;
 // NOTE: these also exist per weapon
 float autocvar_g_balance_ammodistribution_modifier_shells = 1;
 float autocvar_g_balance_ammodistribution_modifier_bullets = 1;
@@ -43,11 +43,11 @@ float item_ammo_modifier(float i)
 	float m = 0;
 	switch (i)
 	{
-		case 0: m = autocvar_g_balance_ammodistribution_modifier_shells;
-		case 1: m = autocvar_g_balance_ammodistribution_modifier_bullets;
-		case 2: m = autocvar_g_balance_ammodistribution_modifier_cells;
-		case 3: m = autocvar_g_balance_ammodistribution_modifier_rockets;
-		case 4: m = autocvar_g_balance_ammodistribution_modifier_fuel;
+		case 0: m = autocvar_g_balance_ammodistribution_modifier_shells; break;
+		case 1: m = autocvar_g_balance_ammodistribution_modifier_bullets; break;
+		case 2: m = autocvar_g_balance_ammodistribution_modifier_cells; break;
+		case 3: m = autocvar_g_balance_ammodistribution_modifier_rockets; break;
+		case 4: m = autocvar_g_balance_ammodistribution_modifier_fuel; break;
 		default: error("item_ammo_wtf");
 	}
 	if (m == 0)
@@ -120,9 +120,9 @@ void item_ammo_pick()
 		item_ammo_mincount[i] = 0;
 	}
 	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		if (start_weapons & get_weaponinfo(i).weapons)
+		if (start_weapons & get_weaponinfo(j).weapons)
 			for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+				if (get_weaponinfo(j).items & item_ammo_type(i))
 					item_ammo_mincount[i] = n_teams;
 	for (w = weaponlist; w; w = w.chain)
 	{
