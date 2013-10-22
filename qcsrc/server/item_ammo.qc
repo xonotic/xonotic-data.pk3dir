@@ -74,6 +74,17 @@ float item_ammo_count[ITEM_AMMO_COUNT];
 .float item_ammo_weight[ITEM_AMMO_COUNT];
 .float item_ammo_priority[ITEM_AMMO_COUNT];
 .float item_ammo_chosen_type;
+.vector item_ammo_origin;
+
+void item_ammo_findtarget()
+{
+	entity e;
+	RandomSelection_Init();
+	for (e = world; (e = find(e, targetname, self.target)); )
+		RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), 0);
+	if (RandomSelection_chosen_ent)
+		self.item_ammo_origin = e.origin;
+}
 
 float item_ammo_picked;
 void item_ammo_pick()
@@ -162,7 +173,7 @@ void item_ammo_pick()
 			for (w = weaponlist; w; w = w.chain)
 				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
 				{
-					float dist = vlen(w.origin - a.origin);
+					float dist = vlen(w.origin - a.item_ammo_origin);
 					if (mindist < 0 || dist < mindist)
 						mindist = dist;
 					sum += pow(dist, autocvar_g_balance_ammodistribution_inner_exponent);
@@ -223,7 +234,7 @@ void item_ammo_pick()
 		// Assign the selected item type to the selected item.
 		a.item_ammo_chosen_type = i;
 
-		print(sprintf("%v: %s -> %s\n", a.origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
+		print(sprintf("%v (%v): %s -> %s\n", a.origin, a.item_ammo_origin, a.save_classname, Item_CounterFieldName(item_ammo_type(i))));
 
 		// Decrease the count of remaining items.
 		if (item_ammo_mincount[i] > 0)
@@ -240,6 +251,7 @@ void item_ammo_pick()
 			error("item_ammo_wtf");
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
 			a.(Item_CounterField(item_ammo_type(i))) = 0;
+		a.target = string_null;
 		self = a;
 		item_ammo_spawnfunc(a.item_ammo_chosen_type)();
 	}
@@ -247,5 +259,9 @@ void item_ammo_pick()
 
 void spawnfunc_item_ammo()
 {
-	InitializeEntity(self, item_ammo_pick, INITPRIO_FIRST);
+	if (self.item_ammo_origin == '0 0 0')
+		self.item_ammo_origin = self.origin;
+	if (self.target != "")
+		InitializeEntity(self, item_ammo_findtarget, INITPRIO_PREBECOME);
+	InitializeEntity(self, item_ammo_pick, INITPRIO_BECOME);
 }

@@ -1425,6 +1425,8 @@ void precache()
 #define INITPRIO_FIRST              0
 #define INITPRIO_GAMETYPE           0
 #define INITPRIO_GAMETYPE_FALLBACK  1
+#define INITPRIO_PREBECOME          4
+#define INITPRIO_BECOME             5
 #define INITPRIO_FINDTARGET        10
 #define INITPRIO_DROPTOFLOOR       20
 #define INITPRIO_SETLOCATION       90
