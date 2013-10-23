@@ -6,8 +6,8 @@ float autocvar_g_balance_ammodistribution_nudgefactor_max = 1.4;
 float autocvar_g_balance_ammodistribution_inner_exponent = -1;
 float autocvar_g_balance_ammodistribution_outer_exponent = 2;
 float autocvar_g_balance_ammodistribution_outer_nonmatch_exponent = -2;
-float autocvar_g_balance_ammodistribution_shortdistance = 64 * 2.125 + 1;
-float autocvar_g_balance_ammodistribution_mediumdistance = 512 + 1;
+float autocvar_g_balance_ammodistribution_distance_short = 64 * 2.125 + 1;
+float autocvar_g_balance_ammodistribution_distance_medium = 512 + 1;
 // NOTE: these also exist per weapon
 float autocvar_g_balance_ammodistribution_modifier_shells = 1;
 float autocvar_g_balance_ammodistribution_modifier_bullets = 1;
@@ -232,9 +232,9 @@ void item_ammo_pick()
 			else if (mindist < 0)
 				a.item_ammo_priority[i] = ITEM_AMMO_PRIORITY_NOTTHERE;
 			// Distance based decisions.
-			else if (mindist <= autocvar_g_balance_ammodistribution_shortdistance)
+			else if (mindist <= autocvar_g_balance_ammodistribution_distance_short)
 				a.item_ammo_priority[i] = ITEM_AMMO_PRIORITY_SHORT;
-			else if (mindist <= autocvar_g_balance_ammodistribution_mediumdistance)
+			else if (mindist <= autocvar_g_balance_ammodistribution_distance_medium)
 				a.item_ammo_priority[i] = ITEM_AMMO_PRIORITY_MEDIUM;
 			else
 				a.item_ammo_priority[i] = ITEM_AMMO_PRIORITY_FAR;
