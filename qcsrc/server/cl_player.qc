@@ -637,7 +637,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
 			self.respawn_time = time + sdelay;
-		if(autocvar_g_respawn_delay_max > self.respawn_time)
+		if(autocvar_g_respawn_delay_max > sdelay)
 			self.respawn_time_max = time + autocvar_g_respawn_delay_max;
 		else
 			self.respawn_time_max = self.respawn_time;
