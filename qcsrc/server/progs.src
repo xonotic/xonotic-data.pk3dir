@@ -34,6 +34,8 @@ defs.qh		// Should rename this, it has fields and globals
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
+../common/vehicles/vehicles_include.qh
+
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_assault.qh
@@ -50,7 +52,6 @@ mutators/mutator_nades.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
-vehicles/vehicles_def.qh
 
 campaign.qh
 ../common/campaign_common.qh
@@ -197,7 +198,6 @@ race.qc
 
 //// tZork Turrets ////
 tturrets/include/turrets.qh
-vehicles/vehicles.qh
 
 scores.qc
 
@@ -211,6 +211,7 @@ target_music.qc
 
 ../common/items.qc
 
+../common/vehicles/vehicles_include.qc
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc

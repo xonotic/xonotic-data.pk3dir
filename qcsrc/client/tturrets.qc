@@ -257,21 +257,13 @@ void turret_draw2d()
         o_z = 0;
         if(hud != HUD_NORMAL)
         {        
-            switch(hud)
-            {
-                case HUD_SPIDERBOT:
-                case HUD_WAKIZASHI:
-                case HUD_RAPTOR:
-                case HUD_BUMBLEBEE:
-                    if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
-                        txt = "gfx/vehicles/vth-mover.tga";
-                    else
-                        txt = "gfx/vehicles/vth-stationary.tga";
+			if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
+				txt = "gfx/vehicles/vth-mover.tga";
+			else
+				txt = "gfx/vehicles/vth-stationary.tga";
                         
-                    vector pz = drawgetimagesize(txt) * 0.25;
-                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
-                    break;
-            }
+			vector pz = drawgetimagesize(txt) * 0.25;
+			drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
         }
 	}
     
