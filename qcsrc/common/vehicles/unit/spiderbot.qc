@@ -13,12 +13,6 @@ REGISTER_VEHICLE(
 );
 #else
 
-#define SBRM_FIRST 1
-#define SBRM_VOLLY 1
-#define SBRM_GUIDE 2
-#define SBRM_ARTILLERY 3
-#define SBRM_LAST 3
-
 #ifdef SVQC
 float autocvar_g_vehicle_spiderbot;
 
@@ -72,6 +66,12 @@ float autocvar_g_vehicle_spiderbot_rocket_health;
 float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
+
+#define SBRM_FIRST 0
+#define SBRM_VOLLY 0
+#define SBRM_GUIDE 1
+#define SBRM_ARTILLERY 2
+#define SBRM_LAST 2
 
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
@@ -878,6 +878,12 @@ float v_spiderbot(float req)
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
 #define spider_mgun "gfx/vehicles/sbot_mguns.tga"
 string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
+
+#define SBRM_FIRST 1
+#define SBRM_VOLLY 1
+#define SBRM_GUIDE 2
+#define SBRM_ARTILLERY 3
+#define SBRM_LAST 3
 
 float v_spiderbot(float req)
 {
