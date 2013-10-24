@@ -9,40 +9,36 @@ REGISTER_MONSTER(
 /* fullname   */ _("Mage")
 );
 
-#define MAGE_SETTINGS(monster) \
-	MON_ADD_CVAR(monster, health) \
-	MON_ADD_CVAR(monster, attack_spike_damage) \
-	MON_ADD_CVAR(monster, attack_spike_radius) \
-	MON_ADD_CVAR(monster, attack_spike_delay) \
-	MON_ADD_CVAR(monster, attack_spike_accel) \
-	MON_ADD_CVAR(monster, attack_spike_decel) \
-	MON_ADD_CVAR(monster, attack_spike_turnrate) \
-	MON_ADD_CVAR(monster, attack_spike_speed_max) \
-	MON_ADD_CVAR(monster, attack_spike_smart) \
-	MON_ADD_CVAR(monster, attack_spike_smart_trace_min) \
-	MON_ADD_CVAR(monster, attack_spike_smart_trace_max) \
-	MON_ADD_CVAR(monster, attack_spike_smart_mindist) \
-	MON_ADD_CVAR(monster, attack_push_damage) \
-	MON_ADD_CVAR(monster, attack_push_radius) \
-	MON_ADD_CVAR(monster, attack_push_delay) \
-	MON_ADD_CVAR(monster, attack_push_force) \
-	MON_ADD_CVAR(monster, heal_self) \
-	MON_ADD_CVAR(monster, heal_allies) \
-	MON_ADD_CVAR(monster, heal_minhealth) \
-	MON_ADD_CVAR(monster, heal_range) \
-	MON_ADD_CVAR(monster, heal_delay) \
-	MON_ADD_CVAR(monster, shield_time) \
-	MON_ADD_CVAR(monster, shield_delay) \
-	MON_ADD_CVAR(monster, shield_blockpercent) \
-	MON_ADD_CVAR(monster, speed_stop) \
-	MON_ADD_CVAR(monster, speed_run) \
-	MON_ADD_CVAR(monster, speed_walk) 
-
-#ifdef SVQC
-MAGE_SETTINGS(mage)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_monster_mage_health;
+float autocvar_g_monster_mage_attack_spike_damage;
+float autocvar_g_monster_mage_attack_spike_radius;
+float autocvar_g_monster_mage_attack_spike_delay;
+float autocvar_g_monster_mage_attack_spike_accel;
+float autocvar_g_monster_mage_attack_spike_decel;
+float autocvar_g_monster_mage_attack_spike_turnrate;
+float autocvar_g_monster_mage_attack_spike_speed_max;
+float autocvar_g_monster_mage_attack_spike_smart;
+float autocvar_g_monster_mage_attack_spike_smart_trace_min;
+float autocvar_g_monster_mage_attack_spike_smart_trace_max;
+float autocvar_g_monster_mage_attack_spike_smart_mindist;
+float autocvar_g_monster_mage_attack_push_damage;
+float autocvar_g_monster_mage_attack_push_radius;
+float autocvar_g_monster_mage_attack_push_delay;
+float autocvar_g_monster_mage_attack_push_force;
+float autocvar_g_monster_mage_heal_self;
+float autocvar_g_monster_mage_heal_allies;
+float autocvar_g_monster_mage_heal_minhealth;
+float autocvar_g_monster_mage_heal_range;
+float autocvar_g_monster_mage_heal_delay;
+float autocvar_g_monster_mage_shield_time;
+float autocvar_g_monster_mage_shield_delay;
+float autocvar_g_monster_mage_shield_blockpercent;
+float autocvar_g_monster_mage_speed_stop;
+float autocvar_g_monster_mage_speed_run;
+float autocvar_g_monster_mage_speed_walk;
+
 const float mage_anim_idle		= 0;
 const float mage_anim_walk 		= 1;
 const float mage_anim_attack 	= 2;
@@ -91,7 +87,7 @@ void mage_spike_explode()
 	self.realowner.mage_spike = world;
 	
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, MON_CVAR(mage, attack_spike_damage), MON_CVAR(mage, attack_spike_damage) * 0.5, MON_CVAR(mage, attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
 }
@@ -120,9 +116,9 @@ void mage_spike_think()
 
 	spd = vlen(self.velocity);
 	spd = bound(
-		spd - MON_CVAR(mage, attack_spike_decel) * frametime,
-		MON_CVAR(mage, attack_spike_speed_max),
-		spd + MON_CVAR(mage, attack_spike_accel) * frametime
+		spd - (autocvar_g_monster_mage_attack_spike_decel) * frametime,
+		(autocvar_g_monster_mage_attack_spike_speed_max),
+		spd + (autocvar_g_monster_mage_attack_spike_accel) * frametime
 	);
 
 	if (self.enemy != world)
@@ -133,13 +129,13 @@ void mage_spike_think()
 	{
 		e               = self.enemy;
 		eorg            = 0.5 * (e.absmin + e.absmax);
-		turnrate        = MON_CVAR(mage, attack_spike_turnrate); // how fast to turn
+		turnrate        = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
 		desireddir      = normalize(eorg - self.origin);
 		olddir          = normalize(self.velocity); // get my current direction
 		dist            = vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if (MON_CVAR(mage, attack_spike_smart) && (dist > MON_CVAR(mage, attack_spike_smart_mindist)))
+		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen(self.origin + olddir * self.wait) < dist)
@@ -148,7 +144,7 @@ void mage_spike_think()
 				traceline(self.origin, eorg, FALSE, self);
 
 			// Setup adaptive tracelength
-			self.wait = bound(MON_CVAR(mage, attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = MON_CVAR(mage, attack_spike_smart_trace_max));
+			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
 			desireddir  = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
@@ -199,7 +195,7 @@ void mage_heal()
 	entity head;
 	float washealed = FALSE;
 	
-	for(head = findradius(self.origin, MON_CVAR(mage, heal_range)); head; head = head.chain) if(friend_needshelp(head))
+	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(friend_needshelp(head))
 	{
 		washealed = TRUE;
 		string fx = "";
@@ -208,7 +204,7 @@ void mage_heal()
 			switch(self.skin)
 			{
 				case 0:
-					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), autocvar_g_balance_health_regenstable);
+					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
 					fx = "healing_fx";
 					break;
 				case 1:
@@ -221,12 +217,12 @@ void mage_heal()
 				case 2:
 					if(head.armorvalue < autocvar_g_balance_armor_regenstable)
 					{
-						head.armorvalue = bound(0, head.armorvalue + MON_CVAR(mage, heal_allies), autocvar_g_balance_armor_regenstable);
+						head.armorvalue = bound(0, head.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
 						fx = "armorrepair_fx";
 					}
 					break;
 				case 3:
-					head.health = bound(0, head.health - ((head == self)  ? MON_CVAR(mage, heal_self) : MON_CVAR(mage, heal_allies)), autocvar_g_balance_health_regenstable);
+					head.health = bound(0, head.health - ((head == self)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
 					fx = "rage";
 					break;
 			}
@@ -236,7 +232,7 @@ void mage_heal()
 		else
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
-			head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), head.max_health);
+			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
 			WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
@@ -244,18 +240,18 @@ void mage_heal()
 	if(washealed)
 	{
 		self.frame = mage_anim_attack;
-		self.attack_finished_single = time + MON_CVAR(mage, heal_delay);
+		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
 	}
 }
 
 void mage_push()
 {
 	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
-	RadiusDamage (self, self, MON_CVAR(mage, attack_push_damage), MON_CVAR(mage, attack_push_damage), MON_CVAR(mage, attack_push_radius), world, MON_CVAR(mage, attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
+	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 	
 	self.frame = mage_anim_attack;
-	self.attack_finished_single = time + MON_CVAR(mage, attack_push_delay);
+	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
 }
 
 void mage_teleport()
@@ -285,10 +281,10 @@ void mage_shield_remove()
 void mage_shield()
 {
 	self.effects |= (EF_ADDITIVE | EF_BLUE);
-	self.lastshielded = time + MON_CVAR(mage, shield_delay);
-	self.m_armor_blockpercent = MON_CVAR(mage, shield_blockpercent);
+	self.lastshielded = time + (autocvar_g_monster_mage_shield_delay);
+	self.m_armor_blockpercent = (autocvar_g_monster_mage_shield_blockpercent);
 	self.armorvalue = self.health;
-	self.shield_ltime = time + MON_CVAR(mage, shield_time);
+	self.shield_ltime = time + (autocvar_g_monster_mage_shield_time);
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
 }
@@ -319,7 +315,7 @@ float mage_attack(float attack_type)
 				else
 				{
 					self.frame = mage_anim_attack;
-					self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
+					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					defer(0.2, mage_attack_spike);
 					return TRUE;
 				}
@@ -359,7 +355,7 @@ float m_mage(float req)
 			entity head;
 			float need_help = FALSE;
 			
-			for(head = findradius(self.origin, MON_CVAR(mage, heal_range)); head; head = head.chain)
+			for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain)
 			if(head != self)
 			if(friend_needshelp(head))
 			{
@@ -367,7 +363,7 @@ float m_mage(float req)
 				break;
 			}
 				
-			if(self.health < MON_CVAR(mage, heal_minhealth) || need_help)
+			if(self.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
 			if(time >= self.attack_finished_single)
 			if(random() < 0.5)
 				mage_heal();
@@ -381,7 +377,7 @@ float m_mage(float req)
 			if(random() < 0.5)
 				mage_shield();
 			
-			monster_move(MON_CVAR(mage, speed_run), MON_CVAR(mage, speed_walk), MON_CVAR(mage, speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
+			monster_move((autocvar_g_monster_mage_speed_run), (autocvar_g_monster_mage_speed_walk), (autocvar_g_monster_mage_speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -391,7 +387,7 @@ float m_mage(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = MON_CVAR(mage, health);
+			if not(self.health) self.health = (autocvar_g_monster_mage_health);
 			
 			self.monster_loot = spawnfunc_item_health_large;
 			self.monster_attackfunc	= mage_attack;
@@ -404,11 +400,6 @@ float m_mage(float req)
 			precache_model ("models/monsters/mage.dpm");
 			precache_sound ("weapons/grenade_impact.wav");
 			precache_sound ("weapons/tagexp1.wav");
-			return TRUE;
-		}
-		case MR_CONFIG:
-		{
-			MON_CONFIG_SETTINGS(MAGE_SETTINGS(mage))
 			return TRUE;
 		}
 	}
