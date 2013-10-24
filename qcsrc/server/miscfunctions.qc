@@ -615,6 +615,7 @@ float start_armorvalue;
 WepSet warmup_start_weapons;
 WepSet warmup_start_weapons_default;
 WepSet warmup_start_weapons_defaultmask;
+#define WARMUP_START_WEAPONS ((g_warmup_allguns == 1) ? (warmup_start_weapons & (weaponsInMap | start_weapons)) : warmup_start_weapons)
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -834,7 +835,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
@@ -858,10 +859,13 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
+	WepSet precache_weapons = start_weapons;
+	if (g_warmup_allguns != 1)
+		precache_weapons |= warmup_start_weapons;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if((start_weapons | warmup_start_weapons) & WepSet_FromWeapon(i))
+		if(precache_weapons & WepSet_FromWeapon(i))
 			weapon_action(i, WR_PRECACHE);
 	}
 

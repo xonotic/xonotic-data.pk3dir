@@ -269,5 +269,3 @@ mutators/mutator_campcheck.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
