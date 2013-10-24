@@ -284,6 +284,11 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 }
 
+void DisableServerBackwardsCompatibility()
+{
+	cvar_set("gameversion_min", ftos(100 * floor(cvar("gameversion") / 100)));
+}
+
 void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 {
 	float n;
@@ -324,6 +329,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string un_emergency_pk3s = "";
 	string un_promoted = "";
 	string un_recommended = "";
+	string un_compatexpire = "";
 	
 	for(i = 0; i < n; ++i)
 	{
@@ -336,6 +342,11 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			case "V":
 			{
 				un_version = s;
+				break;
+			}
+			case "C":
+			{
+				un_compatexpire = s;
 				break;
 			}
 			case "D":
@@ -380,12 +391,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
 			if(un_download) { print(sprintf(_("Update can be downloaded at:\n%s\n"), un_download)); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
+			DisableServerBackwardsCompatibility();
+		}
+		else if(cvar_string("g_xonoticversion") == un_version)
+		{
+			if(un_compatexpire != "")
+			{
+				string curdate = strftime(FALSE, "%Y%m%d%H%M%S");
+				if (strcmp(curdate, un_compatexpire) >= 0)
+					DisableServerBackwardsCompatibility();
+			}
 		}
 	}
 	
 	if(un_emergency_pk3s != "")
 	{
-		_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);
 		_Nex_ExtResponseSystem_PacksStep = 1;
 	}
 
@@ -400,7 +421,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		_Nex_ExtResponseSystem_RecommendedServers = strzone(un_recommended);
 		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
 	}
-
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
@@ -419,36 +439,8 @@ void updateCheck()
 
 			// for privacy, munge the start count a little
 			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?format=keys&version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-
-#ifdef CVAR_POPCON
-			float cvar_handle, popcon_handle;
-			float n, i, j;
-			string k, s;
-			cvar_handle = buf_create();
-			buf_cvarlist(cvar_handle, "", "");
-			n = buf_getsize(cvar_handle);
-			popcon_handle = buf_create();
-			for(i= 0, j = 0; i < n; ++i)
-			{
-				k = bufstr_get(cvar_handle, i);
-				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
-					continue;
-				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
-				bufstr_set(popcon_handle, j, s);
-				++j;
-			}
-			buf_del(cvar_handle);
-			uri_postbuf(
-				uri, URI_GET_UPDATENOTIFICATION,
-				"application/x-www-form-urlencoded",
-				"&",
-				popcon_handle
-			);
-			buf_del(popcon_handle);
-#else
+			uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
 			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-#endif
 		}
 	}
 
