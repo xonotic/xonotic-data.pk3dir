@@ -734,7 +734,7 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if not((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon))
+		if (!((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon

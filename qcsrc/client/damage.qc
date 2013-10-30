@@ -133,7 +133,7 @@ void Ent_DamageInfo(float isNew)
 	force = decompressShortVector(ReadShort());
 	species = ReadByte();
 
-	if not(isNew)
+	if (!isNew)
 		return;
 
 	if(rad < 0)

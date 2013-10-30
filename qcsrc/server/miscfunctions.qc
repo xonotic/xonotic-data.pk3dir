@@ -96,7 +96,7 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
 
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
@@ -713,7 +713,7 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
@@ -724,7 +724,7 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
@@ -1037,7 +1037,7 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(warmup_stage)
+	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
 	readplayerstartcvars();
@@ -2404,7 +2404,7 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 #else
 string cvar_string_normal(string n)
 {
-	if not(cvar_type(n) & 1)
+	if (!(cvar_type(n) & 1))
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
 	return builtin_cvar_string(n);
 }

@@ -247,13 +247,13 @@ float CanThrowNade()
 	if(self.deadflag != DEAD_NO)
 		return FALSE;
 	
-	if not(autocvar_g_nades)
+	if (!autocvar_g_nades)
 		return FALSE; // allow turning them off mid match
 		
 	if(forbidWeaponUse())
 		return FALSE;
 		
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return FALSE;
 		
 	return TRUE;

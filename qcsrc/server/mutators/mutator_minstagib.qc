@@ -1,7 +1,7 @@
 void spawnfunc_item_minst_cells (void) 
 {
-	if not(g_minstagib) { remove(self); return; }
-	if not(self.ammo_cells)
+	if (!g_minstagib) { remove(self); return; }
+	if (!self.ammo_cells)
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		
 	StartItem ("models/items/a_cells.md3",
@@ -28,7 +28,7 @@ void minstagib_stop_countdown(entity e)
 }
 void minstagib_ammocheck()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return; // not a player
 	if (time < self.minstagib_nextthink)
 		return;
@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 {
-	if not(self.effects & EF_FULLBRIGHT)
+	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
 
 	if (self.items & IT_STRENGTH)
@@ -372,8 +372,8 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 {
-	if not(autocvar_g_powerups) { return FALSE; }
-	if not(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega")
+	if (!autocvar_g_powerups) { return FALSE; }
+	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
 		return FALSE;
 	
 	entity e = spawn();

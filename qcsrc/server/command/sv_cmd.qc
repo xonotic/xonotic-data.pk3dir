@@ -1360,9 +1360,9 @@ void GameCommand_shuffleteams(float request)
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
 					{							
-						if not(shuffleteams_teams[i] >= x)
+						if (!(shuffleteams_teams[i] >= x))
 						{
-							if not(shuffleteams_players[z])
+							if (!(shuffleteams_players[z]))
 								continue; // not a player, move on to next random slot
 								
 							if(VerifyClientNumber(shuffleteams_players[z]))

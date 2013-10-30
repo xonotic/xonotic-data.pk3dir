@@ -510,7 +510,7 @@ void onslaught_generator_deaththink()
 	vector org;
 	float i;
 
-	if not (self.count)
+	if (!self.count)
 		self.count = 40;
 
 	// White shockwave
@@ -614,7 +614,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 #endif
 		self.lasthealth = self.health;
 	}
-	else if not(warmup_stage)
+	else if (!warmup_stage)
 	{
 		if (attacker == self)
 			bprint(Team_ColoredFullName(self.team), " generator spontaneously exploded due to overtime!\n");
@@ -1271,7 +1271,7 @@ void onslaught_controlpoint_touch()
 {
 	entity e;
 	float a;
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	a = onslaught_controlpoint_attackable(self, other.team);
 	if(a != 2 && a != 4)

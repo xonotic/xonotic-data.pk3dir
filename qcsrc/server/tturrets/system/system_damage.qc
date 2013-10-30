@@ -88,7 +88,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         return;
 
     // Inactive turrets take no damage. (hm..)
-    if not (self.active)
+    if (!self.active)
         return;
 
     if (teamplay)

@@ -65,7 +65,7 @@ void Announcer_Gamestart()
 		if(time < startTime) 
 		{
 			entity e = find(world, classname, "announcer_countdown");
-			if not(e)
+			if (!e)
 			{
 				e = spawn();
 				e.classname = "announcer_countdown";

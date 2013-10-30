@@ -156,7 +156,7 @@ float w_nex(float req)
 							if(self.BUTTON_ATCK2) // only eat ammo when the button is pressed
 							{
 								dt = min(dt, (1 - self.nex_charge) / autocvar_g_balance_nex_secondary_charge_rate);
-								if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+								if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 								{
 									// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 									if(autocvar_g_balance_nex_reload_ammo)

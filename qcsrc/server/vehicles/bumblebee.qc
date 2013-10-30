@@ -339,7 +339,7 @@ float bumb_gunner_enter()
 
 float vehicles_valid_pilot()
 {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return FALSE;
 
 	if(other.deadflag != DEAD_NO)
@@ -348,7 +348,7 @@ float vehicles_valid_pilot()
 	if(other.vehicle != world)
 		return FALSE;
 
-	if not(IS_REAL_CLIENT(other))
+	if (!IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
 			return FALSE;
 

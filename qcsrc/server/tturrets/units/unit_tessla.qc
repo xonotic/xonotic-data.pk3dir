@@ -71,7 +71,7 @@ float turret_tesla_firecheck()
         self.target_select_time = time;
     }
 
-    if not (turret_stdproc_firecheck())
+    if (!turret_stdproc_firecheck())
         return 0;
 
     if(self.enemy)
@@ -120,7 +120,7 @@ void turret_tesla_fire()
 
 void turret_tesla_postthink()
 {
-    if not (self.active)
+    if (!self.active)
     {
         self.tur_head.avelocity = '0 0 0';
         return;

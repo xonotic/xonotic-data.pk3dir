@@ -249,7 +249,7 @@ void raptor_exit(float eject)
         self.nextthink  = time;
     }
 
-    if not (self.owner)
+    if (!self.owner)
         return;
 	
 	makevectors(self.angles);

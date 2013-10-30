@@ -5,7 +5,7 @@
 
 float SV_ParseClientCommand_floodcheck()
 {
-	if not(timeout_status) // not while paused
+	if (!timeout_status) // not while paused
 	{
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
@@ -208,7 +208,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 						}
 
 						// cannot reset the game while a timeout is active!
-						if not(timeout_status)
+						if (!timeout_status)
 							ReadyCount();
 					} else {
 						sprint(self, "^1Game has already been restarted\n");
@@ -280,7 +280,7 @@ void ClientCommand_selectteam(float request, float argc)
 				{
 					if(teamplay)
 						if not(self.team_forced > 0) 
-							if not(lockteams) 
+							if (!lockteams) 
 							{
 								float selection;
 								
