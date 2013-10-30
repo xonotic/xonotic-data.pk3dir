@@ -748,7 +748,7 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			
 			else // everything went okay, continue changing vote
 			{
@@ -786,7 +786,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 			
-			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			if(!autocvar_sv_vote_call && caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
@@ -850,7 +850,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						if (!caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
 						else if (!VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-						else if not(VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+						else if (!VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 						
 						else // everything went okay, proceed with command
 						{
@@ -865,9 +865,9 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					
 					case "login":
 					{
-						if not(autocvar_sv_vote_master_password != "") { print_to(caller, "^1Login to vote master is not allowed."); }
+						if(autocvar_sv_vote_master_password == "") { print_to(caller, "^1Login to vote master is not allowed."); }
 						else if(caller.vote_master) { print_to(caller, "^1You are already logged in as vote master."); }
-						else if not(autocvar_sv_vote_master_password == argv(3)) { print_to(caller, strcat("Rejected vote master login from ", GetCallerName(caller))); }
+						else if(autocvar_sv_vote_master_password != argv(3)) { print_to(caller, strcat("Rejected vote master login from ", GetCallerName(caller))); }
 
 						else // everything went okay, proceed with giving this player master privilages
 						{
@@ -935,7 +935,7 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			else if(((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote) { VoteStop(caller); }
 			
 			else // everything went okay, continue changing vote
@@ -1013,7 +1013,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			
 			else // everything went okay, continue changing vote
 			{

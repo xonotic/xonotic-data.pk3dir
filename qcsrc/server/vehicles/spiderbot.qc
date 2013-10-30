@@ -855,7 +855,7 @@ void spawnfunc_vehicle_spiderbot()
     if(autocvar_g_vehicle_spiderbot_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
         
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Spiderbot",
              "models/vehicles/spiderbot.dpm",
              "models/vehicles/spiderbot_top.dpm",

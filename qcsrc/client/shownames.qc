@@ -19,7 +19,7 @@ void Draw_ShowNames(entity ent)
 #else
 	if(ent.sv_entnum == player_localentnum) // ent is me or person i'm spectating
 #endif
-		if not (autocvar_hud_shownames_self && autocvar_chase_active) 
+		if(!(autocvar_hud_shownames_self && autocvar_chase_active))
 			return;
 
 	makevectors(view_angles);

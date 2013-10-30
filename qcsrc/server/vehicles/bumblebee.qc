@@ -913,7 +913,7 @@ void spawnfunc_vehicle_bumblebee()
 	if(autocvar_g_vehicle_bumblebee_health_regen)
 		self.vehicle_flags |= VHF_HEALTHREGEN;
 
-	if not(vehicle_initialize(
+	if(!vehicle_initialize(
 			   "Bumblebee", "models/vehicles/bumblebee_body.dpm",
 			   "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
 			   HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,

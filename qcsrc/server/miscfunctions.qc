@@ -1645,7 +1645,7 @@ void adaptor_think2use()
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {
-	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
 }
@@ -2336,7 +2336,7 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 
 float randombit(float bits)
 {
-	if not(bits & (bits-1)) // this ONLY holds for powers of two!
+	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
 		return bits;
 
 	float n, f, b, r;

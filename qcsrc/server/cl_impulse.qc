@@ -299,7 +299,7 @@ void ImpulseCommands (void)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
-							if not(e.effects & EF_NODEPTHTEST) // not already reported before
+							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							++i;

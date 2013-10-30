@@ -666,7 +666,7 @@ void spawnfunc_vehicle_racer()
     if(autocvar_g_vehicle_racer_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Wakizashi",
              "models/vehicles/wakizashi.dpm",
              "null", // we need this so tur_head is networked and usable for sounds

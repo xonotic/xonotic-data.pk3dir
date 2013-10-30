@@ -914,7 +914,7 @@ void spawnfunc_vehicle_raptor()
     precache_sound ("vehicles/raptor_speed.wav");
     precache_sound ("vehicles/missile_alarm.wav");
     
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Raptor",
              "models/vehicles/raptor.dpm",
              "",

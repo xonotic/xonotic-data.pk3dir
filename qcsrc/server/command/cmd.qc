@@ -279,7 +279,7 @@ void ClientCommand_selectteam(float request, float argc)
 				if(IS_CLIENT(self))
 				{
 					if(teamplay)
-						if not(self.team_forced > 0) 
+						if(self.team_forced <= 0)
 							if (!lockteams) 
 							{
 								float selection;

@@ -242,7 +242,7 @@ float GetPlayerColorForce(float i)
 
 float GetPlayerColor(float i)
 {
-	if not(playerslots[i].gotscores) // unconnected
+	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
 	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
 		return NUM_SPECTATOR;
@@ -1133,7 +1133,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -3123,7 +3123,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
-	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
+	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record

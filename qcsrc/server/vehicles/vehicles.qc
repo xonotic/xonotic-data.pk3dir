@@ -275,7 +275,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE ||
+        if(!trace_ent.vehicle_flags & VHF_ISVEHICLE ||
 				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
 				trace_ent.takedamage == DAMAGE_TARGETDRONE)
             trace_ent = world;
