@@ -745,7 +745,7 @@ void CSQC_UpdateView(float w, float h)
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
 	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
-	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
+	if (!(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT))
 	{
 		// apply night vision effect
 		vector tc_00, tc_01, tc_10, tc_11;
@@ -1104,7 +1104,7 @@ void CSQC_UpdateView(float w, float h)
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL) 
 		{
-			if not(autocvar_crosshair_enabled) // main toggle for crosshair rendering
+			if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 				return;
 				
 			string wcross_style;
@@ -1431,7 +1431,7 @@ void CSQC_UpdateView(float w, float h)
 					if(autocvar_crosshair_effect_time > 0)
 					{
 						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
-						if not(f < 1)
+						if (!(f < 1))
 						{
 							wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
 						}

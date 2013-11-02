@@ -46,7 +46,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
-    if not(IS_REAL_CLIENT(own))
+    if (!IS_REAL_CLIENT(own))
         return;
 
     entity axh;
@@ -101,7 +101,7 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 **/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
-    if not(IS_REAL_CLIENT(own))
+    if (!IS_REAL_CLIENT(own))
         return;
 	
 	msg_entity = own;
@@ -275,7 +275,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE ||
+        if(!trace_ent.vehicle_flags & VHF_ISVEHICLE ||
 				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
 				trace_ent.takedamage == DAMAGE_TARGETDRONE)
             trace_ent = world;
@@ -559,7 +559,7 @@ void vehicles_touch()
         return;
     }
 
-    if not(IS_PLAYER(other))
+    if (!IS_PLAYER(other))
         return;
 
     if(other.deadflag != DEAD_NO)
@@ -1153,7 +1153,7 @@ float vehicle_addplayerslot(    entity _owner,
                                 float() _framefunc, 
                                 void(float) _exitfunc)
 {
-    if not (_owner.vehicle_flags & VHF_MULTISLOT)
+    if (!(_owner.vehicle_flags & VHF_MULTISLOT))
         _owner.vehicle_flags |= VHF_MULTISLOT;
 
     _slot.PlayerPhysplug = _framefunc;
@@ -1310,7 +1310,7 @@ float vehicle_initialize(string  net_name,
     }
 
     setsize(self, min_s, max_s);
-    if not (nodrop)
+    if (!nodrop)
     {
         setorigin(self, self.origin);
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);

@@ -697,7 +697,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if not(IS_PLAYER(source))
+	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -857,9 +857,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if not(IS_PLAYER(source))
+	if (!IS_PLAYER(source))
 	{
-		if not(intermission_running)
+		if (!intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
@@ -903,7 +903,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
-			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
@@ -925,7 +925,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
+			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
@@ -1014,7 +1014,7 @@ void PrecachePlayerSounds(string f)
 	}
 	fclose(fh);
 
-	if not(allvoicesamples)
+	if (!allvoicesamples)
 	{
 #define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
 		ALLVOICEMSGS

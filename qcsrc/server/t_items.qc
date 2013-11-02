@@ -601,7 +601,7 @@ float Item_GiveTo(entity item, entity player)
 	if (player.switchweapon == w_getbestweapon(player))
 		_switchweapon = TRUE;
 
-	if not(player.weapons & WepSet_FromWeapon(player.switchweapon))
+	if (!(player.weapons & WepSet_FromWeapon(player.switchweapon)))
 		_switchweapon = TRUE;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -680,7 +680,7 @@ void Item_Touch (void)
 		}
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (other.deadflag)
 		return;
@@ -723,7 +723,7 @@ void Item_Touch (void)
 
 	if (self.classname == "droppedweapon")
 		remove (self);
-	else if not(self.spawnshieldtime)
+	else if (!self.spawnshieldtime)
 		return;
 	else
 	{
@@ -869,7 +869,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if not(player.weapons & WepSet_FromWeapon(i))
+		if (!(player.weapons & WepSet_FromWeapon(i)))
 			continue;
 
 		if(wi.items & IT_SHELLS)
@@ -1486,7 +1486,7 @@ void target_items_use (void)
 		return;
 	}
 
-	if not(IS_PLAYER(activator))
+	if (!IS_PLAYER(activator))
 		return;
 	if(activator.deadflag != DEAD_NO)
 		return;
@@ -1859,7 +1859,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				{
 					wi = get_weaponinfo(j);
 					if(wi.weapon)
-						if not(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+						if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 							got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
@@ -1943,7 +1943,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 		if(wi.weapon)
 		{
 			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
-			if not(save_weapons & WepSet_FromWeapon(j))
+			if (!(save_weapons & WepSet_FromWeapon(j)))
 				if(e.weapons & WepSet_FromWeapon(j))
 					weapon_action(wi.weapon, WR_PRECACHE);
 		}
@@ -1975,7 +1975,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if not(e.weapons & WepSet_FromWeapon(e.switchweapon))
+	if (!(e.weapons & WepSet_FromWeapon(e.switchweapon)))
 		_switchweapon = TRUE;
 	if(_switchweapon)
 		W_SwitchWeapon_Force(e, w_getbestweapon(e));
