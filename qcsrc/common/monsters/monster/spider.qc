@@ -124,7 +124,7 @@ void spawnfunc_monster_spider()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
 }
 
 float m_spider(float req)
@@ -144,7 +144,7 @@ float m_spider(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = (autocvar_g_monster_spider_health);
+			if(!self.health) self.health = (autocvar_g_monster_spider_health);
 			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= spider_attack;

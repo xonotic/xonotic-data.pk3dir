@@ -101,7 +101,7 @@ void spawnfunc_monster_wyvern()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_WYVERN, TRUE)) { remove(self); return; }
+	if(!monster_initialize(MON_WYVERN, TRUE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -126,7 +126,7 @@ float m_wyvern(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = (autocvar_g_monster_wyvern_health);
+			if(!self.health) self.health = (autocvar_g_monster_wyvern_health);
 			
 			self.monster_loot = spawnfunc_item_cells;
 			self.monster_attackfunc	= wyvern_attack;

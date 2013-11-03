@@ -41,7 +41,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 		strunzone(do_cvar);
 	}
 	if(!do_exec)
-		if not(do_cvar)
+		if (!do_cvar)
 			print(data);
 }
 

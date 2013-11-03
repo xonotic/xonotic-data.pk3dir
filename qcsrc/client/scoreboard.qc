@@ -375,7 +375,7 @@ void Cmd_HUD_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if not(isGametypeInFilter(gametype, teamplay, FALSE, pattern))
+			if (!isGametypeInFilter(gametype, teamplay, FALSE, pattern))
 				continue;
 		}
 
@@ -409,7 +409,7 @@ void Cmd_HUD_SetFields(float argc)
 			}
 			else
 			{
-				if not(nocomplain)
+				if (!nocomplain)
 					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
 				continue;
 			}
@@ -526,7 +526,7 @@ string HUD_GetField(entity pl, float field)
 	switch(field)
 	{
 		case SP_PING:
-			if not(pl.gotscores)
+			if (!pl.gotscores)
 				return "\xEE\x82\x8D\xEE\x82\x8D\xEE\x82\x8D"; // >>> sign
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
@@ -537,7 +537,7 @@ string HUD_GetField(entity pl, float field)
 			return ftos(f);
 
 		case SP_PL:
-			if not(pl.gotscores)
+			if (!pl.gotscores)
 				return _("N/A");
 			f = pl.ping_packetloss;
 			tmp = pl.ping_movementloss;
@@ -1024,7 +1024,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if not(self.weapon)
+		if (!self.weapon)
 			continue;
 		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;
@@ -1106,7 +1106,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 		rows += 1;
 
 	// if no rows, return
-	if not(rows)
+	if (!rows)
 		return pos;
 
 	//  draw table header
@@ -1225,7 +1225,7 @@ void HUD_DrawScoreboard()
 			scoreboard_fade_alpha = 0;
 	}
 
-	if not(scoreboard_fade_alpha)
+	if (!scoreboard_fade_alpha)
 		return;
 
 	HUD_UpdatePlayerTeams();

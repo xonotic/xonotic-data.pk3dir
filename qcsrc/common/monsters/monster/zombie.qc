@@ -137,7 +137,7 @@ void spawnfunc_monster_zombie()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_ZOMBIE, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_ZOMBIE, FALSE)) { remove(self); return; }
 }
 
 float m_zombie(float req)
@@ -158,7 +158,7 @@ float m_zombie(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = (autocvar_g_monster_zombie_health);
+			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
 			
 			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
 				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn

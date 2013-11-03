@@ -93,7 +93,7 @@ void GameCommand_adminmsg(float request, float argc)
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, TRUE, FALSE);
 					
-					if not(accepted > 0) 
+					if(accepted <= 0) 
 					{
 						print("adminmsg: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
 						continue;
@@ -1036,7 +1036,7 @@ void GameCommand_moveplayer(float request, float argc)
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, FALSE, FALSE);
 					
-					if not(accepted > 0) 
+					if(accepted <= 0) 
 					{
 						print("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
 						continue;
@@ -1192,7 +1192,7 @@ void GameCommand_playerdemo(float request, float argc)
 						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, TRUE);
 						
-						if not(accepted > 0) 
+						if(accepted <= 0) 
 						{
 							print("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
 							return;
@@ -1208,7 +1208,7 @@ void GameCommand_playerdemo(float request, float argc)
 						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, FALSE);
 						
-						if not(accepted > 0) 
+						if(accepted <= 0) 
 						{
 							print("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
 							return;
@@ -1404,9 +1404,9 @@ void GameCommand_shuffleteams(float request)
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
 					{							
-						if not(shuffleteams_teams[i] >= x)
+						if (!(shuffleteams_teams[i] >= x))
 						{
-							if not(shuffleteams_players[z])
+							if (!(shuffleteams_players[z]))
 								continue; // not a player, move on to next random slot
 								
 							if(VerifyClientNumber(shuffleteams_players[z]))

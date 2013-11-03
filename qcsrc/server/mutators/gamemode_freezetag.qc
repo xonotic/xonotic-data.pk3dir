@@ -500,7 +500,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 {
-	if not(self.deadflag)
+	if (!self.deadflag)
 	{
 		if (random() < 0.5)
 			self.havocbot_role = havocbot_role_ft_freeing;

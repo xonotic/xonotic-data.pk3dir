@@ -21,7 +21,7 @@ void turret_machinegun_std_init()
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL;
     self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
     
-	if not (autocvar_g_antilag_bullets)
+	if (!autocvar_g_antilag_bullets)
 		self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
 
     if (turret_stdproc_init("machinegun_std", "models/turrets/base.md3", "models/turrets/machinegun.md3", TID_MACHINEGUN) == 0)

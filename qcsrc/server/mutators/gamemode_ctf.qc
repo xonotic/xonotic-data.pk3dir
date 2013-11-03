@@ -386,7 +386,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
 	float old_time, new_time; 
 	
-	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
+	if (!player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
@@ -607,7 +607,7 @@ void ctf_CheckStalemate(void)
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, tmp_entity.team, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
 		}
 		
-		if not(wpforenemy_announced)
+		if (!wpforenemy_announced)
 		{
 			FOR_EACH_REALPLAYER(tmp_entity)
 				Send_Notification(NOTIF_ONE, tmp_entity, MSG_CENTER, ((tmp_entity.flagcarried) ? CENTER_CTF_STALEMATE_CARRIER : CENTER_CTF_STALEMATE_OTHER));
@@ -795,10 +795,10 @@ void ctf_FlagTouch()
 	}
 	else if(toucher.flags & FL_MONSTER)
 	{
-		if not(autocvar_g_ctf_allow_monster_touch)
+		if(!autocvar_g_ctf_allow_monster_touch)
 			return; // do nothing
 	}
-	else if not(IS_PLAYER(toucher)) // The flag just touched an object, most likely the world
+	else if (!IS_PLAYER(toucher)) // The flag just touched an object, most likely the world
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
@@ -1077,7 +1077,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 
 float havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 {
-	if not(teamplay)
+	if (!teamplay)
 		return 0;
 
 	float c = 0;
@@ -1119,7 +1119,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 			break;
 		head = head.ctf_worldflagnext;
 	}
-	if not(head)
+	if (!head)
 		return;
 
 	navigation_routerating(head.bot_basewaypoint, ratingscale, 10000);
@@ -1141,7 +1141,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 
 void havocbot_goalrating_ctf_enemybase(float ratingscale)
 {
-	if not(bot_waypoints_for_items)
+	if (!bot_waypoints_for_items)
 	{
 		havocbot_goalrating_ctf_enemyflag(ratingscale);
 		return;
@@ -1151,7 +1151,7 @@ void havocbot_goalrating_ctf_enemybase(float ratingscale)
 
 	head = havocbot_ctf_find_enemy_flag(self);
 
-	if not(head)
+	if (!head)
 		return;
 
 	navigation_routerating(head.bot_basewaypoint, ratingscale, 10000);

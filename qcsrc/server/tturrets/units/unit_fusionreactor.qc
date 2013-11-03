@@ -49,7 +49,7 @@ float turret_fusionreactor_firecheck()
 	if(DIFF_TEAM(self, self.enemy))
 		return 0;
 	
-	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)
+	if (!(self.enemy.ammo_flags & TFL_AMMO_ENERGY))
 		return 0;    
 	
 	return 1;

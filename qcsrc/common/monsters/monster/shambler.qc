@@ -201,7 +201,7 @@ void spawnfunc_monster_shambler()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
 }
 
 float m_shambler(float req)
@@ -220,8 +220,8 @@ float m_shambler(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = (autocvar_g_monster_shambler_health);
-			if not(self.attack_range) self.attack_range = 150;
+			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
+			if(!self.attack_range) self.attack_range = 150;
 			
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;

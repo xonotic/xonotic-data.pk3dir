@@ -305,7 +305,7 @@ float mage_attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if not(self.mage_spike)
+			if(!self.mage_spike)
 			{
 				if(random() <= 0.4)
 				{
@@ -340,7 +340,7 @@ void spawnfunc_monster_mage()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -387,7 +387,7 @@ float m_mage(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = (autocvar_g_monster_mage_health);
+			if(!self.health) self.health = (autocvar_g_monster_mage_health);
 			
 			self.monster_loot = spawnfunc_item_health_large;
 			self.monster_attackfunc	= mage_attack;

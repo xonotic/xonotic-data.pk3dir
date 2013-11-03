@@ -7,7 +7,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 	
-	if not(respwn)
+	if(!respwn)
 		e.spawnflags |= MONSTERFLAG_NORESPAWN;
 	
 	setorigin(e, orig);
@@ -25,7 +25,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 				break;
 			}
 		}
-		if not(found)
+		if(!found)
 			monster = (get_monsterinfo(MON_FIRST)).netname;
 	}
 		
