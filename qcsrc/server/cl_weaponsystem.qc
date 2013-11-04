@@ -541,7 +541,7 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	
+
 	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
@@ -667,7 +667,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		complain = 0;
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
-		
+
 	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 
@@ -851,7 +851,7 @@ float weapon_prepareattack_checkammo(float secondary)
 		{
 			W_SwitchToOtherWeapon(self);
 		}
-		
+
 		return FALSE;
 	}
 	return TRUE;
@@ -1129,7 +1129,7 @@ vector W_CalculateProjectileSpread(vector forward, float spread)
 	if(spread <= 0)
 		return forward;
 	sstyle = autocvar_g_projectiles_spread_style;
-	
+
 	if(sstyle == 0)
 	{
 		// this is the baseline for the spread value!

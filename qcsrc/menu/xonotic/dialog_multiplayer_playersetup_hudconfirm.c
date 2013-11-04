@@ -16,7 +16,7 @@ void HUDSetup_Start(entity me, entity btn)
 		localcmd("map hudsetup/hudsetup", "\n");
 	else
 		localcmd("togglemenu 0\n");
-		
+
 	localcmd("_hud_configure 1", "\n");
 }
 

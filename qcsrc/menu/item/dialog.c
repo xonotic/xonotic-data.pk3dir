@@ -4,7 +4,7 @@
 // - closable is 0
 // - rootDialog is 0
 // - title is ""
-// - marginTop is 
+// - marginTop is
 // - intendedHeight ends up to be the tab's actual height, or at least close
 // - titleFontSize is 0
 // - marginTop cancels out as much of titleHeight as needed (that is, it should be actualMarginTop - titleHeight)

@@ -5,7 +5,7 @@ CLASS(Tab) EXTENDS(Dialog)
 	ATTRIB(Tab, rootDialog, float, 0)
 	ATTRIB(Tab, title, string, string_null)
 	ATTRIB(Tab, titleFontSize, float, 0) // pixels
-	
+
 	// still to be customized
 	ATTRIB(Tab, intendedWidth, float, 0)
 	ATTRIB(Tab, rows, float, 3)

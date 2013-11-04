@@ -385,7 +385,7 @@ void Container_moveItemAfter(entity me, entity other, entity dest)
 		n.prevSibling = p;
 	else
 		me.lastChild = p;
-	
+
 	// now other got removed. Insert it behind dest now.
 	other.prevSibling = dest;
 	if(dest)

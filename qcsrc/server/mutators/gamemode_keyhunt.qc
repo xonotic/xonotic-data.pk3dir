@@ -627,9 +627,9 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			--j;
 		}
 	}
-	
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
-	
+
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
 
@@ -790,7 +790,7 @@ void kh_Key_DropOne(entity key)
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
-	
+
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
 	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
@@ -840,7 +840,7 @@ float kh_CheckPlayers(float num)
 				if(!tmp_player.BUTTON_CHAT)
 					if(tmp_player.team == t_team)
 						++players;
-		
+
 		if (!players) { return t_team; }
 	}
 	return 0;
@@ -893,7 +893,7 @@ void kh_StartRound()  // runs at the start of each round
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 

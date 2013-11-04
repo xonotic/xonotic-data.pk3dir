@@ -169,7 +169,7 @@ void ToggleFavorite(string srv)
 		f = 1;
 		--i;
 	}
-	
+
 	if(!f)
 	{
 		s1 = "";

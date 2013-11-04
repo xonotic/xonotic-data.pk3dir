@@ -55,43 +55,43 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(me.currentServerName)
 		strunzone(me.currentServerName);
 	me.currentServerName = string_null;
-	
+
 	if(me.currentServerCName)
 		strunzone(me.currentServerCName);
 	me.currentServerCName = string_null;
-	
+
 	if(me.currentServerType)
 		strunzone(me.currentServerType);
 	me.currentServerType = string_null;
-	
+
 	if(me.currentServerMap)
 		strunzone(me.currentServerMap);
 	me.currentServerMap = string_null;
-	
+
 	if(me.currentServerPlayers)
 		strunzone(me.currentServerPlayers);
 	me.currentServerPlayers = string_null;
-	
+
 	if(me.currentServerNumPlayers)
 		strunzone(me.currentServerNumPlayers);
 	me.currentServerNumPlayers = string_null;
-	
+
 	if(me.currentServerNumBots)
 		strunzone(me.currentServerNumBots);
 	me.currentServerNumBots = string_null;
-	
+
 	if(me.currentServerNumFreeSlots)
 		strunzone(me.currentServerNumFreeSlots);
 	me.currentServerNumFreeSlots = string_null;
-	
+
 	if(me.currentServerMod)
 		strunzone(me.currentServerMod);
 	me.currentServerMod = string_null;
-	
+
 	if(me.currentServerVersion)
 		strunzone(me.currentServerVersion);
 	me.currentServerVersion = string_null;
-	
+
 	// not zoned!
 	//if(me.currentServerEncrypt)
 	//	strunzone(me.currentServerEncrypt);
@@ -99,11 +99,11 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	if(me.currentServerPure)
 		strunzone(me.currentServerPure);
 	me.currentServerPure = string_null;
-	
+
 	if(me.currentServerKey)
 		strunzone(me.currentServerKey);
 	me.currentServerKey = string_null;
-	
+
 	if(me.currentServerID)
 		strunzone(me.currentServerID);
 	me.currentServerID = string_null;
@@ -158,7 +158,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 
 	j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
-	
+
 	me.currentServerType = strzone(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
 
@@ -177,7 +177,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	s = ftos(numb);
 	me.currentServerNumBots = strzone(s);
 	me.numBotsLabel.setText(me.numBotsLabel, me.currentServerNumBots);
-	
+
 	if(freeslots < 0) { freeslots = maxp - numh - numb; }
 	s = ftos(freeslots);
 	me.currentServerNumFreeSlots = strzone(s);
@@ -230,7 +230,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			break;
 	}
 	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
-	
+
 	s = crypto_getidfp(me.currentServerCName);
 	if (!s) { s = _("N/A"); }
 	me.currentServerID = strzone(s);
@@ -257,7 +257,7 @@ void XonoticServerInfoDialog_fill(entity me)
 		e.colorL = SKINCOLOR_SERVERINFO_IP;
 		e.allowCut = 1;
 		me.cnameLabel = e;
-		
+
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Gametype:")));
@@ -284,7 +284,7 @@ void XonoticServerInfoDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
 		e.allowCut = 1;
 		me.pureLabel = e;
-		
+
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Players:")));
@@ -301,7 +301,7 @@ void XonoticServerInfoDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, ""));
 		e.allowCut = 1;
 		me.numFreeSlotsLabel = e;
-		
+
 	me.gotoRC(me, me.rows - 5, 0);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Encryption:")));
 		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));

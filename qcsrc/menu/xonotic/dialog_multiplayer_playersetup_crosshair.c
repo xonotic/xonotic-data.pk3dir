@@ -23,7 +23,7 @@ string XonoticCrosshairDialog_toString(entity me)
 void XonoticCrosshairDialog_fill(entity me)
 {
 	entity e;
-	
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", _("Enable center crosshair dot")));
 		setDependent(e, "crosshair_enabled", 1, 2);
@@ -84,9 +84,9 @@ void XonoticCrosshairDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.25, 0, "crosshair_pickup", _("Animate when picking up an item")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-			
+
 	me.TR(me);
-			
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

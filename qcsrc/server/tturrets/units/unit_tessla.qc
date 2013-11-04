@@ -35,7 +35,7 @@ entity toast(entity from, float range, float damage)
     }
 
     if (etarget)
-    {        
+    {
         te_csqc_lightningarc(from.origin,etarget.origin);
         Damage(etarget, self, self, damage, DEATH_TURRET_TESLA, etarget.origin, '0 0 0');
         etarget.railgunhit = 1;
@@ -48,7 +48,7 @@ float turret_tesla_firecheck()
 {
     // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
     float do_target_scan = 0;
-    
+
     if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
         do_target_scan = 1;
 

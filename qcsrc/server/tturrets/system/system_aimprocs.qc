@@ -25,7 +25,7 @@ vector turret_stdproc_aim_generic()
 
     // Lead?
     if (self.aim_flags & TFL_AIM_LEAD)
-    {    	
+    {
 		if (self.aim_flags & TFL_AIM_SHOTTIMECOMPENSATE)       // Need to conpensate for shot traveltime
 		{
 			// FIXME: this cant be the best way to do this..
@@ -60,7 +60,7 @@ vector turret_stdproc_aim_generic()
 		else
 			pre_pos = pre_pos + self.enemy.velocity * mintime;
     }
-    
+
     if(self.aim_flags & TFL_AIM_GROUNDGROUND)
     {
         //tracebox(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);

@@ -349,7 +349,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		)
 	);
 	#endif
-	
+
 	// =======
 	// SUICIDE
 	// =======
@@ -370,7 +370,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
-					
+
 					default:
 					{
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -399,7 +399,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(attacker, targ, -1, deathtype);
 
 			attacker.killcount = 0;
-			
+
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, deathlocation, targ.killcount);
@@ -527,7 +527,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					0);
 				break;
 			}
-			
+
 			default:
 			{
 				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -558,7 +558,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float complainteamdamage = 0; 
+	float complainteamdamage = 0;
 	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
@@ -596,7 +596,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
 			vehicles_exit(VHEF_RELESE);
-	
+
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -677,7 +677,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
-		
+
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
 		frag_target = targ;
@@ -689,7 +689,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
-		
+
 		if (!g_minstagib)
 		{
 			// apply strength multiplier
@@ -1098,7 +1098,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(maxtime > mintime || maxdps > mindps)
 		{
 			// Constraints:
-			
+
 			// damage we have right now
 			mindamage = mindps * mintime;
 

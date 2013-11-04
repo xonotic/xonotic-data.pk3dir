@@ -167,7 +167,7 @@ void PutObserverInServer (void)
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
-	
+
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
@@ -176,7 +176,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);	    
+		vehicles_exit(VHEF_RELESE);
 
 	WaypointSprite_PlayerDead();
 
@@ -198,7 +198,7 @@ void PutObserverInServer (void)
 	accuracy_resend(self);
 
 	self.spectatortime = time;
-	
+
 	self.classname = "observer";
 	self.iscreature = FALSE;
 	self.teleportable = TELEPORT_SIMPLE;
@@ -558,7 +558,7 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-	 	
+
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
@@ -766,7 +766,7 @@ void ClientKill_Now()
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
-            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
 	    }
 	}
 
@@ -934,7 +934,7 @@ void ClientKill (void)
 	if(gameover) return;
 	if(self.player_blocked) return;
 	if(self.freezetag_frozen) return;
-	
+
 	ClientKill_TeamChange(0);
 }
 
@@ -1277,7 +1277,7 @@ void ClientDisconnect (void)
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-		
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1516,7 +1516,7 @@ void player_powerups (void)
 			self.superweapons_finished = 0;
 		}
 	}
-	
+
 	if(autocvar_g_nodepthtestplayers)
 		self.effects = self.effects | EF_NODEPTHTEST;
 
@@ -1730,7 +1730,7 @@ void SpectateCopy(entity spectatee) {
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-    
+
     anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
@@ -1746,22 +1746,22 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_reload2 = spectatee.vehicle_reload2;
 
         msg_entity = self;
-        
+
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE,  spectatee.v_angle_x);
             WriteAngle(MSG_ONE,  spectatee.v_angle_y);
             WriteAngle(MSG_ONE,  spectatee.v_angle_z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
-        //    WriteEntity(MSG_ONE, self);            
+        //    WriteEntity(MSG_ONE, self);
         //makevectors(spectatee.v_angle);
-        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/
     }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-	    return 0;		
+	    return 0;
 
 	if (self == self.enemy)
 		return 0;
@@ -1820,13 +1820,13 @@ entity CA_SpectateNext(entity start) {
 	if (start.team == self.team) {
 		return start;
 	}
-	
+
 	other = start;
 	// continue from current player
 	while(other && other.team != self.team) {
 		other = find(other, classname, "player");
 	}
-	
+
 	if (!other) {
 		// restart from begining
 		other = find(other, classname, "player");
@@ -1834,7 +1834,7 @@ entity CA_SpectateNext(entity start) {
 			other = find(other, classname, "player");
 		}
 	}
-	
+
 	return other;
 }
 
@@ -2143,7 +2143,7 @@ void PlayerUseKey()
         vehicles_exit(VHEF_NORMAL);
         return;
 	}
-	
+
 	// a use key was pressed; call handlers
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
@@ -2305,7 +2305,7 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				
+
 				if (self.deadflag == DEAD_DYING)
 				{
 					if(self.respawn_flags & RESPAWN_FORCE)
@@ -2410,10 +2410,10 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-		
+
 		// secret status
 		secrets_setstatus();
-		
+
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -2573,7 +2573,7 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 		GetPressedKeys();
 	}
-	
+
 #ifdef TETRIS
 	}
 #endif
