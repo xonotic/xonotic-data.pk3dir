@@ -53,6 +53,11 @@ decide()
 				printf "%s = %s\n" "$KEY" "$choice"
 			} > uncrustify.cfg.test
 			uncrustify -c uncrustify.cfg.test --replace --no-backup $FILES >/dev/null 2>&1
+			status=$?
+			if [ $status -gt 1 ]; then
+				echo "# ERROR: $KEY = $choice crashes with status $status."
+				continue
+			fi
 			score=0
 			git diff --numstat > diffstat.tmp
 			while read -r add del rest; do
@@ -123,7 +128,7 @@ while read -r LINE; do
 			out_raw
 			continue
 			;;
-		*"#force"*)
+		*"#force"*|*"#ignore"*)
 			out_raw
 			continue
 			;;
@@ -142,7 +147,7 @@ while read -r LINE; do
 						decide 1 2 4 8
 						;;
 					*)
-						decide 0 1 2 3 4 indent_columns
+						decide 0 1 2 3 indent_columns
 						;;
 				esac
 				out
