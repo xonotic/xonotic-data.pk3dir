@@ -1567,6 +1567,20 @@ void CSQC_UpdateView(float w, float h)
 	else if(HUD_QuickMenu_IsOpened())
 		HUD_QuickMenu_Mouse();
 
+	if(hud && !intermission)
+    {
+        if(hud == HUD_SPIDERBOT)
+            CSQC_SPIDER_HUD();
+        else if(hud == HUD_WAKIZASHI)
+            CSQC_WAKIZASHI_HUD();
+        else if(hud == HUD_RAPTOR)
+            CSQC_RAPTOR_HUD();
+        else if(hud == HUD_BUMBLEBEE)
+            CSQC_BUMBLE_HUD();
+        else if(hud == HUD_BUMBLEBEE_GUN)
+            CSQC_BUMBLE_GUN_HUD();
+    }
+
 	cl_notice_run();
 
 	// let's reset the view back to normal for the end
