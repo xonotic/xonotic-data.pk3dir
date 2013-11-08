@@ -52,7 +52,7 @@ decide()
 				cat uncrustify.cfg
 				printf "%s = %s\n" "$KEY" "$choice"
 			} > uncrustify.cfg.test
-			uncrustify -c uncrustify.cfg.test --replace --no-backup $FILES >/dev/null 2>&1
+			UNCRUSTIFY_CONFIG=uncrustify.cfg.test sh uncrustify.sh $FILES >/dev/null 2>&1
 			status=$?
 			if [ $status -gt 1 ]; then
 				echo "# ERROR: $KEY = $choice crashes with status $status."
