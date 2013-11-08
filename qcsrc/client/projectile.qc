@@ -111,7 +111,7 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
-				rot = self.avelocity; 
+				rot = self.avelocity;
 				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
@@ -324,7 +324,7 @@ void Ent_Projectile()
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
-			
+
 			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
 			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
 			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
@@ -467,7 +467,7 @@ void Ent_Projectile()
 				break;
             case PROJECTILE_WAKIROCKET:
                 loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
-				break;            
+				break;
             /*
             case PROJECTILE_WAKICANNON:
 				break;
@@ -523,7 +523,7 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
-	
+
 	precache_model("models/weapons/v_ok_grenade.md3");
 
 	precache_sound("weapons/electro_fly.wav");

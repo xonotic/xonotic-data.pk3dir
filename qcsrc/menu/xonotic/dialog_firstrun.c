@@ -19,13 +19,13 @@ float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != "Player")
 		return 1;
-		
+
 	if(cvar_string("_menu_prvm_language") != prvm_language)
 		return 1; // OK will then reopen the dialog in another language
-		
+
 	if(cvar_string("cl_allow_uid2name") != "-1")
-		return 1; 
-		
+		return 1;
+
 	return 0;
 }
 
@@ -62,7 +62,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-	
+
 	me.gotoRC(me, 3, 4); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Text language:")));
@@ -75,7 +75,7 @@ void XonoticFirstRunDialog_fill(entity me)
 
 	me.gotoRC(me, me.rows - 4, 0);
 	me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, _("Allow player statistics to use your nickname at stats.xonotic.org?")));
-	
+
 	me.gotoRC(me, me.rows - 3, 0);
 	me.TDempty(me, 1.5);
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", ZCTX(_("ALWU2N^Yes"))));

@@ -338,7 +338,7 @@ float autocvar_hud_panel_weapons_timeout;
 float autocvar_hud_panel_weapons_timeout_effect;
 float autocvar_hud_panel_weapons_timeout_fadebgmin;
 float autocvar_hud_panel_weapons_timeout_fadefgmin;
-var float autocvar_hud_panel_weapons_timeout_speed_in = 0.25; 
+var float autocvar_hud_panel_weapons_timeout_speed_in = 0.25;
 var float autocvar_hud_panel_weapons_timeout_speed_out = 0.75;
 //float autocvar_hud_panel_quickmenu;
 float autocvar_hud_panel_quickmenu_align;
