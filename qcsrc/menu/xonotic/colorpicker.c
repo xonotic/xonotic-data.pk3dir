@@ -141,7 +141,7 @@ void XonoticColorpicker_draw(entity me)
 	// for this to work, C/(1-B) must be in 0..1
 	// B must be < 1
 	// C must be < 1-B
-	
+
 	B = bound(0, B, 1);
 	C = bound(0, C, 1-B);
 

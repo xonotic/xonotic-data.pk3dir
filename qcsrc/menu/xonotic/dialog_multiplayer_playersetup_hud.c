@@ -15,7 +15,7 @@ void HUDSetup_Start(entity me, entity btn);
 #ifdef IMPLEMENTATION
 void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
-	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, ask the player if they want to start one anyway
+	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, ask the player if they want to start one anyway
 	{
 		DialogOpenButton_Click(me, main.hudconfirmDialog);
 	}
@@ -30,12 +30,12 @@ void XonoticHUDDialog_showNotify(entity me)
 }
 string XonoticHUDDialog_toString(entity me)
 {
-	return "hi"; // TODO: show hud config name with text here 
+	return "hi"; // TODO: show hud config name with text here
 }
 void XonoticHUDDialog_fill(entity me)
 {
 	entity e;
-	
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Damage:")));
 	me.TR(me);
@@ -55,7 +55,7 @@ void XonoticHUDDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.25, 1, 0.05, "hud_damage_fade_rate"));
 		setDependent(e, "hud_damage", 0.001, 100);
 	me.TR(me);
-	
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_hidewaypoints", _("Waypoints")));
 	me.TR(me);
@@ -78,7 +78,7 @@ void XonoticHUDDialog_fill(entity me)
 		makeMulti(e, "g_waypointsprite_edgeoffset_top g_waypointsprite_edgeoffset_left g_waypointsprite_edgeoffset_right");
 		setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
-	
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
 	me.TR(me);
@@ -93,8 +93,8 @@ void XonoticHUDDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
-		// TODO: show hud config name with text here 
-		
+		// TODO: show hud config name with text here
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
