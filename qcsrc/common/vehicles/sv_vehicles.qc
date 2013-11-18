@@ -23,7 +23,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
-	if not(IS_REAL_CLIENT(own))
+	if(!IS_REAL_CLIENT(own))
 		return;
 
 	entity axh;
@@ -48,7 +48,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
-	if not(IS_REAL_CLIENT(own))
+	if(!IS_REAL_CLIENT(own))
 		return;
 
 	msg_entity = own;
@@ -105,9 +105,9 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(trace_ent.deadflag != DEAD_NO)
 			trace_ent = world;
 
-		if not (trace_ent.vehicle_flags & VHF_ISVEHICLE ||
+		if(!(trace_ent.vehicle_flags & VHF_ISVEHICLE ||
 				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
-				trace_ent.takedamage == DAMAGE_TARGETDRONE)
+				trace_ent.takedamage == DAMAGE_TARGETDRONE))
 			trace_ent = world;
 	}
 
@@ -325,7 +325,7 @@ float vehicle_addplayerslot(	entity _owner,
 								float() _framefunc,
 								void(float) _exitfunc)
 {
-	if not (_owner.vehicle_flags & VHF_MULTISLOT)
+	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
 
 	_slot.PlayerPhysplug = _framefunc;
@@ -834,7 +834,7 @@ void vehicles_exit(float eject)
 
 	_vehicle.tur_head.nodrawtoclient = world;
 
-	if not(teamplay)
+	if(!teamplay)
 		_vehicle.team = 0;
 
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES);
@@ -902,7 +902,7 @@ void vehicles_enter(entity pl, entity veh)
 	else
 		return;
 
-	if not(IS_PLAYER(pl))
+	if(!IS_PLAYER(pl))
 		return;
 
 	if(veh.phase > time)
@@ -1077,7 +1077,7 @@ void vehicles_spawn()
 
 float vehicle_initialize(float vehicle_id, float nodrop)
 {
-	if not(autocvar_g_vehicles)
+	if(!autocvar_g_vehicles)
 		return FALSE;
 
 	entity veh = get_vehicleinfo(vehicle_id);
@@ -1085,7 +1085,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	if(self.targetname)
 	{
 		self.vehicle_controller = find(world, target, self.targetname);
-		if not(self.vehicle_controller)
+		if(!self.vehicle_controller)
 		{
 			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
 		}
@@ -1157,7 +1157,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	setsize(self, veh.mins, veh.maxs);
 
-	if not(nodrop)
+	if(!nodrop)
 	{
 		setorigin(self, self.origin);
 		tracebox(self.origin + '0 0 100', veh.mins, veh.maxs, self.origin - '0 0 10000', MOVE_WORLDONLY, self);

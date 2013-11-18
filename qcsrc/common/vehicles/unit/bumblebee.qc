@@ -717,8 +717,8 @@ float bumble_raygun_send(entity to, float sf)
 
 void spawnfunc_vehicle_bumblebee()
 {
-	if not(autocvar_g_vehicle_bumblebee) { remove(self); return; }
-	if not(vehicle_initialize(VEH_BUMBLEBEE, FALSE)) { remove(self); return; }
+	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
+	if(!vehicle_initialize(VEH_BUMBLEBEE, FALSE)) { remove(self); return; }
 }
 
 float v_bumblebee(float req)
@@ -842,7 +842,7 @@ float v_bumblebee(float req)
 		}
 		case VR_SPAWN:
 		{
-			if not(self.gun1)
+			if(!self.gun1)
 			{
 				// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
 				self.vehicle_shieldent = spawn();

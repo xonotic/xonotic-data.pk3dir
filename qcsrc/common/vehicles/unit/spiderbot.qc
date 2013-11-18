@@ -103,7 +103,7 @@ void spiderbot_rocket_guided()
 
 	self.nextthink  = time;
 
-	if not (self.realowner.vehicle)
+	if(!self.realowner.vehicle)
 		self.think = spiderbot_rocket_unguided;
 
 	crosshair_trace(self.realowner);
@@ -121,7 +121,7 @@ void spiderbot_guide_release()
 {
 	entity rkt;
 	rkt = findchainentity(realowner, self.owner);
-	if not (rkt)
+	if(!rkt)
 		return;
 
 	crosshair_trace(self.owner);
@@ -247,10 +247,9 @@ void spiderbot_rocket_do()
 		self.wait = 0;
 	}
 
-	if (self.wait != -10)
-		if not (self.owner.BUTTON_ATCK2)
-			return;
-
+	if(self.wait != -10)
+	if(!self.owner.BUTTON_ATCK2)
+		return;
 
 	v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
 
@@ -576,7 +575,7 @@ void spiderbot_exit(float eject)
 	self.frame = 5;
 	self.movetype = MOVETYPE_WALK;
 
-	if not(self.owner)
+	if(!self.owner)
 		return;
 
 	makevectors(self.angles);
@@ -739,8 +738,8 @@ float spiderbot_impulse(float _imp)
 
 void spawnfunc_vehicle_spiderbot()
 {
-	if not(autocvar_g_vehicle_spiderbot) { remove(self); return; }
-	if not(vehicle_initialize(VEH_SPIDERBOT, FALSE)) { remove(self); return; }
+	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
+	if(!vehicle_initialize(VEH_SPIDERBOT, FALSE)) { remove(self); return; }
 }
 
 float v_spiderbot(float req)
@@ -797,7 +796,7 @@ float v_spiderbot(float req)
 		}
 		case VR_SPAWN:
 		{
-			if not(self.gun1)
+			if(!self.gun1)
 			{
 				self.vehicles_impulse = spiderbot_impulse;
 				self.gun1 = spawn();

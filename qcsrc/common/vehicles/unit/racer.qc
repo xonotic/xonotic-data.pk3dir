@@ -162,7 +162,7 @@ void racer_rocket_groundhugger()
 		return;
 	}
 
-	if not (self.realowner.vehicle)
+	if(!self.realowner.vehicle)
 	{
 		UpdateCSQCProjectile(self);
 		return;
@@ -210,7 +210,7 @@ void racer_rocket_tracker()
 		return;
 	}
 
-	if not (self.realowner.vehicle)
+	if(!self.realowner.vehicle)
 	{
 		UpdateCSQCProjectile(self);
 		return;
@@ -492,7 +492,7 @@ void racer_exit(float eject)
 	self.movetype   = MOVETYPE_BOUNCE;
 	sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 
-	if not (self.owner)
+	if(!self.owner)
 		return;
 
 	makevectors(self.angles);
@@ -560,8 +560,8 @@ void racer_deadtouch()
 
 void spawnfunc_vehicle_racer()
 {
-	if not(autocvar_g_vehicle_racer) { remove(self); return; }
-	if not(vehicle_initialize(VEH_RACER, TRUE)) { remove(self); return; }
+	if(!autocvar_g_vehicle_racer) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RACER, TRUE)) { remove(self); return; }
 }
 
 float v_racer(float req)

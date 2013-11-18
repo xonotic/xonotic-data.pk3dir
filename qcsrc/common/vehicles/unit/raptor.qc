@@ -232,7 +232,7 @@ void raptor_exit(float eject)
 		self.nextthink  = time;
 	}
 
-	if not (self.owner)
+	if(!self.owner)
 		return;
 
 	makevectors(self.angles);
@@ -744,8 +744,8 @@ float raptor_impulse(float _imp)
 
 void spawnfunc_vehicle_raptor()
 {
-	if not(autocvar_g_vehicle_raptor) { remove(self); return; }
-	if not(vehicle_initialize(VEH_RAPTOR, FALSE)) { remove(self); return; }
+	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RAPTOR, FALSE)) { remove(self); return; }
 }
 
 float v_raptor(float req)
@@ -808,7 +808,7 @@ float v_raptor(float req)
 		}
 		case VR_SPAWN:
 		{
-			if not(self.gun1)
+			if(!self.gun1)
 			{
 				entity spinner;
 				vector ofs;
@@ -1101,7 +1101,7 @@ float v_raptor(float req)
 					setorigin(dropmark, trace_endpos);
 					picsize = draw_getimagesize(raptor_drop) * 0.2;
 
-					if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
+					if(!(where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight))
 					{
 						where_x -= picsize_x * 0.5;
 						where_y -= picsize_y * 0.5;
@@ -1118,7 +1118,7 @@ float v_raptor(float req)
 						where = project_3d_to_2d(dropmark.origin);
 						picsize = draw_getimagesize(raptor_drop) * 0.25;
 
-						if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
+						if(!(where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight))
 						{
 							where_x -= picsize_x * 0.5;
 							where_y -= picsize_y * 0.5;

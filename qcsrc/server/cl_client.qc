@@ -2150,7 +2150,7 @@ void PlayerUseKey()
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if not(self.freezetag_frozen)
+		if(!self.freezetag_frozen)
 		if(self.deadflag == DEAD_NO)
 		{
 			entity head, closest_target = world;
@@ -2160,7 +2160,7 @@ void PlayerUseKey()
 			{
 				if(head.vehicle_flags & VHF_ISVEHICLE)
 				if(head.deadflag == DEAD_NO)
-				if not(head.owner)
+				if(!head.owner)
 				{
 					if(closest_target)
 					{
@@ -2274,15 +2274,15 @@ void PlayerPreThink (void)
 	if(autocvar_g_vehicles_enter)
 	if(time > self.last_vehiclecheck)
 	if(IS_PLAYER(self))
-	if not(self.freezetag_frozen)
-	if not(self.vehicle)
+	if(!self.freezetag_frozen)
+	if(!self.vehicle)
 	if(self.deadflag == DEAD_NO)
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
 		if(veh.deadflag == DEAD_NO)
-		if not(veh.owner)
+		if(!veh.owner)
 		if(!veh.team || SAME_TEAM(self, veh))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
 		else if(autocvar_g_vehicles_steal)

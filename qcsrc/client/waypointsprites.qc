@@ -319,6 +319,7 @@ string spritelookuptext(string s)
 		case "freezetag_frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
+		case "intruder": return _("Intruder!");
 		default: return s;
 	}
 }
