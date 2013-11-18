@@ -527,6 +527,61 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	return;
 }
 
+void fireBallisticBullet_simple(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant)
+{
+	vector  end;
+
+	dir = normalize(dir + randomvec() * spread);
+	end = start + dir * MAX_SHOT_DISTANCE;
+
+	for (;;)
+	{
+		// TODO also show effect
+		if(self.antilag_debug)
+			WarpZone_traceline_antilag (self, start, end, FALSE, self, self.antilag_debug);
+		else
+			WarpZone_traceline_antilag (self, start, end, FALSE, self, ANTILAG_LATENCY(self));
+
+		if (pointcontents (trace_endpos) != CONTENT_SKY)
+		{
+			trace_endpos = end;
+			return;
+		}
+
+		// Avoid self-damage
+		if (!trace_ent || (trace_ent == self))
+		{
+			if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+				return;
+
+			W_BallisticBullet_Hit();  // FIXME
+		}
+
+		// if we hit "weapclip", bail out
+		//
+		// rationale of this check:
+		//
+		// any shader that is solid, nodraw AND trans is meant to clip weapon
+		// shots and players, but has no other effect!
+		//
+		// if it is not trans, it is caulk and should not have this side effect
+		//
+		// matching shaders:
+		//   common/weapclip (intended)
+		//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
+		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
+			return;
+
+		// go through solid!
+		if(!W_BallisticBullet_LeaveSolid((trace_ent && (trace_ent.solid != SOLID_BSP)) ? eff : -1))  // FIXME
+			return;
+
+		W_BallisticBullet_LeaveSolid_think();  // FIXME
+	}
+}
+
 void fireBullet (vector start, vector dir, float spread, float damage, float force, float dtype, float tracer)
 {
 	vector  end;
