@@ -239,15 +239,15 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		// Avoid self-damage // FIXME can this happen?
 		if (hit != self)
 		{
-			if(hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-				Damage_DamageInfo(self.origin, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
+			if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
+				Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
 
 			if(hit && hit != last_hit)
 			{
 				yoda = 0;
 				float g = accuracy_isgooddamage(self, hit);
 				// FIXME preserve trace stuff
-				Damage(hit, self, self, damage * solid_penetration_left, dtype, self.origin, force * dir * solid_penetration_left);
+				Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 				// calculate hits for ballistic weapons
 				if(g)
 				{
@@ -266,7 +266,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// go through solid!
 		// outside the world? forget it
-		if(end_x > world.maxs_x || end_y > world.maxs_y || end_z > world.maxs_z || end_x < world.mins_x || end_y < world.mins_y || end_z < world.mins_z)
+		if(start_x > world.maxs_x || start_y > world.maxs_y || start_z > world.maxs_z || start_x < world.mins_x || start_y < world.mins_y || start_z < world.mins_z)
 			break;
 
 		float maxdist;
@@ -285,7 +285,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			break;
 
 		// move the entity along its velocity until it's out of solid, then let it resume
-		traceline_inverted (start, self.origin + dir * maxdist, MOVE_NORMAL, self, TRUE);
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, self, TRUE);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 
