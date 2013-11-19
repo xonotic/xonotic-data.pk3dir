@@ -1216,10 +1216,6 @@ float CSQC_Parse_TempEntity()
 			Net_ReadRace();
 			bHandled = true;
 			break;
-		case TE_CSQC_ZCURVEPARTICLES:
-			Net_ReadZCurveParticles();
-			bHandled = true;
-			break;
 		case TE_CSQC_NEXGUNBEAMPARTICLE:
 			Net_ReadNexgunBeamParticle();
 			bHandled = true;
