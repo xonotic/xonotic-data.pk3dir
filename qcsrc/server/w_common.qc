@@ -162,11 +162,11 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	trace_dphitq3surfaceflags = endq3surfaceflags;
 }
 
-float fireBallisticBullet_trace_callback_eff;
-void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
+float fireBullet_trace_callback_eff;
+void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(hit - start) > 16)
-		trailparticles(world, fireBallisticBullet_trace_callback_eff, start, hit);
+		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
 	WarpZone_trace_forent = world;
 }
 
@@ -184,11 +184,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBallisticBullet_trace_callback_eff = particleeffectnum("tr_rifle");
+		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle");
 	else if(tracereffects & EF_BLUE)
-		fireBallisticBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
+		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
 	else
-		fireBallisticBullet_trace_callback_eff = particleeffectnum("tr_bullet");
+		fireBullet_trace_callback_eff = particleeffectnum("tr_bullet");
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)
@@ -205,7 +205,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	for (;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, self, world, fireBallisticBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, self, world, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
@@ -295,7 +295,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
 			if(vlen(trace_endpos - start) > 4)
-				trailparticles(self, fireBallisticBullet_trace_callback_eff, start, trace_endpos);
+				trailparticles(self, fireBullet_trace_callback_eff, start, trace_endpos);
 
 		start = trace_endpos;
 
@@ -307,15 +307,6 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		FOR_EACH_PLAYER(pl)
 			if(pl != self)
 				antilag_restore(pl);
-}
-
-// DEPRECATED kill this adaptor once we can
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant)
-{
-	fireBullet(start, dir, spread, (0.5 * pSpeed * pSpeed * bulletconstant) / autocvar_g_ballistics_materialconstant, damage, force, dtype, tracereffects);
-}
-void endFireBallisticBullet()
-{
 }
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
