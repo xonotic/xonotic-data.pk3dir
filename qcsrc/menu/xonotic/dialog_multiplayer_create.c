@@ -9,8 +9,10 @@ CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
+	ATTRIB(XonoticServerCreateTab, sliderTeams, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderTimelimit, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, labelFraglimit, entity, NULL)
+	ATTRIB(XonoticServerCreateTab, labelTeams, entity, NULL)
 ENDCLASS(XonoticServerCreateTab)
 entity makeXonoticServerCreateTab();
 #endif
@@ -103,7 +105,14 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
 			GameType_ConfigureSliders(me.sliderFraglimit, me.labelFraglimit, _("Frag limit:"), 5, 100, 5, "fraglimit_override");
-
+	me.TR(me);
+		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
+		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
+			e.addValue(e, "Default", "0");
+			e.addValue(e, "2 teams", "2");
+			e.addValue(e, "3 teams", "3");
+			e.addValue(e, "4 teams", "4");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player slots:")));
 		me.TD(me, 1, 2, makeXonoticSlider(1, 32, 1, "menu_maxplayers"));
@@ -175,6 +184,7 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 	gt = MapInfo_CurrentGametype();
 	e = me.sliderFraglimit;
 	l = me.labelFraglimit;
+
 	switch(gt)
 	{
 		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
@@ -188,6 +198,23 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
 		default:                      GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
+
+	float x = FALSE;
+	e = me.sliderTeams;
+	switch(gt)
+	{
+		case MAPINFO_TYPE_CA:               x = TRUE; e.configureXonoticTextSlider(e, "g_ca_teams_override");          break;
+		case MAPINFO_TYPE_DOMINATION:       x = TRUE; e.configureXonoticTextSlider(e, "g_domination_teams_override");  break;
+		case MAPINFO_TYPE_FREEZETAG:        x = TRUE; e.configureXonoticTextSlider(e, "g_freezetag_teams_override");   break;
+		case MAPINFO_TYPE_KEEPAWAY:         x = TRUE; e.configureXonoticTextSlider(e, "g_keepaway_teams_override");    break;
+		case MAPINFO_TYPE_KEYHUNT:          x = TRUE; e.configureXonoticTextSlider(e, "g_keyhunt_teams_override");     break;
+		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = TRUE; e.configureXonoticTextSlider(e, "g_tdm_teams_override");         break;
+
+		default: x = FALSE; e.configureXonoticTextSlider(e, string_null); break;
+	}
+	me.sliderTeams.configureXonoticTextSliderValues(e);
+	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
+	
 	me.mapListBox.refilter(me.mapListBox);
 }
 
