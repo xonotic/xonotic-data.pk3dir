@@ -2,15 +2,15 @@ void CreatureFrame (void)
 {
 	entity oldself;
 	float dm;
-	
+
 	oldself = self;
 	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
-		
+
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
 		float projectile = (self.flags & FL_PROJECTILE);
-		
+
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
 			if (!(self.flags & FL_INWATER))
@@ -38,11 +38,11 @@ void CreatureFrame (void)
 					}
 				}
 			}
-			
+
 			if (self.dmgtime < time)
 			{
-				self.dmgtime = time + autocvar_g_balance_contents_damagerate; 
-				
+				self.dmgtime = time + autocvar_g_balance_contents_damagerate;
+
 				if (projectile)
 				{
 					if (self.watertype == CONTENT_LAVA)
@@ -125,7 +125,7 @@ void CreatureFrame (void)
 					else
 						dprint(ftos(trace_dphitq3surfaceflags), "\n");
 					*/
-					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -135,7 +135,7 @@ void CreatureFrame (void)
 				}
 			}
 		}
-		
+
         self.oldvelocity = self.velocity;
 	}
 	self = oldself;
@@ -249,7 +249,7 @@ void SV_OnEntityPreSpawnFunction()
 {
 	if (self)
 	if (self.gametypefilter != "")
-	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
+	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;
@@ -349,14 +349,14 @@ void SV_OnEntityPreSpawnFunction()
 			else
 			{
 				k = s;
-				if not(cvar(k))
+				if (!cvar(k))
 					goto cvar_fail;
 			}
 		}
 		inv = !inv;
 :cvar_fail
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
-		if not(inv)
+		if (!inv)
 		{
 			//print("cvarfilter fail\n");
 			remove(self);

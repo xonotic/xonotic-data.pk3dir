@@ -258,7 +258,7 @@ void turret_hk_attack()
     missile.cnt              = time + 30;
     missile.ticrate          = max(autocvar_sys_ticrate, 0.05);
     missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
-    
+
     if (self.tur_head.frame == 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 
@@ -289,7 +289,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
 
 void turret_hk_dinit()
 {
-    if (self.netname == "")      
+    if (self.netname == "")
         self.netname  = "Hunter-killer turret";
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;
