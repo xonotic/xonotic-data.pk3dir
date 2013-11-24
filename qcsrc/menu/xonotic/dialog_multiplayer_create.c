@@ -108,10 +108,10 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
-			e.addValue(e, "Default", "0");
-			e.addValue(e, "2 teams", "2");
-			e.addValue(e, "3 teams", "3");
-			e.addValue(e, "4 teams", "4");
+			e.addValue(e, _("Default"), "0");
+			e.addValue(e, _("2 teams"), "2");
+			e.addValue(e, _("3 teams"), "3");
+			e.addValue(e, _("4 teams"), "4");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player slots:")));
@@ -212,7 +212,8 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 
 		default: x = FALSE; e.configureXonoticTextSlider(e, string_null); break;
 	}
-	me.sliderTeams.configureXonoticTextSliderValues(e);
+	e.configureXonoticTextSliderValues(e);
+	e.setText(e, _("Default")); 
 	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
 	
 	me.mapListBox.refilter(me.mapListBox);
