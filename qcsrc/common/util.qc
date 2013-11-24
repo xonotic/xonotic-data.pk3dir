@@ -241,7 +241,7 @@ vector colormapPaletteColor(float c, float isPants)
 string fstrunzone(string s)
 {
 	string sc;
-	if not(s)
+	if (!s)
 		return s;
 	sc = strcat(s, "");
 	strunzone(s);
@@ -882,7 +882,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	created_saved_value = 0;
 
-	if not(tmp_cvar || tmp_value)
+	if (!(tmp_cvar || tmp_value))
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
@@ -1492,7 +1492,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
 		{
-			if not(subpattern4)
+			if (!subpattern4)
 				return 0;
 			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 				return 0;
@@ -1728,7 +1728,7 @@ void check_unacceptable_compiler_bugs()
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
 
 	string s = "";
-	if not(s)
+	if (!s)
 		error("The empty string counts as false. We do not want that!");
 }
 
@@ -2068,7 +2068,7 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
-	if not(m)
+	if (!m)
 		return 1;
 
 	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
@@ -2527,7 +2527,7 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 
 	   Therefore: there is an inflection point iff:
 	   e outside (3 - s)/2 .. 3 - s*2
-	   
+
 	   in other words, if (s,e) in triangle (1,1)(0,3)(0,1.5) or in triangle (1,1)(3,0)(1.5,0)
 	*/
 }
@@ -2667,15 +2667,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_GAMESTART_10;
-				case 9:  return ANNCE_NUM_GAMESTART_9; 
-				case 8:  return ANNCE_NUM_GAMESTART_8; 
-				case 7:  return ANNCE_NUM_GAMESTART_7; 
-				case 6:  return ANNCE_NUM_GAMESTART_6; 
-				case 5:  return ANNCE_NUM_GAMESTART_5; 
-				case 4:  return ANNCE_NUM_GAMESTART_4; 
-				case 3:  return ANNCE_NUM_GAMESTART_3; 
-				case 2:  return ANNCE_NUM_GAMESTART_2; 
-				case 1:  return ANNCE_NUM_GAMESTART_1; 
+				case 9:  return ANNCE_NUM_GAMESTART_9;
+				case 8:  return ANNCE_NUM_GAMESTART_8;
+				case 7:  return ANNCE_NUM_GAMESTART_7;
+				case 6:  return ANNCE_NUM_GAMESTART_6;
+				case 5:  return ANNCE_NUM_GAMESTART_5;
+				case 4:  return ANNCE_NUM_GAMESTART_4;
+				case 3:  return ANNCE_NUM_GAMESTART_3;
+				case 2:  return ANNCE_NUM_GAMESTART_2;
+				case 1:  return ANNCE_NUM_GAMESTART_1;
 			}
 			break;
 		}
@@ -2684,15 +2684,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9; 
-				case 8:  return ANNCE_NUM_IDLE_8; 
-				case 7:  return ANNCE_NUM_IDLE_7; 
-				case 6:  return ANNCE_NUM_IDLE_6; 
-				case 5:  return ANNCE_NUM_IDLE_5; 
-				case 4:  return ANNCE_NUM_IDLE_4; 
-				case 3:  return ANNCE_NUM_IDLE_3; 
-				case 2:  return ANNCE_NUM_IDLE_2; 
-				case 1:  return ANNCE_NUM_IDLE_1; 
+				case 9:  return ANNCE_NUM_IDLE_9;
+				case 8:  return ANNCE_NUM_IDLE_8;
+				case 7:  return ANNCE_NUM_IDLE_7;
+				case 6:  return ANNCE_NUM_IDLE_6;
+				case 5:  return ANNCE_NUM_IDLE_5;
+				case 4:  return ANNCE_NUM_IDLE_4;
+				case 3:  return ANNCE_NUM_IDLE_3;
+				case 2:  return ANNCE_NUM_IDLE_2;
+				case 1:  return ANNCE_NUM_IDLE_1;
 			}
 			break;
 		}
@@ -2701,15 +2701,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_KILL_10;
-				case 9:  return ANNCE_NUM_KILL_9; 
-				case 8:  return ANNCE_NUM_KILL_8; 
-				case 7:  return ANNCE_NUM_KILL_7; 
-				case 6:  return ANNCE_NUM_KILL_6; 
-				case 5:  return ANNCE_NUM_KILL_5; 
-				case 4:  return ANNCE_NUM_KILL_4; 
-				case 3:  return ANNCE_NUM_KILL_3; 
-				case 2:  return ANNCE_NUM_KILL_2; 
-				case 1:  return ANNCE_NUM_KILL_1; 
+				case 9:  return ANNCE_NUM_KILL_9;
+				case 8:  return ANNCE_NUM_KILL_8;
+				case 7:  return ANNCE_NUM_KILL_7;
+				case 6:  return ANNCE_NUM_KILL_6;
+				case 5:  return ANNCE_NUM_KILL_5;
+				case 4:  return ANNCE_NUM_KILL_4;
+				case 3:  return ANNCE_NUM_KILL_3;
+				case 2:  return ANNCE_NUM_KILL_2;
+				case 1:  return ANNCE_NUM_KILL_1;
 			}
 			break;
 		}
@@ -2718,15 +2718,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_RESPAWN_10;
-				case 9:  return ANNCE_NUM_RESPAWN_9; 
-				case 8:  return ANNCE_NUM_RESPAWN_8; 
-				case 7:  return ANNCE_NUM_RESPAWN_7; 
-				case 6:  return ANNCE_NUM_RESPAWN_6; 
-				case 5:  return ANNCE_NUM_RESPAWN_5; 
-				case 4:  return ANNCE_NUM_RESPAWN_4; 
-				case 3:  return ANNCE_NUM_RESPAWN_3; 
-				case 2:  return ANNCE_NUM_RESPAWN_2; 
-				case 1:  return ANNCE_NUM_RESPAWN_1; 
+				case 9:  return ANNCE_NUM_RESPAWN_9;
+				case 8:  return ANNCE_NUM_RESPAWN_8;
+				case 7:  return ANNCE_NUM_RESPAWN_7;
+				case 6:  return ANNCE_NUM_RESPAWN_6;
+				case 5:  return ANNCE_NUM_RESPAWN_5;
+				case 4:  return ANNCE_NUM_RESPAWN_4;
+				case 3:  return ANNCE_NUM_RESPAWN_3;
+				case 2:  return ANNCE_NUM_RESPAWN_2;
+				case 1:  return ANNCE_NUM_RESPAWN_1;
 			}
 			break;
 		}
@@ -2735,15 +2735,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_ROUNDSTART_10;
-				case 9:  return ANNCE_NUM_ROUNDSTART_9; 
-				case 8:  return ANNCE_NUM_ROUNDSTART_8; 
-				case 7:  return ANNCE_NUM_ROUNDSTART_7; 
-				case 6:  return ANNCE_NUM_ROUNDSTART_6; 
-				case 5:  return ANNCE_NUM_ROUNDSTART_5; 
-				case 4:  return ANNCE_NUM_ROUNDSTART_4; 
-				case 3:  return ANNCE_NUM_ROUNDSTART_3; 
-				case 2:  return ANNCE_NUM_ROUNDSTART_2; 
-				case 1:  return ANNCE_NUM_ROUNDSTART_1; 
+				case 9:  return ANNCE_NUM_ROUNDSTART_9;
+				case 8:  return ANNCE_NUM_ROUNDSTART_8;
+				case 7:  return ANNCE_NUM_ROUNDSTART_7;
+				case 6:  return ANNCE_NUM_ROUNDSTART_6;
+				case 5:  return ANNCE_NUM_ROUNDSTART_5;
+				case 4:  return ANNCE_NUM_ROUNDSTART_4;
+				case 3:  return ANNCE_NUM_ROUNDSTART_3;
+				case 2:  return ANNCE_NUM_ROUNDSTART_2;
+				case 1:  return ANNCE_NUM_ROUNDSTART_1;
 			}
 			break;
 		}
@@ -2752,15 +2752,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_10;
-				case 9:  return ANNCE_NUM_9; 
-				case 8:  return ANNCE_NUM_8; 
-				case 7:  return ANNCE_NUM_7; 
-				case 6:  return ANNCE_NUM_6; 
-				case 5:  return ANNCE_NUM_5; 
-				case 4:  return ANNCE_NUM_4; 
-				case 3:  return ANNCE_NUM_3; 
-				case 2:  return ANNCE_NUM_2; 
-				case 1:  return ANNCE_NUM_1; 
+				case 9:  return ANNCE_NUM_9;
+				case 8:  return ANNCE_NUM_8;
+				case 7:  return ANNCE_NUM_7;
+				case 6:  return ANNCE_NUM_6;
+				case 5:  return ANNCE_NUM_5;
+				case 4:  return ANNCE_NUM_4;
+				case 3:  return ANNCE_NUM_3;
+				case 2:  return ANNCE_NUM_2;
+				case 1:  return ANNCE_NUM_1;
 			}
 			break;
 		}

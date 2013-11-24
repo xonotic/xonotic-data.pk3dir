@@ -14,8 +14,8 @@ void spawnfunc_info_null (void)
 void setanim(entity e, vector anim, float looping, float override, float restart)
 {
 	if (!anim)
-		return; // no animation was given to us! We can't use this. 
-		
+		return; // no animation was given to us! We can't use this.
+
 	if (anim_x == e.animstate_startframe)
 	if (anim_y == e.animstate_numframes)
 	if (anim_z == e.animstate_framerate)
@@ -294,7 +294,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	// the thinking is now done by the controller
 	self.think = SUB_NullThink; // for PushMove
 	self.nextthink = self.ltime + traveltime;
-	
+
 	// invoke controller
 	self = controller;
 	self.think();
@@ -467,7 +467,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
-	if not(IS_REAL_CLIENT(forent))
+	if (!IS_REAL_CLIENT(forent))
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
@@ -799,7 +799,7 @@ void LODmodel_attach()
 	}
 
 	if(self.lodmodelindex1)
-		if not(self.SendEntity)
+		if (!self.SendEntity)
 			SetCustomizer(self, LOD_customize, LOD_uncustomize);
 }
 

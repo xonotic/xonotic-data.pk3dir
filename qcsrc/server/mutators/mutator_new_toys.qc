@@ -4,7 +4,7 @@ CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   
 									minsta  porto
 									tuba
 
-NEW             rifle   hlac    minel                           seeker   
+NEW             rifle   hlac    minel                           seeker
 IDEAS                                   OPEN    flak    OPEN            FUN FUN FUN FUN
 
 
@@ -110,7 +110,7 @@ string nt_GetReplacement(string w, float m)
 	if(m == NT_AUTOREPLACE_NEVER)
 		return w;
 	string s = nt_GetFullReplacement(w);
-	if not(s)
+	if (!s)
 		return w;
 	if(m == NT_AUTOREPLACE_RANDOM)
 		s = strcat(w, " ", s);
@@ -127,7 +127,7 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 
 	WepSet newdefault;
 	WepSet warmup_newdefault;
-	
+
 	newdefault = '0 0 0';
 	warmup_newdefault = '0 0 0';
 

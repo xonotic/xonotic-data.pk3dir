@@ -4,7 +4,7 @@ CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticAudioSettingsTab)
 entity makeXonoticAudioSettingsTab();
 #endif
@@ -97,7 +97,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
-	
+
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("snd_speed"));

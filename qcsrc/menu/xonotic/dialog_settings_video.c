@@ -4,7 +4,7 @@ CLASS(XonoticVideoSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticVideoSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space
 	ATTRIB(XonoticVideoSettingsTab, name, string, "videosettings")
 ENDCLASS(XonoticVideoSettingsTab)
 entity makeXonoticVideoSettingsTab();
@@ -47,7 +47,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", _("Vertical Synchronization")));
-		
+
 	me.TR(me);
 		if(cvar("developer"))
 			{ me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally"))); }
@@ -72,7 +72,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
 			setDependent(e, "vid_samples", 1, 1);
-		
+
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));

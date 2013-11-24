@@ -5,7 +5,7 @@ CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
-	ATTRIB(XonoticProfileTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticProfileTab, columns, float, 6.2) // added extra .2 for center space
 	ATTRIB(XonoticProfileTab, playerNameLabel, entity, NULL)
 	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticProfileTab)
@@ -197,7 +197,7 @@ void XonoticProfileTab_fill(entity me)
 			e.onClickEntity = main.weaponsDialog;
 		// I don't really think this is useful as is, and especially it doesn't look very clean...
 		// In the future, if ALL of these buttons had some information, then it would be justified/clean
-		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null)); 
+		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null));
 		//	e0.textEntity = main.weaponsDialog;
 		//	e0.allowCut = 1;
 	me.TR(me);
@@ -205,7 +205,7 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.hudDialog;
-		// TODO: show hud config name with text here 
+		// TODO: show hud config name with text here
 
 	*/
 	me.gotoRC(me, me.rows - 1, 0);

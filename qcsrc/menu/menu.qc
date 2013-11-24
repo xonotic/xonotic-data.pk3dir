@@ -67,7 +67,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
@@ -994,7 +994,7 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-				
+
 		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();

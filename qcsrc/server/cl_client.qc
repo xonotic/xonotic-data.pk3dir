@@ -180,7 +180,7 @@ void PutObserverInServer (void)
 
 	WaypointSprite_PlayerDead();
 
-	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
+	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)
@@ -984,7 +984,7 @@ float PlayerInIDList(entity p, string idlist)
 	string s;
 
 	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
-	if not(p.crypto_idfp)
+	if (!p.crypto_idfp)
 		return 0;
 
 	// this function allows abbreviated player IDs too!
@@ -1250,7 +1250,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(IS_CLIENT(self))
+	if (!IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1431,7 +1431,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if not(g_minstagib)
+	if (!g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -1614,7 +1614,7 @@ void player_regen (void)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
 }
 
@@ -1767,7 +1767,7 @@ float SpectateUpdate() {
 	if (self == self.enemy)
 		return 0;
 
-	if not(IS_PLAYER(self.enemy))
+	if (!IS_PLAYER(self.enemy))
 		return 0;
 
 	SpectateCopy(self.enemy);
@@ -1862,7 +1862,7 @@ float SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
-	if not(other) // no player
+	if (!other) // no player
 		return FALSE;
 
 	entity first = other;
@@ -1876,7 +1876,7 @@ float SpectatePrev()
 		do { other = other.chain; }
 		while(other && other.team != self.team);
 
-		if not(other)
+		if (!other)
 		{
 			other = first;
 			while(other.team != self.team)
@@ -2136,7 +2136,7 @@ void SpectatorThink()
 
 void PlayerUseKey()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2604,7 +2604,7 @@ void PlayerPostThink (void)
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if not(self.stored_netname)
+		if (!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{

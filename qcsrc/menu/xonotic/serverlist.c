@@ -414,7 +414,7 @@ void XonoticServerList_toggleFavorite(entity me, string srv)
 		f = 1;
 		--i;
 	}
-	
+
 	if(!f)
 	{
 		s1 = "";
@@ -1077,7 +1077,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
 	else if(freeslots == 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
-	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
+	else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
 		theAlpha = 1;
@@ -1163,7 +1163,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	string n;
 
-	if not(me.seenIPv4 && me.seenIPv6)
+	if (!(me.seenIPv4 && me.seenIPv6))
 	{
 		iconPos_x += iconSize_x * 0.5;
 	}

@@ -494,7 +494,7 @@ float preMenuInit()
 		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
 		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
 		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
+
 		boxA += sz * 0.1;
 		boxB -= sz * 0.1;
 		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
@@ -552,7 +552,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
-	if not(campaign_name_previous)
+	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)
 	{
@@ -661,13 +661,13 @@ float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-	
+
 	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
 	#undef GAMETYPE
 
 	unused_float = i;
-	
+
 	return 0;
 }
 
@@ -675,31 +675,31 @@ float GameType_GetCount()
 {
 	float i;
 	i = 0;
-	
+
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	
+
 	return i;
 }
 
 string GameType_GetName(float cnt)
 {
 	float i = GameType_GetID(cnt);
-	
+
 	if(i)
 		return MapInfo_Type_ToText(i);
-	
+
 	return "";
 }
 
 string GameType_GetIcon(float cnt)
 {
 	float i = GameType_GetID(cnt);
-	
+
 	if(i)
 		return strcat("gametype_", MapInfo_Type_ToString(i));
-	
+
 	return "";
 }
 
@@ -707,7 +707,7 @@ string GameType_GetIcon(float cnt)
 {
 	float i = GameType_GetID(cnt);
 	string s = _MapInfo_GetDefaultEx(i);
-	
+
 	if(i)
 	{
 		if(strstrofs(s, "teams", 0) >= 0)
@@ -715,7 +715,7 @@ string GameType_GetIcon(float cnt)
 		else
 			return _("free for all");
 	}
-	
+
 	return _("tuba for all");
 }*/
 

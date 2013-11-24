@@ -35,7 +35,7 @@ void clippedspectatingclick(entity me, entity checkbox)
 void XonoticGameViewSettingsTab_fill(entity me)
 {
 	entity e;
-	
+
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
 		makeMulti(e, "crosshair_hittest_showimpact");

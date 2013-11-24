@@ -4,7 +4,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticEffectsSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
 float updateCompression();
