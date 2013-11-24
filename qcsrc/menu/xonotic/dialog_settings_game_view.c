@@ -41,6 +41,10 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		makeMulti(e, "crosshair_hittest_showimpact");
 	me.TR(me);
 		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_eventchase_death", _("Slide to third person upon death")));
+		setDependent(e, "chase_active", -1, 0);
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.05, 0, "cl_bobfall", _("Smooth the view when landing from a jump")));
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
@@ -73,9 +77,6 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_eventchase_death", _("Slide to third person perspective upon death")));
-		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 			e.onClick = clippedspectatingclick;
