@@ -149,15 +149,14 @@ void XonoticServerCreateTab_fill(entity me)
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
 		me.TD(me, me.rows - 5, 3, me.mapListBox);
-	me.gotoRC(me, me.rows - 3, 3.5);
-		me.TDempty(me, 0.25);
+	me.gotoRC(me, me.rows - 3, 3.2);
+		me.TDempty(me, 0.375);
 		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));
 			e.onClick = MapList_All;
 			e.onClickEntity = me.mapListBox;
 		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select none"), '0 0 0'));
 			e.onClick = MapList_None;
 			e.onClickEntity = me.mapListBox;
-		me.TDempty(me, 0.25);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Multiplayer!"), '0 0 0'));
