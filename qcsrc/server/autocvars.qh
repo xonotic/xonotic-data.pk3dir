@@ -801,6 +801,7 @@ float autocvar_g_domination_point_leadlimit;
 float autocvar_g_domination_point_rate;
 float autocvar_g_domination_teams_override;
 float autocvar_g_forced_respawn;
+float autocvar_g_respawn_delay_max;
 string autocvar_g_forced_team_blue;
 string autocvar_g_forced_team_otherwise;
 string autocvar_g_forced_team_pink;
