@@ -33,8 +33,7 @@ void XonoticProfileTab_fill(entity me)
 	entity e, pms, label, box;
 	float i;
 
-	me.TR(me);
-	me.TR(me);
+	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
 		me.TD(me, 1, 2.5, label = makeXonoticTextLabel(0, string_null));
@@ -85,7 +84,7 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 	
 
-	me.gotoRC(me, 1, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model:")));
 	me.TR(me);
@@ -93,12 +92,12 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, 13, 2.4, pms);
+		me.TD(me, 14, 2.4, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 
-	me.gotoRC(me, 15, 3.533); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 15.5, 3.533); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color:")));
 		for(i = 0; i < 15; ++i)
@@ -107,7 +106,7 @@ void XonoticProfileTab_fill(entity me)
 				me.TR(me);
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
 		}
-	me.gotoRC(me, 15, 4.866); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 15.5, 4.866); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color:")));
 		for(i = 0; i < 15; ++i)
