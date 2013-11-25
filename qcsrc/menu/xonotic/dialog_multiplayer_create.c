@@ -64,21 +64,12 @@ void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
 
-	me.TR(me);
-	me.TR(me);
+	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));
 	me.TR(me);
-		me.TD(me, 8, 3, e = makeXonoticGametypeList());
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-		//me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Match settings:"))); // pointless, overcrowds the dialog imo
-	me.TR(me);
+		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
+
+	me.gotoRC(me, 12.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("timelimit_override"));
 			e.addValue(e, _("Default"), "-1");
@@ -105,7 +96,8 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
 			GameType_ConfigureSliders(me.sliderFraglimit, me.labelFraglimit, _("Frag limit:"), 5, 100, 5, "fraglimit_override");
-	me.TR(me);
+
+	me.gotoRC(me, 15, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
 			e.addValue(e, _("Default"), "0");
@@ -136,23 +128,26 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addValue(e, _("Godlike"), "10");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
+
+	me.gotoRC(me, me.rows - 3.5, 0);
+		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
+			e0.textEntity = main.mutatorsDialog;
+			e0.allowCut = 1;
+			//e0.allowWrap = 1;
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
-		me.TD(me, 1, 2, e0 = makeXonoticTextLabel(0, string_null));
-			e0.textEntity = main.mutatorsDialog;
-			e0.allowCut = 1;
 
-	me.gotoRC(me, 1, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Map list:")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
-		me.TD(me, me.rows - 5, 3, me.mapListBox);
-	me.gotoRC(me, me.rows - 3, 3.2);
+		me.TD(me, me.rows - 4, 3, me.mapListBox);
+	me.gotoRC(me, me.rows - 2.5, 3.2);
 		me.TDempty(me, 0.375);
 		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));
 			e.onClick = MapList_All;
