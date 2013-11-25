@@ -40,13 +40,13 @@ void XonoticDemoBrowserTab_fill(entity me)
 	
 	me.TR(me);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.TD(me, 1, 2.8, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = dlist;
 			dlist.controlledTextbox = e;
 
-	me.gotoRC(me, 0, 3.6);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "cl_autodemo", _("Auto record demos")));
+	me.gotoRC(me, 0, 3.7);
+		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_autodemo", _("Auto record demos")));
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			//e.onClick = DemoList_Filter_Change;
 			//e.onClickEntity = dlist;

@@ -36,7 +36,23 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 	entity e, slist;
 	slist = makeXonoticScreenshotList();
 	float slist_height = me.rows - 2;
+
+
 	me.TR(me);
+		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.TD(me, 1, 2.5, e = makeXonoticInputBox(0, string_null));
+			e.onChange = ScreenshotList_Filter_Would_Change;
+			e.onChangeEntity = slist;
+			slist.screenshotViewerDialog = main.screenshotViewerDialog;
+			main.screenshotViewerDialog.scrList = slist;
+
+	me.gotoRC(me, 0, 3.3);
+		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxEx(2, 1, "cl_autoscreenshot", _("Auto screenshot endmatch")));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
+			e.onClick = ScreenshotList_Refresh_Click;
+			e.onClickEntity = slist;
+			
+	/*me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Filter:"));
 		me.TD(me, 1, me.columns - 1.5, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ScreenshotList_Filter_Would_Change;
@@ -45,9 +61,10 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			main.screenshotViewerDialog.scrList = slist;
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
-			e.onClickEntity = slist;
-	me.TR(me);
-		me.TD(me, slist_height, me.columns, slist);
+			e.onClickEntity = slist;*/
+			
+	me.gotoRC(me, 1.5, 0);
+		me.TD(me, me.rows - 2.5, me.columns, slist);
 
 	me.gotoRC(me, slist_height + 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Open in the viewer"), '0 0 0'));
