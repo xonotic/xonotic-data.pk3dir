@@ -639,7 +639,7 @@ void PlayerInfo_Basic(entity p)
 		return;
 
         string uri;
-        uri = playerinfo_uri; // FIXME
+        uri = autocvar_g_playerinfo_uri;
 	if(uri != "" && p.crypto_idfp != "")
 	{
 		uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
@@ -658,7 +658,7 @@ void PlayerInfo_Details()
 		return;
 
         string uri;
-        uri = playerinfo_uri; // FIXME
+        uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
 		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
@@ -679,7 +679,7 @@ void PlayerInfo_Details()
 		return;
 
         string uri;
-        uri = playerinfo_uri; // FIXME
+        uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
                 entity p = spawn();
