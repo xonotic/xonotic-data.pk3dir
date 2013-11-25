@@ -145,12 +145,6 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 2, e0 = makeXonoticTextLabel(0, string_null));
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Advanced settings..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.advancedDialog;
-			main.advancedDialog.refilterEntity = me.mapListBox;
 
 	me.gotoRC(me, 1, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
