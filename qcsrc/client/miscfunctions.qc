@@ -573,6 +573,21 @@ vector getplayerorigin(float pl)
 	return GETPLAYERORIGIN_ERROR;
 }
 
+float getplayeralpha(float pl)
+{
+	entity e;
+
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.alpha;
+
+	e = entcs_receiver[pl];
+	if(e)
+		return e.alpha;
+
+	return 1;
+}
+
 float getplayerisdead(float pl)
 {
 	entity e;

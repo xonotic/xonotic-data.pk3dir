@@ -24,6 +24,7 @@ void Draw_ShowNames(entity ent)
 
 	makevectors(view_angles);
 
+	if(getplayeralpha(ent.sv_entnum-1) >= SHOWNAMES_MIN_ALPHA)
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;

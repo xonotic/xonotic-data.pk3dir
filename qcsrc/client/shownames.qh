@@ -3,3 +3,5 @@
 .float sameteam;
 .float fadedelay;
 .float pointtime;
+
+const float SHOWNAMES_MIN_ALPHA = 0.5;
