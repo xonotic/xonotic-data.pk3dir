@@ -1,18 +1,56 @@
 #ifdef SVQC
-void PlayerStats_Prematch
+#define PS_PM_IN_DB   playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+#define PS_GR_OUT_DB  playerstats_gamereport_out_db   // db of info SENT at the end of a match
+#define PS_GR_IN_DB   playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+#define PS_B_IN_DB    playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+float PS_PM_IN_DB;
+float PS_GR_OUT_DB;
+float PS_GR_IN_DB;
+float PS_B_IN_DB;
+#endif
 
-float playerstats_db;
-string teamstats_last;
-string playerstats_last;
-string events_last;
-.float playerstats_addedglobalinfo;
+#ifdef MENUQC
+#define PS_D_IN_DB    playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+float PS_D_IN_DB;
+#endif
+
+#ifdef SVQC
+#define PS_PM_IN_EVL   playerstats_prematch_in_events_last
+#define PS_GR_OUT_TL   playerstats_gamereport_out_teams_last
+#define PS_GR_OUT_PL   playerstats_gamereport_out_players_last
+#define PS_GR_OUT_EVL  playerstats_gamereport_out_events_last
+#define PS_GR_IN_PL    playerstats_gamereport_in_players_last
+#define PS_GR_IN_EVL   playerstats_gamereport_in_events_last
+#define PS_B_IN_PL     playerstats_playerbasic_in_players_last
+#define PS_B_IN_EVL    playerstats_playerbasic_in_events_last
+string PS_PM_IN_EVL;
+string PS_GR_OUT_TL;
+string PS_GR_OUT_PL;
+string PS_GR_OUT_EVL;
+string PS_GR_IN_PL;
+string PS_GR_IN_EVL;
+string PS_B_IN_PL;
+string PS_B_IN_EVL;
+#endif
+
+#ifdef MENUQC
+#define PS_D_IN_EVL    playerstats_playerdetail_in_events_last
+string PS_D_IN_EVL;
+#endif
+
+#ifdef SVQC
+void PlayerStats_Prematch(void)
+{
+	//foobar
+}
+
 .string playerstats_id;
 
 void PlayerStats_GameReport_AddPlayer(entity e)
 {
 	string s;
 
-	if(playerstats_db < 0) { return; }
+	if(playerstats_gamereport_db < 0) { return; }
 	if(e.playerstats_id) { return; }
 
 	s = string_null;
@@ -32,77 +70,77 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	e.playerstats_id = strzone(s);
 
 	string key = sprintf("%s:*", e.playerstats_id);
-	string p = db_get(playerstats_db, key);
+	string p = db_get(playerstats_gamereport_db, key);
 	
 	if(p == "")
 	{
 		if(playerstats_last)
 		{
-			db_put(playerstats_db, key, playerstats_last);
+			db_put(playerstats_gamereport_db, key, playerstats_last);
 			strunzone(playerstats_last);
 		}
-		else { db_put(playerstats_db, key, "#"); }
+		else { db_put(playerstats_gamereport_db, key, "#"); }
 		playerstats_last = strzone(e.playerstats_id);
 	}
 }
 
 void PlayerStats_GameReport_AddTeam(float t)
 {
-	if(playerstats_db < 0) { return; }
+	if(playerstats_gamereport_db < 0) { return; }
 
 	string key = sprintf("%d", t);
-	string p = db_get(playerstats_db, key);
+	string p = db_get(playerstats_gamereport_db, key);
 	
 	if(p == "")
 	{
 		if(teamstats_last)
 		{
-			db_put(playerstats_db, key, teamstats_last);
+			db_put(playerstats_gamereport_db, key, teamstats_last);
 			strunzone(teamstats_last);
 		}
-		else { db_put(playerstats_db, key, "#"); }
+		else { db_put(playerstats_gamereport_db, key, "#"); }
 		teamstats_last = strzone(key);
 	}
 }
 
 void PlayerStats_GameReport_AddEvent(string event_id)
 {
-	if(playerstats_db < 0) { return; }
+	if(playerstats_gamereport_db < 0) { return; }
 
 	string key = sprintf("*:%s", event_id);
-	string p = db_get(playerstats_db, key);
+	string p = db_get(playerstats_gamereport_db, key);
 	
 	if(p == "")
 	{
 		if(events_last)
 		{
-			db_put(playerstats_db, key, events_last);
+			db_put(playerstats_gamereport_db, key, events_last);
 			strunzone(events_last);
 		}
-		else { db_put(playerstats_db, key, "#"); }
+		else { db_put(playerstats_gamereport_db, key, "#"); }
 		events_last = strzone(event_id);
 	}
 }
 
 float PlayerStats_GameReport_Event(entity e, string event_id, float value)
 {
-	if((e.playerstats_id == "") || playerstats_db < 0) { return 0; }
+	if((e.playerstats_id == "") || playerstats_gamereport_db < 0) { return 0; }
 
 	string key = sprintf("%s:%s", e.playerstats_id, event_id);
-	float val = stof(db_get(playerstats_db, key));
+	float val = stof(db_get(playerstats_gamereport_db, key));
 	val += value;
-	db_put(playerstats_db, key, ftos(val));
+	db_put(playerstats_gamereport_db, key, ftos(val));
 	return val;
 }
 
 float PlayerStats_GameReport_TeamScore(float t, string event_id, float value)
 {
-	if(playerstats_db < 0) { return 0; }
+	if(playerstats_gamereport_db < 0) { return 0; }
 
 	string key = sprintf("team#%d:%s", t, event_id);
-	float val = stof(db_get(playerstats_db, key));
+	float val = stof(db_get(playerstats_gamereport_db, key));
 	val += value;
-	db_put(playerstats_db, key, ftos(val));
+	db_put(playerstats_gamereport_db, key, ftos(val));
 	return val;
 }
 
@@ -126,8 +164,7 @@ void PlayerStats_GameReport_Accuracy(entity p)
 
 void PlayerStats_GameReport_AddGlobalInfo(entity p)
 {
-	if((p.playerstats_id == "") || playerstats_db < 0) { return; }
-	p.playerstats_addedglobalinfo = TRUE; // todo: move to end?
+	if((p.playerstats_id == "") || playerstats_gamereport_db < 0) { return; }
 
 	// add global info!
 	if(p.alivetime)
@@ -136,15 +173,15 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 		p.alivetime = 0;
 	}
 
-	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
+	db_put(playerstats_gamereport_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
 	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
-		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
+		db_put(playerstats_gamereport_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
 	if(teamplay)
-		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
+		db_put(playerstats_gamereport_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
-	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
+	if(stof(db_get(playerstats_gamereport_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
@@ -197,13 +234,13 @@ void PlayerStats_GameReport_EndMatch(float finished)
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
-	playerstats_db = -1;
+	playerstats_gamereport_db = -1;
 	playerstats_waitforme = TRUE;
 	uri = autocvar_g_playerstats_uri;
 	if(uri == "")
 		return;
-	playerstats_db = db_create();
-	if(playerstats_db >= 0)
+	playerstats_gamereport_db = db_create();
+	if(playerstats_gamereport_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
 	serverflags |= SERVERFLAG_PLAYERSTATS;
@@ -246,7 +283,7 @@ void PlayerStats_GameReport_Shutdown()
 {
 	string uri;
 
-	if(playerstats_db < 0) { return; }
+	if(playerstats_gamereport_db < 0) { return; }
 
 	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
@@ -257,8 +294,8 @@ void PlayerStats_GameReport_Shutdown()
 	else
 	{
 		playerstats_waitforme = TRUE;
-		db_close(playerstats_db);
-		playerstats_db = -1;
+		db_close(playerstats_gamereport_db);
+		playerstats_gamereport_db = -1;
 	}
 }
 
@@ -328,35 +365,35 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
                         url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_ladder));
 			if(teamplay)
-                        for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
+                        for(t = teamstats_last; (tn = db_get(playerstats_gamereport_db, sprintf("%d", stof(t)))) != ""; t = tn)
                         {
                                 url_fputs(fh, sprintf("Q team#%s\n", t));
-                                for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+                                for(e = events_last; (en = db_get(playerstats_gamereport_db, sprintf("*:%s", e))) != ""; e = en)
                                 {
                                         float v;
-                                        v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
+                                        v = stof(db_get(playerstats_gamereport_db, sprintf("team#%d:%s", stof(t), e)));
                                         if(v != 0)
                                                 url_fputs(fh, sprintf("e %s %g\n", e, v));
                                 }
                         }
-			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
+			for(p = playerstats_last; (pn = db_get(playerstats_gamereport_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
-				nn = db_get(playerstats_db, sprintf("%s:_playerid", p));
+				nn = db_get(playerstats_gamereport_db, sprintf("%s:_playerid", p));
 				if(nn != "")
 					url_fputs(fh, sprintf("i %s\n", nn));
-				nn = db_get(playerstats_db, sprintf("%s:_netname", p));
+				nn = db_get(playerstats_gamereport_db, sprintf("%s:_netname", p));
 				if(nn != "")
 					url_fputs(fh, sprintf("n %s\n", nn));
 				if(teamplay)
 				{
-					tt = db_get(playerstats_db, sprintf("%s:_team", p));
+					tt = db_get(playerstats_gamereport_db, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
-				for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+				for(e = events_last; (en = db_get(playerstats_gamereport_db, sprintf("*:%s", e))) != ""; e = en)
 				{
 					float v;
-					v = stof(db_get(playerstats_db, sprintf("%s:%s", p, e)));
+					v = stof(db_get(playerstats_gamereport_db, sprintf("%s:%s", p, e)));
 					if(v != 0)
 						url_fputs(fh, sprintf("e %s %g\n", e, v));
 				}
@@ -388,8 +425,8 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			// url_fclose has finished
 			print("Player stats written\n");
 			playerstats_waitforme = TRUE;
-			db_close(playerstats_db);
-			playerstats_db = -1;
+			db_close(playerstats_gamereport_db);
+			playerstats_gamereport_db = -1;
 			break;
 		}
 		
@@ -398,21 +435,16 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			print("Player stats writing failed: ", ftos(status), "\n");
 			playerstats_waitforme = TRUE;
-			if(playerstats_db >= 0)
+			if(playerstats_gamereport_db >= 0)
 			{
-				db_close(playerstats_db);
-				playerstats_db = -1;
+				db_close(playerstats_gamereport_db);
+				playerstats_gamereport_db = -1;
 			}
 			break;
 		}
 	}
 }
 #endif // SVQC
-
-float playerinfo_db;
-string playerinfo_last;
-string playerinfo_events_last;
-.float playerid;
 
 void PlayerInfo_AddPlayer(entity e)
 {
