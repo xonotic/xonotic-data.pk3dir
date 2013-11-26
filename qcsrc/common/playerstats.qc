@@ -287,6 +287,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * C: number of "unpure" cvar changes
 		 * U: UDP port number of the server
 		 * D: duration of the match
+		 * L: "ladder" in which the server is participating in
 		 * P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 		 * Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
 		 * n: nickname of the player (optional)
@@ -313,7 +314,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 */
 		case URL_READY_CANWRITE:
 		{
-			url_fputs(fh, "V 8\n");
+			url_fputs(fh, "V 9\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
@@ -325,20 +326,19 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+                        url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_ladder));
 			if(teamplay)
-			{
-				for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
-				{
-					url_fputs(fh, sprintf("Q team#%s\n", t));
-					for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
-					{
-						float v;
-						v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
-						if(v != 0)
-							url_fputs(fh, sprintf("e %s %g\n", e, v));
-					}
-				}
-			}
+                        for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
+                        {
+                                url_fputs(fh, sprintf("Q team#%s\n", t));
+                                for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+                                {
+                                        float v;
+                                        v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
+                                        if(v != 0)
+                                                url_fputs(fh, sprintf("e %s %g\n", e, v));
+                                }
+                        }
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
@@ -487,7 +487,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 	float n;
 	string s;
 
-	PlayerInfo_AddPlayer(p);
+        PlayerInfo_AddPlayer(p);
 
 	switch(status)
 	{
@@ -514,7 +514,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 			{
 				print("  ", s, "\n");
 
-				string key = string_null, value = string_null, data = string_null;
+				string key = "", value = "", data = "";
 
 				n = tokenizebyseparator(s, " "); // key (value) data
 				if (n == 1)
@@ -524,47 +524,31 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 					key = argv(0);
 					data = argv(1);
 				}
-				else if (n == 3)
+				else if (n >= 3)
 				{
                                         key = argv(0);
                                         value = argv(1);
                                         data = argv(2);
 				}
-				else if (n == 4)
-				{
-					key = argv(0);
-					value = argv(1);
-					data = argv(2);
-				}
-				else
-					continue;
 
 				if (data == "")
 					continue;
 
 				if (key == "#")
-					// comment
 					continue;
 				else if (key == "V")
-					// version
 					PlayerInfo_AddItem(p, "_version", data);
 				else if (key == "R")
-					// watermark
 					PlayerInfo_AddItem(p, "_release", data);
 				else if (key == "T")
-					// timestamp
 					PlayerInfo_AddItem(p, "_time", data);
 				else if (key == "S")
-					// stats page URL
 					PlayerInfo_AddItem(p, "_statsurl", data);
 				else if (key == "P")
-					// player hashkey
 					PlayerInfo_AddItem(p, "_hashkey", data);
 				else if (key == "n")
-					// player nick
 					PlayerInfo_AddItem(p, "_playernick", data);
 				else if (key == "i")
-					// xonstats id
 					PlayerInfo_AddItem(p, "_playerid", data);
 				else if (key == "G")
 					gametype = data;
@@ -629,7 +613,8 @@ void PlayerInfo_Details()
         uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
-		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+                uri = strcat(uri, "/player/me");
 		print("Retrieving playerstats from URL: ", uri, "\n");
 		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, world);
 	}
@@ -650,8 +635,6 @@ void PlayerInfo_Details()
         uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
-                entity p = spawn();
-                p.playerid = 0; // TODO: okay to use -1 for local player? or does local player already has an entity in MENUQC?
 		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
 		print("Retrieving playerstats from URL: ", uri, "\n");
 		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
