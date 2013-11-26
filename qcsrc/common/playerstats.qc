@@ -158,7 +158,7 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
-	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0) // fixme: not a number?
+	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
