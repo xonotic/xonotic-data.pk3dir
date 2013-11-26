@@ -1,41 +1,27 @@
 #ifdef SVQC
-#define PS_PM_IN_DB   playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
-#define PS_GR_OUT_DB  playerstats_gamereport_out_db   // db of info SENT at the end of a match
-#define PS_GR_IN_DB   playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
-#define PS_B_IN_DB    playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
-float PS_PM_IN_DB;
-float PS_GR_OUT_DB;
-float PS_GR_IN_DB;
-float PS_B_IN_DB;
+float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
+float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
 #endif
 
 #ifdef MENUQC
-#define PS_D_IN_DB    playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
-float PS_D_IN_DB;
+float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
 #endif
 
 #ifdef SVQC
-#define PS_PM_IN_EVL   playerstats_prematch_in_events_last
-#define PS_GR_OUT_TL   playerstats_gamereport_out_teams_last
-#define PS_GR_OUT_PL   playerstats_gamereport_out_players_last
-#define PS_GR_OUT_EVL  playerstats_gamereport_out_events_last
-#define PS_GR_IN_PL    playerstats_gamereport_in_players_last
-#define PS_GR_IN_EVL   playerstats_gamereport_in_events_last
-#define PS_B_IN_PL     playerstats_playerbasic_in_players_last
-#define PS_B_IN_EVL    playerstats_playerbasic_in_events_last
-string PS_PM_IN_EVL;
-string PS_GR_OUT_TL;
-string PS_GR_OUT_PL;
-string PS_GR_OUT_EVL;
-string PS_GR_IN_PL;
-string PS_GR_IN_EVL;
-string PS_B_IN_PL;
-string PS_B_IN_EVL;
+string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
+string PS_GR_OUT_TL;   // playerstats_gamereport_out_teams_last
+string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_las
+string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
+string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
+string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
+string PS_B_IN_PL;     // playerstats_playerbasic_in_players_las
+string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
 #endif
 
 #ifdef MENUQC
-#define PS_D_IN_EVL    playerstats_playerdetail_in_events_last
-string PS_D_IN_EVL;
+string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
 #endif
 
 #ifdef SVQC
@@ -74,13 +60,13 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	
 	if(p == "")
 	{
-		if(playerstats_last)
+		if(PS_GR_OUT_PL)
 		{
-			db_put(PS_GR_OUT_DB, key, playerstats_last);
-			strunzone(playerstats_last);
+			db_put(PS_GR_OUT_DB, key, PS_GR_OUT_PL);
+			strunzone(PS_GR_OUT_PL);
 		}
 		else { db_put(PS_GR_OUT_DB, key, "#"); }
-		playerstats_last = strzone(e.playerstats_id);
+		PS_GR_OUT_PL = strzone(e.playerstats_id);
 	}
 }
 
@@ -93,13 +79,13 @@ void PlayerStats_GameReport_AddTeam(float t)
 	
 	if(p == "")
 	{
-		if(teamstats_last)
+		if(PS_GR_OUT_TL)
 		{
-			db_put(PS_GR_OUT_DB, key, teamstats_last);
-			strunzone(teamstats_last);
+			db_put(PS_GR_OUT_DB, key, PS_GR_OUT_TL);
+			strunzone(PS_GR_OUT_TL);
 		}
 		else { db_put(PS_GR_OUT_DB, key, "#"); }
-		teamstats_last = strzone(key);
+		PS_GR_OUT_TL = strzone(key);
 	}
 }
 
@@ -112,32 +98,23 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 	
 	if(p == "")
 	{
-		if(events_last)
+		if(PS_GR_OUT_EVL)
 		{
-			db_put(PS_GR_OUT_DB, key, events_last);
-			strunzone(events_last);
+			db_put(PS_GR_OUT_DB, key, PS_GR_OUT_EVL);
+			strunzone(PS_GR_OUT_EVL);
 		}
 		else { db_put(PS_GR_OUT_DB, key, "#"); }
-		events_last = strzone(event_id);
+		PS_GR_OUT_EVL = strzone(event_id);
 	}
 }
-
-float PlayerStats_GameReport_SetPlayerEvent(entity e, string event_id, float value)
+#define PS_GR_P_ADDVAL(ent,eventid,val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
+#define PS_GR_T_ADDVAL(team,eventid,val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
+// referred to by PS_GR_P_ADDVAL and PS_GR_T_ADDVAL
+float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
-	if((e.playerstats_id == "") || PS_GR_OUT_DB < 0) { return 0; }
+	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
 
-	string key = sprintf("%s:%s", e.playerstats_id, event_id);
-	float val = stof(db_get(PS_GR_OUT_DB, key));
-	val += value;
-	db_put(PS_GR_OUT_DB, key, ftos(val));
-	return val;
-}
-
-float PlayerStats_GameReport_SetTeamEvent(float t, string event_id, float value)
-{
-	if(PS_GR_OUT_DB < 0) { return 0; }
-
-	string key = sprintf("team#%d:%s", t, event_id);
+	string key = sprintf("%s:%s", prefix, event_id);
 	float val = stof(db_get(PS_GR_OUT_DB, key));
 	val += value;
 	db_put(PS_GR_OUT_DB, key, ftos(val));
@@ -153,11 +130,11 @@ void PlayerStats_GameReport_Accuracy(entity p)
     for(i = WEP_FIRST; i <= WEP_LAST; ++i)
     {
         w = get_weaponinfo(i);
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), PAC.(accuracy_hit[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), PAC.(accuracy_fired[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), PAC.(accuracy_cnt_hit[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), PAC.(accuracy_cnt_fired[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), PAC.(accuracy_frags[i-1]));
+        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-hit"), PAC.(accuracy_hit[i-1]));
+        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-fired"), PAC.(accuracy_fired[i-1]));
+        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-cnt-hit"), PAC.(accuracy_cnt_hit[i-1]));
+        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-cnt-fired"), PAC.(accuracy_cnt_fired[i-1]));
+        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-frags"), PAC.(accuracy_frags[i-1]));
     }
     #undef PAC
 }
@@ -169,7 +146,7 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 	// add global info!
 	if(p.alivetime)
 	{
-		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
+		PS_GR_P_ADDVAL(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
 		p.alivetime = 0;
 	}
 
@@ -181,17 +158,17 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 	if(teamplay)
 		db_put(PS_GR_OUT_DB, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
-	if(stof(db_get(PS_GR_OUT_DB, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
-		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
+	if(stof(db_get(PS_GR_OUT_DB, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0) // fixme: not a number?
+		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
 
 	if(IS_REAL_CLIENT(p))
-	{teamstats_last
+	{
 		if(p.latency_cnt)
 		{
 			float latency = (p.latency_sum / p.latency_cnt);
-			if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+			if(latency) { PS_GR_P_ADDVAL(p, PLAYERSTATS_AVGLATENCY, latency); }
 		}
 	}
 
@@ -209,15 +186,15 @@ void PlayerStats_GameReport_EndMatch(float finished)
 	FOR_EACH_CLIENT(p)
 	{
 		// add personal score rank
-		PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
+		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
 
 		if(!p.scoreboard_pos) { continue; }
 
 		// scoreboard is valid!
-		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+		PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 		// add scoreboard position
-		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+		PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 
 		// add scoreboard data
 		PlayerScore_PlayerStats(p);
@@ -225,8 +202,8 @@ void PlayerStats_GameReport_EndMatch(float finished)
 		// if the match ended normally, add winning info
 		if(finished)
 		{
-			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
-			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
+			PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
+			PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
 		}
 	}
 }
@@ -245,14 +222,14 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 	serverflags |= SERVERFLAG_PLAYERSTATS;
 
-	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
-	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
-	PlayerStats_AddEvent(PLAYERSTATS_WINS);
-	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
-	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
-	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
-	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
-	PlayerStats_AddEvent(PLAYERSTATS_RANK);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_WINS);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_MATCHES);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_JOINS);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
     // accuracy stats
     entity w;
@@ -260,23 +237,23 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
     for(i = WEP_FIRST; i <= WEP_LAST; ++i)
     {
         w = get_weaponinfo(i);
-        PlayerStats_AddEvent(strcat("acc-", w.netname, "-hit"));
-        PlayerStats_AddEvent(strcat("acc-", w.netname, "-fired"));
-        PlayerStats_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
-        PlayerStats_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
-        PlayerStats_AddEvent(strcat("acc-", w.netname, "-frags"));
+        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
+        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
+        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
+        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
+        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
     }
 
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
-	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
+	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
 }
 
 void PlayerStats_GameReport_Shutdown()
@@ -368,13 +345,13 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			// TEAMS
 			if(teamplay)
 			{
-				for(t = teamstats_last; (tn = db_get(PS_GR_OUT_DB, sprintf("%d", stof(t)))) != ""; t = tn)
+				for(t = PS_GR_OUT_TL; (tn = db_get(PS_GR_OUT_DB, sprintf("%d", stof(t)))) != ""; t = tn)
 				{
 					// start team section
 					url_fputs(fh, sprintf("Q team#%s\n", t));
 
 					// output team events // todo: does this do unnecessary loops? perhaps we should do a separate "team_events_last" tracker..."
-					for(e = events_last; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
+					for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
 					{
 						float v = stof(db_get(PS_GR_OUT_DB, sprintf("team#%d:%s", stof(t), e)));
 						if(v != 0) { url_fputs(fh, sprintf("e %s %g\n", e, v)); }
@@ -383,7 +360,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			}
 
 			// PLAYERS
-			for(p = playerstats_last; (pn = db_get(PS_GR_OUT_DB, sprintf("%s:*", p))) != ""; p = pn)
+			for(p = PS_GR_OUT_PL; (pn = db_get(PS_GR_OUT_DB, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				// start player section
 				url_fputs(fh, sprintf("P %s\n", p));
@@ -404,7 +381,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 				}
 
 				// output player events
-				for(e = events_last; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
+				for(e = PS_GR_OUT_EVL; (en = db_get(PS_GR_OUT_DB, sprintf("*:%s", e))) != ""; e = en)
 				{
 					float v = stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p, e)));
 					if(v != 0) { url_fputs(fh, sprintf("e %s %g\n", e, v)); }
