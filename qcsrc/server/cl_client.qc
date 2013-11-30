@@ -171,7 +171,7 @@ void PutObserverInServer (void)
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -1039,7 +1039,7 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
-        PlayerInfo_Basic(self);
+	//PlayerInfo_Basic(self);
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
@@ -1120,10 +1120,10 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
-	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
 
     if(IS_BOT_CLIENT(self))
-        PlayerStats_AddPlayer(self);
+        PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
@@ -1256,7 +1256,7 @@ void ClientDisconnect (void)
 		return;
 	}
 
-	PlayerStats_AddGlobalInfo(self);
+	PlayerStats_GameReport_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 

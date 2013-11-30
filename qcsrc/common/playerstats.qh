@@ -28,33 +28,36 @@ const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 float playerstats_waitforme;
 
 // call at initialization
-void PlayerStats_Init();
+void PlayerStats_GameReport_Init();
 
 // add a new player
-void PlayerStats_AddPlayer(entity e);
+void PlayerStats_GameReport_AddPlayer(entity e);
 
 // add a new team
-void PlayerStats_AddTeam(float t);
+void PlayerStats_GameReport_AddTeam(float t);
 
 // add a new event
-void PlayerStats_AddEvent(string event_id);
+void PlayerStats_GameReport_AddEvent(string event_id);
 
 // call on each event to track, or at player disconnect OR match end for "global stuff"
-float PlayerStats_Event(entity e, string event_id, float value);
-
-// add a team score
-float PlayerStats_TeamScore(float t, string event_id, float value);
+#define PS_GR_P_ADDVAL(ent,eventid,val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
+#define PS_GR_T_ADDVAL(team,eventid,val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
+float PlayerStats_GameReport_Event(string prefix, string event_id, float value);
 
 // call at game over
-void PlayerStats_Shutdown(); // send stats to the server
+void PlayerStats_GameReport_Shutdown(); // send stats to the server
 
-void PlayerStats_Accuracy(entity p);
+void PlayerStats_GameReport_Accuracy(entity p);
 
 // call this whenever a player leaves
-void PlayerStats_AddGlobalInfo(entity p);
+void PlayerStats_GameReport_AddGlobalInfo(entity p);
 
 // call this at the end of the match
-void PlayerStats_EndMatch(float finished);
+void PlayerStats_GameReport_EndMatch(float finished);
+
+void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
+
+.string playerstats_id;
 
 string autocvar_g_playerstats_uri;
 
@@ -62,7 +65,7 @@ string autocvar_g_playerstats_uri;
 
 
 
-
+/*
 //// WIP -zykure /////////////////////////////////////////////////////
 
 
@@ -84,3 +87,4 @@ void PlayerInfo_Details();
 
 //void PlayerInfo_Details();
 #endif
+*/

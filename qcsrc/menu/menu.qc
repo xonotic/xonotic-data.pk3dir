@@ -94,7 +94,7 @@ void m_init()
 		cvar_set("_menu_initialized", "1");
 	}
 
-        PlayerInfo_Details();
+	//PlayerInfo_Details();
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024

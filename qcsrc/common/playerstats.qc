@@ -1,29 +1,29 @@
 #ifdef SVQC
-float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+//float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
 float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
-float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
-float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+//float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+//float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
 // http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 #endif
 
 #ifdef MENUQC
-float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+//float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
 // http://stats.xonotic.org/player/me
 #endif
 
 #ifdef SVQC
-string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
+//string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
 string PS_GR_OUT_TL;   // playerstats_gamereport_out_teams_last
 string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_las
 string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
-string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
-string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
-string PS_B_IN_PL;     // playerstats_playerbasic_in_players_las
-string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
+//string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
+//string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
+//string PS_B_IN_PL;     // playerstats_playerbasic_in_players_las
+//string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
 #endif
 
 #ifdef MENUQC
-string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
+//string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
 #endif
 
 #ifdef SVQC
@@ -109,8 +109,7 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 		PS_GR_OUT_EVL = strzone(event_id);
 	}
 }
-#define PS_GR_P_ADDVAL(ent,eventid,val) PlayerStats_GameReport_Event(ent.playerstats_id, eventid, val)
-#define PS_GR_T_ADDVAL(team,eventid,val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
+
 // referred to by PS_GR_P_ADDVAL and PS_GR_T_ADDVAL
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
@@ -163,7 +162,7 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 	if(stof(db_get(PS_GR_OUT_DB, sprintf("%s:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PS_GR_P_ADDVAL(p, PLAYERSTATS_JOINS, 1);
 
-	PlayerStats_Accuracy(p);
+	PlayerStats_GameReport_Accuracy(p);
 
 	if(IS_REAL_CLIENT(p))
 	{

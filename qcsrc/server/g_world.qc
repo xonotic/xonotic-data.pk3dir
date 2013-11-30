@@ -237,7 +237,6 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
-                BADCVAR("g_playerstats_ladder");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
@@ -645,7 +644,7 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
-	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
+	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
@@ -1506,12 +1505,12 @@ void NextLevel()
 
 	DumpStats(TRUE);
 
-	// send statistics
+	// send statistics // fixme
 	entity e;
-	PlayerStats_EndMatch(1);
+	PlayerStats_GameReport_EndMatch(1);
 	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
+		PlayerStats_GameReport_AddGlobalInfo(e);
+	PlayerStats_GameReport_Shutdown();
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2835,10 +2834,11 @@ void Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
-		PlayerStats_EndMatch(0);
+		// fixme
+		PlayerStats_GameReport_EndMatch(0);
 		FOR_EACH_CLIENT(e)
-			PlayerStats_AddGlobalInfo(e);
-		PlayerStats_Shutdown();
+			PlayerStats_GameReport_AddGlobalInfo(e);
+		PlayerStats_GameReport_Shutdown();
 
 		if(!cheatcount_total)
 		{
