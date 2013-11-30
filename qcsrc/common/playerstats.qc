@@ -661,5 +661,6 @@ void PlayerInfo_Details()
 		url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
 	}
 }
-*/
+
 #endif
+*/
