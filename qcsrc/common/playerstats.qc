@@ -3,10 +3,12 @@ float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED
 float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
 float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
 float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 #endif
 
 #ifdef MENUQC
 float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+// http://stats.xonotic.org/player/me
 #endif
 
 #ifdef SVQC
