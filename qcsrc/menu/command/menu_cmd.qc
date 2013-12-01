@@ -118,8 +118,6 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "debugstats")
 	{
-		//PlayerInfo_Init();
-		//PlayerInfo_Details();
 		PlayerStats_PlayerDetail();
 		return;
 	}

@@ -1040,6 +1040,8 @@ void ClientConnect (void)
 	}
 
 	//PlayerInfo_Basic(self);
+	PlayerStats_PlayerBasic();
+
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);

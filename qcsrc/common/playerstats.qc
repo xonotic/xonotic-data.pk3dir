@@ -3,7 +3,9 @@
 float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
 //float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
 //float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
-// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
+// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt -- this works, 
+// http://stats.xonotic.org/player/ENkUjf83vKMVZcNm%2F6Ao1EmXEj1apQ6XvdQTxwELvmA%3D/elo.txt -- but this doesn't?!?
+// ENkUjf83vKMVZcNm/6Ao1EmXEj1apQ6XvdQTxwELvmA=
 #endif
 
 #ifdef MENUQC
@@ -122,24 +124,24 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-    entity w;
-    float i;
+	entity w;
+	float i;
 
-    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-    {
-        w = get_weaponinfo(i);
-        
-        #define ACCMAC(suffix,field) \
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		w = get_weaponinfo(i);
+
+		#define ACCMAC(suffix,field) \
 			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
-			
-        ACCMAC("hit", accuracy_hit)
-        ACCMAC("fired", accuracy_fired)
-        ACCMAC("cnt-hit", accuracy_cnt_hit)
-        ACCMAC("cnt-fired", accuracy_cnt_fired)
-        ACCMAC("frags", accuracy_frags)
 
-        #undef ACCMAC
-    }
+		ACCMAC("hit", accuracy_hit)
+		ACCMAC("fired", accuracy_fired)
+		ACCMAC("cnt-hit", accuracy_cnt_hit)
+		ACCMAC("cnt-fired", accuracy_cnt_fired)
+		ACCMAC("frags", accuracy_frags)
+
+		#undef ACCMAC
+	}
 }
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
@@ -441,10 +443,40 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		}
 	}
 }
-#endif // SVQC
 
-#ifdef MENUQC
-void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
+void PlayerStats_PlayerBasic()
+{
+	entity player;
+	//PS_D_IN_DB = -1;
+	//PS_D_IN_DB = db_create();
+
+	//if(PS_D_IN_DB < 0) { return; }
+
+	FOR_EACH_REALCLIENT(player)
+	{
+		string uri = autocvar_g_playerstats_playerbasic_uri;
+		if((uri != "") && (player.crypto_idfp != ""))
+		{
+			uri = strcat(uri, "/player/", uri_escape(player.crypto_idfp), "/elo.txt");
+			print("Retrieving playerstats from URL: ", uri, "\n");
+			url_single_fopen(
+				uri,
+				FILE_APPEND,
+				PlayerStats_PlayerBasic_Handler,
+				player
+			);
+		}
+
+		/*p.crypto_idfp != "")
+		{
+			uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
+			print("Retrieving playerstats from URL: ", uri, "\n");
+			url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+		}*/
+	}
+}
+
+void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 {
 	switch(status)
 	{
@@ -542,7 +574,9 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
 		}
 	}
 }
+#endif // SVQC
 
+#ifdef MENUQC
 void PlayerStats_PlayerDetail()
 {
 	//PS_D_IN_DB = -1;
@@ -560,6 +594,105 @@ void PlayerStats_PlayerDetail()
 			PlayerStats_PlayerDetail_Handler,
 			world
 		);
+	}
+}
+
+void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
+{
+	switch(status)
+	{
+		case URL_READY_CANWRITE:
+		{
+			print("-- Sending data to player stats server\n");
+			/*url_fputs(fh, "V 1\n");
+			#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+			#endif
+			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
+			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
+			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
+			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
+			*/url_fputs(fh, "\n");
+			url_fclose(fh);
+			break;
+		}
+		
+		case URL_READY_CANREAD:
+		{
+			string s = "";
+			print("-- Got response from player stats server:\n");
+			//string gametype = string_null;
+			while((s = url_fgets(fh)))
+			{
+				print("  ", s, "\n");
+				/*
+				string key = "", value = "", data = "";
+
+				n = tokenizebyseparator(s, " "); // key (value) data
+				if (n == 1)
+					continue;
+				else if (n == 2)
+				{
+				key = argv(0);
+				data = argv(1);
+				}
+				else if (n >= 3)
+				{
+								key = argv(0);
+								value = argv(1);
+								data = argv(2);
+				}
+
+				if (data == "")
+				continue;
+
+				if (key == "#")
+				continue;
+				else if (key == "V")
+				PlayerInfo_AddItem(p, "_version", data);
+				else if (key == "R")
+				PlayerInfo_AddItem(p, "_release", data);
+				else if (key == "T")
+				PlayerInfo_AddItem(p, "_time", data);
+				else if (key == "S")
+				PlayerInfo_AddItem(p, "_statsurl", data);
+				else if (key == "P")
+				PlayerInfo_AddItem(p, "_hashkey", data);
+				else if (key == "n")
+				PlayerInfo_AddItem(p, "_playernick", data);
+				else if (key == "i")
+				PlayerInfo_AddItem(p, "_playerid", data);
+				else if (key == "G")
+				gametype = data;
+				else if (key == "e" && value != "")
+				{
+				if (gametype == "")
+				PlayerInfo_AddItem(p, value, data);
+				else
+				PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
+				}
+				else
+				continue;
+				*/
+			}
+			print("-- End of response.\n");
+			url_fclose(fh);
+			break;
+		}
+		case URL_READY_CLOSED:
+		{
+			// url_fclose has finished
+			print("Player stats synchronized with server\n");
+			break;
+		}
+		
+		case URL_READY_ERROR:
+		default:
+		{
+			print("Receiving player stats failed: ", ftos(status), "\n");
+			break;
+		}
 	}
 }
 #endif
