@@ -125,17 +125,21 @@ void PlayerStats_GameReport_Accuracy(entity p)
     entity w;
     float i;
 
-	#define PAC p.accuracy
     for(i = WEP_FIRST; i <= WEP_LAST; ++i)
     {
         w = get_weaponinfo(i);
-        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-hit"), PAC.(accuracy_hit[i-1]));
-        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-fired"), PAC.(accuracy_fired[i-1]));
-        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-cnt-hit"), PAC.(accuracy_cnt_hit[i-1]));
-        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-cnt-fired"), PAC.(accuracy_cnt_fired[i-1]));
-        PS_GR_P_ADDVAL(p, strcat("acc-", w.netname, "-frags"), PAC.(accuracy_frags[i-1]));
+        
+        #define ACCMAC(suffix,field) \
+			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
+			
+        ACCMAC("hit", accuracy_hit)
+        ACCMAC("fired", accuracy_fired)
+        ACCMAC("cnt-hit", accuracy_cnt_hit)
+        ACCMAC("cnt-fired", accuracy_cnt_fired)
+        ACCMAC("frags", accuracy_frags)
+
+        #undef ACCMAC
     }
-    #undef PAC
 }
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
