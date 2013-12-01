@@ -44,9 +44,6 @@ void PlayerStats_GameReport_AddEvent(string event_id);
 #define PS_GR_T_ADDVAL(team,eventid,val) PlayerStats_GameReport_Event(sprintf("team#%d", team), eventid, val)
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value);
 
-// call at game over
-void PlayerStats_GameReport_Shutdown(); // send stats to the server
-
 void PlayerStats_GameReport_Accuracy(entity p);
 
 // call this whenever a player leaves

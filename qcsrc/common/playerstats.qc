@@ -175,7 +175,6 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	p.playerstats_id = string_null;
 }
 
-.float scoreboard_pos;
 void PlayerStats_GameReport_EndMatch(float finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
