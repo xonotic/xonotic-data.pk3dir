@@ -57,11 +57,15 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 .string playerstats_id;
 
 //string autocvar_g_playerstats_uri;
+
 string autocvar_g_playerstats_gamereport_ladder;
-string autocvar_g_playerstats_gamereport_uri;
+var string autocvar_g_playerstats_gamereport_uri = "-";
 
 #endif //SVQC
-
+#ifdef MENUQC
+var string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
+void PlayerStats_PlayerDetail();
+#endif
 
 
 /*

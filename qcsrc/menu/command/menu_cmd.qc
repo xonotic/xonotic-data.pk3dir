@@ -120,6 +120,7 @@ void GameCommand(string theCommand)
 	{
 		//PlayerInfo_Init();
 		//PlayerInfo_Details();
+		PlayerStats_PlayerDetail();
 		return;
 	}
 

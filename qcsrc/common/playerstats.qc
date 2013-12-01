@@ -34,17 +34,16 @@ void PlayerStats_Prematch(void)
 
 void PlayerStats_GameReport_AddPlayer(entity e)
 {
-	string s;
+	if((PS_GR_OUT_DB < 0) || (e.playerstats_id)) { return; }
 
-	if(PS_GR_OUT_DB < 0) { return; }
-	if(e.playerstats_id) { return; }
+	// set up player identification
+	string s = string_null;
 
-	s = string_null;
-	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
+	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
-
+		
 	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(IS_BOT_CLIENT(e))
@@ -52,9 +51,10 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 		else
 			{ s = sprintf("player#%d", e.playerid); }
 	}
-
+	
 	e.playerstats_id = strzone(s);
 
+	// now add the player to the database
 	string key = sprintf("%s:*", e.playerstats_id);
 	string p = db_get(PS_GR_OUT_DB, key);
 	
@@ -438,6 +438,128 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 	}
 }
 #endif // SVQC
+
+#ifdef MENUQC
+void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
+{
+	switch(status)
+	{
+		case URL_READY_CANWRITE:
+		{
+			print("-- Sending data to player stats server\n");
+			/*url_fputs(fh, "V 1\n");
+			#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+			#endif
+			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
+			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
+			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
+			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
+			*/url_fputs(fh, "\n");
+			url_fclose(fh);
+			break;
+		}
+		
+		case URL_READY_CANREAD:
+		{
+			string s = "";
+			print("-- Got response from player stats server:\n");
+			//string gametype = string_null;
+			while((s = url_fgets(fh)))
+			{
+				print("  ", s, "\n");
+				/*
+				string key = "", value = "", data = "";
+
+				n = tokenizebyseparator(s, " "); // key (value) data
+				if (n == 1)
+					continue;
+				else if (n == 2)
+				{
+				key = argv(0);
+				data = argv(1);
+				}
+				else if (n >= 3)
+				{
+								key = argv(0);
+								value = argv(1);
+								data = argv(2);
+				}
+
+				if (data == "")
+				continue;
+
+				if (key == "#")
+				continue;
+				else if (key == "V")
+				PlayerInfo_AddItem(p, "_version", data);
+				else if (key == "R")
+				PlayerInfo_AddItem(p, "_release", data);
+				else if (key == "T")
+				PlayerInfo_AddItem(p, "_time", data);
+				else if (key == "S")
+				PlayerInfo_AddItem(p, "_statsurl", data);
+				else if (key == "P")
+				PlayerInfo_AddItem(p, "_hashkey", data);
+				else if (key == "n")
+				PlayerInfo_AddItem(p, "_playernick", data);
+				else if (key == "i")
+				PlayerInfo_AddItem(p, "_playerid", data);
+				else if (key == "G")
+				gametype = data;
+				else if (key == "e" && value != "")
+				{
+				if (gametype == "")
+				PlayerInfo_AddItem(p, value, data);
+				else
+				PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
+				}
+				else
+				continue;
+				*/
+			}
+			print("-- End of response.\n");
+			url_fclose(fh);
+			break;
+		}
+		case URL_READY_CLOSED:
+		{
+			// url_fclose has finished
+			print("Player stats synchronized with server\n");
+			break;
+		}
+		
+		case URL_READY_ERROR:
+		default:
+		{
+			print("Receiving player stats failed: ", ftos(status), "\n");
+			break;
+		}
+	}
+}
+
+void PlayerStats_PlayerDetail()
+{
+	//PS_D_IN_DB = -1;
+	//PS_D_IN_DB = db_create();
+
+	//if(PS_D_IN_DB < 0) { return; }
+
+	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
+	{
+		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
+		print("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
+		url_single_fopen(
+			autocvar_g_playerstats_playerdetail_uri,
+			FILE_APPEND,
+			PlayerStats_PlayerDetail_Handler,
+			world
+		);
+	}
+}
+#endif
+
 /*
 void PlayerInfo_AddPlayer(entity e)
 {
