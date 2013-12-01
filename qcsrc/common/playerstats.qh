@@ -59,7 +59,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 
 .string playerstats_id;
 
-string autocvar_g_playerstats_uri;
+//string autocvar_g_playerstats_uri;
 string autocvar_g_playerstats_gamereport_ladder;
 string autocvar_g_playerstats_gamereport_uri;
 

@@ -234,50 +234,51 @@ void PlayerStats_GameReport_EndMatch(float finished)
 
 void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that scores are added properly
 {
-	string uri;
+	if(autocvar_g_playerstats_gamereport_uri == "") { return; }
+
 	PS_GR_OUT_DB = -1;
-	PlayerStats_GameReport_DelayMapVote = FALSE;
-	uri = autocvar_g_playerstats_uri;
-	if(uri == "")
-		return;
 	PS_GR_OUT_DB = db_create();
+
 	if(PS_GR_OUT_DB >= 0)
-		PlayerStats_GameReport_DelayMapVote = TRUE; // must wait for it at match end
+	{
+		PlayerStats_GameReport_DelayMapVote = TRUE;
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;
+		serverflags |= SERVERFLAG_PLAYERSTATS;
 
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_WINS);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_MATCHES);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_JOINS);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_WINS);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_MATCHES);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_JOINS);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
-    // accuracy stats
-    entity w;
-    float i;
-    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-    {
-        w = get_weaponinfo(i);
-        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
-        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
-        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
-        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
-        PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
-    }
+		// accuracy stats
+		entity w;
+		float i;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			w = get_weaponinfo(i);
+			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
+		}
 
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
-	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
+	}
+	else { PlayerStats_GameReport_DelayMapVote = FALSE; }
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
