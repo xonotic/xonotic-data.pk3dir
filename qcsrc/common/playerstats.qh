@@ -50,7 +50,7 @@ void PlayerStats_GameReport_Accuracy(entity p);
 void PlayerStats_GameReport_FinalizePlayer(entity p);
 
 // call this at the end of the match
-void PlayerStats_GameReport_EndMatch(float finished);
+void PlayerStats_GameReport(float finished);
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 

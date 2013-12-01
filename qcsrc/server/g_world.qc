@@ -1506,7 +1506,7 @@ void NextLevel()
 	DumpStats(TRUE);
 
 	// send statistics
-	PlayerStats_GameReport_EndMatch(TRUE);
+	PlayerStats_GameReport(TRUE);
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2839,7 +2839,7 @@ void Shutdown()
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
-		PlayerStats_GameReport_EndMatch(FALSE);
+		PlayerStats_GameReport(FALSE);
 
 		if(!cheatcount_total)
 		{
