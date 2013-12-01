@@ -2646,8 +2646,7 @@ void MapVote_Start()
 	if(mapvote_run) { return; }
 
 	// don't start mapvote until after playerstats gamereport is sent
-	if(playerstats_waitforme) { return; }
-
+	if(PlayerStats_GameReport_DelayMapVote) { return; }
 
 	// set up map information for mapvote
 	MapInfo_Enumerate();
