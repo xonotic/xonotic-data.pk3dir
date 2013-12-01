@@ -1256,7 +1256,7 @@ void ClientDisconnect (void)
 		return;
 	}
 
-	PlayerStats_GameReport_AddGlobalInfo(self);
+	PlayerStats_GameReport_FinalizePlayer(self);
 
 	CheatShutdownClient();
 

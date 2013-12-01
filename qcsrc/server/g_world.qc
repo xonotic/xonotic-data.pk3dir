@@ -1505,12 +1505,8 @@ void NextLevel()
 
 	DumpStats(TRUE);
 
-	// send statistics // fixme
-	entity e;
-	PlayerStats_GameReport_EndMatch(1);
-	FOR_EACH_CLIENT(e)
-		PlayerStats_GameReport_AddGlobalInfo(e);
-	PlayerStats_GameReport_Shutdown();
+	// send statistics
+	PlayerStats_GameReport_EndMatch(TRUE);
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2834,8 +2830,6 @@ void RestoreGame()
 
 void Shutdown()
 {
-	entity e;
-
 	gameover = 2;
 
 	if(world_initialized > 0)
@@ -2844,11 +2838,8 @@ void Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
-		// fixme
-		PlayerStats_GameReport_EndMatch(0);
-		FOR_EACH_CLIENT(e)
-			PlayerStats_GameReport_AddGlobalInfo(e);
-		PlayerStats_GameReport_Shutdown();
+		// playerstats with unfinished match
+		PlayerStats_GameReport_EndMatch(FALSE);
 
 		if(!cheatcount_total)
 		{

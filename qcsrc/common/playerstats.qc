@@ -138,7 +138,7 @@ void PlayerStats_GameReport_Accuracy(entity p)
     #undef PAC
 }
 
-void PlayerStats_GameReport_AddGlobalInfo(entity p)
+void PlayerStats_GameReport_FinalizePlayer(entity p)
 {
 	if((p.playerstats_id == "") || PS_GR_OUT_DB < 0) { return; }
 
@@ -178,32 +178,57 @@ void PlayerStats_GameReport_AddGlobalInfo(entity p)
 .float scoreboard_pos;
 void PlayerStats_GameReport_EndMatch(float finished)
 {
-	entity p;
+	if(PS_GR_OUT_DB < 0) { return; }
+	
 	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
+
+	entity p;
 	FOR_EACH_CLIENT(p)
 	{
 		// add personal score rank
 		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
 
-		if(!p.scoreboard_pos) { continue; }
-
-		// scoreboard is valid!
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
-
-		// add scoreboard position
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
-
-		// add scoreboard data
-		PlayerScore_PlayerStats(p);
-
-		// if the match ended normally, add winning info
-		if(finished)
+		// scoreboard data
+		if(p.scoreboard_pos)
 		{
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+			// scoreboard is valid!
+			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+
+			// add scoreboard position
+			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+
+			// add scoreboard data
+			PlayerScore_PlayerStats(p);
+
+			// if the match ended normally, add winning info
+			if(finished)
+			{
+				PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
+				PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+			}
 		}
+
+		// collect final player information
+		PlayerStats_GameReport_FinalizePlayer(p);
+	}
+
+	if(autocvar_g_playerstats_gamereport_uri != "")
+	{
+		PlayerStats_GameReport_DelayMapVote = TRUE;
+		url_multi_fopen(
+			autocvar_g_playerstats_gamereport_uri,
+			FILE_APPEND,
+			PlayerStats_GameReport_Handler,
+			world
+		);
+	}
+	else
+	{
+		PlayerStats_GameReport_DelayMapVote = FALSE;
+		db_close(PS_GR_OUT_DB);
+		PS_GR_OUT_DB = -1;
 	}
 }
 
@@ -253,26 +278,6 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_BOTLIKE);
 	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
 	PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
-}
-
-void PlayerStats_GameReport_Shutdown()
-{
-	string uri;
-
-	if(PS_GR_OUT_DB < 0) { return; }
-
-	uri = autocvar_g_playerstats_uri;
-	if(uri != "")
-	{
-		PlayerStats_GameReport_DelayMapVote = TRUE;
-		url_multi_fopen(uri, FILE_APPEND, PlayerStats_GameReport_Handler, world);
-	}
-	else
-	{
-		PlayerStats_GameReport_DelayMapVote = FALSE;
-		db_close(PS_GR_OUT_DB);
-		PS_GR_OUT_DB = -1;
-	}
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
@@ -339,7 +344,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
-			url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_ladder));
+			url_fputs(fh, sprintf("L %s\n", autocvar_g_playerstats_gamereport_ladder));
 
 			// TEAMS
 			if(teamplay)

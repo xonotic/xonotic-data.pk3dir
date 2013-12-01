@@ -50,7 +50,7 @@ void PlayerStats_GameReport_Shutdown(); // send stats to the server
 void PlayerStats_GameReport_Accuracy(entity p);
 
 // call this whenever a player leaves
-void PlayerStats_GameReport_AddGlobalInfo(entity p);
+void PlayerStats_GameReport_FinalizePlayer(entity p);
 
 // call this at the end of the match
 void PlayerStats_GameReport_EndMatch(float finished);
@@ -60,6 +60,8 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 .string playerstats_id;
 
 string autocvar_g_playerstats_uri;
+string autocvar_g_playerstats_gamereport_ladder;
+string autocvar_g_playerstats_gamereport_uri;
 
 #endif //SVQC
 
