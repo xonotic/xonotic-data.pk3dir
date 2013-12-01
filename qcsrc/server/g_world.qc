@@ -2642,16 +2642,27 @@ void MapVote_Tick()
 }
 void MapVote_Start()
 {
-	if(mapvote_run)
-		return;
+	// if mapvote is already running, don't do this initialization again
+	if(mapvote_run) { return; }
 
-	// wait for stats to be sent first
-	if(!playerstats_waitforme)
-		return;
+	// don't start mapvote until after playerstats gamereport is sent
+	if(playerstats_waitforme) { return; }
 
+
+	// set up map information for mapvote
 	MapInfo_Enumerate();
-	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
-		mapvote_run = TRUE;
+	if
+	(
+		MapInfo_FilterGametype
+		(
+			MapInfo_CurrentGametype(),
+			MapInfo_CurrentFeatures(),
+			MapInfo_RequiredFlags(),
+			MapInfo_ForbiddenFlags(),
+			1
+		)
+	)
+		{ mapvote_run = TRUE; }
 }
 void MapVote_Think()
 {

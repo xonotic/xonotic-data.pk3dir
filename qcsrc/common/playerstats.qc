@@ -32,8 +32,6 @@ void PlayerStats_Prematch(void)
 	//foobar
 }
 
-.string playerstats_id;
-
 void PlayerStats_GameReport_AddPlayer(entity e)
 {
 	string s;
@@ -213,13 +211,13 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 {
 	string uri;
 	PS_GR_OUT_DB = -1;
-	playerstats_waitforme = TRUE;
+	playerstats_waitforme = FALSE;
 	uri = autocvar_g_playerstats_uri;
 	if(uri == "")
 		return;
 	PS_GR_OUT_DB = db_create();
 	if(PS_GR_OUT_DB >= 0)
-		playerstats_waitforme = FALSE; // must wait for it at match end
+		playerstats_waitforme = TRUE; // must wait for it at match end
 
 	serverflags |= SERVERFLAG_PLAYERSTATS;
 
@@ -266,12 +264,12 @@ void PlayerStats_GameReport_Shutdown()
 	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
 	{
-		playerstats_waitforme = FALSE;
+		playerstats_waitforme = TRUE;
 		url_multi_fopen(uri, FILE_APPEND, PlayerStats_GameReport_Handler, world);
 	}
 	else
 	{
-		playerstats_waitforme = TRUE;
+		playerstats_waitforme = FALSE;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
 	}
@@ -414,7 +412,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose has finished
 			print("Player stats written\n");
-			playerstats_waitforme = TRUE;
+			playerstats_waitforme = FALSE;
 			db_close(PS_GR_OUT_DB);
 			PS_GR_OUT_DB = -1;
 			break;
@@ -424,7 +422,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		default:
 		{
 			print("Player stats writing failed: ", ftos(status), "\n");
-			playerstats_waitforme = TRUE;
+			playerstats_waitforme = FALSE;
 			if(PS_GR_OUT_DB >= 0)
 			{
 				db_close(PS_GR_OUT_DB);
