@@ -2,16 +2,16 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 {
 	// ensure spawnfunc database is initialized
 	initialize_field_db();
-	
+
 	entity e = spawn();
-	
+
 	e.spawnflags = MONSTERFLAG_SPAWNED;
-	
+
 	if(!respwn)
 		e.spawnflags |= MONSTERFLAG_NORESPAWN;
-	
+
 	setorigin(e, orig);
-	
+
 	if(monster != "")
 	{
 		float i, found = 0;
@@ -28,30 +28,30 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		if(!found)
 			monster = (get_monsterinfo(MON_FIRST)).netname;
 	}
-		
+
 	if(monster == "")
 	if(monster_id)
 		monster = (get_monsterinfo(monster_id)).netname;
-	
+
 	e.realowner = spawnedby;
-	
+
 	if(moveflag)
 		e.monster_moveflags = moveflag;
-	
+
 	if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
-			
+
 		if(autocvar_g_monsters_owners)
 			e.monster_owner = own; // using .owner makes the monster non-solid for its master
-			
+
 		e.angles = spawnedby.angles;
 	}
-		
+
 	monster = strcat("$ spawnfunc_monster_", monster);
-		
+
 	target_spawn_edit_entity(e, monster, world, world, world, world, world);
-		
+
 	return e;
 }

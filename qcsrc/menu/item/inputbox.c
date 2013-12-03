@@ -260,11 +260,11 @@ void InputBox_draw(entity me)
 		vector p;
 		vector theTempColor;
 		float component;
-		
+
 		p = me.realOrigin - eX * me.scrollPos;
 		theColor = '1 1 1';
 		theAlpha = 1;    //theVariableAlpha = 1; // changes when ^ax found
-		
+
 		n = strlen(me.text);
 		for(i = 0; i < n; ++i)
 		{
@@ -300,24 +300,24 @@ void InputBox_draw(entity me)
 				else if(ch2 == "x") // ^x found
 				{
 					theColor = '1 1 1';
-					
+
 					component = HEXDIGIT_TO_DEC(substring(me.text, i+2, 1));
 					if (component >= 0) // ^xr found
 					{
 						theTempColor_x = component/15;
-						
+
 						component = HEXDIGIT_TO_DEC(substring(me.text, i+3, 1));
 						if (component >= 0) // ^xrg found
 						{
 							theTempColor_y = component/15;
-							
+
 							component = HEXDIGIT_TO_DEC(substring(me.text, i+4, 1));
 							if (component >= 0) // ^xrgb found
 							{
 								theTempColor_z = component/15;
 								theColor = theTempColor;
 								w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
-								
+
 								draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
 								draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);    // theVariableAlpha instead of 1 using alpha tags ^ax
 								i += 3;

@@ -441,7 +441,7 @@ void trigger_hurt_use()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if(self.team)
@@ -532,9 +532,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 .float triggerhealtime;
 void trigger_heal_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -544,7 +544,7 @@ void trigger_heal_touch()
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhealtime = time + 1;
-			
+
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
@@ -558,7 +558,7 @@ void trigger_heal_touch()
 void spawnfunc_trigger_heal()
 {
 	self.active = ACTIVE_ACTIVE;
-	
+
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
@@ -942,7 +942,7 @@ void spawnfunc_func_pointparticles()
 		setmodel(self, self.model);
 	if(self.noise != "")
 		precache_sound (self.noise);
-	
+
 	if(!self.bgmscriptsustain)
 		self.bgmscriptsustain = 1;
 	else if(self.bgmscriptsustain < 0)
@@ -1369,7 +1369,7 @@ void trigger_impulse_touch1()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1409,7 +1409,7 @@ void trigger_impulse_touch2()
 {
     float pushdeltatime;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1433,7 +1433,7 @@ void trigger_impulse_touch3()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1819,7 +1819,7 @@ void spawnfunc_target_voicescript()
 	//          added after this message
 	// wait: average time between messages
 	// delay: initial delay before the first message
-	
+
 	float i, n;
 	self.use = target_voicescript_use;
 
@@ -1970,7 +1970,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 			if(ear.spawnflags & 8)
 				return msgin;
 	}
-	
+
 	matchstart = -1;
 	l = strlen(ear.message);
 
@@ -2110,9 +2110,9 @@ void spawnfunc_trigger_magicear()
 void relay_activators_use()
 {
 	entity trg, os;
-	
+
 	os = self;
-	
+
 	for(trg = world; (trg = find(trg, targetname, os.target)); )
 	{
 		self = trg;
@@ -2124,11 +2124,11 @@ void relay_activators_use()
 			if(os.cnt == ACTIVE_TOGGLE)
 				if(trg.active == ACTIVE_ACTIVE)
 					trg.active = ACTIVE_NOT;
-				else	
+				else
 					trg.active = ACTIVE_ACTIVE;
 			else
 				trg.active = os.cnt;
-		}		
+		}
 	}
 	self = os;
 }
@@ -2142,13 +2142,13 @@ void spawnfunc_relay_activate()
 void spawnfunc_relay_deactivate()
 {
 	self.cnt = ACTIVE_NOT;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 void spawnfunc_relay_activatetoggle()
 {
 	self.cnt = ACTIVE_TOGGLE;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 .string chmap, gametype;

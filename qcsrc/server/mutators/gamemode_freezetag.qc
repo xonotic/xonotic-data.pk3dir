@@ -491,7 +491,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
 		}
-	
+
 		frag_damage = 0;
 		frag_force = frag_force * autocvar_g_freezetag_frozen_force;
 	}

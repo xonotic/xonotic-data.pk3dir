@@ -267,7 +267,7 @@ void assault_new_round()
 void spawnfunc_info_player_attacker()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	self.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
@@ -275,7 +275,7 @@ void spawnfunc_info_player_attacker()
 void spawnfunc_info_player_defender()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	self.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
@@ -283,7 +283,7 @@ void spawnfunc_info_player_defender()
 void spawnfunc_target_objective()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	self.classname = "target_objective";
 	self.use = assault_objective_use;
 	assault_objective_reset();
@@ -312,10 +312,10 @@ void spawnfunc_target_objective_decrease()
 void spawnfunc_func_assault_destructible()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
-	
+
 	if(assault_attacker_team == NUM_TEAM_1)
 		self.team = NUM_TEAM_2;
 	else
@@ -327,7 +327,7 @@ void spawnfunc_func_assault_destructible()
 void spawnfunc_func_assault_wall()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	self.classname = "func_assault_wall";
 	self.mdl = self.model;
 	setmodel(self, self.mdl);
@@ -351,7 +351,7 @@ void spawnfunc_target_assault_roundend()
 void spawnfunc_target_assault_roundstart()
 {
 	if (!g_assault) { remove(self); return; }
-	
+
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
 	self.use = assault_roundstart_use;
@@ -549,7 +549,7 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 		centerprint(self, "You are attacking!");
 	else
 		centerprint(self, "You are defending!");
-		
+
 	return FALSE;
 }
 
@@ -589,7 +589,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, assault_BotRoles, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

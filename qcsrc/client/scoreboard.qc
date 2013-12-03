@@ -586,7 +586,7 @@ string HUD_GetField(entity pl, float field)
 			} else
 				str = sprintf("%.1f", num/denom);
 			return str;
-			
+
 		case SP_SUM:
 			f = pl.(scores[SP_KILLS]);
 			f -= pl.(scores[SP_DEATHS]);
@@ -1081,7 +1081,7 @@ vector HUD_DrawKeyValue(vector pos, string key, string value) {
 	drawstring(pos, value, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x = px;
 	pos_y+= hud_fontsize_y;
-	
+
 	return pos;
 }
 
@@ -1112,8 +1112,8 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	//  draw table header
 	drawstring(pos, _("Map stats:"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	
-	// draw table	
+
+	// draw table
 	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * rows;
@@ -1123,7 +1123,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
-	
+
 	// draw monsters
 	if(stat_monsters_total)
 	{
@@ -1137,7 +1137,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 		val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
 		pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
 	}
-	
+
 	// update position
 	pos_y += 1.25 * hud_fontsize_y;
 	return pos;
@@ -1334,7 +1334,7 @@ void HUD_DrawScoreboard()
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
-		
+
 	if(teamplay)
 		pos = HUD_DrawMapStats(pos, Team_ColorRGB(myteam), bg_size);
 	else
@@ -1382,14 +1382,14 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl), 
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl),
 					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl), 
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl),
 					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
 					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label[ps_primary])));
@@ -1401,14 +1401,14 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll), 
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll),
 					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll), 
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll),
 					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
 					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label[ps_primary])));
@@ -1428,7 +1428,7 @@ void HUD_DrawScoreboard()
 			// a negative number means we are awaiting respawn, time value is still the same
 			respawn_time *= -1; // remove mark now that we checked it
 			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
-			
+
 			str = sprintf(_("^1Respawning in ^3%s^1..."),
 				(autocvar_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)

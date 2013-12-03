@@ -81,7 +81,7 @@ void CSQC_Init(void)
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
-	
+
 	ConsoleCommand_macro_init();
 
 	registercvar("hud_usecsqc", "1");
@@ -126,13 +126,13 @@ void CSQC_Init(void)
 	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
-	
+
 	if(autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
 		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
 	}
-	
+
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
@@ -652,7 +652,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin_x = ReadShort();
 	spn_origin_y = ReadShort();
 	spn_origin_z = ReadShort();
-	
+
 	if(is_new)
 	{
 		self.origin = spn_origin;
@@ -683,7 +683,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 				}
 			}
 			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
-			
+
 			self.draw = Spawn_Draw;
 		}
 	}
@@ -697,7 +697,7 @@ void Ent_ReadSpawnEvent(float is_new)
 	// this way the server can disable the sending of
 	// spawn origin or such to clients if wanted.
 	float entnum = ReadByte();
-	
+
 	if(entnum)
 	{
 		self.origin_x = ReadShort();
@@ -725,7 +725,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 		}
 	}
-	
+
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
@@ -738,7 +738,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-	
+
 	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
 }
 
@@ -823,9 +823,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_TURRET: ent_turret(); break; 
+		case ENT_CLIENT_TURRET: ent_turret(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
-		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;

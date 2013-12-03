@@ -650,16 +650,16 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 		d = 0; // weapon is set a few lines later
 	else
 		d = (i == WEP_LASER || i == WEP_SHOTGUN);
-		
+
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
 	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
-	
+
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
-	
+
 	// bit order in t:
 	// 1: want or not
 	// 2: is default?
@@ -791,7 +791,7 @@ void readplayerstartcvars()
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
-	
+
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
@@ -909,7 +909,7 @@ void readlevelcvars(void)
 	// load mutators
 	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
 		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
-		
+
 	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
 	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
@@ -930,9 +930,9 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
-	
+
 	#undef CHECK_MUTATOR_ADD
-	
+
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
@@ -951,7 +951,7 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
-	
+
 	g_minstagib = cvar("g_minstagib");
 
 	sv_clones = cvar("sv_clones");
@@ -972,7 +972,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_assault || cvar("g_campaign"))
 		warmup_stage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1820,7 +1820,7 @@ string uid2name(string myuid) {
 			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
 		}
 	}
-	
+
 	if(s == "")
 		s = "^1Unregistered Player";
 	return s;

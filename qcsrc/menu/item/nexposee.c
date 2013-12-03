@@ -92,7 +92,7 @@ void Nexposee_calc(entity me)
 	float scale;
 	entity e, e2;
 	vector emins, emaxs, e2mins, e2maxs;
-	
+
 	for(scale = 0.7;; scale *= 0.99)
 	{
 		Nexposee_Calc_Scale(me, scale);

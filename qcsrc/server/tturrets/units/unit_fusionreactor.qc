@@ -28,7 +28,7 @@ void turret_fusionreactor_respawnhook()
 **/
 float turret_fusionreactor_firecheck()
 {
-	if (self.attack_finished_single > time) 
+	if (self.attack_finished_single > time)
 		return 0;
 
 	if (self.enemy.deadflag != DEAD_NO)
@@ -38,20 +38,20 @@ float turret_fusionreactor_firecheck()
 		return 0;
 
 	if (self.ammo < self.shot_dmg)
-		return 0;	
-	
-	if (vlen(self.enemy.origin - self.origin) > self.target_range)
-		return 0;	
-	
+		return 0;
+
 	if (self.enemy.ammo >= self.enemy.ammo_max)
 		return 0;
-	
-	if(DIFF_TEAM(self, self.enemy))
+
+	if (vlen(self.enemy.origin - self.origin) > self.target_range)
 		return 0;
-	
+
+	if(self.team != self.enemy.team)
+		return 0;
+
 	if (!(self.enemy.ammo_flags & TFL_AMMO_ENERGY))
-		return 0;    
-	
+		return 0;
+
 	return 1;
 }
 
