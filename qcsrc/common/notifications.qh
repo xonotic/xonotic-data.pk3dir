@@ -5,7 +5,7 @@
 
 // main types/groups of notifications
 #define MSG_ANNCE 1 // "Global" AND "personal" announcer messages
-#define MSG_INFO 2 // "Global" information messages 
+#define MSG_INFO 2 // "Global" information messages
 #define MSG_CENTER 3 // "Personal" centerprint messages
 #define MSG_CENTER_CPID 4 // Kill centerprint message
 #define MSG_MULTI 5 // Subcall MSG_INFO and/or MSG_CENTER notifications
@@ -51,7 +51,7 @@ void Create_Notification_Entity(
 	float strnum,
 	float flnum,
 	/* MSG_ANNCE */
-	float channel, 
+	float channel,
 	string snd,
 	float vol,
 	float position,
@@ -188,7 +188,7 @@ void Send_Notification_WOCOVA(
 
  Check out the definitions in util.qc/util.qh/teams.qh for string CCR(...) and
  string TCR(...) to better understand how these code replacements work.
- 
+
  Additionally, you can find all the definitions and explanations for
  the argument values and what they return down below in this file.
 
@@ -217,15 +217,21 @@ void Send_Notification_WOCOVA(
       If you send a notification with mismatching arguments, Send_Notification() will error.
 */
 
-#define MULTITEAM_ANNCE(default,prefix,teams,channel,sound,volume,position) \
+#define MULTITEAM_ANNCE2(default,prefix,channel,sound,volume,position) \
+	MSG_ANNCE_NOTIF(default, prefix##RED, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), volume, position) \
+	MSG_ANNCE_NOTIF(default, prefix##BLUE, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), volume, position)
+#define MULTITEAM_ANNCE3(default,prefix,channel,sound,volume,position) \
 	MSG_ANNCE_NOTIF(default, prefix##RED, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), volume, position) \
 	MSG_ANNCE_NOTIF(default, prefix##BLUE, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), volume, position) \
-	#if teams >= 3 \
-		MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position) \
-	#endif \
-	#if teams >= 4 \
-		MSG_ANNCE_NOTIF(default, prefix##PINK, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), volume, position) \
-	#endif
+	MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position)
+#define MULTITEAM_ANNCE4(default,prefix,channel,sound,volume,position) \
+	MSG_ANNCE_NOTIF(default, prefix##RED, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_1)), volume, position) \
+	MSG_ANNCE_NOTIF(default, prefix##BLUE, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_2)), volume, position) \
+	MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position) \
+	MSG_ANNCE_NOTIF(default, prefix##PINK, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), volume, position)
+#define MULTITEAM_ANNCE(default,prefix,teams,channel,sound,volume,position) \
+	MULTITEAM_ANNCE##teams(default,prefix,channel,sound,volume,position)
+
 #define MSG_ANNCE_NOTIFICATIONS \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AMAZING,       CH_INFO, "amazing",           VOL_BASEVOICE, ATTEN_NONE) \
@@ -317,15 +323,21 @@ void Send_Notification_WOCOVA(
 	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_CALL,                 CH_INFO, "votecall",          VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTEN_NONE)
 
-#define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
+#define MULTITEAM_INFO2(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
+	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2)))
+#define MULTITEAM_INFO3(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
 	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-	#if teams >= 3 \
-		MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
-	#endif \
-	#if teams >= 4 \
-		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
-	#endif
+	MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3)))
+#define MULTITEAM_INFO4(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
+	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
+	MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
+	MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4)))
+#define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
+	MULTITEAM_INFO##teams(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle)
+
 #define MSG_INFO_NOTIFICATIONS \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 4,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 4,         2, 2, "s1 f1p2dec s2 f2p2dec", "s1",     "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "") \
@@ -503,17 +515,23 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER,                   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") 
+	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "")
 
-#define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+#define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2)))
+#define MULTITEAM_CENTER3(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
 	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-	#if teams >= 3 \
-		MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
-	#endif \
-	#if teams >= 4 \
-		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
-	#endif
+	MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3)))
+#define MULTITEAM_CENTER4(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
+	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
+	MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
+	MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4)))
+#define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+	MULTITEAM_CENTER##teams(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle)
+
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
@@ -534,6 +552,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_REQUESTING,         1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGRequesting %s^BG to pass you the flag"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_SENT_, 4,           1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou passed the ^TC^TT^BG flag to %s"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the ^TC^TT^BG flag!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM,             1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got your %steam^BG's flag, return it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_ENEMY,       1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the %senemy^BG's flag, return it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY,            1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,    2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM,        1, 0, "s1",          CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got their flag! Retrieve it!"), "") \
@@ -646,15 +666,21 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
-#define MULTITEAM_MULTI(default,prefix,teams,anncepre,infopre,centerpre) \
+#define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
+	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
+	MSG_MULTI_NOTIF(default, prefix##BLUE, anncepre##BLUE, infopre##BLUE, centerpre##BLUE)
+#define MULTITEAM_MULTI3(default,prefix,anncepre,infopre,centerpre) \
 	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
 	MSG_MULTI_NOTIF(default, prefix##BLUE, anncepre##BLUE, infopre##BLUE, centerpre##BLUE) \
-	#if teams >= 3 \
-		MSG_MULTI_NOTIF(default, prefix##YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW) \
-	#endif \
-	#if teams >= 4 \
-		MSG_MULTI_NOTIF(default, prefix##PINK, anncepre##PINK, infopre##PINK, centerpre##PINK) \
-	#endif
+	MSG_MULTI_NOTIF(default, prefix##YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW)
+#define MULTITEAM_MULTI4(default,prefix,anncepre,infopre,centerpre) \
+	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
+	MSG_MULTI_NOTIF(default, prefix##BLUE, anncepre##BLUE, infopre##BLUE, centerpre##BLUE) \
+	MSG_MULTI_NOTIF(default, prefix##YELLOW, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW) \
+	MSG_MULTI_NOTIF(default, prefix##PINK, anncepre##PINK, infopre##PINK, centerpre##PINK)
+#define MULTITEAM_MULTI(default,prefix,teams,anncepre,infopre,centerpre) \
+	MULTITEAM_MULTI##teams(default,prefix,anncepre,infopre,centerpre)
+
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   NO_MSG,        INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
@@ -778,15 +804,21 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
 
-#define MULTITEAM_CHOICE(default,challow,prefix,teams,chtype,optiona,optionb) \
+#define MULTITEAM_CHOICE2(default,challow,prefix,chtype,optiona,optionb) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##RED, chtype, optiona##RED, optionb##RED) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##BLUE, chtype, optiona##BLUE, optionb##BLUE)
+#define MULTITEAM_CHOICE3(default,challow,prefix,chtype,optiona,optionb) \
 	MSG_CHOICE_NOTIF(default, challow, prefix##RED, chtype, optiona##RED, optionb##RED) \
 	MSG_CHOICE_NOTIF(default, challow, prefix##BLUE, chtype, optiona##BLUE, optionb##BLUE) \
-	#if teams >= 3 \
-		MSG_CHOICE_NOTIF(default, challow, prefix##YELLOW, chtype, optiona##YELLOW, optionb##YELLOW) \
-	#endif \
-	#if teams >= 4 \
-		MSG_CHOICE_NOTIF(default, challow, prefix##PINK, chtype, optiona##PINK, optionb##PINK) \
-	#endif
+	MSG_CHOICE_NOTIF(default, challow, prefix##YELLOW, chtype, optiona##YELLOW, optionb##YELLOW)
+#define MULTITEAM_CHOICE4(default,challow,prefix,chtype,optiona,optionb) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##RED, chtype, optiona##RED, optionb##RED) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##BLUE, chtype, optiona##BLUE, optionb##BLUE) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##YELLOW, chtype, optiona##YELLOW, optionb##YELLOW) \
+	MSG_CHOICE_NOTIF(default, challow, prefix##PINK, chtype, optiona##PINK, optionb##PINK)
+#define MULTITEAM_CHOICE(default,challow,prefix,teams,chtype,optiona,optionb) \
+	MULTITEAM_CHOICE##teams(default,challow,prefix,chtype,optiona,optionb)
+
 #define MSG_CHOICE_NOTIFICATIONS \
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_CAPTURE_BROKEN_, 4,    MSG_INFO,    INFO_CTF_CAPTURE_,                INFO_CTF_CAPTURE_BROKEN_) \
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_CAPTURE_TIME_, 4,      MSG_INFO,    INFO_CTF_CAPTURE_,                INFO_CTF_CAPTURE_TIME_) \
@@ -830,7 +862,7 @@ var float autocvar_notification_item_centerprinttime = 1.5;
 
 // 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
 // DISABLED IN CODE, BUT ENABLED IN CONFIG FOR COMPATIBILITY WITH OLD CLIENTS
-var float autocvar_notification_allow_chatboxprint = 0; 
+var float autocvar_notification_allow_chatboxprint = 0;
 
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
@@ -847,14 +879,14 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
  allows for more dynamic data to be inferred by the local
  notification parser, so that the server does not have to network
  anything too crazy on a per-client/per-situation basis.
- 
+
  Pay attention to the CSQC/SVQC relations, some of these are redefined
  in slightly different ways for different programs, this is because the
  server does a more conservative approach to the notifs than the client.
- 
+
  All arguments are swapped into strings, so be sure that your
  sprintf usage matches with proper %s placement.
- 
+
  Argument descriptions:
     s1-s4: string arguments to be literally swapped into sprintf
     s2loc: s2 string of locations of deaths or other events
@@ -963,7 +995,7 @@ string notif_arg_frag_ping(float newline, float fping)
 
 string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 {
-	if not(fhealth < 1)
+	if (!(fhealth < 1))
 		return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, notif_arg_frag_ping(FALSE, fping));
 	else
 		return sprintf(CCR(_("\n(^F4Dead^BG)%s")), notif_arg_frag_ping(FALSE, fping));
@@ -998,19 +1030,19 @@ string notif_arg_missing_teams(float f1, float f2, float f3, float f4)
 string notif_arg_spree_cen(float spree)
 {
 	// 0 = off, 1 = target (but only for first victim) and attacker
-	if(autocvar_notification_show_sprees_center) 
+	if(autocvar_notification_show_sprees_center)
 	{
 		if(spree > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: { return normal_or_gentle(center, sprintf(_("%d score spree! "), spree)); }
-			
+
 			switch(spree)
 			{
 				KILL_SPREE_LIST
 				default:
 				{
-					if not(autocvar_notification_show_sprees_center_specialonly)
+					if (!autocvar_notification_show_sprees_center_specialonly)
 					{
 						return
 							sprintf(
@@ -1020,7 +1052,7 @@ string notif_arg_spree_cen(float spree)
 								),
 								spree);
 					}
-					else { return ""; } // don't show spree information if it isn't an achievement 
+					else { return ""; } // don't show spree information if it isn't an achievement
 				}
 			}
 
@@ -1047,7 +1079,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 		{
 			// 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 			// this conditional (& 2) is true for 2 and 3
-			if(autocvar_notification_show_sprees_info & 2) 
+			if(autocvar_notification_show_sprees_info & 2)
 			{
 				#ifdef CSQC
 				string spree_newline =
@@ -1057,18 +1089,18 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 				string spree_newline =
 					(autocvar_notification_show_sprees_info_newline ? "\n" : "");
 				#endif
-				
+
 				if(spree > 1)
 				{
 					#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
-					
+
 					switch(spree)
 					{
 						KILL_SPREE_LIST
 						default:
 						{
-							if not(autocvar_notification_show_sprees_info_specialonly)
+							if (!autocvar_notification_show_sprees_info_specialonly)
 							{
 								return
 									sprintf(
@@ -1081,7 +1113,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 										spree_newline
 									);
 							}
-							else { return ""; } // don't show spree information if it isn't an achievement 
+							else { return ""; } // don't show spree information if it isn't an achievement
 						}
 					}
 
@@ -1253,7 +1285,7 @@ float notif_global_error;
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
 	} \
-	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
@@ -1295,7 +1327,7 @@ float notif_global_error;
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
 	} \
-	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 #define MSG_CENTER_NOTIF(default,name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
@@ -1339,7 +1371,7 @@ float notif_global_error;
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
 	} \
-	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 #define MSG_MULTI_NOTIF(default,name,anncename,infoname,centername) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
@@ -1381,7 +1413,7 @@ float notif_global_error;
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
 	} \
-	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 #define ACVNN(name) autocvar_notification_##name
 
@@ -1426,7 +1458,7 @@ float notif_global_error;
 			optiona,                                 /* optiona     */ \
 			optionb);                                /* optionb     */ \
 	} \
-	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 void RegisterNotifications_First()
 {
@@ -1437,9 +1469,9 @@ void RegisterNotifications_First()
 	#else
 	#define dedi ""
 	#endif
-	
+
 	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));
-	
+
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)
 	{
@@ -1469,13 +1501,13 @@ void RegisterNotifications_Done()
 }
 
 // NOW we actually activate the declarations
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
+ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First);
 MSG_ANNCE_NOTIFICATIONS
 MSG_INFO_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_MULTI_NOTIFICATIONS
 MSG_CHOICE_NOTIFICATIONS
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
+ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done);
 #undef MSG_ANNCE_NOTIF
 #undef MSG_INFO_NOTIF
 #undef MSG_CENTER_NOTIF

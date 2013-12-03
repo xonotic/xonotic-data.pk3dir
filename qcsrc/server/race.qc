@@ -174,7 +174,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 
 	oldrec = race_readTime(GetMapname(), newpos);
 	oldrec_holder = race_readName(GetMapname(), newpos);
-	
+
 	// store new ranking
 	race_writeTime(GetMapname(), t, myuid);
 
@@ -187,7 +187,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	if(rankings_reply)
 		strunzone(rankings_reply);
 	rankings_reply = strzone(getrankings());
-	
+
 	if(newpos == player_prevpos)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
@@ -249,7 +249,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
-	if not(e.race_completed)
+	if (!e.race_completed)
 	{
 		float s;
 		if(g_race_qualifying)
@@ -457,7 +457,7 @@ void checkpoint_passed()
 	/*
 	 * Trigger targets
 	 */
-	if not((self.spawnflags & 2) && (IS_PLAYER(other)))
+	if (!((self.spawnflags & 2) && (IS_PLAYER(other))))
 	{
 		activator = other;
 		oldmsg = self.message;
@@ -466,7 +466,7 @@ void checkpoint_passed()
 		self.message = oldmsg;
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 
 	/*
@@ -477,7 +477,7 @@ void checkpoint_passed()
 	other.porto_forbidden = 2; // decreased by 1 each StartFrame
 
 	if(defrag_ents) {
-		if(self.race_checkpoint == -2) 
+		if(self.race_checkpoint == -2)
 		{
 			self.race_checkpoint = other.race_checkpoint;
 		}
@@ -497,7 +497,7 @@ void checkpoint_passed()
 				for(cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
 					if(cp.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
 						defragcpexists = -1;
-				}	
+				}
 			}
 		}
 		if(cp_amount == 0) {
@@ -611,7 +611,7 @@ void trigger_race_checkpoint_verify()
 	if(have_verified)
 		return;
 	have_verified = 1;
-	
+
 	qual = g_race_qualifying;
 
 	oldself = self;
@@ -637,7 +637,7 @@ void trigger_race_checkpoint_verify()
 				self.race_place = race_lowest_place_spawn;
 				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
-				
+
 				// race only (initial spawn)
 				g_race_qualifying = 0;
 				for(p = 1; p <= race_highest_place_spawn; ++p)
@@ -663,7 +663,7 @@ void trigger_race_checkpoint_verify()
 		self.race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		self.race_place = 0; // there's only one spawn on defrag maps
- 
+
 		// check if a defragcp file already exists, then read it and apply the checkpoint order
 		float fh;
 		float len;
@@ -739,8 +739,8 @@ void trigger_race_checkpoint_verify()
 					targ.wait = 0;
 					targ.delay = 0;
 
-                    // These just make the game crash on some maps with oddly shaped triggers. 
-                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once, 
+                    // These just make the game crash on some maps with oddly shaped triggers.
+                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once,
                     // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
                     // (happened on item triggers too)
                     //
@@ -800,7 +800,7 @@ void spawnfunc_trigger_race_checkpoint()
 	EXACTTRIGGER_INIT;
 
 	self.use = checkpoint_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
@@ -814,7 +814,7 @@ void spawnfunc_trigger_race_checkpoint()
 		self.message2 = "was pushed backwards by";
 	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
-	
+
 	self.race_checkpoint = self.cnt;
 
 	if(self.race_checkpoint > race_highest_checkpoint)
@@ -853,7 +853,7 @@ void spawnfunc_target_checkpoint() // defrag entity
 	EXACTTRIGGER_INIT;
 
 	self.use = checkpoint_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
@@ -1090,7 +1090,7 @@ void spawnfunc_trigger_race_penalty()
 	EXACTTRIGGER_INIT;
 
 	self.use = penalty_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = penalty_touch;
 
 	if (self.race_penalty_reason == "")
@@ -1115,7 +1115,7 @@ float race_GetFractionalLapCount(entity e)
 	l = PlayerScore_Add(e, SP_RACE_LAPS, 0);
 	if(e.race_completed)
 		return l; // not fractional
-	
+
 	vector o0, o1;
 	float bestfraction, fraction;
 	entity lastcp, cp0, cp1;
@@ -1127,7 +1127,7 @@ float race_GetFractionalLapCount(entity e)
 
 	if(nextcpindex == lastcpindex)
 		return l; // finish
-	
+
 	bestfraction = 1;
 	for(cp0 = world; (cp0 = find(cp0, classname, "trigger_race_checkpoint")); )
 	{

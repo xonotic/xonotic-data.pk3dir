@@ -6,6 +6,12 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+#ifdef GMQCC
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	[[accumulate]] void func() { otherfunc(); }
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
 #ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
@@ -24,7 +30,7 @@
 	func()
 #else
 # define ACCUMULATE_FUNCTION(func,otherfunc) \
-	.void _ACCUMULATE_##func##__##otherfunc;
+	.float _ACCUMULATE_##func##__##otherfunc
 void ACCUMULATE_call(string func)
 {
 	float i;
@@ -41,11 +47,12 @@ void ACCUMULATE_call(string func)
 # define CALL_ACCUMULATED_FUNCTION(func) \
 	ACCUMULATE_call(#func)
 #endif
+#endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs
 #define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
 #define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
@@ -94,7 +101,7 @@ void buf_save(float buf, string filename);
 
 // modulo function
 #ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }   
+float mod(float a, float b) { return a - (floor(a / b) * b); }
 #endif
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)

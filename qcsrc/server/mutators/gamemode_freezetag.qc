@@ -531,7 +531,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 		}
 		else
 			self.movement = '0 0 0';
-			
+
 		self.disableclientprediction = 1;
 	}
 	return 1;
@@ -551,7 +551,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
 		}
-	
+
 		frag_damage = 0;
 		frag_force = frag_force * autocvar_g_freezetag_frozen_force;
 	}
@@ -562,7 +562,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerJump)
 {
 	if(self.freezetag_frozen)
 		return TRUE; // no jumping in freezetag when frozen
-	
+
 	return FALSE;
 }
 
@@ -582,7 +582,7 @@ MUTATOR_HOOKFUNCTION(freezetag_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 {
-	if not(self.deadflag)
+	if (!self.deadflag)
 	{
 		if (random() < 0.5)
 			self.havocbot_role = havocbot_role_ft_freeing;
@@ -610,7 +610,7 @@ MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
 {
 	if(other.freezetag_frozen)
 		return TRUE;
-		
+
 	return FALSE;
 }
 

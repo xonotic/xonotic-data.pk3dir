@@ -142,16 +142,16 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-void drawstringright(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x -= 2 / 3 * strlen(text) * theScale_x;
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale_x);
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 // return the string of the onscreen race timer
@@ -242,7 +242,7 @@ float GetPlayerColorForce(float i)
 
 float GetPlayerColor(float i)
 {
-	if not(playerslots[i].gotscores) // unconnected
+	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
 	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
 		return NUM_SPECTATOR;
@@ -734,12 +734,12 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if not((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon))
+		if (!((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos 
-			+ eX * column * weapon_size_x 
+		weapon_pos = (panel_pos
+			+ eX * column * weapon_size_x
 			+ eY * row * weapon_size_y);
 
 		// draw background behind currently selected weapon
@@ -1133,7 +1133,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -1543,7 +1543,7 @@ void HUD_HealthArmor(void)
 					{
 						float BLINK_FACTOR = 0.15;
 						float BLINK_BASE = 0.85;
-						float BLINK_FREQ = 9; 
+						float BLINK_FREQ = 9;
 						pain_health_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 					}
 				}
@@ -1664,7 +1664,7 @@ void HUD_Notify(void)
 	float entries, height;
 	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
 	height = mySize_y/entries;
-	
+
 	vector fontsize;
 	float fontheight = height * autocvar_hud_panel_notify_fontsize;
 	fontsize = '0.5 0.5 0' * fontheight;
@@ -1726,7 +1726,7 @@ void HUD_Notify(void)
 			{
 				break;
 			}
-			
+
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
 			icon = notify_icon[j];
@@ -1865,10 +1865,10 @@ void HUD_Radar(void)
 		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
 		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 		panel_pos_y = (vid_conheight - panel_size_y) / 2;
-		
+
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
-		
+
 		switch(hud_panel_radar_maximized_zoommode)
 		{
 			default:
@@ -1885,7 +1885,7 @@ void HUD_Radar(void)
 				f = 1;
 				break;
 		}
-		
+
 		switch(hud_panel_radar_maximized_rotation)
 		{
 			case 0:
@@ -1914,7 +1914,7 @@ void HUD_Radar(void)
 				f = 1;
 				break;
 		}
-		
+
 		switch(hud_panel_radar_rotation)
 		{
 			case 0:
@@ -2297,7 +2297,7 @@ void HUD_Score(void)
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
 				score = 123;
-			
+
 			if (score > max_fragcount)
 				max_fragcount = score;
 
@@ -2754,7 +2754,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
 	entity tm;
-	
+
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
 	if(tm.team != NUM_SPECTATOR)
 		++teams_count;
@@ -2764,7 +2764,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 	yellowflag = (stat_items/IT_YELLOW_FLAG_TAKEN) & 3;
 	pinkflag = (stat_items/IT_PINK_FLAG_TAKEN) & 3;
-	
+
 	if(redflag || blueflag || yellowflag || pinkflag)
 		mod_active = 1;
 	else
@@ -2794,7 +2794,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		blueflag_prevstatus = blueflag_prevframe;
 		blueflag_prevframe = blueflag;
 	}
-	
+
 	if (yellowflag != yellowflag_prevframe)
 	{
 		yellowflag_statuschange_time = time;
@@ -2878,7 +2878,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				blue_icon_prevstatus = string_null;
 			break;
 	}
-	
+
 	string yellow_icon, yellow_icon_prevstatus;
 	float yellow_alpha, yellow_alpha_prevstatus;
 	yellow_alpha = yellow_alpha_prevstatus = 1;
@@ -2906,7 +2906,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				yellow_icon_prevstatus = string_null;
 			break;
 	}
-	
+
 	string pink_icon, pink_icon_prevstatus;
 	float pink_alpha, pink_alpha_prevstatus;
 	pink_alpha = pink_alpha_prevstatus = 1;
@@ -2934,7 +2934,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				pink_icon_prevstatus = string_null;
 			break;
 	}
-	
+
 	switch(teams_count)
 	{
 		default:
@@ -2942,7 +2942,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
 		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
-	
+
 	if(mySize_x > mySize_y)
 	{
 		size1 = mySize_x;
@@ -2957,7 +2957,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		e1 = eY;
 		e2 = eX;
 	}
-	
+
 	switch(myteam)
 	{
 		default:
@@ -3007,13 +3007,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
-		
+
 	f = bound(0, yellowflag_statuschange_elapsedtime*2, 1);
 	if(yellow_icon_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(yellowflag_pos, yellow_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(yellow_icon)
 		drawpic_aspect_skin(yellowflag_pos, yellow_icon, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
-		
+
 	f = bound(0, pinkflag_statuschange_elapsedtime*2, 1);
 	if(pink_icon_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(pinkflag_pos, pink_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
@@ -3170,29 +3170,29 @@ void HUD_Mod_KH(vector pos, vector mySize)
 float kaball_prevstatus; // last remembered status
 float kaball_statuschange_time; // time when the status changed
 
-// we don't need to reset for keepaway since it immediately 
+// we don't need to reset for keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
 
 void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
 	mod_active = 1; // keepaway should always show the mod HUD
-	
+
 	float BLINK_FACTOR = 0.15;
 	float BLINK_BASE = 0.85;
-	float BLINK_FREQ = 5; 
+	float BLINK_FREQ = 5;
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
-	
+
 	float stat_items = getstati(STAT_ITEMS, 0, 24);
 	float kaball = (stat_items/IT_KEY1) & 1;
-	
+
 	if(kaball != kaball_prevstatus)
 	{
 		kaball_statuschange_time = time;
 		kaball_prevstatus = kaball;
 	}
-	
+
 	vector kaball_pos, kaball_size;
-	
+
 	if(mySize_x > mySize_y) {
 		kaball_pos = pos + eX * 0.25 * mySize_x;
 		kaball_size = eX * 0.5 * mySize_x + eY * mySize_y;
@@ -3200,13 +3200,13 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		kaball_pos = pos + eY * 0.25 * mySize_y;
 		kaball_size = eY * 0.5 * mySize_y + eX * mySize_x;
 	}
-	
+
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
 	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
-	
+
 	if(kaball_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
-	
+
 	if(kaball)
 		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
 }
@@ -3264,7 +3264,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
-	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
+	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record
@@ -3732,7 +3732,7 @@ void HUD_EngineInfo(void)
 		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
 		frametimeavg2 = frametimeavg1;
 		frametimeavg1 = frametimeavg;
-		
+
 		float weight;
 		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
 		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
@@ -3810,7 +3810,7 @@ void HUD_InfoMessages(void)
 
 	vector fontsize;
 	fontsize = '0.20 0.20 0' * mySize_y;
-	
+
 	float a;
 	a = panel_fg_alpha;
 
@@ -3845,9 +3845,7 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == MAPINFO_TYPE_ARENA)
-				s = _("^1Wait for your turn to join");
-			else if(gametype == MAPINFO_TYPE_LMS)
+			if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
@@ -3936,7 +3934,7 @@ void HUD_InfoMessages(void)
 			}
 		}
 	}
-	else 
+	else
 	{
 		s = _("^7Press ^3ESC ^7to show HUD options.");
 		drawInfoMessage(s)
@@ -4012,7 +4010,7 @@ void HUD_Physics(void)
 			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 			break;
 	}
-	
+
 	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
@@ -4035,9 +4033,9 @@ void HUD_Physics(void)
 			acceleration = (vlen(vel) - vlen(acc_prevspeed));
 		else
 			acceleration = (vlen(vel - '0 0 1' * vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
-		
+
 		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
-		
+
 		acc_prevspeed = vel;
 		acc_prevtime = time;
 
@@ -4370,9 +4368,9 @@ void HUD_CenterPrint (void)
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
-		
+
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
-		
+
 		if(target_pos_y > panel_pos_y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
@@ -4429,7 +4427,7 @@ void HUD_CenterPrint (void)
 		}
 
 
-		// fade the centerprint_hud in/out 
+		// fade the centerprint_hud in/out
 		if(centerprint_time[j] < 0)
 			a = bound(0, (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
@@ -4438,21 +4436,21 @@ void HUD_CenterPrint (void)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 		else
 			a = 0;
-		
+
 		// set the size from fading in/out before subsequent fading
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
-		
+		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
 		}
-		
+
 		// finally set the size based on the new theAlpha from subsequent fading
-		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize)); 
+		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
 		drawfontscale = sz * '1 1 0';
-		
+
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
@@ -4495,15 +4493,15 @@ void HUD_CenterPrint (void)
 			}
 		}
 
-		++g; // move next position number up 
-		
+		++g; // move next position number up
+
 		msg_size = pos_y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
-				
+
 			if (pos_y < panel_pos_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
@@ -4515,7 +4513,7 @@ void HUD_CenterPrint (void)
 			pos_y += CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
-				
+
 			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';

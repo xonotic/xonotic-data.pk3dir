@@ -15,17 +15,17 @@ void XonoticCvarsDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls 
+void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls
 {
 
 	entity e, cvarlist;
 
 	cvarlist = makeXonoticCvarList();
 
-	cvarlist.color = 
-		cvarlist.colorF = 
-		cvarlist.color2 = 
-		cvarlist.colorC = 
+	cvarlist.color =
+		cvarlist.colorF =
+		cvarlist.color2 =
+		cvarlist.colorC =
 		SKINCOLOR_CVARLIST_CONTROLS;
 
 	me.TR(me);
