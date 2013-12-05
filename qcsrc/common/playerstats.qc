@@ -457,7 +457,7 @@ void PlayerStats_PlayerBasic()
 		string uri = autocvar_g_playerstats_playerbasic_uri;
 		if((uri != "") && (player.crypto_idfp != ""))
 		{
-			uri = strcat(uri, "/player/", uri_escape(player.crypto_idfp), "/elo.txt");
+			uri = strcat(uri, "/player/", uri_escape(uri_escape(player.crypto_idfp)), "/elo.txt");
 			print("Retrieving playerstats from URL: ", uri, "\n");
 			url_single_fopen(
 				uri,
@@ -604,7 +604,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
 		case URL_READY_CANWRITE:
 		{
 			print("-- Sending data to player stats server\n");
-			/*url_fputs(fh, "V 1\n");
+			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
@@ -613,7 +613,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
-			*/url_fputs(fh, "\n");
+			url_fputs(fh, "\n");
 			url_fclose(fh);
 			break;
 		}
