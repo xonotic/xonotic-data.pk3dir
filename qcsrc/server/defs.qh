@@ -55,7 +55,7 @@ float team1_score, team2_score, team3_score, team4_score;
 float maxclients;
 
 // flag set on worldspawn so that the code knows if it is dedicated or not
-float server_is_dedicated; 
+float server_is_dedicated;
 
 // Fields
 
@@ -73,7 +73,8 @@ float server_is_dedicated;
 //.float	style;
 //.float	skill;
 .float	sounds;
-.float  platmovetype;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
 
 .string killtarget;
 
@@ -103,6 +104,7 @@ float server_is_dedicated;
 .float play_time;
 .float respawn_flags;
 .float respawn_time;
+.float respawn_time_max;
 .float death_time;
 .float fade_time;
 .float fade_rate;
@@ -468,10 +470,11 @@ void target_voicescript_clear(entity pl);
 .string target2;
 .string target3;
 .string target4;
+.string curvetarget;
 .float target_random;
 .float trigger_reverse;
 
-// Nexball 
+// Nexball
 .entity ballcarried; // Also used for keepaway
 .float metertime;
 float g_nexball_meter_period;
@@ -511,8 +514,8 @@ string matchid;
 
 .float last_pickup;
 
-.float hit_time; 
-.float typehit_time; 
+.float hit_time;
+.float typehit_time;
 
 .float stat_leadlimit;
 

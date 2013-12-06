@@ -96,7 +96,7 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
 
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
@@ -614,6 +614,7 @@ float start_armorvalue;
 WepSet warmup_start_weapons;
 WepSet warmup_start_weapons_default;
 WepSet warmup_start_weapons_defaultmask;
+#define WARMUP_START_WEAPONS ((g_warmup_allguns == 1) ? (warmup_start_weapons & (weaponsInMap | start_weapons)) : warmup_start_weapons)
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -645,17 +646,17 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_LASER);
-		
+		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
 	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
-	
+
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
-	
+
 	// bit order in t:
 	// 1: want or not
 	// 2: is default?
@@ -711,7 +712,7 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
@@ -722,7 +723,7 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
@@ -787,7 +788,7 @@ void readplayerstartcvars()
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
-	
+
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
@@ -833,7 +834,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
@@ -857,10 +858,13 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
+	WepSet precache_weapons = start_weapons;
+	if (g_warmup_allguns != 1)
+		precache_weapons |= warmup_start_weapons;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if((start_weapons | warmup_start_weapons) & WepSet_FromWeapon(i))
+		if(precache_weapons & WepSet_FromWeapon(i))
 			WEP_ACTION(i, WR_INIT);
 	}
 
@@ -902,7 +906,7 @@ void readlevelcvars(void)
 	// load mutators
 	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
 		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
-		
+
 	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
 	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
@@ -923,9 +927,9 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
-	
+
 	#undef CHECK_MUTATOR_ADD
-	
+
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
@@ -944,7 +948,7 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
-	
+
 	g_minstagib = cvar("g_minstagib");
 
 	sv_clones = cvar("sv_clones");
@@ -965,7 +969,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_assault || cvar("g_campaign"))
 		warmup_stage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1032,7 +1036,7 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(warmup_stage)
+	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
 	readplayerstartcvars();
@@ -1628,7 +1632,7 @@ void adaptor_think2use()
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {
-	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
 }
@@ -1801,7 +1805,7 @@ string uid2name(string myuid) {
 			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
 		}
 	}
-	
+
 	if(s == "")
 		s = "^1Unregistered Player";
 	return s;
@@ -2319,7 +2323,7 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 
 float randombit(float bits)
 {
-	if not(bits & (bits-1)) // this ONLY holds for powers of two!
+	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
 		return bits;
 
 	float n, f, b, r;
@@ -2387,7 +2391,7 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 #else
 string cvar_string_normal(string n)
 {
-	if not(cvar_type(n) & 1)
+	if (!(cvar_type(n) & 1))
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
 	return builtin_cvar_string(n);
 }

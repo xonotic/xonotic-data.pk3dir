@@ -290,9 +290,9 @@ void Net_ReadNexgunBeamParticle()
 	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
 	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
 	charge = ReadByte() / 255.0;
-	
+
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);
-	
+
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;

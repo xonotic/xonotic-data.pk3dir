@@ -19,15 +19,15 @@ void PlayerTouchExplode(entity p1, entity p2)
 MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
 {
 	if(time > self.touchexplode_time)
-	if not(gameover)
+	if (!gameover)
 	if(IS_PLAYER(self))
 	if(self.deadflag == DEAD_NO)
-	if not(IS_INDEPENDENT_PLAYER(self))
+	if (!IS_INDEPENDENT_PLAYER(self))
 	FOR_EACH_PLAYER(other) if(self != other)
 	{
 		if(time > other.touchexplode_time)
 		if(other.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(other))
+		if (!IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
 		{
 			PlayerTouchExplode(self, other);

@@ -274,12 +274,12 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
-			
+
 	self.health = self.health - damage;
-		
+
 	if (self.health <= 0)
 	{
 		if(attacker != self.realowner)
@@ -383,7 +383,7 @@ void GrapplingHookFrame()
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
 		{
-			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)))
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;

@@ -316,7 +316,7 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	
+
 	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
@@ -447,7 +447,7 @@ void w_ready()
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
@@ -482,7 +482,7 @@ float weapon_prepareattack_checkammo(float secondary)
 		{
 			W_SwitchToOtherWeapon(self);
 		}
-		
+
 		return FALSE;
 	}
 	return TRUE;
@@ -882,7 +882,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.reload_sound = sent_sound;
 
 	// don't reload weapons that don't have the RELOADABLE flag
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
 	{
 		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
 		return;
@@ -898,7 +898,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 
 	// no ammo, so nothing to load
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
@@ -907,7 +907,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if not(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+		if (!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);

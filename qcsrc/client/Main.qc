@@ -5,7 +5,7 @@
 entity clearentity_ent;
 void clearentity(entity e)
 {
-	if not(clearentity_ent)
+	if (!clearentity_ent)
 	{
 		clearentity_ent = spawn();
 		clearentity_ent.classname = "clearentity";
@@ -81,7 +81,7 @@ void CSQC_Init(void)
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
-	
+
 	ConsoleCommand_macro_init();
 
 	registercvar("hud_usecsqc", "1");
@@ -124,13 +124,13 @@ void CSQC_Init(void)
 	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
-	
+
 	if(autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
 		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
 	}
-	
+
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
@@ -186,11 +186,11 @@ void Shutdown(void)
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
 
-	if not(isdemo())
+	if (!isdemo())
 	{
-		if not(calledhooks & HOOK_START)
+		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
-		if not(calledhooks & HOOK_END)
+		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
 }
@@ -246,7 +246,7 @@ float SetTeam(entity o, float Team)
 	}
 	else
 	{
-		if not(o.has_team)
+		if (!o.has_team)
 		{
 			o.team = Team;
 			tm = GetTeam(Team, true);
@@ -287,10 +287,10 @@ void Playerchecker_Think()
 		}
 		else
 		{
-			if not(e.sort_prev)
+			if (!e.sort_prev)
 			{
 				// player connected
-				if not(e)
+				if (!e)
 					playerslots[i] = e = spawn();
 				e.sv_entnum = i;
 				e.ping = 0;
@@ -432,13 +432,13 @@ void Ent_ReadPlayerScore()
 
 	self.sv_entnum = n;
 
-	if not(playerslots[self.sv_entnum])
+	if (!(playerslots[self.sv_entnum]))
 		playerslots[self.sv_entnum] = spawn();
 	o = self.owner = playerslots[self.sv_entnum];
 	o.sv_entnum = self.sv_entnum;
 	o.gotscores = 1;
 
-	//if not(o.sort_prev)
+	//if (!o.sort_prev)
 	//	RegisterPlayer(o);
 	//playerchecker will do this for us later, if it has not already done so
 
@@ -587,7 +587,7 @@ void Ent_Nagger()
 		{
 			f = ReadByte();
 			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if not(f & b)
+				if (!(f & b))
 					if(playerslots[j])
 						playerslots[j].ready = 0;
 		}
@@ -650,7 +650,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin_x = ReadShort();
 	spn_origin_y = ReadShort();
 	spn_origin_z = ReadShort();
-	
+
 	if(is_new)
 	{
 		self.origin = spn_origin;
@@ -681,7 +681,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 				}
 			}
 			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
-			
+
 			self.draw = Spawn_Draw;
 		}
 	}
@@ -695,7 +695,7 @@ void Ent_ReadSpawnEvent(float is_new)
 	// this way the server can disable the sending of
 	// spawn origin or such to clients if wanted.
 	float entnum = ReadByte();
-	
+
 	if(entnum)
 	{
 		self.origin_x = ReadShort();
@@ -723,7 +723,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 		}
 	}
-	
+
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
@@ -736,7 +736,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-	
+
 	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
 }
 
@@ -821,9 +821,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ARC_BEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_ARC_BEAM); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_TURRET: ent_turret(); break; 
+		case ENT_CLIENT_TURRET: ent_turret(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
-		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
@@ -881,7 +881,7 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if not(isdemo())
+	if (!isdemo())
 	{
 		if(!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
@@ -1158,7 +1158,7 @@ void Net_ReadPingPLReport()
 	pi = ReadShort();
 	pl = ReadByte();
 	ml = ReadByte();
-	if not(playerslots[e])
+	if (!(playerslots[e]))
 		return;
 	playerslots[e].ping = pi;
 	playerslots[e].ping_packetloss = pl / 255.0;

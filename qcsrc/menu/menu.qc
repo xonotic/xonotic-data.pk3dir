@@ -16,10 +16,13 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
+      realconwidth, realconheight;
+
 void m_sync()
 {
 	updateCompression();
-	updateConwidths();
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw.
 
 	loadAllCvars(main);
 }
@@ -64,7 +67,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
@@ -74,12 +77,13 @@ void m_init()
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
+	RegisterSLCategories();
+
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
-	initConwidths();
 
 	if(!restarting)
 	{
@@ -92,18 +96,26 @@ void m_init()
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024
-const float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
+
 void draw_reset_cropped()
 {
-	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
+	draw_reset(conwidth, conheight, 0.5 * (realconwidth - conwidth), 0.5 * (realconheight - conheight));
 }
 void draw_reset_full()
 {
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
-void UpdateConWidthHeight()
+
+void UpdateConWidthHeight(float w, float h, float p)
 {
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
+	{
+		if (updateConwidths(w, h, p))
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		vidwidth_s = w;
+		vidheight_s = h;
+		vidpixelheight_s = p;
+	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
@@ -120,18 +132,6 @@ void UpdateConWidthHeight()
 		conwidth = realconwidth;
 		conheight = realconwidth / MENU_ASPECT;
 	}
-	screenconwidth = conwidth;
-	screenconheight = conheight;
-	if(conwidth < MENU_MINHEIGHT * MENU_ASPECT)
-	{
-		conheight *= MENU_MINHEIGHT * MENU_ASPECT / conwidth;
-		conwidth = MENU_MINHEIGHT * MENU_ASPECT;
-	}
-	if(conheight < MENU_MINHEIGHT)
-	{
-		conwidth *= MENU_MINHEIGHT / conheight;
-		conheight = MENU_MINHEIGHT;
-	}
 	if(main)
 	{
 		if(conwidth_s != conwidth || conheight_s != conheight)
@@ -139,6 +139,10 @@ void UpdateConWidthHeight()
 			draw_reset_cropped();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
+	}
+	else
+	{
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
 	}
 }
 
@@ -148,8 +152,6 @@ void m_init_delayed()
 	float fh, glob, n, i;
 	string s;
 
-	conwidth = conheight = -1;
-	UpdateConWidthHeight();
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -441,7 +443,7 @@ float m_allocatetooltipbox(vector pos)
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// bottom center
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
@@ -461,12 +463,12 @@ float m_allocatetooltipbox(vector pos)
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// top right
 	v_x = pos_x + avoidplus_x;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	return FALSE;
 }
 entity m_findtooltipitem(entity root, vector pos)
@@ -671,7 +673,7 @@ void m_tooltip(vector pos)
 	}
 }
 
-void m_draw()
+void m_draw(float width, float height)
 {
 	float t;
 	float realFrametime;
@@ -685,8 +687,7 @@ void m_draw()
 	if (anim)
 		anim.tickAll(anim);
 
-	if(main)
-		UpdateConWidthHeight();
+	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
 	if(!menuInitialized)
 	{
@@ -991,7 +992,8 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-		if(e)
+
+		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();
 			m_activate_window(e);

@@ -128,7 +128,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 
 			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = warmup_start_weapons;
+				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
 			else
 				GiveFrags_randomweapons.weapons = start_weapons;
 
@@ -147,7 +147,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if not(attacker.weapons & WepSet_FromWeapon(attacker.weapon))
+		if (!(attacker.weapons & WepSet_FromWeapon(attacker.weapon)))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
@@ -225,7 +225,7 @@ void Obituary_SpecialDeath(
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		entity deathent = deathtypes[(deathtype - DT_FIRST)];
-		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
+		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
 		{
@@ -326,7 +326,7 @@ float Obituary_WeaponDeath(
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
-	if not(IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
+	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
 	float notif_firstblood = FALSE;
@@ -349,7 +349,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		)
 	);
 	#endif
-	
+
 	// =======
 	// SUICIDE
 	// =======
@@ -370,7 +370,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
-					
+
 					default:
 					{
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -379,7 +379,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				}
 			}
 		}
-		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -399,7 +399,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(attacker, targ, -1, deathtype);
 
 			attacker.killcount = 0;
-			
+
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, deathlocation, targ.killcount);
@@ -493,7 +493,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
-			if not(Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
+			if (!Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
 		}
 	}
@@ -527,7 +527,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					0);
 				break;
 			}
-			
+
 			default:
 			{
 				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -558,7 +558,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float complainteamdamage = 0; 
+	float complainteamdamage = 0;
 	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
@@ -593,6 +593,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
+		// exit the vehicle before killing (fixes a crash)
+		if(IS_PLAYER(targ) && targ.vehicle)
+			vehicles_exit(VHEF_RELESE);
+
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -639,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -649,7 +653,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
@@ -665,7 +669,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if not(DEATH_ISSPECIAL(deathtype))
+		if (!DEATH_ISSPECIAL(deathtype))
 		{
 			damage *= g_weapondamagefactor;
 			mirrordamage *= g_weapondamagefactor;
@@ -673,7 +677,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
-		
+
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
 		frag_target = targ;
@@ -685,8 +689,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
-		
-		if not(g_minstagib)
+
+		if (!g_minstagib)
 		{
 			// apply strength multiplier
 			if (attacker.items & IT_STRENGTH)
@@ -745,7 +749,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						damage_goodhits += 1;
 						damage_gooddamage += damage;
 
-						if not(DEATH_ISSPECIAL(deathtype))
+						if (!DEATH_ISSPECIAL(deathtype))
 						{
 							if(IS_PLAYER(targ)) // don't do this for vehicles
 							if(IsFlying(victim))
@@ -1052,7 +1056,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(maxtime > mintime || maxdps > mindps)
 		{
 			// Constraints:
-			
+
 			// damage we have right now
 			mindamage = mindps * mintime;
 
@@ -1141,7 +1145,7 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
-	if not(Fire_IsBurning(e))
+	if (!Fire_IsBurning(e))
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
@@ -1170,12 +1174,12 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = TRUE;
 
-	if not(IS_INDEPENDENT_PLAYER(e))
+	if (!IS_INDEPENDENT_PLAYER(e))
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))
 		if(other.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(other))
+		if (!IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
 		{
 			t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);

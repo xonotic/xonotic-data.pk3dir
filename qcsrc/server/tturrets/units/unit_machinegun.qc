@@ -5,7 +5,7 @@ void turret_machinegun_attack();
 //.float bulletcounter;
 void turret_machinegun_attack()
 {
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, 1, WEP_CVAR(uzi, bulletconstant)); // WEAPONTODO
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, WEP_CVAR(uzi, bulletconstant)); // WEAPONTODO
     endFireBallisticBullet();
 
     UziFlash();
@@ -20,9 +20,8 @@ void turret_machinegun_std_init()
     self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL;
     self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
-    
-	if not (autocvar_g_antilag_bullets)
-		self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
+
+    self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
 
     if (turret_stdproc_init("machinegun_std", "models/turrets/base.md3", "models/turrets/machinegun.md3", TID_MACHINEGUN) == 0)
     {

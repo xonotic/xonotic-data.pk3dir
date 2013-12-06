@@ -54,5 +54,3 @@ xonotic/util.qc
 ../common/urllib.qc
 
 ../warpzonelib/mathlib.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
