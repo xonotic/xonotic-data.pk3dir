@@ -626,7 +626,7 @@ float g_weapon_stay;
 
 entity get_weaponinfo(float w);
 
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
+float want_weapon(string cvarprefix, entity weaponinfo, float allguns) // WEAPONTODO
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -642,11 +642,11 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			d = FALSE;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOTGUN); // todo: how to handle shotgun in CTS mode? we're removing it.. so.... 
+		d = (i == WEP_SHOCKWAVE); // todo: how to handle shotgun in CTS mode? we're removing it.. so.... 
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		d = (i == WEP_LASER || i == WEP_SHOCKWAVE);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);

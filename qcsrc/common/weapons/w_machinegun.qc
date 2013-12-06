@@ -51,7 +51,7 @@ void spawnfunc_weapon_uzi()
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_SHOTGUN);
+		weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 		return;
 	}
 	weapon_defaultspawnfunc(WEP_UZI);

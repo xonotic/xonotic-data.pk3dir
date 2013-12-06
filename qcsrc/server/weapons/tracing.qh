@@ -67,6 +67,6 @@ entity fireBallisticBullet_trace_callback_ent;
 float fireBallisticBullet_trace_callback_eff;
 void fireBallisticBullet_trace_callback(vector start, vector hit, vector end);
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant);
+void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant);
 
 void fireBullet (vector start, vector dir, float spread, float damage, float force, float dtype, float tracer);

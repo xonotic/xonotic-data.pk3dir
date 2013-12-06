@@ -113,7 +113,8 @@ void W_Laser_Attack(float issecondary)
 		self = oldself;
 	}
 }
-
+void W_Laser_Shockwave(void);
+void W_Laser_Melee(void);
 float W_Laser(float request)
 {
 	switch(request)

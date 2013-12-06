@@ -14,7 +14,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 void spawnfunc_weapon_shockwave()
 {
-	if(autocvar_sv_q3acompat_machineshockwaveswap)
+	//if(autocvar_sv_q3acompat_machineshockwaveswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_UZI);
@@ -22,6 +23,7 @@ void spawnfunc_weapon_shockwave()
 	}
 	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 }
+/*
 .float swing_prev;
 .entity swing_alreadyhit;
 .float shockwave_pelletstime;
@@ -399,13 +401,14 @@ void W_Shockwave_Attack()
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
 }
-
+*/
 float W_Shockwave(float req)
 {
 	float ammo_amount;
 	
 	switch(req)
 	{
+		/*
 		case WR_AIM:
 		{
 			if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shockwave_secondary_melee_range)
@@ -454,6 +457,7 @@ float W_Shockwave(float req)
 			
 			return TRUE;
 		}
+		*/
 		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
@@ -472,8 +476,9 @@ float W_Shockwave(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
+			/*
 			ammo_amount = self.ammo_shells >= autocvar_g_balance_shockwave_pellets_ammo;
-			ammo_amount += self.(weapon_load[WEP_SHOCKWAVE]) >= autocvar_g_balance_shockwave_pellets_ammo;
+			ammo_amount += self.(weapon_load[WEP_SHOCKWAVE]) >= autocvar_g_balance_shockwave_pellets_ammo;*/
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -483,7 +488,7 @@ float W_Shockwave(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(autocvar_g_balance_shockwave_pellets_ammo, "weapons/reload.wav");
+			//W_Reload(autocvar_g_balance_shockwave_pellets_ammo, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
