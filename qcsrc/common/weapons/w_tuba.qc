@@ -12,21 +12,21 @@ REGISTER_WEAPON(
 /* fullname  */ _("@!#%'n Tuba")
 );
 
-#define TUBA_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, attenuation) \
-	WEP_ADD_CVAR(weapon, MO_NONE, damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, refire) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define TUBA_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, animtime) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, attenuation) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, damage) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, edgedamage) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, force) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, radius) \
+	w_cvar(WEP_TUBA, tuba, MO_NONE, refire) \
+	w_prop(WEP_TUBA, tuba, reloading_ammo, reload_ammo) \
+	w_prop(WEP_TUBA, tuba, reloading_time, reload_time) \
+	w_prop(WEP_TUBA, tuba, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_TUBA, tuba, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-TUBA_SETTINGS(tuba)
+TUBA_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity tuba_note;
 .float tuba_smoketime;
 .float tuba_instrument;
@@ -411,7 +411,7 @@ float w_tuba(float req)
 			precache_model ("models/weapons/h_akordeon.iqm");
 			precache_model ("models/weapons/v_kleinbottle.md3");
 			precache_model ("models/weapons/h_kleinbottle.iqm");
-			WEP_SET_PROPS(TUBA_SETTINGS(tuba), WEP_TUBA)
+			TUBA_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -455,7 +455,7 @@ float w_tuba(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(TUBA_SETTINGS(tuba))
+			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

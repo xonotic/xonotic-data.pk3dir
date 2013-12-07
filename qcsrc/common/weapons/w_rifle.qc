@@ -11,30 +11,30 @@ REGISTER_WEAPON(
 /* fullname */ _("Rifle")
 );
 
-#define RIFLE_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, bulletconstant) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, bullethail) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, burstcost) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, shots) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, spread) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, tracer) \
-	WEP_ADD_CVAR(weapon, MO_NONE, bursttime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  reload) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define RIFLE_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, ammo) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, animtime) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, bulletconstant) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, bullethail) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, burstcost) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, damage) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, force) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, lifetime) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, refire) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, shots) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, speed) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, spread) \
+	w_cvar(WEP_RIFLE, rifle, MO_BOTH, tracer) \
+	w_cvar(WEP_RIFLE, rifle, MO_NONE, bursttime) \
+	w_cvar(WEP_RIFLE, rifle, MO_NONE, secondary) \
+	w_cvar(WEP_RIFLE, rifle, MO_SEC,  reload) \
+	w_prop(WEP_RIFLE, rifle, reloading_ammo, reload_ammo) \
+	w_prop(WEP_RIFLE, rifle, reloading_time, reload_time) \
+	w_prop(WEP_RIFLE, rifle, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_RIFLE, rifle, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-RIFLE_SETTINGS(rifle)
+RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rifle_accumulator;
 #endif
 #else
@@ -202,7 +202,7 @@ float w_rifle(float req)
 			precache_model ("models/weapons/h_campingrifle.iqm");
 			precache_sound ("weapons/campingrifle_fire.wav");
 			precache_sound ("weapons/campingrifle_fire2.wav");
-			WEP_SET_PROPS(RIFLE_SETTINGS(rifle), WEP_RIFLE)
+			RIFLE_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -224,7 +224,7 @@ float w_rifle(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(RIFLE_SETTINGS(rifle))
+			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

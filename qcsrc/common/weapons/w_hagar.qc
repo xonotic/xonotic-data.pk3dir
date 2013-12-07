@@ -11,38 +11,38 @@ REGISTER_WEAPON(
 /* fullname */ _("Hagar")
 );
 
-#define HAGAR_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, health) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  spread) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_max) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_abort) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_animtime) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_hold) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_speed) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_releasedeath) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_spread) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_spread_bias) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  load_linkexplode) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime_min) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime_rand) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define HAGAR_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, ammo) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damage) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, edgedamage) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, force) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, radius) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, refire) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, speed) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damageforcescale) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, health) \
+	w_cvar(WEP_HAGAR, hagar, MO_PRI,  lifetime) \
+	w_cvar(WEP_HAGAR, hagar, MO_NONE, secondary) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  spread) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_max) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_abort) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_animtime) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_hold) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_speed) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_releasedeath) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_spread) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_spread_bias) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_linkexplode) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_min) \
+	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_rand) \
+	w_prop(WEP_HAGAR, hagar, reloading_ammo, reload_ammo) \
+	w_prop(WEP_HAGAR, hagar, reloading_time, reload_time) \
+	w_prop(WEP_HAGAR, hagar, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HAGAR, hagar, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-HAGAR_SETTINGS(hagar)
+HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
@@ -442,7 +442,7 @@ float w_hagar(float req)
 			precache_sound ("weapons/hagar_fire.wav");
 			precache_sound ("weapons/hagar_load.wav");
 			precache_sound ("weapons/hagar_beep.wav");
-			WEP_SET_PROPS(HAGAR_SETTINGS(hagar), WEP_HAGAR)
+			HAGAR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -472,7 +472,7 @@ float w_hagar(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(HAGAR_SETTINGS(hagar))
+			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

@@ -11,37 +11,37 @@ REGISTER_WEAPON(
 /* fullname */ _("Devastator")
 );
 
-#define DEVASTATOR_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_NONE, ammo) \
-	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_NONE, detonatedelay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, guidedelay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, guidegoal) \
-	WEP_ADD_CVAR(weapon, MO_NONE, guiderate) \
-	WEP_ADD_CVAR(weapon, MO_NONE, guideratedelay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, guidestop) \
-	WEP_ADD_CVAR(weapon, MO_NONE, health) \
-	WEP_ADD_CVAR(weapon, MO_NONE, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, refire) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
-	WEP_ADD_CVAR(weapon, MO_NONE, speedaccel) \
-	WEP_ADD_CVAR(weapon, MO_NONE, speedstart) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define DEVASTATOR_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, ammo) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, animtime) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, damage) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, damageforcescale) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, detonatedelay) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, edgedamage) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, force) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, guidedelay) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, guidegoal) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, guiderate) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, guideratedelay) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, guidestop) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, health) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, lifetime) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, radius) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, refire) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, remote_damage) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, remote_edgedamage) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, remote_force) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, remote_radius) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speed) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speedaccel) \
+	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speedstart) \
+	w_prop(WEP_DEVASTATOR, devastator, reloading_ammo, reload_ammo) \
+	w_prop(WEP_DEVASTATOR, devastator, reloading_time, reload_time) \
+	w_prop(WEP_DEVASTATOR, devastator, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_DEVASTATOR, devastator, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-DEVASTATOR_SETTINGS(devastator)
+DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rl_release;
 .float rl_detonate_later;
 #endif
@@ -463,7 +463,7 @@ float W_Devastator(float req)
 				precache_sound("weapons/rocket_fire.wav");
 				precache_sound("weapons/rocket_mode.wav");
 			}
-			WEP_SET_PROPS(DEVASTATOR_SETTINGS(devastator), WEP_DEVASTATOR)
+			DEVASTATOR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -496,7 +496,7 @@ float W_Devastator(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(DEVASTATOR_SETTINGS(devastator))
+			DEVASTATOR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

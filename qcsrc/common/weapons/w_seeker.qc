@@ -11,55 +11,55 @@ REGISTER_WEAPON(
 /* fullname */ _("T.A.G. Seeker")
 );
 
-#define SEEKER_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_NONE, type) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_ammo) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_lifetime_rand) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, flac_refire) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_accel) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_ammo) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_count) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_decel) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_delay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_health) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_proxy) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_proxy_delay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_proxy_maxrange) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_refire) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_smart) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_smart_mindist) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_smart_trace_max) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_smart_trace_min) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_speed_max) \
-	WEP_ADD_CVAR(weapon, MO_NONE, missile_turnrate) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_ammo) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_health) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_refire) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_speed) \
-	WEP_ADD_CVAR(weapon, MO_NONE, tag_tracker_lifetime) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define SEEKER_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, type) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_ammo) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_animtime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_damage) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_edgedamage) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_force) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_lifetime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_lifetime_rand) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_radius) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_refire) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_accel) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_ammo) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_animtime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_count) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_damage) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_damageforcescale) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_decel) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_delay) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_edgedamage) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_force) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_health) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_lifetime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy_delay) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy_maxrange) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_radius) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_refire) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_mindist) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_max) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_min) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_max) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_turnrate) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_ammo) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_animtime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_damageforcescale) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_health) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_lifetime) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_refire) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_speed) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_tracker_lifetime) \
+	w_prop(WEP_SEEKER, seeker, reloading_ammo, reload_ammo) \
+	w_prop(WEP_SEEKER, seeker, reloading_time, reload_time) \
+	w_prop(WEP_SEEKER, seeker, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_SEEKER, seeker, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-SEEKER_SETTINGS(seeker)
+SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
 #endif
@@ -650,7 +650,7 @@ float w_seeker(float req)
 			precache_sound ("weapons/tag_fire.wav");
 			precache_sound ("weapons/flac_fire.wav");
 			precache_sound ("weapons/seeker_fire.wav");
-			WEP_SET_PROPS(SEEKER_SETTINGS(seeker), WEP_SEEKER)
+			SEEKER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -688,7 +688,7 @@ float w_seeker(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(SEEKER_SETTINGS(seeker))
+			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RELOAD:

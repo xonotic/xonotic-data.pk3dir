@@ -11,39 +11,39 @@ REGISTER_WEAPON(
 /* fullname */ _("Crylink")
 );
 
-#define CRYLINK_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, spread) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, shots) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, bounces) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, bouncedamagefactor) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, middle_lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, middle_fadetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, other_lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, other_fadetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, linkexplode) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joindelay) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinspread) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, joinexplode_force) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  spreadtype) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define CRYLINK_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, ammo) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, animtime) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, damage) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, edgedamage) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, radius) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, force) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, spread) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, refire) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, speed) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, shots) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, bounces) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, bouncedamagefactor) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, middle_lifetime) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, middle_fadetime) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, other_lifetime) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, other_fadetime) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, linkexplode) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joindelay) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinspread) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_damage) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_edgedamage) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_radius) \
+	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_force) \
+	w_cvar(WEP_CRYLINK, crylink, MO_SEC,  spreadtype) \
+	w_prop(WEP_CRYLINK, crylink, reloading_ammo, reload_ammo) \
+	w_prop(WEP_CRYLINK, crylink, reloading_time, reload_time) \
+	w_prop(WEP_CRYLINK, crylink, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_CRYLINK, crylink, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-CRYLINK_SETTINGS(crylink)
+CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gravity;
 .float crylink_waitrelease;
 .entity crylink_lastgroup;
@@ -625,7 +625,7 @@ float w_crylink(float req)
 			precache_sound ("weapons/crylink_fire.wav");
 			precache_sound ("weapons/crylink_fire2.wav");
 			precache_sound ("weapons/crylink_linkjoin.wav");
-			WEP_SET_PROPS(CRYLINK_SETTINGS(crylink), WEP_CRYLINK)
+			CRYLINK_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -655,7 +655,7 @@ float w_crylink(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(CRYLINK_SETTINGS(crylink))
+			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RELOAD:

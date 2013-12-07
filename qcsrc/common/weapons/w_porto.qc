@@ -11,19 +11,19 @@ REGISTER_WEAPON(
 /* fullname */ _("Port-O-Launch")
 );
 
-#define PORTO_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define PORTO_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_PORTO, porto, MO_BOTH, animtime) \
+	w_cvar(WEP_PORTO, porto, MO_BOTH, lifetime) \
+	w_cvar(WEP_PORTO, porto, MO_BOTH, refire) \
+	w_cvar(WEP_PORTO, porto, MO_BOTH, speed) \
+	w_cvar(WEP_PORTO, porto, MO_NONE, secondary) \
+	w_prop(WEP_PORTO, porto, reloading_ammo, reload_ammo) \
+	w_prop(WEP_PORTO, porto, reloading_time, reload_time) \
+	w_prop(WEP_PORTO, porto, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_PORTO, porto, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-PORTO_SETTINGS(porto)
+PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity porto_current;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
@@ -298,7 +298,7 @@ float w_porto(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(PORTO_SETTINGS(porto))
+			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_THINK:
@@ -371,7 +371,7 @@ float w_porto(float req)
 			precache_sound ("porto/explode.wav");
 			precache_sound ("porto/fire.wav");
 			precache_sound ("porto/unsupported.wav");
-			WEP_SET_PROPS(PORTO_SETTINGS(porto), WEP_PORTO)
+			PORTO_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

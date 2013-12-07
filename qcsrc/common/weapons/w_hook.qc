@@ -11,31 +11,31 @@ REGISTER_WEAPON(
 /* fullname */ _("Grappling Hook")
 );
 
-#define HOOK_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_ammo) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_time_free) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  hooked_time_max) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  damage) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  duration) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  force) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  gravity) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  power) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  radius) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  speed) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  health) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  damageforcescale) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define HOOK_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_HOOK, hook, MO_BOTH, animtime) \
+	w_cvar(WEP_HOOK, hook, MO_BOTH, ammo) \
+	w_cvar(WEP_HOOK, hook, MO_BOTH, refire) \
+	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_ammo) \
+	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_time_free) \
+	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_time_max) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  damage) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  duration) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  edgedamage) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  force) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  gravity) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  lifetime) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  power) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  radius) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  speed) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  health) \
+	w_cvar(WEP_HOOK, hook, MO_SEC,  damageforcescale) \
+	w_prop(WEP_HOOK, hook, reloading_ammo, reload_ammo) \
+	w_prop(WEP_HOOK, hook, reloading_time, reload_time) \
+	w_prop(WEP_HOOK, hook, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HOOK, hook, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-HOOK_SETTINGS(hook)
+HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 .float dmg;
 .float dmg_edge;
@@ -286,7 +286,7 @@ float w_hook(float req)
 			precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
 			precache_sound ("weapons/hook_fire.wav");
 			precache_sound ("weapons/hookbomb_fire.wav");
-			WEP_SET_PROPS(HOOK_SETTINGS(hook), WEP_HOOK)
+			HOOK_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -308,7 +308,7 @@ float w_hook(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(HOOK_SETTINGS(hook))
+			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

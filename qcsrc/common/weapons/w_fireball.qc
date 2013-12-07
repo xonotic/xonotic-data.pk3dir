@@ -10,34 +10,35 @@ REGISTER_WEAPON(
 /* netname  */ "fireball",
 /* fullname */ _("Fireball")
 );
-#define FIREBALL_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, laserburntime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, laserdamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, laseredgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, laserradius) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  force) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  radius) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  health) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  refire2) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  bfgdamage) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  bfgforce) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  bfgradius) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  damagetime) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  speed_up) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+
+#define FIREBALL_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, animtime) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, refire) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damage) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damageforcescale) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, speed) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, lifetime) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserburntime) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserdamage) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laseredgedamage) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserradius) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  edgedamage) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  force) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  radius) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  health) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  refire2) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgdamage) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgforce) \
+	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgradius) \
+	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  damagetime) \
+	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_up) \
+	w_prop(WEP_FIREBALL, fireball, reloading_ammo, reload_ammo) \
+	w_prop(WEP_FIREBALL, fireball, reloading_time, reload_time) \
+	w_prop(WEP_FIREBALL, fireball, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_FIREBALL, fireball, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-FIREBALL_SETTINGS(fireball)
+FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -395,7 +396,7 @@ float w_fireball(float req)
 			precache_sound ("weapons/fireball_fire.wav");
 			precache_sound ("weapons/fireball_fire2.wav");
 			precache_sound ("weapons/fireball_prefire2.wav");
-			WEP_SET_PROPS(FIREBALL_SETTINGS(fireball), WEP_FIREBALL)
+			FIREBALL_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -410,7 +411,7 @@ float w_fireball(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(FIREBALL_SETTINGS(fireball))
+			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:

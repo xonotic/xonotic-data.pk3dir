@@ -11,30 +11,30 @@ REGISTER_WEAPON(
 /* fullname */ _("Heavy Laser Assault Cannon")
 );
 
-#define HLAC_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, spread_crouchmod) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  spread_add) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  spread_max) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  spread_min) \
-	WEP_ADD_CVAR(weapon, MO_NONE, secondary) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  shots) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  spread) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define HLAC_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, ammo) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, animtime) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, damage) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, edgedamage) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, force) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, lifetime) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, radius) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, refire) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, speed) \
+	w_cvar(WEP_HLAC, hlac, MO_BOTH, spread_crouchmod) \
+	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_add) \
+	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_max) \
+	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_min) \
+	w_cvar(WEP_HLAC, hlac, MO_NONE, secondary) \
+	w_cvar(WEP_HLAC, hlac, MO_SEC,  shots) \
+	w_cvar(WEP_HLAC, hlac, MO_SEC,  spread) \
+	w_prop(WEP_HLAC, hlac, reloading_ammo, reload_ammo) \
+	w_prop(WEP_HLAC, hlac, reloading_time, reload_time) \
+	w_prop(WEP_HLAC, hlac, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HLAC, hlac, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-HLAC_SETTINGS(hlac)
+HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
@@ -235,7 +235,7 @@ float w_hlac(float req)
 			precache_model ("models/weapons/v_hlac.md3");
 			precache_model ("models/weapons/h_hlac.iqm");
 			precache_sound ("weapons/lasergun_fire.wav");
-			WEP_SET_PROPS(HLAC_SETTINGS(hlac), WEP_HLAC)
+			HLAC_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -257,7 +257,7 @@ float w_hlac(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(HLAC_SETTINGS(hlac))
+			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RELOAD:
