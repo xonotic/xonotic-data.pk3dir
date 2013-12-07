@@ -132,7 +132,7 @@ float w_minstanex(float req)
 					float w;
 					w = self.weapon;
 					self.weapon = WEP_LASER;
-					W_Laser_Shockwave();
+					W_Laser_Attack(FALSE);
 					self.weapon = w;
 					
 					// now do normal refire

@@ -13,25 +13,6 @@ REGISTER_WEAPON(
 #else
 #ifdef SVQC
 void spawnfunc_weapon_laser() { weapon_defaultspawnfunc(WEP_LASER); }
-void(float imp) W_SwitchWeapon;
-void() W_LastWeapon;
-
-void SendCSQCShockwaveParticle(vector endpos) 
-{
-	//endpos = WarpZone_UnTransformOrigin(transform, endpos);
-	
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg_x);
-	WriteCoord(MSG_BROADCAST, w_shotorg_y);
-	WriteCoord(MSG_BROADCAST, w_shotorg_z);
-	WriteCoord(MSG_BROADCAST, endpos_x);
-	WriteCoord(MSG_BROADCAST, endpos_y);
-	WriteCoord(MSG_BROADCAST, endpos_z);
-	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_max, 255));
-	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_min, 255));
-	WriteByte(MSG_BROADCAST, num_for_edict(self));
-}
 
 void W_Laser_Touch()
 {
@@ -113,18 +94,22 @@ void W_Laser_Attack(float issecondary)
 		self = oldself;
 	}
 }
-void W_Laser_Shockwave(void);
-void W_Laser_Melee(void);
 float W_Laser(float request)
 {
 	switch(request)
 	{
 		case WR_AIM:
 		{
-			if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_melee_range))
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+			if(autocvar_g_balance_laser_secondary)
+			{
+				if((random() * (autocvar_g_balance_laser_primary_damage + autocvar_g_balance_laser_secondary_damage)) > autocvar_g_balance_laser_primary_damage)
+					{ self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_secondary_speed, 0, autocvar_g_balance_laser_secondary_lifetime, FALSE); }
+				else
+					{ self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE); }
+			}
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+				{ self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE); }
+
 			return TRUE;
 		}
 		
@@ -136,13 +121,8 @@ float W_Laser(float request)
 			{
 				if(weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 				{
-					W_DecreaseAmmo(ammo_none, 1, TRUE);
-
-					if not(autocvar_g_balance_laser_primary)
-						W_Laser_Shockwave();
-					else
-						W_Laser_Attack(FALSE);
-
+					W_DecreaseAmmo(ammo_none, 1, TRUE); // WEAPONTODO is this necessary?
+					W_Laser_Attack(FALSE);
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 				}
 			}
@@ -154,7 +134,6 @@ float W_Laser(float request)
 					{
 						if(self.switchweapon == WEP_LASER) // don't do this if already switching
 							W_LastWeapon();
-
 						break;
 					}
 
@@ -168,17 +147,6 @@ float W_Laser(float request)
 						}
 
 						break;
-					}
-
-					case 2: // melee attack secondary
-					{
-						if(!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
-						if(weapon_prepareattack(1, autocvar_g_balance_laser_melee_refire))
-						{
-							// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-							W_Laser_Melee();
-							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_melee_animtime, w_ready);
-						}
 					}
 				}
 			}
