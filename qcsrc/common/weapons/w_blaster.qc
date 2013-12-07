@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ LASER,
-/* function */ W_Laser,
+/* WEP_##id */ BLASTER,
+/* function */ W_Blaster,
 /* ammotype */ 0,
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
@@ -10,78 +10,112 @@ REGISTER_WEAPON(
 /* netname  */ "laser",
 /* fullname */ _("Blaster")
 );
+
+#define BLASTER_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, ammo) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, animtime) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, damage) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, delay) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, edgedamage) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, force) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, lifetime) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, radius) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, refire) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, shotangle) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, speed) \
+	w_cvar(WEP_BLASTER, blaster, MO_NONE, secondary) \
+	w_prop(WEP_BLASTER, blaster, reloading_ammo, reload_ammo) \
+	w_prop(WEP_BLASTER, blaster, reloading_time, reload_time) \
+	w_prop(WEP_BLASTER, blaster, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_BLASTER, blaster, switchdelay_drop, switchdelay_drop)
+
+#ifdef SVQC
+BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+#define PROJISPRIMARY(ent) ent.dmg
+#endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_laser() { weapon_defaultspawnfunc(WEP_LASER); }
+void spawnfunc_weapon_blaster() { weapon_defaultspawnfunc(WEP_BLASTER); }
+void spawnfunc_weapon_laser() { spawnfunc_weapon_blaster(); }
 
-void W_Laser_Touch()
+void W_Blaster_Touch()
 {
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	
-	if(self.dmg)
-		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
-	else
-		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
 
+	if(PROJISPRIMARY(self))
+	{
+		RadiusDamage(
+			self,
+			self.realowner,
+			WEP_CVAR_PRI(blaster, damage),
+			WEP_CVAR_PRI(blaster, edgedamage),
+			WEP_CVAR_PRI(blaster, radius),
+			world,
+			world,
+			WEP_CVAR_PRI(blaster, force),
+			self.projectiledeathtype,
+			other
+		);
+	}
+	else
+	{
+		RadiusDamage(
+			self,
+			self.realowner,
+			WEP_CVAR_SEC(blaster, damage),
+			WEP_CVAR_SEC(blaster, edgedamage),
+			WEP_CVAR_SEC(blaster, radius),
+			world,
+			world,
+			WEP_CVAR_SEC(blaster, force),
+			self.projectiledeathtype,
+			other
+		);
+	}
+	
 	remove(self);
 }
 
-void W_Laser_Think()
+void W_Blaster_Think()
 {
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
-	
-	if(self.dmg)
-		self.nextthink = time + autocvar_g_balance_laser_secondary_lifetime;
-	else
-		self.nextthink = time + autocvar_g_balance_laser_primary_lifetime;
-		
-	CSQCProjectile(self, TRUE, PROJECTILE_LASER, TRUE);
+	self.nextthink = time + WEP_CVAR_BOTH(blaster, PROJISPRIMARY(self), lifetime);
+	CSQCProjectile(self, TRUE, PROJECTILE_BLASTER, TRUE);
 }
 
-void W_Laser_Attack(float issecondary)
+void W_Blaster_Attack(float isprimary)
 {
-	entity missile;
-	vector s_forward;
-	float a;
+	float a = WEP_CVAR_BOTH(blaster, isprimary, shotangle);
+	vector s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
-	a = autocvar_g_balance_laser_primary_shotangle;
-	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
-
-	//if(nodamage)
-	//	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
-	/*else*/if(issecondary == 1)
-		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage);
-	else
-		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
+	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, WEP_CVAR_BOTH(blaster, isprimary, damage));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
+	entity missile = spawn();
 	missile.owner = missile.realowner = self;
-	missile.classname = "laserbolt";
-	missile.dmg = 0;
+	missile.classname = "laserbolt"; // WEAPONTODO
 	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = autocvar_g_balance_laser_primary_damage;
-
+	missile.bot_dodgerating = WEP_CVAR_BOTH(blaster, isprimary, damage);
+	PROJISPRIMARY(missile) = isprimary;
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_LASER;
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
-
-	W_SETUPPROJECTILEVELOCITY(missile, g_balance_laser_primary);
+	WEP_SETUPPROJVELOCITY(missile, blaster, MO_BOTH, isprimary);
 	missile.angles = vectoangles(missile.velocity);
+	
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
-	missile.touch = W_Laser_Touch;
 
+	missile.touch = W_Blaster_Touch;
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
-
-	missile.think = W_Laser_Think;
-	missile.nextthink = time + autocvar_g_balance_laser_primary_delay;
+	missile.missile_flags = MIF_SPLASH;
+	missile.projectiledeathtype = WEP_BLASTER; 
+	missile.think = W_Blaster_Think;
+	missile.nextthink = time + WEP_CVAR_BOTH(blaster, isprimary, delay);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 
@@ -94,7 +128,7 @@ void W_Laser_Attack(float issecondary)
 		self = oldself;
 	}
 }
-float W_Laser(float request)
+float W_Blaster(float request)
 {
 	switch(request)
 	{
@@ -122,7 +156,7 @@ float W_Laser(float request)
 				if(weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 				{
 					W_DecreaseAmmo(ammo_none, 1, TRUE); // WEAPONTODO is this necessary?
-					W_Laser_Attack(FALSE);
+					W_Blaster_Attack(FALSE);
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 				}
 			}
@@ -142,7 +176,7 @@ float W_Laser(float request)
 						if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
 						{
 							W_DecreaseAmmo(ammo_none, 1, TRUE);
-							W_Laser_Attack(TRUE);
+							W_Blaster_Attack(TRUE);
 							weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
 						}
 
@@ -195,7 +229,7 @@ float W_Laser(float request)
 }
 #endif
 #ifdef CSQC
-float W_Laser(float request)
+float W_Blaster(float request)
 {
 	switch(request)
 	{
