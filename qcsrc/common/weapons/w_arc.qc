@@ -11,26 +11,26 @@ REGISTER_WEAPON(
 /* fullname */ _("Arc")
 );
 
-#define ARC_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  animtime) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  damage) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_halflifedist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_maxdist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  falloff_mindist) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  force) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  range) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  refire) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define ARC_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_ARC, arc, MO_BOTH, ammo) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  animtime) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  damage) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_halflifedist) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_maxdist) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_mindist) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  force) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  range) \
+	w_cvar(WEP_ARC, arc, MO_PRI,  refire) \
+	w_prop(WEP_ARC, arc, reloading_ammo, reload_ammo) \
+	w_prop(WEP_ARC, arc, reloading_time, reload_time) \
+	w_prop(WEP_ARC, arc, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_ARC, arc, switchdelay_drop, switchdelay_drop)
 
 #ifndef MENUQC
 vector arc_shotorigin[4];
 #endif
 #ifdef SVQC
-ARC_SETTINGS(arc)
+ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void ArcInit();
 .vector hook_start, hook_end; // used for beam
 .entity arc_beam; // used for beam
@@ -259,7 +259,7 @@ float w_arc(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(ARC_SETTINGS(arc))
+			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_KILLMESSAGE:
@@ -292,7 +292,7 @@ void ArcInit()
 	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
 	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
 	arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
-	WEP_SET_PROPS(ARC_SETTINGS(arc), WEP_ARC)
+	ARC_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 }
 #endif
 #ifdef CSQC

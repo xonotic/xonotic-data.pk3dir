@@ -187,39 +187,34 @@ void register_weapons_done();
 */
 
 #define WEP_ADD_CVAR_MO_PRI(weapon,name) \
-	WEP_DUPECHECK(WEP_CVAR_P_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name)
+	WEP_DUPECHECK(WEP_CVAR_P_##wepname##_##name, autocvar_g_balance_##wepname##_primary_##name)
 
 #define WEP_ADD_CVAR_MO_SEC(weapon,name) \
-	WEP_DUPECHECK(WEP_CVAR_S_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name)
+	WEP_DUPECHECK(WEP_CVAR_S_##wepname##_##name, autocvar_g_balance_##wepname##_secondary_##name)
 
 #define WEP_ADD_CVAR_MO_BOTH(weapon,name) \
-	WEP_DUPECHECK(WEP_CVAR_P_##weapon##_##name, autocvar_g_balance_##weapon##_primary_##name) \
-	WEP_DUPECHECK(WEP_CVAR_S_##weapon##_##name, autocvar_g_balance_##weapon##_secondary_##name)
+	WEP_DUPECHECK(WEP_CVAR_P_##wepname##_##name, autocvar_g_balance_##wepname##_primary_##name) \
+	WEP_DUPECHECK(WEP_CVAR_S_##wepname##_##name, autocvar_g_balance_##wepname##_secondary_##name)
 
-#define WEP_ADD_CVAR_MO_NONE(weapon,name) \
-	WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_##name)
+#define WEP_ADD_CVAR_MO_NONE(wepname,name) \
+	WEP_DUPECHECK(WEP_CVAR_##wepname##_##name, autocvar_g_balance_##wepname##_##name)
 
-#define WEP_ADD_CVAR(weapon,mode,name) WEP_ADD_CVAR_##mode(weapon, name)
+#define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
 
-#define WEP_CVAR(weapon,name) autocvar_g_balance_##weapon##_##name
-#define WEP_CVAR_PRI(weapon,name) WEP_CVAR(weapon, primary_##name)
-#define WEP_CVAR_SEC(weapon,name) WEP_CVAR(weapon, secondary_##name)
-#define WEP_CVAR_BOTH(weapon,mode,name) ((mode == MO_PRI) ? WEP_CVAR_PRI(weapon, name) : WEP_CVAR_SEC(weapon, name))
+#define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
+#define WEP_CVAR_PRI(wepname,name) WEP_CVAR(wepname, primary_##name)
+#define WEP_CVAR_SEC(wepname,name) WEP_CVAR(wepname, secondary_##name)
+#define WEP_CVAR_BOTH(wepname,mode,name) ((mode == MO_PRI) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
 
-#define WEP_ADD_PROP(weapon,prop,name) \
+
+#define WEP_ADD_PROP(wepid,wepname,prop,name) \
 	.float ##prop; \
-	WEP_DUPECHECK(WEP_CVAR_##weapon##_##name, autocvar_g_balance_##weapon##_##name)
+	WEP_DUPECHECK(WEP_CVAR_##wepname##_##name, autocvar_g_balance_##wepname##_##name)
 
-#define WEP_SET_PROP(wepid,weapon,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##weapon##_##name;
+#define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
+#define WEP_SET_PROP(wepid,wepname,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
-/*#define WEP_SET_PROPS(wepsettings,wepid) \
-	#define WEP_ADD_CVAR(weapon,mode,name) \
-	#define WEP_ADD_PROP(weapon,prop,name) WEP_SET_PROP(wepid,weapon,prop,name) \
-	wepsettings \
-	#undef WEP_ADD_CVAR \
-	#undef WEP_ADD_PROP
-*/
 #include "all.qh"
 
 #undef WEP_ADD_CVAR

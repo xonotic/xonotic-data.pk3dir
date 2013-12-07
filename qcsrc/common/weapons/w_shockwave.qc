@@ -54,9 +54,9 @@ void W_Shockwave_Pellets(void)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shockwave_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, d * bullets);
+	W_SetupShot (self, TRUE, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOCKWAVE, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOCKWAVE, 0, bulletconstant);
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shockwave_pellets_ammo);
@@ -414,6 +414,7 @@ float W_Shockwave(float req)
 			if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shockwave_secondary_melee_range)
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 			else
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 			{
 				if(autocvar_g_antilag_bullets)
 					self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);

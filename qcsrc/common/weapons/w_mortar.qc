@@ -11,32 +11,32 @@ REGISTER_WEAPON(
 /* fullname */ _("Mortar")
 );
 
-#define MORTAR_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, ammo) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, bouncefactor) \
-	WEP_ADD_CVAR(weapon, MO_NONE, bouncestop) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, force) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, health) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_SEC,  lifetime_bounce) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, lifetime_stick) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, radius) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, refire) \
-	WEP_ADD_CVAR(weapon, MO_PRI,  remote_minbouncecnt) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, speed_up) \
-	WEP_ADD_CVAR(weapon, MO_BOTH, type) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define MORTAR_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, ammo) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, animtime) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_NONE, bouncefactor) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_NONE, bouncestop) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, damage) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, damageforcescale) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, edgedamage) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, force) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, health) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, lifetime) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_SEC,  lifetime_bounce) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, lifetime_stick) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, radius) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, refire) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_PRI,  remote_minbouncecnt) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, speed) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, speed_up) \
+	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, type) \
+	w_prop(WEP_GRENADE_LAUNCHER, mortar, reloading_ammo, reload_ammo) \
+	w_prop(WEP_GRENADE_LAUNCHER, mortar, reloading_time, reload_time) \
+	w_prop(WEP_GRENADE_LAUNCHER, mortar, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_GRENADE_LAUNCHER, mortar, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-MORTAR_SETTINGS(mortar)
+MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gl_detonate_later;
 .float gl_bouncecnt;
 #endif
@@ -402,7 +402,7 @@ float w_glauncher(float req)
 			precache_sound ("weapons/grenade_bounce6.wav");
 			precache_sound ("weapons/grenade_stick.wav");
 			precache_sound ("weapons/grenade_fire.wav");
-			WEP_SET_PROPS(MORTAR_SETTINGS(mortar), WEP_GRENADE_LAUNCHER)
+			MORTAR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -424,7 +424,7 @@ float w_glauncher(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(MORTAR_SETTINGS(mortar))
+			MORTAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RELOAD:

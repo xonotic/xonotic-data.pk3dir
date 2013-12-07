@@ -415,7 +415,7 @@ void W_Crylink_Attack (void)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
-    proj.missile_flags = MIF_SPLASH;
+		proj.missile_flags = MIF_SPLASH;
     
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
