@@ -404,7 +404,7 @@ void W_Shockwave_Attack()
 */
 float W_Shockwave(float req)
 {
-	float ammo_amount;
+	float ammo_amount = 0;
 	
 	switch(req)
 	{

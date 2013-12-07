@@ -425,7 +425,7 @@ float GetAmmoTypeForWep(float i) // WEAPONTODO
 {
 	switch(i)
 	{
-		case WEP_SHOTGUN: return 0;
+		case WEP_SHOCKWAVE: return 0;
 		case WEP_UZI: return 1;
 		case WEP_GRENADE_LAUNCHER: return 2;
 		case WEP_MINE_LAYER: return 2;

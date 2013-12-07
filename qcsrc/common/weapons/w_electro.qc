@@ -36,7 +36,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 			// change owner to whoever caused the combo explosion
 			WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
 
-			if((trace_fraction == 1) || (autocvar_g_balance_electro_combo_comboradius_thruwall > e.WarpZone_findradius_dist))
+			if((trace_fraction == 1) || (autocvar_g_balance_electro_combo_comboradius_thruwall > vlen(e.WarpZone_findradius_dist)))
 			{
 				e.realowner = own;
 				e.takedamage = DAMAGE_NO;

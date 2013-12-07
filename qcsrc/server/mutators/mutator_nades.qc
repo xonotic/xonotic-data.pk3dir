@@ -113,10 +113,10 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && !(deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) && !(deathtype & HITTYPE_SECONDARY)) // WEAPONTODO
 		damage = self.max_health * 1.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) && (deathtype & HITTYPE_SECONDARY))
 	{
 		damage = self.max_health * 0.1;
 		force *= 15;

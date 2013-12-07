@@ -164,11 +164,11 @@ void register_weapons_done();
 	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
-/*#define MO_NONE 0
+#define MO_NONE 0
 #define MO_PRI 1
 #define MO_SEC 2
 #define MO_BOTH 3
-*/
+
 #define WEP_DUPECHECK(dupecheck,cvar) float cvar;
 
 /*#define WEP_DUPECHECK(dupecheck,cvar) \
@@ -186,13 +186,13 @@ void register_weapons_done();
 	#endif
 */
 
-#define WEP_ADD_CVAR_MO_PRI(weapon,name) \
+#define WEP_ADD_CVAR_MO_PRI(wepname,name) \
 	WEP_DUPECHECK(WEP_CVAR_P_##wepname##_##name, autocvar_g_balance_##wepname##_primary_##name)
 
-#define WEP_ADD_CVAR_MO_SEC(weapon,name) \
+#define WEP_ADD_CVAR_MO_SEC(wepname,name) \
 	WEP_DUPECHECK(WEP_CVAR_S_##wepname##_##name, autocvar_g_balance_##wepname##_secondary_##name)
 
-#define WEP_ADD_CVAR_MO_BOTH(weapon,name) \
+#define WEP_ADD_CVAR_MO_BOTH(wepname,name) \
 	WEP_DUPECHECK(WEP_CVAR_P_##wepname##_##name, autocvar_g_balance_##wepname##_primary_##name) \
 	WEP_DUPECHECK(WEP_CVAR_S_##wepname##_##name, autocvar_g_balance_##wepname##_secondary_##name)
 
