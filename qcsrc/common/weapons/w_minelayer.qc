@@ -11,35 +11,35 @@ REGISTER_WEAPON(
 /* fullname */ _("Mine Layer")
 );
 
-#define MINELAYER_SETTINGS(weapon) \
-	WEP_ADD_CVAR(weapon, MO_NONE, ammo) \
-	WEP_ADD_CVAR(weapon, MO_NONE, animtime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, damageforcescale) \
-	WEP_ADD_CVAR(weapon, MO_NONE, detonatedelay) \
-	WEP_ADD_CVAR(weapon, MO_NONE, edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, health) \
-	WEP_ADD_CVAR(weapon, MO_NONE, lifetime) \
-	WEP_ADD_CVAR(weapon, MO_NONE, lifetime_countdown) \
-	WEP_ADD_CVAR(weapon, MO_NONE, limit) \
-	WEP_ADD_CVAR(weapon, MO_NONE, protection) \
-	WEP_ADD_CVAR(weapon, MO_NONE, proximityradius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, refire) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_damage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_edgedamage) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_force) \
-	WEP_ADD_CVAR(weapon, MO_NONE, remote_radius) \
-	WEP_ADD_CVAR(weapon, MO_NONE, speed) \
-	WEP_ADD_CVAR(weapon, MO_NONE, time) \
-	WEP_ADD_PROP(weapon, reloading_ammo, reload_ammo) \
-	WEP_ADD_PROP(weapon, reloading_time, reload_time) \
-	WEP_ADD_PROP(weapon, switchdelay_raise, switchdelay_raise) \
-	WEP_ADD_PROP(weapon, switchdelay_drop, switchdelay_drop)
+#define MINELAYER_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, ammo) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, animtime) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, damage) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, damageforcescale) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, detonatedelay) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, edgedamage) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, force) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, health) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, lifetime) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, lifetime_countdown) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, limit) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, protection) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, proximityradius) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, radius) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, refire) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, remote_damage) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, remote_edgedamage) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, remote_force) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, remote_radius) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, speed) \
+	w_cvar(WEP_MINE_LAYER, minelayer, MO_NONE, time) \
+	w_prop(WEP_MINE_LAYER, minelayer, reloading_ammo, reload_ammo) \
+	w_prop(WEP_MINE_LAYER, minelayer, reloading_time, reload_time) \
+	w_prop(WEP_MINE_LAYER, minelayer, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_MINE_LAYER, minelayer, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-MINELAYER_SETTINGS(minelayer)
+MINELAYER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
@@ -531,7 +531,7 @@ float w_minelayer(float req)
 			precache_sound ("weapons/mine_fire.wav");
 			precache_sound ("weapons/mine_stick.wav");
 			precache_sound ("weapons/mine_trigger.wav");
-			WEP_SET_PROPS(MINELAYER_SETTINGS(minelayer), WEP_MINE_LAYER)
+			MINELAYER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -559,7 +559,7 @@ float w_minelayer(float req)
 		}
 		case WR_CONFIG:
 		{
-			WEP_CONFIG_SETTINGS(MINELAYER_SETTINGS(minelayer))
+			MINELAYER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
 			return TRUE;
 		}
 		case WR_RESETPLAYER:
