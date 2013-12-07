@@ -105,6 +105,16 @@ entity get_weaponinfo(float id);
 string W_FixWeaponOrder(string order, float complete);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
+string W_FixWeaponOrder_BuildImpulseList(string o);
+string W_FixWeaponOrder_AllowIncomplete(string order);
+string W_FixWeaponOrder_ForceComplete(string order);
+
+void W_RandomWeapons(entity e, float n);
+
+string W_Name(float weaponid);
+
+float W_AmmoItemCode(float wpn);
+
 
 // ammo types
 .float ammo_shells;
@@ -132,9 +142,39 @@ string W_NumberWeaponOrder(string order);
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
 
+
 // =====================
 //  Weapon Registration
 // =====================
+
+#define MO_NONE 0
+#define MO_PRI 1
+#define MO_SEC 2
+#define MO_BOTH 3
+
+// create cvars for weapon settings
+#define WEP_ADD_CVAR_MO_PRI(wepname,name) final float autocvar_g_balance_##wepname##_primary_##name;
+#define WEP_ADD_CVAR_MO_SEC(wepname,name) final float autocvar_g_balance_##wepname##_secondary_##name;
+#define WEP_ADD_CVAR_MO_BOTH(wepname,name) \
+	final float autocvar_g_balance_##wepname##_primary_##name; \
+	final float autocvar_g_balance_##wepname##_secondary_##name;
+#define WEP_ADD_CVAR_MO_NONE(wepname,name) final float autocvar_g_balance_##wepname##_##name;
+#define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
+
+// create properties for weapon settings
+#define WEP_ADD_PROP(wepid,wepname,prop,name) \
+	.float ##prop; \
+	final float autocvar_g_balance_##wepname##_##name;
+
+// read cvars from weapon settings
+#define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
+#define WEP_CVAR_PRI(wepname,name) WEP_CVAR(wepname, primary_##name)
+#define WEP_CVAR_SEC(wepname,name) WEP_CVAR(wepname, secondary_##name)
+#define WEP_CVAR_BOTH(wepname,mode,name) ((mode == MO_PRI) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
+
+// set initialization values for weapon settings
+#define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
+#define WEP_SET_PROP(wepid,wepname,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
 float w_null(float dummy);
 void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
@@ -164,37 +204,6 @@ void register_weapons_done();
 	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
-#define MO_NONE 0
-#define MO_PRI 1
-#define MO_SEC 2
-#define MO_BOTH 3
-
-#define NODUPE final
-
-// create cvars for weapon settings
-#define WEP_ADD_CVAR_MO_PRI(wepname,name) NODUPE float autocvar_g_balance_##wepname##_primary_##name;
-#define WEP_ADD_CVAR_MO_SEC(wepname,name) NODUPE float autocvar_g_balance_##wepname##_secondary_##name;
-#define WEP_ADD_CVAR_MO_BOTH(wepname,name) \
-	NODUPE float autocvar_g_balance_##wepname##_primary_##name; \
-	NODUPE float autocvar_g_balance_##wepname##_secondary_##name;
-#define WEP_ADD_CVAR_MO_NONE(wepname,name) NODUPE float autocvar_g_balance_##wepname##_##name;
-#define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
-
-// create properties for weapon settings
-#define WEP_ADD_PROP(wepid,wepname,prop,name) \
-	.float ##prop; \
-	NODUPE float autocvar_g_balance_##wepname##_##name;
-
-// read cvars from weapon settings
-#define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
-#define WEP_CVAR_PRI(wepname,name) WEP_CVAR(wepname, primary_##name)
-#define WEP_CVAR_SEC(wepname,name) WEP_CVAR(wepname, secondary_##name)
-#define WEP_CVAR_BOTH(wepname,mode,name) ((mode == MO_PRI) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
-
-// set initialization values for weapon settings
-#define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##wepname##_##name;
-
 #include "all.qh"
 
 #undef WEP_ADD_CVAR_MO_PRI
@@ -204,17 +213,5 @@ void register_weapons_done();
 #undef WEP_ADD_CVAR
 #undef WEP_ADD_PROP
 #undef REGISTER_WEAPON
+
 ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done);
-
-string W_FixWeaponOrder(string order, float complete);
-string W_NumberWeaponOrder(string order);
-string W_NameWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-
-void W_RandomWeapons(entity e, float n);
-
-string W_Name(float weaponid);
-
-float W_AmmoItemCode(float wpn);
