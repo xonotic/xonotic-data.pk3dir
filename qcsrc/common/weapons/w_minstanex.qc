@@ -97,7 +97,7 @@ float w_minstanex(float req)
 			if(self.ammo_cells > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 			else
-				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); // WEAPONTODO: replace with proper minstanex cvars
 				
 			return TRUE;
 		}
@@ -131,8 +131,18 @@ float w_minstanex(float req)
 					// ugly minstagib hack to reuse the fire mode of the laser
 					float w;
 					w = self.weapon;
-					self.weapon = WEP_LASER;
-					W_Laser_Attack(FALSE);
+					self.weapon = WEP_BLASTER;
+					W_Blaster_Attack( // WEAPONTODO: replace with proper minstanex cvars
+						WEP_CVAR_PRI(blaster, shotangle),
+						WEP_CVAR_PRI(blaster, damage),
+						WEP_CVAR_PRI(blaster, edgedamage),
+						WEP_CVAR_PRI(blaster, radius),
+						WEP_CVAR_PRI(blaster, force),
+						WEP_CVAR_PRI(blaster, speed),
+						WEP_CVAR_PRI(blaster, spread),
+						WEP_CVAR_PRI(blaster, delay),
+						WEP_CVAR_PRI(blaster, lifetime)
+					);
 					self.weapon = w;
 					
 					// now do normal refire
@@ -152,7 +162,7 @@ float w_minstanex(float req)
 			precache_sound ("weapons/nexwhoosh1.wav");
 			precache_sound ("weapons/nexwhoosh2.wav");
 			precache_sound ("weapons/nexwhoosh3.wav");
-			W_Laser(WR_INIT);
+			W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously? 
 			return TRUE;
 		}
 		case WR_SETUP:

@@ -235,7 +235,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
 			frag_damage = 0;
 			frag_mirrordamage = 0;

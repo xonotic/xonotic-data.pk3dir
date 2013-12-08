@@ -783,7 +783,7 @@ void HUD_Weapons(void)
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
+			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_BLASTER && self.weapon != WEP_PORTO) // WEAPONTODO: detect weapons which don't have ammo automatically
 			{
 				a = 0;
 				ammo_type = GetAmmoTypeForWep(self.weapon);

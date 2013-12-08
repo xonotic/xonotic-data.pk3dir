@@ -101,7 +101,7 @@ void nade_beep()
 
 void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(DEATH_ISWEAPON(deathtype, WEP_LASER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 		return;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_NEX) || DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))

@@ -22,7 +22,7 @@ float NIX_CanChooseWeapon(float wpn)
 	}
 	else
 	{
-		if(wpn == WEP_LASER && g_nix_with_laser)
+		if(wpn == WEP_BLASTER && g_nix_with_laser) // WEAPONTODO: rename to g_nix_with_blaster
 			return FALSE;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return FALSE;
@@ -138,7 +138,7 @@ void NIX_GiveCurrentWeapon()
 
 	self.weapons = '0 0 0';
 	if(g_nix_with_laser)
-		self.weapons &= ~WEPSET_LASER;
+		self.weapons &= ~WEPSET_BLASTER;
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)

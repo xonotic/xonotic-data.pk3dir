@@ -12,7 +12,6 @@ REGISTER_WEAPON(
 );
 
 #define BLASTER_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, ammo) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, animtime) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, damage) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, delay) \
@@ -23,6 +22,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, refire) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, shotangle) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, speed) \
+	w_cvar(WEP_BLASTER, blaster, MO_BOTH, spread) \
 	w_cvar(WEP_BLASTER, blaster, MO_NONE, secondary) \
 	w_prop(WEP_BLASTER, blaster, reloading_ammo, reload_ammo) \
 	w_prop(WEP_BLASTER, blaster, reloading_time, reload_time) \
@@ -31,7 +31,11 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#define PROJISPRIMARY(ent) ent.dmg
+.float blaster_damage;
+.float blaster_edgedamage;
+.float blaster_radius;
+.float blaster_force;
+.float blaster_lifetime;
 #endif
 #else
 #ifdef SVQC
@@ -44,36 +48,18 @@ void W_Blaster_Touch()
 
 	self.event_damage = func_null;
 
-	if(PROJISPRIMARY(self))
-	{
-		RadiusDamage(
-			self,
-			self.realowner,
-			WEP_CVAR_PRI(blaster, damage),
-			WEP_CVAR_PRI(blaster, edgedamage),
-			WEP_CVAR_PRI(blaster, radius),
-			world,
-			world,
-			WEP_CVAR_PRI(blaster, force),
-			self.projectiledeathtype,
-			other
-		);
-	}
-	else
-	{
-		RadiusDamage(
-			self,
-			self.realowner,
-			WEP_CVAR_SEC(blaster, damage),
-			WEP_CVAR_SEC(blaster, edgedamage),
-			WEP_CVAR_SEC(blaster, radius),
-			world,
-			world,
-			WEP_CVAR_SEC(blaster, force),
-			self.projectiledeathtype,
-			other
-		);
-	}
+	RadiusDamage(
+		self,
+		self.realowner,
+		self.blaster_damage,
+		self.blaster_edgedamage,
+		self.blaster_radius,
+		world,
+		world,
+		self.blaster_force,
+		self.projectiledeathtype,
+		other
+	);
 	
 	remove(self);
 }
@@ -82,29 +68,53 @@ void W_Blaster_Think()
 {
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
-	self.nextthink = time + WEP_CVAR_BOTH(blaster, PROJISPRIMARY(self), lifetime);
+	self.nextthink = time + self.blaster_lifetime;
 	CSQCProjectile(self, TRUE, PROJECTILE_BLASTER, TRUE);
 }
 
-void W_Blaster_Attack(float isprimary)
+void W_Blaster_Attack(
+	float atk_shotangle,
+	float atk_damage,
+	float atk_edgedamage,
+	float atk_radius,
+	float atk_force,
+	float atk_speed,
+	float atk_spread,
+	float atk_delay,
+	float atk_lifetime)
 {
-	float a = WEP_CVAR_BOTH(blaster, isprimary, shotangle);
-	vector s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
+	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, WEP_CVAR_BOTH(blaster, isprimary, damage));
+	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = self;
-	missile.classname = "laserbolt"; // WEAPONTODO
+	missile.classname = "blasterbolt";
 	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = WEP_CVAR_BOTH(blaster, isprimary, damage);
-	PROJISPRIMARY(missile) = isprimary;
+	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);
+
+	missile.blaster_damage = atk_damage;
+	missile.blaster_edgedamage = atk_edgedamage;
+	missile.blaster_radius = atk_radius;
+	missile.blaster_force = atk_force;
+	missile.blaster_lifetime = atk_lifetime;
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
-	WEP_SETUPPROJVELOCITY(missile, blaster, MO_BOTH, isprimary);
+	
+	W_SetupProjectileVelocityEx(
+		missile,
+		w_shotdir,
+		v_up,
+		atk_speed,
+		0,
+		0,
+		atk_spread,
+		FALSE
+	);
+	
 	missile.angles = vectoangles(missile.velocity);
 	
 	//missile.glow_color = 250; // 244, 250
@@ -115,7 +125,7 @@ void W_Blaster_Attack(float isprimary)
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_BLASTER; 
 	missile.think = W_Blaster_Think;
-	missile.nextthink = time + WEP_CVAR_BOTH(blaster, isprimary, delay);
+	missile.nextthink = time + atk_delay;
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 
@@ -134,50 +144,72 @@ float W_Blaster(float request)
 	{
 		case WR_AIM:
 		{
-			if(autocvar_g_balance_laser_secondary)
+			if(WEP_CVAR(blaster, secondary))
 			{
-				if((random() * (autocvar_g_balance_laser_primary_damage + autocvar_g_balance_laser_secondary_damage)) > autocvar_g_balance_laser_primary_damage)
-					{ self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_secondary_speed, 0, autocvar_g_balance_laser_secondary_lifetime, FALSE); }
+				if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
+					{ self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), FALSE); }
 				else
-					{ self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE); }
+					{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); }
 			}
 			else
-				{ self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE); }
+				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); }
 
 			return TRUE;
 		}
 		
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
+			if(WEP_CVAR(blaster, reload_ammo) && self.clip_load < 1) // forced reload
+			{
 				WEP_ACTION(self.weapon, WR_RELOAD);
+			}
 			else if(self.BUTTON_ATCK)
 			{
-				if(weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_DecreaseAmmo(ammo_none, 1, TRUE); // WEAPONTODO is this necessary?
-					W_Blaster_Attack(FALSE);
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
+					W_Blaster_Attack(
+						WEP_CVAR_PRI(blaster, shotangle),
+						WEP_CVAR_PRI(blaster, damage),
+						WEP_CVAR_PRI(blaster, edgedamage),
+						WEP_CVAR_PRI(blaster, radius),
+						WEP_CVAR_PRI(blaster, force),
+						WEP_CVAR_PRI(blaster, speed),
+						WEP_CVAR_PRI(blaster, spread),
+						WEP_CVAR_PRI(blaster, delay),
+						WEP_CVAR_PRI(blaster, lifetime)
+					);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
 				}
 			}
 			else if(self.BUTTON_ATCK2)
 			{
-				switch(autocvar_g_balance_laser_secondary)
+				switch(WEP_CVAR(blaster, secondary))
 				{
 					case 0: // switch to last used weapon
 					{
-						if(self.switchweapon == WEP_LASER) // don't do this if already switching
+						if(self.switchweapon == WEP_BLASTER) // don't do this if already switching
 							W_LastWeapon();
 						break;
 					}
 
 					case 1: // normal projectile secondary
 					{
-						if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
+						if(weapon_prepareattack(1, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_DecreaseAmmo(ammo_none, 1, TRUE);
-							W_Blaster_Attack(TRUE);
-							weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+							W_Blaster_Attack(
+								WEP_CVAR_SEC(blaster, shotangle),
+								WEP_CVAR_SEC(blaster, damage),
+								WEP_CVAR_SEC(blaster, edgedamage),
+								WEP_CVAR_SEC(blaster, radius),
+								WEP_CVAR_SEC(blaster, force),
+								WEP_CVAR_SEC(blaster, speed),
+								WEP_CVAR_SEC(blaster, spread),
+								WEP_CVAR_SEC(blaster, delay),
+								WEP_CVAR_SEC(blaster, lifetime)
+							);
+							weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
 						}
 
 						break;
@@ -193,6 +225,7 @@ float W_Blaster(float request)
 			precache_model("models/weapons/v_laser.md3");
 			precache_model("models/weapons/h_laser.iqm");
 			precache_sound("weapons/lasergun_fire.wav");
+			BLASTER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		
@@ -206,6 +239,12 @@ float W_Blaster(float request)
 		case WR_CHECKAMMO2:
 		{
 			return TRUE; // laser has infinite ammo
+		}
+		
+		case WR_CONFIG:
+		{
+			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			return TRUE;
 		}
 		
 		case WR_RELOAD:

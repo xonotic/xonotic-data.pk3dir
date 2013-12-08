@@ -646,7 +646,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns) // WEAPON
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_LASER || i == WEP_SHOCKWAVE);
+		d = (i == WEP_BLASTER || i == WEP_SHOCKWAVE); // WEAPONTODO: add spawnflag for hard coded spawn weapons
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);

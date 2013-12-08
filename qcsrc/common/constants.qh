@@ -324,7 +324,7 @@ const float ATTEN_MAX = 3.984375;
 #define VOL_BASE 0.7
 #define VOL_BASEVOICE 1.0
 
-// this sets sounds and other properties of the projectiles in csqc
+// WEAPONTODO: move this into separate/new projectile handling code // this sets sounds and other properties of the projectiles in csqc
 const float PROJECTILE_ELECTRO = 1;
 const float PROJECTILE_ROCKET = 2;
 const float PROJECTILE_TAG = 3;
@@ -333,7 +333,7 @@ const float PROJECTILE_ELECTRO_BEAM = 6;
 const float PROJECTILE_GRENADE = 7;
 const float PROJECTILE_GRENADE_BOUNCING = 8;
 const float PROJECTILE_MINE = 9;
-const float PROJECTILE_LASER = 10;
+const float PROJECTILE_BLASTER = 10;
 const float PROJECTILE_HLAC = 11;
 const float PROJECTILE_SEEKER = 12;
 const float PROJECTILE_FLAC = 13;
