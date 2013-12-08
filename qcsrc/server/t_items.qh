@@ -11,6 +11,7 @@
 #define ISF_COLORMAP 16
 #define ISF_DROP 32
 #define ISF_ANGLES 64
+#define ISF_SIZE 128
 
 .float ItemStatus;
 

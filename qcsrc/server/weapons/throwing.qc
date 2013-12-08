@@ -1,5 +1,11 @@
 void thrown_wep_think()
 {
+	self.nextthink = time;
+	if(self.oldorigin != self.origin)
+	{
+		self.SendFlags |= ISF_LOCATION;
+		self.oldorigin = self.origin;
+	}
 	self.owner = world;
 	float timeleft = self.savenextthink - time;
 	if(timeleft > 1)
