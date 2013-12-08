@@ -24,11 +24,13 @@ REGISTER_WEAPON(
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, lifetime) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  comboradius) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_interval) \
+	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_radius) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncefactor) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncestop) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  count) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damageforcescale) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damagedbycontents) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  takedamageexplode) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  health) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  refire2) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_up) \
@@ -156,7 +158,7 @@ void W_Plasma_Touch(void)
 {
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
-		{ W_Plasma_Explode(); }
+		{ if(WEP_CVAR_SEC(electro, takedamageexplode)) { W_Plasma_Explode(); } }
 	else
 	{
 		//UpdateCSQCProjectile(self);
@@ -215,7 +217,7 @@ void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deat
 
 void W_Plasma_Think()
 {
-	self.nextthink = time + WEP_CVAR_PRI(electro, midaircombo_interval);
+	self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime);
 	
 	if(time >= self.ltime)
 	{
@@ -223,7 +225,7 @@ void W_Plasma_Think()
 		return;
 	}
 	
-	W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, comboradius), self.realowner);
+	W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), self.realowner);
 }
 
 void W_Electro_Attack_Bolt(void)
