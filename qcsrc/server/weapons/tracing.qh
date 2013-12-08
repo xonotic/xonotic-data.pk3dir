@@ -32,17 +32,15 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread); /* W
 #define W_SETUPPROJECTILEVELOCITY_UP(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), cvar(#s "_speed_up"), cvar(#s "_speed_z"), cvar(#s "_spread"), FALSE)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
-#define WEP_SETUPPROJVELOCITY_UP_MO_NONE(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, speed), WEP_CVAR(wepname, speed_up), WEP_CVAR(wepname, speed_z), WEP_CVAR(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_MO_PRI(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_MO_SEC(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_MO_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), WEP_CVAR_BOTH(wepname, isprimary, speed_up), WEP_CVAR_BOTH(wepname, isprimary, speed_z), WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP(ent,wepname,mode,isprimary) WEP_SETUPPROJVELOCITY_UP_##mode(ent, wepname, isprimary)
+#define WEP_SETUPPROJVELOCITY_UP_NONE(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, speed), WEP_CVAR(wepname, speed_up), WEP_CVAR(wepname, speed_z), WEP_CVAR(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_UP_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_UP_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_UP_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), WEP_CVAR_BOTH(wepname, isprimary, speed_up), WEP_CVAR_BOTH(wepname, isprimary, speed_z), WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
 
-#define WEP_SETUPPROJVELOCITY_MO_NONE(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, speed), 0, 0, WEP_CVAR(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_MO_PRI(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_MO_SEC(ent,wepname,unused) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_MO_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), 0, 0, WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY(ent,wepname,mode,isprimary) WEP_SETUPPROJVELOCITY_##mode(ent, wepname, isprimary)
+#define WEP_SETUPPROJVELOCITY_NONE(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, speed), 0, 0, WEP_CVAR(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
+#define WEP_SETUPPROJVELOCITY_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), 0, 0, WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
 
 // ====================
 //  Ballistics Tracing

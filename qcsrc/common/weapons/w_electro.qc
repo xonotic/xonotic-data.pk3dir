@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ ELECTRO,
-/* function */ w_electro,
+/* function */ W_Electro,
 /* ammotype */ IT_CELLS,
 /* impulse  */ 5,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
@@ -13,27 +13,40 @@ REGISTER_WEAPON(
 
 #define ELECTRO_SETTINGS(w_cvar,w_prop) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, ammo) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, animtime) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, damage) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, edgedamage) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, force) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, radius) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, refire) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, speed) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, damageforcescale) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, health) \
-	w_cvar(WEP_ELECTRO, electro, MO_PRI,  lifetime) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, secondary) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  spread) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  lifetime_min) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  lifetime_rand) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, spread) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, lifetime) \
+	w_cvar(WEP_ELECTRO, electro, MO_PRI,  comboradius) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncefactor) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncestop) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  count) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damageforcescale) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damagedbycontents) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  health) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  refire2) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_up) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_z) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius_thruwall) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_damage) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_edgedamage) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_force) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_radius) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_speed) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_safeammocheck) \
 	w_prop(WEP_ELECTRO, electro, reloading_ammo, reload_ammo) \
 	w_prop(WEP_ELECTRO, electro, reloading_time, reload_time) \
 	w_prop(WEP_ELECTRO, electro, switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_ELECTRO, electro, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
-//ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-var float autocvar_g_balance_electro_combo_comboradius_thruwall = 200;
+ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
@@ -46,7 +59,7 @@ void W_Plasma_Explode_Combo(void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
-	entity e = WarpZone_FindRadius(org, rad, !autocvar_g_balance_electro_combo_comboradius_thruwall);
+	entity e = WarpZone_FindRadius(org, rad, !WEP_CVAR(electro, combo_comboradius_thruwall));
 	while(e)
 	{
 		if(e.classname == "plasma")
@@ -57,14 +70,14 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 			if(
 				(trace_fraction == 1)
 				||
-				(autocvar_g_balance_electro_combo_comboradius_thruwall >= vlen(e.WarpZone_findradius_dist))
+				(WEP_CVAR(electro, combo_comboradius_thruwall) >= vlen(e.WarpZone_findradius_dist))
 			)
 			{
 				e.realowner = own;
 				e.takedamage = DAMAGE_NO;
 				e.classname = "plasma_chain";
 				e.think = W_Plasma_Explode_Combo;
-				e.nextthink = time + vlen(e.WarpZone_findradius_dist) / autocvar_g_balance_electro_combo_speed; // delay combo chains, looks cooler
+				e.nextthink = time + vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed); // delay combo chains, looks cooler
 			}
 		}
 		e = e.chain;
@@ -88,28 +101,28 @@ void W_Plasma_Explode(void)
 		RadiusDamage(
 			self,
 			self.realowner,
-			autocvar_g_balance_electro_secondary_damage,
-			autocvar_g_balance_electro_secondary_edgedamage,
-			autocvar_g_balance_electro_secondary_radius,
+			WEP_CVAR_SEC(electro, damage),
+			WEP_CVAR_SEC(electro, edgedamage),
+			WEP_CVAR_SEC(electro, radius),
 			world,
 			world,
-			autocvar_g_balance_electro_secondary_force,
+			WEP_CVAR_SEC(electro, force),
 			self.projectiledeathtype,
 			other
 		);
 	}
 	else
 	{
-		W_Plasma_TriggerCombo(self.origin, autocvar_g_balance_electro_primary_comboradius, self.realowner);
+		W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, comboradius), self.realowner);
 		RadiusDamage(
 			self,
 			self.realowner,
-			autocvar_g_balance_electro_primary_damage,
-			autocvar_g_balance_electro_primary_edgedamage,
-			autocvar_g_balance_electro_primary_radius,
+			WEP_CVAR_PRI(electro, damage),
+			WEP_CVAR_PRI(electro, edgedamage),
+			WEP_CVAR_PRI(electro, radius),
 			world,
 			world,
-			autocvar_g_balance_electro_primary_force,
+			WEP_CVAR_PRI(electro, force),
 			self.projectiledeathtype,
 			other
 		);
@@ -120,19 +133,19 @@ void W_Plasma_Explode(void)
 
 void W_Plasma_Explode_Combo(void)
 {
-	W_Plasma_TriggerCombo(self.origin, autocvar_g_balance_electro_combo_comboradius, self.realowner);
+	W_Plasma_TriggerCombo(self.origin, WEP_CVAR(electro, combo_comboradius), self.realowner);
 
 	self.event_damage = func_null;
 	
 	RadiusDamage(
 		self,
 		self.realowner,
-		autocvar_g_balance_electro_combo_damage,
-		autocvar_g_balance_electro_combo_edgedamage,
-		autocvar_g_balance_electro_combo_radius,
+		WEP_CVAR(electro, combo_damage),
+		WEP_CVAR(electro, combo_edgedamage),
+		WEP_CVAR(electro, combo_radius),
 		world,
 		world,
-		autocvar_g_balance_electro_combo_force,
+		WEP_CVAR(electro, combo_force),
 		WEP_ELECTRO | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
 		world
 	);
@@ -185,12 +198,12 @@ void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deat
 				(
 					// bound the length, inflictor may be in a galaxy far far away (warpzones)
 					min(
-						autocvar_g_balance_electro_combo_radius,
+						WEP_CVAR(electro, combo_radius),
 						vlen(self.origin - inflictor.origin)
 					)
 					/
 					// delay combo chains, looks cooler
-					autocvar_g_balance_electro_combo_speed
+					WEP_CVAR(electro, combo_speed)
 				);
 		}
 		else
@@ -201,13 +214,13 @@ void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deat
 	}
 }
 
-void W_Electro_Attack()
+void W_Electro_Attack_Bolt(void)
 {
 	entity proj;
 
-	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, WEP_CVAR_PRI(electro, ammo), autocvar_g_balance_electro_reload_ammo);//weapontodo
 
-	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
+	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(electro, damage));
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -215,16 +228,16 @@ void W_Electro_Attack()
 	proj.classname = "plasma_prim";
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_balance_electro_primary_damage;
+	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
 	proj.use = W_Plasma_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
-	proj.nextthink = time + autocvar_g_balance_electro_primary_lifetime;
+	proj.nextthink = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO;
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
-	W_SETUPPROJECTILEVELOCITY(proj, g_balance_electro_primary);
+	WEP_SETUPPROJVELOCITY_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Plasma_TouchExplode;
 	setsize(proj, '0 0 -3', '0 0 -3');
@@ -236,11 +249,11 @@ void W_Electro_Attack()
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_Electro_Attack2()
+void W_Electro_Attack_Orbs(void)
 {
-	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(electro, ammo), autocvar_g_balance_electro_reload_ammo);//weapontodo
 
-	W_SetupShot_ProjectileSize(self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_balance_electro_secondary_damage);
+	W_SetupShot_ProjectileSize(self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, WEP_CVAR_SEC(electro, damage));
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -252,8 +265,8 @@ void W_Electro_Attack2()
 	proj.use = W_Plasma_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_balance_electro_secondary_damage;
-	proj.nextthink = time + autocvar_g_balance_electro_secondary_lifetime;
+	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);
+	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO | HITTYPE_SECONDARY;
 	setorigin(proj, w_shotorg);
@@ -261,18 +274,18 @@ void W_Electro_Attack2()
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_electro_secondary);
+	WEP_SETUPPROJVELOCITY_UP_SEC(proj, electro);
 	proj.touch = W_Plasma_Touch;
 	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
-	proj.damageforcescale = autocvar_g_balance_electro_secondary_damageforcescale;
-	proj.health = autocvar_g_balance_electro_secondary_health;
+	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);
+	proj.health = WEP_CVAR_SEC(electro, health);
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
-	proj.damagedbycontents = (autocvar_g_balance_electro_secondary_damagedbycontents);
+	proj.damagedbycontents = (WEP_CVAR_SEC(electro, damagedbycontents));
 
-	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
-	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
+	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
 #if 0
@@ -288,39 +301,37 @@ void W_Electro_Attack2()
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void w_electro_checkattack()
+void W_Electro_CheckAttack()
 {
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
 	if(weapon_prepareattack(1, -1))
 	{
-		W_Electro_Attack2();
+		W_Electro_Attack_Orbs();
 		self.electro_count -= 1;
-		weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
+		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
-
 	w_ready();
 }
 
 .float bot_secondary_electromooth;
-float w_electro(float req)
+float W_Electro(float req)
 {
 	float ammo_amount;
 	switch(req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK=FALSE;
-			self.BUTTON_ATCK2=FALSE;
+			self.BUTTON_ATCK = self.BUTTON_ATCK2 = FALSE;
 			if(vlen(self.origin-self.enemy.origin) > 1000)
 				self.bot_secondary_electromooth = 0;
 			if(self.bot_secondary_electromooth == 0)
 			{
 				float shoot;
 
-				if(autocvar_g_balance_electro_primary_speed)
-					shoot = bot_aim(autocvar_g_balance_electro_primary_speed, 0, autocvar_g_balance_electro_primary_lifetime, FALSE);
+				if(WEP_CVAR_PRI(electro, speed))
+					shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), FALSE);
 				else
 					shoot = bot_aim(1000000, 0, 0.001, FALSE);
 
@@ -332,7 +343,7 @@ float w_electro(float req)
 			}
 			else
 			{
-				if(bot_aim(autocvar_g_balance_electro_secondary_speed, autocvar_g_balance_mortar_secondary_speed_up, autocvar_g_balance_electro_secondary_lifetime, TRUE)) // WHAT THE ACTUAL FUUUUUUUUUCK?!?!? WEAPONTODO
+				if(bot_aim(WEP_CVAR_SEC(electro, speed), autocvar_g_balance_mortar_secondary_speed_up, WEP_CVAR_SEC(electro, lifetime), TRUE)) // WHAT THE ACTUAL FUUUUUUUUUCK?!?!? WEAPONTODO
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;
@@ -343,12 +354,12 @@ float w_electro(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_electro_reload_ammo) // forced reload
+			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
 				ammo_amount = 0;
-				if(self.clip_load >= autocvar_g_balance_electro_primary_ammo)
+				if(self.clip_load >= WEP_CVAR_PRI(electro, ammo))
 					ammo_amount = 1;
-				if(self.clip_load >= autocvar_g_balance_electro_secondary_ammo)
+				if(self.clip_load >= WEP_CVAR_SEC(electro, ammo))
 					ammo_amount += 1;
 
 				if(!ammo_amount)
@@ -361,21 +372,21 @@ float w_electro(float req)
 			}
 			if (self.BUTTON_ATCK)
 			{
-				if(weapon_prepareattack(0, autocvar_g_balance_electro_primary_refire))
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
 				{
-						W_Electro_Attack();
-						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+						W_Electro_Attack_Bolt();
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
 			else if(self.BUTTON_ATCK2)
 			{
-				if (time >= self.electro_secondarytime)
-				if (weapon_prepareattack(1, autocvar_g_balance_electro_secondary_refire))
+				if(time >= self.electro_secondarytime)
+				if(weapon_prepareattack(1, WEP_CVAR_SEC(electro, refire)))
 				{
-					W_Electro_Attack2();
-					self.electro_count = autocvar_g_balance_electro_secondary_count;
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_electro_secondary_animtime, w_electro_checkattack);
-					self.electro_secondarytime = time + autocvar_g_balance_electro_secondary_refire2 * W_WeaponRateFactor();
+					W_Electro_Attack_Orbs();
+					self.electro_count = WEP_CVAR_SEC(electro, count);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+					self.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
 				}
 			}
 
@@ -383,14 +394,15 @@ float w_electro(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_electro.md3");
-			precache_model ("models/weapons/v_electro.md3");
-			precache_model ("models/weapons/h_electro.iqm");
-			precache_sound ("weapons/electro_bounce.wav");
-			precache_sound ("weapons/electro_fire.wav");
-			precache_sound ("weapons/electro_fire2.wav");
-			precache_sound ("weapons/electro_impact.wav");
-			precache_sound ("weapons/electro_impact_combo.wav");
+			precache_model("models/weapons/g_electro.md3");
+			precache_model("models/weapons/v_electro.md3");
+			precache_model("models/weapons/h_electro.iqm");
+			precache_sound("weapons/electro_bounce.wav");
+			precache_sound("weapons/electro_fire.wav");
+			precache_sound("weapons/electro_fire2.wav");
+			precache_sound("weapons/electro_impact.wav");
+			precache_sound("weapons/electro_impact_combo.wav");
+			ELECTRO_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -400,23 +412,28 @@ float w_electro(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
+			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(electro, ammo);
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_PRI(electro, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			if(autocvar_g_balance_electro_combo_safeammocheck) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+			if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
 			{
-				ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
-				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
 			}
 			else
 			{
-				ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
+				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(electro, ammo);
+				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo);
 			}
 			return ammo_amount;
+		}
+		case WR_CONFIG:
+		{
+			ELECTRO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			return TRUE;
 		}
 		case WR_RESETPLAYER:
 		{
@@ -425,7 +442,7 @@ float w_electro(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -454,7 +471,7 @@ float w_electro(float req)
 }
 #endif
 #ifdef CSQC
-float w_electro(float req)
+float W_Electro(float req)
 {
 	switch(req)
 	{

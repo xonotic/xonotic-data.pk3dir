@@ -22,7 +22,6 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damageforcescale) \
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, health) \
 	w_cvar(WEP_HAGAR, hagar, MO_PRI,  lifetime) \
-	w_cvar(WEP_HAGAR, hagar, MO_NONE, secondary) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  spread) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_max) \
@@ -36,6 +35,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_linkexplode) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_min) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_rand) \
+	w_cvar(WEP_HAGAR, hagar, MO_NONE, secondary) \
 	w_prop(WEP_HAGAR, hagar, reloading_ammo, reload_ammo) \
 	w_prop(WEP_HAGAR, hagar, reloading_time, reload_time) \
 	w_prop(WEP_HAGAR, hagar, switchdelay_raise, switchdelay_raise) \
