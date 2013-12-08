@@ -11,7 +11,29 @@ REGISTER_WEAPON(
 /* fullname */ _("MinstaNex")
 );
 
+#define MINSTANEX_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, ammo) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, animtime) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, refire) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, ammo) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, animtime) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, damage) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, delay) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, edgedamage) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, force) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, lifetime) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, radius) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, refire) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, shotangle) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, speed) \
+	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, spread) \
+	w_prop(WEP_MINSTANEX, minstanex, reloading_ammo, reload_ammo) \
+	w_prop(WEP_MINSTANEX, minstanex, reloading_time, reload_time) \
+	w_prop(WEP_MINSTANEX, minstanex, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_MINSTANEX, minstanex, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+MINSTANEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float minstanex_lasthit;
 .float jump_interval;
 #endif
@@ -79,7 +101,7 @@ void W_MinstaNex_Attack (void)
 			break;
 	}
 	
-	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : WEP_CVAR_PRI(minstanex, ammo)), WEP_CVAR(minstanex, reload_ammo));
 }
 
 float w_minstanex(float req)
@@ -88,7 +110,7 @@ float w_minstanex(float req)
 	float minstanex_ammo;
 
 	// now multiple WR_s use this
-	minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
+	minstanex_ammo = ((g_minstagib) ? 1 : WEP_CVAR_PRI(minstanex, ammo));
 
 	switch(req)
 	{
@@ -97,23 +119,23 @@ float w_minstanex(float req)
 			if(self.ammo_cells > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); // WEAPONTODO: replace with proper minstanex cvars
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(minstanex, speed), 0, WEP_CVAR_SEC(minstanex, lifetime), FALSE); // WEAPONTODO: replace with proper minstanex cvars
 				
 			return TRUE;
 		}
 		case WR_THINK:
 		{
 			// if the laser uses load, we also consider its ammo for reloading
-			if(autocvar_g_balance_minstanex_reload_ammo && autocvar_g_balance_minstanex_laser_ammo && self.clip_load < min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo)) // forced reload
+			if(WEP_CVAR(minstanex, reload_ammo) && WEP_CVAR_SEC(minstanex, ammo) && self.clip_load < min(minstanex_ammo, WEP_CVAR_SEC(minstanex, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
+			else if(WEP_CVAR(minstanex, reload_ammo) && self.clip_load < minstanex_ammo) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if (self.BUTTON_ATCK)
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
+				if (weapon_prepareattack(0, WEP_CVAR_PRI(minstanex, refire)))
 				{
 					W_MinstaNex_Attack();
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(minstanex, animtime), w_ready);
 				}
 			}
 			else if (self.BUTTON_ATCK2)
@@ -122,31 +144,31 @@ float w_minstanex(float req)
 				if (weapon_prepareattack(1, -1))
 				{
 					// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
-					self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+					self.jump_interval = time + WEP_CVAR_SEC(minstanex, refire) * W_WeaponRateFactor();
 					
 					// decrease ammo for the laser?
-					if(autocvar_g_balance_minstanex_laser_ammo)
-						W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
+					if(WEP_CVAR_SEC(minstanex, ammo))
+						W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(minstanex, ammo), WEP_CVAR(minstanex, reload_ammo));
 
 					// ugly minstagib hack to reuse the fire mode of the laser
 					float w;
 					w = self.weapon;
 					self.weapon = WEP_BLASTER;
-					W_Blaster_Attack( // WEAPONTODO: replace with proper minstanex cvars
-						WEP_CVAR_PRI(blaster, shotangle),
-						WEP_CVAR_PRI(blaster, damage),
-						WEP_CVAR_PRI(blaster, edgedamage),
-						WEP_CVAR_PRI(blaster, radius),
-						WEP_CVAR_PRI(blaster, force),
-						WEP_CVAR_PRI(blaster, speed),
-						WEP_CVAR_PRI(blaster, spread),
-						WEP_CVAR_PRI(blaster, delay),
-						WEP_CVAR_PRI(blaster, lifetime)
+					W_Blaster_Attack(
+						WEP_CVAR_SEC(minstanex, shotangle),
+						WEP_CVAR_SEC(minstanex, damage),
+						WEP_CVAR_SEC(minstanex, edgedamage),
+						WEP_CVAR_SEC(minstanex, radius),
+						WEP_CVAR_SEC(minstanex, force),
+						WEP_CVAR_SEC(minstanex, speed),
+						WEP_CVAR_SEC(minstanex, spread),
+						WEP_CVAR_SEC(minstanex, delay),
+						WEP_CVAR_SEC(minstanex, lifetime)
 					);
 					self.weapon = w;
 					
 					// now do normal refire
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
+					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(minstanex, animtime), w_ready);
 				}
 			}
 			
@@ -154,15 +176,16 @@ float w_minstanex(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/nexflash.md3");
-			precache_model ("models/weapons/g_minstanex.md3");
-			precache_model ("models/weapons/v_minstanex.md3");
-			precache_model ("models/weapons/h_minstanex.iqm");
-			precache_sound ("weapons/minstanexfire.wav");
-			precache_sound ("weapons/nexwhoosh1.wav");
-			precache_sound ("weapons/nexwhoosh2.wav");
-			precache_sound ("weapons/nexwhoosh3.wav");
-			W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously? 
+			precache_model("models/nexflash.md3");
+			precache_model("models/weapons/g_minstanex.md3");
+			precache_model("models/weapons/v_minstanex.md3");
+			precache_model("models/weapons/h_minstanex.iqm");
+			precache_sound("weapons/minstanexfire.wav");
+			precache_sound("weapons/nexwhoosh1.wav");
+			precache_sound("weapons/nexwhoosh2.wav");
+			precache_sound("weapons/nexwhoosh3.wav");
+			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
+			MINSTANEX_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:
@@ -179,11 +202,16 @@ float w_minstanex(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			if(!autocvar_g_balance_minstanex_laser_ammo)
+			if(!WEP_CVAR_SEC(minstanex, ammo))
 				return TRUE;
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
-			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= autocvar_g_balance_minstanex_laser_ammo;
+			ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(minstanex, ammo);
+			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= WEP_CVAR_SEC(minstanex, ammo);
 			return ammo_amount;
+		}
+		case WR_CONFIG:
+		{
+			MINSTANEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			return TRUE;
 		}
 		case WR_RESETPLAYER:
 		{
@@ -193,8 +221,8 @@ float w_minstanex(float req)
 		case WR_RELOAD:
 		{
 			float used_ammo;
-			if(autocvar_g_balance_minstanex_laser_ammo)
-				used_ammo = min(minstanex_ammo, autocvar_g_balance_minstanex_laser_ammo);
+			if(WEP_CVAR_SEC(minstanex, ammo))
+				used_ammo = min(minstanex_ammo, WEP_CVAR_SEC(minstanex, ammo));
 			else
 				used_ammo = minstanex_ammo;
 
