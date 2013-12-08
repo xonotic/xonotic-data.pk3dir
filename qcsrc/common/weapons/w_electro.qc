@@ -11,7 +11,28 @@ REGISTER_WEAPON(
 /* fullname */ _("Electro")
 );
 
+#define ELECTRO_SETTINGS(w_cvar,w_prop) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, ammo) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, damage) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, edgedamage) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, force) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, radius) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, refire) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, speed) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, damageforcescale) \
+	w_cvar(WEP_ELECTRO, electro, MO_BOTH, health) \
+	w_cvar(WEP_ELECTRO, electro, MO_PRI,  lifetime) \
+	w_cvar(WEP_ELECTRO, electro, MO_NONE, secondary) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  spread) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  lifetime_min) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  lifetime_rand) \
+	w_prop(WEP_ELECTRO, electro, reloading_ammo, reload_ammo) \
+	w_prop(WEP_ELECTRO, electro, reloading_time, reload_time) \
+	w_prop(WEP_ELECTRO, electro, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_ELECTRO, electro, switchdelay_drop, switchdelay_drop)
+
 #ifdef SVQC
+//ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 var float autocvar_g_balance_electro_combo_comboradius_thruwall = 200;
 #endif
 #else
@@ -21,20 +42,23 @@ void spawnfunc_weapon_electro() { weapon_defaultspawnfunc(WEP_ELECTRO); }
 .float electro_count;
 .float electro_secondarytime;
 
-void W_Plasma_Explode_Combo (void);
+void W_Plasma_Explode_Combo(void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
-	entity e;
-	e = WarpZone_FindRadius(org, rad, !autocvar_g_balance_electro_combo_comboradius_thruwall);
-	while (e)
+	entity e = WarpZone_FindRadius(org, rad, !autocvar_g_balance_electro_combo_comboradius_thruwall);
+	while(e)
 	{
-		if (e.classname == "plasma")
+		if(e.classname == "plasma")
 		{
 			// change owner to whoever caused the combo explosion
 			WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
 
-			if((trace_fraction == 1) || (autocvar_g_balance_electro_combo_comboradius_thruwall >= vlen(e.WarpZone_findradius_dist)))
+			if(
+				(trace_fraction == 1)
+				||
+				(autocvar_g_balance_electro_combo_comboradius_thruwall >= vlen(e.WarpZone_findradius_dist))
+			)
 			{
 				e.realowner = own;
 				e.takedamage = DAMAGE_NO;
@@ -47,7 +71,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
-void W_Plasma_Explode (void)
+void W_Plasma_Explode(void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -58,50 +82,84 @@ void W_Plasma_Explode (void)
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
-	if (self.movetype == MOVETYPE_BOUNCE)
+	
+	if(self.movetype == MOVETYPE_BOUNCE)
 	{
-		RadiusDamage(self, self.realowner, autocvar_g_balance_electro_secondary_damage, autocvar_g_balance_electro_secondary_edgedamage, autocvar_g_balance_electro_secondary_radius, world, world, autocvar_g_balance_electro_secondary_force, self.projectiledeathtype, other);
+		RadiusDamage(
+			self,
+			self.realowner,
+			autocvar_g_balance_electro_secondary_damage,
+			autocvar_g_balance_electro_secondary_edgedamage,
+			autocvar_g_balance_electro_secondary_radius,
+			world,
+			world,
+			autocvar_g_balance_electro_secondary_force,
+			self.projectiledeathtype,
+			other
+		);
 	}
 	else
 	{
 		W_Plasma_TriggerCombo(self.origin, autocvar_g_balance_electro_primary_comboradius, self.realowner);
-		RadiusDamage (self, self.realowner, autocvar_g_balance_electro_primary_damage, autocvar_g_balance_electro_primary_edgedamage, autocvar_g_balance_electro_primary_radius, world, world, autocvar_g_balance_electro_primary_force, self.projectiledeathtype, other);
+		RadiusDamage(
+			self,
+			self.realowner,
+			autocvar_g_balance_electro_primary_damage,
+			autocvar_g_balance_electro_primary_edgedamage,
+			autocvar_g_balance_electro_primary_radius,
+			world,
+			world,
+			autocvar_g_balance_electro_primary_force,
+			self.projectiledeathtype,
+			other
+		);
 	}
 
-	remove (self);
+	remove(self);
 }
 
-void W_Plasma_Explode_Combo (void)
+void W_Plasma_Explode_Combo(void)
 {
 	W_Plasma_TriggerCombo(self.origin, autocvar_g_balance_electro_combo_comboradius, self.realowner);
 
 	self.event_damage = func_null;
-	RadiusDamage (self, self.realowner, autocvar_g_balance_electro_combo_damage, autocvar_g_balance_electro_combo_edgedamage, autocvar_g_balance_electro_combo_radius, world, world, autocvar_g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
+	
+	RadiusDamage(
+		self,
+		self.realowner,
+		autocvar_g_balance_electro_combo_damage,
+		autocvar_g_balance_electro_combo_edgedamage,
+		autocvar_g_balance_electro_combo_radius,
+		world,
+		world,
+		autocvar_g_balance_electro_combo_force,
+		WEP_ELECTRO | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		world
+	);
 
 	remove (self);
 }
 
-void W_Plasma_Touch (void)
+void W_Plasma_Touch(void)
 {
-	//self.velocity = self.velocity  * 0.1;
-
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM) {
-		W_Plasma_Explode ();
-	} else {
+	if(other.takedamage == DAMAGE_AIM)
+		{ W_Plasma_Explode(); }
+	else
+	{
 		//UpdateCSQCProjectile(self);
-		spamsound (self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
 
-void W_Plasma_TouchExplode (void)
+void W_Plasma_TouchExplode(void)
 {
 	PROJECTILE_TOUCH;
-	W_Plasma_Explode ();
+	W_Plasma_Explode();
 }
 
-void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -109,22 +167,31 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
 	self.health = self.health - damage;
-	if (self.health <= 0)
+	if(self.health <= 0)
 	{
 		self.takedamage = DAMAGE_NO;
 		self.nextthink = time;
-		if (is_combo)
+		if(is_combo)
 		{
 			// change owner to whoever caused the combo explosion
 			self.realowner = inflictor.realowner;
 			self.classname = "plasma_chain";
 			self.think = W_Plasma_Explode_Combo;
-			self.nextthink = time + min(autocvar_g_balance_electro_combo_radius, vlen(self.origin - inflictor.origin)) / autocvar_g_balance_electro_combo_speed; // delay combo chains, looks cooler
-				//                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ bounding the length, because inflictor may be in a galaxy far far away (warpzones)
+			self.nextthink = time +
+				(
+					// bound the length, inflictor may be in a galaxy far far away (warpzones)
+					min(
+						autocvar_g_balance_electro_combo_radius,
+						vlen(self.origin - inflictor.origin)
+					)
+					/
+					// delay combo chains, looks cooler
+					autocvar_g_balance_electro_combo_speed
+				);
 		}
 		else
 		{
@@ -140,7 +207,7 @@ void W_Electro_Attack()
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
+	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -171,17 +238,15 @@ void W_Electro_Attack()
 
 void W_Electro_Attack2()
 {
-	entity proj;
-
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_balance_electro_secondary_damage);
+	W_SetupShot_ProjectileSize(self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_balance_electro_secondary_damage);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	entity proj = spawn();
 	proj.classname = "plasma";
 	proj.owner = proj.realowner = self;
 	proj.use = W_Plasma_Explode;
