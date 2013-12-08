@@ -23,6 +23,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, spread) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, lifetime) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  comboradius) \
+	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_interval) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncefactor) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncestop) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  count) \
@@ -212,6 +213,19 @@ void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deat
 	}
 }
 
+void W_Plasma_Think()
+{
+	self.nextthink = time + WEP_CVAR_PRI(electro, midaircombo_interval);
+	
+	if(time >= self.ltime)
+	{
+		self.use();
+		return;
+	}
+	
+	W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, comboradius), self.realowner);
+}
+
 void W_Electro_Attack_Bolt(void)
 {
 	entity proj;
@@ -228,8 +242,9 @@ void W_Electro_Attack_Bolt(void)
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
 	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use_hittype_splash;
-	proj.nextthink = time + WEP_CVAR_PRI(electro, lifetime);
+	proj.think = W_Plasma_Think;
+	proj.nextthink = time;
+	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = WEP_ELECTRO;
 	setorigin(proj, w_shotorg);
