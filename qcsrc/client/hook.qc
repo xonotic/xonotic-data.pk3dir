@@ -75,9 +75,6 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			vs = hook_shotorigin[s];
 			break;
-		case ENT_CLIENT_ELECTRO_BEAM:
-			vs = electro_shotorigin[s];
-			break;
 		case ENT_CLIENT_ARC_BEAM:
 			vs = lightning_shotorigin[s];
 			break;
@@ -92,7 +89,6 @@ void Draw_GrapplingHook()
 				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ELECTRO_BEAM:
 			case ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
@@ -113,7 +109,6 @@ void Draw_GrapplingHook()
 				a = self.velocity;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ELECTRO_BEAM:
 			case ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
@@ -155,12 +150,6 @@ void Draw_GrapplingHook()
 				rgb = '.3 1 .3';
 			}
 			break;
-		case ENT_CLIENT_ELECTRO_BEAM:
-			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
-			offset = Noise_Brown(self, frametime) * 10;
-			tex = "particles/lgbeam";
-			rgb = '1 1 1';
-			break;
 		case ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
@@ -193,7 +182,6 @@ void Draw_GrapplingHook()
 				self.drawmask = 0;
 			}
 			break;
-		case ENT_CLIENT_ELECTRO_BEAM:
 		case ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
@@ -203,9 +191,6 @@ void Draw_GrapplingHook()
 	{
 		default:
 		case ENT_CLIENT_HOOK:
-			break;
-		case ENT_CLIENT_ELECTRO_BEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 		case ENT_CLIENT_ARC_BEAM:
 			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
@@ -239,7 +224,6 @@ void Ent_ReadHook(float bIsNew, float type)
 			case ENT_CLIENT_HOOK:
 				self.HookRange = 0;
 				break;
-			case ENT_CLIENT_ELECTRO_BEAM:
 			case ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
@@ -273,9 +257,6 @@ void Ent_ReadHook(float bIsNew, float type)
 				// for the model
 				setmodel(self, "models/hook.md3");
 				self.drawmask = MASK_NORMAL;
-				break;
-			case ENT_CLIENT_ELECTRO_BEAM:
-				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
 			case ENT_CLIENT_ARC_BEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);

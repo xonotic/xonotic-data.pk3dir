@@ -622,10 +622,6 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[0]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[1]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[2]));

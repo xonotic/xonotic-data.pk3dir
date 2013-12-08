@@ -817,7 +817,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
-		case ENT_CLIENT_ELECTRO_BEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_ELECTRO_BEAM); break;
 		case ENT_CLIENT_ARC_BEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_ARC_BEAM); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
@@ -954,10 +953,6 @@ void Ent_Init()
 	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());

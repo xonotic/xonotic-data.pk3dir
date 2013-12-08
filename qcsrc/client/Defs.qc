@@ -223,7 +223,6 @@ string shortmapname;
 float tempdb;
 float ClientProgsDB;
 vector hook_shotorigin[4];
-vector electro_shotorigin[4];
 vector lightning_shotorigin[4];
 
 
