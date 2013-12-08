@@ -440,6 +440,7 @@ void W_Shockwave_Attack()
 			h = vlen(center - self.origin);
 			ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
 			a = h * cos(ang);
+			// WEAPONTODO: replace with simpler method
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
