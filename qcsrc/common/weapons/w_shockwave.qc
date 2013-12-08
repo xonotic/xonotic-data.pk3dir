@@ -97,36 +97,53 @@ vector shockwave_hit_force[32];
 void W_Shockwave_Pellets(void)
 {
 	float sc;
-	float ammoamount;
-	float bullets;
-	float d;
-	float f;
-	float spread;
-	float bulletspeed;
-	float bulletconstant;
 	entity flash;
 
-	ammoamount = WEP_CVAR(shockwave, pellets_ammo);
-	bullets = WEP_CVAR(shockwave, pellets_bullets);
-	d = WEP_CVAR(shockwave, pellets_damage);
-	f = WEP_CVAR(shockwave, pellets_force);
-	spread = WEP_CVAR(shockwave, pellets_spread);
-	bulletspeed = WEP_CVAR(shockwave, pellets_speed);
-	bulletconstant = WEP_CVAR(shockwave, pellets_bulletconstant);
+	W_DecreaseAmmo(ammo_shells, WEP_CVAR(shockwave, pellets_ammo), WEP_CVAR(shockwave, reload_ammo));
 
-	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shockwave_reload_ammo);
-
-	W_SetupShot(self, TRUE, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, d * bullets);
-	for(sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOCKWAVE, 0, bulletconstant);
+	W_SetupShot(self, TRUE, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, WEP_CVAR(shockwave, pellets_damage) * WEP_CVAR(shockwave, pellets_bullets));
+	
+	for(sc = 0; sc < WEP_CVAR(shockwave, pellets_bullets); ++sc)
+	{
+		fireBallisticBullet(
+			w_shotorg,
+			w_shotdir,
+			WEP_CVAR(shockwave, pellets_spread),
+			WEP_CVAR(shockwave, pellets_speed),
+			5,
+			WEP_CVAR(shockwave, pellets_damage),
+			WEP_CVAR(shockwave, pellets_force),
+			WEP_SHOCKWAVE,
+			0,
+			WEP_CVAR(shockwave, pellets_bulletconstant)
+		);
+	}
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR(shockwave, pellets_ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
-		for(sc = 0;sc < ammoamount;sc = sc + 1)
-			SpawnCasing(((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
+	{
+		for(sc = 0;sc < WEP_CVAR(shockwave, pellets_ammo); ++sc)
+		{
+			SpawnCasing(
+				(
+					((random () * 50 + 50) * v_right)
+					-
+					(v_forward * (random () * 25 + 25))
+					-
+					((random () * 5 - 30) * v_up)
+				),
+				2,
+				vectoangles(v_forward),
+				'0 250 0',
+				100,
+				1,
+				self
+			);
+		}
+	}
 
 	// muzzle flash for 1st person view
 	flash = spawn();
