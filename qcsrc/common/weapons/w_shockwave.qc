@@ -106,13 +106,13 @@ void W_Shockwave_Pellets(void)
 	float bulletconstant;
 	entity flash;
 
-	ammoamount = autocvar_g_balance_shockwave_pellets_ammo;
-	bullets = autocvar_g_balance_shockwave_pellets_bullets;
-	d = autocvar_g_balance_shockwave_pellets_damage;
-	f = autocvar_g_balance_shockwave_pellets_force;
-	spread = autocvar_g_balance_shockwave_pellets_spread;
-	bulletspeed = autocvar_g_balance_shockwave_pellets_speed;
-	bulletconstant = autocvar_g_balance_shockwave_pellets_bulletconstant;
+	ammoamount = WEP_CVAR(shockwave, pellets_ammo);
+	bullets = WEP_CVAR(shockwave, pellets_bullets);
+	d = WEP_CVAR(shockwave, pellets_damage);
+	f = WEP_CVAR(shockwave, pellets_force);
+	spread = WEP_CVAR(shockwave, pellets_spread);
+	bulletspeed = WEP_CVAR(shockwave, pellets_speed);
+	bulletconstant = WEP_CVAR(shockwave, pellets_bulletconstant);
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shockwave_reload_ammo);
 
@@ -121,7 +121,7 @@ void W_Shockwave_Pellets(void)
 		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOCKWAVE, 0, bulletconstant);
 	endFireBallisticBullet();
 
-	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shockwave_pellets_ammo);
+	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR(shockwave, pellets_ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -480,10 +480,10 @@ float W_Shockwave(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_shockwave_reload_ammo && self.clip_load < autocvar_g_balance_shockwave_pellets_ammo) // forced reload
+			if(autocvar_g_balance_shockwave_reload_ammo && self.clip_load < WEP_CVAR(shockwave, pellets_ammo)) // forced reload
 			{
 				// don't force reload an empty shockwave if its melee attack is active
-				if(!(autocvar_g_balance_shockwave_secondary && self.ammo_shells < autocvar_g_balance_shockwave_pellets_ammo))
+				if(!(autocvar_g_balance_shockwave_secondary && self.ammo_shells < WEP_CVAR(shockwave, pellets_ammo)))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
@@ -492,11 +492,11 @@ float W_Shockwave(float req)
 				{
 					if (time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(0, autocvar_g_balance_shockwave_pellets_animtime))
+						if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
 						{
 							W_Shockwave_Attack();
-							self.shockwave_pelletstime = time + autocvar_g_balance_shockwave_pellets_refire * W_WeaponRateFactor();
-							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shockwave_pellets_animtime, w_ready);
+							self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
+							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
 						}
 					}
 				}
@@ -531,8 +531,8 @@ float W_Shockwave(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_shells >= autocvar_g_balance_shockwave_pellets_ammo;
-			ammo_amount += self.(weapon_load[WEP_SHOCKWAVE]) >= autocvar_g_balance_shockwave_pellets_ammo;
+			ammo_amount = self.ammo_shells >= WEP_CVAR(shockwave, pellets_ammo);
+			ammo_amount += self.(weapon_load[WEP_SHOCKWAVE]) >= WEP_CVAR(shockwave, pellets_ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -547,7 +547,7 @@ float W_Shockwave(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(autocvar_g_balance_shockwave_pellets_ammo, "weapons/reload.wav");
+			W_Reload(WEP_CVAR(shockwave, pellets_ammo), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
