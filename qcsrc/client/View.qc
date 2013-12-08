@@ -274,7 +274,7 @@ float TrueAimCheck()
 		case WEP_TUBA: // no aim
 		case WEP_PORTO: // shoots from eye
 		case WEP_HOOK: // no trueaim
-		case WEP_GRENADE_LAUNCHER: // toss curve
+		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
 		case WEP_NEX:
 		case WEP_MINSTANEX:

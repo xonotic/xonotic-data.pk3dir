@@ -12,28 +12,28 @@ REGISTER_WEAPON(
 );
 
 #define MORTAR_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, ammo) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, animtime) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_NONE, bouncefactor) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_NONE, bouncestop) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, damage) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, damageforcescale) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, edgedamage) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, force) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, health) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, lifetime) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_SEC,  lifetime_bounce) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, lifetime_stick) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, radius) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, refire) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_PRI,  remote_minbouncecnt) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, speed) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, speed_up) \
-	w_cvar(WEP_GRENADE_LAUNCHER, mortar, MO_BOTH, type) \
-	w_prop(WEP_GRENADE_LAUNCHER, mortar, reloading_ammo, reload_ammo) \
-	w_prop(WEP_GRENADE_LAUNCHER, mortar, reloading_time, reload_time) \
-	w_prop(WEP_GRENADE_LAUNCHER, mortar, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_GRENADE_LAUNCHER, mortar, switchdelay_drop, switchdelay_drop)
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, ammo) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, animtime) \
+	w_cvar(WEP_MORTAR, mortar, MO_NONE, bouncefactor) \
+	w_cvar(WEP_MORTAR, mortar, MO_NONE, bouncestop) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, damage) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, damageforcescale) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, edgedamage) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, force) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, health) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, lifetime) \
+	w_cvar(WEP_MORTAR, mortar, MO_SEC,  lifetime_bounce) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, lifetime_stick) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, radius) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, refire) \
+	w_cvar(WEP_MORTAR, mortar, MO_PRI,  remote_minbouncecnt) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed_up) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, type) \
+	w_prop(WEP_MORTAR, mortar, reloading_ammo, reload_ammo) \
+	w_prop(WEP_MORTAR, mortar, reloading_time, reload_time) \
+	w_prop(WEP_MORTAR, mortar, switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_MORTAR, mortar, switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
@@ -223,7 +223,7 @@ void W_Grenade_Attack (void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER;
+	gren.projectiledeathtype = WEP_MORTAR;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -272,7 +272,7 @@ void W_Grenade_Attack2 (void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_GRENADE_LAUNCHER | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_MORTAR | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -302,7 +302,7 @@ void W_Grenade_Attack2 (void)
 
 void spawnfunc_weapon_grenadelauncher (void)
 {
-	weapon_defaultspawnfunc(WEP_GRENADE_LAUNCHER);
+	weapon_defaultspawnfunc(WEP_MORTAR);
 }
 
 .float bot_secondary_grenademooth;
@@ -413,13 +413,13 @@ float w_glauncher(float req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.ammo_rockets >= WEP_CVAR_PRI(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.ammo_rockets >= WEP_CVAR_SEC(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

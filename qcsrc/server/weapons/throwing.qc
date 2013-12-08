@@ -148,7 +148,7 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
+	if (g_nexball && w == WEP_MORTAR)
 		return 0;
     if(w == 0)
         return 0;
