@@ -354,7 +354,7 @@ void W_Shockwave_Attack()
 	//entity transform = WarpZone_trace_transform;
 
 	// do the firing effect now
-	//SendCSQCShockwaveParticle(attack_endpos);
+	//SendCSQCShockwaveParticle(attack_endpos); // WEAPONTODO
 	Damage_DamageInfo(attack_hitpos, WEP_CVAR(shockwave, blast_splash_damage), WEP_CVAR(shockwave, blast_splash_edgedamage), WEP_CVAR(shockwave, blast_splash_radius), w_shotdir * WEP_CVAR(shockwave, blast_splash_force), WEP_SHOCKWAVE, 0, self);
 
 	// splash damage/jumping trace
