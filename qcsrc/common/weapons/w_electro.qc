@@ -217,15 +217,18 @@ void W_Plasma_Damage(entity inflictor, entity attacker, float damage, float deat
 
 void W_Plasma_Think()
 {
-	self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime);
-	
 	if(time >= self.ltime)
 	{
 		self.use();
 		return;
 	}
-	
-	W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), self.realowner);
+
+	if(WEP_CVAR_PRI(electro, midaircombo_radius))
+	{
+		self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime);
+		W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), self.realowner);
+	}
+	else { self.nextthink = self.ltime; }
 }
 
 void W_Electro_Attack_Bolt(void)
