@@ -12,20 +12,6 @@ void W_Config_Queue_Swap(float root, float child, entity pass)
 float W_Config_Queue_Compare(float root, float child, entity pass)
 {
 	return strcmp(wep_config_queue[root], wep_config_queue[child]);
-	
-	#if 0
-	float i, r, c;
-	for(i = 1; i <= 100; ++i)
-	{
-		r = str2chr(wep_config_queue[root], i);
-		c = str2chr(wep_config_queue[child], i);
-		if(r == c) { continue; }
-		else if(c > r) { return -1; }
-		else { return 1; }
-	}
-
-	return 0;
-	#endif
 }
 
 void Dump_Weapon_Settings(void)
