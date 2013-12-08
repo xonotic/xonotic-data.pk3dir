@@ -1,6 +1,6 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ GRENADE_LAUNCHER,
+/* WEP_##id */ MORTAR,
 /* function */ w_glauncher,
 /* ammotype */ IT_ROCKETS,
 /* impulse  */ 4,
@@ -134,6 +134,7 @@ void W_Grenade_Touch1 (void)
 			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
 			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
@@ -178,6 +179,7 @@ void W_Grenade_Touch2 (void)
 			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
 			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 		
