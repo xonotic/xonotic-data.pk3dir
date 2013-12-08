@@ -47,15 +47,13 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+.float electro_count;
+.float electro_secondarytime;
+void W_Plasma_Explode_Combo(void);
 #endif
 #else
 #ifdef SVQC
 void spawnfunc_weapon_electro() { weapon_defaultspawnfunc(WEP_ELECTRO); }
-
-.float electro_count;
-.float electro_secondarytime;
-
-void W_Plasma_Explode_Combo(void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
@@ -324,8 +322,7 @@ float W_Electro(float req)
 		case WR_AIM:
 		{
 			self.BUTTON_ATCK = self.BUTTON_ATCK2 = FALSE;
-			if(vlen(self.origin-self.enemy.origin) > 1000)
-				self.bot_secondary_electromooth = 0;
+			if(vlen(self.origin-self.enemy.origin) > 1000) { self.bot_secondary_electromooth = 0; }
 			if(self.bot_secondary_electromooth == 0)
 			{
 				float shoot;
@@ -343,7 +340,7 @@ float W_Electro(float req)
 			}
 			else
 			{
-				if(bot_aim(WEP_CVAR_SEC(electro, speed), autocvar_g_balance_mortar_secondary_speed_up, WEP_CVAR_SEC(electro, lifetime), TRUE)) // WHAT THE ACTUAL FUUUUUUUUUCK?!?!? WEAPONTODO
+				if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), TRUE))
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;
@@ -370,7 +367,8 @@ float W_Electro(float req)
 				
 				return TRUE;
 			}
-			if (self.BUTTON_ATCK)
+			
+			if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
 				{
