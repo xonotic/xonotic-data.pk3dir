@@ -1015,9 +1015,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
-		if(self.angles != '0 0 0')
-            self.SendFlags |= ISF_ANGLES;
-
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -1036,9 +1033,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
-				
-			self.SendFlags |= ISF_SIZE;
-			
+
 			// note droptofloor returns FALSE if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
@@ -1112,8 +1107,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
     }
     setsize (self, self.pos1, self.pos2);
 
-    self.SendFlags |= ISF_SIZE;
-
     if(itemflags & FL_POWERUP)
         self.ItemStatus |= ITS_ANIMATE1;
 
@@ -1144,6 +1137,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		Item_Reset();
 
     Net_LinkEntity(self, FALSE, 0, ItemSend);
+	
+	self.SendFlags |= ISF_SIZE;
+	if(self.angles)
+		self.SendFlags |= ISF_ANGLES;
 
 	// call this hook after everything else has been done
 	if(MUTATOR_CALLHOOK(Item_Spawn))
