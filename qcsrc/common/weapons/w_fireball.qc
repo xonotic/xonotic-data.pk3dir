@@ -34,10 +34,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  damagetime) \
 	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_up) \
 	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_z) \
-	w_prop(WEP_FIREBALL, fireball, reloading_ammo, reload_ammo) \
-	w_prop(WEP_FIREBALL, fireball, reloading_time, reload_time) \
-	w_prop(WEP_FIREBALL, fireball, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_FIREBALL, fireball, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_FIREBALL, fireball, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_FIREBALL, fireball, float,  reloading_time, reload_time) \
+	w_prop(WEP_FIREBALL, fireball, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_FIREBALL, fireball, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

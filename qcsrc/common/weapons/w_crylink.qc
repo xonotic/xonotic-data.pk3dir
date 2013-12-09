@@ -37,10 +37,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_radius) \
 	w_cvar(WEP_CRYLINK, crylink, MO_BOTH, joinexplode_force) \
 	w_cvar(WEP_CRYLINK, crylink, MO_SEC,  spreadtype) \
-	w_prop(WEP_CRYLINK, crylink, reloading_ammo, reload_ammo) \
-	w_prop(WEP_CRYLINK, crylink, reloading_time, reload_time) \
-	w_prop(WEP_CRYLINK, crylink, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_CRYLINK, crylink, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_CRYLINK, crylink, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_CRYLINK, crylink, float,  reloading_time, reload_time) \
+	w_prop(WEP_CRYLINK, crylink, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_CRYLINK, crylink, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

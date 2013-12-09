@@ -28,10 +28,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HLAC, hlac, MO_NONE, secondary) \
 	w_cvar(WEP_HLAC, hlac, MO_SEC,  shots) \
 	w_cvar(WEP_HLAC, hlac, MO_SEC,  spread) \
-	w_prop(WEP_HLAC, hlac, reloading_ammo, reload_ammo) \
-	w_prop(WEP_HLAC, hlac, reloading_time, reload_time) \
-	w_prop(WEP_HLAC, hlac, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HLAC, hlac, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_HLAC, hlac, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_HLAC, hlac, float,  reloading_time, reload_time) \
+	w_prop(WEP_HLAC, hlac, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HLAC, hlac, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

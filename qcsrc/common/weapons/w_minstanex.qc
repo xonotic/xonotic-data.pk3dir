@@ -27,10 +27,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, shotangle) \
 	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, speed) \
 	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, spread) \
-	w_prop(WEP_MINSTANEX, minstanex, reloading_ammo, reload_ammo) \
-	w_prop(WEP_MINSTANEX, minstanex, reloading_time, reload_time) \
-	w_prop(WEP_MINSTANEX, minstanex, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_MINSTANEX, minstanex, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_MINSTANEX, minstanex, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_MINSTANEX, minstanex, float,  reloading_time, reload_time) \
+	w_prop(WEP_MINSTANEX, minstanex, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_MINSTANEX, minstanex, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 MINSTANEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

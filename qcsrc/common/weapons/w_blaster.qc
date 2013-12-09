@@ -24,10 +24,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, speed) \
 	w_cvar(WEP_BLASTER, blaster, MO_BOTH, spread) \
 	w_cvar(WEP_BLASTER, blaster, MO_NONE, secondary) \
-	w_prop(WEP_BLASTER, blaster, reloading_ammo, reload_ammo) \
-	w_prop(WEP_BLASTER, blaster, reloading_time, reload_time) \
-	w_prop(WEP_BLASTER, blaster, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_BLASTER, blaster, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_BLASTER, blaster, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_BLASTER, blaster, float,  reloading_time, reload_time) \
+	w_prop(WEP_BLASTER, blaster, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_BLASTER, blaster, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

@@ -44,10 +44,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_radius) \
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_speed) \
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_safeammocheck) \
-	w_prop(WEP_ELECTRO, electro, reloading_ammo, reload_ammo) \
-	w_prop(WEP_ELECTRO, electro, reloading_time, reload_time) \
-	w_prop(WEP_ELECTRO, electro, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_ELECTRO, electro, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_ELECTRO, electro, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_ELECTRO, electro, float,  reloading_time, reload_time) \
+	w_prop(WEP_ELECTRO, electro, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_ELECTRO, electro, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

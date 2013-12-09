@@ -29,10 +29,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HOOK, hook, MO_SEC,  speed) \
 	w_cvar(WEP_HOOK, hook, MO_SEC,  health) \
 	w_cvar(WEP_HOOK, hook, MO_SEC,  damageforcescale) \
-	w_prop(WEP_HOOK, hook, reloading_ammo, reload_ammo) \
-	w_prop(WEP_HOOK, hook, reloading_time, reload_time) \
-	w_prop(WEP_HOOK, hook, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HOOK, hook, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_HOOK, hook, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_HOOK, hook, float,  reloading_time, reload_time) \
+	w_prop(WEP_HOOK, hook, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HOOK, hook, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

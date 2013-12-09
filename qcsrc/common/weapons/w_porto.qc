@@ -17,10 +17,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_PORTO, porto, MO_BOTH, refire) \
 	w_cvar(WEP_PORTO, porto, MO_BOTH, speed) \
 	w_cvar(WEP_PORTO, porto, MO_NONE, secondary) \
-	w_prop(WEP_PORTO, porto, reloading_ammo, reload_ammo) \
-	w_prop(WEP_PORTO, porto, reloading_time, reload_time) \
-	w_prop(WEP_PORTO, porto, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_PORTO, porto, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_PORTO, porto, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_PORTO, porto, float,  reloading_time, reload_time) \
+	w_prop(WEP_PORTO, porto, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_PORTO, porto, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

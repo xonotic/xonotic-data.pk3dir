@@ -62,10 +62,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_speed) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_spread) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_tracker_lifetime) \
-	w_prop(WEP_SEEKER, seeker, reloading_ammo, reload_ammo) \
-	w_prop(WEP_SEEKER, seeker, reloading_time, reload_time) \
-	w_prop(WEP_SEEKER, seeker, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_SEEKER, seeker, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_SEEKER, seeker, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_SEEKER, seeker, float,  reloading_time, reload_time) \
+	w_prop(WEP_SEEKER, seeker, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_SEEKER, seeker, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

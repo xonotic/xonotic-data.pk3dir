@@ -65,10 +65,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_spread) \
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, primary) \
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, secondary) \
-	w_prop(WEP_SHOCKWAVE, shockwave, reloading_ammo, reload_ammo) \
-	w_prop(WEP_SHOCKWAVE, shockwave, reloading_time, reload_time) \
-	w_prop(WEP_SHOCKWAVE, shockwave, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_SHOCKWAVE, shockwave, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_time, reload_time) \
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

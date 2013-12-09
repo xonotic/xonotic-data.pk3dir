@@ -35,10 +35,12 @@ REGISTER_WEAPON(
 	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speed) \
 	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speedaccel) \
 	w_cvar(WEP_DEVASTATOR, devastator, MO_NONE, speedstart) \
-	w_prop(WEP_DEVASTATOR, devastator, reloading_ammo, reload_ammo) \
-	w_prop(WEP_DEVASTATOR, devastator, reloading_time, reload_time) \
-	w_prop(WEP_DEVASTATOR, devastator, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_DEVASTATOR, devastator, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_DEVASTATOR, devastator, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_DEVASTATOR, devastator, float,  reloading_time, reload_time) \
+	w_prop(WEP_DEVASTATOR, devastator, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_DEVASTATOR, devastator, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(WEP_DEVASTATOR, devastator, string, weaponreplace, weaponreplace) \
+	w_prop(WEP_DEVASTATOR, devastator, float,  weaponstart, weaponstart)
 
 #ifdef SVQC
 DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
@@ -329,7 +331,7 @@ float W_Devastator(float req)
 				for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == self)
 				{
 					targ = targetlist;
-					while (targ)
+					while(targ)
 					{
 						if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(devastator, radius))
 						{
@@ -351,7 +353,7 @@ float W_Devastator(float req)
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
-				if (self.BUTTON_ATCK)
+				if(self.BUTTON_ATCK)
 				{
 					if(self.rl_release || WEP_CVAR(devastator, guidestop))
 					if(weapon_prepareattack(0, WEP_CVAR(devastator, refire)))
@@ -364,7 +366,7 @@ float W_Devastator(float req)
 				else
 					self.rl_release = 1;
 
-				if (self.BUTTON_ATCK2)
+				if(self.BUTTON_ATCK2)
 				{
 					rockfound = 0;
 					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)

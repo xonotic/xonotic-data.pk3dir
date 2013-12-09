@@ -35,10 +35,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_UZI, uzi, MO_NONE, burst_animtime) \
 	w_cvar(WEP_UZI, uzi, MO_NONE, burst_speed) \
 	w_cvar(WEP_UZI, uzi, MO_NONE, burst_ammo) \
-	w_prop(WEP_UZI, uzi, reloading_ammo, reload_ammo) \
-	w_prop(WEP_UZI, uzi, reloading_time, reload_time) \
-	w_prop(WEP_UZI, uzi, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_UZI, uzi, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_UZI, uzi, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_UZI, uzi, float,  reloading_time, reload_time) \
+	w_prop(WEP_UZI, uzi, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_UZI, uzi, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 UZI_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

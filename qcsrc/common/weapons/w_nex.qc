@@ -37,10 +37,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool) \
 	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool_regen) \
 	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool_pause_regen) \
-	w_prop(WEP_NEX, nex, reloading_ammo, reload_ammo) \
-	w_prop(WEP_NEX, nex, reloading_time, reload_time) \
-	w_prop(WEP_NEX, nex, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_NEX, nex, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_NEX, nex, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_NEX, nex, float,  reloading_time, reload_time) \
+	w_prop(WEP_NEX, nex, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_NEX, nex, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 NEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

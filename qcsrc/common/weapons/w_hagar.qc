@@ -36,10 +36,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_min) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_rand) \
 	w_cvar(WEP_HAGAR, hagar, MO_NONE, secondary) \
-	w_prop(WEP_HAGAR, hagar, reloading_ammo, reload_ammo) \
-	w_prop(WEP_HAGAR, hagar, reloading_time, reload_time) \
-	w_prop(WEP_HAGAR, hagar, switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HAGAR, hagar, switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_HAGAR, hagar, float,  reloading_ammo, reload_ammo) \
+	w_prop(WEP_HAGAR, hagar, float,  reloading_time, reload_time) \
+	w_prop(WEP_HAGAR, hagar, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(WEP_HAGAR, hagar, float,  switchdelay_drop, switchdelay_drop)
 
 #ifdef SVQC
 HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
