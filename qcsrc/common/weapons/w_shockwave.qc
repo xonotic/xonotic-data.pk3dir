@@ -421,8 +421,7 @@ void W_Shockwave_Attack()
 						)
 					);
 
-				// calculate damage from multiplier
-				// 1 = "highest" damage, 0 = "lowest" edgedamage
+				// calculate damage from multiplier: 1 = "highest" damage, 0 = "lowest" edgedamage
 				final_damage =
 					(
 						(WEP_CVAR(shockwave, blast_jump_damage) * multiplier)

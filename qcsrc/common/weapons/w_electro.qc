@@ -23,6 +23,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, spread) \
 	w_cvar(WEP_ELECTRO, electro, MO_BOTH, lifetime) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  comboradius) \
+	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_explode) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_interval) \
 	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_radius) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncefactor) \
@@ -65,21 +66,41 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 	{
 		if(e.classname == "plasma")
 		{
-			// change owner to whoever caused the combo explosion
-			WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
-
-			if(
-				(trace_fraction == 1)
-				||
-				(WEP_CVAR(electro, combo_comboradius_thruwall) >= vlen(e.WarpZone_findradius_dist))
-			)
+			// do we allow thruwall triggering?
+			if(WEP_CVAR(electro, combo_comboradius_thruwall))
 			{
-				e.realowner = own;
-				e.takedamage = DAMAGE_NO;
-				e.classname = "plasma_chain";
-				e.think = W_Plasma_Explode_Combo;
-				e.nextthink = time + vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed); // delay combo chains, looks cooler
+				// if distance is greater than thruwall distance, check to make sure it's not through a wall
+				if(vlen(e.WarpZone_findradius_dist) > WEP_CVAR(electro, combo_comboradius_thruwall))
+				{
+					WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
+					if(trace_fraction != 1)
+					{
+						// trigger is through a wall and outside of thruwall range, abort
+						e = e.chain;
+						continue;
+					}
+				}
 			}
+			
+			// change owner to whoever caused the combo explosion
+			e.realowner = own;
+			e.takedamage = DAMAGE_NO;
+			e.classname = "plasma_chain";
+			
+			// now set the next one to trigger as well
+			e.think = W_Plasma_Explode_Combo;
+			
+			// delay combo chains, looks cooler
+			e.nextthink =
+				(
+					time
+					+
+					(WEP_CVAR(electro, combo_speed) ?
+						(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
+						:
+						0
+					)
+				);
 		}
 		e = e.chain;
 	}
@@ -151,7 +172,7 @@ void W_Plasma_Explode_Combo(void)
 		world
 	);
 
-	remove (self);
+	remove(self);
 }
 
 void W_Plasma_Touch(void)
@@ -225,8 +246,44 @@ void W_Plasma_Think()
 
 	if(WEP_CVAR_PRI(electro, midaircombo_radius))
 	{
-		self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime);
-		W_Plasma_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), self.realowner);
+		float found = 0;
+		entity e = WarpZone_FindRadius(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), TRUE);
+
+		// loop through nearby orbs and trigger them
+		while(e)
+		{
+			if(e.classname == "plasma")
+			{
+				// change owner to whoever caused the combo explosion
+				e.realowner = self.realowner;
+				e.takedamage = DAMAGE_NO;
+				e.classname = "plasma_chain";
+
+				// now set the next one to trigger as well
+				e.think = W_Plasma_Explode_Combo;
+				
+				// delay combo chains, looks cooler
+				e.nextthink =
+					(
+						time
+						+
+						(WEP_CVAR(electro, combo_speed) ?
+							(vlen(e.WarpZone_findradius_dist) / WEP_CVAR(electro, combo_speed))
+							:
+							0
+						)
+					);
+
+				++found;
+			}
+			e = e.chain;
+		}
+
+		// if we triggered an orb, should we explode? if not, lets try again next time
+		if(found && WEP_CVAR_PRI(electro, midaircombo_explode))
+			{ self.use(); }
+		else
+			{ self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime); }
 	}
 	else { self.nextthink = self.ltime; }
 }
