@@ -34,6 +34,7 @@ weapons/selection.qh
 weapons/spawning.qh
 weapons/throwing.qh
 weapons/tracing.qh
+weapons/weaponstats.qh
 weapons/weaponsystem.qh
 
 t_items.qh
@@ -155,6 +156,7 @@ weapons/selection.qc
 weapons/spawning.qc
 weapons/throwing.qc
 weapons/tracing.qc
+weapons/weaponstats.qc
 weapons/weaponsystem.qc
 ../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
