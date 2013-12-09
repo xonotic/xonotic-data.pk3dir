@@ -26,6 +26,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, lifetime_stick) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, radius) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, refire) \
+	w_cvar(WEP_MORTAR, mortar, MO_SEC,  remote_detonateprimary) \
 	w_cvar(WEP_MORTAR, mortar, MO_PRI,  remote_minbouncecnt) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed_up) \
@@ -370,7 +371,7 @@ float w_glauncher(float req)
 			}
 			else if (self.BUTTON_ATCK2)
 			{
-				if (cvar("g_balance_mortar_secondary_remote_detonateprimary"))
+				if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
 				{
 					nadefound = 0;
 					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == self)
