@@ -17,6 +17,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damage) \
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damageforcescale) \
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, speed) \
+	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, spread) \
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, lifetime) \
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserburntime) \
 	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserdamage) \
@@ -32,6 +33,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgradius) \
 	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  damagetime) \
 	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_up) \
+	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_z) \
 	w_prop(WEP_FIREBALL, fireball, reloading_ammo, reload_ammo) \
 	w_prop(WEP_FIREBALL, fireball, reloading_time, reload_time) \
 	w_prop(WEP_FIREBALL, fireball, switchdelay_raise, switchdelay_raise) \
@@ -195,7 +197,7 @@ void W_Fireball_Attack1()
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
-	W_SETUPPROJECTILEVELOCITY(proj, g_balance_fireball_primary);
+	WEP_SETUPPROJVELOCITY_PRI(proj, fireball);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Fireball_TouchExplode;
 	setsize(proj, '-16 -16 -16', '16 16 16');
@@ -327,7 +329,7 @@ void W_Fireball_Attack2()
 	proj.nextthink = time;
 	proj.damageforcescale = WEP_CVAR_SEC(fireball, damageforcescale);
 	proj.pushltime = time + WEP_CVAR_SEC(fireball, lifetime);
-	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_fireball_secondary);
+	WEP_SETUPPROJVELOCITY_UP_SEC(proj, fireball);
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;

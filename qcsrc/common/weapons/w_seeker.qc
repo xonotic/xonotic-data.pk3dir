@@ -22,6 +22,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_lifetime_rand) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_radius) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_refire) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed_up) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed_z) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_spread) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_accel) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_ammo) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_animtime) \
@@ -43,7 +47,11 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_mindist) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_max) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_min) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_max) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_up) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_z) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_spread) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_turnrate) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_ammo) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_animtime) \
@@ -52,6 +60,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_lifetime) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_refire) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_speed) \
+	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_spread) \
 	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_tracker_lifetime) \
 	w_prop(WEP_SEEKER, seeker, reloading_ammo, reload_ammo) \
 	w_prop(WEP_SEEKER, seeker, reloading_time, reload_time) \
@@ -269,7 +278,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	missile.flags       = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
-	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
+	WEP_SETUPPROJVELOCITY_UP_NONE(missile, seeker, missile_);
 
 	missile.angles = vectoangles (missile.velocity);
 
@@ -350,7 +359,7 @@ void Seeker_Fire_Flac()
 	setorigin (missile, w_shotorg);
 	setsize (missile, '-2 -2 -2', '2 2 2');
 
-	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_flac);
+	WEP_SETUPPROJVELOCITY_UP_NONE(missile, seeker, flac_);
 	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
@@ -566,7 +575,7 @@ void Seeker_Fire_Tag()
 	//missile.missile_flags = MIF_..?;
 
 	missile.movetype    = MOVETYPE_FLY;
-	W_SETUPPROJECTILEVELOCITY(missile, g_balance_seeker_tag);
+	WEP_SETUPPROJVELOCITY_NONE(missile, seeker, tag_);
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound

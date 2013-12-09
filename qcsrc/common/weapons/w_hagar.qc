@@ -19,10 +19,10 @@ REGISTER_WEAPON(
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, radius) \
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, refire) \
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, speed) \
+	w_cvar(WEP_HAGAR, hagar, MO_BOTH, spread) \
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damageforcescale) \
 	w_cvar(WEP_HAGAR, hagar, MO_BOTH, health) \
 	w_cvar(WEP_HAGAR, hagar, MO_PRI,  lifetime) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  spread) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_max) \
 	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_abort) \
@@ -143,7 +143,7 @@ void W_Hagar_Attack (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_FLY;
-	W_SETUPPROJECTILEVELOCITY(missile, g_balance_hagar_primary);
+	WEP_SETUPPROJVELOCITY_PRI(missile, hagar);
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
@@ -187,7 +187,7 @@ void W_Hagar_Attack2 (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
-	W_SETUPPROJECTILEVELOCITY(missile, g_balance_hagar_secondary);
+	WEP_SETUPPROJVELOCITY_SEC(missile, hagar);
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;

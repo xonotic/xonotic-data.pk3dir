@@ -29,6 +29,8 @@ REGISTER_WEAPON(
 	w_cvar(WEP_MORTAR, mortar, MO_PRI,  remote_minbouncecnt) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed_up) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, speed_z) \
+	w_cvar(WEP_MORTAR, mortar, MO_BOTH, spread) \
 	w_cvar(WEP_MORTAR, mortar, MO_BOTH, type) \
 	w_prop(WEP_MORTAR, mortar, reloading_ammo, reload_ammo) \
 	w_prop(WEP_MORTAR, mortar, reloading_time, reload_time) \
@@ -241,7 +243,7 @@ void W_Grenade_Attack (void)
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_mortar_primary); // WEAPONTODO
+	WEP_SETUPPROJVELOCITY_UP_PRI(gren, mortar);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -289,7 +291,7 @@ void W_Grenade_Attack2 (void)
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_mortar_secondary); // WEAPONTODO
+	WEP_SETUPPROJVELOCITY_UP_SEC(gren, mortar); // WEAPONTODO
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
