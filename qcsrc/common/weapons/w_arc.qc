@@ -26,7 +26,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_ARC, arc, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_ARC, arc, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_ARC, arc, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_ARC, arc, float,  weaponstart, weaponstart)
+	w_prop(WEP_ARC, arc, float,  weaponstart, weaponstart) \
+	w_prop(WEP_ARC, arc, float,  weaponstartoverride, weaponstartoverride)
 
 #ifndef MENUQC
 vector arc_shotorigin[4];

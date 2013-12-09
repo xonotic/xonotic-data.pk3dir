@@ -40,7 +40,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_UZI, uzi, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_UZI, uzi, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_UZI, uzi, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_UZI, uzi, float,  weaponstart, weaponstart)
+	w_prop(WEP_UZI, uzi, float,  weaponstart, weaponstart) \
+	w_prop(WEP_UZI, uzi, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 UZI_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

@@ -33,7 +33,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_RIFLE, rifle, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_RIFLE, rifle, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_RIFLE, rifle, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_RIFLE, rifle, float,  weaponstart, weaponstart)
+	w_prop(WEP_RIFLE, rifle, float,  weaponstart, weaponstart) \
+	w_prop(WEP_RIFLE, rifle, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

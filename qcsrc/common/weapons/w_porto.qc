@@ -22,7 +22,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_PORTO, porto, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_PORTO, porto, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_PORTO, porto, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_PORTO, porto, float,  weaponstart, weaponstart)
+	w_prop(WEP_PORTO, porto, float,  weaponstart, weaponstart) \
+	w_prop(WEP_PORTO, porto, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

@@ -29,7 +29,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_BLASTER, blaster, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_BLASTER, blaster, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_BLASTER, blaster, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_BLASTER, blaster, float,  weaponstart, weaponstart)
+	w_prop(WEP_BLASTER, blaster, float,  weaponstart, weaponstart) \
+	w_prop(WEP_BLASTER, blaster, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

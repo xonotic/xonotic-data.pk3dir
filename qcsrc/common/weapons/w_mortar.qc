@@ -38,7 +38,8 @@ REGISTER_WEAPON(
 	w_prop(WEP_MORTAR, mortar, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(WEP_MORTAR, mortar, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(WEP_MORTAR, mortar, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_MORTAR, mortar, float,  weaponstart, weaponstart)
+	w_prop(WEP_MORTAR, mortar, float,  weaponstart, weaponstart) \
+	w_prop(WEP_MORTAR, mortar, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
