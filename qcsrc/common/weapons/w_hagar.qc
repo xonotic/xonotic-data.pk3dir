@@ -373,7 +373,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
-	if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
 	{
 		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
