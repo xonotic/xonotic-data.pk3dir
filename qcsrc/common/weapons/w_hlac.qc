@@ -11,30 +11,31 @@ REGISTER_WEAPON(
 /* fullname */ _("Heavy Laser Assault Cannon")
 );
 
-#define HLAC_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, ammo) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, animtime) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, damage) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, edgedamage) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, force) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, lifetime) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, radius) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, refire) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, speed) \
-	w_cvar(WEP_HLAC, hlac, MO_BOTH, spread_crouchmod) \
-	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_add) \
-	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_max) \
-	w_cvar(WEP_HLAC, hlac, MO_PRI,  spread_min) \
-	w_cvar(WEP_HLAC, hlac, MO_NONE, secondary) \
-	w_cvar(WEP_HLAC, hlac, MO_SEC,  shots) \
-	w_cvar(WEP_HLAC, hlac, MO_SEC,  spread) \
-	w_prop(WEP_HLAC, hlac, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_HLAC, hlac, float,  reloading_time, reload_time) \
-	w_prop(WEP_HLAC, hlac, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HLAC, hlac, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_HLAC, hlac, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_HLAC, hlac, float,  weaponstart, weaponstart) \
-	w_prop(WEP_HLAC, hlac, float,  weaponstartoverride, weaponstartoverride)
+#define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, WEP_HLAC, hlac)
+#define HLAC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, edgedamage) \
+	w_cvar(id, sn, MO_BOTH, force) \
+	w_cvar(id, sn, MO_BOTH, lifetime) \
+	w_cvar(id, sn, MO_BOTH, radius) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_BOTH, spread_crouchmod) \
+	w_cvar(id, sn, MO_PRI,  spread_add) \
+	w_cvar(id, sn, MO_PRI,  spread_max) \
+	w_cvar(id, sn, MO_PRI,  spread_min) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_cvar(id, sn, MO_SEC,  shots) \
+	w_cvar(id, sn, MO_SEC,  spread) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

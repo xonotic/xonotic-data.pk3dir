@@ -11,26 +11,27 @@ REGISTER_WEAPON(
 /* fullname */ _("Blaster")
 );
 
-#define BLASTER_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, animtime) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, damage) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, delay) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, edgedamage) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, force) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, lifetime) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, radius) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, refire) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, shotangle) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, speed) \
-	w_cvar(WEP_BLASTER, blaster, MO_BOTH, spread) \
-	w_cvar(WEP_BLASTER, blaster, MO_NONE, secondary) \
-	w_prop(WEP_BLASTER, blaster, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_BLASTER, blaster, float,  reloading_time, reload_time) \
-	w_prop(WEP_BLASTER, blaster, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_BLASTER, blaster, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_BLASTER, blaster, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_BLASTER, blaster, float,  weaponstart, weaponstart) \
-	w_prop(WEP_BLASTER, blaster, float,  weaponstartoverride, weaponstartoverride)
+#define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, WEP_BLASTER, blaster)
+#define BLASTER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, delay) \
+	w_cvar(id, sn, MO_BOTH, edgedamage) \
+	w_cvar(id, sn, MO_BOTH, force) \
+	w_cvar(id, sn, MO_BOTH, lifetime) \
+	w_cvar(id, sn, MO_BOTH, radius) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, shotangle) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_BOTH, spread) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

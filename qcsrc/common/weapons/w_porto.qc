@@ -11,19 +11,20 @@ REGISTER_WEAPON(
 /* fullname */ _("Port-O-Launch")
 );
 
-#define PORTO_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_PORTO, porto, MO_BOTH, animtime) \
-	w_cvar(WEP_PORTO, porto, MO_BOTH, lifetime) \
-	w_cvar(WEP_PORTO, porto, MO_BOTH, refire) \
-	w_cvar(WEP_PORTO, porto, MO_BOTH, speed) \
-	w_cvar(WEP_PORTO, porto, MO_NONE, secondary) \
-	w_prop(WEP_PORTO, porto, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_PORTO, porto, float,  reloading_time, reload_time) \
-	w_prop(WEP_PORTO, porto, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_PORTO, porto, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_PORTO, porto, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_PORTO, porto, float,  weaponstart, weaponstart) \
-	w_prop(WEP_PORTO, porto, float,  weaponstartoverride, weaponstartoverride)
+#define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, WEP_PORTO, porto)
+#define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, lifetime) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

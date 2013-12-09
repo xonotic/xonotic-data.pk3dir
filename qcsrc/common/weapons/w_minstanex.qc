@@ -11,29 +11,30 @@ REGISTER_WEAPON(
 /* fullname */ _("MinstaNex")
 );
 
-#define MINSTANEX_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, ammo) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, animtime) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_PRI, refire) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, ammo) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, animtime) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, damage) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, delay) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, edgedamage) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, force) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, lifetime) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, radius) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, refire) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, shotangle) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, speed) \
-	w_cvar(WEP_MINSTANEX, minstanex, MO_SEC, spread) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  reloading_time, reload_time) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_MINSTANEX, minstanex, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  weaponstart, weaponstart) \
-	w_prop(WEP_MINSTANEX, minstanex, float,  weaponstartoverride, weaponstartoverride)
+#define MINSTANEX_SETTINGS(w_cvar,w_prop) MINSTANEX_SETTINGS_LIST(w_cvar, w_prop, WEP_MINSTANEX, minstanex)
+#define MINSTANEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_PRI, ammo) \
+	w_cvar(id, sn, MO_PRI, animtime) \
+	w_cvar(id, sn, MO_PRI, refire) \
+	w_cvar(id, sn, MO_SEC, ammo) \
+	w_cvar(id, sn, MO_SEC, animtime) \
+	w_cvar(id, sn, MO_SEC, damage) \
+	w_cvar(id, sn, MO_SEC, delay) \
+	w_cvar(id, sn, MO_SEC, edgedamage) \
+	w_cvar(id, sn, MO_SEC, force) \
+	w_cvar(id, sn, MO_SEC, lifetime) \
+	w_cvar(id, sn, MO_SEC, radius) \
+	w_cvar(id, sn, MO_SEC, refire) \
+	w_cvar(id, sn, MO_SEC, shotangle) \
+	w_cvar(id, sn, MO_SEC, speed) \
+	w_cvar(id, sn, MO_SEC, spread) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 MINSTANEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

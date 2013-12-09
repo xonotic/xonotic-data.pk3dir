@@ -11,31 +11,32 @@ REGISTER_WEAPON(
 /* fullname */ _("Grappling Hook")
 );
 
-#define HOOK_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_HOOK, hook, MO_BOTH, animtime) \
-	w_cvar(WEP_HOOK, hook, MO_BOTH, ammo) \
-	w_cvar(WEP_HOOK, hook, MO_BOTH, refire) \
-	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_ammo) \
-	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_time_free) \
-	w_cvar(WEP_HOOK, hook, MO_PRI,  hooked_time_max) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  damage) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  duration) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  edgedamage) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  force) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  gravity) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  lifetime) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  power) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  radius) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  speed) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  health) \
-	w_cvar(WEP_HOOK, hook, MO_SEC,  damageforcescale) \
-	w_prop(WEP_HOOK, hook, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_HOOK, hook, float,  reloading_time, reload_time) \
-	w_prop(WEP_HOOK, hook, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HOOK, hook, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_HOOK, hook, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_HOOK, hook, float,  weaponstart, weaponstart) \
-	w_prop(WEP_HOOK, hook, float,  weaponstartoverride, weaponstartoverride)
+#define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, WEP_HOOK, hook)
+#define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_PRI,  hooked_ammo) \
+	w_cvar(id, sn, MO_PRI,  hooked_time_free) \
+	w_cvar(id, sn, MO_PRI,  hooked_time_max) \
+	w_cvar(id, sn, MO_SEC,  damage) \
+	w_cvar(id, sn, MO_SEC,  duration) \
+	w_cvar(id, sn, MO_SEC,  edgedamage) \
+	w_cvar(id, sn, MO_SEC,  force) \
+	w_cvar(id, sn, MO_SEC,  gravity) \
+	w_cvar(id, sn, MO_SEC,  lifetime) \
+	w_cvar(id, sn, MO_SEC,  power) \
+	w_cvar(id, sn, MO_SEC,  radius) \
+	w_cvar(id, sn, MO_SEC,  speed) \
+	w_cvar(id, sn, MO_SEC,  health) \
+	w_cvar(id, sn, MO_SEC,  damageforcescale) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

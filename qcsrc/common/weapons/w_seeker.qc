@@ -11,64 +11,65 @@ REGISTER_WEAPON(
 /* fullname */ _("T.A.G. Seeker")
 );
 
-#define SEEKER_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, type) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_ammo) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_animtime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_damage) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_edgedamage) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_force) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_lifetime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_lifetime_rand) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_radius) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_refire) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed_up) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_speed_z) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, flac_spread) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_accel) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_ammo) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_animtime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_count) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_damage) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_damageforcescale) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_decel) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_delay) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_edgedamage) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_force) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_health) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_lifetime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy_delay) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_proxy_maxrange) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_radius) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_refire) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_mindist) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_max) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_smart_trace_min) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_max) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_up) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_speed_z) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_spread) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, missile_turnrate) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_ammo) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_animtime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_damageforcescale) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_health) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_lifetime) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_refire) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_speed) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_spread) \
-	w_cvar(WEP_SEEKER, seeker, MO_NONE, tag_tracker_lifetime) \
-	w_prop(WEP_SEEKER, seeker, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_SEEKER, seeker, float,  reloading_time, reload_time) \
-	w_prop(WEP_SEEKER, seeker, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_SEEKER, seeker, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_SEEKER, seeker, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_SEEKER, seeker, float,  weaponstart, weaponstart) \
-	w_prop(WEP_SEEKER, seeker, float,  weaponstartoverride, weaponstartoverride)
+#define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, WEP_SEEKER, seeker)
+#define SEEKER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_NONE, type) \
+	w_cvar(id, sn, MO_NONE, flac_ammo) \
+	w_cvar(id, sn, MO_NONE, flac_animtime) \
+	w_cvar(id, sn, MO_NONE, flac_damage) \
+	w_cvar(id, sn, MO_NONE, flac_edgedamage) \
+	w_cvar(id, sn, MO_NONE, flac_force) \
+	w_cvar(id, sn, MO_NONE, flac_lifetime) \
+	w_cvar(id, sn, MO_NONE, flac_lifetime_rand) \
+	w_cvar(id, sn, MO_NONE, flac_radius) \
+	w_cvar(id, sn, MO_NONE, flac_refire) \
+	w_cvar(id, sn, MO_NONE, flac_speed) \
+	w_cvar(id, sn, MO_NONE, flac_speed_up) \
+	w_cvar(id, sn, MO_NONE, flac_speed_z) \
+	w_cvar(id, sn, MO_NONE, flac_spread) \
+	w_cvar(id, sn, MO_NONE, missile_accel) \
+	w_cvar(id, sn, MO_NONE, missile_ammo) \
+	w_cvar(id, sn, MO_NONE, missile_animtime) \
+	w_cvar(id, sn, MO_NONE, missile_count) \
+	w_cvar(id, sn, MO_NONE, missile_damage) \
+	w_cvar(id, sn, MO_NONE, missile_damageforcescale) \
+	w_cvar(id, sn, MO_NONE, missile_decel) \
+	w_cvar(id, sn, MO_NONE, missile_delay) \
+	w_cvar(id, sn, MO_NONE, missile_edgedamage) \
+	w_cvar(id, sn, MO_NONE, missile_force) \
+	w_cvar(id, sn, MO_NONE, missile_health) \
+	w_cvar(id, sn, MO_NONE, missile_lifetime) \
+	w_cvar(id, sn, MO_NONE, missile_proxy) \
+	w_cvar(id, sn, MO_NONE, missile_proxy_delay) \
+	w_cvar(id, sn, MO_NONE, missile_proxy_maxrange) \
+	w_cvar(id, sn, MO_NONE, missile_radius) \
+	w_cvar(id, sn, MO_NONE, missile_refire) \
+	w_cvar(id, sn, MO_NONE, missile_smart) \
+	w_cvar(id, sn, MO_NONE, missile_smart_mindist) \
+	w_cvar(id, sn, MO_NONE, missile_smart_trace_max) \
+	w_cvar(id, sn, MO_NONE, missile_smart_trace_min) \
+	w_cvar(id, sn, MO_NONE, missile_speed) \
+	w_cvar(id, sn, MO_NONE, missile_speed_max) \
+	w_cvar(id, sn, MO_NONE, missile_speed_up) \
+	w_cvar(id, sn, MO_NONE, missile_speed_z) \
+	w_cvar(id, sn, MO_NONE, missile_spread) \
+	w_cvar(id, sn, MO_NONE, missile_turnrate) \
+	w_cvar(id, sn, MO_NONE, tag_ammo) \
+	w_cvar(id, sn, MO_NONE, tag_animtime) \
+	w_cvar(id, sn, MO_NONE, tag_damageforcescale) \
+	w_cvar(id, sn, MO_NONE, tag_health) \
+	w_cvar(id, sn, MO_NONE, tag_lifetime) \
+	w_cvar(id, sn, MO_NONE, tag_refire) \
+	w_cvar(id, sn, MO_NONE, tag_speed) \
+	w_cvar(id, sn, MO_NONE, tag_spread) \
+	w_cvar(id, sn, MO_NONE, tag_tracker_lifetime) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

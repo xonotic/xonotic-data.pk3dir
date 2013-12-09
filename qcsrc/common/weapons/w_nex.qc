@@ -11,39 +11,40 @@ REGISTER_WEAPON(
 /* fullname */ _("Nex")
 );
 
-#define NEX_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, ammo) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, animtime) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, damage) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, force) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, damagefalloff_mindist) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, damagefalloff_maxdist) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, damagefalloff_halflife) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, damagefalloff_forcehalflife) \
-	w_cvar(WEP_NEX, nex, MO_BOTH, refire) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_mindmg) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_shot_multiplier) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_animlimit) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_limit) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_rate) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_rot_rate) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_rot_pause) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_start) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_minspeed) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_maxspeed) \
-	w_cvar(WEP_NEX, nex, MO_NONE, charge_velocity_rate) \
-	w_cvar(WEP_NEX, nex, MO_NONE, secondary) \
-	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool) \
-	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool_regen) \
-	w_cvar(WEP_NEX, nex, MO_SEC,  chargepool_pause_regen) \
-	w_prop(WEP_NEX, nex, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_NEX, nex, float,  reloading_time, reload_time) \
-	w_prop(WEP_NEX, nex, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_NEX, nex, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_NEX, nex, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_NEX, nex, float,  weaponstart, weaponstart) \
-	w_prop(WEP_NEX, nex, float,  weaponstartoverride, weaponstartoverride)
+#define NEX_SETTINGS(w_cvar,w_prop) NEX_SETTINGS_LIST(w_cvar, w_prop, WEP_NEX, nex)
+#define NEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, force) \
+	w_cvar(id, sn, MO_BOTH, damagefalloff_mindist) \
+	w_cvar(id, sn, MO_BOTH, damagefalloff_maxdist) \
+	w_cvar(id, sn, MO_BOTH, damagefalloff_halflife) \
+	w_cvar(id, sn, MO_BOTH, damagefalloff_forcehalflife) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_NONE, charge) \
+	w_cvar(id, sn, MO_NONE, charge_mindmg) \
+	w_cvar(id, sn, MO_NONE, charge_shot_multiplier) \
+	w_cvar(id, sn, MO_NONE, charge_animlimit) \
+	w_cvar(id, sn, MO_NONE, charge_limit) \
+	w_cvar(id, sn, MO_NONE, charge_rate) \
+	w_cvar(id, sn, MO_NONE, charge_rot_rate) \
+	w_cvar(id, sn, MO_NONE, charge_rot_pause) \
+	w_cvar(id, sn, MO_NONE, charge_start) \
+	w_cvar(id, sn, MO_NONE, charge_minspeed) \
+	w_cvar(id, sn, MO_NONE, charge_maxspeed) \
+	w_cvar(id, sn, MO_NONE, charge_velocity_rate) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_cvar(id, sn, MO_SEC,  chargepool) \
+	w_cvar(id, sn, MO_SEC,  chargepool_regen) \
+	w_cvar(id, sn, MO_SEC,  chargepool_pause_regen) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 NEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

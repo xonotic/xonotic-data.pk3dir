@@ -12,21 +12,22 @@ REGISTER_WEAPON(
 /* fullname  */ _("@!#%'n Tuba")
 );
 
-#define TUBA_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, animtime) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, attenuation) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, damage) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, edgedamage) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, force) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, radius) \
-	w_cvar(WEP_TUBA, tuba, MO_NONE, refire) \
-	w_prop(WEP_TUBA, tuba, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_TUBA, tuba, float,  reloading_time, reload_time) \
-	w_prop(WEP_TUBA, tuba, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_TUBA, tuba, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_TUBA, tuba, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_TUBA, tuba, float,  weaponstart, weaponstart) \
-	w_prop(WEP_TUBA, tuba, float,  weaponstartoverride, weaponstartoverride)
+#define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, WEP_TUBA, tuba)
+#define TUBA_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_NONE, animtime) \
+	w_cvar(id, sn, MO_NONE, attenuation) \
+	w_cvar(id, sn, MO_NONE, damage) \
+	w_cvar(id, sn, MO_NONE, edgedamage) \
+	w_cvar(id, sn, MO_NONE, force) \
+	w_cvar(id, sn, MO_NONE, radius) \
+	w_cvar(id, sn, MO_NONE, refire) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 TUBA_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

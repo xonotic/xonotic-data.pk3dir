@@ -11,38 +11,39 @@ REGISTER_WEAPON(
 /* fullname */ _("Hagar")
 );
 
-#define HAGAR_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, ammo) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damage) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, edgedamage) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, force) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, radius) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, refire) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, speed) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, spread) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, damageforcescale) \
-	w_cvar(WEP_HAGAR, hagar, MO_BOTH, health) \
-	w_cvar(WEP_HAGAR, hagar, MO_PRI,  lifetime) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_max) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_abort) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_animtime) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_hold) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_speed) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_releasedeath) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_spread) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_spread_bias) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  load_linkexplode) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_min) \
-	w_cvar(WEP_HAGAR, hagar, MO_SEC,  lifetime_rand) \
-	w_cvar(WEP_HAGAR, hagar, MO_NONE, secondary) \
-	w_prop(WEP_HAGAR, hagar, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_HAGAR, hagar, float,  reloading_time, reload_time) \
-	w_prop(WEP_HAGAR, hagar, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_HAGAR, hagar, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_HAGAR, hagar, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_HAGAR, hagar, float,  weaponstart, weaponstart) \
-	w_prop(WEP_HAGAR, hagar, float,  weaponstartoverride, weaponstartoverride)
+#define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, WEP_HAGAR, hagar)
+#define HAGAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, edgedamage) \
+	w_cvar(id, sn, MO_BOTH, force) \
+	w_cvar(id, sn, MO_BOTH, radius) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_BOTH, spread) \
+	w_cvar(id, sn, MO_BOTH, damageforcescale) \
+	w_cvar(id, sn, MO_BOTH, health) \
+	w_cvar(id, sn, MO_PRI,  lifetime) \
+	w_cvar(id, sn, MO_SEC,  load) \
+	w_cvar(id, sn, MO_SEC,  load_max) \
+	w_cvar(id, sn, MO_SEC,  load_abort) \
+	w_cvar(id, sn, MO_SEC,  load_animtime) \
+	w_cvar(id, sn, MO_SEC,  load_hold) \
+	w_cvar(id, sn, MO_SEC,  load_speed) \
+	w_cvar(id, sn, MO_SEC,  load_releasedeath) \
+	w_cvar(id, sn, MO_SEC,  load_spread) \
+	w_cvar(id, sn, MO_SEC,  load_spread_bias) \
+	w_cvar(id, sn, MO_SEC,  load_linkexplode) \
+	w_cvar(id, sn, MO_SEC,  lifetime_min) \
+	w_cvar(id, sn, MO_SEC,  lifetime_rand) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

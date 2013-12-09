@@ -11,23 +11,24 @@ REGISTER_WEAPON(
 /* fullname */ _("Arc")
 );
 
-#define ARC_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_ARC, arc, MO_BOTH, ammo) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  animtime) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  damage) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_halflifedist) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_maxdist) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  falloff_mindist) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  force) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  range) \
-	w_cvar(WEP_ARC, arc, MO_PRI,  refire) \
-	w_prop(WEP_ARC, arc, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_ARC, arc, float,  reloading_time, reload_time) \
-	w_prop(WEP_ARC, arc, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_ARC, arc, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_ARC, arc, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_ARC, arc, float,  weaponstart, weaponstart) \
-	w_prop(WEP_ARC, arc, float,  weaponstartoverride, weaponstartoverride)
+#define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, WEP_ARC, arc)
+#define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_PRI,  animtime) \
+	w_cvar(id, sn, MO_PRI,  damage) \
+	w_cvar(id, sn, MO_PRI,  falloff_halflifedist) \
+	w_cvar(id, sn, MO_PRI,  falloff_maxdist) \
+	w_cvar(id, sn, MO_PRI,  falloff_mindist) \
+	w_cvar(id, sn, MO_PRI,  force) \
+	w_cvar(id, sn, MO_PRI,  range) \
+	w_cvar(id, sn, MO_PRI,  refire) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifndef MENUQC
 vector arc_shotorigin[4];

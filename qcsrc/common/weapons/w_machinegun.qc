@@ -11,37 +11,38 @@ REGISTER_WEAPON(
 /* fullname */ _("Machine Gun")
 );
 
-#define UZI_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, speed) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, spread_min) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, spread_max) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, spread_add) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, mode) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, bulletconstant) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first_damage) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first_force) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first_refire) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first_spread) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, first_ammo) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, sustained_damage) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, sustained_force) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, sustained_refire) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, sustained_spread) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, sustained_ammo) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst_refire) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst_refire2) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst_animtime) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst_speed) \
-	w_cvar(WEP_UZI, uzi, MO_NONE, burst_ammo) \
-	w_prop(WEP_UZI, uzi, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_UZI, uzi, float,  reloading_time, reload_time) \
-	w_prop(WEP_UZI, uzi, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_UZI, uzi, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_UZI, uzi, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_UZI, uzi, float,  weaponstart, weaponstart) \
-	w_prop(WEP_UZI, uzi, float,  weaponstartoverride, weaponstartoverride)
+#define UZI_SETTINGS(w_cvar,w_prop) UZI_SETTINGS_LIST(w_cvar, w_prop, WEP_UZI, uzi)
+#define UZI_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_NONE, speed) \
+	w_cvar(id, sn, MO_NONE, spread_min) \
+	w_cvar(id, sn, MO_NONE, spread_max) \
+	w_cvar(id, sn, MO_NONE, spread_add) \
+	w_cvar(id, sn, MO_NONE, mode) \
+	w_cvar(id, sn, MO_NONE, bulletconstant) \
+	w_cvar(id, sn, MO_NONE, first) \
+	w_cvar(id, sn, MO_NONE, first_damage) \
+	w_cvar(id, sn, MO_NONE, first_force) \
+	w_cvar(id, sn, MO_NONE, first_refire) \
+	w_cvar(id, sn, MO_NONE, first_spread) \
+	w_cvar(id, sn, MO_NONE, first_ammo) \
+	w_cvar(id, sn, MO_NONE, sustained_damage) \
+	w_cvar(id, sn, MO_NONE, sustained_force) \
+	w_cvar(id, sn, MO_NONE, sustained_refire) \
+	w_cvar(id, sn, MO_NONE, sustained_spread) \
+	w_cvar(id, sn, MO_NONE, sustained_ammo) \
+	w_cvar(id, sn, MO_NONE, burst) \
+	w_cvar(id, sn, MO_NONE, burst_refire) \
+	w_cvar(id, sn, MO_NONE, burst_refire2) \
+	w_cvar(id, sn, MO_NONE, burst_animtime) \
+	w_cvar(id, sn, MO_NONE, burst_speed) \
+	w_cvar(id, sn, MO_NONE, burst_ammo) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 UZI_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

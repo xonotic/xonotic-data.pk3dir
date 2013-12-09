@@ -11,36 +11,37 @@ REGISTER_WEAPON(
 /* fullname */ _("Fireball")
 );
 
-#define FIREBALL_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, animtime) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, refire) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damage) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, damageforcescale) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, speed) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, spread) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, lifetime) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserburntime) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserdamage) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laseredgedamage) \
-	w_cvar(WEP_FIREBALL, fireball, MO_BOTH, laserradius) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  edgedamage) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  force) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  radius) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  health) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  refire2) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgdamage) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgforce) \
-	w_cvar(WEP_FIREBALL, fireball, MO_PRI,  bfgradius) \
-	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  damagetime) \
-	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_up) \
-	w_cvar(WEP_FIREBALL, fireball, MO_SEC,  speed_z) \
-	w_prop(WEP_FIREBALL, fireball, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_FIREBALL, fireball, float,  reloading_time, reload_time) \
-	w_prop(WEP_FIREBALL, fireball, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_FIREBALL, fireball, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_FIREBALL, fireball, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_FIREBALL, fireball, float,  weaponstart, weaponstart) \
-	w_prop(WEP_FIREBALL, fireball, float,  weaponstartoverride, weaponstartoverride)
+#define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, WEP_FIREBALL, fireball)
+#define FIREBALL_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, damageforcescale) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_BOTH, spread) \
+	w_cvar(id, sn, MO_BOTH, lifetime) \
+	w_cvar(id, sn, MO_BOTH, laserburntime) \
+	w_cvar(id, sn, MO_BOTH, laserdamage) \
+	w_cvar(id, sn, MO_BOTH, laseredgedamage) \
+	w_cvar(id, sn, MO_BOTH, laserradius) \
+	w_cvar(id, sn, MO_PRI,  edgedamage) \
+	w_cvar(id, sn, MO_PRI,  force) \
+	w_cvar(id, sn, MO_PRI,  radius) \
+	w_cvar(id, sn, MO_PRI,  health) \
+	w_cvar(id, sn, MO_PRI,  refire2) \
+	w_cvar(id, sn, MO_PRI,  bfgdamage) \
+	w_cvar(id, sn, MO_PRI,  bfgforce) \
+	w_cvar(id, sn, MO_PRI,  bfgradius) \
+	w_cvar(id, sn, MO_SEC,  damagetime) \
+	w_cvar(id, sn, MO_SEC,  speed_up) \
+	w_cvar(id, sn, MO_SEC,  speed_z) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

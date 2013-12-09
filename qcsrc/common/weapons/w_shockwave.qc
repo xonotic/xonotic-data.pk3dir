@@ -11,67 +11,68 @@ REGISTER_WEAPON(
 /* fullname */ _("Shockwave")
 );
 
-#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_damage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_distance) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_edgedamage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_force) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_force_forwardbias) \
-	/*w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_force_velocitybias)*/ \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_force_zscale) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_damage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_edgedamage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_force) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_force_velocitybias) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_force_zscale) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_multiplier_accuracy) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_multiplier_distance) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_multiplier_min) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_jump_radius) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_multiplier_accuracy) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_multiplier_distance) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_multiplier_min) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_damage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_edgedamage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_force) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_force_forwardbias) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_multiplier_accuracy) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_multiplier_distance) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_multiplier_min) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_splash_radius) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_spread_max) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, blast_spread_min) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_animtime) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_damage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_delay) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_force) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_multihit) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_no_doubleslap) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_nonplayerdamage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_range) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_refire) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_swing_side) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_swing_up) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_time) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, melee_traces) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_ammo) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_animtime) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_bulletconstant) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_bullets) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_damage) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_force) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_refire) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_speed) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_spread) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, primary) \
-	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, secondary) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_time, reload_time) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_SHOCKWAVE, shockwave, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  weaponstart, weaponstart) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  weaponstartoverride, weaponstartoverride)
+#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, WEP_SHOCKWAVE, shockwave)
+#define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_NONE, blast_damage) \
+	w_cvar(id, sn, MO_NONE, blast_distance) \
+	w_cvar(id, sn, MO_NONE, blast_edgedamage) \
+	w_cvar(id, sn, MO_NONE, blast_force) \
+	w_cvar(id, sn, MO_NONE, blast_force_forwardbias) \
+	/*w_cvar(id, sn, MO_NONE, blast_force_velocitybias)*/ \
+	w_cvar(id, sn, MO_NONE, blast_force_zscale) \
+	w_cvar(id, sn, MO_NONE, blast_jump_damage) \
+	w_cvar(id, sn, MO_NONE, blast_jump_edgedamage) \
+	w_cvar(id, sn, MO_NONE, blast_jump_force) \
+	w_cvar(id, sn, MO_NONE, blast_jump_force_velocitybias) \
+	w_cvar(id, sn, MO_NONE, blast_jump_force_zscale) \
+	w_cvar(id, sn, MO_NONE, blast_jump_multiplier_accuracy) \
+	w_cvar(id, sn, MO_NONE, blast_jump_multiplier_distance) \
+	w_cvar(id, sn, MO_NONE, blast_jump_multiplier_min) \
+	w_cvar(id, sn, MO_NONE, blast_jump_radius) \
+	w_cvar(id, sn, MO_NONE, blast_multiplier_accuracy) \
+	w_cvar(id, sn, MO_NONE, blast_multiplier_distance) \
+	w_cvar(id, sn, MO_NONE, blast_multiplier_min) \
+	w_cvar(id, sn, MO_NONE, blast_splash_damage) \
+	w_cvar(id, sn, MO_NONE, blast_splash_edgedamage) \
+	w_cvar(id, sn, MO_NONE, blast_splash_force) \
+	w_cvar(id, sn, MO_NONE, blast_splash_force_forwardbias) \
+	w_cvar(id, sn, MO_NONE, blast_splash_multiplier_accuracy) \
+	w_cvar(id, sn, MO_NONE, blast_splash_multiplier_distance) \
+	w_cvar(id, sn, MO_NONE, blast_splash_multiplier_min) \
+	w_cvar(id, sn, MO_NONE, blast_splash_radius) \
+	w_cvar(id, sn, MO_NONE, blast_spread_max) \
+	w_cvar(id, sn, MO_NONE, blast_spread_min) \
+	w_cvar(id, sn, MO_NONE, melee_animtime) \
+	w_cvar(id, sn, MO_NONE, melee_damage) \
+	w_cvar(id, sn, MO_NONE, melee_delay) \
+	w_cvar(id, sn, MO_NONE, melee_force) \
+	w_cvar(id, sn, MO_NONE, melee_multihit) \
+	w_cvar(id, sn, MO_NONE, melee_no_doubleslap) \
+	w_cvar(id, sn, MO_NONE, melee_nonplayerdamage) \
+	w_cvar(id, sn, MO_NONE, melee_range) \
+	w_cvar(id, sn, MO_NONE, melee_refire) \
+	w_cvar(id, sn, MO_NONE, melee_swing_side) \
+	w_cvar(id, sn, MO_NONE, melee_swing_up) \
+	w_cvar(id, sn, MO_NONE, melee_time) \
+	w_cvar(id, sn, MO_NONE, melee_traces) \
+	w_cvar(id, sn, MO_NONE, pellets_ammo) \
+	w_cvar(id, sn, MO_NONE, pellets_animtime) \
+	w_cvar(id, sn, MO_NONE, pellets_bulletconstant) \
+	w_cvar(id, sn, MO_NONE, pellets_bullets) \
+	w_cvar(id, sn, MO_NONE, pellets_damage) \
+	w_cvar(id, sn, MO_NONE, pellets_force) \
+	w_cvar(id, sn, MO_NONE, pellets_refire) \
+	w_cvar(id, sn, MO_NONE, pellets_speed) \
+	w_cvar(id, sn, MO_NONE, pellets_spread) \
+	w_cvar(id, sn, MO_NONE, primary) \
+	w_cvar(id, sn, MO_NONE, secondary) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

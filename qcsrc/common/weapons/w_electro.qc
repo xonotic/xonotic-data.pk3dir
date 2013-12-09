@@ -11,46 +11,47 @@ REGISTER_WEAPON(
 /* fullname */ _("Electro")
 );
 
-#define ELECTRO_SETTINGS(w_cvar,w_prop) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, ammo) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, animtime) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, damage) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, edgedamage) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, force) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, radius) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, refire) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, speed) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, spread) \
-	w_cvar(WEP_ELECTRO, electro, MO_BOTH, lifetime) \
-	w_cvar(WEP_ELECTRO, electro, MO_PRI,  comboradius) \
-	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_explode) \
-	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_interval) \
-	w_cvar(WEP_ELECTRO, electro, MO_PRI,  midaircombo_radius) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncefactor) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  bouncestop) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  count) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damageforcescale) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damagedbycontents) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  health) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  refire2) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_up) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_z) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  touchexplode) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius_thruwall) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_damage) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_edgedamage) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_force) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_radius) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_speed) \
-	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_safeammocheck) \
-	w_prop(WEP_ELECTRO, electro, float,  reloading_ammo, reload_ammo) \
-	w_prop(WEP_ELECTRO, electro, float,  reloading_time, reload_time) \
-	w_prop(WEP_ELECTRO, electro, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_ELECTRO, electro, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(WEP_ELECTRO, electro, string, weaponreplace, weaponreplace) \
-	w_prop(WEP_ELECTRO, electro, float,  weaponstart, weaponstart) \
-	w_prop(WEP_ELECTRO, electro, float,  weaponstartoverride, weaponstartoverride)
+#define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, WEP_ELECTRO, electro)
+#define ELECTRO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_BOTH, ammo) \
+	w_cvar(id, sn, MO_BOTH, animtime) \
+	w_cvar(id, sn, MO_BOTH, damage) \
+	w_cvar(id, sn, MO_BOTH, edgedamage) \
+	w_cvar(id, sn, MO_BOTH, force) \
+	w_cvar(id, sn, MO_BOTH, radius) \
+	w_cvar(id, sn, MO_BOTH, refire) \
+	w_cvar(id, sn, MO_BOTH, speed) \
+	w_cvar(id, sn, MO_BOTH, spread) \
+	w_cvar(id, sn, MO_BOTH, lifetime) \
+	w_cvar(id, sn, MO_PRI,  comboradius) \
+	w_cvar(id, sn, MO_PRI,  midaircombo_explode) \
+	w_cvar(id, sn, MO_PRI,  midaircombo_interval) \
+	w_cvar(id, sn, MO_PRI,  midaircombo_radius) \
+	w_cvar(id, sn, MO_SEC,  bouncefactor) \
+	w_cvar(id, sn, MO_SEC,  bouncestop) \
+	w_cvar(id, sn, MO_SEC,  count) \
+	w_cvar(id, sn, MO_SEC,  damageforcescale) \
+	w_cvar(id, sn, MO_SEC,  damagedbycontents) \
+	w_cvar(id, sn, MO_SEC,  health) \
+	w_cvar(id, sn, MO_SEC,  refire2) \
+	w_cvar(id, sn, MO_SEC,  speed_up) \
+	w_cvar(id, sn, MO_SEC,  speed_z) \
+	w_cvar(id, sn, MO_SEC,  touchexplode) \
+	w_cvar(id, sn, MO_NONE, combo_comboradius) \
+	w_cvar(id, sn, MO_NONE, combo_comboradius_thruwall) \
+	w_cvar(id, sn, MO_NONE, combo_damage) \
+	w_cvar(id, sn, MO_NONE, combo_edgedamage) \
+	w_cvar(id, sn, MO_NONE, combo_force) \
+	w_cvar(id, sn, MO_NONE, combo_radius) \
+	w_cvar(id, sn, MO_NONE, combo_speed) \
+	w_cvar(id, sn, MO_NONE, combo_safeammocheck) \
+	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
+	w_prop(id, sn, float,  reloading_time, reload_time) \
+	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
+	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(id, sn, string, weaponreplace, weaponreplace) \
+	w_prop(id, sn, float,  weaponstart, weaponstart) \
+	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride)
 
 #ifdef SVQC
 ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
