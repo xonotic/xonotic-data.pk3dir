@@ -63,6 +63,7 @@ REGISTER_WEAPON(
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_refire) \
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_speed) \
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, pellets_spread) \
+	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, primary) \
 	w_cvar(WEP_SHOCKWAVE, shockwave, MO_NONE, secondary) \
 	w_prop(WEP_SHOCKWAVE, shockwave, reloading_ammo, reload_ammo) \
 	w_prop(WEP_SHOCKWAVE, shockwave, reloading_time, reload_time) \
@@ -575,7 +576,7 @@ float W_Shockwave(float req)
 	{
 		case WR_AIM:
 		{
-			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
+			if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
 				{ self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE); }
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE); }
@@ -584,34 +585,55 @@ float W_Shockwave(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_shockwave_reload_ammo && self.clip_load < WEP_CVAR(shockwave, pellets_ammo)) // forced reload
+			if(WEP_CVAR(shockwave, reload_ammo) && self.clip_load < WEP_CVAR(shockwave, pellets_ammo)) // forced reload
 			{
 				// don't force reload an empty shockwave if its melee attack is active
-				if(!(autocvar_g_balance_shockwave_secondary && self.ammo_shells < WEP_CVAR(shockwave, pellets_ammo)))
+				if(!(WEP_CVAR(shockwave, secondary) && self.ammo_shells < WEP_CVAR(shockwave, pellets_ammo)))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
 			{
-				if (self.BUTTON_ATCK)
+				if(self.BUTTON_ATCK)
 				{
-					if (time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
+					switch(WEP_CVAR(shockwave, primary))
 					{
-						if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
+						case 1:
 						{
-							W_Shockwave_Attack();
-							self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
-							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
+							if(time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
+							{
+								if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
+								{
+									W_Shockwave_Attack();
+									self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
+									weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
+								}
+							}
+							break;
+						}
+						case 2:
+						{
+							if(time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
+							{
+								if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
+								{
+									W_Shockwave_Pellets();
+									self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
+									weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
+								}
+							}
+							break;
 						}
 					}
 				}
-			}
-			if (self.clip_load >= 0) // we are not currently reloading
-			if (!self.crouch) // no crouchmelee please
-			if (self.BUTTON_ATCK2 && autocvar_g_balance_shockwave_secondary)
-			if (weapon_prepareattack(1, WEP_CVAR(shockwave, melee_refire)))
-			{
-				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
+				
+				if(self.clip_load >= 0) // we are not currently reloading
+				if(!self.crouch) // no crouchmelee please
+				if(self.BUTTON_ATCK2 && WEP_CVAR(shockwave, secondary))
+				if(weapon_prepareattack(1, WEP_CVAR(shockwave, melee_refire)))
+				{
+					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+					weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
+				}
 			}
 			
 			return TRUE;
