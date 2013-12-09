@@ -361,9 +361,9 @@ void W_Shockwave_Attack()
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
-	float final_damage; //, final_spread;
+	float final_damage;
 	vector final_force, center, vel;
-	entity head, next;
+	entity head;
 
 	float i, queue = 0;
 	
@@ -401,8 +401,6 @@ void W_Shockwave_Attack()
 	
 	while(head)
 	{
-		next = head.chain;
-
 		if(head.takedamage)
 		{
 			float distance_to_head = vlen(attack_hitpos - head.WarpZone_findradius_nearest);
@@ -515,15 +513,13 @@ void W_Shockwave_Attack()
 				#endif
 			}
 		}
-		head = next;
+		head = head.chain;
 	}
 
 	// cone damage trace
 	head = WarpZone_FindRadius(w_shotorg, WEP_CVAR(shockwave, blast_distance), FALSE);
 	while(head)
 	{
-		next = head.chain;
-		
 		if((head != self) && head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
@@ -558,17 +554,40 @@ void W_Shockwave_Attack()
 						)
 					);
 
-				final_force = normalize(center - (nearest_on_line - (w_shotdir * WEP_CVAR(shockwave, blast_force_forwardbias))));
-				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
-				final_force = ((final_force * WEP_CVAR(shockwave, blast_force)) * multiplier);
-				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
-				final_damage = (WEP_CVAR(shockwave, blast_damage) * multiplier + WEP_CVAR(shockwave, blast_edgedamage) * (1 - multiplier));
+				// calculate damage from multiplier: 1 = "highest" damage, 0 = "lowest" edgedamage
+				final_damage =
+					(
+						(WEP_CVAR(shockwave, blast_damage) * multiplier)
+						+
+						(WEP_CVAR(shockwave, blast_edgedamage) * (1 - multiplier))
+					);
 
+				// figure out the direction of force
+				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_force_forwardbias));
+				final_force = normalize((center - nearest_on_line) + final_force);
+				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
+
+				// now multiply the direction by force units
+				final_force *= (WEP_CVAR(shockwave, blast_force) * multiplier);
+				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
+
+				// queue damage with this calculated info
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
-				//print("CONE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+
+				#ifdef DEBUG_SHOCKWAVE
+				print(sprintf(
+					"BLAST HIT: multiplier = %f, damage = %f, force = %f... "
+					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
+					multiplier,
+					final_damage,
+					vlen(final_force),
+					multiplier_from_accuracy,
+					multiplier_from_distance
+				));
+				#endif
 			}
 		}
-		head = next;
+		head = head.chain;
 	}
 
 	for(i = 1; i <= queue; ++i)
@@ -578,13 +597,19 @@ void W_Shockwave_Attack()
 		final_damage = shockwave_hit_damage[i];
 		
 		Damage(head, self, self, final_damage, WEP_SHOCKWAVE, head.origin, final_force);
-		print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
+		#ifdef DEBUG_SHOCKWAVE
+		print(sprintf(
+			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
+			self.netname,
+			final_damage,
+			vlen(final_force)
+		));
+		#endif
 		
 		shockwave_hit[i] = world;
 		shockwave_hit_force[i] = '0 0 0';
 		shockwave_hit_damage[i] = 0;
 	}
-	//print("queue was ", ftos(queue), ".\n\n");
 }
 
 float W_Shockwave(float req)
