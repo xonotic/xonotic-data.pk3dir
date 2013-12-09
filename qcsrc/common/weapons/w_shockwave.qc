@@ -465,7 +465,7 @@ void W_Shockwave_Attack()
 					vlen(final_force),
 					multiplier_from_accuracy,
 					multiplier_from_distance
-				);
+				));
 				#endif
 			}
 			else if(distance_to_head <= WEP_CVAR(shockwave, blast_splash_radius))
@@ -482,10 +482,7 @@ void W_Shockwave_Attack()
 						)
 					);
 
-				final_force = normalize(CENTER_OR_VIEWOFS(head) - (attack_hitpos - (w_shotdir * WEP_CVAR(shockwave, blast_splash_force_forwardbias))));
-				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
-				final_force = ((final_force * WEP_CVAR(shockwave, blast_splash_force)) * multiplier);
-				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
+				// calculate damage from multiplier: 1 = "highest" damage, 0 = "lowest" edgedamage
 				final_damage =
 					(
 						(WEP_CVAR(shockwave, blast_splash_damage) * multiplier)
@@ -493,8 +490,29 @@ void W_Shockwave_Attack()
 						(WEP_CVAR(shockwave, blast_splash_edgedamage) * (1 - multiplier))
 					);
 
+				// figure out the direction of force
+				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_splash_force_forwardbias));
+				final_force = normalize((CENTER_OR_VIEWOFS(head) - attack_hitpos) + final_force);
+				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
+
+				// now multiply the direction by force units
+				final_force *= (WEP_CVAR(shockwave, blast_splash_force) * multiplier);
+				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
+
+				// queue damage with this calculated info
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
-				//print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+
+				#ifdef DEBUG_SHOCKWAVE
+				print(sprintf(
+					"SPLASH HIT: multiplier = %f, damage = %f, force = %f... "
+					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
+					multiplier,
+					final_damage,
+					vlen(final_force),
+					multiplier_from_accuracy,
+					multiplier_from_distance
+				));
+				#endif
 			}
 		}
 		head = next;
