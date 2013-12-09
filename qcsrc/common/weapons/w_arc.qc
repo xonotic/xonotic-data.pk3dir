@@ -90,7 +90,7 @@ void W_Arc_Beam_Think()
 
 	float dt, f;
 	dt = frametime;
-	if not(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(WEP_CVAR_PRI(arc, ammo))
 		{

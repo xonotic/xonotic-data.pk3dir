@@ -330,7 +330,7 @@ float W_Shockwave_Attack_CheckHit(
 	vector final_force,
 	float final_damage)
 {
-	if not(head) { return FALSE; }
+	if(!head) { return FALSE; }
 	float i;
 
 	++queue;

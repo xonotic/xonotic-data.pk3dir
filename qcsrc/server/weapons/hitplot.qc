@@ -55,7 +55,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if not(IS_REAL_CLIENT(player))
+		if(!IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;

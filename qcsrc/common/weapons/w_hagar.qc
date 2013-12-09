@@ -373,7 +373,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
-	if not(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	{
 		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
@@ -490,7 +490,7 @@ float w_hagar(float req)
 		}
 		case WR_RELOAD:
 		{
-			if not(self.hagar_load) // require releasing loaded rockets first
+			if(!self.hagar_load) // require releasing loaded rockets first
 				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), "weapons/reload.wav");
 				
 			return TRUE;

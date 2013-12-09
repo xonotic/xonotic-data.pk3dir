@@ -85,7 +85,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				{
 					if(e.classname == "droppedweapon")
 						continue;
-					if not(e.flags & FL_ITEM)
+					if(!(e.flags & FL_ITEM))
 						continue;
 					WaypointSprite_Spawn(
 						s,

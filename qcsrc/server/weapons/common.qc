@@ -52,14 +52,14 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	{
 		if(is_from_exception)
 			return (exception); // if exception is detected, allow it to override
-		else if not(is_from_contents)
+		else if(!is_from_contents)
 			return FALSE; // otherwise, only allow damage from contents
 	}	
 	else if(autocvar_g_projectiles_damage == 1)
 	{
 		if(is_from_exception)
 			return (exception); // if exception is detected, allow it to override
-		else if not(is_from_contents || is_from_owner)
+		else if(!(is_from_contents || is_from_owner))
 			return FALSE; // otherwise, only allow self damage and damage from contents
 	}
 	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
