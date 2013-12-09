@@ -36,7 +36,9 @@ REGISTER_WEAPON(
 	w_prop(WEP_MINE_LAYER, minelayer, float,  reloading_ammo, reload_ammo) \
 	w_prop(WEP_MINE_LAYER, minelayer, float,  reloading_time, reload_time) \
 	w_prop(WEP_MINE_LAYER, minelayer, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_MINE_LAYER, minelayer, float,  switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_MINE_LAYER, minelayer, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(WEP_MINE_LAYER, minelayer, string, weaponreplace, weaponreplace) \
+	w_prop(WEP_MINE_LAYER, minelayer, float,  weaponstart, weaponstart)
 
 #ifdef SVQC
 MINELAYER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

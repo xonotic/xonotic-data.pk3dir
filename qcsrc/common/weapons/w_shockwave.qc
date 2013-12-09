@@ -68,7 +68,9 @@ REGISTER_WEAPON(
 	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_ammo, reload_ammo) \
 	w_prop(WEP_SHOCKWAVE, shockwave, float,  reloading_time, reload_time) \
 	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_drop, switchdelay_drop)
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  switchdelay_drop, switchdelay_drop) \
+	w_prop(WEP_SHOCKWAVE, shockwave, string, weaponreplace, weaponreplace) \
+	w_prop(WEP_SHOCKWAVE, shockwave, float,  weaponstart, weaponstart)
 
 #ifdef SVQC
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
