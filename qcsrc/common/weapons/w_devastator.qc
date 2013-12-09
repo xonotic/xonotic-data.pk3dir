@@ -325,91 +325,22 @@ float W_Devastator(float req)
 			{
 				// decide whether to detonate rockets
 				entity missile, targetlist, targ;
-				float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
-				float selfdamage, teamdamage, enemydamage;
-				edgedamage = WEP_CVAR(devastator, edgedamage);
-				coredamage = WEP_CVAR(devastator, damage);
-				edgeradius = WEP_CVAR(devastator, radius);
-				recipricoledgeradius = 1 / edgeradius;
-				selfdamage = 0;
-				teamdamage = 0;
-				enemydamage = 0;
 				targetlist = findchainfloat(bot_attack, TRUE);
-				missile = find(world, classname, "rocket");
-				while (missile)
+				for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == self)
 				{
-					if (missile.realowner != self)
-					{
-						missile = find(missile, classname, "rocket");
-						continue;
-					}
 					targ = targetlist;
 					while (targ)
 					{
-						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - missile.origin);
-						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
-						// count potential damage according to type of target
-						if (targ == self)
-							selfdamage = selfdamage + d;
-						else if (targ.team == self.team && teamplay)
-							teamdamage = teamdamage + d;
-						else if (bot_shouldattack(targ))
-							enemydamage = enemydamage + d;
+						if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(devastator, radius))
+						{
+							self.BUTTON_ATCK2 = TRUE;
+							break;
+						}
 						targ = targ.chain;
 					}
-					missile = find(missile, classname, "rocket");
 				}
-				float desirabledamage;
-				desirabledamage = enemydamage;
-				if (time > self.invincible_finished && time > self.spawnshieldtime)
-					desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-				if (teamplay && self.team)
-					desirabledamage = desirabledamage - teamdamage;
-
-				missile = find(world, classname, "rocket");
-				while (missile)
-				{
-					if (missile.realowner != self)
-					{
-						missile = find(missile, classname, "rocket");
-						continue;
-					}
-					makevectors(missile.v_angle);
-					targ = targetlist;
-					if (skill > 9) // normal players only do this for the target they are tracking
-					{
-						targ = targetlist;
-						while (targ)
-						{
-							if (
-								(v_forward * normalize(missile.origin - targ.origin)< 0.1)
-								&& desirabledamage > 0.1*coredamage
-							)self.BUTTON_ATCK2 = TRUE;
-							targ = targ.chain;
-						}
-					}else{
-						float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
-						//As the distance gets larger, a correct detonation gets near imposible
-						//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
-						if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
-							if(IS_PLAYER(self.enemy))
-								if(desirabledamage >= 0.1*coredamage)
-									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-										self.BUTTON_ATCK2 = TRUE;
-					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
-					}
-
-					missile = find(missile, classname, "rocket");
-				}
-				// if we would be doing at X percent of the core damage, detonate it
-				// but don't fire a new shot at the same time!
-				if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
-					self.BUTTON_ATCK2 = TRUE;
-				if ((skill > 6.5) && (selfdamage > self.health))
-					self.BUTTON_ATCK2 = FALSE;
-				//if(self.BUTTON_ATCK2 == TRUE)
-				//	dprint(ftos(desirabledamage),"\n");
-				if (self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
+				
+				if(self.BUTTON_ATCK2) self.BUTTON_ATCK = FALSE;
 			}
 			
 			return TRUE;
