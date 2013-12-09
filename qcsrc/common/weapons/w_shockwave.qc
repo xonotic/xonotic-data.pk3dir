@@ -81,7 +81,7 @@ SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 void spawnfunc_weapon_shockwave()
 {
-	//if(autocvar_sv_q3acompat_machineshockwaveswap)
+	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
@@ -106,7 +106,7 @@ void W_Shockwave_Pellets(void)
 
 	W_DecreaseAmmo(ammo_shells, WEP_CVAR(shockwave, pellets_ammo), WEP_CVAR(shockwave, reload_ammo));
 
-	W_SetupShot(self, TRUE, 5, "weapons/shockwave_fire.wav", CH_WEAPON_A, WEP_CVAR(shockwave, pellets_damage) * WEP_CVAR(shockwave, pellets_bullets));
+	W_SetupShot(self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, WEP_CVAR(shockwave, pellets_damage) * WEP_CVAR(shockwave, pellets_bullets));
 	
 	for(sc = 0; sc < WEP_CVAR(shockwave, pellets_bullets); ++sc)
 	{
@@ -125,7 +125,7 @@ void W_Shockwave_Pellets(void)
 	}
 	endFireBallisticBullet();
 
-	pointparticles(particleeffectnum("shockwave_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR(shockwave, pellets_ammo));
+	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR(shockwave, pellets_ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -167,27 +167,29 @@ void W_Shockwave_Melee_Think()
 	entity target_victim;
 	vector targpos;
 
-	if(!self.cnt) // set start time of melee
-	{
-		self.cnt = time; 
-		W_PlayStrengthSound(self.realowner);
-	}
-
-	makevectors(self.realowner.v_angle); // update values for v_* vectors
-	
-	// calculate swing percentage based on time
-	meleetime = WEP_CVAR(shockwave, melee_time) * W_WeaponRateFactor();
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * WEP_CVAR(shockwave, melee_traces));
-	
 	// check to see if we can still continue, otherwise give up now
 	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR(shockwave, melee_no_doubleslap))
 	{
 		remove(self);
 		return;
 	}
+
+	// set start time of melee
+	if(!self.cnt)
+	{
+		self.cnt = time; 
+		W_PlayStrengthSound(self.realowner);
+	}
+
+	// update values for v_* vectors
+	makevectors(self.realowner.v_angle);
 	
-	// if okay, perform the traces needed for this frame 
+	// calculate swing percentage based on time
+	meleetime = WEP_CVAR(shockwave, melee_time) * W_WeaponRateFactor();
+	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
+	f = ((1 - swing) * WEP_CVAR(shockwave, melee_traces));
+	
+	// perform the traces needed for this frame 
 	for(i=self.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR(shockwave, melee_traces))) * 2 - 1);
@@ -197,7 +199,14 @@ void W_Shockwave_Melee_Think()
 			+ (v_up * swing_factor * WEP_CVAR(shockwave, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR(shockwave, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(
+			self.realowner,
+			(self.realowner.origin + self.realowner.view_ofs),
+			targpos,
+			FALSE,
+			self.realowner,
+			ANTILAG_LATENCY(self.realowner)
+		);
 		
 		// draw lightning beams for debugging
 		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
@@ -205,28 +214,46 @@ void W_Shockwave_Melee_Think()
 		
 		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
 
-		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
 			&& (is_player || WEP_CVAR(shockwave, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 			
-			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (WEP_CVAR(shockwave, melee_damage * min(1, swing_factor + 1)));
+			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught
+				swing_damage = (WEP_CVAR(shockwave, melee_damage) * min(1, swing_factor + 1));
 			else
-				swing_damage = (WEP_CVAR(shockwave, melee_nonplayerdamage * min(1, swing_factor + 1)));
-			
-			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
-			
-			Damage(target_victim, self.realowner, self.realowner, 
-				swing_damage, WEP_SHOCKWAVE | HITTYPE_SECONDARY, 
-				self.realowner.origin + self.realowner.view_ofs, 
-				v_forward * WEP_CVAR(shockwave, melee_force));
-				
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
-			
-			if(WEP_CVAR(shockwave, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
+				swing_damage = (WEP_CVAR(shockwave, melee_nonplayerdamage) * min(1, swing_factor + 1));
+
+			// trigger damage with this calculated info
+			Damage(
+				target_victim,
+				self.realowner,
+				self.realowner, 
+				swing_damage,
+				(WEP_SHOCKWAVE | HITTYPE_SECONDARY), 
+				(self.realowner.origin + self.realowner.view_ofs), 
+				(v_forward * WEP_CVAR(shockwave, melee_force))
+			);
+
+			// handle accuracy
+			if(accuracy_isgooddamage(self.realowner, target_victim))
+				{ accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
+
+			#ifdef DEBUG_SHOCKWAVE
+			print(sprintf(
+				"MELEE: %s hitting %s with %f damage (factor: %f) at %f time.\n",
+				self.realowner.netname,
+				target_victim.netname,
+				swing_damage,
+				swing_factor,
+				time
+			));
+			#endif
+
+			// allow multiple hits with one swing, but not against the same player twice
+			if(WEP_CVAR(shockwave, melee_multihit))
 			{
 				self.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
