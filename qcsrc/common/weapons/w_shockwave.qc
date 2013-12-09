@@ -522,7 +522,7 @@ void W_Shockwave_Attack()
 
 				// figure out the direction of force
 				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_splash_force_forwardbias));
-				final_force = normalize((CENTER_OR_VIEWOFS(head) - attack_hitpos) + final_force);
+				final_force = normalize(CENTER_OR_VIEWOFS(head) - (attack_hitpos - final_force));
 				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
 
 				// now multiply the direction by force units
@@ -614,7 +614,7 @@ void W_Shockwave_Attack()
 
 				// figure out the direction of force
 				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_force_forwardbias));
-				final_force = normalize((center - nearest_on_line) + final_force);
+				final_force = normalize(center - (nearest_on_line - final_force));
 				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
 
 				// now multiply the direction by force units
