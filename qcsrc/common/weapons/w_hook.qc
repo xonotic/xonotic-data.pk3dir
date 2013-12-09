@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Grappling Hook")
 );
 
-#define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, WEP_HOOK, hook)
+#define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)
 #define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, animtime) \
 	w_cvar(id, sn, MO_BOTH, ammo) \

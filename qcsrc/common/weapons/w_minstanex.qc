@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("MinstaNex")
 );
 
-#define MINSTANEX_SETTINGS(w_cvar,w_prop) MINSTANEX_SETTINGS_LIST(w_cvar, w_prop, WEP_MINSTANEX, minstanex)
+#define MINSTANEX_SETTINGS(w_cvar,w_prop) MINSTANEX_SETTINGS_LIST(w_cvar, w_prop, MINSTANEX, minstanex)
 #define MINSTANEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_PRI, ammo) \
 	w_cvar(id, sn, MO_PRI, animtime) \

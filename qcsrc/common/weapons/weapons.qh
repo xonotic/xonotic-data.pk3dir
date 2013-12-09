@@ -169,7 +169,7 @@ float W_AmmoItemCode(float wpn);
 
 // set initialization values for weapon settings
 #define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(##wepid).##prop = autocvar_g_balance_##wepname##_##name;
+#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
 float w_null(float dummy);
 void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);

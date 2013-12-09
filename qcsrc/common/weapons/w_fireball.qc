@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Fireball")
 );
 
-#define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, WEP_FIREBALL, fireball)
+#define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)
 #define FIREBALL_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, animtime) \
 	w_cvar(id, sn, MO_BOTH, refire) \

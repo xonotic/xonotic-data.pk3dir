@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Heavy Laser Assault Cannon")
 );
 
-#define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, WEP_HLAC, hlac)
+#define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, HLAC, hlac)
 #define HLAC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, animtime) \

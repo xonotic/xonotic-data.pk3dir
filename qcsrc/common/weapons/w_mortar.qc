@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Mortar")
 );
 
-#define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, WEP_MORTAR, mortar)
+#define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, MORTAR, mortar)
 #define MORTAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, animtime) \

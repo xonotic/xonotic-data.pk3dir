@@ -12,7 +12,7 @@ REGISTER_WEAPON(
 /* fullname  */ _("@!#%'n Tuba")
 );
 
-#define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, WEP_TUBA, tuba)
+#define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, TUBA, tuba)
 #define TUBA_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, animtime) \
 	w_cvar(id, sn, MO_NONE, attenuation) \

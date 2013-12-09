@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("T.A.G. Seeker")
 );
 
-#define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, WEP_SEEKER, seeker)
+#define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, SEEKER, seeker)
 #define SEEKER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, type) \
 	w_cvar(id, sn, MO_NONE, flac_ammo) \

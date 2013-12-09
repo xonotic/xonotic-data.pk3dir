@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Hagar")
 );
 
-#define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, WEP_HAGAR, hagar)
+#define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, HAGAR, hagar)
 #define HAGAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, damage) \

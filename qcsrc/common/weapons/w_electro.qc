@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Electro")
 );
 
-#define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, WEP_ELECTRO, electro)
+#define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, ELECTRO, electro)
 #define ELECTRO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, animtime) \

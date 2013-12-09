@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Blaster")
 );
 
-#define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, WEP_BLASTER, blaster)
+#define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, BLASTER, blaster)
 #define BLASTER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, animtime) \
 	w_cvar(id, sn, MO_BOTH, damage) \

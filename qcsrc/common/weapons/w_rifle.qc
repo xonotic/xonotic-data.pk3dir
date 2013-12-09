@@ -10,7 +10,8 @@ REGISTER_WEAPON(
 /* netname  */ "rifle",
 /* fullname */ _("Rifle")
 );
-#define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, WEP_RIFLE, rifle)
+
+#define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, RIFLE, rifle)
 #define RIFLE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, animtime) \

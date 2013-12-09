@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Devastator")
 );
 
-#define DEVASTATOR_SETTINGS(w_cvar,w_prop) DEVASTATOR_SETTINGS_LIST(w_cvar, w_prop, WEP_DEVASTATOR, devastator)
+#define DEVASTATOR_SETTINGS(w_cvar,w_prop) DEVASTATOR_SETTINGS_LIST(w_cvar, w_prop, DEVASTATOR, devastator)
 #define DEVASTATOR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, ammo) \
 	w_cvar(id, sn, MO_NONE, animtime) \

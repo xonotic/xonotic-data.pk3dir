@@ -10,7 +10,8 @@ REGISTER_WEAPON(
 /* netname  */ "minelayer",
 /* fullname */ _("Mine Layer")
 );
-#define MINELAYER_SETTINGS(w_cvar,w_prop) MINELAYER_SETTINGS_LIST(w_cvar, w_prop, WEP_MINE_LAYER, minelayer)
+
+#define MINELAYER_SETTINGS(w_cvar,w_prop) MINELAYER_SETTINGS_LIST(w_cvar, w_prop, MINE_LAYER, minelayer)
 #define MINELAYER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, ammo) \
 	w_cvar(id, sn, MO_NONE, animtime) \

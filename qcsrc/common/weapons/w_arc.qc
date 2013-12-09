@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Arc")
 );
 
-#define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, WEP_ARC, arc)
+#define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)
 #define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_PRI,  animtime) \

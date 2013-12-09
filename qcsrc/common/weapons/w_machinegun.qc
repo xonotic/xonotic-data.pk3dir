@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Machine Gun")
 );
 
-#define UZI_SETTINGS(w_cvar,w_prop) UZI_SETTINGS_LIST(w_cvar, w_prop, WEP_UZI, uzi)
+#define UZI_SETTINGS(w_cvar,w_prop) UZI_SETTINGS_LIST(w_cvar, w_prop, UZI, uzi)
 #define UZI_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, speed) \
 	w_cvar(id, sn, MO_NONE, spread_min) \

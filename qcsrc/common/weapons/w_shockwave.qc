@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Shockwave")
 );
 
-#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, WEP_SHOCKWAVE, shockwave)
+#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
 #define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_NONE, blast_damage) \
 	w_cvar(id, sn, MO_NONE, blast_distance) \

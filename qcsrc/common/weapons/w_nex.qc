@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Nex")
 );
 
-#define NEX_SETTINGS(w_cvar,w_prop) NEX_SETTINGS_LIST(w_cvar, w_prop, WEP_NEX, nex)
+#define NEX_SETTINGS(w_cvar,w_prop) NEX_SETTINGS_LIST(w_cvar, w_prop, NEX, nex)
 #define NEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, ammo) \
 	w_cvar(id, sn, MO_BOTH, animtime) \

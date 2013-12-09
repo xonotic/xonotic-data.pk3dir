@@ -11,7 +11,7 @@ REGISTER_WEAPON(
 /* fullname */ _("Port-O-Launch")
 );
 
-#define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, WEP_PORTO, porto)
+#define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)
 #define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, MO_BOTH, animtime) \
 	w_cvar(id, sn, MO_BOTH, lifetime) \
