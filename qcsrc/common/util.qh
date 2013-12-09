@@ -365,6 +365,7 @@ typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
 #ifdef SVQC
+vector combine_to_vector(float x, float y, float z);
 vector get_corner_position(entity box, float corner);
 #endif
 
