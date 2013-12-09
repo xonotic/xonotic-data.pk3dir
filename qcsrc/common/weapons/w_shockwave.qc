@@ -407,9 +407,25 @@ void W_Shockwave_Attack()
 			
 			if((head == self) && (distance_to_head <= WEP_CVAR(shockwave, blast_jump_radius)))
 			{
+				// ========================
+				//  BLAST JUMP CALCULATION
+				// ========================
+				
 				// calculate importance of distance and accuracy for this attack
-				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(shockwave, blast_jump_radius))) : 0));
-				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
+				multiplier_from_accuracy = (1 -
+					(distance_to_head ?
+						min(1, (distance_to_head / WEP_CVAR(shockwave, blast_jump_radius)))
+						:
+						0
+					)
+				);
+				multiplier_from_distance = (1 -
+					(distance_to_hit ?
+						min(1, (distance_to_hit / distance_to_end))
+						:
+						0
+					)
+				);
 				multiplier =
 					max(
 						WEP_CVAR(shockwave, blast_jump_multiplier_min),
@@ -436,7 +452,6 @@ void W_Shockwave_Attack()
 						*
 						WEP_CVAR(shockwave, blast_jump_force_velocitybias)
 					);
-
 				final_force = normalize((CENTER_OR_VIEWOFS(head) - attack_hitpos) + vel);
 
 				// now multiply the direction by force units
@@ -468,8 +483,25 @@ void W_Shockwave_Attack()
 			}
 			else if(distance_to_head <= WEP_CVAR(shockwave, blast_splash_radius))
 			{
-				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(shockwave, blast_splash_radius))) : 0));
-				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
+				// ==========================
+				//  BLAST SPLASH CALCULATION
+				// ==========================
+				
+				// calculate importance of distance and accuracy for this attack
+				multiplier_from_accuracy = (1 -
+					(distance_to_head ?
+						min(1, (distance_to_head / WEP_CVAR(shockwave, blast_splash_radius)))
+						:
+						0
+					)
+				);
+				multiplier_from_distance = (1 -
+					(distance_to_hit ?
+						min(1, (distance_to_hit / distance_to_end))
+						:
+						0
+					)
+				);
 				multiplier =
 					max(
 						WEP_CVAR(shockwave, blast_splash_multiplier_min),
@@ -522,6 +554,10 @@ void W_Shockwave_Attack()
 	{
 		if((head != self) && head.takedamage)
 		{
+			// ========================
+			//  BLAST CONE CALCULATION
+			// ========================
+
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
 			center = CENTER_OR_VIEWOFS(head);
 
@@ -542,8 +578,22 @@ void W_Shockwave_Attack()
 			if((distance_to_target <= WEP_CVAR(shockwave, blast_distance)) 
 				&& (W_Shockwave_Attack_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
-				multiplier_from_accuracy = (1 - W_Shockwave_Attack_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
-				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
+				// calculate importance of distance and accuracy for this attack
+				multiplier_from_accuracy = (1 -
+					W_Shockwave_Attack_CheckSpread(
+						nearest_to_attacker,
+						nearest_on_line,
+						w_shotorg,
+						attack_endpos
+					)
+				);
+				multiplier_from_distance = (1 -
+					(distance_to_hit ?
+						min(1, (distance_to_target / distance_to_end))
+						:
+						0
+					)
+				);
 				multiplier =
 					max(
 						WEP_CVAR(shockwave, blast_multiplier_min),
@@ -596,7 +646,16 @@ void W_Shockwave_Attack()
 		final_force = shockwave_hit_force[i];
 		final_damage = shockwave_hit_damage[i];
 		
-		Damage(head, self, self, final_damage, WEP_SHOCKWAVE, head.origin, final_force);
+		Damage(
+			head,
+			self,
+			self,
+			final_damage,
+			WEP_SHOCKWAVE,
+			head.origin,
+			final_force
+		);
+		
 		#ifdef DEBUG_SHOCKWAVE
 		print(sprintf(
 			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
