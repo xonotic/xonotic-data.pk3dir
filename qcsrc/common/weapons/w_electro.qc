@@ -31,11 +31,11 @@ REGISTER_WEAPON(
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  count) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damageforcescale) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  damagedbycontents) \
-	w_cvar(WEP_ELECTRO, electro, MO_SEC,  takedamageexplode) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  health) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  refire2) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_up) \
 	w_cvar(WEP_ELECTRO, electro, MO_SEC,  speed_z) \
+	w_cvar(WEP_ELECTRO, electro, MO_SEC,  touchexplode) \
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius) \
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_comboradius_thruwall) \
 	w_cvar(WEP_ELECTRO, electro, MO_NONE, combo_damage) \
@@ -179,7 +179,7 @@ void W_Plasma_Touch(void)
 {
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, takedamageexplode)) { W_Plasma_Explode(); } }
+		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Plasma_Explode(); } }
 	else
 	{
 		//UpdateCSQCProjectile(self);
