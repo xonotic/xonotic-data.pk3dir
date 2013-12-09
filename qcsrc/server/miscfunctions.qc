@@ -624,9 +624,7 @@ float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-entity get_weaponinfo(float w);
-
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns) // WEAPONTODO
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -653,7 +651,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns) // WEAPON
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	var float t = weaponinfo.weaponstart;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 
@@ -776,7 +774,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon("g_start_weapon_", e, FALSE);
+			float w = want_weapon(e, FALSE);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -834,7 +832,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
+				float w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
