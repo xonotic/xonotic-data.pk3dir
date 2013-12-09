@@ -544,7 +544,7 @@ void havocbot_movetogoal()
 	else if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		self.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 
-	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump // WEAPONTODO: move this to bot think!
+	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
 	if (!(self.flags & FL_ONGROUND))
 	{
