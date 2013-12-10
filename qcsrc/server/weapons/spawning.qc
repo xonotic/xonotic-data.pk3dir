@@ -1,16 +1,21 @@
 string W_Apply_Weaponreplace(string in)
 {
 	float n = tokenize_console(in);
-	string out = "";
-	float i;
+	string out = "", replacement = "";
+	float i, j;
 	for(i = 0; i < n; ++i)
 	{
-		string s = argv(i);
-		string r = cvar_string(strcat("g_weaponreplace_", s));
-		if(r == "")
-			out = strcat(out, " ", s);
-		else if(r != "0")
-			out = strcat(out, " ", r);
+		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
+			e = get_weaponinfo(j);
+			if(e.netname == argv(i))
+			{
+				replacement = e.weaponreplace;
+			}
+		}
+		if(replacement != "") { out = sprintf("%s %s", out, replacement); }
+		else if(replacement != "0") { out = sprintf("%s %s", out, replacement); }
+		else { out = sprintf("%s %s", out, argv(i)); }
 	}
 	return substring(out, 1, -1);
 }
