@@ -19,7 +19,6 @@ void weapon_defaultspawnfunc(float wpn)
 {
 	entity e;
 	float t;
-	var .float ammofield;
 	string s;
 	entity oldself;
 	float i, j;
@@ -120,6 +119,22 @@ void weapon_defaultspawnfunc(float wpn)
 		if(!self.superweapons_finished)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
+	// if we don't already have ammo, give us some ammo
+	if(!self.(e.current_ammo))
+	{
+		switch(e.current_ammo)
+		{
+			case ammo_shells:  self.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
+			case ammo_nails:   self.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
+			case ammo_rockets: self.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
+			case ammo_cells:   self.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
+			case ammo_fuel:    self.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
+		}
+	}
+
+	print(sprintf("defaultspawnfunc: current ammo count: %f\n", self.(e.current_ammo)));
+
+	#if 0
 	if(e.items)
 	{
 		for(i = 0, j = 1; i < 24; ++i, j *= 2)
@@ -132,6 +147,7 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 		}
 	}
+	#endif
 
 	// pickup anyway
 	if(g_pickup_weapons_anyway)

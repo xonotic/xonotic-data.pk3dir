@@ -661,7 +661,7 @@ void W_WeaponFrame()
 		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
-		self.items &= ~IT_AMMO;
+		//self.items &= ~IT_AMMO;
 		return;
 	}
 
@@ -679,8 +679,8 @@ void W_WeaponFrame()
 			self.switchingweapon = self.switchweapon;
 			entity newwep = get_weaponinfo(self.switchweapon);
 
-			self.items &= ~IT_AMMO;
-			self.items = self.items | (newwep.items & IT_AMMO);
+			//self.items &= ~IT_AMMO;
+			//self.items = self.items | (newwep.items & IT_AMMO);
 
 			// the two weapon entities will notice this has changed and update their models
 			self.weapon = self.switchweapon;
@@ -774,19 +774,6 @@ void W_WeaponFrame()
 				bprint("\{1}^1ERROR: undefined weapon think function for ", self.netname, "\n");
 		}
 	}
-
-#if 0
-	if (self.items & IT_CELLS)
-		self.currentammo = self.ammo_cells;
-	else if (self.items & IT_ROCKETS)
-		self.currentammo = self.ammo_rockets;
-	else if (self.items & IT_NAILS)
-		self.currentammo = self.ammo_nails;
-	else if (self.items & IT_SHELLS)
-		self.currentammo = self.ammo_shells;
-	else
-		self.currentammo = 1;
-#endif
 }
 
 void W_AttachToShotorg(entity flash, vector offset)

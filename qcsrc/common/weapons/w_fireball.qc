@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ FIREBALL,
 /* function */ w_fireball,
-/* ammotype */ ammo_none, // WEAPONTODO
+/* ammotype */ ammo_none,
 /* impulse  */ 9,
 /* flags    */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,

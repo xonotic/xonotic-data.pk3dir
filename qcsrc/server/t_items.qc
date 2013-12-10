@@ -281,52 +281,10 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items == 0)
 			return FALSE;
 		if(g_weaponarena)
-			if(self.weapons || (self.items & IT_AMMO))
+			if(self.weapons || (self.items & IT_AMMO)) // no item or ammo pickups in weaponarena
 				return FALSE;
 	}
 	return TRUE;
-}
-
-floatfield Item_CounterField(float it)
-{
-	switch(it)
-	{
-		case IT_SHELLS:      return ammo_shells;
-		case IT_NAILS:       return ammo_nails;
-		case IT_ROCKETS:     return ammo_rockets;
-		case IT_CELLS:       return ammo_cells;
-		case IT_FUEL:        return ammo_fuel;
-		case IT_5HP:         return health;
-		case IT_25HP:        return health;
-		case IT_HEALTH:      return health;
-		case IT_ARMOR_SHARD: return armorvalue;
-		case IT_ARMOR:       return armorvalue;
-		// add more things here (health, armor)
-		default:             error("requested item has no counter field");
-	}
-#ifdef GMQCC
-	// should never happen
-	return health;
-#endif
-}
-
-string Item_CounterFieldName(float it)
-{
-	switch(it)
-	{
-		case IT_SHELLS:      return "shells";
-		case IT_NAILS:       return "nails";
-		case IT_ROCKETS:     return "rockets";
-		case IT_CELLS:       return "cells";
-		case IT_FUEL:        return "fuel";
-
-		// add more things here (health, armor)
-		default:             error("requested item has no counter field name");
-	}
-#ifdef GMQCC
-	// should never happen
-	return string_null;
-#endif
 }
 
 /*

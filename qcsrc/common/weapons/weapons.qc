@@ -239,12 +239,7 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string W_Name(float weaponid)
+string W_Name(float weaponid) // WEAPONTODO: make into a macro
 {
 	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO; // WEAPONTODO
 }

@@ -20,9 +20,9 @@ void thrown_wep_think()
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
 {
 	entity oldself, wep;
-	float wa, thisammo, i, j;
+	float thisammo, i;
 	string s;
-	var .float ammofield;
+	var .float ammofield = (get_weaponinfo(wpn)).current_ammo;
 
 	wep = spawn();
 
@@ -61,8 +61,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	wa = W_AmmoItemCode(wpn);
-	if(wa == 0)
+	//wa = W_AmmoItemCode(wpn);
+	if(ammofield == ammo_none)
 	{
 		oldself = self;
 		self = wep;
@@ -88,44 +88,40 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			return string_null;
 		if(doreduce && g_weapon_stay == 2)
 		{
-			for(i = 0, j = 1; i < 24; ++i, j *= 2)
+			// if our weapon is loaded, give its load back to the player
+			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				if(wa & j)
-				{
-					ammofield = Item_CounterField(j);
-
-					// if our weapon is loaded, give its load back to the player
-					if(self.(weapon_load[self.weapon]) > 0)
-					{
-						own.ammofield += self.(weapon_load[self.weapon]);
-						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
-					}
-
-					wep.ammofield = 0;
-				}
+				own.ammofield += self.(weapon_load[self.weapon]);
+				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
+
+			wep.ammofield = 0;
 		}
 		else if(doreduce)
 		{
-			for(i = 0, j = 1; i < 24; ++i, j *= 2)
+			// if our weapon is loaded, give its load back to the player
+			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				if(wa & j)
-				{
-					ammofield = Item_CounterField(j);
-
-					// if our weapon is loaded, give its load back to the player
-					if(self.(weapon_load[self.weapon]) > 0)
-					{
-						own.ammofield += self.(weapon_load[self.weapon]);
-						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
-					}
-
-					thisammo = min(own.ammofield, wep.ammofield);
-					wep.ammofield = thisammo;
-					own.ammofield -= thisammo;
-					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
-				}
+				own.ammofield += self.(weapon_load[self.weapon]);
+				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
+
+			// stuff
+			thisammo = min(own.ammofield, wep.ammofield);
+			wep.ammofield = thisammo;
+			own.ammofield -= thisammo;
+
+			//print(sprintf("W_ThrowNewWeapon: wep ammo count: %f, own ammo count: %f, thisammo = %f\n", wep.ammofield, own.ammofield, thisammo));
+
+			switch(ammofield)
+			{
+				case ammo_shells:  s = sprintf("%s and %d shells", s, thisammo);  break;
+				case ammo_nails:   s = sprintf("%s and %d nails", s, thisammo);   break;
+				case ammo_rockets: s = sprintf("%s and %d rockets", s, thisammo); break;
+				case ammo_cells:   s = sprintf("%s and %d cells", s, thisammo);   break;
+				case ammo_fuel:    s = sprintf("%s and %d fuel", s, thisammo);    break;
+			}
+
 			s = substring(s, 5, -1);
 		}
 		wep.glowmod = own.weaponentity_glowmod;
@@ -140,8 +136,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 float W_IsWeaponThrowable(float w)
 {
-	float wa;
-
 	if (!autocvar_g_pickup_items)
 		return 0;
 	if (g_weaponarena)
@@ -153,13 +147,12 @@ float W_IsWeaponThrowable(float w)
     if(w == 0)
         return 0;
 	
-	wa = W_AmmoItemCode(w);
 	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 			return 0;
-		if(wa == 0)
+		if((get_weaponinfo(w)).current_ammo == ammo_none)
 			return 0;
 	}
 
