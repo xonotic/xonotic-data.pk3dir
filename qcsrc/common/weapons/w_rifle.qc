@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ RIFLE,
-/* function */ w_rifle,
+/* function */ W_Rifle,
 /* ammotype */ ammo_nails,
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
@@ -131,7 +131,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 }
 
 .float bot_secondary_riflemooth;
-float w_rifle(float req)
+float W_Rifle(float req)
 {
 	float ammo_amount;
 	
@@ -267,7 +267,7 @@ float w_rifle(float req)
 }
 #endif
 #ifdef CSQC
-float w_rifle(float req)
+float W_Rifle(float req)
 {
 	switch(req)
 	{

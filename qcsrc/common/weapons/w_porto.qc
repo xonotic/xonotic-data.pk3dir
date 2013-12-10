@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ PORTO,
-/* function */ w_porto,
+/* function */ W_Porto,
 /* ammotype */ ammo_none,
 /* impulse  */ 0,
 /* flags    */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
@@ -281,8 +281,8 @@ void W_Porto_Attack (float type)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_nexball_weapon(float req);
-float w_porto(float req)
+float w_nexball_weapon(float req); // WEAPONTODO
+float W_Porto(float req)
 {
 	//vector v_angle_save;
 
@@ -393,7 +393,7 @@ float w_porto(float req)
 }
 #endif
 #ifdef CSQC
-float w_porto(float req)
+float W_Porto(float req)
 {
 	switch(req)
 	{

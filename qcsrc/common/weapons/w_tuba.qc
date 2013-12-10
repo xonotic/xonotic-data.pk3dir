@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ TUBA,
-/* function */ w_tuba,
+/* function */ W_Tuba,
 /* ammotype */ ammo_none,
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
@@ -171,7 +171,7 @@ void W_Tuba_NoteOff()
 	remove(self);
 }
 
-float Tuba_GetNote(entity pl, float hittype)
+float W_Tuba_GetNote(entity pl, float hittype)
 {
 	float note;
 	float movestate;
@@ -315,7 +315,7 @@ void W_Tuba_NoteOn(float hittype)
 
 	W_SetupShot(self, FALSE, 2, "", 0, WEP_CVAR(tuba, damage));
 
-	n = Tuba_GetNote(self, hittype);
+	n = W_Tuba_GetNote(self, hittype);
 
 	hittype = 0;
 	if(self.tuba_instrument & 1)
@@ -359,7 +359,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-float w_tuba(float req)
+float W_Tuba(float req)
 {
 	switch(req)
 	{
@@ -485,7 +485,7 @@ float w_tuba(float req)
 }
 #endif
 #ifdef CSQC
-float w_tuba(float req)
+float W_Tuba(float req)
 {
 	// nothing to do here; particles of tuba are handled differently
 

@@ -18,7 +18,6 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_NONE, blast_edgedamage) \
 	w_cvar(id, sn, MO_NONE, blast_force) \
 	w_cvar(id, sn, MO_NONE, blast_force_forwardbias) \
-	/*w_cvar(id, sn, MO_NONE, blast_force_velocitybias)*/ \
 	w_cvar(id, sn, MO_NONE, blast_force_zscale) \
 	w_cvar(id, sn, MO_NONE, blast_jump_damage) \
 	w_cvar(id, sn, MO_NONE, blast_jump_edgedamage) \
