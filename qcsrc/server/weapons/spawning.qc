@@ -1,21 +1,31 @@
 string W_Apply_Weaponreplace(string in)
 {
 	float n = tokenize_console(in);
-	string out = "", replacement = "";
+	string out = "", s, replacement;
 	float i, j;
+	entity e;
 	for(i = 0; i < n; ++i)
 	{
+		replacement = "";
+		s = argv(i);
+		
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if(e.netname == argv(i))
+			if(e.netname == s)
 			{
 				replacement = e.weaponreplace;
 			}
 		}
-		if(replacement != "") { out = sprintf("%s %s", out, replacement); }
-		else if(replacement != "0") { out = sprintf("%s %s", out, replacement); }
-		else { out = sprintf("%s %s", out, argv(i)); }
+		
+		//if(replacement != "") { out = sprintf("%s %s", out, replacement); }
+		//else if(replacement != "0") { out = sprintf("%s %s", out, replacement); }
+		//else { out = sprintf("%s %s", out, argv(i)); }
+
+		if(replacement == "")
+			out = strcat(out, " ", s);
+		else if(replacement != "0")
+			out = strcat(out, " ", replacement);
 	}
 	return substring(out, 1, -1);
 }
