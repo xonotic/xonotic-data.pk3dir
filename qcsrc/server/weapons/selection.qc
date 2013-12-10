@@ -118,6 +118,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
 	float weaponcur;
+	entity wep;
 
 	if(skipmissing || pl.selectweapon == 0)
 		weaponcur = pl.switchweapon;
@@ -133,9 +134,16 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
+		wep = get_weaponinfo(weaponwant);
 		if(imp >= 0)
-			if((get_weaponinfo(weaponwant)).impulse != imp)
+			if(wep.impulse != imp)
 				continue;
+
+		// skip weapons we don't own that aren't normal and aren't in the map
+		if(!(pl.weapons & WepSet_FromWeapon(weaponwant)))
+			if(!((get_weaponinfo(weaponwant)).spawnflags & WEP_FLAG_NORMAL))
+				if(!(weaponsInMap & WepSet_FromWeapon(weaponwant)))
+					continue;
 
 		++c;
 
@@ -173,9 +181,16 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		while(rest != "")
 		{
 			weaponwant = stof(car(rest)); rest = cdr(rest);
+			wep = get_weaponinfo(weaponwant);
 			if(imp >= 0)
-				if((get_weaponinfo(weaponwant)).impulse != imp)
+				if(wep.impulse != imp)
 					continue;
+
+			// skip weapons we don't own that aren't normal and aren't in the map
+			if(!(pl.weapons & WepSet_FromWeapon(weaponwant)))
+				if(!((get_weaponinfo(weaponwant)).spawnflags & WEP_FLAG_NORMAL))
+					if(!(weaponsInMap & WepSet_FromWeapon(weaponwant)))
+						continue;
 
 			--c;
 			if(c == 0)
