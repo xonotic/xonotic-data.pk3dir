@@ -775,7 +775,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, self.netname, '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(self.message), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
@@ -783,7 +783,7 @@ void HUD_Weapons(void)
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_BLASTER && self.weapon != WEP_PORTO) // WEAPONTODO: detect weapons which don't have ammo automatically
+			if(autocvar_hud_panel_weapons_ammo && self.current_ammo != ammo_none)
 			{
 				a = 0;
 				ammo_type = GetAmmoTypeForWep(self.weapon);
