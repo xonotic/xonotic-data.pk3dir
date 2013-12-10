@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ MINE_LAYER,
 /* function */ w_minelayer,
-/* ammotype */ IT_ROCKETS,
+/* ammotype */ ammo_rockets,
 /* impulse  */ 4,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_HIGH,

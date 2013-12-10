@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ TUBA,
 /* function */ w_tuba,
-/* ammotype */ 0,
+/* ammotype */ ammo_none,
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,

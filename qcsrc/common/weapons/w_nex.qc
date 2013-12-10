@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ NEX,
 /* function */ w_nex,
-/* ammotype */ IT_CELLS,
+/* ammotype */ ammo_cells,
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_HIGH,

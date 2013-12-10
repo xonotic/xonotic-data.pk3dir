@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ ELECTRO,
 /* function */ W_Electro,
-/* ammotype */ IT_CELLS,
+/* ammotype */ ammo_cells,
 /* impulse  */ 5,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,

@@ -526,8 +526,6 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-..float current_ammo;
-
 .float weapon_load[WEP_MAXCOUNT];
 .float ammo_none; // used by the reloading system, must always be 0
 .float clip_load;

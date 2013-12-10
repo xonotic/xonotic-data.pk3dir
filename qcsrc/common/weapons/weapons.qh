@@ -122,7 +122,8 @@ float W_AmmoItemCode(float wpn);
 .float ammo_rockets;
 .float ammo_cells;
 .float ammo_fuel;
-.float ammo_batteries; // dummy
+.float ammo_none;
+.float ammo_broken; // dummy
 
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
@@ -137,7 +138,7 @@ float W_AmmoItemCode(float wpn);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-..float ammo_field; // main ammo field
+..float current_ammo; // main ammo field
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
@@ -172,7 +173,7 @@ float W_AmmoItemCode(float wpn);
 #define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
 float w_null(float dummy);
-void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
+void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
 void register_weapons_done();
 
 // note: the fabs call is just there to hide "if result is constant" warning

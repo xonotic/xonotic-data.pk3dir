@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ HOOK,
 /* function */ w_hook,
-/* ammotype */ IT_CELLS|IT_FUEL,
+/* ammotype */ ammo_fuel,
 /* impulse  */ 0,
 /* flags    */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ 0,

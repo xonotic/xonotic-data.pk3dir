@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ SHOCKWAVE,
 /* function */ W_Shockwave,
-/* ammotype */ IT_SHELLS,
+/* ammotype */ ammo_shells,
 /* impulse  */ 2,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_LOW,

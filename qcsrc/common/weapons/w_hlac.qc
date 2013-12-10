@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ HLAC,
 /* function */ w_hlac,
-/* ammotype */ IT_CELLS,
+/* ammotype */ ammo_cells,
 /* impulse  */ 6,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,

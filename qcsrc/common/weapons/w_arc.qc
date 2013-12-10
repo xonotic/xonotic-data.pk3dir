@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ ARC,
 /* function */ w_arc,
-/* ammotype */ IT_CELLS,
+/* ammotype */ ammo_cells,
 /* impulse  */ 5,
 /* flags    */ WEP_FLAG_NORMAL,
 /* rating   */ BOT_PICKUP_RATING_HIGH,

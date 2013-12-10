@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ BLASTER,
 /* function */ W_Blaster,
-/* ammotype */ 0,
+/* ammotype */ ammo_none,
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ 0,

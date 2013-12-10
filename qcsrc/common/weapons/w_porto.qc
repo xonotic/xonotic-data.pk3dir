@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ PORTO,
 /* function */ w_porto,
-/* ammotype */ 0,
+/* ammotype */ ammo_none,
 /* impulse  */ 0,
 /* flags    */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
 /* rating   */ 0,

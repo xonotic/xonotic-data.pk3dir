@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ MINSTANEX,
 /* function */ w_minstanex,
-/* ammotype */ IT_CELLS,
+/* ammotype */ ammo_cells,
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_HIGH,

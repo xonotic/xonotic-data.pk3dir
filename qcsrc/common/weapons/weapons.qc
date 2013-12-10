@@ -74,7 +74,7 @@ WepSet ReadWepSet()
 }
 #endif
 
-void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
+void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
 {
 	entity e;
 	weapon_info[id - 1] = e = spawn();
@@ -83,7 +83,7 @@ void register_weapon(float id, WepSet bit, float(float) func, float ammotype, fl
 	e.weapons = bit;
 	e.netname = shortname;
 	e.message = wname;
-	e.items = ammotype;
+	//e.items = ammotype;
 	e.weapon_func = func;
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
@@ -91,18 +91,7 @@ void register_weapon(float id, WepSet bit, float(float) func, float ammotype, fl
 	e.model2 = strzone(strcat("wpn-", e.mdl));
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
-	if(ammotype & IT_SHELLS)
-		e.ammo_field = ammo_shells;
-	else if(ammotype & IT_NAILS)
-		e.ammo_field = ammo_nails;
-	else if(ammotype & IT_ROCKETS)
-		e.ammo_field = ammo_rockets;
-	else if(ammotype & IT_CELLS)
-		e.ammo_field = ammo_cells;
-	else if(ammotype & IT_FUEL)
-		e.ammo_field = ammo_fuel;
-	else
-		e.ammo_field = ammo_batteries;
+	e.current_ammo = ammotype;
 
 	#ifndef MENUQC
 	func(WR_INIT);
@@ -120,7 +109,7 @@ void register_weapons_done()
 	dummy_weapon_info.weapons = '0 0 0';
 	dummy_weapon_info.netname = "";
 	dummy_weapon_info.message = "AOL CD Thrower";
-	dummy_weapon_info.items = 0;
+	//dummy_weapon_info.items = 0;
 	dummy_weapon_info.weapon_func = w_null;
 	dummy_weapon_info.mdl = "";
 	dummy_weapon_info.model = "";
@@ -128,6 +117,7 @@ void register_weapons_done()
 	dummy_weapon_info.model2 = "";
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
+	dummy_weapon_info.current_ammo = ammo_broken;
 
 	float i;
 	weaponorder_byid = "";
@@ -256,5 +246,5 @@ string W_Name(float weaponid)
 
 float W_AmmoItemCode(float wpn)
 {
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
+	return (get_weaponinfo(wpn)).items & IT_AMMO; // WEAPONTODO
 }

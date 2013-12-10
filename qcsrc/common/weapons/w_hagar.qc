@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id */ HAGAR,
 /* function */ w_hagar,
-/* ammotype */ IT_ROCKETS,
+/* ammotype */ ammo_rockets,
 /* impulse  */ 8,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
