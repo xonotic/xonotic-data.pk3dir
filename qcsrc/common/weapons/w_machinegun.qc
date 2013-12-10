@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function */ w_uzi,
 /* ammotype */ ammo_nails,
 /* impulse  */ 3,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* flags    */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* model    */ "uzi",
 /* netname  */ "uzi",
