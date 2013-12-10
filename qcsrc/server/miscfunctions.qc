@@ -644,14 +644,14 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_BLASTER || i == WEP_SHOCKWAVE); // WEAPONTODO: add spawnflag for hard coded spawn weapons
+		d = !(!weaponinfo.weaponstart);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
-	var float t = weaponinfo.weaponstart;
+	var float t = weaponinfo.weaponstartoverride;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 
