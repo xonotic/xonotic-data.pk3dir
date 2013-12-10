@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* model    */ "nex",
 /* netname  */ "nex",
-/* fullname */ _("Nex")
+/* fullname */ _("Vortex")
 );
 
 #define NEX_SETTINGS(w_cvar,w_prop) NEX_SETTINGS_LIST(w_cvar, w_prop, NEX, nex)

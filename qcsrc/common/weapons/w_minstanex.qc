@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* model    */ "minstanex",
 /* netname  */ "minstanex",
-/* fullname */ _("MinstaNex")
+/* fullname */ _("Vaporizer")
 );
 
 #define MINSTANEX_SETTINGS(w_cvar,w_prop) MINSTANEX_SETTINGS_LIST(w_cvar, w_prop, MINSTANEX, minstanex)
