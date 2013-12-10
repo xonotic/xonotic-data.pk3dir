@@ -38,6 +38,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_BOTH, joinexplode_radius) \
 	w_cvar(id, sn, MO_BOTH, joinexplode_force) \
 	w_cvar(id, sn, MO_SEC,  spreadtype) \
+	w_cvar(id, sn, MO_NONE, secondary) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
 	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
@@ -239,10 +240,18 @@ void W_Crylink_LinkJoinEffect_Think()
 			if(WEP_CVAR_BOTH(crylink, isprimary, joinexplode))
 			{
 				n /= WEP_CVAR_BOTH(crylink, isprimary, shots);
-				RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, joinexplode_damage) * n,
-											 WEP_CVAR_BOTH(crylink, isprimary, joinexplode_edgedamage) * n,
-											 WEP_CVAR_BOTH(crylink, isprimary, joinexplode_radius) * n, e.realowner, world,
-											 WEP_CVAR_BOTH(crylink, isprimary, joinexplode_force) * n, e.projectiledeathtype, other);
+				RadiusDamage(
+					e,
+					e.realowner,
+					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_damage) * n,
+					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_edgedamage) * n,
+					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_radius) * n,
+					e.realowner,
+					world,
+					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_force) * n,
+					e.projectiledeathtype,
+					other
+				);
 				pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
 			}
 		}
@@ -332,7 +341,7 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, WEP_CVAR_PRI(crylink, ammo), autocvar_g_balance_crylink_reload_ammo);
 
 	maxdmg = WEP_CVAR_PRI(crylink, damage) * WEP_CVAR_PRI(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_PRI(crylink, bouncedamagefactor) * WEP_CVAR_PRI(crylink, bounces);
@@ -441,7 +450,7 @@ void W_Crylink_Attack2 (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_secondary_ammo, autocvar_g_balance_crylink_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(crylink, ammo), autocvar_g_balance_crylink_reload_ammo);
 
 	maxdmg = WEP_CVAR_SEC(crylink, damage) * WEP_CVAR_SEC(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_SEC(crylink, bouncedamagefactor) * WEP_CVAR_SEC(crylink, bounces);
@@ -565,7 +574,7 @@ float w_crylink(float req)
 		}
 		case WR_THINK:
 		{
-			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo)) // forced reload
+			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
 
 			if (self.BUTTON_ATCK)
@@ -643,8 +652,8 @@ float w_crylink(float req)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_primary_ammo;
+			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -653,8 +662,8 @@ float w_crylink(float req)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_secondary_ammo;
+			ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:
@@ -664,7 +673,7 @@ float w_crylink(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

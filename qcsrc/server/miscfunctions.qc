@@ -640,7 +640,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
 			d = FALSE;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOCKWAVE); // todo: how to handle shotgun in CTS mode? we're removing it.. so.... 
+		d = (i == WEP_SHOCKWAVE); // WEAPONTODO: how to handle shotgun in CTS mode? we're replacing it.. so.... 
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
