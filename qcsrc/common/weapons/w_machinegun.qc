@@ -311,17 +311,12 @@ float w_uzi(float req)
 			UZI_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_nails;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
 			if(WEP_CVAR(uzi, mode) == 1)
-				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, sustained_ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, sustained_ammo);
 			else
-				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, first_ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{
@@ -335,9 +330,9 @@ float w_uzi(float req)
 		case WR_CHECKAMMO2:
 		{
 			if(WEP_CVAR(uzi, mode) == 1)
-				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, burst_ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, burst_ammo);
 			else
-				ammo_amount = self.ammo_nails >= WEP_CVAR(uzi, first_ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{

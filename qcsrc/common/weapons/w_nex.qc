@@ -202,11 +202,11 @@ float w_nex(float req)
 										}
 										else
 										{
-											dt = min(dt, (self.ammo_cells - WEP_CVAR_PRI(nex, ammo)) / WEP_CVAR_SEC(nex, ammo));
+											dt = min(dt, (self.(self.current_ammo) - WEP_CVAR_PRI(nex, ammo)) / WEP_CVAR_SEC(nex, ammo));
 											dt = max(0, dt);
 											if(dt > 0)
 											{
-												self.ammo_cells = max(WEP_CVAR_SEC(nex, ammo), self.ammo_cells - WEP_CVAR_SEC(nex, ammo) * dt);
+												self.(self.current_ammo) = max(WEP_CVAR_SEC(nex, ammo), self.(self.current_ammo) - WEP_CVAR_SEC(nex, ammo) * dt);
 											}
 										}
 									}
@@ -248,14 +248,9 @@ float w_nex(float req)
 			NEX_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_cells;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(nex, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(nex, ammo);
 			ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.(weapon_load[WEP_NEX]) >= WEP_CVAR_PRI(nex, ammo));
 			return ammo_amount;
 		}
@@ -264,7 +259,7 @@ float w_nex(float req)
 			if(WEP_CVAR(nex, secondary))
 			{
 				// don't allow charging if we don't have enough ammo
-				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(nex, ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(nex, ammo);
 				ammo_amount += self.(weapon_load[WEP_NEX]) >= WEP_CVAR_SEC(nex, ammo);	
 				return ammo_amount;
 			}

@@ -485,14 +485,9 @@ float W_Electro(float req)
 			ELECTRO_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_cells;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(electro, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(electro, ammo);
 			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_PRI(electro, ammo);
 			return ammo_amount;
 		}
@@ -500,12 +495,12 @@ float W_Electro(float req)
 		{
 			if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
 			{
-				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
 				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
 			}
 			else
 			{
-				ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(electro, ammo);
+				ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(electro, ammo);
 				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo);
 			}
 			return ammo_amount;

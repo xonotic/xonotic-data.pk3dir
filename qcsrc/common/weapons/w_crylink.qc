@@ -641,18 +641,13 @@ float w_crylink(float req)
 			CRYLINK_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_cells;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
 			// don't "run out of ammo" and switch weapons while waiting for release
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(crylink, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
@@ -662,7 +657,7 @@ float w_crylink(float req)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(crylink, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}

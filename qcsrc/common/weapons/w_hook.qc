@@ -14,8 +14,8 @@ REGISTER_WEAPON(
 #define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)
 #define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, ammo) \
 	w_cvar(id, sn, BOTH, refire) \
+	w_cvar(id, sn, PRI, ammo) \
 	w_cvar(id, sn, PRI,  hooked_ammo) \
 	w_cvar(id, sn, PRI,  hooked_time_free) \
 	w_cvar(id, sn, PRI,  hooked_time_max) \
@@ -127,7 +127,7 @@ void W_Hook_Attack2()
 {
 	entity gren;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo));
+	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn ();
@@ -293,7 +293,6 @@ float w_hook(float req)
 		}
 		case WR_SETUP:
 		{
-			self.current_ammo = ammo_fuel;
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			return TRUE;
 		}
@@ -306,7 +305,8 @@ float w_hook(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			return self.ammo_cells >= WEP_CVAR_SEC(hook, ammo);
+			// infinite ammo for now
+			return TRUE; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 		}
 		case WR_CONFIG:
 		{

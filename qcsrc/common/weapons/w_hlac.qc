@@ -242,20 +242,15 @@ float w_hlac(float req)
 			HLAC_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_cells;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_cells >= WEP_CVAR_PRI(hlac, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_PRI(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.ammo_cells >= WEP_CVAR_SEC(hlac, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}

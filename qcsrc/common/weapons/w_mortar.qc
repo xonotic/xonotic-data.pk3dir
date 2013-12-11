@@ -414,20 +414,15 @@ float w_glauncher(float req)
 			MORTAR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
 			return TRUE;
 		}
-		case WR_SETUP:
-		{
-			self.current_ammo = ammo_rockets;
-			return TRUE;
-		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.ammo_rockets >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.ammo_rockets >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
