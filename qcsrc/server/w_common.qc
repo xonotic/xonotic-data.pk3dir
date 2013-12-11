@@ -163,11 +163,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 }
 
 float fireBullet_trace_callback_eff;
+entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(hit - start) > 16)
 		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
 	WarpZone_trace_forent = world;
+	fireBullet_last_hit = world;
 }
 
 void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects)
@@ -179,7 +181,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	end = start + dir * MAX_SHOT_DISTANCE;
 
 	entity pl;
-	entity last_hit = world;
+	fireBullet_last_hit = world;
 	float solid_penetration_left = 1;
 	float total_damage = 0;
 
@@ -241,15 +243,9 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
 			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
 
-		if (hit && hit != WarpZone_trace_forent)  // Avoid self-damage (except after going through a warp).
+		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
 		{
-			if (hit == last_hit)
-				if (WarpZone_trace_forent)
-					dprint("NOTE: a player was hit twice in a row by the same bullet. But a warpzone was involved. Please verify that this is OK.\n"); // TODO make sure this doesn't actually happen unless when it should.
-				else
-					print("^4WARNING:^7 a player was hit twice in a row by the same bullet.\n");
-			last_hit = hit;
-
+			fireBullet_last_hit = hit;
 			yoda = 0;
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
@@ -287,7 +283,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			break;
 
 		// move the entity along its velocity until it's out of solid, then let it resume
-		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE);
+		// The previously hit entity is ignored here!
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE, hit);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 
