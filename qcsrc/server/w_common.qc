@@ -238,30 +238,29 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
 			is_weapclip = 1;
 
-		// Avoid self-damage (except after going through a warp)
-		// FIXME can this actually happen in any other case? Probably
-		// only with weird shotorigin outside the player bbox.
-		if (hit != WarpZone_trace_forent)
+		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
+			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
+
+		if (hit && hit != WarpZone_trace_forent)  // Avoid self-damage (except after going through a warp).
 		{
-			if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-				Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
+			if (hit == last_hit)
+				if (WarpZone_trace_forent)
+					dprint("NOTE: a player was hit twice in a row by the same bullet. But a warpzone was involved. Please verify that this is OK.\n"); // TODO make sure this doesn't actually happen unless when it should.
+				else
+					print("^4WARNING:^7 a player was hit twice in a row by the same bullet.\n");
+			last_hit = hit;
 
-			if(hit && hit != last_hit)
+			yoda = 0;
+			float g = accuracy_isgooddamage(self, hit);
+			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			// calculate hits for ballistic weapons
+			if(g)
 			{
-				yoda = 0;
-				float g = accuracy_isgooddamage(self, hit);
-				Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
-				// calculate hits for ballistic weapons
-				if(g)
-				{
-					// do not exceed 100%
-					float added_damage = min(damage - total_damage, damage * solid_penetration_left);
-					total_damage += damage * solid_penetration_left;
-					accuracy_add(self, self.weapon, 0, added_damage);
-				}
+				// do not exceed 100%
+				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
+				total_damage += damage * solid_penetration_left;
+				accuracy_add(self, self.weapon, 0, added_damage);
 			}
-
-			last_hit = hit; // don't hit the same player twice with the same bullet
 		}
 
 		if (is_weapclip)
