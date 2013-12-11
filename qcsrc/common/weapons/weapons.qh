@@ -149,12 +149,14 @@ float W_AmmoItemCode(float wpn);
 // =====================
 
 // create cvars for weapon settings
-#define WEP_ADD_CVAR_PRI(wepname,name) final float autocvar_g_balance_##wepname##_primary_##name;
-#define WEP_ADD_CVAR_SEC(wepname,name) final float autocvar_g_balance_##wepname##_secondary_##name;
-#define WEP_ADD_CVAR_BOTH(wepname,name) \
-	final float autocvar_g_balance_##wepname##_primary_##name; \
-	final float autocvar_g_balance_##wepname##_secondary_##name;
 #define WEP_ADD_CVAR_NONE(wepname,name) final float autocvar_g_balance_##wepname##_##name;
+
+#define WEP_ADD_CVAR_PRI(wepname,name) WEP_ADD_CVAR_NONE(wepname, primary_##name)
+#define WEP_ADD_CVAR_SEC(wepname,name) WEP_ADD_CVAR_NONE(wepname, secondary_##name)
+#define WEP_ADD_CVAR_BOTH(wepname,name) \
+	WEP_ADD_CVAR_PRI(wepname, name) \
+	WEP_ADD_CVAR_SEC(wepname, name)
+	
 #define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
 // create properties for weapon settings
