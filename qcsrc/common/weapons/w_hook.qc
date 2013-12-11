@@ -15,7 +15,7 @@ REGISTER_WEAPON(
 #define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, BOTH, animtime) \
 	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, PRI, ammo) \
+	w_cvar(id, sn, PRI,  ammo) \
 	w_cvar(id, sn, PRI,  hooked_ammo) \
 	w_cvar(id, sn, PRI,  hooked_time_free) \
 	w_cvar(id, sn, PRI,  hooked_time_max) \
