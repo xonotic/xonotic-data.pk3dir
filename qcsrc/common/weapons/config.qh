@@ -18,17 +18,17 @@ string wep_config_queue[MAX_WEP_CONFIG];
 	fputs(wep_config_file, a); \
 	if(wep_config_alsoprint) { print(a); } }
 
-#define WEP_CONFIG_WRITE_CVARS_MO_PRI(wepname,name) \
+#define WEP_CONFIG_WRITE_CVARS_PRI(wepname,name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_primary_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_primary_%s", #wepname, #name)))) }
 
-#define WEP_CONFIG_WRITE_CVARS_MO_SEC(wepname,name) \
+#define WEP_CONFIG_WRITE_CVARS_SEC(wepname,name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_secondary_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_secondary_%s", #wepname, #name)))) }
 		
-#define WEP_CONFIG_WRITE_CVARS_MO_BOTH(wepname,name) \
+#define WEP_CONFIG_WRITE_CVARS_BOTH(wepname,name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_primary_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_primary_%s", #wepname, #name)))) } \
@@ -36,7 +36,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 		sprintf("set g_balance_%s_secondary_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_secondary_%s", #wepname, #name)))) }
 
-#define WEP_CONFIG_WRITE_CVARS_MO_NONE(wepname,name) \
+#define WEP_CONFIG_WRITE_CVARS_NONE(wepname,name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }

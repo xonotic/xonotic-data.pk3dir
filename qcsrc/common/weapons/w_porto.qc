@@ -13,11 +13,11 @@ REGISTER_WEAPON(
 
 #define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)
 #define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, MO_BOTH, animtime) \
-	w_cvar(id, sn, MO_BOTH, lifetime) \
-	w_cvar(id, sn, MO_BOTH, refire) \
-	w_cvar(id, sn, MO_BOTH, speed) \
-	w_cvar(id, sn, MO_NONE, secondary) \
+	w_cvar(id, sn, BOTH, animtime) \
+	w_cvar(id, sn, BOTH, lifetime) \
+	w_cvar(id, sn, BOTH, refire) \
+	w_cvar(id, sn, BOTH, speed) \
+	w_cvar(id, sn, NONE, secondary) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \

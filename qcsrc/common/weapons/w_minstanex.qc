@@ -13,21 +13,21 @@ REGISTER_WEAPON(
 
 #define MINSTANEX_SETTINGS(w_cvar,w_prop) MINSTANEX_SETTINGS_LIST(w_cvar, w_prop, MINSTANEX, minstanex)
 #define MINSTANEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, MO_PRI, ammo) \
-	w_cvar(id, sn, MO_PRI, animtime) \
-	w_cvar(id, sn, MO_PRI, refire) \
-	w_cvar(id, sn, MO_SEC, ammo) \
-	w_cvar(id, sn, MO_SEC, animtime) \
-	w_cvar(id, sn, MO_SEC, damage) \
-	w_cvar(id, sn, MO_SEC, delay) \
-	w_cvar(id, sn, MO_SEC, edgedamage) \
-	w_cvar(id, sn, MO_SEC, force) \
-	w_cvar(id, sn, MO_SEC, lifetime) \
-	w_cvar(id, sn, MO_SEC, radius) \
-	w_cvar(id, sn, MO_SEC, refire) \
-	w_cvar(id, sn, MO_SEC, shotangle) \
-	w_cvar(id, sn, MO_SEC, speed) \
-	w_cvar(id, sn, MO_SEC, spread) \
+	w_cvar(id, sn, PRI, ammo) \
+	w_cvar(id, sn, PRI, animtime) \
+	w_cvar(id, sn, PRI, refire) \
+	w_cvar(id, sn, SEC, ammo) \
+	w_cvar(id, sn, SEC, animtime) \
+	w_cvar(id, sn, SEC, damage) \
+	w_cvar(id, sn, SEC, delay) \
+	w_cvar(id, sn, SEC, edgedamage) \
+	w_cvar(id, sn, SEC, force) \
+	w_cvar(id, sn, SEC, lifetime) \
+	w_cvar(id, sn, SEC, radius) \
+	w_cvar(id, sn, SEC, refire) \
+	w_cvar(id, sn, SEC, shotangle) \
+	w_cvar(id, sn, SEC, speed) \
+	w_cvar(id, sn, SEC, spread) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
 	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \

@@ -13,15 +13,15 @@ REGISTER_WEAPON(
 
 #define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)
 #define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, MO_BOTH, ammo) \
-	w_cvar(id, sn, MO_PRI,  animtime) \
-	w_cvar(id, sn, MO_PRI,  damage) \
-	w_cvar(id, sn, MO_PRI,  falloff_halflifedist) \
-	w_cvar(id, sn, MO_PRI,  falloff_maxdist) \
-	w_cvar(id, sn, MO_PRI,  falloff_mindist) \
-	w_cvar(id, sn, MO_PRI,  force) \
-	w_cvar(id, sn, MO_PRI,  range) \
-	w_cvar(id, sn, MO_PRI,  refire) \
+	w_cvar(id, sn, BOTH, ammo) \
+	w_cvar(id, sn, PRI,  animtime) \
+	w_cvar(id, sn, PRI,  damage) \
+	w_cvar(id, sn, PRI,  falloff_halflifedist) \
+	w_cvar(id, sn, PRI,  falloff_maxdist) \
+	w_cvar(id, sn, PRI,  falloff_mindist) \
+	w_cvar(id, sn, PRI,  force) \
+	w_cvar(id, sn, PRI,  range) \
+	w_cvar(id, sn, PRI,  refire) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \

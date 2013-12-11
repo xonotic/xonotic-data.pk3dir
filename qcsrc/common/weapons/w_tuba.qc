@@ -14,13 +14,13 @@ REGISTER_WEAPON(
 
 #define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, TUBA, tuba)
 #define TUBA_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, MO_NONE, animtime) \
-	w_cvar(id, sn, MO_NONE, attenuation) \
-	w_cvar(id, sn, MO_NONE, damage) \
-	w_cvar(id, sn, MO_NONE, edgedamage) \
-	w_cvar(id, sn, MO_NONE, force) \
-	w_cvar(id, sn, MO_NONE, radius) \
-	w_cvar(id, sn, MO_NONE, refire) \
+	w_cvar(id, sn, NONE, animtime) \
+	w_cvar(id, sn, NONE, attenuation) \
+	w_cvar(id, sn, NONE, damage) \
+	w_cvar(id, sn, NONE, edgedamage) \
+	w_cvar(id, sn, NONE, force) \
+	w_cvar(id, sn, NONE, radius) \
+	w_cvar(id, sn, NONE, refire) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \

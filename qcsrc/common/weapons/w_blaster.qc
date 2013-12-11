@@ -13,18 +13,18 @@ REGISTER_WEAPON(
 
 #define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, BLASTER, blaster)
 #define BLASTER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, MO_BOTH, animtime) \
-	w_cvar(id, sn, MO_BOTH, damage) \
-	w_cvar(id, sn, MO_BOTH, delay) \
-	w_cvar(id, sn, MO_BOTH, edgedamage) \
-	w_cvar(id, sn, MO_BOTH, force) \
-	w_cvar(id, sn, MO_BOTH, lifetime) \
-	w_cvar(id, sn, MO_BOTH, radius) \
-	w_cvar(id, sn, MO_BOTH, refire) \
-	w_cvar(id, sn, MO_BOTH, shotangle) \
-	w_cvar(id, sn, MO_BOTH, speed) \
-	w_cvar(id, sn, MO_BOTH, spread) \
-	w_cvar(id, sn, MO_NONE, secondary) \
+	w_cvar(id, sn, BOTH, animtime) \
+	w_cvar(id, sn, BOTH, damage) \
+	w_cvar(id, sn, BOTH, delay) \
+	w_cvar(id, sn, BOTH, edgedamage) \
+	w_cvar(id, sn, BOTH, force) \
+	w_cvar(id, sn, BOTH, lifetime) \
+	w_cvar(id, sn, BOTH, radius) \
+	w_cvar(id, sn, BOTH, refire) \
+	w_cvar(id, sn, BOTH, shotangle) \
+	w_cvar(id, sn, BOTH, speed) \
+	w_cvar(id, sn, BOTH, spread) \
+	w_cvar(id, sn, NONE, secondary) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
