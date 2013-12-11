@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function */ W_Shockwave,
 /* ammotype */ ammo_none,
 /* impulse  */ 2,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* flags    */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_LOW,
 /* model    */ "shotgun",
 /* netname  */ "shockwave",
@@ -13,6 +13,7 @@ REGISTER_WEAPON(
 
 #define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
 #define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
+	w_cvar(id, sn, MO_NONE, blast_animtime) \
 	w_cvar(id, sn, MO_NONE, blast_damage) \
 	w_cvar(id, sn, MO_NONE, blast_distance) \
 	w_cvar(id, sn, MO_NONE, blast_edgedamage) \
@@ -31,6 +32,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_NONE, blast_multiplier_accuracy) \
 	w_cvar(id, sn, MO_NONE, blast_multiplier_distance) \
 	w_cvar(id, sn, MO_NONE, blast_multiplier_min) \
+	w_cvar(id, sn, MO_NONE, blast_refire) \
 	w_cvar(id, sn, MO_NONE, blast_splash_damage) \
 	w_cvar(id, sn, MO_NONE, blast_splash_edgedamage) \
 	w_cvar(id, sn, MO_NONE, blast_splash_force) \
@@ -54,18 +56,6 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_NONE, melee_swing_up) \
 	w_cvar(id, sn, MO_NONE, melee_time) \
 	w_cvar(id, sn, MO_NONE, melee_traces) \
-	w_cvar(id, sn, MO_NONE, pellets_animtime) \
-	w_cvar(id, sn, MO_NONE, pellets_bulletconstant) \
-	w_cvar(id, sn, MO_NONE, pellets_bullets) \
-	w_cvar(id, sn, MO_NONE, pellets_damage) \
-	w_cvar(id, sn, MO_NONE, pellets_force) \
-	w_cvar(id, sn, MO_NONE, pellets_refire) \
-	w_cvar(id, sn, MO_NONE, pellets_speed) \
-	w_cvar(id, sn, MO_NONE, pellets_spread) \
-	w_cvar(id, sn, MO_NONE, primary) \
-	w_cvar(id, sn, MO_NONE, secondary) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -91,71 +81,10 @@ void spawnfunc_weapon_shockwave()
 
 .float swing_prev;
 .entity swing_alreadyhit;
-.float shockwave_pelletstime;
+.float shockwave_blasttime;
 entity shockwave_hit[32];
 float shockwave_hit_damage[32];
 vector shockwave_hit_force[32];
-
-// LEGACY ATTACK MODE: Scattered bullets
-void W_Shockwave_Pellets(void)
-{
-	float sc;
-	entity flash;
-
-	//W_DecreaseAmmo(ammo_shells, WEP_CVAR(shockwave, pellets_ammo), WEP_CVAR(shockwave, reload_ammo));
-
-	W_SetupShot(self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, WEP_CVAR(shockwave, pellets_damage) * WEP_CVAR(shockwave, pellets_bullets));
-	
-	for(sc = 0; sc < WEP_CVAR(shockwave, pellets_bullets); ++sc)
-	{
-		fireBallisticBullet(
-			w_shotorg,
-			w_shotdir,
-			WEP_CVAR(shockwave, pellets_spread),
-			WEP_CVAR(shockwave, pellets_speed),
-			5,
-			WEP_CVAR(shockwave, pellets_damage),
-			WEP_CVAR(shockwave, pellets_force),
-			WEP_SHOCKWAVE,
-			0,
-			WEP_CVAR(shockwave, pellets_bulletconstant)
-		);
-	}
-	endFireBallisticBullet();
-
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, 5); // WEAPONTODO: why 5? this was pellets_ammo before
-
-	// casing code
-	if(autocvar_g_casings >= 1)
-	{
-		for(sc = 0;sc < 5; ++sc)
-		{
-			SpawnCasing(
-				(
-					((random () * 50 + 50) * v_right)
-					-
-					(v_forward * (random () * 25 + 25))
-					-
-					((random () * 5 - 30) * v_up)
-				),
-				2,
-				vectoangles(v_forward),
-				'0 250 0',
-				100,
-				1,
-				self
-			);
-		}
-	}
-
-	// muzzle flash for 1st person view
-	flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = SUB_Remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
-}
 
 // MELEE ATTACK MODE
 void W_Shockwave_Melee_Think()
@@ -717,46 +646,27 @@ float W_Shockwave(float req)
 		{
 			if(self.BUTTON_ATCK)
 			{
-				switch(WEP_CVAR(shockwave, primary))
+				if(time >= self.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					case 1:
+					if(weapon_prepareattack(0, WEP_CVAR(shockwave, blast_animtime)))
 					{
-						if(time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
-						{
-							if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
-							{
-								W_Shockwave_Attack();
-								self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
-								weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
-							}
-						}
-						break;
-					}
-					case 2:
-					{
-						if(time >= self.shockwave_pelletstime) // handle refire separately so the secondary can be fired straight after a primary
-						{
-							if(weapon_prepareattack(0, WEP_CVAR(shockwave, pellets_animtime)))
-							{
-								W_Shockwave_Pellets();
-								self.shockwave_pelletstime = time + WEP_CVAR(shockwave, pellets_refire) * W_WeaponRateFactor();
-								weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, pellets_animtime), w_ready);
-							}
-						}
-						break;
+						W_Shockwave_Attack();
+						self.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
 					}
 				}
 			}
-			
-			if(self.clip_load >= 0) // we are not currently reloading
-			if(!self.crouch) // no crouchmelee please
-			if(self.BUTTON_ATCK2 && WEP_CVAR(shockwave, secondary))
-			if(weapon_prepareattack(1, WEP_CVAR(shockwave, melee_refire)))
+			else if(self.BUTTON_ATCK2)
 			{
-				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
+				//if(self.clip_load >= 0) // we are not currently reloading
+				if(!self.crouch) // no crouchmelee please
+				if(weapon_prepareattack(1, WEP_CVAR(shockwave, melee_refire)))
+				{
+					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+					weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
+				}
 			}
-
+			
 			return TRUE;
 		}
 		case WR_INIT:
@@ -780,11 +690,6 @@ float W_Shockwave(float req)
 		case WR_CONFIG:
 		{
 			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
-		}
-		case WR_RELOAD:
-		{
-			W_Reload(0, "weapons/reload.wav");
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:
