@@ -17,10 +17,6 @@ string W_Apply_Weaponreplace(string in)
 				replacement = e.weaponreplace;
 			}
 		}
-		
-		//if(replacement != "") { out = sprintf("%s %s", out, replacement); }
-		//else if(replacement != "0") { out = sprintf("%s %s", out, replacement); }
-		//else { out = sprintf("%s %s", out, argv(i)); }
 
 		if(replacement == "")
 			out = strcat(out, " ", s);
@@ -146,8 +142,6 @@ void weapon_defaultspawnfunc(float wpn)
 			case ammo_fuel:    self.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
 		}
 	}
-
-	print(sprintf("defaultspawnfunc: current ammo count: %f\n", self.(e.current_ammo)));
 
 	#if 0
 	if(e.items)

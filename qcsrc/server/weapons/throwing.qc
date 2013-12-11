@@ -61,31 +61,27 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
+	oldself = self;
+	self = wep;
+	weapon_defaultspawnfunc(wpn);
+	self = oldself;
+	if(startitem_failed)
+		return string_null;
+	wep.glowmod = own.weaponentity_glowmod;
+	wep.think = thrown_wep_think;
+	wep.savenextthink = wep.nextthink;
+	wep.nextthink = min(wep.nextthink, time + 0.5);
+	wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+	
 	//wa = W_AmmoItemCode(wpn);
 	if(ammofield == ammo_none)
 	{
-		oldself = self;
-		self = wep;
-		weapon_defaultspawnfunc(wpn);
-		self = oldself;
-		if(startitem_failed)
-			return string_null;
-		wep.glowmod = own.weaponentity_glowmod;
-		wep.think = thrown_wep_think;
-		wep.savenextthink = wep.nextthink;
-		wep.nextthink = min(wep.nextthink, time + 0.5);
-		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 		return "";
 	}
 	else
 	{
 		s = "";
-		oldself = self;
-		self = wep;
-		weapon_defaultspawnfunc(wpn);
-		self = oldself;
-		if(startitem_failed)
-			return string_null;
+
 		if(doreduce && g_weapon_stay == 2)
 		{
 			// if our weapon is loaded, give its load back to the player
@@ -106,12 +102,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			// stuff
 			thisammo = min(own.ammofield, wep.ammofield);
 			wep.ammofield = thisammo;
 			own.ammofield -= thisammo;
-
-			//print(sprintf("W_ThrowNewWeapon: wep ammo count: %f, own ammo count: %f, thisammo = %f\n", wep.ammofield, own.ammofield, thisammo));
 
 			switch(ammofield)
 			{
@@ -124,12 +117,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 			s = substring(s, 5, -1);
 		}
-		wep.glowmod = own.weaponentity_glowmod;
-		wep.think = thrown_wep_think;
-		wep.savenextthink = wep.nextthink;
-		wep.nextthink = min(wep.nextthink, time + 0.5);
-		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
-
 		return s;
 	}
 }
