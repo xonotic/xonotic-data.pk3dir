@@ -104,6 +104,7 @@ float server_is_dedicated;
 .float play_time;
 .float respawn_flags;
 .float respawn_time;
+.float respawn_time_max;
 .float death_time;
 .float fade_time;
 .float fade_rate;
