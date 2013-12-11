@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function */ W_Blaster,
 /* ammotype */ ammo_none,
 /* impulse  */ 1,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ 0,
 /* model    */ "laser",
 /* netname  */ "laser",
@@ -25,8 +25,6 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_BOTH, speed) \
 	w_cvar(id, sn, MO_BOTH, spread) \
 	w_cvar(id, sn, MO_NONE, secondary) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -163,11 +161,7 @@ float W_Blaster(float request)
 		
 		case WR_THINK:
 		{
-			if(WEP_CVAR(blaster, reload_ammo) && self.clip_load < 1) // forced reload
-			{
-				WEP_ACTION(self.weapon, WR_RELOAD);
-			}
-			else if(self.BUTTON_ATCK)
+			if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
@@ -248,12 +242,6 @@ float W_Blaster(float request)
 		case WR_CONFIG:
 		{
 			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
-		}
-		
-		case WR_RELOAD:
-		{
-			W_Reload(0, "weapons/reload.wav");
 			return TRUE;
 		}
 		
