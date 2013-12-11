@@ -262,7 +262,7 @@ void W_Devastator_Attack (void)
 	entity missile;
 	entity flash;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(devastator, ammo), WEP_CVAR(devastator, reload_ammo));
+	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

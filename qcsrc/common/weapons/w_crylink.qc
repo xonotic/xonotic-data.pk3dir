@@ -341,7 +341,7 @@ void W_Crylink_Attack (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_PRI(crylink, ammo), autocvar_g_balance_crylink_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_PRI(crylink, ammo));
 
 	maxdmg = WEP_CVAR_PRI(crylink, damage) * WEP_CVAR_PRI(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_PRI(crylink, bouncedamagefactor) * WEP_CVAR_PRI(crylink, bounces);
@@ -450,7 +450,7 @@ void W_Crylink_Attack2 (void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(crylink, ammo), autocvar_g_balance_crylink_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_SEC(crylink, ammo));
 
 	maxdmg = WEP_CVAR_SEC(crylink, damage) * WEP_CVAR_SEC(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_SEC(crylink, bouncedamagefactor) * WEP_CVAR_SEC(crylink, bounces);

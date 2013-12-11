@@ -105,7 +105,7 @@ void W_MinstaNex_Attack (void)
 			break;
 	}
 	
-	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : WEP_CVAR_PRI(minstanex, ammo)), WEP_CVAR(minstanex, reload_ammo));
+	W_DecreaseAmmo(((g_minstagib) ? 1 : WEP_CVAR_PRI(minstanex, ammo)));
 }
 
 float w_minstanex(float req)
@@ -152,7 +152,7 @@ float w_minstanex(float req)
 					
 					// decrease ammo for the laser?
 					if(WEP_CVAR_SEC(minstanex, ammo))
-						W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(minstanex, ammo), WEP_CVAR(minstanex, reload_ammo));
+						W_DecreaseAmmo(WEP_CVAR_SEC(minstanex, ammo));
 
 					// ugly minstagib hack to reuse the fire mode of the laser
 					float w;

@@ -216,7 +216,7 @@ void W_Grenade_Attack (void)
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_PRI(mortar, ammo), autocvar_g_balance_mortar_reload_ammo); // WEAPONTODO
+	W_DecreaseAmmo(WEP_CVAR_PRI(mortar, ammo));
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -265,7 +265,7 @@ void W_Grenade_Attack2 (void)
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(mortar, ammo), autocvar_g_balance_mortar_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_SEC(mortar, ammo));
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please

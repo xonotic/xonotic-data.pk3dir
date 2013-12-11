@@ -241,7 +241,7 @@ void W_Electro_Attack_Bolt(void)
 {
 	entity proj;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_PRI(electro, ammo), autocvar_g_balance_electro_reload_ammo);//weapontodo
+	W_DecreaseAmmo(WEP_CVAR_PRI(electro, ammo));
 
 	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(electro, damage));
 
@@ -330,7 +330,7 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, float
 
 void W_Electro_Attack_Orb(void)
 {
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(electro, ammo), autocvar_g_balance_electro_reload_ammo);//weapontodo
+	W_DecreaseAmmo(WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, WEP_CVAR_SEC(electro, damage));
 

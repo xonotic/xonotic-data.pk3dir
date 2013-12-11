@@ -51,7 +51,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 {
 	float i;
 
-	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_rifle_reload_ammo);
+	W_DecreaseAmmo(pAmmo);
 
 	W_SetupShot (self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 

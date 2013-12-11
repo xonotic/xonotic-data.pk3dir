@@ -319,7 +319,7 @@ void W_Mine_Attack (void)
 		}
 	}
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(minelayer, ammo), autocvar_g_balance_minelayer_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
 
 	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

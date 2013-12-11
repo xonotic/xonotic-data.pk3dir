@@ -119,7 +119,7 @@ void W_Hagar_Attack (void)
 {
 	entity missile;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_PRI(hagar, ammo), autocvar_g_balance_hagar_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
 
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
@@ -162,7 +162,7 @@ void W_Hagar_Attack2 (void)
 {
 	entity missile;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(hagar, ammo), autocvar_g_balance_hagar_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
 
 	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
@@ -307,7 +307,7 @@ void W_Hagar_Attack2_Load (void)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
 				self.weaponentity.state = WS_READY;
-				W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
+				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
 
@@ -325,7 +325,7 @@ void W_Hagar_Attack2_Load (void)
 			{
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
-					W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(hagar, ammo), autocvar_g_balance_hagar_reload_ammo);
+					W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
@@ -456,7 +456,7 @@ float w_hagar(float req)
 
 			if(self.hagar_load)
 			{
-				W_DecreaseAmmo(ammo_rockets, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo if necessary
+				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
 				self.hagar_load = 0;
 			}
 			

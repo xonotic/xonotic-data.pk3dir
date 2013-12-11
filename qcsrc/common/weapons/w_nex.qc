@@ -109,7 +109,7 @@ void W_Nex_Attack (float issecondary)
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
 
-	W_DecreaseAmmo(ammo_cells, myammo, autocvar_g_balance_nex_reload_ammo);
+	W_DecreaseAmmo(myammo);
 }
 
 void spawnfunc_weapon_nex (void); // defined in t_items.qc

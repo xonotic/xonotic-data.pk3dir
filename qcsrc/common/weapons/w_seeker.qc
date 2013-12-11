@@ -241,7 +241,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 {
 	entity missile;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(seeker, missile_ammo), autocvar_g_balance_seeker_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
@@ -316,7 +316,7 @@ void W_Seeker_Fire_Flac()
 	vector f_diff;
 	float c;
 
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(seeker, flac_ammo), autocvar_g_balance_seeker_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR(seeker, flac_ammo));
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -552,7 +552,7 @@ void W_Seeker_Tag_Touch()
 void W_Seeker_Fire_Tag()
 {
 	entity missile;
-	W_DecreaseAmmo(ammo_rockets, WEP_CVAR(seeker, tag_ammo), autocvar_g_balance_seeker_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 

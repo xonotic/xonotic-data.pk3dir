@@ -125,9 +125,9 @@ void W_UZI_Attack (float deathtype)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
 	if (self.misc_bulletcounter == 1)
-		W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, first_ammo), autocvar_g_balance_uzi_reload_ammo);
+		W_DecreaseAmmo(WEP_CVAR(uzi, first_ammo));
 	else
-		W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, sustained_ammo), autocvar_g_balance_uzi_reload_ammo);
+		W_DecreaseAmmo(WEP_CVAR(uzi, sustained_ammo));
 }
 
 // weapon frames
@@ -174,7 +174,7 @@ void uzi_mode1_fire_auto()
 		return;
 	}
 
-	W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, sustained_ammo), autocvar_g_balance_uzi_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR(uzi, sustained_ammo));
 
 	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(uzi, sustained_damage));
 	if (!autocvar_g_norecoil)
@@ -273,7 +273,7 @@ float w_uzi(float req)
 						return FALSE;
 					}
 
-					W_DecreaseAmmo(ammo_nails, WEP_CVAR(uzi, burst_ammo), autocvar_g_balance_uzi_reload_ammo);
+					W_DecreaseAmmo(WEP_CVAR(uzi, burst_ammo));
 
 					self.misc_bulletcounter = WEP_CVAR(uzi, burst) * -1;
 					uzi_mode1_fire_burst();

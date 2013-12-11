@@ -64,7 +64,7 @@ void W_HLAC_Attack (void)
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_PRI(hlac, ammo), autocvar_g_balance_hlac_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_PRI(hlac, ammo));
 
     spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * self.misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
@@ -156,7 +156,7 @@ void W_HLAC_Attack2 (void)
 {
     float i;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(hlac, ammo), autocvar_g_balance_hlac_reload_ammo);
+	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2f();

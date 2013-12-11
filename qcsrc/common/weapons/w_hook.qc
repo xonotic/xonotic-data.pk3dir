@@ -129,7 +129,7 @@ void W_Hook_Attack2()
 {
 	entity gren;
 
-	W_DecreaseAmmo(ammo_cells, WEP_CVAR_SEC(hook, ammo), FALSE);
+	W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo));
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn ();
@@ -191,7 +191,7 @@ float w_hook(float req)
 				if (time > self.hook_refire)
 				if (weapon_prepareattack(0, -1))
 				{
-					W_DecreaseAmmo(ammo_fuel, WEP_CVAR_PRI(hook, ammo), FALSE);
+					W_DecreaseAmmo(WEP_CVAR_PRI(hook, ammo));
 					self.hook_state |= HOOK_FIRING;
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);				
 				}
@@ -234,7 +234,7 @@ float w_hook(float req)
 						{
 							if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 							{
-								W_DecreaseAmmo(ammo_fuel, (time - self.hook_time_fueldecrease) * hooked_fuel, FALSE);
+								W_DecreaseAmmo((time - self.hook_time_fueldecrease) * hooked_fuel);
 								self.hook_time_fueldecrease = time;
 								// decrease next frame again
 							}

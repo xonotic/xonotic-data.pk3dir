@@ -808,13 +808,13 @@ void W_AttachToShotorg(entity flash, vector offset)
 	}
 }
 
-void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload) // WEAPONTODO: why does this have ammo_type?
+void W_DecreaseAmmo(float ammo_use)
 {
-	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.reloading_ammo)
 		return;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if(ammo_reload)
+	if(self.reloading_ammo)
 	{
 		self.clip_load -= ammo_use;
 		self.(weapon_load[self.weapon]) = self.clip_load;
