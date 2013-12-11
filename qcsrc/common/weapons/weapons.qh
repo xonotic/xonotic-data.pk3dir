@@ -123,7 +123,6 @@ float W_AmmoItemCode(float wpn);
 .float ammo_cells;
 .float ammo_fuel;
 .float ammo_none;
-.float ammo_broken; // dummy
 
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
@@ -142,7 +141,7 @@ float W_AmmoItemCode(float wpn);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-
+#define AMMO_VAL(wpn) ((get_weaponinfo(wpn)).current_ammo)
 
 // =====================
 //  Weapon Registration

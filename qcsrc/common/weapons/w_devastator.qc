@@ -81,7 +81,7 @@ void W_Devastator_Explode()
 
 	if (self.realowner.weapon == WEP_DEVASTATOR)
 	{
-		if(self.realowner.(self.current_ammo) < WEP_CVAR(devastator, ammo))
+		if(self.realowner.AMMO_VAL(WEP_DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR;
 			ATTACK_FINISHED(self.realowner) = time;
@@ -102,7 +102,7 @@ void W_Devastator_DoRemoteExplode()
 
 	if (self.realowner.weapon == WEP_DEVASTATOR)
 	{
-		if(self.realowner.(self.current_ammo) < WEP_CVAR(devastator, ammo))
+		if(self.realowner.AMMO_VAL(WEP_DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR;
 			ATTACK_FINISHED(self.realowner) = time;
@@ -414,10 +414,10 @@ float W_Devastator(float req)
 				ammo_amount = FALSE;
 				if(WEP_CVAR(devastator, reload_ammo))
 				{
-					if(self.(self.current_ammo) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR]) < WEP_CVAR(devastator, ammo))
+					if(self.AMMO_VAL(WEP_DEVASTATOR) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR]) < WEP_CVAR(devastator, ammo))
 						ammo_amount = TRUE;
 				}
-				else if(self.(self.current_ammo) < WEP_CVAR(devastator, ammo))
+				else if(self.AMMO_VAL(WEP_DEVASTATOR) < WEP_CVAR(devastator, ammo))
 					ammo_amount = TRUE;
 				return !ammo_amount;
 			}

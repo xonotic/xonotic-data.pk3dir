@@ -120,7 +120,7 @@ float w_minstanex(float req)
 	{
 		case WR_AIM:
 		{
-			if(self.(self.current_ammo) > 0)
+			if(self.AMMO_VAL(WEP_MINSTANEX) > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(minstanex, speed), 0, WEP_CVAR_SEC(minstanex, lifetime), FALSE); // WEAPONTODO: replace with proper minstanex cvars
@@ -194,13 +194,13 @@ float w_minstanex(float req)
 		}
 		case WR_SETUP:
 		{
-			self.current_ammo = (self.current_ammo);
+			self.current_ammo = AMMO_VAL(WEP_MINSTANEX);
 			self.minstanex_lasthit = 0;
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.(self.current_ammo) >= minstanex_ammo;
+			ammo_amount = self.AMMO_VAL(WEP_MINSTANEX) >= minstanex_ammo;
 			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= minstanex_ammo;
 			return ammo_amount;
 		}
@@ -208,7 +208,7 @@ float w_minstanex(float req)
 		{
 			if(!WEP_CVAR_SEC(minstanex, ammo))
 				return TRUE;
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(minstanex, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_MINSTANEX) >= WEP_CVAR_SEC(minstanex, ammo);
 			ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= WEP_CVAR_SEC(minstanex, ammo);
 			return ammo_amount;
 		}

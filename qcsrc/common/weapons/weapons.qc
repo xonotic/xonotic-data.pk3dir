@@ -117,7 +117,7 @@ void register_weapons_done()
 	dummy_weapon_info.model2 = "";
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.current_ammo = ammo_broken;
+	dummy_weapon_info.current_ammo = ammo_none;
 
 	float i;
 	weaponorder_byid = "";

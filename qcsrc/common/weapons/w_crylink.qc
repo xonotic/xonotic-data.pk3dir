@@ -647,7 +647,7 @@ float w_crylink(float req)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(crylink, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
@@ -657,7 +657,7 @@ float w_crylink(float req)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return TRUE;
 
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(crylink, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}

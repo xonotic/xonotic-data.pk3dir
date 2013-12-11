@@ -314,9 +314,9 @@ float w_uzi(float req)
 		case WR_CHECKAMMO1:
 		{
 			if(WEP_CVAR(uzi, mode) == 1)
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, sustained_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_UZI) >= WEP_CVAR(uzi, sustained_ammo);
 			else
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, first_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_UZI) >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{
@@ -330,9 +330,9 @@ float w_uzi(float req)
 		case WR_CHECKAMMO2:
 		{
 			if(WEP_CVAR(uzi, mode) == 1)
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, burst_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_UZI) >= WEP_CVAR(uzi, burst_ammo);
 			else
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(uzi, first_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_UZI) >= WEP_CVAR(uzi, first_ammo);
 
 			if(autocvar_g_balance_uzi_reload_ammo)
 			{

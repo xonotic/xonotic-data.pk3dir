@@ -416,13 +416,13 @@ float w_glauncher(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}

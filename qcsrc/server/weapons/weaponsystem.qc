@@ -686,6 +686,7 @@ void W_WeaponFrame()
 			self.weapon = self.switchweapon;
 			self.weaponname = newwep.mdl;
 			self.bulletcounter = 0; // WEAPONTODO
+			//self.current_ammo = newwep.current_ammo;
 			WEP_ACTION(self.switchweapon, WR_SETUP);
 			self.weaponentity.state = WS_RAISE;
 
@@ -810,17 +811,19 @@ void W_AttachToShotorg(entity flash, vector offset)
 
 void W_DecreaseAmmo(float ammo_use)
 {
-	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.reloading_ammo)
+	entity wep = get_weaponinfo(self.weapon);
+
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo)
 		return;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if(self.reloading_ammo)
+	if(wep.reloading_ammo)
 	{
 		self.clip_load -= ammo_use;
 		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
 	else
-		self.(self.current_ammo) -= ammo_use;
+		self.(wep.current_ammo) -= ammo_use;
 }
 
 // weapon reloading code

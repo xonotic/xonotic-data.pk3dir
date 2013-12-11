@@ -411,7 +411,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 	entity oldself,oldenemy;
 	self.cnt = self.cnt - 1;
 
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(self.current_ammo) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.AMMO_VAL(WEP_SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER))
 	{
 		remove(self);
 		return;
@@ -670,12 +670,12 @@ float W_Seeker(float req)
 		{
 			if (WEP_CVAR(seeker, type) == 1)
 			{
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(seeker, missile_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_SEEKER) >= WEP_CVAR(seeker, missile_ammo);
 				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, missile_ammo);
 			}
 			else
 			{
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_SEEKER) >= WEP_CVAR(seeker, tag_ammo);
 				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			return ammo_amount;
@@ -684,12 +684,12 @@ float W_Seeker(float req)
 		{
 			if (WEP_CVAR(seeker, type) == 1)
 			{
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_SEEKER) >= WEP_CVAR(seeker, tag_ammo);
 				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			else
 			{
-				ammo_amount = self.(self.current_ammo) >= WEP_CVAR(seeker, flac_ammo);
+				ammo_amount = self.AMMO_VAL(WEP_SEEKER) >= WEP_CVAR(seeker, flac_ammo);
 				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, flac_ammo);
 			}
 			return ammo_amount;

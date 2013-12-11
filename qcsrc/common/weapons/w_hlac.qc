@@ -244,13 +244,13 @@ float w_hlac(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_PRI(hlac, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_HLAC) >= WEP_CVAR_PRI(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_PRI(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.(self.current_ammo) >= WEP_CVAR_SEC(hlac, ammo);
+			ammo_amount = self.AMMO_VAL(WEP_HLAC) >= WEP_CVAR_SEC(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
