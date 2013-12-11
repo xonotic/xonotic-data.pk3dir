@@ -22,8 +22,6 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, MO_PRI,  force) \
 	w_cvar(id, sn, MO_PRI,  range) \
 	w_cvar(id, sn, MO_PRI,  refire) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
