@@ -640,7 +640,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
 			d = FALSE;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOCKWAVE); // WEAPONTODO: how to handle shotgun in CTS mode? we're replacing it.. so.... 
+		d = (i == WEP_SHOTGUN);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
@@ -648,7 +648,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
-	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
 	var float t = weaponinfo.weaponstartoverride;

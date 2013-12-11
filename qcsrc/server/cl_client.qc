@@ -2348,7 +2348,7 @@ void PlayerPreThink (void)
 			do_crouch = 0;
 		if(self.freezetag_frozen)
 			do_crouch = 0;
-		if(self.weapon == WEP_SHOCKWAVE && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink) // WEAPONTODO
+		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink) // WEAPONTODO
 			do_crouch = 0;
 
 		if (do_crouch)
