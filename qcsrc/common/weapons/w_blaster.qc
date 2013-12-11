@@ -165,7 +165,6 @@ float W_Blaster(float request)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
-					W_DecreaseAmmo(ammo_none, 1, TRUE); // WEAPONTODO is this necessary?
 					W_Blaster_Attack(
 						WEP_CVAR_PRI(blaster, shotangle),
 						WEP_CVAR_PRI(blaster, damage),
@@ -195,7 +194,6 @@ float W_Blaster(float request)
 					{
 						if(weapon_prepareattack(1, WEP_CVAR_SEC(blaster, refire)))
 						{
-							W_DecreaseAmmo(ammo_none, 1, TRUE);
 							W_Blaster_Attack(
 								WEP_CVAR_SEC(blaster, shotangle),
 								WEP_CVAR_SEC(blaster, damage),
