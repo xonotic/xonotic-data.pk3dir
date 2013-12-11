@@ -202,10 +202,12 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			if(pl != self)
 				antilag_takeback(pl, time - lag);
 
+	WarpZone_trace_forent = self;
+
 	for (;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, self, world, fireBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, WarpZone_trace_forent, world, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
@@ -236,8 +238,10 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
 			is_weapclip = 1;
 
-		// Avoid self-damage // FIXME can this happen?
-		if (hit != self)
+		// Avoid self-damage (except after going through a warp)
+		// FIXME can this actually happen in any other case? Probably
+		// only with weird shotorigin outside the player bbox.
+		if (hit != WarpZone_trace_forent)
 		{
 			if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
 				Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
@@ -246,7 +250,6 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			{
 				yoda = 0;
 				float g = accuracy_isgooddamage(self, hit);
-				// FIXME preserve trace stuff
 				Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 				// calculate hits for ballistic weapons
 				if(g)
@@ -285,7 +288,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			break;
 
 		// move the entity along its velocity until it's out of solid, then let it resume
-		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, self, TRUE);
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 
