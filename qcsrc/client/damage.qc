@@ -88,7 +88,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 	// if damage was dealt with a bullet weapon, our effect is blood
 	// since blood is species dependent, include the species tag
-	if(type == WEP_SHOCKWAVE || type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
+	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE) // WEAPONTODO: when we kill shells and bullets, what happens to this?
 	{
 		if(self.isplayermodel)
 		{
