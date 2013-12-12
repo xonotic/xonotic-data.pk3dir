@@ -42,32 +42,7 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 .vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
 
-.float dmg_force;
-.float dmg_radius;
-.float dmg_total;
-//.float last_yoda;
-void W_BallisticBullet_Hit (void);
-
-.void(void) W_BallisticBullet_LeaveSolid_think_save;
-.float W_BallisticBullet_LeaveSolid_nextthink_save;
-.vector W_BallisticBullet_LeaveSolid_origin;
-.vector W_BallisticBullet_LeaveSolid_velocity;
-
-void W_BallisticBullet_LeaveSolid_think();
-
-float W_BallisticBullet_LeaveSolid(float eff);
-
-void W_BallisticBullet_Touch (void);
-
-void endFireBallisticBullet(); /* WEAPONTODO
-{
-	endzcurveparticles();
-}*/
-
-entity fireBallisticBullet_trace_callback_ent;
-float fireBallisticBullet_trace_callback_eff;
-void fireBallisticBullet_trace_callback(vector start, vector hit, vector end);
-
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant);
-
-void fireBullet (vector start, vector dir, float spread, float damage, float force, float dtype, float tracer);
+float fireBullet_trace_callback_eff;
+entity fireBullet_last_hit;
+void fireBullet_trace_callback(vector start, vector hit, vector end);
+void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects);

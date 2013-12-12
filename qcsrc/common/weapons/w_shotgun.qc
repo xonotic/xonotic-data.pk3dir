@@ -17,11 +17,10 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, BOTH, animtime) \
 	w_cvar(id, sn, BOTH, refire) \
 	w_cvar(id, sn, PRI,  bullets) \
-	w_cvar(id, sn, PRI,  bulletconstant) \
 	w_cvar(id, sn, BOTH, damage) \
 	w_cvar(id, sn, BOTH, force) \
+	w_cvar(id, sn, PRI,  solidpenetration) \
 	w_cvar(id, sn, PRI,  spread) \
-	w_cvar(id, sn, PRI,  speed) \
 	w_cvar(id, sn, NONE, secondary) \
 	w_cvar(id, sn, SEC,  melee_time) \
 	w_cvar(id, sn, SEC,  melee_no_doubleslap) \
@@ -55,8 +54,7 @@ void W_Shotgun_Attack (void)
 
 	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for (sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, speed), 5, WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0, WEP_CVAR_PRI(shotgun, bulletconstant));
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 

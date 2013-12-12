@@ -15,15 +15,13 @@ REGISTER_WEAPON(
 #define RIFLE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, BOTH, ammo) \
 	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, bulletconstant) \
 	w_cvar(id, sn, BOTH, bullethail) \
 	w_cvar(id, sn, BOTH, burstcost) \
 	w_cvar(id, sn, BOTH, damage) \
 	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, lifetime) \
 	w_cvar(id, sn, BOTH, refire) \
 	w_cvar(id, sn, BOTH, shots) \
-	w_cvar(id, sn, BOTH, speed) \
+	w_cvar(id, sn, BOTH, solidpenetration) \
 	w_cvar(id, sn, BOTH, spread) \
 	w_cvar(id, sn, BOTH, tracer) \
 	w_cvar(id, sn, NONE, bursttime) \
@@ -47,7 +45,7 @@ void spawnfunc_weapon_rifle (void) { weapon_defaultspawnfunc(WEP_RIFLE); }
 void spawnfunc_weapon_campingrifle (void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle (void) { spawnfunc_weapon_rifle(); }
 
-void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant, float pTracer, float pShots, string pSound)
+void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, float deathtype, float pTracer, float pShots, string pSound)
 {
 	float i;
 
@@ -64,8 +62,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE), pBulletConstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
@@ -73,12 +70,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 
 void W_Rifle_Attack()
 {
-	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, speed), WEP_CVAR_PRI(rifle, lifetime), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, bulletconstant), WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
 }
 
 void W_Rifle_Attack2()
 {
-	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, speed), WEP_CVAR_SEC(rifle, lifetime), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, bulletconstant), WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
+	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
 }
 
 .void(void) rifle_bullethail_attackfunc;
@@ -145,7 +142,7 @@ float W_Rifle(float req)
 				self.bot_secondary_riflemooth = 0;
 			if(self.bot_secondary_riflemooth == 0)
 			{
-				if(bot_aim(WEP_CVAR_PRI(rifle, speed), 0, WEP_CVAR_PRI(rifle, lifetime), FALSE))
+				if(bot_aim(1000000, 0, 0.001, FALSE))
 				{
 					self.BUTTON_ATCK = TRUE;
 					if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -153,7 +150,7 @@ float W_Rifle(float req)
 			}
 			else
 			{
-				if(bot_aim(WEP_CVAR_SEC(rifle, speed), 0, WEP_CVAR_SEC(rifle, lifetime), FALSE))
+				if(bot_aim(1000000, 0, 0.001, FALSE))
 				{
 					self.BUTTON_ATCK2 = TRUE;
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;

@@ -180,7 +180,6 @@ float autocvar_g_balance_teams_prevent_imbalance;
 float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_ballistics_density_corpse;
 float autocvar_g_ballistics_density_player;
-float autocvar_g_ballistics_materialconstant;
 float autocvar_g_ballistics_mindistance;
 float autocvar_g_ban_default_bantime;
 float autocvar_g_ban_default_masksize;

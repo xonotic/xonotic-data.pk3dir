@@ -13,18 +13,17 @@ REGISTER_WEAPON(
 
 #define UZI_SETTINGS(w_cvar,w_prop) UZI_SETTINGS_LIST(w_cvar, w_prop, UZI, uzi)
 #define UZI_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, speed) \
 	w_cvar(id, sn, NONE, spread_min) \
 	w_cvar(id, sn, NONE, spread_max) \
 	w_cvar(id, sn, NONE, spread_add) \
 	w_cvar(id, sn, NONE, mode) \
-	w_cvar(id, sn, NONE, bulletconstant) \
 	w_cvar(id, sn, NONE, first) \
 	w_cvar(id, sn, NONE, first_damage) \
 	w_cvar(id, sn, NONE, first_force) \
 	w_cvar(id, sn, NONE, first_refire) \
 	w_cvar(id, sn, NONE, first_spread) \
 	w_cvar(id, sn, NONE, first_ammo) \
+	w_cvar(id, sn, NONE, solidpenetration) \
 	w_cvar(id, sn, NONE, sustained_damage) \
 	w_cvar(id, sn, NONE, sustained_force) \
 	w_cvar(id, sn, NONE, sustained_refire) \
@@ -110,10 +109,9 @@ void W_UZI_Attack (float deathtype)
 	ATTACK_FINISHED(self) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor();
 
 	if (self.misc_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, 0, WEP_CVAR(uzi, bulletconstant));
+		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, 0);
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, 0, WEP_CVAR(uzi, bulletconstant));
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, 0);
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -184,8 +182,7 @@ void uzi_mode1_fire_auto()
 	}
 
 	uzi_spread = bound(WEP_CVAR(uzi, spread_min), WEP_CVAR(uzi, spread_min) + (WEP_CVAR(uzi, spread_add) * self.misc_bulletcounter), WEP_CVAR(uzi, spread_max));
-	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0, WEP_CVAR(uzi, bulletconstant));
-	endFireBallisticBullet();
+	fireBullet(w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
@@ -210,9 +207,7 @@ void uzi_mode1_fire_burst()
 		self.punchangle_y = random () - 0.5;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, speed), 5, WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0, WEP_CVAR(uzi, bulletconstant));
-	endFireBallisticBullet();
-
+	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI, 0);
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
