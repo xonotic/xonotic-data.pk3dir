@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ w_shotgun,
 /* ammotype  */ ammo_none,
 /* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED,
+/* flags     */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* model     */ "shotgun",
 /* shortname */ "shotgun",
