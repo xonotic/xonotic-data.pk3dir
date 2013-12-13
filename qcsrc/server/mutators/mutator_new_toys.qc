@@ -87,6 +87,7 @@ float nt_IsNewToy(float w)
 		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
+		case WEP_SHOTGUN:
 			return TRUE;
 		default:
 			return FALSE;
@@ -101,6 +102,7 @@ string nt_GetFullReplacement(string w)
 		case "rocketlauncher": return "minelayer";
 		case "uzi": return "hlac";
 		case "nex": return "rifle";
+		case "shockwave": return "shotgun";
 		default: return string_null;
 	}
 }
