@@ -205,7 +205,7 @@ float w_shotgun(float req)
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
 				// don't force reload an empty shotgun if its melee attack is active
-				if (!(WEP_CVAR(shotgun, secondary) && self.ammo_shells < WEP_CVAR_PRI(shotgun, ammo)))
+				if (!WEP_CVAR(shotgun, secondary))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else

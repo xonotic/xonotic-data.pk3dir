@@ -839,7 +839,7 @@ void W_ReloadedAndReady()
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
 
 	// if the gun uses no ammo, max out weapon load, else decrease ammo as we increase weapon load
-	if(!self.reload_ammo_min || self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(!self.reload_ammo_min || self.items & IT_UNLIMITED_WEAPON_AMMO || self.current_ammo == ammo_none)
 		self.clip_load = self.reload_ammo_amount;
 	else
 	{
@@ -887,6 +887,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 		return;
 
 	// no ammo, so nothing to load
+	if(self.current_ammo != ammo_none)
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
