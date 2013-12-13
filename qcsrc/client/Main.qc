@@ -1166,7 +1166,7 @@ void Net_WeaponComplain()
 
 	if(complain_weapon_name)
 		strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(ReadString());
+	complain_weapon_name = strzone(W_Name(complain_weapon));
 
 	complain_weapon_type = ReadByte();
 

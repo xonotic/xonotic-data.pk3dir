@@ -1,11 +1,10 @@
 // switch between weapons
-void Send_WeaponComplain(entity e, float wpn, string wpnname, float type)
+void Send_WeaponComplain(entity e, float wpn, float type)
 {
 	msg_entity = e;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
 	WriteByte(MSG_ONE, wpn);
-	WriteString(MSG_ONE, wpnname);
 	WriteByte(MSG_ONE, type);
 }
 
@@ -58,7 +57,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if(IS_REAL_CLIENT(cl))
 				{
 					play2(cl, "weapons/unavailable.wav");
-					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
+					Send_WeaponComplain (cl, wpn, 0);
 				}
 				return FALSE;
 			}
@@ -71,7 +70,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
-			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
+			Send_WeaponComplain(cl, wpn, 1);
 
 			if(autocvar_g_showweaponspawns)
 			{
@@ -101,7 +100,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		}
 		else
 		{
-			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
+			Send_WeaponComplain (cl, wpn, 2);
 		}
 
 		play2(cl, "weapons/unavailable.wav");

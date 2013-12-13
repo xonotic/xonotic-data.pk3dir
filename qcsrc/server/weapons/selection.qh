@@ -1,5 +1,5 @@
 // switch between weapons
-void Send_WeaponComplain(entity e, float wpn, string wpnname, float type);
+void Send_WeaponComplain(entity e, float wpn, float type);
 
 .float hasweapon_complain_spam;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
