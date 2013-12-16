@@ -237,10 +237,7 @@ vector spritelookupcolor(string s, vector def)
 string spritelookuptext(string s)
 {
 	if(substring(s, 0, 4) == "wpn-")
-	{
-		print(s, "\n");
 		return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message);
-	}
 
 	switch(s)
 	{
