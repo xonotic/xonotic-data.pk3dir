@@ -224,7 +224,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		if(frag_target.armorvalue)
 		{
 			frag_target.armorvalue -= 1;
@@ -275,8 +275,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 
 	start_health = 100;
 	start_armorvalue = 0;
-	start_weapons = WEPSET_MINSTANEX;
-	warmup_start_weapons = WEPSET_MINSTANEX;
+	start_weapons = WEPSET_VAPORIZER;
+	warmup_start_weapons = WEPSET_VAPORIZER;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
@@ -287,7 +287,7 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 	if(self.classname == "item_cells")
 		return TRUE; // no normal cells?
 
-	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
+	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		return FALSE;

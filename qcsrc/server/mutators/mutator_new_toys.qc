@@ -1,7 +1,7 @@
 /*
 
 CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   hook
-									minsta  porto
+									vaporizer  porto
 									tuba
 
 NEW             rifle   hlac    minel                           seeker

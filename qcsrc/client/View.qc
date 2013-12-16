@@ -277,7 +277,7 @@ float TrueAimCheck()
 		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
 		case WEP_NEX:
-		case WEP_MINSTANEX:
+		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
 		case WEP_RIFLE:
@@ -804,7 +804,7 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if((activeweapon == WEP_NEX || activeweapon == WEP_RIFLE || activeweapon == WEP_MINSTANEX) && (button_zoom || zoomscript_caught))
+	else if((activeweapon == WEP_NEX || activeweapon == WEP_RIFLE || activeweapon == WEP_VAPORIZER) && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom

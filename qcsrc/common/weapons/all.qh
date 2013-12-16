@@ -17,7 +17,7 @@
 
 // other weapons
 #include "w_porto.qc"
-#include "w_minstanex.qc"
+#include "w_vaporizer.qc"
 #include "w_hook.qc"
 #include "w_hlac.qc"
 #include "w_tuba.qc"

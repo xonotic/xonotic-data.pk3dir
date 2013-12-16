@@ -969,7 +969,7 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
-	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
+	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
@@ -1012,7 +1012,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(rows == 2)
 		pos_x += weapon_width / 2;
 
-	if(switchweapon == WEP_MINSTANEX)
+	if(switchweapon == WEP_VAPORIZER)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	float weapon_stats;
@@ -1026,7 +1026,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
+		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || vaporizer and tuba
 			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 

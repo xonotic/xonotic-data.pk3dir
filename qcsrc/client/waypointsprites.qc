@@ -238,7 +238,7 @@ vector spritelookupcolor(string s, vector def)
 		case "wpn-hagar":         return '1 1 0.5';
 		case "wpn-rl":            return '1 1 0';
 		case "wpn-porto":         return '0.5 0.5 0.5';
-		case "wpn-minstanex":     return '0.5 1 1';
+		case "wpn-vaporizer":     return '0.5 1 1';
 		case "wpn-hookgun":       return '0 0.5 0';
 		case "wpn-fireball":      return '1 0.5 0';
 		case "wpn-hlac":          return '0 1 0';
@@ -298,7 +298,7 @@ string spritelookuptext(string s)
 		case "wpn-hagar": return _("Hagar");
 		case "wpn-rl": return _("Rocket Launcher");
 		case "wpn-porto": return _("Port-O-Launch");
-		case "wpn-minstanex": return _("Minstanex");
+		case "wpn-vaporizer": return _("Vaporizer");
 		case "wpn-hookgun": return _("Hook");
 		case "wpn-fireball": return _("Fireball");
 		case "wpn-hlac": return _("HLAC");

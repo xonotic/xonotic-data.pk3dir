@@ -256,7 +256,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_MINSTANEX || deathtype == WEP_NEX)
+	if(deathtype == WEP_VAPORIZER || deathtype == WEP_NEX)
 	{
 		FOR_EACH_REALCLIENT(msg_entity)
 		if(msg_entity != self)

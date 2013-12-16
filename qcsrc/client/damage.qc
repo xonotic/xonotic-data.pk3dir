@@ -344,7 +344,7 @@ void Ent_DamageInfo(float isNew)
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_MINSTANEX)
+		if(trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
