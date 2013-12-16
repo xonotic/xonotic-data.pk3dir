@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 6,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '1 0.5 1',
 /* model    */ "crylink",
 /* netname  */ "crylink",
 /* fullname */ _("Crylink")

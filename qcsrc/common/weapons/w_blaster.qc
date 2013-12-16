@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ 0,
+/* color	*/ '1 0.5 0.5',
 /* model    */ "laser",
 /* netname  */ "laser",
 /* fullname */ _("Blaster")

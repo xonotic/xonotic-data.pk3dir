@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 6,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '0 1 0',
 /* model    */ "hlac",
 /* netname  */ "hlac",
 /* fullname */ _("Heavy Laser Assault Cannon")

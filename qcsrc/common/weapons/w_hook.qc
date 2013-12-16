@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 0,
 /* flags    */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ 0,
+/* color	*/ '0 0.5 0',
 /* model    */ "hookgun",
 /* netname  */ "hook",
 /* fullname */ _("Grappling Hook")

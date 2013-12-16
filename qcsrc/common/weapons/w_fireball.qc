@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 9,
 /* flags    */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '1 0.5 0',
 /* model    */ "fireball",
 /* netname  */ "fireball",
 /* fullname */ _("Fireball")

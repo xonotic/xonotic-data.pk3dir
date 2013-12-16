@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 8,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '0.5 1 0',
 /* model    */ "seeker",
 /* netname  */ "seeker",
 /* fullname */ _("T.A.G. Seeker")

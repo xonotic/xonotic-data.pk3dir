@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 4,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '1 0 0',
 /* model    */ "gl",
 /* netname  */ "grenadelauncher",
 /* fullname */ _("Mortar")

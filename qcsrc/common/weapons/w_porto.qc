@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 0,
 /* flags    */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
 /* rating   */ 0,
+/* color	*/ '0.5 0.5 0.5',
 /* model    */ "porto" ,
 /* netname  */ "porto",
 /* fullname */ _("Port-O-Launch")

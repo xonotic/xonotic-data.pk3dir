@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '0.5 1 0',
 /* model    */ "campingrifle",
 /* netname  */ "rifle",
 /* fullname */ _("Rifle")

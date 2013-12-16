@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 1,
 /* flags    */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '0 1 0',
 /* model    */ "tuba",
 /* netname  */ "tuba",
 /* xgettext:no-c-format */

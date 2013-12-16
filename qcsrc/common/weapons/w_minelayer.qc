@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 4,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_HIGH,
+/* color	*/ '0.75 1 0',
 /* model    */ "minelayer",
 /* netname  */ "minelayer",
 /* fullname */ _("Mine Layer")

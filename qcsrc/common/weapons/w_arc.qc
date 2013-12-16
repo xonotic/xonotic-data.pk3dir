@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 3,
 /* flags    */ WEP_FLAG_NORMAL,
 /* rating   */ BOT_PICKUP_RATING_HIGH,
+/* color	*/ '1 1 1',
 /* model    */ "arc",
 /* netname  */ "arc",
 /* fullname */ _("Arc")

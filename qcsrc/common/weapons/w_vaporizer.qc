@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_HIGH,
+/* color	*/ '0.5 1 1',
 /* model    */ "minstanex",
 /* netname  */ "minstanex",
 /* fullname */ _("Vaporizer")

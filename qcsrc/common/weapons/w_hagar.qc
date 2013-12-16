@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 8,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating   */ BOT_PICKUP_RATING_MID,
+/* color	*/ '1 1 0.5',
 /* model    */ "hagar",
 /* netname  */ "hagar",
 /* fullname */ _("Hagar")

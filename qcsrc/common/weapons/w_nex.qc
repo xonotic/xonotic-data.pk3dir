@@ -6,6 +6,7 @@ REGISTER_WEAPON(
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating   */ BOT_PICKUP_RATING_HIGH,
+/* color	*/ '0.5 1 1',
 /* model    */ "nex",
 /* netname  */ "nex",
 /* fullname */ _("Vortex")

@@ -74,7 +74,7 @@ WepSet ReadWepSet()
 }
 #endif
 
-void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
+void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, vector clr, string modelname, string shortname, string wname)
 {
 	entity e;
 	weapon_info[id - 1] = e = spawn();
@@ -85,10 +85,11 @@ void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, f
 	e.message = wname;
 	//e.items = ammotype;
 	e.weapon_func = func;
+	e.wpcolor = clr;
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
 	e.spawnflags = weapontype;
-	e.model2 = strzone(strcat("wpn-", e.mdl));
+	e.model2 = strzone(strcat("wpn-", ftos(id)));
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
 	e.current_ammo = ammotype;
