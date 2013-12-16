@@ -45,6 +45,7 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #else
 #ifdef SVQC
 void spawnfunc_weapon_vaporizer (void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
+void spawnfunc_weapon_minstanex () { spawnfunc_weapon_vaporizer(); }
 
 void W_Vaporizer_Attack (void)
 {
