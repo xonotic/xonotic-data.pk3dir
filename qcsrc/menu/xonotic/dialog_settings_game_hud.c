@@ -1,14 +1,14 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticHUDDialog, toString, string(entity))
-	METHOD(XonoticHUDDialog, fill, void(entity))
-	METHOD(XonoticHUDDialog, showNotify, void(entity))
-	ATTRIB(XonoticHUDDialog, title, string, _("HUD settings"))
-	ATTRIB(XonoticHUDDialog, color, vector, SKINCOLOR_DIALOG_HUD)
-	ATTRIB(XonoticHUDDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticHUDDialog, rows, float, 18)
-	ATTRIB(XonoticHUDDialog, columns, float, 3)
-ENDCLASS(XonoticHUDDialog)
+CLASS(XonoticGameHUDSettingsTab) EXTENDS(XonoticTab)
+	//METHOD(XonoticGameHUDSettingsTab, toString, string(entity))
+	METHOD(XonoticGameHUDSettingsTab, fill, void(entity))
+	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity))
+	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
+	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 14)
+	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)
+ENDCLASS(XonoticGameHUDSettingsTab)
+entity makeXonoticGameHUDSettingsTab();
 void HUDSetup_Start(entity me, entity btn);
 #endif
 
@@ -24,15 +24,19 @@ void HUDSetup_Check_Gamestatus(entity me, entity btn)
 		HUDSetup_Start(me, btn);
 	}
 }
-void XonoticHUDDialog_showNotify(entity me)
+void XonoticGameHUDSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-string XonoticHUDDialog_toString(entity me)
+entity makeXonoticGameHUDSettingsTab()
 {
-	return "hi"; // TODO: show hud config name with text here
+	entity me;
+	me = spawnXonoticGameHUDSettingsTab();
+	me.configureDialog(me);
+	return me;
 }
-void XonoticHUDDialog_fill(entity me)
+
+void XonoticGameHUDSettingsTab_fill(entity me)
 {
 	entity e;
 
@@ -60,7 +64,7 @@ void XonoticHUDDialog_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_hidewaypoints", _("Waypoints")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale:"))); // TODO: use fontsize?
 		setDependent(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 1.5, 0.05, "g_waypointsprite_scale"));
 		setDependent(e, "cl_hidewaypoints", 0, 0);
@@ -77,10 +81,9 @@ void XonoticHUDDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom"));
 		makeMulti(e, "g_waypointsprite_edgeoffset_top g_waypointsprite_edgeoffset_left g_waypointsprite_edgeoffset_right");
 		setDependent(e, "cl_hidewaypoints", 0, 0);
-	me.TR(me);
 
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players"))); // TODO: select fontsize for shownames
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(25, 0, "hud_shownames_crosshairdistance", _("Only when near crosshair")));
@@ -94,10 +97,5 @@ void XonoticHUDDialog_fill(entity me)
 			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
 }
 #endif

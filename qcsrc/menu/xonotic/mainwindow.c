@@ -13,7 +13,6 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
 	ATTRIB(MainWindow, viewDialog, entity, NULL)
 	ATTRIB(MainWindow, modelDialog, entity, NULL)
-	ATTRIB(MainWindow, hudDialog, entity, NULL)
 	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
@@ -167,10 +166,6 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	// dialogs used by multiplayer/player setup	
-	me.hudDialog = i = spawnXonoticHUDDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
