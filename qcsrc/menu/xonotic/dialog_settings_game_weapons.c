@@ -1,46 +1,57 @@
 #ifdef INTERFACE
-CLASS(XonoticWeaponsDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticWeaponsDialog, toString, string(entity))
-	METHOD(XonoticWeaponsDialog, fill, void(entity))
-	METHOD(XonoticWeaponsDialog, showNotify, void(entity))
-	ATTRIB(XonoticWeaponsDialog, title, string, _("Weapon settings"))
-	ATTRIB(XonoticWeaponsDialog, color, vector, SKINCOLOR_DIALOG_WEAPONS)
-	ATTRIB(XonoticWeaponsDialog, intendedWidth, float, 0.7)
-	ATTRIB(XonoticWeaponsDialog, rows, float, 12)
-	ATTRIB(XonoticWeaponsDialog, columns, float, 5.2)
-	ATTRIB(XonoticWeaponsDialog, weaponsList, entity, NULL)
-ENDCLASS(XonoticWeaponsDialog)
+CLASS(XonoticGameWeaponsSettingsTab) EXTENDS(XonoticTab)
+	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
+	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))
+	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity))
+	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
+	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 14)
+	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6.2)
+	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
+ENDCLASS(XonoticGameWeaponsSettingsTab)
+entity makeXonoticGameWeaponsSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticWeaponsDialog_showNotify(entity me)
+void XonoticGameWeaponsSettingsTab_showNotify(entity me)
 {
-        loadAllCvars(me);
+	loadAllCvars(me);
 }
-string XonoticWeaponsDialog_toString(entity me)
+entity makeXonoticGameWeaponsSettingsTab()
 {
-	return me.weaponsList.toString(me.weaponsList);
+	entity me;
+	me = spawnXonoticGameWeaponsSettingsTab();
+	me.configureDialog(me);
+	return me;
 }
-void XonoticWeaponsDialog_fill(entity me)
+
+void XonoticGameWeaponsSettingsTab_fill(entity me)
 {
 	entity e;
 
 	me.TR(me);
-		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon priority list:")));
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, makeXonoticTextLabel(0, _("Weapon priority list:")));
 	me.TR(me);
-		me.TD(me, 8, 2, e = me.weaponsList = makeXonoticWeaponsList());
-	me.gotoRC(me, 9, 0);
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Up"), '0 0 0'));
+		me.TDempty(me, 0.25);
+		me.TD(me, 11, 2.5, e = me.weaponsList = makeXonoticWeaponsList());
+	me.gotoRC(me, 12, 0.25);
+		me.TD(me, 1, 1.25, e = makeXonoticButton(_("Up"), '0 0 0'));
 			e.onClick = WeaponsList_MoveUp_Click;
 			e.onClickEntity = me.weaponsList;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Down"), '0 0 0'));
+		me.TD(me, 1, 1.25, e = makeXonoticButton(_("Down"), '0 0 0'));
 			e.onClick = WeaponsList_MoveDown_Click;
 			e.onClickEntity = me.weaponsList;
 
-	me.gotoRC(me, 0, 2.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_weaponpriority_useforcycling", _("Use priority list for weapon cycling")));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_weaponimpulsemode", _("Cycle through only usable weapon selections")));
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_autoswitch", _("Auto switch weapons on pickup")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_attack_on_weapon_switch", _("Release attack buttons when you switch weapons")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_drawviewmodel", _("Draw 1st person weapon model")));
@@ -62,17 +73,5 @@ void XonoticWeaponsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_bobmodel", _("Gun model bobbing")));
 		setDependent(e, "r_drawviewmodel", 1, 1);
-	//me.TR(me);
-	//me.TR(me);
-	//	me.TDempty(me, 0.2);
-	//	me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VWMDL^Scale"))));
-	//	setDependent(e, "r_drawviewmodel", 1, 1);
-	//	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 2, 0.1, "cl_viewmodel_scale"));
-	//	setDependent(e, "r_drawviewmodel", 1, 1);
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
 }
 #endif
