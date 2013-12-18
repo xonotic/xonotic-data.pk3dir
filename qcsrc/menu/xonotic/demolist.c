@@ -50,37 +50,58 @@ void XonoticDemoList_configureXonoticDemoList(entity me)
 string XonoticDemoList_demoName(entity me, float i )
 {
 	string s;
-	s = search_getfilename(me.listDemo, i);
+	s = bufstr_get(me.listDemo, i);
 	s = substring(s, 6, strlen(s) - 6 - 4);  // demos/, .dem
 	return s;
 }
 
+// if subdir is TRUE look in subdirectories too (1 level)
+void getDemos_for_ext(entity me, string ext, float subdir)
+{
+	string s;
+	if (subdir)
+		s="demos/*/";
+	else
+		s="demos/";
+	if(me.filterString)
+		s=strcat(s, me.filterString, ext);
+	else
+		s=strcat(s, "*", ext);
+
+	float list, i, n;
+	list = search_begin(s, FALSE, TRUE);
+	if(list >= 0)
+	{
+		n = search_getsize(list);
+		for(i = 0; i < n; ++i)
+			bufstr_add(me.listDemo, search_getfilename(list, i), TRUE);
+		search_end(list);
+	}
+
+	if (subdir)
+		getDemos_for_ext(me, ext, FALSE);
+}
 
 void XonoticDemoList_getDemos(entity me)
 {
-	string s;
-
-	if(me.filterString)
-		//subdirectory in filterString allowed
-		s=strcat("demos/*", me.filterString, "*.dem");
-	else
-		s="demos/*.dem";
-
-	//dprint("Search demos with the pattern ", s, "\n");
-	if(me.listDemo >= 0)
-		search_end(me.listDemo);
-
-	me.listDemo = search_begin(s, FALSE, TRUE);
-
-	if(me.listDemo < 0)
-		me.nItems=0;
-	else
-		me.nItems=search_getsize(me.listDemo);
+	if (me.listDemo >= 0)
+		buf_del(me.listDemo);
+	me.listDemo = buf_create();
+	if (me.listDemo < 0)
+	{
+		me.nItems = 0;
+		return;
+	}
+	getDemos_for_ext(me, ".dem", TRUE);
+	me.nItems = buf_getsize(me.listDemo);
+	if(me.nItems > 0)
+		buf_sort(me.listDemo, 128, FALSE);
 }
 
 void XonoticDemoList_destroy(entity me)
 {
-	search_end(me.listDemo);
+	if(me.nItems > 0)
+		buf_del(me.listDemo);
 }
 
 void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -118,7 +139,12 @@ void DemoList_Filter_Change(entity box, entity me)
 		strunzone(me.filterString);
 
 	if(box.text != "")
-		me.filterString = strzone(box.text);
+	{
+		if (strstrofs(box.text, "*", 0) >= 0 || strstrofs(box.text, "?", 0) >= 0)
+			me.filterString = strzone(box.text);
+		else
+			me.filterString = strzone(strcat("*", box.text, "*"));
+	}
 	else
 		me.filterString = string_null;
 
