@@ -65,7 +65,9 @@ void XonoticServerCreateTab_fill(entity me)
 	entity e, e0;
 
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Gametype")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
 
@@ -143,7 +145,9 @@ void XonoticServerCreateTab_fill(entity me)
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Map list:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Maplist")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
 		me.TD(me, me.rows - 4, 3, me.mapListBox);

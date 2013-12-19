@@ -23,16 +23,16 @@ void XonoticMiscSettingsTab_fill(entity me)
 	//entity sk;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Network:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Network")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Client UDP port:")));
 		me.TD(me, 1, 1.5, e = makeXonoticInputBox(0, "cl_port"));
 	me.TR(me);
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth:")));
-		me.TD(me, 1, 1.8, e = makeXonoticTextSlider("_cl_rate"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_rate"));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
 			e.addValue(e, _("Slow ADSL"), "15000");
@@ -40,49 +40,42 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.addValue(e, _("Broadband"), "66666");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Input packets/s:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Server queries/s:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(20, 100, 10, "net_slist_queriespersecond"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 10, "net_slist_queriespersecond"));
 	me.TR(me);
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Downloads:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
 	me.TR(me);
-		me.TDempty(me, 0.3);
+		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(10, 2000, 50, "cl_curl_maxspeed"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(10, 2000, 50, "cl_curl_maxspeed"));
 	me.TR(me);
 		if(cvar("developer"))
 		{
-			me.TDempty(me, 0.2);
-			me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Local latency:")));
+			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Local latency:")));
 			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
 		}
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
 		setDependent(e, "cl_movement", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		if(cvar_type("crypto_aeslevel") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
+			me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available"))); // TODO: move up
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Framerate:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Framerate")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Maximum:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
 			e.addValue(e, ZCTX(_("MAXFPS^5 fps")), "5");
 			e.addValue(e, ZCTX(_("MAXFPS^10 fps")), "10");
@@ -98,8 +91,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Target:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Target:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_minfps"));
 			e.addValue(e, ZCTX(_("TRGT^Disabled")), "0");
 			e.addValue(e, ZCTX(_("TRGT^30 fps")), "30");
@@ -111,8 +103,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("TRGT^200 fps")), "200");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Idle limit:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxidlefps"));
 			e.addValue(e, ZCTX(_("IDLFPS^10 fps")), "10");
 			e.addValue(e, ZCTX(_("IDLFPS^20 fps")), "20");
@@ -122,15 +113,13 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second"))); // TODO: swap
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Save processing time for other apps")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Save processing time for other apps")));
 		setDependent(e, "cl_maxfps", 1, 1000);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:"))); // TODO: move this elsewhere?
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
 			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
 			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");

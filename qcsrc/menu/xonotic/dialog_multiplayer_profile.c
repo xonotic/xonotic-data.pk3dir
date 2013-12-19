@@ -58,8 +58,10 @@ void XonoticProfileTab_fill(entity me)
 	
 	// Statistic Stuff -Debugger
 	me.TR(me);
-	me.TDempty(me, 0.5);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Player Statistics:")));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Player Statistics")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
@@ -86,7 +88,9 @@ void XonoticProfileTab_fill(entity me)
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		pms = makeXonoticPlayerModelSelector();
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
@@ -99,7 +103,9 @@ void XonoticProfileTab_fill(entity me)
 
 	me.gotoRC(me, 15.5, 3.533); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 		for(i = 0; i < 15; ++i)
 		{
 			if(mod(i, 5) == 0)
@@ -108,7 +114,9 @@ void XonoticProfileTab_fill(entity me)
 		}
 	me.gotoRC(me, 15.5, 4.866); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 		for(i = 0; i < 15; ++i)
 		{
 			if(mod(i, 5) == 0)

@@ -23,7 +23,9 @@ void XonoticInputSettingsTab_fill(entity me)
 	entity kb;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Key bindings:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Key Bindings")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		me.TD(me, me.rows - 4, 3, kb = makeXonoticKeyBinder());
 	me.gotoRC(me, me.rows - 3, 0);
@@ -65,7 +67,9 @@ void XonoticInputSettingsTab_fill(entity me)
 		}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Mouse:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Mouse")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Sensitivity:")));

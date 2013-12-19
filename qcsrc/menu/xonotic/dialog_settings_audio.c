@@ -123,7 +123,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("7.1"), "8");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "snd_swapstereo", _("Swap Stereo")));
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "snd_swapstereo", _("Swap Stereo"))); // TODO: remove from inline
 		setDependent(e, "snd_channels", 1.5, 0.5);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
 		setDependent(e, "snd_channels", 1.5, 0.5);
@@ -148,7 +148,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		sl = makeXonoticSlider(0.15, 1, 0.05, "cl_autotaunt");
 			sl.valueDisplayMultiplier = 100;
 			sl.valueDigits = 0;
-		me.TD(me, 1, 3, e = makeXonoticSliderCheckBox(0, 1, sl, _("Automatic taunts")));
+		me.TD(me, 1, 3, e = makeXonoticSliderCheckBox(0, 1, sl, _("Automatic taunts"))); // TODO
 		if(sl.value != e.savedValue)
 			e.savedValue = 0.65; // default
 	me.TR(me);

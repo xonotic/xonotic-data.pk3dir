@@ -24,7 +24,9 @@ void XonoticUserSettingsTab_fill(entity me)
 	entity sk;
 
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Menu skins:")));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Menu Skins")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		me.TD(me, me.rows - 2.5, 2, sk = makeXonoticSkinList());
 	me.gotoRC(me, me.rows - 1.5, 0);
@@ -62,7 +64,9 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClickEntity = sk;*/
 
 	me.gotoRC(me, 0, 2.85); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Text language:")));
+		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0.5, _("Text Language")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
 	me.TR(me);
 		me.TD(me, 6, 1.5, sk = makeXonoticLanguageList());
 	me.TR(me);
