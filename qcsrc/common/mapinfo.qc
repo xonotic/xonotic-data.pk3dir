@@ -562,6 +562,15 @@ string _MapInfo_GetDefaultEx(float t)
 	return "";
 }
 
+float _MapInfo_GetTeamPlayBool(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.items)
+			return e.team;
+	return FALSE;
+}
+
 void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 {
 	string sa, k, v;
