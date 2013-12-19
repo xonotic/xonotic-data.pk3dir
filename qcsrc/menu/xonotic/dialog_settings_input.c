@@ -71,29 +71,24 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Sensitivity:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(1, 32, 0.2, "sensitivity"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_filter", _("Smooth aiming")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_filter", _("Smooth aiming")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert aiming")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert aiming")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Disable system mouse acceleration")));
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Disable system mouse acceleration")));
 		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
 		else
 		{
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 
 
 	me.gotoRC(me, me.rows - 1.25, 0);
