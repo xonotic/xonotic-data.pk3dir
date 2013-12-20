@@ -59,7 +59,13 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player detail:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(4, 0, -0.1, "cl_playerdetailreduction"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_playerdetailreduction"));
+			e.addValue(e, ZCTX(_("PDET^Low")), "4");
+			e.addValue(e, ZCTX(_("PDET^Medium")), "3");
+			e.addValue(e, ZCTX(_("PDET^Normal")), "2");
+			e.addValue(e, ZCTX(_("PDET^Good")), "1");
+			e.addValue(e, ZCTX(_("PDET^Best")), "0");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);

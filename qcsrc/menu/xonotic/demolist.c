@@ -25,6 +25,7 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticDemoList, filterString, string, string_null)
 ENDCLASS(XonoticDemoList)
 
+entity demolist; // for reference elsewhere
 entity makeXonoticDemoList();
 void StartDemo_Click(entity btn, entity me);
 void TimeDemo_Click(entity btn, entity me);

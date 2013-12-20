@@ -18,7 +18,8 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
 	ATTRIB(MainWindow, notificationDialog, entity, NULL)
-	ATTRIB(MainWindow, democonfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 
@@ -151,11 +152,15 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
-	me.democonfirmDialog = i = spawnXonoticDemoConfirmDialog();
+	me.demostartconfirmDialog = i = spawnXonoticDemoStartConfirmDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
-	
+
+	me.demotimeconfirmDialog = i = spawnXonoticDemoTimeConfirmDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+
 	// dialogs used by multiplayer/create
 	me.mapInfoDialog = i = spawnXonoticMapInfoDialog();
 	i.configureDialog(i);
