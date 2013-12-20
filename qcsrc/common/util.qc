@@ -2575,7 +2575,6 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 }
 
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2597,7 +2596,6 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

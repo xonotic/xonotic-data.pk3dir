@@ -368,9 +368,8 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
-#ifndef MENUQC
 void backtrace(string msg);
-#endif
+
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors

@@ -206,9 +206,9 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		default: x = FALSE; e.configureXonoticTextSlider(e, string_null); break;
 	}
 	e.configureXonoticTextSliderValues(e);
-	e.setText(e, _("Default")); 
+	e.value = 0;
 	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
-	
+
 	me.mapListBox.refilter(me.mapListBox);
 }
 
