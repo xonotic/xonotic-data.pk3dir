@@ -63,7 +63,7 @@ float friend_needshelp(entity e)
 	if(e.frozen)
 		return FALSE;
 	if(!IS_PLAYER(e))
-		return (e.flags & FL_MONSTER && e.health < e.max_health);
+		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
 	if(e.items & IT_INVINCIBLE)
 		return FALSE;
 
