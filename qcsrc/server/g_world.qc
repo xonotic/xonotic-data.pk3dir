@@ -253,7 +253,6 @@ void cvar_changes_init()
 
 		// mapinfo
 		BADCVAR("fraglimit");
-		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
@@ -304,7 +303,6 @@ void cvar_changes_init()
 
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
-		BADCVAR("g_arena_point_leadlimit");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
@@ -428,7 +426,7 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
-		
+
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -1401,7 +1399,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || g_arena || other.caplayer == 1 || g_lms)
+			if(IS_PLAYER(other) || other.caplayer == 1 || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1514,7 +1512,7 @@ void NextLevel()
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
@@ -1855,7 +1853,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || g_arena || g_ca || (g_race && !g_race_qualifying) || g_nexball)
+	if(g_dm || g_tdm || g_ca || (g_race && !g_race_qualifying) || g_nexball)
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)
@@ -2238,7 +2236,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 	m = MapInfo_FixName(m);
-	if not(m)
+	if (!m)
 		return "The map you suggested is not available on this server.";
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))

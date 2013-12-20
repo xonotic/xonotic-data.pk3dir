@@ -155,13 +155,13 @@ void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
-	
+
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-		
+
 	s = me.skinParameter(me, i, SKINPARM_PREVIEW);
 	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
-	
+
 	s = me.skinParameter(me, i, SKINPARM_NAME);
 	s = sprintf(_("%s: %s"), s, me.skinParameter(me, i, SKINPARM_TITLE));
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);

@@ -147,8 +147,8 @@ void W_Rocket_Think (void)
 	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
 		if(self == self.realowner.lastrocket)
-		if not(self.realowner.rl_release)
-		if not(self.BUTTON_ATCK2)
+		if (!self.realowner.rl_release)
+		if (!self.BUTTON_ATCK2)
 		if(autocvar_g_balance_rocketlauncher_guiderate)
 		if(time > self.pushltime)
 		if(self.realowner.deadflag == DEAD_NO)
@@ -207,13 +207,13 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if (self.health <= 0)
 		return;
-	
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
 }
@@ -260,7 +260,7 @@ void W_Rocket_Attack (void)
 	missile.nextthink = time;
 	missile.cnt = time + autocvar_g_balance_rocketlauncher_lifetime;
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, autocvar_g_balance_rocketlauncher_guiderate == 0 && autocvar_g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE); // because of fly sound
 

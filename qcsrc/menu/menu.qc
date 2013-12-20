@@ -67,7 +67,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
@@ -76,6 +76,8 @@ void m_init()
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+
+	RegisterSLCategories();
 
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
@@ -441,7 +443,7 @@ float m_allocatetooltipbox(vector pos)
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// bottom center
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
@@ -461,12 +463,12 @@ float m_allocatetooltipbox(vector pos)
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// top right
 	v_x = pos_x + avoidplus_x;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	return FALSE;
 }
 entity m_findtooltipitem(entity root, vector pos)
@@ -990,7 +992,7 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-				
+
 		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();
