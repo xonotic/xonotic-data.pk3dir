@@ -19,9 +19,9 @@ void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, lets watch the demo
 	{
 		if(btn.democlicktype == DMO_PLAY)
-			{ StartDemo_Click(btn, demolist); }
+			{ demolist.startDemo(demolist); }
 		else if(btn.democlicktype == DMO_TIME)
-			{ TimeDemo_Click(btn, demolist); }
+			{ demolist.timeDemo(demolist); }
 	}
 	else // already in a match, player has to confirm
 	{

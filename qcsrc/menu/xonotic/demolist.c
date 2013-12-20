@@ -6,6 +6,7 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	METHOD(XonoticDemoList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticDemoList, getDemos, void(entity))
 	METHOD(XonoticDemoList, startDemo, void(entity))
+	METHOD(XonoticDemoList, timeDemo, void(entity))
 	METHOD(XonoticDemoList, demoName, string(entity, float))
 	METHOD(XonoticDemoList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
@@ -27,8 +28,6 @@ ENDCLASS(XonoticDemoList)
 
 entity demolist; // for reference elsewhere
 entity makeXonoticDemoList();
-void StartDemo_Click(entity btn, entity me);
-void TimeDemo_Click(entity btn, entity me);
 void DemoList_Filter_Change(entity box, entity me);
 #endif
 
@@ -155,20 +154,32 @@ void DemoList_Filter_Change(entity box, entity me)
 void XonoticDemoList_startDemo(entity me)
 {
 	string s;
-	s = me.demoName(me,me.selectedItem);
+	s = me.demoName(me, me.selectedItem);
 	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
 }
 
-void StartDemo_Click(entity btn, entity me)
-{
-	me.startDemo(me);
-}
-
-void TimeDemo_Click(entity btn, entity me)
+void XonoticDemoList_timeDemo(entity me)
 {
 	string s;
-	s = me.demoName(me,me.selectedItem);
+	s = me.demoName(me, me.selectedItem);
 	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
+}
+
+void DemoConfirm_ListClick_Check_Gamestatus(entity me)
+{
+	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, lets watch the demo
+	{
+		me.startDemo(me);
+	}
+	else // already in a match, player has to confirm
+	{
+		DialogOpenButton_Click_withCoords(
+			me,
+			main.demostartconfirmDialog,
+			boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size),
+			boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size)
+		);
+	}
 }
 
 void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
@@ -178,7 +189,7 @@ void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
 		{
 			// DOUBLE CLICK!
 			me.setSelected(me, i);
-			me.startDemo(me);
+			DemoConfirm_ListClick_Check_Gamestatus(me);
 		}
 	me.lastClickedDemo = i;
 	me.lastClickedTime = time;
@@ -186,12 +197,15 @@ void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
 
 float XonoticDemoList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
-		me.startDemo(me);
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		DemoConfirm_ListClick_Check_Gamestatus(me);
 		return 1;
 	}
 	else
+	{
 		return SUPER(XonoticDemoList).keyDown(me, scan, ascii, shift);
+	}
 }
 #endif
 
