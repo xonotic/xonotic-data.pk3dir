@@ -94,6 +94,7 @@
 #include "xonotic/dialog_multiplayer_media_screenshot.c"
 #include "xonotic/dialog_multiplayer_media_screenshot_viewer.c"
 #include "xonotic/screenshotlist.c"
+#include "xonotic/statslist.c"
 #include "xonotic/colorpicker.c"
 #include "xonotic/colorpicker_string.c"
 #include "xonotic/cvarlist.c"

@@ -1,4 +1,34 @@
 #ifdef SVQC
+//float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
+//float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+//float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt -- this works, 
+// http://stats.xonotic.org/player/ENkUjf83vKMVZcNm%2F6Ao1EmXEj1apQ6XvdQTxwELvmA%3D/elo.txt -- but this doesn't?!?
+// ENkUjf83vKMVZcNm/6Ao1EmXEj1apQ6XvdQTxwELvmA=
+#endif
+
+#ifdef MENUQC
+float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+// http://stats.xonotic.org/player/me
+#endif
+
+#ifdef SVQC
+//string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
+string PS_GR_OUT_TL;   // playerstats_gamereport_out_teams_last
+string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_las
+string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
+//string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
+//string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
+//string PS_B_IN_PL;     // playerstats_playerbasic_in_players_last
+//string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
+#endif
+
+#ifdef MENUQC
+string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
+#endif
+
+#ifdef SVQC
 
 // time the player was alive and kicking
 const string PLAYERSTATS_ALIVETIME  = "alivetime";

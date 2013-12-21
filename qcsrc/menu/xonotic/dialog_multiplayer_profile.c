@@ -64,33 +64,12 @@ void XonoticProfileTab_fill(entity me)
 	
 	// Statistic Stuff -Debugger
 	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Player Statistics")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Player Statistics")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 	me.TR(me);
-	me.TR(me);
-	/*me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Total playing time:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Last played:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Games played:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Win / Losses:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Kills / Deaths:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("CTF elo:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DM elo:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("TDM elo:")));
-	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DUEL elo:")));
-	me.TR(me);*/
-	
+		me.TD(me, 11, 3, e = makeXonoticStatsList());
+
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
