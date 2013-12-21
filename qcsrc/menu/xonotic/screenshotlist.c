@@ -99,7 +99,7 @@ void getScreenshots_for_ext(entity me, string ext, float subdir)
 			if(subdir)
 			{
 				s = strreplace("/", "^7/", s); // clear colors at the forward slash
-				s = strcat("/", rgb_to_hexcolor('1 0 0'), s); // add a forward slash for sorting, then color
+				s = strcat("/", rgb_to_hexcolor(SKINCOLOR_SCREENSHOTLIST_SUBDIR), s); // add a forward slash for sorting, then color
 				bufstr_add(me.listScreenshot, s, TRUE);
 			}
 			else { bufstr_add(me.listScreenshot, s, TRUE); }
