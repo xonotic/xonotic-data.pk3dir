@@ -51,7 +51,10 @@ string XonoticDemoList_demoName(entity me, float i)
 {
 	string s;
 	s = bufstr_get(me.listDemo, i);
-	s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
+
+	if(substring(s, 0, 1) == "/")
+		s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
+
 	return s;
 }
 
@@ -166,6 +169,8 @@ void XonoticDemoList_startDemo(entity me)
 {
 	string s;
 	s = me.demoName(me, me.selectedItem);
+	s = strdecolorize(s);
+
 	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
 }
 
@@ -173,6 +178,8 @@ void XonoticDemoList_timeDemo(entity me)
 {
 	string s;
 	s = me.demoName(me, me.selectedItem);
+	s = strdecolorize(s);
+
 	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
 }
 

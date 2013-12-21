@@ -62,11 +62,14 @@ void XonoticScreenshotList_configureXonoticScreenshotList(entity me)
 	me.getScreenshots(me);
 }
 
-string XonoticScreenshotList_screenshotName(entity me, float i )
+string XonoticScreenshotList_screenshotName(entity me, float i)
 {
 	string s;
 	s = bufstr_get(me.listScreenshot, i);
-	s = substring(s, 12, strlen(s) - 12 - 4);  // screenshots/, .<ext>
+
+	if(substring(s, 0, 1) == "/")
+		s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
+
 	return s;
 }
 
@@ -89,7 +92,18 @@ void getScreenshots_for_ext(entity me, string ext, float subdir)
 	{
 		n = search_getsize(list);
 		for(i = 0; i < n; ++i)
-			bufstr_add(me.listScreenshot, search_getfilename(list, i), TRUE);
+		{
+			s = search_getfilename(list, i); // get initial full file name
+			s = substring(s, 12, (strlen(s) - 12 - 4)); // remove "screenshots/" prefix and ".<ext>" suffix
+			s = strdecolorize(s); // remove any pre-existing colors
+			if(subdir)
+			{
+				s = strreplace("/", "^7/", s); // clear colors at the forward slash
+				s = strcat("/", rgb_to_hexcolor('1 0 0'), s); // add a forward slash for sorting, then color
+				bufstr_add(me.listScreenshot, s, TRUE);
+			}
+			else { bufstr_add(me.listScreenshot, s, TRUE); }
+		}
 		search_end(list);
 	}
 
@@ -161,7 +175,7 @@ void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, f
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 }
 
 void XonoticScreenshotList_showNotify(entity me)
@@ -241,12 +255,12 @@ void XonoticScreenshotList_goScreenshot(entity me, float d)
 	if(!me.screenshotViewerDialog)
 		return;
 	me.setSelected(me, me.selectedItem + d);
-	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", strdecolorize(me.screenshotName(me,me.selectedItem))));
 }
 
 void XonoticScreenshotList_startScreenshot(entity me)
 {
-	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+	me.screenshotViewerDialog.loadScreenshot(me.screenshotViewerDialog, strcat("/screenshots/", strdecolorize(me.screenshotName(me,me.selectedItem))));
 	// pop up screenshot
 	DialogOpenButton_Click_withCoords(NULL, me.screenshotViewerDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 }
@@ -258,7 +272,7 @@ void XonoticScreenshotList_previewScreenshot(entity me)
 	if (me.nItems <= 0)
 		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, "");
 	else
-		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, strcat("/screenshots/", me.screenshotName(me,me.selectedItem)));
+		me.screenshotBrowserDialog.loadPreviewScreenshot(me.screenshotBrowserDialog, strcat("/screenshots/", strdecolorize(me.screenshotName(me,me.selectedItem))));
 }
 
 void StartScreenshot_Click(entity btn, entity me)
