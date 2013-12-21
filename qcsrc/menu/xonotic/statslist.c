@@ -23,6 +23,7 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticStatsList, filterString, string, string_null)
 ENDCLASS(XonoticStatsList)
 
+entity statslist; // for reference elsewhere
 entity makeXonoticStatsList();
 #endif
 
