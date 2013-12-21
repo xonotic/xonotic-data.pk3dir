@@ -572,6 +572,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 			db_put(PS_D_IN_DB, marker, PS_D_IN_EVL);
 			strunzone(PS_D_IN_EVL);
 		}
+		else { db_put(PS_D_IN_DB, marker, "#"); } 
 		PS_D_IN_EVL = strzone(marker);
 	}
 
@@ -702,6 +703,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 			}
 			print("-- End of response.\n");
 			url_fclose(fh);
+			statslist.getStats(statslist);
 			break;
 		}
 		case URL_READY_CLOSED:

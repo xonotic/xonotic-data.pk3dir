@@ -118,7 +118,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "debugstats")
 	{
-		//PlayerStats_PlayerDetail();
+		PlayerStats_PlayerDetail();
 		return;
 	}
 

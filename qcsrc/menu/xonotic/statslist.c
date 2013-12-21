@@ -40,11 +40,11 @@ entity makeXonoticStatsList()
 void XonoticStatsList_configureXonoticStatsList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.getStats(me);
 }
 
 void XonoticStatsList_getStats(entity me)
 {
+	print("called getstats\n");
 	if (me.listStats >= 0)
 		buf_del(me.listStats);
 	me.listStats = buf_create();
@@ -63,8 +63,8 @@ void XonoticStatsList_getStats(entity me)
 	}
 	
 	me.nItems = buf_getsize(me.listStats);
-	if(me.nItems > 0)
-		buf_sort(me.listStats, 128, FALSE);
+	//if(me.nItems > 0)
+	//	buf_sort(me.listStats, 128, FALSE);
 }
 
 void XonoticStatsList_destroy(entity me)
@@ -99,7 +99,7 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 
 void XonoticStatsList_showNotify(entity me)
 {
-	me.getStats(me);
+	PlayerStats_PlayerDetail();
 }
 
 void XonoticStatsList_clickListBoxItem(entity me, float i, vector where)
