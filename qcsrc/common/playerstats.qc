@@ -9,7 +9,7 @@ float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at th
 #endif
 
 #ifdef MENUQC
-//float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
 // http://stats.xonotic.org/player/me
 #endif
 
@@ -20,12 +20,12 @@ string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_las
 string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
 //string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
 //string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last
-//string PS_B_IN_PL;     // playerstats_playerbasic_in_players_las
+//string PS_B_IN_PL;     // playerstats_playerbasic_in_players_last
 //string PS_B_IN_EVL;    // playerstats_playerbasic_in_events_last
 #endif
 
 #ifdef MENUQC
-//string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
+string PS_D_IN_EVL; // playerstats_playerdetail_in_events_last
 #endif
 
 #ifdef SVQC
@@ -577,12 +577,55 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 #endif // SVQC
 
 #ifdef MENUQC
+
+
+#if 0 // reading the entire DB at once
+	string e = "", en = "";
+	float i = 0;
+	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
+	{
+		print(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
+		++i;
+	}
+#endif
+
+void PlayerStats_PlayerDetail_AddItem(string event, string data)
+{
+	if(PS_D_IN_DB < 0) { return; }
+
+	// create a marker for the event so that we can access it later
+	string marker = sprintf("%s", event);
+	if(db_get(PS_D_IN_DB, marker) == "")
+	{
+		if(PS_D_IN_EVL)
+		{
+			db_put(PS_D_IN_DB, marker, PS_D_IN_EVL);
+			strunzone(PS_D_IN_EVL);
+		}
+		PS_D_IN_EVL = strzone(marker);
+	}
+
+	// now actually set the event data
+	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
+	print("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
+}
+
 void PlayerStats_PlayerDetail()
 {
 	//PS_D_IN_DB = -1;
 	//PS_D_IN_DB = db_create();
 
-	//if(PS_D_IN_DB < 0) { return; }
+	if(PS_D_IN_DB < 0)
+	{
+		PS_D_IN_DB = -1;
+		PS_D_IN_DB = db_create();
+	}
+	else
+	{
+		// kill the old db and try again
+		//db_close(PS_D_IN_DB);
+		//PS_D_IN_DB = -1;
+	}
 
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
 	{
@@ -597,7 +640,7 @@ void PlayerStats_PlayerDetail()
 	}
 }
 
-void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
+void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 {
 	switch(status)
 	{
@@ -620,61 +663,72 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status)
 		
 		case URL_READY_CANREAD:
 		{
-			string s = "";
 			print("-- Got response from player stats server:\n");
-			//string gametype = string_null;
-			while((s = url_fgets(fh)))
+			string input = "";
+			string gametype = "overall";
+			while((input = url_fgets(fh)))
 			{
-				print("  ", s, "\n");
-				/*
-				string key = "", value = "", data = "";
+				//print(input, "\n");
+				float count = tokenizebyseparator(input, " ");
+				string key = "", event = "", data = "";
 
-				n = tokenizebyseparator(s, " "); // key (value) data
-				if (n == 1)
-					continue;
-				else if (n == 2)
+				if(argv(0) == "#") { continue; }
+				
+				if(count == 2)
 				{
-				key = argv(0);
-				data = argv(1);
+					key = argv(0);
+					data = substring(input, argv_start_index(1), strlen(input) - argv_start_index(1));
 				}
-				else if (n >= 3)
+				else if(count >= 3)
 				{
-								key = argv(0);
-								value = argv(1);
-								data = argv(2);
+					key = argv(0);
+					event = argv(1);
+					data = substring(input, argv_start_index(2), strlen(input) - argv_start_index(2));
+				}
+				else { continue; }
+
+				switch(key)
+				{
+					// general info
+					case "V": PlayerStats_PlayerDetail_AddItem("version", data); break;
+					case "R": PlayerStats_PlayerDetail_AddItem("release", data); break;
+					case "T": PlayerStats_PlayerDetail_AddItem("time", data); break;
+
+					// player info
+					case "S": PlayerStats_PlayerDetail_AddItem("statsurl", data); break;
+					case "P": PlayerStats_PlayerDetail_AddItem("hashkey", data); break;
+					case "n": PlayerStats_PlayerDetail_AddItem("playernick", data); break;
+					case "i": PlayerStats_PlayerDetail_AddItem("playerid", data); break;
+
+					// other/event info
+					case "G": gametype = data; break;
+					case "e":
+					{
+						if(event != "" && data != "")
+						{
+							PlayerStats_PlayerDetail_AddItem(
+								sprintf(
+									"%s/%s",
+									gametype,
+									event
+								),
+								data
+							);
+						}
+						break;
+					}
+					
+					default: print("PlayerStats_PlayerDetail_Handler(): Key went unhandled?\n"); break;
 				}
 
-				if (data == "")
-				continue;
-
-				if (key == "#")
-				continue;
-				else if (key == "V")
-				PlayerInfo_AddItem(p, "_version", data);
-				else if (key == "R")
-				PlayerInfo_AddItem(p, "_release", data);
-				else if (key == "T")
-				PlayerInfo_AddItem(p, "_time", data);
-				else if (key == "S")
-				PlayerInfo_AddItem(p, "_statsurl", data);
-				else if (key == "P")
-				PlayerInfo_AddItem(p, "_hashkey", data);
-				else if (key == "n")
-				PlayerInfo_AddItem(p, "_playernick", data);
-				else if (key == "i")
-				PlayerInfo_AddItem(p, "_playerid", data);
-				else if (key == "G")
-				gametype = data;
-				else if (key == "e" && value != "")
-				{
-				if (gametype == "")
-				PlayerInfo_AddItem(p, value, data);
-				else
-				PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
-				}
-				else
-				continue;
-				*/
+				#if 0
+				print(sprintf(
+					"PlayerStats_PlayerDetail_Handler(): key '%s', event '%s', data '%s'\n",
+					key,
+					event,
+					data
+				));
+				#endif
 			}
 			print("-- End of response.\n");
 			url_fclose(fh);
