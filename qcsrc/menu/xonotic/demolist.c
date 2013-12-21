@@ -74,7 +74,10 @@ void getDemos_for_ext(entity me, string ext, float subdir)
 	{
 		n = search_getsize(list);
 		for(i = 0; i < n; ++i)
-			bufstr_add(me.listDemo, search_getfilename(list, i), TRUE);
+		{
+			if(subdir) { bufstr_add(me.listDemo, sprintf("\{3}%s", search_getfilename(list, i)), TRUE); }
+			else { bufstr_add(me.listDemo, search_getfilename(list, i), TRUE); }
+		}
 		search_end(list);
 	}
 
