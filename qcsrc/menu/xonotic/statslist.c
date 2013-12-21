@@ -23,7 +23,6 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticStatsList, filterString, string, string_null)
 ENDCLASS(XonoticStatsList)
 
-entity demolist; // for reference elsewhere
 entity makeXonoticStatsList();
 #endif
 
