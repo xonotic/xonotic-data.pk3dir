@@ -47,11 +47,11 @@ void XonoticDemoList_configureXonoticDemoList(entity me)
 	me.getDemos(me);
 }
 
-string XonoticDemoList_demoName(entity me, float i )
+string XonoticDemoList_demoName(entity me, float i)
 {
 	string s;
 	s = bufstr_get(me.listDemo, i);
-	s = substring(s, 6, strlen(s) - 6 - 4);  // demos/, .dem
+	s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
 	return s;
 }
 
@@ -75,8 +75,16 @@ void getDemos_for_ext(entity me, string ext, float subdir)
 		n = search_getsize(list);
 		for(i = 0; i < n; ++i)
 		{
-			if(subdir) { bufstr_add(me.listDemo, sprintf("\{3}%s", search_getfilename(list, i)), TRUE); }
-			else { bufstr_add(me.listDemo, search_getfilename(list, i), TRUE); }
+			s = search_getfilename(list, i); // get initial full file name
+			s = substring(s, 6, (strlen(s) - 6 - 4)); // remove "demos/" prefix and ".dem" suffix
+			s = strdecolorize(s); // remove any pre-existing colors
+			if(subdir)
+			{
+				s = strreplace("/", "^7/", s); // clear colors at the forward slash
+				s = strcat("/", rgb_to_hexcolor('1 0 0'), s); // add a forward slash for sorting, then color
+				bufstr_add(me.listDemo, s, TRUE);
+			}
+			else { bufstr_add(me.listDemo, s, TRUE); }
 		}
 		search_end(list);
 	}
@@ -128,7 +136,7 @@ void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 	s = me.demoName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 }
 
 void XonoticDemoList_showNotify(entity me)
