@@ -34,13 +34,19 @@ void XonoticProfileTab_fill(entity me)
 	float i;
 
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
-			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
-		me.TD(me, 1, 2.5, label = makeXonoticTextLabel(0, string_null));
+		me.TD(me, 1, 3, me.playerNameLabel = makeXonoticTextLabel(0.5, _("Name")));
+			me.playerNameLabel.isBold = TRUE;
+			me.playerNameLabelAlpha = 0.5;
+
+	me.gotoRC(me, 1.5, 0);
+		me.TD(me, 1, 3, label = makeXonoticTextLabel(0.5, string_null));
 			label.allowCut = 1;
 			label.allowColors = 1;
 			label.alpha = 1;
-	me.TR(me);
+			label.isBold = TRUE;
+			label.fontSize = SKINFONTSIZE_TITLE;
+
+	me.gotoRC(me, 2.5, 0);
 		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
@@ -64,7 +70,7 @@ void XonoticProfileTab_fill(entity me)
 			e.alpha = 0.5;
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
+	/*me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Join time:")));
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Total playing time:")));
 	me.TR(me);
@@ -83,7 +89,7 @@ void XonoticProfileTab_fill(entity me)
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("TDM elo:")));
 	me.TR(me);
 	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("DUEL elo:")));
-	me.TR(me);
+	me.TR(me);*/
 	
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
