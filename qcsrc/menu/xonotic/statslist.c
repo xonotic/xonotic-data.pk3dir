@@ -44,7 +44,7 @@ void XonoticStatsList_configureXonoticStatsList(entity me)
 
 void XonoticStatsList_getStats(entity me)
 {
-	print("called getstats\n");
+	print("XonoticStatsList_getStats() at time: ", ftos(time), "\n");
 	if (me.listStats >= 0)
 		buf_del(me.listStats);
 	me.listStats = buf_create();
@@ -53,18 +53,98 @@ void XonoticStatsList_getStats(entity me)
 		me.nItems = 0;
 		return;
 	}
+
+	float order = 0;
+	string e = "", en = "", data = "";
 	
-	string e = "", en = "";
-	float i = 0;
+	string outstr = ""; // NOTE: out string MUST use underscores for spaces here, we'll replace them later
+
+	float out_total_matches = -1;
+	float out_total_wins = -1;
+	float out_total_losses = -1;
+	
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		++i;
-		bufstr_add(me.listStats, sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))), TRUE);
+		order = 0;
+		outstr = "";
+		data = db_get(PS_D_IN_DB, sprintf("#%s", e));
+
+		// non-gamemode specific stuff
+		switch(e)
+		{
+			case "overall/joined_dt":
+			{
+				order = 1;
+				outstr = _("Joined:");
+				data = car(data);
+				break;
+			}
+			case "overall/last_seen_dt":
+			{
+				order = 1;
+				outstr = _("Last_Seen:");
+				data = car(data);
+				break;
+			}
+			case "overall/alivetime":
+			{
+				order = 1;
+				outstr = _("Time_Played:");
+				data = process_time(3, stof(data));
+				break;
+			}
+			case "overall/matches":
+			{
+				order = -1;
+				out_total_matches = stof(data);
+				break;
+			}
+			case "overall/wins":
+			{
+				order = -1;
+				out_total_wins = stof(data);
+				break;
+			}
+		}
+
+		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
+		{
+			out_total_losses = max(0, (out_total_matches - out_total_wins));
+
+			bufstr_add(me.listStats, sprintf("2Matches: %d", out_total_matches), TRUE);
+			bufstr_add(me.listStats, sprintf("2Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
+
+			out_total_matches = -1;
+			out_total_wins = -1;
+			out_total_losses = -1;
+			continue;
+		}
+
+		// game mode specific stuff
+		if(!(order > 0))
+		{
+			//dividerpos = strstrofs(e, "/", 0);
+			//switch(substring(e, dividerpos, strlen(e) - dividerpos))
+			switch(e)
+			{
+				case "":
+				{
+					order = 1;
+					outstr = _("Last_seen:");
+					data = car(data);
+					break;
+				}
+				
+				default: continue; // nothing to see here
+			}
+		}
+
+		bufstr_add(me.listStats, sprintf("%d%s %s", order, outstr, data), TRUE);
 	}
-	
+
 	me.nItems = buf_getsize(me.listStats);
-	//if(me.nItems > 0)
-	//	buf_sort(me.listStats, 128, FALSE);
+	if(me.nItems > 0)
+		buf_sort(me.listStats, 128, FALSE);
 }
 
 void XonoticStatsList_destroy(entity me)
@@ -92,7 +172,15 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	s = bufstr_get(me.listStats, i);
+	string data;
+	data = bufstr_get(me.listStats, i);
+
+	s = car(data);
+	s = substring(s, 1, strlen(s) - 1);
+	s = strreplace("_", " ", s);
+
+	s = strcat(s, " ", cdr(data));
+
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 }
