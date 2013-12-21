@@ -6,7 +6,7 @@ CLASS(XonoticGameWeaponsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 14)
-	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6.2)
+	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)
 	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameWeaponsSettingsTab)
 entity makeXonoticGameWeaponsSettingsTab();
