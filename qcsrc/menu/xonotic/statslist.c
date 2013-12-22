@@ -12,15 +12,16 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticStatsList, listStats, float, -1)
 	ATTRIB(XonoticStatsList, realFontSize, vector, '0 0 0')
+	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
-	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
+	ATTRIB(XonoticStatsList, columnDataOrigin, float, 0)
+	ATTRIB(XonoticStatsList, columnDataSize, float, 0)
 	ATTRIB(XonoticStatsList, origin, vector, '0 0 0')
 	ATTRIB(XonoticStatsList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticStatsList, lastClickedDemo, float, -1)
 	ATTRIB(XonoticStatsList, lastClickedTime, float, 0)
-	ATTRIB(XonoticStatsList, filterString, string, string_null)
 ENDCLASS(XonoticStatsList)
 
 entity statslist; // for reference elsewhere
@@ -62,6 +63,9 @@ void XonoticStatsList_getStats(entity me)
 	float out_total_matches = -1;
 	float out_total_wins = -1;
 	float out_total_losses = -1;
+
+	float out_total_kills = -1;
+	float out_total_deaths = -1;
 	
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
@@ -105,18 +109,49 @@ void XonoticStatsList_getStats(entity me)
 				out_total_wins = stof(data);
 				break;
 			}
+			case "overall/total-kills":
+			{
+				order = -1;
+				out_total_kills = stof(data);
+				break;
+			}
+			case "overall/total-deaths":
+			{
+				order = -1;
+				out_total_deaths = stof(data);
+				break;
+			}
 		}
 
 		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
 		{
-			out_total_losses = max(0, (out_total_matches - out_total_wins));
-
-			bufstr_add(me.listStats, sprintf("2Matches: %d", out_total_matches), TRUE);
-			bufstr_add(me.listStats, sprintf("2Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
+			bufstr_add(me.listStats, sprintf("02Matches: %d", out_total_matches), TRUE);
+			
+			if(out_total_matches > 0) // don't show extra info if there are no matches played
+			{
+				out_total_losses = max(0, (out_total_matches - out_total_wins));
+				bufstr_add(me.listStats, sprintf("02Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
+				bufstr_add(me.listStats, sprintf("03Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
+			}
 
 			out_total_matches = -1;
 			out_total_wins = -1;
 			out_total_losses = -1;
+			continue;
+		}
+
+		if((order == -1) && (out_total_kills >= 0) && (out_total_deaths >= 0))
+		{
+			bufstr_add(me.listStats, sprintf("04Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
+
+			// if there are no deaths, just show kill count 
+			if(out_total_deaths > 0)
+				bufstr_add(me.listStats, sprintf("04Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
+			else
+				bufstr_add(me.listStats, sprintf("04Kill_Ratio: %.2f", out_total_kills), TRUE);
+
+			out_total_kills = -1;
+			out_total_deaths = -1;
 			continue;
 		}
 
@@ -129,7 +164,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				case "":
 				{
-					order = 1;
+					order = 5;
 					outstr = _("Last_seen:");
 					data = car(data);
 					break;
@@ -139,7 +174,7 @@ void XonoticStatsList_getStats(entity me)
 			}
 		}
 
-		bufstr_add(me.listStats, sprintf("%d%s %s", order, outstr, data), TRUE);
+		bufstr_add(me.listStats, sprintf("%02d%s %s", order, outstr, data), TRUE);
 	}
 
 	me.nItems = buf_getsize(me.listStats);
@@ -176,7 +211,7 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 	data = bufstr_get(me.listStats, i);
 
 	s = car(data);
-	s = substring(s, 1, strlen(s) - 1);
+	s = substring(s, 2, strlen(s) - 2);
 	s = strreplace("_", " ", s);
 
 	s = strcat(s, " ", cdr(data));
