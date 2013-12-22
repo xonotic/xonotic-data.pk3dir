@@ -64,12 +64,13 @@ void XonoticProfileTab_fill(entity me)
 	
 	// Statistic Stuff -Debugger
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Player Statistics")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Statistics")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 
 	me.TR(me);
-		me.TD(me, 11, 3, statslist = makeXonoticStatsList());
+		me.TDempty(me, 0.25);
+		me.TD(me, 10, 2.5, statslist = makeXonoticStatsList());
 
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);

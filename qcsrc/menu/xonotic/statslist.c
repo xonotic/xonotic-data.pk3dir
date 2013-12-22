@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
-	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.25)
+	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticStatsList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticStatsList, getStats, void(entity))
@@ -197,27 +197,33 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
+#if 0
+	me.columnNameOrigin = me.realFontSize_x;
+	me.columnNameSize = 0.5 - me.realFontSize_x; // end halfway at maximum length
+	me.columnDataOrigin = me.columnNameOrigin + me.columnNameSize;
+	me.columnDataSize = 1 - me.columnNameSize - me.realFontSize_x; // fill the rest of the control
+#else
 	me.columnNameOrigin = me.realFontSize_x;
 	me.columnNameSize = 1 - 2 * me.realFontSize_x;
+#endif
 }
 
 void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
-	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	string data;
-	data = bufstr_get(me.listStats, i);
-
-	s = car(data);
+	string data = bufstr_get(me.listStats, i);
+	string s = car(data);
+	string d = cdr(data);
+	
 	s = substring(s, 2, strlen(s) - 2);
 	s = strreplace("_", " ", s);
+	s = draw_TextShortenToWidth(s, 0.5 * me.columnNameSize, 0, me.realFontSize);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 
-	s = strcat(s, " ", cdr(data));
-
-	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
+	d = draw_TextShortenToWidth(d, me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize), 0, me.realFontSize);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1 * (me.columnNameSize - draw_TextWidth(d, 0, me.realFontSize))) * eX, d, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 }
 
 void XonoticStatsList_showNotify(entity me)
