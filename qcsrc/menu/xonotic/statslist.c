@@ -40,6 +40,40 @@ void XonoticStatsList_configureXonoticStatsList(entity me)
 	me.getStats(me);
 }
 
+string XonoticStatsList_convertDate(string input)
+{
+	// 2013-12-21
+	// 0123456789
+	if(strlen(input) != 10)
+		return input;
+
+	string monthname = "";
+
+	switch(stof(substring(input, 5, 2)))
+	{
+		case 1:  monthname = _("January");    break;
+		case 2:  monthname = _("February");   break;
+		case 3:  monthname = _("March");      break;
+		case 4:  monthname = _("April");      break;
+		case 5:  monthname = _("May");        break;
+		case 6:  monthname = _("June");       break;
+		case 7:  monthname = _("July");       break;
+		case 8:  monthname = _("August");     break;
+		case 9:  monthname = _("September");  break;
+		case 10: monthname = _("October");    break;
+		case 11: monthname = _("November");   break;
+		case 12: monthname = _("December");   break;
+		default: return input; // failed, why?
+	}
+
+	return sprintf(
+		"%s %s, %d",
+		monthname,
+		count_ordinal(stof(substring(input, 8, 2))),
+		stof(substring(input, 0, 4))
+	);
+}
+
 void XonoticStatsList_getStats(entity me)
 {
 	print("XonoticStatsList_getStats() at time: ", ftos(time), "\n");
@@ -79,14 +113,14 @@ void XonoticStatsList_getStats(entity me)
 			{
 				order = 1;
 				outstr = _("Joined:");
-				data = car(data);
+				data = XonoticStatsList_convertDate(car(data));
 				break;
 			}
 			case "overall/last_seen_dt":
 			{
 				order = 1;
 				outstr = _("Last_Seen:");
-				data = car(data);
+				data = XonoticStatsList_convertDate(car(data));
 				break;
 			}
 			case "overall/alivetime":
