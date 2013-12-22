@@ -89,7 +89,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 //string autocvar_g_playerstats_uri;
 
 string autocvar_g_playerstats_gamereport_ladder;
-var string autocvar_g_playerstats_gamereport_uri = "-";
+var string autocvar_g_playerstats_gamereport_uri = "http://stats.xonotic.org/stats/submit";
 var string autocvar_g_playerstats_playerbasic_uri = "http://stats.xonotic.org";
 
 void PlayerStats_PlayerBasic();
