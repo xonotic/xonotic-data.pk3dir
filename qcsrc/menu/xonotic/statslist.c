@@ -96,6 +96,13 @@ void XonoticStatsList_getStats(entity me)
 				data = process_time(3, stof(data));
 				break;
 			}
+			case "overall/favorite-map":
+			{
+				order = 2;
+				outstr = _("Favorite_Map:");
+				data = car(data);
+				break;
+			}
 			case "overall/matches":
 			{
 				order = -1;
@@ -124,13 +131,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("002Matches: %d", out_total_matches), TRUE);
+			bufstr_add(me.listStats, sprintf("003Matches: %d", out_total_matches), TRUE);
 			
 			if(out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
-				bufstr_add(me.listStats, sprintf("002Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
-				bufstr_add(me.listStats, sprintf("003Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
+				bufstr_add(me.listStats, sprintf("003Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
+				bufstr_add(me.listStats, sprintf("004Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
 			}
 
 			out_total_matches = -1;
@@ -141,13 +148,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_kills >= 0) && (out_total_deaths >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("004Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
+			bufstr_add(me.listStats, sprintf("005Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
 
 			// if there are no deaths, just show kill count 
 			if(out_total_deaths > 0)
-				bufstr_add(me.listStats, sprintf("005Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
+				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
 			else
-				bufstr_add(me.listStats, sprintf("005Kill_Ratio: %.2f", out_total_kills), TRUE);
+				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", out_total_kills), TRUE);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
@@ -203,7 +210,7 @@ void XonoticStatsList_getStats(entity me)
 					case "favorite-map":
 					{
 						order = 5;
-						outstr = sprintf(_("%s_Matches:"), strtoupper(gametype));
+						outstr = sprintf(_("%s_Favorite_Map:"), strtoupper(gametype));
 						//data = sprintf(_("%d (unranked)"), data);
 						break;
 					}
