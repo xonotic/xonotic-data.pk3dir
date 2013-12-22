@@ -37,6 +37,7 @@ entity makeXonoticStatsList()
 void XonoticStatsList_configureXonoticStatsList(entity me)
 {
 	me.configureXonoticListBox(me);
+	me.getStats(me);
 }
 
 void XonoticStatsList_getStats(entity me)
@@ -55,6 +56,7 @@ void XonoticStatsList_getStats(entity me)
 	string e = "", en = "", data = "";
 	
 	string outstr = ""; // NOTE: out string MUST use underscores for spaces here, we'll replace them later
+	string orderstr = "";
 
 	float out_total_matches = -1;
 	float out_total_wins = -1;
@@ -67,6 +69,7 @@ void XonoticStatsList_getStats(entity me)
 	{
 		order = 0;
 		outstr = "";
+		orderstr = "";
 		data = db_get(PS_D_IN_DB, sprintf("#%s", e));
 
 		// non-gamemode specific stuff
@@ -121,13 +124,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("02Matches: %d", out_total_matches), TRUE);
+			bufstr_add(me.listStats, sprintf("002Matches: %d", out_total_matches), TRUE);
 			
 			if(out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
-				bufstr_add(me.listStats, sprintf("02Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
-				bufstr_add(me.listStats, sprintf("03Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
+				bufstr_add(me.listStats, sprintf("002Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
+				bufstr_add(me.listStats, sprintf("003Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
 			}
 
 			out_total_matches = -1;
@@ -138,13 +141,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_kills >= 0) && (out_total_deaths >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("04Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
+			bufstr_add(me.listStats, sprintf("004Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
 
 			// if there are no deaths, just show kill count 
 			if(out_total_deaths > 0)
-				bufstr_add(me.listStats, sprintf("05Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
+				bufstr_add(me.listStats, sprintf("005Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
 			else
-				bufstr_add(me.listStats, sprintf("05Kill_Ratio: %.2f", out_total_kills), TRUE);
+				bufstr_add(me.listStats, sprintf("005Kill_Ratio: %.2f", out_total_kills), TRUE);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
@@ -152,25 +155,78 @@ void XonoticStatsList_getStats(entity me)
 		}
 
 		// game mode specific stuff
-		if(!(order > 0))
+		if(order > 0)
 		{
-			//dividerpos = strstrofs(e, "/", 0);
-			//switch(substring(e, dividerpos, strlen(e) - dividerpos))
-			switch(e)
+			orderstr = sprintf("%03d", order);
+		}
+		else
+		{
+			float dividerpos = strstrofs(e, "/", 0);
+			string gametype = substring(e, 0, dividerpos);
+			string event = substring(e, (dividerpos + 1), strlen(e) - (dividerpos + 1));
+
+			// if we are ranked, read these sets of possible options
+			if(stof(db_get(PS_D_IN_DB, sprintf("#%s/rank", gametype))))
 			{
-				case "":
+				switch(event)
 				{
-					order = 5;
-					outstr = _("Last_seen:");
-					data = car(data);
-					break;
+					case "matches":
+					{
+						order = 1;
+						outstr = sprintf(_("%s_Matches:"), strtoupper(gametype));
+						//data = sprintf(_("%d (unranked)"), data);
+						break;
+					}
+					case "elo":
+					{
+						order = 2;
+						outstr = sprintf(_("%s_ELO:"), strtoupper(gametype));
+						data = sprintf("%d", stof(data));
+						break;
+					}
+					case "rank":
+					{
+						order = 3;
+						outstr = sprintf(_("%s_Rank:"), strtoupper(gametype));
+						data = sprintf("%d", stof(data));
+						break;
+					}
+					case "percentile":
+					{
+						order = 4;
+						outstr = sprintf(_("%s_Percentile:"), strtoupper(gametype));
+						data = sprintf("%d%%", stof(data));
+						break;
+					}
+					
+					#if 0
+					case "favorite-map":
+					{
+						order = 5;
+						outstr = sprintf(_("%s_Matches:"), strtoupper(gametype));
+						//data = sprintf(_("%d (unranked)"), data);
+						break;
+					}
+					#endif
+					
+					default: continue; // nothing to see here
 				}
-				
-				default: continue; // nothing to see here
+
+				// now set up order for sorting later
+				orderstr = sprintf("%2.2s%d", gametype, order);
 			}
+			else if(event == "matches")
+			{
+				outstr = sprintf(_("%s_Matches:"), strtoupper(gametype));
+				data = sprintf(_("%d (unranked)"), stof(data));
+
+				// unranked game modes ALWAYS get put last
+				orderstr = "zzz";
+			}
+			else { continue; }
 		}
 
-		bufstr_add(me.listStats, sprintf("%02d%s %s", order, outstr, data), TRUE);
+		bufstr_add(me.listStats, sprintf("%s%s %s", orderstr, outstr, data), TRUE);
 	}
 
 	me.nItems = buf_getsize(me.listStats);
@@ -213,7 +269,7 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 	string s = car(data);
 	string d = cdr(data);
 	
-	s = substring(s, 2, strlen(s) - 2);
+	s = substring(s, 3, strlen(s) - 3);
 	s = strreplace("_", " ", s);
 	s = draw_TextShortenToWidth(s, 0.5 * me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
