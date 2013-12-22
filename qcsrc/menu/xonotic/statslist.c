@@ -203,7 +203,10 @@ void XonoticStatsList_getStats(entity me)
 		else
 		{
 			float dividerpos = strstrofs(e, "/", 0);
+			
 			string gametype = substring(e, 0, dividerpos);
+			if(gametype == "overall") { continue; }
+			
 			string event = substring(e, (dividerpos + 1), strlen(e) - (dividerpos + 1));
 
 			// if we are ranked, read these sets of possible options
