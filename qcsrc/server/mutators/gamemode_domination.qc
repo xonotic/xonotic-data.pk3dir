@@ -46,7 +46,7 @@ void dompoint_captured ()
 		wait_time = self.wait;
 
 	if(domination_roundbased)
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE, head.netname, self.message);
+		bprint(sprintf("^3%s^3%s\n", head.netname, self.message));
 	else
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, self.message, points, wait_time);
 
