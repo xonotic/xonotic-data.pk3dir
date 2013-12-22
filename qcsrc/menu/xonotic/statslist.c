@@ -15,10 +15,6 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
-	ATTRIB(XonoticStatsList, columnDataOrigin, float, 0)
-	ATTRIB(XonoticStatsList, columnDataSize, float, 0)
-	ATTRIB(XonoticStatsList, origin, vector, '0 0 0')
-	ATTRIB(XonoticStatsList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticStatsList, lastClickedDemo, float, -1)
 	ATTRIB(XonoticStatsList, lastClickedTime, float, 0)
@@ -146,9 +142,9 @@ void XonoticStatsList_getStats(entity me)
 
 			// if there are no deaths, just show kill count 
 			if(out_total_deaths > 0)
-				bufstr_add(me.listStats, sprintf("04Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
+				bufstr_add(me.listStats, sprintf("05Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
 			else
-				bufstr_add(me.listStats, sprintf("04Kill_Ratio: %.2f", out_total_kills), TRUE);
+				bufstr_add(me.listStats, sprintf("05Kill_Ratio: %.2f", out_total_kills), TRUE);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
