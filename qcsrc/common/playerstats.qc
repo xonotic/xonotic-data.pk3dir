@@ -584,7 +584,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 	print("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
 
-void PlayerStats_PlayerDetail()
+void PlayerStats_PlayerDetail(void)
 {
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
 	{
@@ -697,12 +697,19 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 						break;
 					}
 					
-					default: backtrace("PlayerStats_PlayerDetail_Handler(): Key went unhandled?\n"); break;
+					default:
+					{
+						print(
+							"PlayerStats_PlayerDetail_Handler(): ERROR: "
+							"Key went unhandled? Is our version outdated?\n"
+						);
+						break;
+					}
 				}
 
 				#if 0
 				print(sprintf(
-					"PlayerStats_PlayerDetail_Handler(): key '%s', event '%s', data '%s'\n",
+					"PlayerStats_PlayerDetail_Handler(): Key '%s', Event '%s', Data '%s'\n",
 					key,
 					event,
 					data
