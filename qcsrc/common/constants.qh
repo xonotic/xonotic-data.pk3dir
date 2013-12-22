@@ -194,11 +194,11 @@ const float STAT_FROZEN = 104;
 const float STAT_REVIVE_PROGRESS = 105;
 
 // domination
-const float STAT_DOM_TOTAL_PPS = 100;
-const float STAT_DOM_PPS_RED = 101;
-const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_TOTAL_PPS = 99;
+const float STAT_DOM_PPS_RED = 100;
+const float STAT_DOM_PPS_BLUE = 101;
+const float STAT_DOM_PPS_YELLOW = 102;
 const float STAT_DOM_PPS_PINK = 103;
-const float STAT_DOM_PPS_YELLOW = 104;
 
 //const float STAT_SPIDERBOT_AIM 53 // compressShotOrigin
 //const float STAT_SPIDERBOT_TARGET 54 // compressShotOrigin
