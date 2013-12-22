@@ -394,8 +394,11 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			// url_fclose has finished
 			print("Player stats written\n");
 			PlayerStats_GameReport_DelayMapVote = FALSE;
-			db_close(PS_GR_OUT_DB);
-			PS_GR_OUT_DB = -1;
+			if(PS_GR_OUT_DB >= 0)
+			{
+				db_close(PS_GR_OUT_DB);
+				PS_GR_OUT_DB = -1;
+			}
 			break;
 		}
 		
@@ -580,26 +583,21 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
 	print("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
-
+#define PS_D_STATUS_ERROR -1
+#define PS_D_STATUS_IDLE 0
+#define PS_D_STATUS_WAITING 1
+#define PS_D_STATUS_RECEIVED 2
 void PlayerStats_PlayerDetail()
 {
-	//PS_D_IN_DB = -1;
-	//PS_D_IN_DB = db_create();
-
-	if(PS_D_IN_DB < 0)
-	{
-		PS_D_IN_DB = -1;
-		PS_D_IN_DB = db_create();
-	}
-	else
-	{
-		// kill the old db and try again
-		//db_close(PS_D_IN_DB);
-		//PS_D_IN_DB = -1;
-	}
-
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
 	{
+		// create the database if it doesn't already exist
+		if(PS_D_IN_DB < 0)
+		{
+			PS_D_IN_DB = -1;
+			PS_D_IN_DB = db_create();
+		}
+
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
 		print("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
 		url_single_fopen(
@@ -608,6 +606,20 @@ void PlayerStats_PlayerDetail()
 			PlayerStats_PlayerDetail_Handler,
 			world
 		);
+
+		PlayerStats_PlayerDetail_Status = PS_D_STATUS_WAITING;
+	}
+	else
+	{
+		// player has this disabled, kill the DB and set status to idle
+		if(PS_D_IN_DB >= 0)
+		{
+			db_close(PS_D_IN_DB);
+			PS_D_IN_DB = -1;
+		}
+
+		PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
+		
 	}
 }
 
@@ -617,7 +629,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			print("-- Sending data to player stats server\n");
+			print("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...\n");
 			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -634,12 +646,11 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		
 		case URL_READY_CANREAD:
 		{
-			print("-- Got response from player stats server:\n");
+			//print("PlayerStats_PlayerDetail_Handler(): Got response from player stats server:\n");
 			string input = "";
 			string gametype = "overall";
 			while((input = url_fgets(fh)))
 			{
-				//print(input, "\n");
 				float count = tokenizebyseparator(input, " ");
 				string key = "", event = "", data = "";
 
@@ -689,7 +700,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 						break;
 					}
 					
-					default: print("PlayerStats_PlayerDetail_Handler(): Key went unhandled?\n"); break;
+					default: backtrace("PlayerStats_PlayerDetail_Handler(): Key went unhandled?\n"); break;
 				}
 
 				#if 0
@@ -701,22 +712,30 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				));
 				#endif
 			}
-			print("-- End of response.\n");
+			//print("PlayerStats_PlayerDetail_Handler(): End of response.\n");
 			url_fclose(fh);
+			PlayerStats_PlayerDetail_Status = PS_D_RECEIVED;
 			statslist.getStats(statslist);
 			break;
 		}
+
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("Player stats synchronized with server\n");
+			print("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
 			break;
 		}
-		
+
 		case URL_READY_ERROR:
 		default:
 		{
-			print("Receiving player stats failed: ", ftos(status), "\n");
+			print("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
+			PlayerStats_PlayerDetail_Status = PS_D_ERROR;
+			if(PS_D_IN_DB >= 0)
+			{
+				db_close(PS_D_IN_DB);
+				PS_D_IN_DB = -1;
+			}
 			break;
 		}
 	}

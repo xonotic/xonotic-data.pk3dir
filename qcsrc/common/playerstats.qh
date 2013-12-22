@@ -96,6 +96,11 @@ void PlayerStats_PlayerBasic();
 void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status);
 #endif //SVQC
 #ifdef MENUQC
+#define PS_D_STATUS_ERROR -1
+#define PS_D_STATUS_IDLE 0
+#define PS_D_STATUS_WAITING 1
+#define PS_D_STATUS_RECEIVED 2
+var float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
 var string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
 void PlayerStats_PlayerDetail();
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
