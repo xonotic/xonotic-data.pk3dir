@@ -82,14 +82,14 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s = GameType_GetName(i);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (0.025 * me.columnNameSize)) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	
 	if(_MapInfo_GetTeamPlayBool(GameType_GetID(i)))
 		s = _("teamplay");
 	else
 		s = _("free for all");
 
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT * 0.5, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT * 0.5, 0);
 }
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -101,7 +101,7 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize_y / me.itemAbsSize_x;
-	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize;
-	me.columnNameSize = 1 - me.columnIconSize - 2 * me.realFontSize_x;
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize_x);
+	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize_x);
 }
 #endif
