@@ -583,10 +583,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
 	print("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
-#define PS_D_STATUS_ERROR -1
-#define PS_D_STATUS_IDLE 0
-#define PS_D_STATUS_WAITING 1
-#define PS_D_STATUS_RECEIVED 2
+
 void PlayerStats_PlayerDetail()
 {
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
@@ -714,7 +711,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 			}
 			//print("PlayerStats_PlayerDetail_Handler(): End of response.\n");
 			url_fclose(fh);
-			PlayerStats_PlayerDetail_Status = PS_D_RECEIVED;
+			PlayerStats_PlayerDetail_Status = PS_D_STATUS_RECEIVED;
 			statslist.getStats(statslist);
 			break;
 		}
@@ -730,7 +727,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		default:
 		{
 			print("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
-			PlayerStats_PlayerDetail_Status = PS_D_ERROR;
+			PlayerStats_PlayerDetail_Status = PS_D_STATUS_ERROR;
 			if(PS_D_IN_DB >= 0)
 			{
 				db_close(PS_D_IN_DB);
