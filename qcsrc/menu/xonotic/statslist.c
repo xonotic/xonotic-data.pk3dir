@@ -77,10 +77,16 @@ string XonoticStatsList_convertDate(string input)
 void XonoticStatsList_getStats(entity me)
 {
 	print("XonoticStatsList_getStats() at time: ", ftos(time), "\n");
-	if (me.listStats >= 0)
+	// delete the old buffer if it exists
+	if(me.listStats >= 0)
 		buf_del(me.listStats);
-	me.listStats = buf_create();
-	if (me.listStats < 0)
+
+	// create the new buffer if we have a stats buffer
+	if(PS_D_IN_DB >= 0)
+		me.listStats = buf_create();
+
+	// now confirmation, if we didn't create a buffer then just return now
+	if(me.listStats < 0)
 	{
 		me.nItems = 0;
 		return;
@@ -88,7 +94,7 @@ void XonoticStatsList_getStats(entity me)
 
 	float order = 0;
 	string e = "", en = "", data = "";
-	
+
 	string outstr = ""; // NOTE: out string MUST use underscores for spaces here, we'll replace them later
 	string orderstr = "";
 
@@ -98,7 +104,7 @@ void XonoticStatsList_getStats(entity me)
 
 	float out_total_kills = -1;
 	float out_total_deaths = -1;
-	
+
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
 		order = 0;
