@@ -3,7 +3,7 @@ float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 
-var float autocvar_g_vehicles_nex_damagerate = 0.5;
+var float autocvar_g_vehicles_vortex_damagerate = 0.5;
 var float autocvar_g_vehicles_uzi_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;
 var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
@@ -881,8 +881,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
     self.dmg_time = time;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
-        damage *= autocvar_g_vehicles_nex_damagerate;
+	// WEAPONTODO
+    if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+        damage *= autocvar_g_vehicles_vortex_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_UZI))
         damage *= autocvar_g_vehicles_uzi_damagerate;

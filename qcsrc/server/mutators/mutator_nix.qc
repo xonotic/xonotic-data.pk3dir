@@ -107,11 +107,11 @@ void NIX_GiveCurrentWeapon()
 			self.(weapon_load[nix_weapon]) = e.reloading_ammo;
 
 		// nex too
-		if(WEP_CVAR(nex, charge))
+		if(WEP_CVAR(vortex, charge))
 		{
-			if(WEP_CVAR_SEC(nex, chargepool))
-				self.nex_chargepool_ammo = 1;
-			self.nex_charge = WEP_CVAR(nex, charge_start);
+			if(WEP_CVAR_SEC(vortex, chargepool))
+				self.vortex_chargepool_ammo = 1;
+			self.vortex_charge = WEP_CVAR(vortex, charge_start);
 		}
 	}
 	if(self.nix_lastinfotime != dt)

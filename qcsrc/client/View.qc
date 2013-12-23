@@ -104,7 +104,7 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
-	if((activeweapon == WEP_NEX && nex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -276,7 +276,7 @@ float TrueAimCheck()
 		case WEP_HOOK: // no trueaim
 		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
-		case WEP_NEX:
+		case WEP_VORTEX:
 		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
@@ -364,7 +364,7 @@ float pickup_crosshair_time, pickup_crosshair_size;
 float hit_time, typehit_time;
 float nextsound_hit_time, nextsound_typehit_time;
 float hitindication_crosshair_time, hitindication_crosshair_size;
-float use_nex_chargepool;
+float use_vortex_chargepool;
 
 float myhealth, myhealth_prev;
 float myhealth_flash;
@@ -804,11 +804,11 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if((activeweapon == WEP_NEX || activeweapon == WEP_RIFLE || activeweapon == WEP_VAPORIZER) && (button_zoom || zoomscript_caught))
+	else if((activeweapon == WEP_VORTEX || activeweapon == WEP_RIFLE || activeweapon == WEP_VAPORIZER) && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if((activeweapon == WEP_NEX) && button_attack2)
+	else if((activeweapon == WEP_VORTEX) && button_attack2)
 		reticle_type = 2; // nex zoom
 
 	if(reticle_type && autocvar_cl_reticle)
@@ -836,10 +836,10 @@ void CSQC_UpdateView(float w, float h)
 			if(reticle_type == 1 && f)
 				drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
 		}
-		if(autocvar_cl_reticle_item_nex)
+		if(autocvar_cl_reticle_item_vortex)
 		{
 			if(reticle_type == 2 && f)
-				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
+				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_vortex, DRAWFLAG_NORMAL);
 		}
 	}
 
@@ -1368,32 +1368,32 @@ void CSQC_UpdateView(float w, float h)
 					weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
 					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
 
-					float nex_charge, nex_chargepool;
-					nex_charge = getstatf(STAT_NEX_CHARGE);
-					nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
+					float vortex_charge, vortex_chargepool;
+					vortex_charge = getstatf(STAT_VORTEX_CHARGE);
+					vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
 
-					if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
-						nex_charge_movingavg = nex_charge;
+					if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+						vortex_charge_movingavg = vortex_charge;
 
 
 					// handle the values
-					if (autocvar_crosshair_ring && activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
+					if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 					{
-						if (nex_chargepool || use_nex_chargepool) {
-							use_nex_chargepool = 1;
-							ring_inner_value = nex_chargepool;
+						if (vortex_chargepool || use_vortex_chargepool) {
+							use_vortex_chargepool = 1;
+							ring_inner_value = vortex_chargepool;
 						} else {
-							nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
-							ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1);
+							vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * vortex_charge;
+							ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (vortex_charge - vortex_charge_movingavg), 1);
 						}
 
-						ring_inner_alpha = autocvar_crosshair_ring_nex_inner_alpha;
-						ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
+						ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
+						ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
 						ring_inner_image = "gfx/crosshair_ring_inner.tga";
 
 						// draw the outer ring to show the current charge of the weapon
-						ring_value = nex_charge;
-						ring_alpha = autocvar_crosshair_ring_nex_alpha;
+						ring_value = vortex_charge;
+						ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring_nexgun.tga";
 					}

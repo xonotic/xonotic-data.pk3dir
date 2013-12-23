@@ -1026,7 +1026,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || vaporizer and tuba
+		if ((i == WEP_VORTEX && g_minstagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
 			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 

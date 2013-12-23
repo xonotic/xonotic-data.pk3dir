@@ -251,7 +251,7 @@ float w_deathtype, w_issilent, w_random;
 vector w_org, w_backoff;
 
 float rifle_scope;
-float nex_scope;
+float vortex_scope;
 
 float minelayer_maxmines;
 
@@ -262,7 +262,7 @@ float bgmtime;
 string weaponorder_byimpulse;
 string weaponorder_bypriority;
 
-float nex_charge_movingavg;
+float vortex_charge_movingavg;
 
 float serverflags;
 

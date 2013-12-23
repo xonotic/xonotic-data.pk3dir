@@ -22,8 +22,8 @@ void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
-// Rail -> Nex
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_nex();          }
+// Rail -> Vortex
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_vortex();          }
 void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
 
 // BFG -> Crylink

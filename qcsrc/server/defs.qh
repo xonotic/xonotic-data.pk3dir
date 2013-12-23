@@ -533,9 +533,9 @@ float client_cefc_accumulatortime;
 
 .entity lastrocket;
 .float minelayer_mines;
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
+.float vortex_charge;
+.float vortex_charge_rottime;
+.float vortex_chargepool_ammo;
 .float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab

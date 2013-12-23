@@ -225,7 +225,7 @@ void Ent_RainOrSnow()
 		self.draw = Draw_Snow;
 }
 
-void Net_ReadNexgunBeamParticle()
+void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;

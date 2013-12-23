@@ -128,7 +128,7 @@ void CSQC_Init(void)
 	if(autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
-		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
+		if(autocvar_cl_reticle_item_vortex) { precache_pic("gfx/reticle_nex"); }
 	}
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
@@ -969,7 +969,7 @@ void Ent_Init()
 	g_balance_electro_secondary_bouncefactor = ReadCoord();
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
-	nex_scope = !ReadByte();
+	vortex_scope = !ReadByte();
 	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
@@ -1210,8 +1210,8 @@ float CSQC_Parse_TempEntity()
 			Net_ReadRace();
 			bHandled = true;
 			break;
-		case TE_CSQC_NEXGUNBEAMPARTICLE:
-			Net_ReadNexgunBeamParticle();
+		case TE_CSQC_VORTEXBEAMPARTICLE:
+			Net_ReadVortexBeamParticle();
 			bHandled = true;
 			break;
 		case TE_CSQC_TEAMNAGGER:

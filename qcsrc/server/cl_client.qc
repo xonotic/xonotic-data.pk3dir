@@ -423,11 +423,11 @@ void PutClientInServer (void)
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
-		if(WEP_CVAR(nex, charge))
+		if(WEP_CVAR(vortex, charge))
 		{
-			if(WEP_CVAR_SEC(nex, chargepool))
-				self.nex_chargepool_ammo = 1;
-			self.nex_charge = WEP_CVAR(nex, charge_start);
+			if(WEP_CVAR_SEC(vortex, chargepool))
+				self.vortex_chargepool_ammo = 1;
+			self.vortex_charge = WEP_CVAR(vortex, charge_start);
 		}
 
 		if(warmup_stage)
@@ -636,7 +636,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
 	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
 	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(MSG_ENTITY, WEP_CVAR(nex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(MSG_ENTITY, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(MSG_ENTITY, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
@@ -1700,8 +1700,8 @@ void SpectateCopy(entity spectatee) {
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
-	self.nex_charge = spectatee.nex_charge;
-	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
+	self.vortex_charge = spectatee.vortex_charge;
+	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
@@ -2255,17 +2255,17 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_NEX && WEP_CVAR(nex, charge))
+			if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge))
 			{
-				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
-				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
-				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / WEP_CVAR(nex, charge_animlimit));
+				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
 
-				if(self.nex_charge > WEP_CVAR(nex, charge_animlimit))
+				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
 				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - WEP_CVAR(nex, charge_animlimit)) / (1 - WEP_CVAR(nex, charge_animlimit));
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
 				}
 			}
 			else
@@ -2397,8 +2397,8 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// rot nex charge to the charge limit
-		if(WEP_CVAR(nex, charge_rot_rate) && self.nex_charge > WEP_CVAR(nex, charge_limit) && self.nex_charge_rottime < time)
-			self.nex_charge = bound(WEP_CVAR(nex, charge_limit), self.nex_charge - WEP_CVAR(nex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
+			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 
 		if(frametime)
 			player_anim();
@@ -2420,7 +2420,7 @@ void PlayerPreThink (void)
 	}
 
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

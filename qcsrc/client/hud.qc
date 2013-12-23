@@ -434,7 +434,7 @@ float GetAmmoTypeForWep(float i) // WEAPONTODO
 		case WEP_CRYLINK: return 3;
 		case WEP_HLAC: return 3;
 		case WEP_VAPORIZER: return 3;
-		case WEP_NEX: return 3;
+		case WEP_VORTEX: return 3;
 		case WEP_RIFLE: return 1;
 		case WEP_HAGAR: return 2;
 		case WEP_DEVASTATOR: return 2;

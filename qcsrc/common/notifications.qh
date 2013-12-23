@@ -498,7 +498,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MORTAR_MURDER_EXPLODE,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapongrenadelauncher",  _("^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         2, 1, "s1 s2loc spree_lost", "s1",                 "weapongrenadelauncher",  _("^BG%s^K1 didn't see their own Mortar grenade%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,        2, 1, "s1 s2loc spree_lost", "s1",                 "weapongrenadelauncher",  _("^BG%s^K1 blew themself up with their own Mortar%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_NEX_MURDER,                    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponnex",              _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Nex%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_VORTEX_MURDER,                 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponnex",              _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER,                  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"), "") \
@@ -783,7 +783,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG,        INFO_WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_BOUNCE,         NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_EXPLODE,        NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,        CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_NEX_MURDER,                    NO_MSG,        INFO_WEAPON_NEX_MURDER,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_VORTEX_MURDER,                 NO_MSG,        INFO_WEAPON_VORTEX_MURDER,                 NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER,                  NO_MSG,        INFO_WEAPON_RIFLE_MURDER,                  NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL,             NO_MSG,        INFO_WEAPON_RIFLE_MURDER_HAIL,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG,        INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG) \

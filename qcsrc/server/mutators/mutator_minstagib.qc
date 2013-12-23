@@ -6,7 +6,7 @@ void spawnfunc_item_minst_cells (void)
 
 	StartItem ("models/items/a_cells.md3",
 			   "misc/itempickup.wav", 45, 0,
-			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 void minstagib_health_mega()
@@ -293,7 +293,7 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 		return FALSE;
 	}
 
-	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_NEX)
+	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);
