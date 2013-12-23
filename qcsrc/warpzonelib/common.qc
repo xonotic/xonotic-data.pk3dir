@@ -113,7 +113,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 		return 0;
 	}
 #endif
-	if not(trace_ent)
+	if (!trace_ent)
 		return 0;
 	if (trace_ent == WarpZoneLib_BoxTouchesBrush_ent)
 		return 1;
@@ -469,7 +469,6 @@ void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector e
 	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
 }
 
-float PARTICLES_DRAWASTRAIL = 128;
 void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
 {
 	WarpZone_TrailParticles_trace_callback_own = own;

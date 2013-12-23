@@ -40,7 +40,7 @@ void turret_stdproc_die()
         self.SendFlags      |= TNSF_STATUS;
         self.nextthink      = time + 0.2;
         self.think          = turret_hide;
-        
+
         if (self.turret_diehook)
             self.turret_diehook();
     }
@@ -52,11 +52,11 @@ void turret_stdproc_respawn()
     // this function doubles as "teamchange" function.
     self.tur_head.team 	= self.team;
 
-    self.effects             &~= EF_NODRAW;
+    self.effects             &= ~EF_NODRAW;
     self.deadflag           = DEAD_NO;
     self.effects            = EF_LOWPRECISION;
     self.solid              = SOLID_BBOX;
-    
+
     self.takedamage 			= DAMAGE_AIM;
     self.event_damage           = turret_stdproc_damage;
 
@@ -71,7 +71,7 @@ void turret_stdproc_respawn()
 
     self.nextthink  = time + self.ticrate;
     self.think      = turret_think;
-    
+
     self.SendFlags  = TNSF_FULL_UPDATE;
 
     if (self.turret_respawnhook)
@@ -88,7 +88,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         return;
 
     // Inactive turrets take no damage. (hm..)
-    if not (self.active)
+    if (!self.active)
         return;
 
     if (teamplay)
@@ -111,13 +111,13 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     {
         self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
-        
+
         self.SendFlags  |= TNSF_ANG;
     }
 
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)
         self.velocity = self.velocity + vforce;
-    
+
     if (self.health <= 0)
     {
         self.event_damage           = func_null;
@@ -126,6 +126,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.nextthink = time;
         self.think = turret_stdproc_die;
     }
-    
+
     self.SendFlags  |= TNSF_STATUS;
 }

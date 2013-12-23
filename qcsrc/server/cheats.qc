@@ -50,7 +50,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
-	
+
 	// sv_clones
 	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
 		if(self.lip < sv_clones)
@@ -59,7 +59,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// haha
 	if(self.maycheat)
 		return 1;
-	
+
 	// sv_cheats
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
@@ -144,7 +144,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;
 			self.personal.armorvalue = self.armorvalue;
-			WEPSET_COPY_EE(self.personal, self);
+			self.personal.weapons = self.weapons;
 			self.personal.items = self.items;
 			self.personal.pauserotarmor_finished = self.pauserotarmor_finished;
 			self.personal.pauserothealth_finished = self.pauserothealth_finished;
@@ -190,7 +190,7 @@ float CheatImpulse(float i)
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
 					self.fixangle = TRUE;
-					
+
 					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
 
@@ -201,7 +201,7 @@ float CheatImpulse(float i)
 				self.ammo_fuel = self.personal.ammo_fuel;
 				self.health = self.personal.health;
 				self.armorvalue = self.personal.armorvalue;
-				WEPSET_COPY_EE(self, self.personal);
+				self.weapons = self.personal.weapons;
 				self.items = self.personal.items;
 				self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
 				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
@@ -236,7 +236,7 @@ float CheatImpulse(float i)
 					break;
 				}
 			}
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
 			{
 				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
@@ -252,7 +252,7 @@ float CheatImpulse(float i)
 			RandomSelection_Init();
 			FOR_EACH_PLAYER(e)
 				if(e.deadflag == DEAD_NO)
-					if(IsDifferentTeam(e, self))
+					if(DIFF_TEAM(e, self))
 						RandomSelection_Add(e, 0, string_null, 1, 1);
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
@@ -260,7 +260,7 @@ float CheatImpulse(float i)
 				e = self;
 
 			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
@@ -718,7 +718,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity e, float grab, float ischeat);
+float Drag(float force_allow_pick, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -748,40 +748,11 @@ float CheatFrame()
 			{
 				// use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				Drag(trace_ent, TRUE, TRUE);
+				Drag(TRUE, TRUE);
 			}
 			else
 			{
-				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
-				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-				// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
-				// it goes out of range while slinging it around.
-
-				float drag;
-				crosshair_trace_plusvisibletriggers(self);
-				drag = FALSE;
-				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
-				{
-					switch(trace_ent.grab)
-					{
-						case 0: // can't grab
-							break;
-						case 1: // owner can grab
-							if(trace_ent.owner == self || trace_ent.realowner == self)
-								drag = TRUE;
-							break;
-						case 2: // owner and team mates can grab
-							if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
-								drag = TRUE;
-							break;
-						case 3: // anyone can grab
-							drag = TRUE;
-							break;
-						default:
-							break;
-					}
-				}
-				Drag(trace_ent, drag, FALSE); // execute dragging
+				Drag(FALSE, FALSE); // execute dragging
 			}
 			break;
 	}
@@ -795,7 +766,7 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e, float pick, float ischeat)
+float Drag(float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
 
@@ -840,9 +811,42 @@ float Drag(entity e, float pick, float ischeat)
 			else
 			{
 				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG && pick)
+					if(self.BUTTON_DRAG)
 					{
-						if(e)
+						crosshair_trace_plusvisibletriggers(self);
+						entity e = trace_ent;
+						float pick = force_allow_pick;
+						if (e && !pick)
+						{
+							// pick is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+							// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+							// it goes out of range while slinging it around.
+
+							if(vlen(self.origin - e.origin) <= autocvar_g_grab_range)
+							{
+								switch(e.grab)
+								{
+									case 0: // can't grab
+										break;
+									case 1: // owner can grab
+										if(e.owner == self || e.realowner == self)
+											pick = TRUE;
+										break;
+									case 2: // owner and team mates can grab
+										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
+											pick = TRUE;
+										break;
+									case 3: // anyone can grab
+										pick = TRUE;
+										break;
+									default:
+										break;
+								}
+							}
+						}
+						// Find e and pick
+						if(e && pick)
 							if(Drag_IsDraggable(e))
 							{
 								if(ischeat)
@@ -880,7 +884,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	draggee.draggravity = draggee.gravity;
 	draggee.movetype = MOVETYPE_WALK;
 	draggee.gravity = 0.00001;
-	draggee.flags &~= FL_ONGROUND;
+	draggee.flags &= ~FL_ONGROUND;
 	draggee.draggedby = dragger;
 
 	dragger.dragentity = draggee;
@@ -985,7 +989,7 @@ void Drag_Update(entity dragger)
 	entity draggee;
 
 	draggee = dragger.dragentity;
-	draggee.flags &~= FL_ONGROUND;
+	draggee.flags &= ~FL_ONGROUND;
 
 	curorigin = gettaginfo(draggee, 0);
 	curorigin = curorigin + v_forward * dragger.draglocalvector_x + v_right * dragger.draglocalvector_y + v_up * dragger.draglocalvector_z;

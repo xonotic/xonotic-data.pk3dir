@@ -93,7 +93,7 @@ string forceplayermodels_goodmodel;
 float forceplayermodels_goodmodelindex;
 
 .vector glowmod;
-.vector old_glowmod; 
+.vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(void)
 {
@@ -121,7 +121,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
 	// FORCEMODEL
 	// which one is ALWAYS good?
-	if not(forceplayermodels_goodmodel)
+	if (!forceplayermodels_goodmodel)
 	{
 		entity e;
 		e = spawn();
@@ -180,7 +180,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	float isfriend;
 	float cm;
 	cm = self.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -283,7 +283,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 			// Fade out to black now...
 			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
 			self.colormap = 0;
-			
+
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
 			self.glowmod_x = max(self.glowmod_x, 0.0001);
 			self.glowmod_y = max(self.glowmod_y, 0.0001);
@@ -452,22 +452,22 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-float EF_BRIGHTFIELD	= 1;
-float EF_BRIGHTLIGHT 	= 4;
-float EF_DIMLIGHT 	= 8;
-float EF_DOUBLESIDED = 32768;
-float EF_NOSELFSHADOW = 65536;
-float EF_DYNAMICMODELLIGHT = 131072;
-float EF_RESTARTANIM_BIT = 1048576;
-float EF_TELEPORT_BIT = 2097152;
-float MF_ROCKET  =   1; // leave a trail
-float MF_GRENADE =   2; // leave a trail
-float MF_GIB     =   4; // leave a trail
-float MF_ROTATE  =   8; // rotate (bonus items)
-float MF_TRACER  =  16; // green split trail
-float MF_ZOMGIB  =  32; // small blood trail
-float MF_TRACER2 =  64; // orange split trail
-float MF_TRACER3 = 128; // purple trail
+const float EF_BRIGHTFIELD	= 1;
+const float EF_BRIGHTLIGHT 	= 4;
+const float EF_DIMLIGHT 	= 8;
+const float EF_DOUBLESIDED = 32768;
+const float EF_NOSELFSHADOW = 65536;
+const float EF_DYNAMICMODELLIGHT = 131072;
+const float EF_RESTARTANIM_BIT = 1048576;
+const float EF_TELEPORT_BIT = 2097152;
+const float MF_ROCKET  =   1; // leave a trail
+const float MF_GRENADE =   2; // leave a trail
+const float MF_GIB     =   4; // leave a trail
+const float MF_ROTATE  =   8; // rotate (bonus items)
+const float MF_TRACER  =  16; // green split trail
+const float MF_ZOMGIB  =  32; // small blood trail
+const float MF_TRACER2 =  64; // orange split trail
+const float MF_TRACER3 = 128; // purple trail
 .float csqcmodel_effects;
 .float csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)
@@ -488,12 +488,12 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
+	eff &= ~CSQCMODEL_EF_RESPAWNGHOST;
 
-	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
+	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
-	                
+
 	if(eff & EF_BRIGHTFIELD)
 		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
 	// ignoring EF_MUZZLEFLASH
@@ -610,7 +610,22 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
+		{
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
 			CSQCPlayer_FallbackFrame_Apply();
+			if(doblend)
+			{
+				skeleton_from_frames(self, self.csqcmodel_isdead);
+			}
+			else
+			{
+				free_skeleton_from_frames(self);
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
+				self.lerpfrac4 = 0;
+			}
+		}
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!

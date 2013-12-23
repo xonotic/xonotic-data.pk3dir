@@ -28,37 +28,37 @@ var string autocvr_cl_simpleitems_postfix = "_simple";
 .float  gravity;
 .vector colormod;
 void ItemDraw()
-{    
+{
     if(self.gravity)
-    {        
+    {
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
-        if(self.move_flags & FL_ONGROUND) 
+        if(self.move_flags & FL_ONGROUND)
         { // For some reason move_avelocity gets set to '0 0 0' here ...
             self.oldorigin = self.origin;
             self.gravity = 0;
 
-            if(autocvar_cl_animate_items)   
-            { // ... so reset it if animations are requested. 
+            if(autocvar_cl_animate_items)
+            { // ... so reset it if animations are requested.
                 if(self.ItemStatus & ITS_ANIMATE1)
                     self.move_avelocity = '0 180 0';
-                
+
                 if(self.ItemStatus & ITS_ANIMATE2)
                     self.move_avelocity = '0 -90 0';
             }
         }
     }
     else if (autocvar_cl_animate_items)
-    {        
+    {
         if(self.ItemStatus & ITS_ANIMATE1)
         {
             self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
-        }    
-        
+            setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));
+        }
+
         if(self.ItemStatus & ITS_ANIMATE2)
         {
             self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
+            setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
 }
@@ -66,9 +66,9 @@ void ItemDraw()
 void ItemDrawSimple()
 {
     if(self.gravity)
-    {        
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);    
-        
+    {
+        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+
         if(self.move_flags & FL_ONGROUND)
             self.gravity = 0;
     }
@@ -86,19 +86,19 @@ void ItemRead(float _IsNew)
         setorigin(self, self.origin);
         self.oldorigin = self.origin;
     }
-    
-    if(sf & ISF_ANGLES) 
+
+    if(sf & ISF_ANGLES)
     {
         self.angles_x = ReadCoord();
         self.angles_y = ReadCoord();
-        self.angles_z = ReadCoord();        
+        self.angles_z = ReadCoord();
         self.move_angles = self.angles;
     }
-    
+
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
-        self.ItemStatus = ReadByte();    
-        
+        self.ItemStatus = ReadByte();
+
         if(self.ItemStatus & ITS_AVAILABLE)
         {
             self.alpha = 1;
@@ -113,47 +113,47 @@ void ItemRead(float _IsNew)
             }
             else
                 self.alpha = -1;
-        }    
-        
+        }
+
         if(autocvar_cl_fullbright_items)
             if(self.ItemStatus & ITS_ALLOWFB)
                 self.effects |= EF_FULLBRIGHT;
-            
+
         if(self.ItemStatus & ITS_STAYWEP)
         {
             self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
             self.alpha = autocvar_cl_weapon_stay_alpha;
-            
+
         }
-        
+
         if(self.ItemStatus & ITS_POWERUP)
         {
             if(self.ItemStatus & ITS_AVAILABLE)
                 self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 self.effects &~= (EF_ADDITIVE | EF_FULLBRIGHT);
+                 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
-    
+
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
         self.movetype  = MOVETYPE_NOCLIP;
         self.draw       = ItemDraw;
-        
+
         if(self.mdl)
             strunzone(self.mdl);
-        
+
         self.mdl = "";
         string _fn = ReadString();
-        
+
         if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             self.draw = ItemDrawSimple;
-                    
-            
-            
+
+
+
             if(fexists(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix)))
@@ -168,21 +168,21 @@ void ItemRead(float _IsNew)
                 dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
             }
         }
-        
-        if(self.draw != ItemDrawSimple)        
-            self.mdl = strzone(_fn);                
-        
-        
+
+        if(self.draw != ItemDrawSimple)
+            self.mdl = strzone(_fn);
+
+
         if(self.mdl == "")
             dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
-        
+
         precache_model(self.mdl);
         setmodel(self, self.mdl);
     }
-    
+
     if(sf & ISF_COLORMAP)
         self.colormap = ReadShort();
-    
+
     if(sf & ISF_DROP)
     {
         self.gravity = 1;
@@ -193,7 +193,7 @@ void ItemRead(float _IsNew)
         self.move_velocity_z = ReadCoord();
         self.velocity = self.move_velocity;
         self.move_origin = self.oldorigin;
-        
+
         if(!self.move_time)
         {
             self.move_time = time;
@@ -202,12 +202,12 @@ void ItemRead(float _IsNew)
         else
             self.move_time = max(self.move_time, time);
     }
-        
+
     if(autocvar_cl_animate_items)
-    {        
+    {
         if(self.ItemStatus & ITS_ANIMATE1)
             self.move_avelocity = '0 180 0';
-                
+
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
@@ -222,9 +222,9 @@ float ItemSend(entity to, float sf)
     if(self.gravity)
         sf |= ISF_DROP;
     else
-        sf &~= ISF_DROP;
-	
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);	
+        sf &= ~ISF_DROP;
+
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);
@@ -234,7 +234,7 @@ float ItemSend(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.origin_y);
         WriteCoord(MSG_ENTITY, self.origin_z);
     }
-    
+
     if(sf & ISF_ANGLES)
     {
         WriteCoord(MSG_ENTITY, self.angles_x);
@@ -247,14 +247,14 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_MODEL)
     {
-        
+
         if(self.mdl == "")
             dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
-        
+
         WriteString(MSG_ENTITY, self.mdl);
     }
-        
-        
+
+
     if(sf & ISF_COLORMAP)
         WriteShort(MSG_ENTITY, self.colormap);
 
@@ -264,10 +264,14 @@ float ItemSend(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.velocity_y);
         WriteCoord(MSG_ENTITY, self.velocity_z);
     }
-        
+
     return TRUE;
 }
 
+void ItemUpdate(entity item)
+{
+	item.SendFlags |= ISF_LOCATION;
+}
 
 float have_pickup_item(void)
 {
@@ -277,10 +281,6 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_powerups == 0)
 			return FALSE;
-		if(g_ca)
-			return FALSE;
-		if(g_arena)
-			return FALSE;
 	}
 	else
 	{
@@ -288,10 +288,8 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_pickup_items == 0)
 			return FALSE;
-		if(g_ca)
-			return FALSE;
 		if(g_weaponarena)
-			if(!WEPSET_EMPTY_E(self) || (self.items & IT_AMMO))
+			if(self.weapons || (self.items & IT_AMMO))
 				return FALSE;
 	}
 	return TRUE;
@@ -353,7 +351,7 @@ float Item_Customize()
 {
 	if(self.spawnshieldtime)
 		return TRUE;
-	if(!WEPSET_CONTAINS_ALL_EE(other, self))
+	if(self.weapons & ~other.weapons)
 	{
 		self.colormod = '0 0 0';
 		self.glowmod = self.colormod;
@@ -376,9 +374,9 @@ float Item_Customize()
 */
 
 void Item_Show (entity e, float mode)
-{    
-	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
-	e.ItemStatus &~= ITS_STAYWEP;
+{
+	e.effects &= ~(EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST);
+	e.ItemStatus &= ~ITS_STAYWEP;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
@@ -393,7 +391,7 @@ void Item_Show (entity e, float mode)
 		e.model = string_null;
 		e.solid = SOLID_NOT;
 		e.spawnshieldtime = 1;
-		e.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
@@ -411,19 +409,19 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.spawnshieldtime = 1;
-		e.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
-	
+
 	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
-	    e.ItemStatus |= ITS_POWERUP;    		
-	
+	    e.ItemStatus |= ITS_POWERUP;
+
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
-		
-    
+
+
     if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
-	
+
 	if (autocvar_sv_simple_items)
         e.ItemStatus |= ITS_ALLOWSI;
 
@@ -437,11 +435,11 @@ void Item_Respawn (void)
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == IT_STRENGTH)
-		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else if(self.items == IT_INVINCIBLE)
-		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -498,7 +496,7 @@ void Item_RespawnCountdown (void)
 				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
 			}
 		}
-		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -509,7 +507,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -539,10 +537,10 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
-float ITEM_MODE_NONE = 0;
-float ITEM_MODE_HEALTH = 1;
-float ITEM_MODE_ARMOR = 2;
-float ITEM_MODE_FUEL = 3;
+const float ITEM_MODE_NONE = 0;
+const float ITEM_MODE_HEALTH = 1;
+const float ITEM_MODE_ARMOR = 2;
+const float ITEM_MODE_FUEL = 3;
 float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
 {
 	if (!item.ammofield)
@@ -603,7 +601,7 @@ float Item_GiveTo(entity item, entity player)
 	if (player.switchweapon == w_getbestweapon(player))
 		_switchweapon = TRUE;
 
-	if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
+	if (!(player.weapons & WepSet_FromWeapon(player.switchweapon)))
 		_switchweapon = TRUE;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -616,15 +614,15 @@ float Item_GiveTo(entity item, entity player)
 
 	if (item.flags & FL_WEAPON)
 	{
-		WEPSET_DECLARE_A(it);
-		WEPSET_COPY_AE(it, item);
-		WEPSET_ANDNOT_AE(it, player);
+		WepSet it;
+		it = item.weapons;
+		it &= ~player.weapons;
 
-		if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && item.pickup_anyway))
+		if (it || (item.spawnshieldtime && item.pickup_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(WEPSET_CONTAINS_AW(it, i))
+			if(it & WepSet_FromWeapon(i))
 				W_GiveWeapon(player, i);
 		}
 	}
@@ -653,7 +651,7 @@ float Item_GiveTo(entity item, entity player)
 	}
 
 :skip
-	
+
 	// always eat teamed entities
 	if(item.team)
 		pickedup = TRUE;
@@ -671,7 +669,7 @@ float Item_GiveTo(entity item, entity player)
 void Item_Touch (void)
 {
 	entity e, head;
-	
+
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if(self.classname == "droppedweapon")
 	{
@@ -682,7 +680,7 @@ void Item_Touch (void)
 		}
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (other.deadflag)
 		return;
@@ -721,11 +719,11 @@ void Item_Touch (void)
 	other.last_pickup = time;
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
-	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
-	else if not(self.spawnshieldtime)
+	else if (!self.spawnshieldtime)
 		return;
 	else
 	{
@@ -762,7 +760,7 @@ void Item_Reset()
 		if(self.waypointsprite_attached)
 			WaypointSprite_Kill(self.waypointsprite_attached);
 
-		if((self.flags & FL_POWERUP) | WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+		if((self.flags & FL_POWERUP) || (self.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
 			Item_ScheduleInitialRespawn(self);
 	}
 }
@@ -790,7 +788,7 @@ void Item_FindTeam()
 				Item_Show(head, -1);
 				head.state = 1; // state 1 = initially hidden item
 			}
-			head.effects &~= EF_NODRAW;
+			head.effects &= ~EF_NODRAW;
 		}
 
 		Item_Reset();
@@ -814,7 +812,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	float c, j, position;
 
 	// See if I have it already
-	if(!WEPSET_CONTAINS_ALL_EE(player, item))
+	if(item.weapons & ~player.weapons)
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -871,7 +869,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if not(WEPSET_CONTAINS_EW(player, i))
+		if (!(player.weapons & WepSet_FromWeapon(i)))
 			continue;
 
 		if(wi.items & IT_SHELLS)
@@ -932,16 +930,16 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	if(self.model == "")
 		self.model = itemmodel;
-	
+
 	if(self.model == "")
     {
         error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
         return;
     }
-        
+
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
-	
+
 	if(!self.respawntime) // both need to be set
 	{
 		self.respawntime = defaultrespawntime;
@@ -952,8 +950,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.weapon = weaponid;
 
 	if(weaponid)
-		WEPSET_COPY_EW(self, weaponid);
-	
+		self.weapons = WepSet_FromWeapon(weaponid);
+
 	self.flags = FL_ITEM | itemflags;
 
 	if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
@@ -980,7 +978,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
 		if(self.items == 0)
-		if(WEPSET_CONTAINS_ALL_AE(WEPBIT_SUPERWEAPONS, self)) // only superweapons
+		if(!(self.weapons & ~WEPSET_SUPERWEAPONS)) // only superweapons
 		if(self.ammo_nails == 0)
 		if(self.ammo_cells == 0)
 		if(self.ammo_rockets == 0)
@@ -1011,7 +1009,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			remove (self);
 			return;
 		}
-		
+
 		if(self.angles != '0 0 0')
             self.SendFlags |= ISF_ANGLES;
 
@@ -1068,7 +1066,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		WEPSET_OR_AW(weaponsInMap, weaponid);
+		weaponsInMap |= WepSet_FromWeapon(weaponid);
 
 		precache_model (self.model);
 		precache_sound (self.item_pickupsound);
@@ -1092,8 +1090,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.netname = itemname;
 	self.touch = Item_Touch;
 	setmodel(self, "null"); // precision set below
-	//self.effects |= EF_LOWPRECISION; 
-	
+	//self.effects |= EF_LOWPRECISION;
+
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
     {
         self.pos1 = '-16 -16 0';
@@ -1105,20 +1103,20 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
         self.pos2 = '16 16 32';
     }
     setsize (self, self.pos1, self.pos2);
-    
-    if(itemflags & FL_POWERUP) 
+
+    if(itemflags & FL_POWERUP)
         self.ItemStatus |= ITS_ANIMATE1;
-	
+
 	if(self.armorvalue || self.health)
         self.ItemStatus |= ITS_ANIMATE2;
-	
+
 	if(itemflags & FL_WEAPON)
 	{
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
             self.colormap = 1024; // color shirt=0 pants=0 grey
         else
             self.gravity = 1;
-            
+
 		self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
 	}
@@ -1128,13 +1126,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	{
 		if(!self.cnt)
 			self.cnt = 1; // item probability weight
-			
+
 		self.effects |= EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
 		Item_Reset();
-        
+
     Net_LinkEntity(self, FALSE, 0, ItemSend);
 
 	// call this hook after everything else has been done
@@ -1238,7 +1236,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	if(!self.respawntime)
 	{
-		if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		if(e.weapons & WEPSET_SUPERWEAPONS)
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -1250,7 +1248,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
-	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if(e.weapons & WEPSET_SUPERWEAPONS)
 		if(!self.superweapons_finished)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
@@ -1274,7 +1272,7 @@ void weapon_defaultspawnfunc(float wpn)
 	f = FL_WEAPON;
 
 	// no weapon-stay on superweapons
-	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+	if(e.weapons & WEPSET_SUPERWEAPONS)
 		f |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons
@@ -1488,7 +1486,7 @@ void target_items_use (void)
 		return;
 	}
 
-	if not(IS_PLAYER(activator))
+	if (!IS_PLAYER(activator))
 		return;
 	if(activator.deadflag != DEAD_NO)
 		return;
@@ -1547,7 +1545,7 @@ void spawnfunc_target_items (void)
 					e = get_weaponinfo(j);
 					if(argv(i) == e.netname)
 					{
-						WEPSET_OR_EW(self, j);
+						self.weapons |= WepSet_FromWeapon(j);
 						if(self.spawnflags == 0 || self.spawnflags == 2)
 							weapon_action(e.weapon, WR_PRECACHE);
 						break;
@@ -1607,7 +1605,7 @@ void spawnfunc_target_items (void)
 		{
 			e = get_weaponinfo(j);
 			if(e.weapon)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, WEPSET_CONTAINS_EW(self, j), e.netname);
+				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & WepSet_FromWeapon(j)), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1670,31 +1668,31 @@ void spawnfunc_item_jetpack(void)
 
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
-	float v0, v1;
-	v0 = WEPSET_CONTAINS_EW(e, wpn);
+	WepSet v0, v1;
+	v0 = (e.weapons & WepSet_FromWeapon(wpn));
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				WEPSET_OR_EW(e, wpn);
+				e.weapons |= WepSet_FromWeapon(wpn);
 			else
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				WEPSET_OR_EW(e, wpn);
+				e.weapons |= WepSet_FromWeapon(wpn);
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				WEPSET_ANDNOT_EW(e, wpn);
+				e.weapons &= ~WepSet_FromWeapon(wpn);
 			break;
 	}
-	v1 = WEPSET_CONTAINS_EW(e, wpn);
+	v1 = (e.weapons & WepSet_FromWeapon(wpn));
 	return (v0 != v1);
 }
 
@@ -1708,7 +1706,7 @@ float GiveBit(entity e, .float fld, float bit, float op, float val)
 			if(val > 0)
 				e.fld |= bit;
 			else
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
@@ -1717,11 +1715,11 @@ float GiveBit(entity e, .float fld, float bit, float op, float val)
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.fld &~= bit;
+				e.fld &= ~bit;
 			break;
 	}
 	v1 = (e.fld & bit);
@@ -1761,12 +1759,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1778,9 +1776,9 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.regenfield = max(e.regenfield, time + regentime);
 }
 
-#define PREGIVE_WEAPONS(e) WEPSET_DECLARE_A(save_weapons); WEPSET_COPY_AE(save_weapons, e)
+#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = e.weapons
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), WEPSET_CONTAINS_AW(save_weapons, b), WEPSET_CONTAINS_EW(e, b), 0, snd_incr, snd_decr)
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(e.weapons & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
@@ -1805,7 +1803,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	e.strength_finished = max(0, e.strength_finished - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
 	e.superweapons_finished = max(0, e.superweapons_finished - time);
-	
+
 	PREGIVE(e, items);
 	PREGIVE_WEAPONS(e);
 	PREGIVE(e, strength_finished);
@@ -1861,7 +1859,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				{
 					wi = get_weaponinfo(j);
 					if(wi.weapon)
-						if not(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+						if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 							got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
@@ -1945,8 +1943,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 		if(wi.weapon)
 		{
 			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
-			if not(WEPSET_CONTAINS_AW(save_weapons, j))
-				if(WEPSET_CONTAINS_EW(e, j))
+			if (!(save_weapons & WepSet_FromWeapon(j)))
+				if(e.weapons & WepSet_FromWeapon(j))
 					weapon_action(wi.weapon, WR_PRECACHE);
 		}
 	}
@@ -1961,7 +1959,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
 
 	if(e.superweapons_finished <= 0)
-		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+		if(self.weapons & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)
@@ -1977,7 +1975,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if not(WEPSET_CONTAINS_EW(e, e.switchweapon))
+	if (!(e.weapons & WepSet_FromWeapon(e.switchweapon)))
 		_switchweapon = TRUE;
 	if(_switchweapon)
 		W_SwitchWeapon_Force(e, w_getbestweapon(e));

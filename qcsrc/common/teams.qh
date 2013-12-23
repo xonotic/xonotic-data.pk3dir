@@ -36,11 +36,6 @@ const string STATIC_NAME_TEAM_2 = "Blue";
 const string STATIC_NAME_TEAM_3 = "Yellow";
 const string STATIC_NAME_TEAM_4 = "Pink";
 
-#define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
-#define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
-#define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
-#define APP_TEAM_ENT_4(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : ((ent.team == NUM_TEAM_2) ? prefix##BLUE : ((ent.team == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
-
 #ifdef CSQC
 float teamplay;
 float myteam;
@@ -55,7 +50,7 @@ string Team_ColorCode(float teamid)
     	case NUM_TEAM_3: return COL_TEAM_3;
     	case NUM_TEAM_4: return COL_TEAM_4;
 	}
-	
+
 	return "^7";
 }
 
@@ -81,7 +76,7 @@ string Team_ColorName(float teamid)
     	case NUM_TEAM_3: return NAME_TEAM_3;
     	case NUM_TEAM_4: return NAME_TEAM_4;
 	}
-	
+
     return NAME_NEUTRAL;
 }
 
@@ -95,7 +90,7 @@ string Static_Team_ColorName(float teamid)
     	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
     	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
-	
+
     return NAME_NEUTRAL;
 }
 
@@ -109,7 +104,7 @@ float Team_ColorToTeam(string team_color)
     	case "pink": return NUM_TEAM_4;
     	case "auto": return 0;
 	}
-	
+
 	return -1;
 }
 
@@ -122,7 +117,7 @@ float Team_NumberToTeam(float number)
 		case 3: return NUM_TEAM_3;
 		case 4: return NUM_TEAM_4;
 	}
-	
+
 	return -1;
 }
 
@@ -135,7 +130,7 @@ float Team_TeamToNumber(float teamid)
 		case NUM_TEAM_3: return 3;
 		case NUM_TEAM_4: return 4;
 	}
-	
+
 	return -1;
 }
 
@@ -160,3 +155,13 @@ float Team_TeamToNumber(float teamid)
 
 // replace these flags in a string with the strings provided
 #define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
+
+// safe team comparisons
+#define SAME_TEAM(a,b) (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0))
+#define DIFF_TEAM(a,b) (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0))
+
+// used for notification system multi-team identifiers
+#define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
+#define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_ENT_4(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : ((ent.team == NUM_TEAM_2) ? prefix##BLUE : ((ent.team == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))

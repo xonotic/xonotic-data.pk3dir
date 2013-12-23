@@ -34,11 +34,11 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 {
 	if (self.health <= 0)
 		return;
-		
+
 	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : TRUE)
-		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY) 
+		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY)
 		&& (self.projectiledeathtype & HITTYPE_SECONDARY));
-	
+
 	if(is_linkexplode)
 		is_linkexplode = (is_linkexplode && autocvar_g_balance_hagar_secondary_load_linkexplode);
 	else
@@ -49,7 +49,7 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.think);
 }
@@ -90,13 +90,13 @@ void W_Hagar_Attack (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = autocvar_g_balance_hagar_primary_damage;
-	
+
 	missile.takedamage = DAMAGE_YES;
 	missile.health = autocvar_g_balance_hagar_primary_health;
 	missile.damageforcescale = autocvar_g_balance_hagar_primary_damageforcescale;
 	missile.event_damage = W_Hagar_Damage;
 	missile.damagedbycontents = TRUE;
-	
+
 	missile.touch = W_Hagar_Touch;
 	missile.use = W_Hagar_Explode;
 	missile.think = adaptor_think2use_hittype_splash;
@@ -111,7 +111,7 @@ void W_Hagar_Attack (void)
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
 
@@ -133,7 +133,7 @@ void W_Hagar_Attack2 (void)
 	missile.classname = "missile";
 	missile.bot_dodge = TRUE;
 	missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
-	
+
 	missile.takedamage = DAMAGE_YES;
 	missile.health = autocvar_g_balance_hagar_secondary_health;
 	missile.damageforcescale = autocvar_g_balance_hagar_secondary_damageforcescale;
@@ -155,7 +155,7 @@ void W_Hagar_Attack2 (void)
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
 
@@ -193,7 +193,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		missile.classname = "missile";
 		missile.bot_dodge = TRUE;
 		missile.bot_dodgerating = autocvar_g_balance_hagar_secondary_damage;
-		
+
 		missile.takedamage = DAMAGE_YES;
 		missile.health = autocvar_g_balance_hagar_secondary_health;
 		missile.damageforcescale = autocvar_g_balance_hagar_secondary_damageforcescale;
@@ -209,13 +209,13 @@ void W_Hagar_Attack2_Load_Release (void)
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
-		missile.missile_flags = MIF_SPLASH; 
-		
+		missile.missile_flags = MIF_SPLASH;
+
 		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
-		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
+		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1));
 		spread_pershot = (1 - (spread_pershot * autocvar_g_balance_hagar_secondary_load_spread_bias));
 		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot * g_weaponspreadfactor);
-		
+
 		// pattern spread calculation
 		s = '0 0 0';
 		if (counter == 0)
@@ -227,7 +227,7 @@ void W_Hagar_Attack2_Load_Release (void)
 			s_z = v_forward_y;
 		}
 		s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
-		
+
 		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, autocvar_g_balance_hagar_secondary_speed, 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles (missile.velocity);
@@ -246,7 +246,7 @@ void W_Hagar_Attack2_Load_Release (void)
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
-	
+
 	if(time < game_starttime)
 		return;
 
@@ -269,7 +269,7 @@ void W_Hagar_Attack2_Load (void)
 				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
@@ -288,7 +288,7 @@ void W_Hagar_Attack2_Load (void)
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
-					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
+					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTEN_NORM); // sound is too loud according to most
 
 					if (self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
 						self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_hold * W_WeaponRateFactor();
@@ -299,7 +299,7 @@ void W_Hagar_Attack2_Load (void)
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 				self.hagar_loadbeep = TRUE;
 			}
 		}
@@ -318,11 +318,11 @@ void W_Hagar_Attack2_Load (void)
 			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
 				self.hagar_warning = TRUE;
 			}
 		}
-		
+
 		// release if player let go of button or if they've held it in too long
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && autocvar_g_balance_hagar_secondary_load_hold >= 0))
 		{
@@ -337,7 +337,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
-	if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+	if (!(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)))
 	{
 		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
@@ -442,7 +442,7 @@ float w_hagar(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		if not(self.hagar_load) // require releasing loaded rockets first
+		if (!self.hagar_load) // require releasing loaded rockets first
 			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
@@ -470,11 +470,11 @@ float w_hagar(float req)
 		if(!w_issilent)
 		{
 			if (w_random<0.15)
-				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTEN_NORM);
 			else if (w_random<0.7)
-				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTEN_NORM);
 			else
-				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)

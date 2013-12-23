@@ -54,9 +54,9 @@ void InitGameplayMode()
 
 	MapInfo_LoadMapSettings(mapname);
 	teamplay = 0;
-	serverflags &~= SERVERFLAG_TEAMPLAY;
+	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
-	if not(cvar_value_issafe(world.fog))
+	if (!cvar_value_issafe(world.fog))
 	{
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
@@ -113,13 +113,6 @@ void InitGameplayMode()
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
 		MUTATOR_ADD(gamemode_lms);
-	}
-
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)
@@ -192,7 +185,7 @@ void InitGameplayMode()
         have_team_spawns = -1; // request team spawns
 	    MUTATOR_ADD(gamemode_nexball);
 	}
-        
+
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
@@ -286,14 +279,8 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
-	if(g_midair)
-		modifications = strcat(modifications, ", Midair");
-	if(g_pinata)
-		modifications = strcat(modifications, ", Piñata");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_bloodloss > 0)
-		modifications = strcat(modifications, ", Blood loss");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	if(autocvar_g_powerups == 0)
@@ -606,7 +593,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 			cb -= cbb * 0.999;
 		}
 	}
-	
+
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
@@ -677,7 +664,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		GetTeamCounts(world);
 
 	RandomSelection_Init();
-	
+
 	t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;

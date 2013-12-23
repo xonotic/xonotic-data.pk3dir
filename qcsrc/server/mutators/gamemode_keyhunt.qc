@@ -4,21 +4,21 @@
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
-vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
-vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
-vector KH_PLAYER_ATTACHMENT = '0 0 0';
-vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
-string KH_PLAYER_ATTACHMENT_BONE = "";
+const vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
+const vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
+const vector KH_PLAYER_ATTACHMENT = '0 0 0';
+const vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
+const string KH_PLAYER_ATTACHMENT_BONE = "";
 #else
-float KH_KEY_ZSHIFT = 22;
-float KH_KEY_XYDIST = 24;
-float KH_KEY_XYSPEED = 45;
+const float KH_KEY_ZSHIFT = 22;
+const float KH_KEY_XYDIST = 24;
+const float KH_KEY_XYSPEED = 45;
 #endif
-float KH_KEY_WP_ZSHIFT = 20;
+const float KH_KEY_WP_ZSHIFT = 20;
 
-vector KH_KEY_MIN = '-10 -10 -46';
-vector KH_KEY_MAX = '10 10 3';
-float KH_KEY_BRIGHTNESS = 2;
+const vector KH_KEY_MIN = '-10 -10 -46';
+const vector KH_KEY_MAX = '10 10 3';
+const float KH_KEY_BRIGHTNESS = 2;
 
 float kh_no_radar_circles;
 
@@ -397,7 +397,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTEN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -426,7 +426,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		// maybe start a shorter countdown?
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if(other.deadflag != DEAD_NO)
 		return;
@@ -627,9 +627,9 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			--j;
 		}
 	}
-	
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
-	
+
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
 
@@ -662,7 +662,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTEN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -700,7 +700,7 @@ void key_reset()
 	kh_Key_Remove(self);
 }
 
-string STR_ITEM_KH_KEY = "item_kh_key";
+const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
 	entity key;
@@ -790,7 +790,7 @@ void kh_Key_DropOne(entity key)
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
-	
+
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
 	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
@@ -798,7 +798,7 @@ void kh_Key_DropOne(entity key)
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -824,7 +824,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -840,8 +840,8 @@ float kh_CheckPlayers(float num)
 				if(!tmp_player.BUTTON_CHAT)
 					if(tmp_player.team == t_team)
 						++players;
-		
-		if not(players) { return t_team; }
+
+		if (!players) { return t_team; }
 	}
 	return 0;
 }
@@ -855,7 +855,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if not(p1 || p2 || p3 || p4)
+	if (!(p1 || p2 || p3 || p4))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -893,7 +893,7 @@ void kh_StartRound()  // runs at the start of each round
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 

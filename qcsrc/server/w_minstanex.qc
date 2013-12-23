@@ -74,7 +74,7 @@ void W_MinstaNex_Attack (void)
 				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
 			break;
 	}
-	
+
 	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
 
@@ -117,7 +117,7 @@ float w_minstanex(float req)
 			{
 				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
 				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
-				
+
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
@@ -128,7 +128,7 @@ float w_minstanex(float req)
 				self.weapon = WEP_LASER;
 				W_Laser_Attack(2);
 				self.weapon = w;
-				
+
 				// now do normal refire
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
 			}
@@ -201,7 +201,7 @@ float w_minstanex(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

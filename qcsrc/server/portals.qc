@@ -89,7 +89,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	vector from, to, safe, step, transform, ang, newvel;
 	float planeshift, s, t;
 
-	if not(teleporter.enemy)
+	if (!teleporter.enemy)
 	{
 		backtrace("Portal_TeleportPlayer called without other portal being set. Stop.");
 		return 0;
@@ -160,7 +160,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	player = self;
 	self = oldself;
 
-	if not(teleporter.enemy)
+	if (!teleporter.enemy)
 	{
 		backtrace("Portal_TeleportPlayer ended up without other portal being set BEFORE TeleportPlayer. Stop.");
 		return 0;
@@ -175,7 +175,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
 	}
 
-	if not(teleporter.enemy)
+	if (!teleporter.enemy)
 	{
 		backtrace("Portal_TeleportPlayer ended up without other portal being set AFTER TeleportPlayer. Stop.");
 		return 0;
@@ -398,14 +398,14 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTEN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }

@@ -167,20 +167,20 @@ void PutObserverInServer (void)
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
-	
+
 	if(self.alivetime)
 	{
-		if(!inWarmupStage)
+		if(!warmup_stage)
 			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);	    
+		vehicles_exit(VHEF_RELESE);
 
 	WaypointSprite_PlayerDead();
 
-	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
+	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)
@@ -198,7 +198,7 @@ void PutObserverInServer (void)
 	accuracy_resend(self);
 
 	self.spectatortime = time;
-	
+
 	self.classname = "observer";
 	self.iscreature = FALSE;
 	self.teleportable = TELEPORT_SIMPLE;
@@ -241,7 +241,7 @@ void PutObserverInServer (void)
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
-	WEPSET_CLEAR_E(self);
+	self.weapons = '0 0 0';
 	self.model = "";
 	FixPlayermodel();
 	setmodel(self, "null");
@@ -297,7 +297,13 @@ void FixPlayermodel()
 
 		n = tokenize_console(defaultmodel);
 		if(n > 0)
+		{
 			defaultmodel = argv(floor(n * self.model_randomizer));
+			// However, do NOT randomize if the player-selected model is in the list.
+			for (i = 0; i < n; ++i)
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
+					defaultmodel = argv(i);
+		}
 
 		i = strstrofs(defaultmodel, ":", 0);
 		if(i >= 0)
@@ -424,7 +430,7 @@ void PutClientInServer (void)
 			self.nex_charge = autocvar_g_balance_nex_charge_start;
 		}
 
-		if(inWarmupStage)
+		if(warmup_stage)
 		{
 			self.ammo_shells = warmup_start_ammo_shells;
 			self.ammo_nails = warmup_start_ammo_nails;
@@ -433,7 +439,7 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			WEPSET_COPY_EA(self, warmup_start_weapons);
+			self.weapons = WARMUP_START_WEAPONS;
 		}
 		else
 		{
@@ -444,10 +450,10 @@ void PutClientInServer (void)
 			self.ammo_fuel = start_ammo_fuel;
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
-			WEPSET_COPY_EA(self, start_weapons);
+			self.weapons = start_weapons;
 		}
 
-		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
+		if(self.weapons & WEPSET_SUPERWEAPONS)
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
@@ -455,10 +461,10 @@ void PutClientInServer (void)
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				WEPSET_ANDNOT_EW(self, WEP_LASER);
+				self.weapons &= ~WEPSET_LASER;
 			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_laser)
-				WEPSET_OR_EW(self, WEP_LASER);
+				self.weapons |= WEPSET_LASER;
 		}
 
 		self.items = start_items;
@@ -552,7 +558,7 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-	 	
+
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
@@ -593,7 +599,7 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!inWarmupStage)
+		if(!warmup_stage)
 			if(!self.alivetime)
 				self.alivetime = time;
 
@@ -760,7 +766,7 @@ void ClientKill_Now()
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
-            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
 	    }
 	}
 
@@ -811,7 +817,7 @@ void KillIndicator_Think()
 		if(IS_REAL_CLIENT(self.owner))
 		{
 			if(self.cnt <= 10)
-				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(self.cnt)); }
+				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(CNT_KILL, self.cnt)); }
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -928,7 +934,7 @@ void ClientKill (void)
 	if(gameover) return;
 	if(self.player_blocked) return;
 	if(self.freezetag_frozen) return;
-	
+
 	ClientKill_TeamChange(0);
 }
 
@@ -978,7 +984,7 @@ float PlayerInIDList(entity p, string idlist)
 	string s;
 
 	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
-	if not(p.crypto_idfp)
+	if (!p.crypto_idfp)
 		return 0;
 
 	// this function allows abbreviated player IDs too!
@@ -1180,7 +1186,7 @@ void ClientConnect (void)
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
+		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -1243,7 +1249,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(IS_CLIENT(self))
+	if (!IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1271,7 +1277,7 @@ void ClientDisconnect (void)
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-		
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1282,7 +1288,7 @@ void ClientDisconnect (void)
 
 	// Here, everything has been done that requires this player to be a client.
 
-	self.flags &~= FL_CLIENT;
+	self.flags &= ~FL_CLIENT;
 
 	if (self.chatbubbleentity)
 		remove (self.chatbubbleentity);
@@ -1403,7 +1409,7 @@ void play_countdown(float finished, string samp)
 	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
+				sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
 void player_powerups (void)
@@ -1414,9 +1420,9 @@ void player_powerups (void)
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
 		self.modelflags |= MF_ROCKET;
 	else
-		self.modelflags &~= MF_ROCKET;
+		self.modelflags &= ~MF_ROCKET;
 
-	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	self.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if((self.alpha < 0 || self.deadflag) && !self.vehicle) // don't apply the flags if the player is gibbed
 		return;
@@ -1424,7 +1430,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if not(g_minstagib)
+	if (!g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -1468,7 +1474,7 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			if (!WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+			if (!(self.weapons & WEPSET_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1485,13 +1491,13 @@ void player_powerups (void)
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
-					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
+					self.weapons &= ~WEPSET_SUPERWEAPONS;
 					//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_BROKEN, self.netname);
 					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
 		}
-		else if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+		else if(self.weapons & WEPSET_SUPERWEAPONS)
 		{
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
@@ -1502,7 +1508,7 @@ void player_powerups (void)
 			else
 			{
 				self.superweapons_finished = 0;
-				WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
+				self.weapons &= ~WEPSET_SUPERWEAPONS;
 			}
 		}
 		else
@@ -1510,21 +1516,12 @@ void player_powerups (void)
 			self.superweapons_finished = 0;
 		}
 	}
-	
+
 	if(autocvar_g_nodepthtestplayers)
 		self.effects = self.effects | EF_NODEPTHTEST;
 
 	if(autocvar_g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
-
-	// midair gamemode: damage only while in the air
-	// if in midair mode, being on ground grants temporary invulnerability
-	// (this is so that multishot weapon don't clear the ground flag on the
-	// first damage in the frame, leaving the player vulnerable to the
-	// remaining hits in the same frame)
-	if (self.flags & FL_ONGROUND)
-	if (g_midair)
-		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
 
 	if (time >= game_starttime)
 	if (time < self.spawnshieldtime)
@@ -1616,8 +1613,8 @@ void player_regen (void)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * (self.items & IT_FUEL_REGEN != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
 }
 
 float zoomstate_set;
@@ -1636,52 +1633,52 @@ void GetPressedKeys(void) {
 	if (self.movement_x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;
-		self.pressedkeys &~= KEY_BACKWARD;
+		self.pressedkeys &= ~KEY_BACKWARD;
 	}
 	else if (self.movement_x < 0)
 	{	// backward key pressed
 		self.pressedkeys |= KEY_BACKWARD;
-		self.pressedkeys &~= KEY_FORWARD;
+		self.pressedkeys &= ~KEY_FORWARD;
 	}
 	else
 	{	// no x input
-		self.pressedkeys &~= KEY_FORWARD;
-		self.pressedkeys &~= KEY_BACKWARD;
+		self.pressedkeys &= ~KEY_FORWARD;
+		self.pressedkeys &= ~KEY_BACKWARD;
 	}
 
 	if (self.movement_y > 0)
 	{	// right key pressed
 		self.pressedkeys |= KEY_RIGHT;
-		self.pressedkeys &~= KEY_LEFT;
+		self.pressedkeys &= ~KEY_LEFT;
 	}
 	else if (self.movement_y < 0)
 	{	// left key pressed
 		self.pressedkeys |= KEY_LEFT;
-		self.pressedkeys &~= KEY_RIGHT;
+		self.pressedkeys &= ~KEY_RIGHT;
 	}
 	else
 	{	// no y input
-		self.pressedkeys &~= KEY_RIGHT;
-		self.pressedkeys &~= KEY_LEFT;
+		self.pressedkeys &= ~KEY_RIGHT;
+		self.pressedkeys &= ~KEY_LEFT;
 	}
 
 	if (self.BUTTON_JUMP) // get if jump and crouch keys are pressed
 		self.pressedkeys |= KEY_JUMP;
 	else
-		self.pressedkeys &~= KEY_JUMP;
+		self.pressedkeys &= ~KEY_JUMP;
 	if (self.BUTTON_CROUCH)
 		self.pressedkeys |= KEY_CROUCH;
 	else
-		self.pressedkeys &~= KEY_CROUCH;
+		self.pressedkeys &= ~KEY_CROUCH;
 
 	if (self.BUTTON_ATCK)
 		self.pressedkeys |= KEY_ATCK;
 	else
-		self.pressedkeys &~= KEY_ATCK;
+		self.pressedkeys &= ~KEY_ATCK;
 	if (self.BUTTON_ATCK2)
 		self.pressedkeys |= KEY_ATCK2;
 	else
-		self.pressedkeys &~= KEY_ATCK2;
+		self.pressedkeys &= ~KEY_ATCK2;
 }
 
 /*
@@ -1712,7 +1709,7 @@ void SpectateCopy(entity spectatee) {
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
-	WEPSET_COPY_EE(self, spectatee);
+	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
@@ -1733,7 +1730,7 @@ void SpectateCopy(entity spectatee) {
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-    
+
     anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
@@ -1749,27 +1746,27 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_reload2 = spectatee.vehicle_reload2;
 
         msg_entity = self;
-        
+
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE,  spectatee.v_angle_x);
             WriteAngle(MSG_ONE,  spectatee.v_angle_y);
             WriteAngle(MSG_ONE,  spectatee.v_angle_z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
-        //    WriteEntity(MSG_ONE, self);            
+        //    WriteEntity(MSG_ONE, self);
         //makevectors(spectatee.v_angle);
-        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/
     }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-	    return 0;		
+	    return 0;
 
 	if (self == self.enemy)
 		return 0;
 
-	if not(IS_PLAYER(self.enemy))
+	if (!IS_PLAYER(self.enemy))
 		return 0;
 
 	SpectateCopy(self.enemy);
@@ -1823,13 +1820,13 @@ entity CA_SpectateNext(entity start) {
 	if (start.team == self.team) {
 		return start;
 	}
-	
+
 	other = start;
 	// continue from current player
 	while(other && other.team != self.team) {
 		other = find(other, classname, "player");
 	}
-	
+
 	if (!other) {
 		// restart from begining
 		other = find(other, classname, "player");
@@ -1837,7 +1834,7 @@ entity CA_SpectateNext(entity start) {
 			other = find(other, classname, "player");
 		}
 	}
-	
+
 	return other;
 }
 
@@ -1864,7 +1861,7 @@ float SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
-	if not(other) // no player
+	if (!other) // no player
 		return FALSE;
 
 	entity first = other;
@@ -1878,7 +1875,7 @@ float SpectatePrev()
 		do { other = other.chain; }
 		while(other && other.team != self.team);
 
-		if not(other)
+		if (!other)
 		{
 			other = first;
 			while(other.team != self.team)
@@ -1919,7 +1916,7 @@ void ShowRespawnCountdown()
 		{
 			self.respawn_countdown = number - 1;
 			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(number)); 
+				{ Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(CNT_RESPAWN, number)); }
 		}
 	}
 }
@@ -2048,7 +2045,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
@@ -2062,10 +2059,10 @@ void ObserverThink()
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = "spectator";
 			}
@@ -2079,7 +2076,7 @@ void ObserverThink()
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
-				self.flags &~= FL_SPAWNING;
+				self.flags &= ~FL_SPAWNING;
 				LeaveSpectatorMode();
 				return;
 			}
@@ -2091,10 +2088,10 @@ void SpectatorThink()
 {
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || self.impulse >= 200 && self.impulse <= 209) {
-			self.flags &~= FL_JUMPRELEASED;
+		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
+			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = "spectator";
 			} else {
@@ -2102,8 +2099,8 @@ void SpectatorThink()
 				PutClientInServer();
 			}
 			self.impulse = 0;
-		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || self.impulse >= 220 && self.impulse <= 229) {
-			self.flags &~= FL_JUMPRELEASED;
+		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229)) {
+			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectatePrev()) {
 				self.classname = "spectator";
 			} else {
@@ -2112,7 +2109,7 @@ void SpectatorThink()
 			}
 			self.impulse = 0;
 		} else if (self.BUTTON_ATCK2) {
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.classname = "observer";
 			PutClientInServer();
 		} else {
@@ -2124,7 +2121,7 @@ void SpectatorThink()
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
-				self.flags &~= FL_SPAWNING;
+				self.flags &= ~FL_SPAWNING;
 				LeaveSpectatorMode();
 				return;
 			}
@@ -2138,7 +2135,7 @@ void SpectatorThink()
 
 void PlayerUseKey()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2146,7 +2143,7 @@ void PlayerUseKey()
         vehicles_exit(VHEF_NORMAL);
         return;
 	}
-	
+
 	// a use key was pressed; call handlers
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
@@ -2308,10 +2305,10 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				
+
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(self.respawn_flags & RESPAWN_FORCE)
+					if((self.respawn_flags & RESPAWN_FORCE) && !autocvar_g_respawn_delay_max)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2320,6 +2317,8 @@ void PlayerPreThink (void)
 				{
 					if(button_pressed)
 						self.deadflag = DEAD_RESPAWNABLE;
+					else if(time >= self.respawn_time_max && (self.respawn_flags & RESPAWN_FORCE))
+						self.deadflag = DEAD_RESPAWNING;
 				}
 				else if (self.deadflag == DEAD_RESPAWNABLE)
 				{
@@ -2331,6 +2330,7 @@ void PlayerPreThink (void)
 					if(time > self.respawn_time)
 					{
 						self.respawn_time = time + 1; // only retry once a second
+						self.respawn_time_max = self.respawn_time;
 						respawn();
 					}
 				}
@@ -2339,6 +2339,8 @@ void PlayerPreThink (void)
 
 				if(self.respawn_flags & RESPAWN_SILENT)
 					self.stat_respawn_time = 0;
+				else if((self.respawn_flags & RESPAWN_FORCE) && autocvar_g_respawn_delay_max)
+					self.stat_respawn_time = self.respawn_time_max;
 				else
 					self.stat_respawn_time = self.respawn_time;
 			}
@@ -2355,8 +2357,6 @@ void PlayerPreThink (void)
 		float do_crouch = self.BUTTON_CROUCH;
 		if(self.hook.state)
 			do_crouch = 0;
-		if(self.health <= g_bloodloss)
-			do_crouch = 1;
 		if(self.vehicle)
 			do_crouch = 0;
 		if(self.freezetag_frozen)
@@ -2388,15 +2388,6 @@ void PlayerPreThink (void)
 			}
 		}
 
-		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
-		{
-			if(self.bloodloss_timer < time)
-			{
-				self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-				self.bloodloss_timer = time + 0.5 + random() * 0.5;
-			}
-		}
-
 		FixPlayermodel();
 
 		GrapplingHookFrame();
@@ -2404,7 +2395,7 @@ void PlayerPreThink (void)
 		// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 		//if(frametime)
 		{
-			self.items &~= self.items_added;
+			self.items &= ~self.items_added;
 
 			W_WeaponFrame();
 
@@ -2425,12 +2416,9 @@ void PlayerPreThink (void)
 		if(frametime)
 			player_anim();
 
-		if(g_nexball)
-			nexball_setstatus();
-		
 		// secret status
 		secrets_setstatus();
-		
+
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -2564,7 +2552,7 @@ void PlayerPostThink (void)
 			else if(timeleft <= 10)
 			{
 				if(timeleft != self.idlekick_lasttimeleft)
-					Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(timeleft));
+					{ Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(CNT_IDLE, timeleft)); }
 				self.idlekick_lasttimeleft = timeleft;
 			}
 		}
@@ -2590,7 +2578,7 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 		GetPressedKeys();
 	}
-	
+
 #ifdef TETRIS
 	}
 #endif
@@ -2614,13 +2602,13 @@ void PlayerPostThink (void)
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	playerdemo_write();
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if not(self.stored_netname)
+		if (!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{

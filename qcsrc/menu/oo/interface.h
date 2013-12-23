@@ -17,7 +17,7 @@
 #endif
 
 #define CLASS(cname)                       entity spawn##cname(); entity cname##_vtbl;
-#define EXTENDS(base)                
+#define EXTENDS(base)
 #define METHOD(cname,name,prototype)       prototype cname##_##name; .prototype name;
 #define ATTRIB(cname,name,type,val)        .type name;
 #define ATTRIBARRAY(cname,name,type,cnt)   .type name[cnt];

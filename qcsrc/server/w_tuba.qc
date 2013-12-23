@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* model     */ "tuba",
 /* shortname */ "tuba",
+/* xgettext:no-c-format */
 /* fullname  */ _("@!#%'n Tuba")
 );
 #else
@@ -189,7 +190,7 @@ float Tuba_GetNote(entity pl, float hittype)
 		note += 12;
 	if(hittype & HITTYPE_SECONDARY)
 		note += 7;
-	
+
 	// we support two kinds of tubas, those tuned in Eb and those tuned in C
 	// kind of tuba currently is player slot number, or team number if in
 	// teamplay
@@ -204,7 +205,7 @@ float Tuba_GetNote(entity pl, float hittype)
 		if(pl.clientcolors & 1)
 			note += 3;
 	}
-	
+
 	// total range of notes:
 	//                       0
 	//                 ***  ** ****
@@ -312,7 +313,7 @@ void W_Tuba_NoteOn(float hittype)
 		}
 	}
 
-	if not(self.tuba_note)
+	if (!self.tuba_note)
 	{
 		self.tuba_note = spawn();
 		self.tuba_note.owner = self.tuba_note.realowner = self;

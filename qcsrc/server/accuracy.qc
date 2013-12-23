@@ -25,7 +25,7 @@ float accuracy_send(entity to, float sf)
 	a = a.accuracy;
 
 	if(to != a.owner)
-		if not(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share)
+		if (!(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share))
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
@@ -109,17 +109,17 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 	if(IS_CLIENT(targ))
 	if(targ.deadflag == DEAD_NO)
-	if(IsDifferentTeam(attacker, targ))
+	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;
 }
 
 float accuracy_canbegooddamage(entity attacker)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 		return TRUE;
 	return FALSE;
 }
