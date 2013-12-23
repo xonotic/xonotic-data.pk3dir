@@ -54,8 +54,8 @@ void XonoticDemoBrowserTab_fill(entity me)
 	me.gotoRC(me, 0, 3.7);
 		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_autodemo", _("Auto record demos")));
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
-			//e.onClick = DemoList_Filter_Change;
-			//e.onClickEntity = demolist;
+			e.onClick = DemoList_Refresh_Click;
+			e.onClickEntity = demolist;
 
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, me.rows - 2.5, me.columns, demolist);

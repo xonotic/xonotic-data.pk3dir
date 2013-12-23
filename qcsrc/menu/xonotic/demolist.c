@@ -28,6 +28,7 @@ ENDCLASS(XonoticDemoList)
 
 entity demolist; // for reference elsewhere
 entity makeXonoticDemoList();
+void DemoList_Refresh_Click(entity btn, entity me);
 void DemoList_Filter_Change(entity box, entity me);
 #endif
 
@@ -145,6 +146,12 @@ void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float i
 void XonoticDemoList_showNotify(entity me)
 {
 	me.getDemos(me);
+}
+
+void DemoList_Refresh_Click(entity btn, entity me)
+{
+	me.getDemos(me);
+	me.setSelected(me, 0); //always select the first element after a list update
 }
 
 void DemoList_Filter_Change(entity box, entity me)
