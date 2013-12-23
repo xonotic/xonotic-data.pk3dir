@@ -1,29 +1,34 @@
 #ifdef INTERFACE
-CLASS(XonoticNotificationDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticNotificationDialog, toString, string(entity))
-	METHOD(XonoticNotificationDialog, fill, void(entity))
-	METHOD(XonoticNotificationDialog, showNotify, void(entity))
-	ATTRIB(XonoticNotificationDialog, title, string, _("Notification settings"))
-	ATTRIB(XonoticNotificationDialog, color, vector, SKINCOLOR_DIALOG_MODEL)
-	ATTRIB(XonoticNotificationDialog, intendedWidth, float, 0.6)
-	ATTRIB(XonoticNotificationDialog, rows, float, 19)
-	ATTRIB(XonoticNotificationDialog, columns, float, 3)
-ENDCLASS(XonoticNotificationDialog)
+CLASS(XonoticGameMessageSettingsTab) EXTENDS(XonoticTab)
+	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
+	METHOD(XonoticGameMessageSettingsTab, fill, void(entity))
+	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity))
+	ATTRIB(XonoticGameMessageSettingsTab, title, string, _("Messages"))
+	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 14)
+	ATTRIB(XonoticGameMessageSettingsTab, columns, float, 6)
+	ATTRIB(XonoticGameMessageSettingsTab, weaponsList, entity, NULL)
+ENDCLASS(XonoticGameMessageSettingsTab)
+entity makeXonoticGameMessageSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticNotificationDialog_showNotify(entity me)
+void XonoticGameMessageSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-string XonoticNotificationDialog_toString(entity me)
+entity makeXonoticGameMessageSettingsTab()
 {
-	return "hi"; // TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
+	entity me;
+	me = spawnXonoticGameMessageSettingsTab();
+	me.configureDialog(me);
+	return me;
 }
-void XonoticNotificationDialog_fill(entity me)
+
+void XonoticGameMessageSettingsTab_fill(entity me)
 {
 	entity e;
-	
+
 	// General settings for the player
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("General Settings:")));
@@ -87,10 +92,5 @@ void XonoticNotificationDialog_fill(entity me)
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "notification_show_sprees_info_newline", _("Print spree information in a new line")));
 		
-	// Close this dialog
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;
 }
 #endif
