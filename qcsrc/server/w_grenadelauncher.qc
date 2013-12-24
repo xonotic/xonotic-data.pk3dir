@@ -175,6 +175,13 @@ void W_Grenade_Touch2 (void)
 	}
 }
 
+void W_Grenade_ContentsTransition(float originalcont, float newcont)
+{
+	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), self.origin, self.velocity, 1);
+	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
+	print(sprintf("W_Grenade_ContentsTransition(): Original: '%d', New: '%d'\n", originalcont, newcont));
+}
+
 void W_Grenade_Attack (void)
 {
 	entity gren;
@@ -210,6 +217,7 @@ void W_Grenade_Attack (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.contentstransition = W_Grenade_ContentsTransition;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 

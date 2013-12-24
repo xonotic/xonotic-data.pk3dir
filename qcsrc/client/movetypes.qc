@@ -17,6 +17,7 @@ float _Movetype_CheckWater() // SV_CheckWater
 
 void _Movetype_CheckWaterTransition() // SV_CheckWaterTransition
 {
+	print("foobar\n");
 }
 
 void _Movetype_Impact(entity oth) // SV_Impact
