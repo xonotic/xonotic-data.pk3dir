@@ -29,6 +29,21 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 {
 	entity e;
 
+	// todo:
+	// notification_CHOICE_CTF_CAPTURE_* CTF capture record
+	// notification_CHOICE_CTF_PICKUP_* CTF pickup verbose info
+	// notification_FRAG* Frag message verbose info
+	// notification_show_location Show location of pickups in death messages
+	// notification_show_sprees Show spree information
+	// notification_INFO_ITEM_WEAPON* Show weapon notifications in console
+	// Enable con_notify
+	// notification_ANNCE_NUM_RESPAWN* Add respawning countdown slider
+	// notification_ANNCE_NUM_ROUNDSTART* Add roundstart countdown slider
+	// notification_ANNCE_NUM_KILL* Add kill countdown slider
+	// notification_ANNCE_NUM_GAMESTART* Add gamestart countdown slider
+	// notification_ANNCE_ACHIEVEMENT* achievements toggle
+	// notification_ANNCE_KILLSTREAK* killstreak toggles
+
 	// General settings for the player
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("General Settings:")));

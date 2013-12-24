@@ -17,7 +17,6 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
-	ATTRIB(MainWindow, notificationDialog, entity, NULL)
 	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
 	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
 ENDCLASS(MainWindow)
@@ -176,10 +175,6 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.modelDialog = i = spawnXonoticModelDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.notificationDialog = i = spawnXonoticNotificationDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 

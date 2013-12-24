@@ -82,6 +82,7 @@
 #include "xonotic/dialog_settings_game_hud.c"
 #include "xonotic/dialog_settings_game_hudconfirm.c"
 #include "xonotic/dialog_settings_game_model.c"
+#include "xonotic/dialog_settings_game_messages.c"
 #include "xonotic/dialog_settings_game_view.c"
 #include "xonotic/dialog_settings_game_weapons.c"
 #include "xonotic/weaponslist.c"
@@ -118,5 +119,4 @@
 #include "xonotic/dialog_hudpanel_physics.c"
 #include "xonotic/dialog_hudpanel_centerprint.c"
 #include "xonotic/slider_picmip.c"
-#include "xonotic/dialog_settings_game_notification.c"
 #include "xonotic/slider_particles.c"
