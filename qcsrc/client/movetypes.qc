@@ -10,162 +10,6 @@ void _Movetype_CheckVelocity() // SV_CheckVelocity
 {
 }
 
-#if 0
-int Mod_Q1BSP_SuperContentsFromNativeContents(dp_model_t *model, int nativecontents)
-{
-	switch(nativecontents)
-	{
-		case CONTENTS_EMPTY:
-			return 0;
-		case CONTENTS_SOLID:
-			return SUPERCONTENTS_SOLID | SUPERCONTENTS_OPAQUE;
-		case CONTENTS_WATER:
-			return SUPERCONTENTS_WATER;
-		case CONTENTS_SLIME:
-			return SUPERCONTENTS_SLIME;
-		case CONTENTS_LAVA:
-			return SUPERCONTENTS_LAVA | SUPERCONTENTS_NODROP;
-		case CONTENTS_SKY:
-			return SUPERCONTENTS_SKY | SUPERCONTENTS_NODROP | SUPERCONTENTS_OPAQUE; // to match behaviour of Q3 maps, let sky count as opaque
-	}
-	return 0;
-}
-int Mod_Q1BSP_NativeContentsFromSuperContents(dp_model_t *model, int supercontents)
-{
-	if (supercontents & (SUPERCONTENTS_SOLID | SUPERCONTENTS_BODY))
-		return CONTENTS_SOLID;
-	if (supercontents & SUPERCONTENTS_SKY)
-		return CONTENTS_SKY;
-	if (supercontents & SUPERCONTENTS_LAVA)
-		return CONTENTS_LAVA;
-	if (supercontents & SUPERCONTENTS_SLIME)
-		return CONTENTS_SLIME;
-	if (supercontents & SUPERCONTENTS_WATER)
-		return CONTENTS_WATER;
-	return CONTENTS_EMPTY;
-}
-static qboolean SV_CheckWater (prvm_edict_t *ent)
-{
-	prvm_prog_t *prog = SVVM_prog;
-	int cont;
-	int nNativeContents;
-	vec3_t point;
-
-	point[0] = PRVM_serveredictvector(ent, origin)[0];
-	point[1] = PRVM_serveredictvector(ent, origin)[1];
-	point[2] = PRVM_serveredictvector(ent, origin)[2] + PRVM_serveredictvector(ent, mins)[2] + 1;
-
-	// DRESK - Support for Entity Contents Transition Event
-	// NOTE: Some logic needed to be slightly re-ordered
-	// to not affect performance and allow for the feature.
-
-	// Acquire Super Contents Prior to Resets
-	cont = SV_PointSuperContents(point);
-	// Acquire Native Contents Here
-	nNativeContents = Mod_Q1BSP_NativeContentsFromSuperContents(NULL, cont);
-
-	// DRESK - Support for Entity Contents Transition Event
-	if(PRVM_serveredictfloat(ent, watertype))
-		// Entity did NOT Spawn; Check
-		SV_CheckContentsTransition(ent, nNativeContents);
-
-
-	PRVM_serveredictfloat(ent, waterlevel) = 0;
-	PRVM_serveredictfloat(ent, watertype) = CONTENTS_EMPTY;
-	cont = SV_PointSuperContents(point);
-	if (cont & (SUPERCONTENTS_LIQUIDSMASK))
-	{
-		PRVM_serveredictfloat(ent, watertype) = nNativeContents;
-		PRVM_serveredictfloat(ent, waterlevel) = 1;
-		point[2] = PRVM_serveredictvector(ent, origin)[2] + (PRVM_serveredictvector(ent, mins)[2] + PRVM_serveredictvector(ent, maxs)[2])*0.5;
-		if (SV_PointSuperContents(point) & (SUPERCONTENTS_LIQUIDSMASK))
-		{
-			PRVM_serveredictfloat(ent, waterlevel) = 2;
-			point[2] = PRVM_serveredictvector(ent, origin)[2] + PRVM_serveredictvector(ent, view_ofs)[2];
-			if (SV_PointSuperContents(point) & (SUPERCONTENTS_LIQUIDSMASK))
-				PRVM_serveredictfloat(ent, waterlevel) = 3;
-		}
-	}
-
-	return PRVM_serveredictfloat(ent, waterlevel) > 1;
-}
-static int SV_CheckContentsTransition(prvm_edict_t *ent, const int nContents)
-{
-	prvm_prog_t *prog = SVVM_prog;
-	int bValidFunctionCall;
-
-	// Default Valid Function Call to False
-	bValidFunctionCall = false;
-
-	if(PRVM_serveredictfloat(ent, watertype) != nContents)
-	{ // Changed Contents
-		// Acquire Contents Transition Function from QC
-		if(PRVM_serveredictfunction(ent, contentstransition))
-		{ // Valid Function; Execute
-			// Assign Valid Function
-			bValidFunctionCall = true;
-			// Prepare Parameters (Original Contents, New Contents)
-			// Original Contents
-			PRVM_G_FLOAT(OFS_PARM0) = PRVM_serveredictfloat(ent, watertype);
-			// New Contents
-			PRVM_G_FLOAT(OFS_PARM1) = nContents;
-			// Assign Self
-			PRVM_serverglobaledict(self) = PRVM_EDICT_TO_PROG(ent);
-			// Set Time
-			PRVM_serverglobalfloat(time) = sv.time;
-			// Execute VM Function
-			prog->ExecuteProgram(prog, PRVM_serveredictfunction(ent, contentstransition), "contentstransition: NULL function");
-		}
-	}
-
-	// Return if Function Call was Valid
-	return bValidFunctionCall;
-}
-
-static void SV_CheckWaterTransition (prvm_edict_t *ent)
-{
-	vec3_t entorigin;
-	prvm_prog_t *prog = SVVM_prog;
-	// LordHavoc: bugfixes in this function are keyed to the sv_gameplayfix_bugfixedcheckwatertransition cvar - if this cvar is 0 then all the original bugs should be reenabled for compatibility
-	int cont;
-	VectorCopy(PRVM_serveredictvector(ent, origin), entorigin);
-	cont = Mod_Q1BSP_NativeContentsFromSuperContents(NULL, SV_PointSuperContents(entorigin));
-	if (!PRVM_serveredictfloat(ent, watertype))
-	{
-		// just spawned here
-		if (!sv_gameplayfix_fixedcheckwatertransition.integer)
-		{
-			PRVM_serveredictfloat(ent, watertype) = cont;
-			PRVM_serveredictfloat(ent, waterlevel) = 1;
-			return;
-		}
-	}
-	// DRESK - Support for Entity Contents Transition Event
-	// NOTE: Call here BEFORE updating the watertype below,
-	// and suppress watersplash sound if a valid function
-	// call was made to allow for custom "splash" sounds.
-	else if( !SV_CheckContentsTransition(ent, cont) )
-	{ // Contents Transition Function Invalid; Potentially Play Water Sound
-		// check if the entity crossed into or out of water
-		if (sv_sound_watersplash.string && ((PRVM_serveredictfloat(ent, watertype) == CONTENTS_WATER || PRVM_serveredictfloat(ent, watertype) == CONTENTS_SLIME) != (cont == CONTENTS_WATER || cont == CONTENTS_SLIME)))
-			SV_StartSound (ent, 0, sv_sound_watersplash.string, 255, 1, false, 1.0f);
-	}
-
-	if (cont <= CONTENTS_WATER)
-	{
-		PRVM_serveredictfloat(ent, watertype) = cont;
-		PRVM_serveredictfloat(ent, waterlevel) = 1;
-	}
-	else
-	{
-		PRVM_serveredictfloat(ent, watertype) = CONTENTS_EMPTY;
-		PRVM_serveredictfloat(ent, waterlevel) = sv_gameplayfix_fixedcheckwatertransition.integer ? 0 : cont;
-	}
-}
-#endif
-
-.float watertype;
-.float waterlevel;
 float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
 {
 	switch(nativecontents)
@@ -188,15 +32,15 @@ float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
 
 float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
 {
-	if (supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
+	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
 		return CONTENT_SOLID;
-	if (supercontents & DPCONTENTS_SKY)
+	if(supercontents & DPCONTENTS_SKY)
 		return CONTENT_SKY;
-	if (supercontents & DPCONTENTS_LAVA)
+	if(supercontents & DPCONTENTS_LAVA)
 		return CONTENT_LAVA;
-	if (supercontents & DPCONTENTS_SLIME)
+	if(supercontents & DPCONTENTS_SLIME)
 		return CONTENT_SLIME;
-	if (supercontents & DPCONTENTS_WATER)
+	if(supercontents & DPCONTENTS_WATER)
 		return CONTENT_WATER;
 	return CONTENT_EMPTY;
 }
@@ -212,81 +56,65 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 
 	nativecontents = pointcontents(point);
 
-	if(ent.watertype)
-	if(ent.watertype != nativecontents)
+	if(ent.move_watertype)
+	if(ent.move_watertype != nativecontents)
 	{
-		print(sprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.watertype, nativecontents));
-		//ent.contentstransition(ent.watertype, contents);
+		print(sprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents));
+		if(ent.contentstransition)
+			ent.contentstransition(ent.move_watertype, nativecontents);
 	}
 
-	ent.waterlevel = 0;
-	ent.watertype = CONTENT_EMPTY;
+	ent.move_waterlevel = 0;
+	ent.move_watertype = CONTENT_EMPTY;
 
 	supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
-	//supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point));
 	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
-		ent.watertype = nativecontents;
-		ent.waterlevel = 1;
+		ent.move_watertype = nativecontents;
+		ent.move_waterlevel = 1;
 		point_y = (ent.origin_y + ((ent.mins_z + ent.maxs_y) * 0.5));
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
-			ent.waterlevel = 2;
+			ent.move_waterlevel = 2;
 			point_y = ent.origin_y + ent.view_ofs_y;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
-				ent.waterlevel = 3;
+				ent.move_waterlevel = 3;
 		}
 	}
 
-	return (ent.waterlevel > 1);
+	return (ent.move_waterlevel > 1);
 }
 
-#if 0
-void _Movetype_CheckContentsTransition(entity ent, float contents)
-{
-	if(ent.watertype != contents)
-	{
-		print(sprintf("_Movetype_CheckWaterTransition(): Original: '%d', New: '%d'\n", ent.watertype, contents));
-		//ent.contentstransition(ent.watertype, contents);
-	}
-}
-#endif
-
-float autocvar_sv_gameplayfix_fixedcheckwatertransition;
 void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 {
 	float contents = pointcontents(ent.move_origin);
 	
-	if(!ent.watertype)
+	if(!ent.move_watertype)
 	{
 		// just spawned here
 		if(!autocvar_sv_gameplayfix_fixedcheckwatertransition)
 		{
-			ent.watertype = contents;
-			ent.waterlevel = 1;
+			ent.move_watertype = contents;
+			ent.move_waterlevel = 1;
 			return;
 		}
 	}
-	//else if(!_Movetype_CheckContentsTransition(ent, contents))
-	//{
-		//if (sv_sound_watersplash.string && ((PRVM_serveredictfloat(ent, watertype) == CONTENTS_WATER || PRVM_serveredictfloat(ent, watertype) == CONTENTS_SLIME) != (cont == CONTENTS_WATER || cont == CONTENTS_SLIME)))
-		//	SV_StartSound (ent, 0, sv_sound_watersplash.string, 255, 1, false, 1.0f);
-	//}
-	else if(ent.watertype != contents)
+	else if(ent.move_watertype != contents)
 	{
-		print(sprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.watertype, contents));
-		//ent.contentstransition(ent.watertype, contents);
+		print(sprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.move_watertype, contents));
+		if(ent.contentstransition)
+			ent.contentstransition(ent.move_watertype, contents);
 	}
 
 	if(contents <= CONTENT_WATER)
 	{
-		ent.watertype = contents;
-		ent.waterlevel = 1;
+		ent.move_watertype = contents;
+		ent.move_waterlevel = 1;
 	}
 	else
 	{
-		ent.watertype = CONTENT_EMPTY;
-		ent.waterlevel = (autocvar_sv_gameplayfix_fixedcheckwatertransition ? 0 : contents);
+		ent.move_watertype = CONTENT_EMPTY;
+		ent.move_waterlevel = (autocvar_sv_gameplayfix_fixedcheckwatertransition ? 0 : contents);
 	}
 }
 
