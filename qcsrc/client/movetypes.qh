@@ -13,7 +13,9 @@
 .float move_bounce_stopspeed;
 .float move_nomonsters; // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-float autocvar_sv_gameplayfix_fixedcheckwatertransition;
+// TODO: what to do with this? in Xonotic, we always have it enabled anyway
+// however, it is a server setting which could in theory be disabled...?
+float autocvar_sv_gameplayfix_fixedcheckwatertransition; 
 
 void Movetype_Physics_MatchTicrate(float tr, float sloppy);
 void Movetype_Physics_MatchServer(float sloppy);
