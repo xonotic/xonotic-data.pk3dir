@@ -263,7 +263,7 @@ void lgbeam_think()
 		return;
 	}
 
-	if (owner_player.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || owner_player.deadflag != DEAD_NO || !owner_player.BUTTON_ATCK || owner_player.frozen)
+	if (owner_player.weaponentity.state != WS_INUSE || !lgbeam_checkammo() || owner_player.deadflag != DEAD_NO || !owner_player.BUTTON_ATCK || owner_player.freezetag_frozen)
 	{
 		if(self == owner_player.lgbeam)
 			owner_player.lgbeam = world;

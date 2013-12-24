@@ -1102,7 +1102,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
-	self.bot_attack = TRUE;
+    self.bot_attack = TRUE;
     self.monster_attack = TRUE;
 
     if (!self.turrcaps_flags)

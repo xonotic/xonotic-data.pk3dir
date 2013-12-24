@@ -26,11 +26,9 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
-
 ../common/monsters/monsters.qh
 ../common/monsters/sv_monsters.qh
 ../common/monsters/spawn.qh
-
 
 autocvars.qh
 constants.qh

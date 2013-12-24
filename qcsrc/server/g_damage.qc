@@ -549,77 +549,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if(targ.killcount) { targ.killcount = 0; }
 }
 
-void Ice_Think()
-{
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
-}
-
-void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{
-	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
-		return;
-		
-	if(targ.frozen)
-		return;
-		
-	targ.frozen = frozen_type;
-	targ.revive_progress = 0;
-	targ.health = 1;
-	targ.revive_speed = freeze_time;
-
-	entity ice, head;
-	ice = spawn();
-	ice.owner = targ;
-	ice.classname = "ice";
-	ice.scale = targ.scale;
-	ice.think = Ice_Think;
-	ice.nextthink = time;
-	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(ice, "models/ice/ice.md3");
-	ice.alpha = 1;
-	ice.colormod = Team_ColorRGB(targ.team);
-	ice.glowmod = ice.colormod;
-	targ.iceblock = ice;
-
-	entity oldself;
-	oldself = self;
-	self = ice;
-	Ice_Think();
-	self = oldself;
-
-	RemoveGrapplingHook(targ);
-	
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
-	
-	// add waypoint
-	if(show_waypoint)	
-		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
-}
-
-void Unfreeze (entity targ)
-{
-	if(targ.frozen) // only reset health if target was frozen
-		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
-
-	entity head;
-	targ.frozen = 0;
-	targ.revive_progress = 0;
-	
-	WaypointSprite_Kill(targ.waypointsprite_attached);
-	
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
-
-	// remove the ice block
-	if(targ.iceblock)
-		remove(targ.iceblock);
-	targ.iceblock = world;
-}
-
 // these are updated by each Damage call for use in button triggering and such
 entity damage_targ;
 entity damage_inflictor;
@@ -747,12 +676,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			complainteamdamage *= g_weapondamagefactor;
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
-		}
-
-		if(targ.frozen && deathtype != DEATH_HURTTRIGGER)
-		{
-			damage = 0;
-			force *= 0.2;
 		}
 
 		// should this be changed at all? If so, in what way?
@@ -1277,7 +1200,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.frozen)
+	if(e.freezetag_frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);

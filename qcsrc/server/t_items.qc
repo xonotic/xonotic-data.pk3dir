@@ -682,8 +682,6 @@ void Item_Touch (void)
 
 	if (!IS_PLAYER(other))
 		return;
-	if (other.frozen)
-		return;
 	if (other.deadflag)
 		return;
 	if (self.solid != SOLID_TRIGGER)

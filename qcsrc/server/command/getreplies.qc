@@ -345,13 +345,13 @@ string getmonsterlist()
 {
 	string monsterlist = "", col;
 	float i;
-	
+
 	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		if(mod(i, 2)) { col = "^2"; }
 		else { col = "^3"; }
 		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
 	}
-	
+
 	return sprintf("^7Monsters available: %s\n", monsterlist);
 }

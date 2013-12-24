@@ -793,10 +793,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-	
-	// freeze attacks
-	addstat(STAT_FROZEN, AS_INT, frozen);
-	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
 
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
@@ -807,7 +803,7 @@ void spawnfunc_worldspawn (void)
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
-	
+
 	// monsters
 	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
 	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);

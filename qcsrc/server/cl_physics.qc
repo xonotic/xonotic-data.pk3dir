@@ -19,9 +19,6 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(self.frozen)
-		return; // no jumping in freezetag when frozen
-		
 	float doublejump = FALSE;
 
 	player_multijump = doublejump;
@@ -787,24 +784,11 @@ void SV_PlayerPhysics()
 	self.disableclientprediction = 0;
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
-		
+
 	if(time < self.spider_slowness)
 	{
 		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
 		self.stat_sv_airspeedlimit_nonqw *= 0.5;
-	}
-		
-	if(self.frozen)
-	{
-		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
-		{
-			self.movement_x = bound(-5, self.movement_x, 5);
-			self.movement_y = bound(-5, self.movement_y, 5);
-			self.movement_z = bound(-5, self.movement_z, 5);
-		}
-		else
-			self.movement = '0 0 0';
-		self.disableclientprediction = 1;
 	}
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
@@ -1008,7 +992,7 @@ void SV_PlayerPhysics()
 			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
-	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
+	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.freezetag_frozen)
 	{
 		//makevectors(self.v_angle_y * '0 1 0');
 		makevectors(self.v_angle);

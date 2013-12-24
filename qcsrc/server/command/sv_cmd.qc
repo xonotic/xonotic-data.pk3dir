@@ -147,32 +147,32 @@ void GameCommand_butcher(float request)
 		{
 			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
 			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
-		
-            float removed_count = 0;
+
+			float removed_count = 0;
 			entity head;
-			
+
 			FOR_EACH_MONSTER(head)
 			{
 				monster_remove(head);
 				++removed_count;
 			}
-			
+
 			FOR_EACH_PLAYER(head)
 				head.monstercount = 0;
-				
+
 			monsters_total = 0; // reset stats?
 			monsters_killed = 0;
-				
+
 			totalspawned = 0;
-			
+
 			if(removed_count <= 0)
 				print("No monsters to kill\n");
 			else
 				print(sprintf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s")));
-				
+
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{

@@ -585,10 +585,7 @@ float serverflags;
 
 .float player_blocked;
 
-.float frozen; // for freeze attacks
-.float revive_progress;
-.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
-.entity iceblock;
+.float freezetag_frozen;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.

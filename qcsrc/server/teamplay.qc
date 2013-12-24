@@ -190,7 +190,7 @@ void InitGameplayMode()
 	{
 		MUTATOR_ADD(gamemode_keepaway);
 	}
-	
+
 	if(g_invasion)
 	{
 		timelimit_override = 0; // no timelimit in invasion, round based

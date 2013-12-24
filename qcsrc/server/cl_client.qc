@@ -168,8 +168,6 @@ void PutObserverInServer (void)
 
 	Portal_ClearAll(self);
 
-	Unfreeze(self);
-
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
@@ -588,8 +586,6 @@ void PutClientInServer (void)
 				self.target = s;
 			activator = world;
 		self = oldself;
-		
-		Unfreeze(self);
 
 		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
@@ -940,7 +936,7 @@ void ClientKill (void)
 {
 	if(gameover) return;
 	if(self.player_blocked) return;
-	if(self.frozen) return;
+	if(self.freezetag_frozen) return;
 
 	ClientKill_TeamChange(0);
 }
@@ -1290,8 +1286,6 @@ void ClientDisconnect (void)
 	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
-	
-	Unfreeze(self);
 
 	RemoveGrapplingHook(self);
 
@@ -1734,8 +1728,6 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
-	self.frozen = spectatee.frozen;
-	self.revive_progress = spectatee.revive_progress;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
@@ -2246,16 +2238,6 @@ void PlayerPreThink (void)
 		return;
 #endif
 
-	if(self.frozen == 2)
-	{
-		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
-		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
-		self.iceblock.alpha = 1 - self.revive_progress;
-
-		if(self.revive_progress >= 1)
-			Unfreeze(self);
-	}
-
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
@@ -2380,7 +2362,7 @@ void PlayerPreThink (void)
 			do_crouch = 0;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.frozen)
+		if(self.freezetag_frozen)
 			do_crouch = 0;
 		if(self.weapon == WEP_SHOTGUN && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;

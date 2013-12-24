@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float clean_up_and_do_nothing;
 	float horiz_speed = autocvar_sv_dodging_horiz_speed;
 
-	if(self.frozen)
+	if(self.freezetag_frozen)
 		horiz_speed = autocvar_sv_dodging_horiz_speed_frozen;
 
     if (self.deadflag != DEAD_NO)
@@ -170,7 +170,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	tap_direction_y = 0;
 
 	float frozen_dodging;
-	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
+	frozen_dodging = (self.freezetag_frozen && autocvar_sv_dodging_frozen);
 
 	float dodge_detected;
 	if (g_dodging == 0)

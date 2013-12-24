@@ -104,7 +104,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
 
-	if (targ.frozen)
+	if (targ.freezetag_frozen)
 		return FALSE; // ignore frozen
 
 	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
@@ -538,26 +538,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	entity targ;
 
-	if(self.frozen)
-	{
-		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
-		self.health = max(1, self.max_health * self.revive_progress);
-
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
-
-		movelib_beak_simple(stopspeed);
-
-		self.frame = manim_idle;
-
-		self.enemy = world;
-		self.nextthink = time + self.ticrate;
-
-		if(self.revive_progress >= 1)
-			Unfreeze(self); // wait for next think before attacking
-
-		return; // no moving while frozen
-	}
-
 	if(self.flags & FL_SWIM)
 	{
 		if(self.waterlevel < WATERLEVEL_WETFEET)
@@ -733,9 +713,6 @@ void monster_remove(entity mon)
 	if(mon.weaponentity)
 		remove(mon.weaponentity);
 
-	if(mon.iceblock)
-		remove(mon.iceblock);
-
 	WaypointSprite_Kill(mon.sprite);
 
 	remove(mon);
@@ -786,8 +763,6 @@ void monsters_reset()
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
 
-	Unfreeze(self); // remove any icy remains
-
 	self.health = self.max_health;
 	self.velocity = '0 0 0';
 	self.enemy = world;
@@ -820,12 +795,6 @@ void monster_die(entity attacker, float gibbed)
 	self.think = monster_dead_think;
 	self.nextthink = time;
 	self.ltime = time + 5;
-
-	if ( self.frozen )
-	{
-		Unfreeze(self); // remove any icy remains
-		self.health = 0; // reset by Unfreeze
-	}
 
 	monster_dropitem();
 
@@ -871,10 +840,6 @@ void monster_die(entity attacker, float gibbed)
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-
-	if(self.frozen && deathtype != DEATH_KILL)
-		return;
-
 	if(time < self.pain_finished && deathtype != DEATH_KILL)
 		return;
 
