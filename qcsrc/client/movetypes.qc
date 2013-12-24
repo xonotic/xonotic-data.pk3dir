@@ -203,15 +203,14 @@ float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
 
 float _Movetype_CheckWater(entity ent) // SV_CheckWater
 {
-	float contents;
+	float supercontents;
 	float nativecontents;
 	vector point;
 
 	point = ent.move_origin;
 	point_z += (ent.mins_z + 1);
 
-	contents = pointcontents(point);
-	nativecontents = Mod_Q1BSP_NativeContentsFromSuperContents(contents);
+	nativecontents = pointcontents(point);
 
 	if(ent.watertype)
 	if(ent.watertype != nativecontents)
@@ -222,18 +221,19 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 
 	ent.waterlevel = 0;
 	ent.watertype = CONTENT_EMPTY;
-	
-	contents = pointcontents(point);
-	if(contents & DPCONTENTS_LIQUIDSMASK)
+
+	supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
+	//supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point));
+	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
 		ent.watertype = nativecontents;
 		ent.waterlevel = 1;
 		point_y = (ent.origin_y + ((ent.mins_z + ent.maxs_y) * 0.5));
-		if(pointcontents(point) & DPCONTENTS_LIQUIDSMASK)
+		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			ent.waterlevel = 2;
 			point_y = ent.origin_y + ent.view_ofs_y;
-			if(pointcontents(point) & DPCONTENTS_LIQUIDSMASK)
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				ent.waterlevel = 3;
 		}
 	}
@@ -255,7 +255,7 @@ void _Movetype_CheckContentsTransition(entity ent, float contents)
 float autocvar_sv_gameplayfix_fixedcheckwatertransition;
 void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 {
-	float contents = Mod_Q1BSP_NativeContentsFromSuperContents(pointcontents(ent.move_origin));
+	float contents = pointcontents(ent.move_origin);
 	
 	if(!ent.watertype)
 	{
@@ -274,7 +274,7 @@ void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 	//}
 	else if(ent.watertype != contents)
 	{
-		print(sprintf("_Movetype_CheckWaterTransition(): Original: '%d', New: '%d'\n", ent.watertype, contents));
+		print(sprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.watertype, contents));
 		//ent.contentstransition(ent.watertype, contents);
 	}
 
