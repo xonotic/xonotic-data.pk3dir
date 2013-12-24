@@ -59,7 +59,6 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	if(ent.move_watertype)
 	if(ent.move_watertype != nativecontents)
 	{
-		print(sprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents));
 		if(ent.contentstransition)
 			ent.contentstransition(ent.move_watertype, nativecontents);
 	}
@@ -101,7 +100,6 @@ void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 	}
 	else if(ent.move_watertype != contents)
 	{
-		print(sprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.move_watertype, contents));
 		if(ent.contentstransition)
 			ent.contentstransition(ent.move_watertype, contents);
 	}
