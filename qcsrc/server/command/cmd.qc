@@ -210,7 +210,7 @@ void ClientCommand_mobedit(float request, float argc)
 		}
 	}
 }
-	
+
 void ClientCommand_mobkill(float request)
 {
 	switch(request)
