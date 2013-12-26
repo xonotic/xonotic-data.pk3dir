@@ -12,7 +12,6 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
 	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
 	ATTRIB(MainWindow, viewDialog, entity, NULL)
-	ATTRIB(MainWindow, modelDialog, entity, NULL)
 	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
@@ -139,6 +138,10 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
+	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 
 	// dialog used by singleplayer
 	me.winnerDialog = i = spawnXonoticWinnerDialog();
@@ -168,16 +171,6 @@ void MainWindow_configureMainWindow(entity me)
 	me.mutatorsDialog = i = spawnXonoticMutatorsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	// dialogs used by multiplayer/player setup	
-	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.modelDialog = i = spawnXonoticModelDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 
 	// mutator dialogs
 	i = spawnXonoticSandboxToolsDialog();
