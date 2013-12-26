@@ -212,6 +212,8 @@ void ClientCommand_mobedit(float request, float argc)
 						}
 					}
 				}
+				
+				return;
 			}
 		}
 		default:
