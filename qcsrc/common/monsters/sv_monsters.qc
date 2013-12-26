@@ -384,8 +384,7 @@ void Monster_Fade ()
 		totalspawned -= 1;
 
 		if(IS_CLIENT(self.realowner))
-		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-				self.realowner.monstercount -= 1;
+			self.realowner.monstercount -= 1;
 
 		SUB_SetFade(self, time + 3, 1);
 	}
@@ -781,8 +780,10 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
+		// number of monsters spawned with mobspawn command
+		totalspawned -= 1;
+
 		if(IS_CLIENT(self.realowner))
-		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 			self.realowner.monstercount -= 1;
 
 		self.think = SUB_Remove;
@@ -807,13 +808,12 @@ void monster_die(entity attacker, float gibbed)
 	if(autocvar_g_monsters_score_spawned || !((self.spawnflags & MONSTERFLAG_SPAWNED) || (self.spawnflags & MONSTERFLAG_RESPAWNED)))
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
-	if(!Monster_CanRespawn(self) && gibbed)
+	if(gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
 		if(IS_CLIENT(self.realowner))
-		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 			self.realowner.monstercount -= 1;
 	}
 
