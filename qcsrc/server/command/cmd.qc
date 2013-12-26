@@ -193,6 +193,7 @@ void ClientCommand_mobedit(float request, float argc)
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 				
+				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); }
 				if(!(trace_ent.flags & FL_MONSTER)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); }
 				else if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); }
 				else // all went well, continue
@@ -286,7 +287,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
 			else if(tospawn == "") { sprint(self, "No argument specified.\n"); }
-			else if(g_invasion) { sprint(self, "You can't spawn monsters during an invasion!\n"); }
+			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); }

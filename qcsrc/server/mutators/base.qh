@@ -186,6 +186,10 @@ MUTATOR_HOOKABLE(MonsterFindTarget);
 MUTATOR_HOOKABLE(MonsterCheckBossFlag);
     // called to change a random monster to a miniboss
 
+MUTATOR_HOOKABLE(AllowMobSpawning);
+	// called when a player tries to spawn a monster
+	// return 1 to prevent spawning
+
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:
@@ -214,6 +218,10 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 	// INPUT
 	entity self;
 	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P
+
+MUTATOR_HOOKABLE(PlayerRegen);
+	// called every player think frame
+	// return 1 to disable regen
 
 MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
