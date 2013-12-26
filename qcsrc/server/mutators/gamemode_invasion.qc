@@ -276,6 +276,13 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
+{
+	if(frag_target.flags & FL_MONSTER)
+		return MUT_ACCADD_INVALID;
+	return MUT_ACCADD_INDIFFERENT;
+}
+
 void invasion_ScoreRules()
 {
 	ScoreRules_basics(0, 0, 0, FALSE);
@@ -308,6 +315,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AccuracyTargetValid, invasion_AccuracyTargetValid, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

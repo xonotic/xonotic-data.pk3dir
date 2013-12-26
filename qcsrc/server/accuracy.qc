@@ -109,11 +109,13 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	float targ_isvalid = ((g_invasion) ? (targ.flags & FL_MONSTER) : IS_CLIENT(targ));
+	frag_attacker = attacker;
+	frag_target = targ;
+	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid);
 
 	if(!warmup_stage)
-	if(targ_isvalid)
 	if(targ.deadflag == DEAD_NO)
+	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;
