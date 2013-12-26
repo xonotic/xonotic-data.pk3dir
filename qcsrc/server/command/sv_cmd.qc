@@ -139,7 +139,7 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
-void GameCommand_butcher(float request)
+void GameCommand_mobbutcher(float request)
 {
 	switch(request)
 	{
@@ -1772,7 +1772,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
+	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

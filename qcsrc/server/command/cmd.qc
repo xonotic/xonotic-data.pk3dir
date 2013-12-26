@@ -188,16 +188,30 @@ void ClientCommand_mobedit(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
-			if(!(trace_ent.flags & FL_MONSTER)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
-			if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
-			
-			switch(argv(1))
+			if(argv(1) && argv(2))
 			{
-				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); } return;
-				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+				
+				if(!(trace_ent.flags & FL_MONSTER)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); }
+				else if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); }
+				else // all went well, continue
+				{
+					switch(argv(1))
+					{
+						case "skin":
+						{
+							if(trace_ent.monsterid != MON_MAGE)
+								trace_ent.skin = stof(argv(2));
+							break;
+						}
+						case "movetarget":
+						{
+							trace_ent.monster_moveflags = stof(argv(2));
+							break;
+						}
+					}
+				}
 			}
 		}
 		default:
@@ -269,6 +283,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
+			else if(tospawn == "") { sprint(self, "No argument specified.\n"); }
 			else if(g_invasion) { sprint(self, "You can't spawn monsters during an invasion!\n"); }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
@@ -297,9 +312,10 @@ void ClientCommand_mobspawn(float request, float argc)
 			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd mobspawn monster\n");
+			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
 			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
-			sprint(self, "  Argument 'random' spawns a randomly selected monster.\n");
+			sprint(self, "  Argument 'random' spawns a random monster.\n");
+			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
 			return;
 		}
 	}
