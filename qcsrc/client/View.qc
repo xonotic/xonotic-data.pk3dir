@@ -565,6 +565,7 @@ void CSQC_UpdateView(float w, float h)
 	vector ov_worldmax = '0 0 0';
 	if(autocvar_cl_orthoview)
 	{
+		#define ORTHO_ACCURACY 512 // x^2 resolution accuracy for evaluating fov scaling and distance
 		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
 
 		ov_worldmin = mi_picmin;
@@ -572,8 +573,8 @@ void CSQC_UpdateView(float w, float h)
 		
 		float ov_width = (ov_worldmax_x - ov_worldmin_x);
 		float ov_height = (ov_worldmax_y - ov_worldmin_y);
-		float ov_distance = (512 * max(ov_width, ov_height));
-		//if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
+		float ov_distance = (ORTHO_ACCURACY * max(ov_width, ov_height));
+
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
 		ov_org = FL2VEC(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
 
@@ -594,12 +595,12 @@ void CSQC_UpdateView(float w, float h)
 		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		
+
 		cvar_set("r_nearclip", ftos(ov_nearest));
 		cvar_set("r_farclip_base", ftos(ov_furthest));
 		cvar_set("r_farclip_world", "0");
 		cvar_set("r_useinfinitefarclip", "0");
-		
+
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
 
