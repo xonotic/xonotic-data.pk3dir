@@ -74,7 +74,7 @@ void W_Laser_Attack (float issecondary)
 	missile.touch = W_Laser_Touch;
 
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	missile.think = W_Laser_Think;
 	missile.nextthink = time + autocvar_g_balance_laser_primary_delay;

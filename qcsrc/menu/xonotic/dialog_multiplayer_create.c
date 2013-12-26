@@ -5,7 +5,7 @@ CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)

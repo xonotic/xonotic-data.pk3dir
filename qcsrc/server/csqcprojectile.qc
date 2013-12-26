@@ -52,7 +52,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(sf & 2)
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
-	
+
 	return 1;
 }
 
@@ -69,9 +69,9 @@ void CSQCProjectile_Check(entity e)
 void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 {
 	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
-	
+
 	e.csqcprojectile_clientanimate = clientanimate;
-	
+
 	if(e.movetype == MOVETYPE_TOSS || e.movetype == MOVETYPE_BOUNCE)
 	{
 		if(e.gravity == 0)
@@ -85,6 +85,10 @@ void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 	e.csqcprojectile_type = type;
 }
 
+// FIXME HACK
+float ItemSend(entity to, float sf);
+void ItemUpdate(entity item);
+// END HACK
 void UpdateCSQCProjectile(entity e)
 {
 	if(e.SendEntity == CSQCProjectile_SendEntity)
@@ -92,6 +96,12 @@ void UpdateCSQCProjectile(entity e)
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
+// FIXME HACK
+	else if(e.SendEntity == ItemSend)
+	{
+		ItemUpdate(e);
+	}
+// END HACK
 }
 
 void UpdateCSQCProjectileAfterTeleport(entity e)

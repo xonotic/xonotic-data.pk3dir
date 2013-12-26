@@ -1,4 +1,4 @@
-#ifdef SVQC 
+#ifdef SVQC
 .vector moveto;
 
 /**

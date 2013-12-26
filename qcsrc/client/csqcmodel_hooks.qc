@@ -93,7 +93,7 @@ string forceplayermodels_goodmodel;
 float forceplayermodels_goodmodelindex;
 
 .vector glowmod;
-.vector old_glowmod; 
+.vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(void)
 {
@@ -121,7 +121,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
 	// FORCEMODEL
 	// which one is ALWAYS good?
-	if not(forceplayermodels_goodmodel)
+	if (!forceplayermodels_goodmodel)
 	{
 		entity e;
 		e = spawn();
@@ -180,7 +180,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	float isfriend;
 	float cm;
 	cm = self.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
@@ -283,7 +283,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 			// Fade out to black now...
 			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
 			self.colormap = 0;
-			
+
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
 			self.glowmod_x = max(self.glowmod_x, 0.0001);
 			self.glowmod_y = max(self.glowmod_y, 0.0001);
@@ -493,7 +493,7 @@ void CSQCModel_Effects_Apply(void)
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
-	                
+
 	if(eff & EF_BRIGHTFIELD)
 		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
 	// ignoring EF_MUZZLEFLASH
@@ -610,7 +610,22 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
+		{
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
 			CSQCPlayer_FallbackFrame_Apply();
+			if(doblend)
+			{
+				skeleton_from_frames(self, self.csqcmodel_isdead);
+			}
+			else
+			{
+				free_skeleton_from_frames(self);
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
+				self.lerpfrac4 = 0;
+			}
+		}
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!

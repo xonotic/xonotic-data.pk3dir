@@ -4,7 +4,7 @@
 // - closable is 0
 // - rootDialog is 0
 // - title is ""
-// - marginTop is 
+// - marginTop is
 // - intendedHeight ends up to be the tab's actual height, or at least close
 // - titleFontSize is 0
 // - marginTop cancels out as much of titleHeight as needed (that is, it should be actualMarginTop - titleHeight)
@@ -135,7 +135,7 @@ void Dialog_configureDialog(entity me)
 	me.frame.alpha = me.alpha;
 	me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
 
-	if not(me.titleFontSize)
+	if (!me.titleFontSize)
 		me.titleHeight = 0; // no title bar
 
 	absWidth = me.intendedWidth * conwidth;

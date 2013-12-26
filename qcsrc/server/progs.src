@@ -37,7 +37,6 @@ defs.qh		// Should rename this, it has fields and globals
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_assault.qh
-mutators/gamemode_arena.qh
 mutators/gamemode_ca.qh
 mutators/gamemode_ctf.qh
 mutators/gamemode_domination.qh
@@ -228,7 +227,6 @@ round_handler.qc
 
 mutators/base.qc
 mutators/gamemode_assault.qc
-mutators/gamemode_arena.qc
 mutators/gamemode_ca.qc
 mutators/gamemode_ctf.qc
 mutators/gamemode_domination.qc
@@ -269,5 +267,3 @@ mutators/mutator_campcheck.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
