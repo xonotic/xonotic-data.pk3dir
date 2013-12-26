@@ -573,7 +573,7 @@ void CSQC_UpdateView(float w, float h)
 		float ov_width = (ov_worldmax_x - ov_worldmin_x);
 		float ov_height = (ov_worldmax_y - ov_worldmin_y);
 		float ov_distance = (512 * max(ov_width, ov_height));
-		if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
+		//if(autocvar_cl_orthoview_distanceoverride) { ov_distance = autocvar_cl_orthoview_distanceoverride; }
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
 		ov_org = FL2VEC(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
 
@@ -603,15 +603,14 @@ void CSQC_UpdateView(float w, float h)
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
 
-		/*if(autocvar_cl_orthoview_debug)
-		{
-			print(sprintf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
-				vtos(ov_org),
-				vtos(getpropertyvec(VF_ANGLES)),
-				ov_distance,
-				ov_nearest,
-				ov_furthest));
-		}*/
+		#if 0
+		print(sprintf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+			vtos(ov_org),
+			vtos(getpropertyvec(VF_ANGLES)),
+			ov_distance,
+			ov_nearest,
+			ov_furthest));
+		#endif
 	}
 
 	// Render the Scene
