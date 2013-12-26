@@ -25,13 +25,12 @@ void XonoticGameSettingsTab_fill(entity me)
 	
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		//me.TD(me, 1, 1, mc.makeTabButton(mc, _("General"),      makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameViewSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Crosshair"),      makeXonoticGameCrosshairSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("HUD"),            makeXonoticGameHUDSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Messages"),       makeXonoticGameMessageSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Weapons"),        makeXonoticGameWeaponsSettingsTab()));
-		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Playermodels"),   makeXonoticGameCrosshairSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Models"),         makeXonoticGameCrosshairSettingsTab()));
 
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, me.rows - 1.5, me.columns, mc);
