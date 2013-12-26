@@ -599,6 +599,8 @@ void CSQC_UpdateView(float w, float h)
 		cvar_set("r_nearclip", ftos(ov_nearest));
 		cvar_set("r_farclip_base", ftos(ov_furthest));
 		cvar_set("r_farclip_world", "0");
+		cvar_set("r_novis", "1");
+		cvar_set("r_useportalculling", "0");
 		cvar_set("r_useinfinitefarclip", "0");
 
 		setproperty(VF_ORIGIN, ov_org);
