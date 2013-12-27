@@ -87,7 +87,12 @@ void saveCvarsMulti(entity me)
 
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
-		cvar_set(argv(i), s);
+	{
+		if(substring(argv(i), 0, 1) == "!")
+			cvar_set(substring(argv(i), 1, strlen(argv(i))), ftos(!stof(s)));
+		else
+			cvar_set(argv(i), s);
+	}
 }
 void makeMulti(entity e, string otherCvars)
 {
