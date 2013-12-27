@@ -565,14 +565,12 @@ void CSQC_UpdateView(float w, float h)
 	vector ov_worldmax = '0 0 0';
 	if(autocvar_cl_orthoview)
 	{
-		#define ORTHO_ACCURACY 512 // x^2 resolution accuracy for evaluating fov scaling and distance
-
 		ov_worldmin = mi_picmin;
 		ov_worldmax = mi_picmax;
-		
+
 		float ov_width = (ov_worldmax_x - ov_worldmin_x);
 		float ov_height = (ov_worldmax_y - ov_worldmin_y);
-		float ov_distance = (ORTHO_ACCURACY * max(ov_width, ov_height));
+		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
 
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
 		ov_org = FL2VEC(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
