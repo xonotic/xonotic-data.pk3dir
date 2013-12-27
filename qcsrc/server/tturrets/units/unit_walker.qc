@@ -515,7 +515,7 @@ void walker_postthink()
 void walker_attack()
 {
     sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 }
@@ -574,10 +574,7 @@ void turret_walker_dinit()
     self.turrcaps_flags = TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MOVE ;
     self.aim_flags = TFL_AIM_LEAD;
 
-    if (autocvar_g_antilag_bullets)
-        self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
-    else
-        self.aim_flags      |= TFL_AIM_SHOTTIMECOMPENSATE;
+    self.turrcaps_flags |= TFL_TURRCAPS_HITSCAN;
 
 
     self.turret_respawnhook = walker_respawnhook;

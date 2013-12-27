@@ -370,8 +370,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA;
 		}
-		if(                     diameter < 4096)
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ARENA;
 		if(spawnpoints >= 12 && diameter > 5120)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 	}
@@ -416,7 +414,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
 		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
 		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_ARENA:           return "10 20 0";
 		case MAPINFO_TYPE_CA:              return "10 20 0";
 		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
 		case MAPINFO_TYPE_ASSAULT:         return "20 0";

@@ -155,6 +155,7 @@ void CopyBody(float keepvelocity)
 	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
+	self.v_angle = oldself.v_angle;
 	self.avelocity = oldself.avelocity;
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
@@ -637,6 +638,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
 			self.respawn_time = time + sdelay;
+		if(autocvar_g_respawn_delay_max > sdelay)
+			self.respawn_time_max = time + autocvar_g_respawn_delay_max;
+		else
+			self.respawn_time_max = self.respawn_time;
 		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
