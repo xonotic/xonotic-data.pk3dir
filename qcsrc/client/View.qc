@@ -566,7 +566,6 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_cl_orthoview)
 	{
 		#define ORTHO_ACCURACY 512 // x^2 resolution accuracy for evaluating fov scaling and distance
-		#define FL2VEC(x,y,z) (('1 0 0' * x) + ('0 1 0' * y) + ('0 0 1' * z))
 
 		ov_worldmin = mi_picmin;
 		ov_worldmax = mi_picmax;
