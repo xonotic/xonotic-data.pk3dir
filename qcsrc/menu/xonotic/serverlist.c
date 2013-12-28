@@ -956,7 +956,10 @@ void ServerList_Info_Click(entity btn, entity me)
 {
 	if (me.nItems != 0)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-	DialogOpenButton_Click(me, main.serverInfoDialog);
+
+	vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
