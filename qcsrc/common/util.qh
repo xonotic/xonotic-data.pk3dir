@@ -430,6 +430,3 @@ void dedicated_print(string input);
 #define CNT_ROUNDSTART 6
 float Announcer_PickNumber(float type, float num);
 #endif
-
-// TODO: Replace this with new gmqcc syntax when available
-#define FL2VEC(x,y,z) ((eX * (x)) + (eY * (y)) + (eZ * (z)))

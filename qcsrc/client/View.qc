@@ -573,9 +573,9 @@ void CSQC_UpdateView(float w, float h)
 		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
 
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
-		ov_org = FL2VEC(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
+		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
 
-		float ov_nearest = vlen(ov_org - FL2VEC(
+		float ov_nearest = vlen(ov_org - vec3(
 			bound(ov_worldmin_x, ov_org_x, ov_worldmax_x),
 			bound(ov_worldmin_y, ov_org_y, ov_worldmax_y),
 			bound(ov_worldmin_z, ov_org_z, ov_worldmax_z)
@@ -584,14 +584,14 @@ void CSQC_UpdateView(float w, float h)
 		float ov_furthest = 0;
 		float dist = 0;
 
-		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(FL2VEC(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 
 		cvar_set("r_nearclip", ftos(ov_nearest));
 		cvar_set("r_farclip_base", ftos(ov_furthest));
