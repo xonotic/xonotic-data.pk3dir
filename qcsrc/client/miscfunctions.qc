@@ -581,10 +581,6 @@ float getplayeralpha(float pl)
 	if(e)
 		return e.alpha;
 
-	e = entcs_receiver[pl];
-	if(e)
-		return e.alpha;
-
 	return 1;
 }
 

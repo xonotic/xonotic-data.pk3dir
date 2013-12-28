@@ -9,6 +9,7 @@
 
 const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
+const float SHOWNAMES_MIN_ALPHA = 0.5;
 void Draw_ShowNames(entity ent)
 {
 	if(!autocvar_hud_shownames)
