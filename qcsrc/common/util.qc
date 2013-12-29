@@ -1312,7 +1312,7 @@ string find_last_color_code(string s)
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
