@@ -9,7 +9,6 @@
 
 const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
-const float SHOWNAMES_MIN_ALPHA = 0.5;
 void Draw_ShowNames(entity ent)
 {
 	if(!autocvar_hud_shownames)
@@ -25,7 +24,6 @@ void Draw_ShowNames(entity ent)
 
 	makevectors(view_angles);
 
-	if(ent.sameteam || (getplayeralpha(ent.sv_entnum-1) >= SHOWNAMES_MIN_ALPHA))
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;
@@ -102,7 +100,11 @@ void Draw_ShowNames(entity ent)
 		else if(time > ent.fadedelay) // fade in for enemies
 			ent.alpha = min(1, ent.alpha + SHOWNAMES_FADESPEED * frametime);
 
-		if(!ent.alpha)
+		// multiply by player alpha
+		if(!ent.sameteam || (ent.sv_entnum == player_localentnum))
+			ent.alpha *= getplayeralpha(ent.sv_entnum-1);
+
+		if(ent.alpha < ALPHA_MIN_VISIBLE)
 			return;
 
 		float dist;
