@@ -4287,14 +4287,17 @@ void HUD_CenterPrint (void)
 
 
 		// fade the centerprint_hud in/out
-		if(centerprint_time[j] < 0)
-			a = bound(0, (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
-			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		else if(centerprint_expire_time[j] > time)
+		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
+			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
+			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
-		else
-			a = 0;
+
+		if (a <= 0.5/256.0)  // Guaranteed invisible - don't show.
+			continue;
+		if (a > 1)
+			a = 1;
 
 		// set the size from fading in/out before subsequent fading
 		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
@@ -4305,6 +4308,7 @@ void HUD_CenterPrint (void)
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
 		}
+		a *= panel_fg_alpha;
 
 		// finally set the size based on the new theAlpha from subsequent fading
 		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
@@ -4344,7 +4348,8 @@ void HUD_CenterPrint (void)
 				{
 					if (align)
 						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
-					drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+					if (a > 0.5/256.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
+						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos_y += fontsize_y;
 				}
 				else

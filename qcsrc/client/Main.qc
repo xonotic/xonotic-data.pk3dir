@@ -921,8 +921,10 @@ void Fog_Force()
 {
 	// TODO somehow thwart prvm_globalset client ...
 
-	if(forcefog != "")
-		localcmd(strcat(notranslate_fogcmd1, forcefog, notranslate_fogcmd2));
+	if(autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
+		{ localcmd("\nr_drawfog 0\n"); }
+	else if(forcefog != "")
+		{ localcmd(strcat(notranslate_fogcmd1, forcefog, notranslate_fogcmd2)); }
 }
 
 void Gamemode_Init();
