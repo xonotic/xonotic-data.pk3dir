@@ -89,7 +89,7 @@ void saveCvarsMulti(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		if(substring(argv(i), 0, 1) == "!")
-			cvar_set(substring(argv(i), 1, strlen(argv(i))), ftos(!stof(s)));
+			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
 		else
 			cvar_set(argv(i), s);
 	}
