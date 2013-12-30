@@ -286,10 +286,6 @@ string gamemode_name;
 
 float startitem_failed;
 
-typedef .float floatfield;
-floatfield Item_CounterField(float it);
-
-float W_AmmoItemCode(float wpn);
 string W_Name(float weaponid);
 string W_Apply_Weaponreplace(string in);
 

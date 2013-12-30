@@ -50,8 +50,6 @@ float have_pickup_item(void);
 #define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
 	// range: 10 .. respawntime + respawntimejitter
 
-string Item_CounterFieldName(float it);
-
 .float max_armorvalue;
 .float pickup_anyway;
 
