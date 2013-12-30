@@ -307,13 +307,15 @@ float TrueAimCheck()
 			break;
 	}
 
+	vector traceorigin = getplayerorigin(player_localentnum-1) + (eZ * getstati(STAT_VIEWHEIGHT));
+
 	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
 
-	traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
-	if(vlen(trueaimpoint - view_origin) < g_trueaim_minrange)
-		trueaimpoint = view_origin + view_forward * g_trueaim_minrange;
+	if(vlen(trueaimpoint - traceorigin) < g_trueaim_minrange)
+		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
 	if(vecs_x > 0)
 		vecs_y = -vecs_y;
@@ -321,7 +323,7 @@ float TrueAimCheck()
 		vecs = '0 0 0';
 
 	dv = view_right * vecs_y + view_up * vecs_z;
-	w_shotorg = view_origin + dv;
+	w_shotorg = traceorigin + dv;
 
 	// now move the vecs forward as much as requested if possible
 	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs_x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
