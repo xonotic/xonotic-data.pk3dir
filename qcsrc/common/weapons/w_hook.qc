@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ HOOK,
-/* function */ w_hook,
+/* function */ W_Hook,
 /* ammotype */ ammo_fuel,
 /* impulse  */ 0,
 /* flags    */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
@@ -169,7 +169,7 @@ void W_Hook_Attack2()
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_hook(float req)
+float W_Hook(float req)
 {
 	float hooked_time_max, hooked_fuel;
 		
@@ -332,7 +332,7 @@ float w_hook(float req)
 }
 #endif
 #ifdef CSQC
-float w_hook(float req)
+float W_Hook(float req)
 {
 	switch(req)
 	{
