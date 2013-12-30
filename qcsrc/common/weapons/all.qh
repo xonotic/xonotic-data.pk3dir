@@ -5,7 +5,7 @@
 // core weapons
 #include "w_blaster.qc"
 #include "w_shockwave.qc"
-#include "w_machinegun.qc"
+#include "w_uzi.qc"
 #include "w_mortar.qc"
 #include "w_minelayer.qc"
 #include "w_electro.qc"
