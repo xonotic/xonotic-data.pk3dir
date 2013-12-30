@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ FIREBALL,
-/* function */ w_fireball,
+/* function */ W_Fireball,
 /* ammotype */ ammo_none,
 /* impulse  */ 9,
 /* flags    */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
@@ -250,7 +250,7 @@ void W_Fireball_Attack1_Frame0()
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
-void W_Firemine_Think()
+void W_Fireball_Firemine_Think()
 {
 	if(time > self.pushltime)
 	{
@@ -276,7 +276,7 @@ void W_Firemine_Think()
 	self.nextthink = time + 0.1;
 }
 
-void W_Firemine_Touch (void)
+void W_Fireball_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
@@ -324,11 +324,11 @@ void W_Fireball_Attack2()
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
-	proj.touch = W_Firemine_Touch;
+	proj.touch = W_Fireball_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, w_shotorg);
-	proj.think = W_Firemine_Think;
+	proj.think = W_Fireball_Firemine_Think;
 	proj.nextthink = time;
 	proj.damageforcescale = WEP_CVAR_SEC(fireball, damageforcescale);
 	proj.pushltime = time + WEP_CVAR_SEC(fireball, lifetime);
@@ -343,7 +343,7 @@ void W_Fireball_Attack2()
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_fireball(float req)
+float W_Fireball(float req)
 {
 	switch(req)
 	{
@@ -443,7 +443,7 @@ float w_fireball(float req)
 }
 #endif
 #ifdef CSQC
-float w_fireball(float req)
+float W_Fireball(float req)
 {
 	switch(req)
 	{
