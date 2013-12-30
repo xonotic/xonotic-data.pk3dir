@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ MORTAR,
-/* function */ w_glauncher,
+/* function */ W_Mortar,
 /* ammotype */ ammo_rockets,
 /* impulse  */ 4,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
@@ -51,7 +51,10 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #else
 #ifdef SVQC
 
-void W_Grenade_Explode (void)
+void spawnfunc_weapon_mortar() { weapon_defaultspawnfunc(WEP_MORTAR); }
+void spawnfunc_weapon_grenadelauncher() { spawnfunc_weapon_mortar(); }
+
+void W_Mortar_Grenade_Explode()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -71,7 +74,7 @@ void W_Grenade_Explode (void)
 	remove (self);
 }
 
-void W_Grenade_Explode2 (void)
+void W_Mortar_Grenade_Explode2()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -91,7 +94,8 @@ void W_Grenade_Explode2 (void)
 	remove (self);
 }
 
-void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+
+void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -105,21 +109,21 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
-void W_Grenade_Think1 (void)
+void W_Mortar_Grenade_Think1()
 {
 	self.nextthink = time;
 	if (time > self.cnt)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Grenade_Explode ();
+		W_Mortar_Grenade_Explode();
 		return;
 	}
 	if(self.gl_detonate_later && self.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
-		W_Grenade_Explode();
+		W_Mortar_Grenade_Explode();
 }
 
-void W_Grenade_Touch1 (void)
+void W_Mortar_Grenade_Touch1()
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
@@ -164,7 +168,7 @@ void W_Grenade_Touch1 (void)
 	}
 }
 
-void W_Grenade_Touch2 (void)
+void W_Mortar_Grenade_Touch2()
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
@@ -213,7 +217,7 @@ void W_Grenade_Touch2 (void)
 	}
 }
 
-void W_Grenade_Attack (void)
+void W_Mortar_Attack()
 {
 	entity gren;
 
@@ -239,14 +243,14 @@ void W_Grenade_Attack (void)
 
 	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
-	gren.think = W_Grenade_Think1;
-	gren.use = W_Grenade_Explode;
-	gren.touch = W_Grenade_Touch1;
+	gren.think = W_Mortar_Grenade_Think1;
+	gren.use = W_Mortar_Grenade_Explode;
+	gren.touch = W_Mortar_Grenade_Touch1;
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_PRI(mortar, health);
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
-	gren.event_damage = W_Grenade_Damage;
+	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	WEP_SETUPPROJVELOCITY_UP_PRI(gren, mortar);
@@ -262,7 +266,7 @@ void W_Grenade_Attack (void)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_Grenade_Attack2 (void)
+void W_Mortar_Attack2()
 {
 	entity gren;
 
@@ -288,13 +292,13 @@ void W_Grenade_Attack2 (void)
 
 	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use = W_Grenade_Explode2;
-	gren.touch = W_Grenade_Touch2;
+	gren.use = W_Mortar_Grenade_Explode2;
+	gren.touch = W_Mortar_Grenade_Touch2;
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_SEC(mortar, health);
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
-	gren.event_damage = W_Grenade_Damage;
+	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	WEP_SETUPPROJVELOCITY_UP_SEC(gren, mortar); // WEAPONTODO
@@ -310,13 +314,8 @@ void W_Grenade_Attack2 (void)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void spawnfunc_weapon_grenadelauncher (void)
-{
-	weapon_defaultspawnfunc(WEP_MORTAR);
-}
-
 .float bot_secondary_grenademooth;
-float w_glauncher(float req)
+float W_Mortar(float req)
 {
 	entity nade;
 	float nadefound;
@@ -370,7 +369,7 @@ float w_glauncher(float req)
 			{
 				if (weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))
 				{
-					W_Grenade_Attack();
+					W_Mortar_Attack();
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
@@ -392,7 +391,7 @@ float w_glauncher(float req)
 				}
 				else if (weapon_prepareattack(1, WEP_CVAR_SEC(mortar, refire)))
 				{
-					W_Grenade_Attack2();
+					W_Mortar_Attack2();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
@@ -456,7 +455,7 @@ float w_glauncher(float req)
 }
 #endif
 #ifdef CSQC
-float w_glauncher(float req)
+float W_Mortar(float req)
 {
 	switch(req)
 	{
