@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ HAGAR,
-/* function */ w_hagar,
+/* function */ W_Hagar,
 /* ammotype */ ammo_rockets,
 /* impulse  */ 8,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
@@ -386,7 +386,7 @@ void W_Hagar_Attack2_Load (void)
 	}
 }
 
-float w_hagar(float req)
+float W_Hagar(float req)
 {
 	float ammo_amount;
 	switch(req)
@@ -515,7 +515,7 @@ float w_hagar(float req)
 }
 #endif
 #ifdef CSQC
-float w_hagar(float req)
+float W_Hagar(float req)
 {
 	switch(req)
 	{
