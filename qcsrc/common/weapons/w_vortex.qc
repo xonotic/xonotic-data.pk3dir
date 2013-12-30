@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ VORTEX,
-/* function */ w_vortex,
+/* function */ W_Vortex,
 /* ammotype */ ammo_cells,
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
@@ -117,7 +117,7 @@ void W_Vortex_Attack (float issecondary)
 void spawnfunc_weapon_vortex (void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float w_vortex(float req)
+float W_Vortex(float req)
 {
 	float dt;
 	float ammo_amount;
@@ -293,7 +293,7 @@ float w_vortex(float req)
 }
 #endif
 #ifdef CSQC
-float w_vortex(float req)
+float W_Vortex(float req)
 {
 	switch(req)
 	{
