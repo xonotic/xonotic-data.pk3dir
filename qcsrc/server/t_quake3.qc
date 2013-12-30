@@ -8,7 +8,6 @@
 void spawnfunc_ammo_shells()         { spawnfunc_item_shells();         }
 
 // MG -> MG
-void spawnfunc_weapon_machinegun()   { spawnfunc_weapon_uzi();          }
 void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
 
 // GL -> Mortar

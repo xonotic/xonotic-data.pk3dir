@@ -265,7 +265,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_porto g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_hlac g_start_weapon_rifle g_start_weapon_fireball g_start_weapon_seeker g_start_weapon_tuba");
+			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_machinegun g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_porto g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_hlac g_start_weapon_rifle g_start_weapon_fireball g_start_weapon_seeker g_start_weapon_tuba");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
