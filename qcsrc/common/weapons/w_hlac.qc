@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ HLAC,
-/* function */ w_hlac,
+/* function */ W_HLAC,
 /* ammotype */ ammo_cells,
 /* impulse  */ 6,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
@@ -109,7 +109,7 @@ void W_HLAC_Attack (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_HLAC_Attack2f (void)
+void W_HLAC_Attack2()
 {
 	entity missile;
     float spread;
@@ -153,24 +153,8 @@ void W_HLAC_Attack2f (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_HLAC_Attack2 (void)
-{
-    float i;
-
-	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
-
-    for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
-        W_HLAC_Attack2f();
-
-	if (!autocvar_g_norecoil)
-	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
-}
-
 // weapon frames
-void HLAC_fire1_02()
+void W_HLAC_Attack_Frame()
 {
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
@@ -191,7 +175,7 @@ void HLAC_fire1_02()
 		ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
 		W_HLAC_Attack();
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-        weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), HLAC_fire1_02);
+        weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
@@ -199,7 +183,23 @@ void HLAC_fire1_02()
 	}
 }
 
-float w_hlac(float req)
+void W_HLAC_Attack2_Frame()
+{
+    float i;
+
+	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
+
+    for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
+        W_HLAC_Attack2();
+
+	if (!autocvar_g_norecoil)
+	{
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+	}
+}
+
+float W_HLAC(float req)
 {
 	float ammo_amount;
 	switch(req)
@@ -219,7 +219,7 @@ float w_hlac(float req)
 				{
 					self.misc_bulletcounter = 0;
 					W_HLAC_Attack();
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), HLAC_fire1_02);
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 				}
 			}
 
@@ -227,7 +227,7 @@ float w_hlac(float req)
 			{
 				if (weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
 				{
-					W_HLAC_Attack2();
+					W_HLAC_Attack2_Frame();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
@@ -278,7 +278,7 @@ float w_hlac(float req)
 }
 #endif
 #ifdef CSQC
-float w_hlac(float req)
+float W_HLAC(float req)
 {
 	switch(req)
 	{
