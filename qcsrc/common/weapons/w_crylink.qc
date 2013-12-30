@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ CRYLINK,
-/* function */ w_crylink,
+/* function */ W_Crylink,
 /* ammotype */ ammo_cells,
 /* impulse  */ 6,
 /* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
@@ -559,7 +559,7 @@ void W_Crylink_Attack2 (void)
 	}
 }
 
-float w_crylink(float req)
+float W_Crylink(float req)
 {
 	float ammo_amount;
 	switch(req)
@@ -619,7 +619,7 @@ float w_crylink(float req)
 						setorigin(linkjoineffect, pos);
 					}
 					self.crylink_waitrelease = 0;
-					if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
+					if(!W_Crylink(WR_CHECKAMMO1) && !W_Crylink(WR_CHECKAMMO2))
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						// ran out of ammo!
@@ -685,7 +685,7 @@ float w_crylink(float req)
 }
 #endif
 #ifdef CSQC
-float w_crylink(float req)
+float W_Crylink(float req)
 {
 	switch(req)
 	{
