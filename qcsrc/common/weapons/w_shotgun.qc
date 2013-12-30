@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOTGUN,
-/* function  */ w_shotgun,
+/* function  */ W_Shotgun,
 /* ammotype  */ ammo_none,
 /* impulse   */ 2,
 /* flags     */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED,
@@ -75,7 +75,7 @@ void W_Shotgun_Attack (void)
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void shotgun_meleethink (void)
+void W_Shotgun_Melee_Think()
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -179,7 +179,7 @@ void W_Shotgun_Attack2 (void)
 	entity meleetemp;
 	meleetemp = spawn();
 	meleetemp.realowner = self;
-	meleetemp.think = shotgun_meleethink;
+	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
@@ -188,7 +188,7 @@ void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
 .float shotgun_primarytime;
 
-float w_shotgun(float req)
+float W_Shotgun(float req)
 {
 	switch(req)
 	{
@@ -286,7 +286,7 @@ float w_shotgun(float req)
 #endif
 #ifdef CSQC
 .float prevric;
-float w_shotgun(float req)
+float W_Shotgun(float req)
 {
 	switch(req)
 	{
