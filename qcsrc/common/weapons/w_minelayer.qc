@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ MINE_LAYER,
-/* function */ w_minelayer,
+/* function */ W_MineLayer,
 /* ammotype */ ammo_rockets,
 /* impulse  */ 4,
 /* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
@@ -45,7 +45,7 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 MINELAYER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-void W_Mine_Think (void);
+void W_MineLayer_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 .vector mine_orientation;
@@ -54,7 +54,7 @@ void W_Mine_Think (void);
 #ifdef SVQC
 void spawnfunc_weapon_minelayer() { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
 
-void W_Mine_Stick (entity to)
+void W_MineLayer_Stick (entity to)
 {
 	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 
@@ -89,7 +89,7 @@ void W_Mine_Stick (entity to)
 	newmine.mine_time = self.mine_time;
 
 	newmine.touch = func_null;
-	newmine.think = W_Mine_Think;
+	newmine.think = W_MineLayer_Think;
 	newmine.nextthink = time;
 	newmine.cnt = self.cnt;
 	newmine.flags = self.flags;
@@ -101,7 +101,7 @@ void W_Mine_Stick (entity to)
 		SetMovetypeFollow(self, to);
 }
 
-void W_Mine_Explode ()
+void W_MineLayer_Explode()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -132,7 +132,7 @@ void W_Mine_Explode ()
 	remove (self);
 }
 
-void W_Mine_DoRemoteExplode ()
+void W_MineLayer_DoRemoteExplode ()
 {
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -159,7 +159,7 @@ void W_Mine_DoRemoteExplode ()
 	remove (self);
 }
 
-void W_Mine_RemoteExplode ()
+void W_MineLayer_RemoteExplode ()
 {
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
@@ -167,11 +167,11 @@ void W_Mine_RemoteExplode ()
 			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(minelayer, remote_radius)) // safety device
 		)
 		{
-			W_Mine_DoRemoteExplode();
+			W_MineLayer_DoRemoteExplode();
 		}
 }
 
-void W_Mine_ProximityExplode ()
+void W_MineLayer_ProximityExplode ()
 {
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
@@ -187,10 +187,10 @@ void W_Mine_ProximityExplode ()
 	}
 
 	self.mine_time = 0;
-	W_Mine_Explode();
+	W_MineLayer_Explode();
 }
 
-float W_Mine_Count(entity e)
+float W_MineLayer_Count(entity e)
 {
 	float minecount = 0;
 	entity mine;
@@ -200,7 +200,7 @@ float W_Mine_Count(entity e)
 	return minecount;
 }
 
-void W_Mine_Think (void)
+void W_MineLayer_Think (void)
 {
 	entity head;
 
@@ -231,7 +231,7 @@ void W_Mine_Think (void)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mine_Explode();
+		W_MineLayer_Explode();
 		return;
 	}
 
@@ -252,7 +252,7 @@ void W_Mine_Think (void)
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
 	{
-		W_Mine_ProximityExplode();
+		W_MineLayer_ProximityExplode();
 		return;
 	}
 
@@ -260,10 +260,10 @@ void W_Mine_Think (void)
 	if (self.realowner.weapon == WEP_MINE_LAYER)
 	if (self.realowner.deadflag == DEAD_NO)
 	if (self.minelayer_detonate)
-		W_Mine_RemoteExplode();
+		W_MineLayer_RemoteExplode();
 }
 
-void W_Mine_Touch (void)
+void W_MineLayer_Touch (void)
 {
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
@@ -282,11 +282,11 @@ void W_Mine_Touch (void)
 	}
 	else
 	{
-		W_Mine_Stick(other);
+		W_MineLayer_Stick(other);
 	}
 }
 
-void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_MineLayer_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -300,10 +300,10 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 	self.angles = vectoangles(self.velocity);
 	
 	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
+		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
 }
 
-void W_Mine_Attack (void)
+void W_MineLayer_Attack()
 {
 	entity mine;
 	entity flash;
@@ -338,7 +338,7 @@ void W_Mine_Attack (void)
 	mine.takedamage = DAMAGE_YES;
 	mine.damageforcescale = WEP_CVAR(minelayer, damageforcescale);
 	mine.health = WEP_CVAR(minelayer, health);
-	mine.event_damage = W_Mine_Damage;
+	mine.event_damage = W_MineLayer_Damage;
 	mine.damagedbycontents = TRUE;
 
 	mine.movetype = MOVETYPE_TOSS;
@@ -350,8 +350,8 @@ void W_Mine_Attack (void)
 	W_SetupProjectileVelocity(mine, WEP_CVAR(minelayer, speed), 0);
 	mine.angles = vectoangles (mine.velocity);
 
-	mine.touch = W_Mine_Touch;
-	mine.think = W_Mine_Think;
+	mine.touch = W_MineLayer_Touch;
+	mine.think = W_MineLayer_Think;
 	mine.nextthink = time;
 	mine.cnt = time + (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
 	mine.flags = FL_PROJECTILE;
@@ -370,10 +370,10 @@ void W_Mine_Attack (void)
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
 	
-	self.minelayer_mines = W_Mine_Count(self);
+	self.minelayer_mines = W_MineLayer_Count(self);
 }
 
-float W_PlacedMines(float detonate)
+float W_MineLayer_PlacedMines(float detonate)
 {
 	entity mine;
 	float minfound = 0;
@@ -394,7 +394,7 @@ float W_PlacedMines(float detonate)
 	return minfound;
 }
 
-float w_minelayer(float req)
+float W_MineLayer(float req)
 {
 	entity mine;
 	float ammo_amount;
@@ -505,21 +505,21 @@ float w_minelayer(float req)
 			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if(!(W_PlacedMines(FALSE) && self.AMMO_VAL(WEP_MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
+				if(!(W_MineLayer_PlacedMines(FALSE) && self.AMMO_VAL(WEP_MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else if (self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR(minelayer, refire)))
 				{
-					W_Mine_Attack();
+					W_MineLayer_Attack();
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
 			if (self.BUTTON_ATCK2)
 			{
-				if(W_PlacedMines(TRUE))
+				if(W_MineLayer_PlacedMines(TRUE))
 					sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 			}
 			
@@ -552,7 +552,7 @@ float w_minelayer(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			if (W_PlacedMines(FALSE))
+			if (W_MineLayer_PlacedMines(FALSE))
 				return TRUE;
 			else
 				return FALSE;
@@ -585,7 +585,7 @@ float w_minelayer(float req)
 }
 #endif
 #ifdef CSQC
-float w_minelayer(float req)
+float W_MineLayer(float req)
 {
 	switch(req)
 	{
