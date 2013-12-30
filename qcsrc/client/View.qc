@@ -199,6 +199,17 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
+vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
+{
+	float fovx, fovy;
+	float width = (ov_worldmax_x - ov_worldmin_x);
+	float height = (ov_worldmax_y - ov_worldmin_y);
+	float distance_to_middle_of_world = vlen(ov_mid - ov_org);
+	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
+	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
 // this function must match W_SetupShot!
 float zoomscript_caught;
 
@@ -481,7 +492,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission)
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -549,6 +560,60 @@ void CSQC_UpdateView(float w, float h)
 
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
+
+	vector ov_org = '0 0 0';
+	vector ov_mid = '0 0 0';
+	vector ov_worldmin = '0 0 0';
+	vector ov_worldmax = '0 0 0';
+	if(autocvar_cl_orthoview)
+	{
+		ov_worldmin = mi_picmin;
+		ov_worldmax = mi_picmax;
+
+		float ov_width = (ov_worldmax_x - ov_worldmin_x);
+		float ov_height = (ov_worldmax_y - ov_worldmin_y);
+		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
+
+		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
+		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
+
+		float ov_nearest = vlen(ov_org - vec3(
+			bound(ov_worldmin_x, ov_org_x, ov_worldmax_x),
+			bound(ov_worldmin_y, ov_org_y, ov_worldmax_y),
+			bound(ov_worldmin_z, ov_org_z, ov_worldmax_z)
+		));
+
+		float ov_furthest = 0;
+		float dist = 0;
+
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+
+		cvar_set("r_nearclip", ftos(ov_nearest));
+		cvar_set("r_farclip_base", ftos(ov_furthest));
+		cvar_set("r_farclip_world", "0");
+		cvar_set("r_novis", "1");
+		cvar_set("r_useportalculling", "0");
+		cvar_set("r_useinfinitefarclip", "0");
+
+		setproperty(VF_ORIGIN, ov_org);
+		setproperty(VF_ANGLES, '90 0 0');
+
+		#if 0
+		print(sprintf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+			vtos(ov_org),
+			vtos(getpropertyvec(VF_ANGLES)),
+			ov_distance,
+			ov_nearest,
+			ov_furthest));
+		#endif
+	}
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -691,7 +756,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	setproperty(VF_FOV, GetCurrentFov(fov));
+	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
+	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
 	if(camera_active)
