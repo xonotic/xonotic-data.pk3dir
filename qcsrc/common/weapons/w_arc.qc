@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ ARC,
-/* function */ w_arc,
+/* function */ W_Arc,
 /* ammotype */ ammo_cells,
 /* impulse  */ 3,
 /* flags    */ WEP_FLAG_NORMAL,
@@ -157,7 +157,7 @@ void W_Arc_Attack1 (void)
 	self = oldself;
 }
 
-float w_arc(float req)
+float W_Arc(float req)
 {
 	switch(req)
 	{
@@ -299,7 +299,7 @@ void ArcInit()
 }
 #endif
 #ifdef CSQC
-float w_arc(float req)
+float W_Arc(float req)
 {
 	switch(req)
 	{
