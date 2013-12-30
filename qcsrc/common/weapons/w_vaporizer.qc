@@ -1,7 +1,7 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id */ VAPORIZER,
-/* function */ w_vaporizer,
+/* function */ W_Vaporizer,
 /* ammotype */ ammo_cells,
 /* impulse  */ 7,
 /* flags    */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
@@ -110,7 +110,7 @@ void W_Vaporizer_Attack (void)
 	W_DecreaseAmmo(((g_minstagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
-float w_vaporizer(float req)
+float W_Vaporizer(float req)
 {
 	float ammo_amount;
 	float vaporizer_ammo;
@@ -248,7 +248,7 @@ float w_vaporizer(float req)
 }
 #endif
 #ifdef CSQC
-float w_vaporizer(float req)
+float W_Vaporizer(float req)
 {
 	switch(req)
 	{
