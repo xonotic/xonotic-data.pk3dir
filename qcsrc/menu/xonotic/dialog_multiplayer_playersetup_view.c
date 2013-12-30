@@ -73,7 +73,7 @@ void XonoticViewDialog_fill(entity me)
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
-		makeMulti(e, "crosshair_hittest_showimpact !r_water_hideplayer");
+		makeMulti(e, "crosshair_hittest_showimpact");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.05, 0, "cl_bobfall", _("Smooth the view when landing from a jump")));
@@ -94,7 +94,7 @@ void XonoticViewDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "1", _("3rd person perspective")));
-		makeMulti(e, "crosshair_hittest_showimpact !r_water_hideplayer");
+		makeMulti(e, "crosshair_hittest_showimpact");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Back distance")));
