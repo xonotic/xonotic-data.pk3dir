@@ -47,12 +47,13 @@ const float   IT_CTF_SHIELDED              = 4; // set for the flag shield
 const float   IT_USING_JETPACK             = 8; // confirmation that button is pressed
 const float   IT_JETPACK                   = 16; // actual item
 const float   IT_FUEL_REGEN                = 32; // fuel regeneration trigger
+// where is 64... ?
+const float   IT_FUEL                      = 128;
 WANT_CONST float   IT_SHELLS                    = 256;
 WANT_CONST float   IT_NAILS                     = 512;
 WANT_CONST float   IT_ROCKETS                   = 1024;
 WANT_CONST float   IT_CELLS                     = 2048;
 const float   IT_SUPERWEAPON               = 4096;
-const float   IT_FUEL                      = 128;
 const float   IT_STRENGTH                  = 8192;
 const float   IT_INVINCIBLE                = 16384;
 const float   IT_HEALTH                    = 32768;
@@ -129,22 +130,6 @@ float GetAmmoStat(.float ammotype);
 .float ammo_fuel;
 .float ammo_none;
 
-// entity properties of weaponinfo:
-.float weapon; // WEP_...
-.WepSet weapons; // WEPSET_...
-.string netname; // short name
-.string message; // human readable name
-.float items; // IT_... // WEAPONTODO: I thought I removed items from weapons... ?
-.float(float) weapon_func; // w_...
-.vector wpcolor; // waypointsprite color
-.string mdl; // modelname without g_, v_, w_
-.string model; // full name of g_ model
-.float spawnflags; // WEPSPAWNFLAG_... combined
-.float impulse; // weapon impulse
-.float bot_pickupbasevalue; // bot weapon priority
-.string model2; // wpn- sprite name
-..float ammo_field; // main ammo field
-
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
 #define AMMO_VAL(wpn) ((get_weaponinfo(wpn)).ammo_field)
@@ -182,6 +167,22 @@ float GetAmmoStat(.float ammotype);
 float w_null(float dummy);
 void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, vector clr, string modelname, string shortname, string wname);
 void register_weapons_done();
+
+// entity properties of weaponinfo:
+.float weapon; // WEP_...
+.WepSet weapons; // WEPSET_...
+.string netname; // short name
+.string message; // human readable name
+.float items; // IT_... // WEAPONTODO: I thought I removed items from weapons... ?
+.float(float) weapon_func; // w_...
+.vector wpcolor; // waypointsprite color
+.string mdl; // modelname without g_, v_, w_
+.string model; // full name of g_ model
+.float spawnflags; // WEPSPAWNFLAG_... combined
+.float impulse; // weapon impulse
+.float bot_pickupbasevalue; // bot weapon priority
+.string model2; // wpn- sprite name
+..float ammo_field; // main ammo field
 
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname) \
