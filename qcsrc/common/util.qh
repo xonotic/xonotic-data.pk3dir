@@ -1,4 +1,3 @@
-#define WANT_CONST
 // commonly used, but better make them macros
 #define TRUE 1
 #define FALSE 0

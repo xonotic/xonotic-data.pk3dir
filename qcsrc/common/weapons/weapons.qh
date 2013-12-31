@@ -38,6 +38,7 @@ const float MAX_SHOT_DISTANCE = 32768;
 #define WR_ZOOMRETICLE    16 // (CLIENT) weapon specific zoom reticle
 
 // WEAPONTODO
+#define WANT_CONST /* we WANT these to be constant, but it conflicts with the declaration in dpdefs/progsdefs.qc */
 const float	IT_UNLIMITED_WEAPON_AMMO     = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const float	IT_UNLIMITED_SUPERWEAPONS    = 2;
