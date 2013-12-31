@@ -1,5 +1,3 @@
-.float antilag_debug;
-
 vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
