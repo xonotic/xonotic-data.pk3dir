@@ -133,11 +133,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	return outvelocity;
 }
 
-#if 0
-float mspercallsum;
-float mspercallsstyle;
-float mspercallcount;
-#endif
 void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
 	if(missile.owner == world)

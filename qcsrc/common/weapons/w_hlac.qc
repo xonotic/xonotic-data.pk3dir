@@ -93,7 +93,7 @@ void W_HLAC_Attack (void)
 	setorigin (missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	W_SetupProjectileVelocity(missile, WEP_CVAR_PRI(hlac, speed), spread);
+	W_SetupVelocity_Explicit(missile, WEP_CVAR_PRI(hlac, speed), spread);
 	//missile.angles = vectoangles (missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
@@ -136,7 +136,7 @@ void W_HLAC_Attack2()
 	setorigin (missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
-	W_SetupProjectileVelocity(missile, WEP_CVAR_SEC(hlac, speed), spread);
+	W_SetupVelocity_Explicit(missile, WEP_CVAR_SEC(hlac, speed), spread);
 	//missile.angles = vectoangles (missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;

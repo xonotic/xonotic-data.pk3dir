@@ -262,7 +262,7 @@ void W_Electro_Attack_Bolt(void)
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
-	WEP_SPV_PRI(proj, electro);
+	W_SetupVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Electro_TouchExplode;
 	setsize(proj, '0 0 -3', '0 0 -3');
@@ -354,7 +354,7 @@ void W_Electro_Attack_Orb(void)
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	WEP_SPV_UP_SEC(proj, electro);
+	W_SetupVelocity_UP_SEC(proj, electro);
 	proj.touch = W_Electro_Orb_Touch;
 	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;

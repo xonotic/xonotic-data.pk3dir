@@ -292,7 +292,7 @@ void W_Devastator_Attack (void)
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-	W_SetupProjectileVelocity(missile, WEP_CVAR(devastator, speedstart), 0);
+	W_SetupVelocity_Explicit(missile, WEP_CVAR(devastator, speedstart), 0);
 	missile.angles = vectoangles (missile.velocity);
 
 	missile.touch = W_Devastator_Touch;

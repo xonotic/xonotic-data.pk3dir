@@ -257,9 +257,9 @@ void W_Porto_Attack (float type)
 	gren.touch = W_Porto_Touch;
 	
 	if(self.items & IT_STRENGTH)
-		W_SetupProjectileVelocity(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
+		W_SetupVelocity_Explicit(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
-		W_SetupProjectileVelocity(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
+		W_SetupVelocity_Explicit(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;

@@ -159,7 +159,7 @@ void W_Hook_Attack2()
 		gren.velocity = gren.velocity + self.velocity;
 
 	gren.gravity = WEP_CVAR_SEC(hook, gravity);
-	//W_SetupProjectileVelocity(gren); // just falling down!
+	//W_SetupVelocity_Explicit(gren); // just falling down!
 
 	gren.angles = '0 0 0';
 	gren.flags = FL_PROJECTILE;
