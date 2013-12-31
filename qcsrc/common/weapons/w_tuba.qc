@@ -487,6 +487,16 @@ float W_Tuba(float req)
 float W_Tuba(float req)
 {
 	// nothing to do here; particles of tuba are handled differently
+	// WEAPONTODO
+
+	switch(req)
+	{
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
+	}
 
 	return TRUE;
 }

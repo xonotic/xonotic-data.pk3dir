@@ -479,6 +479,11 @@ float W_Devastator(float req)
 			precache_sound("weapons/rocket_impact.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	return TRUE;
 }

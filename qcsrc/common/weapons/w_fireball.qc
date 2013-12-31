@@ -469,6 +469,11 @@ float W_Fireball(float req)
 			precache_sound("weapons/fireball_impact2.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 
 	return TRUE;

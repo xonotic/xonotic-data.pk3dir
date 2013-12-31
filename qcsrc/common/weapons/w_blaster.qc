@@ -277,6 +277,11 @@ float W_Blaster(float request)
 			precache_sound("weapons/laserimpact.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	
 	return TRUE;

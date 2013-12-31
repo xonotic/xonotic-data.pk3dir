@@ -34,7 +34,8 @@ const float MAX_SHOT_DISTANCE = 32768;
 #define WR_SWITCHABLE     12 // (CLIENT) impact effect
 #define WR_PLAYERDEATH    13 // (SERVER) does not need to do anything
 #define WR_GONETHINK      14 // (SERVER) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
-#define WR_CONFIG         15 // (ALL) 
+#define WR_CONFIG         15 // (ALL)
+#define WR_ZOOMRETICLE    16 // (CLIENT) weapon specific zoom reticle
 
 // WEAPONTODO
 const float	IT_UNLIMITED_WEAPON_AMMO     = 1;
@@ -127,7 +128,7 @@ string W_Name(float weaponid);
 .WepSet weapons; // WEPSET_...
 .string netname; // short name
 .string message; // human readable name
-.float items; // IT_...
+.float items; // IT_... // WEAPONTODO: I thought I removed items from weapons... ?
 .float(float) weapon_func; // w_...
 .vector wpcolor; // waypointsprite color
 .string mdl; // modelname without g_, v_, w_
@@ -136,6 +137,7 @@ string W_Name(float weaponid);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
+.string message2; // zoom reticle image
 ..float current_ammo; // main ammo field
 
 // other useful macros

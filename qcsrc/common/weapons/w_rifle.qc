@@ -286,7 +286,24 @@ float W_Rifle(float req)
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");
 			precache_sound("weapons/ric3.wav");
+			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+			{
+				precache_pic("gfx/reticle_nex");
+			}
 			return TRUE;
+		}
+		case WR_ZOOMRETICLE:
+		{
+			if(button_zoom || zoomscript_caught)
+			{
+				reticle_image = "gfx/reticle_nex";
+				return TRUE;
+			}
+			else
+			{
+				// no weapon specific image for this weapon
+				return FALSE;
+			}
 		}
 	}
 

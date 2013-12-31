@@ -352,6 +352,7 @@ float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
 float reticle_type;
+string reticle_image;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
 void CSQC_RAPTOR_HUD();
@@ -798,49 +799,63 @@ void CSQC_UpdateView(float w, float h)
 		R_EndPolygon();
 	}
 
-	// Draw the aiming reticle for weapons that use it
-	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
-	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
-	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || is_dead || hud != HUD_NORMAL)
-		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if((activeweapon == WEP_VORTEX || activeweapon == WEP_RIFLE || activeweapon == WEP_VAPORIZER) && (button_zoom || zoomscript_caught))
-		reticle_type = 2; // nex zoom
-	else if(button_zoom || zoomscript_caught)
-		reticle_type = 1; // normal zoom
-	else if((activeweapon == WEP_VORTEX) && button_attack2)
-		reticle_type = 2; // nex zoom
-
-	if(reticle_type && autocvar_cl_reticle)
+	if(autocvar_cl_reticle)
 	{
-		if(autocvar_cl_reticle_stretch)
+		// Draw the aiming reticle for weapons that use it
+		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
+		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
+		// the view to go back to normal, so reticle_type would become 0 as we fade out)
+		if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		{
-			reticle_size_x = vid_conwidth;
-			reticle_size_y = vid_conheight;
-			reticle_pos_x = 0;
-			reticle_pos_y = 0;
+			// no zoom reticle while dead
+			reticle_type = 0;
 		}
-		else
+		else if(WEP_ACTION(activeweapon, WR_ZOOMRETICLE) && autocvar_cl_reticle_weapon)
 		{
-			reticle_size_x = max(vid_conwidth, vid_conheight);
-			reticle_size_y = max(vid_conwidth, vid_conheight);
-			reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-			reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+			if(reticle_image != "") { reticle_type = 2; }
+			else { reticle_type = 0; }
+		}
+		else if(button_zoom || zoomscript_caught)
+		{
+			// normal zoom
+			reticle_type = 1;
 		}
 
-		f = current_zoomfraction;
-		if(zoomscript_caught)
-			f = 1;
-		if(autocvar_cl_reticle_item_normal)
+		if(reticle_type)
 		{
-			if(reticle_type == 1 && f)
-				drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
+			if(autocvar_cl_reticle_stretch)
+			{
+				reticle_size_x = vid_conwidth;
+				reticle_size_y = vid_conheight;
+				reticle_pos_x = 0;
+				reticle_pos_y = 0;
+			}
+			else
+			{
+				reticle_size_x = max(vid_conwidth, vid_conheight);
+				reticle_size_y = max(vid_conwidth, vid_conheight);
+				reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+				reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+			}
+
+			if(zoomscript_caught)
+				f = 1;
+			else 
+				f = current_zoomfraction;
+
+			if(f)
+			{
+				switch(reticle_type)
+				{
+					case 1: drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL); break;
+					case 2: drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
+				}
+			}
 		}
-		if(autocvar_cl_reticle_item_vortex)
-		{
-			if(reticle_type == 2 && f)
-				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_vortex, DRAWFLAG_NORMAL);
-		}
+	}
+	else
+	{
+		if(reticle_type != 0) { reticle_type = 0; }
 	}
 
 

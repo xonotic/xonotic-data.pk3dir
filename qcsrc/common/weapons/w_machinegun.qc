@@ -391,6 +391,11 @@ float W_MachineGun(float req)
 			precache_sound("weapons/ric3.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	return TRUE;
 }

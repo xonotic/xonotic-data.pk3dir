@@ -293,6 +293,7 @@ float W_Vortex(float req)
 }
 #endif
 #ifdef CSQC
+var float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 float W_Vortex(float req)
 {
 	switch(req)
@@ -310,7 +311,24 @@ float W_Vortex(float req)
 		case WR_INIT:
 		{
 			precache_sound("weapons/neximpact.wav");
+			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+			{
+				precache_pic("gfx/reticle_nex");
+			}
 			return TRUE;
+		}
+		case WR_ZOOMRETICLE:
+		{
+			if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
+			{
+				reticle_image = "gfx/reticle_nex";
+				return TRUE;
+			}
+			else
+			{
+				// no weapon specific image for this weapon
+				return FALSE;
+			}
 		}
 	}
 	return TRUE;

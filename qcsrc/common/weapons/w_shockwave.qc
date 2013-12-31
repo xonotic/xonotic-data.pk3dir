@@ -727,6 +727,11 @@ float W_Shockwave(float req)
 			//precache_sound("weapons/ric3.wav");
 			return FALSE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	return TRUE;
 }

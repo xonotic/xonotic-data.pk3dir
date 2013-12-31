@@ -329,6 +329,11 @@ float W_Arc(float req)
 			precache_sound("weapons/arc_impact_combo.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	return TRUE;
 }

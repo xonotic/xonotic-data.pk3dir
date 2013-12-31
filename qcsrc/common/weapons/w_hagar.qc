@@ -543,6 +543,11 @@ float W_Hagar(float req)
 			precache_sound("weapons/hagexp3.wav");
 			return TRUE;
 		}
+		case WR_ZOOMRETICLE:
+		{
+			// no weapon specific image for this weapon
+			return FALSE;
+		}
 	}
 	return TRUE;
 }

@@ -127,8 +127,8 @@ void CSQC_Init(void)
 
 	if(autocvar_cl_reticle)
 	{
-		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
-		if(autocvar_cl_reticle_item_vortex) { precache_pic("gfx/reticle_nex"); }
+		precache_pic("gfx/reticle_normal");
+		// weapon reticles are precached in weapon files
 	}
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
