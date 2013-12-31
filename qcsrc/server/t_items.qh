@@ -80,6 +80,9 @@ void Item_FindTeam();
 // TODO: perhaps nice special effect?
 void RemoveItem(void); // WEAPONTODO
 
+float ItemSend(entity to, float sf);
+void ItemUpdate(entity item);
+
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots
 

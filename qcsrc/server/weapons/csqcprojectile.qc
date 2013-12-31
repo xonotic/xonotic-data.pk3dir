@@ -85,10 +85,6 @@ void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 	e.csqcprojectile_type = type;
 }
 
-// FIXME HACK
-float ItemSend(entity to, float sf);
-void ItemUpdate(entity item);
-// END HACK
 void UpdateCSQCProjectile(entity e)
 {
 	if(e.SendEntity == CSQCProjectile_SendEntity)
