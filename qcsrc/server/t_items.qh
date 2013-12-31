@@ -92,8 +92,6 @@ float weapon_pickupevalfunc(entity player, entity item);
 
 float commodity_pickupevalfunc(entity player, entity item);
 
-void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force); // WEAPONTODO
-
 .float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
 
