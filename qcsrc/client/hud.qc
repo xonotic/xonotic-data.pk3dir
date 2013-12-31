@@ -784,7 +784,7 @@ void HUD_Weapons(void)
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && self.current_ammo != ammo_none)
+			if(autocvar_hud_panel_weapons_ammo && self.ammo_field != ammo_none)
 			{
 				a = 0;
 				ammo_type = GetAmmoTypeForWep(self.weapon);

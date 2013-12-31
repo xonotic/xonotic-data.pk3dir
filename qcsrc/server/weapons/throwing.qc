@@ -22,7 +22,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	entity oldself, wep;
 	float thisammo, i;
 	string s;
-	var .float ammofield = (get_weaponinfo(wpn)).current_ammo;
+	var .float ammotype = (get_weaponinfo(wpn)).ammo_field;
 
 	wep = spawn();
 
@@ -74,7 +74,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 	
 	//wa = W_AmmoItemCode(wpn);
-	if(ammofield == ammo_none)
+	if(ammotype == ammo_none)
 	{
 		return "";
 	}
@@ -87,26 +87,26 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammofield += self.(weapon_load[self.weapon]);
+				own.ammotype += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			wep.ammofield = 0;
+			wep.ammotype = 0;
 		}
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammofield += self.(weapon_load[self.weapon]);
+				own.ammotype += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			thisammo = min(own.ammofield, wep.ammofield);
-			wep.ammofield = thisammo;
-			own.ammofield -= thisammo;
+			thisammo = min(own.ammotype, wep.ammotype);
+			wep.ammotype = thisammo;
+			own.ammotype -= thisammo;
 
-			switch(ammofield)
+			switch(ammotype)
 			{
 				case ammo_shells:  s = sprintf("%s and %d shells", s, thisammo);  break;
 				case ammo_nails:   s = sprintf("%s and %d nails", s, thisammo);   break;
@@ -139,7 +139,7 @@ float W_IsWeaponThrowable(float w)
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 			return 0;
-		if((get_weaponinfo(w)).current_ammo == ammo_none)
+		if((get_weaponinfo(w)).ammo_field == ammo_none)
 			return 0;
 	}
 

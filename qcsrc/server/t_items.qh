@@ -67,7 +67,7 @@ float ITEM_MODE_NONE = 0;
 float ITEM_MODE_HEALTH = 1;
 float ITEM_MODE_ARMOR = 2;
 float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode);
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
 
 float Item_GiveTo(entity item, entity player);
 

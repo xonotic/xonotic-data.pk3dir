@@ -92,7 +92,7 @@ void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, f
 	e.model2 = strzone(strcat("wpn-", ftos(id)));
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
-	e.current_ammo = ammotype;
+	e.ammo_field = ammotype;
 
 	#ifndef MENUQC
 	func(WR_INIT);
@@ -118,7 +118,7 @@ void register_weapons_done()
 	dummy_weapon_info.model2 = "";
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.current_ammo = ammo_none;
+	dummy_weapon_info.ammo_field = ammo_none;
 
 	float i;
 	weaponorder_byid = "";

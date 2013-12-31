@@ -505,25 +505,25 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
-	if (!item.ammofield)
+	if (!item.ammotype)
 		return FALSE;
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.ammofield < ammomax) || item.pickup_anyway)
+		if ((player.ammotype < ammomax) || item.pickup_anyway)
 		{
-			player.ammofield = bound(player.ammofield, ammomax, player.ammofield + item.ammofield);
+			player.ammotype = bound(player.ammotype, ammomax, player.ammotype + item.ammotype);
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
-		float mi = min(item.ammofield, ammomax);
-		if (player.ammofield < mi)
+		float mi = min(item.ammotype, ammomax);
+		if (player.ammotype < mi)
 		{
-			player.ammofield = mi;
+			player.ammotype = mi;
 			goto YEAH;
 		}
 	}

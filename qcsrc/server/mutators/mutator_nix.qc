@@ -68,7 +68,7 @@ void NIX_GiveCurrentWeapon()
 		
 		if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
-			switch(e.current_ammo)
+			switch(e.ammo_field)
 			{
 				case ammo_shells:  self.ammo_shells  = autocvar_g_pickup_shells_max;  break;
 				case ammo_nails:   self.ammo_nails   = autocvar_g_pickup_nails_max;   break;
@@ -79,7 +79,7 @@ void NIX_GiveCurrentWeapon()
 		}
 		else
 		{
-			switch(e.current_ammo)
+			switch(e.ammo_field)
 			{
 				case ammo_shells:  self.ammo_shells  = autocvar_g_balance_nix_ammo_shells;  break;
 				case ammo_nails:   self.ammo_nails   = autocvar_g_balance_nix_ammo_nails;   break;
@@ -121,7 +121,7 @@ void NIX_GiveCurrentWeapon()
 
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
 	{
-		switch(e.current_ammo)
+		switch(e.ammo_field)
 		{
 			case ammo_shells:  self.ammo_shells  += autocvar_g_balance_nix_ammoincr_shells;  break;
 			case ammo_nails:   self.ammo_nails   += autocvar_g_balance_nix_ammoincr_nails;   break;

@@ -131,9 +131,9 @@ void weapon_defaultspawnfunc(float wpn)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if(!self.(e.current_ammo))
+	if(!self.(e.ammo_field))
 	{
-		switch(e.current_ammo)
+		switch(e.ammo_field)
 		{
 			case ammo_shells:  self.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
 			case ammo_nails:   self.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
@@ -150,9 +150,9 @@ void weapon_defaultspawnfunc(float wpn)
 		{
 			if(e.items & j)
 			{
-				ammofield = Item_CounterField(j);
-				if(!self.ammofield)
-					self.ammofield = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
+				ammotype = Item_CounterField(j);
+				if(!self.ammotype)
+					self.ammotype = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
 			}
 		}
 	}

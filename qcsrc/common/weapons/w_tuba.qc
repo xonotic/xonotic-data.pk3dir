@@ -419,7 +419,7 @@ float W_Tuba(float req)
 		}
 		case WR_SETUP:
 		{
-			self.current_ammo = ammo_none;
+			self.ammo_field = ammo_none;
 			self.tuba_instrument = 0;
 			return TRUE;
 		}

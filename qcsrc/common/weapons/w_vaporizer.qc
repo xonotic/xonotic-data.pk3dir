@@ -196,7 +196,7 @@ float W_Vaporizer(float req)
 		}
 		case WR_SETUP:
 		{
-			self.current_ammo = AMMO_VAL(WEP_VAPORIZER);
+			self.ammo_field = AMMO_VAL(WEP_VAPORIZER);
 			self.vaporizer_lasthit = 0;
 			return TRUE;
 		}

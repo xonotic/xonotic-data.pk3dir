@@ -228,7 +228,7 @@ float W_Blaster(float request)
 		
 		case WR_SETUP:
 		{
-			self.current_ammo = ammo_none;
+			self.ammo_field = ammo_none;
 			return TRUE;
 		}
 		

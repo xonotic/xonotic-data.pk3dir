@@ -137,11 +137,11 @@ string W_Name(float weaponid);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-..float current_ammo; // main ammo field
+..float ammo_field; // main ammo field
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define AMMO_VAL(wpn) ((get_weaponinfo(wpn)).current_ammo)
+#define AMMO_VAL(wpn) ((get_weaponinfo(wpn)).ammo_field)
 
 // =====================
 //  Weapon Registration

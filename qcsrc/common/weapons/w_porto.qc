@@ -379,7 +379,7 @@ float W_Porto(float req)
 		}
 		case WR_SETUP:
 		{
-			self.current_ammo = ammo_none;
+			self.ammo_field = ammo_none;
 			return TRUE;
 		}
 		case WR_RESETPLAYER:
