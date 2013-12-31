@@ -283,7 +283,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	missile.flags       = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
 
-	W_SetupVelocity_UP_PRE(missile, seeker, missile_);
+	W_SetupProjVelocity_UP_PRE(missile, seeker, missile_);
 
 	missile.angles = vectoangles (missile.velocity);
 
@@ -364,7 +364,7 @@ void W_Seeker_Fire_Flac()
 	setorigin (missile, w_shotorg);
 	setsize (missile, '-2 -2 -2', '2 2 2');
 
-	W_SetupVelocity_UP_PRE(missile, seeker, flac_);
+	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
 	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
@@ -580,7 +580,7 @@ void W_Seeker_Fire_Tag()
 	//missile.missile_flags = MIF_..?;
 
 	missile.movetype    = MOVETYPE_FLY;
-	W_SetupVelocity_PRE(missile, seeker, tag_);
+	W_SetupProjVelocity_PRE(missile, seeker, tag_);
 	missile.angles = vectoangles (missile.velocity);
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound

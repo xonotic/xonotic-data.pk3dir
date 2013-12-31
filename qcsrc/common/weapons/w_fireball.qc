@@ -200,7 +200,7 @@ void W_Fireball_Attack1()
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
-	W_SetupVelocity_PRI(proj, fireball);
+	W_SetupProjVelocity_PRI(proj, fireball);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Fireball_TouchExplode;
 	setsize(proj, '-16 -16 -16', '16 16 16');
@@ -332,7 +332,7 @@ void W_Fireball_Attack2()
 	proj.nextthink = time;
 	proj.damageforcescale = WEP_CVAR_SEC(fireball, damageforcescale);
 	proj.pushltime = time + WEP_CVAR_SEC(fireball, lifetime);
-	W_SetupVelocity_UP_SEC(proj, fireball);
+	W_SetupProjVelocity_UP_SEC(proj, fireball);
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;

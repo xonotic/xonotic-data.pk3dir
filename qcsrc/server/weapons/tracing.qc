@@ -133,9 +133,9 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	return outvelocity;
 }
 
-void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
+void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
-	if(missile.owner == world)
+	if(proj.owner == world)
 		error("Unowned missile");
 
 	dir = dir + upDir * (pUpSpeed / pSpeed);
@@ -143,22 +143,24 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	pSpeed *= vlen(dir);
 	dir = normalize(dir);
 
-#if 0
+	#if 0
 	if(autocvar_g_projectiles_spread_style != mspercallsstyle)
 	{
 		mspercallsum = mspercallcount = 0;
 		mspercallsstyle = autocvar_g_projectiles_spread_style;
 	}
 	mspercallsum -= gettime(GETTIME_HIRES);
-#endif
+	#endif
+	
 	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
-#if 0
+	
+	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
 	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
-#endif
+	#endif
 
-	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
+	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
 

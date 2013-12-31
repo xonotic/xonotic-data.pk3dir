@@ -764,7 +764,7 @@ void W_Nexball_Attack2(void)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
-	W_SetupVelocity_Explicit(missile, autocvar_g_balance_nexball_secondary_speed, 0);
+	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
 	missile.think = SUB_Remove;

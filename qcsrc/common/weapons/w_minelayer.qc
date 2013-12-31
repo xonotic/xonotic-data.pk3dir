@@ -347,7 +347,7 @@ void W_MineLayer_Attack()
 	setsize (mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
 	setorigin (mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
-	W_SetupVelocity_Explicit(mine, WEP_CVAR(minelayer, speed), 0);
+	W_SetupProjVelocity_Basic(mine, WEP_CVAR(minelayer, speed), 0);
 	mine.angles = vectoangles (mine.velocity);
 
 	mine.touch = W_MineLayer_Touch;

@@ -404,7 +404,7 @@ void W_Crylink_Attack (void)
 			s_z = v_forward_y;
 		}
 		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, FALSE);
+		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -521,7 +521,7 @@ void W_Crylink_Attack2 (void)
 			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor);
 		}
 
-		W_SetupProjectileVelocityEx(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, FALSE);
+		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)

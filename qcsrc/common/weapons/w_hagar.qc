@@ -148,7 +148,7 @@ void W_Hagar_Attack (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_FLY;
-	W_SetupVelocity_PRI(missile, hagar);
+	W_SetupProjVelocity_PRI(missile, hagar);
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
@@ -192,7 +192,7 @@ void W_Hagar_Attack2 (void)
 	setsize(missile, '0 0 0', '0 0 0');
 
 	missile.movetype = MOVETYPE_BOUNCEMISSILE;
-	W_SetupVelocity_SEC(missile, hagar);
+	W_SetupProjVelocity_SEC(missile, hagar);
 
 	missile.angles = vectoangles (missile.velocity);
 	missile.flags = FL_PROJECTILE;
@@ -269,7 +269,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		}
 		s = s * WEP_CVAR_SEC(hagar, load_spread) * g_weaponspreadfactor;
 		
-		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, FALSE);
+		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles (missile.velocity);
 		missile.flags = FL_PROJECTILE;

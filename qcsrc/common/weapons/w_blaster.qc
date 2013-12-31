@@ -107,7 +107,7 @@ void W_Blaster_Attack(
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 	
-	W_SetupProjectileVelocityEx(
+	W_SetupProjVelocity_Explicit(
 		missile,
 		w_shotdir,
 		v_up,
