@@ -408,43 +408,6 @@ float weaponorder_cmp(float i, float j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-float GetAmmoStat(float i)
-{
-	switch(i)
-	{
-		case 0: return STAT_SHELLS;
-		case 1: return STAT_NAILS;
-		case 2: return STAT_ROCKETS;
-		case 3: return STAT_CELLS;
-		case 4: return STAT_FUEL;
-		default: return -1;
-	}
-}
-
-float GetAmmoTypeForWep(float i) // WEAPONTODO
-{
-	switch(i)
-	{
-		case WEP_SHOCKWAVE: return 0;
-		case WEP_SHOTGUN: return 0;
-		case WEP_MACHINEGUN: return 1;
-		case WEP_MORTAR: return 2;
-		case WEP_MINE_LAYER: return 2;
-		case WEP_ELECTRO: return 3;
-		case WEP_CRYLINK: return 3;
-		case WEP_HLAC: return 3;
-		case WEP_VAPORIZER: return 3;
-		case WEP_VORTEX: return 3;
-		case WEP_RIFLE: return 1;
-		case WEP_HAGAR: return 2;
-		case WEP_DEVASTATOR: return 2;
-		case WEP_SEEKER: return 2;
-		case WEP_FIREBALL: return 4;
-		case WEP_HOOK: return 3;
-		default: return -1;
-	}
-}
-
 void HUD_Weapons(void)
 {
 	// declarations
@@ -461,7 +424,7 @@ void HUD_Weapons(void)
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
 	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
-	float ammo_type, ammo_full;
+	float ammo_full;
 	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
@@ -784,21 +747,19 @@ void HUD_Weapons(void)
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && self.ammo_field != ammo_none)
+			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
 			{
-				a = 0;
-				ammo_type = GetAmmoTypeForWep(self.weapon);
-				if(ammo_type != -1)
-					a = getstati(GetAmmoStat(ammo_type)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(ammo_type) {
-						case 0: ammo_full = autocvar_hud_panel_weapons_ammo_full_shells; break;
-						case 1: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails; break;
-						case 2: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case 3: ammo_full = autocvar_hud_panel_weapons_ammo_full_cells; break;
-						case 4: ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel; break;
+					switch(self.ammo_field)
+					{
+						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 
@@ -806,8 +767,18 @@ void HUD_Weapons(void)
 						weapon_pos_x + baroffset_x,
 						weapon_pos_y + baroffset_y,
 						barsize_x * bound(0, a/ammo_full, 1),
-						barsize_y);
-					drawpic_aspect_skin(weapon_pos, "weapon_ammo", weapon_size, ammo_color, ammo_alpha, DRAWFLAG_NORMAL);
+						barsize_y
+					);
+
+					drawpic_aspect_skin(
+						weapon_pos,
+						"weapon_ammo",
+						weapon_size,
+						ammo_color,
+						ammo_alpha,
+						DRAWFLAG_NORMAL
+					);
+
 					drawresetcliparea();
 				}
 			}
@@ -856,44 +827,16 @@ void HUD_Weapons(void)
 }
 
 // Ammo (#1)
-//
-// TODO: macro
-float GetAmmoItemCode(float i)
-{
-	switch(i)
-	{
-		case 0: return IT_SHELLS;
-		case 1: return IT_NAILS;
-		case 2: return IT_ROCKETS;
-		case 3: return IT_CELLS;
-		case 4: return IT_FUEL;
-		default: return -1;
-	}
-}
-
-string GetAmmoPicture(float i)
-{
-	switch(i)
-	{
-		case 0: return "ammo_shells";
-		case 1: return "ammo_bullets";
-		case 2: return "ammo_rockets";
-		case 3: return "ammo_cells";
-		case 4: return "ammo_fuel";
-		default: return "";
-	}
-}
-
-void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
+void DrawAmmoItem(vector myPos, vector mySize, .float ammotype, float currently_selected, float infinite_ammo)
 {
 	float a;
 	if(autocvar__hud_configure)
 	{
-		currently_selected = (itemcode == 2); //rockets always selected
-		a = 31 + mod(itemcode*93, 128);
+		currently_selected = (ammotype == ammo_rockets); //rockets always selected
+		a = 60;
 	}
 	else
-		a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
+		a = getstati(GetAmmoStat(ammotype)); // how much ammo do we have of type itemcode?
 
 	vector color;
 	if(infinite_ammo)
@@ -921,7 +864,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		picpos = myPos;
 	}
 
-	if (currently_selected)
+	if(currently_selected)
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
     if(a > 0 && autocvar_hud_panel_ammo_progressbar)
@@ -935,9 +878,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
             drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
     }
 	if(a > 0 || infinite_ammo)
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(ammotype), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(ammotype), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void HUD_Ammo(void)
@@ -967,7 +910,7 @@ void HUD_Ammo(void)
 
 	float rows = 0, columns, row, column;
 	vector ammo_size;
-	if (autocvar_hud_panel_ammo_onlycurrent)
+	if(autocvar_hud_panel_ammo_onlycurrent)
 		ammo_size = mySize;
 	else
 	{
@@ -997,38 +940,40 @@ void HUD_Ammo(void)
 		ammo_size_y = newSize;
 	}
 
-	float i, stat_items, currently_selected, infinite_ammo;
-	infinite_ammo = FALSE;
-	if (autocvar_hud_panel_ammo_onlycurrent)
+	float i;
+	float infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
+	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
+			DrawAmmoItem(pos, ammo_size, ammo_rockets, true, FALSE);
 		}
 		else
 		{
-			stat_items = getstati(STAT_ITEMS, 0, 24);
-			if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
-				infinite_ammo = TRUE;
-			for (i = 0; i < AMMO_COUNT; ++i) {
-				currently_selected = stat_items & GetAmmoItemCode(i);
-				if (currently_selected)
-				{
-					DrawAmmoItem(pos, ammo_size, i, true, infinite_ammo);
-					break;
-				}
-			}
+			DrawAmmoItem(
+				pos,
+				ammo_size,
+				(get_weaponinfo(switchweapon)).ammo_field,
+				TRUE,
+				infinite_ammo
+			);
 		}
 	}
 	else
 	{
-		stat_items = getstati(STAT_ITEMS, 0, 24);
-		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
-			infinite_ammo = TRUE;
+		.float ammotype;
 		row = column = 0;
-		for (i = 0; i < AMMO_COUNT; ++i) {
-			currently_selected = stat_items & GetAmmoItemCode(i);
-			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
+		for(i = 0; i < AMMO_COUNT; ++i)
+		{
+			ammotype = GetAmmoFieldFromNum(i);
+			DrawAmmoItem(
+				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
+				ammo_size,
+				ammotype,
+				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
+				infinite_ammo
+			);
+
 			++row;
 			if(row >= rows)
 			{

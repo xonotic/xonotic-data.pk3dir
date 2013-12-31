@@ -244,3 +244,44 @@ string W_Name(float weaponid) // WEAPONTODO: make into a macro
 {
 	return (get_weaponinfo(weaponid)).message;
 }
+
+#ifdef CSQC
+.float GetAmmoFieldFromNum(float i)
+{
+	switch(i)
+	{
+		case 0: return ammo_shells;
+		case 1: return ammo_nails;
+		case 2: return ammo_rockets;
+		case 3: return ammo_cells;
+		case 4: return ammo_fuel;
+		default: return ammo_none;
+	}
+}
+
+string GetAmmoPicture(.float ammotype)
+{
+	switch(ammotype)
+	{
+		case ammo_shells:  return "ammo_shells";
+		case ammo_nails:   return "ammo_nails";
+		case ammo_rockets: return "ammo_rockets";
+		case ammo_cells:   return "ammo_cells";
+		case ammo_fuel:    return "ammo_fuel";
+		default: return ""; // wtf, no ammo type?
+	}
+}
+
+float GetAmmoStat(.float ammotype)
+{
+	switch(ammotype)
+	{
+		case ammo_shells: return STAT_SHELLS;
+		case ammo_nails: return STAT_NAILS;
+		case ammo_rockets: return STAT_ROCKETS;
+		case ammo_cells: return STAT_CELLS;
+		case ammo_fuel: return STAT_FUEL;
+		default: return -1;
+	}
+}
+#endif
