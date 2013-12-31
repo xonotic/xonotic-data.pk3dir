@@ -301,7 +301,7 @@ void W_Mortar_Attack2()
 	gren.event_damage = W_Mortar_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjVelocity_UP_SEC(gren, mortar); // WEAPONTODO
+	W_SetupProjVelocity_UP_SEC(gren, mortar);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
