@@ -2,13 +2,13 @@
 #include "calculations.qh"
 #endif
 
-const float BOT_PICKUP_RATING_LOW	= 2500;
-const float BOT_PICKUP_RATING_MID	= 5000;
-const float BOT_PICKUP_RATING_HIGH	= 10000;
+const float BOT_PICKUP_RATING_LOW  =  2500;
+const float BOT_PICKUP_RATING_MID  =  5000;
+const float BOT_PICKUP_RATING_HIGH = 10000;
 
-const float WEP_TYPE_OTHER	      =  0x00; // not for damaging people
-const float WEP_TYPE_SPLASH	      =  0x01; // splash damage
-const float WEP_TYPE_HITSCAN	      =  0x02; // hitscan
+const float WEP_TYPE_OTHER          =  0x00; // not for damaging people
+const float WEP_TYPE_SPLASH         =  0x01; // splash damage
+const float WEP_TYPE_HITSCAN        =  0x02; // hitscan
 const float WEP_TYPEMASK            =  0x0F;
 const float WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
 const float WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
@@ -19,64 +19,64 @@ const float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (muta
 
 const float MAX_SHOT_DISTANCE = 32768;
 
-// weapon requests // WEAPONTODO
-#define WR_SETUP          1 // (SERVER) setup weapon data
-#define WR_THINK          2 // (SERVER) logic to run every frame
-#define WR_CHECKAMMO1     3 // (SERVER) checks ammo for weapon
-#define WR_CHECKAMMO2     4 // (SERVER) checks ammo for weapon
-#define WR_AIM            5 // (SERVER) runs bot aiming code for this weapon
-#define WR_INIT           6 // (BOTH) precaches models/sounds used by this weapon
-#define WR_SUICIDEMESSAGE 7 // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
-#define WR_KILLMESSAGE    8 // (SERVER) notification number for kill message (may inspect w_deathtype for details)
-#define WR_RELOAD         9 // (SERVER) does not need to do anything
-#define WR_RESETPLAYER    10 // (SERVER) does not need to do anything
-#define WR_IMPACTEFFECT   11 // (CLIENT) impact effect
-#define WR_SWITCHABLE     12 // (CLIENT) impact effect
-#define WR_PLAYERDEATH    13 // (SERVER) does not need to do anything
-#define WR_GONETHINK      14 // (SERVER) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
-#define WR_CONFIG         15 // (ALL)
-#define WR_ZOOMRETICLE    16 // (CLIENT) weapon specific zoom reticle
+// weapon requests // WEAPONTODO: give these better descriptions
+const float WR_SETUP          =  1; // (SERVER) setup weapon data
+const float WR_THINK          =  2; // (SERVER) logic to run every frame
+const float WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon
+const float WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon
+const float WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
+const float WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon
+const float WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
+const float WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
+const float WR_RELOAD         =  9; // (SERVER) does not need to do anything
+const float WR_RESETPLAYER    = 10; // (SERVER) does not need to do anything
+const float WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect
+const float WR_SWITCHABLE     = 12; // (CLIENT) impact effect
+const float WR_PLAYERDEATH    = 13; // (SERVER) does not need to do anything
+const float WR_GONETHINK      = 14; // (SERVER) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
+const float WR_CONFIG         = 15; // (ALL)
+const float WR_ZOOMRETICLE    = 16; // (CLIENT) weapon specific zoom reticle
 
-// WEAPONTODO
 #define WANT_CONST /* we WANT these to be constant, but it conflicts with the declaration in dpdefs/progsdefs.qc */
-const float	IT_UNLIMITED_WEAPON_AMMO     = 1;
-// when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const float	IT_UNLIMITED_SUPERWEAPONS    = 2;
-// when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-const float   IT_CTF_SHIELDED              = 4; // set for the flag shield
-const float   IT_USING_JETPACK             = 8; // confirmation that button is pressed
-const float   IT_JETPACK                   = 16; // actual item
-const float   IT_FUEL_REGEN                = 32; // fuel regeneration trigger
+const      float IT_UNLIMITED_WEAPON_AMMO     =       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const      float IT_UNLIMITED_SUPERWEAPONS    =       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const      float IT_CTF_SHIELDED              =       4; // set for the flag shield
+const      float IT_USING_JETPACK             =       8; // confirmation that button is pressed
+const      float IT_JETPACK                   =      16; // actual item
+const      float IT_FUEL_REGEN                =      32; // fuel regeneration trigger
 // where is 64... ?
-const float   IT_FUEL                      = 128;
-WANT_CONST float   IT_SHELLS                    = 256;
-WANT_CONST float   IT_NAILS                     = 512;
-WANT_CONST float   IT_ROCKETS                   = 1024;
-WANT_CONST float   IT_CELLS                     = 2048;
-const float   IT_SUPERWEAPON               = 4096;
-const float   IT_STRENGTH                  = 8192;
-const float   IT_INVINCIBLE                = 16384;
-const float   IT_HEALTH                    = 32768;
-// union:
-	// for items:
-	WANT_CONST float	IT_KEY1					= 131072;
-	WANT_CONST float	IT_KEY2					= 262144;
-	// for players:
-	const float	IT_RED_FLAG_TAKEN		= 32768;
-	const float	IT_RED_FLAG_LOST		= 65536;
-	const float	IT_RED_FLAG_CARRYING		= 98304;
-	const float	IT_BLUE_FLAG_TAKEN		= 131072;
-	const float	IT_BLUE_FLAG_LOST		= 262144;
-	const float	IT_BLUE_FLAG_CARRYING	= 393216;
-// end
-const float   IT_5HP                       = 524288;
-const float   IT_25HP                      = 1048576;
-const float   IT_ARMOR_SHARD               = 2097152;
-const float   IT_ARMOR                     = 4194304;
+const      float IT_FUEL                      =     128;
+WANT_CONST float IT_SHELLS                    =     256;
+WANT_CONST float IT_NAILS                     =     512;
+WANT_CONST float IT_ROCKETS                   =    1024;
+WANT_CONST float IT_CELLS                     =    2048;
+const      float IT_SUPERWEAPON               =    4096;
+const      float IT_STRENGTH                  =    8192;
+const      float IT_INVINCIBLE                =   16384;
+const      float IT_HEALTH                    =   32768;
 
-const float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_FUEL;
-const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-const float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+// shared value space (union):
+	// for items:
+	WANT_CONST float IT_KEY1                  =  131072;
+	WANT_CONST float IT_KEY2                  =  262144;
+	// for players:
+	const      float IT_RED_FLAG_TAKEN        =   32768;
+	const      float IT_RED_FLAG_LOST         =   65536;
+	const      float IT_RED_FLAG_CARRYING     =   98304;
+	const      float IT_BLUE_FLAG_TAKEN       =  131072;
+	const      float IT_BLUE_FLAG_LOST        =  262144;
+	const      float IT_BLUE_FLAG_CARRYIN     =  393216;
+// end
+
+const      float IT_5HP                       =  524288;
+const      float IT_25HP                      = 1048576;
+const      float IT_ARMOR_SHARD               = 2097152;
+const      float IT_ARMOR                     = 4194304;
+
+// item masks
+const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS;
+const      float IT_PICKUPMASK                =      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
 const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
