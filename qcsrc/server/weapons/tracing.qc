@@ -166,11 +166,6 @@ void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float
 	missile.velocity = W_CalculateProjectileVelocity(missile.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
-void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread) // WEAPONTODO
-{
-	W_SetupProjectileVelocityEx(missile, w_shotdir, v_up, pSpeed, 0, 0, spread, FALSE);
-}
-
 
 // ====================
 //  Ballistics Tracing

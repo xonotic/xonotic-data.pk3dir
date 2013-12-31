@@ -24,15 +24,18 @@ float mspercallcount;
 #endif
 void W_SetupProjectileVelocityEx(entity missile, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute);
 
-#define WEP_SETUPPROJVELOCITY_UP_NONE(ent,wepname,prefix) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_UP_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), WEP_CVAR_BOTH(wepname, isprimary, speed_up), WEP_CVAR_BOTH(wepname, isprimary, speed_z), WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
+#define W_SetupProjectileVelocity(ent,pspeed,pspread) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, FALSE)
 
-#define WEP_SETUPPROJVELOCITY_NONE(ent,wepname,prefix) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
-#define WEP_SETUPPROJVELOCITY_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), 0, 0, WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
+
+#define WEP_SPV_UP_NONE(ent,wepname,prefix) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), FALSE)
+#define WEP_SPV_UP_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
+#define WEP_SPV_UP_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
+#define WEP_SPV_UP_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), WEP_CVAR_BOTH(wepname, isprimary, speed_up), WEP_CVAR_BOTH(wepname, isprimary, speed_z), WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
+
+#define WEP_SPV_NONE(ent,wepname,prefix) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), FALSE)
+#define WEP_SPV_PRI(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
+#define WEP_SPV_SEC(ent,wepname) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
+#define WEP_SPV_BOTH(ent,wepname,isprimary) W_SetupProjectileVelocityEx(ent, w_shotdir, v_up, WEP_CVAR_BOTH(wepname, isprimary, speed), 0, 0, WEP_CVAR_BOTH(wepname, isprimary, spread), FALSE)
 
 // ====================
 //  Ballistics Tracing
