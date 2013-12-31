@@ -137,7 +137,6 @@ string W_Name(float weaponid);
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-.string message2; // zoom reticle image
 ..float current_ammo; // main ammo field
 
 // other useful macros
