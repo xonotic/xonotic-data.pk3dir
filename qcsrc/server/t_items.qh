@@ -78,7 +78,6 @@ void Item_Reset();
 void Item_FindTeam();
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
-void RemoveItem(void); // WEAPONTODO
 
 float ItemSend(entity to, float sf);
 void ItemUpdate(entity item);
