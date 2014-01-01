@@ -2,6 +2,8 @@
 #include "calculations.qh"
 #endif
 
+const float MAX_SHOT_DISTANCE = 32768;
+
 const float BOT_PICKUP_RATING_LOW  =  2500;
 const float BOT_PICKUP_RATING_MID  =  5000;
 const float BOT_PICKUP_RATING_HIGH = 10000;
@@ -16,8 +18,6 @@ const float WEP_FLAG_HIDDEN         =  0x40; // hides from menu
 const float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
 const float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
-
-const float MAX_SHOT_DISTANCE = 32768;
 
 // weapon requests // WEAPONTODO: give these better descriptions
 const float WR_SETUP          =  1; // (SERVER) setup weapon data
@@ -103,7 +103,7 @@ float GetAmmoStat(.float ammotype);
 #define WEP_ADD_CVAR_BOTH(wepname,name) \
 	WEP_ADD_CVAR_PRI(wepname, name) \
 	WEP_ADD_CVAR_SEC(wepname, name)
-	
+
 #define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
 // create properties for weapon settings
