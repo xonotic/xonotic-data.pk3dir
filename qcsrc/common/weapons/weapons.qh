@@ -19,22 +19,22 @@ const float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
 const float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
-// weapon requests // WEAPONTODO: give these better descriptions
+// weapon requests
 const float WR_SETUP          =  1; // (SERVER) setup weapon data
 const float WR_THINK          =  2; // (SERVER) logic to run every frame
-const float WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon
-const float WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon
+const float WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
+const float WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
 const float WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
-const float WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon
+const float WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
 const float WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
 const float WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
-const float WR_RELOAD         =  9; // (SERVER) does not need to do anything
-const float WR_RESETPLAYER    = 10; // (SERVER) does not need to do anything
-const float WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect
-const float WR_SWITCHABLE     = 12; // (CLIENT) impact effect
-const float WR_PLAYERDEATH    = 13; // (SERVER) does not need to do anything
-const float WR_GONETHINK      = 14; // (SERVER) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
-const float WR_CONFIG         = 15; // (ALL)
+const float WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
+const float WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
+const float WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
+const float WR_SWITCHABLE     = 12; // (CLIENT) decides whether the player is able to switch away from this weapon
+const float WR_PLAYERDEATH    = 13; // (SERVER) called whenever a player dies
+const float WR_GONETHINK      = 14; // (SERVER) logic to run when weapon is lost/switched away from
+const float WR_CONFIG         = 15; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
 const float WR_ZOOMRETICLE    = 16; // (CLIENT) weapon specific zoom reticle
 
 // variables:
