@@ -606,12 +606,12 @@ void CSQC_UpdateView(float w, float h)
 		setproperty(VF_ANGLES, '90 0 0');
 
 		#if 0
-		print(sprintf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		printf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,
 			ov_nearest,
-			ov_furthest));
+			ov_furthest);
 		#endif
 	}
 
@@ -1238,7 +1238,7 @@ void CSQC_UpdateView(float w, float h)
 				}
 			}
 
-			//print(sprintf("crosshair style: %s\n", wcross_style));
+			//printf("crosshair style: %s\n", wcross_style);
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 			// MAIN CROSSHAIR COLOR DECISION

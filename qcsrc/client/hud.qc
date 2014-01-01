@@ -4095,7 +4095,7 @@ float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
 {
-	//print(sprintf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num));
+	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
 	float i, j;
 
 	if(strMessage == "" && new_id == 0)
