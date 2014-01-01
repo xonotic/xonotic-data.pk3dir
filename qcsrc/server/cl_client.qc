@@ -2620,7 +2620,7 @@ void PlayerPostThink (void)
 
 	/*
 	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
+		dprintf("%f %.6f\n", time, race_GetFractionalLapCount(self));
 	*/
 
 	CSQCMODEL_AUTOUPDATE();
