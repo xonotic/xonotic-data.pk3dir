@@ -1469,7 +1469,7 @@ void RegisterNotifications_First()
 	#define dedi ""
 	#endif
 
-	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));
+	printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
 
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)
@@ -1481,8 +1481,8 @@ void RegisterNotifications_First()
 		#endif
 			notif_global_error = TRUE;
 
-		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
-			PROGNAME, autocvar_notification_version, NOTIF_VERSION));
+		printf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
+			PROGNAME, autocvar_notification_version, NOTIF_VERSION);
 	}*/
 }
 

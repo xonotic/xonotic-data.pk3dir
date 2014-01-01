@@ -1,6 +1,6 @@
 float accuracy_byte(float n, float d)
 {
-	//print(sprintf("accuracy: %d / %d\n", n, d));
+	//printf("accuracy: %d / %d\n", n, d);
 	if(n <= 0)
 		return 0;
 	if(n > d)

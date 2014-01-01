@@ -87,7 +87,12 @@ void saveCvarsMulti(entity me)
 
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
-		cvar_set(argv(i), s);
+	{
+		if(substring(argv(i), 0, 1) == "!")
+			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		else
+			cvar_set(argv(i), s);
+	}
 }
 void makeMulti(entity e, string otherCvars)
 {
@@ -280,7 +285,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf("Received HTTP request data for an invalid id %d.\n", id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -300,7 +305,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	}
 	if(status != 0)
 	{
-		print(sprintf(_("error receiving update notification: status is %d\n"), status));
+		printf(_("error receiving update notification: status is %d\n"), status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
@@ -389,7 +394,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { print(sprintf(_("Update can be downloaded at:\n%s\n"), un_download)); }
+			if(un_download) { printf(_("Update can be downloaded at:\n%s\n"), un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
