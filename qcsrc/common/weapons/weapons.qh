@@ -96,7 +96,7 @@ float GetAmmoStat(.float ammotype);
 // =====================
 
 // create cvars for weapon settings
-#define WEP_ADD_CVAR_NONE(wepname,name) final float autocvar_g_balance_##wepname##_##name;
+#define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
 
 #define WEP_ADD_CVAR_PRI(wepname,name) WEP_ADD_CVAR_NONE(wepname, primary_##name)
 #define WEP_ADD_CVAR_SEC(wepname,name) WEP_ADD_CVAR_NONE(wepname, secondary_##name)
@@ -109,7 +109,7 @@ float GetAmmoStat(.float ammotype);
 // create properties for weapon settings
 #define WEP_ADD_PROP(wepid,wepname,type,prop,name) \
 	.type ##prop; \
-	final type autocvar_g_balance_##wepname##_##name;
+	[[last]] type autocvar_g_balance_##wepname##_##name;
 
 // read cvars from weapon settings
 #define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
