@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# kammy <kammysmb@gmail.com>, 2013
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-03 11:55+0200\n"
-"PO-Revision-Date: 2013-10-03 10:08+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2013-11-20 10:44+0000\n"
+"Last-Translator: kammy <kammysmb@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/xonotic/language/"
 "es/)\n"
 "Language: es\n"
@@ -64,122 +65,123 @@ msgstr ""
 #: qcsrc/client/hud.qc:186
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr "(-%dL)"
 
 #: qcsrc/client/hud.qc:191
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr "(+%dL)"
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
-msgstr ""
+msgstr "Comienzo"
 
 #: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
-msgstr ""
+msgstr "Meta"
 
 #: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Intermedio %d"
 
 #: qcsrc/client/hud.qc:223
 #, c-format
 msgid "%s (%s %s)"
-msgstr ""
+msgstr "%s (%s %s)"
 
 #: qcsrc/client/hud.qc:829
 msgid "Out of ammo"
-msgstr ""
+msgstr "Sin municiones"
 
 #: qcsrc/client/hud.qc:833
 msgid "Don't have"
-msgstr ""
+msgstr "No tienes"
 
 #: qcsrc/client/hud.qc:837
 msgid "Unavailable"
-msgstr ""
+msgstr "No disponible"
 
 #: qcsrc/client/hud.qc:1704 qcsrc/client/hud.qc:1705 qcsrc/client/hud.qc:2068
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Jugador %d"
 
 #: qcsrc/client/hud.qc:2384
 msgid "^1Intermediate 1 (+15.42)"
-msgstr ""
+msgstr "^1Intermedio 1 (+15.42)"
 
 #: qcsrc/client/hud.qc:2386 qcsrc/client/hud.qc:2428 qcsrc/client/hud.qc:2469
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^1SANCION: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2471
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^2SANCION: %.1f(%s)"
 
 #: qcsrc/client/hud.qc:2501
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
+"^1Debes de responder antes de entrar al modo de configuracion de interface\n"
 
 #: qcsrc/client/hud.qc:2506
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nombre ^7en lugar de \"^1Anonymous player^7\" en xonstat"
 
 #: qcsrc/client/hud.qc:2586
 msgid "A vote has been called for:"
-msgstr ""
+msgstr "Una votacion ha sido iniciada para:"
 
 #: qcsrc/client/hud.qc:2588
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Permitir a los servidores guardar y desplegar tu nombre?"
 
 #: qcsrc/client/hud.qc:2592
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Configurar la Interface"
 
 #: qcsrc/client/hud.qc:2596
 #, c-format
 msgid "Yes (%s): %d"
-msgstr ""
+msgstr "SI (%s): %d"
 
 #: qcsrc/client/hud.qc:2598
 #, c-format
 msgid "No (%s): %d"
-msgstr ""
+msgstr "No (%s): %d"
 
 #: qcsrc/client/hud.qc:3169 qcsrc/client/hud.qc:3172 qcsrc/client/hud.qc:3174
 msgid "Personal best"
-msgstr ""
+msgstr "Record personal"
 
 #: qcsrc/client/hud.qc:3187 qcsrc/client/hud.qc:3190 qcsrc/client/hud.qc:3192
 msgid "Server best"
-msgstr ""
+msgstr "Record del servidor"
 
 #: qcsrc/client/hud.qc:3552
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3Jugador^7: Esta es la alrea de chat."
 
 #: qcsrc/client/hud.qc:3618
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud.qc:3683
 msgid "^1Observing"
-msgstr ""
+msgstr "^1Observando"
 
 #: qcsrc/client/hud.qc:3686 qcsrc/client/hud.qc:3688
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^1Espectando: ^7%s"
 
 #: qcsrc/client/hud.qc:3693
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1Presiona ^3%s^1 para espectar"
 
 #: qcsrc/client/hud.qc:3695
 #, c-format
