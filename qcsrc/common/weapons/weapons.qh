@@ -130,7 +130,6 @@ void register_weapons_done();
 .WepSet weapons; // WEPSET_...
 .string netname; // short name
 .string message; // human readable name
-.float items; // IT_... // WEAPONTODO: I thought I removed items from weapons... ?
 .float(float) weapon_func; // w_...
 .vector wpcolor; // waypointsprite color
 .string mdl; // modelname without g_, v_, w_

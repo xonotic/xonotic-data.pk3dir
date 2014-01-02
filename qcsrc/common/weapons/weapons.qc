@@ -83,7 +83,6 @@ void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, f
 	e.weapons = bit;
 	e.netname = shortname;
 	e.message = wname;
-	//e.items = ammotype;
 	e.weapon_func = func;
 	e.wpcolor = clr;
 	e.mdl = modelname;
@@ -110,7 +109,6 @@ void register_weapons_done()
 	dummy_weapon_info.weapons = '0 0 0';
 	dummy_weapon_info.netname = "";
 	dummy_weapon_info.message = "AOL CD Thrower";
-	//dummy_weapon_info.items = 0;
 	dummy_weapon_info.weapon_func = w_null;
 	dummy_weapon_info.mdl = "";
 	dummy_weapon_info.model = "";
