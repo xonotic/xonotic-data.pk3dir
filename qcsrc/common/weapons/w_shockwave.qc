@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ SHOCKWAVE,
-/* function */ W_Shockwave,
-/* ammotype */ ammo_none,
-/* impulse  */ 2,
-/* flags    */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
-/* rating   */ BOT_PICKUP_RATING_LOW,
-/* color	*/ '0.5 0.25 0',
-/* model    */ "shotgun",
+/* WEP_##id  */ SHOCKWAVE,
+/* function  */ W_Shockwave,
+/* ammotype  */ ammo_none,
+/* impulse   */ 2,
+/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_LOW,
+/* color     */ '0.5 0.25 0',
+/* model     */ "shotgun",
 /* crosshair */ "gfx/crosshairshotgun 0.7",
-/* netname  */ "shockwave",
-/* fullname */ _("Shockwave")
+/* netname   */ "shockwave",
+/* fullname  */ _("Shockwave")
 );
 
 #define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)

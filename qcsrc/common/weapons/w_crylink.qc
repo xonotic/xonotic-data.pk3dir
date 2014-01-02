@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ CRYLINK,
-/* function */ W_Crylink,
-/* ammotype */ ammo_cells,
-/* impulse  */ 6,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '1 0.5 1',
-/* model    */ "crylink",
+/* WEP_##id  */ CRYLINK,
+/* function  */ W_Crylink,
+/* ammotype  */ ammo_cells,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '1 0.5 1',
+/* model     */ "crylink",
 /* crosshair */ "gfx/crosshaircrylink 0.4",
-/* netname  */ "crylink",
-/* fullname */ _("Crylink")
+/* netname   */ "crylink",
+/* fullname  */ _("Crylink")
 );
 
 #define CRYLINK_SETTINGS(w_cvar,w_prop) CRYLINK_SETTINGS_LIST(w_cvar, w_prop, CRYLINK, crylink)

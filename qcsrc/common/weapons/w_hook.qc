@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ HOOK,
-/* function */ W_Hook,
-/* ammotype */ ammo_fuel,
-/* impulse  */ 0,
-/* flags    */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating   */ 0,
-/* color	*/ '0 0.5 0',
-/* model    */ "hookgun",
+/* WEP_##id  */ HOOK,
+/* function  */ W_Hook,
+/* ammotype  */ ammo_fuel,
+/* impulse   */ 0,
+/* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ 0,
+/* color     */ '0 0.5 0',
+/* model     */ "hookgun",
 /* crosshair */ "gfx/crosshairhook 0.5",
-/* netname  */ "hook",
-/* fullname */ _("Grappling Hook")
+/* netname   */ "hook",
+/* fullname  */ _("Grappling Hook")
 );
 
 #define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)

@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ ELECTRO,
-/* function */ W_Electro,
-/* ammotype */ ammo_cells,
-/* impulse  */ 5,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '0 0.5 1',
-/* model    */ "electro",
+/* WEP_##id  */ ELECTRO,
+/* function  */ W_Electro,
+/* ammotype  */ ammo_cells,
+/* impulse   */ 5,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '0 0.5 1',
+/* model     */ "electro",
 /* crosshair */ "gfx/crosshairelectro 0.5",
-/* netname  */ "electro",
-/* fullname */ _("Electro")
+/* netname   */ "electro",
+/* fullname  */ _("Electro")
 );
 
 #define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, ELECTRO, electro)

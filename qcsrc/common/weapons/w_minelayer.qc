@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ MINE_LAYER,
-/* function */ W_MineLayer,
-/* ammotype */ ammo_rockets,
-/* impulse  */ 4,
-/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_HIGH,
-/* color	*/ '0.75 1 0',
-/* model    */ "minelayer",
+/* WEP_##id  */ MINE_LAYER,
+/* function  */ W_MineLayer,
+/* ammotype  */ ammo_rockets,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* color     */ '0.75 1 0',
+/* model     */ "minelayer",
 /* crosshair */ "gfx/crosshairminelayer 0.9",
-/* netname  */ "minelayer",
-/* fullname */ _("Mine Layer")
+/* netname   */ "minelayer",
+/* fullname  */ _("Mine Layer")
 );
 
 #define MINELAYER_SETTINGS(w_cvar,w_prop) MINELAYER_SETTINGS_LIST(w_cvar, w_prop, MINE_LAYER, minelayer)

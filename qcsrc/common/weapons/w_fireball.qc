@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ FIREBALL,
-/* function */ W_Fireball,
-/* ammotype */ ammo_none,
-/* impulse  */ 9,
-/* flags    */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '1 0.5 0',
-/* model    */ "fireball",
+/* WEP_##id  */ FIREBALL,
+/* function  */ W_Fireball,
+/* ammotype  */ ammo_none,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '1 0.5 0',
+/* model     */ "fireball",
 /* crosshair */ "gfx/crosshairfireball",
-/* netname  */ "fireball",
-/* fullname */ _("Fireball")
+/* netname   */ "fireball",
+/* fullname  */ _("Fireball")
 );
 
 #define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)

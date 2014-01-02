@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ PORTO,
-/* function */ W_Porto,
-/* ammotype */ ammo_none,
-/* impulse  */ 0,
-/* flags    */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
-/* rating   */ 0,
-/* color	*/ '0.5 0.5 0.5',
-/* model    */ "porto" ,
+/* WEP_##id  */ PORTO,
+/* function  */ W_Porto,
+/* ammotype  */ ammo_none,
+/* impulse   */ 0,
+/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
+/* rating    */ 0,
+/* color     */ '0.5 0.5 0.5',
+/* model     */ "porto" ,
 /* crosshair */ "gfx/crosshairporto 0.6",
-/* netname  */ "porto",
-/* fullname */ _("Port-O-Launch")
+/* netname   */ "porto",
+/* fullname  */ _("Port-O-Launch")
 );
 
 #define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)

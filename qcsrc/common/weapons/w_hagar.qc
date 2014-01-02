@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ HAGAR,
-/* function */ W_Hagar,
-/* ammotype */ ammo_rockets,
-/* impulse  */ 8,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '1 1 0.5',
-/* model    */ "hagar",
+/* WEP_##id  */ HAGAR,
+/* function  */ W_Hagar,
+/* ammotype  */ ammo_rockets,
+/* impulse   */ 8,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '1 1 0.5',
+/* model     */ "hagar",
 /* crosshair */ "gfx/crosshairhagar 0.8",
-/* netname  */ "hagar",
-/* fullname */ _("Hagar")
+/* netname   */ "hagar",
+/* fullname  */ _("Hagar")
 );
 
 #define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, HAGAR, hagar)

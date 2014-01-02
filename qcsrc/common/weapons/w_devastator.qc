@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ DEVASTATOR,
-/* function */ W_Devastator,
-/* ammotype */ ammo_rockets,
-/* impulse  */ 9,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_HIGH,
-/* color	*/ '1 1 0',
-/* model    */ "rl",
+/* WEP_##id  */ DEVASTATOR,
+/* function  */ W_Devastator,
+/* ammotype  */ ammo_rockets,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* color     */ '1 1 0',
+/* model     */ "rl",
 /* crosshair */ "gfx/crosshairrocketlauncher 0.5875",
-/* netname  */ "devastator",
-/* fullname */ _("Devastator")
+/* netname   */ "devastator",
+/* fullname  */ _("Devastator")
 );
 
 #define DEVASTATOR_SETTINGS(w_cvar,w_prop) DEVASTATOR_SETTINGS_LIST(w_cvar, w_prop, DEVASTATOR, devastator)

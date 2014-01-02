@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ VORTEX,
-/* function */ W_Vortex,
-/* ammotype */ ammo_cells,
-/* impulse  */ 7,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating   */ BOT_PICKUP_RATING_HIGH,
-/* color	*/ '0.5 1 1',
-/* model    */ "nex",
+/* WEP_##id  */ VORTEX,
+/* function  */ W_Vortex,
+/* ammotype  */ ammo_cells,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* color     */ '0.5 1 1',
+/* model     */ "nex",
 /* crosshair */ "gfx/crosshairnex 0.65",
-/* netname  */ "nex",
-/* fullname */ _("Vortex")
+/* netname   */ "nex",
+/* fullname  */ _("Vortex")
 );
 
 #define VORTEX_SETTINGS(w_cvar,w_prop) VORTEX_SETTINGS_LIST(w_cvar, w_prop, VORTEX, vortex)

@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ MACHINEGUN,
-/* function */ W_MachineGun,
-/* ammotype */ ammo_nails,
-/* impulse  */ 3,
-/* flags    */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '1 1 0',
-/* model    */ "uzi",
+/* WEP_##id  */ MACHINEGUN,
+/* function  */ W_MachineGun,
+/* ammotype  */ ammo_nails,
+/* impulse   */ 3,
+/* flags     */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '1 1 0',
+/* model     */ "uzi",
 /* crosshair */ "gfx/crosshairuzi 0.6",
-/* netname  */ "uzi",
-/* fullname */ _("Machine Gun")
+/* netname   */ "uzi",
+/* fullname  */ _("Machine Gun")
 );
 
 #define MACHINEGUN_SETTINGS(w_cvar,w_prop) MACHINEGUN_SETTINGS_LIST(w_cvar, w_prop, MACHINEGUN, machinegun)

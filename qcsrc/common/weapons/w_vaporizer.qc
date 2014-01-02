@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ VAPORIZER,
-/* function */ W_Vaporizer,
-/* ammotype */ ammo_cells,
-/* impulse  */ 7,
-/* flags    */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
-/* rating   */ BOT_PICKUP_RATING_HIGH,
-/* color	*/ '0.5 1 1',
-/* model    */ "minstanex",
+/* WEP_##id  */ VAPORIZER,
+/* function  */ W_Vaporizer,
+/* ammotype  */ ammo_cells,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* color     */ '0.5 1 1',
+/* model     */ "minstanex",
 /* crosshair */ "gfx/crosshairminstanex 0.4",
-/* netname  */ "minstanex",
-/* fullname */ _("Vaporizer")
+/* netname   */ "minstanex",
+/* fullname  */ _("Vaporizer")
 );
 
 #define VAPORIZER_SETTINGS(w_cvar,w_prop) VAPORIZER_SETTINGS_LIST(w_cvar, w_prop, VAPORIZER, vaporizer)

@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ HLAC,
-/* function */ W_HLAC,
-/* ammotype */ ammo_cells,
-/* impulse  */ 6,
-/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '0 1 0',
-/* model    */ "hlac",
+/* WEP_##id  */ HLAC,
+/* function  */ W_HLAC,
+/* ammotype  */ ammo_cells,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '0 1 0',
+/* model     */ "hlac",
 /* crosshair */ "gfx/crosshairhlac 0.6",
-/* netname  */ "hlac",
-/* fullname */ _("Heavy Laser Assault Cannon")
+/* netname   */ "hlac",
+/* fullname  */ _("Heavy Laser Assault Cannon")
 );
 
 #define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, HLAC, hlac)

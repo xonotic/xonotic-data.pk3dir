@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ SEEKER,
-/* function */ W_Seeker,
-/* ammotype */ ammo_rockets,
-/* impulse  */ 8,
-/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '0.5 1 0',
-/* model    */ "seeker",
+/* WEP_##id  */ SEEKER,
+/* function  */ W_Seeker,
+/* ammotype  */ ammo_rockets,
+/* impulse   */ 8,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '0.5 1 0',
+/* model     */ "seeker",
 /* crosshair */ "gfx/crosshairseeker 0.8",
-/* netname  */ "seeker",
-/* fullname */ _("T.A.G. Seeker")
+/* netname   */ "seeker",
+/* fullname  */ _("T.A.G. Seeker")
 );
 
 #define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, SEEKER, seeker)

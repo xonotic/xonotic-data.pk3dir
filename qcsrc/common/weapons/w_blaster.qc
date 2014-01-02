@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ BLASTER,
-/* function */ W_Blaster,
-/* ammotype */ ammo_none,
-/* impulse  */ 1,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating   */ 0,
-/* color	*/ '1 0.5 0.5',
-/* model    */ "laser",
+/* WEP_##id  */ BLASTER,
+/* function  */ W_Blaster,
+/* ammotype  */ ammo_none,
+/* impulse   */ 1,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ 0,
+/* color     */ '1 0.5 0.5',
+/* model     */ "laser",
 /* crosshair */ "gfx/crosshairlaser 0.4",
-/* netname  */ "laser",
-/* fullname */ _("Blaster")
+/* netname   */ "laser",
+/* fullname  */ _("Blaster")
 );
 
 #define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, BLASTER, blaster)

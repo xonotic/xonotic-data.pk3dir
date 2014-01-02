@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ RIFLE,
-/* function */ W_Rifle,
-/* ammotype */ ammo_nails,
-/* impulse  */ 7,
-/* flags    */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '0.5 1 0',
-/* model    */ "campingrifle",
+/* WEP_##id  */ RIFLE,
+/* function  */ W_Rifle,
+/* ammotype  */ ammo_nails,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '0.5 1 0',
+/* model     */ "campingrifle",
 /* crosshair */ "gfx/crosshairrifle 0.5",
-/* netname  */ "rifle",
-/* fullname */ _("Rifle")
+/* netname   */ "rifle",
+/* fullname  */ _("Rifle")
 );
 
 #define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, RIFLE, rifle)

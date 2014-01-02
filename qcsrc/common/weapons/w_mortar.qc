@@ -1,16 +1,16 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id */ MORTAR,
-/* function */ W_Mortar,
-/* ammotype */ ammo_rockets,
-/* impulse  */ 4,
-/* flags    */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating   */ BOT_PICKUP_RATING_MID,
-/* color	*/ '1 0 0',
-/* model    */ "gl",
+/* WEP_##id  */ MORTAR,
+/* function  */ W_Mortar,
+/* ammotype  */ ammo_rockets,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* color     */ '1 0 0',
+/* model     */ "gl",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
-/* netname  */ "grenadelauncher",
-/* fullname */ _("Mortar")
+/* netname   */ "grenadelauncher",
+/* fullname  */ _("Mortar")
 );
 
 #define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, MORTAR, mortar)
