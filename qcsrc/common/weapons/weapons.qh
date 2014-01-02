@@ -88,7 +88,7 @@ float GetAmmoStat(.float ammotype);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn)).ammo_field)
+#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn)).ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
 
@@ -147,7 +147,7 @@ void register_weapons_done();
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
 .WepSet weapons; // WEPSET_...
-.string netname; // short name
+.string netname; // reference name name
 .string message; // human readable name
 .float(float) weapon_func; // w_...
 .vector wpcolor; // waypointsprite color
@@ -160,27 +160,27 @@ void register_weapons_done();
 ..float ammo_field; // main ammo field
 
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname) \
+#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
 	float id; \
 	WepSet bit; \
-	float func(float); \
+	float function(float); \
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
 		bit = WepSet_FromWeapon(id); \
 		WEPSET_ALL |= bit; \
-		if((weapontype) & WEP_FLAG_SUPERWEAPON) \
+		if((flags) & WEP_FLAG_SUPERWEAPON) \
 			WEPSET_SUPERWEAPONS |= bit; \
 		++WEP_COUNT; \
-		register_weapon(id,bit,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname); \
+		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,model,refname,wepname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
-#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,model,refname,wepname)
 #else
-#define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,func,ammotype,i,weapontype,pickupbasevalue,clr,modelname,shortname,wname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,model,refname,wepname)
 #endif
 
 #include "all.qh"
