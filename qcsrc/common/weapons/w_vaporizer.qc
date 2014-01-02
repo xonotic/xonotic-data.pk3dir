@@ -122,7 +122,7 @@ float W_Vaporizer(float req)
 	{
 		case WR_AIM:
 		{
-			if(self.AMMO_VAL(WEP_VAPORIZER) > 0)
+			if(self.WEP_AMMO(WEP_VAPORIZER) > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), FALSE); // WEAPONTODO: replace with proper vaporizer cvars
@@ -196,13 +196,13 @@ float W_Vaporizer(float req)
 		}
 		case WR_SETUP:
 		{
-			self.ammo_field = AMMO_VAL(WEP_VAPORIZER);
+			self.ammo_field = WEP_AMMO(WEP_VAPORIZER);
 			self.vaporizer_lasthit = 0;
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.AMMO_VAL(WEP_VAPORIZER) >= vaporizer_ammo;
+			ammo_amount = self.WEP_AMMO(WEP_VAPORIZER) >= vaporizer_ammo;
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= vaporizer_ammo;
 			return ammo_amount;
 		}
@@ -210,7 +210,7 @@ float W_Vaporizer(float req)
 		{
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
 				return TRUE;
-			ammo_amount = self.AMMO_VAL(WEP_VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
+			ammo_amount = self.WEP_AMMO(WEP_VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}

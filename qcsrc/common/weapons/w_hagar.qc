@@ -298,7 +298,7 @@ void W_Hagar_Attack2_Load (void)
 	if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
-		enough_ammo = self.AMMO_VAL(WEP_HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = self.WEP_AMMO(WEP_HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
 
 	if(self.BUTTON_ATCK2)
 	{
@@ -464,13 +464,13 @@ float W_Hagar(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.AMMO_VAL(WEP_HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
+			ammo_amount = self.WEP_AMMO(WEP_HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
 			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_PRI(hagar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.AMMO_VAL(WEP_HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
+			ammo_amount = self.WEP_AMMO(WEP_HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
 			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
