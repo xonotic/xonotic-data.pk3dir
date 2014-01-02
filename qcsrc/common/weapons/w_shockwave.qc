@@ -297,6 +297,7 @@ float W_Shockwave_Attack_CheckHit(
 	vector final_force,
 	float final_damage)
 {
+	// WEAPONTODO: check if we hit MAX_SHOCKWAVE_HITS 
 	if(!head) { return FALSE; }
 	float i;
 
