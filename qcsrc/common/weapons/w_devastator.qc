@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* color	*/ '1 1 0',
 /* model    */ "rl",
+/* crosshair */ "gfx/crosshairrocketlauncher",
 /* netname  */ "devastator",
 /* fullname */ _("Devastator")
 );

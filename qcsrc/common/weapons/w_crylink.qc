@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '1 0.5 1',
 /* model    */ "crylink",
+/* crosshair */ "gfx/crosshaircrylink",
 /* netname  */ "crylink",
 /* fullname */ _("Crylink")
 );

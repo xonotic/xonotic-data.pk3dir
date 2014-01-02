@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ 0,
 /* color	*/ '0 0.5 0',
 /* model    */ "hookgun",
+/* crosshair */ "gfx/crosshairhook",
 /* netname  */ "hook",
 /* fullname */ _("Grappling Hook")
 );

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* color	*/ '1 1 1',
 /* model    */ "arc",
+/* crosshair */ "gfx/crosshairhlac",
 /* netname  */ "arc",
 /* fullname */ _("Arc")
 );

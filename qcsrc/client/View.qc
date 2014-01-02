@@ -1228,42 +1228,39 @@ void CSQC_UpdateView(float w, float h)
 				shottype = SHOTTYPE_HITWORLD;
 
 			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
-			string wcross_wep = "", wcross_name;
+			string wcross_name = "";
 			float wcross_scale, wcross_blur;
 
-			if (autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
+			if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 			{
 				e = get_weaponinfo(switchingweapon);
-				if (e && e.netname != "")
+				if(e)
 				{
-					wcross_wep = e.netname;
 					if(autocvar_crosshair_per_weapon)
 					{
-						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-						if (wcross_resolution == 0)
-							return;
-						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
-						if (wcross_alpha == 0)
-							return;
+						// WEAPONTODO: access these through some general settings (with non-balance config settings)
+						//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						//if (wcross_resolution == 0)
+							//return;
 
-						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-						if(wcross_style == "" || wcross_style == "0")
-							wcross_style = wcross_wep;
+						//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+						wcross_resolution *= e.w_crosshair_size;
+						wcross_name = e.w_crosshair;
 					}
 				}
 			}
 
-			//printf("crosshair style: %s\n", wcross_style);
-			wcross_name = strcat("gfx/crosshair", wcross_style);
+			if(wcross_name == "")
+				wcross_name = strcat("gfx/crosshair", wcross_style);
 
 			// MAIN CROSSHAIR COLOR DECISION
 			switch(autocvar_crosshair_color_special)
 			{
 				case 1: // crosshair_color_per_weapon
 				{
-					if(wcross_wep != "")
+					if(e)
 					{
-						wcross_color = stov(cvar_string(sprintf("crosshair_%s_color", wcross_wep)));
+						wcross_color = e.wpcolor;
 						break;
 					}
 					else { goto normalcolor; }

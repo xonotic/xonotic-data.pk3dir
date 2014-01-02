@@ -139,6 +139,7 @@ void register_weapon(
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
+	string crosshair,
 	string shortname,
 	string wname);
 
@@ -157,11 +158,14 @@ void register_weapons_done();
 .string model2;             // A: wpn-id     // wpn- sprite name
 .string mdl;                // M: model      // modelname without g_, v_, w_
 .string model;              // A: model      // full name of g_ model
+.string w_crosshair;
+.float w_crosshair_size;
 .string netname;            // M: refname    // reference name name
 .string message;            // M: fullname   // human readable name
 
+
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
+#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
 	float id; \
 	WepSet bit; \
 	float function(float); \
@@ -173,15 +177,15 @@ void register_weapons_done();
 		if((flags) & WEP_FLAG_SUPERWEAPON) \
 			WEPSET_SUPERWEAPONS |= bit; \
 		++WEP_COUNT; \
-		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,model,refname,wepname); \
+		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,model,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname)
 #else
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,model,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname)
 #endif
 
 #include "all.qh"

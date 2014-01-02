@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '0 0.5 1',
 /* model    */ "electro",
+/* crosshair */ "gfx/crosshairelectro",
 /* netname  */ "electro",
 /* fullname */ _("Electro")
 );

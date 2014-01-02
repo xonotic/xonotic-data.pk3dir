@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_LOW,
 /* color	*/ '0.5 0.25 0',
 /* model    */ "shotgun",
+/* crosshair */ "gfx/crosshairshotgun",
 /* netname  */ "shockwave",
 /* fullname */ _("Shockwave")
 );

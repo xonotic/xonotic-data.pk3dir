@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* color	*/ '0.5 1 1',
 /* model    */ "minstanex",
+/* crosshair */ "gfx/crosshairminstanex",
 /* netname  */ "minstanex",
 /* fullname */ _("Vaporizer")
 );

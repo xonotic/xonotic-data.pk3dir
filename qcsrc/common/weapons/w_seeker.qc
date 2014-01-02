@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '0.5 1 0',
 /* model    */ "seeker",
+/* crosshair */ "gfx/crosshairseeker",
 /* netname  */ "seeker",
 /* fullname */ _("T.A.G. Seeker")
 );

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '0 1 0',
 /* model    */ "tuba",
+/* crosshair */ "gfx/crosshairtuba",
 /* netname  */ "tuba",
 /* xgettext:no-c-format */
 /* fullname  */ _("@!#%'n Tuba")

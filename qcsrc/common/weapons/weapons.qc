@@ -84,6 +84,7 @@ void register_weapon(
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
+	string crosshair,
 	string shortname,
 	string wname)
 {
@@ -103,6 +104,14 @@ void register_weapon(
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
 	e.ammo_field = ammotype;
+
+	// WEAPONTODO: reorganize this
+
+	e.w_crosshair = strzone(car(crosshair));
+	string s = cdr(crosshair);
+	e.w_crosshair_size = ((s != "") ? stof(s) : 1);
+
+	printf("wtf: '%s', '%s', %f.\n", car(crosshair), s, e.w_crosshair_size);
 
 	#ifndef MENUQC
 	func(WR_INIT);
@@ -128,6 +137,9 @@ void register_weapons_done()
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
 	dummy_weapon_info.ammo_field = ammo_none;
+
+	dummy_weapon_info.w_crosshair = "gfx/crosshair1";
+	dummy_weapon_info.w_crosshair_size = 1;
 
 	float i;
 	weaponorder_byid = "";

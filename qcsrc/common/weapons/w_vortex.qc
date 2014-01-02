@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* color	*/ '0.5 1 1',
 /* model    */ "nex",
+/* crosshair */ "gfx/crosshairnex 0.65",
 /* netname  */ "nex",
 /* fullname */ _("Vortex")
 );
