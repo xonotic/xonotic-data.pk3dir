@@ -145,19 +145,20 @@ void register_weapon(
 void register_weapons_done();
 
 // entity properties of weaponinfo:
-.float weapon; // WEP_...
-.WepSet weapons; // WEPSET_...
-.string netname; // reference name name
-.string message; // human readable name
-.float(float) weapon_func; // w_...
-.vector wpcolor; // waypointsprite color
-.string mdl; // modelname without g_, v_, w_
-.string model; // full name of g_ model
-.float spawnflags; // WEPSPAWNFLAG_... combined
-.float impulse; // weapon impulse
-.float bot_pickupbasevalue; // bot weapon priority
-.string model2; // wpn- sprite name
-..float ammo_field; // main ammo field
+// fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A"
+.float weapon;              // M: WEP_id     // WEP_...
+.WepSet weapons;            // A: WEPSET_id  // WEPSET_...
+.float(float) weapon_func;  // M: function   // w_...
+..float ammo_field;         // M: ammotype   // main ammo field
+.float impulse;             // M: impulse    // weapon impulse
+.float spawnflags;          // M: flags      // WEPSPAWNFLAG_... combined
+.float bot_pickupbasevalue; // M: rating     // bot weapon priority
+.vector wpcolor;            // M: color      // waypointsprite color
+.string model2;             // A: wpn-id     // wpn- sprite name
+.string mdl;                // M: model      // modelname without g_, v_, w_
+.string model;              // A: model      // full name of g_ model
+.string netname;            // M: refname    // reference name name
+.string message;            // M: fullname   // human readable name
 
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,model,refname,wepname) \
