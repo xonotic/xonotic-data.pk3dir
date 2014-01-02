@@ -4,10 +4,12 @@
 
 const float MAX_SHOT_DISTANCE = 32768;
 
+// weapon pickup ratings for bot logic
 const float BOT_PICKUP_RATING_LOW  =  2500;
 const float BOT_PICKUP_RATING_MID  =  5000;
 const float BOT_PICKUP_RATING_HIGH = 10000;
 
+// weapon flags
 const float WEP_TYPE_OTHER          =  0x00; // not for damaging people
 const float WEP_TYPE_SPLASH         =  0x01; // splash damage
 const float WEP_TYPE_HITSCAN        =  0x02; // hitscan
@@ -40,7 +42,7 @@ const float WR_ZOOMRETICLE    = 16; // (CLIENT) weapon specific zoom reticle
 // variables:
 string weaponorder_byid;
 
-// Weapon sets
+// weapon sets
 typedef vector WepSet;
 WepSet WepSet_FromWeapon(float a);
 #ifdef SVQC
@@ -52,7 +54,7 @@ WepSet WepSet_GetFromStat();
 WepSet ReadWepSet();
 #endif
 
-// Weapon name macros
+// weapon name macros
 #define WEP_FIRST 1
 #define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
 float WEP_COUNT;
@@ -68,9 +70,7 @@ string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
-
 void W_RandomWeapons(entity e, float n);
-
 string W_Name(float weaponid);
 
 #ifdef CSQC
@@ -91,9 +91,10 @@ float GetAmmoStat(.float ammotype);
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
 #define AMMO_VAL(wpn) ((get_weaponinfo(wpn)).ammo_field)
 
-// =====================
-//  Weapon Registration
-// =====================
+
+// ======================
+//  Configuration Macros
+// ======================
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -121,8 +122,26 @@ float GetAmmoStat(.float ammotype);
 #define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
 #define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
+
+// =====================
+//  Weapon Registration
+// =====================
+
 float w_null(float dummy);
-void register_weapon(float id, WepSet bit, float(float) func, .float ammotype, float i, float weapontype, float pickupbasevalue, vector clr, string modelname, string shortname, string wname);
+
+void register_weapon(
+	float id,
+	WepSet bit,
+	float(float) func,
+	.float ammotype,
+	float i,
+	float weapontype,
+	float pickupbasevalue,
+	vector clr,
+	string modelname,
+	string shortname,
+	string wname);
+
 void register_weapons_done();
 
 // entity properties of weaponinfo:
