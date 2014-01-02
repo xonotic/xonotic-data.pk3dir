@@ -79,7 +79,7 @@ void W_Arc_Beam_Think()
 		remove(self);
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.WEP_AMMO(WEP_ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam)
 			self.owner.arc_beam = world;
@@ -97,8 +97,8 @@ void W_Arc_Beam_Think()
 	{
 		if(WEP_CVAR_PRI(arc, ammo))
 		{
-			dt = min(dt, self.owner.WEP_AMMO(WEP_ARC) / WEP_CVAR_PRI(arc, ammo));
-			self.owner.WEP_AMMO(WEP_ARC) = max(0, self.owner.WEP_AMMO(WEP_ARC) - WEP_CVAR_PRI(arc, ammo) * frametime);
+			dt = min(dt, self.owner.WEP_AMMO(ARC) / WEP_CVAR_PRI(arc, ammo));
+			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - WEP_CVAR_PRI(arc, ammo) * frametime);
 		}
 	}
 
@@ -254,11 +254,11 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			return !WEP_CVAR_PRI(arc, ammo) || (self.WEP_AMMO(WEP_ARC) > 0);
+			return !WEP_CVAR_PRI(arc, ammo) || (self.WEP_AMMO(ARC) > 0);
 		}
 		case WR_CHECKAMMO2:
 		{
-			return self.WEP_AMMO(WEP_ARC) >= WEP_CVAR_SEC(arc, ammo);
+			return self.WEP_AMMO(ARC) >= WEP_CVAR_SEC(arc, ammo);
 		}
 		case WR_CONFIG:
 		{

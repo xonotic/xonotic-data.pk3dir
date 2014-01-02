@@ -89,7 +89,7 @@ float GetAmmoStat(.float ammotype);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) ((get_weaponinfo(wpn)).ammo_field)
+#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn)).ammo_field)
 
 
 // ======================

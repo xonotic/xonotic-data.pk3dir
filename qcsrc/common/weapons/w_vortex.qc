@@ -204,11 +204,11 @@ float W_Vortex(float req)
 										}
 										else
 										{
-											dt = min(dt, (self.WEP_AMMO(WEP_VORTEX) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+											dt = min(dt, (self.WEP_AMMO(VORTEX) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
 											dt = max(0, dt);
 											if(dt > 0)
 											{
-												self.WEP_AMMO(WEP_VORTEX) = max(WEP_CVAR_SEC(vortex, ammo), self.WEP_AMMO(WEP_VORTEX) - WEP_CVAR_SEC(vortex, ammo) * dt);
+												self.WEP_AMMO(VORTEX) = max(WEP_CVAR_SEC(vortex, ammo), self.WEP_AMMO(VORTEX) - WEP_CVAR_SEC(vortex, ammo) * dt);
 											}
 										}
 									}
@@ -252,7 +252,7 @@ float W_Vortex(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.WEP_AMMO(WEP_VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
+			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
 			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_PRI(vortex, ammo));
 			return ammo_amount;
 		}
@@ -261,7 +261,7 @@ float W_Vortex(float req)
 			if(WEP_CVAR(vortex, secondary))
 			{
 				// don't allow charging if we don't have enough ammo
-				ammo_amount = self.WEP_AMMO(WEP_VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
+				ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
 				ammo_amount += self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_SEC(vortex, ammo);
 				return ammo_amount;
 			}

@@ -505,7 +505,7 @@ float W_MineLayer(float req)
 			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if(!(W_MineLayer_PlacedMines(FALSE) && self.WEP_AMMO(WEP_MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
+				if(!(W_MineLayer_PlacedMines(FALSE) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else if (self.BUTTON_ATCK)
@@ -544,7 +544,7 @@ float W_MineLayer(float req)
 			// don't switch while placing a mine
 			if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 			{
-				ammo_amount = self.WEP_AMMO(WEP_MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
+				ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
 				ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= WEP_CVAR(minelayer, ammo);
 				return ammo_amount;
 			}

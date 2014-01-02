@@ -91,7 +91,7 @@ void W_Rifle_BulletHail_Continue()
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
 	ATTACK_FINISHED(self) = time;
-	print(ftos(self.WEP_AMMO(WEP_RIFLE)), "\n");
+	print(ftos(self.WEP_AMMO(RIFLE)), "\n");
 	r = weapon_prepareattack(self.rifle_bullethail_frame == WFRAME_FIRE2, self.rifle_bullethail_refire);
 	if(self.switchweapon == self.weapon)
 		self.switchweapon = sw;
@@ -209,13 +209,13 @@ float W_Rifle(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			ammo_amount = self.WEP_AMMO(WEP_RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
+			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
 			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_PRI(rifle, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
-			ammo_amount = self.WEP_AMMO(WEP_RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
+			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
 			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
 		}

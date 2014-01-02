@@ -310,9 +310,9 @@ float W_MachineGun(float req)
 		case WR_CHECKAMMO1:
 		{
 			if(WEP_CVAR(machinegun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(WEP_MACHINEGUN) >= WEP_CVAR(machinegun, sustained_ammo);
+				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, sustained_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(WEP_MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
+				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
 
 			if(WEP_CVAR(machinegun, reload_ammo))
 			{
@@ -326,9 +326,9 @@ float W_MachineGun(float req)
 		case WR_CHECKAMMO2:
 		{
 			if(WEP_CVAR(machinegun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(WEP_MACHINEGUN) >= WEP_CVAR(machinegun, burst_ammo);
+				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, burst_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(WEP_MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
+				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
 
 			if(WEP_CVAR(machinegun, reload_ammo))
 			{
