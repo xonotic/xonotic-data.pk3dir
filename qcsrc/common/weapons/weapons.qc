@@ -249,11 +249,6 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string W_Name(float weaponid) // WEAPONTODO: make into a macro
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
 #ifdef CSQC
 .float GetAmmoFieldFromNum(float i)
 {

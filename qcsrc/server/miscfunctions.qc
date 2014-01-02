@@ -353,7 +353,7 @@ string formatmessage(string msg)
 				wep = self.switchweapon;
 			if (!wep)
 				wep = self.cnt;
-			replacement = W_Name(wep);
+			replacement = WEP_NAME(wep);
 		} else if (escape == "W") {
 			if (self.items & IT_SHELLS) replacement = "shells";
 			else if (self.items & IT_NAILS) replacement = "bullets";
