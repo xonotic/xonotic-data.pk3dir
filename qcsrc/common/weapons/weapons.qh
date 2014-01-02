@@ -140,8 +140,8 @@ void register_weapon(
 	vector clr,
 	string modelname,
 	string crosshair,
-	string shortname,
-	string wname);
+	string refname,
+	string wepname);
 
 void register_weapons_done();
 
