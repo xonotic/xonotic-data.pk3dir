@@ -80,12 +80,14 @@ void spawnfunc_weapon_shockwave()
 	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 }
 
+#define MAX_SHOCKWAVE_HITS 5
+
 .float swing_prev;
 .entity swing_alreadyhit;
 .float shockwave_blasttime;
-entity shockwave_hit[32];
-float shockwave_hit_damage[32];
-vector shockwave_hit_force[32];
+entity shockwave_hit[MAX_SHOCKWAVE_HITS];
+float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
+vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
 void W_Shockwave_Melee_Think()
