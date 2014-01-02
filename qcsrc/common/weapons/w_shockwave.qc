@@ -297,7 +297,6 @@ float W_Shockwave_Attack_CheckHit(
 	vector final_force,
 	float final_damage)
 {
-	// WEAPONTODO: check if we hit MAX_SHOCKWAVE_HITS 
 	if(!head) { return FALSE; }
 	float i;
 	
@@ -533,9 +532,8 @@ void W_Shockwave_Attack()
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
-			float distance_to_target = vlen(w_shotorg - nearest_to_attacker); // WEAPONTODO: use the findradius function for this
 
-			if((distance_to_target <= WEP_CVAR(shockwave, blast_distance)) 
+			if((vlen(head.WarpZone_findradius_dist) <= WEP_CVAR(shockwave, blast_distance)) 
 				&& (W_Shockwave_Attack_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				// calculate importance of distance and accuracy for this attack
@@ -549,7 +547,7 @@ void W_Shockwave_Attack()
 				);
 				multiplier_from_distance = (1 -
 					(distance_to_hit ?
-						min(1, (distance_to_target / distance_to_end))
+						min(1, (vlen(head.WarpZone_findradius_dist) / distance_to_end))
 						:
 						0
 					)
