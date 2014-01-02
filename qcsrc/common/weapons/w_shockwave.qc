@@ -80,7 +80,7 @@ void spawnfunc_weapon_shockwave()
 	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 }
 
-#define MAX_SHOCKWAVE_HITS 5
+#define MAX_SHOCKWAVE_HITS 10
 
 .float swing_prev;
 .entity swing_alreadyhit;
@@ -300,10 +300,8 @@ float W_Shockwave_Attack_CheckHit(
 	// WEAPONTODO: check if we hit MAX_SHOCKWAVE_HITS 
 	if(!head) { return FALSE; }
 	float i;
-
-	++queue;
 	
-	for(i = 1; i <= queue; ++i)
+	for(i = 0; i <= queue; ++i)
 	{
 		if(shockwave_hit[i] == head)
 		{
@@ -602,7 +600,7 @@ void W_Shockwave_Attack()
 		head = head.chain;
 	}
 
-	for(i = 1; i <= queue; ++i)
+	for(i = 0; i <= queue; ++i)
 	{
 		head = shockwave_hit[i];
 		final_force = shockwave_hit_force[i];
