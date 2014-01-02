@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 1 1',
 /* model     */ "arc",
 /* crosshair */ "gfx/crosshairhlac 0.7",
-/* netname   */ "arc",
-/* fullname  */ _("Arc")
+/* refname   */ "arc",
+/* wepname   */ _("Arc")
 );
 
 #define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)

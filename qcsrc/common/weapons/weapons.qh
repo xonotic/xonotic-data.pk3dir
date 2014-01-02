@@ -158,10 +158,10 @@ void register_weapons_done();
 .string model2;             // A: wpn-id     // wpn- sprite name
 .string mdl;                // M: model      // modelname without g_, v_, w_
 .string model;              // A: model      // full name of g_ model
-.string w_crosshair;
-.float w_crosshair_size;
+.string w_crosshair;        // M: crosshair  // per-weapon crosshair: "CrosshairImage Size"
+.float w_crosshair_size;    // A: crosshair  // per-weapon crosshair size (argument two of "crosshair" field)
 .string netname;            // M: refname    // reference name name
-.string message;            // M: fullname   // human readable name
+.string message;            // M: wepname    // human readable name
 
 
 // note: the fabs call is just there to hide "if result is constant" warning

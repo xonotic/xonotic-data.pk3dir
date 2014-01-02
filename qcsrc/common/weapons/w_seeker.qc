@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 0',
 /* model     */ "seeker",
 /* crosshair */ "gfx/crosshairseeker 0.8",
-/* netname   */ "seeker",
-/* fullname  */ _("T.A.G. Seeker")
+/* refname   */ "seeker",
+/* wepname   */ _("T.A.G. Seeker")
 );
 
 #define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, SEEKER, seeker)

@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 0.5 0',
 /* model     */ "fireball",
 /* crosshair */ "gfx/crosshairfireball",
-/* netname   */ "fireball",
-/* fullname  */ _("Fireball")
+/* refname   */ "fireball",
+/* wepname   */ _("Fireball")
 );
 
 #define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)

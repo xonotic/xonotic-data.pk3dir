@@ -85,8 +85,8 @@ void register_weapon(
 	vector clr,
 	string modelname,
 	string crosshair,
-	string shortname,
-	string wname)
+	string refname,
+	string wepname)
 {
 	entity e;
 	weapon_info[id - 1] = e = spawn();
@@ -105,8 +105,8 @@ void register_weapon(
 	string s = cdr(crosshair);
 	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
 	e.model2 = strzone(strcat("wpn-", ftos(id)));
-	e.netname = shortname;
-	e.message = wname;
+	e.netname = refname;
+	e.message = wepname;
 
 	#ifndef MENUQC
 	func(WR_INIT);

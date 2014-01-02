@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 1 0',
 /* model     */ "uzi",
 /* crosshair */ "gfx/crosshairuzi 0.6",
-/* netname   */ "uzi",
-/* fullname  */ _("Machine Gun")
+/* refname   */ "uzi",
+/* wepname   */ _("Machine Gun")
 );
 
 #define MACHINEGUN_SETTINGS(w_cvar,w_prop) MACHINEGUN_SETTINGS_LIST(w_cvar, w_prop, MACHINEGUN, machinegun)

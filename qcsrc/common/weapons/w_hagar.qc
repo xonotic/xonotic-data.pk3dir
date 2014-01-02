@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 1 0.5',
 /* model     */ "hagar",
 /* crosshair */ "gfx/crosshairhagar 0.8",
-/* netname   */ "hagar",
-/* fullname  */ _("Hagar")
+/* refname   */ "hagar",
+/* wepname   */ _("Hagar")
 );
 
 #define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, HAGAR, hagar)

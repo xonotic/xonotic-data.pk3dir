@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 0 0',
 /* model     */ "gl",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
-/* netname   */ "grenadelauncher",
-/* fullname  */ _("Mortar")
+/* refname   */ "grenadelauncher",
+/* wepname   */ _("Mortar")
 );
 
 #define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, MORTAR, mortar)

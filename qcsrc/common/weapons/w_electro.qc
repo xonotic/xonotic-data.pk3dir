@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0 0.5 1',
 /* model     */ "electro",
 /* crosshair */ "gfx/crosshairelectro 0.5",
-/* netname   */ "electro",
-/* fullname  */ _("Electro")
+/* refname   */ "electro",
+/* wepname   */ _("Electro")
 );
 
 #define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, ELECTRO, electro)

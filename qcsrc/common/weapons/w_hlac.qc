@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0 1 0',
 /* model     */ "hlac",
 /* crosshair */ "gfx/crosshairhlac 0.6",
-/* netname   */ "hlac",
-/* fullname  */ _("Heavy Laser Assault Cannon")
+/* refname   */ "hlac",
+/* wepname   */ _("Heavy Laser Assault Cannon")
 );
 
 #define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, HLAC, hlac)

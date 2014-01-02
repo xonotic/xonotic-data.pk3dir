@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 1 0',
 /* model     */ "rl",
 /* crosshair */ "gfx/crosshairrocketlauncher 0.5875",
-/* netname   */ "devastator",
-/* fullname  */ _("Devastator")
+/* refname   */ "devastator",
+/* wepname   */ _("Devastator")
 );
 
 #define DEVASTATOR_SETTINGS(w_cvar,w_prop) DEVASTATOR_SETTINGS_LIST(w_cvar, w_prop, DEVASTATOR, devastator)

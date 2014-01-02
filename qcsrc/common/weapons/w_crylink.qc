@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '1 0.5 1',
 /* model     */ "crylink",
 /* crosshair */ "gfx/crosshaircrylink 0.4",
-/* netname   */ "crylink",
-/* fullname  */ _("Crylink")
+/* refname   */ "crylink",
+/* wepname   */ _("Crylink")
 );
 
 #define CRYLINK_SETTINGS(w_cvar,w_prop) CRYLINK_SETTINGS_LIST(w_cvar, w_prop, CRYLINK, crylink)

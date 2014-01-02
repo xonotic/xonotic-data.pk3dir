@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 0',
 /* model     */ "campingrifle",
 /* crosshair */ "gfx/crosshairrifle 0.5",
-/* netname   */ "rifle",
-/* fullname  */ _("Rifle")
+/* refname   */ "rifle",
+/* wepname   */ _("Rifle")
 );
 
 #define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, RIFLE, rifle)

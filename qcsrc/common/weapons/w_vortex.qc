@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 1',
 /* model     */ "nex",
 /* crosshair */ "gfx/crosshairnex 0.65",
-/* netname   */ "nex",
-/* fullname  */ _("Vortex")
+/* refname   */ "nex",
+/* wepname   */ _("Vortex")
 );
 
 #define VORTEX_SETTINGS(w_cvar,w_prop) VORTEX_SETTINGS_LIST(w_cvar, w_prop, VORTEX, vortex)

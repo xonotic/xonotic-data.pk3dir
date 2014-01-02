@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.75 1 0',
 /* model     */ "minelayer",
 /* crosshair */ "gfx/crosshairminelayer 0.9",
-/* netname   */ "minelayer",
-/* fullname  */ _("Mine Layer")
+/* refname   */ "minelayer",
+/* wepname   */ _("Mine Layer")
 );
 
 #define MINELAYER_SETTINGS(w_cvar,w_prop) MINELAYER_SETTINGS_LIST(w_cvar, w_prop, MINE_LAYER, minelayer)

@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.25 0',
 /* model     */ "shotgun",
 /* crosshair */ "gfx/crosshairshotgun 0.65",
-/* shortname */ "shotgun",
-/* fullname  */ _("Shotgun")
+/* refname   */ "shotgun",
+/* wepname   */ _("Shotgun")
 );
 
 #define SHOTGUN_SETTINGS(w_cvar,w_prop) SHOTGUN_SETTINGS_LIST(w_cvar, w_prop, SHOTGUN, shotgun)

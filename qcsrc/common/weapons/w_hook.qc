@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0 0.5 0',
 /* model     */ "hookgun",
 /* crosshair */ "gfx/crosshairhook 0.5",
-/* netname   */ "hook",
-/* fullname  */ _("Grappling Hook")
+/* refname   */ "hook",
+/* wepname   */ _("Grappling Hook")
 );
 
 #define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)

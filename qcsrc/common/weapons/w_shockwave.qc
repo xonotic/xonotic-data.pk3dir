@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.25 0',
 /* model     */ "shotgun",
 /* crosshair */ "gfx/crosshairshotgun 0.7",
-/* netname   */ "shockwave",
-/* fullname  */ _("Shockwave")
+/* refname   */ "shockwave",
+/* wepname   */ _("Shockwave")
 );
 
 #define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)

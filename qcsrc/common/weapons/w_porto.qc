@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.5 0.5',
 /* model     */ "porto" ,
 /* crosshair */ "gfx/crosshairporto 0.6",
-/* netname   */ "porto",
-/* fullname  */ _("Port-O-Launch")
+/* refname   */ "porto",
+/* wepname   */ _("Port-O-Launch")
 );
 
 #define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)

@@ -9,9 +9,9 @@ REGISTER_WEAPON(
 /* color     */ '0 1 0',
 /* model     */ "tuba",
 /* crosshair */ "gfx/crosshairtuba",
-/* netname   */ "tuba",
+/* refname   */ "tuba",
 /* xgettext:no-c-format */
-/* fullname  */ _("@!#%'n Tuba")
+/* wepname   */ _("@!#%'n Tuba")
 );
 
 #define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, TUBA, tuba)

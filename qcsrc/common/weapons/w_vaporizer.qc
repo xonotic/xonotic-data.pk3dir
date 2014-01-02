@@ -9,8 +9,8 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 1',
 /* model     */ "minstanex",
 /* crosshair */ "gfx/crosshairminstanex 0.4",
-/* netname   */ "minstanex",
-/* fullname  */ _("Vaporizer")
+/* refname   */ "minstanex",
+/* wepname   */ _("Vaporizer")
 );
 
 #define VAPORIZER_SETTINGS(w_cvar,w_prop) VAPORIZER_SETTINGS_LIST(w_cvar, w_prop, VAPORIZER, vaporizer)
