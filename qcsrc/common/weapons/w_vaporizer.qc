@@ -192,7 +192,7 @@ float W_Vaporizer(float req)
 			precache_sound("weapons/nexwhoosh2.wav");
 			precache_sound("weapons/nexwhoosh3.wav");
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
-			VAPORIZER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

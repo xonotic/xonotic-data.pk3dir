@@ -119,7 +119,7 @@ float GetAmmoStat(.float ammotype);
 #define WEP_CVAR_BOTH(wepname,isprimary,name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
 
 // set initialization values for weapon settings
-#define WEP_SKIPCVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
+#define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
 #define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
 
 

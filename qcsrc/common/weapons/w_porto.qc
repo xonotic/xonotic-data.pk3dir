@@ -375,7 +375,7 @@ float W_Porto(float req)
 			precache_sound ("porto/explode.wav");
 			precache_sound ("porto/fire.wav");
 			precache_sound ("porto/unsupported.wav");
-			PORTO_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

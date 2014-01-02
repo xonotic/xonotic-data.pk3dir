@@ -223,7 +223,7 @@ float W_Blaster(float request)
 			precache_model("models/weapons/v_laser.md3");
 			precache_model("models/weapons/h_laser.iqm");
 			precache_sound("weapons/lasergun_fire.wav");
-			BLASTER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		

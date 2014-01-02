@@ -665,7 +665,7 @@ float W_Seeker(float req)
 			precache_sound ("weapons/tag_fire.wav");
 			precache_sound ("weapons/flac_fire.wav");
 			precache_sound ("weapons/seeker_fire.wav");
-			SEEKER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

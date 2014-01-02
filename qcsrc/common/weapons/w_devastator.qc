@@ -400,7 +400,7 @@ float W_Devastator(float req)
 				precache_sound("weapons/rocket_fire.wav");
 				precache_sound("weapons/rocket_mode.wav");
 			}
-			DEVASTATOR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

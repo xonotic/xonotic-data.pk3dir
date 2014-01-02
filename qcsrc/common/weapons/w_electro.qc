@@ -484,7 +484,7 @@ float W_Electro(float req)
 			precache_sound("weapons/electro_fire2.wav");
 			precache_sound("weapons/electro_impact.wav");
 			precache_sound("weapons/electro_impact_combo.wav");
-			ELECTRO_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

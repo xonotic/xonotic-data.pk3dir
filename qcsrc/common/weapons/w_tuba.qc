@@ -415,7 +415,7 @@ float W_Tuba(float req)
 			precache_model ("models/weapons/h_akordeon.iqm");
 			precache_model ("models/weapons/v_kleinbottle.md3");
 			precache_model ("models/weapons/h_kleinbottle.iqm");
-			TUBA_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

@@ -537,7 +537,7 @@ float W_MineLayer(float req)
 			precache_sound ("weapons/mine_fire.wav");
 			precache_sound ("weapons/mine_stick.wav");
 			precache_sound ("weapons/mine_trigger.wav");
-			MINELAYER_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

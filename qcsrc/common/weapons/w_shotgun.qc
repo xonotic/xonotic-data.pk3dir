@@ -245,7 +245,7 @@ float W_Shotgun(float req)
 			precache_sound ("misc/itempickup.wav");
 			precache_sound ("weapons/shotgun_fire.wav");
 			precache_sound ("weapons/shotgun_melee.wav");
-			SHOTGUN_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_SETUP:

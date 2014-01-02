@@ -305,7 +305,7 @@ float W_MachineGun(float req)
 			precache_model ("models/weapons/v_uzi.md3");
 			precache_model ("models/weapons/h_uzi.iqm");
 			precache_sound ("weapons/uzi_fire.wav");
-			MACHINEGUN_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

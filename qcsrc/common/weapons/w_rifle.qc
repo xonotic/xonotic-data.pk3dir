@@ -205,7 +205,7 @@ float W_Rifle(float req)
 			precache_model ("models/weapons/h_campingrifle.iqm");
 			precache_sound ("weapons/campingrifle_fire.wav");
 			precache_sound ("weapons/campingrifle_fire2.wav");
-			RIFLE_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

@@ -241,7 +241,7 @@ float W_HLAC(float req)
 			precache_model ("models/weapons/v_hlac.md3");
 			precache_model ("models/weapons/h_hlac.iqm");
 			precache_sound ("weapons/lasergun_fire.wav");
-			HLAC_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

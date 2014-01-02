@@ -412,7 +412,7 @@ float W_Mortar(float req)
 			precache_sound ("weapons/grenade_bounce6.wav");
 			precache_sound ("weapons/grenade_stick.wav");
 			precache_sound ("weapons/grenade_fire.wav");
-			MORTAR_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

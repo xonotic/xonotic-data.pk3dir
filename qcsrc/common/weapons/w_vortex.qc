@@ -248,7 +248,7 @@ float W_Vortex(float req)
 			precache_sound ("weapons/nexwhoosh1.wav");
 			precache_sound ("weapons/nexwhoosh2.wav");
 			precache_sound ("weapons/nexwhoosh3.wav");
-			VORTEX_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:

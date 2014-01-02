@@ -679,7 +679,7 @@ float W_Shockwave(float req)
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/shockwave_fire.wav");
 			precache_sound("weapons/shockwave_melee.wav");
-			SHOCKWAVE_SETTINGS(WEP_SKIPCVAR, WEP_SET_PROP)
+			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
