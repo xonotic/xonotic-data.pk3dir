@@ -490,7 +490,7 @@ void W_Shockwave_Attack()
 				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
 
 				// queue damage with this calculated info
-				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
+				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
 				print(sprintf(
@@ -582,7 +582,7 @@ void W_Shockwave_Attack()
 				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
 
 				// queue damage with this calculated info
-				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
+				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
 				print(sprintf(
