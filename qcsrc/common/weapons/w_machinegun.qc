@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '1 1 0',
 /* model    */ "uzi",
-/* crosshair */ "gfx/crosshairuzi",
+/* crosshair */ "gfx/crosshairuzi 0.6",
 /* netname  */ "uzi",
 /* fullname */ _("Machine Gun")
 );

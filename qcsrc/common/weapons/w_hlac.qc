@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '0 1 0',
 /* model    */ "hlac",
-/* crosshair */ "gfx/crosshairhlac",
+/* crosshair */ "gfx/crosshairhlac 0.6",
 /* netname  */ "hlac",
 /* fullname */ _("Heavy Laser Assault Cannon")
 );

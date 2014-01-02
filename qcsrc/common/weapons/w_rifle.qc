@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '0.5 1 0',
 /* model    */ "campingrifle",
-/* crosshair */ "gfx/crosshairrifle",
+/* crosshair */ "gfx/crosshairrifle 0.5",
 /* netname  */ "rifle",
 /* fullname */ _("Rifle")
 );

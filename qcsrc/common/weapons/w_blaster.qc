@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ 0,
 /* color	*/ '1 0.5 0.5',
 /* model    */ "laser",
-/* crosshair */ "gfx/crosshairlaser",
+/* crosshair */ "gfx/crosshairlaser 0.4",
 /* netname  */ "laser",
 /* fullname */ _("Blaster")
 );

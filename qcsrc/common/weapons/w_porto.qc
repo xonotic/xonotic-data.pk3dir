@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ 0,
 /* color	*/ '0.5 0.5 0.5',
 /* model    */ "porto" ,
-/* crosshair */ "gfx/crosshairporto",
+/* crosshair */ "gfx/crosshairporto 0.6",
 /* netname  */ "porto",
 /* fullname */ _("Port-O-Launch")
 );

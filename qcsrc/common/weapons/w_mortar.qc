@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '1 0 0',
 /* model    */ "gl",
-/* crosshair */ "gfx/crosshairgrenadelauncher",
+/* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
 /* netname  */ "grenadelauncher",
 /* fullname */ _("Mortar")
 );

@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_MID,
 /* color	*/ '1 1 0.5',
 /* model    */ "hagar",
-/* crosshair */ "gfx/crosshairhagar",
+/* crosshair */ "gfx/crosshairhagar 0.8",
 /* netname  */ "hagar",
 /* fullname */ _("Hagar")
 );

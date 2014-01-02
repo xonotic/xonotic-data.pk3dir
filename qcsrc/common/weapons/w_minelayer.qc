@@ -8,7 +8,7 @@ REGISTER_WEAPON(
 /* rating   */ BOT_PICKUP_RATING_HIGH,
 /* color	*/ '0.75 1 0',
 /* model    */ "minelayer",
-/* crosshair */ "gfx/crosshairminelayer",
+/* crosshair */ "gfx/crosshairminelayer 0.9",
 /* netname  */ "minelayer",
 /* fullname */ _("Mine Layer")
 );
