@@ -93,25 +93,20 @@ void register_weapon(
 	e.classname = "weapon_info";
 	e.weapon = id;
 	e.weapons = bit;
-	e.netname = shortname;
-	e.message = wname;
 	e.weapon_func = func;
+	e.ammo_field = ammotype;
+	e.impulse = i;
+	e.spawnflags = weapontype;
+	e.bot_pickupbasevalue = pickupbasevalue;
 	e.wpcolor = clr;
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
-	e.spawnflags = weapontype;
-	e.model2 = strzone(strcat("wpn-", ftos(id)));
-	e.impulse = i;
-	e.bot_pickupbasevalue = pickupbasevalue;
-	e.ammo_field = ammotype;
-
-	// WEAPONTODO: reorganize this
-
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
-	e.w_crosshair_size = ((s != "") ? stof(s) : 1);
-
-	printf("wtf: '%s', '%s', %f.\n", car(crosshair), s, e.w_crosshair_size);
+	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
+	e.model2 = strzone(strcat("wpn-", ftos(id)));
+	e.netname = shortname;
+	e.message = wname;
 
 	#ifndef MENUQC
 	func(WR_INIT);
