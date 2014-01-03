@@ -75,10 +75,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			if(autocvar_g_showweaponspawns)
 			{
 				entity e;
-				string s;
-
-				e = get_weaponinfo(wpn);
-				s = e.model2;
 
 				for(e = world; (e = findfloat(e, weapon, wpn)); )
 				{
@@ -87,7 +83,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 					if(!(e.flags & FL_ITEM))
 						continue;
 					WaypointSprite_Spawn(
-						s,
+						(get_weaponinfo(wpn)).wpmodel,
 						1, 0,
 						world, e.origin,
 						self, 0,

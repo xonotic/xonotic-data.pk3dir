@@ -99,12 +99,12 @@ void register_weapon(
 	e.spawnflags = weapontype;
 	e.bot_pickupbasevalue = pickupbasevalue;
 	e.wpcolor = clr;
+	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
 	e.mdl = modelname;
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
 	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
-	e.model2 = strzone(strcat("wpn-", ftos(id)));
 	e.netname = refname;
 	e.message = wepname;
 
