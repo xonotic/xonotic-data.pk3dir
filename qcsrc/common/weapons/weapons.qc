@@ -83,7 +83,10 @@ void register_weapon(
 	float weapontype,
 	float pickupbasevalue,
 	vector clr,
-	string modelname,
+	string firstmodel,
+	string thirdmodel,
+	string pickupmodel,
+	string simplemodel,
 	string crosshair,
 	string refname,
 	string wepname)
@@ -100,8 +103,10 @@ void register_weapon(
 	e.bot_pickupbasevalue = pickupbasevalue;
 	e.wpcolor = clr;
 	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
-	e.mdl = modelname;
-	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+	e.model = strzone(firstmodel); // first person view weapon model (h_)
+	e.model2 = strzone(thirdmodel); // third person weapon model (v_)
+	e.model3 = strzone(pickupmodel); // pickup weapon model (g_)
+	e.mdl = strzone(simplemodel); // simpleitems weapon model/image
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
 	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
@@ -125,10 +130,12 @@ void register_weapons_done()
 	dummy_weapon_info.netname = "";
 	dummy_weapon_info.message = "AOL CD Thrower";
 	dummy_weapon_info.weapon_func = w_null;
-	dummy_weapon_info.mdl = "";
+	dummy_weapon_info.wpmodel = "";
 	dummy_weapon_info.model = "";
-	dummy_weapon_info.spawnflags = 0;
 	dummy_weapon_info.model2 = "";
+	dummy_weapon_info.model3 = "";
+	dummy_weapon_info.mdl = "";
+	dummy_weapon_info.spawnflags = 0;
 	dummy_weapon_info.impulse = -1;
 	dummy_weapon_info.bot_pickupbasevalue = 0;
 	dummy_weapon_info.ammo_field = ammo_none;

@@ -138,7 +138,10 @@ void register_weapon(
 	float weapontype,
 	float pickupbasevalue,
 	vector clr,
-	string modelname,
+	string firstmodel,
+	string thirdmodel,
+	string pickupmodel,
+	string simplemodel,
 	string crosshair,
 	string refname,
 	string wepname);
@@ -156,8 +159,10 @@ void register_weapons_done();
 .float bot_pickupbasevalue; // M: rating     // bot weapon priority
 .vector wpcolor;            // M: color      // waypointsprite color
 .string wpmodel;            // A: wpn-id     // wpn- sprite name
-.string mdl;                // M: model      // modelname without g_, v_, w_
-.string model;              // A: model      // full name of g_ model
+.string model;              // M: firstmodel  // first person view weapon model (h_)
+.string model2;             // M: thirdmodel  // third person weapon model (v_)
+.string model3;             // M: pickupmodel // pickup weapon model (g_)
+.string mdl;                // M: simplemodel // simpleitems weapon model/image
 .string w_crosshair;        // M: crosshair  // per-weapon crosshair: "CrosshairImage Size"
 .float w_crosshair_size;    // A: crosshair  // per-weapon crosshair size (argument two of "crosshair" field)
 .string netname;            // M: refname    // reference name name
