@@ -624,7 +624,7 @@ float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;

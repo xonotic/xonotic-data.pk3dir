@@ -173,7 +173,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .string item_pickupsound;
 
 // definitions for weaponsystem
-
+// more WEAPONTODO: move these to their proper files
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
