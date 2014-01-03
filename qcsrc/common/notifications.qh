@@ -516,8 +516,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_THINKING_WITH_PORTALS,         2, 1, "s1 s2loc spree_lost", "s1",                 "notify_selfkill",        _("^BG%s^K1 is now thinking with portals%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER,                   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "")
+	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SNIPE,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SPRAY,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "")
 
 #define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
