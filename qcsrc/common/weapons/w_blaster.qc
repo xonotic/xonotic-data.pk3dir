@@ -249,12 +249,12 @@ float W_Blaster(float request)
 		
 		case WR_SUICIDEMESSAGE:
 		{
-			return WEAPON_LASER_SUICIDE;
+			return WEAPON_BLASTER_SUICIDE;
 		}
 		
 		case WR_KILLMESSAGE:
 		{
-			return WEAPON_LASER_MURDER;
+			return WEAPON_BLASTER_MURDER;
 		}
 	}
 	

@@ -449,14 +449,14 @@ float W_Devastator(float req)
 		}
 		case WR_SUICIDEMESSAGE:
 		{
-			return WEAPON_ROCKETLAUNCHER_SUICIDE;
+			return WEAPON_DEVASTATOR_SUICIDE;
 		}
 		case WR_KILLMESSAGE:
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
-				return WEAPON_ROCKETLAUNCHER_MURDER_SPLASH;
+				return WEAPON_DEVASTATOR_MURDER_SPLASH;
 			else
-				return WEAPON_ROCKETLAUNCHER_MURDER_DIRECT;
+				return WEAPON_DEVASTATOR_MURDER_DIRECT;
 		}
 	}
 	return TRUE;
