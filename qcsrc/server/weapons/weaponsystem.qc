@@ -88,10 +88,10 @@ float CL_Weaponentity_CustomizeEntityForClient()
 //   call again with ""
 //   remove the ent
 
-#define WEP_MODEL_FIRSTPERSON model // h_ // wep.WEP_MODEL_FIRSTPERSON
-#define WEP_MODEL_THIRDPERSON model2 // v_ // wep.WEP_MODEL_THIRDPERSON
-#define WEP_MODEL_PICKUP model3 // g_ // wep.WEP_MODEL_PICKUP
-#define WEP_MODEL_SIMPLE mdl
+//#define WEP_MODEL_FIRSTPERSON model // h_ // wep.WEP_MODEL_FIRSTPERSON
+//#define WEP_MODEL_THIRDPERSON model2 // v_ // wep.WEP_MODEL_THIRDPERSON
+//#define WEP_MODEL_PICKUP model3 // g_ // wep.WEP_MODEL_PICKUP
+//#define WEP_MODEL_SIMPLE mdl
 void CL_WeaponEntity_SetModel(entity wep)
 {
 	float v_shot_idx;
