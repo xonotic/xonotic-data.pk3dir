@@ -10,7 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "nex",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairnex 0.65",
-/* refname   */ "nex",
+/* refname   */ "vortex",
 /* wepname   */ _("Vortex")
 );
 

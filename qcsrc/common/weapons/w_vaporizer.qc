@@ -10,7 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "minstanex",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminstanex 0.4",
-/* refname   */ "minstanex",
+/* refname   */ "vaporizer",
 /* wepname   */ _("Vaporizer")
 );
 
