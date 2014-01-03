@@ -474,9 +474,9 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_SUICIDE,               2, 1, "s1 s2loc spree_lost", "s1",                 "weaponcrylink",          _("^BG%s^K1 felt the strong pull of their Crylink%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_MURDER_BOLT,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponelectro",          _("^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_MURDER_COMBO,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponelectro",          _("^BG%s%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_MURDER_ORBS,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponelectro",          _("^BG%s%s^K1 got too close to ^BG%s^K1's Electro plasma%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_SUICIDE_BOLT,          2, 1, "s1 s2loc spree_lost", "s1",                 "weaponelectro",          _("^BG%s^K1 played with Electro plasma%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_SUICIDE_ORBS,          2, 1, "s1 s2loc spree_lost", "s1",                 "weaponelectro",          _("^BG%s^K1 could not remember where they put their Electro plasma%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_MURDER_ORBS,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponelectro",          _("^BG%s%s^K1 got too close to ^BG%s^K1's Electro orb%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_SUICIDE_BOLT,          2, 1, "s1 s2loc spree_lost", "s1",                 "weaponelectro",          _("^BG%s^K1 played with Electro bolts%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_ELECTRO_SUICIDE_ORBS,          2, 1, "s1 s2loc spree_lost", "s1",                 "weaponelectro",          _("^BG%s^K1 could not remember where they put their Electro orb%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_MURDER_BLAST,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponfireball",         _("^BG%s%s^K1 got too close to ^BG%s^K1's fireball%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_MURDER_FIREMINE,      3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponfireball",         _("^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_SUICIDE_BLAST,        2, 1, "s1 s2loc spree_lost", "s1",                 "weaponfireball",         _("^BG%s^K1 should have used a smaller gun%s%s"), "") \
