@@ -84,8 +84,6 @@ void register_weapon(
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
-	string thirdpmdl,
-	string pickupmdl,
 	string simplemdl,
 	string crosshair,
 	string refname,
