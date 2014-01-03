@@ -84,6 +84,7 @@ void spawnfunc_weapon_shockwave()
 }
 
 #define MAX_SHOCKWAVE_HITS 10
+#define DEBUG_SHOCKWAVE
 
 .float swing_prev;
 .entity swing_alreadyhit;
@@ -601,11 +602,11 @@ void W_Shockwave_Attack()
 		head = head.chain;
 	}
 
-	for(i = 0; i <= queue; ++i)
+	for(i = 1; i <= queue; ++i)
 	{
-		head = shockwave_hit[i];
-		final_force = shockwave_hit_force[i];
-		final_damage = shockwave_hit_damage[i];
+		head = shockwave_hit[i-1];
+		final_force = shockwave_hit_force[i-1];
+		final_damage = shockwave_hit_damage[i-1];
 		
 		Damage(
 			head,
@@ -616,7 +617,13 @@ void W_Shockwave_Attack()
 			head.origin,
 			final_force
 		);
-		
+
+		if(accuracy_isgooddamage(self.realowner, head))
+		{
+			print("wtf\n");
+			accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, final_damage);
+		}
+
 		#ifdef DEBUG_SHOCKWAVE
 		print(sprintf(
 			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
@@ -626,9 +633,9 @@ void W_Shockwave_Attack()
 		));
 		#endif
 		
-		shockwave_hit[i] = world;
-		shockwave_hit_force[i] = '0 0 0';
-		shockwave_hit_damage[i] = 0;
+		shockwave_hit[i-1] = world;
+		shockwave_hit_force[i-1] = '0 0 0';
+		shockwave_hit_damage[i-1] = 0;
 	}
 }
 
