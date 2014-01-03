@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "gl",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
+/* wepimg    */ "weapongrenadelauncher",
 /* refname   */ "mortar",
 /* wepname   */ _("Mortar")
 );

@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "hagar",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhagar 0.8",
+/* wepimg    */ "weaponhagar",
 /* refname   */ "hagar",
 /* wepname   */ _("Hagar")
 );

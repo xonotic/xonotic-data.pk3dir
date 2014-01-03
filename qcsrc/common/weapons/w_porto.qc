@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "porto",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairporto 0.6",
+/* wepimg    */ "weaponporto",
 /* refname   */ "porto",
 /* wepname   */ _("Port-O-Launch")
 );

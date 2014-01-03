@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "hlac",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
+/* wepimg    */ "weaponhlac",
 /* refname   */ "arc",
 /* wepname   */ _("Arc")
 );

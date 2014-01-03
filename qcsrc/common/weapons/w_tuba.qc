@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "tuba",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairtuba",
+/* wepimg    */ "weapontuba",
 /* refname   */ "tuba",
 /* xgettext:no-c-format */
 /* wepname   */ _("@!#%'n Tuba")

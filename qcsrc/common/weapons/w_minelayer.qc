@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "minelayer",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminelayer 0.9",
+/* wepimg    */ "weaponminelayer",
 /* refname   */ "minelayer",
 /* wepname   */ _("Mine Layer")
 );

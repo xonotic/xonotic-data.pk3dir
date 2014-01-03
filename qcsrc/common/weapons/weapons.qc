@@ -86,6 +86,7 @@ void register_weapon(
 	string modelname,
 	string simplemdl,
 	string crosshair,
+	string wepimg,
 	string refname,
 	string wepname)
 {
@@ -107,6 +108,7 @@ void register_weapon(
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
 	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
+	e.model2 = strzone(wepimg);
 	e.netname = refname;
 	e.message = wepname;
 
@@ -137,6 +139,7 @@ void register_weapons_done()
 
 	dummy_weapon_info.w_crosshair = "gfx/crosshair1";
 	dummy_weapon_info.w_crosshair_size = 1;
+	dummy_weapon_info.model2 = "";
 
 	float i;
 	weaponorder_byid = "";

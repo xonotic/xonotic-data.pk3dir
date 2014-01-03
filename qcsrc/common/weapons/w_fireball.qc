@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "fireball",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairfireball",
+/* wepimg    */ "weaponfireball",
 /* refname   */ "fireball",
 /* wepname   */ _("Fireball")
 );

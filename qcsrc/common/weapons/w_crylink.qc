@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "crylink",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshaircrylink 0.4",
+/* wepimg    */ "weaponcrylink",
 /* refname   */ "crylink",
 /* wepname   */ _("Crylink")
 );

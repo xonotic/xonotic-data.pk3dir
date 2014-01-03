@@ -141,6 +141,7 @@ void register_weapon(
 	string modelname,
 	string simplemdl,
 	string crosshair,
+	string wepimg,
 	string refname,
 	string wepname);
 
@@ -162,12 +163,13 @@ void register_weapons_done();
 .string w_simplemdl;        // M: simplemdl // simpleitems weapon model/image
 .string w_crosshair;        // M: crosshair // per-weapon crosshair: "CrosshairImage Size"
 .float w_crosshair_size;    // A: crosshair // per-weapon crosshair size (argument two of "crosshair" field)
+.string model2;             // M: wepimg    // "weaponfoobar" side view image file of weapon // WEAPONTODO: Move out of skin files, move to common files
 .string netname;            // M: refname   // reference name name
 .string message;            // M: wepname   // human readable name
 
 
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname) \
+#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
 	float id; \
 	WepSet bit; \
 	float function(float); \
@@ -179,15 +181,15 @@ void register_weapons_done();
 		if((flags) & WEP_FLAG_SUPERWEAPON) \
 			WEPSET_SUPERWEAPONS |= bit; \
 		++WEP_COUNT; \
-		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname); \
+		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
 #else
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
 #endif
 
 #include "all.qh"

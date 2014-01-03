@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "hookgun",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhook 0.5",
+/* wepimg    */ "weaponhook",
 /* refname   */ "hook",
 /* wepname   */ _("Grappling Hook")
 );

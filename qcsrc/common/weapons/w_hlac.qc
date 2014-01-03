@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "hlac",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.6",
+/* wepimg    */ "weaponhlac",
 /* refname   */ "hlac",
 /* wepname   */ _("Heavy Laser Assault Cannon")
 );

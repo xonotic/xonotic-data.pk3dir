@@ -10,6 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "uzi",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairuzi 0.6",
+/* wepimg    */ "weaponuzi",
 /* refname   */ "machinegun",
 /* wepname   */ _("Machine Gun")
 );
