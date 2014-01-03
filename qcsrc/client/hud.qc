@@ -725,7 +725,7 @@ void HUD_Weapons(void)
 		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -785,7 +785,7 @@ void HUD_Weapons(void)
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
@@ -1649,7 +1649,7 @@ void HUD_Notify(void)
 				a = entries - 1 - i;
 			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
+			icon = get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).model2;
 			a = bound(0, (when - a) / 4, 1);
 			goto hud_config_notifyprint;
 		}
