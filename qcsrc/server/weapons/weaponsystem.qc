@@ -87,20 +87,25 @@ float CL_Weaponentity_CustomizeEntityForClient()
 // to free:
 //   call again with ""
 //   remove the ent
-void CL_WeaponEntity_SetModel(string name)
+
+#define WEP_MODEL_FIRSTPERSON model // h_ // wep.WEP_MODEL_FIRSTPERSON
+#define WEP_MODEL_THIRDPERSON model2 // v_ // wep.WEP_MODEL_THIRDPERSON
+#define WEP_MODEL_PICKUP model3 // g_ // wep.WEP_MODEL_PICKUP
+#define WEP_MODEL_SIMPLE mdl
+void CL_WeaponEntity_SetModel(entity wep)
 {
 	float v_shot_idx;
-	if (name != "")
+	if(wep)
 	{
 		// if there is a child entity, hide it until we're sure we use it
 		if (self.weaponentity)
 			self.weaponentity.model = "";
-		setmodel(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
+		setmodel(self, wep.WEP_MODEL_THIRDPERSON); // precision set below
 		v_shot_idx = gettagindex(self, "shot"); // used later
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		setmodel(self, wep.WEP_MODEL_FIRSTPERSON); // precision set below
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
 		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
@@ -113,14 +118,14 @@ void CL_WeaponEntity_SetModel(string name)
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, wep.WEP_MODEL_THIRDPERSON); // precision does not matter
 			setattachment(self.weaponentity, self, "weapon");
 		}
 		else if(gettagindex(self, "tag_weapon"))
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, wep.WEP_MODEL_THIRDPERSON); // precision does not matter
 			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
@@ -248,14 +253,13 @@ void CL_WeaponEntity_SetModel(string name)
 
 vector CL_Weapon_GetShotOrg(float wpn)
 {
-	entity wi, oldself;
+	entity oldself;
 	vector ret;
-	wi = get_weaponinfo(wpn);
 	oldself = self;
 	self = spawn();
-	CL_WeaponEntity_SetModel(wi.mdl);
+	CL_WeaponEntity_SetModel(get_weaponinfo(wpn));
 	ret = self.movedir;
-	CL_WeaponEntity_SetModel("");
+	CL_WeaponEntity_SetModel(world);
 	remove(self);
 	self = oldself;
 	return ret;
@@ -281,13 +285,14 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag) // WEAPONTODO: get rid of .weaponname, handle model directly
 	{
 		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
-		CL_WeaponEntity_SetModel(self.owner.weaponname);
+		// WEAPONTODO: get weapon entity from here!
+		//CL_WeaponEntity_SetModel(self.owner.weaponname);
 	}
 
 	tb = (self.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));

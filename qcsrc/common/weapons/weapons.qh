@@ -168,6 +168,11 @@ void register_weapons_done();
 .string netname;            // M: refname   // reference name name
 .string message;            // M: wepname   // human readable name
 
+#define WEP_MODEL_FIRSTPERSON model
+#define WEP_MODEL_THIRDPERSON model2
+#define WEP_MODEL_PICKUP model3
+#define WEP_MODEL_SIMPLE mdl
+
 
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname) \
