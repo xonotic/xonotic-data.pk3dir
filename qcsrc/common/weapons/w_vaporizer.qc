@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.5 1 1',
-/* model     */ "minstanex",
+/* firstpmdl */ "models/weapons/h_minstanex.iqm",
+/* thirdpmdl */ "models/weapons/v_minstanex.md3",
+/* pickupmdl */ "models/weapons/g_minstanex.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminstanex 0.4",
 /* refname   */ "minstanex",
 /* wepname   */ _("Vaporizer")

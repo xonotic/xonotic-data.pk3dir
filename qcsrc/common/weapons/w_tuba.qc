@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0 1 0',
-/* model     */ "tuba",
+/* firstpmdl */ "models/weapons/h_tuba.iqm",
+/* thirdpmdl */ "models/weapons/v_tuba.md3",
+/* pickupmdl */ "models/weapons/g_tuba.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairtuba",
 /* refname   */ "tuba",
 /* xgettext:no-c-format */

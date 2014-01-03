@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0 0.5 1',
-/* model     */ "electro",
+/* firstpmdl */ "models/weapons/h_electro.iqm",
+/* thirdpmdl */ "models/weapons/v_electro.md3",
+/* pickupmdl */ "models/weapons/g_electro.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairelectro 0.5",
 /* refname   */ "electro",
 /* wepname   */ _("Electro")

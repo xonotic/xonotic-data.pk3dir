@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 0.5 0',
-/* model     */ "fireball",
+/* firstpmdl */ "models/weapons/h_fireball.iqm",
+/* thirdpmdl */ "models/weapons/v_fireball.md3",
+/* pickupmdl */ "models/weapons/g_fireball.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairfireball",
 /* refname   */ "fireball",
 /* wepname   */ _("Fireball")

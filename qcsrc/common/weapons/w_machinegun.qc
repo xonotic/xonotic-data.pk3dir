@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 1 0',
-/* model     */ "uzi",
+/* firstpmdl */ "models/weapons/h_uzi.iqm",
+/* thirdpmdl */ "models/weapons/v_uzi.md3",
+/* pickupmdl */ "models/weapons/g_uzi.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairuzi 0.6",
 /* refname   */ "uzi",
 /* wepname   */ _("Machine Gun")

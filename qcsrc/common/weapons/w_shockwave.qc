@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
-/* model     */ "shotgun",
+/* firstpmdl */ "models/weapons/h_shotgun.iqm",
+/* thirdpmdl */ "models/weapons/v_shotgun.md3",
+/* pickupmdl */ "models/weapons/g_shotgun.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairshotgun 0.7",
 /* refname   */ "shockwave",
 /* wepname   */ _("Shockwave")

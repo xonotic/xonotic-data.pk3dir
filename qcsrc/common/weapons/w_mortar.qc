@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 0 0',
-/* model     */ "gl",
+/* firstpmdl */ "models/weapons/h_gl.iqm",
+/* thirdpmdl */ "models/weapons/v_gl.md3",
+/* pickupmdl */ "models/weapons/g_gl.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
 /* refname   */ "grenadelauncher",
 /* wepname   */ _("Mortar")

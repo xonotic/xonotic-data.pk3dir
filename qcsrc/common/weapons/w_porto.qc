@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
 /* rating    */ 0,
 /* color     */ '0.5 0.5 0.5',
-/* model     */ "porto" ,
+/* firstpmdl */ "models/weapons/h_porto.iqm",
+/* thirdpmdl */ "models/weapons/v_porto.md3",
+/* pickupmdl */ "models/weapons/g_porto.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairporto 0.6",
 /* refname   */ "porto",
 /* wepname   */ _("Port-O-Launch")

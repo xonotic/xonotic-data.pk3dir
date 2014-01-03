@@ -138,10 +138,10 @@ void register_weapon(
 	float weapontype,
 	float pickupbasevalue,
 	vector clr,
-	string firstmodel,
-	string thirdmodel,
-	string pickupmodel,
-	string simplemodel,
+	string firstpmdl,
+	string thirdpmdl,
+	string pickupmdl,
+	string simplemdl,
 	string crosshair,
 	string refname,
 	string wepname);
@@ -150,27 +150,27 @@ void register_weapons_done();
 
 // entity properties of weaponinfo:
 // fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A"
-.float weapon;              // M: WEP_id     // WEP_...
-.WepSet weapons;            // A: WEPSET_id  // WEPSET_...
-.float(float) weapon_func;  // M: function   // w_...
-..float ammo_field;         // M: ammotype   // main ammo field
-.float impulse;             // M: impulse    // weapon impulse
-.float spawnflags;          // M: flags      // WEPSPAWNFLAG_... combined
-.float bot_pickupbasevalue; // M: rating     // bot weapon priority
-.vector wpcolor;            // M: color      // waypointsprite color
-.string wpmodel;            // A: wpn-id     // wpn- sprite name
-.string model;              // M: firstmodel  // first person view weapon model (h_)
-.string model2;             // M: thirdmodel  // third person weapon model (v_)
-.string model3;             // M: pickupmodel // pickup weapon model (g_)
-.string mdl;                // M: simplemodel // simpleitems weapon model/image
-.string w_crosshair;        // M: crosshair  // per-weapon crosshair: "CrosshairImage Size"
-.float w_crosshair_size;    // A: crosshair  // per-weapon crosshair size (argument two of "crosshair" field)
-.string netname;            // M: refname    // reference name name
-.string message;            // M: wepname    // human readable name
+.float weapon;              // M: WEP_id    // WEP_...
+.WepSet weapons;            // A: WEPSET_id // WEPSET_...
+.float(float) weapon_func;  // M: function  // w_...
+..float ammo_field;         // M: ammotype  // main ammo field
+.float impulse;             // M: impulse   // weapon impulse
+.float spawnflags;          // M: flags     // WEPSPAWNFLAG_... combined
+.float bot_pickupbasevalue; // M: rating    // bot weapon priority
+.vector wpcolor;            // M: color     // waypointsprite color
+.string wpmodel;            // A: wpn-id    // wpn- sprite name
+.string model;              // M: firstpmdl // first person view weapon model (h_)
+.string model2;             // M: thirdpmdl // third person weapon model (v_)
+.string model3;             // M: pickupmdl // pickup weapon model (g_)
+.string mdl;                // M: simplemdl // simpleitems weapon model/image
+.string w_crosshair;        // M: crosshair // per-weapon crosshair: "CrosshairImage Size"
+.float w_crosshair_size;    // A: crosshair // per-weapon crosshair size (argument two of "crosshair" field)
+.string netname;            // M: refname   // reference name name
+.string message;            // M: wepname   // human readable name
 
 
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
+#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname) \
 	float id; \
 	WepSet bit; \
 	float function(float); \
@@ -182,15 +182,15 @@ void register_weapons_done();
 		if((flags) & WEP_FLAG_SUPERWEAPON) \
 			WEPSET_SUPERWEAPONS |= bit; \
 		++WEP_COUNT; \
-		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname); \
+		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname)
 #else
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,model,crosshair,refname,wepname)
+#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname) \
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,firstpmdl,thirdpmdl,pickupmdl,simplemdl,crosshair,refname,wepname)
 #endif
 
 #include "all.qh"

@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating    */ 0,
 /* color     */ '1 0.5 0.5',
-/* model     */ "laser",
+/* firstpmdl */ "models/weapons/h_laser.iqm",
+/* thirdpmdl */ "models/weapons/v_laser.md3",
+/* pickupmdl */ "models/weapons/g_laser.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairlaser 0.4",
 /* refname   */ "laser",
 /* wepname   */ _("Blaster")

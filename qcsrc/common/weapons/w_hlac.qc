@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0 1 0',
-/* model     */ "hlac",
+/* firstpmdl */ "models/weapons/h_hlac.iqm",
+/* thirdpmdl */ "models/weapons/v_hlac.md3",
+/* pickupmdl */ "models/weapons/g_hlac.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.6",
 /* refname   */ "hlac",
 /* wepname   */ _("Heavy Laser Assault Cannon")

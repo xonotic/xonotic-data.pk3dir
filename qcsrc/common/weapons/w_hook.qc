@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating    */ 0,
 /* color     */ '0 0.5 0',
-/* model     */ "hookgun",
+/* firstpmdl */ "models/weapons/h_hookgun.iqm",
+/* thirdpmdl */ "models/weapons/v_hookgun.md3",
+/* pickupmdl */ "models/weapons/g_hookgun.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhook 0.5",
 /* refname   */ "hook",
 /* wepname   */ _("Grappling Hook")

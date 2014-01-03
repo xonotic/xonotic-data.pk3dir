@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.5 1 1',
-/* model     */ "nex",
+/* firstpmdl */ "models/weapons/h_nex.iqm",
+/* thirdpmdl */ "models/weapons/v_nex.md3",
+/* pickupmdl */ "models/weapons/g_nex.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairnex 0.65",
 /* refname   */ "nex",
 /* wepname   */ _("Vortex")

@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0.5 1 0',
-/* model     */ "seeker",
+/* firstpmdl */ "models/weapons/h_seeker.iqm",
+/* thirdpmdl */ "models/weapons/v_seeker.md3",
+/* pickupmdl */ "models/weapons/g_seeker.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairseeker 0.8",
 /* refname   */ "seeker",
 /* wepname   */ _("T.A.G. Seeker")

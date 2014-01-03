@@ -83,10 +83,10 @@ void register_weapon(
 	float weapontype,
 	float pickupbasevalue,
 	vector clr,
-	string firstmodel,
-	string thirdmodel,
-	string pickupmodel,
-	string simplemodel,
+	string firstpmdl,
+	string thirdpmdl,
+	string pickupmdl,
+	string simplemdl,
 	string crosshair,
 	string refname,
 	string wepname)
@@ -103,10 +103,10 @@ void register_weapon(
 	e.bot_pickupbasevalue = pickupbasevalue;
 	e.wpcolor = clr;
 	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
-	e.model = strzone(firstmodel); // first person view weapon model (h_)
-	e.model2 = strzone(thirdmodel); // third person weapon model (v_)
-	e.model3 = strzone(pickupmodel); // pickup weapon model (g_)
-	e.mdl = strzone(simplemodel); // simpleitems weapon model/image
+	e.model = strzone(firstpmdl); // first person view weapon model (h_)
+	e.model2 = strzone(thirdpmdl); // third person weapon model (v_)
+	e.model3 = strzone(pickupmdl); // pickup weapon model (g_)
+	e.mdl = strzone(simplemdl); // simpleitems weapon model/image
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
 	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)

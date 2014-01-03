@@ -7,7 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.75 1 0',
-/* model     */ "minelayer",
+/* firstpmdl */ "models/weapons/h_minelayer.iqm",
+/* thirdpmdl */ "models/weapons/v_minelayer.md3",
+/* pickupmdl */ "models/weapons/g_minelayer.md3",
+/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminelayer 0.9",
 /* refname   */ "minelayer",
 /* wepname   */ _("Mine Layer")
