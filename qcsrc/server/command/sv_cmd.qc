@@ -176,7 +176,7 @@ void GameCommand_mobbutcher(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd butcher\n");
+			print("\nUsage:^3 sv_cmd mobbutcher\n");
 			print("  No arguments required.\n");
 			return;
 		}
