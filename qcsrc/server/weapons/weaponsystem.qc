@@ -6,7 +6,7 @@
 
 ===========================================================================
 */
-
+// WEAPONTODO: move to the .qh file
 .float weapon_frametime;
 
 float W_WeaponRateFactor()
