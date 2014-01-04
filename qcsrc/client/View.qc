@@ -572,7 +572,7 @@ void CSQC_UpdateView(float w, float h)
 
 		float ov_width = (ov_worldmax_x - ov_worldmin_x);
 		float ov_height = (ov_worldmax_y - ov_worldmin_y);
-		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
+		float ov_distance = (max(vid_width, vid_height) * max(ov_width, ov_height));
 
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
 		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
