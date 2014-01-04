@@ -167,7 +167,7 @@ void PutObserverInServer (void)
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
-	
+
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
@@ -176,11 +176,11 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);	    
+		vehicles_exit(VHEF_RELESE);
 
 	WaypointSprite_PlayerDead();
 
-	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
+	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)
@@ -198,7 +198,7 @@ void PutObserverInServer (void)
 	accuracy_resend(self);
 
 	self.spectatortime = time;
-	
+
 	self.classname = "observer";
 	self.iscreature = FALSE;
 	self.teleportable = TELEPORT_SIMPLE;
@@ -297,7 +297,13 @@ void FixPlayermodel()
 
 		n = tokenize_console(defaultmodel);
 		if(n > 0)
+		{
 			defaultmodel = argv(floor(n * self.model_randomizer));
+			// However, do NOT randomize if the player-selected model is in the list.
+			for (i = 0; i < n; ++i)
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
+					defaultmodel = argv(i);
+		}
 
 		i = strstrofs(defaultmodel, ":", 0);
 		if(i >= 0)
@@ -436,7 +442,7 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			self.weapons = WARMUP_START_WEAPONS;
 		}
 		else
 		{
@@ -555,7 +561,7 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-	 	
+
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
@@ -763,7 +769,7 @@ void ClientKill_Now()
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
-            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');	        
+            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
 	    }
 	}
 
@@ -931,7 +937,7 @@ void ClientKill (void)
 	if(gameover) return;
 	if(self.player_blocked) return;
 	if(self.freezetag_frozen) return;
-	
+
 	ClientKill_TeamChange(0);
 }
 
@@ -981,7 +987,7 @@ float PlayerInIDList(entity p, string idlist)
 	string s;
 
 	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
-	if not(p.crypto_idfp)
+	if (!p.crypto_idfp)
 		return 0;
 
 	// this function allows abbreviated player IDs too!
@@ -1246,7 +1252,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(IS_CLIENT(self))
+	if (!IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1274,7 +1280,7 @@ void ClientDisconnect (void)
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-		
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1427,7 +1433,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if not(g_minstagib)
+	if (!g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -1513,7 +1519,7 @@ void player_powerups (void)
 			self.superweapons_finished = 0;
 		}
 	}
-	
+
 	if(autocvar_g_nodepthtestplayers)
 		self.effects = self.effects | EF_NODEPTHTEST;
 
@@ -1610,7 +1616,7 @@ void player_regen (void)
 			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
 }
 
@@ -1727,7 +1733,7 @@ void SpectateCopy(entity spectatee) {
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-    
+
     anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
@@ -1743,27 +1749,27 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_reload2 = spectatee.vehicle_reload2;
 
         msg_entity = self;
-        
+
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE,  spectatee.v_angle_x);
             WriteAngle(MSG_ONE,  spectatee.v_angle_y);
             WriteAngle(MSG_ONE,  spectatee.v_angle_z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
-        //    WriteEntity(MSG_ONE, self);            
+        //    WriteEntity(MSG_ONE, self);
         //makevectors(spectatee.v_angle);
-        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/
     }
 }
 
 float SpectateUpdate() {
 	if(!self.enemy)
-	    return 0;		
+	    return 0;
 
 	if (self == self.enemy)
 		return 0;
 
-	if not(IS_PLAYER(self.enemy))
+	if (!IS_PLAYER(self.enemy))
 		return 0;
 
 	SpectateCopy(self.enemy);
@@ -1817,13 +1823,13 @@ entity CA_SpectateNext(entity start) {
 	if (start.team == self.team) {
 		return start;
 	}
-	
+
 	other = start;
 	// continue from current player
 	while(other && other.team != self.team) {
 		other = find(other, classname, "player");
 	}
-	
+
 	if (!other) {
 		// restart from begining
 		other = find(other, classname, "player");
@@ -1831,7 +1837,7 @@ entity CA_SpectateNext(entity start) {
 			other = find(other, classname, "player");
 		}
 	}
-	
+
 	return other;
 }
 
@@ -1858,7 +1864,7 @@ float SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
-	if not(other) // no player
+	if (!other) // no player
 		return FALSE;
 
 	entity first = other;
@@ -1872,7 +1878,7 @@ float SpectatePrev()
 		do { other = other.chain; }
 		while(other && other.team != self.team);
 
-		if not(other)
+		if (!other)
 		{
 			other = first;
 			while(other.team != self.team)
@@ -2042,7 +2048,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
@@ -2132,7 +2138,7 @@ void SpectatorThink()
 
 void PlayerUseKey()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2140,7 +2146,7 @@ void PlayerUseKey()
         vehicles_exit(VHEF_NORMAL);
         return;
 	}
-	
+
 	// a use key was pressed; call handlers
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
@@ -2302,10 +2308,10 @@ void PlayerPreThink (void)
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				
+
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(self.respawn_flags & RESPAWN_FORCE)
+					if((self.respawn_flags & RESPAWN_FORCE) && !autocvar_g_respawn_delay_max)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2314,6 +2320,8 @@ void PlayerPreThink (void)
 				{
 					if(button_pressed)
 						self.deadflag = DEAD_RESPAWNABLE;
+					else if(time >= self.respawn_time_max && (self.respawn_flags & RESPAWN_FORCE))
+						self.deadflag = DEAD_RESPAWNING;
 				}
 				else if (self.deadflag == DEAD_RESPAWNABLE)
 				{
@@ -2325,6 +2333,7 @@ void PlayerPreThink (void)
 					if(time > self.respawn_time)
 					{
 						self.respawn_time = time + 1; // only retry once a second
+						self.respawn_time_max = self.respawn_time;
 						respawn();
 					}
 				}
@@ -2333,6 +2342,8 @@ void PlayerPreThink (void)
 
 				if(self.respawn_flags & RESPAWN_SILENT)
 					self.stat_respawn_time = 0;
+				else if((self.respawn_flags & RESPAWN_FORCE) && autocvar_g_respawn_delay_max)
+					self.stat_respawn_time = self.respawn_time_max;
 				else
 					self.stat_respawn_time = self.respawn_time;
 			}
@@ -2407,10 +2418,10 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-		
+
 		// secret status
 		secrets_setstatus();
-		
+
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -2570,7 +2581,7 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 		GetPressedKeys();
 	}
-	
+
 #ifdef TETRIS
 	}
 #endif
@@ -2594,13 +2605,13 @@ void PlayerPostThink (void)
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	playerdemo_write();
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if not(self.stored_netname)
+		if (!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{
@@ -2612,7 +2623,7 @@ void PlayerPostThink (void)
 
 	/*
 	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
+		dprintf("%f %.6f\n", time, race_GetFractionalLapCount(self));
 	*/
 
 	CSQCMODEL_AUTOUPDATE();

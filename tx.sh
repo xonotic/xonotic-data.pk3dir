@@ -61,5 +61,5 @@ for f in translations/xonotic.commonpot/*..po; do
 		cp "$tcurfile" "$gnewfile"
 	fi
 done
-tx push -t
+tx push -t --skip
 date > .tx/merge-base

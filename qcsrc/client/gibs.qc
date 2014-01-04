@@ -176,7 +176,7 @@ void Ent_GibSplash(float isNew)
 	{
 		if(cl_gentle_gibs == 2)
 			gentle_prefix = "";
-		else if(cl_gentle_gibs == 3) 
+		else if(cl_gentle_gibs == 3)
 			gentle_prefix = "happy_";
 	}
 	else if(autocvar_cl_particlegibs)
@@ -185,7 +185,7 @@ void Ent_GibSplash(float isNew)
 		gentle_prefix = "particlegibs_";
 	}
 
-	if not(cl_gentle_gibs || autocvar_cl_gentle)
+	if (!(cl_gentle_gibs || autocvar_cl_gentle))
 		amount *= 1 - autocvar_cl_nogibs;
 
 	if(autocvar_ekg)

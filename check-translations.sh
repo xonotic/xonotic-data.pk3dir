@@ -34,11 +34,11 @@ if [ x"$mode" = x"po" ]; then
 	for X in common.*.po; do
 		[ -f "$X" ] || continue
 		if [ -n "$language" ]; then
-			if [ x"${X#*.dat.}" != x"$language.po" ]; then
+			if [ x"${X#common.}" != x"$language.po" ]; then
 				continue
 			fi
 		else
-			if [ x"${X#*.dat.}" = x"en.po" ]; then
+			if [ x"${X#common.}" = x"en.po" ]; then
 				continue
 			fi
 		fi
@@ -189,7 +189,7 @@ EOF
 	for X in common.*.po.disabled; do
 		[ -f "$X" ] || continue
 		if [ -n "$language" ]; then
-			if [ x"${X#*.dat.}" != x"$language.po" ]; then
+			if [ x"${X#common.}" != x"$language.po" ]; then
 				continue
 			fi
 		fi

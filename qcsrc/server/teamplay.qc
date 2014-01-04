@@ -56,7 +56,7 @@ void InitGameplayMode()
 	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
-	if not(cvar_value_issafe(world.fog))
+	if (!cvar_value_issafe(world.fog))
 	{
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
@@ -113,13 +113,6 @@ void InitGameplayMode()
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
 		MUTATOR_ADD(gamemode_lms);
-	}
-
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)
@@ -192,7 +185,7 @@ void InitGameplayMode()
         have_team_spawns = -1; // request team spawns
 	    MUTATOR_ADD(gamemode_nexball);
 	}
-        
+
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
@@ -600,7 +593,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 			cb -= cbb * 0.999;
 		}
 	}
-	
+
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
@@ -671,7 +664,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		GetTeamCounts(world);
 
 	RandomSelection_Init();
-	
+
 	t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;

@@ -7,7 +7,7 @@ CLASS(XonoticViewDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticViewDialog, color, vector, SKINCOLOR_DIALOG_VIEW)
 	ATTRIB(XonoticViewDialog, intendedWidth, float, 0.9)
 	ATTRIB(XonoticViewDialog, rows, float, 11)
-	ATTRIB(XonoticViewDialog, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticViewDialog, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticViewDialog)
 #endif
 
@@ -23,7 +23,7 @@ string XonoticViewDialog_toString(entity me)
 void XonoticViewDialog_fill(entity me)
 {
 	entity e;
-	
+
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
@@ -70,7 +70,7 @@ void XonoticViewDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
-	
+
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
 		makeMulti(e, "crosshair_hittest_showimpact");
@@ -108,7 +108,7 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
-		
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

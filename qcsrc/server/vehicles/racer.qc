@@ -149,7 +149,7 @@ void racer_rocket_groundhugger()
         return;
     }
 
-    if not (self.realowner.vehicle)
+    if (!self.realowner.vehicle)
     {
         UpdateCSQCProjectile(self);
         return;
@@ -197,7 +197,7 @@ void racer_rocket_tracker()
         return;
     }
 
-    if not (self.realowner.vehicle)
+    if (!self.realowner.vehicle)
     {
         UpdateCSQCProjectile(self);
         return;
@@ -491,7 +491,7 @@ void racer_exit(float eject)
     self.movetype   = MOVETYPE_BOUNCE;
     sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 
-    if not (self.owner)
+    if (!self.owner)
         return;
 
 	makevectors(self.angles);
@@ -630,8 +630,8 @@ void spawnfunc_vehicle_racer()
     {
         remove(self);
         return;
-    }        
-    
+    }
+
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
@@ -659,7 +659,7 @@ void spawnfunc_vehicle_racer()
     if(autocvar_g_vehicle_racer_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Wakizashi",
              "models/vehicles/wakizashi.dpm",
              "null", // we need this so tur_head is networked and usable for sounds
@@ -672,7 +672,7 @@ void spawnfunc_vehicle_racer()
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             TRUE, 
+             TRUE,
              autocvar_g_vehicle_racer_health,
              autocvar_g_vehicle_racer_shield))
     {

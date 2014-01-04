@@ -128,7 +128,7 @@ float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 	vector org;
 	float cont;
 	org = self.move_origin + ofs;
-	
+
 	cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
@@ -160,10 +160,10 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
-	dprint(sprintf(_("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin)));
+	dprintf(_("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
 	return FALSE;
 :success
-	dprint(sprintf(_("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin)));
+	dprintf(_("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
 	_Movetype_LinkEdict(TRUE);
 	return TRUE;
 }
@@ -264,7 +264,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		_Movetype_PushEntity(move, TRUE);
 		if(wasfreed(self))
 			return;
-	
+
 		if(trace_startsolid)
 		{
 			_Movetype_UnstickEntity();
