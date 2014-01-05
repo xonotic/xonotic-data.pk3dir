@@ -4491,6 +4491,7 @@ void HUD_QuickMenu_Close()
 	HUD_QuickMenu_Buffer_Close();
 
 	if(autocvar_hud_cursormode)
+	if(!mv_active)
 		setcursormode(0);
 }
 
@@ -4648,7 +4649,7 @@ float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondar
 	if(bInputType == 2)
 		return false;
 
-	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure)
+	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
 
 	if(bInputType == 3)
@@ -4715,6 +4716,8 @@ float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondar
 }
 void HUD_QuickMenu_Mouse()
 {
+	if(mv_active) return;
+
 	if(!mouseClicked)
 	if(prevMouseClicked & S_MOUSE2)
 	{
@@ -4722,7 +4725,7 @@ void HUD_QuickMenu_Mouse()
 		return;
 	}
 
-	if not(autocvar_hud_cursormode)
+	if(!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
@@ -4760,7 +4763,7 @@ void HUD_QuickMenu_Mouse()
 				color = '1 1 1';
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
 
-			if(!mouseClicked && prevMouseClicked & S_MOUSE1)
+			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 			{
 				float f;
 				if (entry_num < QUICKMENU_MAXLINES - 1)
@@ -4799,6 +4802,7 @@ void HUD_QuickMenu(void)
 			HUD_QuickMenu_Close();
 
 		if(!hud_draw_maximized) return;
+		if(mv_active) return;
 		//if(!autocvar_hud_panel_quickmenu) return; // autocvar exists only for conformity with other panels
 		if(!hud_panel_quickmenu) return;
 	}
