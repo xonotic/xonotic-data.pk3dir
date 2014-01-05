@@ -412,6 +412,7 @@ float W_Devastator(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
+			#if 0
 			// don't switch while guiding a missile
 			if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_DEVASTATOR)
 			{
@@ -425,8 +426,23 @@ float W_Devastator(float req)
 					ammo_amount = TRUE;
 				return !ammo_amount;
 			}
-			
-			return TRUE;
+
+			if(self.rl_release == 0)
+			{
+				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo));
+				return TRUE;
+			}
+			else
+			{
+				ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
+				ammo_amount += self.(weapon_load[WEP_DEVASTATOR]) >= WEP_CVAR(devastator, ammo);
+				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+				return ammo_amount;
+			}
+			#endif
+			ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
+			ammo_amount += self.(weapon_load[WEP_DEVASTATOR]) >= WEP_CVAR(devastator, ammo);
+			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
