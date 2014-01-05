@@ -677,13 +677,10 @@ void W_WeaponFrame()
 			self.switchingweapon = self.switchweapon;
 			entity newwep = get_weaponinfo(self.switchweapon);
 
-			//self.items &= ~IT_AMMO;
-			//self.items = self.items | (newwep.items & IT_AMMO);
-
 			// the two weapon entities will notice this has changed and update their models
 			self.weapon = self.switchweapon;
 			self.weaponname = newwep.mdl;
-			self.bulletcounter = 0; // WEAPONTODO
+			self.bulletcounter = 0;
 			//self.ammo_field = newwep.ammo_field;
 			WEP_ACTION(self.switchweapon, WR_SETUP);
 			self.weaponentity.state = WS_RAISE;
@@ -697,10 +694,7 @@ void W_WeaponFrame()
 			else
 				self.clip_load = self.clip_size = 0;
 
-			// VorteX: add player model weapon select frame here
-			// setcustomframe(PlayerWeaponRaise);
 			weapon_thinkf(WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
-			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname))));
 		}
 		else if (self.weaponentity.state == WS_DROP)
 		{
@@ -711,21 +705,19 @@ void W_WeaponFrame()
 		{
 			// start switching!
 			self.switchingweapon = self.switchweapon;
-
 			entity oldwep = get_weaponinfo(self.weapon);
-			
-#ifndef INDEPENDENT_ATTACK_FINISHED
+
+			// set up weapon switch think in the future, and start drop anim
+			#ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
-#endif
-			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
-			self.weaponentity.state = WS_DROP;
-			// set up weapon switch think in the future, and start drop anim
-			weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
-			//print(sprintf("W_WeaponFrame(): cvar: %s, value: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname))));
-#ifndef INDEPENDENT_ATTACK_FINISHED
+			#endif
+				sound(self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+				self.weaponentity.state = WS_DROP;
+				weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
+			#ifndef INDEPENDENT_ATTACK_FINISHED
 			}
-#endif
+			#endif
 		}
 	}
 
