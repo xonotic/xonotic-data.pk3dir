@@ -72,9 +72,10 @@ string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 void W_RandomWeapons(entity e, float n);
 
+string GetAmmoPicture(.float ammotype);
+
 #ifdef CSQC
 .float GetAmmoFieldFromNum(float i);
-string GetAmmoPicture(.float ammotype);
 float GetAmmoStat(.float ammotype);
 #endif
 

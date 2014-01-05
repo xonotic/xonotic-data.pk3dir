@@ -813,7 +813,21 @@ void W_DecreaseAmmo(float ammo_use)
 		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
 	else
+	{
 		self.(wep.ammo_field) -= ammo_use;
+		if(self.(wep.ammo_field) < 0)
+		{
+			backtrace(sprintf(
+				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
+				"Please notify Samual immediately with a copy of this backtrace!\n",
+				ammo_use,
+				wep.netname,
+				GetAmmoPicture(wep.ammo_field),
+				self.netname,
+				self.(wep.ammo_field)
+			));
+		}
+	}
 }
 
 // weapon reloading code

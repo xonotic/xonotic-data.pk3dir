@@ -261,6 +261,19 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
+string GetAmmoPicture(.float ammotype)
+{
+	switch(ammotype)
+	{
+		case ammo_shells:  return "ammo_shells";
+		case ammo_nails:   return "ammo_nails";
+		case ammo_rockets: return "ammo_rockets";
+		case ammo_cells:   return "ammo_cells";
+		case ammo_fuel:    return "ammo_fuel";
+		default: return ""; // wtf, no ammo type?
+	}
+}
+
 #ifdef CSQC
 .float GetAmmoFieldFromNum(float i)
 {
@@ -272,19 +285,6 @@ void W_RandomWeapons(entity e, float n)
 		case 3: return ammo_cells;
 		case 4: return ammo_fuel;
 		default: return ammo_none;
-	}
-}
-
-string GetAmmoPicture(.float ammotype)
-{
-	switch(ammotype)
-	{
-		case ammo_shells:  return "ammo_shells";
-		case ammo_nails:   return "ammo_nails";
-		case ammo_rockets: return "ammo_rockets";
-		case ammo_cells:   return "ammo_cells";
-		case ammo_fuel:    return "ammo_fuel";
-		default: return ""; // wtf, no ammo type?
 	}
 }
 
