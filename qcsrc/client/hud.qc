@@ -829,14 +829,28 @@ void HUD_Weapons(void)
 // Ammo (#1)
 void DrawAmmoItem(vector myPos, vector mySize, .float ammotype, float currently_selected, float infinite_ammo)
 {
-	float a;
-	if(autocvar__hud_configure)
+	float a = 0;
+	if(ammotype != ammo_none)
 	{
-		currently_selected = (ammotype == ammo_rockets); //rockets always selected
-		a = 60;
+		if(autocvar__hud_configure)
+		{
+			currently_selected = (ammotype == ammo_rockets); //rockets always selected
+			a = 60;
+		}
+		else
+		{
+			// how much ammo do we have of this ammotype?
+			a = getstati(GetAmmoStat(ammotype));
+		}
 	}
 	else
-		a = getstati(GetAmmoStat(ammotype)); // how much ammo do we have of type itemcode?
+	{
+		#if 0
+		infinite_ammo = TRUE;
+		#else
+		return; // just don't draw infinite ammo at all.
+		#endif
+	}
 
 	vector color;
 	if(infinite_ammo)
@@ -946,7 +960,7 @@ void HUD_Ammo(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, ammo_rockets, true, FALSE);
+			DrawAmmoItem(pos, ammo_size, ammo_rockets, TRUE, FALSE);
 		}
 		else
 		{
