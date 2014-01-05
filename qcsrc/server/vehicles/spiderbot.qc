@@ -58,6 +58,11 @@ float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
+float autocvar_g_vehicle_spiderbot_blowup_radius;
+float autocvar_g_vehicle_spiderbot_blowup_coredamage;
+float autocvar_g_vehicle_spiderbot_blowup_edgedamage;
+float autocvar_g_vehicle_spiderbot_blowup_forceintensity;
+
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 
@@ -634,8 +639,8 @@ void spiderbot_exit(float eject)
 
 void spider_impact()
 {
-    if(autocvar_g_vehicle_spiderbot_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
+	if(autocvar_g_vehicle_spiderbot_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 }
 
 void spiderbot_headfade()
@@ -718,14 +723,18 @@ void spiderbot_blowup()
     SUB_SetFade(g1, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
     SUB_SetFade(g2, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
+	RadiusDamage(self, self.enemy, autocvar_g_vehicle_spiderbot_blowup_coredamage,
+				autocvar_g_vehicle_spiderbot_blowup_edgedamage,
+				autocvar_g_vehicle_spiderbot_blowup_radius, world,
+				autocvar_g_vehicle_spiderbot_blowup_forceintensity, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.movetype   = MOVETYPE_NONE;
     self.deadflag   = DEAD_DEAD;
     self.solid      = SOLID_NOT;
     self.tur_head.effects  &=  ~EF_FLAME;
-    self.vehicle_hudmodel.viewmodelforclient = self;
+	self.vehicle_hudmodel.viewmodelforclient = self;
+	setorigin(self, self.pos1);
 }
 
 void spiderbot_die()
@@ -784,7 +793,7 @@ void spiderbot_spawn(float _f)
 {
     if(!self.gun1)
     {
-        self.vehicles_impusle   = spiderbot_impulse;
+        self.vehicles_impulse   = spiderbot_impulse;
         self.gun1               = spawn();
         self.gun2               = spawn();
         setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
