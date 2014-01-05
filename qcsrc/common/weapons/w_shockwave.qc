@@ -726,7 +726,7 @@ float W_Shockwave(float req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("shockwave_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1); // WEAPONTODO: replace with proper impact effect
 			return TRUE;
 		}
 		case WR_INIT:

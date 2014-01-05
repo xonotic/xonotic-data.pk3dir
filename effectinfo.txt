@@ -8951,82 +8951,47 @@ originjitter 64 64 64
 velocityjitter 324 324 324
 rotate -180 180 -100 100
 
-// laser_shockwave_attack
+// shockwave_attack
 // used nowhere in code
-effect laser_shockwave_attack
-// glow and light
-//countabsolute 1
-//type smoke
-//color 0xcc0000 0xff0000
-//tex 65 65
-//size 10 15
-//alpha 256 512 6280
-//airfriction 10
-//sizeincrease 1.5
-//stretchfactor 2
-//lightradius 200
-//lightradiusfade 2000
-//lightcolor 3 0.1 0.1
-// electricity
-effect laser_shockwave_attack
-count 1
-type spark
-color 0xb44215 0xff0000
-tex 43 43
-size 5 7
-bounce 0
-alpha 4096 4096 20000
-airfriction 1
-originjitter 2 2 2
-velocityjitter 10 10 10
-velocitymultiplier 10
-sizeincrease 1.5
-stretchfactor 2.3
-rotate -180 180 4000 -4000
-// fire
-effect laser_shockwave_attack
-count 1
-type spark
-color 0xff4200 0xff0000
-tex 8 15
-size 7 9
-bounce 0
-alpha 4096 4096 20000
-airfriction 1
-originjitter 2 2 2
-velocityjitter 10 10 10
-velocitymultiplier 10
-sizeincrease 1.5
-stretchfactor 2
-
-// new_laser_impact
-// used nowhere in code
-// decal
-effect new_laser_impact
-countabsolute 1
-type decal
-tex 8 16
-size 72 72
-alpha 256 256 0
-originjitter 2 2 2
-// flare effect
-//effect new_laser_impact
-//countabsolute 1
-//type static
-//tex 39 39
-//color 0xFF2010 0xFF2010
-//alpha 256 256 1024
-//size 24 24
-// sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
-effect new_laser_impact
-count 128
-type spark
-color 0x800000 0xFF8020
-alpha 256 256 1024
-size 4 4
-bounce 1.5
-gravity 0.5
-airfriction 1
-liquidfriction 1
-originjitter 20 20 20
-velocityjitter 256 256 256
+effect shockwave_attack // glow and light
+	//countabsolute 1
+	//type smoke
+	//color 0xcc0000 0xff0000
+	//tex 65 65
+	//size 10 15
+	//alpha 256 512 6280
+	//airfriction 10
+	//sizeincrease 1.5
+	//stretchfactor 2
+	//lightradius 200
+	//lightradiusfade 2000
+	//lightcolor 3 0.1 0.1
+effect shockwave_attack // electricity
+	count 1
+	type spark
+	color 0xb44215 0xff0000
+	tex 43 43
+	size 5 7
+	bounce 0
+	alpha 4096 4096 20000
+	airfriction 1
+	originjitter 2 2 2
+	velocityjitter 10 10 10
+	velocitymultiplier 10
+	sizeincrease 1.5
+	stretchfactor 2.3
+	rotate -180 180 4000 -4000
+effect shockwave_attack // fire
+	count 1
+	type spark
+	color 0xff4200 0xff0000
+	tex 8 15
+	size 7 9
+	bounce 0
+	alpha 4096 4096 20000
+	airfriction 1
+	originjitter 2 2 2
+	velocityjitter 10 10 10
+	velocitymultiplier 10
+	sizeincrease 1.5
+	stretchfactor 2
