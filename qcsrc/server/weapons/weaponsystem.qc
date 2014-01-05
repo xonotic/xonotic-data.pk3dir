@@ -812,7 +812,7 @@ void W_DecreaseAmmo(float ammo_use)
 		self.clip_load -= ammo_use;
 		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
-	else
+	else if(wep.ammo_field != ammo_none)
 	{
 		self.(wep.ammo_field) -= ammo_use;
 		if(self.(wep.ammo_field) < 0)
