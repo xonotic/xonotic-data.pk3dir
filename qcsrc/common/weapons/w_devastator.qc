@@ -325,7 +325,8 @@ float W_Devastator(float req)
 	float ammo_amount;
 	switch(req)
 	{
-		case WR_AIM: // WEAPONTODO: rewrite this, it's WAY too complicated for what it should be
+		#if 0
+		case WR_AIM:
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), FALSE);
@@ -353,6 +354,105 @@ float W_Devastator(float req)
 			
 			return TRUE;
 		}
+		#else
+		case WR_AIM:
+		{
+			// aim and decide to fire if appropriate
+			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), FALSE);
+			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
+			{
+				// decide whether to detonate rockets
+				entity missile, targetlist, targ;
+				float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+				float selfdamage, teamdamage, enemydamage;
+				edgedamage = WEP_CVAR(devastator, edgedamage);
+				coredamage = WEP_CVAR(devastator, damage);
+				edgeradius = WEP_CVAR(devastator, radius);
+				recipricoledgeradius = 1 / edgeradius;
+				selfdamage = 0;
+				teamdamage = 0;
+				enemydamage = 0;
+				targetlist = findchainfloat(bot_attack, TRUE);
+				missile = find(world, classname, "rocket");
+				while (missile)
+				{
+					if (missile.realowner != self)
+					{
+						missile = find(missile, classname, "rocket");
+						continue;
+					}
+					targ = targetlist;
+					while (targ)
+					{
+						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - missile.origin);
+						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
+						// count potential damage according to type of target
+						if (targ == self)
+							selfdamage = selfdamage + d;
+						else if (targ.team == self.team && teamplay)
+							teamdamage = teamdamage + d;
+						else if (bot_shouldattack(targ))
+							enemydamage = enemydamage + d;
+						targ = targ.chain;
+					}
+					missile = find(missile, classname, "rocket");
+				}
+				float desirabledamage;
+				desirabledamage = enemydamage;
+				if (time > self.invincible_finished && time > self.spawnshieldtime)
+					desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
+				if (teamplay && self.team)
+					desirabledamage = desirabledamage - teamdamage;
+
+				missile = find(world, classname, "rocket");
+				while (missile)
+				{
+					if (missile.realowner != self)
+					{
+						missile = find(missile, classname, "rocket");
+						continue;
+					}
+					makevectors(missile.v_angle);
+					targ = targetlist;
+					if (skill > 9) // normal players only do this for the target they are tracking
+					{
+						targ = targetlist;
+						while (targ)
+						{
+							if (
+								(v_forward * normalize(missile.origin - targ.origin)< 0.1)
+								&& desirabledamage > 0.1*coredamage
+							)self.BUTTON_ATCK2 = TRUE;
+							targ = targ.chain;
+						}
+					}else{
+						float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+						//As the distance gets larger, a correct detonation gets near imposible
+						//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
+						if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
+							if(IS_PLAYER(self.enemy))
+								if(desirabledamage >= 0.1*coredamage)
+									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
+										self.BUTTON_ATCK2 = TRUE;
+					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
+					}
+
+					missile = find(missile, classname, "rocket");
+				}
+				// if we would be doing at X percent of the core damage, detonate it
+				// but don't fire a new shot at the same time!
+				if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
+					self.BUTTON_ATCK2 = TRUE;
+				if ((skill > 6.5) && (selfdamage > self.health))
+					self.BUTTON_ATCK2 = FALSE;
+				//if(self.BUTTON_ATCK2 == TRUE)
+				//	dprint(ftos(desirabledamage),"\n");
+				if (self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
+			}
+			
+			return TRUE;
+		}
+		#endif
 		case WR_THINK:
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) // forced reload
@@ -426,7 +526,8 @@ float W_Devastator(float req)
 					ammo_amount = TRUE;
 				return !ammo_amount;
 			}
-
+			#endif
+			#if 0
 			if(self.rl_release == 0)
 			{
 				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo));
@@ -439,10 +540,11 @@ float W_Devastator(float req)
 				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
 				return ammo_amount;
 			}
-			#endif
+			#else
 			ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
 			ammo_amount += self.(weapon_load[WEP_DEVASTATOR]) >= WEP_CVAR(devastator, ammo);
 			return ammo_amount;
+			#endif
 		}
 		case WR_CHECKAMMO2:
 		{
