@@ -133,7 +133,8 @@ float W_IsWeaponThrowable(float w)
 		return 0;
     if(w == 0)
         return 0;
-	
+
+	#if 0
 	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
@@ -142,8 +143,10 @@ float W_IsWeaponThrowable(float w)
 		if((get_weaponinfo(w)).ammo_field == ammo_none)
 			return 0;
 	}
-
 	return 1;
+	#else
+	return (get_weaponinfo(w)).weaponthrowable;
+	#endif
 }
 
 // toss current weapon
