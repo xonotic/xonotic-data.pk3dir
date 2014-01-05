@@ -331,7 +331,7 @@ float W_Hook(float req)
 			return WEAPON_HOOK_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -360,7 +360,7 @@ float W_Hook(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

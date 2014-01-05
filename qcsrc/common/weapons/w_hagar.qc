@@ -514,7 +514,7 @@ float W_Hagar(float req)
 				return WEAPON_HAGAR_MURDER_SPRAY;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -552,7 +552,7 @@ float W_Hagar(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

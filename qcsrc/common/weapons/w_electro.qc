@@ -546,7 +546,7 @@ float W_Electro(float req)
 			}
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -595,7 +595,7 @@ float W_Electro(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

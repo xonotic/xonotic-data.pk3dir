@@ -577,7 +577,7 @@ float W_Devastator(float req)
 				return WEAPON_DEVASTATOR_MURDER_DIRECT;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -606,7 +606,7 @@ float W_Devastator(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

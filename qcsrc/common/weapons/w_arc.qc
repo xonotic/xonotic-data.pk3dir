@@ -288,7 +288,7 @@ float W_Arc(float req)
 			return TRUE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 
 void ArcInit()
@@ -338,7 +338,7 @@ float W_Arc(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

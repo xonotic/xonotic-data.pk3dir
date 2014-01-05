@@ -257,8 +257,7 @@ float W_Blaster(float request)
 			return WEAPON_BLASTER_MURDER;
 		}
 	}
-	
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -286,8 +285,7 @@ float W_Blaster(float request)
 			return FALSE;
 		}
 	}
-	
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

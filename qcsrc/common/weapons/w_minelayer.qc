@@ -584,7 +584,7 @@ float W_MineLayer(float req)
 			return WEAPON_MINELAYER_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -613,7 +613,7 @@ float W_MineLayer(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

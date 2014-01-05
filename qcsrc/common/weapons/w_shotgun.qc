@@ -282,8 +282,7 @@ float W_Shotgun(float req)
 				return WEAPON_SHOTGUN_MURDER;
 		}
 	}
-
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -323,7 +322,7 @@ float W_Shotgun(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

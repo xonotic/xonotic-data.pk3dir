@@ -442,7 +442,7 @@ float W_Fireball(float req)
 				return WEAPON_FIREBALL_MURDER_BLAST;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -478,8 +478,7 @@ float W_Fireball(float req)
 			return FALSE;
 		}
 	}
-
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

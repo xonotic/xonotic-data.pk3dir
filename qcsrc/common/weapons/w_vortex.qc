@@ -292,7 +292,7 @@ float W_Vortex(float req)
 			return WEAPON_VORTEX_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -334,7 +334,7 @@ float W_Vortex(float req)
 			}
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

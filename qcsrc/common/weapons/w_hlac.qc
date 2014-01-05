@@ -277,7 +277,7 @@ float W_HLAC(float req)
 			return WEAPON_HLAC_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -306,7 +306,7 @@ float W_HLAC(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

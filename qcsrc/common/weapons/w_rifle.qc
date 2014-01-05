@@ -259,7 +259,7 @@ float W_Rifle(float req)
 			}
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -309,8 +309,7 @@ float W_Rifle(float req)
 			}
 		}
 	}
-
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

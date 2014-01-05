@@ -364,7 +364,7 @@ float W_MachineGun(float req)
 				return WEAPON_MACHINEGUN_MURDER_SPRAY;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -400,7 +400,7 @@ float W_MachineGun(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

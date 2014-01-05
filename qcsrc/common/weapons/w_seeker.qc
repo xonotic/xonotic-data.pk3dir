@@ -720,7 +720,7 @@ float W_Seeker(float req)
 				return WEAPON_SEEKER_MURDER_SPRAY;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -785,8 +785,7 @@ float W_Seeker(float req)
 			return FALSE;
 		}
 	}
-
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

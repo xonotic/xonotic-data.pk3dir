@@ -483,7 +483,7 @@ float W_Tuba(float req)
 				return WEAPON_TUBA_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -501,7 +501,7 @@ float W_Tuba(float req)
 		}
 	}
 
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

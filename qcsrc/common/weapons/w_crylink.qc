@@ -684,7 +684,7 @@ float W_Crylink(float req)
 			return WEAPON_CRYLINK_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -723,7 +723,7 @@ float W_Crylink(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

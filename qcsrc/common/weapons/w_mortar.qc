@@ -454,7 +454,7 @@ float W_Mortar(float req)
 				return WEAPON_MORTAR_MURDER_EXPLODE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -483,7 +483,7 @@ float W_Mortar(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif

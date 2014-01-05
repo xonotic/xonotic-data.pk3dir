@@ -714,7 +714,7 @@ float W_Shockwave(float req)
 				return WEAPON_SHOCKWAVE_MURDER;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #ifdef CSQC
@@ -742,7 +742,7 @@ float W_Shockwave(float req)
 			return FALSE;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 #endif
 #endif
