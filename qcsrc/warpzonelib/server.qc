@@ -56,7 +56,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
-	if not(IS_NOT_A_CLIENT(player))
+	if (!IS_NOT_A_CLIENT(player))
 		a1 = WarpZone_TransformVAngles(wz, player.v_angle);
 	else
 		a1 = WarpZone_TransformAngles(wz, a0);
@@ -184,16 +184,16 @@ void WarpZone_Touch (void)
 		save1 = self.target; self.target = string_null;
 		save2 = self.target3; self.target3 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target3) self.target3 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target3) self.target3 = save2;
 
 		oldself = self;
 		self = self.enemy;
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target2) self.target2 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target2) self.target2 = save2;
 		self = oldself;
 	}
 	else
@@ -348,15 +348,15 @@ float WarpZone_CheckProjectileImpact(entity player)
 		save1 = self.target; self.target = string_null;
 		save2 = self.target3; self.target3 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target3) self.target3 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target3) self.target3 = save2;
 
 		self = self.enemy;
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target2) self.target2 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target2) self.target2 = save2;
 		self = oldself;
 	}
 	else
@@ -537,7 +537,7 @@ void WarpZone_InitStep_UpdateTransform()
 	for(i_s = 0; ; ++i_s)
 	{
 		tex = getsurfacetexture(self, i_s);
-		if not(tex)
+		if (!tex)
 			break; // this is beyond the last one
 		if(tex == "textures/common/trigger" || tex == "trigger")
 			continue;
@@ -809,22 +809,22 @@ void WarpZone_StartFrame()
 	for(e = world; (e = nextent(e)); )
 	{
 		if(warpzone_warpzones_exist) { WarpZone_StoreProjectileData(e); }
-		
+
 		if(IS_REAL_CLIENT(e))
 		{
 			if(e.solid == SOLID_NOT) // not spectating?
 			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_FLY_WORLDONLY) // not spectating? (this is to catch observers)
 			{
 				other = e; // player
-			
+
 				// warpzones
-				if(warpzone_warpzones_exist) { 
-				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs); 
+				if(warpzone_warpzones_exist) {
+				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
 				if(!WarpZoneLib_ExactTrigger_Touch())
 					if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
 						WarpZone_Teleport(self, e, -1, 0); } // NOT triggering targets by this!
-			
+
 				// teleporters
 				self = Teleport_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
@@ -832,7 +832,7 @@ void WarpZone_StartFrame()
 					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
 			}
 		}
-		
+
 		if(IS_NOT_A_CLIENT(e))
 		{
 			if(warpzone_warpzones_exist)

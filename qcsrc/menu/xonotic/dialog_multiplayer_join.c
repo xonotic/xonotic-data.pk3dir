@@ -26,10 +26,13 @@ void XonoticServerListTab_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Filter:")));
-		me.TD(me, 1, me.columns - 0.6 * 3 - 0.4, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 0.6 * 3 - 0.9 - 0.4, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
 			slist.controlledTextbox = e;
+		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
+			e.onClickEntity = slist;
+			e.onClick = ServerList_Categories_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
 			slist.filterShowEmpty = e.checked;
 			e.onClickEntity = slist;

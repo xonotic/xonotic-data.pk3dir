@@ -4,12 +4,12 @@
 float anglemods(float v)
 {
 	v = v - 360 * floor(v / 360);
-	
+
 	if(v >= 180)
 		return v - 360;
 	else if(v <= -180)
 		return v + 360;
-	else		
+	else
 		return v;
 }
 
@@ -78,7 +78,7 @@ vector real_origin(entity ent)
 vector angleofs(entity from, entity to)
 {
     vector v_res;
-    
+
     v_res = normalize(to.origin - from.origin);
     v_res = vectoangles(v_res);
     v_res = v_res - from.angles;
@@ -95,7 +95,7 @@ vector angleofs(entity from, entity to)
 vector angleofs3(vector from, vector from_a, entity to)
 {
     vector v_res;
-    
+
     v_res = normalize(to.origin - from);
     v_res = vectoangles(v_res);
     v_res = v_res - from_a;
@@ -130,7 +130,7 @@ float turret_tag_fire_update_s()
 }
 
 /*
-* Railgun-like beam, but has thickness and suppots slowing of target 
+* Railgun-like beam, but has thickness and suppots slowing of target
 */
 void FireImoBeam (vector start, vector end, vector smin, vector smax,
                   float bforce, float f_dmg, float f_velfactor, float deathtype)
@@ -352,4 +352,4 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
     e.colormod = v_color;
     SUB_SetFade(e,time,f_time);
 }
-#endif 
+#endif

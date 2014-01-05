@@ -53,13 +53,13 @@ void ImpulseCommands (void)
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
-    
+
     if(self.vehicle)
         if(self.vehicle.deadflag == DEAD_NO)
             if(self.vehicle.vehicles_impusle)
                 if(self.vehicle.vehicles_impusle(imp))
                     return;
-    
+
 	if(CheatImpulse(imp))
 	{
 	}
@@ -169,7 +169,7 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					if not(MUTATOR_CALLHOOK(HelpMePing))
+					if (!MUTATOR_CALLHOOK(HelpMePing))
 					{
 						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
 						if(!wp)
@@ -257,7 +257,7 @@ void ImpulseCommands (void)
 				case 104:
 					e = navigation_findnearestwaypoint(self, FALSE);
 					if (e)
-					if not(e.wpflags & WAYPOINTFLAG_GENERATED)
+					if (!(e.wpflags & WAYPOINTFLAG_GENERATED))
 					{
 						bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
 						waypoint_remove(e);
@@ -300,7 +300,7 @@ void ImpulseCommands (void)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
-							if not(e.effects & EF_NODEPTHTEST) // not already reported before
+							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							++i;

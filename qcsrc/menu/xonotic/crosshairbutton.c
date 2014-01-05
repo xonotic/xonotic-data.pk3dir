@@ -50,14 +50,14 @@ void XonoticCrosshairButton_setChecked(entity me, float val)
 }
 void XonoticCrosshairButton_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	me.checked = (cvar(me.cvarName) == me.cvarValueFloat);
 }
 void XonoticCrosshairButton_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.checked)
@@ -121,7 +121,7 @@ void XonoticCrosshairButton_draw(entity me)
 	{
 		if(cvar("crosshair_dot_color_custom") && (cvar_string("crosshair_dot_color") != "0"))
 			rgb = stov(cvar_string("crosshair_dot_color"));
-			
+
 		draw_Picture('0.5 0.5 0' - 0.5 * sz * cvar("crosshair_dot_size"), me.src4, sz * cvar("crosshair_dot_size"), rgb, a * cvar("crosshair_dot_alpha"));
 	}
 }

@@ -240,9 +240,9 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 	if(frag_target.deadflag == DEAD_NO)
 	if(frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL)
 		frag_damage = 0;
-		
+
 	frag_mirrordamage = 0;
-		
+
 	return FALSE;
 }
 
@@ -251,20 +251,20 @@ MUTATOR_HOOKFUNCTION(ca_FilterItem)
 	if(autocvar_g_powerups <= 0)
 	if(self.flags & FL_POWERUP)
 		return TRUE;
-		
+
 	if(autocvar_g_pickup_items <= 0)
 		return TRUE;
-		
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 {
 	float excess = max(0, frag_damage - damage_take - damage_save);
-	
+
 	if(frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
-		
+
 	return FALSE;
 }
 
