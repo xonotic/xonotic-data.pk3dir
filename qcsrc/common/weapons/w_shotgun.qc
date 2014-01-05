@@ -48,6 +48,7 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN); }
 
 void W_Shotgun_Attack (void)
 {
@@ -186,8 +187,6 @@ void W_Shotgun_Attack2 (void)
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
-
-void spawnfunc_weapon_shotgun(); // defined in t_items.qc
 
 .float shotgun_primarytime;
 
