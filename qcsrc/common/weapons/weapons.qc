@@ -266,7 +266,7 @@ string GetAmmoPicture(.float ammotype)
 	switch(ammotype)
 	{
 		case ammo_shells:  return "ammo_shells";
-		case ammo_nails:   return "ammo_nails";
+		case ammo_nails:   return "ammo_bullets";
 		case ammo_rockets: return "ammo_rockets";
 		case ammo_cells:   return "ammo_cells";
 		case ammo_fuel:    return "ammo_fuel";
