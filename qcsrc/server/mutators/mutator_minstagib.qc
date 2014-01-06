@@ -109,6 +109,22 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
+{
+	other.monster_loot = spawnfunc_item_minst_cells;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
+{
+	// always refill ammo
+	if(self.monsterid == MON_MAGE)
+		self.skin = 1;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
 {
 	if(checkentity.items & IT_STRENGTH)
@@ -133,6 +149,12 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 {
 	minstagib_ammocheck();
 	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_PlayerRegen)
+{
+	// no regeneration in minstagib
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
@@ -414,6 +436,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SetModname)
 MUTATOR_DEFINITION(mutator_minstagib)
 {
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
@@ -428,6 +452,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, minstagib_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
