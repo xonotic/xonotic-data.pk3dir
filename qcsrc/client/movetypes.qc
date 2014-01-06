@@ -1,5 +1,5 @@
-float STAT_MOVEFLAGS = 225;
-float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+const float STAT_MOVEFLAGS = 225;
+const float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 
 .entity move_groundentity; // FIXME add move_groundnetworkentity?
@@ -128,7 +128,7 @@ float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 	vector org;
 	float cont;
 	org = self.move_origin + ofs;
-	
+
 	cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
@@ -160,10 +160,10 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
-	dprint(sprintf(_("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin)));
+	dprintf(_("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
 	return FALSE;
 :success
-	dprint(sprintf(_("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin)));
+	dprintf(_("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
 	_Movetype_LinkEdict(TRUE);
 	return TRUE;
 }
@@ -220,7 +220,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	if(self.move_flags & FL_ONGROUND)
 	{
 		if(self.move_velocity_z >= 1/32)
-			self.move_flags &~= FL_ONGROUND;
+			self.move_flags &= ~FL_ONGROUND;
 		else if(!self.move_groundentity)
 			return;
 		else if(self.move_suspendedinair && wasfreed(self.move_groundentity))
@@ -264,7 +264,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		_Movetype_PushEntity(move, TRUE);
 		if(wasfreed(self))
 			return;
-	
+
 		if(trace_startsolid)
 		{
 			_Movetype_UnstickEntity();
@@ -281,7 +281,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		if(self.move_movetype == MOVETYPE_BOUNCEMISSILE)
 		{
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 2.0);
-			self.move_flags &~= FL_ONGROUND;
+			self.move_flags &= ~FL_ONGROUND;
 		}
 		else if(self.move_movetype == MOVETYPE_BOUNCE)
 		{
@@ -305,7 +305,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 				self.move_avelocity = '0 0 0';
 			}
 			else
-				self.move_flags &~= FL_ONGROUND;
+				self.move_flags &= ~FL_ONGROUND;
 		}
 		else
 		{
@@ -320,7 +320,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 				self.move_avelocity = '0 0 0';
 			}
 			else
-				self.move_flags &~= FL_ONGROUND;
+				self.move_flags &= ~FL_ONGROUND;
 		}
 
 		// DP revision 8905 (just, WHY...)

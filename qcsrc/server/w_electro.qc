@@ -40,7 +40,7 @@ void W_Plasma_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(IsDifferentTeam(self.realowner, other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
@@ -78,7 +78,7 @@ void W_Plasma_Touch (void)
 		W_Plasma_Explode ();
 	} else {
 		//UpdateCSQCProjectile(self);
-		spamsound (self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -96,10 +96,10 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
-	
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
-		return; // g_projectiles_damage says to halt	
-	
+		return; // g_projectiles_damage says to halt
+
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
@@ -279,7 +279,7 @@ void lgbeam_think()
 	dt = frametime;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(owner_player.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(owner_player.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(autocvar_g_balance_electro_primary_ammo)
 		{
@@ -337,7 +337,7 @@ void W_Electro_Attack3 (void)
 {
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.prevlgfire > 0.5)
-		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTEN_NORM);
 
 	entity beam, oldself;
 
@@ -588,7 +588,7 @@ float w_electro(float req)
 		{
 			pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
 		}
 		else
 		{
@@ -597,13 +597,13 @@ float w_electro(float req)
 				// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
 				pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTEN_NORM);
 			}
 			else
 			{
 				pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}

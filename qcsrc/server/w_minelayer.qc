@@ -24,7 +24,7 @@ void spawnfunc_weapon_minelayer (void)
 
 void W_Mine_Stick (entity to)
 {
-	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTEN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -73,7 +73,7 @@ void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(IsDifferentTeam(self.realowner, other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
@@ -148,7 +148,7 @@ void W_Mine_ProximityExplode ()
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
 		while(head)
 		{
-			if(head == self.realowner || !IsDifferentTeam(head, self.realowner))
+			if(head == self.realowner || SAME_TEAM(head, self.realowner))
 				return;
 			head = head.chain;
 		}
@@ -182,13 +182,13 @@ void W_Mine_Think (void)
 			self.movetype = MOVETYPE_NONE;
 		}
 	}
-	
+
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if ((time > self.cnt) && (!self.mine_time))
 	{
 		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -208,10 +208,10 @@ void W_Mine_Think (void)
 	while(head)
 	{
 		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
-		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
+		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
 			self.mine_time = time + autocvar_g_balance_minelayer_time;
 		}
 		head = head.chain;
@@ -258,15 +258,15 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 {
 	if (self.health <= 0)
 		return;
-		
+
 	float is_from_enemy = (inflictor.realowner != self.realowner);
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }
@@ -337,7 +337,7 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
-	
+
 	self.minelayer_mines = W_Mine_Count(self);
 }
 
@@ -470,7 +470,7 @@ float w_minelayer(float req)
 		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
 		{
 			// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-			if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+			if (!(W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo))
 				weapon_action(self.weapon, WR_RELOAD);
 		}
 		else if (self.BUTTON_ATCK)
@@ -485,7 +485,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -551,7 +551,7 @@ float w_minelayer(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

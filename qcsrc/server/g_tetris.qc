@@ -26,28 +26,28 @@ float tet_vs_current_timeout;
 
 var float tet_high_score = 0;
 
-vector TET_START_PIECE_POS = '5 1 0';
-float TET_LINES = 22;
-float TET_DISPLAY_LINES = 20;
-float TET_WIDTH = 10;
-string TET_EMPTY_LINE = "0000000000"; // must match TET_WIDTH
+const vector TET_START_PIECE_POS = '5 1 0';
+const float TET_LINES = 22;
+const float TET_DISPLAY_LINES = 20;
+const float TET_WIDTH = 10;
+const string TET_EMPTY_LINE = "0000000000"; // must match TET_WIDTH
 //character values
-float TET_BORDER = 139;
-float TET_BLOCK = 133;
-float TET_SPACE = 160; // blankness
+const float TET_BORDER = 139;
+const float TET_BLOCK = 133;
+const float TET_SPACE = 160; // blankness
 
 
 
-float TETKEY_UP = 1;
-float TETKEY_DOWN = 2;
-float TETKEY_LEFT = 4;
-float TETKEY_RIGHT = 8;
-float TETKEY_ROTLEFT = 16;
-float TETKEY_ROTRIGHT = 32;
-float TETKEY_DROP = 64;
-string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0"; // get away from crosshair
+const float TETKEY_UP = 1;
+const float TETKEY_DOWN = 2;
+const float TETKEY_LEFT = 4;
+const float TETKEY_RIGHT = 8;
+const float TETKEY_ROTLEFT = 16;
+const float TETKEY_ROTRIGHT = 32;
+const float TETKEY_DROP = 64;
+const string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0"; // get away from crosshair
 
-float PIECES = 7;
+const float PIECES = 7;
 
 float tet_line_buf;
 
@@ -262,7 +262,7 @@ void PieceMinsMaxs(float rot, float pc)
 		tet_piecemins_y = 1;
 		tet_piecemaxs_y = sz_y;
 	}
-	//print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
+	//printf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs);
 	if (rot == 1) // 90 degrees
 	{
 		t = tet_piecemins_y;
@@ -653,7 +653,7 @@ float BastetSearch(float buf, float pc, float x, float y, float rot, float move_
 		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
 		if(s < 0)
 		{
-			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
+			//printf("MAY CEMENT AT: %d %d %d\n", x, y, rot);
 			// moving down did not work - that means we can fixate the block here
 			t1 = gettime(GETTIME_HIRES);
 
@@ -699,7 +699,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
 	var float t2 = gettime(GETTIME_HIRES);
-	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1)));
+	dprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1));
 
 	// sort
 	float i, j, k, p, s;
@@ -707,7 +707,7 @@ float BastetPiece()
 /*
 	for(i = 0; i < 7; ++i)
 	{
-		print(sprintf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]));
+		printf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]);
 	}
 */
 
@@ -875,8 +875,8 @@ void CementPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	}
 }
 
-float LINE_LOW = 349525;
-float LINE_HIGH = 699050; // above number times 2
+const float LINE_LOW = 349525;
+const float LINE_HIGH = 699050; // above number times 2
 
 void AddLines(float n)
 {

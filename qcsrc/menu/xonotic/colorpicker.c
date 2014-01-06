@@ -72,37 +72,58 @@ vector color_hslimage(vector v, vector margin)
 
 float XonoticColorpicker_mouseDrag(entity me, vector coords)
 {
-	float i;
+	float i, carets;
 	for(;;)
 	{
 		i = me.controlledTextbox.cursorPos;
 		if(i >= 2)
 		{
 			if(substring(me.controlledTextbox.text, i-2, 1) == "^")
-				if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
-				{
-					me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-					me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-					continue;
-				}
+			{
+				carets = 1;
+				while (i - 2 - carets >= 0 && substring(me.controlledTextbox.text, i - 2 - carets, 1) == "^")
+					++carets;
+				if (carets & 1)
+					if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+					{
+						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+						continue;
+					}
+			}
 		}
 
 		if(i >= 5)
 		{
 			if(substring(me.controlledTextbox.text, i-5, 2) == "^x")
-				if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-3, 1), 0) >= 0)
-					if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-2, 1), 0) >= 0)
-						if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
-						{
-							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-							me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
-							continue;
-						}
+			{
+				carets = 1;
+				while (i - 5 - carets >= 0 && substring(me.controlledTextbox.text, i - 5 - carets, 1) == "^")
+					++carets;
+				if (carets & 1)
+					if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-3, 1), 0) >= 0)
+						if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-2, 1), 0) >= 0)
+							if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
+							{
+								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+								me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
+								continue;
+							}
+			}
 		}
 		break;
+	}
+
+	if(substring(me.controlledTextbox.text, i-1, 1) == "^")
+	{
+		carets = 1;
+		while (i - 1 - carets >= 0 && substring(me.controlledTextbox.text, i - 1 - carets, 1) == "^")
+			++carets;
+		if (carets & 1)
+			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 	}
 
 	vector margin;
@@ -141,7 +162,7 @@ void XonoticColorpicker_draw(entity me)
 	// for this to work, C/(1-B) must be in 0..1
 	// B must be < 1
 	// C must be < 1-B
-	
+
 	B = bound(0, B, 1);
 	C = bound(0, C, 1-B);
 

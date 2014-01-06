@@ -6,7 +6,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 	org = (p1.origin + p2.origin) * 0.5;
 	org_z += (p1.mins_z + p2.mins_z) * 0.5;
 
-	sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), org, '0 0 0', 1);
 
 	entity e;
@@ -19,15 +19,15 @@ void PlayerTouchExplode(entity p1, entity p2)
 MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
 {
 	if(time > self.touchexplode_time)
-	if not(gameover)
+	if (!gameover)
 	if(IS_PLAYER(self))
 	if(self.deadflag == DEAD_NO)
-	if not(IS_INDEPENDENT_PLAYER(self))
+	if (!IS_INDEPENDENT_PLAYER(self))
 	FOR_EACH_PLAYER(other) if(self != other)
 	{
 		if(time > other.touchexplode_time)
 		if(other.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(other))
+		if (!IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
 		{
 			PlayerTouchExplode(self, other);

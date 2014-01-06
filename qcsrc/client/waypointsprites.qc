@@ -38,14 +38,14 @@ float waypointsprite_alpha;
 .float build_starthealth;
 .float build_finished;
 
-float SPRITE_HEALTHBAR_WIDTH = 144;
-float SPRITE_HEALTHBAR_HEIGHT = 9;
-float SPRITE_HEALTHBAR_MARGIN = 6;
-float SPRITE_HEALTHBAR_BORDER = 2;
-float SPRITE_HEALTHBAR_BORDERALPHA = 1;
-float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
-float SPRITE_ARROW_SCALE = 1.0;
-float SPRITE_HELPME_BLINK = 2;
+const float SPRITE_HEALTHBAR_WIDTH = 144;
+const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_MARGIN = 6;
+const float SPRITE_HEALTHBAR_BORDER = 2;
+const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
+const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const float SPRITE_ARROW_SCALE = 1.0;
+const float SPRITE_HELPME_BLINK = 2;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -96,7 +96,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	o = hotspot;
 	ri = '1 0 0';
 	up = '0 1 0';
-	
+
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
 	o = rotate(o, rot) + org;
 	ri = rotate(ri, rot);
@@ -439,10 +439,10 @@ void Draw_WaypointSprite()
 		return;
 
 	++waypointsprite_newcount;
-	
+
 	float dist;
 	dist = vlen(self.origin - view_origin);
-	
+
 	float a;
 	a = self.alpha * autocvar_hud_panel_fg_alpha;
 
@@ -457,7 +457,7 @@ void Draw_WaypointSprite()
 	if(rgb == '0 0 0')
 	{
 		self.teamradar_color = '1 0 1';
-		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
+		printf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
 	}
 
 	if(time - floor(time) > 0.5)
@@ -483,10 +483,10 @@ void Draw_WaypointSprite()
 	float ang;
 
 	o = project_3d_to_2d(self.origin);
-	if(o_z < 0 
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+	if(o_z < 0
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top)
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
 	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
@@ -543,9 +543,9 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
-	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
 	float vidscale;
@@ -585,7 +585,7 @@ void Draw_WaypointSprite()
 	}
 
 	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
-	
+
 	string txt;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");

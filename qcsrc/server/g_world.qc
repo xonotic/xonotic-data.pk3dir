@@ -51,7 +51,7 @@ void PingPLReport_Spawn()
 	pingplreport.nextthink = time;
 }
 
-float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
+const float SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS = 1;
 string redirection_target;
 float world_initialized;
 
@@ -253,7 +253,6 @@ void cvar_changes_init()
 
 		// mapinfo
 		BADCVAR("fraglimit");
-		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
 		BADCVAR("g_ca_teams");
@@ -304,7 +303,6 @@ void cvar_changes_init()
 
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
-		BADCVAR("g_arena_point_leadlimit");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
@@ -323,7 +321,6 @@ void cvar_changes_init()
 		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
-		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
@@ -417,7 +414,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADCVAR("g_spawnshieldtime");
@@ -430,7 +426,7 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
-		
+
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -563,7 +559,7 @@ void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
-	string s, col;
+	string s;
 
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
@@ -707,10 +703,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":norecoil");
 
 		// TODO to mutator system
-		if(autocvar_g_midair)
-			s = strcat(s, ":midair");
-
-		// TODO to mutator system
 		if(autocvar_g_powerups == 0)
 			s = strcat(s, ":no_powerups");
 		if(autocvar_g_powerups > 0)
@@ -773,7 +765,7 @@ void spawnfunc_worldspawn (void)
 
 	WeaponStats_Init();
 
-	WEPSET_ADDSTAT();
+	WepSet_AddStat();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -818,58 +810,15 @@ void spawnfunc_worldspawn (void)
 	detect_maptype();
 
 	// set up information replies for clients and server to use
-	lsmaps_reply = "^7Maps available: ";
-	lsnewmaps_reply = "^7Maps without a record set: ";
-	for(i = 0, j = 0; i < MapInfo_count; ++i)
-	{
-		if(MapInfo_Get_ByID(i))
-			if not(MapInfo_Map_flags & MapInfo_ForbiddenFlags())
-			{
-				if(mod(i, 2))
-					col = "^2";
-				else
-					col = "^3";
-
-				++j;
-
-				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
-
-				if(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
-					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
-				else if(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
-					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
-			}
-	}
-
-	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
-	lsnewmaps_reply = strzone(strcat(((!g_race && !g_cts) ? "Need to be playing race or CTS for lsnewmaps to work." : lsnewmaps_reply), "\n"));
-
-	maplist_reply = "^7Maps in list: ";
-	n = tokenize_console(autocvar_g_maplist);
-	for(i = 0, j = 0; i < n; ++i)
-	{
-		if(MapInfo_CheckMap(argv(i)))
-		{
-			if(mod(j, 2))
-				col = "^2";
-			else
-				col = "^3";
-			maplist_reply = strcat(maplist_reply, col, argv(i), " ");
-			++j;
-		}
-	}
-	maplist_reply = strzone(strcat(maplist_reply, "\n"));
-	MapInfo_ClearTemps();
-
+	maplist_reply = strzone(getmaplist());
+	lsmaps_reply = strzone(getlsmaps());
 	for(i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
 		if (s)
 			records_reply[i] = strzone(s);
 	}
-
 	ladder_reply = strzone(getladder());
-
 	rankings_reply = strzone(getrankings());
 
 	// begin other init
@@ -887,7 +836,7 @@ void spawnfunc_worldspawn (void)
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 		for(i = 0; i < n; ++i)
-			if(substring(argv(i), -14, -1) != "-serverpackage.txt")
+			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
 			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
 		fd = search_begin("*-serverpackage.txt", TRUE, FALSE);
@@ -1097,6 +1046,8 @@ float() MaplistMethod_Iterate = // usual method
 {
 	float pass, i;
 
+	dprint("Trying MaplistMethod_Iterate\n");
+
 	for(pass = 1; pass <= 2; ++pass)
 	{
 		for(i = 1; i < Map_Count; ++i)
@@ -1112,6 +1063,8 @@ float() MaplistMethod_Iterate = // usual method
 
 float() MaplistMethod_Repeat = // fallback method
 {
+	dprint("Trying MaplistMethod_Repeat\n");
+
 	if(Map_Check(Map_Current, 2))
 		return Map_Current;
 	return -2;
@@ -1120,6 +1073,8 @@ float() MaplistMethod_Repeat = // fallback method
 float() MaplistMethod_Random = // random map selection
 {
 	float i, imax;
+
+	dprint("Trying MaplistMethod_Random\n");
 
 	imax = 42;
 
@@ -1138,6 +1093,8 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 // the higher the exponent, the less likely "shortly repeated" same maps are
 {
 	float i, j, imax, insertpos;
+
+	dprint("Trying MaplistMethod_Shuffle\n");
 
 	imax = 42;
 
@@ -1173,10 +1130,14 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 void Maplist_Init()
 {
 	Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
-	if(Map_Count == 0)
+	float i;
+	for (i = 0; i < Map_Count; ++i)
+		if (Map_Check(i, 2))
+			break;
+	if (i == Map_Count)
 	{
-		bprint( "Maplist is empty!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
+		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags() | MAPINFO_FLAG_NOAUTOMAPLIST));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");
@@ -1279,31 +1240,12 @@ void GotoNextMap(float reinit)
 		return;
 	alreadychangedlevel = TRUE;
 
-	{
-		string nextMap;
-		float allowReset;
+	string nextMap;
 
-		for(allowReset = 1; allowReset >= 0; --allowReset)
-		{
-			nextMap = GetNextMap();
-			if(nextMap != "")
-				break;
-
-			if(allowReset)
-			{
-				bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-				cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-				if(autocvar_g_maplist_shuffle)
-					ShuffleMaplist();
-				localcmd("\nmenu_cmd sync\n");
-			}
-			else
-			{
-				error("Everything is broken - not even the default map list works. Please report this to the developers.");
-			}
-		}
-		Map_Goto(reinit);
-	}
+	nextMap = GetNextMap();
+	if(nextMap == "")
+		error("Everything is broken - cannot find a next map. Please report this to the developers.");
+	Map_Goto(reinit);
 }
 
 
@@ -1457,7 +1399,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || g_arena || other.caplayer == 1 || g_lms)
+			if(IS_PLAYER(other) || other.caplayer == 1 || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1570,7 +1512,7 @@ void NextLevel()
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
@@ -1616,10 +1558,10 @@ float checkrules_suddendeathwarning;
 float checkrules_suddendeathend;
 float checkrules_overtimesadded; //how many overtimes have been already added
 
-float WINNING_NO = 0; // no winner, but time limits may terminate the game
-float WINNING_YES = 1; // winner found
-float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+const float WINNING_NO = 0; // no winner, but time limits may terminate the game
+const float WINNING_YES = 1; // winner found
+const float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
 
 float InitiateSuddenDeath()
 {
@@ -1713,7 +1655,7 @@ float WinningCondition_Onslaught()
 
 	WinningConditionHelper(); // set worldstatus
 
-	if(inWarmupStage)
+	if(warmup_stage)
 		return WINNING_NO;
 
 	// first check if the game has ended
@@ -1911,7 +1853,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || g_arena || g_ca || (g_race && !g_race_qualifying) || g_nexball)
+	if(g_dm || g_tdm || g_ca || (g_race && !g_race_qualifying) || g_nexball)
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)
@@ -2106,7 +2048,7 @@ void CheckRules_World()
 	fraglimit = autocvar_fraglimit;
 	leadlimit = autocvar_leadlimit;
 
-	if(inWarmupStage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
+	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
 		if(timelimit > 0)
 			timelimit = 0; // timelimit is not made for warmup
@@ -2294,7 +2236,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 	m = MapInfo_FixName(m);
-	if not(m)
+	if (!m)
 		return "The map you suggested is not available on this server.";
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))
@@ -2446,7 +2388,7 @@ float MapVote_SendEntity(entity to, float sf)
 	float i;
 
 	if(sf & 1)
-		sf &~= 2; // if we send 1, we don't need to also send 2
+		sf &= ~2; // if we send 1, we don't need to also send 2
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);

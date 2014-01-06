@@ -32,7 +32,7 @@ void bot_think()
 	if (self.bot_nextthink > time)
 		return;
 
-	self.flags &~= FL_GODMODE;
+	self.flags &= ~FL_GODMODE;
 	if(autocvar_bot_god)
 		self.flags |= FL_GODMODE;
 
@@ -363,7 +363,7 @@ void bot_relinkplayerlist()
 
 void bot_clientdisconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
 	if(self.cleanname)
@@ -386,7 +386,7 @@ void bot_clientdisconnect()
 
 void bot_clientconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
@@ -551,7 +551,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(IS_PLAYER(head) || g_lms || g_arena || head.caplayer == 1)
+		if(IS_PLAYER(head) || g_lms || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

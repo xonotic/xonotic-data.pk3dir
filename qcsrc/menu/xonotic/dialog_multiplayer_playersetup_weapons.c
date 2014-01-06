@@ -36,7 +36,7 @@ void XonoticWeaponsDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Down"), '0 0 0'));
 			e.onClick = WeaponsList_MoveDown_Click;
 			e.onClickEntity = me.weaponsList;
-			
+
 	me.gotoRC(me, 0, 2.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_weaponpriority_useforcycling", _("Use priority list for weapon cycling")));
 	me.TR(me);
@@ -69,7 +69,7 @@ void XonoticWeaponsDialog_fill(entity me)
 	//	setDependent(e, "r_drawviewmodel", 1, 1);
 	//	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 2, 0.1, "cl_viewmodel_scale"));
 	//	setDependent(e, "r_drawviewmodel", 1, 1);
-			
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

@@ -128,7 +128,7 @@ float current_player;
 		hud_panelent.panel_draw = ##draw_func; \
 		++HUD_PANEL_NUM; \
 	} \
-	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME)
+	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME);
 
 HUD_PANELS
 #undef HUD_PANEL
@@ -307,7 +307,6 @@ if(panel.update_time <= time) { \
 	}\
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
-	panel.current_panel_bg_alpha = panel_bg_alpha; \
 	panel.current_panel_bg_border = panel_bg_border; \
 	panel.current_panel_bg_color = panel_bg_color; \
 	panel.current_panel_bg_color_team = panel_bg_color_team; \

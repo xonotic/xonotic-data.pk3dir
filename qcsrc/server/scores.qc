@@ -14,7 +14,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 {
 	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
 		return previous;
-	if(fieldflags & SFL_SORT_PRIO_MASK < previous_y)
+	if((fieldflags & SFL_SORT_PRIO_MASK) < previous_y)
 		return previous;
 	if(t1.field == t2.field)
 		return previous;
@@ -150,7 +150,7 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 {
 	scores_label[i] = label;
 	scores_flags[i] = scoreflags;
-	if(scoreflags & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+	if((scoreflags & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 	{
 		scores_primary = scores[i];
 		scores_flags_primary = scoreflags;
@@ -166,7 +166,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 {
 	teamscores_label[i] = label;
 	teamscores_flags[i] = scoreflags;
-	if(scoreflags & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+	if((scoreflags & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 	{
 		teamscores_primary = teamscores[i];
 		teamscores_flags_primary = scoreflags;
@@ -334,7 +334,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	entity s;
 
 	if(gameover)
-	if not(g_lms && scorefield == SP_LMS_RANK) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
@@ -349,7 +349,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
-	if(!inWarmupStage)
+	if(!warmup_stage)
 		PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
 }
@@ -532,12 +532,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && !g_arena && p.caplayer != 1 && !g_lms)
+			if(!IS_PLAYER(p) && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(IS_PLAYER(p) || g_arena || p.caplayer == 1 || g_lms)
+			if(IS_PLAYER(p) || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
@@ -553,9 +553,9 @@ string GetScoreLogLabel(string label, float fl)
 {
 	if(fl & SFL_LOWER_IS_BETTER)
 		label = strcat(label, "<");
-	if(fl & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+	if((fl & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 		label = strcat(label, "!!");
-	else if(fl & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
+	else if((fl & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 		label = strcat(label, "!");
 	return label;
 }
@@ -572,7 +572,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 	{
 		// label
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 			{
 				f = scores_flags[i];
 				l = scores_label[i];
@@ -580,7 +580,7 @@ string GetPlayerScoreString(entity pl, float shortString)
 			}
 		if(shortString < 2)
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 			{
 				f = scores_flags[i];
 				l = scores_label[i];
@@ -588,8 +588,8 @@ string GetPlayerScoreString(entity pl, float shortString)
 			}
 		if(shortString < 1)
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_PRIMARY)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_SECONDARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 			{
 				f = scores_flags[i];
 				l = scores_label[i];
@@ -600,16 +600,16 @@ string GetPlayerScoreString(entity pl, float shortString)
 	else if((sk = pl.scorekeeper))
 	{
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 				out = strcat(out, ftos(sk.(scores[i])), ",");
 		if(shortString < 2)
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores[i])), ",");
 		if(shortString < 1)
 		for(i = 0; i < MAX_SCORE; ++i)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_PRIMARY)
-			if(scores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_SECONDARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
+			if((scores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(scores[i])), ",");
 		out = substring(out, 0, strlen(out) - 1);
 	}
@@ -628,7 +628,7 @@ string GetTeamScoreString(float tm, float shortString)
 	{
 		// label
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 			{
 				f = teamscores_flags[i];
 				l = teamscores_label[i];
@@ -636,7 +636,7 @@ string GetTeamScoreString(float tm, float shortString)
 			}
 		if(shortString < 2)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 			{
 				f = teamscores_flags[i];
 				l = teamscores_label[i];
@@ -644,8 +644,8 @@ string GetTeamScoreString(float tm, float shortString)
 			}
 		if(shortString < 1)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_PRIMARY)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_SECONDARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 			{
 				f = teamscores_flags[i];
 				l = teamscores_label[i];
@@ -656,16 +656,16 @@ string GetTeamScoreString(float tm, float shortString)
 	else if((sk = teamscorekeepers[tm - 1]))
 	{
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_PRIMARY)
 				out = strcat(out, ftos(sk.(teamscores[i])), ",");
 		if(shortString < 2)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) == SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(teamscores[i])), ",");
 		if(shortString < 1)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_PRIMARY)
-			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_SECONDARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_PRIMARY)
+			if((teamscores_flags[i] & SFL_SORT_PRIO_MASK) != SFL_SORT_PRIO_SECONDARY)
 				out = strcat(out, ftos(sk.(teamscores[i])), ",");
 		out = substring(out, 0, strlen(out) - 1);
 	}
@@ -688,7 +688,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 		if(teams < 0)
 			return 0;
 	}
-	
+
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
 
@@ -712,7 +712,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		plist = p;
 	}
 	// Now plist points to the whole list.
-	
+
 	pfirst = plast = world;
 
 	i = j = 0;
@@ -742,7 +742,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 		pbest.field = j;
 
-		if not(pfirst)
+		if (!pfirst)
 			pfirst = pbest;
 		if(plast)
 			plast.chain = pbest;
@@ -765,7 +765,7 @@ float TeamScore_GetCompareValue(float t)
 	}
 
 	sk = teamscorekeepers[t - 1];
-	if not(sk)
+	if (!sk)
 		return -999999999;
 	s = sk.teamscores_primary;
 	if(teamscores_flags_primary & SFL_ZERO_IS_WORST)
@@ -813,7 +813,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 		s = "Scores:";
 
 	s = strcat(s, strpad(max(0, NAMEWIDTH - strlennocol(s)), ""));
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -847,7 +847,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 			break;
 		}
 	}
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -896,12 +896,12 @@ void Score_NicePrint(entity to)
 		t = p.team;
 		p = p.chain;
 	}
-	
+
 	t = 0;
 	FOR_EACH_CLIENT(p)
-	if not(IS_PLAYER(p))
+	if (!IS_PLAYER(p))
 	{
-		if not(t)
+		if (!t)
 			Score_NicePrint_Spectators(to);
 		Score_NicePrint_Spectator(to, p);
 		t = 1;

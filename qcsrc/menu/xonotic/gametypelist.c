@@ -77,7 +77,7 @@ void XonoticGametypeList_saveCvars(entity me)
 void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
-	
+
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
@@ -91,7 +91,7 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 {
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	
+
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
 	me.realUpperMargin1 = 0.5 * (1 - me.realFontSize_y);
