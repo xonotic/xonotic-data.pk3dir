@@ -46,8 +46,9 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	// forbid impulses when not in round time
+	// allow only weapon change impulses when not in round time
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
 		return;
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
@@ -55,8 +56,8 @@ void ImpulseCommands (void)
 
     if(self.vehicle)
         if(self.vehicle.deadflag == DEAD_NO)
-            if(self.vehicle.vehicles_impusle)
-                if(self.vehicle.vehicles_impusle(imp))
+            if(self.vehicle.vehicles_impulse)
+                if(self.vehicle.vehicles_impulse(imp))
                     return;
 
 	if(CheatImpulse(imp))

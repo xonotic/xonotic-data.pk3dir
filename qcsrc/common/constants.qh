@@ -182,6 +182,9 @@ const float STAT_ROUNDSTARTTIME = 73;
 const float STAT_WEAPONS2 = 74;
 const float STAT_WEAPONS3 = 75;
 
+const float STAT_MONSTERS_TOTAL = 76;
+const float STAT_MONSTERS_KILLED = 77;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
@@ -353,6 +356,9 @@ const float PROJECTILE_WAKICANNON = 29;
 
 const float PROJECTILE_BUMBLE_GUN = 30;
 const float PROJECTILE_BUMBLE_BEAM = 31;
+
+const float PROJECTILE_MAGE_SPIKE = 32;
+const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
 const float PROJECTILE_NADE_RED = 50;
 const float PROJECTILE_NADE_RED_BURN = 51;

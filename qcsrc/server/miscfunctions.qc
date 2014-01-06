@@ -99,6 +99,8 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
 
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)

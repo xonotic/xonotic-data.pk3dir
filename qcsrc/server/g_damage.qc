@@ -683,7 +683,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
-        frag_deathtype = deathtype;
+		frag_deathtype = deathtype;
 		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
@@ -732,7 +732,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER)
 			{
 				if(DIFF_TEAM(victim, attacker))
 				{

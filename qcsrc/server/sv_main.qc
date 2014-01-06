@@ -10,6 +10,7 @@ void CreatureFrame (void)
 
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
 		float projectile = (self.flags & FL_PROJECTILE);
+		float monster = (self.flags & FL_MONSTER);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -19,7 +20,7 @@ void CreatureFrame (void)
 				self.dmgtime = 0;
 			}
 
-			if(!vehic && !projectile) // vehicles and projectiles don't drown
+			if(!vehic && !projectile && !monster) // vehicles, monsters and projectiles don't drown
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{

@@ -62,10 +62,8 @@ const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 #define VHSF_NORMAL 0
 #define VHSF_FACTORY 2
 .void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
-.float(float _imp) vehicles_impusle;
+.float(float _imp) vehicles_impulse;
 .float vehicle_weapon2mode = volly_counter;
-
-//§ .void() vehicle_factory()
 
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
