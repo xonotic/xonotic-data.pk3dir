@@ -4393,6 +4393,477 @@ void HUD_CenterPrint (void)
 	}
 }
 
+// QuickMenu (#17)
+//
+// QUICKMENU_MAXLINES must be <= 10
+#define QUICKMENU_MAXLINES 10
+#define QUICKMENU_MAXENTRIES 256
+string QuickMenu_Command[QUICKMENU_MAXLINES];
+string QuickMenu_Description[QUICKMENU_MAXLINES];
+float QuickMenu_CurrentPage;
+float QuickMenu_IsLastPage;
+var float QuickMenu_Buffer = -1;
+float QuickMenu_Buffer_Size;
+float QuickMenu_Buffer_Index;
+string QuickMenu_CurrentSubMenu;
+float QuickMenu_CurrentPage_FirstEntry;
+var float QuickMenu_Entries;
+void HUD_QuickMenu_load_entry(float i, string s, string s1)
+{
+	//print(sprintf("^xc80 entry %d: %s, %s\n", i, s, s1));
+	if (QuickMenu_Description[i])
+		strunzone(QuickMenu_Description[i]);
+	QuickMenu_Description[i] = strzone(s);
+	if (QuickMenu_Command[i])
+		strunzone(QuickMenu_Command[i]);
+	QuickMenu_Command[i] = strzone(s1);
+}
+void HUD_QuickMenu_clear_entry(float i)
+{
+	if (QuickMenu_Description[i])
+		strunzone(QuickMenu_Description[i]);
+	QuickMenu_Description[i] = string_null;
+	if (QuickMenu_Command[i])
+		strunzone(QuickMenu_Command[i]);
+	QuickMenu_Command[i] = string_null;
+}
+
+float HUD_QuickMenu_Buffer_Init()
+{
+	float fh, i;
+	string s;
+	fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+	if(fh < 0)
+	{
+		print(sprintf(_("Error: Couldn't open file %s!\n"), autocvar_hud_panel_quickmenu_file));
+		return false;
+	}
+
+	QuickMenu_Buffer = buf_create();
+	if (QuickMenu_Buffer < 0)
+	{
+		fclose(fh);
+		return false;
+	}
+
+	i = 0;
+	while((s = fgets(fh)) && i < QUICKMENU_MAXENTRIES)
+	{
+		// first skip invalid entries, so we don't check them anymore
+		float argc;
+		argc = tokenize_console(s);
+		if(argc == 0 || argc > 2)
+			continue;
+
+		bufstr_set(QuickMenu_Buffer, i, s);
+		++i;
+	}
+	QuickMenu_Buffer_Size = i;
+
+	if (QuickMenu_Buffer_Size <= 0)
+	{
+		buf_del(QuickMenu_Buffer);
+		QuickMenu_Buffer = -1;
+	}
+	fclose(fh);
+	return true;
+}
+
+void HUD_QuickMenu_Buffer_Close()
+{
+	if (QuickMenu_Buffer >= 0)
+	{
+		buf_del(QuickMenu_Buffer);
+		QuickMenu_Buffer = -1;
+		QuickMenu_Buffer_Size = 0;
+	}
+}
+
+void HUD_QuickMenu_Close()
+{
+	if (QuickMenu_CurrentSubMenu)
+		strunzone(QuickMenu_CurrentSubMenu);
+	QuickMenu_CurrentSubMenu = string_null;
+	float i;
+	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
+		HUD_QuickMenu_clear_entry(i);
+	QuickMenu_Entries = 0;
+	hud_panel_quickmenu = 0;
+	mouseClicked = 0;
+	prevMouseClicked = 0;
+	HUD_QuickMenu_Buffer_Close();
+
+	if(autocvar_hud_cursormode)
+	if(!mv_active)
+		setcursormode(0);
+}
+
+// It assumes submenu open tag is already detected
+void HUD_QuickMenu_skip_submenu(string submenu)
+{
+	string s, z_submenu;
+	z_submenu = strzone(submenu);
+	for(++QuickMenu_Buffer_Index ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+	{
+		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+		float argc;
+		argc = tokenize_console(s);
+		if(argc == 2)
+			continue;
+		if (argv(0) == "")
+			continue;
+		if (argv(0) == z_submenu) // submenu end
+			break;
+		HUD_QuickMenu_skip_submenu(argv(0));
+	}
+	strunzone(z_submenu);
+}
+
+float HUD_QuickMenu_IsOpened()
+{
+	return (QuickMenu_Entries > 0);
+}
+
+// new_page 0 means page 0, new_page != 0 means next page
+float QuickMenu_Buffer_Index_Prev;
+float HUD_QuickMenu_Page(string target_submenu, float new_page)
+{
+	string s, z_submenu;
+
+	if (new_page == 0)
+		QuickMenu_CurrentPage = 0;
+	else
+		++QuickMenu_CurrentPage;
+	QuickMenu_CurrentPage_FirstEntry = QuickMenu_CurrentPage * (QUICKMENU_MAXLINES - 2);
+
+	z_submenu = strzone(target_submenu);
+	if (QuickMenu_CurrentSubMenu)
+		strunzone(QuickMenu_CurrentSubMenu);
+	QuickMenu_CurrentSubMenu = strzone(z_submenu);
+
+	QuickMenu_IsLastPage = TRUE;
+	QuickMenu_Entries = 0;
+
+	QuickMenu_Buffer_Index = 0;
+	if (z_submenu != "")
+	{
+		// skip everything until the submenu open tag is found
+		for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+		{
+			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+			if (tokenize_console(s) == 1 && argv(0) == z_submenu)
+			{
+				// print(sprintf("^3 beginning of %s\n", z_submenu));
+				++QuickMenu_Buffer_Index;
+				break;
+			}
+			// print(sprintf("^1 skipping %s\n", s));
+		}
+	}
+	float total = 0;
+	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+	{
+		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+		float argc;
+		argc = tokenize_console(s);
+
+		if (z_submenu != "" && z_submenu == argv(0))
+		{
+			// print(sprintf("^3 end of %s\n", z_submenu));
+			break;
+		}
+
+		if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		{
+			++QuickMenu_Entries;
+			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
+				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
+			else if(QuickMenu_Entries == QUICKMENU_MAXLINES)
+			{
+				HUD_QuickMenu_clear_entry(QUICKMENU_MAXLINES - 1);
+				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
+				QuickMenu_IsLastPage = FALSE;
+				break;
+			}
+		}
+
+		// NOTE: entries are loaded starting from 1, not from 0
+		if (argc == 1 && argv(0) != "") // submenu
+		{
+			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, argv(0), "");
+			HUD_QuickMenu_skip_submenu(argv(0));
+		}
+		else if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, argv(0), argv(1));
+
+		++total;
+	}
+	strunzone(z_submenu);
+	if (QuickMenu_Entries == 0)
+	{
+		HUD_QuickMenu_Close();
+		return 0;
+	}
+	return 1;
+}
+
+void HUD_QuickMenu_Open()
+{
+	if(!HUD_QuickMenu_Buffer_Init()) return;
+
+	hud_panel_quickmenu = 1;
+	if(autocvar_hud_cursormode)
+		setcursormode(1);
+	hudShiftState = 0;
+
+	HUD_QuickMenu_Page("", 0);
+}
+
+float HUD_QuickMenu_ActionForNumber(float num)
+{
+	if (!QuickMenu_IsLastPage)
+	{
+		if (num < 0 || num >= QUICKMENU_MAXLINES)
+			return 0;
+		if (num == QUICKMENU_MAXLINES - 1)
+			return 0;
+		if (num == 0)
+		{
+			HUD_QuickMenu_Page(QuickMenu_CurrentSubMenu, +1);
+			return 0;
+		}
+	} else if (num <= 0 || num > QuickMenu_Entries)
+		return 0;
+
+	if (QuickMenu_Command[num] != "")
+	{
+		localcmd(strcat("\n", QuickMenu_Command[num], "\n"));
+		return 1;
+	}
+	if (QuickMenu_Description[num] != "")
+		HUD_QuickMenu_Page(QuickMenu_Description[num], 0);
+	return 0;
+}
+
+float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	// we only care for keyboard events
+	if(bInputType == 2)
+		return false;
+
+	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	// allow console bind to work
+	string con_keys;
+	float keys;
+	con_keys = findkeysforcommand("toggleconsole", 0);
+	keys = tokenize(con_keys); // findkeysforcommand returns data for this
+
+	float hit_con_bind = 0, i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			hit_con_bind = 1;
+	}
+
+	if(bInputType == 0) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else if(bInputType == 1) {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
+	if(nPrimary == K_ESCAPE)
+	{
+		if (bInputType == 1)
+			return true;
+		HUD_QuickMenu_Close();
+	}
+	else if(nPrimary >= '0' && nPrimary <= '9')
+	{
+		if (bInputType == 1)
+			return true;
+		HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
+	}
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if(hit_con_bind)
+		return false;
+
+	return true;
+}
+void HUD_QuickMenu_Mouse()
+{
+	if(mv_active) return;
+
+	if(!mouseClicked)
+	if(prevMouseClicked & S_MOUSE2)
+	{
+		HUD_QuickMenu_Close();
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars()
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float first_entry_pos, entries_height;
+	vector fontsize;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y);
+
+	if (mousepos_x >= panel_pos_x && mousepos_y >= first_entry_pos && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= first_entry_pos + entries_height)
+	{
+		float entry_num;
+		entry_num = floor((mousepos_y - first_entry_pos) / fontsize_y);
+		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
+		{
+			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
+			vector color;
+			if(mouseClicked & S_MOUSE1)
+				color = '0.5 1 0.5';
+			else if(hudShiftState & S_CTRL)
+				color = '1 1 0.3';
+			else
+				color = '1 1 1';
+			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
+
+			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
+			{
+				float f;
+				if (entry_num < QUICKMENU_MAXLINES - 1)
+					f = HUD_QuickMenu_ActionForNumber(entry_num + 1);
+				else
+					f = HUD_QuickMenu_ActionForNumber(0);
+				if(f && !(hudShiftState & S_CTRL))
+					HUD_QuickMenu_Close();
+			}
+		}
+	}
+
+	const vector cursorsize = '32 32 0';
+	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+
+	prevMouseClicked = mouseClicked;
+}
+void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
+{
+	string entry;
+	float offset;
+	entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	if (autocvar_hud_panel_quickmenu_align > 0)
+	{
+		offset = (panel_size_x - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+	}
+	else
+		drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+}
+void HUD_QuickMenu(void)
+{
+	if(!autocvar__hud_configure)
+	{
+		if (hud_configure_prev && hud_configure_prev != -1)
+			HUD_QuickMenu_Close();
+
+		if(!hud_draw_maximized) return;
+		if(mv_active) return;
+		//if(!autocvar_hud_panel_quickmenu) return; // autocvar exists only for conformity with other panels
+		if(!hud_panel_quickmenu) return;
+	}
+	else
+	{
+		if(!HUD_QuickMenu_IsOpened())
+		{
+			QuickMenu_Entries = 1;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			// although real command doesn't matter here, it must not be empty
+			// otherwise the entry is displayed like a submenu
+			for (; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "-");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+			QuickMenu_IsLastPage = FALSE;
+		}
+	}
+
+	HUD_Panel_UpdateCvars();
+	HUD_Panel_ApplyFadeAlpha();
+
+	HUD_Panel_DrawBg(1);
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float i;
+	vector fontsize;
+	string color;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+
+	if (!QuickMenu_IsLastPage)
+	{
+		color = "^5";
+		HUD_QuickMenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
+	}
+	else
+		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+
+	for (i = 1; i <= QuickMenu_Entries; ++i) {
+		if (QuickMenu_Description[i] == "")
+			break;
+		if (QuickMenu_Command[i] == "")
+			color = "^4";
+		else
+			color = "^3";
+		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Description[i]), fontsize);
+		panel_pos_y += fontsize_y;
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -4572,6 +5043,8 @@ void HUD_Main (void)
 		(panel = HUD_PANEL(RADAR)).panel_draw();
 	if(autocvar__con_chat_maximized)
 		(panel = HUD_PANEL(CHAT)).panel_draw();
+	if(hud_panel_quickmenu)
+		(panel = HUD_PANEL(QUICKMENU)).panel_draw();
 
 	if(autocvar__hud_configure)
 	{

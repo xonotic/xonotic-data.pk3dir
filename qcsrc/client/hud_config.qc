@@ -188,6 +188,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
 					break;
+				case HUD_PANEL_QUICKMENU:
+					HUD_Write_PanelCvar_q("_align");
+					break;
 			}
 			HUD_Write("\n");
 		}
