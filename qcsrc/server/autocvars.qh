@@ -336,7 +336,6 @@ float autocvar_g_balance_health_regenstable;
 float autocvar_g_balance_health_rot;
 float autocvar_g_balance_health_rotlinear;
 float autocvar_g_balance_health_rotstable;
-float autocvar_g_balance_health_start;
 float autocvar_g_balance_hlac_primary_ammo;
 float autocvar_g_balance_hlac_primary_animtime;
 float autocvar_g_balance_hlac_primary_damage;
@@ -695,6 +694,7 @@ float autocvar_g_ca_round_timelimit;
 float autocvar_g_ca_spectate_enemies;
 float autocvar_g_ca_teams;
 float autocvar_g_ca_teams_override;
+float autocvar_g_ca_team_spawns;
 float autocvar_g_ca_warmup;
 float autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
@@ -813,6 +813,7 @@ float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
 float autocvar_g_freezetag_teams;
 float autocvar_g_freezetag_teams_override;
+float autocvar_g_freezetag_team_spawns;
 float autocvar_g_freezetag_warmup;
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
