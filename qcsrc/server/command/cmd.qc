@@ -286,7 +286,6 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
-			else if(tospawn == "") { sprint(self, "No argument specified.\n"); }
 			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
@@ -294,21 +293,37 @@ void ClientCommand_mobspawn(float request, float argc)
 			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); }
 			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
-			else // all worked out, so continue
+			else if(tospawn != "")
 			{
-				self.monstercount += 1;
-				totalspawned += 1;
-			
-				makevectors(self.v_angle);
-				WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
-				//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
-			
-				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
+				float found = 0, i;
+				entity mon;
 				
-				sprint(self, strcat("Spawned ", e.monster_name, "\n"));
+				for(i = MON_FIRST; i <= MON_LAST; ++i)
+				{
+					mon = get_monsterinfo(i);
+					if(mon.netname == tospawn)
+					{
+						found = TRUE;
+						break;
+					}
+				}
+
+				if(found)
+				{
+					self.monstercount += 1;
+					totalspawned += 1;
+				
+					makevectors(self.v_angle);
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
+				
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
+					
+					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
+					
+					return;
+				}
 			}
-			
-			return;
 		}
 	
 		default:
@@ -316,7 +331,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
-			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
+			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
 			sprint(self, "  Argument 'random' spawns a random monster.\n");
 			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
 			return;
