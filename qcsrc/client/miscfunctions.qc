@@ -612,7 +612,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf("Received HTTP request data for an invalid id %d.\n", id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 

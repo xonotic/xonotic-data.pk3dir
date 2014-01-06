@@ -400,6 +400,9 @@ void PutClientInServer (void)
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELESE);
+
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
@@ -2620,7 +2623,7 @@ void PlayerPostThink (void)
 
 	/*
 	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
+		dprintf("%f %.6f\n", time, race_GetFractionalLapCount(self));
 	*/
 
 	CSQCMODEL_AUTOUPDATE();

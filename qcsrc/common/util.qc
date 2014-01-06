@@ -874,7 +874,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -911,7 +911,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
