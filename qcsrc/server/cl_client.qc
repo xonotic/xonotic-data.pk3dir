@@ -2429,6 +2429,7 @@ void PlayerPreThink (void)
 		SpectatorThink();
 	}
 
+	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
 		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
 

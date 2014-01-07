@@ -138,13 +138,6 @@ void player_anim (void)
 	}
 }
 
-void SpawnThrownWeapon (vector org, float w)
-{
-	if(self.weapons & WepSet_FromWeapon(self.weapon))
-		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
-}
-
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	float take, save;

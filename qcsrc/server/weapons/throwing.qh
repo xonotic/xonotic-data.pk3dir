@@ -8,3 +8,5 @@ float W_IsWeaponThrowable(float w);
 
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce);
+
+void SpawnThrownWeapon(vector org, float w);

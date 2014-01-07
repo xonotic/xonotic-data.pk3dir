@@ -177,3 +177,10 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
+
+void SpawnThrownWeapon(vector org, float w)
+{
+	if(self.weapons & WepSet_FromWeapon(self.weapon))
+		if(W_IsWeaponThrowable(self.weapon))
+			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+}
