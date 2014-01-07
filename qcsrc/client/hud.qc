@@ -568,7 +568,7 @@ void HUD_Weapons(void)
 		weapon_size_y = old_panel_size_y / rows;
 
 		// change table values to include only the owned weapons
-		// weapon_size won't be changed
+		float columns_save = columns;
 		if(weapon_count <= rows)
 		{
 			rows = weapon_count;
@@ -576,6 +576,10 @@ void HUD_Weapons(void)
 		}
 		else
 			columns = ceil(weapon_count / rows);
+
+		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
+		if(columns < columns_save)
+			weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
 
 		// reduce size of the panel
 		panel_size_x = columns * weapon_size_x;
