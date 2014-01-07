@@ -33,11 +33,10 @@ const float WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill mes
 const float WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
 const float WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
 const float WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
-const float WR_SWITCHABLE     = 12; // (CLIENT) decides whether the player is able to switch away from this weapon
-const float WR_PLAYERDEATH    = 13; // (SERVER) called whenever a player dies
-const float WR_GONETHINK      = 14; // (SERVER) logic to run when weapon is lost/switched away from
-const float WR_CONFIG         = 15; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
-const float WR_ZOOMRETICLE    = 16; // (CLIENT) weapon specific zoom reticle
+const float WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
+const float WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
+const float WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
+const float WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
 
 // variables:
 string weaponorder_byid;
