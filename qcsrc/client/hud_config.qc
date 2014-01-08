@@ -661,7 +661,11 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	// block any input while a menu dialog is fading
 	// don't block mousepos read as it leads to cursor jumps in the interaction with the menu
 	if(autocvar__menu_alpha)
+	{
+		hudShiftState = 0;
+		mouseClicked = 0;
 		return true;
+	}
 
 	// allow console bind to work
 	string con_keys;
