@@ -426,7 +426,7 @@ void GrapplingHookFrame()
 			RemoveGrapplingHook(self);
 		FireGrapplingHook();
 		self.hook_state &= ~HOOK_FIRING;
-		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
+		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
