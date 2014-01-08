@@ -46,7 +46,7 @@ void ArcInit();
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_arc() { weapon_defaultspawnfunc(WEP_ARC); }
+void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
 
 float W_Arc_Beam_Send(entity to, float sf)
 {
@@ -75,19 +75,22 @@ float W_Arc_Beam_Send(entity to, float sf)
 	return TRUE;
 }
 
-void W_Arc_Beam_Think()
+void W_Arc_Beam_Think(void)
 {
+	print("W_Arc_Beam_Think();\n");
 	self.owner.lg_fire_prev = time;
 	if (self != self.owner.arc_beam)
 	{
 		remove(self);
+		print("W_Arc_Beam_Think(): EXPIRING BEAM #1\n");
 		return;
 	}
-	if (self.owner.weaponentity.state != WS_INUSE || (self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if ((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam)
 			self.owner.arc_beam = world;
 		remove(self);
+		print("W_Arc_Beam_Think(): EXPIRING BEAM #2\n");
 		return;
 	}
 
@@ -136,8 +139,9 @@ void W_Arc_Beam_Think()
 }
 
 // Attack functions ========================= 
-void W_Arc_Attack1 (void)
+void W_Arc_Beam(void)
 {
+	print("W_Arc_Beam();\n");
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.lg_fire_prev > 0.5)
 		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
@@ -202,7 +206,7 @@ float W_Arc(float req)
 		}
 		case WR_THINK:
 		{
-			if (self.BUTTON_ATCK)
+			if(self.BUTTON_ATCK)
 			{
 				if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
 					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
@@ -210,10 +214,10 @@ float W_Arc(float req)
 					else*/
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
 				
-				if (weapon_prepareattack(0, 0))
+				if(weapon_prepareattack(0, 0))
 				{
 					if ((!self.arc_beam) || wasfreed(self.arc_beam))
-						W_Arc_Attack1();
+						W_Arc_Beam();
 					
 					if(!self.BUTTON_ATCK_prev)
 					{

@@ -2474,6 +2474,7 @@ void PlayerPreThink (void)
 
 	target_voicescript_next(self);
 
+	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
 	if(!self.weapon)
 		self.clip_load = self.clip_size = 0;
