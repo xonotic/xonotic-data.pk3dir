@@ -46,9 +46,9 @@ RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_rifle (void) { weapon_defaultspawnfunc(WEP_RIFLE); }
-void spawnfunc_weapon_campingrifle (void) { spawnfunc_weapon_rifle(); }
-void spawnfunc_weapon_sniperrifle (void) { spawnfunc_weapon_rifle(); }
+void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
+void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
+void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
 void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, float deathtype, float pTracer, float pShots, string pSound)
 {
@@ -56,7 +56,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_DecreaseAmmo(pAmmo);
 
-	W_SetupShot (self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
 	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -69,16 +69,16 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 	for(i = 0; i < pShots; ++i)
 		fireBullet(w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
-	if (autocvar_g_casings >= 2)
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+	if(autocvar_g_casings >= 2)
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 }
 
-void W_Rifle_Attack()
+void W_Rifle_Attack(void)
 {
 	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
 }
 
-void W_Rifle_Attack2()
+void W_Rifle_Attack2(void)
 {
 	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
 }
@@ -87,7 +87,7 @@ void W_Rifle_Attack2()
 .float rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
-void W_Rifle_BulletHail_Continue()
+void W_Rifle_BulletHail_Continue(void)
 {
 	float r, sw, af;
 
@@ -171,24 +171,24 @@ float W_Rifle(float req)
 			else
 			{
 				self.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), self.rifle_accumulator, time);
-				if (self.BUTTON_ATCK)
-				if (weapon_prepareattack_check(0, WEP_CVAR_PRI(rifle, refire)))
-				if (time >= self.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
+				if(self.BUTTON_ATCK)
+				if(weapon_prepareattack_check(0, WEP_CVAR_PRI(rifle, refire)))
+				if(time >= self.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
 					weapon_prepareattack_do(0, WEP_CVAR_PRI(rifle, refire));
 					W_Rifle_BulletHail(WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 					self.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
 				}
-				if (self.BUTTON_ATCK2)
+				if(self.BUTTON_ATCK2)
 				{
-					if (WEP_CVAR(rifle, secondary))
+					if(WEP_CVAR(rifle, secondary))
 					{
 						if(WEP_CVAR_SEC(rifle, reload))
 							WEP_ACTION(self.weapon, WR_RELOAD);
 						else
 						{
-							if (weapon_prepareattack_check(1, WEP_CVAR_SEC(rifle, refire)))
-							if (time >= self.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
+							if(weapon_prepareattack_check(1, WEP_CVAR_SEC(rifle, refire)))
+							if(time >= self.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
 							{
 								weapon_prepareattack_do(1, WEP_CVAR_SEC(rifle, refire));
 								W_Rifle_BulletHail(WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
@@ -203,11 +203,11 @@ float W_Rifle(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_campingrifle.md3");
-			precache_model ("models/weapons/v_campingrifle.md3");
-			precache_model ("models/weapons/h_campingrifle.iqm");
-			precache_sound ("weapons/campingrifle_fire.wav");
-			precache_sound ("weapons/campingrifle_fire2.wav");
+			precache_model("models/weapons/g_campingrifle.md3");
+			precache_model("models/weapons/v_campingrifle.md3");
+			precache_model("models/weapons/h_campingrifle.iqm");
+			precache_sound("weapons/campingrifle_fire.wav");
+			precache_sound("weapons/campingrifle_fire2.wav");
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

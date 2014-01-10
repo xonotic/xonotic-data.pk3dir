@@ -56,10 +56,10 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_devastator() { weapon_defaultspawnfunc(WEP_DEVASTATOR); }
-void spawnfunc_weapon_rocketlauncher() { spawnfunc_weapon_devastator(); }
+void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR); }
+void spawnfunc_weapon_rocketlauncher(void) { spawnfunc_weapon_devastator(); }
 
-void W_Devastator_Unregister()
+void W_Devastator_Unregister(void)
 {
 	if(self.realowner && self.realowner.lastrocket == self)
 	{
@@ -68,7 +68,7 @@ void W_Devastator_Unregister()
 	}
 }
 
-void W_Devastator_Explode()
+void W_Devastator_Explode(void)
 {
 	W_Devastator_Unregister();
 
@@ -82,9 +82,9 @@ void W_Devastator_Explode()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, WEP_CVAR(devastator, damage), WEP_CVAR(devastator, edgedamage), WEP_CVAR(devastator, radius), world, world, WEP_CVAR(devastator, force), self.projectiledeathtype, other);
+	RadiusDamage(self, self.realowner, WEP_CVAR(devastator, damage), WEP_CVAR(devastator, edgedamage), WEP_CVAR(devastator, radius), world, world, WEP_CVAR(devastator, force), self.projectiledeathtype, other);
 
-	if (self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		{
@@ -93,19 +93,19 @@ void W_Devastator_Explode()
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
-	remove (self);
+	remove(self);
 }
 
-void W_Devastator_DoRemoteExplode()
+void W_Devastator_DoRemoteExplode(void)
 {
 	W_Devastator_Unregister();
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, WEP_CVAR(devastator, remote_damage), WEP_CVAR(devastator, remote_edgedamage), WEP_CVAR(devastator, remote_radius), world, world, WEP_CVAR(devastator, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage(self, self.realowner, WEP_CVAR(devastator, remote_damage), WEP_CVAR(devastator, remote_edgedamage), WEP_CVAR(devastator, remote_radius), world, world, WEP_CVAR(devastator, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if (self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		{
@@ -114,10 +114,10 @@ void W_Devastator_DoRemoteExplode()
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
-	remove (self);
+	remove(self);
 }
 
-void W_Devastator_RemoteExplode()
+void W_Devastator_RemoteExplode(void)
 {
 	if(self.realowner.deadflag == DEAD_NO)
 	if(self.realowner.lastrocket)
@@ -165,7 +165,7 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 //   normalize(thisdir + goaldir)
 //   normalize(0)
 
-void W_Devastator_Think (void)
+void W_Devastator_Think(void)
 {
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 #if 0
@@ -173,22 +173,22 @@ void W_Devastator_Think (void)
 #endif
 	float velspeed, f;
 	self.nextthink = time;
-	if (time > self.cnt)
+	if(time > self.cnt)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Devastator_Explode ();
+		W_Devastator_Explode();
 		return;
 	}
 
 	// accelerate
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
 	velspeed = WEP_CVAR(devastator, speed) * g_weaponspeedfactor - (self.velocity * v_forward);
-	if (velspeed > 0)
+	if(velspeed > 0)
 		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * g_weaponspeedfactor * frametime, velspeed);
 
 	// laser guided, or remote detonation
-	if (self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
 		if(self == self.realowner.lastrocket)
 		if(!self.realowner.rl_release)
@@ -222,7 +222,7 @@ void W_Devastator_Think (void)
 			{
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound(self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -235,7 +235,7 @@ void W_Devastator_Think (void)
 		UpdateCSQCProjectile(self);
 }
 
-void W_Devastator_Touch (void)
+void W_Devastator_Touch(void)
 {
 	if(WarpZone_Projectile_Touch())
 	{
@@ -244,32 +244,32 @@ void W_Devastator_Touch (void)
 		return;
 	}
 	W_Devastator_Unregister();
-	W_Devastator_Explode ();
+	W_Devastator_Explode();
 }
 
-void W_Devastator_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Devastator_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if (self.health <= 0)
+	if(self.health <= 0)
 		return;
 	
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
 	
-	if (self.health <= 0)
+	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Devastator_Explode);
 }
 
-void W_Devastator_Attack (void)
+void W_Devastator_Attack(void)
 {
 	entity missile;
 	entity flash;
 
 	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -293,11 +293,11 @@ void W_Devastator_Attack (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_DEVASTATOR;
-	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(devastator, speedstart), 0);
-	missile.angles = vectoangles (missile.velocity);
+	missile.angles = vectoangles(missile.velocity);
 
 	missile.touch = W_Devastator_Touch;
 	missile.think = W_Devastator_Think;
@@ -309,9 +309,9 @@ void W_Devastator_Attack (void)
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, FALSE); // because of fly sound
 
 	// muzzle flash for 1st person view
-	flash = spawn ();
-	setmodel (flash, "models/flash.md3"); // precision set below
-	SUB_SetFade (flash, time, 0.1);
+	flash = spawn();
+	setmodel(flash, "models/flash.md3"); // precision set below
+	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
 
@@ -375,24 +375,24 @@ float W_Devastator(float req)
 				enemydamage = 0;
 				targetlist = findchainfloat(bot_attack, TRUE);
 				missile = find(world, classname, "rocket");
-				while (missile)
+				while(missile)
 				{
-					if (missile.realowner != self)
+					if(missile.realowner != self)
 					{
 						missile = find(missile, classname, "rocket");
 						continue;
 					}
 					targ = targetlist;
-					while (targ)
+					while(targ)
 					{
 						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - missile.origin);
 						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
 						// count potential damage according to type of target
-						if (targ == self)
+						if(targ == self)
 							selfdamage = selfdamage + d;
-						else if (targ.team == self.team && teamplay)
+						else if(targ.team == self.team && teamplay)
 							teamdamage = teamdamage + d;
-						else if (bot_shouldattack(targ))
+						else if(bot_shouldattack(targ))
 							enemydamage = enemydamage + d;
 						targ = targ.chain;
 					}
@@ -400,27 +400,27 @@ float W_Devastator(float req)
 				}
 				float desirabledamage;
 				desirabledamage = enemydamage;
-				if (time > self.invincible_finished && time > self.spawnshieldtime)
+				if(time > self.invincible_finished && time > self.spawnshieldtime)
 					desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-				if (teamplay && self.team)
+				if(teamplay && self.team)
 					desirabledamage = desirabledamage - teamdamage;
 
 				missile = find(world, classname, "rocket");
-				while (missile)
+				while(missile)
 				{
-					if (missile.realowner != self)
+					if(missile.realowner != self)
 					{
 						missile = find(missile, classname, "rocket");
 						continue;
 					}
 					makevectors(missile.v_angle);
 					targ = targetlist;
-					if (skill > 9) // normal players only do this for the target they are tracking
+					if(skill > 9) // normal players only do this for the target they are tracking
 					{
 						targ = targetlist;
-						while (targ)
+						while(targ)
 						{
-							if (
+							if(
 								(v_forward * normalize(missile.origin - targ.origin)< 0.1)
 								&& desirabledamage > 0.1*coredamage
 							)self.BUTTON_ATCK2 = TRUE;
@@ -442,13 +442,13 @@ float W_Devastator(float req)
 				}
 				// if we would be doing at X percent of the core damage, detonate it
 				// but don't fire a new shot at the same time!
-				if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
+				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
 					self.BUTTON_ATCK2 = TRUE;
-				if ((skill > 6.5) && (selfdamage > self.health))
+				if((skill > 6.5) && (selfdamage > self.health))
 					self.BUTTON_ATCK2 = FALSE;
 				//if(self.BUTTON_ATCK2 == TRUE)
 				//	dprint(ftos(desirabledamage),"\n");
-				if (self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
+				if(self.BUTTON_ATCK2 == TRUE) self.BUTTON_ATCK = FALSE;
 			}
 			
 			return TRUE;
@@ -485,7 +485,7 @@ float W_Devastator(float req)
 						}
 					}
 					if(rockfound)
-						sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+						sound(self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 				}
 			}
 			
@@ -515,7 +515,7 @@ float W_Devastator(float req)
 		{
 			#if 0
 			// don't switch while guiding a missile
-			if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_DEVASTATOR)
+			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_DEVASTATOR)
 			{
 				ammo_amount = FALSE;
 				if(WEP_CVAR(devastator, reload_ammo))

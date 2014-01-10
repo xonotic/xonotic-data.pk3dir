@@ -38,9 +38,9 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_porto (void) { weapon_defaultspawnfunc(WEP_PORTO); }
+void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
 
-void W_Porto_Success (void)
+void W_Porto_Success(void)
 {
 	if(self.realowner == world)
 	{
@@ -53,7 +53,7 @@ void W_Porto_Success (void)
 }
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
-void W_Porto_Fail (float failhard)
+void W_Porto_Fail(float failhard)
 {
 	if(self.realowner == world)
 	{
@@ -71,7 +71,7 @@ void W_Porto_Fail (float failhard)
 
 	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPSET_PORTO))
 	{
-		setsize (self, '-16 -16 0', '16 16 32');
+		setsize(self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);
 		if(move_out_of_solid(self))
 		{
@@ -88,7 +88,7 @@ void W_Porto_Fail (float failhard)
 	remove(self);
 }
 
-void W_Porto_Remove (entity p)
+void W_Porto_Remove(entity p)
 {
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
@@ -100,7 +100,7 @@ void W_Porto_Remove (entity p)
 	}
 }
 
-void W_Porto_Think (void)
+void W_Porto_Think(void)
 {
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
@@ -109,7 +109,7 @@ void W_Porto_Think (void)
 		W_Porto_Fail(0);
 }
 
-void W_Porto_Touch (void)
+void W_Porto_Touch(void)
 {
 	vector norm;
 
@@ -231,18 +231,18 @@ void W_Porto_Touch (void)
 	}
 }
 
-void W_Porto_Attack (float type)
+void W_Porto_Attack(float type)
 {
 	entity gren;
 
-	W_SetupShot (self, FALSE, 4, "porto/fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot(self, FALSE, 4, "porto/fire.wav", CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
 	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn ();
+	gren = spawn();
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;
 	gren.playerid = self.playerid;
@@ -265,7 +265,7 @@ void W_Porto_Attack (float type)
 	else
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
 
-	gren.angles = vectoangles (gren.velocity);
+	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
 	gren.portal_id = time;
@@ -289,7 +289,7 @@ float W_Porto(float req)
 {
 	//vector v_angle_save;
 
-	if (g_nexball) { return w_nexball_weapon(req); }
+	if(g_nexball) { return w_nexball_weapon(req); }
 	
 	switch(req)
 	{
@@ -312,19 +312,19 @@ float W_Porto(float req)
 		{
 			if(WEP_CVAR(porto, secondary))
 			{
-				if (self.BUTTON_ATCK)
-				if (!self.porto_current)
-				if (!self.porto_forbidden)
-				if (weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
+				if(self.BUTTON_ATCK)
+				if(!self.porto_current)
+				if(!self.porto_forbidden)
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
-				if (self.BUTTON_ATCK2)
-				if (!self.porto_current)
-				if (!self.porto_forbidden)
-				if (weapon_prepareattack(1, WEP_CVAR_SEC(porto, refire)))
+				if(self.BUTTON_ATCK2)
+				if(!self.porto_current)
+				if(!self.porto_forbidden)
+				if(weapon_prepareattack(1, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
@@ -354,10 +354,10 @@ float W_Porto(float req)
 				if(self.porto_v_angle_held)
 					makevectors(self.porto_v_angle); // override the previously set angles
 
-				if (self.BUTTON_ATCK)
-				if (!self.porto_current)
-				if (!self.porto_forbidden)
-				if (weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
+				if(self.BUTTON_ATCK)
+				if(!self.porto_current)
+				if(!self.porto_forbidden)
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
@@ -368,16 +368,16 @@ float W_Porto(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_porto.md3");
-			precache_model ("models/weapons/v_porto.md3");
-			precache_model ("models/weapons/h_porto.iqm");
-			precache_model ("models/portal.md3");
-			precache_sound ("porto/bounce.wav");
-			precache_sound ("porto/create.wav");
-			precache_sound ("porto/expire.wav");
-			precache_sound ("porto/explode.wav");
-			precache_sound ("porto/fire.wav");
-			precache_sound ("porto/unsupported.wav");
+			precache_model("models/weapons/g_porto.md3");
+			precache_model("models/weapons/v_porto.md3");
+			precache_model("models/weapons/h_porto.iqm");
+			precache_model("models/portal.md3");
+			precache_sound("porto/bounce.wav");
+			precache_sound("porto/create.wav");
+			precache_sound("porto/expire.wav");
+			precache_sound("porto/explode.wav");
+			precache_sound("porto/fire.wav");
+			precache_sound("porto/unsupported.wav");
 			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

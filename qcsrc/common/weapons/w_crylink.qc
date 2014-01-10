@@ -63,7 +63,7 @@ CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_crylink() { weapon_defaultspawnfunc(WEP_CRYLINK); }
+void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK); }
 
 void W_Crylink_CheckLinks(entity e)
 {
@@ -112,7 +112,7 @@ void W_Crylink_Reset(void)
 }
 
 // force projectile to explode
-void W_Crylink_LinkExplode (entity e, entity e2)
+void W_Crylink_LinkExplode(entity e, entity e2)
 {
 	float a;
 
@@ -131,7 +131,7 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 	W_Crylink_LinkExplode(e.queuenext, e2);
 
 	e.classname = "spike_oktoremove";
-	remove (e);
+	remove(e);
 }
 
 // adjust towards center
@@ -222,7 +222,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 	return targ_origin;
 }
 
-void W_Crylink_LinkJoinEffect_Think()
+void W_Crylink_LinkJoinEffect_Think(void)
 {
 	// is there at least 2 projectiles very close?
 	entity e, p;
@@ -287,7 +287,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 }
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch (void)
+void W_Crylink_Touch(void)
 {
 	float finalhit;
 	float f;
@@ -313,7 +313,7 @@ void W_Crylink_Touch (void)
 			self.realowner.crylink_lastgroup = world;
 		W_Crylink_LinkExplode(self.queuenext, self);
 		self.classname = "spike_oktoremove";
-		remove (self);
+		remove(self);
 		return;
 	}
 	else if(finalhit)
@@ -332,13 +332,13 @@ void W_Crylink_Touch (void)
 	//	CSQCProjectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
-void W_Crylink_Fadethink (void)
+void W_Crylink_Fadethink(void)
 {
 	W_Crylink_Dequeue(self);
 	remove(self);
 }
 
-void W_Crylink_Attack (void)
+void W_Crylink_Attack(void)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -353,7 +353,7 @@ void W_Crylink_Attack (void)
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -363,7 +363,7 @@ void W_Crylink_Attack (void)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn ();
+		proj = spawn();
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
@@ -394,12 +394,12 @@ void W_Crylink_Attack (void)
 		proj.projectiledeathtype = WEP_CRYLINK;
 		//proj.gravity = 0.001;
 
-		setorigin (proj, w_shotorg);
+		setorigin(proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
 
 		s = '0 0 0';
-		if (counter == 0)
+		if(counter == 0)
 			s = '0 0 0';
 		else
 		{
@@ -428,7 +428,7 @@ void W_Crylink_Attack (void)
 		proj.cnt = WEP_CVAR_PRI(crylink, bounces);
 		//proj.scale = 1 + 1 * proj.cnt;
 
-		proj.angles = vectoangles (proj.velocity);
+		proj.angles = vectoangles(proj.velocity);
 
 		//proj.glow_size = 20;
 
@@ -447,7 +447,7 @@ void W_Crylink_Attack (void)
 	}
 }
 
-void W_Crylink_Attack2 (void)
+void W_Crylink_Attack2(void)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -462,7 +462,7 @@ void W_Crylink_Attack2 (void)
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -472,7 +472,7 @@ void W_Crylink_Attack2 (void)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn ();
+		proj = spawn();
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
@@ -503,13 +503,13 @@ void W_Crylink_Attack2 (void)
 		proj.projectiledeathtype = WEP_CRYLINK | HITTYPE_SECONDARY;
 		//proj.gravity = 0.001;
 
-		setorigin (proj, w_shotorg);
+		setorigin(proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
 		if(WEP_CVAR_SEC(crylink, spreadtype) == 1)
 		{
 			s = '0 0 0';
-			if (counter == 0)
+			if(counter == 0)
 				s = '0 0 0';
 			else
 			{
@@ -544,7 +544,7 @@ void W_Crylink_Attack2 (void)
 		proj.cnt = WEP_CVAR_SEC(crylink, bounces);
 		//proj.scale = 1 + 1 * proj.cnt;
 
-		proj.angles = vectoangles (proj.velocity);
+		proj.angles = vectoangles(proj.velocity);
 
 		//proj.glow_size = 20;
 
@@ -570,7 +570,7 @@ float W_Crylink(float req)
 	{
 		case WR_AIM:
 		{
-			if (random() < 0.10)
+			if(random() < 0.10)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), FALSE);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), FALSE);
@@ -582,10 +582,10 @@ float W_Crylink(float req)
 			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
 
-			if (self.BUTTON_ATCK)
+			if(self.BUTTON_ATCK)
 			{
-				if (self.crylink_waitrelease != 1)
-				if (weapon_prepareattack(0, WEP_CVAR_PRI(crylink, refire)))
+				if(self.crylink_waitrelease != 1)
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(crylink, refire)))
 				{
 					W_Crylink_Attack();
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
@@ -594,17 +594,17 @@ float W_Crylink(float req)
 
 			if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
 			{
-				if (self.crylink_waitrelease != 2)
-				if (weapon_prepareattack(1, WEP_CVAR_SEC(crylink, refire)))
+				if(self.crylink_waitrelease != 2)
+				if(weapon_prepareattack(1, WEP_CVAR_SEC(crylink, refire)))
 				{
 					W_Crylink_Attack2();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
 				}
 			}
 
-			if ((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
+			if((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
 			{
-				if (!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
+				if(!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
 				{
 					// fired and released now!
 					if(self.crylink_lastgroup)
@@ -637,12 +637,12 @@ float W_Crylink(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_crylink.md3");
-			precache_model ("models/weapons/v_crylink.md3");
-			precache_model ("models/weapons/h_crylink.iqm");
-			precache_sound ("weapons/crylink_fire.wav");
-			precache_sound ("weapons/crylink_fire2.wav");
-			precache_sound ("weapons/crylink_linkjoin.wav");
+			precache_model("models/weapons/g_crylink.md3");
+			precache_model("models/weapons/v_crylink.md3");
+			precache_model("models/weapons/h_crylink.iqm");
+			precache_sound("weapons/crylink_fire.wav");
+			precache_sound("weapons/crylink_fire2.wav");
+			precache_sound("weapons/crylink_linkjoin.wav");
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

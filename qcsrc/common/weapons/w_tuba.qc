@@ -45,7 +45,7 @@ TUBA_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_tuba (void) { weapon_defaultspawnfunc(WEP_TUBA); }
+void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA); }
 
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
 {
@@ -138,7 +138,7 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 	return TRUE;
 }
 
-void W_Tuba_NoteOff()
+void W_Tuba_NoteOff(void)
 {
 	// we have a note:
 	//   on: self.spawnshieldtime
@@ -273,7 +273,7 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 	return TRUE;
 }
 
-void W_Tuba_NoteThink()
+void W_Tuba_NoteThink(void)
 {
 	float dist_mult;
 	float vol0, vol1;
@@ -337,7 +337,7 @@ void W_Tuba_NoteOn(float hittype)
 		}
 	}
 
-	if (!self.tuba_note)
+	if(!self.tuba_note)
 	{
 		self.tuba_note = spawn();
 		self.tuba_note.owner = self.tuba_note.realowner = self;
@@ -382,15 +382,15 @@ float W_Tuba(float req)
 		}
 		case WR_THINK:
 		{
-			if (self.BUTTON_ATCK)
-			if (weapon_prepareattack(0, WEP_CVAR(tuba, refire)))
+			if(self.BUTTON_ATCK)
+			if(weapon_prepareattack(0, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
 				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
-			if (self.BUTTON_ATCK2)
-			if (weapon_prepareattack(1, WEP_CVAR(tuba, refire)))
+			if(self.BUTTON_ATCK2)
+			if(weapon_prepareattack(1, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
 				//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
@@ -411,13 +411,13 @@ float W_Tuba(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_tuba.md3");
-			precache_model ("models/weapons/v_tuba.md3");
-			precache_model ("models/weapons/h_tuba.iqm");
-			precache_model ("models/weapons/v_akordeon.md3");
-			precache_model ("models/weapons/h_akordeon.iqm");
-			precache_model ("models/weapons/v_kleinbottle.md3");
-			precache_model ("models/weapons/h_kleinbottle.iqm");
+			precache_model("models/weapons/g_tuba.md3");
+			precache_model("models/weapons/v_tuba.md3");
+			precache_model("models/weapons/h_tuba.iqm");
+			precache_model("models/weapons/v_akordeon.md3");
+			precache_model("models/weapons/h_akordeon.iqm");
+			precache_model("models/weapons/v_kleinbottle.md3");
+			precache_model("models/weapons/h_kleinbottle.iqm");
 			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

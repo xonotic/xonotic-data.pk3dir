@@ -48,19 +48,19 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_vaporizer (void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
-void spawnfunc_weapon_minstanex () { spawnfunc_weapon_vaporizer(); }
+void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
+void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
-void W_Vaporizer_Attack (void)
+void W_Vaporizer_Attack(void)
 {
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, 10000);
+	W_SetupShot(self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, 10000);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -140,18 +140,18 @@ float W_Vaporizer(float req)
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if (self.BUTTON_ATCK)
+			else if(self.BUTTON_ATCK)
 			{
-				if (weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 				{
 					W_Vaporizer_Attack();
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
-			else if (self.BUTTON_ATCK2)
+			else if(self.BUTTON_ATCK2)
 			{
-				if (self.jump_interval <= time)
-				if (weapon_prepareattack(1, -1))
+				if(self.jump_interval <= time)
+				if(weapon_prepareattack(1, -1))
 				{
 					// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
 					self.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();

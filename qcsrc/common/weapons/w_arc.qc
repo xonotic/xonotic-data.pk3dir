@@ -38,7 +38,7 @@ vector arc_shotorigin[4];
 #endif
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-void ArcInit();
+void ArcInit(void);
 .vector hook_start, hook_end; // used for beam
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
@@ -79,13 +79,13 @@ void W_Arc_Beam_Think(void)
 {
 	print("W_Arc_Beam_Think();\n");
 	self.owner.lg_fire_prev = time;
-	if (self != self.owner.arc_beam)
+	if(self != self.owner.arc_beam)
 	{
 		remove(self);
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #1\n");
 		return;
 	}
-	if ((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam)
 			self.owner.arc_beam = world;
@@ -122,7 +122,7 @@ void W_Arc_Beam_Think(void)
 
 		if(accuracy_isgooddamage(self.owner, trace_ent))
 			accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
-		Damage (trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_ARC, trace_endpos, force * dt);
+		Damage(trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_ARC, trace_endpos, force * dt);
 	}
 
 	// draw effect
@@ -144,7 +144,7 @@ void W_Arc_Beam(void)
 	print("W_Arc_Beam();\n");
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.lg_fire_prev > 0.5)
-		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
 
 	entity beam, oldself;
 
@@ -216,7 +216,7 @@ float W_Arc(float req)
 				
 				if(weapon_prepareattack(0, 0))
 				{
-					if ((!self.arc_beam) || wasfreed(self.arc_beam))
+					if((!self.arc_beam) || wasfreed(self.arc_beam))
 						W_Arc_Beam();
 					
 					if(!self.BUTTON_ATCK_prev)
@@ -228,7 +228,7 @@ float W_Arc(float req)
 			} 
 			else // todo
 			{
-				if (self.BUTTON_ATCK_prev != 0)
+				if(self.BUTTON_ATCK_prev != 0)
 				{
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
 					ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor();
@@ -236,8 +236,8 @@ float W_Arc(float req)
 				self.BUTTON_ATCK_prev = 0;
 			}
 
-			//if (self.BUTTON_ATCK2)
-				//if (weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
+			//if(self.BUTTON_ATCK2)
+				//if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
 				//{
 				//	W_Arc_Attack2();
 				//	self.arc_count = autocvar_g_balance_arc_secondary_count;
@@ -249,15 +249,15 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_arc.md3");
-			precache_model ("models/weapons/v_arc.md3");
-			precache_model ("models/weapons/h_arc.iqm");
-			//precache_sound ("weapons/arc_bounce.wav");
-			precache_sound ("weapons/arc_fire.wav");
-			precache_sound ("weapons/arc_fire2.wav");
-			precache_sound ("weapons/arc_impact.wav");
-			//precache_sound ("weapons/arc_impact_combo.wav");
-			//precache_sound ("weapons/W_Arc_Beam_fire.wav");
+			precache_model("models/weapons/g_arc.md3");
+			precache_model("models/weapons/v_arc.md3");
+			precache_model("models/weapons/h_arc.iqm");
+			//precache_sound("weapons/arc_bounce.wav");
+			precache_sound("weapons/arc_fire.wav");
+			precache_sound("weapons/arc_fire2.wav");
+			precache_sound("weapons/arc_impact.wav");
+			//precache_sound("weapons/arc_impact_combo.wav");
+			//precache_sound("weapons/W_Arc_Beam_fire.wav");
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
@@ -296,7 +296,7 @@ float W_Arc(float req)
 	return FALSE;
 }
 
-void ArcInit()
+void ArcInit(void)
 {
 	WEP_ACTION(WEP_ARC, WR_INIT);
 	arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);

@@ -72,7 +72,7 @@ SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_shockwave()
+void spawnfunc_weapon_shockwave(void)
 {
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
@@ -95,7 +95,7 @@ float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
 vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
-void W_Shockwave_Melee_Think()
+void W_Shockwave_Melee_Think(void)
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -215,7 +215,7 @@ void W_Shockwave_Melee_Think()
 	}
 }
 
-void W_Shockwave_Melee()
+void W_Shockwave_Melee(void)
 {
 	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
@@ -321,7 +321,7 @@ float W_Shockwave_Attack_CheckHit(
 	return TRUE;
 }
 
-void W_Shockwave_Attack()
+void W_Shockwave_Attack(void)
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;

@@ -47,9 +47,9 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_hlac() { weapon_defaultspawnfunc(WEP_HLAC); }
+void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC); }
 
-void W_HLAC_Touch (void)
+void W_HLAC_Touch(void)
 {
 	float isprimary;
 
@@ -61,10 +61,10 @@ void W_HLAC_Touch (void)
 	
 	RadiusDamage(self, self.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), world, world, WEP_CVAR_BOTH(hlac, isprimary, force), self.projectiledeathtype, other);
 
-	remove (self);
+	remove(self);
 }
 
-void W_HLAC_Attack (void)
+void W_HLAC_Attack(void)
 {
 	entity missile;
     float spread;
@@ -76,15 +76,15 @@ void W_HLAC_Attack (void)
     if(self.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	if (!autocvar_g_norecoil)
+	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
+		self.punchangle_x = random() - 0.5;
+		self.punchangle_y = random() - 0.5;
 	}
 
-	missile = spawn ();
+	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
@@ -94,11 +94,11 @@ void W_HLAC_Attack (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setorigin (missile, w_shotorg);
+	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(hlac, speed), spread);
-	//missile.angles = vectoangles (missile.velocity); // csqc
+	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
 	missile.think = SUB_Remove;
@@ -113,7 +113,7 @@ void W_HLAC_Attack (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_HLAC_Attack2()
+void W_HLAC_Attack2(void)
 {
 	entity missile;
     float spread;
@@ -124,10 +124,10 @@ void W_HLAC_Attack2()
     if(self.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
@@ -137,11 +137,11 @@ void W_HLAC_Attack2()
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setorigin (missile, w_shotorg);
+	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR_SEC(hlac, speed), spread);
-	//missile.angles = vectoangles (missile.velocity); // csqc
+	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
 	missile.think = SUB_Remove;
@@ -158,7 +158,7 @@ void W_HLAC_Attack2()
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame()
+void W_HLAC_Attack_Frame(void)
 {
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
@@ -166,9 +166,9 @@ void W_HLAC_Attack_Frame()
 		return;
 	}
 
-	if (self.BUTTON_ATCK)
+	if(self.BUTTON_ATCK)
 	{
-		if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+		if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -187,7 +187,7 @@ void W_HLAC_Attack_Frame()
 	}
 }
 
-void W_HLAC_Attack2_Frame()
+void W_HLAC_Attack2_Frame(void)
 {
     float i;
 
@@ -196,10 +196,10 @@ void W_HLAC_Attack2_Frame()
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2();
 
-	if (!autocvar_g_norecoil)
+	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
+		self.punchangle_x = random() - 0.5;
+		self.punchangle_y = random() - 0.5;
 	}
 }
 
@@ -217,9 +217,9 @@ float W_HLAC(float req)
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
 				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if (self.BUTTON_ATCK)
+			else if(self.BUTTON_ATCK)
 			{
-				if (weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
+				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
 				{
 					self.misc_bulletcounter = 0;
 					W_HLAC_Attack();
@@ -227,9 +227,9 @@ float W_HLAC(float req)
 				}
 			}
 
-			else if (self.BUTTON_ATCK2 && WEP_CVAR(hlac, secondary))
+			else if(self.BUTTON_ATCK2 && WEP_CVAR(hlac, secondary))
 			{
-				if (weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
+				if(weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
 				{
 					W_HLAC_Attack2_Frame();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
@@ -240,10 +240,10 @@ float W_HLAC(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_hlac.md3");
-			precache_model ("models/weapons/v_hlac.md3");
-			precache_model ("models/weapons/h_hlac.iqm");
-			precache_sound ("weapons/lasergun_fire.wav");
+			precache_model("models/weapons/g_hlac.md3");
+			precache_model("models/weapons/v_hlac.md3");
+			precache_model("models/weapons/h_hlac.iqm");
+			precache_sound("weapons/lasergun_fire.wav");
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

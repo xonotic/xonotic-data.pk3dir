@@ -56,8 +56,8 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_vortex() { weapon_defaultspawnfunc(WEP_VORTEX); }
-void spawnfunc_weapon_nex() { spawnfunc_weapon_vortex(); }
+void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX); }
+void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }
 
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;

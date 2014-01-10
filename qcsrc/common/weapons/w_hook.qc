@@ -58,7 +58,7 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #else
 #ifdef SVQC
 
-void spawnfunc_weapon_hook()
+void spawnfunc_weapon_hook(void)
 {
 	if(g_grappling_hook) // offhand hook
 	{
@@ -69,7 +69,7 @@ void spawnfunc_weapon_hook()
 	weapon_defaultspawnfunc(WEP_HOOK);
 }
 
-void W_Hook_ExplodeThink (void)
+void W_Hook_ExplodeThink(void)
 {
 	float dt, dmg_remaining_next, f;
 
@@ -79,9 +79,9 @@ void W_Hook_ExplodeThink (void)
 	f = self.dmg_last - dmg_remaining_next;
 	self.dmg_last = dmg_remaining_next;
 
-	RadiusDamage (self, self.realowner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.realowner, world, self.dmg_force * f, self.projectiledeathtype, world);
+	RadiusDamage(self, self.realowner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.realowner, world, self.dmg_force * f, self.projectiledeathtype, world);
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	//RadiusDamage (self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, world, self.dmg_force * f, self.projectiledeathtype, world);
+	//RadiusDamage(self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, world, self.dmg_force * f, self.projectiledeathtype, world);
 
 	if(dt < self.dmg_duration)
 		self.nextthink = time + 0.05; // soon
@@ -89,7 +89,7 @@ void W_Hook_ExplodeThink (void)
 		remove(self);
 }
 
-void W_Hook_Explode2 (void)
+void W_Hook_Explode2(void)
 {
 	self.event_damage = func_null;
 	self.touch = func_null;
@@ -108,34 +108,34 @@ void W_Hook_Explode2 (void)
 	self.movetype = MOVETYPE_NONE;
 }
 
-void W_Hook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Hook_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if (self.health <= 0)
+	if(self.health <= 0)
 		return;
 		
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt	
 	
 	self.health = self.health - damage;
 	
-	if (self.health <= 0)
+	if(self.health <= 0)
 		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2 (void)
+void W_Hook_Touch2(void)
 {
 	PROJECTILE_TOUCH;
 	self.use();
 }
 
-void W_Hook_Attack2()
+void W_Hook_Attack2(void)
 {
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
-	gren = spawn ();
+	gren = spawn();
 	gren.owner = gren.realowner = self;
 	gren.classname = "hookbomb";
 	gren.bot_dodge = TRUE;
@@ -186,13 +186,13 @@ float W_Hook(float req)
 		}
 		case WR_THINK:
 		{
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if(self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 			{
 				if(!self.hook)
 				if(!(self.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(!(self.hook_state & HOOK_FIRING))
-				if (time > self.hook_refire)
-				if (weapon_prepareattack(0, -1))
+				if(time > self.hook_refire)
+				if(weapon_prepareattack(0, -1))
 				{
 					W_DecreaseAmmo(WEP_CVAR_PRI(hook, ammo));
 					self.hook_state |= HOOK_FIRING;
@@ -200,9 +200,9 @@ float W_Hook(float req)
 				}
 			}
 
-			if (self.BUTTON_ATCK2)
+			if(self.BUTTON_ATCK2)
 			{
-				if (weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
@@ -222,20 +222,20 @@ float W_Hook(float req)
 			if(self.hook && self.hook.state == 1)
 			{
 				hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);			
-				if (hooked_time_max > 0)
+				if(hooked_time_max > 0)
 				{
-					if ( time > self.hook_time_hooked + hooked_time_max )
+					if( time > self.hook_time_hooked + hooked_time_max )
 						self.hook_state |= HOOK_REMOVING;
 				}
 				
 				hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
-				if (hooked_fuel > 0)
+				if(hooked_fuel > 0)
 				{
-					if ( time > self.hook_time_fueldecrease )
+					if( time > self.hook_time_fueldecrease )
 					{
 						if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 						{
-							if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
+							if( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 							{
 								W_DecreaseAmmo((time - self.hook_time_fueldecrease) * hooked_fuel);
 								self.hook_time_fueldecrease = time;
@@ -257,10 +257,10 @@ float W_Hook(float req)
 				self.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
-			if (self.BUTTON_CROUCH)
+			if(self.BUTTON_CROUCH)
 			{
 				self.hook_state &= ~HOOK_PULLING;
-				if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+				if(self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 					self.hook_state &= ~HOOK_RELEASING;
 				else
 					self.hook_state |= HOOK_RELEASING;
@@ -270,7 +270,7 @@ float W_Hook(float req)
 				self.hook_state |= HOOK_PULLING;
 				self.hook_state &= ~HOOK_RELEASING;
 
-				if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+				if(self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 				{
 					// already fired
 					if(self.hook)
@@ -287,12 +287,12 @@ float W_Hook(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/weapons/g_hookgun.md3");
-			precache_model ("models/weapons/v_hookgun.md3");
-			precache_model ("models/weapons/h_hookgun.iqm");
-			precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
-			precache_sound ("weapons/hook_fire.wav");
-			precache_sound ("weapons/hookbomb_fire.wav");
+			precache_model("models/weapons/g_hookgun.md3");
+			precache_model("models/weapons/v_hookgun.md3");
+			precache_model("models/weapons/h_hookgun.iqm");
+			precache_sound("weapons/hook_impact.wav"); // done by g_hook.qc
+			precache_sound("weapons/hook_fire.wav");
+			precache_sound("weapons/hookbomb_fire.wav");
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

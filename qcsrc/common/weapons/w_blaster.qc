@@ -46,10 +46,10 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_blaster() { weapon_defaultspawnfunc(WEP_BLASTER); }
-void spawnfunc_weapon_laser() { spawnfunc_weapon_blaster(); }
+void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER); }
+void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }
 
-void W_Blaster_Touch()
+void W_Blaster_Touch(void)
 {
 	PROJECTILE_TOUCH;
 
@@ -71,7 +71,7 @@ void W_Blaster_Touch()
 	remove(self);
 }
 
-void W_Blaster_Think()
+void W_Blaster_Think(void)
 {
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;

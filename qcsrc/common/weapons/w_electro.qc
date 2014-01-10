@@ -66,7 +66,7 @@ void W_Electro_ExplodeCombo(void);
 #endif
 #else
 #ifdef SVQC
-void spawnfunc_weapon_electro() { weapon_defaultspawnfunc(WEP_ELECTRO); }
+void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -190,7 +190,7 @@ void W_Electro_TouchExplode(void)
 	W_Electro_Explode();
 }
 
-void W_Electro_Bolt_Think()
+void W_Electro_Bolt_Think(void)
 {
 	if(time >= self.ltime)
 	{
@@ -252,7 +252,7 @@ void W_Electro_Attack_Bolt(void)
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn ();
+	proj = spawn();
 	proj.classname = "electro_bolt";
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = TRUE;
@@ -385,7 +385,7 @@ void W_Electro_Attack_Orb(void)
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-void W_Electro_CheckAttack()
+void W_Electro_CheckAttack(void)
 {
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)

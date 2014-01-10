@@ -51,23 +51,23 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN); }
 
-void W_Shotgun_Attack (void)
+void W_Shotgun_Attack(void)
 {
 	float	sc;
 	entity flash;
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
-	for (sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
+	W_SetupShot(self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
-	if (autocvar_g_casings >= 1)
-		for (sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
-			SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
+	if(autocvar_g_casings >= 1)
+		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
+			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
 
 	// muzzle flash for 1st person view
 	flash = spawn();
@@ -80,7 +80,7 @@ void W_Shotgun_Attack (void)
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void W_Shotgun_Melee_Think()
+void W_Shotgun_Melee_Think(void)
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -176,9 +176,9 @@ void W_Shotgun_Melee_Think()
 	}
 }
 
-void W_Shotgun_Attack2 (void)
+void W_Shotgun_Attack2(void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
 	entity meleetemp;
@@ -209,14 +209,14 @@ float W_Shotgun(float req)
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
 				// don't force reload an empty shotgun if its melee attack is active
-				if (!WEP_CVAR(shotgun, secondary))
+				if(!WEP_CVAR(shotgun, secondary))
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
 			{
-				if (self.BUTTON_ATCK)
+				if(self.BUTTON_ATCK)
 				{
-					if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_PRI(shotgun, animtime)))
 						{
@@ -227,10 +227,10 @@ float W_Shotgun(float req)
 					}
 				}
 			}
-			if (self.clip_load >= 0) // we are not currently reloading
-			if (!self.crouch) // no crouchmelee please
-			if (self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary))
-			if (weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
+			if(self.clip_load >= 0) // we are not currently reloading
+			if(!self.crouch) // no crouchmelee please
+			if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary))
+			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
@@ -240,13 +240,13 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/uziflash.md3");
-			precache_model ("models/weapons/g_shotgun.md3");
-			precache_model ("models/weapons/v_shotgun.md3");
-			precache_model ("models/weapons/h_shotgun.iqm");
-			precache_sound ("misc/itempickup.wav");
-			precache_sound ("weapons/shotgun_fire.wav");
-			precache_sound ("weapons/shotgun_melee.wav");
+			precache_model("models/uziflash.md3");
+			precache_model("models/weapons/g_shotgun.md3");
+			precache_model("models/weapons/v_shotgun.md3");
+			precache_model("models/weapons/h_shotgun.iqm");
+			precache_sound("misc/itempickup.wav");
+			precache_sound("weapons/shotgun_fire.wav");
+			precache_sound("weapons/shotgun_melee.wav");
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
