@@ -80,23 +80,18 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	}
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
-	specstr = species_prefix(specnum);
-	type = DEATH_WEAPONOF(type);
-	e = get_weaponinfo(type);
 
-	effectname = strcat("damage_", e.netname);
+	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
 
-	// if damage was dealt with a bullet weapon, our effect is blood
-	// since blood is species dependent, include the species tag
-	if(type == WEP_SHOTGUN || type == WEP_MACHINEGUN || type == WEP_RIFLE) // WEAPONTODO: when we kill shells and bullets, what happens to this?
+	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
 		if(self.isplayermodel)
 		{
-			effectname = strcat(effectname, "_", specstr);
-			effectname = substring(effectname, 0, strlen(effectname) - 1); // remove the _ symbol at the end of the species tag
+			specstr = species_prefix(specnum);
+			specstr = substring(specstr, 0, strlen(specstr) - 1);
+			effectname = strreplace("BLOOD", specstr, effectname); 
 		}
-		else
-			return; // objects don't bleed
+		else { return; } // objects don't bleed
 	}
 
 	e = spawn();
