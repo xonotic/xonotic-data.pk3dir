@@ -80,6 +80,7 @@ void W_Blaster_Think(void)
 }
 
 void W_Blaster_Attack(
+	float atk_deathtype,
 	float atk_shotangle,
 	float atk_damage,
 	float atk_edgedamage,
@@ -121,16 +122,16 @@ void W_Blaster_Attack(
 		atk_spread,
 		FALSE
 	);
-	
+
 	missile.angles = vectoangles(missile.velocity);
-	
+
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 
 	missile.touch = W_Blaster_Touch;
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = WEP_BLASTER; 
+	missile.projectiledeathtype = atk_deathtype; 
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
@@ -171,6 +172,7 @@ float W_Blaster(float request)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
+						WEP_BLASTER,
 						WEP_CVAR_PRI(blaster, shotangle),
 						WEP_CVAR_PRI(blaster, damage),
 						WEP_CVAR_PRI(blaster, edgedamage),
@@ -200,6 +202,7 @@ float W_Blaster(float request)
 						if(weapon_prepareattack(1, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
+								WEP_BLASTER | HITTYPE_SECONDARY,
 								WEP_CVAR_SEC(blaster, shotangle),
 								WEP_CVAR_SEC(blaster, damage),
 								WEP_CVAR_SEC(blaster, edgedamage),

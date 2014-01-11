@@ -161,10 +161,8 @@ float W_Vaporizer(float req)
 						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
 
 					// ugly minstagib hack to reuse the fire mode of the laser
-					float w;
-					w = self.weapon;
-					self.weapon = WEP_BLASTER;
 					W_Blaster_Attack(
+						WEP_VAPORIZER | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
 						WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -175,7 +173,6 @@ float W_Vaporizer(float req)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
-					self.weapon = w;
 					
 					// now do normal refire
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
@@ -260,14 +257,21 @@ float W_Vaporizer(float req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
-				
+			if(w_deathtype & HITTYPE_SECONDARY)
+			{
+				pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+			}
+			else
+			{
+				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
+			}
 			return TRUE;
 		}
 		case WR_INIT:
 		{
+			precache_sound("weapons/laserimpact.wav");
 			precache_sound("weapons/neximpact.wav");
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
