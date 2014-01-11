@@ -73,7 +73,7 @@ void SendCSQCVortexBeamParticle(float charge) {
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 
-void W_Vortex_Attack (float issecondary)
+void W_Vortex_Attack(float issecondary)
 {
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 	
@@ -100,14 +100,14 @@ void W_Vortex_Attack (float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
+	W_SetupShot(self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound (self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
+		sound(self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
@@ -118,7 +118,7 @@ void W_Vortex_Attack (float issecondary)
 	W_DecreaseAmmo(myammo);
 }
 
-void spawnfunc_weapon_vortex (void); // defined in t_items.qc
+void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
 float W_Vortex(float req)
@@ -155,15 +155,15 @@ float W_Vortex(float req)
 				WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
-				if (self.BUTTON_ATCK)
+				if(self.BUTTON_ATCK)
 				{
-					if (weapon_prepareattack(0, WEP_CVAR_PRI(vortex, refire)))
+					if(weapon_prepareattack(0, WEP_CVAR_PRI(vortex, refire)))
 					{
 						W_Vortex_Attack(0);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
-				if ((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
+				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
 				{
 					if(WEP_CVAR(vortex, charge))
 					{
@@ -229,7 +229,7 @@ float W_Vortex(float req)
 					}
 					else if(WEP_CVAR(vortex, secondary))
 					{
-						if (weapon_prepareattack(0, WEP_CVAR_SEC(vortex, refire)))
+						if(weapon_prepareattack(0, WEP_CVAR_SEC(vortex, refire)))
 						{
 							W_Vortex_Attack(1);
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
@@ -242,15 +242,15 @@ float W_Vortex(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/nexflash.md3");
-			precache_model ("models/weapons/g_nex.md3");
-			precache_model ("models/weapons/v_nex.md3");
-			precache_model ("models/weapons/h_nex.iqm");
-			precache_sound ("weapons/nexfire.wav");
-			precache_sound ("weapons/nexcharge.wav");
-			precache_sound ("weapons/nexwhoosh1.wav");
-			precache_sound ("weapons/nexwhoosh2.wav");
-			precache_sound ("weapons/nexwhoosh3.wav");
+			precache_model("models/nexflash.md3");
+			precache_model("models/weapons/g_nex.md3");
+			precache_model("models/weapons/v_nex.md3");
+			precache_model("models/weapons/h_nex.iqm");
+			precache_sound("weapons/nexfire.wav");
+			precache_sound("weapons/nexcharge.wav");
+			precache_sound("weapons/nexwhoosh1.wav");
+			precache_sound("weapons/nexwhoosh2.wav");
+			precache_sound("weapons/nexwhoosh3.wav");
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
