@@ -20,6 +20,8 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, BOTH, ammo) \
 	w_cvar(id, sn, PRI,  animtime) \
 	w_cvar(id, sn, PRI,  damage) \
+	w_cvar(id, sn, PRI,  degreespersegment) \
+	w_cvar(id, sn, PRI,  distancepersegment) \
 	w_cvar(id, sn, PRI,  falloff_halflifedist) \
 	w_cvar(id, sn, PRI,  falloff_maxdist) \
 	w_cvar(id, sn, PRI,  falloff_mindist) \
@@ -78,7 +80,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 }
 #define ARC_DEBUG
 #ifdef ARC_DEBUG
-#define ARC_MAX_SEGMENTS 10
+#define ARC_MAX_SEGMENTS 20
 .entity lg_ents[ARC_MAX_SEGMENTS]; // debug
 #endif
 .vector beam_endpos;
@@ -166,8 +168,19 @@ void W_Arc_Beam_Think(void)
 		newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
 		self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
 
+		float max_allowed_segments;
+
+		if(WEP_CVAR_PRI(arc, distancepersegment))
+			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
+		else
+			max_allowed_segments = ARC_MAX_SEGMENTS;
 		// this is where we calculate how many segments are needed
-		segments = ARC_MAX_SEGMENTS;
+		if(WEP_CVAR_PRI(arc, degreespersegment))
+		{
+			segments = min( max(1, ( min(angle, WEP_CVAR_PRI(arc, maxangle)) / WEP_CVAR_PRI(arc, degreespersegment) ) ), max_allowed_segments );
+			//segments = min( min(angle, WEP_CVAR_PRI(arc, maxangle)) / WEP_CVAR_PRI(arc, degreespersegment), max_allowed_segments );
+		}
+		else { segments = 1; }
 	}
 	else
 	{
@@ -175,6 +188,9 @@ void W_Arc_Beam_Think(void)
 		segments = 1;
 	}
 
+	#ifdef ARC_DEBUG
+	printf("segment count: %d\n", segments);
+	#endif
 	float segmentdist = distance_to_want_pos * (1/segments);
 	float segmentblend;// = (1/segments);
 	vector last_origin = w_shotorg;
