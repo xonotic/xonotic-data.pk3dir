@@ -24,8 +24,10 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, PRI,  falloff_maxdist) \
 	w_cvar(id, sn, PRI,  falloff_mindist) \
 	w_cvar(id, sn, PRI,  force) \
+	w_cvar(id, sn, PRI,  maxangle) \
 	w_cvar(id, sn, PRI,  range) \
 	w_cvar(id, sn, PRI,  refire) \
+	w_cvar(id, sn, PRI,  returnspeed) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -74,10 +76,10 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	return TRUE;
 }
-vector beam_endpos;
+.vector beam_endpos;
 void W_Arc_Beam_Think(void)
 {
-	print("W_Arc_Beam_Think();\n");
+	//print("W_Arc_Beam_Think();\n");
 	if(self != self.owner.arc_beam)
 	{
 		remove(self);
@@ -108,9 +110,41 @@ void W_Arc_Beam_Think(void)
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
-	if(beam_endpos == '0 0 0') { beam_endpos = trace_endpos; }
+	// ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90)
+
+	vector want_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	if(self.beam_endpos == '0 0 0') { self.beam_endpos = want_pos; }
+	if(self.beam_endpos != want_pos)
+	{
+		vector direction_to_want_pos = normalize(want_pos - w_shotorg);
+		vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
+		float distance_to_want_pos = vlen(want_pos - w_shotorg);
+		float angle = (vlen(direction_to_want_pos - direction_to_beam_pos) * RAD2DEG);
+		float anglelimit;
+		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
+		{
+			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+			printf("Correcting max angle: %f\n", angle);
+			anglelimit = min(WEP_CVAR_PRI(arc, maxangle) / angle, 1);
+		}
+		else
+		{
+			// the radius is not too far yet, no worries :D
+			anglelimit = 1;
+		}
+		
+		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
+		//if(WEP_CVAR_PRI(arc, maxcurve))
+		//	blendfactor = (min(distance_to_want_pos, WEP_CVAR_PRI(arc, maxcurve)) / WEP_CVAR_PRI(arc, maxcurve));
+		//else
+		//	blendfactor = 1;
+
+		vector newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
+		self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
+		//beam_endpos = (want_pos * (1 - anglelimit)) + (beam_endpos * anglelimit);
+	}
 	
-	te_lightning1(self, w_shotorg, w_shotend);
+	te_lightning1(self, w_shotorg, self.beam_endpos);
 
 	// apply the damage
 	
