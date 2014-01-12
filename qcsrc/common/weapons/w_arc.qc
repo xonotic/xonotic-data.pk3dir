@@ -76,8 +76,11 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	return TRUE;
 }
-#define W_LG_BEAMSEGS 5
-.entity lg_ents[W_LG_BEAMSEGS]; // debug
+#define ARC_DEBUG
+#ifdef ARC_DEBUG
+#define ARC_MAX_SEGMENTS 10
+.entity lg_ents[ARC_MAX_SEGMENTS]; // debug
+#endif
 .vector beam_endpos;
 void W_Arc_Beam_Think(void)
 {
@@ -85,20 +88,24 @@ void W_Arc_Beam_Think(void)
 	//print("W_Arc_Beam_Think();\n");
 	if(self != self.owner.arc_beam)
 	{
-		remove(self);
+		#ifdef ARC_DEBUG
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #1\n");
+		#endif
+		remove(self);
 		return;
 	}
 	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
+		#ifdef ARC_DEBUG
 		if(self.lg_ents[0])
 		{
-			for(i = 0; i < W_LG_BEAMSEGS; ++i)
+			for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
 				remove(self.lg_ents[i]);
 		}
-		remove(self);
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #2\n");
+		#endif
+		remove(self);
 		return;
 	}
 
@@ -123,9 +130,11 @@ void W_Arc_Beam_Think(void)
 	// TODO: remove this, we should REALLY set it from the attack function
 	if(self.beam_endpos == '0 0 0')
 	{
-		for(i = 0; i < W_LG_BEAMSEGS; ++i)
+		#ifdef ARC_DEBUG
+		for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
 			self.lg_ents[i] = spawn();
-
+		#endif
+		
 		self.beam_endpos = want_pos;
 	}
 
@@ -141,7 +150,9 @@ void W_Arc_Beam_Think(void)
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
 		{
 			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+			#ifdef ARC_DEBUG
 			printf("Correcting max angle: %f\n", angle);
+			#endif
 			anglelimit = min(WEP_CVAR_PRI(arc, maxangle) / angle, 1);
 		}
 		else
@@ -151,17 +162,12 @@ void W_Arc_Beam_Think(void)
 		}
 		
 		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
-		//if(WEP_CVAR_PRI(arc, maxcurve))
-		//	blendfactor = (min(distance_to_want_pos, WEP_CVAR_PRI(arc, maxcurve)) / WEP_CVAR_PRI(arc, maxcurve));
-		//else
-		//	blendfactor = 1;
 
 		newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
 		self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
-		//beam_endpos = (want_pos * (1 - anglelimit)) + (beam_endpos * anglelimit);
 
 		// this is where we calculate how many segments are needed
-		segments = W_LG_BEAMSEGS;
+		segments = ARC_MAX_SEGMENTS;
 	}
 	else
 	{
@@ -177,7 +183,11 @@ void W_Arc_Beam_Think(void)
 		segmentblend = (i/segments);
 		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (newdir * segmentblend));
 		vector new_origin = last_origin + (blended * segmentdist);
+
+		#ifdef ARC_DEBUG
 		te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
+		#endif
+
 		last_origin = new_origin;
 	}
 
