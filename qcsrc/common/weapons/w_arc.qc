@@ -74,11 +74,10 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	return TRUE;
 }
-
+vector beam_endpos;
 void W_Arc_Beam_Think(void)
 {
 	print("W_Arc_Beam_Think();\n");
-	self.owner.lg_fire_prev = time;
 	if(self != self.owner.arc_beam)
 	{
 		remove(self);
@@ -87,19 +86,14 @@ void W_Arc_Beam_Think(void)
 	}
 	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
-		if(self == self.owner.arc_beam)
-			self.owner.arc_beam = world;
+		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
 		remove(self);
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #2\n");
 		return;
 	}
 
-	self.nextthink = time;
-
-	makevectors(self.owner.v_angle);
-
-	float dt, f;
-	dt = frametime;
+	// decrease ammo
+	float dt = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(WEP_CVAR_PRI(arc, ammo))
@@ -109,24 +103,46 @@ void W_Arc_Beam_Think(void)
 		}
 	}
 
+	makevectors(self.owner.v_angle);
+	
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
+	if(beam_endpos == '0 0 0') { beam_endpos = trace_endpos; }
+	
+	te_lightning1(self, w_shotorg, w_shotend);
+
 	// apply the damage
+	
 	if(trace_ent)
 	{
 		vector force;
 		force = w_shotdir * WEP_CVAR_PRI(arc, force);
 
-		f = ExponentialFalloff(WEP_CVAR_PRI(arc, falloff_mindist), WEP_CVAR_PRI(arc, falloff_maxdist), WEP_CVAR_PRI(arc, falloff_halflifedist), vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg));
+		float f = ExponentialFalloff(
+			WEP_CVAR_PRI(arc, falloff_mindist),
+			WEP_CVAR_PRI(arc, falloff_maxdist),
+			WEP_CVAR_PRI(arc, falloff_halflifedist),
+			vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
+		);
 
 		if(accuracy_isgooddamage(self.owner, trace_ent))
 			accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
-		Damage(trace_ent, self.owner, self.owner, WEP_CVAR_PRI(arc, damage) * dt * f, WEP_ARC, trace_endpos, force * dt);
+
+		Damage(
+			trace_ent,
+			self.owner,
+			self.owner,
+			WEP_CVAR_PRI(arc, damage) * dt * f,
+			WEP_ARC,
+			trace_endpos,
+			force * dt
+		);
 	}
+	
 
 	// draw effect
-	if(w_shotorg != self.hook_start)
+	/*if(w_shotorg != self.hook_start)
 	{
 		self.SendFlags |= 2;
 		self.hook_start = w_shotorg;
@@ -135,7 +151,10 @@ void W_Arc_Beam_Think(void)
 	{
 		self.SendFlags |= 4;
 		self.hook_end = w_shotend;
-	}
+	}*/
+
+	self.owner.lg_fire_prev = time;
+	self.nextthink = time;
 }
 
 // Attack functions ========================= 
@@ -157,7 +176,7 @@ void W_Arc_Beam(void)
 	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR_PRI(arc, damage);
-	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
+	//Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
 	oldself = self;
 	self = beam;
