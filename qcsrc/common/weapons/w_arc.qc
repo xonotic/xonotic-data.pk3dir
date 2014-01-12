@@ -76,9 +76,12 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	return TRUE;
 }
+#define W_LG_BEAMSEGS 5
+.entity lg_ents[W_LG_BEAMSEGS]; // debug
 .vector beam_endpos;
 void W_Arc_Beam_Think(void)
 {
+	float i;
 	//print("W_Arc_Beam_Think();\n");
 	if(self != self.owner.arc_beam)
 	{
@@ -89,6 +92,11 @@ void W_Arc_Beam_Think(void)
 	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
+		if(self.lg_ents[0])
+		{
+			for(i = 0; i < W_LG_BEAMSEGS; ++i)
+				remove(self.lg_ents[i]);
+		}
 		remove(self);
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #2\n");
 		return;
@@ -110,15 +118,24 @@ void W_Arc_Beam_Think(void)
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
-	// ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90)
-
 	vector want_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	if(self.beam_endpos == '0 0 0') { self.beam_endpos = want_pos; }
+
+	// TODO: remove this, we should REALLY set it from the attack function
+	if(self.beam_endpos == '0 0 0')
+	{
+		for(i = 0; i < W_LG_BEAMSEGS; ++i)
+			self.lg_ents[i] = spawn();
+
+		self.beam_endpos = want_pos;
+	}
+
+	vector newdir;
+	vector direction_to_want_pos = normalize(want_pos - w_shotorg);
+	float distance_to_want_pos = vlen(want_pos - w_shotorg);
+	float segments; 
 	if(self.beam_endpos != want_pos)
 	{
-		vector direction_to_want_pos = normalize(want_pos - w_shotorg);
 		vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
-		float distance_to_want_pos = vlen(want_pos - w_shotorg);
 		float angle = (vlen(direction_to_want_pos - direction_to_beam_pos) * RAD2DEG);
 		float anglelimit;
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
@@ -139,12 +156,30 @@ void W_Arc_Beam_Think(void)
 		//else
 		//	blendfactor = 1;
 
-		vector newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
+		newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
 		self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
 		//beam_endpos = (want_pos * (1 - anglelimit)) + (beam_endpos * anglelimit);
+
+		// this is where we calculate how many segments are needed
+		segments = W_LG_BEAMSEGS;
 	}
-	
-	te_lightning1(self, w_shotorg, self.beam_endpos);
+	else
+	{
+		newdir = direction_to_want_pos;
+		segments = 1;
+	}
+
+	float segmentdist = distance_to_want_pos * (1/segments);
+	float segmentblend;// = (1/segments);
+	vector last_origin = w_shotorg;
+	for(i = 1; i <= segments; ++i)
+	{
+		segmentblend = (i/segments);
+		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (newdir * segmentblend));
+		vector new_origin = last_origin + (blended * segmentdist);
+		te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
+		last_origin = new_origin;
+	}
 
 	// apply the damage
 	
