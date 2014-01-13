@@ -313,6 +313,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+				else if(v == "invasion_spawnpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -687,6 +689,12 @@ float MapInfo_Type_FromString(string t)
 	{
 		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
 		t = "ka";
+		print("'. Should use '", t, "'.\n");
+	}
+	if(t == "invasion")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "inv";
 		print("'. Should use '", t, "'.\n");
 	}
 	if(t == "all")

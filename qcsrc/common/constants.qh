@@ -30,7 +30,6 @@ const float AS_FLOAT = 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_ZCURVEPARTICLES = 102;
 const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
 const float TE_CSQC_LIGHTNINGARC = 104;
 const float TE_CSQC_TEAMNAGGER = 105;
@@ -182,6 +181,9 @@ const float STAT_ROUNDSTARTTIME = 73;
 
 const float STAT_WEAPONS2 = 74;
 const float STAT_WEAPONS3 = 75;
+
+const float STAT_MONSTERS_TOTAL = 76;
+const float STAT_MONSTERS_KILLED = 77;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
@@ -354,6 +356,9 @@ const float PROJECTILE_WAKICANNON = 29;
 
 const float PROJECTILE_BUMBLE_GUN = 30;
 const float PROJECTILE_BUMBLE_BEAM = 31;
+
+const float PROJECTILE_MAGE_SPIKE = 32;
+const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
 const float PROJECTILE_NADE_RED = 50;
 const float PROJECTILE_NADE_RED_BURN = 51;

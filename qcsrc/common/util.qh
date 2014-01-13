@@ -216,7 +216,7 @@ float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];
 #endif
 
@@ -368,8 +368,15 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
-void backtrace(string msg);
+// Some common varargs functions. Lowercase as they match C.
+#define printf(...) print(sprintf(__VA_ARGS__))
+#define dprintf(...) dprint(sprintf(__VA_ARGS__))
+#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
+//#ifndef MENUQC
+void backtrace(string msg);
+//#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors

@@ -7978,7 +7978,6 @@ alpha 190 190 180
 sizeincrease -80
 color 0xFFFFFF 0xFFFFFF
 
-
 // nade effects
 effect nade_blue
 trailspacing 1
