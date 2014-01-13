@@ -125,9 +125,9 @@ void W_Arc_Beam_Think(void)
 	makevectors(self.owner.v_angle);
 	
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
-	WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+	//WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
-	vector want_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	vector want_pos = w_shotend;
 
 	// TODO: remove this, we should REALLY set it from the attack function
 	if(self.beam_endpos == '0 0 0')
@@ -143,11 +143,13 @@ void W_Arc_Beam_Think(void)
 	vector newdir;
 	vector direction_to_want_pos = normalize(want_pos - w_shotorg);
 	float distance_to_want_pos = vlen(want_pos - w_shotorg);
+	printf("distance_to_want_pos: %f\n", distance_to_want_pos);
 	float segments; 
 	if(self.beam_endpos != want_pos)
 	{
 		vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
-		float angle = (vlen(direction_to_want_pos - direction_to_beam_pos) * RAD2DEG);
+
+		float angle = ceil(vlen(direction_to_want_pos - direction_to_beam_pos) * RAD2DEG);
 		float anglelimit;
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
 		{
@@ -188,6 +190,8 @@ void W_Arc_Beam_Think(void)
 		segments = 1;
 	}
 
+	te_customflash(self.beam_endpos, 40, 2, '1 1 1');
+
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
 	#endif
@@ -200,41 +204,45 @@ void W_Arc_Beam_Think(void)
 		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (newdir * segmentblend));
 		vector new_origin = last_origin + (blended * segmentdist);
 
-		#ifdef ARC_DEBUG
-		te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
-		#endif
+		WarpZone_traceline_antilag(self.owner, last_origin, new_origin, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+		
+		if(trace_ent)
+		{
+			float falloff = ExponentialFalloff(
+				WEP_CVAR_PRI(arc, falloff_mindist),
+				WEP_CVAR_PRI(arc, falloff_maxdist),
+				WEP_CVAR_PRI(arc, falloff_halflifedist),
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
+			);
 
-		last_origin = new_origin;
+			if(accuracy_isgooddamage(self.owner, trace_ent))
+				accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * falloff);
+
+			Damage(
+				trace_ent,
+				self.owner,
+				self.owner,
+				WEP_CVAR_PRI(arc, damage) * dt * falloff,
+				WEP_ARC,
+				trace_endpos,
+				(blended * WEP_CVAR_PRI(arc, force)) * dt * falloff
+			);
+
+			#ifdef ARC_DEBUG
+			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
+			te_customflash(trace_endpos, 80, 5, '1 0 0');
+			#endif
+
+			break; 
+		}
+		else
+		{
+			#ifdef ARC_DEBUG
+			te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
+			#endif
+			last_origin = new_origin;
+		}
 	}
-
-	// apply the damage
-	
-	if(trace_ent)
-	{
-		vector force;
-		force = w_shotdir * WEP_CVAR_PRI(arc, force);
-
-		float f = ExponentialFalloff(
-			WEP_CVAR_PRI(arc, falloff_mindist),
-			WEP_CVAR_PRI(arc, falloff_maxdist),
-			WEP_CVAR_PRI(arc, falloff_halflifedist),
-			vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
-		);
-
-		if(accuracy_isgooddamage(self.owner, trace_ent))
-			accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * f);
-
-		Damage(
-			trace_ent,
-			self.owner,
-			self.owner,
-			WEP_CVAR_PRI(arc, damage) * dt * f,
-			WEP_ARC,
-			trace_endpos,
-			force * dt
-		);
-	}
-	
 
 	// draw effect
 	/*if(w_shotorg != self.hook_start)
