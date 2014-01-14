@@ -4412,7 +4412,7 @@ float QuickMenu_CurrentPage_FirstEntry;
 var float QuickMenu_Entries;
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {
-	//print(sprintf("^xc80 entry %d: %s, %s\n", i, s, s1));
+	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Description[i])
 		strunzone(QuickMenu_Description[i]);
 	QuickMenu_Description[i] = strzone(s);
@@ -4566,11 +4566,11 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
 			if(substring(s, 0, 1) == "S" && substring(s, 1, strlen(s) - 1) == z_submenu)
 			{
-				// print(sprintf("^3 beginning of %s\n", z_submenu));
+				// printf("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
 				break;
 			}
-			// print(sprintf("^1 skipping %s\n", s));
+			// printf("^1 skipping %s\n", s);
 		}
 	}
 	float total = 0;
@@ -4580,7 +4580,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 
 		if(z_submenu != "" && substring(s, 1, strlen(s) - 1) == z_submenu)
 		{
-			// print(sprintf("^3 end of %s\n", z_submenu));
+			// printf("^3 end of %s\n", z_submenu);
 			break;
 		}
 
@@ -4884,39 +4884,49 @@ void HUD_QuickMenu(void)
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", submenu)); \
 	++QuickMenu_Buffer_Size;
 
-#define QUICKMENU_ENTRY(title,command) \
+#define QUICKMENU_ENTRY(title,command) { \
 	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
 	{ \
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", title)); \
 		++QuickMenu_Buffer_Size; \
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, command); \
 	} \
-	++QuickMenu_Buffer_Size;
+	++QuickMenu_Buffer_Size; \
+}
+
+// useful to Translate a string inside the Command
+#define QUICKMENU_ENTRY_TC(title,command,text,translated_text) \
+	if(cvar_string("prvm_language") == "en") \
+		QUICKMENU_ENTRY(title, sprintf(command, text)) \
+	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
+		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
+	else \
+		QUICKMENU_ENTRY(strcat("(", cvar_string("prvm_language"), ")", title), sprintf(command, translated_text))
 
 void HUD_QuickMenu_Load_DefaultEntries()
 {
 QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^nice one")), CTX(_("QMCMD^say :-) / nice one")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^good game")), CTX(_("QMCMD^say good game")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^hi / good luck")), CTX(_("QMCMD^say hi / good luck and have fun")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
 
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^quad soon")), CTX(_("QMCMD^say_team quad soon")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^free item, icon")), CTX(_("QMCMD^say_team free item %x^7 (l:%y^7); g_waypointsprite_team_here_p")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^took item, icon")), CTX(_("QMCMD^say_team took item (l:%l^7); g_waypointsprite_team_here")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^negative")), CTX(_("QMCMD^say_team negative")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^positive")), CTX(_("QMCMD^say_team positive")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^need help, icon")), CTX(_("QMCMD^say_team need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_helpme; cmd voice needhelp")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^enemy seen, icon")), CTX(_("QMCMD^say_team enemy seen (l:%y^7); g_waypointsprite_team_danger_p; cmd voice incoming")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^flag seen, icon")), CTX(_("QMCMD^say_team flag seen (l:%y^7); g_waypointsprite_team_here_p; cmd voice seenflag")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^defending, icon")), CTX(_("QMCMD^say_team defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^roaming, icon")), CTX(_("QMCMD^say_team roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^attacking, icon")), CTX(_("QMCMD^say_team attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^killed flag, icon")), CTX(_("QMCMD^say_team killed flagcarrier (l:%y^7); g_waypointsprite_team_here_p")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^dropped flag, icon")), CTX(_("QMCMD^say_team dropped flag (l:%d^7); g_waypointsprite_team_here_d")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^drop gun, icon")), CTX(_("QMCMD^say_team dropped gun %w^7 (l:%l^7); g_waypointsprite_team_here; wait; dropweapon")))
-	QUICKMENU_ENTRY(CTX(_("QMCMD^drop flag/key, icon")), CTX(_("QMCMD^say_team dropped flag/key %w^7 (l:%l^7); g_waypointsprite_team_here; wait; +use")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^positive")), "say_team %s", "positive", CTX(_("QMCMD^positive")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^need help, icon")), "say_team %s; g_waypointsprite_team_helpme; cmd voice needhelp", "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^enemy seen, icon")), "say_team %s; g_waypointsprite_team_danger_p; cmd voice incoming", "enemy seen (l:%y^7)", CTX(_("QMCMD^enemy seen (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^flag seen, icon")), "say_team %s; g_waypointsprite_team_here_p; cmd voice seenflag", "flag seen (l:%y^7)", CTX(_("QMCMD^flag seen (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
 
 QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
