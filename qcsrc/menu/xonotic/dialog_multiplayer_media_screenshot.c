@@ -40,14 +40,14 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.TD(me, 1, 2.5, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 2.4, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ScreenshotList_Filter_Would_Change;
 			e.onChangeEntity = slist;
 			slist.screenshotViewerDialog = main.screenshotViewerDialog;
 			main.screenshotViewerDialog.scrList = slist;
 
-	me.gotoRC(me, 0, 3.3);
-		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxEx(2, 1, "cl_autoscreenshot", _("Auto screenshot endmatch")));
+	me.gotoRC(me, 0, 3.1);
+		me.TD(me, 1, 1.9, e = makeXonoticCheckBoxEx(2, 1, "cl_autoscreenshot", _("Auto screenshot scoreboard")));
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;
