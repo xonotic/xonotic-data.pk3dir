@@ -1824,6 +1824,11 @@ void HUD_Radar(void)
 		{
 			if (autocvar_hud_panel_radar == 0) return;
 			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+			if(radar_panel_modified)
+			{
+				panel.update_time = time; // forces reload of panel attributes
+				radar_panel_modified = false;
+			}
 		}
 	}
 
@@ -1843,6 +1848,8 @@ void HUD_Radar(void)
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if(precache_pic(panel_bg) == "")
 			panel_bg = "gfx/hud/default/border_default"; // fallback
+		if(!radar_panel_modified && panel_bg != panel.current_panel_bg)
+			radar_panel_modified = true;
 		if(panel.current_panel_bg)
 			strunzone(panel.current_panel_bg);
 		panel.current_panel_bg = strzone(panel_bg);
@@ -3451,7 +3458,14 @@ void HUD_Chat(void)
 			return;
 		}
 		if(autocvar__con_chat_maximized)
+		{
 			if(!hud_draw_maximized) return;
+		}
+		else if(chat_panel_modified)
+		{
+			panel.update_time = time; // forces reload of panel attributes
+			chat_panel_modified = false;
+		}
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -3469,6 +3483,7 @@ void HUD_Chat(void)
 			if(panel.current_panel_bg)
 				strunzone(panel.current_panel_bg);
 			panel.current_panel_bg = strzone(panel_bg);
+			chat_panel_modified = true;
 		}
 		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
 	}
