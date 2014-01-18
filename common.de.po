@@ -6,8 +6,10 @@
 # divVerent <divVerent@xonotic.org>, 2011,2013
 # divVerent <divVerent@xonotic.org>, 2013
 # Hans Andersen <hans.andersen72@yahoo.com>, 2013
+# Hans Andersen <hans.andersen72@yahoo.com>, 2013
 # Yepoleb <huberg18@gmail.com>, 2013
 # divVerent <divVerent@xonotic.org>, 2011
+# Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
