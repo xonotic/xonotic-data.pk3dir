@@ -542,6 +542,7 @@ void spawnfunc___init_dedicated_server(void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -590,6 +591,7 @@ void spawnfunc_worldspawn (void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -802,6 +804,10 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
 
+	// monsters
+	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
+	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
+
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
 
@@ -812,6 +818,7 @@ void spawnfunc_worldspawn (void)
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
+	monsterlist_reply = strzone(getmonsterlist());
 	for(i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
