@@ -1180,6 +1180,10 @@ void ClientConnect (void)
 	{
 		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 	}
+	
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 	self.jointime = time;
 	self.allowed_timeouts = autocvar_sv_timeout_number;
