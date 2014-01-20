@@ -4410,6 +4410,7 @@ float QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
 float QuickMenu_CurrentPage_FirstEntry;
 var float QuickMenu_Entries;
+float QuickMenu_TimeOut;
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {
 	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
@@ -4444,6 +4445,7 @@ float HUD_QuickMenu_Buffer_Init()
 		if(QuickMenu_Buffer < 0)
 			return false;
 		HUD_QuickMenu_Load_DefaultEntries();
+		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 		return true;
 	}
 
@@ -4476,6 +4478,7 @@ float HUD_QuickMenu_Buffer_Init()
 			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, argv(1)); // command
 		}
 		++QuickMenu_Buffer_Size;
+		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	}
 
 	if (QuickMenu_Buffer_Size <= 0)
@@ -4621,6 +4624,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		HUD_QuickMenu_Close();
 		return 0;
 	}
+	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	return 1;
 }
 
@@ -4824,6 +4828,12 @@ void HUD_QuickMenu(void)
 		if(mv_active) return;
 		//if(!autocvar_hud_panel_quickmenu) return;
 		if(!hud_panel_quickmenu) return;
+
+		if(time > QuickMenu_TimeOut)
+		{
+			HUD_QuickMenu_Close();
+			return;
+		}
 	}
 	else
 	{
