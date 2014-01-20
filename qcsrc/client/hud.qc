@@ -4436,6 +4436,7 @@ float HUD_QuickMenu_Buffer_Init()
 	float fh = -1;
 	string s;
 	if(autocvar_hud_panel_quickmenu_file != "")
+	if(autocvar_hud_panel_quickmenu_file != "0")
 		fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
 	if(fh < 0)
 	{
@@ -4821,7 +4822,7 @@ void HUD_QuickMenu(void)
 
 		if(!hud_draw_maximized) return;
 		if(mv_active) return;
-		//if(!autocvar_hud_panel_quickmenu) return; // autocvar exists only for conformity with other panels
+		//if(!autocvar_hud_panel_quickmenu) return;
 		if(!hud_panel_quickmenu) return;
 	}
 	else
