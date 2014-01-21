@@ -4923,6 +4923,8 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
 
+if(teamplay)
+{
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
@@ -4940,6 +4942,7 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
+}
 
 QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
 	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")))
@@ -4956,18 +4959,24 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")))
 
+	if(spectatee_status > 0)
+	{
 	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
 		QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person free")), "chase_active 1; +use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
+	}
 
+	if(spectatee_status == -1)
+	{
 	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "-use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "+use")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
+	}
 
 	QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
 	if(prvm_language != "en")
@@ -4977,8 +4986,12 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
 	QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
+	if(getstatf(STAT_TIMELIMIT) > 0)
+	{
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Reduce match time")), "vcall reducematchtime")
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Extend match time")), "vcall extendmatchtime")
+	}
+	if(teamplay)
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
 QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 }
