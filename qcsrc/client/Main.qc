@@ -37,7 +37,7 @@ void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
-	prvm_language = cvar_string("prvm_language");
+	prvm_language = strzone(cvar_string("prvm_language"));
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");

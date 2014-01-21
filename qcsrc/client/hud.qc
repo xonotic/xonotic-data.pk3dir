@@ -4907,12 +4907,12 @@ void HUD_QuickMenu(void)
 
 // useful to Translate a string inside the Command
 #define QUICKMENU_ENTRY_TC(title,command,text,translated_text) \
-	if(cvar_string("prvm_language") == "en") \
+	if(prvm_language == "en") \
 		QUICKMENU_ENTRY(title, sprintf(command, text)) \
 	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
 		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
 	else \
-		QUICKMENU_ENTRY(strcat("(", cvar_string("prvm_language"), ")", title), sprintf(command, translated_text))
+		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text))
 
 void HUD_QuickMenu_Load_DefaultEntries()
 {
