@@ -265,6 +265,7 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	self.event_damage = func_null;
 }
 
 .float model_randomizer;
@@ -786,8 +787,8 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
-	// in any case:
-	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+	if(IS_PLAYER(self))
+		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
