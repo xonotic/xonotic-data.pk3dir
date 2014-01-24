@@ -1992,7 +1992,7 @@ float nJoinAllowed(entity ignore) {
 
 	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer == 1)
+		if(IS_PLAYER(e) || e.caplayer)
 			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
