@@ -160,6 +160,11 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 	FOR_EACH_CLIENT(self)
 	{
 		self.killcount = 0;
+		if(!self.caplayer && IS_BOT_CLIENT(self))
+		{
+			self.team = -1;
+			self.caplayer = 1;
+		}
 		if(self.caplayer)
 		{
 			self.classname = "player";
