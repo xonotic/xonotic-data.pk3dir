@@ -562,15 +562,11 @@ void ClientCommand_spectate(float request)
 					}
 				}
 
-				if(IS_PLAYER(self) && autocvar_sv_spectate == 1)
-					ClientKill_TeamChange(-2); // observe
-
-				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
-				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
+				if((IS_PLAYER(self) || self.caplayer) && autocvar_sv_spectate == 1)
 				{
-					sprint(self, "WARNING: you will spectate in the next round.\n");
-					self.caplayer = 0;
+					if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
+						sprint(self, "WARNING: you will spectate in the next round.\n");
+					ClientKill_TeamChange(-2); // observe
 				}
 			}
 			return; // never fall through to usage
