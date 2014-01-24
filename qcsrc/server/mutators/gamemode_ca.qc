@@ -142,6 +142,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
 	if(!allowed_to_spawn)
+	if(IS_PLAYER(self)) // this is true even when player is trying to join
 	{
 		self.classname = "observer";
 		if(self.jointime != time) //not when connecting
