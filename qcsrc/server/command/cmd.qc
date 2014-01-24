@@ -152,6 +152,8 @@ void ClientCommand_join(float request)
 			{
 				if(!IS_PLAYER(self) && !lockteams)
 				{
+					if(self.caplayer)
+						return;
 					if(nJoinAllowed(self))
 					{
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
