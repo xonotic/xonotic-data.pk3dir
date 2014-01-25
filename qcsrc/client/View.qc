@@ -164,7 +164,7 @@ vector GetCurrentFov(float fov)
 
 	makevectors(view_angles);
 
-	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type && autocvar_cl_velocityzoom_factor) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type && autocvar_cl_velocityzoom_factor) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
