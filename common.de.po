@@ -5,14 +5,18 @@
 # Translators:
 # divVerent <divVerent@xonotic.org>, 2011,2013
 # divVerent <divVerent@xonotic.org>, 2013
+# Hans Andersen <hans.andersen72@yahoo.com>, 2013
+# Hans Andersen <hans.andersen72@yahoo.com>, 2013
+# Yepoleb <huberg18@gmail.com>, 2013
 # divVerent <divVerent@xonotic.org>, 2011
+# Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-03 11:55+0200\n"
-"PO-Revision-Date: 2013-10-03 10:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2013-12-20 20:17+0000\n"
+"Last-Translator: Yepoleb <huberg18@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
 "Language: de\n"
@@ -1439,7 +1443,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1 ertränkt%s%s"
 #: qcsrc/common/notifications.qh:357
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1%s%s umgelegt"
 
 #: qcsrc/common/notifications.qh:358
 #, c-format
@@ -1449,7 +1453,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:358
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde von ^BG%s^K1 knusprig gebraten%s%s"
 
 #: qcsrc/common/notifications.qh:359
 #, c-format
@@ -1606,7 +1610,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:386
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wurde etwas zu knusprig!%s%s"
 
 #: qcsrc/common/notifications.qh:386
 #, c-format
@@ -1706,7 +1710,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:403
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 wurde von einem Geschützturm durchlöchert%s%s"
 
 #: qcsrc/common/notifications.qh:404
 #, c-format

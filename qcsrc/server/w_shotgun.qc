@@ -21,8 +21,7 @@ void W_Shotgun_Attack (void)
 	float	d;
 	float	f;
 	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
+	float	solidpenetration;
 	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
@@ -30,15 +29,13 @@ void W_Shotgun_Attack (void)
 	d = autocvar_g_balance_shotgun_primary_damage;
 	f = autocvar_g_balance_shotgun_primary_force;
 	spread = autocvar_g_balance_shotgun_primary_spread;
-	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
-	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+	solidpenetration = autocvar_g_balance_shotgun_primary_solidpenetration;
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
 	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, WEP_SHOTGUN, 0, bulletconstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
@@ -61,7 +58,7 @@ void W_Shotgun_Attack (void)
 void shotgun_meleethink (void)
 {
 	// declarations
-	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
+	float i, f, swing, swing_factor, swing_damage, meleetime, is_player, is_monster;
 	entity target_victim;
 	vector targpos;
 
@@ -102,15 +99,16 @@ void shotgun_meleethink (void)
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
+		is_monster = (trace_ent.flags & FL_MONSTER);
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
+			&& ((is_player || is_monster) || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 
-			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
+			if(is_player || is_monster) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
 				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
 			else
 				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));

@@ -792,10 +792,8 @@ void bumb_die()
 
 void bumb_impact()
 {
-    if(autocvar_g_vehicle_bumblebee_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_bumblebee_bouncepain_x,
-						autocvar_g_vehicle_bumblebee_bouncepain_y,
-						autocvar_g_vehicle_bumblebee_bouncepain_z);
+	if(autocvar_g_vehicle_bumblebee_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 }
 
 void bumb_spawn(float _f)

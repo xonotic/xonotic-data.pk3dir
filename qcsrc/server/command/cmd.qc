@@ -57,7 +57,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
+			printf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 			self.checkfail = 1;
 			return; // never fall through to usage
 		}
@@ -177,6 +177,157 @@ void ClientCommand_join(float request)
 		{
 			sprint(self, "\nUsage:^3 cmd join\n");
 			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_mobedit(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argv(1) && argv(2))
+			{
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+				
+				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
+				if(trace_ent.flags & FL_MONSTER)
+				{
+					if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
+					switch(argv(1))
+					{
+						case "skin":
+						{
+							if(trace_ent.monsterid != MON_MAGE)
+								trace_ent.skin = stof(argv(2));
+							return;
+						}
+						case "movetarget":
+						{
+							trace_ent.monster_moveflags = stof(argv(2));
+							return;
+						}
+					}
+				}
+			}
+		}
+		default:
+			sprint(self, "Incorrect parameters for ^2mobedit^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
+			sprint(self, "  Where 'argument' can be skin or movetarget.\n");
+			sprint(self, "  Aim at your monster to edit its properties.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_mobkill(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			makevectors(self.v_angle);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			
+			if(trace_ent.flags & FL_MONSTER)
+			{
+				if(trace_ent.realowner != self)
+				{
+					sprint(self, "That monster does not belong to you.\n");
+					return;
+				}
+				sprint(self, strcat("Your pet '", trace_ent.monster_name, "' has been brutally mutilated.\n"));
+				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health + 200, DEATH_KILL, trace_ent.origin, '0 0 0');
+				return;
+			}
+		}
+	
+		default:
+			sprint(self, "Incorrect parameters for ^2mobkill^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobkill\n");
+			sprint(self, "  Aim at your monster to kill it.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_mobspawn(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity e;
+			string tospawn;
+			float moveflag;
+			
+			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
+			tospawn = strtolower(argv(1));
+			
+			if(tospawn == "list")
+			{
+				sprint(self, monsterlist_reply);
+				return;
+			}
+			
+			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
+			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
+			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
+			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); return; }
+			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); return; }
+			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
+			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
+			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
+			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
+			else if(tospawn != "")
+			{
+				float found = 0, i;
+				entity mon;
+				
+				for(i = MON_FIRST; i <= MON_LAST; ++i)
+				{
+					mon = get_monsterinfo(i);
+					if(mon.netname == tospawn)
+					{
+						found = TRUE;
+						break;
+					}
+				}
+
+				if(found)
+				{
+					self.monstercount += 1;
+					totalspawned += 1;
+				
+					makevectors(self.v_angle);
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
+				
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
+					
+					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
+					
+					return;
+				}
+			}
+		}
+	
+		default:
+			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
+			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
+			sprint(self, "  Argument 'random' spawns a random monster.\n");
+			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
 			return;
 		}
 	}
@@ -302,7 +453,18 @@ void ClientCommand_selectteam(float request, float argc)
 									else if(self.wasplayer && autocvar_g_changeteam_banned)
 										sprint(self, "^1You cannot change team, forbidden by the server.\n");
 									else
+									{
+										if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+										{
+											GetTeamCounts(self);
+											if(!TeamSmallerEqThanTeam(selection, self.team, self))
+											{
+												sprint(self, "Cannot change to a larger/better/shinier team\n");
+												return;
+											}
+										}
 										ClientKill_TeamChange(selection);
+									}
 								}
 							}
 							else
@@ -563,6 +725,9 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
+	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
+	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
+	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \

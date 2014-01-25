@@ -785,6 +785,12 @@ void SV_PlayerPhysics()
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
 
+	if(time < self.spider_slowness)
+	{
+		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
+		self.stat_sv_airspeedlimit_nonqw *= 0.5;
+	}
+
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
 	if(self.player_blocked)

@@ -144,6 +144,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 	if(!allowed_to_spawn)
 	{
 		self.classname = "observer";
+		if(self.jointime != time) //not when connecting
 		if(!self.caplayer)
 		{
 			self.caplayer = 0.5;
@@ -158,6 +159,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 {
 	FOR_EACH_CLIENT(self)
 	{
+		self.killcount = 0;
 		if(self.caplayer)
 		{
 			self.classname = "player";
@@ -182,12 +184,8 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_global)
 
 MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 {
-	ca_teams = autocvar_g_ca_teams_override;
-	if(ca_teams < 2)
-		ca_teams = autocvar_g_ca_teams;
-	ca_teams = bound(2, ca_teams, 4);
 	ret_float = ca_teams;
-	return 1;
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDies)
@@ -224,16 +222,14 @@ MUTATOR_HOOKFUNCTION(ca_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 {
-	start_health = cvar("g_lms_start_health");
-	start_armorvalue = cvar("g_lms_start_armor");
-
-	start_ammo_shells = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells = cvar("g_lms_start_ammo_cells");
-	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-
 	start_items &= ~IT_UNLIMITED_AMMO;
+	start_health       = warmup_start_health       = cvar("g_lms_start_health");
+	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
 	return 0;
 }
@@ -272,22 +268,22 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 	return FALSE;
 }
 
-// scoreboard setup
-void ca_ScoreRules()
+MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_CA_ROUNDS,    "rounds",    SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
-}
-
-void ca_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
-{
-	ca_ScoreRules();
+	// no regeneration in CA
+	return TRUE;
 }
 
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
+
+	ca_teams = autocvar_g_ca_teams_override;
+	if(ca_teams < 2)
+		ca_teams = autocvar_g_ca_teams;
+	ca_teams = bound(2, ca_teams, 4);
+	ret_float = ca_teams;
+	ScoreRules_ca(ca_teams);
 
 	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
@@ -296,8 +292,6 @@ void ca_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-
-	InitializeEntity(world, ca_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_ca)
@@ -317,6 +311,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
