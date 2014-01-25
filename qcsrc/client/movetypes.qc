@@ -92,7 +92,7 @@ void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 	if(!ent.move_watertype)
 	{
 		// just spawned here
-		if(!autocvar_sv_gameplayfix_fixedcheckwatertransition)
+		if(!autocvar_cl_gameplayfix_fixedcheckwatertransition)
 		{
 			ent.move_watertype = contents;
 			ent.move_waterlevel = 1;
@@ -114,7 +114,7 @@ void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 	else
 	{
 		ent.move_watertype = CONTENT_EMPTY;
-		ent.move_waterlevel = (autocvar_sv_gameplayfix_fixedcheckwatertransition ? 0 : contents);
+		ent.move_waterlevel = (autocvar_cl_gameplayfix_fixedcheckwatertransition ? 0 : contents);
 	}
 }
 
