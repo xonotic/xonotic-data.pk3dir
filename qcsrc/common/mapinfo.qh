@@ -51,7 +51,7 @@ REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 p
 REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=0");
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0");
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 teams=2 leadlimit=0");
 #define g_ca IS_GAMETYPE(CA)
 
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0");
