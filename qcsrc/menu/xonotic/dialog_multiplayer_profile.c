@@ -5,7 +5,7 @@ CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
-	ATTRIB(XonoticProfileTab, columns, float, 6.2) // added extra .2 for center space
+	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space
 	ATTRIB(XonoticProfileTab, playerNameLabel, entity, NULL)
 	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticProfileTab)
@@ -62,17 +62,79 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	
-	// Statistic Stuff -Debugger
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.TR(me);
+		me.TDempty(me, 1);
+		pms = makeXonoticPlayerModelSelector();
+		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
+			e.onClick = PlayerModelSelector_Prev_Click;
+			e.onClickEntity = pms;
+		me.TD(me, me.rows - (me.currentRow + 2), 1.4, pms);
+		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
+			e.onClick = PlayerModelSelector_Next_Click;
+			e.onClickEntity = pms;
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+		for(i = 0; i < 15; ++i)
+		{
+			if(mod(i, 5) == 0)
+				me.TR(me);
+			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
+		}
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+		for(i = 0; i < 15; ++i)
+		{
+			if(mod(i, 5) == 0)
+				me.TR(me);
+			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
+		}
+
+	me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Statistics")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 10, 2.5, statslist = makeXonoticStatsList());
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
+	me.TR(me);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
+		setDependent(e, "cl_allow_uidtracking", 1, 1);
 
+	me.gotoRC(me, 4, 3.1);
+		me.TDempty(me, 0.25);
+		me.TD(me, 11, 2.5, statslist = makeXonoticStatsList());
+		//setDependent(statslist, "cl_allow_uidtracking", 1, 1);
 
+	me.gotoRC(me, 15.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0.5, _("Country")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.TR(me);
+		me.TD(me, 5, 1.4, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
+
+	me.gotoRC(me, 15.5, 4.6); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0.5, _("Gender")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.gotoRC(me, 17, 4.6);
+		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "2", _("Female")));
+	me.gotoRC(me, 18, 4.6);
+		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "1", _("Male")));
+	me.gotoRC(me, 19, 4.6);
+		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "0", _("Undisclosed")));
+
+/*
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TDempty(me, 1);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
@@ -110,7 +172,7 @@ void XonoticProfileTab_fill(entity me)
 				me.TR(me);
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
-
+	*/
 	/*
 	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
 	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
