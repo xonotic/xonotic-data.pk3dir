@@ -5,7 +5,7 @@ CLASS(XonoticGameWeaponsSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity))
 	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 14)
+	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)
 	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameWeaponsSettingsTab)
@@ -36,8 +36,8 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			e.alpha = 0.5;
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 11, 2.5, e = me.weaponsList = makeXonoticWeaponsList());
-	me.gotoRC(me, 12, 0.25);
+		me.TD(me, 10, 2.5, e = me.weaponsList = makeXonoticWeaponsList());
+	me.gotoRC(me, 11, 0.25);
 		me.TD(me, 1, 1.25, e = makeXonoticButton(_("Up"), '0 0 0'));
 			e.onClick = WeaponsList_MoveUp_Click;
 			e.onClickEntity = me.weaponsList;

@@ -3,7 +3,7 @@ CLASS(XonoticMiscSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticMiscSettingsTab, fill, void(entity))
 	ATTRIB(XonoticMiscSettingsTab, title, string, _("Misc"))
 	ATTRIB(XonoticMiscSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMiscSettingsTab, rows, float, 15.5)
+	ATTRIB(XonoticMiscSettingsTab, rows, float, 14.5)
 	ATTRIB(XonoticMiscSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticMiscSettingsTab)
 entity makeXonoticMiscSettingsTab();

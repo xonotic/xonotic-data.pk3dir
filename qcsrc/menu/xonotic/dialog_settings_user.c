@@ -3,7 +3,7 @@ CLASS(XonoticUserSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
 	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
 	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5)
+	ATTRIB(XonoticUserSettingsTab, rows, float, 14.5)
 	ATTRIB(XonoticUserSettingsTab, columns, float, 5)
 ENDCLASS(XonoticUserSettingsTab)
 entity makeXonoticUserSettingsTab();
@@ -94,7 +94,7 @@ void XonoticUserSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 		setDependent(e, "cl_allow_uidtracking", 1, 1);
 
-	me.gotoRC(me, me.rows - 2, 2.6);
+	me.gotoRC(me, me.rows - 1, 2.6);
 		me.TD(me, 1, 2, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_gentle; sendcvar cl_allow_uidtracking; sendcvar cl_allow_uid2name;", COMMANDBUTTON_APPLY));
 
 }

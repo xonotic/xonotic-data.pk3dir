@@ -3,7 +3,7 @@ CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticAudioSettingsTab, fill, void(entity))
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
+	ATTRIB(XonoticAudioSettingsTab, rows, float, 14.5)
 	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticAudioSettingsTab)
 entity makeXonoticAudioSettingsTab();
@@ -158,7 +158,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		if(cvar("developer"))
 			me.TD(me, 1, 3, makeXonoticCheckBox(0, "showsound", _("Debug info about sounds")));
 
-	me.gotoRC(me, me.rows - 1.25, 0);
+	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; snd_attenuation_method_$menu_snd_attenuation_method; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation", COMMANDBUTTON_APPLY));
 }
 #endif

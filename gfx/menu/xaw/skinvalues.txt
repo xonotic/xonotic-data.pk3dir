@@ -117,7 +117,7 @@ COLOR_CVARLIST_CONTROLS         '1 0 0'
 //   uses "border" images
 //   uses "closebutton" images
 MARGIN_TOP                      8
-MARGIN_BOTTOM                   12
+MARGIN_BOTTOM                   16
 MARGIN_LEFT                     16
 MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
