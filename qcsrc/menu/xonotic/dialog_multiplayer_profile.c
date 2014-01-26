@@ -33,6 +33,9 @@ void XonoticProfileTab_fill(entity me)
 	entity e, pms, label, box;
 	float i;
 
+	// ==============
+	//  NAME SECTION
+	// ==============
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, me.playerNameLabel = makeXonoticTextLabel(0.5, _("Name")));
 			me.playerNameLabel.isBold = TRUE;
@@ -56,13 +59,12 @@ void XonoticProfileTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeXonoticColorpicker(box));
 		me.TD(me, 5, 2, e = makeXonoticCharmap(box));
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-	
-	me.TR(me);
+
+	// ===============
+	//  MODEL SECTION
+	// ===============
+	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
@@ -98,11 +100,15 @@ void XonoticProfileTab_fill(entity me)
 			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
 
-	me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	// ====================
+	//  STATISTICS SECTION
+	// ====================
+	me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP RIGHT
+	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM RIGHT
+	//me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn); // BOTTOM LEFT
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Statistics")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
-
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
@@ -110,160 +116,52 @@ void XonoticProfileTab_fill(entity me)
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 		setDependent(e, "cl_allow_uidtracking", 1, 1);
-
-	me.gotoRC(me, 4, 3.1);
+	me.gotoRC(me, 4, 3.1); // TOP RIGHT
+	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT 
+	//me.gotoRC(me, 12.5, 0); // BOTTOM LEFT
 		me.TDempty(me, 0.25);
-		me.TD(me, 11, 2.5, statslist = makeXonoticStatsList());
+		me.TD(me, 9, 2.5, statslist = makeXonoticStatsList());
 		//setDependent(statslist, "cl_allow_uidtracking", 1, 1);
 
-	me.gotoRC(me, 15.5, 3.1); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0.5, _("Country")));
+	// =================
+	//  COUNTRY SECTION
+	// =================
+	me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Country")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 	me.TR(me);
-		me.TD(me, 5, 1.4, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
+		me.TDempty(me, 0.5);
+		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
 
-	me.gotoRC(me, 15.5, 4.6); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0.5, _("Gender")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
-	me.gotoRC(me, 17, 4.6);
-		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "2", _("Female")));
-	me.gotoRC(me, 18, 4.6);
-		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "1", _("Male")));
-	me.gotoRC(me, 19, 4.6);
-		me.TD(me, 1, 1.4, e = makeXonoticRadioButton(1, "cl_gender", "0", _("Undisclosed")));
 
-/*
-	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TDempty(me, 1);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
-	me.TR(me);
-		pms = makeXonoticPlayerModelSelector();
-		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
-			e.onClick = PlayerModelSelector_Prev_Click;
-			e.onClickEntity = pms;
-		me.TD(me, 14, 2.4, pms);
-		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
-			e.onClick = PlayerModelSelector_Next_Click;
-			e.onClickEntity = pms;
+	// ================
+	//  GENDER SECTION
+	// ================
+	me.gotoRC(me, 19.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	#if 0
+			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
+			me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_gender"));
+				e.addValue(e, ZCTX(_("GENDER^Undisclosed")), "0");
+				e.addValue(e, ZCTX(_("GENDER^Female")), "1");
+				e.addValue(e, ZCTX(_("GENDER^Male")), "2");
+				e.configureXonoticTextSliderValues(e);
+	#else
+			me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Gender")));
+				e.isBold = TRUE;
+				e.alpha = 0.5;
+		me.TR(me);
+			#define GENDERWIDTH_OFFSET 0.25
+			#define GENDERWIDTH_LENGTH 2.5
+			#define GENDERWIDTH_ITEM (GENDERWIDTH_LENGTH / 3)
+			me.TDempty(me, GENDERWIDTH_OFFSET);
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(1, "cl_gender", "2", _("Female")));
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(1, "cl_gender", "1", _("Male")));
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(1, "cl_gender", "0", _("Undisclosed")));
+	#endif
 
-	me.gotoRC(me, 15.5, 3.533); me.setFirstColumn(me, me.currentColumn);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
-		for(i = 0; i < 15; ++i)
-		{
-			if(mod(i, 5) == 0)
-				me.TR(me);
-			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(1, 0, i), '0 1 0');
-		}
-	me.gotoRC(me, 15.5, 4.866); me.setFirstColumn(me, me.currentColumn);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
-		for(i = 0; i < 15; ++i)
-		{
-			if(mod(i, 5) == 0)
-				me.TR(me);
-			me.TDNoMargin(me, 1, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
-		}
-	*/
-	/*
-	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
-	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon crosshair")));
-		makeMulti(e, "crosshair_enabled");
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom crosshair")));
-	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 1; i <= 14; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
-		// show a larger preview of the selected crosshair
-		me.TDempty(me, 0.1);
-		me.TDNoMargin(me, 3, 0.8, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
-			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 15; i <= 28; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
-			setDependent(e, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
-			setDependent(e, "crosshair_enabled", 1, 2);
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair color:")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(5, "crosshair_color_special", "1", _("Per weapon")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(5, "crosshair_color_special", "2", _("By health")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(5, "crosshair_color_special", "0", _("Custom")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 2, 2, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
-			setDependentAND(e, "crosshair_color_special", 0, 0, "crosshair_enabled", 1, 2);
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Other crosshair settings"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.crosshairDialog;
-		setDependent(e, "crosshair_enabled", 1, 2);
-		// TODO: show status of crosshair dot and hittest and pickups and such here with text
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Model settings"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.modelDialog;
-		// TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("View settings"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.viewDialog;
-		// TODO: show fov and other settings with text here
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Weapon settings"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.weaponsDialog;
-		// I don't really think this is useful as is, and especially it doesn't look very clean...
-		// In the future, if ALL of these buttons had some information, then it would be justified/clean
-		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null));
-		//	e0.textEntity = main.weaponsDialog;
-		//	e0.allowCut = 1;
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.hudDialog;
-		// TODO: show hud config name with text here
-
-	*/
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
 }
