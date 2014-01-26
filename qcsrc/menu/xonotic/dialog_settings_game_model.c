@@ -28,7 +28,13 @@ void XonoticGameModelSettingsTab_fill(entity me)
 {
 	entity e;
 	//float i;
-
+	
+	// todo:
+	// Add slider for cl_ghost_items (alpha) and cl_ghost_items_color (brightness)
+	// Add checkbox for simpleitems
+	// determine difference between cl_deathglow and g_deathglow
+	// Add toggle for skeletal animations?
+	
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
