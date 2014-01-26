@@ -123,6 +123,13 @@ void XonoticMiscSettingsTab_fill(entity me)
 		e.isBold = TRUE;
 		e.alpha = 0.5;
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
+			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
+			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
+			e.addValue(e, ZCTX(_("TLTIP^Advanced")), "2");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current date and time")));
 			makeMulti(e, "showdate");
 	me.TR(me);
