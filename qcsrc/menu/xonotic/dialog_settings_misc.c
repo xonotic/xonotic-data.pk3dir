@@ -113,23 +113,18 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second"))); // TODO: swap
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Save processing time for other apps")));
 		setDependent(e, "cl_maxfps", 1, 1000);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:"))); // TODO: move this elsewhere?
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
-			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
-			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
-			e.addValue(e, ZCTX(_("TLTIP^Advanced")), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current time")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Other")));
+		e.isBold = TRUE;
+		e.alpha = 0.5;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showdate", _("Show current date")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current date and time")));
+			makeMulti(e, "showdate");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "developer", _("Enable developer mode")));
 	me.TR(me);

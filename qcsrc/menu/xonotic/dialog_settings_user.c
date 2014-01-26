@@ -82,8 +82,14 @@ void XonoticUserSettingsTab_fill(entity me)
 	me.gotoRC(me, 9, 2.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects and harsh language")));
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
+			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
+			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
+			e.addValue(e, ZCTX(_("TLTIP^Advanced")), "2");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client"))); // TODO: move to profile tab
 	me.TR(me);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 		setDependent(e, "cl_allow_uidtracking", 1, 1);
