@@ -45,28 +45,6 @@ void XonoticInputSettingsTab_fill(entity me)
 			kb.clearButton = e;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
-	me.TR(me);
-	me.TR(me);
-		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
-		}
-		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
-			setDependent(e, "joy_detected", 1, 10000000);
-		}
-		else
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
-			e.disabled = 1; // the option is never available in this case, just there for show
-		}
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Mouse")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
@@ -89,6 +67,33 @@ void XonoticInputSettingsTab_fill(entity me)
 		}
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
+
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Other")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
+	me.TR(me);
+	me.TR(me);
+		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
+			setDependent(e, "joy_detected", 1, 10000000);
+		}
+		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
+			setDependent(e, "joy_detected", 1, 10000000);
+		}
+		else
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
+			e.disabled = 1; // the option is never available in this case, just there for show
+		}
 
 
 	me.gotoRC(me, me.rows - 1.25, 0);
