@@ -63,21 +63,26 @@ void XonoticProfileTab_fill(entity me)
 	// ===============
 	//  MODEL SECTION
 	// ===============
-	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn);
-	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn);
+	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP RIGHT
+	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM RIGHT
+	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn); // BOTTOM LEFT
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 	me.TR(me);
-		me.TDempty(me, 1);
+		//me.TDempty(me, 0); // MODEL LEFT, COLOR RIGHT
+		me.TDempty(me, 1); // MODEL RIGHT, COLOR LEFT
 		pms = makeXonoticPlayerModelSelector();
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - (me.currentRow + 2), 1.4, pms);
+		me.TD(me, 11.5, 1.4, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
+
+	//me.setFirstColumn(me, me.currentColumn + 2); // MODEL LEFT, COLOR RIGHT
+	me.gotoRC(me, me.currentRow, 0); me.setFirstColumn(me, me.currentColumn); // MODEL RIGHT, COLOR LEFT
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color")));
 			e.isBold = TRUE;
@@ -126,8 +131,9 @@ void XonoticProfileTab_fill(entity me)
 	// =================
 	//  COUNTRY SECTION
 	// =================
-	me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn);
-	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 16, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
+	//me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
+	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, TOP POS
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Country")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
@@ -139,15 +145,16 @@ void XonoticProfileTab_fill(entity me)
 	// ================
 	//  GENDER SECTION
 	// ================
-	me.gotoRC(me, 19.5, 3.1); me.setFirstColumn(me, me.currentColumn);
-	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
+	//me.gotoRC(me, 19.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, BOTTOM POS
+	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, BOTTOM POS
 	#if 0
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
-			me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_gender"));
-				e.addValue(e, ZCTX(_("GENDER^Undisclosed")), "0");
-				e.addValue(e, ZCTX(_("GENDER^Female")), "1");
-				e.addValue(e, ZCTX(_("GENDER^Male")), "2");
-				e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_gender"));
+			e.addValue(e, ZCTX(_("GENDER^Undisclosed")), "0");
+			e.addValue(e, ZCTX(_("GENDER^Female")), "1");
+			e.addValue(e, ZCTX(_("GENDER^Male")), "2");
+			e.configureXonoticTextSliderValues(e);
 	#else
 			me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Gender")));
 				e.isBold = TRUE;
