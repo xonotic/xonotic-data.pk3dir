@@ -330,7 +330,7 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 
 void XonoticStatsList_showNotify(entity me)
 {
-	PlayerStats_PlayerDetail();
+	PlayerStats_PlayerDetail_CheckUpdate();
 }
 
 void XonoticStatsList_clickListBoxItem(entity me, float i, vector where)

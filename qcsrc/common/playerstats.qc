@@ -616,7 +616,30 @@ void PlayerStats_PlayerDetail(void)
 		}
 
 		PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
-		
+	}
+}
+
+void PlayerStats_PlayerDetail_CheckUpdate(void)
+{
+	// determine whether we should retrieve playerdetail information again
+	float gamecount = cvar("cl_matchcount");
+
+	printf("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
+		time,
+		PS_D_NEXTUPDATETIME,
+		PS_D_LASTGAMECOUNT,
+		gamecount
+	);
+
+	if(
+		(time >= PS_D_NEXTUPDATETIME)
+		||
+		(gamecount > PS_D_LASTGAMECOUNT)
+	)
+	{
+		PlayerStats_PlayerDetail();
+		PS_D_NEXTUPDATETIME = (time + autocvar_g_playerstats_playerdetail_autoupdatetime);
+		PS_D_LASTGAMECOUNT = gamecount;
 	}
 }
 
@@ -632,8 +655,8 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
-			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+			//url_fputs(fh, sprintf("c %s\n", cvar_string("_cl_country"))); // country
+			//url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			url_fputs(fh, "\n");

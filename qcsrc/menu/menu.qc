@@ -95,7 +95,7 @@ void m_init()
 	}
 
 	//PlayerInfo_Details();
-	PlayerStats_PlayerDetail();
+	PlayerStats_PlayerDetail_CheckUpdate();
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024

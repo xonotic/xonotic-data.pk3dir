@@ -96,16 +96,19 @@ void PlayerStats_PlayerBasic();
 void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status);
 #endif //SVQC
 #ifdef MENUQC
+float PS_D_NEXTUPDATETIME;
+float PS_D_LASTGAMECOUNT;
 #define PS_D_STATUS_ERROR -2
 #define PS_D_STATUS_IDLE -1
 #define PS_D_STATUS_WAITING 0
 #define PS_D_STATUS_RECEIVED 1
 var float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
 var string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
-void PlayerStats_PlayerDetail();
+var float autocvar_g_playerstats_playerdetail_autoupdatetime = 3600; // automatically update every 60 minutes anyway
+void PlayerStats_PlayerDetail(void);
+void PlayerStats_PlayerDetail_CheckUpdate(void);
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
 #endif
-
 
 /*
 //// WIP -zykure /////////////////////////////////////////////////////
