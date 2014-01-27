@@ -624,12 +624,14 @@ void PlayerStats_PlayerDetail_CheckUpdate(void)
 	// determine whether we should retrieve playerdetail information again
 	float gamecount = cvar("cl_matchcount");
 
+	#if 0
 	printf("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
 		time,
 		PS_D_NEXTUPDATETIME,
 		PS_D_LASTGAMECOUNT,
 		gamecount
 	);
+	#endif
 
 	if(
 		(time >= PS_D_NEXTUPDATETIME)
