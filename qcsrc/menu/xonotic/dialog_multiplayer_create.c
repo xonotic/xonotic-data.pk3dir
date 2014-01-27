@@ -159,6 +159,7 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_ASSAULT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
+		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, l2, _("Point limit:"),     5,    0,  5, "");                         break;
 		default:                      GameType_ConfigureSliders(e, l, l2, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 	me.mapListBox.refilter(me.mapListBox);

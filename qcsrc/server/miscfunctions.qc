@@ -99,6 +99,8 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
 
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
@@ -1722,7 +1724,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprint(sprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin)));
+		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -2009,65 +2011,6 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     }
     else
         return FALSE;
-}
-
-float zcurveparticles_effectno;
-vector zcurveparticles_start;
-float zcurveparticles_spd;
-
-void endzcurveparticles()
-{
-	if(zcurveparticles_effectno)
-	{
-		// terminator
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd | 0x8000);
-	}
-	zcurveparticles_effectno = 0;
-}
-
-void zcurveparticles(float effectno, vector start, vector end, float end_dz, float spd)
-{
-	spd = bound(0, floor(spd / 16), 32767);
-	if(effectno != zcurveparticles_effectno || start != zcurveparticles_start)
-	{
-		endzcurveparticles();
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
-		WriteShort(MSG_BROADCAST, effectno);
-		WriteCoord(MSG_BROADCAST, start_x);
-		WriteCoord(MSG_BROADCAST, start_y);
-		WriteCoord(MSG_BROADCAST, start_z);
-		zcurveparticles_effectno = effectno;
-		zcurveparticles_start = start;
-	}
-	else
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd);
-	WriteCoord(MSG_BROADCAST, end_x);
-	WriteCoord(MSG_BROADCAST, end_y);
-	WriteCoord(MSG_BROADCAST, end_z);
-	WriteCoord(MSG_BROADCAST, end_dz);
-	zcurveparticles_spd = spd;
-}
-
-void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, vector vel)
-{
-	float end_dz;
-	vector vecxy, velxy;
-
-	vecxy = end - start;
-	vecxy_z = 0;
-	velxy = vel;
-	velxy_z = 0;
-
-	if (vlen(velxy) < 0.000001 * fabs(vel_z))
-	{
-		endzcurveparticles();
-		trailparticles(world, effectno, start, end);
-		return;
-	}
-
-	end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
-	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)

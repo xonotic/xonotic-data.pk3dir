@@ -100,7 +100,10 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		FOR_EACH_PLAYER(e)
+		{
 			e.freezetag_frozen_timeout = 0;
+			e.freezetag_revive_progress = 0;
+		}
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
@@ -123,7 +126,10 @@ float freezetag_CheckWinner()
 	}
 
 	FOR_EACH_PLAYER(e)
+	{
 		e.freezetag_frozen_timeout = 0;
+		e.freezetag_revive_progress = 0;
+	}
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
@@ -401,6 +407,7 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 {
 	FOR_EACH_PLAYER(self)
 	{
+		self.killcount = 0;
 		if (self.freezetag_frozen)
 			freezetag_Unfreeze(world);
 		self.freezetag_frozen_timeout = -1;
@@ -468,7 +475,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		if(warmup_stage)
+			self.health = max(1, self.freezetag_revive_progress * warmup_start_health);
+		else
+			self.health = max(1, self.freezetag_revive_progress * start_health);
 
 		if(self.freezetag_revive_progress >= 1)
 		{
@@ -509,7 +519,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		if(warmup_stage)
+			self.health = max(1, self.freezetag_revive_progress * warmup_start_health);
+		else
+			self.health = max(1, self.freezetag_revive_progress * start_health);
 	}
 	else if(!n)
 	{
@@ -602,10 +615,6 @@ MUTATOR_HOOKFUNCTION(freezetag_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
-	freezetag_teams = autocvar_g_freezetag_teams_override;
-	if(freezetag_teams < 2)
-		freezetag_teams = autocvar_g_freezetag_teams;
-	freezetag_teams = bound(2, freezetag_teams, 4);
 	ret_float = freezetag_teams;
 	return 0;
 }
@@ -621,7 +630,12 @@ MUTATOR_HOOKFUNCTION(freezetag_VehicleTouch)
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	ScoreRules_freezetag();
+
+	freezetag_teams = autocvar_g_freezetag_teams_override;
+	if(freezetag_teams < 2)
+		freezetag_teams = autocvar_g_freezetag_teams;
+	freezetag_teams = bound(2, freezetag_teams, 4);
+	ScoreRules_freezetag(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
