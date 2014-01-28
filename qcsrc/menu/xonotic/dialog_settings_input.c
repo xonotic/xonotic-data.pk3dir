@@ -44,6 +44,9 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClickEntity = kb;
 			kb.clearButton = e;
 
+	// todo:
+	// add menu_mouse_absolute and hud_cursormode here
+
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Mouse")));
 			e.isBold = TRUE;
