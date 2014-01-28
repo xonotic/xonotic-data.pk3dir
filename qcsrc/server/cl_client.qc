@@ -2006,7 +2006,10 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(IS_SPEC(self) || IS_OBSERVER(self)) {
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(!self.caplayer)
+	if(IS_REAL_CLIENT(self))
+	{
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(self);
