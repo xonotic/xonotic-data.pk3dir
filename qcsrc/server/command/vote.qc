@@ -463,7 +463,7 @@ void ReadyRestart_force()
 void ReadyRestart()
 {
 	// no arena, assault support yet...
-	if(g_arena | g_assault | gameover | intermission_running | race_completing)
+	if(g_assault | gameover | intermission_running | race_completing)
 		localcmd("restart\n");
 	else
 		localcmd("\nsv_hook_gamerestart\n");
@@ -668,10 +668,10 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 
 	first_command = argv(startpos);
 
-	/*dprint(sprintf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
+	/*printf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
 		substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)),
 		strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)))
-	));*/
+	);*/
 
 	if(
 		(autocvar_sv_vote_limit > 0)
@@ -1013,7 +1013,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if(caller.vote_selection != VOTE_SELECT_NULL && autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 
 			else // everything went okay, continue changing vote
 			{

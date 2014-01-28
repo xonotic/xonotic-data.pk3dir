@@ -186,6 +186,8 @@ void PutObserverInServer (void)
 	if(self.killcount != -666)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
+		if(autocvar_g_chat_nospectators == 1 || (cvar("g_warmup") && !(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -400,6 +402,9 @@ void PutClientInServer (void)
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELESE);
+
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
@@ -538,6 +543,9 @@ void PutClientInServer (void)
 		self.event_damage = PlayerDamage;
 
 		self.bot_attack = TRUE;
+		self.monster_attack = TRUE;
+		
+		self.spider_slowness = 0;
 
 		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
@@ -1577,44 +1585,42 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
-	float minh, mina, minf, maxh, maxa, maxf, limith, limita, limitf, max_mod, regen_mod, rot_mod, limit_mod;
-	maxh = autocvar_g_balance_health_rotstable;
-	maxa = autocvar_g_balance_armor_rotstable;
-	maxf = autocvar_g_balance_fuel_rotstable;
-	minh = autocvar_g_balance_health_regenstable;
-	mina = autocvar_g_balance_armor_regenstable;
-	minf = autocvar_g_balance_fuel_regenstable;
-	limith = autocvar_g_balance_health_limit;
-	limita = autocvar_g_balance_armor_limit;
-	limitf = autocvar_g_balance_fuel_limit;
-
-	max_mod = regen_mod = rot_mod = limit_mod = 1;
-
-	maxh = maxh * max_mod;
-	//maxa = maxa * max_mod;
-	//maxf = maxf * max_mod;
-	minh = minh * max_mod;
-	//mina = mina * max_mod;
-	//minf = minf * max_mod;
-	limith = limith * limit_mod;
-	limita = limita * limit_mod;
-	//limitf = limitf * limit_mod;
-
-	if(g_ca)
-		rot_mod = 0;
-
-	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
+	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	{
+		float minh, mina, maxh, maxa, limith, limita, max_mod, regen_mod, rot_mod, limit_mod;
+		maxh = autocvar_g_balance_health_rotstable;
+		maxa = autocvar_g_balance_armor_rotstable;
+		minh = autocvar_g_balance_health_regenstable;
+		mina = autocvar_g_balance_armor_regenstable;
+		limith = autocvar_g_balance_health_limit;
+		limita = autocvar_g_balance_armor_limit;
+
+		max_mod = regen_mod = rot_mod = limit_mod = 1;
+
+		maxh = maxh * max_mod;
+		minh = minh * max_mod;
+		limith = limith * limit_mod;
+		limita = limita * limit_mod;
+
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
-
-		// if player rotted to death...  die!
-		if(self.health < 1)
-			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
+	// if player rotted to death...  die!
+	// check this outside above checks, as player may still be able to rot to death
+	if(self.health < 1)
+		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+	{
+		float minf, maxf, limitf;
+
+		maxf = autocvar_g_balance_fuel_rotstable;
+		minf = autocvar_g_balance_fuel_regenstable;
+		limitf = autocvar_g_balance_fuel_limit;
+
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+	}
 }
 
 float zoomstate_set;
@@ -2308,7 +2314,7 @@ void PlayerPreThink (void)
 
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(self.respawn_flags & RESPAWN_FORCE)
+					if((self.respawn_flags & RESPAWN_FORCE) && !autocvar_g_respawn_delay_max)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2317,6 +2323,8 @@ void PlayerPreThink (void)
 				{
 					if(button_pressed)
 						self.deadflag = DEAD_RESPAWNABLE;
+					else if(time >= self.respawn_time_max && (self.respawn_flags & RESPAWN_FORCE))
+						self.deadflag = DEAD_RESPAWNING;
 				}
 				else if (self.deadflag == DEAD_RESPAWNABLE)
 				{
@@ -2328,6 +2336,7 @@ void PlayerPreThink (void)
 					if(time > self.respawn_time)
 					{
 						self.respawn_time = time + 1; // only retry once a second
+						self.respawn_time_max = self.respawn_time;
 						respawn();
 					}
 				}
@@ -2336,6 +2345,8 @@ void PlayerPreThink (void)
 
 				if(self.respawn_flags & RESPAWN_SILENT)
 					self.stat_respawn_time = 0;
+				else if((self.respawn_flags & RESPAWN_FORCE) && autocvar_g_respawn_delay_max)
+					self.stat_respawn_time = self.respawn_time_max;
 				else
 					self.stat_respawn_time = self.respawn_time;
 			}
@@ -2413,6 +2424,9 @@ void PlayerPreThink (void)
 
 		// secret status
 		secrets_setstatus();
+
+		// monsters status
+		monsters_setstatus();
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
@@ -2615,7 +2629,7 @@ void PlayerPostThink (void)
 
 	/*
 	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
+		dprintf("%f %.6f\n", time, race_GetFractionalLapCount(self));
 	*/
 
 	CSQCMODEL_AUTOUPDATE();

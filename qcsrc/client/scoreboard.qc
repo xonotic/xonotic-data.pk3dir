@@ -410,7 +410,7 @@ void Cmd_HUD_SetFields(float argc)
 			else
 			{
 				if (!nocomplain)
-					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
+					printf("^1Error:^7 Unknown score field: '%s'\n", str);
 				continue;
 			}
 :found
@@ -481,7 +481,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_secondary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_secondary]);
 		}
 		if(!have_primary)
 		{
@@ -490,7 +490,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_primary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_primary]);
 		}
 	}
 
@@ -1087,15 +1087,23 @@ vector HUD_DrawKeyValue(vector pos, string key, string value) {
 
 vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	float stat_secrets_found, stat_secrets_total;
-	float rows;
+	float stat_monsters_killed, stat_monsters_total;
+	float rows = 0;
 	string val;
+	
+	// get monster stats
+	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
+	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
 
 	// get secrets stats
 	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
 	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
 
 	// get number of rows
-	rows = (stat_secrets_total ? 1 : 0);
+	if(stat_secrets_total)
+		rows += 1;
+	if(stat_monsters_total)
+		rows += 1;
 
 	// if no rows, return
 	if (!rows)
@@ -1116,9 +1124,19 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
+	// draw monsters
+	if(stat_monsters_total)
+	{
+		val = sprintf("%d/%d", stat_monsters_killed, stat_monsters_total);
+		pos = HUD_DrawKeyValue(pos, _("Monsters killed:"), val);
+	}
+
 	// draw secrets
-	val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
-	pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
+	if(stat_secrets_total)
+	{
+		val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
+		pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
+	}
 
 	// update position
 	pos_y += 1.25 * hud_fontsize_y;

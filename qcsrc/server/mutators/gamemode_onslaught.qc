@@ -1304,6 +1304,12 @@ void onslaught_controlpoint_touch()
 	onslaught_updatelinks();
 }
 
+void onslaught_controlpoint_think()
+{
+	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE();
+}
+
 void onslaught_controlpoint_reset()
 {
 	if(self.goalentity && self.goalentity != world)
@@ -1316,8 +1322,9 @@ void onslaught_controlpoint_reset()
 	self.isshielded = TRUE;
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.colormap = self.colormap;
-	self.think = self.enemy.think = func_null;
-	self.nextthink = 0; // don't like func_null :P
+	self.think = onslaught_controlpoint_think;
+	self.enemy.think = func_null;
+	self.nextthink = time; // don't like func_null :P
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
@@ -1327,6 +1334,8 @@ void onslaught_controlpoint_reset()
 
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)
@@ -1397,6 +1406,9 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.colormap = self.colormap;
 
 	waypoint_spawnforitem(self);
+	
+	self.think = onslaught_controlpoint_think;
+	self.nextthink = time;
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
@@ -1404,6 +1416,8 @@ void spawnfunc_onslaught_controlpoint()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_controlpoint_reset;
+	
+	CSQCMODEL_AUTOINIT();
 }
 
 float onslaught_link_send(entity to, float sendflags)
@@ -1644,11 +1658,45 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
     return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ons_MonsterThink)
+{
+	entity e = find(world, targetname, self.target);
+	if (e != world)
+		self.team = e.team;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+{
+	entity e, ee = world;
+	
+	if(self.targetname)
+	{
+		e = find(world,target,self.targetname);
+		if(e != world)
+		{
+			self.team = e.team;
+			ee = e;
+		}
+	}
+	
+	if(ee)
+	{
+        activator = ee;
+        self.use();
+    }
+
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterMove, ons_MonsterThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

@@ -203,7 +203,7 @@ void CSQCModel_Draw()
 void CSQCModel_Read(float isnew)
 {
 	float sf;
-	sf = ReadShort();
+	sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
 	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
@@ -236,8 +236,11 @@ void CSQCModel_Read(float isnew)
 #undef CSQCMODEL_IF
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
+	{
+		vector pmin = self.mins, pmax = self.maxs;
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
-		// FIXME do we WANT this to override mins/maxs?
+		setsize(self, pmin, pmax);
+	}
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{

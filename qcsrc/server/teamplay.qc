@@ -115,19 +115,14 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_lms);
 	}
 
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
-	}
-
 	if(g_ca)
 	{
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		MUTATOR_ADD(gamemode_ca);
+		if(autocvar_g_ca_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_keyhunt)
@@ -144,6 +139,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
 		MUTATOR_ADD(gamemode_freezetag);
+		if(autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_assault)
@@ -198,6 +195,13 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
+	if(g_invasion)
+	{
+		timelimit_override = 0; // no timelimit in invasion, round based
+		fraglimit_override = autocvar_g_invasion_round_limit;
+		MUTATOR_ADD(gamemode_invasion);
+	}
+
 	if(teamplay)
 		entcs_init();
 
@@ -236,6 +240,12 @@ void InitGameplayMode()
 		}
 		else
 			g_race_qualifying = 0;
+	}
+	
+	if(g_invasion)
+	{
+		inv_maxrounds = cvar("fraglimit");
+		cvar_set("fraglimit", "0");
 	}
 
 	if(g_race || g_cts)
