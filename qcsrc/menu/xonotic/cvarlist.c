@@ -65,7 +65,7 @@ void XonoticCvarList_setSelected(entity me, float i)
 	SUPER(XonoticCvarList).setSelected(me, i);
 	if(me.nItems == 0)
 		return;
-	
+
 	if(me.cvarName)
 		strunzone(me.cvarName);
 	if(me.cvarDescription)
@@ -137,7 +137,7 @@ void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	
+
 	k = bufstr_get(me.handle, i);
 
 	v = cvar_string(k);

@@ -131,7 +131,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
 					HUD_Write_PanelCvar_q("_maximized_rotation");
-					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
+					HUD_Write_PanelCvar_q("_maximized_zoommode");
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");
@@ -193,11 +193,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		print(sprintf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename));
+		printf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
 		fclose(fh);
 	}
 	else
-		print(sprintf(_("^1Couldn't write to %s\n"), filename));
+		printf(_("^1Couldn't write to %s\n"), filename);
 }
 
 void HUD_Configure_Exit_Force()
@@ -978,7 +978,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// now save the new top id
 	panel_order[0] = id;
-	
+
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
@@ -1087,10 +1087,10 @@ void HUD_Panel_Mouse()
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	if not(autocvar_hud_cursormode)
+	if (!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-		
+
 		mousepos_x = bound(0, mousepos_x, vid_conwidth);
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}

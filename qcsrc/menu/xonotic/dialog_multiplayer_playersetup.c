@@ -5,7 +5,7 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Player Setup"))
 	ATTRIB(XonoticPlayerSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticPlayerSettingsTab, rows, float, 22)
-	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabel, entity, NULL)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
@@ -166,7 +166,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.onClickEntity = main.weaponsDialog;
 		// I don't really think this is useful as is, and especially it doesn't look very clean...
 		// In the future, if ALL of these buttons had some information, then it would be justified/clean
-		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null)); 
+		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null));
 		//	e0.textEntity = main.weaponsDialog;
 		//	e0.allowCut = 1;
 	me.TR(me);
@@ -174,7 +174,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.hudDialog;
-		// TODO: show hud config name with text here 
+		// TODO: show hud config name with text here
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));

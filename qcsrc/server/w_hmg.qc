@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ HMG,
-/* function  */ w_hmg,
-/* ammotype  */ IT_NAILS,
-/* impulse   */ 3,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "ok_hmg",
+/* WEP_##id	 */ HMG,
+/* function	 */ w_hmg,
+/* ammotype	 */ IT_NAILS,
+/* impulse	 */ 3,
+/* flags	 */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
+/* rating	 */ BOT_PICKUP_RATING_HIGH,
+/* model	 */ "ok_hmg",
 /* shortname */ "hmg",
-/* fullname  */ _("Heavy Machine Gun")
+/* fullname	 */ _("Heavy Machine Gun")
 );
 #else
 #ifdef SVQC
@@ -26,8 +26,8 @@ void hmg_fire_auto()
 	}
 
 	if(autocvar_g_balance_hmg_reload_ammo)
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1))
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(!weapon_action(self.weapon, WR_CHECKAMMO1))
+	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -36,16 +36,16 @@ void hmg_fire_auto()
 
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_hmg_sustained_ammo, autocvar_g_balance_hmg_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_hmg_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage);
-	if not(autocvar_g_norecoil)
+	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage);
+
+	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
 
 	uzi_spread = bound(autocvar_g_balance_hmg_spread_min, autocvar_g_balance_hmg_spread_min + (autocvar_g_balance_hmg_spread_add * self.misc_bulletcounter), autocvar_g_balance_hmg_spread_max);
-	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_hmg_speed, 5, autocvar_g_balance_hmg_sustained_damage, autocvar_g_balance_hmg_sustained_force, WEP_HMG, 0, 1, autocvar_g_balance_hmg_bulletconstant);
-	endFireBallisticBullet();
+	fireBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_hmg_solidpenetration, autocvar_g_balance_hmg_sustained_damage, autocvar_g_balance_hmg_sustained_force, WEP_HMG, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
@@ -62,7 +62,7 @@ void hmg_fire_auto()
 }
 
 void spawnfunc_weapon_hmg()
-{    
+{
 	weapon_defaultspawnfunc(WEP_HMG);
 }
 
@@ -79,7 +79,7 @@ float w_hmg(float req)
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_hmg_reload_ammo && self.clip_load < autocvar_g_balance_hmg_sustained_ammo) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);		
+			weapon_action(self.weapon, WR_RELOAD);
 		else
 		{
 			if (self.BUTTON_ATCK)
@@ -88,25 +88,6 @@ float w_hmg(float req)
 				self.misc_bulletcounter = 0;
 				hmg_fire_auto();
 			}
-
-			/*
-			if(self.BUTTON_ATCK2)
-			if(weapon_prepareattack(1, 0))
-			{
-				if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					W_SwitchWeapon_Force(self, w_getbestweapon(self));
-					w_ready();
-					return FALSE;
-				}
-
-				W_DecreaseAmmo(ammo_nails, autocvar_g_balance_hmg_burst_ammo, autocvar_g_balance_hmg_reload_ammo);
-
-				self.misc_bulletcounter = autocvar_g_balance_hmg_burst * -1;
-				uzi_mode1_fire_burst();
-			}
-			*/
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -115,7 +96,7 @@ float w_hmg(float req)
 		precache_model ("models/weapons/g_ok_hmg.md3");
 		precache_model ("models/weapons/v_ok_hmg.md3");
 		precache_model ("models/weapons/h_ok_hmg.iqm");
-		precache_sound ("weapons/uzi_fire.wav");		
+		precache_sound ("weapons/uzi_fire.wav");
 	}
 	else if (req == WR_SETUP)
 	{
@@ -124,20 +105,20 @@ float w_hmg(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-        ammo_amount = self.ammo_nails >= autocvar_g_balance_hmg_sustained_ammo;
+		ammo_amount = self.ammo_nails >= autocvar_g_balance_hmg_sustained_ammo;
 
-		if(autocvar_g_balance_hmg_reload_ammo)		
-            ammo_amount += self.(weapon_load[WEP_HMG]) >= autocvar_g_balance_hmg_sustained_ammo;
-		
+		if(autocvar_g_balance_hmg_reload_ammo)
+			ammo_amount += self.(weapon_load[WEP_HMG]) >= autocvar_g_balance_hmg_sustained_ammo;
+
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-        ammo_amount = self.ammo_nails >= autocvar_g_balance_hmg_sustained_ammo;
+		ammo_amount = self.ammo_nails >= autocvar_g_balance_hmg_sustained_ammo;
 
 		if(autocvar_g_balance_hmg_reload_ammo)
-            ammo_amount += self.(weapon_load[WEP_HMG]) >= autocvar_g_balance_hmg_sustained_ammo;
-		
+			ammo_amount += self.(weapon_load[WEP_HMG]) >= autocvar_g_balance_hmg_sustained_ammo;
+
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)

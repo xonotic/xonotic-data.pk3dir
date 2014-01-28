@@ -5,7 +5,7 @@
 
 float accuracy_byte(float n, float d)
 {
-	//print(sprintf("accuracy: %d / %d\n", n, d));
+	//printf("accuracy: %d / %d\n", n, d);
 	if(n <= 0)
 		return 0;
 	if(n > d)
@@ -25,7 +25,7 @@ float accuracy_send(entity to, float sf)
 	a = a.accuracy;
 
 	if(to != a.owner)
-		if not(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share)
+		if (!(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share))
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
@@ -109,9 +109,13 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
+	frag_attacker = attacker;
+	frag_target = targ;
+	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid);
+
 	if(!warmup_stage)
-	if(IS_CLIENT(targ))
 	if(targ.deadflag == DEAD_NO)
+	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;

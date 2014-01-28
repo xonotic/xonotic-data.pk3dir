@@ -93,7 +93,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if not(IS_REAL_CLIENT(player))
+		if (!IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
@@ -541,20 +541,20 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	
+
 	float f = (self.owner.weapon_nextthink - time);
 	if (self.state == WS_RAISE && !intermission_running)
 	{
 		entity newwep = get_weaponinfo(self.owner.switchweapon);
 		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
-		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
+		//printf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
 		entity oldwep = get_weaponinfo(self.owner.weapon);
 		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
-		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
+		//printf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)
@@ -667,7 +667,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		complain = 0;
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
-		
+
 	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 
@@ -733,7 +733,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				{
 					if(e.classname == "droppedweapon")
 						continue;
-					if not(e.flags & FL_ITEM)
+					if (!(e.flags & FL_ITEM))
 						continue;
 					WaypointSprite_Spawn(
 						s,
@@ -816,7 +816,7 @@ void W_SwitchToOtherWeapon(entity pl)
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
@@ -851,7 +851,7 @@ float weapon_prepareattack_checkammo(float secondary)
 		{
 			W_SwitchToOtherWeapon(self);
 		}
-		
+
 		return FALSE;
 	}
 	return TRUE;
@@ -1129,7 +1129,7 @@ vector W_CalculateProjectileSpread(vector forward, float spread)
 	if(spread <= 0)
 		return forward;
 	sstyle = autocvar_g_projectiles_spread_style;
-	
+
 	if(sstyle == 0)
 	{
 		// this is the baseline for the spread value!
@@ -1353,7 +1353,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 		return; // TODO
 
 	// don't reload weapons that don't have the RELOADABLE flag
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
 	{
 		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
 		return;
@@ -1369,7 +1369,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// no ammo, so nothing to load
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
@@ -1378,7 +1378,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		if (!(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);

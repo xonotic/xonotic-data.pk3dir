@@ -56,7 +56,7 @@ void InitGameplayMode()
 	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
-	if not(cvar_value_issafe(world.fog))
+	if (!cvar_value_issafe(world.fog))
 	{
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
@@ -115,19 +115,14 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_lms);
 	}
 
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
-	}
-
 	if(g_ca)
 	{
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		MUTATOR_ADD(gamemode_ca);
+		if(autocvar_g_ca_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_keyhunt)
@@ -144,6 +139,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
 		MUTATOR_ADD(gamemode_freezetag);
+		if(autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_assault)
@@ -192,10 +189,17 @@ void InitGameplayMode()
         have_team_spawns = -1; // request team spawns
 	    MUTATOR_ADD(gamemode_nexball);
 	}
-        
+
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
+	}
+
+	if(g_invasion)
+	{
+		timelimit_override = 0; // no timelimit in invasion, round based
+		fraglimit_override = autocvar_g_invasion_round_limit;
+		MUTATOR_ADD(gamemode_invasion);
 	}
 
 	if(teamplay)
@@ -236,6 +240,12 @@ void InitGameplayMode()
 		}
 		else
 			g_race_qualifying = 0;
+	}
+	
+	if(g_invasion)
+	{
+		inv_maxrounds = cvar("fraglimit");
+		cvar_set("fraglimit", "0");
 	}
 
 	if(g_race || g_cts)
@@ -600,7 +610,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 			cb -= cbb * 0.999;
 		}
 	}
-	
+
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
@@ -671,7 +681,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		GetTeamCounts(world);
 
 	RandomSelection_Init();
-	
+
 	t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;
