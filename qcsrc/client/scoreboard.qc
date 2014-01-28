@@ -375,7 +375,7 @@ void Cmd_HUD_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if not(isGametypeInFilter(gametype, teamplay, FALSE, pattern))
+			if (!isGametypeInFilter(gametype, teamplay, FALSE, pattern))
 				continue;
 		}
 
@@ -409,8 +409,8 @@ void Cmd_HUD_SetFields(float argc)
 			}
 			else
 			{
-				if not(nocomplain)
-					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
+				if (!nocomplain)
+					printf("^1Error:^7 Unknown score field: '%s'\n", str);
 				continue;
 			}
 :found
@@ -481,7 +481,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_secondary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_secondary]);
 		}
 		if(!have_primary)
 		{
@@ -490,7 +490,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_primary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_primary]);
 		}
 	}
 
@@ -526,7 +526,7 @@ string HUD_GetField(entity pl, float field)
 	switch(field)
 	{
 		case SP_PING:
-			if not(pl.gotscores)
+			if (!pl.gotscores)
 				return "\xEE\x82\x8D\xEE\x82\x8D\xEE\x82\x8D"; // >>> sign
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
@@ -537,7 +537,7 @@ string HUD_GetField(entity pl, float field)
 			return ftos(f);
 
 		case SP_PL:
-			if not(pl.gotscores)
+			if (!pl.gotscores)
 				return _("N/A");
 			f = pl.ping_packetloss;
 			tmp = pl.ping_movementloss;
@@ -586,7 +586,7 @@ string HUD_GetField(entity pl, float field)
 			} else
 				str = sprintf("%.1f", num/denom);
 			return str;
-			
+
 		case SP_SUM:
 			f = pl.(scores[SP_KILLS]);
 			f -= pl.(scores[SP_DEATHS]);
@@ -1024,7 +1024,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if not(self.weapon)
+		if (!self.weapon)
 			continue;
 		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;
@@ -1081,31 +1081,39 @@ vector HUD_DrawKeyValue(vector pos, string key, string value) {
 	drawstring(pos, value, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x = px;
 	pos_y+= hud_fontsize_y;
-	
+
 	return pos;
 }
 
 vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	float stat_secrets_found, stat_secrets_total;
-	float rows;
+	float stat_monsters_killed, stat_monsters_total;
+	float rows = 0;
 	string val;
+	
+	// get monster stats
+	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
+	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
 
 	// get secrets stats
 	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
 	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
 
 	// get number of rows
-	rows = (stat_secrets_total ? 1 : 0);
+	if(stat_secrets_total)
+		rows += 1;
+	if(stat_monsters_total)
+		rows += 1;
 
 	// if no rows, return
-	if not(rows)
+	if (!rows)
 		return pos;
 
 	//  draw table header
 	drawstring(pos, _("Map stats:"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	
-	// draw table	
+
+	// draw table
 	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * rows;
@@ -1116,10 +1124,20 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
+	// draw monsters
+	if(stat_monsters_total)
+	{
+		val = sprintf("%d/%d", stat_monsters_killed, stat_monsters_total);
+		pos = HUD_DrawKeyValue(pos, _("Monsters killed:"), val);
+	}
+
 	// draw secrets
-	val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
-	pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
-	
+	if(stat_secrets_total)
+	{
+		val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
+		pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
+	}
+
 	// update position
 	pos_y += 1.25 * hud_fontsize_y;
 	return pos;
@@ -1207,7 +1225,7 @@ void HUD_DrawScoreboard()
 			scoreboard_fade_alpha = 0;
 	}
 
-	if not(scoreboard_fade_alpha)
+	if (!scoreboard_fade_alpha)
 		return;
 
 	HUD_UpdatePlayerTeams();
@@ -1316,7 +1334,7 @@ void HUD_DrawScoreboard()
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
-		
+
 	if(teamplay)
 		pos = HUD_DrawMapStats(pos, Team_ColorRGB(myteam), bg_size);
 	else
@@ -1364,14 +1382,14 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl), 
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl),
 					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl), 
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl),
 					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
 					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label[ps_primary])));
@@ -1383,14 +1401,14 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll), 
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll),
 					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
 					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(teamscores_label[ts_primary])));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll), 
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll),
 					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
 					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
 					TranslateScoresLabel(scores_label[ps_primary])));
@@ -1410,7 +1428,7 @@ void HUD_DrawScoreboard()
 			// a negative number means we are awaiting respawn, time value is still the same
 			respawn_time *= -1; // remove mark now that we checked it
 			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
-			
+
 			str = sprintf(_("^1Respawning in ^3%s^1..."),
 				(autocvar_scoreboard_respawntime_decimals ?
 					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)

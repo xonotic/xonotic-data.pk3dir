@@ -84,7 +84,7 @@ float MapInfo_Cache_Retrieve(string map)
 
 // GLOB HANDLING (for all BSP files)
 float _MapInfo_globopen;
-float _MapInfo_globcount; 
+float _MapInfo_globcount;
 float _MapInfo_globhandle;
 string _MapInfo_GlobItem(float i)
 {
@@ -141,7 +141,7 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
 {
 	float i, j;
-	if not(_MapInfo_filtered_allocated)
+	if (!_MapInfo_filtered_allocated)
 	{
 		_MapInfo_filtered_allocated = 1;
 		_MapInfo_filtered = buf_create();
@@ -164,7 +164,7 @@ float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequi
 	}
 	MapInfo_count = j + 1;
 	MapInfo_ClearTemps();
-	
+
 	// sometimes the glob isn't sorted nicely, so fix it here...
 	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
 
@@ -257,7 +257,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 
 	for(;;)
 	{
-		if not((s = fgets(fh)))
+		if (!((s = fgets(fh))))
 			break;
 		if(inWorldspawn == 1)
 			if(startsWith(s, "}"))
@@ -313,6 +313,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+				else if(v == "invasion_spawnpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -370,8 +372,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA;
 		}
-		if(                     diameter < 4096)
-			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ARENA;
 		if(spawnpoints >= 12 && diameter > 5120)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
 	}
@@ -416,7 +416,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
 		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
 		case MAPINFO_TYPE_LMS:             return "9 20 0";
-		case MAPINFO_TYPE_ARENA:           return "10 20 0";
 		case MAPINFO_TYPE_CA:              return "10 20 0";
 		case MAPINFO_TYPE_KEYHUNT:         return "1000 20 3 0";
 		case MAPINFO_TYPE_ASSAULT:         return "20 0";
@@ -442,7 +441,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, FALSE);
-	
+
 	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
@@ -509,7 +508,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 	*/
-	
+
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
@@ -603,14 +602,11 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		p = strstrofs(sa, "=", 0);
 		if(p < 0)
 		{
-			k = "timelimit";
-			v = s;
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
+			continue;
 		}
-		else
-		{
-			k = substring(sa, 0, p);
-			v = substring(sa, p+1, -1);
-		}
+		k = substring(sa, 0, p);
+		v = substring(sa, p+1, -1);
 
 		if(k == "timelimit")
 		{
@@ -646,7 +642,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		}
 		else
 		{
-			print("Invalid gametype key in mapinfo: ", k, "\n");
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
 		}
 	}
 
@@ -683,6 +679,12 @@ float MapInfo_Type_FromString(string t)
 		t = "ka";
 		print("'. Should use '", t, "'.\n");
 	}
+	if(t == "invasion")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "inv";
+		print("'. Should use '", t, "'.\n");
+	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
@@ -694,7 +696,7 @@ float MapInfo_Type_FromString(string t)
 string MapInfo_Type_ToString(float t)
 {
 	entity e;
-	if(t == MAPINFO_TYPE_ALL)     
+	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
@@ -735,12 +737,12 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	o = strstrofs(s, "\"", 0);
 	if(o >= 0)
 		s = substring(s, 0, o);
-	
+
 	//   remove // comments
 	o = strstrofs(s, "//", 0);
 	if(o >= 0)
 		s = substring(s, 0, o);
-	
+
 	//   remove trailing spaces
 	while(substring(s, -1, 1) == " ")
 		s = substring(s, 0, -2);
@@ -756,7 +758,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			{
 				for(;;)
 				{
-					if not((s = fgets(fh)))
+					if (!((s = fgets(fh))))
 						break;
 
 					// catch different sorts of comments
@@ -784,9 +786,9 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	}
 	else if(t == "")
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
-	else if not(cvar_value_issafe(t))
+	else if (!cvar_value_issafe(t))
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
-	else if not (cvar_value_issafe(s))
+	else if (!cvar_value_issafe(s))
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
 	else if(matchacl(MAPINFO_SETTEMP_ACL_SYSTEM, t) <= 0)
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
@@ -913,7 +915,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			else
 				fputs(fh, "// uncomment this if you added turrets: has turrets\n");
 			if(MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_VEHICLES)
-				fputs(fh, "has weapons\n");
+				fputs(fh, "has vehicles\n");
 			else
 				fputs(fh, "// uncomment this if you added vehicles: has vehicles\n");
 			if(MapInfo_Map_flags & MAPINFO_FLAG_FRUSTRATING)
@@ -946,7 +948,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	_MapInfo_Map_Reset();
 	for(;;)
 	{
-		if not((s = fgets(fh)))
+		if (!((s = fgets(fh))))
 			break;
 
 		// catch different sorts of comments
@@ -1078,7 +1080,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(s))
+			if (!cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
@@ -1088,7 +1090,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			t = car(s); s = cdr(s);
 			if(pGametypeToSet) // FIXME is this check right here?
 			{
-				if not(cvar_value_issafe(t))
+				if (!cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
@@ -1121,7 +1123,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	if(cvar("g_tdm_on_dm_maps"))
 	{
 		// if this is set, all DM maps support TDM too
-		if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+		if (!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH))
 			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
 				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
 	}
@@ -1251,7 +1253,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
 	//}
-	
+
 	cvar_settemp_restore();
 	if(reinit)
 		localcmd(strcat("\nmap ", s, "\n"));
@@ -1369,11 +1371,11 @@ float MapInfo_ForbiddenFlags()
 	f = MAPINFO_FLAG_FORBIDDEN;
 
 #ifndef MENUQC
-	if not(cvar("g_maplist_allow_hidden"))
+	if (!cvar("g_maplist_allow_hidden"))
 #endif
 		f |= MAPINFO_FLAG_HIDDEN;
 
-	if not(cvar("g_maplist_allow_frustrating"))
+	if (!cvar("g_maplist_allow_frustrating"))
 		f |= MAPINFO_FLAG_FRUSTRATING;
 
 	return f;

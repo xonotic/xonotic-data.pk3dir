@@ -4,7 +4,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticEffectsSettingsTab, rows, float, 17)
-	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
 float updateCompression();
@@ -195,7 +195,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	        setDependent(e, "cl_decals", 1, 1);
 	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_time"));
 	        setDependent(e, "cl_decals", 1, 1);
-			
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));
 }

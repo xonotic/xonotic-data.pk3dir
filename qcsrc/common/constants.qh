@@ -30,7 +30,6 @@ const float AS_FLOAT = 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_ZCURVEPARTICLES = 102;
 const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
 const float TE_CSQC_LIGHTNINGARC = 104;
 const float TE_CSQC_TEAMNAGGER = 105;
@@ -183,6 +182,9 @@ const float STAT_ROUNDSTARTTIME = 73;
 const float STAT_WEAPONS2 = 74;
 const float STAT_WEAPONS3 = 75;
 
+const float STAT_MONSTERS_TOTAL = 76;
+const float STAT_MONSTERS_KILLED = 77;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
@@ -327,7 +329,6 @@ const float ATTEN_MAX = 3.984375;
 const float PROJECTILE_ELECTRO = 1;
 const float PROJECTILE_ROCKET = 2;
 const float PROJECTILE_TAG = 3;
-const float PROJECTILE_BULLET = 4;
 const float PROJECTILE_CRYLINK = 5;
 const float PROJECTILE_ELECTRO_BEAM = 6;
 const float PROJECTILE_GRENADE = 7;
@@ -342,11 +343,9 @@ const float PROJECTILE_PORTO_BLUE = 15;
 const float PROJECTILE_HOOKBOMB = 16;
 const float PROJECTILE_HAGAR = 17;
 const float PROJECTILE_HAGAR_BOUNCING = 18;
-const float PROJECTILE_BULLET_GLOWING = 19;
 const float PROJECTILE_CRYLINK_BOUNCING = 20;
 const float PROJECTILE_FIREBALL = 21;
 const float PROJECTILE_FIREMINE = 22;
-const float PROJECTILE_BULLET_GLOWING_TRACER = 23;
 
 const float PROJECTILE_RAPTORCANNON = 24;
 const float PROJECTILE_RAPTORBOMB = 25;
@@ -357,6 +356,9 @@ const float PROJECTILE_WAKICANNON = 29;
 
 const float PROJECTILE_BUMBLE_GUN = 30;
 const float PROJECTILE_BUMBLE_BEAM = 31;
+
+const float PROJECTILE_MAGE_SPIKE = 32;
+const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
 const float PROJECTILE_NADE_RED = 50;
 const float PROJECTILE_NADE_RED_BURN = 51;

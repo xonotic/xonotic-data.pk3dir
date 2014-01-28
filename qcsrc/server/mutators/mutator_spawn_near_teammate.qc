@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
-			
+
 		entity team_mate, best_mate = world;
 		vector best_spot = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;
@@ -61,7 +61,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 			{
 				tracebox(team_mate.origin, PL_MIN, PL_MAX, team_mate.origin - '0 0 100', MOVE_WORLDONLY, team_mate);
 				if(trace_fraction != 1.0)
-				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
 					pc = pointcontents(trace_endpos + '0 0 1');
 					if(pc == CONTENT_EMPTY)
@@ -111,6 +111,8 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 									{
 										setorigin(self, trace_endpos);
 										self.angles = team_mate.angles;
+										self.angles_z = 0; // never spawn tilted even if the spot says to
+										self.fixangle = TRUE; // turn this way immediately
 										team_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 										return 0;
 									}
@@ -127,7 +129,8 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 		{
 			setorigin(self, best_spot);
 			self.angles = best_mate.angles;
-			self.fixangle = TRUE;
+			self.angles_z = 0; // never spawn tilted even if the spot says to
+			self.fixangle = TRUE; // turn this way immediately
 			best_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 		}
 	}
@@ -135,6 +138,8 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 	{
 		self.angles = vectoangles(spawn_spot.msnt_lookat.origin - self.origin);
 		self.angles_x = -self.angles_x;
+		self.angles_z = 0; // never spawn tilted even if the spot says to
+		self.fixangle = TRUE; // turn this way immediately
 		/*
 		sprint(self, "You should be looking at ", spawn_spot.msnt_lookat.netname, "^7.\n");
 		sprint(self, "distance: ", vtos(spawn_spot.msnt_lookat.origin - self.origin), "\n");

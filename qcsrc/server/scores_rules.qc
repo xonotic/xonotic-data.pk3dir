@@ -17,12 +17,12 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore  (ST_SCORE,        "score",     stprio);
 
-	if not(INDEPENDENT_PLAYERS)
+	if (!INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_KILLS,        "kills",     0);
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);
 
-	if not(INDEPENDENT_PLAYERS)
+	if (!INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES,     "suicides",  SFL_LOWER_IS_BETTER);
 
 	if(score_enabled)
@@ -106,12 +106,18 @@ void ScoreRules_nexball(float teams)
 	ScoreRules_basics_end();
 }
 
-// FreezeTag stuff
 #define SP_FREEZETAG_REVIVALS 4
-void ScoreRules_freezetag()
+void ScoreRules_freezetag(float teams)
 {
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
+	ScoreRules_basics_end();
+}
+
+#define ST_CA_ROUNDS 1
+void ScoreRules_ca(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }

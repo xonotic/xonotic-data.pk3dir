@@ -24,11 +24,11 @@ void PlayerJump (void)
 	player_multijump = doublejump;
 	if(MUTATOR_CALLHOOK(PlayerJump))
 		return;
-		
+
 	doublejump = player_multijump;
 
 	float mjumpheight;
-	
+
 	if (autocvar_sv_doublejump)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
@@ -110,7 +110,7 @@ void PlayerJump (void)
 	self.flags &= ~FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
-	
+
 	if(autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
@@ -517,9 +517,9 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	}
 	else
 		vel_perpend = vel_perpend * max(0, 1 - frametime * wishspeed * sidefric);
-	
+
 	vel_xy = vel_straight * wishdir + vel_perpend;
-	
+
 	if(speedclamp >= 0)
 	{
 		float vel_xy_preclamp;
@@ -633,7 +633,7 @@ void SV_PlayerPhysics()
 	string c;
 
 	WarpZone_PlayerPhysics_FixVAngle();
-	
+
 	maxspd_mod = 1;
 	if(self.ballcarried)
 		if(g_nexball)
@@ -747,7 +747,7 @@ void SV_PlayerPhysics()
 			return;
 		bot_think();
 	}
-	
+
 	self.items &= ~IT_USING_JETPACK;
 
 	if(IS_PLAYER(self))
@@ -785,6 +785,12 @@ void SV_PlayerPhysics()
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
 
+	if(time < self.spider_slowness)
+	{
+		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
+		self.stat_sv_airspeedlimit_nonqw *= 0.5;
+	}
+
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
 	if(self.player_blocked)
@@ -804,7 +810,7 @@ void SV_PlayerPhysics()
 	if(self.conveyor.state)
 		self.velocity -= self.conveyor.movedir;
 
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 	{
 		maxspd_mod = autocvar_sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
@@ -860,12 +866,12 @@ void SV_PlayerPhysics()
 
 		if(self.waterlevel < WATERLEVEL_SWIMMING)
 		if(time >= self.ladder_time)
-		if not(self.hook)
+		if (!self.hook)
 		{
 			self.nextstep = time + 0.3 + random() * 0.1;
 			trace_dphitq3surfaceflags = 0;
 			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 			{
 				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -1076,7 +1082,7 @@ void SV_PlayerPhysics()
 		if (f > 0 && wishvel != '0 0 0')
 		{
 			self.velocity = self.velocity + wishvel * f * frametime;
-			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+			if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime * fvel * f;
 			self.flags &= ~FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;

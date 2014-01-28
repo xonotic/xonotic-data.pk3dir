@@ -197,7 +197,7 @@ float WaypointSprite_visible_for_player(entity e)
 	{
 		if(self.team != e.team)
 			return FALSE;
-		if not(IS_PLAYER(e))
+		if (!IS_PLAYER(e))
 			return FALSE;
 	}
 
@@ -251,7 +251,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WAYPOINT);
 
 	sendflags = sendflags & 0x7F;
-	
+
 	if(g_nexball)
 		sendflags &= ~0x80;
 	else if(self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))

@@ -78,7 +78,7 @@ void XonoticHUDExitDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
 		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString("hud_dock_color", "hud_dock_color"));
 	me.TR(me);
-	me.TR(me);	
+	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_dock_alpha"));

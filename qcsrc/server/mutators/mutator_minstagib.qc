@@ -1,9 +1,9 @@
-void spawnfunc_item_minst_cells (void) 
+void spawnfunc_item_minst_cells (void)
 {
-	if not(g_minstagib) { remove(self); return; }
-	if not(self.ammo_cells)
+	if (!g_minstagib) { remove(self); return; }
+	if (!self.ammo_cells)
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
-		
+
 	StartItem ("models/items/a_cells.md3",
 			   "misc/itempickup.wav", 45, 0,
 			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
@@ -28,7 +28,7 @@ void minstagib_stop_countdown(entity e)
 }
 void minstagib_ammocheck()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return; // not a player
 	if (time < self.minstagib_nextthink)
 		return;
@@ -105,7 +105,23 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 	entity head;
 	FOR_EACH_PLAYER(head)
 		minstagib_stop_countdown(head);
-		
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
+{
+	other.monster_loot = spawnfunc_item_minst_cells;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
+{
+	// always refill ammo
+	if(self.monsterid == MON_MAGE)
+		self.skin = 1;
+	
 	return FALSE;
 }
 
@@ -113,7 +129,7 @@ MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
 {
 	if(checkentity.items & IT_STRENGTH)
 		return TRUE;
-		
+
 	return FALSE;
 }
 
@@ -135,9 +151,15 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_PlayerRegen)
+{
+	// no regeneration in minstagib
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 {
-	if not(self.effects & EF_FULLBRIGHT)
+	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
 
 	if (self.items & IT_STRENGTH)
@@ -188,7 +210,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPhysics)
 {
 	if(self.items & IT_INVINCIBLE)
 		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_minstagib_speed_highspeed;
-		
+
 	return FALSE;
 }
 
@@ -196,7 +218,7 @@ MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 {
 	damage_save = 0;
 	damage_take = frag_damage;
-	
+
 	return FALSE;
 }
 
@@ -212,7 +234,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
 	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
-		
+
 	if(IS_PLAYER(frag_target))
 	{
 		if ((frag_deathtype == DEATH_FALL)  ||
@@ -222,7 +244,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		{
 			frag_damage = 0;
 		}
-		
+
 		if(IS_PLAYER(frag_attacker))
 		if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
 		if(frag_target.armorvalue)
@@ -233,7 +255,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			frag_target.hitsound += 1;
 			frag_attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
 		}
-		
+
 		if(IS_PLAYER(frag_attacker))
 		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
 		{
@@ -249,7 +271,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			}
 		}
 	}
-	
+
 	if(IS_PLAYER(frag_attacker))
 	if(frag_mirrordamage > 0)
 	{
@@ -262,23 +284,23 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		}
 		frag_mirrordamage = 0;
 	}
-	
+
 	if(frag_target.items & IT_STRENGTH)
 		yoda = 1;
-		
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 {
 	start_ammo_cells = cvar("g_minstagib_ammo_start");
-	
+
 	start_health = 100;
 	start_armorvalue = 0;
 	start_weapons = WEPSET_MINSTANEX;
 	warmup_start_weapons = WEPSET_MINSTANEX;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
-		
+
 	return FALSE;
 }
 
@@ -286,13 +308,13 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 {
 	if(self.classname == "item_cells")
 		return TRUE; // no normal cells?
-		
+
 	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		return FALSE;
 	}
-	
+
 	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
 	{
 		entity e = spawn();
@@ -304,29 +326,29 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 		self = oldself;
 		return TRUE;
 	}
-		
+
 	if(self.flags & FL_POWERUP)
 		return FALSE;
-		
+
 	if(self.ammo_cells > autocvar_g_minstagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
-		
+
 	if(self.ammo_cells && !self.weapon)
 		return FALSE;
-		
+
 	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
 {
 	entity e = WaypointSprite_getviewentity(other);
-	
+
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
 	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
 	if(DIFF_TEAM(self.owner, e))
 		return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -359,37 +381,37 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
-	
+
 	if(self.max_health)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_minstagib_extralives);
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
-		
+
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 {
-	if not(autocvar_g_powerups) { return FALSE; }
-	if not(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega")
+	if (!autocvar_g_powerups) { return FALSE; }
+	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
 		return FALSE;
-	
+
 	entity e = spawn();
-	
+
 	if(random() < 0.3)
 		e.think = spawnfunc_item_strength;
 	else if(random() < 0.6)
 		e.think = minstagib_health_mega;
 	else
 		e.think = spawnfunc_item_invincible;
-		
+
 	e.nextthink = time + 0.1;
 	e.spawnflags = self.spawnflags;
 	e.noalign = self.noalign;
 	setorigin(e, self.origin);
-	
+
 	return TRUE;
 }
 
@@ -405,9 +427,17 @@ MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsPrettyString)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_SetModname)
+{
+	modname = "MinstaGib";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(mutator_minstagib)
 {
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
@@ -422,9 +452,11 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, minstagib_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, minstagib_SetModname, CBC_ORDER_ANY);
 
 	return FALSE;
 }
