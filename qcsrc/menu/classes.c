@@ -121,3 +121,4 @@
 #include "xonotic/dialog_hudpanel_centerprint.c"
 #include "xonotic/slider_picmip.c"
 #include "xonotic/slider_particles.c"
+#include "xonotic/slider_sbfadetime.c"
