@@ -10,6 +10,7 @@ void CreatureFrame (void)
 
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
 		float projectile = (self.flags & FL_PROJECTILE);
+		float monster = (self.flags & FL_MONSTER);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -19,7 +20,7 @@ void CreatureFrame (void)
 				self.dmgtime = 0;
 			}
 
-			if(!vehic && !projectile) // vehicles and projectiles don't drown
+			if(!vehic && !projectile && !monster) // vehicles, monsters and projectiles don't drown
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
@@ -219,17 +220,18 @@ void StartFrame (void)
 
 	game_delay_last = game_delay;
 
+	CreatureFrame ();
+	CheckRules_World ();
+
 	// if in warmup stage and limit for warmup is hit start match
-	if (warmup_stage)
-	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
+	if(warmup_stage)
+	if(!gameover)
+	if((g_warmup_limit > 0 && time >= g_warmup_limit)
 	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{
 		ReadyRestart();
 		return;
 	}
-
-	CreatureFrame ();
-	CheckRules_World ();
 
 	bot_serverframe();
 

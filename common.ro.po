@@ -3,14 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# busterdbk <busterdbk@gmail.com>, 2013
+# busterdbk <busterdbk@gmail.com>, 2013
 # MirceaKitsune <sonichedgehog_hyperblast00@yahoo.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-03 11:55+0200\n"
-"PO-Revision-Date: 2013-10-03 10:08+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2013-12-19 16:57+0000\n"
+"Last-Translator: busterdbk <busterdbk@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/projects/p/xonotic/"
 "language/ro/)\n"
 "Language: ro\n"
@@ -22,7 +24,7 @@ msgstr ""
 
 #: qcsrc/client/Main.qc:21
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr ""
+msgstr "EROARE - MENIUL ESTE VIZIBIL DAR NU S-A DEFINIT NICIUN MENIU!"
 
 #: qcsrc/client/Main.qc:46
 msgid ""
@@ -65,20 +67,20 @@ msgstr ""
 #: qcsrc/client/hud.qc:186
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr "(-%dL)"
 
 #: qcsrc/client/hud.qc:191
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr "(+%dL)"
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
-msgstr ""
+msgstr "Linie de start"
 
 #: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
-msgstr ""
+msgstr "Linie de sosire"
 
 #: qcsrc/client/hud.qc:214
 #, c-format
@@ -100,12 +102,12 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:837
 msgid "Unavailable"
-msgstr ""
+msgstr "Indisponibil"
 
 #: qcsrc/client/hud.qc:1704 qcsrc/client/hud.qc:1705 qcsrc/client/hud.qc:2068
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Jucator: %d"
 
 #: qcsrc/client/hud.qc:2384
 msgid "^1Intermediate 1 (+15.42)"
@@ -135,7 +137,7 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:2588
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Permiti serverelor sa-ti stocheze si afiseze numele? "
 
 #: qcsrc/client/hud.qc:2592
 msgid "^1Configure the HUD"
@@ -144,20 +146,20 @@ msgstr ""
 #: qcsrc/client/hud.qc:2596
 #, c-format
 msgid "Yes (%s): %d"
-msgstr ""
+msgstr "Da (%s): %d"
 
 #: qcsrc/client/hud.qc:2598
 #, c-format
 msgid "No (%s): %d"
-msgstr ""
+msgstr "Nu (%s): %d"
 
 #: qcsrc/client/hud.qc:3169 qcsrc/client/hud.qc:3172 qcsrc/client/hud.qc:3174
 msgid "Personal best"
-msgstr ""
+msgstr "Record personal"
 
 #: qcsrc/client/hud.qc:3187 qcsrc/client/hud.qc:3190 qcsrc/client/hud.qc:3192
 msgid "Server best"
-msgstr ""
+msgstr "Record server"
 
 #: qcsrc/client/hud.qc:3552
 msgid "^3Player^7: This is the chat area."
@@ -166,7 +168,7 @@ msgstr ""
 #: qcsrc/client/hud.qc:3618
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud.qc:3683
 msgid "^1Observing"
@@ -208,35 +210,35 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:3714
 msgid "^1Match has already begun"
-msgstr ""
+msgstr "^1Meciul deja a inceput"
 
 #: qcsrc/client/hud.qc:3716
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1Nu mai ai vieti ramase"
 
 #: qcsrc/client/hud.qc:3718 qcsrc/client/hud.qc:3721
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Apasa ^3%s^1 pentru a te alatura jocului"
 
 #: qcsrc/client/hud.qc:3729
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1Jocul incepe in ^3%d^1 secunde"
 
 #: qcsrc/client/hud.qc:3736
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Momentan in ^1incalzire^2!"
 
 #: qcsrc/client/hud.qc:3751
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sApasa ^3%s%s pentru a termina incalzirea"
 
 #: qcsrc/client/hud.qc:3753
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sApasa ^3%s%s cand esti pregatit"
 
 #: qcsrc/client/hud.qc:3758
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -253,7 +255,7 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:3787
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Numarul de jucatori din echipe nu este echilibrat! "
 
 #: qcsrc/client/hud.qc:3792
 #, c-format
@@ -282,15 +284,15 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:3858
 msgid " m/s"
-msgstr ""
+msgstr "m/s"
 
 #: qcsrc/client/hud.qc:3862
 msgid " km/h"
-msgstr ""
+msgstr "km/h"
 
 #: qcsrc/client/hud.qc:3866
 msgid " mph"
-msgstr ""
+msgstr "mph"
 
 #: qcsrc/client/hud.qc:3870
 msgid " knots"
@@ -312,25 +314,25 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:28
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 vot)"
 
 #: qcsrc/client/mapvoting.qc:30
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr "(%d voturi)"
 
 #: qcsrc/client/mapvoting.qc:118
 msgid "Don't care"
-msgstr ""
+msgstr "Nu-mi pasa"
 
 #: qcsrc/client/mapvoting.qc:203
 msgid "Vote for a map"
-msgstr ""
+msgstr "Voteaza o harta"
 
 #: qcsrc/client/mapvoting.qc:209
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "%d secunde ramase"
 
 #: qcsrc/client/mapvoting.qc:273
 msgid ""
@@ -377,7 +379,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:23
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^morti"
 
 #: qcsrc/client/scoreboard.qc:24
 msgid "SCO^destroyed"
@@ -730,7 +732,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:1341
 msgid "Spectators"
-msgstr ""
+msgstr "Spectatori"
 
 #: qcsrc/client/scoreboard.qc:1348
 #, c-format
@@ -744,7 +746,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:1364 qcsrc/client/scoreboard.qc:1383
 msgid " or"
-msgstr ""
+msgstr "sau"
 
 #: qcsrc/client/scoreboard.qc:1367 qcsrc/client/scoreboard.qc:1374
 #, c-format
@@ -809,66 +811,66 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:255
 msgid "Destroy"
-msgstr ""
+msgstr "Distruge"
 
 #: qcsrc/client/waypointsprites.qc:256
 msgid "Defend"
-msgstr ""
+msgstr "Apara"
 
 #: qcsrc/client/waypointsprites.qc:257
 msgid "Blue base"
-msgstr ""
+msgstr "Baza albastra"
 
 #: qcsrc/client/waypointsprites.qc:258
 msgid "DANGER"
-msgstr ""
+msgstr "PERICOL"
 
 #: qcsrc/client/waypointsprites.qc:259
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Purtator inamic"
 
 #: qcsrc/client/waypointsprites.qc:260
 msgid "Flag carrier"
-msgstr ""
+msgstr "Purtator steag"
 
 #: qcsrc/client/waypointsprites.qc:261
 msgid "Dropped flag"
-msgstr ""
+msgstr "Steag scapat"
 
 #: qcsrc/client/waypointsprites.qc:262
 msgid "Help me!"
-msgstr ""
+msgstr "Ajutor! "
 
 #: qcsrc/client/waypointsprites.qc:263
 msgid "Here"
-msgstr ""
+msgstr "Aici"
 
 #: qcsrc/client/waypointsprites.qc:264
 msgid "Dropped key"
-msgstr ""
+msgstr "Cheie scapata"
 
 #: qcsrc/client/waypointsprites.qc:265 qcsrc/client/waypointsprites.qc:267
 #: qcsrc/client/waypointsprites.qc:268 qcsrc/client/waypointsprites.qc:269
 #: qcsrc/client/waypointsprites.qc:270
 msgid "Key carrier"
-msgstr ""
+msgstr "Purtator cheie"
 
 #: qcsrc/client/waypointsprites.qc:266
 msgid "Run here"
-msgstr ""
+msgstr "Fugi aici"
 
 #: qcsrc/client/waypointsprites.qc:271
 msgid "Red base"
-msgstr ""
+msgstr "Baza rosie"
 
 #: qcsrc/client/waypointsprites.qc:272
 msgid "Waypoint"
-msgstr ""
+msgstr "Indicator"
 
 #: qcsrc/client/waypointsprites.qc:273 qcsrc/client/waypointsprites.qc:274
 #: qcsrc/client/waypointsprites.qc:275
 msgid "Generator"
-msgstr ""
+msgstr "Generator"
 
 #: qcsrc/client/waypointsprites.qc:276 qcsrc/client/waypointsprites.qc:277
 #: qcsrc/client/waypointsprites.qc:278 qcsrc/client/waypointsprites.qc:279
@@ -894,11 +896,11 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:288 qcsrc/client/waypointsprites.qc:289
 msgid "Ball"
-msgstr ""
+msgstr "Minge"
 
 #: qcsrc/client/waypointsprites.qc:290
 msgid "Ball carrier"
-msgstr ""
+msgstr "Purtator minge"
 
 #: qcsrc/client/waypointsprites.qc:291 qcsrc/server/w_laser.qc:11
 msgid "Laser"
@@ -906,11 +908,11 @@ msgstr "Laser"
 
 #: qcsrc/client/waypointsprites.qc:292 qcsrc/server/w_shotgun.qc:11
 msgid "Shotgun"
-msgstr "Shotgun"
+msgstr "Pusca"
 
 #: qcsrc/client/waypointsprites.qc:293 qcsrc/server/w_uzi.qc:11
 msgid "Machine Gun"
-msgstr "Machine Gun"
+msgstr "Mitraliera"
 
 #: qcsrc/client/waypointsprites.qc:294 qcsrc/server/w_grenadelauncher.qc:11
 msgid "Mortar"
@@ -934,7 +936,7 @@ msgstr "Hagar"
 
 #: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_rocketlauncher.qc:11
 msgid "Rocket Launcher"
-msgstr "Rocket Launcher"
+msgstr "Lansator de rachete"
 
 #: qcsrc/client/waypointsprites.qc:300 qcsrc/server/w_porto.qc:11
 msgid "Port-O-Launch"
@@ -942,7 +944,7 @@ msgstr "Port-O-Launch"
 
 #: qcsrc/client/waypointsprites.qc:301
 msgid "Minstanex"
-msgstr ""
+msgstr "Minstanex"
 
 #: qcsrc/client/waypointsprites.qc:302
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
@@ -951,7 +953,7 @@ msgstr "Carlig"
 
 #: qcsrc/client/waypointsprites.qc:303 qcsrc/server/w_fireball.qc:11
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Minge de foc"
 
 #: qcsrc/client/waypointsprites.qc:304
 msgid "HLAC"
@@ -967,23 +969,23 @@ msgstr "Mine Layer"
 
 #: qcsrc/client/waypointsprites.qc:312
 msgid "Invisibility"
-msgstr ""
+msgstr "Invizibilitate"
 
 #: qcsrc/client/waypointsprites.qc:313
 msgid "Extra life"
-msgstr ""
+msgstr "Viata aditionala"
 
 #: qcsrc/client/waypointsprites.qc:314
 msgid "Speed"
-msgstr ""
+msgstr "Viteza"
 
 #: qcsrc/client/waypointsprites.qc:315
 msgid "Strength"
-msgstr ""
+msgstr "Forta"
 
 #: qcsrc/client/waypointsprites.qc:316
 msgid "Shield"
-msgstr ""
+msgstr "Scut"
 
 #: qcsrc/client/waypointsprites.qc:317
 msgid "Fuel regen"
@@ -995,7 +997,7 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:319
 msgid "Frozen!"
-msgstr ""
+msgstr "Inghetat!"
 
 #: qcsrc/client/waypointsprites.qc:320
 msgid "Tagged"
@@ -1003,7 +1005,7 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:321
 msgid "Vehicle"
-msgstr ""
+msgstr "Vehicul"
 
 #: qcsrc/client/waypointsprites.qc:595
 #, c-format
@@ -1917,7 +1919,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:456
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG abandonat cursa"
 
 #: qcsrc/common/notifications.qh:457
 #, c-format
@@ -1932,7 +1934,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:459
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG a terminat cursa"
 
 #: qcsrc/common/notifications.qh:460
 #, c-format
@@ -2241,11 +2243,11 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:536
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BGJoci in atac!"
 
 #: qcsrc/common/notifications.qh:537
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGJoci in defensiva!"
 
 #: qcsrc/common/notifications.qh:538
 msgid "^F4Begin!"
@@ -2265,7 +2267,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:544
 msgid "^F2Don't camp!"
-msgstr ""
+msgstr "^F2Nu sta la panda!"
 
 #: qcsrc/common/notifications.qh:545
 msgid ""
@@ -2354,7 +2356,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:562
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%sL-ai ucis pe ^BG%s"
 
 #: qcsrc/common/notifications.qh:562
 #, c-format
@@ -2364,7 +2366,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:563
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sAi fost ucis de ^BG%s"
 
 #: qcsrc/common/notifications.qh:563
 #, c-format
@@ -2448,7 +2450,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:572
 msgid "^K1Don't shoot your team mates!"
-msgstr ""
+msgstr "^K1Nu trage in colegii tai de echipa!"
 
 #: qcsrc/common/notifications.qh:573
 msgid "^K1Die camper!"
@@ -2465,7 +2467,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:575
 #, c-format
 msgid "^K1You were %s"
-msgstr ""
+msgstr "^K1Ai fost %s"
 
 #: qcsrc/common/notifications.qh:576
 msgid "^K1You couldn't catch your breath!"
@@ -2477,11 +2479,11 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:578
 msgid "^K1You felt a little too hot!"
-msgstr ""
+msgstr "^K1Ti s-a facut un pic prea cald! "
 
 #: qcsrc/common/notifications.qh:578
 msgid "^K1You got a little bit too crispy!"
-msgstr ""
+msgstr "^K1Ai devenit un pic prea crocant!"
 
 #: qcsrc/common/notifications.qh:579
 msgid "^K1You killed your own dumb self!"
@@ -2489,7 +2491,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:579
 msgid "^K1You need to be more careful!"
-msgstr ""
+msgstr "^K1Trebuie sa fii mai atent!"
 
 #: qcsrc/common/notifications.qh:580
 msgid "^K1You couldn't stand the heat!"
@@ -2501,7 +2503,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:581
 msgid "^K1You forgot to put the pin back in!"
-msgstr ""
+msgstr "^K1Ai uitat sa pui cuiul inapoi! "
 
 #: qcsrc/common/notifications.qh:582
 msgid "^K1You are respawning for running out of ammo..."
@@ -2529,7 +2531,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:586
 msgid "^K1You committed suicide!"
-msgstr ""
+msgstr "^K1Te-ai sinucis!"
 
 #: qcsrc/common/notifications.qh:586
 msgid "^K1You ended it all!"
@@ -2546,7 +2548,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:589
 msgid "^K1You died in an accident!"
-msgstr ""
+msgstr "^K1Ai murit intr-un accident!"
 
 #: qcsrc/common/notifications.qh:590
 msgid "^K1You had an unfortunate run in with a turret!"
@@ -2578,7 +2580,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:594
 msgid "^K1You were crushed by a vehicle!"
-msgstr ""
+msgstr "^K1Ai fost zdrobit de un vehicul! "
 
 #: qcsrc/common/notifications.qh:595
 msgid "^K1You were caught in a Raptor cluster bomb!"
@@ -2606,7 +2608,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:601
 msgid "^K1Watch your step!"
-msgstr ""
+msgstr "^K1Ai grija unde calci!"
 
 #: qcsrc/common/notifications.qh:602
 #, c-format
