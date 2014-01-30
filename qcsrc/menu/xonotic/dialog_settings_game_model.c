@@ -6,7 +6,7 @@ CLASS(XonoticGameModelSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Model"))
 	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameModelSettingsTab, rows, float, 13)
-	ATTRIB(XonoticGameModelSettingsTab, columns, float, 6.2)
+	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5)
 ENDCLASS(XonoticGameModelSettingsTab)
 entity makeXonoticGameModelSettingsTab();
 #endif
@@ -29,12 +29,39 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	entity e;
 	//float i;
 	
-	// todo:
-	// Add slider for cl_ghost_items (alpha) and cl_ghost_items_color (brightness)
-	// Add checkbox for simpleitems
-	// determine difference between cl_deathglow and g_deathglow
-	// Add toggle for skeletal animations?
-	
+	// Note that this is pretty terrible currently due to the lack of options for this tab...
+	// There is really not many other decent places for these options, additionally
+	// later I would like quite a few more options in this tab.
+
+	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Items")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_simple_items", _("Use simple 2D images instead of item models")));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unvailable alpha:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_ghost_items"));
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable color:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_ghost_items_color"));
+			e.addValue(e, ZCTX(_("GHOITEMS^Black")), "-1 -1 -1");
+			e.addValue(e, ZCTX(_("GHOITEMS^Dark")), "0.1 0.1 0.1");
+			e.addValue(e, ZCTX(_("GHOITEMS^Tinted")), "0.6 0.6 0.6");
+			e.addValue(e, ZCTX(_("GHOITEMS^Normal")), "1 1 1");
+			e.addValue(e, ZCTX(_("GHOITEMS^Blue")), "-1 -1 3");
+			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "cl_ghost_items", 0.001, 1);
+
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Players")));
+			e.isBold = TRUE;
+			e.alpha = 0.5;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Body fading:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
@@ -47,10 +74,5 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("GIBS^Lots")), "0");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 }
 #endif
