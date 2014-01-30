@@ -215,7 +215,7 @@ float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];
 #endif
 
@@ -435,4 +435,9 @@ void dedicated_print(string input);
 #define CNT_RESPAWN 5
 #define CNT_ROUNDSTART 6
 float Announcer_PickNumber(float type, float num);
+#endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
 #endif

@@ -1,0 +1,9 @@
+/*
+Generated framegroups file for spider
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 60 60 1 // spider idle
+61 41 120 1 // spider walk
+102 24 60 1 // spider attack
+125 10 60 1 // spider attack2
