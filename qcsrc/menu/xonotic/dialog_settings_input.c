@@ -59,6 +59,11 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert aiming")));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_mouse_absolute", _("Use system mouse positioning")));
+			makeMulti(e, "hud_cursormode");
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
+	me.TR(me);
 		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Disable system mouse acceleration")));
 		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
@@ -68,8 +73,6 @@ void XonoticInputSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 
 	me.TR(me);
 	me.TR(me);
