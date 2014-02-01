@@ -24,14 +24,6 @@ entity makeXonoticGameViewSettingsTab()
 	return me;
 }
 
-void clippedspectatingclick(entity me, entity checkbox)
-{
-	if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
-		localcmd("sendcvar cl_clippedspectating\n");
-	
-	CheckBox_Click(me, checkbox);
-}
-
 void XonoticGameViewSettingsTab_fill(entity me)
 {
 	entity e;
@@ -79,9 +71,6 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
-			e.onClick = clippedspectatingclick;
-			e.onClickEntity = e;
-		// todo: onclick, do sendcvar if connected
 	
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));

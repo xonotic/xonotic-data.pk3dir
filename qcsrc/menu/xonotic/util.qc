@@ -92,6 +92,8 @@ void saveCvarsMulti(entity me)
 			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
 		else
 			cvar_set(argv(i), s);
+
+		CheckSendCvars(me, argv(i));
 	}
 }
 void makeMulti(entity e, string otherCvars)
@@ -765,4 +767,16 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+void CheckSendCvars(entity me, string cvarnamestring)
+{
+	if(me.sendCvars)
+	{
+		printf("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
+		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+		{
+			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
+		}
+	}
 }
