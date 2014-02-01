@@ -17,6 +17,13 @@ entity makeXonoticInputSettingsTab()
 	me.configureDialog(me);
 	return me;
 }
+
+void CheckBox_Click_Redisplay(entity me, entity checkbox)
+{
+	CheckBox_Click(me, checkbox);
+	cmd("\ndefer 0.2 \"togglemenu 1\"\n");
+	//m_display();
+}
 void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
@@ -44,9 +51,6 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClickEntity = kb;
 			kb.clearButton = e;
 
-	// todo:
-	// add menu_mouse_absolute and hud_cursormode here
-
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Mouse")));
 			e.isBold = TRUE;
@@ -61,6 +65,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_mouse_absolute", _("Use system mouse positioning")));
 			makeMulti(e, "hud_cursormode");
+			e.onClick = CheckBox_Click_Redisplay;
+			e.onClickEntity = e;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 	me.TR(me);
