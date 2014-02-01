@@ -27,8 +27,8 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.isBold = TRUE;
 			e.alpha = 0.5;
 	me.TR(me);
-		me.TD(me, me.rows - 3.5, 3, kb = makeXonoticKeyBinder());
-	me.gotoRC(me, me.rows - 2.5, 0);
+		me.TD(me, me.rows - 2.5, 3, kb = makeXonoticKeyBinder());
+	me.gotoRC(me, me.rows - 1.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
 			e.onClickEntity = kb;
@@ -80,6 +80,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
+			e.sendCvars = TRUE;
 	me.TR(me);
 	me.TR(me);
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
@@ -97,9 +98,5 @@ void XonoticInputSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
-
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_movement_track_canjump", COMMANDBUTTON_APPLY));
 }
 #endif
