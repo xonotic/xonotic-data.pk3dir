@@ -29,22 +29,6 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 {
 	entity e;
 
-	// todo:
-	// notification_CHOICE_CTF_CAPTURE_* CTF capture record
-	// notification_CHOICE_CTF_PICKUP_* CTF pickup verbose info
-	// notification_FRAG* Frag message verbose info
-	// notification_show_location Show location of deaths in death messages
-	// notification_show_sprees Show spree information
-	// notification_INFO_ITEM_WEAPON* Show weapon notifications in console
-	// Enable con_notify
-	// notification_ANNCE_NUM_RESPAWN* Add respawning countdown slider
-	// notification_ANNCE_NUM_ROUNDSTART* Add roundstart countdown slider
-	// notification_ANNCE_NUM_KILL* Add kill countdown slider
-	// notification_ANNCE_NUM_GAMESTART* Add gamestart countdown slider
-	// notification_ANNCE_ACHIEVEMENT* achievements toggle
-	// notification_ANNCE_KILLSTREAK* killstreak toggles
-
-	/// frag information
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Frag Information")));
 			e.isBold = TRUE;
@@ -88,7 +72,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_location", _("Add frag location to death messages when available")));
 
-	me.gotoRC(me, 8.5, 0); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Gamemode Settings")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
@@ -123,7 +107,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_INFO_ITEM_WEAPON_DONTHAVE", _("Weapon info message notifications")));
 			makeMulti(e, "notification_INFO_ITEM_WEAPON_DROP notification_INFO_ITEM_WEAPON_GOT notification_INFO_ITEM_WEAPON_NOAMMO notification_INFO_ITEM_WEAPON_PRIMORSEC notification_INFO_ITEM_WEAPON_UNAVAILABLE"); 
 
-	me.gotoRC(me, 8.5, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 9, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Announcers")));
 			e.isBold = TRUE;
 			e.alpha = 0.5;
@@ -139,8 +123,5 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(1, 0, "notification_ANNCE_ACHIEVEMENT_AIRSHOT", _("Achievement sounds")));
 			makeMulti(e, "notification_ANNCE_ACHIEVEMENT_AMAZING notification_ANNCE_ACHIEVEMENT_AWESOME notification_ANNCE_ACHIEVEMENT_BOTLIKE notification_ANNCE_ACHIEVEMENT_ELECTROBITCH notification_ANNCE_ACHIEVEMENT_IMPRESSIVE notification_ANNCE_ACHIEVEMENT_YODA");
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "echo stuff", COMMANDBUTTON_APPLY));
 }
 #endif
