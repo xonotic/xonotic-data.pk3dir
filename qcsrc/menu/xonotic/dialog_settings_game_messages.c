@@ -84,6 +84,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "notification_CHOICE_FRAG", _("Add extra frag information to centerprint when available")));
 			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED");
+			e.sendCvars = TRUE;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_location", _("Add frag location to death messages when available")));
 
@@ -94,9 +95,11 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME_RED", _("Display capture times in Capture The Flag")));
 			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE ");
+			e.sendCvars = TRUE;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", _("Display name of flag stealer in Capture The Flag")));
 			makeMulti(e, "notification_CHOICE_CTF_PICKUP_TEAM");
+			e.sendCvars = TRUE;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Other")));
