@@ -4411,6 +4411,7 @@ string QuickMenu_CurrentSubMenu;
 float QuickMenu_CurrentPage_FirstEntry;
 var float QuickMenu_Entries;
 float QuickMenu_TimeOut;
+// if s1 is not empty s will be displayed as command otherwise as submenu
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {
 	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
@@ -4491,7 +4492,7 @@ float HUD_QuickMenu_Open(string mode, string submenu)
 			{
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
 				++QuickMenu_Buffer_Size;
-				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, argv(1)); // command
+				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", argv(1))); // command
 			}
 			++QuickMenu_Buffer_Size;
 		}
@@ -4563,9 +4564,9 @@ void HUD_QuickMenu_skip_submenu(string submenu)
 		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
 		if(substring(s, 0, 1) != "S")
 			continue;
-		if(substring(s, 1, strlen(s) - 1) == z_submenu) // submenu end
+		if(substring(s, 1, -1) == z_submenu) // submenu end
 			break;
-		HUD_QuickMenu_skip_submenu(substring(s, 1, strlen(s) - 1));
+		HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
 	}
 	strunzone(z_submenu);
 }
@@ -4602,7 +4603,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 		{
 			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
-			if(substring(s, 0, 1) == "S" && substring(s, 1, strlen(s) - 1) == z_submenu)
+			if(substring(s, 0, 1) == "S" && substring(s, 1, -1) == z_submenu)
 			{
 				// printf("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
@@ -4616,7 +4617,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 	{
 		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
 
-		if(z_submenu != "" && substring(s, 1, strlen(s) - 1) == z_submenu)
+		if(z_submenu != "" && substring(s, 1, -1) == z_submenu)
 		{
 			// printf("^3 end of %s\n", z_submenu);
 			break;
@@ -4640,14 +4641,16 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		if(substring(s, 0, 1) == "S") // submenu
 		{
 			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
-				HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, strlen(s) - 1), "");
-			HUD_QuickMenu_skip_submenu(substring(s, 1, strlen(s) - 1));
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), "");
+			HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		else if(total - QuickMenu_CurrentPage_FirstEntry >= 0 && substring(s, 0, 1) == "T")
 		{
 			++QuickMenu_Buffer_Index;
 			string cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
-			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, strlen(s) - 1), cmd);
+			if(substring(cmd, 0, 1) == "C")
+				cmd = substring(cmd, 1, -1);
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++total;
@@ -4932,7 +4935,7 @@ void HUD_QuickMenu(void)
 	{ \
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", title)); \
 		++QuickMenu_Buffer_Size; \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, command); \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", command)); \
 	} \
 	++QuickMenu_Buffer_Size; \
 }
