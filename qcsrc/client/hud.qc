@@ -4431,62 +4431,96 @@ void HUD_QuickMenu_clear_entry(float i)
 	QuickMenu_Command[i] = string_null;
 }
 
-void HUD_QuickMenu_Load_DefaultEntries();
-float HUD_QuickMenu_Buffer_Init()
+float HUD_QuickMenu_Page(string target_submenu, float new_page);
+void HUD_QuickMenu_Default(string submenu);
+float HUD_QuickMenu_Open(string mode, string submenu)
 {
 	float fh = -1;
 	string s;
-	if(autocvar_hud_panel_quickmenu_file != "")
-	if(autocvar_hud_panel_quickmenu_file != "0")
-		fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
-	if(fh < 0)
+
+	if(mode == "")
+	{
+		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+			mode = "default";
+		else
+			mode = "file";
+	}
+
+	if(mode == "default")
 	{
 		QuickMenu_Buffer = buf_create();
 		if(QuickMenu_Buffer < 0)
 			return false;
-		HUD_QuickMenu_Load_DefaultEntries();
-		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
-		return true;
+
+		HUD_QuickMenu_Default(submenu);
 	}
-
-	QuickMenu_Buffer = buf_create();
-	if (QuickMenu_Buffer < 0)
+	else if(mode == "file")
 	{
-		fclose(fh);
-		return false;
-	}
-
-	QuickMenu_Buffer_Size = 0;
-	while((s = fgets(fh)) && QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES)
-	{
-		// first skip invalid entries, so we don't check them anymore
-		float argc;
-		argc = tokenize_console(s);
-		if(argc == 0 || argc > 2)
-			continue;
-		if(argv(0) == "")
-			continue;
-		if(argc == 2 && argv(1) == "")
-			continue;
-
-		if(argc == 1)
-			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
-		else
+		if(autocvar_hud_panel_quickmenu_file != "")
+		if(autocvar_hud_panel_quickmenu_file != "0")
+			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+		if(fh < 0)
 		{
-			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
-			++QuickMenu_Buffer_Size;
-			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, argv(1)); // command
+			printf("Couldn't open file \"%s\"\n", autocvar_hud_panel_quickmenu_file);
+			return false;
 		}
-		++QuickMenu_Buffer_Size;
-		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+
+		QuickMenu_Buffer = buf_create();
+		if(QuickMenu_Buffer < 0)
+		{
+			fclose(fh);
+			return false;
+		}
+
+		QuickMenu_Buffer_Size = 0;
+		while((s = fgets(fh)) && QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES)
+		{
+			// first skip invalid entries, so we don't check them anymore
+			float argc;
+			argc = tokenize_console(s);
+			if(argc == 0 || argc > 2)
+				continue;
+			if(argv(0) == "")
+				continue;
+			if(argc == 2 && argv(1) == "")
+				continue;
+
+			if(argc == 1)
+				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+			else
+			{
+				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
+				++QuickMenu_Buffer_Size;
+				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, argv(1)); // command
+			}
+			++QuickMenu_Buffer_Size;
+		}
+		fclose(fh);
+	}
+	else
+	{
+		printf("Unrecognized mode %s\n", mode);
+		return false;
 	}
 
 	if (QuickMenu_Buffer_Size <= 0)
 	{
 		buf_del(QuickMenu_Buffer);
 		QuickMenu_Buffer = -1;
+		return false;
 	}
-	fclose(fh);
+
+	if(mode == "file")
+		HUD_QuickMenu_Page(submenu, 0);
+	else
+		HUD_QuickMenu_Page("", 0);
+
+	hud_panel_quickmenu = 1;
+	if(autocvar_hud_cursormode)
+		setcursormode(1);
+	hudShiftState = 0;
+
+	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	return true;
 }
 
@@ -4618,26 +4652,16 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 
 		++total;
 	}
-	strunzone(z_submenu);
 	if (QuickMenu_Entries == 0)
 	{
+		printf("Couldn't find submenu \"%s\"\n", z_submenu);
+		strunzone(z_submenu);
 		HUD_QuickMenu_Close();
 		return 0;
 	}
+	strunzone(z_submenu);
 	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	return 1;
-}
-
-void HUD_QuickMenu_Open()
-{
-	if(!HUD_QuickMenu_Buffer_Init()) return;
-
-	hud_panel_quickmenu = 1;
-	if(autocvar_hud_cursormode)
-		setcursormode(1);
-	hudShiftState = 0;
-
-	HUD_QuickMenu_Page("", 0);
 }
 
 float HUD_QuickMenu_ActionForNumber(float num)
@@ -4890,10 +4914,18 @@ void HUD_QuickMenu(void)
 	}
 }
 
-#define QUICKMENU_SMENU(submenu) \
+
+#define QUICKMENU_SMENU(submenu,eng_submenu) { \
+	if(target_submenu == eng_submenu && target_submenu_found) \
+		return; /* target_submenu entries are now loaded, exit */ \
 	if(QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES) \
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", submenu)); \
-	++QuickMenu_Buffer_Size;
+	++QuickMenu_Buffer_Size; \
+	if(target_submenu == eng_submenu && !target_submenu_found) { \
+		QuickMenu_Buffer_Size = 0; /* enable load of next entries */ \
+		target_submenu_found = TRUE; \
+	} \
+}
 
 #define QUICKMENU_ENTRY(title,command) { \
 	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
@@ -4915,17 +4947,27 @@ void HUD_QuickMenu(void)
 		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
 }
 
-void HUD_QuickMenu_Load_DefaultEntries()
+
+// Specifying target_submenu, this function only loads entries inside target_submenu
+// NOTE: alternatively we could have loaded the whole default quickmenu and
+// then called HUD_QuickMenu_Page(target_submenu, 0);
+// but this sytem is more reliable since we can always refer to target_submenu
+// with the English title even if a translation is active
+void HUD_QuickMenu_Default(string target_submenu)
 {
-QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
+	float target_submenu_found = FALSE;
+	if(target_submenu != "")
+		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
+
+QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
-QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
 
 if(teamplay)
 {
-QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
@@ -4941,49 +4983,49 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
-QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 }
 
-QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
-	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
+	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^1st/3rd person view")), "toggle chase_active")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine on/off")), "toggle cl_forceplayermodels")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players on/off")), "toggle hud_shownames")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon on/off")), "toggle crosshair_per_weapon")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^FPS on/off")), "toggle hud_panel_engineinfo")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph on/off")), "toggle shownetgraph")
-	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
 
-	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound on/off")), "toggle cl_hitsound")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
 
 	if(spectatee_status > 0)
 	{
-	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
 	}
 
 	if(spectatee_status == -1)
 	{
-	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 	}
 
 	QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
 	if(prvm_language != "en")
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages on/off")), "toggle hud_panel_quickmenu_translatecommands")
-QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 
-QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
 	QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
 	if(getstatf(STAT_TIMELIMIT) > 0)
@@ -4993,10 +5035,19 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 	}
 	if(teamplay)
 	QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
-QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+
+	if(target_submenu != "" && !target_submenu_found)
+	{
+		printf("Couldn't find submenu \"%s\"\n", target_submenu);
+		if(prvm_language != "en")
+			printf("^3Warning: submenu must be in English\n", target_submenu);
+		QuickMenu_Buffer_Size = 0;
+	}
 }
 #undef QUICKMENU_SMENU
 #undef QUICKMENU_ENTRY
+#undef QUICKMENU_ENTRY_TC
 
 
 /*

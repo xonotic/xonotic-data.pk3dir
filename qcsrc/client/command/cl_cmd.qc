@@ -243,7 +243,7 @@ void LocalCommand_hud(float request, float argc)
 					if(HUD_QuickMenu_IsOpened())
 						HUD_QuickMenu_Close();
 					else
-						HUD_QuickMenu_Open();
+						HUD_QuickMenu_Open(argv(2), argv(3)); // mode, submenu
 					return;
 				}
 

@@ -6267,3 +6267,6 @@ msgstr ""
 msgid "QMCMD^good game"
 msgstr "bella partita"
 
+msgid "QMCMD^Chat"
+msgstr "Parla"
+
