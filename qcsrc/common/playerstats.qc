@@ -724,17 +724,23 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 					
 					default:
 					{
-						print(
+						print(sprintf(
 							"PlayerStats_PlayerDetail_Handler(): ERROR: "
 							"Key went unhandled? Is our version outdated?\n"
-						);
+							"PlayerStats_PlayerDetail_Handler(): "
+							"Key '%s', Event '%s', Data '%s'\n",
+							key,
+							event,
+							data
+						));
 						break;
 					}
 				}
 
 				#if 0
 				print(sprintf(
-					"PlayerStats_PlayerDetail_Handler(): Key '%s', Event '%s', Data '%s'\n",
+					"PlayerStats_PlayerDetail_Handler(): "
+					"Key '%s', Event '%s', Data '%s'\n",
 					key,
 					event,
 					data
