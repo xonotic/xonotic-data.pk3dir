@@ -4950,6 +4950,16 @@ void HUD_QuickMenu(void)
 		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
 }
 
+void HUD_Quickmenu_PlayerListEntries(string cmd, float with_me)
+{
+	entity pl;
+	for(pl = players.sort_next; pl; pl = pl.sort_next)
+	{
+		if(pl.sv_entnum != player_localnum || with_me)
+			QUICKMENU_ENTRY(GetPlayerName(pl.sv_entnum), sprintf(cmd, GetPlayerName(pl.sv_entnum)))
+	}
+}
+
 
 // Specifying target_submenu, this function only loads entries inside target_submenu
 // NOTE: alternatively we could have loaded the whole default quickmenu and
@@ -4988,6 +4998,10 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 }
+QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
+	HUD_Quickmenu_PlayerListEntries("commandmode tell %s", FALSE);
+QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
+
 
 QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
