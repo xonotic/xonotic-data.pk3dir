@@ -4611,6 +4611,8 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			}
 			// printf("^1 skipping %s\n", s);
 		}
+		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
+			printf("Couldn't find submenu \"%s\"\n", z_submenu);
 	}
 	float total = 0;
 	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
@@ -4655,14 +4657,12 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 
 		++total;
 	}
+	strunzone(z_submenu);
 	if (QuickMenu_Entries == 0)
 	{
-		printf("Couldn't find submenu \"%s\"\n", z_submenu);
-		strunzone(z_submenu);
 		HUD_QuickMenu_Close();
 		return 0;
 	}
-	strunzone(z_submenu);
 	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	return 1;
 }
