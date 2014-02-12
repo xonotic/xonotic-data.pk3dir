@@ -4614,7 +4614,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
 			printf("Couldn't find submenu \"%s\"\n", z_submenu);
 	}
-	float total = 0;
+	float entry_num = 0;
 	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
 		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
@@ -4625,7 +4625,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			break;
 		}
 
-		if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		if(entry_num >= QuickMenu_CurrentPage_FirstEntry)
 		{
 			++QuickMenu_Entries;
 			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
@@ -4642,11 +4642,11 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		// NOTE: entries are loaded starting from 1, not from 0
 		if(substring(s, 0, 1) == "S") // submenu
 		{
-			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+			if(entry_num >= QuickMenu_CurrentPage_FirstEntry)
 				HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), "");
 			HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if(total - QuickMenu_CurrentPage_FirstEntry >= 0 && substring(s, 0, 1) == "T")
+		else if(entry_num >= QuickMenu_CurrentPage_FirstEntry && substring(s, 0, 1) == "T")
 		{
 			++QuickMenu_Buffer_Index;
 			string cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
@@ -4655,7 +4655,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), cmd);
 		}
 
-		++total;
+		++entry_num;
 	}
 	strunzone(z_submenu);
 	if (QuickMenu_Entries == 0)
