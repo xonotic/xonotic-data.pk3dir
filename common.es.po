@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Ari_tent <xonotic@outlook.com>, 2014
 # kammy <kammysmb@gmail.com>, 2013
 # kammy <kammysmb@gmail.com>, 2013
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011

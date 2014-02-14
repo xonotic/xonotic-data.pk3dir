@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
@@ -10,11 +10,12 @@ msgstr ""
 "POT-Creation-Date: 2014-02-14 12:09+0100\n"
 "PO-Revision-Date: 2014-02-14 11:09+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
-"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xonotic/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/projects/p/xonotic/"
+"language/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: qcsrc/client/Main.qc:21
@@ -326,7 +327,8 @@ msgid "%d seconds left"
 msgstr ""
 
 #: qcsrc/client/mapvoting.qc:273
-msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
+msgid ""
+"mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr ""
 
 #: qcsrc/client/mapvoting.qc:283
@@ -1339,8 +1341,8 @@ msgstr ""
 #: qcsrc/common/notifications.qh:344
 #, c-format
 msgid ""
-"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
-"^BG%s^BG's previous record of ^F2%s^BG seconds"
+"^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
+"%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:345
@@ -1376,8 +1378,8 @@ msgstr ""
 #: qcsrc/common/notifications.qh:351
 #, c-format
 msgid ""
-"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned"
-" itself"
+"^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
+"itself"
 msgstr ""
 
 #: qcsrc/common/notifications.qh:352

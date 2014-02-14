@@ -4,6 +4,7 @@
 #
 # Translators:
 # Pendulla <djdjoric@gmail.com>, 2014
+# Pendulla <djdjoric@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
