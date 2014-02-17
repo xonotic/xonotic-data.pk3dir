@@ -19,6 +19,8 @@ REGISTER_WEAPON(
 #define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, BOTH, ammo) \
 	w_cvar(id, sn, PRI,  animtime) \
+	w_cvar(id, sn, PRI,  botaimspeed) \
+	w_cvar(id, sn, PRI,  botaimlifetime) \
 	w_cvar(id, sn, PRI,  damage) \
 	w_cvar(id, sn, PRI,  degreespersegment) \
 	w_cvar(id, sn, PRI,  distancepersegment) \
@@ -84,11 +86,12 @@ float W_Arc_Beam_Send(entity to, float sf)
 .entity lg_ents[ARC_MAX_SEGMENTS]; // debug
 #endif
 .vector beam_dir;
+.vector beam_wantdir;
+.float beam_type;
 .float beam_initialized;
 void W_Arc_Beam_Think(void)
 {
 	float i;
-	//print("W_Arc_Beam_Think();\n");
 	if(self != self.owner.arc_beam)
 	{
 		#ifdef ARC_DEBUG
@@ -124,11 +127,10 @@ void W_Arc_Beam_Think(void)
 	}
 
 	makevectors(self.owner.v_angle);
-	
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
-	//WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
-	vector want_dir = w_shotdir;
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
+
+	//vector want_dir = w_shotdir;
 	//vector want_pos = w_shotend;
 
 	if(!self.beam_initialized)
@@ -138,20 +140,14 @@ void W_Arc_Beam_Think(void)
 			self.lg_ents[i] = spawn();
 		#endif
 		
-		self.beam_dir = want_dir;
+		self.beam_dir = w_shotdir;
 		self.beam_initialized = TRUE;
 	}
 
-	//vector newdir;
-	//vector direction_to_want_pos = normalize(want_pos - w_shotorg);
-	//float distance_to_want_pos = vlen(want_pos - w_shotorg);
-	//printf("distance_to_want_pos: %f\n", distance_to_want_pos);
 	float segments; 
-	if(self.beam_dir != want_dir)
+	if(self.beam_dir != w_shotdir)
 	{
-		//vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
-
-		float angle = ceil(vlen(want_dir - self.beam_dir) * RAD2DEG);
+		float angle = ceil(vlen(w_shotdir - self.beam_dir) * RAD2DEG);
 		float anglelimit;
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
 		{
@@ -169,8 +165,7 @@ void W_Arc_Beam_Think(void)
 		
 		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
 
-		self.beam_dir = normalize((want_dir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
-		//self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
+		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 
 		float max_allowed_segments = ARC_MAX_SEGMENTS;
 
@@ -193,53 +188,82 @@ void W_Arc_Beam_Think(void)
 	}
 
 	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR_PRI(arc, range)));
-	//te_customflash(beam_endpos_estimate, 40, 2, '1 1 1');
 
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
-	float hit_something = FALSE;
 	#endif
-	float segmentdist; // = WEP_CVAR_PRI(arc, range) / segments; // = vlen(self.beam_endpos - last_origin) * (1/segments);
-	float segmentblend;// = (1/segments);
+
+	float new_beam_type = 0;
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
-		segmentblend = (i/segments);
-		segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
-		//direction_to_want_pos = normalize(self.beam_endpos - last_origin);
-		vector blended = normalize((want_dir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend));
-		vector new_origin = last_origin + (blended * segmentdist);
+		// this could probably be calculated in a better way
+		float segmentblend = (i/segments);
+		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
-		WarpZone_traceline_antilag(self.owner, last_origin, new_origin, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
+		vector new_dir = normalize((w_shotdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend));
+		vector new_origin = last_origin + (new_dir * segmentdist);
+
+		WarpZone_traceline_antilag(
+			self.owner,
+			last_origin,
+			new_origin,
+			MOVE_NORMAL,
+			self.owner,
+			ANTILAG_LATENCY(self.owner)
+		);
 		
-		if(trace_ent)
+		if(trace_ent) // and check if this ent takes damage
 		{
-			//vector attackend = (last_origin * (1 - trace_fraction) + new_origin * trace_fraction); // trace_endpos jumps weirdly with playermodels... 
-			float falloff = ExponentialFalloff(
-				WEP_CVAR_PRI(arc, falloff_mindist),
-				WEP_CVAR_PRI(arc, falloff_maxdist),
-				WEP_CVAR_PRI(arc, falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
-			);
+			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
 
-			if(accuracy_isgooddamage(self.owner, trace_ent))
-				accuracy_add(self.owner, WEP_ARC, 0, WEP_CVAR_PRI(arc, damage) * dt * falloff);
+			if(SAME_TEAM(self.owner, trace_ent))
+			{
+				// hit a team mate
+				// heal them now
+				#ifdef ARC_DEBUG
+				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
+				te_customflash(hitorigin, 80, 5, '1 0 0');
+				#endif
+				new_beam_type = ARC_BT_ENEMY;
+			}
+			else
+			{
+				// hit an enemy/other damageable object
+				float falloff = ExponentialFalloff(
+					WEP_CVAR_PRI(arc, falloff_mindist),
+					WEP_CVAR_PRI(arc, falloff_maxdist),
+					WEP_CVAR_PRI(arc, falloff_halflifedist),
+					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+				);
 
-			Damage(
-				trace_ent,
-				self.owner,
-				self.owner,
-				WEP_CVAR_PRI(arc, damage) * dt * falloff,
-				WEP_ARC,
-				trace_endpos,
-				(blended * WEP_CVAR_PRI(arc, force)) * dt * falloff
-			);
+				if(accuracy_isgooddamage(self.owner, trace_ent))
+				{
+					accuracy_add(
+						self.owner,
+						WEP_ARC,
+						0,
+						WEP_CVAR_PRI(arc, damage) * dt * falloff
+					);
+				}
 
-			#ifdef ARC_DEBUG
-			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
-			te_customflash(trace_endpos, 80, 5, '1 0 0');
-			hit_something = TRUE;
-			#endif
+				Damage(
+					trace_ent,
+					self.owner,
+					self.owner,
+					WEP_CVAR_PRI(arc, damage) * dt * falloff,
+					WEP_ARC,
+					hitorigin,
+					WEP_CVAR_PRI(arc, force) * new_dir * dt * falloff
+				);
+
+				#ifdef ARC_DEBUG
+				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
+				te_customflash(hitorigin, 80, 5, '1 0 0');
+				#endif
+				new_beam_type = ARC_BT_ENEMY;
+			}
 			break; 
 		}
 		else if(trace_fraction != 1)
@@ -248,8 +272,8 @@ void W_Arc_Beam_Think(void)
 			#ifdef ARC_DEBUG
 			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
 			te_customflash(trace_endpos, 50, 2, '0 0 1');
-			hit_something = TRUE;
 			#endif
+			new_beam_type = ARC_BT_WALL;
 			break;
 		}
 		else
@@ -262,23 +286,17 @@ void W_Arc_Beam_Think(void)
 	}
 
 	#ifdef ARC_DEBUG
-	if(!hit_something)
+	if(!new_beam_type)
 	{
 		te_customflash(trace_endpos, 50, 2, '0 1 0');
 	}
 	#endif
 
-	// draw effect
-	/*if(w_shotorg != self.hook_start)
-	{
-		self.SendFlags |= 2;
-		self.hook_start = w_shotorg;
-	}
-	if(w_shotend != self.hook_end)
+	if(new_beam_type != self.beam_type)
 	{
 		self.SendFlags |= 4;
-		self.hook_end = w_shotend;
-	}*/
+		self.beam_type = new_beam_type;
+	}
 
 	self.owner.lg_fire_prev = time;
 	self.nextthink = time;
@@ -317,37 +335,10 @@ float W_Arc(float req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-			/*
-			self.BUTTON_ATCK=FALSE;
-			self.BUTTON_ATCK2=FALSE;
-			if(vlen(self.origin-self.enemy.origin) > 1000)
-				self.bot_aim_whichfiretype = 0;
-			if(self.bot_aim_whichfiretype == 0)
-			{
-				float shoot;
-
-				if(autocvar_g_balance_arc_primary_speed)
-					shoot = bot_aim(autocvar_g_balance_arc_primary_speed, 0, autocvar_g_balance_arc_primary_lifetime, FALSE);
-				else
-					shoot = bot_aim(1000000, 0, 0.001, FALSE);
-
-				if(shoot)
-				{
-					self.BUTTON_ATCK = TRUE;
-					if(random() < 0.01) self.bot_aim_whichfiretype = 1;
-				}
-			}
-			else // todo
-			{
-				//if(bot_aim(autocvar_g_balance_arc_secondary_speed, autocvar_g_balance_grenadelauncher_secondary_speed_up, autocvar_g_balance_arc_secondary_lifetime, TRUE))
-				//{
-				//	self.BUTTON_ATCK2 = TRUE;
-				//	if(random() < 0.03) self.bot_aim_whichfiretype = 0;
-				//}
-			}
-			*/
-			
+			if(WEP_CVAR_PRI(arc, botaimspeed))
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(arc, botaimspeed), 0, WEP_CVAR_PRI(arc, botaimlifetime), FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 			return TRUE;
 		}
 		case WR_THINK:
