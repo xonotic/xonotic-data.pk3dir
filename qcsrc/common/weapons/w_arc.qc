@@ -17,22 +17,22 @@ REGISTER_WEAPON(
 
 #define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)
 #define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, PRI,  animtime) \
-	w_cvar(id, sn, PRI,  botaimspeed) \
-	w_cvar(id, sn, PRI,  botaimlifetime) \
-	w_cvar(id, sn, PRI,  damage) \
-	w_cvar(id, sn, PRI,  degreespersegment) \
-	w_cvar(id, sn, PRI,  distancepersegment) \
-	w_cvar(id, sn, PRI,  falloff_halflifedist) \
-	w_cvar(id, sn, PRI,  falloff_maxdist) \
-	w_cvar(id, sn, PRI,  falloff_mindist) \
-	w_cvar(id, sn, PRI,  force) \
-	w_cvar(id, sn, PRI,  maxangle) \
-	w_cvar(id, sn, PRI,  nonplayerdamage) \
-	w_cvar(id, sn, PRI,  range) \
-	w_cvar(id, sn, PRI,  refire) \
-	w_cvar(id, sn, PRI,  returnspeed) \
+	w_cvar(id, sn, NONE, beam_ammo) \
+	w_cvar(id, sn, NONE, beam_animtime) \
+	w_cvar(id, sn, NONE, beam_botaimspeed) \
+	w_cvar(id, sn, NONE, beam_botaimlifetime) \
+	w_cvar(id, sn, NONE, beam_damage) \
+	w_cvar(id, sn, NONE, beam_degreespersegment) \
+	w_cvar(id, sn, NONE, beam_distancepersegment) \
+	w_cvar(id, sn, NONE, beam_falloff_halflifedist) \
+	w_cvar(id, sn, NONE, beam_falloff_maxdist) \
+	w_cvar(id, sn, NONE, beam_falloff_mindist) \
+	w_cvar(id, sn, NONE, beam_force) \
+	w_cvar(id, sn, NONE, beam_maxangle) \
+	w_cvar(id, sn, NONE, beam_nonplayerdamage) \
+	w_cvar(id, sn, NONE, beam_range) \
+	w_cvar(id, sn, NONE, beam_refire) \
+	w_cvar(id, sn, NONE, beam_returnspeed) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -82,7 +82,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	if(sf & 1) // main information
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-		WriteCoord(MSG_ENTITY, WEP_CVAR_PRI(arc, range));
+		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 	}
 	if(sf & 2) // want/aim direction
 	{
@@ -142,16 +142,16 @@ void W_Arc_Beam_Think(void)
 	float dt = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		if(WEP_CVAR_PRI(arc, ammo))
+		if(WEP_CVAR(arc, beam_ammo))
 		{
-			dt = min(dt, self.owner.WEP_AMMO(ARC) / WEP_CVAR_PRI(arc, ammo));
-			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - WEP_CVAR_PRI(arc, ammo) * frametime);
+			dt = min(dt, self.owner.WEP_AMMO(ARC) / WEP_CVAR(arc, beam_ammo));
+			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - WEP_CVAR(arc, beam_ammo) * frametime);
 		}
 	}
 
 	makevectors(self.owner.v_angle);
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * dt, WEP_CVAR(arc, beam_range));
 
 	// network information: want/aim direction
 	if(self.beam_wantdir != w_shotdir)
@@ -176,10 +176,10 @@ void W_Arc_Beam_Think(void)
 	{
 		float angle = ceil(vlen(w_shotdir - self.beam_dir) * RAD2DEG);
 		float anglelimit;
-		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
+		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
 		{
 			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-			anglelimit = min(WEP_CVAR_PRI(arc, maxangle) / angle, 1);
+			anglelimit = min(WEP_CVAR(arc, beam_maxangle) / angle, 1);
 		}
 		else
 		{
@@ -188,7 +188,7 @@ void W_Arc_Beam_Think(void)
 		}
 
 		// calculate how much we're going to move the end of the beam to the want position
-		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
+		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR(arc, beam_returnspeed) * dt)), 1);
 		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 
 		// network information: beam direction
@@ -198,16 +198,16 @@ void W_Arc_Beam_Think(void)
 		float max_allowed_segments;
 
 		#if 1
-		if(WEP_CVAR_PRI(arc, distancepersegment))
-			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR_PRI(arc, distancepersegment))));
+		if(WEP_CVAR(arc, beam_distancepersegment))
+			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
 		else
 			max_allowed_segments = ARC_MAX_SEGMENTS;
 		#endif
 
-		if(WEP_CVAR_PRI(arc, degreespersegment))
+		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
-			segments = min( max(1, ( min(angle, WEP_CVAR_PRI(arc, maxangle)) / WEP_CVAR_PRI(arc, degreespersegment) ) ), max_allowed_segments );
-			//segments = min( min(angle, WEP_CVAR_PRI(arc, maxangle)) / WEP_CVAR_PRI(arc, degreespersegment), max_allowed_segments );
+			segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+			//segments = min( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment), max_allowed_segments );
 		}
 		else { segments = 1; }
 	}
@@ -216,7 +216,7 @@ void W_Arc_Beam_Think(void)
 		segments = 1;
 	}
 
-	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR_PRI(arc, range)));
+	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
 
 	#ifdef ARC_DEBUG
 	//printf("segment count: %d\n", segments);
@@ -251,7 +251,7 @@ void W_Arc_Beam_Think(void)
 		#endif
 
 		float is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
-		if(trace_ent && (trace_ent.takedamage == DAMAGE_AIM) && (is_player || WEP_CVAR_PRI(arc, nonplayerdamage)))
+		if(trace_ent && (trace_ent.takedamage == DAMAGE_AIM) && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
 			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
@@ -262,9 +262,9 @@ void W_Arc_Beam_Think(void)
 			#endif
 
 			float falloff = ExponentialFalloff(
-				WEP_CVAR_PRI(arc, falloff_mindist),
-				WEP_CVAR_PRI(arc, falloff_maxdist),
-				WEP_CVAR_PRI(arc, falloff_halflifedist),
+				WEP_CVAR(arc, beam_falloff_mindist),
+				WEP_CVAR(arc, beam_falloff_maxdist),
+				WEP_CVAR(arc, beam_falloff_halflifedist),
 				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
 			);
 
@@ -290,9 +290,9 @@ void W_Arc_Beam_Think(void)
 			{
 				float rootdamage;
 				if(is_player)
-					rootdamage = WEP_CVAR_PRI(arc, damage);
+					rootdamage = WEP_CVAR(arc, beam_damage);
 				else
-					rootdamage = WEP_CVAR_PRI(arc, nonplayerdamage);
+					rootdamage = WEP_CVAR(arc, beam_nonplayerdamage);
 
 				if(accuracy_isgooddamage(self.owner, trace_ent))
 				{
@@ -311,7 +311,7 @@ void W_Arc_Beam_Think(void)
 					rootdamage * dt * falloff,
 					WEP_ARC,
 					hitorigin,
-					WEP_CVAR_PRI(arc, force) * new_dir * dt * falloff
+					WEP_CVAR(arc, beam_force) * new_dir * dt * falloff
 				);
 
 				#ifdef ARC_DEBUG
@@ -412,7 +412,7 @@ void W_Arc_Beam(void)
 	beam.movetype = MOVETYPE_NONE;
 	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
-	beam.bot_dodgerating = WEP_CVAR_PRI(arc, damage);
+	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	//Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
 	oldself = self;
@@ -427,8 +427,8 @@ float W_Arc(float req)
 	{
 		case WR_AIM:
 		{
-			if(WEP_CVAR_PRI(arc, botaimspeed))
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(arc, botaimspeed), 0, WEP_CVAR_PRI(arc, botaimlifetime), FALSE);
+			if(WEP_CVAR(arc, beam_botaimspeed))
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR(arc, beam_botaimspeed), 0, WEP_CVAR(arc, beam_botaimlifetime), FALSE);
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 			return TRUE;
@@ -441,7 +441,7 @@ float W_Arc(float req)
 					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
 						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else*/
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				
 				if(weapon_prepareattack(0, 0))
 				{
@@ -450,7 +450,7 @@ float W_Arc(float req)
 					
 					if(!self.BUTTON_ATCK_prev)
 					{
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
+						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 						self.BUTTON_ATCK_prev = 1;
 					}
 				}
@@ -459,8 +459,8 @@ float W_Arc(float req)
 			{
 				if(self.BUTTON_ATCK_prev != 0)
 				{
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(arc, animtime), w_ready);
-					ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(arc, refire) * W_WeaponRateFactor();
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+					ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 				}
 				self.BUTTON_ATCK_prev = 0;
 			}
@@ -491,11 +491,12 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			return !WEP_CVAR_PRI(arc, ammo) || (self.WEP_AMMO(ARC) > 0);
+			return !WEP_CVAR(arc, beam_ammo) || (self.WEP_AMMO(ARC) > 0);
 		}
 		case WR_CHECKAMMO2:
 		{
-			return self.WEP_AMMO(ARC) >= WEP_CVAR_SEC(arc, ammo);
+			//return self.WEP_AMMO(ARC) >= WEP_CVAR_SEC(arc, ammo);
+			return TRUE;
 		}
 		case WR_CONFIG:
 		{
