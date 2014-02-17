@@ -29,6 +29,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, PRI,  falloff_mindist) \
 	w_cvar(id, sn, PRI,  force) \
 	w_cvar(id, sn, PRI,  maxangle) \
+	w_cvar(id, sn, PRI,  nonplayerdamage) \
 	w_cvar(id, sn, PRI,  range) \
 	w_cvar(id, sn, PRI,  refire) \
 	w_cvar(id, sn, PRI,  returnspeed) \
@@ -162,9 +163,6 @@ void W_Arc_Beam_Think(void)
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
 		{
 			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-			#ifdef ARC_DEBUG
-			printf("Correcting max angle: %f %f\n", angle, WEP_CVAR_PRI(arc, distancepersegment));
-			#endif
 			anglelimit = min(WEP_CVAR_PRI(arc, maxangle) / angle, 1);
 		}
 		else
@@ -181,11 +179,11 @@ void W_Arc_Beam_Think(void)
 		self.SendFlags |= 4;
 
 		// this is where we calculate how many segments are needed
-		float max_allowed_segments = ARC_MAX_SEGMENTS;
+		float max_allowed_segments;
 
-		#if 0
+		#if 1
 		if(WEP_CVAR_PRI(arc, distancepersegment))
-			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
+			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR_PRI(arc, distancepersegment))));
 		else
 			max_allowed_segments = ARC_MAX_SEGMENTS;
 		#endif
@@ -205,8 +203,11 @@ void W_Arc_Beam_Think(void)
 	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR_PRI(arc, range)));
 
 	#ifdef ARC_DEBUG
-	printf("segment count: %d\n", segments);
+	//printf("segment count: %d\n", segments);
 	//string segmentinfo = "";
+	#if 0
+	float totaldist = 0;
+	#endif
 	#endif
 
 	float new_beam_type = 0;
@@ -228,30 +229,54 @@ void W_Arc_Beam_Think(void)
 			self.owner,
 			ANTILAG_LATENCY(self.owner)
 		);
-		
-		if(trace_ent) // and check if this ent takes damage
+
+		#ifdef ARC_DEBUG
+		//APPEND_TO_STRING(segmentinfo, "^4, ", sprintf("^3org%s-dis'%f'", vtos(new_origin), segmentdist));
+		#endif
+
+		float is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		if(trace_ent && (trace_ent.takedamage == DAMAGE_AIM) && (is_player || WEP_CVAR_PRI(arc, nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
 			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
+			#ifdef ARC_DEBUG
+			#if 0
+			totaldist += segmentdist * trace_fraction;
+			#endif
+			#endif
 
-			if(SAME_TEAM(self.owner, trace_ent))
+			float falloff = ExponentialFalloff(
+				WEP_CVAR_PRI(arc, falloff_mindist),
+				WEP_CVAR_PRI(arc, falloff_maxdist),
+				WEP_CVAR_PRI(arc, falloff_halflifedist),
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+			);
+
+			if(is_player && SAME_TEAM(self.owner, trace_ent))
 			{
 				// hit a team mate heal them now
 				#ifdef ARC_DEBUG
 				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
-				te_customflash(hitorigin, 80, 5, '1 0 0');
+				te_customflash(hitorigin, 80, 5, '0 1 0');
+				#if 0
+				printf(
+					"W_Arc_Beam_Think(): HIT TEAM MATE: "
+					"Hitorg: %s, Segments: %d, Distance: %f\n",
+					vtos(hitorigin),
+					i,
+					totaldist
+				);
+				#endif
 				#endif
 				new_beam_type = ARC_BT_HEAL;
 			}
 			else
 			{
-				// hit an enemy/other damageable object
-				float falloff = ExponentialFalloff(
-					WEP_CVAR_PRI(arc, falloff_mindist),
-					WEP_CVAR_PRI(arc, falloff_maxdist),
-					WEP_CVAR_PRI(arc, falloff_halflifedist),
-					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-				);
+				float rootdamage;
+				if(is_player)
+					rootdamage = WEP_CVAR_PRI(arc, damage);
+				else
+					rootdamage = WEP_CVAR_PRI(arc, nonplayerdamage);
 
 				if(accuracy_isgooddamage(self.owner, trace_ent))
 				{
@@ -259,7 +284,7 @@ void W_Arc_Beam_Think(void)
 						self.owner,
 						WEP_ARC,
 						0,
-						WEP_CVAR_PRI(arc, damage) * dt * falloff
+						rootdamage * dt * falloff
 					);
 				}
 
@@ -267,7 +292,7 @@ void W_Arc_Beam_Think(void)
 					trace_ent,
 					self.owner,
 					self.owner,
-					WEP_CVAR_PRI(arc, damage) * dt * falloff,
+					rootdamage * dt * falloff,
 					WEP_ARC,
 					hitorigin,
 					WEP_CVAR_PRI(arc, force) * new_dir * dt * falloff
@@ -276,6 +301,15 @@ void W_Arc_Beam_Think(void)
 				#ifdef ARC_DEBUG
 				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
 				te_customflash(hitorigin, 80, 5, '1 0 0');
+				#if 0
+				printf(
+					"W_Arc_Beam_Think(): HIT ENEMY: "
+					"Hitorg: %s, Segments: %d, Distance: %f\n",
+					vtos(hitorigin),
+					i,
+					totaldist
+				);
+				#endif
 				#endif
 				new_beam_type = ARC_BT_ENEMY;
 			}
@@ -287,6 +321,16 @@ void W_Arc_Beam_Think(void)
 			#ifdef ARC_DEBUG
 			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
 			te_customflash(trace_endpos, 50, 2, '0 0 1');
+			#if 0
+			totaldist += segmentdist * trace_fraction;
+			printf(
+				"W_Arc_Beam_Think(): HIT WALL: "
+				"Hitorg: %s, Segments: %d, Distance: %f\n",
+				vtos(trace_endpos),
+				i,
+				totaldist
+			);
+			#endif
 			#endif
 			new_beam_type = ARC_BT_WALL;
 			break;
@@ -294,6 +338,9 @@ void W_Arc_Beam_Think(void)
 		else
 		{
 			#ifdef ARC_DEBUG
+			#if 0
+			totaldist += segmentdist;
+			#endif
 			te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
 			#endif
 			last_origin = new_origin;
@@ -303,7 +350,17 @@ void W_Arc_Beam_Think(void)
 	#ifdef ARC_DEBUG
 	if(!new_beam_type)
 	{
-		te_customflash(trace_endpos, 50, 2, '0 1 0');
+		#if 0
+		printf(
+			"W_Arc_Beam_Think(): MISS: "
+			"Shotorg: %s, Endpos: %s, Segments: %d: %s\n",
+			vtos(w_shotorg),
+			vtos(trace_endpos),
+			i,
+			segmentinfo
+		);
+		#endif
+		te_customflash(trace_endpos, 50, 2, '1 1 0');
 	}
 	#endif
 
