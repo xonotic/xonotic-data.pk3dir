@@ -43,12 +43,23 @@ REGISTER_WEAPON(
 vector arc_shotorigin[4];
 #endif
 #ifdef SVQC
+#define ARC_MAX_SEGMENTS 20
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void ArcInit(void);
-.vector hook_start, hook_end; // used for beam
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
 .float lg_fire_prev; // for better animation control
+#define ARC_DEBUG
+#ifdef ARC_DEBUG
+.entity lg_ents[ARC_MAX_SEGMENTS]; // debug
+#endif
+.vector beam_dir;
+.vector beam_wantdir;
+.float beam_initialized;
+.float beam_type;
+#define ARC_BT_WALL 1
+#define ARC_BT_HEAL 2
+#define ARC_BT_ENEMY 3
 #endif
 #else
 #ifdef SVQC
@@ -61,34 +72,29 @@ float W_Arc_Beam_Send(entity to, float sf)
 	if(sound_allowed(MSG_BROADCAST, self.owner))
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
-	if(sf & 1)
+	if(sf & 1) // main information
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 		WriteCoord(MSG_ENTITY, WEP_CVAR_PRI(arc, range));
 	}
-	if(sf & 2)
+	if(sf & 2) // want/aim direction
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir_x);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir_y);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir_z);
 	}
-	if(sf & 4)
+	if(sf & 4) // beam direction
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
+		WriteCoord(MSG_ENTITY, self.beam_dir_x);
+		WriteCoord(MSG_ENTITY, self.beam_dir_y);
+		WriteCoord(MSG_ENTITY, self.beam_dir_z);
+	}
+	if(sf & 8) // beam type
+	{
+		WriteByte(MSG_ENTITY, self.beam_type);
 	}
 	return TRUE;
 }
-#define ARC_DEBUG
-#ifdef ARC_DEBUG
-#define ARC_MAX_SEGMENTS 20
-.entity lg_ents[ARC_MAX_SEGMENTS]; // debug
-#endif
-.vector beam_dir;
-.vector beam_wantdir;
-.float beam_type;
-.float beam_initialized;
 void W_Arc_Beam_Think(void)
 {
 	float i;
@@ -130,8 +136,12 @@ void W_Arc_Beam_Think(void)
 
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 
-	//vector want_dir = w_shotdir;
-	//vector want_pos = w_shotend;
+	// network information: want/aim direction
+	if(self.beam_wantdir != w_shotdir)
+	{
+		self.SendFlags |= 2;
+		self.beam_wantdir = w_shotdir;
+	}
 
 	if(!self.beam_initialized)
 	{
@@ -162,19 +172,24 @@ void W_Arc_Beam_Think(void)
 			// the radius is not too far yet, no worries :D
 			anglelimit = 1;
 		}
-		
-		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
 
+		// calculate how much we're going to move the end of the beam to the want position
+		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
 		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 
-		float max_allowed_segments = ARC_MAX_SEGMENTS;
-
-		//if(WEP_CVAR_PRI(arc, distancepersegment))
-		//	max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
-		//else
-		//	max_allowed_segments = ARC_MAX_SEGMENTS;
+		// network information: beam direction
+		self.SendFlags |= 4;
 
 		// this is where we calculate how many segments are needed
+		float max_allowed_segments = ARC_MAX_SEGMENTS;
+
+		#if 0
+		if(WEP_CVAR_PRI(arc, distancepersegment))
+			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
+		else
+			max_allowed_segments = ARC_MAX_SEGMENTS;
+		#endif
+
 		if(WEP_CVAR_PRI(arc, degreespersegment))
 		{
 			segments = min( max(1, ( min(angle, WEP_CVAR_PRI(arc, maxangle)) / WEP_CVAR_PRI(arc, degreespersegment) ) ), max_allowed_segments );
@@ -191,6 +206,7 @@ void W_Arc_Beam_Think(void)
 
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
+	//string segmentinfo = "";
 	#endif
 
 	float new_beam_type = 0;
@@ -220,13 +236,12 @@ void W_Arc_Beam_Think(void)
 
 			if(SAME_TEAM(self.owner, trace_ent))
 			{
-				// hit a team mate
-				// heal them now
+				// hit a team mate heal them now
 				#ifdef ARC_DEBUG
 				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
 				te_customflash(hitorigin, 80, 5, '1 0 0');
 				#endif
-				new_beam_type = ARC_BT_ENEMY;
+				new_beam_type = ARC_BT_HEAL;
 			}
 			else
 			{
@@ -292,9 +307,10 @@ void W_Arc_Beam_Think(void)
 	}
 	#endif
 
+	// network information: beam type
 	if(new_beam_type != self.beam_type)
 	{
-		self.SendFlags |= 4;
+		self.SendFlags |= 8;
 		self.beam_type = new_beam_type;
 	}
 
