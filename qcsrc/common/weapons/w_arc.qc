@@ -195,24 +195,27 @@ void W_Arc_Beam_Think(void)
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
 	#endif
-	float segmentdist = distance_to_want_pos * (1/segments);
+	float segmentdist;// = vlen(self.beam_endpos - last_origin) * (1/segments);
 	float segmentblend;// = (1/segments);
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
 		segmentblend = (i/segments);
-		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (newdir * segmentblend));
+		segmentdist = vlen(self.beam_endpos - last_origin) * (i/segments);
+		//direction_to_want_pos = normalize(self.beam_endpos - last_origin);
+		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (normalize(self.beam_endpos - last_origin) * segmentblend));
 		vector new_origin = last_origin + (blended * segmentdist);
 
 		WarpZone_traceline_antilag(self.owner, last_origin, new_origin, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 		
 		if(trace_ent)
 		{
+			vector attackend = (last_origin * (1 - trace_fraction) + new_origin * trace_fraction); // trace_endpos jumps weirdly with playermodels... 
 			float falloff = ExponentialFalloff(
 				WEP_CVAR_PRI(arc, falloff_mindist),
 				WEP_CVAR_PRI(arc, falloff_maxdist),
 				WEP_CVAR_PRI(arc, falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, attackend) - w_shotorg)
 			);
 
 			if(accuracy_isgooddamage(self.owner, trace_ent))
@@ -224,13 +227,13 @@ void W_Arc_Beam_Think(void)
 				self.owner,
 				WEP_CVAR_PRI(arc, damage) * dt * falloff,
 				WEP_ARC,
-				trace_endpos,
+				attackend,
 				(blended * WEP_CVAR_PRI(arc, force)) * dt * falloff
 			);
 
 			#ifdef ARC_DEBUG
-			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
-			te_customflash(trace_endpos, 80, 5, '1 0 0');
+			te_lightning1(self.lg_ents[i - 1], last_origin, attackend);
+			te_customflash(attackend, 80, 5, '1 0 0');
 			#endif
 
 			break; 
