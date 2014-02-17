@@ -41,6 +41,9 @@ REGISTER_WEAPON(
 
 #ifndef MENUQC
 vector arc_shotorigin[4];
+#define ARC_BT_WALL 1
+#define ARC_BT_HEAL 2
+#define ARC_BT_ENEMY 3
 #endif
 #ifdef SVQC
 #define ARC_MAX_SEGMENTS 20
@@ -57,9 +60,6 @@ void ArcInit(void);
 .vector beam_wantdir;
 .float beam_initialized;
 .float beam_type;
-#define ARC_BT_WALL 1
-#define ARC_BT_HEAL 2
-#define ARC_BT_ENEMY 3
 #endif
 #else
 #ifdef SVQC
