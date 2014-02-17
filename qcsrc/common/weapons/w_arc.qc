@@ -83,7 +83,8 @@ float W_Arc_Beam_Send(entity to, float sf)
 #define ARC_MAX_SEGMENTS 20
 .entity lg_ents[ARC_MAX_SEGMENTS]; // debug
 #endif
-.vector beam_endpos;
+.vector beam_dir;
+.float beam_initialized;
 void W_Arc_Beam_Think(void)
 {
 	float i;
@@ -127,35 +128,36 @@ void W_Arc_Beam_Think(void)
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR_PRI(arc, damage) * dt, WEP_CVAR_PRI(arc, range));
 	//WarpZone_traceline_antilag(self.owner, w_shotorg, w_shotend, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 
-	vector want_pos = w_shotend;
+	vector want_dir = w_shotdir;
+	//vector want_pos = w_shotend;
 
-	// TODO: remove this, we should REALLY set it from the attack function
-	if(self.beam_endpos == '0 0 0')
+	if(!self.beam_initialized)
 	{
 		#ifdef ARC_DEBUG
 		for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
 			self.lg_ents[i] = spawn();
 		#endif
 		
-		self.beam_endpos = want_pos;
+		self.beam_dir = want_dir;
+		self.beam_initialized = TRUE;
 	}
 
-	vector newdir;
-	vector direction_to_want_pos = normalize(want_pos - w_shotorg);
-	float distance_to_want_pos = vlen(want_pos - w_shotorg);
-	printf("distance_to_want_pos: %f\n", distance_to_want_pos);
+	//vector newdir;
+	//vector direction_to_want_pos = normalize(want_pos - w_shotorg);
+	//float distance_to_want_pos = vlen(want_pos - w_shotorg);
+	//printf("distance_to_want_pos: %f\n", distance_to_want_pos);
 	float segments; 
-	if(self.beam_endpos != want_pos)
+	if(self.beam_dir != want_dir)
 	{
-		vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
+		//vector direction_to_beam_pos = normalize(self.beam_endpos - w_shotorg);
 
-		float angle = ceil(vlen(direction_to_want_pos - direction_to_beam_pos) * RAD2DEG);
+		float angle = ceil(vlen(want_dir - self.beam_dir) * RAD2DEG);
 		float anglelimit;
 		if(angle && (angle > WEP_CVAR_PRI(arc, maxangle)))
 		{
 			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
 			#ifdef ARC_DEBUG
-			printf("Correcting max angle: %f\n", angle);
+			printf("Correcting max angle: %f %f\n", angle, WEP_CVAR_PRI(arc, distancepersegment));
 			#endif
 			anglelimit = min(WEP_CVAR_PRI(arc, maxangle) / angle, 1);
 		}
@@ -167,15 +169,16 @@ void W_Arc_Beam_Think(void)
 		
 		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR_PRI(arc, returnspeed) * dt)), 1);
 
-		newdir = normalize((direction_to_want_pos * (1 - blendfactor)) + (direction_to_beam_pos * blendfactor));
-		self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
+		self.beam_dir = normalize((want_dir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+		//self.beam_endpos = w_shotorg + (newdir * distance_to_want_pos);
 
-		float max_allowed_segments;
+		float max_allowed_segments = ARC_MAX_SEGMENTS;
 
-		if(WEP_CVAR_PRI(arc, distancepersegment))
-			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
-		else
-			max_allowed_segments = ARC_MAX_SEGMENTS;
+		//if(WEP_CVAR_PRI(arc, distancepersegment))
+		//	max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (distance_to_want_pos / WEP_CVAR_PRI(arc, distancepersegment)));
+		//else
+		//	max_allowed_segments = ARC_MAX_SEGMENTS;
+
 		// this is where we calculate how many segments are needed
 		if(WEP_CVAR_PRI(arc, degreespersegment))
 		{
@@ -186,36 +189,37 @@ void W_Arc_Beam_Think(void)
 	}
 	else
 	{
-		newdir = direction_to_want_pos;
 		segments = 1;
 	}
 
-	te_customflash(self.beam_endpos, 40, 2, '1 1 1');
+	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR_PRI(arc, range)));
+	//te_customflash(beam_endpos_estimate, 40, 2, '1 1 1');
 
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
 	#endif
-	float segmentdist;// = vlen(self.beam_endpos - last_origin) * (1/segments);
+	float hit_something = FALSE;
+	float segmentdist; // = WEP_CVAR_PRI(arc, range) / segments; // = vlen(self.beam_endpos - last_origin) * (1/segments);
 	float segmentblend;// = (1/segments);
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
 		segmentblend = (i/segments);
-		segmentdist = vlen(self.beam_endpos - last_origin) * (i/segments);
+		segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 		//direction_to_want_pos = normalize(self.beam_endpos - last_origin);
-		vector blended = normalize((direction_to_want_pos * (1 - segmentblend)) + (normalize(self.beam_endpos - last_origin) * segmentblend));
+		vector blended = normalize((want_dir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend));
 		vector new_origin = last_origin + (blended * segmentdist);
 
 		WarpZone_traceline_antilag(self.owner, last_origin, new_origin, MOVE_NORMAL, self.owner, ANTILAG_LATENCY(self.owner));
 		
 		if(trace_ent)
 		{
-			vector attackend = (last_origin * (1 - trace_fraction) + new_origin * trace_fraction); // trace_endpos jumps weirdly with playermodels... 
+			//vector attackend = (last_origin * (1 - trace_fraction) + new_origin * trace_fraction); // trace_endpos jumps weirdly with playermodels... 
 			float falloff = ExponentialFalloff(
 				WEP_CVAR_PRI(arc, falloff_mindist),
 				WEP_CVAR_PRI(arc, falloff_maxdist),
 				WEP_CVAR_PRI(arc, falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, attackend) - w_shotorg)
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - w_shotorg)
 			);
 
 			if(accuracy_isgooddamage(self.owner, trace_ent))
@@ -227,16 +231,22 @@ void W_Arc_Beam_Think(void)
 				self.owner,
 				WEP_CVAR_PRI(arc, damage) * dt * falloff,
 				WEP_ARC,
-				attackend,
+				trace_endpos,
 				(blended * WEP_CVAR_PRI(arc, force)) * dt * falloff
 			);
 
 			#ifdef ARC_DEBUG
-			te_lightning1(self.lg_ents[i - 1], last_origin, attackend);
-			te_customflash(attackend, 80, 5, '1 0 0');
+			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
 			#endif
 
+			hit_something = TRUE;
 			break; 
+		}
+		else if(trace_fraction != 1)
+		{
+			// we collided with geometry
+			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
+			break;
 		}
 		else
 		{
@@ -245,6 +255,15 @@ void W_Arc_Beam_Think(void)
 			#endif
 			last_origin = new_origin;
 		}
+	}
+
+	if(hit_something)
+	{
+		te_customflash(trace_endpos, 80, 5, '1 0 0');
+	}
+	else
+	{
+		te_customflash(trace_endpos, 40, 2, '1 1 1');
 	}
 
 	// draw effect
