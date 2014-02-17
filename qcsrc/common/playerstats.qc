@@ -419,33 +419,61 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic()
 {
-	entity player;
-	//PS_D_IN_DB = -1;
-	//PS_D_IN_DB = db_create();
-
-	//if(PS_D_IN_DB < 0) { return; }
-
-	FOR_EACH_REALCLIENT(player)
+	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
-		string uri = autocvar_g_playerstats_playerbasic_uri;
-		if((uri != "") && (player.crypto_idfp != ""))
+		entity player;
+		
+		// create the database if it doesn't already exist
+		if(PS_B_IN_DB < 0)
 		{
-			uri = strcat(uri, "/player/", uri_escape(uri_escape(player.crypto_idfp)), "/elo.txt");
-			print("Retrieving playerstats from URL: ", uri, "\n");
-			url_single_fopen(
-				uri,
-				FILE_APPEND,
-				PlayerStats_PlayerBasic_Handler,
-				player
-			);
+			PS_B_IN_DB = -1;
+			PS_B_IN_DB = db_create();
 		}
 
-		/*p.crypto_idfp != "")
+		FOR_EACH_REALCLIENT(player)
 		{
-			uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
-			print("Retrieving playerstats from URL: ", uri, "\n");
-			url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
-		}*/
+			string uri = autocvar_g_playerstats_playerbasic_uri;
+			if((uri != "") && (player.crypto_idfp != ""))
+			{
+				uri = strcat(uri, "/player/", uri_escape(uri_escape(player.crypto_idfp)), "/elo.txt");
+				print("Retrieving playerstats from URL: ", uri, "\n");
+				url_single_fopen(
+					uri,
+					FILE_APPEND,
+					PlayerStats_PlayerBasic_Handler,
+					player
+				);
+			}
+
+			/*p.crypto_idfp != "")
+			{
+				uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
+				print("Retrieving playerstats from URL: ", uri, "\n");
+				url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
+			}*/
+		}
+
+		if(PlayerStats_PlayerBasic_Status == PS_B_STATUS_RECEIVED)
+		{
+			// database still contains useful information, so don't clear it of a useful status
+			PlayerStats_PlayerBasic_Status = PS_B_STATUS_UPDATING;
+		}
+		else
+		{
+			// database was previously empty or never hit received status for some reason
+			PlayerStats_PlayerBasic_Status = PS_B_STATUS_WAITING;
+		}
+	}
+	else
+	{
+		// player has this disabled, kill the DB and set status to idle
+		if(PS_B_IN_DB >= 0)
+		{
+			db_close(PS_B_IN_DB);
+			PS_B_IN_DB = -1;
+		}
+
+		PlayerStats_PlayerBasic_Status = PS_B_STATUS_IDLE;
 	}
 }
 
