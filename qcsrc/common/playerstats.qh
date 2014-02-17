@@ -116,27 +116,3 @@ void PlayerStats_PlayerDetail(void);
 void PlayerStats_PlayerDetail_CheckUpdate(void);
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
 #endif
-
-/*
-//// WIP -zykure /////////////////////////////////////////////////////
-
-
-//const string playerinfo_uri = "http://localhost:6543"; // FIXME
-
-string PlayerInfo_GetItem(entity e, string item_id);
-string PlayerInfo_GetItemLocal(string item_id);
-
-void PlayerInfo_Init();
-#ifdef SVQC
-string autocvar_g_playerinfo_uri;
-void PlayerInfo_Basic(entity p);
-#endif
-#ifdef MENUQC
-string autocvar_g_playerinfo_uri;
-void PlayerInfo_Details();
-#endif
-#ifdef CSQC
-
-//void PlayerInfo_Details();
-#endif
-*/
