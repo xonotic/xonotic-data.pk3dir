@@ -42,9 +42,15 @@ REGISTER_WEAPON(
 
 #ifndef MENUQC
 vector arc_shotorigin[4];
-#define ARC_BT_WALL 1
-#define ARC_BT_HEAL 2
-#define ARC_BT_ENEMY 3
+#define ARC_BT_MISS        0
+#define ARC_BT_WALL        1
+#define ARC_BT_HEAL        2
+#define ARC_BT_HIT         3
+#define ARC_BT_BURST_MISS  10
+#define ARC_BT_BURST_WALL  11
+#define ARC_BT_BURST_HEAL  12
+#define ARC_BT_BURST_HIT   13
+#define ARC_BT_BURSTMASK   10
 #endif
 #ifdef SVQC
 #define ARC_MAX_SEGMENTS 20
@@ -98,10 +104,15 @@ float W_Arc_Beam_Send(entity to, float sf)
 }
 void W_Arc_Beam_Think(void)
 {
-	float i;
+	float i, burst = TRUE;
 	if(self != self.owner.arc_beam)
 	{
 		#ifdef ARC_DEBUG
+		if(self.lg_ents[0])
+		{
+			for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
+				remove(self.lg_ents[i]);
+		}
 		print("W_Arc_Beam_Think(): EXPIRING BEAM #1\n");
 		#endif
 		remove(self);
@@ -122,7 +133,12 @@ void W_Arc_Beam_Think(void)
 		return;
 	}
 
-	// decrease ammo
+	if(self.owner.BUTTON_ATCK2)
+	{
+		burst = ARC_BT_BURSTMASK;
+	}
+
+	// decrease ammo // todo: support burst ammo
 	float dt = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -303,7 +319,7 @@ void W_Arc_Beam_Think(void)
 				te_customflash(hitorigin, 80, 5, '1 0 0');
 				#if 0
 				printf(
-					"W_Arc_Beam_Think(): HIT ENEMY: "
+					"W_Arc_Beam_Think(): HIT ENTITY: "
 					"Hitorg: %s, Segments: %d, Distance: %f\n",
 					vtos(hitorigin),
 					i,
@@ -311,7 +327,7 @@ void W_Arc_Beam_Think(void)
 				);
 				#endif
 				#endif
-				new_beam_type = ARC_BT_ENEMY;
+				new_beam_type = ARC_BT_HIT;
 			}
 			break; 
 		}
@@ -363,6 +379,9 @@ void W_Arc_Beam_Think(void)
 		te_customflash(trace_endpos, 50, 2, '1 1 0');
 	}
 	#endif
+
+	// if we're bursting, use burst visual effects
+	new_beam_type += burst;
 
 	// network information: beam type
 	if(new_beam_type != self.beam_type)
