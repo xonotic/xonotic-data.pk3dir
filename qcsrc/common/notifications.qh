@@ -339,6 +339,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO##teams(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle)
 
 #define MSG_INFO_NOTIFICATIONS \
+	MSG_INFO_NOTIF(2, INFO_CHAT_NOSPECTATORS,              0, 0, "", "",                            "",                     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 2,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 2,         2, 2, "s1 f1p2dec s2 f2p2dec", "s1",     "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_TIME_, 2,           1, 1, "s1 f1p2dec", "s1",                "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"), "") \
