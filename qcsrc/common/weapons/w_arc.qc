@@ -398,8 +398,8 @@ void W_Arc_Beam_Think(void)
 void W_Arc_Beam(void)
 {
 	print("W_Arc_Beam();\n");
-	// only play fire sound if 0.5 sec has passed since player let go the fire button
-	if(time - self.lg_fire_prev > 0.5)
+	// only play fire sound if 1 sec has passed since player let go the fire button
+	if(time - self.lg_fire_prev > 1)
 		sound(self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
 
 	entity beam, oldself;
