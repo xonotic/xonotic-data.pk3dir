@@ -197,8 +197,8 @@ void W_Arc_Beam_Think(void)
 
 	#ifdef ARC_DEBUG
 	printf("segment count: %d\n", segments);
-	#endif
 	float hit_something = FALSE;
+	#endif
 	float segmentdist; // = WEP_CVAR_PRI(arc, range) / segments; // = vlen(self.beam_endpos - last_origin) * (1/segments);
 	float segmentblend;// = (1/segments);
 	vector last_origin = w_shotorg;
@@ -237,15 +237,18 @@ void W_Arc_Beam_Think(void)
 
 			#ifdef ARC_DEBUG
 			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
-			#endif
-
+			te_customflash(trace_endpos, 80, 5, '1 0 0');
 			hit_something = TRUE;
+			#endif
 			break; 
 		}
 		else if(trace_fraction != 1)
 		{
 			// we collided with geometry
+			#ifdef ARC_DEBUG
 			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
+			te_customflash(trace_endpos, 40, 2, '0 0 1');
+			#endif
 			break;
 		}
 		else
@@ -257,14 +260,12 @@ void W_Arc_Beam_Think(void)
 		}
 	}
 
-	if(hit_something)
-	{
-		te_customflash(trace_endpos, 80, 5, '1 0 0');
-	}
-	else
+	#ifdef ARC_DEBUG
+	if(!hit_something)
 	{
 		te_customflash(trace_endpos, 40, 2, '1 1 1');
 	}
+	#endif
 
 	// draw effect
 	/*if(w_shotorg != self.hook_start)
