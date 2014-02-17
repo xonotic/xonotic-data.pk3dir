@@ -194,20 +194,17 @@ void W_Arc_Beam_Think(void)
 		// network information: beam direction
 		self.SendFlags |= 4;
 
-		// this is where we calculate how many segments are needed
+		// calculate how many segments are needed
 		float max_allowed_segments;
 
-		#if 1
 		if(WEP_CVAR(arc, beam_distancepersegment))
 			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
 		else
 			max_allowed_segments = ARC_MAX_SEGMENTS;
-		#endif
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
 			segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
-			//segments = min( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment), max_allowed_segments );
 		}
 		else { segments = 1; }
 	}
@@ -230,11 +227,11 @@ void W_Arc_Beam_Think(void)
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
-		// this could probably be calculated in a better way
+		// calculate this on every segment to ensure that we always reach the full length of the attack
 		float segmentblend = (i/segments);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
-		vector new_dir = normalize((w_shotdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend));
+		vector new_dir = normalize( (w_shotdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
 		vector new_origin = last_origin + (new_dir * segmentdist);
 
 		WarpZone_traceline_antilag(
