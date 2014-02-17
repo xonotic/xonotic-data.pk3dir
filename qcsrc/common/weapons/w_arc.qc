@@ -247,7 +247,8 @@ void W_Arc_Beam_Think(void)
 			// we collided with geometry
 			#ifdef ARC_DEBUG
 			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
-			te_customflash(trace_endpos, 40, 2, '0 0 1');
+			te_customflash(trace_endpos, 50, 2, '0 0 1');
+			hit_something = TRUE;
 			#endif
 			break;
 		}
@@ -263,7 +264,7 @@ void W_Arc_Beam_Think(void)
 	#ifdef ARC_DEBUG
 	if(!hit_something)
 	{
-		te_customflash(trace_endpos, 40, 2, '1 1 1');
+		te_customflash(trace_endpos, 50, 2, '0 1 0');
 	}
 	#endif
 
