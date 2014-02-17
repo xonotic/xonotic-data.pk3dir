@@ -1047,8 +1047,7 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
-	//PlayerInfo_Basic(self);
-	PlayerStats_PlayerBasic();
+	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();

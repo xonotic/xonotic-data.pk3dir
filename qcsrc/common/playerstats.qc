@@ -417,63 +417,79 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 	}
 }
 
-void PlayerStats_PlayerBasic()
+void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
+	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
-		entity player;
-		
-		// create the database if it doesn't already exist
-		if(PS_B_IN_DB < 0)
+		string uri = autocvar_g_playerstats_playerbasic_uri;
+		if(joiningplayer.crypto_idfp != "")
 		{
-			PS_B_IN_DB = -1;
-			PS_B_IN_DB = db_create();
-		}
-
-		FOR_EACH_REALCLIENT(player)
-		{
-			string uri = autocvar_g_playerstats_playerbasic_uri;
-			if((uri != "") && (player.crypto_idfp != ""))
+			// create the database if it doesn't already exist
+			if(PS_B_IN_DB < 0)
 			{
-				uri = strcat(uri, "/player/", uri_escape(uri_escape(player.crypto_idfp)), "/elo.txt");
-				print("Retrieving playerstats from URL: ", uri, "\n");
-				url_single_fopen(
-					uri,
-					FILE_APPEND,
-					PlayerStats_PlayerBasic_Handler,
-					player
-				);
+				PS_B_IN_DB = -1;
+				PS_B_IN_DB = db_create();
 			}
 
-			/*p.crypto_idfp != "")
-			{
-				uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
-				print("Retrieving playerstats from URL: ", uri, "\n");
-				url_single_fopen(uri, FILE_READ, PlayerInfo_ready, p);
-			}*/
-		}
+			// now request the information
+			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
+			print("Retrieving playerstats from URL: ", uri, "\n");
+			url_single_fopen(
+				uri,
+				FILE_APPEND,
+				PlayerStats_PlayerBasic_Handler,
+				joiningplayer
+			);
 
-		if(PlayerStats_PlayerBasic_Status == PS_B_STATUS_RECEIVED)
-		{
-			// database still contains useful information, so don't clear it of a useful status
-			PlayerStats_PlayerBasic_Status = PS_B_STATUS_UPDATING;
-		}
-		else
-		{
-			// database was previously empty or never hit received status for some reason
-			PlayerStats_PlayerBasic_Status = PS_B_STATUS_WAITING;
+			// set status appropriately // todo: check whether the player info exists in the database previously
+			if(newrequest)
+			{
+				// database still contains useful information, so don't clear it of a useful status
+				joiningplayer.playerstats_basicstatus = PS_B_STATUS_WAITING;
+			}
+			else
+			{
+				// database was previously empty or never hit received status for some reason
+				joiningplayer.playerstats_basicstatus = PS_B_STATUS_UPDATING;
+			}
 		}
 	}
 	else
 	{
-		// player has this disabled, kill the DB and set status to idle
+		// server has this disabled, kill the DB and set status to idle
 		if(PS_B_IN_DB >= 0)
 		{
+			entity player;
+
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
-		}
 
-		PlayerStats_PlayerBasic_Status = PS_B_STATUS_IDLE;
+			FOR_EACH_REALCLIENT(player) { player.playerstats_basicstatus = PS_B_STATUS_IDLE; }
+		}
+	}
+}
+
+void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
+{
+	// determine whether we should retrieve playerbasic information again
+
+	#if 0
+	printf("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
+		joiningplayer.netname,
+		time
+	);
+	#endif
+
+	// TODO: check to see if this playerid is inside the database already somehow...
+	// for now we'll just check the field, but this won't work for players who disconnect and reconnect properly
+	// although maybe we should just submit another request ANYWAY?
+	if(!joiningplayer.playerstats_basicstatus)
+	{
+		PlayerStats_PlayerBasic(
+			joiningplayer,
+			(joiningplayer.playerstats_basicstatus == PS_B_STATUS_RECEIVED)
+		);
 	}
 }
 
@@ -614,6 +630,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 
 void PlayerStats_PlayerDetail(void)
 {
+	// http://stats.xonotic.org/player/me
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
 	{
 		// create the database if it doesn't already exist
