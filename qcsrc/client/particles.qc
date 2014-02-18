@@ -364,7 +364,9 @@ void Net_ReadShockwaveParticle()
 
 .float beam_usevieworigin;
 .float beam_initialized;
+.float beam_maxangle;
 .float beam_range;
+.float beam_returnspeed;
 .vector beam_shotorigin;
 .vector beam_dir;
 void Draw_ArcBeam()
@@ -431,10 +433,10 @@ void Draw_ArcBeam()
 		{
 			float angle = ceil(vlen(wantdir - self.beam_dir) * RAD2DEG);
 			float anglelimit;
-			if(angle && (angle > cvar("g_balance_arc_beam_maxangle")))
+			if(angle && (angle > self.beam_maxangle))
 			{
 				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-				anglelimit = min(cvar("g_balance_arc_beam_maxangle") / angle, 1);
+				anglelimit = min(self.beam_maxangle / angle, 1);
 			}
 			else
 			{
@@ -443,7 +445,7 @@ void Draw_ArcBeam()
 			}
 
 			// calculate how much we're going to move the end of the beam to the want position
-			float blendfactor = bound(0, anglelimit * (1 - (cvar("g_balance_arc_beam_returnspeed") * frametime)), 1);
+			float blendfactor = bound(0, anglelimit * (1 - (self.beam_returnspeed * frametime)), 1);
 			self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 		}
 
@@ -604,7 +606,9 @@ void Ent_ReadArcBeam(float isnew)
 
 	if(sf & 1) // settings information
 	{
+		self.beam_maxangle = ReadShort();
 		self.beam_range = ReadCoord();
+		self.beam_returnspeed = ReadShort();
 	}
 
 	if(sf & 2) // starting location

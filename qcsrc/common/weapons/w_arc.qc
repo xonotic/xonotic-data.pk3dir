@@ -92,7 +92,9 @@ float W_Arc_Beam_Send(entity to, float sf)
 
 	if(sf & 1) // settings information
 	{
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_maxangle));
 		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));
 	}
 	if(sf & 2) // starting location
 	{
