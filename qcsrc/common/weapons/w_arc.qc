@@ -109,7 +109,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 
 void W_Arc_Beam_Think(void)
 {
-	float i, burst = TRUE;
+	float i, burst = 0;
 	if(self != self.owner.arc_beam)
 	{
 		#ifdef ARC_DEBUG

@@ -465,6 +465,37 @@ void Draw_ArcBeam()
 	float segments = 20; // todo: calculate this in a similar way to server does
 	float maxthickness = 8;
 
+	vector beamrgb;
+	float beamalpha;
+	float thickness;
+
+	/*
+	#define ARC_BT_MISS        0
+	#define ARC_BT_WALL        1
+	#define ARC_BT_HEAL        2
+	#define ARC_BT_HIT         3
+	#define ARC_BT_BURST_MISS  10
+	#define ARC_BT_BURST_WALL  11
+	#define ARC_BT_BURST_HEAL  12
+	#define ARC_BT_BURST_HIT   13
+	*/
+
+	switch(self.beam_type)
+	{
+		case ARC_BT_MISS:        beamrgb = '-1 -1 1';    beamalpha = 0.5;  thickness = 8; break;
+		case ARC_BT_WALL:        beamrgb = '0.5 0.5 1';  beamalpha = 0.5;  thickness = 8; break;
+		case ARC_BT_HEAL:        beamrgb = '0 1 0';      beamalpha = 0.5;  thickness = 8; break;
+		case ARC_BT_HIT:         beamrgb = '1 0 1';      beamalpha = 0.5;  thickness = 8; break;
+		case ARC_BT_BURST_MISS:  beamrgb = '-1 -1 1';    beamalpha = 0.5;  thickness = 14; break;
+		case ARC_BT_BURST_WALL:  beamrgb = '0.5 0.5 1';  beamalpha = 0.5;  thickness = 14; break;
+		case ARC_BT_BURST_HEAL:  beamrgb = '0 1 0';      beamalpha = 0.5;  thickness = 14; break;
+		case ARC_BT_BURST_HIT:   beamrgb = '1 0 1';      beamalpha = 0.5;  thickness = 14; break;
+
+		// shouldn't be possible...
+		default: beamrgb = '1 1 1'; beamalpha = 1; thickness = 4; break;
+	}
+
+	printf("beam type: %d\n", self.beam_type); 
 
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
 
@@ -515,16 +546,14 @@ void Draw_ArcBeam()
 		//float falloff = 1;
 		#endif
 
-		float thickness = 8;
-
 		vector top    = hitorigin + (thickdir * thickness);
 		vector bottom = hitorigin - (thickdir * thickness);
 
 		R_BeginPolygon("particles/lgbeam", DRAWFLAG_NORMAL);
-		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (thickness / maxthickness)), '0.5 0.5 1', 0.5);
-		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), '0.5 0.5 1', 0.5);
-		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)), '0.5 0.5 1', 0.5);
-		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (thickness / maxthickness)), '0.5 0.5 1', 0.5);
+		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (thickness / maxthickness)),     beamrgb, beamalpha);
+		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), beamrgb, beamalpha);
+		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         beamrgb, beamalpha);
+		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (thickness / maxthickness)),             beamrgb, beamalpha);
 		R_EndPolygon();
 
 		// draw collision effect
