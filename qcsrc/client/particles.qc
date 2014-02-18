@@ -362,3 +362,258 @@ void Net_ReadShockwaveParticle()
 	shockwave.sw_time = time;
 }
 
+.float beam_usevieworigin;
+.float beam_initialized;
+.vector beam_shotorigin;
+.vector beam_dir;
+void Draw_ArcBeam()
+{
+	if(self.teleport_time)
+	if(time > self.teleport_time)
+	{
+		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM); // safeguard
+		self.teleport_time = 0;
+	}
+
+	InterpolateOrigin_Do();
+
+	// origin = beam starting origin
+	// v_angle = wanted/aim direction
+	// angles = current direction of beam
+
+	vector beamdir; //= self.beam_dir;
+	vector wantdir; //= view_forward;
+
+	vector start_pos;
+
+	if(self.beam_usevieworigin)
+	{
+		makevectors(view_angles);
+
+		if(!self.beam_initialized)
+		{
+			self.beam_dir = view_forward;
+			self.beam_initialized = TRUE;
+		}
+
+		if(self.beam_dir != view_forward)
+		{
+			float angle = ceil(vlen(view_forward - self.beam_dir) * RAD2DEG);
+			float anglelimit;
+			if(angle && (angle > cvar("g_balance_arc_beam_maxangle")))
+			{
+				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+				anglelimit = min(cvar("g_balance_arc_beam_maxangle") / angle, 1);
+			}
+			else
+			{
+				// the radius is not too far yet, no worries :D
+				anglelimit = 1;
+			}
+
+			// calculate how much we're going to move the end of the beam to the want position
+			float blendfactor = bound(0, anglelimit * (1 - (cvar("g_balance_arc_beam_returnspeed") * frametime)), 1);
+			self.beam_dir = normalize((view_forward * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+		}
+
+		beamdir = self.beam_dir;
+		wantdir = view_forward;
+
+		vector origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
+		if(self.beam_usevieworigin == 2)
+			{ start_pos = view_origin + origin_offset; }
+		else
+			{ start_pos = self.origin + origin_offset; }
+	}
+	else
+	{
+		beamdir = self.angles;
+		wantdir = self.v_angle;
+		start_pos = self.origin;
+	}
+
+	setorigin(self, start_pos);
+
+	float i;
+	float segments = 20; // todo: calculate this in a similar way to server does
+
+	vector beam_endpos_estimate = (start_pos + (beamdir * cvar("g_balance_arc_beam_range")));
+
+	//vector axis = normalize(last_origin - new_origin);
+	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
+
+	vector last_origin = start_pos;
+	
+	vector last_top = start_pos + (thickdir * 0);
+	vector last_bottom = start_pos - (thickdir * 0);
+
+	for(i = 1; i <= segments; ++i)
+	{
+		// calculate this on every segment to ensure that we always reach the full length of the attack
+		float segmentblend = (i/segments);
+		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
+
+		vector new_dir = normalize( (wantdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
+		vector new_origin = last_origin + (new_dir * segmentdist);
+
+		WarpZone_TraceLine(
+			last_origin,
+			new_origin,
+			MOVE_NORMAL,
+			self
+		);
+
+		vector hitorigin;
+
+		// draw segment
+		if(trace_fraction != 1)
+		{
+			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+			hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
+		}
+		else
+		{
+			hitorigin = new_origin;
+		}
+
+		#if 0
+		float falloff = ExponentialFalloff(
+			WEP_CVAR(arc, beam_falloff_mindist),
+			WEP_CVAR(arc, beam_falloff_maxdist),
+			WEP_CVAR(arc, beam_falloff_halflifedist),
+			vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - start_pos)
+		);
+		#else
+		//float falloff = 1;
+		#endif
+
+		vector top    = hitorigin + (thickdir * 1);
+		vector bottom = hitorigin - (thickdir * 1);
+
+		R_BeginPolygon("", DRAWFLAG_NORMAL);
+		R_PolygonVertex(top,         '0 1 0', '1 0 0', 0.5);
+		R_PolygonVertex(last_top,    '0 1 0', '1 0 0', 0.5);
+		R_PolygonVertex(last_bottom, '0 0 0', '1 0 0', 0.5);
+		R_PolygonVertex(bottom,      '0 0 0', '1 0 0', 0.5);
+		R_EndPolygon();
+
+		// draw collision effect
+		if(trace_fraction != 1)
+		{
+			switch(self.beam_type)
+			{
+				//case ARC_BT_MISS: te_customflash(hitorigin, 40, 5, '1 1 0'); break;
+				case ARC_BT_WALL: te_customflash(hitorigin, 40, 2, '0 0 1'); break;
+				case ARC_BT_HIT:  te_customflash(hitorigin, 80, 5, '1 0 0'); break;
+				//case ARC_BT_MISS: te_customflash(hitorigin, 80, 5, '0 1 0'); break;
+				default: te_customflash(hitorigin, 40, 2, '0 1 0'); break;
+			}
+			break; // we're done with drawing this frame
+		}
+		else
+		{
+			last_origin = new_origin; // continue onto the next segment
+			last_top = top;
+			last_bottom = bottom;
+		}
+	}
+
+	if(trace_fraction == 1)
+	{
+		// do end of beam effect here
+	}
+}
+
+void Remove_ArcBeam(void)
+{
+	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+}
+
+void Ent_ReadArcBeam(float isnew)
+{
+	// don't send group 1 if this beam is for the local player
+	//if(to == self.owner) { sf |= 1; }
+	//WriteByte(MSG_ENTITY, sf);
+	float sf = ReadByte();
+
+	// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
+	self.iflags = IFLAG_ORIGIN;
+
+	InterpolateOrigin_Undo();
+
+	if(sf & 1) // starting location // not sent if beam is for owner
+	{
+		//WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+		self.beam_usevieworigin = 0;
+		//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+	}
+	else // infer the location from player location
+	{
+		//origin_offset = view_forward * origin_offset_x + view_right * -origin_offset_y + view_up * origin_offset_z;
+
+		if(autocvar_chase_active) // use player origin so that third person display still works
+		{
+			self.beam_usevieworigin = 1;
+			self.origin = getplayerorigin(player_localnum) + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
+		}
+		else // use view origin
+		{
+			self.beam_usevieworigin = 2;
+		}
+		setorigin(self, self.origin);
+	}
+
+	float gunalign = autocvar_cl_gunalign;
+	if(gunalign != 1 && gunalign != 2 && gunalign != 4)
+		gunalign = 3; // default value
+	--gunalign;
+
+	self.beam_shotorigin = arc_shotorigin[gunalign];
+
+	//origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
+	
+	if(sf & 2) // want/aim direction
+	{
+		self.v_angle_x = ReadCoord();
+		self.v_angle_y = ReadCoord();
+		self.v_angle_z = ReadCoord();
+	}
+	if(sf & 4) // beam direction
+	{
+		self.angles_x = ReadCoord();
+		self.angles_y = ReadCoord();
+		self.angles_z = ReadCoord();
+	}
+	if(sf & 8) // beam type
+	{
+		self.beam_type = ReadByte();
+	}
+
+	InterpolateOrigin_Note();
+
+	if(isnew || !self.teleport_time)
+	{
+		self.draw = Draw_ArcBeam;
+		self.entremove = Remove_ArcBeam;
+		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+	}
+
+	self.teleport_time = time + 10;
+
+	#if 0
+	printf(
+		"Ent_ReadArcBeam(%d): sf = %d, start = %s, want = %s, dir = %s, type = %d\n",
+		isnew,
+		sf,
+		vtos(self.beam_start),
+		vtos(self.v_angle),
+		vtos(self.angles),
+		self.beam_type
+	);
+	#endif
+}
+

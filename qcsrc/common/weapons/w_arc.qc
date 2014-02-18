@@ -42,6 +42,10 @@ REGISTER_WEAPON(
 
 #ifndef MENUQC
 vector arc_shotorigin[4];
+.vector beam_start;
+.vector beam_dir;
+.vector beam_wantdir;
+.float beam_type;
 #define ARC_BT_MISS        0
 #define ARC_BT_WALL        1
 #define ARC_BT_HEAL        2
@@ -59,14 +63,10 @@ void ArcInit(void);
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
 .float lg_fire_prev; // for better animation control
-#define ARC_DEBUG
 #ifdef ARC_DEBUG
 .entity lg_ents[ARC_MAX_SEGMENTS]; // debug
 #endif
-.vector beam_dir;
-.vector beam_wantdir;
 .float beam_initialized;
-.float beam_type;
 #endif
 #else
 #ifdef SVQC
@@ -75,14 +75,18 @@ void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
 float W_Arc_Beam_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
-	sf = sf & 0x7F;
-	if(sound_allowed(MSG_BROADCAST, self.owner))
-		sf |= 0x80;
+
+	// don't send group 1, 2, or 3 if this beam is for the local player
+	if(to == self.owner) { sf &= ~7; }
 	WriteByte(MSG_ENTITY, sf);
-	if(sf & 1) // main information
+	
+	if(sf & 1) // starting location // not sent if beam is for owner
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+		//WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteCoord(MSG_ENTITY, self.beam_start_x);
+		WriteCoord(MSG_ENTITY, self.beam_start_y);
+		WriteCoord(MSG_ENTITY, self.beam_start_z);
+		//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 	}
 	if(sf & 2) // want/aim direction
 	{
@@ -102,6 +106,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	return TRUE;
 }
+
 void W_Arc_Beam_Think(void)
 {
 	float i, burst = TRUE;
@@ -153,7 +158,12 @@ void W_Arc_Beam_Think(void)
 
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * dt, WEP_CVAR(arc, beam_range));
 
-	// network information: want/aim direction
+	// network information: shot origin and want/aim direction
+	if(self.beam_start != w_shotorg)
+	{
+		self.SendFlags |= 1;
+		self.beam_start = w_shotorg;
+	}
 	if(self.beam_wantdir != w_shotdir)
 	{
 		self.SendFlags |= 2;
@@ -190,6 +200,10 @@ void W_Arc_Beam_Think(void)
 		// calculate how much we're going to move the end of the beam to the want position
 		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR(arc, beam_returnspeed) * dt)), 1);
 		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+
+		// todo: figure out a way so that blendfactor becomes 0 at some point,
+		// currently self.beam_dir and w_shotdir never really become equal as there is no rounding/snapping point
+		// printf("blendfactor = %f\n", blendfactor);
 
 		// network information: beam direction
 		self.SendFlags |= 4;
@@ -410,7 +424,7 @@ void W_Arc_Beam(void)
 	beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
-	//Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
+	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
 	oldself = self;
 	self = beam;
