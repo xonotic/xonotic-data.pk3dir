@@ -63,9 +63,6 @@ void ArcInit(void);
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
 .float lg_fire_prev; // for better animation control
-#ifdef ARC_DEBUG
-.entity lg_ents[ARC_MAX_SEGMENTS]; // debug
-#endif
 .float beam_initialized;
 #endif
 #else
@@ -79,14 +76,14 @@ float W_Arc_Beam_Send(entity to, float sf)
 	// don't send group 1, 2, or 3 if this beam is for the local player
 	if((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to))) { sf &= ~7; }
 	WriteByte(MSG_ENTITY, sf);
-	
-	if(sf & 1) // starting location // not sent if beam is for owner
+
+	//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+
+	if(sf & 1) // starting location
 	{
-		//WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 		WriteCoord(MSG_ENTITY, self.beam_start_x);
 		WriteCoord(MSG_ENTITY, self.beam_start_y);
 		WriteCoord(MSG_ENTITY, self.beam_start_z);
-		//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 	}
 	if(sf & 2) // want/aim direction
 	{
@@ -104,6 +101,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	{
 		WriteByte(MSG_ENTITY, self.beam_type);
 	}
+
 	return TRUE;
 }
 
@@ -112,28 +110,12 @@ void W_Arc_Beam_Think(void)
 	float i, burst = 0;
 	if(self != self.owner.arc_beam)
 	{
-		#ifdef ARC_DEBUG
-		if(self.lg_ents[0])
-		{
-			for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
-				remove(self.lg_ents[i]);
-		}
-		print("W_Arc_Beam_Think(): EXPIRING BEAM #1\n");
-		#endif
 		remove(self);
 		return;
 	}
 	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
-		#ifdef ARC_DEBUG
-		if(self.lg_ents[0])
-		{
-			for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
-				remove(self.lg_ents[i]);
-		}
-		print("W_Arc_Beam_Think(): EXPIRING BEAM #2\n");
-		#endif
 		remove(self);
 		return;
 	}
@@ -157,8 +139,6 @@ void W_Arc_Beam_Think(void)
 	makevectors(self.owner.v_angle);
 
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * dt, WEP_CVAR(arc, beam_range));
-
-	//printf("SERVER direction: %s\n", vtos(w_shotdir));
 
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
@@ -231,14 +211,6 @@ void W_Arc_Beam_Think(void)
 
 	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
 
-	#ifdef ARC_DEBUG
-	//printf("segment count: %d\n", segments);
-	//string segmentinfo = "";
-	#if 0
-	float totaldist = 0;
-	#endif
-	#endif
-
 	float new_beam_type = 0;
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
@@ -259,20 +231,11 @@ void W_Arc_Beam_Think(void)
 			ANTILAG_LATENCY(self.owner)
 		);
 
-		#ifdef ARC_DEBUG
-		//APPEND_TO_STRING(segmentinfo, "^4, ", sprintf("^3org%s-dis'%f'", vtos(new_origin), segmentdist));
-		#endif
-
 		float is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
 		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
 			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
-			#ifdef ARC_DEBUG
-			#if 0
-			totaldist += segmentdist * trace_fraction;
-			#endif
-			#endif
 
 			float falloff = ExponentialFalloff(
 				WEP_CVAR(arc, beam_falloff_mindist),
@@ -284,19 +247,6 @@ void W_Arc_Beam_Think(void)
 			if(is_player && SAME_TEAM(self.owner, trace_ent))
 			{
 				// hit a team mate heal them now
-				#ifdef ARC_DEBUG
-				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
-				te_customflash(hitorigin, 80, 5, '0 1 0');
-				#if 0
-				printf(
-					"W_Arc_Beam_Think(): HIT TEAM MATE: "
-					"Hitorg: %s, Segments: %d, Distance: %f\n",
-					vtos(hitorigin),
-					i,
-					totaldist
-				);
-				#endif
-				#endif
 				new_beam_type = ARC_BT_HEAL;
 			}
 			else
@@ -327,19 +277,6 @@ void W_Arc_Beam_Think(void)
 					WEP_CVAR(arc, beam_force) * new_dir * dt * falloff
 				);
 
-				#ifdef ARC_DEBUG
-				te_lightning1(self.lg_ents[i - 1], last_origin, hitorigin);
-				te_customflash(hitorigin, 80, 5, '1 0 0');
-				#if 0
-				printf(
-					"W_Arc_Beam_Think(): HIT ENTITY: "
-					"Hitorg: %s, Segments: %d, Distance: %f\n",
-					vtos(hitorigin),
-					i,
-					totaldist
-				);
-				#endif
-				#endif
 				new_beam_type = ARC_BT_HIT;
 			}
 			break; 
@@ -347,51 +284,14 @@ void W_Arc_Beam_Think(void)
 		else if(trace_fraction != 1)
 		{
 			// we collided with geometry
-			#ifdef ARC_DEBUG
-			te_lightning1(self.lg_ents[i - 1], last_origin, trace_endpos);
-			te_customflash(trace_endpos, 50, 2, '0 0 1');
-			#if 0
-			totaldist += segmentdist * trace_fraction;
-			printf(
-				"W_Arc_Beam_Think(): HIT WALL: "
-				"Hitorg: %s, Segments: %d, Distance: %f\n",
-				vtos(trace_endpos),
-				i,
-				totaldist
-			);
-			#endif
-			#endif
 			new_beam_type = ARC_BT_WALL;
 			break;
 		}
 		else
 		{
-			#ifdef ARC_DEBUG
-			#if 0
-			totaldist += segmentdist;
-			#endif
-			te_lightning1(self.lg_ents[i - 1], last_origin, new_origin);
-			#endif
 			last_origin = new_origin;
 		}
 	}
-
-	#ifdef ARC_DEBUG
-	if(!new_beam_type)
-	{
-		#if 0
-		printf(
-			"W_Arc_Beam_Think(): MISS: "
-			"Shotorg: %s, Endpos: %s, Segments: %d: %s\n",
-			vtos(w_shotorg),
-			vtos(trace_endpos),
-			i,
-			segmentinfo
-		);
-		#endif
-		te_customflash(trace_endpos, 50, 2, '1 1 0');
-	}
-	#endif
 
 	// if we're bursting, use burst visual effects
 	new_beam_type += burst;
