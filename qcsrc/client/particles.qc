@@ -381,24 +381,54 @@ void Draw_ArcBeam()
 	// v_angle = wanted/aim direction
 	// angles = current direction of beam
 
-	vector beamdir; //= self.beam_dir;
-	vector wantdir; //= view_forward;
-
 	vector start_pos;
+	vector wantdir; //= view_forward;
+	vector beamdir; //= self.beam_dir;
 
 	if(self.beam_usevieworigin)
 	{
+		// find *exactly* where we are aiming
 		makevectors(view_angles);
+
+		// decide upon start position
+		if(self.beam_usevieworigin == 2)
+			{ start_pos = view_origin; }
+		else
+			{ start_pos = self.origin; }
+
+		// trace forward with an estimation
+		WarpZone_TraceLine(start_pos, start_pos + view_forward * cvar("g_balance_arc_beam_range"), MOVE_NOMONSTERS, self);
+
+		// untransform in case our trace went through a warpzone
+		vector vf, vr, vu;
+		vf = view_forward;
+		vr = view_right;
+		vu = view_up;
+		vector shothitpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+		view_forward = vf;
+		view_right = vr;
+		view_up = vu;
+
+		// un-adjust trueaim if shotend is too close
+		if(vlen(shothitpos - view_origin) < cvar("g_trueaim_minrange"))
+			shothitpos = view_origin + (view_forward * cvar("g_trueaim_minrange"));
+
+		// move shot origin to the actual gun muzzle origin
+		vector origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
+		start_pos = start_pos + origin_offset;
+
+		// calculate the aim direction now
+		wantdir = normalize(shothitpos - start_pos);
 
 		if(!self.beam_initialized)
 		{
-			self.beam_dir = view_forward;
+			self.beam_dir = wantdir;
 			self.beam_initialized = TRUE;
 		}
 
-		if(self.beam_dir != view_forward)
+		if(self.beam_dir != wantdir)
 		{
-			float angle = ceil(vlen(view_forward - self.beam_dir) * RAD2DEG);
+			float angle = ceil(vlen(wantdir - self.beam_dir) * RAD2DEG);
 			float anglelimit;
 			if(angle && (angle > cvar("g_balance_arc_beam_maxangle")))
 			{
@@ -413,33 +443,28 @@ void Draw_ArcBeam()
 
 			// calculate how much we're going to move the end of the beam to the want position
 			float blendfactor = bound(0, anglelimit * (1 - (cvar("g_balance_arc_beam_returnspeed") * frametime)), 1);
-			self.beam_dir = normalize((view_forward * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+			self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 		}
 
+		// finally, set the beam direction which the rest of the code will refer to
 		beamdir = self.beam_dir;
-		wantdir = view_forward;
-
-		vector origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
-		if(self.beam_usevieworigin == 2)
-			{ start_pos = view_origin + origin_offset; }
-		else
-			{ start_pos = self.origin + origin_offset; }
 	}
 	else
 	{
-		beamdir = self.angles;
-		wantdir = self.v_angle;
+		// set the values from the provided info from the networked entity
 		start_pos = self.origin;
+		wantdir = self.v_angle;
+		beamdir = self.angles;
 	}
 
 	setorigin(self, start_pos);
 
+	vector beam_endpos_estimate = (start_pos + (beamdir * cvar("g_balance_arc_beam_range")));
+
 	float i;
 	float segments = 20; // todo: calculate this in a similar way to server does
 
-	vector beam_endpos_estimate = (start_pos + (beamdir * cvar("g_balance_arc_beam_range")));
 
-	//vector axis = normalize(last_origin - new_origin);
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
 
 	vector last_origin = start_pos;
@@ -487,19 +512,20 @@ void Draw_ArcBeam()
 		//float falloff = 1;
 		#endif
 
-		vector top    = hitorigin + (thickdir * 1);
-		vector bottom = hitorigin - (thickdir * 1);
+		vector top    = hitorigin + (thickdir * 4);
+		vector bottom = hitorigin - (thickdir * 4);
 
 		R_BeginPolygon("", DRAWFLAG_NORMAL);
-		R_PolygonVertex(top,         '0 1 0', '1 0 0', 0.5);
-		R_PolygonVertex(last_top,    '0 1 0', '1 0 0', 0.5);
-		R_PolygonVertex(last_bottom, '0 0 0', '1 0 0', 0.5);
-		R_PolygonVertex(bottom,      '0 0 0', '1 0 0', 0.5);
+		R_PolygonVertex(top,         '0 1 0', '0.5 0.5 1', 0.5);
+		R_PolygonVertex(last_top,    '0 1 0', '0.5 0.5 1', 0.5);
+		R_PolygonVertex(last_bottom, '0 0 0', '0.5 0.5 1', 0.5);
+		R_PolygonVertex(bottom,      '0 0 0', '0.5 0.5 1', 0.5);
 		R_EndPolygon();
 
 		// draw collision effect
 		if(trace_fraction != 1)
 		{
+			#if 0
 			switch(self.beam_type)
 			{
 				//case ARC_BT_MISS: te_customflash(hitorigin, 40, 5, '1 1 0'); break;
@@ -508,6 +534,7 @@ void Draw_ArcBeam()
 				//case ARC_BT_MISS: te_customflash(hitorigin, 80, 5, '0 1 0'); break;
 				default: te_customflash(hitorigin, 40, 2, '0 1 0'); break;
 			}
+			#endif
 			break; // we're done with drawing this frame
 		}
 		else
@@ -531,9 +558,6 @@ void Remove_ArcBeam(void)
 
 void Ent_ReadArcBeam(float isnew)
 {
-	// don't send group 1 if this beam is for the local player
-	//if(to == self.owner) { sf |= 1; }
-	//WriteByte(MSG_ENTITY, sf);
 	float sf = ReadByte();
 
 	// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
@@ -543,7 +567,6 @@ void Ent_ReadArcBeam(float isnew)
 
 	if(sf & 1) // starting location // not sent if beam is for owner
 	{
-		//WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
@@ -553,8 +576,6 @@ void Ent_ReadArcBeam(float isnew)
 	}
 	else // infer the location from player location
 	{
-		//origin_offset = view_forward * origin_offset_x + view_right * -origin_offset_y + view_up * origin_offset_z;
-
 		if(autocvar_chase_active) // use player origin so that third person display still works
 		{
 			self.beam_usevieworigin = 1;
@@ -563,18 +584,10 @@ void Ent_ReadArcBeam(float isnew)
 		else // use view origin
 		{
 			self.beam_usevieworigin = 2;
+			self.origin = view_origin; // note that this is only necessary for the sound to be properly located
 		}
 		setorigin(self, self.origin);
 	}
-
-	float gunalign = autocvar_cl_gunalign;
-	if(gunalign != 1 && gunalign != 2 && gunalign != 4)
-		gunalign = 3; // default value
-	--gunalign;
-
-	self.beam_shotorigin = arc_shotorigin[gunalign];
-
-	//origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
 	
 	if(sf & 2) // want/aim direction
 	{
@@ -597,6 +610,15 @@ void Ent_ReadArcBeam(float isnew)
 
 	if(isnew || !self.teleport_time)
 	{
+		// calculate shot origin offset from gun alignment
+		float gunalign = autocvar_cl_gunalign;
+		if(gunalign != 1 && gunalign != 2 && gunalign != 4)
+			gunalign = 3; // default value
+		--gunalign;
+
+		self.beam_shotorigin = arc_shotorigin[gunalign];
+
+		// set other main attributes of the beam
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);

@@ -59,6 +59,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(w_shotend - w_shotorg);
 
+	//vector prevdir = w_shotdir;
+	//vector prevorg = w_shotorg;
+	//vector prevend = w_shotend; 
+
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
 	{
@@ -115,6 +119,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
+	//if(w_shotend != prevend) { printf("SERVER: shotEND differs: %s - %s\n", vtos(w_shotend), vtos(prevend)); }
+	//if(w_shotorg != prevorg) { printf("SERVER: shotORG differs: %s - %s\n", vtos(w_shotorg), vtos(prevorg)); }
+	//if(w_shotdir != prevdir) { printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir)); }
 }
 
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)

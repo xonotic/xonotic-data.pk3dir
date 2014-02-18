@@ -158,6 +158,8 @@ void W_Arc_Beam_Think(void)
 
 	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * dt, WEP_CVAR(arc, beam_range));
 
+	//printf("SERVER direction: %s\n", vtos(w_shotdir));
+
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
 	{
