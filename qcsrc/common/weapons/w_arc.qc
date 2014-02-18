@@ -77,7 +77,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
 	// don't send group 1, 2, or 3 if this beam is for the local player
-	if(to == self.owner) { sf &= ~7; }
+	if((to == self.owner) || (to.enemy == self.owner)) { sf &= ~7; }
 	WriteByte(MSG_ENTITY, sf);
 	
 	if(sf & 1) // starting location // not sent if beam is for owner
@@ -264,7 +264,7 @@ void W_Arc_Beam_Think(void)
 		#endif
 
 		float is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
-		if(trace_ent && (trace_ent.takedamage == DAMAGE_AIM) && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
 			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);

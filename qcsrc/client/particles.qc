@@ -463,14 +463,17 @@ void Draw_ArcBeam()
 
 	float i;
 	float segments = 20; // todo: calculate this in a similar way to server does
+	float maxthickness = 8;
 
 
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
 
 	vector last_origin = start_pos;
-	
-	vector last_top = start_pos + (thickdir * 0);
-	vector last_bottom = start_pos - (thickdir * 0);
+
+	float lastthickness = 0;
+
+	vector last_top = start_pos + (thickdir * lastthickness);
+	vector last_bottom = start_pos - (thickdir * lastthickness);
 
 	for(i = 1; i <= segments; ++i)
 	{
@@ -512,14 +515,16 @@ void Draw_ArcBeam()
 		//float falloff = 1;
 		#endif
 
-		vector top    = hitorigin + (thickdir * 4);
-		vector bottom = hitorigin - (thickdir * 4);
+		float thickness = 8;
 
-		R_BeginPolygon("", DRAWFLAG_NORMAL);
-		R_PolygonVertex(top,         '0 1 0', '0.5 0.5 1', 0.5);
-		R_PolygonVertex(last_top,    '0 1 0', '0.5 0.5 1', 0.5);
-		R_PolygonVertex(last_bottom, '0 0 0', '0.5 0.5 1', 0.5);
-		R_PolygonVertex(bottom,      '0 0 0', '0.5 0.5 1', 0.5);
+		vector top    = hitorigin + (thickdir * thickness);
+		vector bottom = hitorigin - (thickdir * thickness);
+
+		R_BeginPolygon("particles/lgbeam", DRAWFLAG_NORMAL);
+		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (thickness / maxthickness)), '0.5 0.5 1', 0.5);
+		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), '0.5 0.5 1', 0.5);
+		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)), '0.5 0.5 1', 0.5);
+		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (thickness / maxthickness)), '0.5 0.5 1', 0.5);
 		R_EndPolygon();
 
 		// draw collision effect
@@ -535,6 +540,7 @@ void Draw_ArcBeam()
 				default: te_customflash(hitorigin, 40, 2, '0 1 0'); break;
 			}
 			#endif
+			pointparticles(particleeffectnum("electro_lightning"), hitorigin, beamdir * -1, frametime * 2);
 			break; // we're done with drawing this frame
 		}
 		else
@@ -542,6 +548,7 @@ void Draw_ArcBeam()
 			last_origin = new_origin; // continue onto the next segment
 			last_top = top;
 			last_bottom = bottom;
+			lastthickness = thickness;
 		}
 	}
 
