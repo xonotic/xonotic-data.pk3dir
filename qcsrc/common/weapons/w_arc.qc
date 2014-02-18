@@ -73,31 +73,46 @@ float W_Arc_Beam_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
-	// don't send group 1, 2, or 3 if this beam is for the local player
-	if((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to))) { sf &= ~7; }
+	// Truncate information when this beam is displayed to the owner client
+	// - The owner client has no use for beam start position or directions,
+	//    it always figures this information out for itself with csqc code.
+	// - Spectating the owner also truncates this information.
+	if((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to)))
+	{
+		#if 0
+		sf &= ~2;
+		sf &= ~4;
+		sf &= ~8;
+		#else
+		sf &= ~14;
+		#endif
+	}
+
 	WriteByte(MSG_ENTITY, sf);
 
-	//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
-
-	if(sf & 1) // starting location
+	if(sf & 1) // settings information
+	{
+		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+	}
+	if(sf & 2) // starting location
 	{
 		WriteCoord(MSG_ENTITY, self.beam_start_x);
 		WriteCoord(MSG_ENTITY, self.beam_start_y);
 		WriteCoord(MSG_ENTITY, self.beam_start_z);
 	}
-	if(sf & 2) // want/aim direction
+	if(sf & 4) // want/aim direction
 	{
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_x);
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_y);
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_z);
 	}
-	if(sf & 4) // beam direction
+	if(sf & 8) // beam direction
 	{
 		WriteCoord(MSG_ENTITY, self.beam_dir_x);
 		WriteCoord(MSG_ENTITY, self.beam_dir_y);
 		WriteCoord(MSG_ENTITY, self.beam_dir_z);
 	}
-	if(sf & 8) // beam type
+	if(sf & 16) // beam type
 	{
 		WriteByte(MSG_ENTITY, self.beam_type);
 	}
@@ -143,12 +158,12 @@ void W_Arc_Beam_Think(void)
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
 	{
-		self.SendFlags |= 1;
+		self.SendFlags |= 2;
 		self.beam_start = w_shotorg;
 	}
 	if(self.beam_wantdir != w_shotdir)
 	{
-		self.SendFlags |= 2;
+		self.SendFlags |= 4;
 		self.beam_wantdir = w_shotdir;
 	}
 
@@ -188,7 +203,7 @@ void W_Arc_Beam_Think(void)
 		// printf("blendfactor = %f\n", blendfactor);
 
 		// network information: beam direction
-		self.SendFlags |= 4;
+		self.SendFlags |= 8;
 
 		// calculate how many segments are needed
 		float max_allowed_segments;
@@ -299,7 +314,7 @@ void W_Arc_Beam_Think(void)
 	// network information: beam type
 	if(new_beam_type != self.beam_type)
 	{
-		self.SendFlags |= 8;
+		self.SendFlags |= 16;
 		self.beam_type = new_beam_type;
 	}
 

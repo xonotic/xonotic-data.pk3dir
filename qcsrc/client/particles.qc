@@ -364,6 +364,7 @@ void Net_ReadShockwaveParticle()
 
 .float beam_usevieworigin;
 .float beam_initialized;
+.float beam_range;
 .vector beam_shotorigin;
 .vector beam_dir;
 void Draw_ArcBeam()
@@ -397,7 +398,7 @@ void Draw_ArcBeam()
 			{ start_pos = self.origin; }
 
 		// trace forward with an estimation
-		WarpZone_TraceLine(start_pos, start_pos + view_forward * cvar("g_balance_arc_beam_range"), MOVE_NOMONSTERS, self);
+		WarpZone_TraceLine(start_pos, start_pos + view_forward * self.beam_range, MOVE_NOMONSTERS, self);
 
 		// untransform in case our trace went through a warpzone
 		vector vf, vr, vu;
@@ -459,7 +460,7 @@ void Draw_ArcBeam()
 
 	setorigin(self, start_pos);
 
-	vector beam_endpos_estimate = (start_pos + (beamdir * cvar("g_balance_arc_beam_range")));
+	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
 	float i;
 	float segments = 20; // todo: calculate this in a similar way to server does
@@ -601,7 +602,12 @@ void Ent_ReadArcBeam(float isnew)
 
 	InterpolateOrigin_Undo();
 
-	if(sf & 1) // starting location // not sent if beam is for owner
+	if(sf & 1) // settings information
+	{
+		self.beam_range = ReadCoord();
+	}
+
+	if(sf & 2) // starting location
 	{
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
@@ -624,20 +630,22 @@ void Ent_ReadArcBeam(float isnew)
 		}
 		setorigin(self, self.origin);
 	}
-	
-	if(sf & 2) // want/aim direction
+
+	if(sf & 4) // want/aim direction
 	{
 		self.v_angle_x = ReadCoord();
 		self.v_angle_y = ReadCoord();
 		self.v_angle_z = ReadCoord();
 	}
-	if(sf & 4) // beam direction
+
+	if(sf & 8) // beam direction
 	{
 		self.angles_x = ReadCoord();
 		self.angles_y = ReadCoord();
 		self.angles_z = ReadCoord();
 	}
-	if(sf & 8) // beam type
+
+	if(sf & 16) // beam type
 	{
 		self.beam_type = ReadByte();
 	}
