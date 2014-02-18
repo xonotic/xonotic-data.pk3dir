@@ -77,7 +77,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
 	// don't send group 1, 2, or 3 if this beam is for the local player
-	if((to == self.owner) || (to.enemy == self.owner)) { sf &= ~7; }
+	if((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to))) { sf &= ~7; }
 	WriteByte(MSG_ENTITY, sf);
 	
 	if(sf & 1) // starting location // not sent if beam is for owner
