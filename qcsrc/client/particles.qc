@@ -413,8 +413,8 @@ void Draw_ArcBeam()
 		view_up = vu;
 
 		// un-adjust trueaim if shotend is too close
-		if(vlen(shothitpos - view_origin) < cvar("g_trueaim_minrange"))
-			shothitpos = view_origin + (view_forward * cvar("g_trueaim_minrange"));
+		if(vlen(shothitpos - view_origin) < g_trueaim_minrange)
+			shothitpos = view_origin + (view_forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
