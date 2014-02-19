@@ -473,7 +473,7 @@ void Draw_ArcBeam()
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
 	float segments = 20; // todo: calculate this in a similar way to server does
-	float maxthickness = 8;
+	float maxthickness = self.beam_thickness;
 
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
 
@@ -528,7 +528,7 @@ void Draw_ArcBeam()
 		vector top    = hitorigin + (thickdir * self.beam_thickness);
 		vector bottom = hitorigin - (thickdir * self.beam_thickness);
 
-		R_BeginPolygon(self.beam_image, DRAWFLAG_NORMAL);
+		R_BeginPolygon(self.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
 		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)), self.beam_rgb, self.beam_alpha);
 		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), self.beam_rgb, self.beam_alpha);
 		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         self.beam_rgb, self.beam_alpha);
