@@ -486,6 +486,19 @@ void Draw_ArcBeam()
 
 	vector hitorigin = start_pos;
 
+	/*
+	_len = vlen(self.origin - self.move_origin);
+	_dir = normalize(self.move_origin - self.origin);
+
+	if(self.total_damages < time)
+	{
+		boxparticles(self.traileffect, self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+		boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
+		self.total_damages = time + 0.1;
+	}
+	*/
+
+
 	float i;
 	for(i = 1; i <= segments; ++i)
 	{
@@ -557,7 +570,7 @@ void Draw_ArcBeam()
 	}
 	if(self.beam_muzzleflash)
 	{
-		pointparticles(self.beam_muzzleflash, start_pos, wantdir * 1000, frametime * 1);
+		pointparticles(self.beam_muzzleflash, start_pos + wantdir * 20, wantdir * 1000, frametime * 0.1);
 	}
 }
 
@@ -635,14 +648,14 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
 				break;
 			}
-			case ARC_BT_WALL:
+			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
 			{
 				self.beam_rgb = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleflash = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
 				break;
 			}
 			case ARC_BT_HEAL:
@@ -651,7 +664,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_hiteffect = particleeffectnum("healray_impact"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
 				break;
 			}
