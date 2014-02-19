@@ -368,9 +368,9 @@ void Net_ReadShockwaveParticle()
 .float beam_traileffect;
 .float beam_hiteffect;
 .float beam_muzzleflash;
-//.string beam_muzzlemodel;
-//.vector beam_muzzlecolor; // todo: should we just use beam_color?
 .string beam_image;
+
+.entity beam_muzzleentity;
 
 .float beam_usevieworigin;
 .float beam_initialized;
@@ -453,8 +453,11 @@ void Draw_ArcBeam()
 			self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 		}
 
-		// finally, set the beam direction which the rest of the code will refer to
+		// set the beam direction which the rest of the code will refer to
 		beamdir = self.beam_dir;
+
+		// finally, set self.angles to the proper direction so that muzzle attachment points in proper direction
+		self.angles = fixedvectoangles2(view_forward, view_up);
 	}
 	else
 	{
@@ -465,6 +468,8 @@ void Draw_ArcBeam()
 	}
 
 	setorigin(self, start_pos);
+	//self.beam_muzzleentity.angles = self.angles;
+	self.beam_muzzleentity.angles_z = random() * 360;
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
@@ -572,17 +577,49 @@ void Draw_ArcBeam()
 
 void Remove_ArcBeam(void)
 {
+	remove(self.beam_muzzleentity);
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadArcBeam(float isnew)
 {
 	float sf = ReadByte();
+	entity flash;
 
 	// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
 	self.iflags = IFLAG_ORIGIN;
 
 	InterpolateOrigin_Undo();
+
+	if(isnew)
+	{
+		// calculate shot origin offset from gun alignment
+		float gunalign = autocvar_cl_gunalign;
+		if(gunalign != 1 && gunalign != 2 && gunalign != 4)
+			gunalign = 3; // default value
+		--gunalign;
+
+		self.beam_shotorigin = arc_shotorigin[gunalign];
+
+		// set other main attributes of the beam
+		self.draw = Draw_ArcBeam;
+		self.entremove = Remove_ArcBeam;
+		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+
+		flash = spawn();
+		flash.owner = self;
+		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
+		flash.drawmask = MASK_NORMAL;
+		flash.solid = SOLID_NOT;
+		setattachment(flash, self, "");
+		setorigin(flash, '0 0 0');
+
+		self.beam_muzzleentity = flash;
+	}
+	else
+	{
+		flash = self.beam_muzzleentity;
+	}
 
 	if(sf & 1) // settings information
 	{
@@ -642,9 +679,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning");
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
@@ -655,9 +694,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_HEAL:
@@ -668,9 +709,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("healray_impact"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_HIT:
@@ -681,9 +724,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_BURST_MISS:
@@ -694,9 +739,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_BURST_WALL:
@@ -707,9 +754,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_BURST_HEAL:
@@ -720,9 +769,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 			case ARC_BT_BURST_HIT:
@@ -733,9 +784,11 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 
@@ -748,31 +801,17 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = FALSE; 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
-				//self.beam_muzzlemodel = "models/uziflash.md3";
-				//self.beam_muzzlecolor = '-1 -1 1';
 				self.beam_image = "particles/lgbeam";
+				setmodel(flash, "models/flash.md3");
+				flash.alpha = self.beam_alpha;
+				flash.colormod = self.beam_color;
+				flash.scale = 0.5;
 				break;
 			}
 		}
 	}
 
 	InterpolateOrigin_Note();
-
-	if(isnew)
-	{
-		// calculate shot origin offset from gun alignment
-		float gunalign = autocvar_cl_gunalign;
-		if(gunalign != 1 && gunalign != 2 && gunalign != 4)
-			gunalign = 3; // default value
-		--gunalign;
-
-		self.beam_shotorigin = arc_shotorigin[gunalign];
-
-		// set other main attributes of the beam
-		self.draw = Draw_ArcBeam;
-		self.entremove = Remove_ArcBeam;
-		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
-	}
 
 	#if 0
 	printf(
