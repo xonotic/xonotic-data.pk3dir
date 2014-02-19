@@ -377,6 +377,7 @@ void Net_ReadShockwaveParticle()
 .float beam_maxangle;
 .float beam_range;
 .float beam_returnspeed;
+.float beam_tightness;
 .vector beam_shotorigin;
 .vector beam_dir;
 void Draw_ArcBeam()
@@ -498,7 +499,7 @@ void Draw_ArcBeam()
 	for(i = 1; i <= segments; ++i)
 	{
 		// calculate this on every segment to ensure that we always reach the full length of the attack
-		float segmentblend = (i/segments);
+		float segmentblend = bound(0, (i/segments) + self.beam_tightness, 1);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
 		vector new_dir = normalize( (wantdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
@@ -588,6 +589,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.beam_maxangle = ReadShort();
 		self.beam_range = ReadCoord();
 		self.beam_returnspeed = ReadShort();
+		self.beam_tightness = (ReadByte() / 10);
 	}
 
 	if(sf & 2) // starting location

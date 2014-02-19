@@ -33,6 +33,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, beam_range) \
 	w_cvar(id, sn, NONE, beam_refire) \
 	w_cvar(id, sn, NONE, beam_returnspeed) \
+	w_cvar(id, sn, NONE, beam_tightness) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -95,6 +96,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_maxangle));
 		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));
+		WriteByte(MSG_ENTITY, WEP_CVAR(arc, beam_tightness) * 10);
 	}
 	if(sf & 2) // starting location
 	{
@@ -233,7 +235,7 @@ void W_Arc_Beam_Think(void)
 	for(i = 1; i <= segments; ++i)
 	{
 		// calculate this on every segment to ensure that we always reach the full length of the attack
-		float segmentblend = (i/segments);
+		float segmentblend = bound(0, (i/segments) + WEP_CVAR(arc, beam_tightness), 1);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
 		vector new_dir = normalize( (w_shotdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
