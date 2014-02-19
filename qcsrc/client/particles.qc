@@ -468,8 +468,7 @@ void Draw_ArcBeam()
 	}
 
 	setorigin(self, start_pos);
-	//self.beam_muzzleentity.angles = self.angles;
-	self.beam_muzzleentity.angles_z = random() * 360;
+	self.beam_muzzleentity.angles_z = random() * 360; // randomly spin the muzzleflash
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
@@ -486,19 +485,6 @@ void Draw_ArcBeam()
 	vector last_bottom = start_pos - (thickdir * lastthickness);
 
 	vector hitorigin = start_pos;
-
-	/*
-	_len = vlen(self.origin - self.move_origin);
-	_dir = normalize(self.move_origin - self.origin);
-
-	if(self.total_damages < time)
-	{
-		boxparticles(self.traileffect, self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
-		boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
-		self.total_damages = time + 0.1;
-	}
-	*/
-
 
 	float i;
 	for(i = 1; i <= segments; ++i)
@@ -627,6 +613,18 @@ void Ent_ReadArcBeam(float isnew)
 		self.beam_range = ReadCoord();
 		self.beam_returnspeed = ReadShort();
 		self.beam_tightness = (ReadByte() / 10);
+
+		if(ReadByte())
+		{
+			if(autocvar_chase_active)
+				{ self.beam_usevieworigin = 1; }
+			else // use view origin
+				{ self.beam_usevieworigin = 2; }
+		}
+		else
+		{
+			self.beam_usevieworigin = 0;
+		}
 	}
 
 	if(sf & 2) // starting location
@@ -634,23 +632,22 @@ void Ent_ReadArcBeam(float isnew)
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
-		self.beam_usevieworigin = 0;
 	}
-	else // infer the location from player location
+	else if(self.beam_usevieworigin) // infer the location from player location
 	{
-		if(autocvar_chase_active) // use player origin so that third person display still works
+		if(self.beam_usevieworigin == 2)
 		{
-			self.beam_usevieworigin = 1;
+			// use view origin
+			self.origin = view_origin;
+		}
+		else
+		{
+			// use player origin so that third person display still works
 			self.origin = getplayerorigin(player_localnum) + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
 		}
-		else // use view origin
-		{
-			self.beam_usevieworigin = 2;
-			self.origin = view_origin; // note that this is only necessary for the sound to be properly located
-		}
-		setorigin(self, self.origin);
 	}
+
+	setorigin(self, self.origin);
 
 	if(sf & 4) // want/aim direction
 	{

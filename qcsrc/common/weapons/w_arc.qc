@@ -78,7 +78,8 @@ float W_Arc_Beam_Send(entity to, float sf)
 	// - The owner client has no use for beam start position or directions,
 	//    it always figures this information out for itself with csqc code.
 	// - Spectating the owner also truncates this information.
-	if((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to)))
+	float drawlocal = ((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to)));
+	if(drawlocal)
 	{
 		#if 0
 		sf &= ~2;
@@ -97,6 +98,8 @@ float W_Arc_Beam_Send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));
 		WriteByte(MSG_ENTITY, WEP_CVAR(arc, beam_tightness) * 10);
+
+		WriteByte(MSG_ENTITY, drawlocal);
 	}
 	if(sf & 2) // starting location
 	{
