@@ -381,13 +381,6 @@ void Net_ReadShockwaveParticle()
 .vector beam_dir;
 void Draw_ArcBeam()
 {
-	if(self.teleport_time)
-	if(time > self.teleport_time)
-	{
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM); // safeguard
-		self.teleport_time = 0;
-	}
-
 	InterpolateOrigin_Do();
 
 	// origin = beam starting origin
@@ -763,7 +756,7 @@ void Ent_ReadArcBeam(float isnew)
 
 	InterpolateOrigin_Note();
 
-	if(isnew || !self.teleport_time)
+	if(isnew)
 	{
 		// calculate shot origin offset from gun alignment
 		float gunalign = autocvar_cl_gunalign;
@@ -778,8 +771,6 @@ void Ent_ReadArcBeam(float isnew)
 		self.entremove = Remove_ArcBeam;
 		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 	}
-
-	self.teleport_time = time + 10;
 
 	#if 0
 	printf(
