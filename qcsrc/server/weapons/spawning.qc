@@ -143,7 +143,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
-	#if 0
+	#if 0 // WEAPONTODO
 	if(e.items)
 	{
 		for(i = 0, j = 1; i < 24; ++i, j *= 2)
@@ -173,6 +173,8 @@ void weapon_defaultspawnfunc(float wpn)
 		f |= FL_NO_WEAPON_STAY;
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	#if 0 // WEAPONTODO
 	if (self.modelindex) // don't precache if self was removed
 		WEP_ACTION(e.weapon, WR_INIT);
+	#endif
 }
