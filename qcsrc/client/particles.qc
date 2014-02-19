@@ -544,10 +544,10 @@ void Draw_ArcBeam()
 		vector bottom = hitorigin - (thickdir * self.beam_thickness);
 
 		R_BeginPolygon(self.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
-		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)), self.beam_color, self.beam_alpha);
-		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), self.beam_color, self.beam_alpha);
-		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         self.beam_color, self.beam_alpha);
-		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),         self.beam_color, self.beam_alpha);
+		R_PolygonVertex(top,          '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)),  self.beam_color,  self.beam_alpha);
+		R_PolygonVertex(last_top,     '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)),        self.beam_color,  self.beam_alpha);
+		R_PolygonVertex(last_bottom,  '0 0.5 0' * (1 - (lastthickness / maxthickness)),                self.beam_color,  self.beam_alpha);
+		R_PolygonVertex(bottom,       '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),          self.beam_color,  self.beam_alpha);
 		R_EndPolygon();
 
 		// check if we're going to proceed with drawing
@@ -604,7 +604,6 @@ void Ent_ReadArcBeam(float isnew)
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
 		self.beam_usevieworigin = 0;
-		//WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 	}
 	else // infer the location from player location
 	{
