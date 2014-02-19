@@ -368,6 +368,8 @@ void Net_ReadShockwaveParticle()
 .float beam_traileffect;
 .float beam_hiteffect;
 .float beam_muzzleflash;
+//.string beam_muzzlemodel;
+//.vector beam_muzzlecolor; // todo: should we just use beam_rgb?
 .string beam_image;
 
 .float beam_usevieworigin;
@@ -646,6 +648,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning");
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
@@ -656,6 +661,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_HEAL:
@@ -666,6 +674,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("healray_impact"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_HIT:
@@ -676,6 +687,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_BURST_MISS:
@@ -686,6 +700,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_BURST_WALL:
@@ -696,6 +713,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_BURST_HEAL:
@@ -706,6 +726,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 			case ARC_BT_BURST_HIT:
@@ -716,6 +739,9 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 
@@ -728,11 +754,12 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = FALSE; 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				//self.beam_muzzlemodel = "models/uziflash.md3";
+				//self.beam_muzzlecolor = '-1 -1 1';
+				self.beam_image = "particles/lgbeam";
 				break;
 			}
 		}
-		// todo: move this into the switch case above:
-		self.beam_image = "particles/lgbeam";
 	}
 
 	InterpolateOrigin_Note();
