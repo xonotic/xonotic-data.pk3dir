@@ -28,12 +28,19 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, beam_falloff_maxdist) \
 	w_cvar(id, sn, NONE, beam_falloff_mindist) \
 	w_cvar(id, sn, NONE, beam_force) \
+	w_cvar(id, sn, NONE, beam_healing_amax) \
+	w_cvar(id, sn, NONE, beam_healing_aps) \
+	w_cvar(id, sn, NONE, beam_healing_hmax) \
+	w_cvar(id, sn, NONE, beam_healing_hps) \
 	w_cvar(id, sn, NONE, beam_maxangle) \
 	w_cvar(id, sn, NONE, beam_nonplayerdamage) \
 	w_cvar(id, sn, NONE, beam_range) \
 	w_cvar(id, sn, NONE, beam_refire) \
 	w_cvar(id, sn, NONE, beam_returnspeed) \
 	w_cvar(id, sn, NONE, beam_tightness) \
+	w_cvar(id, sn, NONE, burst_damage) \
+	w_cvar(id, sn, NONE, burst_healing_aps) \
+	w_cvar(id, sn, NONE, burst_healing_hps) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -300,16 +307,47 @@ void W_Arc_Beam_Think(void)
 
 			if(is_player && SAME_TEAM(self.owner, trace_ent))
 			{
-				// hit a team mate heal them now
-				new_beam_type = ARC_BT_HEAL;
+				float roothealth, rootarmor;
+				if(burst)
+				{
+					roothealth = WEP_CVAR(arc, burst_healing_hps);
+					rootarmor = WEP_CVAR(arc, burst_healing_aps);
+				}
+				else
+				{
+					roothealth = WEP_CVAR(arc, beam_healing_hps);
+					rootarmor = WEP_CVAR(arc, beam_healing_aps);
+				}
+
+				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
+				{
+					trace_ent.health = min(trace_ent.health + (roothealth * dt), WEP_CVAR(arc, beam_healing_hmax));
+				}
+				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
+				{
+					trace_ent.armorvalue = min(trace_ent.armorvalue + (rootarmor * dt), WEP_CVAR(arc, beam_healing_amax));
+				}
+
+				// stop rot, set visual effect
+				if(roothealth || rootarmor)
+				{
+					trace_ent.pauserothealth_finished = max(trace_ent.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+					trace_ent.pauserotarmor_finished = max(trace_ent.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
+					new_beam_type = ARC_BT_HEAL;
+				}
 			}
 			else
 			{
 				float rootdamage;
 				if(is_player)
-					rootdamage = WEP_CVAR(arc, beam_damage);
+				{
+					if(burst)
+						{ rootdamage = WEP_CVAR(arc, burst_damage); }
+					else
+						{ rootdamage = WEP_CVAR(arc, beam_damage); }
+				}
 				else
-					rootdamage = WEP_CVAR(arc, beam_nonplayerdamage);
+					{ rootdamage = WEP_CVAR(arc, beam_nonplayerdamage); }
 
 				if(accuracy_isgooddamage(self.owner, trace_ent))
 				{
