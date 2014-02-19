@@ -295,8 +295,6 @@ void invasion_Initialize()
 	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
-	allowed_to_spawn = TRUE;
-
 	inv_roundcnt = 0;
 }
 
