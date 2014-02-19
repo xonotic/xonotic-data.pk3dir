@@ -205,8 +205,13 @@ void W_Arc_Beam_Think(void)
 		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR(arc, beam_returnspeed) * dt)), 1);
 		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 
-		// todo: figure out a way so that blendfactor becomes 0 at some point,
-		// currently self.beam_dir and w_shotdir never really become equal as there is no rounding/snapping point
+		// WEAPONTODO (server and client):
+		// blendfactor never actually becomes 0 in this situation, which is a problem
+		// regarding precision... this means that self.beam_dir and w_shotdir approach
+		// eachother, however they never actually become the same value with this method.
+		
+		// Perhaps we should do some form of rounding/snapping?
+
 		// printf("blendfactor = %f\n", blendfactor);
 
 		// network information: beam direction
@@ -224,7 +229,10 @@ void W_Arc_Beam_Think(void)
 		{
 			segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
 		}
-		else { segments = 1; }
+		else
+		{
+			segments = 1;
+		}
 	}
 	else
 	{

@@ -392,8 +392,15 @@ void Draw_ArcBeam()
 	vector wantdir; //= view_forward;
 	vector beamdir; //= self.beam_dir;
 
+	float segments;
 	if(self.beam_usevieworigin)
 	{
+		// WEAPONTODO:
+		// Currently we have to replicate nearly the same method of figuring
+		// out the shotdir that the server does... Ideally in the future we
+		// should be able to acquire this from a generalized function built
+		// into a weapon system for client code. 
+
 		// find where we are aiming
 		makevectors(view_angles);
 
@@ -433,6 +440,8 @@ void Draw_ArcBeam()
 			self.beam_initialized = TRUE;
 		}
 
+		// WEAPONTODO: Calculate segments dyanmically similarly to the server code
+		segments = 20;
 		if(self.beam_dir != wantdir)
 		{
 			float angle = ceil(vlen(wantdir - self.beam_dir) * RAD2DEG);
@@ -451,7 +460,41 @@ void Draw_ArcBeam()
 			// calculate how much we're going to move the end of the beam to the want position
 			float blendfactor = bound(0, anglelimit * (1 - (self.beam_returnspeed * frametime)), 1);
 			self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+
+			// WEAPONTODO (server and client):
+			// blendfactor never actually becomes 0 in this situation, which is a problem
+			// regarding precision... this means that self.beam_dir and w_shotdir approach
+			// eachother, however they never actually become the same value with this method.
+
+			// Perhaps we should do some form of rounding/snapping?
+
+			// printf("blendfactor = %f\n", blendfactor);
+
+			#if 0
+			// calculate how many segments are needed
+			float max_allowed_segments;
+
+			if(WEP_CVAR(arc, beam_distancepersegment))
+				max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
+			else
+				max_allowed_segments = ARC_MAX_SEGMENTS;
+
+			if(WEP_CVAR(arc, beam_degreespersegment))
+			{
+				segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+			}
+			else
+			{
+				segments = 1;
+			}
+			#endif
 		}
+		#if 0
+		else
+		{
+			segments = 1;
+		}
+		#endif
 
 		// set the beam direction which the rest of the code will refer to
 		beamdir = self.beam_dir;
@@ -465,14 +508,41 @@ void Draw_ArcBeam()
 		start_pos = self.origin;
 		wantdir = self.v_angle;
 		beamdir = self.angles;
+
+		// WEAPONTODO: Calculate segments dyanmically similarly to the server code
+		segments = 20;
+		#if 0
+		if(beamdir != wantdir)
+		{
+			// calculate how many segments are needed
+			float max_allowed_segments;
+
+			if(WEP_CVAR(arc, beam_distancepersegment))
+				max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
+			else
+				max_allowed_segments = ARC_MAX_SEGMENTS;
+
+			if(WEP_CVAR(arc, beam_degreespersegment))
+			{
+				segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+			}
+			else
+			{
+				segments = 1;
+			}
+		}
+		else
+		{
+			segments = 1;
+		}
+		#endif
 	}
 
 	setorigin(self, start_pos);
-	self.beam_muzzleentity.angles_z = random() * 360; // randomly spin the muzzleflash
+	self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
-	float segments = 20; // todo: calculate this in a similar way to server does
 	float maxthickness = self.beam_thickness;
 
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
