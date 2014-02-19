@@ -370,6 +370,8 @@ void Net_ReadShockwaveParticle()
 .float beam_muzzleflash;
 .string beam_image;
 
+// WEAPONTODO: Add beam_hitlight and beam_muzzlelight which uses direct real time light control
+
 .entity beam_muzzleentity;
 
 .float beam_usevieworigin;
@@ -619,6 +621,7 @@ void Draw_ArcBeam()
 		//float falloff = 1;
 		#endif
 
+		// draw primary beam render
 		vector top    = hitorigin + (thickdir * self.beam_thickness);
 		vector bottom = hitorigin - (thickdir * self.beam_thickness);
 
@@ -628,6 +631,15 @@ void Draw_ArcBeam()
 		R_PolygonVertex(last_bottom,  '0 0.5 0' * (1 - (lastthickness / maxthickness)),                self.beam_color,  self.beam_alpha);
 		R_PolygonVertex(bottom,       '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),          self.beam_color,  self.beam_alpha);
 		R_EndPolygon();
+
+		// draw trailing particles
+		// NOTES:
+		//  - Don't use spammy particle counts here, use a FEW small particles around the beam
+		//  - We're not using WarpZone_TrailParticles here because we will handle warpzones ourselves.
+		if(self.beam_traileffect)
+		{
+			trailparticles(self, self.beam_traileffect, last_origin, hitorigin);
+		}
 
 		// check if we're going to proceed with drawing
 		if(trace_fraction != 1)
@@ -812,7 +824,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("nex_beam");
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
 				self.beam_image = "particles/lgbeam";
