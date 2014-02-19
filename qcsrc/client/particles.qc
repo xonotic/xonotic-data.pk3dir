@@ -390,7 +390,7 @@ void Draw_ArcBeam()
 
 	if(self.beam_usevieworigin)
 	{
-		// find *exactly* where we are aiming
+		// find where we are aiming
 		makevectors(view_angles);
 
 		// decide upon start position
@@ -464,41 +464,117 @@ void Draw_ArcBeam()
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
-	float i;
 	float segments = 20; // todo: calculate this in a similar way to server does
 	float maxthickness = 8;
 
+	// determine visual effects now
+	// todo: figure this out when reading the networked entity
+	// this way we don't have to check this EVERY frame
 	vector beamrgb;
 	float beamalpha;
-	float thickness;
+	float beamthickness;
+	float beamtraileffect;
+	float beamhiteffect;
+	float beammuzzleflash;
+	string beamimage = "particles/lgbeam";
 
-	/*
-	#define ARC_BT_MISS        0
-	#define ARC_BT_WALL        1
-	#define ARC_BT_HEAL        2
-	#define ARC_BT_HIT         3
-	#define ARC_BT_BURST_MISS  10
-	#define ARC_BT_BURST_WALL  11
-	#define ARC_BT_BURST_HEAL  12
-	#define ARC_BT_BURST_HIT   13
-	*/
+	//printf("beam type: %d\n", self.beam_type);
 
 	switch(self.beam_type)
 	{
-		case ARC_BT_MISS:        beamrgb = '-1 -1 1';    beamalpha = 0.5;  thickness = 8; break;
-		case ARC_BT_WALL:        beamrgb = '0.5 0.5 1';  beamalpha = 0.5;  thickness = 8; break;
-		case ARC_BT_HEAL:        beamrgb = '0 1 0';      beamalpha = 0.5;  thickness = 8; break;
-		case ARC_BT_HIT:         beamrgb = '1 0 1';      beamalpha = 0.5;  thickness = 8; break;
-		case ARC_BT_BURST_MISS:  beamrgb = '-1 -1 1';    beamalpha = 0.5;  thickness = 14; break;
-		case ARC_BT_BURST_WALL:  beamrgb = '0.5 0.5 1';  beamalpha = 0.5;  thickness = 14; break;
-		case ARC_BT_BURST_HEAL:  beamrgb = '0 1 0';      beamalpha = 0.5;  thickness = 14; break;
-		case ARC_BT_BURST_HIT:   beamrgb = '1 0 1';      beamalpha = 0.5;  thickness = 14; break;
+		case ARC_BT_MISS:
+		{
+			beamrgb = '-1 -1 1';
+			beamalpha = 0.5;
+			beamthickness = 8;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning");
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_WALL:
+		{
+			beamrgb = '0.5 0.5 1';
+			beamalpha = 0.5;
+			beamthickness = 8;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_HEAL:
+		{
+			beamrgb = '0 1 0';
+			beamalpha = 0.5;
+			beamthickness = 8;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_HIT:
+		{
+			beamrgb = '1 0 1';
+			beamalpha = 0.5;
+			beamthickness = 8;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_BURST_MISS:
+		{
+			beamrgb = '-1 -1 1';
+			beamalpha = 0.5;
+			beamthickness = 14;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_BURST_WALL:
+		{
+			beamrgb = '0.5 0.5 1';
+			beamalpha = 0.5;
+			beamthickness = 14;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_BURST_HEAL:
+		{
+			beamrgb = '0 1 0';
+			beamalpha = 0.5;
+			beamthickness = 14;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
+		case ARC_BT_BURST_HIT:
+		{
+			beamrgb = '1 0 1';
+			beamalpha = 0.5;
+			beamthickness = 14;
+			beamtraileffect = FALSE;
+			beamhiteffect = particleeffectnum("electro_lightning"); 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
 
-		// shouldn't be possible...
-		default: beamrgb = '1 1 1'; beamalpha = 1; thickness = 4; break;
+		// shouldn't be possible, but lets make it colorful if it does :D
+		default:
+		{
+			beamrgb = randomvec();
+			beamalpha = 1;
+			beamthickness = 8;
+			beamtraileffect = FALSE;
+			beamhiteffect = FALSE; 
+			beammuzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+			break;
+		}
 	}
-
-	printf("beam type: %d\n", self.beam_type); 
 
 	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
 
@@ -509,6 +585,9 @@ void Draw_ArcBeam()
 	vector last_top = start_pos + (thickdir * lastthickness);
 	vector last_bottom = start_pos - (thickdir * lastthickness);
 
+	vector hitorigin = start_pos;
+
+	float i;
 	for(i = 1; i <= segments; ++i)
 	{
 		// calculate this on every segment to ensure that we always reach the full length of the attack
@@ -524,8 +603,6 @@ void Draw_ArcBeam()
 			MOVE_NORMAL,
 			self
 		);
-
-		vector hitorigin;
 
 		// draw segment
 		if(trace_fraction != 1)
@@ -549,44 +626,39 @@ void Draw_ArcBeam()
 		//float falloff = 1;
 		#endif
 
-		vector top    = hitorigin + (thickdir * thickness);
-		vector bottom = hitorigin - (thickdir * thickness);
+		vector top    = hitorigin + (thickdir * beamthickness);
+		vector bottom = hitorigin - (thickdir * beamthickness);
 
-		R_BeginPolygon("particles/lgbeam", DRAWFLAG_NORMAL);
-		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (thickness / maxthickness)),     beamrgb, beamalpha);
+		R_BeginPolygon(beamimage, DRAWFLAG_NORMAL);
+		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (beamthickness / maxthickness)), beamrgb, beamalpha);
 		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), beamrgb, beamalpha);
 		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         beamrgb, beamalpha);
-		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (thickness / maxthickness)),             beamrgb, beamalpha);
+		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (beamthickness / maxthickness)),         beamrgb, beamalpha);
 		R_EndPolygon();
 
-		// draw collision effect
+		// check if we're going to proceed with drawing
 		if(trace_fraction != 1)
 		{
-			#if 0
-			switch(self.beam_type)
-			{
-				//case ARC_BT_MISS: te_customflash(hitorigin, 40, 5, '1 1 0'); break;
-				case ARC_BT_WALL: te_customflash(hitorigin, 40, 2, '0 0 1'); break;
-				case ARC_BT_HIT:  te_customflash(hitorigin, 80, 5, '1 0 0'); break;
-				//case ARC_BT_MISS: te_customflash(hitorigin, 80, 5, '0 1 0'); break;
-				default: te_customflash(hitorigin, 40, 2, '0 1 0'); break;
-			}
-			#endif
-			pointparticles(particleeffectnum("electro_lightning"), hitorigin, beamdir * -1, frametime * 2);
-			break; // we're done with drawing this frame
+			// we're done with drawing this frame
+			break;
 		}
 		else
 		{
-			last_origin = new_origin; // continue onto the next segment
+			// continue onto the next segment
+			last_origin = new_origin;
 			last_top = top;
 			last_bottom = bottom;
-			lastthickness = thickness;
+			lastthickness = beamthickness;
 		}
 	}
 
-	if(trace_fraction == 1)
+	if(beamhiteffect)
 	{
-		// do end of beam effect here
+		pointparticles(beamhiteffect, hitorigin, beamdir * -1, frametime * 2);
+	}
+	if(beammuzzleflash)
+	{
+		pointparticles(beammuzzleflash, start_pos, wantdir * 1000, frametime * 1);
 	}
 }
 
