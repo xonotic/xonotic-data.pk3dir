@@ -362,14 +362,14 @@ void Net_ReadShockwaveParticle()
 	shockwave.sw_time = time;
 }
 
-.vector beam_rgb;
+.vector beam_color;
 .float beam_alpha;
 .float beam_thickness;
 .float beam_traileffect;
 .float beam_hiteffect;
 .float beam_muzzleflash;
 //.string beam_muzzlemodel;
-//.vector beam_muzzlecolor; // todo: should we just use beam_rgb?
+//.vector beam_muzzlecolor; // todo: should we just use beam_color?
 .string beam_image;
 
 .float beam_usevieworigin;
@@ -544,10 +544,10 @@ void Draw_ArcBeam()
 		vector bottom = hitorigin - (thickdir * self.beam_thickness);
 
 		R_BeginPolygon(self.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
-		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)), self.beam_rgb, self.beam_alpha);
-		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), self.beam_rgb, self.beam_alpha);
-		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         self.beam_rgb, self.beam_alpha);
-		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),         self.beam_rgb, self.beam_alpha);
+		R_PolygonVertex(top,         '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)), self.beam_color, self.beam_alpha);
+		R_PolygonVertex(last_top,    '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)), self.beam_color, self.beam_alpha);
+		R_PolygonVertex(last_bottom, '0 0.5 0' * (1 - (lastthickness / maxthickness)),         self.beam_color, self.beam_alpha);
+		R_PolygonVertex(bottom,      '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),         self.beam_color, self.beam_alpha);
 		R_EndPolygon();
 
 		// check if we're going to proceed with drawing
@@ -642,7 +642,7 @@ void Ent_ReadArcBeam(float isnew)
 		{
 			case ARC_BT_MISS:
 			{
-				self.beam_rgb = '-1 -1 1';
+				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
@@ -655,7 +655,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
 			{
-				self.beam_rgb = '0.5 0.5 1';
+				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
@@ -668,7 +668,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_HEAL:
 			{
-				self.beam_rgb = '0 1 0';
+				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
@@ -681,7 +681,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_HIT:
 			{
-				self.beam_rgb = '1 0 1';
+				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
@@ -694,7 +694,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_MISS:
 			{
-				self.beam_rgb = '-1 -1 1';
+				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
@@ -707,7 +707,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_WALL:
 			{
-				self.beam_rgb = '0.5 0.5 1';
+				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
@@ -720,7 +720,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_HEAL:
 			{
-				self.beam_rgb = '0 1 0';
+				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
@@ -733,7 +733,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_HIT:
 			{
-				self.beam_rgb = '1 0 1';
+				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
@@ -748,7 +748,7 @@ void Ent_ReadArcBeam(float isnew)
 			// shouldn't be possible, but lets make it colorful if it does :D
 			default:
 			{
-				self.beam_rgb = randomvec();
+				self.beam_color = randomvec();
 				self.beam_alpha = 1;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
