@@ -237,6 +237,30 @@ void W_Arc_Beam_Think(void)
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
+		// WEAPONTODO (server and client):
+		// Segment blend and distance should probably really be calculated in a better way,
+		// however I am not sure how to do it properly. There are a few things I have tried,
+		// but most of them do not work properly due to my lack of understanding regarding
+		// the mathematics behind them.
+
+		// Ideally, we should calculate the positions along a perfect curve
+		// between wantdir and self.beam_dir with an option for depth of arc
+
+		// Another issue is that (on the client code) we must separate the
+		// curve into multiple rendered curves when handling warpzones.
+		
+		// I can handle this by detecting it for each segment, however that
+		// is a fairly inefficient method in comparison to having a curved line
+		// drawing function similar to Draw_CylindricLine that accepts
+		// top and bottom origins as input, this way there would be no
+		// overlapping edges when connecting the curved pieces.
+
+		// WEAPONTODO (client):
+		// In order to do nice fading and pointing on the starting segment, we must always
+		// have that drawn as a separate triangle... However, that is difficult to do when
+		// keeping in mind the above problems and also optimizing the amount of segments
+		// drawn on screen at any given time. (Automatic beam quality scaling, essentially)
+
 		// calculate this on every segment to ensure that we always reach the full length of the attack
 		float segmentblend = bound(0, (i/segments) + WEP_CVAR(arc, beam_tightness), 1);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
