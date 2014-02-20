@@ -194,6 +194,12 @@ void W_Arc_Beam_Think(void)
 		self.beam_initialized = TRUE;
 	}
 
+	// WEAPONTODO: Detect player velocity so that the beam curves when moving too
+	// idea: blend together self.beam_dir with the inverted direction the player is moving in
+	// might have to make some special accomodation so that it only uses view_right and view_up
+
+	// note that if we do this, it'll always be corrected to a maximum angle by beam_maxangle handling
+
 	float segments; 
 	if(self.beam_dir != w_shotdir)
 	{
@@ -418,7 +424,6 @@ void W_Arc_Beam(float bursting)
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	//beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = bursting;
