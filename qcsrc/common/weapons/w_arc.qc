@@ -70,7 +70,7 @@ vector arc_shotorigin[4];
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
-.float lg_fire_prev; // for better animation control
+.float beam_prev; // for better animation control
 .float beam_initialized;
 .float beam_bursting;
 #endif
@@ -418,22 +418,20 @@ void W_Arc_Beam_Think(void)
 		self.beam_type = new_beam_type;
 	}
 
-	self.owner.lg_fire_prev = time;
+	self.owner.beam_prev = time;
 	self.nextthink = time;
 }
 
 // Attack functions ========================= 
-void W_Arc_Beam(float bursting)
+void W_Arc_Beam(float burst)
 {
 	// only play fire sound if 1 sec has passed since player let go the fire button
-	if(time - self.lg_fire_prev > 1)
+	if(time - self.beam_prev > 1)
 	{
 		sound(self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
 	}
 
-	entity beam, oldself;
-
-	self.arc_beam = beam = spawn();
+	entity beam = self.arc_beam = spawn();
 	beam.classname = "W_Arc_Beam";
 	beam.solid = SOLID_NOT;
 	beam.think = W_Arc_Beam_Think;
@@ -441,10 +439,10 @@ void W_Arc_Beam(float bursting)
 	beam.movetype = MOVETYPE_NONE;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
-	beam.beam_bursting = bursting;
+	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
-	oldself = self;
+	entity oldself = self;
 	self = beam;
 	self.think();
 	self = oldself;
