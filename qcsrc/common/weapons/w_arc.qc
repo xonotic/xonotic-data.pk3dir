@@ -146,6 +146,14 @@ void W_Arc_Beam_Think(void)
 	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || (!self.owner.BUTTON_ATCK && !self.beam_bursting) || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
+		entity oldself = self;
+		self = self.owner;
+		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
+		{
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(self);
+		}
+		self = oldself;
 		remove(self);
 		return;
 	}
@@ -471,16 +479,18 @@ float W_Arc(float req)
 						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else*/
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-				
-				if(weapon_prepareattack(self.BUTTON_ATCK2, 0))
+
+				if((!self.arc_beam) || wasfreed(self.arc_beam))
 				{
-					if((!self.arc_beam) || wasfreed(self.arc_beam))
-						W_Arc_Beam(self.BUTTON_ATCK2);
-					
-					if(!self.BUTTON_ATCK_prev)
+					if(weapon_prepareattack(!!self.BUTTON_ATCK2, 0))
 					{
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-						self.BUTTON_ATCK_prev = 1;
+						W_Arc_Beam(!!self.BUTTON_ATCK2);
+						
+						if(!self.BUTTON_ATCK_prev)
+						{
+							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+							self.BUTTON_ATCK_prev = 1;
+						}
 					}
 				}
 			} 
@@ -527,13 +537,12 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			//return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
-			return FALSE;
+			//printf("beam_ammo: %f, wep_ammo: %f, result: %d\n", WEP_CVAR(arc, beam_ammo), self.WEP_AMMO(ARC), ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0)));
+			return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CHECKAMMO2:
 		{
-			//return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
-			return FALSE;
+			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{
