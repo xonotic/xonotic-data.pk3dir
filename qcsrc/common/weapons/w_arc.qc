@@ -456,7 +456,15 @@ float W_Arc(float req)
 		}
 		case WR_THINK:
 		{
-			if(self.BUTTON_ATCK || self.arc_beam.beam_bursting)
+			#if 0
+			if(self.arc_beam.beam_heat > threshold)
+			{
+				stop the beam somehow
+				play overheat animation
+			}
+			#endif
+
+			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting)
 			{
 				if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
 					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
@@ -464,10 +472,10 @@ float W_Arc(float req)
 					else*/
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				
-				if(weapon_prepareattack(0, 0))
+				if(weapon_prepareattack(self.BUTTON_ATCK2, 0))
 				{
 					if((!self.arc_beam) || wasfreed(self.arc_beam))
-						W_Arc_Beam(FALSE);
+						W_Arc_Beam(self.BUTTON_ATCK2);
 					
 					if(!self.BUTTON_ATCK_prev)
 					{
@@ -519,12 +527,13 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			return !WEP_CVAR(arc, beam_ammo) || (self.WEP_AMMO(ARC) > 0);
+			//return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return FALSE;
 		}
 		case WR_CHECKAMMO2:
 		{
-			//return self.WEP_AMMO(ARC) >= WEP_CVAR_SEC(arc, ammo);
-			return TRUE;
+			//return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return FALSE;
 		}
 		case WR_CONFIG:
 		{
