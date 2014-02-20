@@ -137,7 +137,6 @@ float W_Arc_Beam_Send(entity to, float sf)
 
 void W_Arc_Beam_Think(void)
 {
-	float i, burst = 0;
 	if(self != self.owner.arc_beam)
 	{
 		remove(self);
@@ -158,6 +157,7 @@ void W_Arc_Beam_Think(void)
 		return;
 	}
 
+	float burst = 0;
 	if(self.owner.BUTTON_ATCK2 || self.beam_bursting)
 	{
 		if(!self.beam_bursting)
@@ -165,7 +165,7 @@ void W_Arc_Beam_Think(void)
 		burst = ARC_BT_BURSTMASK;
 	}
 
-	// decrease ammo // todo: support burst ammo
+	// decrease ammo
 	float dt = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -271,6 +271,7 @@ void W_Arc_Beam_Think(void)
 
 	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
 
+	float i;
 	float new_beam_type = 0;
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
@@ -422,7 +423,6 @@ void W_Arc_Beam_Think(void)
 	self.nextthink = time;
 }
 
-// Attack functions ========================= 
 void W_Arc_Beam(float burst)
 {
 	// only play fire sound if 1 sec has passed since player let go the fire button
@@ -520,9 +520,9 @@ float W_Arc(float req)
 			precache_model("models/weapons/g_arc.md3");
 			precache_model("models/weapons/v_arc.md3");
 			precache_model("models/weapons/h_arc.iqm");
-			precache_sound("weapons/arc_fire.wav");
-			precache_sound("weapons/arc_fire2.wav");
-			precache_sound("weapons/arc_impact.wav");
+			//precache_sound("weapons/arc_fire.wav");
+			//precache_sound("weapons/arc_fire2.wav");
+			//precache_sound("weapons/arc_impact.wav");
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
@@ -535,7 +535,6 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO1:
 		{
-			//printf("beam_ammo: %f, wep_ammo: %f, result: %d\n", WEP_CVAR(arc, beam_ammo), self.WEP_AMMO(ARC), ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0)));
 			return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CHECKAMMO2:
@@ -561,11 +560,6 @@ float W_Arc(float req)
 					return WEAPON_ELECTRO_MURDER_BOLT;
 			}
 		}
-		case WR_RESETPLAYER:
-		{
-			//self.arc_secondarytime = time;
-			return TRUE;
-		}
 	}
 	return FALSE;
 }
@@ -582,8 +576,8 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/arc_impact.wav");
-			precache_sound("weapons/arc_impact_combo.wav");
+			//precache_sound("weapons/arc_impact.wav");
+			//precache_sound("weapons/arc_impact_combo.wav");
 			return TRUE;
 		}
 		case WR_ZOOMRETICLE:
