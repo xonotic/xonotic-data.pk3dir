@@ -68,9 +68,9 @@ vector arc_shotorigin[4];
 #ifdef SVQC
 #define ARC_MAX_SEGMENTS 20
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-.entity arc_beam; // used for beam
+.entity arc_beam;
 .float BUTTON_ATCK_prev; // for better animation control
-.float beam_prev; // for better animation control
+.float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
 #endif
