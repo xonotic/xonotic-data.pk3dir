@@ -38,6 +38,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, beam_refire) \
 	w_cvar(id, sn, NONE, beam_returnspeed) \
 	w_cvar(id, sn, NONE, beam_tightness) \
+	w_cvar(id, sn, NONE, burst_ammo) \
 	w_cvar(id, sn, NONE, burst_damage) \
 	w_cvar(id, sn, NONE, burst_healing_aps) \
 	w_cvar(id, sn, NONE, burst_healing_hps) \
@@ -160,10 +161,16 @@ void W_Arc_Beam_Think(void)
 	float dt = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		if(WEP_CVAR(arc, beam_ammo))
+		float rootammo;
+		if(burst)
+			{ rootammo = WEP_CVAR(arc, burst_ammo); }
+		else
+			{ rootammo = WEP_CVAR(arc, beam_ammo); }
+
+		if(rootammo)
 		{
-			dt = min(dt, self.owner.WEP_AMMO(ARC) / WEP_CVAR(arc, beam_ammo));
-			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - WEP_CVAR(arc, beam_ammo) * frametime);
+			dt = min(dt, self.owner.WEP_AMMO(ARC) / rootammo);
+			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
 		}
 	}
 
