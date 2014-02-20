@@ -67,11 +67,11 @@ vector arc_shotorigin[4];
 #ifdef SVQC
 #define ARC_MAX_SEGMENTS 20
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-void ArcInit(void);
 .entity arc_beam; // used for beam
 .float BUTTON_ATCK_prev; // for better animation control
 .float lg_fire_prev; // for better animation control
 .float beam_initialized;
+.float beam_bursting;
 #endif
 #else
 #ifdef SVQC
@@ -142,15 +142,17 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || !self.owner.BUTTON_ATCK || self.owner.freezetag_frozen)
+	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || (!self.owner.BUTTON_ATCK && !self.beam_bursting) || self.owner.freezetag_frozen)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
 		remove(self);
 		return;
 	}
 
-	if(self.owner.BUTTON_ATCK2)
+	if(self.owner.BUTTON_ATCK2 || self.beam_bursting)
 	{
+		if(!self.beam_bursting)
+			self.beam_bursting = TRUE;
 		burst = ARC_BT_BURSTMASK;
 	}
 
@@ -400,12 +402,13 @@ void W_Arc_Beam_Think(void)
 }
 
 // Attack functions ========================= 
-void W_Arc_Beam(void)
+void W_Arc_Beam(float bursting)
 {
-	print("W_Arc_Beam();\n");
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.lg_fire_prev > 1)
+	{
 		sound(self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+	}
 
 	entity beam, oldself;
 
@@ -415,9 +418,10 @@ void W_Arc_Beam(void)
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	beam.shot_spread = 1;
+	//beam.shot_spread = 1;
 	beam.bot_dodge = TRUE;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
+	beam.beam_bursting = bursting;
 	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
 
 	oldself = self;
@@ -440,7 +444,7 @@ float W_Arc(float req)
 		}
 		case WR_THINK:
 		{
-			if(self.BUTTON_ATCK)
+			if(self.BUTTON_ATCK || self.arc_beam.beam_bursting)
 			{
 				if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
 					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
@@ -451,7 +455,7 @@ float W_Arc(float req)
 				if(weapon_prepareattack(0, 0))
 				{
 					if((!self.arc_beam) || wasfreed(self.arc_beam))
-						W_Arc_Beam();
+						W_Arc_Beam(FALSE);
 					
 					if(!self.BUTTON_ATCK_prev)
 					{
@@ -470,15 +474,17 @@ float W_Arc(float req)
 				self.BUTTON_ATCK_prev = 0;
 			}
 
-			//if(self.BUTTON_ATCK2)
-				//if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
-				//{
-				//	W_Arc_Attack2();
-				//	self.arc_count = autocvar_g_balance_arc_secondary_count;
-				//	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-				//	self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
-				//}
-				
+			#if 0
+			if(self.BUTTON_ATCK2)
+			if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
+			{
+				W_Arc_Attack2();
+				self.arc_count = autocvar_g_balance_arc_secondary_count;
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+				self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
+			}
+			#endif
+
 			return TRUE;
 		}
 		case WR_INIT:
@@ -486,12 +492,9 @@ float W_Arc(float req)
 			precache_model("models/weapons/g_arc.md3");
 			precache_model("models/weapons/v_arc.md3");
 			precache_model("models/weapons/h_arc.iqm");
-			//precache_sound("weapons/arc_bounce.wav");
 			precache_sound("weapons/arc_fire.wav");
 			precache_sound("weapons/arc_fire2.wav");
 			precache_sound("weapons/arc_impact.wav");
-			//precache_sound("weapons/arc_impact_combo.wav");
-			//precache_sound("weapons/W_Arc_Beam_fire.wav");
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
@@ -546,22 +549,7 @@ float W_Arc(float req)
 	{
 		case WR_IMPACTEFFECT:
 		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				pointparticles(particleeffectnum("arc_ballexplode"), org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
-			}
-			else
-			{
-				pointparticles(particleeffectnum("arc_impact"), org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/arc_impact.wav", VOL_BASE, ATTN_NORM);
-			}
-			
+			// todo
 			return TRUE;
 		}
 		case WR_INIT:
