@@ -652,7 +652,6 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
-	ArcInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;

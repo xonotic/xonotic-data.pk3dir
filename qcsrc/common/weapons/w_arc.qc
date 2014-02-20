@@ -492,6 +492,14 @@ float W_Arc(float req)
 			precache_sound("weapons/arc_impact.wav");
 			//precache_sound("weapons/arc_impact_combo.wav");
 			//precache_sound("weapons/W_Arc_Beam_fire.wav");
+			if(!arc_shotorigin[0])
+			{
+				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
+				arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
+				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
+				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
+			}
+			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
@@ -529,16 +537,6 @@ float W_Arc(float req)
 		}
 	}
 	return FALSE;
-}
-
-void ArcInit(void)
-{
-	WEP_ACTION(WEP_ARC, WR_INIT);
-	arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
-	arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
-	arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
-	arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
-	ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 }
 #endif
 #ifdef CSQC
