@@ -382,6 +382,91 @@ void Net_ReadShockwaveParticle()
 .float beam_tightness;
 .vector beam_shotorigin;
 .vector beam_dir;
+
+entity Draw_ArcBeam_callback_entity;
+vector Draw_ArcBeam_callback_new_dir;
+float Draw_ArcBeam_callback_segmentdist;
+float Draw_ArcBeam_callback_last_thickness;
+vector Draw_ArcBeam_callback_last_top;
+vector Draw_ArcBeam_callback_last_bottom;
+
+void Draw_ArcBeam_callback(vector start, vector hit, vector end)
+{
+	entity beam = Draw_ArcBeam_callback_entity;
+	vector transformed_view_org;
+	transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+
+	vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+
+	vector hitorigin;
+
+	// draw segment
+	#if 0
+	if(trace_fraction != 1)
+	{
+		// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+		hitorigin = start + (Draw_ArcBeam_callback_new_dir * Draw_ArcBeam_callback_segmentdist * trace_fraction);
+		hitorigin = WarpZone_TransformOrigin(WarpZone_trace_transform, hitorigin);
+	}
+	else
+	{
+		hitorigin = hit;
+	}
+	#else
+	hitorigin = hit;
+	#endif
+
+	// decide upon thickness
+	float thickness = beam.beam_thickness;
+
+	// draw primary beam render
+	vector top    = hitorigin + (thickdir * thickness);
+	vector bottom = hitorigin - (thickdir * thickness);
+	vector last_top    = start + (thickdir * Draw_ArcBeam_callback_last_thickness);
+	vector last_bottom = start - (thickdir * Draw_ArcBeam_callback_last_thickness);
+
+	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
+	R_PolygonVertex(
+		top,
+		'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		last_top,
+		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		last_bottom,
+		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		bottom,
+		'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_EndPolygon();
+
+	// draw trailing particles
+	// NOTES:
+	//  - Don't use spammy particle counts here, use a FEW small particles around the beam
+	//  - We're not using WarpZone_TrailParticles here because we will handle warpzones ourselves.
+	if(beam.beam_traileffect)
+	{
+		trailparticles(beam, beam.beam_traileffect, start, hitorigin);
+	}
+
+	// set up for the next 
+	Draw_ArcBeam_callback_last_thickness = thickness;
+	Draw_ArcBeam_callback_last_top = top;
+	Draw_ArcBeam_callback_last_bottom = bottom;
+}
+
 void Draw_ArcBeam()
 {
 	InterpolateOrigin_Do();
@@ -545,18 +630,13 @@ void Draw_ArcBeam()
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
-	float maxthickness = self.beam_thickness;
-
-	vector thickdir = normalize(cross(beamdir, view_origin - start_pos));
+	Draw_ArcBeam_callback_entity = self;
+	Draw_ArcBeam_callback_last_thickness = 0;
+	Draw_ArcBeam_callback_last_top = start_pos;
+	Draw_ArcBeam_callback_last_bottom = start_pos;
 
 	vector last_origin = start_pos;
-
-	float lastthickness = 0;
-
-	vector last_top = start_pos + (thickdir * lastthickness);
-	vector last_bottom = start_pos - (thickdir * lastthickness);
-
-	vector hitorigin = start_pos;
+	//vector hitorigin = start_pos;
 
 	float i;
 	for(i = 1; i <= segments; ++i)
@@ -592,79 +672,52 @@ void Draw_ArcBeam()
 		vector new_dir = normalize( (wantdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
 		vector new_origin = last_origin + (new_dir * segmentdist);
 
-		WarpZone_TraceLine(
+		Draw_ArcBeam_callback_segmentdist = segmentdist;
+		Draw_ArcBeam_callback_new_dir = new_dir;
+
+		WarpZone_TraceBox_ThroughZone(
 			last_origin,
+			'0 0 0',
+			'0 0 0',
 			new_origin,
 			MOVE_NORMAL,
-			self
+			world,
+			world,
+			Draw_ArcBeam_callback
 		);
-
-		// draw segment
-		if(trace_fraction != 1)
-		{
-			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-			hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
-		}
-		else
-		{
-			hitorigin = new_origin;
-		}
-
-		#if 0
-		float falloff = ExponentialFalloff(
-			WEP_CVAR(arc, beam_falloff_mindist),
-			WEP_CVAR(arc, beam_falloff_maxdist),
-			WEP_CVAR(arc, beam_falloff_halflifedist),
-			vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - start_pos)
-		);
-		#else
-		//float falloff = 1;
-		#endif
-
-		// draw primary beam render
-		vector top    = hitorigin + (thickdir * self.beam_thickness);
-		vector bottom = hitorigin - (thickdir * self.beam_thickness);
-
-		R_BeginPolygon(self.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
-		R_PolygonVertex(top,          '0 0.5 0' + ('0 0.5 0' * (self.beam_thickness / maxthickness)),  self.beam_color,  self.beam_alpha);
-		R_PolygonVertex(last_top,     '0 0.5 0' + ('0 0.5 0' * (lastthickness / maxthickness)),        self.beam_color,  self.beam_alpha);
-		R_PolygonVertex(last_bottom,  '0 0.5 0' * (1 - (lastthickness / maxthickness)),                self.beam_color,  self.beam_alpha);
-		R_PolygonVertex(bottom,       '0 0.5 0' * (1 - (self.beam_thickness / maxthickness)),          self.beam_color,  self.beam_alpha);
-		R_EndPolygon();
-
-		// draw trailing particles
-		// NOTES:
-		//  - Don't use spammy particle counts here, use a FEW small particles around the beam
-		//  - We're not using WarpZone_TrailParticles here because we will handle warpzones ourselves.
-		if(self.beam_traileffect)
-		{
-			trailparticles(self, self.beam_traileffect, last_origin, hitorigin);
-		}
 
 		// check if we're going to proceed with drawing
-		if(trace_fraction != 1)
-		{
+		//if(trace_fraction != 1)
+		//{
 			// we're done with drawing this frame
-			break;
-		}
-		else
+			//last_origin = last_origin + (new_dir * segmentdist * trace_fraction);
+			//hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
+			//break;
+		//}
+		//else
 		{
 			// continue onto the next segment
-			last_origin = new_origin;
-			last_top = top;
-			last_bottom = bottom;
-			lastthickness = self.beam_thickness;
+			last_origin = WarpZone_TransformOrigin(WarpZone_trace_transform, new_origin);
+			beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
 		}
 	}
 
 	if(self.beam_hiteffect)
 	{
-		pointparticles(self.beam_hiteffect, hitorigin, beamdir * -1, frametime * 2);
+		pointparticles(self.beam_hiteffect, last_origin, beamdir * -1, frametime * 2);
 	}
 	if(self.beam_muzzleflash)
 	{
 		pointparticles(self.beam_muzzleflash, start_pos + wantdir * 20, wantdir * 1000, frametime * 0.1);
 	}
+
+	// cleanup
+	Draw_ArcBeam_callback_entity = world;
+	Draw_ArcBeam_callback_new_dir = '0 0 0';
+	Draw_ArcBeam_callback_segmentdist = 0;
+	Draw_ArcBeam_callback_last_thickness = 0;
+	Draw_ArcBeam_callback_last_top = '0 0 0';
+	Draw_ArcBeam_callback_last_bottom = '0 0 0';
 }
 
 void Remove_ArcBeam(void)
