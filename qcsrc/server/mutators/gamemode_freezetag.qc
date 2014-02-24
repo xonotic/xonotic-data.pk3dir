@@ -42,27 +42,23 @@ void freezetag_count_alive_players()
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-float prev_total_players;
+float prev_missing_teams_mask;
 float freezetag_CheckTeams()
 {
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
-		if(prev_total_players > 0)
+		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
-		prev_total_players = -1;
+		prev_missing_teams_mask = -1;
 		return 1;
 	}
-	if(prev_total_players != total_players)
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(freezetag_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(freezetag_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!redalive) p1 = NUM_TEAM_1;
-		if(!bluealive) p2 = NUM_TEAM_2;
-		if(freezetag_teams >= 3)
-		if(!yellowalive) p3 = NUM_TEAM_3;
-		if(freezetag_teams >= 4)
-		if(!pinkalive) p4 = NUM_TEAM_4;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
-		prev_total_players = total_players;
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
 }
