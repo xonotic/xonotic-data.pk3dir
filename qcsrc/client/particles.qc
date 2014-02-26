@@ -422,8 +422,8 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	// draw primary beam render
 	vector top    = hitorigin + (thickdir * thickness);
 	vector bottom = hitorigin - (thickdir * thickness);
-	vector last_top    = start + (thickdir * Draw_ArcBeam_callback_last_thickness);
-	vector last_bottom = start - (thickdir * Draw_ArcBeam_callback_last_thickness);
+	//vector last_top    = start + (thickdir * Draw_ArcBeam_callback_last_thickness);
+	//vector last_bottom = start - (thickdir * Draw_ArcBeam_callback_last_thickness);
 
 	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
 	R_PolygonVertex(
@@ -433,13 +433,13 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		beam.beam_alpha
 	);
 	R_PolygonVertex(
-		last_top,
+		Draw_ArcBeam_callback_last_top,
 		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
 		beam.beam_color,
 		beam.beam_alpha
 	);
 	R_PolygonVertex(
-		last_bottom,
+		Draw_ArcBeam_callback_last_bottom,
 		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
 		beam.beam_color,
 		beam.beam_alpha
@@ -692,6 +692,8 @@ void Draw_ArcBeam()
 			world,
 			Draw_ArcBeam_callback
 		);
+
+		//printf("segment: %d, warpzone transform: %d\n", i, (WarpZone_trace_transform != world));
 
 		// WEAPONTODO:
 		// Figure out some way to detect a collision with geometry with callback...
