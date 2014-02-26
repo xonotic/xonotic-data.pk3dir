@@ -469,7 +469,10 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 
 void Draw_ArcBeam()
 {
-	InterpolateOrigin_Do();
+	if(!self.beam_usevieworigin)
+	{
+		InterpolateOrigin_Do();
+	}
 
 	// origin = beam starting origin
 	// v_angle = wanted/aim direction
@@ -739,11 +742,6 @@ void Ent_ReadArcBeam(float isnew)
 	float sf = ReadByte();
 	entity flash;
 
-	// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
-	self.iflags = IFLAG_ORIGIN;
-
-	InterpolateOrigin_Undo();
-
 	if(isnew)
 	{
 		// calculate shot origin offset from gun alignment
@@ -792,6 +790,14 @@ void Ent_ReadArcBeam(float isnew)
 		{
 			self.beam_usevieworigin = 0;
 		}
+	}
+
+	if(!self.beam_usevieworigin)
+	{
+		// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
+		self.iflags = IFLAG_ORIGIN;
+
+		InterpolateOrigin_Undo();
 	}
 
 	if(sf & 2) // starting location
@@ -1047,7 +1053,10 @@ void Ent_ReadArcBeam(float isnew)
 		}
 	}
 
-	InterpolateOrigin_Note();
+	if(!self.beam_usevieworigin)
+	{
+		InterpolateOrigin_Note();
+	}
 
 	#if 0
 	printf(
