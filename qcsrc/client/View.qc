@@ -1672,32 +1672,16 @@ void CSQC_common_hud(void)
 	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
 		Accuracy_LoadLevels();
 
-    HUD_Main(); // always run these functions for alpha checks
-    HUD_DrawScoreboard();
+	HUD_Main(); // always run these functions for alpha checks
+	HUD_DrawScoreboard();
 
-    if (scoreboard_active) // scoreboard/accuracy
-        HUD_Reset();
-    else if (intermission == 2) // map voting screen
-    {
-        HUD_FinaleOverlay();
-        HUD_Reset();
-    }
-	/*
-	switch(hud)
+	if (scoreboard_active) // scoreboard/accuracy
+		HUD_Reset();
+	else if (intermission == 2) // map voting screen
 	{
-		case HUD_SPIDERBOT:
-			CSQC_SPIDER_HUD();
-			break;
-
-		case HUD_WAKIZASHI:
-			CSQC_WAKIZASHI_HUD();
-			break;
-
-        case HUD_BUMBLEBEE:
-            CSQC_BUMBLE_HUD();
-            break;
+		MapVote_Draw();
+		HUD_Reset();
 	}
-	*/
 }
 
 
