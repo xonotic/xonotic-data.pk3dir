@@ -197,10 +197,45 @@ MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 	return 0;
 }
 
+entity ca_LastPlayerForTeam()
+{
+	entity pl, last_pl = world;
+	FOR_EACH_PLAYER(pl)
+	{
+		if(pl.health >= 1)
+		if(pl != self)
+		if(pl.team == self.team)
+		if(!last_pl)
+			last_pl = pl;
+		else
+			return world;
+	}
+	return last_pl;
+}
+
+void ca_LastPlayerForTeam_Notify()
+{
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
+	{
+		entity pl = ca_LastPlayerForTeam();
+		if(pl)
+			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+	}
+}
+
 MUTATOR_HOOKFUNCTION(ca_PlayerDies)
 {
+	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
 		self.respawn_flags =  RESPAWN_SILENT;
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(ca_ClientDisconnect)
+{
+	if(self.caplayer == 1)
+		ca_LastPlayerForTeam_Notify();
 	return 1;
 }
 
@@ -211,6 +246,8 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
 {
+	if(self.caplayer == 1)
+		ca_LastPlayerForTeam_Notify();
 	if(self.killindicator_teamchange == -2)
 		self.caplayer = 0;
 	if(self.caplayer)
@@ -313,6 +350,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(PlayerDies, ca_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, ca_ClientDisconnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);

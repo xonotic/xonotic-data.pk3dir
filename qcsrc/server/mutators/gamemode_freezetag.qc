@@ -137,6 +137,34 @@ float freezetag_CheckWinner()
 	return 1;
 }
 
+entity freezetag_LastPlayerForTeam()
+{
+	entity pl, last_pl = world;
+	FOR_EACH_PLAYER(pl)
+	{
+		if(pl.health >= 1)
+		if(!pl.freezetag_frozen)
+		if(pl != self)
+		if(pl.team == self.team)
+		if(!last_pl)
+			last_pl = pl;
+		else
+			return world;
+	}
+	return last_pl;
+}
+
+void freezetag_LastPlayerForTeam_Notify()
+{
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
+	{
+		entity pl = freezetag_LastPlayerForTeam();
+		if(pl)
+			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+	}
+}
+
 // this is needed to allow the player to turn his view around (fixangle can't
 // be used to freeze his view, as that also changes the angles), while not
 // turning that ice object with the player
@@ -325,6 +353,8 @@ void havocbot_role_ft_freeing()
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
+	if(!self.freezetag_frozen)
+		freezetag_LastPlayerForTeam_Notify();
 	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
 	return 1;
@@ -351,6 +381,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		{
 			freezetag_Add_Score(frag_attacker);
 			freezetag_count_alive_players();
+			freezetag_LastPlayerForTeam_Notify();
 		}
 		else
 			freezetag_Unfreeze(world); // remove ice
@@ -362,6 +393,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		return 1;
 
 	freezetag_Freeze(frag_attacker);
+	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{

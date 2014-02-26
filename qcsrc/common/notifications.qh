@@ -545,6 +545,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CENTER##teams(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle)
 
 #define MSG_CENTER_NOTIFICATIONS \
+	MSG_CENTER_NOTIF(1, CENTER_ALONE,                       0, 0, "",             NO_CPID,             "0 0", _("^F4You are now alone!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,             0, 0, "",             CPID_ROUND,          "2 0", _("^F4Begin!"), "") \
