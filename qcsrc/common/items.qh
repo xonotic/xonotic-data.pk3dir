@@ -51,8 +51,6 @@ const float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_
 const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
 const float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
-const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
-
 // variables:
 string weaponorder_byid;
 
