@@ -689,20 +689,13 @@ void Draw_ArcBeam()
 			Draw_ArcBeam_callback
 		);
 
-		// check if we're going to proceed with drawing
-		//if(trace_fraction != 1)
-		//{
-			// we're done with drawing this frame
-			//last_origin = last_origin + (new_dir * segmentdist * trace_fraction);
-			//hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
-			//break;
-		//}
-		//else
-		{
-			// continue onto the next segment
-			last_origin = WarpZone_TransformOrigin(WarpZone_trace_transform, new_origin);
-			beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
-		}
+		// WEAPONTODO:
+		// Figure out some way to detect a collision with geometry with callback...
+		// That way we can know when we are done drawing the beam and skip
+		// the rest of the segments without breaking warpzone support.
+
+		last_origin = WarpZone_TransformOrigin(WarpZone_trace_transform, new_origin);
+		beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
 	}
 
 	if(self.beam_hiteffect)
@@ -1057,17 +1050,5 @@ void Ent_ReadArcBeam(float isnew)
 	{
 		InterpolateOrigin_Note();
 	}
-
-	#if 0
-	printf(
-		"Ent_ReadArcBeam(%d): sf = %d, start = %s, want = %s, dir = %s, type = %d\n",
-		isnew,
-		sf,
-		vtos(self.beam_start),
-		vtos(self.v_angle),
-		vtos(self.angles),
-		self.beam_type
-	);
-	#endif
 }
 
