@@ -501,7 +501,12 @@ void Draw_ArcBeam()
 			{ start_pos = self.origin; }
 
 		// trace forward with an estimation
-		WarpZone_TraceLine(start_pos, start_pos + view_forward * self.beam_range, MOVE_NOMONSTERS, self);
+		WarpZone_TraceLine(
+			start_pos,
+			start_pos + view_forward * self.beam_range,
+			MOVE_NOMONSTERS,
+			self
+		);
 
 		// untransform in case our trace went through a warpzone
 		vector vf, vr, vu;
@@ -639,7 +644,6 @@ void Draw_ArcBeam()
 	Draw_ArcBeam_callback_last_bottom = start_pos;
 
 	vector last_origin = start_pos;
-	//vector hitorigin = start_pos;
 
 	float i;
 	for(i = 1; i <= segments; ++i)
@@ -655,7 +659,7 @@ void Draw_ArcBeam()
 
 		// Another issue is that (on the client code) we must separate the
 		// curve into multiple rendered curves when handling warpzones.
-		
+
 		// I can handle this by detecting it for each segment, however that
 		// is a fairly inefficient method in comparison to having a curved line
 		// drawing function similar to Draw_CylindricLine that accepts
@@ -698,21 +702,48 @@ void Draw_ArcBeam()
 		beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
 	}
 
+	// startpoint and endpoint drawn visual effects
 	if(self.beam_hiteffect)
 	{
-		pointparticles(self.beam_hiteffect, last_origin, beamdir * -1, frametime * 2);
+		pointparticles(
+			self.beam_hiteffect,
+			last_origin,
+			beamdir * -1,
+			frametime * 2
+		);
 	}
 	if(self.beam_hitlight[0])
 	{
-		adddynamiclight(last_origin, self.beam_hitlight[0], vec3(self.beam_hitlight[1], self.beam_hitlight[2], self.beam_hitlight[3]));
+		adddynamiclight(
+			last_origin,
+			self.beam_hitlight[0],
+			vec3(
+				self.beam_hitlight[1],
+				self.beam_hitlight[2],
+				self.beam_hitlight[3]
+			)
+		);
 	}
 	if(self.beam_muzzleeffect)
 	{
-		pointparticles(self.beam_muzzleeffect, start_pos + wantdir * 20, wantdir * 1000, frametime * 0.1);
+		pointparticles(
+			self.beam_muzzleeffect,
+			start_pos + wantdir * 20,
+			wantdir * 1000,
+			frametime * 0.1
+		);
 	}
 	if(self.beam_muzzlelight[0])
 	{
-		adddynamiclight(start_pos + wantdir * 20, self.beam_muzzlelight[0], vec3(self.beam_muzzlelight[1], self.beam_muzzlelight[2], self.beam_muzzlelight[3]));
+		adddynamiclight(
+			start_pos + wantdir * 20,
+			self.beam_muzzlelight[0],
+			vec3(
+				self.beam_muzzlelight[1],
+				self.beam_muzzlelight[2],
+				self.beam_muzzlelight[3]
+			)
+		);
 	}
 
 	// cleanup
