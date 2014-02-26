@@ -367,10 +367,10 @@ void Net_ReadShockwaveParticle()
 .float beam_thickness;
 .float beam_traileffect;
 .float beam_hiteffect;
-.float beam_muzzleflash;
+.float beam_hitlight[4]; // 0: radius, 123: rgb
+.float beam_muzzleeffect;
+.float beam_muzzlelight[4]; // 0: radius, 123: rgb
 .string beam_image;
-
-// WEAPONTODO: Add beam_hitlight and beam_muzzlelight which uses direct real time light control
 
 .entity beam_muzzleentity;
 
@@ -706,9 +706,17 @@ void Draw_ArcBeam()
 	{
 		pointparticles(self.beam_hiteffect, last_origin, beamdir * -1, frametime * 2);
 	}
-	if(self.beam_muzzleflash)
+	if(self.beam_hitlight[0])
 	{
-		pointparticles(self.beam_muzzleflash, start_pos + wantdir * 20, wantdir * 1000, frametime * 0.1);
+		adddynamiclight(last_origin, self.beam_hitlight[0], vec3(self.beam_hitlight[1], self.beam_hitlight[2], self.beam_hitlight[3]));
+	}
+	if(self.beam_muzzleeffect)
+	{
+		pointparticles(self.beam_muzzleeffect, start_pos + wantdir * 20, wantdir * 1000, frametime * 0.1);
+	}
+	if(self.beam_muzzlelight[0])
+	{
+		adddynamiclight(start_pos + wantdir * 20, self.beam_muzzlelight[0], vec3(self.beam_muzzlelight[1], self.beam_muzzlelight[2], self.beam_muzzlelight[3]));
 	}
 
 	// cleanup
@@ -834,7 +842,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning");
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -848,8 +864,16 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
+				self.beam_hiteffect = particleeffectnum("electro_lightning");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -864,7 +888,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("healray_impact"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -879,7 +911,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 8;
 				self.beam_traileffect = particleeffectnum("nex_beam");
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 20;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 0;
+				self.beam_hitlight[3] = 0;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 50;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 0;
+				self.beam_muzzlelight[3] = 0;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -894,7 +934,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -909,7 +957,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -924,7 +980,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -939,7 +1003,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
@@ -956,7 +1028,15 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = FALSE; 
-				self.beam_muzzleflash = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
 				setmodel(flash, "models/flash.md3");
 				flash.alpha = self.beam_alpha;
