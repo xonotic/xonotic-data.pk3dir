@@ -56,6 +56,7 @@ vector arc_shotorigin[4];
 .vector beam_dir;
 .vector beam_wantdir;
 .float beam_type;
+
 #define ARC_BT_MISS        0
 #define ARC_BT_WALL        1
 #define ARC_BT_HEAL        2
@@ -65,6 +66,13 @@ vector arc_shotorigin[4];
 #define ARC_BT_BURST_HEAL  12
 #define ARC_BT_BURST_HIT   13
 #define ARC_BT_BURSTMASK   10
+
+#define ARC_SF_SETTINGS    1
+#define ARC_SF_START       2
+#define ARC_SF_WANTDIR     4
+#define ARC_SF_BEAMDIR     8
+#define ARC_SF_BEAMTYPE    16
+#define ARC_SF_LOCALMASK   14
 #endif
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
@@ -92,18 +100,12 @@ float W_Arc_Beam_Send(entity to, float sf)
 	float drawlocal = ((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to)));
 	if(drawlocal)
 	{
-		#if 0
-		sf &= ~2;
-		sf &= ~4;
-		sf &= ~8;
-		#else
-		sf &= ~14;
-		#endif
+		sf &= ~ARC_SF_LOCALMASK;
 	}
 
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1) // settings information
+	if(sf & ARC_SF_SETTINGS) // settings information
 	{
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_degreespersegment));
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_distancepersegment));
@@ -114,25 +116,25 @@ float W_Arc_Beam_Send(entity to, float sf)
 
 		WriteByte(MSG_ENTITY, drawlocal);
 	}
-	if(sf & 2) // starting location
+	if(sf & ARC_SF_START) // starting location
 	{
 		WriteCoord(MSG_ENTITY, self.beam_start_x);
 		WriteCoord(MSG_ENTITY, self.beam_start_y);
 		WriteCoord(MSG_ENTITY, self.beam_start_z);
 	}
-	if(sf & 4) // want/aim direction
+	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_x);
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_y);
 		WriteCoord(MSG_ENTITY, self.beam_wantdir_z);
 	}
-	if(sf & 8) // beam direction
+	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
 		WriteCoord(MSG_ENTITY, self.beam_dir_x);
 		WriteCoord(MSG_ENTITY, self.beam_dir_y);
 		WriteCoord(MSG_ENTITY, self.beam_dir_z);
 	}
-	if(sf & 16) // beam type
+	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
 		WriteByte(MSG_ENTITY, self.beam_type);
 	}
@@ -214,22 +216,17 @@ void W_Arc_Beam_Think(void)
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
 	{
-		self.SendFlags |= 2;
+		self.SendFlags |= ARC_SF_START;
 		self.beam_start = w_shotorg;
 	}
 	if(self.beam_wantdir != w_shotdir)
 	{
-		self.SendFlags |= 4;
+		self.SendFlags |= ARC_SF_WANTDIR;
 		self.beam_wantdir = w_shotdir;
 	}
 
 	if(!self.beam_initialized)
 	{
-		#ifdef ARC_DEBUG
-		for(i = 0; i < ARC_MAX_SEGMENTS; ++i)
-			self.lg_ents[i] = spawn();
-		#endif
-		
 		self.beam_dir = w_shotdir;
 		self.beam_initialized = TRUE;
 	}
@@ -272,7 +269,7 @@ void W_Arc_Beam_Think(void)
 		}
 
 		// network information: beam direction
-		self.SendFlags |= 8;
+		self.SendFlags |= ARC_SF_BEAMDIR;
 
 		// calculate how many segments are needed
 		float max_allowed_segments;
@@ -476,7 +473,7 @@ void W_Arc_Beam_Think(void)
 	// network information: beam type
 	if(new_beam_type != self.beam_type)
 	{
-		self.SendFlags |= 16;
+		self.SendFlags |= ARC_SF_BEAMTYPE;
 		self.beam_type = new_beam_type;
 	}
 
@@ -1105,7 +1102,7 @@ void Ent_ReadArcBeam(float isnew)
 		flash = self.beam_muzzleentity;
 	}
 
-	if(sf & 1) // settings information
+	if(sf & ARC_SF_SETTINGS) // settings information
 	{
 		self.beam_degreespersegment = ReadShort();
 		self.beam_distancepersegment = ReadShort();
@@ -1135,7 +1132,7 @@ void Ent_ReadArcBeam(float isnew)
 		InterpolateOrigin_Undo();
 	}
 
-	if(sf & 2) // starting location
+	if(sf & ARC_SF_START) // starting location
 	{
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
@@ -1157,21 +1154,21 @@ void Ent_ReadArcBeam(float isnew)
 
 	setorigin(self, self.origin);
 
-	if(sf & 4) // want/aim direction
+	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
 		self.v_angle_x = ReadCoord();
 		self.v_angle_y = ReadCoord();
 		self.v_angle_z = ReadCoord();
 	}
 
-	if(sf & 8) // beam direction
+	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
 		self.angles_x = ReadCoord();
 		self.angles_y = ReadCoord();
 		self.angles_z = ReadCoord();
 	}
 
-	if(sf & 16) // beam type
+	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
 		self.beam_type = ReadByte();
 		switch(self.beam_type)
