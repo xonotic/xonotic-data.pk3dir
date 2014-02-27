@@ -790,14 +790,14 @@ void Draw_ArcBeam(void)
 		vf = view_forward;
 		vr = view_right;
 		vu = view_up;
-		vector shothitpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 		view_forward = vf;
 		view_right = vr;
 		view_up = vu;
 
 		// un-adjust trueaim if shotend is too close
-		if(vlen(shothitpos - view_origin) < g_trueaim_minrange)
-			shothitpos = view_origin + (view_forward * g_trueaim_minrange);
+		if(vlen(end_pos - view_origin) < g_trueaim_minrange)
+			end_pos = view_origin + (view_forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset =
@@ -808,7 +808,7 @@ void Draw_ArcBeam(void)
 		start_pos = start_pos + origin_offset;
 
 		// calculate the aim direction now
-		wantdir = normalize(shothitpos - start_pos);
+		wantdir = normalize(end_pos - start_pos);
 
 		if(!self.beam_initialized)
 		{
