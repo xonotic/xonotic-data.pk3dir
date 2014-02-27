@@ -272,17 +272,15 @@ void W_Arc_Beam_Think(void)
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
-			segments = min(
-				max(
-					1,
-					(
-						min(
-							angle,
-							WEP_CVAR(arc, beam_maxangle)
-						)
-						/
-						WEP_CVAR(arc, beam_degreespersegment)
+			segments = bound(
+				1, 
+				(
+					min(
+						angle,
+						WEP_CVAR(arc, beam_maxangle)
 					)
+					/
+					WEP_CVAR(arc, beam_degreespersegment)
 				),
 				max_allowed_segments
 			);

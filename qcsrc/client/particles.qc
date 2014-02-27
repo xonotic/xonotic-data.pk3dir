@@ -586,17 +586,15 @@ void Draw_ArcBeam()
 
 			if(WEP_CVAR(arc, beam_degreespersegment))
 			{
-				segments = min(
-					max(
-						1,
-						(
-							min(
-								angle,
-								WEP_CVAR(arc, beam_maxangle)
-							)
-							/
-							WEP_CVAR(arc, beam_degreespersegment)
+				segments = bound(
+					1, 
+					(
+						min(
+							angle,
+							WEP_CVAR(arc, beam_maxangle)
 						)
+						/
+						WEP_CVAR(arc, beam_degreespersegment)
 					),
 					max_allowed_segments
 				);
@@ -640,17 +638,15 @@ void Draw_ArcBeam()
 
 			if(WEP_CVAR(arc, beam_degreespersegment))
 			{
-				segments = min(
-					max(
-						1,
-						(
-							min(
-								angle,
-								WEP_CVAR(arc, beam_maxangle)
-							)
-							/
-							WEP_CVAR(arc, beam_degreespersegment)
+				segments = bound(
+					1, 
+					(
+						min(
+							angle,
+							WEP_CVAR(arc, beam_maxangle)
 						)
+						/
+						WEP_CVAR(arc, beam_degreespersegment)
 					),
 					max_allowed_segments
 				);
