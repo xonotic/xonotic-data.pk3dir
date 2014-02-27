@@ -50,6 +50,7 @@ REGISTER_WEAPON(
 	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
 
 #ifndef MENUQC
+#define ARC_MAX_SEGMENTS 20
 vector arc_shotorigin[4];
 .vector beam_start;
 .vector beam_dir;
@@ -66,7 +67,6 @@ vector arc_shotorigin[4];
 #define ARC_BT_BURSTMASK   10
 #endif
 #ifdef SVQC
-#define ARC_MAX_SEGMENTS 20
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam;
 .float BUTTON_ATCK_prev; // for better animation control
@@ -102,6 +102,8 @@ float W_Arc_Beam_Send(entity to, float sf)
 
 	if(sf & 1) // settings information
 	{
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_degreespersegment));
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_distancepersegment));
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_maxangle));
 		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
 		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));

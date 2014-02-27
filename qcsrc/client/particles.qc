@@ -374,6 +374,8 @@ void Net_ReadShockwaveParticle()
 
 .entity beam_muzzleentity;
 
+.float beam_degreespersegment;
+.float beam_distancepersegment;
 .float beam_usevieworigin;
 .float beam_initialized;
 .float beam_maxangle;
@@ -539,8 +541,6 @@ void Draw_ArcBeam()
 			self.beam_initialized = TRUE;
 		}
 
-		// WEAPONTODO: Calculate segments dyanmically similarly to the server code
-		segments = 20;
 		if(self.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
@@ -571,40 +571,36 @@ void Draw_ArcBeam()
 				self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
 			}
 
-			#if 0
 			// calculate how many segments are needed
 			float max_allowed_segments;
 
-			if(WEP_CVAR(arc, beam_distancepersegment))
+			if(self.beam_distancepersegment)
 			{
 				max_allowed_segments = min(
 					ARC_MAX_SEGMENTS,
-					1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+					1 + (vlen(wantdir / self.beam_distancepersegment))
 				);
 			}
 			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
-			if(WEP_CVAR(arc, beam_degreespersegment))
+			if(self.beam_degreespersegment)
 			{
 				segments = bound(
 					1, 
 					(
 						min(
 							angle,
-							WEP_CVAR(arc, beam_maxangle)
+							self.beam_maxangle
 						)
 						/
-						WEP_CVAR(arc, beam_degreespersegment)
+						self.beam_degreespersegment
 					),
 					max_allowed_segments
 				);
 			}
 			else { segments = 1; }
-			#endif
 		}
-		#if 0
 		else { segments = 1; }
-		#endif
 
 		// set the beam direction which the rest of the code will refer to
 		beamdir = self.beam_dir;
@@ -619,34 +615,33 @@ void Draw_ArcBeam()
 		wantdir = self.v_angle;
 		beamdir = self.angles;
 
-		// WEAPONTODO: Calculate segments dyanmically similarly to the server code
-		segments = 20;
-		#if 0
 		if(beamdir != wantdir)
 		{
+			float angle = vlen(wantdir - beamdir) * RAD2DEG;
+
 			// calculate how many segments are needed
 			float max_allowed_segments;
 
-			if(WEP_CVAR(arc, beam_distancepersegment))
+			if(self.beam_distancepersegment)
 			{
 				max_allowed_segments = min(
 					ARC_MAX_SEGMENTS,
-					1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+					1 + (vlen(wantdir / self.beam_distancepersegment))
 				);
 			}
 			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
-			if(WEP_CVAR(arc, beam_degreespersegment))
+			if(self.beam_degreespersegment)
 			{
 				segments = bound(
 					1, 
 					(
 						min(
 							angle,
-							WEP_CVAR(arc, beam_maxangle)
+							self.beam_maxangle
 						)
 						/
-						WEP_CVAR(arc, beam_degreespersegment)
+						self.beam_degreespersegment
 					),
 					max_allowed_segments
 				);
@@ -654,7 +649,6 @@ void Draw_ArcBeam()
 			else { segments = 1; }
 		}
 		else { segments = 1; }
-		#endif
 	}
 
 	setorigin(self, start_pos);
@@ -830,6 +824,8 @@ void Ent_ReadArcBeam(float isnew)
 
 	if(sf & 1) // settings information
 	{
+		self.beam_degreespersegment = ReadShort();
+		self.beam_distancepersegment = ReadShort();
 		self.beam_maxangle = ReadShort();
 		self.beam_range = ReadCoord();
 		self.beam_returnspeed = ReadShort();
