@@ -106,7 +106,6 @@ void Ent_ReadArcBeam(float isnew);
 .float beam_returnspeed;
 .float beam_tightness;
 .vector beam_shotorigin;
-.vector beam_dir;
 
 entity Draw_ArcBeam_callback_entity;
 vector Draw_ArcBeam_callback_new_dir;
@@ -666,7 +665,6 @@ float W_Arc(float req)
 }
 #endif
 #ifdef CSQC
-
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 {
 	entity beam = Draw_ArcBeam_callback_entity;
@@ -1397,8 +1395,7 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			//precache_sound("weapons/arc_impact.wav");
-			//precache_sound("weapons/arc_impact_combo.wav");
+			precache_sound("weapons/lgbeam_fly.wav");
 			return TRUE;
 		}
 		case WR_ZOOMRETICLE:
