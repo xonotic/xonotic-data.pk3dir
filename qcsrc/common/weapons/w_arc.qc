@@ -142,7 +142,16 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-	if((self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO)) || self.owner.deadflag != DEAD_NO || (!self.owner.BUTTON_ATCK && !self.beam_bursting) || self.owner.freezetag_frozen)
+
+	if(
+		(self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+		||
+		self.owner.deadflag != DEAD_NO
+		||
+		(!self.owner.BUTTON_ATCK && !self.beam_bursting)
+		||
+		self.owner.freezetag_frozen
+	)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
 		entity oldself = self;
@@ -251,23 +260,34 @@ void W_Arc_Beam_Think(void)
 		float max_allowed_segments;
 
 		if(WEP_CVAR(arc, beam_distancepersegment))
-			max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
-		else
-			max_allowed_segments = ARC_MAX_SEGMENTS;
+		{
+			max_allowed_segments = min(
+				ARC_MAX_SEGMENTS,
+				1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+			);
+		}
+		else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
-			segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+			segments = min(
+				max(
+					1,
+					(
+						min(
+							angle,
+							WEP_CVAR(arc, beam_maxangle)
+						)
+						/
+						WEP_CVAR(arc, beam_degreespersegment)
+					)
+				),
+				max_allowed_segments
+			);
 		}
-		else
-		{
-			segments = 1;
-		}
+		else { segments = 1; }
 	}
-	else
-	{
-		segments = 1;
-	}
+	else { segments = 1; }
 
 	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
 
@@ -304,7 +324,13 @@ void W_Arc_Beam_Think(void)
 		float segmentblend = bound(0, (i/segments) + WEP_CVAR(arc, beam_tightness), 1);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
-		vector new_dir = normalize( (w_shotdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
+		// WEAPONTODO: Apparently, normalize is not the correct function to use here...
+		// Figure out how this actually should work.
+		vector new_dir = normalize(
+			(w_shotdir * (1 - segmentblend))
+			+
+			(normalize(beam_endpos_estimate - last_origin) * segmentblend)
+		);
 		vector new_origin = last_origin + (new_dir * segmentdist);
 
 		WarpZone_traceline_antilag(
@@ -316,7 +342,14 @@ void W_Arc_Beam_Think(void)
 			ANTILAG_LATENCY(self.owner)
 		);
 
-		float is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		float is_player = (
+			trace_ent.classname == "player"
+			||
+			trace_ent.classname == "body"
+			||
+			(trace_ent.flags & FL_MONSTER)
+		);
+
 		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
@@ -345,18 +378,30 @@ void W_Arc_Beam_Think(void)
 
 				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
 				{
-					trace_ent.health = min(trace_ent.health + (roothealth * dt), WEP_CVAR(arc, beam_healing_hmax));
+					trace_ent.health = min(
+						trace_ent.health + (roothealth * dt),
+						WEP_CVAR(arc, beam_healing_hmax)
+					);
 				}
 				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
 				{
-					trace_ent.armorvalue = min(trace_ent.armorvalue + (rootarmor * dt), WEP_CVAR(arc, beam_healing_amax));
+					trace_ent.armorvalue = min(
+						trace_ent.armorvalue + (rootarmor * dt),
+						WEP_CVAR(arc, beam_healing_amax)
+					);
 				}
 
 				// stop rot, set visual effect
 				if(roothealth || rootarmor)
 				{
-					trace_ent.pauserothealth_finished = max(trace_ent.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-					trace_ent.pauserotarmor_finished = max(trace_ent.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
+					trace_ent.pauserothealth_finished = max(
+						trace_ent.pauserothealth_finished,
+						time + autocvar_g_balance_pause_health_rot
+					);
+					trace_ent.pauserotarmor_finished = max(
+						trace_ent.pauserotarmor_finished,
+						time + autocvar_g_balance_pause_armor_rot
+					);
 					new_beam_type = ARC_BT_HEAL;
 				}
 			}

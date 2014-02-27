@@ -523,7 +523,11 @@ void Draw_ArcBeam()
 			shothitpos = view_origin + (view_forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
-		vector origin_offset = view_forward * self.beam_shotorigin_x + view_right * -self.beam_shotorigin_y + view_up * self.beam_shotorigin_z;
+		vector origin_offset =
+			view_forward * self.beam_shotorigin_x
+			+ view_right * -self.beam_shotorigin_y 
+			+ view_up * self.beam_shotorigin_z;
+
 		start_pos = start_pos + origin_offset;
 
 		// calculate the aim direction now
@@ -570,25 +574,36 @@ void Draw_ArcBeam()
 			float max_allowed_segments;
 
 			if(WEP_CVAR(arc, beam_distancepersegment))
-				max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
-			else
-				max_allowed_segments = ARC_MAX_SEGMENTS;
+			{
+				max_allowed_segments = min(
+					ARC_MAX_SEGMENTS,
+					1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+				);
+			}
+			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(WEP_CVAR(arc, beam_degreespersegment))
 			{
-				segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+				segments = min(
+					max(
+						1,
+						(
+							min(
+								angle,
+								WEP_CVAR(arc, beam_maxangle)
+							)
+							/
+							WEP_CVAR(arc, beam_degreespersegment)
+						)
+					),
+					max_allowed_segments
+				);
 			}
-			else
-			{
-				segments = 1;
-			}
+			else { segments = 1; }
 			#endif
 		}
 		#if 0
-		else
-		{
-			segments = 1;
-		}
+		else { segments = 1; }
 		#endif
 
 		// set the beam direction which the rest of the code will refer to
@@ -613,23 +628,34 @@ void Draw_ArcBeam()
 			float max_allowed_segments;
 
 			if(WEP_CVAR(arc, beam_distancepersegment))
-				max_allowed_segments = min(ARC_MAX_SEGMENTS, 1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment))));
-			else
-				max_allowed_segments = ARC_MAX_SEGMENTS;
+			{
+				max_allowed_segments = min(
+					ARC_MAX_SEGMENTS,
+					1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+				);
+			}
+			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
 			if(WEP_CVAR(arc, beam_degreespersegment))
 			{
-				segments = min( max(1, ( min(angle, WEP_CVAR(arc, beam_maxangle)) / WEP_CVAR(arc, beam_degreespersegment) ) ), max_allowed_segments );
+				segments = min(
+					max(
+						1,
+						(
+							min(
+								angle,
+								WEP_CVAR(arc, beam_maxangle)
+							)
+							/
+							WEP_CVAR(arc, beam_degreespersegment)
+						)
+					),
+					max_allowed_segments
+				);
 			}
-			else
-			{
-				segments = 1;
-			}
+			else { segments = 1; }
 		}
-		else
-		{
-			segments = 1;
-		}
+		else { segments = 1; }
 		#endif
 	}
 
@@ -676,7 +702,13 @@ void Draw_ArcBeam()
 		float segmentblend = bound(0, (i/segments) + self.beam_tightness, 1);
 		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
 
-		vector new_dir = normalize( (wantdir * (1 - segmentblend)) + (normalize(beam_endpos_estimate - last_origin) * segmentblend) );
+		// WEAPONTODO: Apparently, normalize is not the correct function to use here...
+		// Figure out how this actually should work.
+		vector new_dir = normalize(
+			(wantdir * (1 - segmentblend))
+			+
+			(normalize(beam_endpos_estimate - last_origin) * segmentblend)
+		);
 		vector new_origin = last_origin + (new_dir * segmentdist);
 
 		Draw_ArcBeam_callback_segmentdist = segmentdist;
