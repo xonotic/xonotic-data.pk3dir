@@ -158,7 +158,10 @@ void W_Arc_Beam_Think(void)
 		self.owner.freezetag_frozen
 	)
 	{
-		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; } // is this needed? I thought this is changed to world when removed ANYWAY
+		#if 0
+		// is this needed? I thought this is changed to world when removed ANYWAY
+		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
+		#endif
 		entity oldself = self;
 		self = self.owner;
 		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
@@ -198,7 +201,15 @@ void W_Arc_Beam_Think(void)
 
 	makevectors(self.owner.v_angle);
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * coefficient, WEP_CVAR(arc, beam_range));
+	W_SetupShot_Range(
+		self.owner,
+		TRUE,
+		0,
+		"",
+		0,
+		WEP_CVAR(arc, beam_damage) * coefficient,
+		WEP_CVAR(arc, beam_range)
+	);
 
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
@@ -312,7 +323,7 @@ void W_Arc_Beam_Think(void)
 
 		// Another issue is that (on the client code) we must separate the
 		// curve into multiple rendered curves when handling warpzones.
-		
+
 		// I can handle this by detecting it for each segment, however that
 		// is a fairly inefficient method in comparison to having a curved line
 		// drawing function similar to Draw_CylindricLine that accepts
@@ -505,9 +516,23 @@ float W_Arc(float req)
 		case WR_AIM:
 		{
 			if(WEP_CVAR(arc, beam_botaimspeed))
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR(arc, beam_botaimspeed), 0, WEP_CVAR(arc, beam_botaimlifetime), FALSE);
+			{
+				self.BUTTON_ATCK = bot_aim(
+					WEP_CVAR(arc, beam_botaimspeed),
+					0,
+					WEP_CVAR(arc, beam_botaimlifetime),
+					FALSE
+				);
+			}
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+			{
+				self.BUTTON_ATCK = bot_aim(
+					1000000,
+					0,
+					0.001,
+					FALSE
+				);
+			}
 			return TRUE;
 		}
 		case WR_THINK:
@@ -522,11 +547,15 @@ float W_Arc(float req)
 
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting)
 			{
-				if(self.BUTTON_ATCK_prev) // TODO: Find another way to implement this!
-					/*if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+				if(self.BUTTON_ATCK_prev)
+				{
+					#if 0
+					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
 						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
-					else*/
+					else
+					#endif
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				}
 
 				if((!self.arc_beam) || wasfreed(self.arc_beam))
 				{
@@ -723,7 +752,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	Draw_ArcBeam_callback_last_bottom = bottom;
 }
 
-void Draw_ArcBeam()
+void Draw_ArcBeam(void)
 {
 	if(!self.beam_usevieworigin)
 	{
