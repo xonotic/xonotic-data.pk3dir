@@ -84,6 +84,36 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
+
+.vector beam_color;
+.float beam_alpha;
+.float beam_thickness;
+.float beam_traileffect;
+.float beam_hiteffect;
+.float beam_hitlight[4]; // 0: radius, 123: rgb
+.float beam_muzzleeffect;
+.float beam_muzzlelight[4]; // 0: radius, 123: rgb
+.string beam_image;
+
+.entity beam_muzzleentity;
+
+.float beam_degreespersegment;
+.float beam_distancepersegment;
+.float beam_usevieworigin;
+.float beam_initialized;
+.float beam_maxangle;
+.float beam_range;
+.float beam_returnspeed;
+.float beam_tightness;
+.vector beam_shotorigin;
+.vector beam_dir;
+
+entity Draw_ArcBeam_callback_entity;
+vector Draw_ArcBeam_callback_new_dir;
+float Draw_ArcBeam_callback_segmentdist;
+float Draw_ArcBeam_callback_last_thickness;
+vector Draw_ArcBeam_callback_last_top;
+vector Draw_ArcBeam_callback_last_bottom;
 #endif
 #else
 #ifdef SVQC
@@ -637,36 +667,6 @@ float W_Arc(float req)
 #endif
 #ifdef CSQC
 
-.vector beam_color;
-.float beam_alpha;
-.float beam_thickness;
-.float beam_traileffect;
-.float beam_hiteffect;
-.float beam_hitlight[4]; // 0: radius, 123: rgb
-.float beam_muzzleeffect;
-.float beam_muzzlelight[4]; // 0: radius, 123: rgb
-.string beam_image;
-
-.entity beam_muzzleentity;
-
-.float beam_degreespersegment;
-.float beam_distancepersegment;
-.float beam_usevieworigin;
-.float beam_initialized;
-.float beam_maxangle;
-.float beam_range;
-.float beam_returnspeed;
-.float beam_tightness;
-.vector beam_shotorigin;
-.vector beam_dir;
-
-entity Draw_ArcBeam_callback_entity;
-vector Draw_ArcBeam_callback_new_dir;
-float Draw_ArcBeam_callback_segmentdist;
-float Draw_ArcBeam_callback_last_thickness;
-vector Draw_ArcBeam_callback_last_top;
-vector Draw_ArcBeam_callback_last_bottom;
-
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 {
 	entity beam = Draw_ArcBeam_callback_entity;
@@ -1003,7 +1003,7 @@ void Draw_ArcBeam(void)
 		beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
 	}
 
-	// startpoint and endpoint drawn visual effects
+	// visual effects for startpoint and endpoint
 	if(self.beam_hiteffect)
 	{
 		pointparticles(
