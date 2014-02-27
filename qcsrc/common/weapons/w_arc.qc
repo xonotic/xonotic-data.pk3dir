@@ -186,10 +186,7 @@ void W_Arc_Beam_Think(void)
 		self.owner.freezetag_frozen
 	)
 	{
-		#if 0
-		// is this needed? I thought this is changed to world when removed ANYWAY
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
-		#endif
 		entity oldself = self;
 		self = self.owner;
 		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
