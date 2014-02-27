@@ -98,10 +98,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	//    it always figures this information out for itself with csqc code.
 	// - Spectating the owner also truncates this information.
 	float drawlocal = ((to == self.owner) || ((to.enemy == self.owner) && IS_SPEC(to)));
-	if(drawlocal)
-	{
-		sf &= ~ARC_SF_LOCALMASK;
-	}
+	if(drawlocal) { sf &= ~ARC_SF_LOCALMASK; }
 
 	WriteByte(MSG_ENTITY, sf);
 
@@ -596,9 +593,7 @@ float W_Arc(float req)
 			precache_model("models/weapons/g_arc.md3");
 			precache_model("models/weapons/v_arc.md3");
 			precache_model("models/weapons/h_arc.iqm");
-			//precache_sound("weapons/arc_fire.wav");
-			//precache_sound("weapons/arc_fire2.wav");
-			//precache_sound("weapons/arc_impact.wav");
+			precache_sound("weapons/lgbeam_fire.wav");
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
