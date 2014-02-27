@@ -543,31 +543,33 @@ void Draw_ArcBeam()
 		segments = 20;
 		if(self.beam_dir != wantdir)
 		{
-			float angle = ceil(vlen(wantdir - self.beam_dir) * RAD2DEG);
-			float anglelimit;
-			if(angle && (angle > self.beam_maxangle))
-			{
-				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-				anglelimit = min(self.beam_maxangle / angle, 1);
-			}
-			else
-			{
-				// the radius is not too far yet, no worries :D
-				anglelimit = 1;
-			}
-
 			// calculate how much we're going to move the end of the beam to the want position
-			float blendfactor = bound(0, anglelimit * (1 - (self.beam_returnspeed * frametime)), 1);
-			self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
-
 			// WEAPONTODO (server and client):
 			// blendfactor never actually becomes 0 in this situation, which is a problem
 			// regarding precision... this means that self.beam_dir and w_shotdir approach
 			// eachother, however they never actually become the same value with this method.
-
 			// Perhaps we should do some form of rounding/snapping?
-
-			// printf("blendfactor = %f\n", blendfactor);
+			float angle = vlen(wantdir - self.beam_dir) * RAD2DEG;
+			if(angle && (angle > self.beam_maxangle))
+			{
+				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+				float blendfactor = bound(
+					0,
+					(1 - (self.beam_returnspeed * frametime)),
+					min(self.beam_maxangle / angle, 1)
+				);
+				self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+			}
+			else
+			{
+				// the radius is not too far yet, no worries :D
+				float blendfactor = bound(
+					0,
+					(1 - (self.beam_returnspeed * frametime)),
+					1
+				);
+				self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+			}
 
 			#if 0
 			// calculate how many segments are needed

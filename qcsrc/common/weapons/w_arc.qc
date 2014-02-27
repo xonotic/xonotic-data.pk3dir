@@ -175,7 +175,7 @@ void W_Arc_Beam_Think(void)
 	}
 
 	// decrease ammo
-	float dt = frametime;
+	float coefficient = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		float rootammo;
@@ -186,14 +186,14 @@ void W_Arc_Beam_Think(void)
 
 		if(rootammo)
 		{
-			dt = min(dt, self.owner.WEP_AMMO(ARC) / rootammo);
+			coefficient = min(coefficient, self.owner.WEP_AMMO(ARC) / rootammo);
 			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
 		}
 	}
 
 	makevectors(self.owner.v_angle);
 
-	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * dt, WEP_CVAR(arc, beam_range));
+	W_SetupShot_Range(self.owner, TRUE, 0, "", 0, WEP_CVAR(arc, beam_damage) * coefficient, WEP_CVAR(arc, beam_range));
 
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
@@ -227,31 +227,33 @@ void W_Arc_Beam_Think(void)
 	float segments; 
 	if(self.beam_dir != w_shotdir)
 	{
-		float angle = ceil(vlen(w_shotdir - self.beam_dir) * RAD2DEG);
-		float anglelimit;
-		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
-		{
-			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
-			anglelimit = min(WEP_CVAR(arc, beam_maxangle) / angle, 1);
-		}
-		else
-		{
-			// the radius is not too far yet, no worries :D
-			anglelimit = 1;
-		}
-
 		// calculate how much we're going to move the end of the beam to the want position
-		float blendfactor = bound(0, anglelimit * (1 - (WEP_CVAR(arc, beam_returnspeed) * dt)), 1);
-		self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
-
 		// WEAPONTODO (server and client):
 		// blendfactor never actually becomes 0 in this situation, which is a problem
 		// regarding precision... this means that self.beam_dir and w_shotdir approach
 		// eachother, however they never actually become the same value with this method.
-		
 		// Perhaps we should do some form of rounding/snapping?
-
-		// printf("blendfactor = %f\n", blendfactor);
+		float angle = vlen(w_shotdir - self.beam_dir) * RAD2DEG;
+		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
+		{
+			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+			float blendfactor = bound(
+				0,
+				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
+				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
+			);
+			self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+		}
+		else
+		{
+			// the radius is not too far yet, no worries :D
+			float blendfactor = bound(
+				0,
+				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
+				1
+			);
+			self.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+		}
 
 		// network information: beam direction
 		self.SendFlags |= 8;
@@ -379,14 +381,14 @@ void W_Arc_Beam_Think(void)
 				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
 				{
 					trace_ent.health = min(
-						trace_ent.health + (roothealth * dt),
+						trace_ent.health + (roothealth * coefficient),
 						WEP_CVAR(arc, beam_healing_hmax)
 					);
 				}
 				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
 				{
 					trace_ent.armorvalue = min(
-						trace_ent.armorvalue + (rootarmor * dt),
+						trace_ent.armorvalue + (rootarmor * coefficient),
 						WEP_CVAR(arc, beam_healing_amax)
 					);
 				}
@@ -424,7 +426,7 @@ void W_Arc_Beam_Think(void)
 						self.owner,
 						WEP_ARC,
 						0,
-						rootdamage * dt * falloff
+						rootdamage * coefficient * falloff
 					);
 				}
 
@@ -432,10 +434,10 @@ void W_Arc_Beam_Think(void)
 					trace_ent,
 					self.owner,
 					self.owner,
-					rootdamage * dt * falloff,
+					rootdamage * coefficient * falloff,
 					WEP_ARC,
 					hitorigin,
-					WEP_CVAR(arc, beam_force) * new_dir * dt * falloff
+					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
 				);
 
 				new_beam_type = ARC_BT_HIT;
