@@ -760,13 +760,13 @@ void Draw_Shockwave()
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
 
-	// WEAPONTODO: combine and simplify these calculations
 	vectorvectors(self.sw_shotdir);
 	vector right = v_right; // save this for when we do makevectors later
 	vector up = v_up; // save this for when we do makevectors later
+
+	// WEAPONTODO: combine and simplify these calculations
 	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * SW_DISTTOMIN)) + (up * self.sw_spread_min));
 	vector max_end = (endpos + (up * self.sw_spread_max));
-
 	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
 	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
 
@@ -774,12 +774,11 @@ void Draw_Shockwave()
 	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
 	float new_max_dist, new_min_dist;
 
-	vector deviation, angle;
+	vector deviation, angle = '0 0 0';
 	float counter, divisions = 20;
 	for(counter = 0; counter < divisions; ++counter)
 	{
 		// perfect circle effect lines
-		angle = '0 0 0';
 		makevectors('0 360 0' * (0.75 + (counter - 0.5) / divisions));
 		angle_y = v_forward_x;
 		angle_z = v_forward_y;
