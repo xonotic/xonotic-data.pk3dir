@@ -321,6 +321,22 @@ float W_Shockwave_Attack_CheckHit(
 	return TRUE;
 }
 
+void W_Shockwave_Send(void)
+{
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
+	WriteCoord(MSG_BROADCAST, w_shotorg_x);
+	WriteCoord(MSG_BROADCAST, w_shotorg_y);
+	WriteCoord(MSG_BROADCAST, w_shotorg_z);
+	WriteCoord(MSG_BROADCAST, w_shotdir_x);
+	WriteCoord(MSG_BROADCAST, w_shotdir_y);
+	WriteCoord(MSG_BROADCAST, w_shotdir_z);
+	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
+	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
+	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
+	WriteByte(MSG_BROADCAST, num_for_edict(self));
+}
+
 void W_Shockwave_Attack(void)
 {
 	// declarations
@@ -341,7 +357,7 @@ void W_Shockwave_Attack(void)
 	//entity transform = WarpZone_trace_transform;
 
 	// do the firing effect now
-	//SendCSQCShockwaveParticle(attack_endpos); // WEAPONTODO
+	W_Shockwave_Send();
 	Damage_DamageInfo(
 		attack_hitpos,
 		WEP_CVAR(shockwave, blast_splash_damage),
