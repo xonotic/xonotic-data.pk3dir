@@ -70,6 +70,15 @@ REGISTER_WEAPON(
 #ifdef SVQC
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
+#ifdef CSQC
+void Net_ReadShockwaveParticle(void);
+.vector sw_shotorg;
+.vector sw_shotdir;
+.float sw_distance;
+.float sw_spread_max;
+.float sw_spread_min;
+.float sw_time;
+#endif
 #else
 #ifdef SVQC
 void spawnfunc_weapon_shockwave(void)
@@ -735,6 +744,120 @@ float W_Shockwave(float req)
 }
 #endif
 #ifdef CSQC
+void Draw_Shockwave()
+{
+	float a = bound(0, (0.5 - ((time - self.sw_time) / 0.4)), 0.5);
+
+	if(!a) { remove(self); }
+	
+	vector deviation, angle;
+
+	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+
+	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
+	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
+
+	float new_max_dist, new_min_dist;
+	
+	//vector shotdir = normalize(self.sw_endpos - self.sw_shotorg);
+	vectorvectors(self.sw_shotdir);
+	vector right = v_right;
+	vector up = v_up;
+
+	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
+	
+	float counter, dist_before_normal = 200, shots = 20;
+	
+	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * dist_before_normal)) + (up * self.sw_spread_min));
+	vector max_end = (endpos + (up * self.sw_spread_max));
+	
+	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
+	
+	for(counter = 0; counter < shots; ++counter)
+	{
+		// perfect circle effect lines
+		angle = '0 0 0';
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
+		angle_y = v_forward_x;
+		angle_z = v_forward_y;
+
+		// first do the spread_to_min effect
+		deviation = angle * spread_to_min;
+		deviation = ((self.sw_shotdir + (right * deviation_y) + (up * deviation_z)));
+		new_min_dist = dist_before_normal;
+		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
+		//te_lightning2(world, new_min_end, self.sw_shotorg);
+
+		// then calculate spread_to_max effect
+		deviation = angle * spread_to_max;
+		deviation = ((self.sw_shotdir + (right * deviation_y) + (up * deviation_z)));
+		new_max_dist = vlen(new_min_end - endpos);
+		new_max_end = (new_min_end + (deviation * new_max_dist));
+		//te_lightning2(world, new_end, prev_min_end);
+		
+
+		if(counter == 0)
+		{
+			first_min_end = new_min_end;
+			first_max_end = new_max_end;
+		}
+
+		if(counter >= 1)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_max_end, '0 0 0', sw_color, a);
+			R_EndPolygon();
+		}
+
+		prev_min_end = new_min_end;
+		prev_max_end = new_max_end;
+
+		if((counter + 1) == shots)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_max_end, '0 0 0', sw_color, a);
+			R_EndPolygon();
+		}
+	}
+}
+
+void Net_ReadShockwaveParticle(void)
+{
+	entity shockwave;
+	shockwave = spawn();
+	shockwave.draw = Draw_Shockwave;
+	
+	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
+	shockwave.sw_shotdir_x  = ReadCoord(); shockwave.sw_shotdir_y  = ReadCoord(); shockwave.sw_shotdir_z  = ReadCoord();
+
+	shockwave.sw_distance = ReadShort();
+	shockwave.sw_spread_max = ReadByte();
+	shockwave.sw_spread_min = ReadByte();
+
+	shockwave.sv_entnum = ReadByte();
+
+	shockwave.sw_time = time;
+}
+
 float W_Shockwave(float req)
 {
 	switch(req)
