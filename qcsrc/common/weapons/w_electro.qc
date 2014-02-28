@@ -248,7 +248,16 @@ void W_Electro_Attack_Bolt(void)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(electro, ammo));
 
-	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(electro, damage));
+	W_SetupShot_ProjectileSize(
+		self,
+		'0 0 -3',
+		'0 0 -3',
+		FALSE,
+		2,
+		"weapons/electro_fire.wav",
+		CH_WEAPON_A,
+		WEP_CVAR_PRI(electro, damage)
+	);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -337,7 +346,16 @@ void W_Electro_Attack_Orb(void)
 {
 	W_DecreaseAmmo(WEP_CVAR_SEC(electro, ammo));
 
-	W_SetupShot_ProjectileSize(self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, WEP_CVAR_SEC(electro, damage));
+	W_SetupShot_ProjectileSize(
+		self,
+		'0 0 -4',
+		'0 0 -4',
+		FALSE,
+		2,
+		"weapons/electro_fire2.wav",
+		CH_WEAPON_A,
+		WEP_CVAR_SEC(electro, damage)
+	);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 

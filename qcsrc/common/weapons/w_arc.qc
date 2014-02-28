@@ -922,7 +922,7 @@ void Draw_ArcBeam(void)
 	}
 
 	setorigin(self, start_pos);
-	self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
+	//self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
 	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
 
@@ -1082,6 +1082,7 @@ void Ent_ReadArcBeam(float isnew)
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 		flash.drawmask = MASK_NORMAL;
 		flash.solid = SOLID_NOT;
+		flash.avelocity_z = 5000;
 		setattachment(flash, self, "");
 		setorigin(flash, '0 0 0');
 
