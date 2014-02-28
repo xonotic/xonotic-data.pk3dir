@@ -744,48 +744,50 @@ float W_Shockwave(float req)
 }
 #endif
 #ifdef CSQC
+// WEAPONTODO: add client side settings for these
+#define SW_MAXALPHA 0.5
+#define SW_FADETIME 0.4
+#define SW_DISTTOMIN 200
 void Draw_Shockwave()
 {
-	float a = bound(0, (0.5 - ((time - self.sw_time) / 0.4)), 0.5);
+	// fading/removal control
+	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
+	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
 
-	if(!a) { remove(self); }
-	
-	vector deviation, angle;
-
+	// WEAPONTODO: save this only once when creating the entity
 	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+
+	// WEAPONTODO: trace to find what we actually hit
+	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
+
+	// WEAPONTODO: combine and simplify these calculations
+	vectorvectors(self.sw_shotdir);
+	vector right = v_right; // save this for when we do makevectors later
+	vector up = v_up; // save this for when we do makevectors later
+	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * SW_DISTTOMIN)) + (up * self.sw_spread_min));
+	vector max_end = (endpos + (up * self.sw_spread_max));
+
+	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
 
 	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
 	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
-
 	float new_max_dist, new_min_dist;
-	
-	//vector shotdir = normalize(self.sw_endpos - self.sw_shotorg);
-	vectorvectors(self.sw_shotdir);
-	vector right = v_right;
-	vector up = v_up;
 
-	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
-	
-	float counter, dist_before_normal = 200, shots = 20;
-	
-	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * dist_before_normal)) + (up * self.sw_spread_min));
-	vector max_end = (endpos + (up * self.sw_spread_max));
-	
-	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
-	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
-	
-	for(counter = 0; counter < shots; ++counter)
+	vector deviation, angle;
+	float counter, divisions = 20;
+	for(counter = 0; counter < divisions; ++counter)
 	{
 		// perfect circle effect lines
 		angle = '0 0 0';
-		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / divisions));
 		angle_y = v_forward_x;
 		angle_z = v_forward_y;
 
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;
 		deviation = ((self.sw_shotdir + (right * deviation_y) + (up * deviation_z)));
-		new_min_dist = dist_before_normal;
+		new_min_dist = SW_DISTTOMIN;
 		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
 		//te_lightning2(world, new_min_end, self.sw_shotorg);
 
@@ -805,12 +807,14 @@ void Draw_Shockwave()
 
 		if(counter >= 1)
 		{
+			// draw from shot origin to min spread radius
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
+			// draw from min spread radius to max spread radius
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
@@ -822,14 +826,17 @@ void Draw_Shockwave()
 		prev_min_end = new_min_end;
 		prev_max_end = new_max_end;
 
-		if((counter + 1) == shots)
+		// first division only
+		if((counter + 1) == divisions)
 		{
+			// draw from shot origin to min spread radius
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
+			// draw from min spread radius to max spread radius
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
@@ -868,7 +875,7 @@ float W_Shockwave(float req)
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
 			//pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-			return TRUE;
+			return FALSE;
 		}
 		case WR_INIT:
 		{
