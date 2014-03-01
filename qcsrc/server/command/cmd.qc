@@ -578,7 +578,7 @@ void ClientCommand_spectate(float request)
 				if((IS_PLAYER(self) || self.caplayer) && autocvar_sv_spectate == 1)
 				{
 					if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
-						sprint(self, "WARNING: you will spectate in the next round.\n");
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CA_LEAVE);
 					ClientKill_TeamChange(-2); // observe
 				}
 			}

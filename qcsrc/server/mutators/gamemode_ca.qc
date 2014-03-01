@@ -153,7 +153,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 		{
 			self.caplayer = 0.5;
 			if(IS_REAL_CLIENT(self))
-				sprint(self, "You will join the game in the next round.\n");
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
 	return 1;
