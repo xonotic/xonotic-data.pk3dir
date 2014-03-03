@@ -26,8 +26,6 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float))
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
-
-	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "prvm_language \"$_menu_prvm_language\"\nmenu_restart\nmenu_cmd languageselect")
 ENDCLASS(XonoticLanguageList)
 
 entity makeXonoticLanguageList();
@@ -172,7 +170,13 @@ void XonoticLanguageList_getLanguages(entity me)
 
 void XonoticLanguageList_setLanguage(entity me)
 {
-	localcmd(sprintf("\n%s\n", me.doubleClickCommand));
+	if(prvm_language != cvar_string("_menu_prvm_language"))
+	{
+		if(!(gamestatus & GAME_CONNECTED))
+			localcmd("\nprvm_language \"$_menu_prvm_language\"; menu_restart; menu_cmd languageselect\n");
+		else
+			DialogOpenButton_Click(me, main.languageWarningDialog);
+	}
 }
 
 string XonoticLanguageList_languageParameter(entity me, float i, float key)

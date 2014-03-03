@@ -16,6 +16,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, crosshairDialog, entity, NULL)
 	ATTRIB(MainWindow, hudDialog, entity, NULL)
 	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, languageWarningDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
@@ -132,6 +133,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.languageWarningDialog = i = spawnXonoticLanguageWarningDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
