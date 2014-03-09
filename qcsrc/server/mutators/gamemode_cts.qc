@@ -154,6 +154,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 	race_send_speedaward_alltimebest(MSG_ONE);
 
 	float i;
+	if(IS_REAL_CLIENT(self))
 	for (i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		race_SendRankings(i, 0, 0, MSG_ONE);
