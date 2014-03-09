@@ -825,7 +825,7 @@ void Draw_Shockwave()
 		prev_min_end = new_min_end;
 		prev_max_end = new_max_end;
 
-		// first division only
+		// last division only
 		if((counter + 1) == divisions)
 		{
 			// draw from shot origin to min spread radius
