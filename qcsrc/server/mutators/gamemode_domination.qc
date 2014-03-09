@@ -493,7 +493,7 @@ void dom_Initialize()
 MUTATOR_DEFINITION(gamemode_domination)
 {
 	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, dom_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
