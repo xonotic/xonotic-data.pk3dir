@@ -260,11 +260,6 @@ void havocbot_chooserole_dm()
 	self.havocbot_role = havocbot_role_dm;
 }
 
-void havocbot_chooserole_race()
-{
-	self.havocbot_role = havocbot_role_race;
-}
-
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
@@ -273,8 +268,6 @@ void havocbot_chooserole()
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch

@@ -48,6 +48,8 @@ mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/gamemode_lms.qh
 mutators/gamemode_invasion.qh
+mutators/gamemode_cts.qh
+mutators/gamemode_race.qh
 mutators/mutator_dodging.qh
 mutators/mutator_nades.qh
 
@@ -246,6 +248,8 @@ mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
 mutators/gamemode_lms.qc
 mutators/gamemode_invasion.qc
+mutators/gamemode_cts.qc
+mutators/gamemode_race.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc
 mutators/mutator_nix.qc
