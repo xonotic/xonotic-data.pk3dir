@@ -1,3 +1,32 @@
+// legacy bot roles
+.float race_checkpoint;
+void havocbot_role_cts()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	entity e;
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start();
+
+		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		{
+			if(e.cnt == self.race_checkpoint)
+			{
+				navigation_routerating(e, 1000000, 5000);
+			}
+			else if(self.race_checkpoint == -1)
+			{
+				navigation_routerating(e, 1000000, 5000);
+			}
+		}
+
+		navigation_goalrating_end();
+	}
+}
+
 void cts_ScoreRules()
 {
 	ScoreRules_basics(0, 0, 0, FALSE);
@@ -183,9 +212,9 @@ MUTATOR_HOOKFUNCTION(cts_PlayerDies)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(cts_HavocBot_ChooseRule)
+MUTATOR_HOOKFUNCTION(cts_BotRoles)
 {
-	self.havocbot_role = havocbot_role_race;
+	self.havocbot_role = havocbot_role_cts;
 	return TRUE;
 }
 
@@ -251,7 +280,7 @@ MUTATOR_DEFINITION(gamemode_cts)
 	MUTATOR_HOOK(PlayerSpawn, cts_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PutClientInServer, cts_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, cts_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, cts_HavocBot_ChooseRule, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRule, cts_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetPressedKeys, cts_PlayerPostThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, cts_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, cts_FilterItem, CBC_ORDER_ANY);
