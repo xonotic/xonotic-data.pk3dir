@@ -132,9 +132,20 @@ void XonoticCvarList_setSelected(entity me, float i)
 }
 void CvarList_Filter_Change(entity box, entity me)
 {
-	buf_cvarlist(me.handle, box.text, "_");
-	me.nItems = buf_getsize(me.handle);
-
+	string filter = box.text;
+	buf_cvarlist(me.handle, "", "_");
+	float n = buf_getsize(me.handle);
+	float i;
+	float o;
+	for (i = 0, o = 0; i < n; ++i) {
+		string n = bufstr_get(me.handle, i);
+		if (strstrofs(n, filter, 0) < 0)
+		if (strstrofs(cvar_description(n), filter, 0) < 0)
+			continue;
+		bufstr_set(me.handle, o, bufstr_get(me.handle, i));
+		++o;
+	}
+	me.nItems = o;
 	me.setSelected(me, 0);
 }
 void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
