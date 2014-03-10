@@ -53,8 +53,7 @@ void XonoticCvarList_configureXonoticCvarList(entity me)
 	me.configureXonoticListBox(me);
 
 	me.handle = buf_create();
-	buf_cvarlist(me.handle, "", "_");
-	me.nItems = buf_getsize(me.handle);
+	CvarList_Filter_Change(world, me); // world.text is always ""
 }
 void XonoticCvarList_destroy(entity me)
 {
@@ -139,9 +138,16 @@ void CvarList_Filter_Change(entity box, entity me)
 	float o;
 	for (i = 0, o = 0; i < n; ++i) {
 		string n = bufstr_get(me.handle, i);
-		if (strstrofs(n, filter, 0) < 0)
-		if (strstrofs(cvar_description(n), filter, 0) < 0)
-			continue;
+		if (filter == "") {
+			// Empty filter? Show changed only.
+			if (cvar_string(n) == cvar_defstring(n))
+				continue;
+		} else {
+			// Otherwise apply filter.
+			if (strstrofs(n, filter, 0) < 0)
+			if (strstrofs(cvar_description(n), filter, 0) < 0)
+				continue;
+		}
 		bufstr_set(me.handle, o, bufstr_get(me.handle, i));
 		++o;
 	}
