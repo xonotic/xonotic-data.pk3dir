@@ -108,11 +108,9 @@ void Ent_ReadArcBeam(float isnew);
 .vector beam_shotorigin;
 
 entity Draw_ArcBeam_callback_entity;
-vector Draw_ArcBeam_callback_new_dir;
-float Draw_ArcBeam_callback_segmentdist;
 float Draw_ArcBeam_callback_last_thickness;
-vector Draw_ArcBeam_callback_last_top;
-vector Draw_ArcBeam_callback_last_bottom;
+vector Draw_ArcBeam_callback_last_top; // NOTE: in same coordinate system as player.
+vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as player.
 #endif
 #else
 #ifdef SVQC
@@ -325,49 +323,26 @@ void W_Arc_Beam_Think(void)
 	}
 	else { segments = 1; }
 
-	vector beam_endpos_estimate = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
+	vector beam_endpos = (w_shotorg + (self.beam_dir * WEP_CVAR(arc, beam_range)));
+	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
 
 	float i;
 	float new_beam_type = 0;
 	vector last_origin = w_shotorg;
 	for(i = 1; i <= segments; ++i)
 	{
-		// WEAPONTODO (server and client):
-		// Segment blend and distance should probably really be calculated in a better way,
-		// however I am not sure how to do it properly. There are a few things I have tried,
-		// but most of them do not work properly due to my lack of understanding regarding
-		// the mathematics behind them.
-
-		// Ideally, we should calculate the positions along a perfect curve
-		// between wantdir and self.beam_dir with an option for depth of arc
-
-		// Another issue is that (on the client code) we must separate the
-		// curve into multiple rendered curves when handling warpzones.
-
-		// I can handle this by detecting it for each segment, however that
-		// is a fairly inefficient method in comparison to having a curved line
-		// drawing function similar to Draw_CylindricLine that accepts
-		// top and bottom origins as input, this way there would be no
-		// overlapping edges when connecting the curved pieces.
-
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always
 		// have that drawn as a separate triangle... However, that is difficult to do when
 		// keeping in mind the above problems and also optimizing the amount of segments
 		// drawn on screen at any given time. (Automatic beam quality scaling, essentially)
 
-		// calculate this on every segment to ensure that we always reach the full length of the attack
-		float segmentblend = bound(0, (i/segments) + WEP_CVAR(arc, beam_tightness), 1);
-		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
-
-		// WEAPONTODO: Apparently, normalize is not the correct function to use here...
-		// Figure out how this actually should work.
-		vector new_dir = normalize(
-			(w_shotdir * (1 - segmentblend))
-			+
-			(normalize(beam_endpos_estimate - last_origin) * segmentblend)
-		);
-		vector new_origin = last_origin + (new_dir * segmentdist);
+		vector new_origin = bezier_quadratic_getpoint(
+			w_shotorg,
+			beam_controlpoint,
+			beam_endpos,
+			i / segments);
+		vector new_dir = normalize(new_origin - last_origin);
 
 		WarpZone_traceline_antilag(
 			self.owner,
@@ -377,6 +352,15 @@ void W_Arc_Beam_Think(void)
 			self.owner,
 			ANTILAG_LATENCY(self.owner)
 		);
+
+		// Do all the transforms for warpzones right now, as we already
+		// "are" in the post-trace system (if we hit a player, that's
+		// always BEHIND the last passed wz).
+		last_origin = trace_endpos;
+		w_shotorg = WarpZone_TransformOrigin(WarpZone_trace_transform, w_shotorg);
+		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
+		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
 		float is_player = (
 			trace_ent.classname == "player"
@@ -389,7 +373,9 @@ void W_Arc_Beam_Think(void)
 		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
 		{
 			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
-			vector hitorigin = last_origin + (new_dir * segmentdist * trace_fraction);
+			// NO. trace_endpos should be just fine. If not,
+			// that's an engine bug that needs proper debugging.
+			vector hitorigin = trace_endpos;
 
 			float falloff = ExponentialFalloff(
 				WEP_CVAR(arc, beam_falloff_mindist),
@@ -483,10 +469,6 @@ void W_Arc_Beam_Think(void)
 			// we collided with geometry
 			new_beam_type = ARC_BT_WALL;
 			break;
-		}
-		else
-		{
-			last_origin = new_origin;
 		}
 	}
 
@@ -668,6 +650,8 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	vector transformed_view_org;
 	transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
 
+	// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
+	// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
 	vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
 
 	vector hitorigin;
@@ -694,8 +678,9 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	// draw primary beam render
 	vector top    = hitorigin + (thickdir * thickness);
 	vector bottom = hitorigin - (thickdir * thickness);
-	//vector last_top    = start + (thickdir * Draw_ArcBeam_callback_last_thickness);
-	//vector last_bottom = start - (thickdir * Draw_ArcBeam_callback_last_thickness);
+	
+	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
 	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
 	R_PolygonVertex(
@@ -705,13 +690,13 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		beam.beam_alpha
 	);
 	R_PolygonVertex(
-		Draw_ArcBeam_callback_last_top,
+		last_top,
 		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
 		beam.beam_color,
 		beam.beam_alpha
 	);
 	R_PolygonVertex(
-		Draw_ArcBeam_callback_last_bottom,
+		last_bottom,
 		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
 		beam.beam_color,
 		beam.beam_alpha
@@ -735,8 +720,8 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 
 	// set up for the next 
 	Draw_ArcBeam_callback_last_thickness = thickness;
-	Draw_ArcBeam_callback_last_top = top;
-	Draw_ArcBeam_callback_last_bottom = bottom;
+	Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
+	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
 void Draw_ArcBeam(void)
@@ -924,7 +909,8 @@ void Draw_ArcBeam(void)
 	setorigin(self, start_pos);
 	//self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
-	vector beam_endpos_estimate = (start_pos + (beamdir * self.beam_range));
+	vector beam_endpos = (start_pos + (beamdir * self.beam_range));
+	vector beam_controlpoint = start_pos + wantdir * (self.beam_range * (1 - self.beam_tightness));
 
 	Draw_ArcBeam_callback_entity = self;
 	Draw_ArcBeam_callback_last_thickness = 0;
@@ -932,49 +918,22 @@ void Draw_ArcBeam(void)
 	Draw_ArcBeam_callback_last_bottom = start_pos;
 
 	vector last_origin = start_pos;
+	vector original_start_pos = start_pos;
 
 	float i;
 	for(i = 1; i <= segments; ++i)
 	{
-		// WEAPONTODO (server and client):
-		// Segment blend and distance should probably really be calculated in a better way,
-		// however I am not sure how to do it properly. There are a few things I have tried,
-		// but most of them do not work properly due to my lack of understanding regarding
-		// the mathematics behind them.
-
-		// Ideally, we should calculate the positions along a perfect curve
-		// between wantdir and self.beam_dir with an option for depth of arc
-
-		// Another issue is that (on the client code) we must separate the
-		// curve into multiple rendered curves when handling warpzones.
-
-		// I can handle this by detecting it for each segment, however that
-		// is a fairly inefficient method in comparison to having a curved line
-		// drawing function similar to Draw_CylindricLine that accepts
-		// top and bottom origins as input, this way there would be no
-		// overlapping edges when connecting the curved pieces.
-
 		// WEAPONTODO (client):
 		// In order to do nice fading and pointing on the starting segment, we must always
 		// have that drawn as a separate triangle... However, that is difficult to do when
 		// keeping in mind the above problems and also optimizing the amount of segments
 		// drawn on screen at any given time. (Automatic beam quality scaling, essentially)
 
-		// calculate this on every segment to ensure that we always reach the full length of the attack
-		float segmentblend = bound(0, (i/segments) + self.beam_tightness, 1);
-		float segmentdist = vlen(beam_endpos_estimate - last_origin) * (i/segments);
-
-		// WEAPONTODO: Apparently, normalize is not the correct function to use here...
-		// Figure out how this actually should work.
-		vector new_dir = normalize(
-			(wantdir * (1 - segmentblend))
-			+
-			(normalize(beam_endpos_estimate - last_origin) * segmentblend)
-		);
-		vector new_origin = last_origin + (new_dir * segmentdist);
-
-		Draw_ArcBeam_callback_segmentdist = segmentdist;
-		Draw_ArcBeam_callback_new_dir = new_dir;
+		vector new_origin = bezier_quadratic_getpoint(
+			start_pos,
+			beam_controlpoint,
+			beam_endpos,
+			i / segments);
 
 		WarpZone_TraceBox_ThroughZone(
 			last_origin,
@@ -987,15 +946,28 @@ void Draw_ArcBeam(void)
 			Draw_ArcBeam_callback
 		);
 
+		// Do all the transforms for warpzones right now, as we already
+		// "are" in the post-trace system (if we hit a player, that's
+		// always BEHIND the last passed wz).
+		last_origin = trace_endpos;
+		start_pos = WarpZone_TransformOrigin(WarpZone_trace_transform, start_pos);
+		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
+		beamdir = WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir);
+		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+
 		//printf("segment: %d, warpzone transform: %d\n", i, (WarpZone_trace_transform != world));
 
 		// WEAPONTODO:
 		// Figure out some way to detect a collision with geometry with callback...
 		// That way we can know when we are done drawing the beam and skip
 		// the rest of the segments without breaking warpzone support.
+		//
+		// Not needed to do this in the callback. trace_fraction != 1 is a good abort condition.
 
-		last_origin = WarpZone_TransformOrigin(WarpZone_trace_transform, new_origin);
-		beam_endpos_estimate = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos_estimate);
+		if (trace_fraction < 1)
+			break;
 	}
 
 	// visual effects for startpoint and endpoint
@@ -1024,7 +996,7 @@ void Draw_ArcBeam(void)
 	{
 		pointparticles(
 			self.beam_muzzleeffect,
-			start_pos + wantdir * 20,
+			original_start_pos + wantdir * 20,
 			wantdir * 1000,
 			frametime * 0.1
 		);
@@ -1032,7 +1004,7 @@ void Draw_ArcBeam(void)
 	if(self.beam_muzzlelight[0])
 	{
 		adddynamiclight(
-			start_pos + wantdir * 20,
+			original_start_pos + wantdir * 20,
 			self.beam_muzzlelight[0],
 			vec3(
 				self.beam_muzzlelight[1],
@@ -1044,8 +1016,6 @@ void Draw_ArcBeam(void)
 
 	// cleanup
 	Draw_ArcBeam_callback_entity = world;
-	Draw_ArcBeam_callback_new_dir = '0 0 0';
-	Draw_ArcBeam_callback_segmentdist = 0;
 	Draw_ArcBeam_callback_last_thickness = 0;
 	Draw_ArcBeam_callback_last_top = '0 0 0';
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
