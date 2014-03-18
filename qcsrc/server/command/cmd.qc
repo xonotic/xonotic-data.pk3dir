@@ -283,6 +283,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); return; }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); return; }
+			else if(self.freezetag_frozen) { sprint(self, "You can't spawn monsters while frozen.\n"); return; }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
 			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
 			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
@@ -302,7 +303,7 @@ void ClientCommand_mobspawn(float request, float argc)
 					}
 				}
 
-				if(found)
+				if(found || tospawn == "random")
 				{
 					self.monstercount += 1;
 					totalspawned += 1;
@@ -311,7 +312,7 @@ void ClientCommand_mobspawn(float request, float argc)
 					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
 					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 				
-					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
 					
 					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
 					

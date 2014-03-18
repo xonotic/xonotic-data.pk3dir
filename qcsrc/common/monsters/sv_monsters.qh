@@ -11,6 +11,11 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
+.float wander_delay;
+.float wander_distance;
+
+.float monster_lifetime;
+
 .float spider_slowness; // special spider timer
 
 void monster_remove(entity mon); // removes a monster
@@ -69,10 +74,9 @@ const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
 const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
 const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
 const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
 const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
-
-.void() monster_spawnfunc;
 
 .float monster_movestate; // used to tell what the monster is currently doing
 const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still
