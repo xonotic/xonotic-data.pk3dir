@@ -1,6 +1,3 @@
-void race_send_recordtime(float msg);
-void race_SendRankings(float pos, float prevpos, float del, float msg);
-
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
