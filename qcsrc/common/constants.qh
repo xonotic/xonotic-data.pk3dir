@@ -230,7 +230,7 @@ const vector eZ = '0 0 1';
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
-#define MAPVOTE_COUNT 10
+#define MAPVOTE_COUNT 30
 
 /**
  * Lower scores are better (e.g. suicides)
@@ -455,3 +455,8 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define URI_GET_UPDATENOTIFICATION 33
 #define URI_GET_URLLIB 128
 #define URI_GET_URLLIB_END 191
+
+// gametype votes
+#define GTV_AVAILABLE 0
+// for later use in per-map gametype filtering
+#define GTV_FORBIDDEN 2

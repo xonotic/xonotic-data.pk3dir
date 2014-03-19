@@ -88,6 +88,8 @@ scores.qh
 
 spawnpoints.qh
 
+mapvoting.qh
+
 ipban.qh
 
 race.qh
@@ -130,6 +132,8 @@ pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
+
+mapvoting.qc
 
 t_jumppads.qc
 t_teleporters.qc
