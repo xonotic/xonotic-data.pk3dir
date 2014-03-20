@@ -315,7 +315,7 @@ void ok_Initialize()
 		while((s = fgets(fh)))
 		{
 			tokenize_console(s);
-			if not(argv(0) == "" || argv(1) == "//" || argv(1) == "")
+			if(!(argv(0) == "" || argv(1) == "//" || argv(1) == ""))
 				cvar_settemp(argv(0), argv(1));
 		}
 		fclose(fh);
