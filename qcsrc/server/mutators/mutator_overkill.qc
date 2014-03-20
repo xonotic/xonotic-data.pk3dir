@@ -7,7 +7,7 @@ void ok_DecreaseCharge(entity ent, float wep)
 	if(wepent.weapon == 0)
 		return; // dummy
 
-	ent.ammo_charge[wep] -= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname));
+	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
 void ok_IncreaseCharge(entity ent, float wep)
@@ -62,9 +62,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 		frag_damage = 0;
 
 		if(frag_attacker != frag_target)
+		if(frag_target.health > 0)
+		if(frag_target.freezetag_frozen == 0)
+		if(frag_target.deadflag == DEAD_NO)
 		{
-			if(frag_target.health >= 1 && !frag_target.freezetag_frozen && frag_target.deadflag == DEAD_NO)
-				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
 		}
 	}
@@ -75,9 +77,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
-
-	if(other.flags & FL_MONSTER)
-		other.monster_loot = func_null; // this hook is shared with monsters
 
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
@@ -95,6 +94,12 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_MonsterSpawn)
+{
+	self.candrop = FALSE; // no default item drops
 	return FALSE;
 }
 
@@ -171,28 +176,40 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
 	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
-	if(self.classname == "item_strength")
 	{
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		wep.ok_item = TRUE;
-		wep.think = start_hmg;
-		wep.nextthink = time + 0.1;
-		wep.noalign = self.noalign;
-		return TRUE;
-	}
+		if(self.classname == "item_strength")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_hmg.md3");
+			wep.classname = "weapon_hmg";
+			wep.ok_item = TRUE;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = TRUE;
+			wep.think = spawnfunc_weapon_hmg;
+			wep.nextthink = time + 0.1;
+			return TRUE;
+		}
 
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
-	if(self.classname == "item_invincible")
-	{
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		wep.ok_item = TRUE;
-		wep.think = start_rpc;
-		wep.nextthink = time + 0.1;
-		wep.noalign = self.noalign;
-		return TRUE;
+		if(self.classname == "item_invincible")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_rl.md3");
+			wep.classname = "weapon_rpc";
+			wep.ok_item = TRUE;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = TRUE;
+			wep.think = spawnfunc_weapon_rpc;
+			wep.nextthink = time + 0.1;
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -314,9 +331,10 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDies, ok_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterSpawn, ok_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterDropItem, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ok_BuildMutatorsString, CBC_ORDER_ANY);
