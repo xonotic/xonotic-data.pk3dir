@@ -53,7 +53,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK));
+	printf(_("^4CSQC Build information: ^1%s\n"), WATERMARK);
 #endif
 
 	float i;
@@ -105,6 +105,7 @@ void CSQC_Init(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
+	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -213,7 +214,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
+					printf(_("trying to switch to unsupported team %d\n"), Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -229,7 +230,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
+					printf(_("trying to switch to unsupported team %d\n"), Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -424,7 +425,7 @@ void Ent_ReadPlayerScore()
 	if(!isNew && n != self.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		print(sprintf("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname));
+		printf("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname);
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -687,7 +688,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 		}
 	}
 
-	//print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt));
+	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt);
 }
 
 void Ent_ReadSpawnEvent(float is_new)
@@ -738,7 +739,7 @@ void Ent_ReadSpawnEvent(float is_new)
 		}
 	}
 
-	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
+	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
@@ -753,7 +754,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	t = ReadByte();
 
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t));
+		printf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
@@ -774,7 +775,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		if(t != self.enttype || bIsNewEntity)
 		{
 			//print("A CSQC entity changed its type!\n");
-			print(sprintf("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t));
+			printf("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
 			Ent_Remove();
 			clearentity(self);
 			bIsNewEntity = 1;
@@ -784,7 +785,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(!bIsNewEntity)
 		{
-			print(sprintf("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t));
+			printf("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t);
 			bIsNewEntity = 1;
 		}
 	}
@@ -868,7 +869,7 @@ void Ent_Remove()
 void CSQC_Ent_Remove()
 {
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype));
+		printf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
 
 	if(wasfreed(self))
 	{
@@ -893,7 +894,7 @@ void Gamemode_Init()
 void CSQC_Parse_StuffCmd(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage));
+		printf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
 
 	localcmd(strMessage);
 }
@@ -901,7 +902,7 @@ void CSQC_Parse_StuffCmd(string strMessage)
 void CSQC_Parse_Print(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Parse_Print(\"%s\")\n", strMessage));
+		printf("CSQC_Parse_Print(\"%s\")\n", strMessage);
 
 	print(ColorTranslateRGB(strMessage));
 }
@@ -910,7 +911,7 @@ void CSQC_Parse_Print(string strMessage)
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage));
+		printf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
 
 	centerprint_hud(strMessage);
 }
@@ -921,8 +922,10 @@ void Fog_Force()
 {
 	// TODO somehow thwart prvm_globalset client ...
 
-	if(forcefog != "")
-		localcmd(strcat(notranslate_fogcmd1, forcefog, notranslate_fogcmd2));
+	if(autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
+		{ localcmd("\nr_drawfog 0\n"); }
+	else if(forcefog != "")
+		{ localcmd(strcat(notranslate_fogcmd1, forcefog, notranslate_fogcmd2)); }
 }
 
 void Gamemode_Init();
@@ -931,6 +934,7 @@ void Ent_ScoresInfo()
 	float i;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadInt24_t();
+	HUD_ModIcons_SetFunc();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		scores_label[i] = strzone(ReadString());
@@ -1199,7 +1203,7 @@ float CSQC_Parse_TempEntity()
 		nTEID = ReadByte();
 
 	if(autocvar_developer_csqcentities)
-		print(sprintf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID));
+		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)
@@ -1214,10 +1218,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
-		case TE_CSQC_ZCURVEPARTICLES:
-			Net_ReadZCurveParticles();
 			bHandled = true;
 			break;
 		case TE_CSQC_NEXGUNBEAMPARTICLE:

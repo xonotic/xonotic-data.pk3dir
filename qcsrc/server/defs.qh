@@ -104,6 +104,7 @@ float server_is_dedicated;
 .float play_time;
 .float respawn_flags;
 .float respawn_time;
+.float respawn_time_max;
 .float death_time;
 .float fade_time;
 .float fade_rate;
@@ -243,6 +244,7 @@ float game_completion_ratio; // 0 at start, 1 near end
 float nJoinAllowed(entity ignore);
 
 .float spawnshieldtime;
+.float item_spawnshieldtime;
 
 .entity flagcarried;
 
@@ -458,7 +460,6 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
 .float stat_allow_oldnexbeam;
 
 // reset to 0 on weapon switch

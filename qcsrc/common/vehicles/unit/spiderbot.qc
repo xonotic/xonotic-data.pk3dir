@@ -13,6 +13,12 @@ REGISTER_VEHICLE(
 );
 #else
 
+const float SBRM_FIRST = 1;
+const float SBRM_VOLLY = 1;
+const float SBRM_GUIDE = 2;
+const float SBRM_ARTILLERY = 3;
+const float SBRM_LAST = 3;
+
 #ifdef SVQC
 float autocvar_g_vehicle_spiderbot;
 
@@ -51,8 +57,7 @@ float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
 float autocvar_g_vehicle_spiderbot_minigun_force;
-float autocvar_g_vehicle_spiderbot_minigun_speed;
-float autocvar_g_vehicle_spiderbot_minigun_bulletconstant;
+float autocvar_g_vehicle_spiderbot_minigun_solidpenetration;
 
 float autocvar_g_vehicle_spiderbot_rocket_damage;
 float autocvar_g_vehicle_spiderbot_rocket_force;
@@ -66,12 +71,6 @@ float autocvar_g_vehicle_spiderbot_rocket_health;
 float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
-
-#define SBRM_FIRST 0
-#define SBRM_VOLLY 0
-#define SBRM_GUIDE 1
-#define SBRM_ARTILLERY 2
-#define SBRM_LAST 2
 
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
@@ -250,6 +249,9 @@ void spiderbot_rocket_do()
 	if(self.wait != -10)
 	if(!self.owner.BUTTON_ATCK2)
 		return;
+		
+	if(forbidWeaponUse(self.owner))
+		return;
 
 	v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
 
@@ -325,7 +327,10 @@ float spiderbot_frame()
 	float ftmp;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player = self;
 	spider = self.vehicle;
@@ -336,6 +341,7 @@ float spiderbot_frame()
 	player.BUTTON_ZOOM	  = 0;
 	player.BUTTON_CROUCH	= 0;
 	player.switchweapon	 = 0;
+	player.vehicle_weapon2mode = spider.vehicle_weapon2mode;
 
 
 #if 1 // 0 to enable per-gun impact aux crosshairs
@@ -476,6 +482,7 @@ float spiderbot_frame()
 	self.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
 	self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
+	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
 	{
 		spider.cnt = time;
@@ -492,15 +499,8 @@ float spiderbot_frame()
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
 
-//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
-
-			fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
-								5, autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
-
-			endFireBallisticBullet();
-
-//			fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
-//				autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_VH_SPID_MINIGUN, 0);
+			fireBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+                                autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0);
 
 			sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
 			//trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -791,6 +791,8 @@ float v_spiderbot(float req)
 			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
+			
+			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
 
 			return TRUE;
 		}
@@ -842,6 +844,7 @@ float v_spiderbot(float req)
 			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 			self.max_health = self.vehicle_health;
+			self.pushable = TRUE; // spiderbot can use jumppads
 
 			return TRUE;
 		}
@@ -872,17 +875,13 @@ float v_spiderbot(float req)
 
 #endif // SVQC
 #ifdef CSQC
+var float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+var float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 #define spider_ico  "gfx/vehicles/sbot.tga"
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
 #define spider_mgun "gfx/vehicles/sbot_mguns.tga"
 string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
-
-#define SBRM_FIRST 1
-#define SBRM_VOLLY 1
-#define SBRM_GUIDE 2
-#define SBRM_ARTILLERY 3
-#define SBRM_LAST 3
 
 float v_spiderbot(float req)
 {
@@ -934,7 +933,7 @@ float v_spiderbot(float req)
 				if(alarm1time < time)
 				{
 					alarm1time = time + 2;
-					sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
 				}
 				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
 			}
@@ -943,7 +942,7 @@ float v_spiderbot(float req)
 				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 				if(alarm1time)
 				{
-					sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
 					alarm1time = 0;
 				}
 			}
@@ -961,7 +960,7 @@ float v_spiderbot(float req)
 				if(alarm2time < time)
 				{
 					alarm2time = time + 1;
-					sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm_shield.wav");
 				}
 				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
 			}
@@ -970,7 +969,7 @@ float v_spiderbot(float req)
 				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 				if(alarm2time)
 				{
-					sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
 					alarm2time = 0;
 				}
 			}
@@ -1028,7 +1027,7 @@ float v_spiderbot(float req)
 				HUD_DrawScoreboard();
 			else
 			{
-				switch(weapon2mode)
+				switch(getstati(STAT_VEHICLESTAT_W2MODE))
 				{
 					case SBRM_VOLLY:
 						spider_xhair = "gfx/vehicles/axh-bracket.tga";

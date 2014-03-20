@@ -55,15 +55,11 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
-	if(vehicle_id != 0)
-		WriteByte(MSG_ONE, vehicle_id);
-	else
-		WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + VEH_LAST);
+	WriteByte(MSG_ONE, vehicle_id);
 }
 
 vector targetdrone_getnewspot()
 {
-
 	vector spot;
 	float i;
 	for(i = 0; i < 100; ++i)
@@ -99,16 +95,17 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 	if(trace_ent != world)
 	{
-		if(teamplay && trace_ent.team == self.team)
+		if(SAME_TEAM(trace_ent, self))
 			trace_ent = world;
 
 		if(trace_ent.deadflag != DEAD_NO)
 			trace_ent = world;
 
-		if(!(trace_ent.vehicle_flags & VHF_ISVEHICLE ||
-				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
-				trace_ent.takedamage == DAMAGE_TARGETDRONE))
+		if(!((trace_ent.vehicle_flags & VHF_ISVEHICLE) || (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)))
 			trace_ent = world;
+
+		if(trace_ent.alpha <= 0.5)
+			trace_ent = world; // invisible
 	}
 
 	if(self.lock_target == world && trace_ent != world)
@@ -126,7 +123,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 			play2(self.owner, "vehicles/locking.wav");
 			self.lock_soundtime = time + 0.3;
 		}
-
 	}
 
 	// Have a locking target
@@ -323,13 +319,14 @@ float vehicle_addplayerslot(	entity _owner,
 								float _hud,
 								string _hud_model,
 								float() _framefunc,
-								void(float) _exitfunc)
+								void(float) _exitfunc, float() _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
 
 	_slot.PlayerPhysplug = _framefunc;
 	_slot.vehicle_exit = _exitfunc;
+	_slot.vehicle_enter = _enterfunc;
 	_slot.hud = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
 	_slot.vehicle_viewport = spawn();
@@ -386,6 +383,19 @@ void vehicles_reset_colors()
 
 	// Find all ents attacked to main model and setup effects, colormod etc.
 	e = findchainentity(tag_entity, self);
+	while(e)
+	{
+		if(e != self.vehicle_shieldent)
+		{
+			e.effects   = _effects; //  | EF_LOWPRECISION;
+			e.colormod  = _colormod;
+			e.colormap  = _colormap;
+			e.alpha	 = 1;
+		}
+		e = e.chain;
+	}
+	// Also check head tags
+	e = findchainentity(tag_entity, self.tur_head);
 	while(e)
 	{
 		if(e != self.vehicle_shieldent)
@@ -535,7 +545,7 @@ void vehicle_use()
 	else
 		self.active = ACTIVE_ACTIVE;
 
-	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO)
+	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
 		dprint("Respawning vehicle: ", self.netname, "\n");
 		vehicles_setreturn(self);
@@ -616,6 +626,8 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
 	self.enemy = attacker;
 
+	self.pain_finished = time;
+
 	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
 	{
 		if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
@@ -672,7 +684,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 			if(self.vehicle_flags & VHF_DEATHEJECT)
 				vehicles_exit(VHEF_EJECT);
 			else
-				vehicles_exit(VHEF_RELESE);
+				vehicles_exit(VHEF_RELEASE);
 
 
 		antilag_clear(self);
@@ -816,6 +828,7 @@ void vehicles_exit(float eject)
 		_player.solid			= SOLID_SLIDEBOX;
 		_player.movetype		= MOVETYPE_WALK;
 		_player.effects		   &= ~EF_NODRAW;
+		_player.teleportable	= TELEPORT_NORMAL;
 		_player.alpha			= 1;
 		_player.PlayerPhysplug	= func_null;
 		_player.vehicle			= world;
@@ -859,6 +872,9 @@ void vehicles_exit(float eject)
 	vehicles_setreturn(_vehicle);
 	vehicles_reset_colors();
 	_vehicle.owner = world;
+
+	CSQCMODEL_AUTOINIT();
+
 	self = _oldself;
 
 	vehicles_exit_running = FALSE;
@@ -872,7 +888,9 @@ void vehicles_touch()
 	// Vehicle currently in use
 	if(self.owner)
 	{
+		if(!forbidWeaponUse(self.owner))
 		if(other != world)
+		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
 			if(vlen(self.velocity) != 0)
@@ -917,6 +935,35 @@ void vehicles_enter(entity pl, entity veh)
 	if(pl.vehicle)
 		return;
 
+	if(autocvar_g_vehicles_enter) // skip if we're using regular touch code
+	if(veh.vehicle_flags & VHF_MULTISLOT)
+	if(veh.owner)
+	{
+		entity oldself = self;
+		self = veh;
+		other = pl; // TODO: fix
+
+		if(!veh.gunner1)
+		if(veh.gun1.phase <= time)
+		if(veh.gun1.vehicle_enter)
+		if(veh.gun1.vehicle_enter())
+		{
+			self = oldself;
+			return;
+		}
+
+		if(!veh.gunner2)
+		if(veh.gun2.phase <= time)
+		if(veh.gun2.vehicle_enter)
+		if(veh.gun2.vehicle_enter())
+		{
+			self = oldself;
+			return;
+		}
+
+		self = oldself;
+	}
+
 	if(teamplay)
 	if(veh.team)
 	if(DIFF_TEAM(pl, veh))
@@ -928,7 +975,8 @@ void vehicles_enter(entity pl, entity veh)
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
-		WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
+		if(autocvar_g_vehicles_steal_show_waypoint)
+			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
 	}
 	else return;
 
@@ -948,24 +996,25 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
+	pl.crouch = FALSE;
+	pl.view_ofs = PL_VIEW_OFS;
+	setsize (pl, PL_MIN, PL_MAX);
+
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
 	pl.angles			= veh.angles;
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
 	pl.movetype			= MOVETYPE_NOCLIP;
+	pl.teleportable		= FALSE;
 	pl.alpha			= -1;
-	pl.vehicle			= veh;
 	pl.event_damage		= func_null;
 	pl.view_ofs			= '0 0 0';
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
 	veh.switchweapon = pl.switchweapon;
-	if(veh.hud)
-		pl.hud = veh.hud;
-	else
-		pl.hud = veh.vehicleid;
+	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 
 	pl.vehicle_ammo1 = veh.vehicle_ammo1;
@@ -1013,11 +1062,10 @@ void vehicles_enter(entity pl, entity veh)
 	vh_player = pl;
 	vh_vehicle = veh;
 	MUTATOR_CALLHOOK(VehicleEnter);
-	pl = vh_player;
-	veh = vh_vehicle;
 
 	entity oldself = self;
 	self = veh;
+	CSQCModel_UnlinkEntity();
 	VEH_ACTION(veh.vehicleid, VR_ENTER);
 	self = oldself;
 
@@ -1028,13 +1076,18 @@ void vehicles_think()
 {
 	self.nextthink = time;
 	
+	if(self.owner)
+		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
+	
 	VEH_ACTION(self.vehicleid, VR_THINK);
+
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // initialization
 void vehicles_spawn()
 {
-	dprint("Spawning vehicle: ", self.netname, "\n");
+	dprint("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset
 	self.vehicle_hudmodel.viewmodelforclient = self;
@@ -1063,16 +1116,23 @@ void vehicles_spawn()
 
 	// Return to spawn
 	self.angles = self.pos2;
-	setorigin(self, self.pos1 + '0 0 0');
+	setorigin(self, self.pos1);
 	// Show it
 	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
 
+	entity head; // remove hooks (if any)
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == self)
+		RemoveGrapplingHook(head);
+
 	vehicles_reset_colors();
 
 	VEH_ACTION(self.vehicleid, VR_SPAWN);
+
+	CSQCMODEL_AUTOINIT();
 }
 
 float vehicle_initialize(float vehicle_id, float nodrop)
@@ -1081,6 +1141,9 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		return FALSE;
 
 	entity veh = get_vehicleinfo(vehicle_id);
+
+	if(!veh.vehicleid)
+		return FALSE;
 
 	if(self.targetname)
 	{
@@ -1104,7 +1167,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		}
 	}
 
-	if(self.team && !teamplay)
+	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;
 
 	self.vehicle_flags |= VHF_ISVEHICLE;
@@ -1115,7 +1178,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	self.vehicle_hudmodel		= spawn();
 	self.tur_head				= spawn();
 	self.tur_head.owner			= self;
-	self.takedamage				= DAMAGE_AIM;
+	self.takedamage				= DAMAGE_NO;
 	self.bot_attack				= TRUE;
 	self.iscreature				= TRUE;
 	self.teleportable			= FALSE; // no teleporting for vehicles, too buggy

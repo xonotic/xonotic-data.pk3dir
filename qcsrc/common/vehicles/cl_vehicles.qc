@@ -18,7 +18,7 @@ var float autocvar_cl_vehicles_hudalpha = 0.75;
 
 void CSQC_BUMBLE_GUN_HUD();
 
-#define MAX_AXH 4
+const float MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];
 
 .string axh_image;
@@ -35,7 +35,6 @@ entity AuxiliaryXhair[MAX_AXH];
 
 float alarm1time;
 float alarm2time;
-float weapon2mode;
 
 void vehicle_alarm(entity e, float ch, string s0und)
 {
@@ -92,17 +91,9 @@ void Net_AuXair2(float bIsNew)
 
 void Net_VehicleSetup()
 {
-
 	float i;
 
 	float hud_id = ReadByte();
-
-	// Weapon update?
-	if(hud_id > VEH_LAST && hud_id != HUD_BUMBLEBEE_GUN)
-	{
-		weapon2mode = hud_id - VEH_LAST;
-		return;
-	}
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)

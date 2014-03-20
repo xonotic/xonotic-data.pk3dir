@@ -52,7 +52,7 @@ void ACCUMULATE_call(string func)
 // used for simplifying ACCUMULATE_FUNCTIONs
 #define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
 #define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
@@ -215,7 +215,7 @@ float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];
 #endif
 
@@ -367,6 +367,12 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
+// Some common varargs functions. Lowercase as they match C.
+#define printf(...) print(sprintf(__VA_ARGS__))
+#define dprintf(...) dprint(sprintf(__VA_ARGS__))
+#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
+
 #ifndef MENUQC
 void backtrace(string msg);
 #endif
@@ -430,3 +436,12 @@ void dedicated_print(string input);
 #define CNT_ROUNDSTART 6
 float Announcer_PickNumber(float type, float num);
 #endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
+#endif
+
+// Quadratic splines (bezier)
+vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
+vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);

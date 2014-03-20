@@ -3,7 +3,7 @@ REGISTER_VEHICLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
 /* spawnflags */ VHF_DMGSHAKE,
-/* mins,maxs  */ '-130 -130 -130', '130 130 130',
+/* mins,maxs  */ '-245 -130 -130', '230 130 130',
 /* model	  */ "models/vehicles/bumblebee_body.dpm",
 /* head_model */ "",
 /* hud_model  */ "models/vehicles/spiderbot_cockpit.dpm",
@@ -160,7 +160,7 @@ float bumblebee_gunner_frame()
 
 	if(gun.enemy)
 	{
-		float i, distance, impact_time;
+		float distance, impact_time;
 
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
@@ -169,12 +169,9 @@ float bumblebee_gunner_frame()
 
 
 		ad = vf;
-		for(i = 0; i < 4; ++i)
-		{
-			distance = vlen(ad - gunner.origin);
-			impact_time = distance / autocvar_g_vehicle_bumblebee_cannon_speed;
-			ad = vf + _vel * impact_time;
-		}
+		distance = vlen(ad - gunner.origin);
+		impact_time = distance / autocvar_g_vehicle_bumblebee_cannon_speed;
+		ad = vf + _vel * impact_time;
 		trace_endpos = ad;
 
 
@@ -189,6 +186,7 @@ float bumblebee_gunner_frame()
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
+	if(!forbidWeaponUse(gunner))
 	if(gunner.BUTTON_ATCK)
 		if(time > gun.attack_finished_single)
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
@@ -246,6 +244,7 @@ void bumblebee_gunner_exit(float _exitflag)
 	self.view_ofs       = PL_VIEW_OFS;
 	self.event_damage   = PlayerDamage;
 	self.hud            = HUD_NORMAL;
+	self.teleportable	= TELEPORT_NORMAL;
 	self.switchweapon   = self.vehicle.switchweapon;
 
     vh_player = self;
@@ -316,6 +315,7 @@ float bumblebee_gunner_enter()
 	other.event_damage      = func_null;
 	other.view_ofs          = '0 0 0';
 	other.hud               = _gun.hud;
+	other.teleportable		= FALSE;
 	other.PlayerPhysplug    = _gun.PlayerPhysplug;
 	other.vehicle_ammo1     = self.vehicle_ammo1;
 	other.vehicle_ammo2     = self.vehicle_ammo2;
@@ -325,13 +325,17 @@ float bumblebee_gunner_enter()
 	other.PlayerPhysplug    = bumblebee_gunner_frame;
 	other.flags             &= ~FL_ONGROUND;
 
-	msg_entity = other;
-	WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-	WriteEntity(MSG_ONE, _gun.vehicle_viewport);
-	WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
-	WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
-	WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
-	WriteAngle(MSG_ONE, 0);                             // roll
+	if(IS_REAL_CLIENT(other))
+	{
+		msg_entity = other;
+		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+		WriteEntity(MSG_ONE, _gun.vehicle_viewport);
+		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
+		WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
+		WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
+		WriteAngle(MSG_ONE, 0);                             // roll
+	}
+	
 	_gun.vehicle_hudmodel.viewmodelforclient = other;
 
 	CSQCVehicleSetup(other, other.hud);
@@ -368,6 +372,8 @@ float vehicles_valid_pilot()
 
 void bumblebee_touch()
 {
+	if(autocvar_g_vehicles_enter) { return; }
+
 	if(self.gunner1 != world && self.gunner2 != world)
 	{
 		vehicles_touch();
@@ -417,7 +423,6 @@ float bumblebee_pilot_frame()
 	pilot = self;
 	vehic = self.vehicle;
 	self   = vehic;
-
 
 	if(vehic.deadflag != DEAD_NO)
 	{
@@ -535,6 +540,7 @@ float bumblebee_pilot_frame()
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 
+	if(!forbidWeaponUse(pilot))
 	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
 		vehic.gun3.enemy.realowner = pilot;
@@ -560,11 +566,11 @@ float bumblebee_pilot_frame()
 
 						if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
 						{
-							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.tur_health)
-								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.tur_health);
+							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
+								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.max_health);
 
 							if(autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.tur_health);
+								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.max_health);
 						}
 						else if(IS_CLIENT(trace_ent))
 						{
@@ -624,11 +630,40 @@ float bumblebee_pilot_frame()
 	return 1;
 }
 
+void bumblebee_land()
+{
+	float hgt;
+
+	hgt = raptor_altitude(512);
+	self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
+	self.angles_x *= 0.95;
+	self.angles_z *= 0.95;
+
+	if(hgt < 16)
+		self.think	= vehicles_think;
+
+	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
+}
+
 void bumblebee_exit(float eject)
 {
+	if(self.owner.vehicleid == VEH_BUMBLEBEE)
+	{
+		bumblebee_gunner_exit(eject);
+		return;
+	}
+
 	self.touch = vehicles_touch;
-	self.think = vehicles_think;
-	self.nextthink = time;
+
+	if(self.deadflag == DEAD_NO)
+	{
+		self.think = bumblebee_land;
+		self.nextthink  = time;
+	}
+	
+	self.movetype = MOVETYPE_TOSS;
 
 	if(!self.owner)
 		return;
@@ -636,9 +671,9 @@ void bumblebee_exit(float eject)
 	fixedmakevectors(self.angles);
 	vector spot;
 	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)
-		spot = self.origin + v_up * 128 + v_forward * 200;
+		spot = self.origin + v_up * 128 + v_forward * 300;
 	else
-		spot = self.origin + v_up * 128 - v_forward * 200;
+		spot = self.origin + v_up * 128 - v_forward * 300;
 
 	spot = vehicles_findgoodexit(spot);
 
@@ -664,7 +699,7 @@ void bumblebee_blowup()
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	pointparticles(particleeffectnum("explosion_big"), (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -741,12 +776,10 @@ float v_bumblebee(float req)
 		}
 		case VR_THINK:
 		{
-			self.movetype = MOVETYPE_TOSS;
-			
 			self.angles_z *= 0.8;
 			self.angles_x *= 0.8;
 			
-			self.nextthink = time + 0.05;
+			self.nextthink = time;
 			
 			if(!self.owner)
 			{
@@ -783,7 +816,9 @@ float v_bumblebee(float req)
 		case VR_DEATH:
 		{
 			entity oldself = self;
-	
+
+			CSQCModel_UnlinkEntity();
+
 			// Hide beam
 			if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
 				self.gun3.enemy.effects |= EF_NODRAW;
@@ -821,12 +856,14 @@ float v_bumblebee(float req)
 			_body.wait = time + 2 + (random() * 8);
 			_body.owner = self;
 			_body.enemy = self.enemy;
+			_body.scale = 1.5;
+			_body.angles = self.angles;
 			
 			pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 			
 			self.health			= 0;
 			self.event_damage	= func_null;
-			self.solid			= SOLID_CORPSE;
+			self.solid			= SOLID_NOT;
 			self.takedamage		= DAMAGE_NO;
 			self.deadflag		= DEAD_DYING;
 			self.movetype		= MOVETYPE_NONE;
@@ -881,8 +918,8 @@ float v_bumblebee(float req)
 				setorigin(self.gun3, ofs);
 				self.angles = self.gun3.pos1;
 
-				vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit);
-				vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit);
+				vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+				vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
 
 				setorigin(self.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
 				setorigin(self.vehicle_viewport, '5 0 2');    // Move camera forward up

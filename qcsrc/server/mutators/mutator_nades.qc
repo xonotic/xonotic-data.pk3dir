@@ -169,16 +169,15 @@ void toss_nade(entity e, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(e.crouch)
-		_nade.velocity = '0 0 -10';
+	if(self.v_angle_x >= 70 && self.v_angle_x <= 110)
+		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
 	else if(autocvar_g_nades_nade_newton_style == 2)
 		_nade.velocity = _velocity;
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, TRUE);
-
-	//_nade.solid = SOLID_BBOX; // TODO: remember why this was needed
+		
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;
@@ -250,7 +249,7 @@ float CanThrowNade()
 	if (!autocvar_g_nades)
 		return FALSE; // allow turning them off mid match
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 		return FALSE;
 
 	if (!IS_PLAYER(self))

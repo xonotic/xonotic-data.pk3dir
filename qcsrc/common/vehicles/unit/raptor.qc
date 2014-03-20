@@ -13,10 +13,10 @@ REGISTER_VEHICLE(
 );
 #else
 
-const float RSM_FIRST = 0;
-const float RSM_BOMB = 0;
-const float RSM_FLARE = 1;
-const float RSM_LAST = 1;
+const float RSM_FIRST = 1;
+const float RSM_BOMB = 1;
+const float RSM_FLARE = 2;
+const float RSM_LAST = 2;
 
 #ifdef SVQC
 float autocvar_g_vehicle_raptor;
@@ -219,6 +219,8 @@ void raptor_land()
 	}
 
 	self.nextthink  = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 void raptor_exit(float eject)
@@ -304,11 +306,15 @@ float raptor_frame()
 	vector df;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
+	
 	vehicles_painframe();
 	/*
 	ftmp = vlen(self.velocity);
@@ -409,6 +415,8 @@ float raptor_frame()
 	player.velocity = player.movement  = raptor.velocity;
 	setorigin(player, raptor.origin + '0 0 32');
 
+	player.vehicle_weapon2mode = raptor.vehicle_weapon2mode;
+
 	vector vf, ad;
 	// Target lock & predict
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
@@ -438,7 +446,7 @@ float raptor_frame()
 
 		if(raptor.gun1.enemy)
 		{
-			float i, distance, impact_time;
+			float distance, impact_time;
 
 			vf = real_origin(raptor.gun1.enemy);
 			UpdateAuxiliaryXhair(player, vf, '1 0 0', 1);
@@ -449,12 +457,9 @@ float raptor_frame()
 			if(autocvar_g_vehicle_raptor_cannon_predicttarget)
 			{
 				ad = vf;
-				for(i = 0; i < 4; ++i)
-				{
-					distance = vlen(ad - player.origin);
-					impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
-					ad = vf + _vel * impact_time;
-				}
+				distance = vlen(ad - player.origin);
+				impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+				ad = vf + _vel * impact_time;
 				trace_endpos = ad;
 			}
 			else
@@ -512,6 +517,7 @@ float raptor_frame()
 	UpdateAuxiliaryXhair(player, trace_endpos, '0 1 0', 0);
 	*/
 
+	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
 	if(raptor.attack_finished_single <= time)
 	if(raptor.vehicle_energy > autocvar_g_vehicle_raptor_cannon_cost)
@@ -541,6 +547,7 @@ float raptor_frame()
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
 
+	if(!forbidWeaponUse(player))
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
 	{
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
@@ -626,6 +633,11 @@ float raptor_takeoff()
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
+	
+	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE();
+	self.nextthink = 0; // will this work?
+	
 	if(self.sound_nexttime < time)
 	{
 		self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
@@ -692,12 +704,14 @@ void raptor_diethink()
 	if(time >= self.wait)
 		self.think = raptor_blowup;
 
-	if(random() < 0.1)
+	if(random() < 0.05)
 	{
 		sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
-	self.nextthink = time + 0.1;
+	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // If we dont do this ever now and then, the raptors rotors
@@ -942,12 +956,10 @@ float v_raptor(float req)
 
 #endif // SVQC
 #ifdef CSQC
-
 #define raptor_ico  "gfx/vehicles/raptor.tga"
 #define raptor_gun  "gfx/vehicles/raptor_guns.tga"
 #define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
 #define raptor_drop "gfx/vehicles/axh-dropcross.tga"
-string raptor_xhair;
 
 float v_raptor(float req)
 {
@@ -959,6 +971,7 @@ float v_raptor(float req)
 				return TRUE;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
+			string raptor_xhair;
 
 			// Fetch health & ammo stats
 			HUD_GETVEHICLESTATS
@@ -1072,7 +1085,7 @@ float v_raptor(float req)
 			else
 				drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
 
-			if(weapon2mode == RSM_FLARE)
+			if(getstati(STAT_VEHICLESTAT_W2MODE) == RSM_FLARE)
 			{
 				raptor_xhair =  "gfx/vehicles/axh-bracket.tga";
 			}

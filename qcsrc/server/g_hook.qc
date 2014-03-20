@@ -299,7 +299,7 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if(forbidWeaponUse()) return;
+	if(forbidWeaponUse(self)) return;
 	if(self.vehicle) return;
 
 	makevectors(self.v_angle);

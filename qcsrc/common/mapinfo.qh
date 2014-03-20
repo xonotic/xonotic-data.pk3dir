@@ -39,9 +39,6 @@ REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30
 REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0");
 #define g_lms IS_GAMETYPE(LMS)
 
-REGISTER_GAMETYPE(_("Arena"),arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0");
-#define g_arena IS_GAMETYPE(ARENA)
-
 REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0");
 #define g_race IS_GAMETYPE(RACE)
 
@@ -77,6 +74,9 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointli
 
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30");
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
+
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=5");
+#define g_invasion IS_GAMETYPE(INVASION)
 
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;

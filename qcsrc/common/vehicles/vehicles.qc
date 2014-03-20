@@ -25,6 +25,8 @@ void vehicles_common_initialize()
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
 	addstat(STAT_VEHICLESTAT_ENERGY,  AS_INT, vehicle_energy);
 
+	addstat(STAT_VEHICLESTAT_W2MODE, AS_INT, vehicle_weapon2mode);
+
 	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT, vehicle_ammo1);
 	addstat(STAT_VEHICLESTAT_RELOAD1, AS_INT, vehicle_reload1);
 

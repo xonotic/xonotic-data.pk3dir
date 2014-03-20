@@ -11,3 +11,5 @@ stuffcmds
 //startdemos
 //play announcer/male/welcome.ogg
 crypto_keygen 0 http://ca.xonotic.org/?ca=0&key=
+
+exec post-config.cfg

@@ -311,11 +311,11 @@ float Obituary_WeaponDeath(
 		}
 		else
 		{
-			dprint(sprintf(
+			dprintf(
 				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
 				deathtype,
 				death_weapon
-			));
+			);
 		}
 
 		return TRUE;
@@ -595,7 +595,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELESE);
+			vehicles_exit(VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -683,7 +683,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
-        frag_deathtype = deathtype;
+		frag_deathtype = deathtype;
 		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
@@ -732,7 +732,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER)
 			{
 				if(DIFF_TEAM(victim, attacker))
 				{
@@ -924,12 +924,12 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
 
 							if(autocvar_g_throughfloor_debug)
-								print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
+								printf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
 
 							total = 0.25 * pow(max(mininv_f, mininv_d), 2);
 
 							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f", total));
+								printf(" steps=%f", total);
 
 							if (IS_PLAYER(targ))
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
@@ -937,7 +937,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
 
 							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
+								printf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
 
 							for(c = 0; c < total; ++c)
 							{
@@ -964,7 +964,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							force = force * a;
 
 							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
+								printf(" D=%f F=%f\n", finaldmg, vlen(force));
 						}
 
 						// laser force adjustments :P
