@@ -48,12 +48,16 @@ mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/gamemode_lms.qh
 mutators/gamemode_invasion.qh
+mutators/gamemode_onslaught.qh
 mutators/mutator_dodging.qh
 mutators/mutator_nades.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
+
+generator.qh
+controlpoint.qh
 
 campaign.qh
 ../common/campaign_common.qh
@@ -207,6 +211,9 @@ scores.qc
 spawnpoints.qc
 
 portals.qc
+
+generator.qc
+controlpoint.qc
 
 target_spawn.qc
 func_breakable.qc

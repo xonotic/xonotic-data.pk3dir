@@ -732,7 +732,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER)
+			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER || victim.classname == "func_assault_destructible" || (victim.classname == "onslaught_generator" && !victim.isshielded) || (victim.classname == "onslaught_controlpoint_icon" && !victim.owner.isshielded))
 			{
 				if(DIFF_TEAM(victim, attacker))
 				{

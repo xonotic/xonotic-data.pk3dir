@@ -117,6 +117,7 @@ void CSQC_Init(void)
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
@@ -824,6 +825,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
+		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
