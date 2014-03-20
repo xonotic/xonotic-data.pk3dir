@@ -210,31 +210,8 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void vehicles_clearrturn();
-void vehicles_spawn();
 void assault_new_round()
 {
-    entity oldself;
-	//bprint("ASSAULT: new round\n");
-
-	oldself = self;
-	// Eject players from vehicles
-    FOR_EACH_PLAYER(self)
-    {
-        if(self.vehicle)
-            vehicles_exit(VHEF_RELESE);
-    }
-
-    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
-    while(self)
-    {
-        vehicles_clearrturn();
-        vehicles_spawn();
-        self = self.chain;
-    }
-
-    self = oldself;
-
 	// up round counter
 	self.winning = self.winning + 1;
 
@@ -264,24 +241,24 @@ void assault_new_round()
 // spawnfuncs
 void spawnfunc_info_player_attacker()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	self.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
 void spawnfunc_info_player_defender()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	self.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
 void spawnfunc_target_objective()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	self.classname = "target_objective";
 	self.use = assault_objective_use;
 	assault_objective_reset();
@@ -291,7 +268,7 @@ void spawnfunc_target_objective()
 
 void spawnfunc_target_objective_decrease()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective_decrease";
 
@@ -309,11 +286,11 @@ void spawnfunc_target_objective_decrease()
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_assault_destructible()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
-	
+
 	if(assault_attacker_team == NUM_TEAM_1)
 		self.team = NUM_TEAM_2;
 	else
@@ -324,8 +301,8 @@ void spawnfunc_func_assault_destructible()
 
 void spawnfunc_func_assault_wall()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	self.classname = "func_assault_wall";
 	self.mdl = self.model;
 	setmodel(self, self.mdl);
@@ -337,7 +314,7 @@ void spawnfunc_func_assault_wall()
 
 void spawnfunc_target_assault_roundend()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 
 	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
@@ -348,8 +325,8 @@ void spawnfunc_target_assault_roundend()
 
 void spawnfunc_target_assault_roundstart()
 {
-	if not(g_assault) { remove(self); return; }
-	
+	if (!g_assault) { remove(self); return; }
+
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
 	self.use = assault_roundstart_use;
@@ -371,7 +348,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		if (ad.target == "")
 			continue;
 
-		if not(ad.bot_attack)
+		if (!ad.bot_attack)
 			continue;
 
 		found = FALSE;
@@ -547,13 +524,13 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 		centerprint(self, "You are attacking!");
 	else
 		centerprint(self, "You are defending!");
-		
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 {
-	if not (self.team)
+	if (!self.team)
 		self.team = 14;
 
 	return FALSE;
@@ -587,7 +564,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, assault_BotRoles, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

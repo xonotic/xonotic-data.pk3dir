@@ -142,16 +142,16 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-void drawstringright(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x -= 2 / 3 * strlen(text) * theScale_x;
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale_x);
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 // return the string of the onscreen race timer
@@ -242,7 +242,7 @@ float GetPlayerColorForce(float i)
 
 float GetPlayerColor(float i)
 {
-	if not(playerslots[i].gotscores) // unconnected
+	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
 	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
 		return NUM_SPECTATOR;
@@ -264,8 +264,8 @@ HUD panels
 
 // draw the background/borders
 #define HUD_Panel_DrawBg(theAlpha)\
-if(panel_bg != "0" && panel_bg != "")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
+if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")\
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -489,7 +489,6 @@ void HUD_Weapons(void)
 
 	// update generic hud functions
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -568,7 +567,7 @@ void HUD_Weapons(void)
 		weapon_size_y = old_panel_size_y / rows;
 
 		// change table values to include only the owned weapons
-		// weapon_size won't be changed
+		float columns_save = columns;
 		if(weapon_count <= rows)
 		{
 			rows = weapon_count;
@@ -576,6 +575,10 @@ void HUD_Weapons(void)
 		}
 		else
 			columns = ceil(weapon_count / rows);
+
+		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
+		if(columns < columns_save)
+			weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
 
 		// reduce size of the panel
 		panel_size_x = columns * weapon_size_x;
@@ -734,12 +737,12 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if not((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon))
+		if (!((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos 
-			+ eX * column * weapon_size_x 
+		weapon_pos = (panel_pos
+			+ eX * column * weapon_size_x
 			+ eY * row * weapon_size_y);
 
 		// draw background behind currently selected weapon
@@ -941,7 +944,7 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 
 void HUD_Ammo(void)
 {
-    if(hud != HUD_NORMAL) return;
+	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_ammo) return;
@@ -949,7 +952,6 @@ void HUD_Ammo(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -964,6 +966,7 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	const float AMMO_COUNT = 4;
 	float rows = 0, columns, row, column;
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
@@ -1133,7 +1136,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -1155,7 +1158,6 @@ void HUD_Powerups(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -1277,10 +1279,7 @@ void HUD_Powerups(void)
 		const float maxshield = 30;
 		float shield = ceil(shield_time);
 		if(autocvar_hud_panel_powerups_progressbar)
-		{
-			HUD_Panel_GetProgressBarColor(shield);
-			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
+			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, autocvar_hud_progressbar_shield_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		if(autocvar_hud_panel_powerups_text)
 		{
 			if(shield > 1)
@@ -1295,10 +1294,7 @@ void HUD_Powerups(void)
 		const float maxstrength = 30;
 		float strength = ceil(strength_time);
 		if(autocvar_hud_panel_powerups_progressbar)
-		{
-			HUD_Panel_GetProgressBarColor(strength);
-			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
+			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		if(autocvar_hud_panel_powerups_text)
 		{
 			if(strength > 1)
@@ -1313,10 +1309,7 @@ void HUD_Powerups(void)
 		const float maxsuperweapons = 30;
 		float superweapons = ceil(superweapons_time);
 		if(autocvar_hud_panel_powerups_progressbar)
-		{
-			HUD_Panel_GetProgressBarColor(superweapons);
-			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		}
+			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, autocvar_hud_progressbar_superweapons_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		if(autocvar_hud_panel_powerups_text)
 		{
 			if(superweapons > 1)
@@ -1396,7 +1389,6 @@ void HUD_HealthArmor(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1427,10 +1419,7 @@ void HUD_HealthArmor(void)
 		{
 			biggercount = "health";
 			if(autocvar_hud_panel_healtharmor_progressbar)
-			{
-				HUD_Panel_GetProgressBarColor(health);
-				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, x/maxtotal, 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			}
+				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, x/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			if(armor)
             if(autocvar_hud_panel_healtharmor_text)
 				drawpic_aspect_skin(pos + eX * mySize_x - eX * 0.5 * mySize_y, "armor", '0.5 0.5 0' * mySize_y, '1 1 1', panel_fg_alpha * armor / health, DRAWFLAG_NORMAL);
@@ -1439,10 +1428,7 @@ void HUD_HealthArmor(void)
 		{
 			biggercount = "armor";
 			if(autocvar_hud_panel_healtharmor_progressbar)
-			{
-				HUD_Panel_GetProgressBarColor(armor);
-				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, x/maxtotal, 0, (baralign == 1 || baralign == 2), progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			}
+				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, x/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_armor_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			if(health)
             if(autocvar_hud_panel_healtharmor_text)
 				drawpic_aspect_skin(pos + eX * mySize_x - eX * 0.5 * mySize_y, "health", '0.5 0.5 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -1451,10 +1437,7 @@ void HUD_HealthArmor(void)
 			DrawNumIcon(pos, mySize, x, biggercount, 0, iconalign, HUD_Get_Num_Color(x, maxtotal), 1);
 
 		if(fuel)
-		{
-			HUD_Panel_GetProgressBarColor(fuel);
-			HUD_Panel_DrawProgressBar(pos, eX * mySize_x + eY * 0.2 * mySize_y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
-		}
+			HUD_Panel_DrawProgressBar(pos, eX * mySize_x + eY * 0.2 * mySize_y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{
@@ -1501,7 +1484,6 @@ void HUD_HealthArmor(void)
 		{
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(health);
 				float p_health, pain_health_alpha;
 				p_health = health;
 				pain_health_alpha = 1;
@@ -1534,7 +1516,7 @@ void HUD_HealthArmor(void)
 						if (time - health_damagetime < 1)
 						{
 							float health_damagealpha = 1 - (time - health_damagetime)*(time - health_damagetime);
-							HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * health_damagealpha, DRAWFLAG_NORMAL);
+							HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * health_damagealpha, DRAWFLAG_NORMAL);
 						}
 					}
 					prev_health = health;
@@ -1543,11 +1525,11 @@ void HUD_HealthArmor(void)
 					{
 						float BLINK_FACTOR = 0.15;
 						float BLINK_BASE = 0.85;
-						float BLINK_FREQ = 9; 
+						float BLINK_FREQ = 9;
 						pain_health_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 					}
 				}
-				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health/maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
 				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, health_iconalign, HUD_Get_Num_Color(health, maxhealth), 1);
@@ -1557,7 +1539,6 @@ void HUD_HealthArmor(void)
 		{
 			if(autocvar_hud_panel_healtharmor_progressbar)
 			{
-				HUD_Panel_GetProgressBarColor(armor);
 				float p_armor;
 				p_armor = armor;
 				if (autocvar_hud_panel_healtharmor_progressbar_gfx)
@@ -1589,12 +1570,12 @@ void HUD_HealthArmor(void)
 						if (time - armor_damagetime < 1)
 						{
 							float armor_damagealpha = 1 - (time - armor_damagetime)*(time - armor_damagetime);
-							HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, armor_beforedamage/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * armor_damagealpha, DRAWFLAG_NORMAL);
+							HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, armor_beforedamage/maxarmor, is_vertical, armor_baralign, autocvar_hud_progressbar_armor_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * armor_damagealpha, DRAWFLAG_NORMAL);
 						}
 					}
 					prev_armor = armor;
 				}
-				HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, p_armor/maxarmor, is_vertical, armor_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + armor_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, p_armor/maxarmor, is_vertical, armor_baralign, autocvar_hud_progressbar_armor_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			if(autocvar_hud_panel_healtharmor_text)
 				DrawNumIcon(pos + armor_offset, mySize, armor, "armor", is_vertical, armor_iconalign, HUD_Get_Num_Color(armor, maxarmor), 1);
@@ -1610,8 +1591,7 @@ void HUD_HealthArmor(void)
 				mySize_x *= 2; //restore full panel size
 			else if (panel_ar < 1/4)
 				mySize_y *= 2; //restore full panel size
-			HUD_Panel_GetProgressBarColor(fuel);
-			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, progressbar_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -1649,7 +1629,6 @@ void HUD_Notify(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1664,7 +1643,7 @@ void HUD_Notify(void)
 	float entries, height;
 	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
 	height = mySize_y/entries;
-	
+
 	vector fontsize;
 	float fontheight = height * autocvar_hud_panel_notify_fontsize;
 	fontsize = '0.5 0.5 0' * fontheight;
@@ -1726,7 +1705,7 @@ void HUD_Notify(void)
 			{
 				break;
 			}
-			
+
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
 			icon = notify_icon[j];
@@ -1786,7 +1765,6 @@ void HUD_Timer(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -1850,11 +1828,15 @@ void HUD_Radar(void)
 		{
 			if (autocvar_hud_panel_radar == 0) return;
 			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+			if(radar_panel_modified)
+			{
+				panel.update_time = time; // forces reload of panel attributes
+				radar_panel_modified = false;
+			}
 		}
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	float f = 0;
 
@@ -1865,10 +1847,17 @@ void HUD_Radar(void)
 		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
 		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 		panel_pos_y = (vid_conheight - panel_size_y) / 2;
-		
+
+		string panel_bg;
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
-		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
-		
+		if(precache_pic(panel_bg) == "")
+			panel_bg = "gfx/hud/default/border_default"; // fallback
+		if(!radar_panel_modified && panel_bg != panel.current_panel_bg)
+			radar_panel_modified = true;
+		if(panel.current_panel_bg)
+			strunzone(panel.current_panel_bg);
+		panel.current_panel_bg = strzone(panel_bg);
+
 		switch(hud_panel_radar_maximized_zoommode)
 		{
 			default:
@@ -1885,7 +1874,7 @@ void HUD_Radar(void)
 				f = 1;
 				break;
 		}
-		
+
 		switch(hud_panel_radar_maximized_rotation)
 		{
 			case 0:
@@ -1914,7 +1903,7 @@ void HUD_Radar(void)
 				f = 1;
 				break;
 		}
-		
+
 		switch(hud_panel_radar_rotation)
 		{
 			case 0:
@@ -2016,7 +2005,7 @@ void HUD_Radar(void)
 // Score (#7)
 //
 void HUD_UpdatePlayerTeams();
-void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
+void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
 	entity tm = world, pl;
@@ -2146,7 +2135,6 @@ void HUD_Score(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2207,7 +2195,7 @@ void HUD_Score(void)
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
 		{
-			HUD_Score_Rankings(pos, mySize, me, 0);
+			HUD_Score_Rankings(pos, mySize, me);
 			return;
 		}
 		// me vector := [team/connected frags id]
@@ -2248,23 +2236,21 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else { // teamgames
-		float scores_count = 0, row, column, rows = 0, columns = 0;
+		float row, column, rows = 0, columns = 0;
 		local noref vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
-		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
+		if(autocvar_hud_panel_score_rankings)
 		{
-			for(tm = teams.sort_next; tm, tm.team != NUM_SPECTATOR; tm = tm.sort_next)
-				++scores_count;
-			if (autocvar_hud_panel_score_rankings)
-			{
-				HUD_Score_Rankings(pos, mySize, me, scores_count);
-				return;
-			}
+			HUD_Score_Rankings(pos, mySize, me);
+			return;
+		}
+		if(spectatee_status == -1)
+		{
 			rows = mySize_y/mySize_x;
-			rows = bound(1, floor((sqrt(4 * (3/1) * rows * scores_count + rows * rows) + rows + 0.5) / 2), scores_count);
+			rows = bound(1, floor((sqrt(4 * (3/1) * rows * team_count + rows * rows) + rows + 0.5) / 2), team_count);
 			//                               ^^^ ammo item aspect goes here
 
-			columns = ceil(scores_count/rows);
+			columns = ceil(team_count/rows);
 
 			score_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
@@ -2297,7 +2283,7 @@ void HUD_Score(void)
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
 				score = 123;
-			
+
 			if (score > max_fragcount)
 				max_fragcount = score;
 
@@ -2341,7 +2327,6 @@ void HUD_RaceTimer (void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -2542,7 +2527,6 @@ void HUD_Vote(void)
 		return;
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	if(uid2name_dialog)
 	{
@@ -2693,11 +2677,6 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, f
 void HUD_Mod_CA(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
-	entity tm;
-	float teams_count = 0;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != NUM_SPECTATOR)
-			++teams_count;
 
 	float layout;
 	if(gametype == MAPINFO_TYPE_CA)
@@ -2707,14 +2686,14 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 2 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
-	columns = ceil(teams_count/rows);
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
 	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	for(i=0; i<teams_count; ++i)
+	for(i=0; i<team_count; ++i)
 	{
 		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
@@ -2752,7 +2731,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-	
+
 	if(redflag || blueflag)
 		mod_active = 1;
 	else
@@ -3029,29 +3008,29 @@ void HUD_Mod_KH(vector pos, vector mySize)
 float kaball_prevstatus; // last remembered status
 float kaball_statuschange_time; // time when the status changed
 
-// we don't need to reset for keepaway since it immediately 
+// we don't need to reset for keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
 
 void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
 	mod_active = 1; // keepaway should always show the mod HUD
-	
+
 	float BLINK_FACTOR = 0.15;
 	float BLINK_BASE = 0.85;
-	float BLINK_FREQ = 5; 
+	float BLINK_FREQ = 5;
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
-	
+
 	float stat_items = getstati(STAT_ITEMS, 0, 24);
 	float kaball = (stat_items/IT_KEY1) & 1;
-	
+
 	if(kaball != kaball_prevstatus)
 	{
 		kaball_statuschange_time = time;
 		kaball_prevstatus = kaball;
 	}
-	
+
 	vector kaball_pos, kaball_size;
-	
+
 	if(mySize_x > mySize_y) {
 		kaball_pos = pos + eX * 0.25 * mySize_x;
 		kaball_size = eX * 0.5 * mySize_x + eY * mySize_y;
@@ -3059,13 +3038,13 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		kaball_pos = pos + eY * 0.25 * mySize_y;
 		kaball_size = eY * 0.5 * mySize_y + eX * mySize_x;
 	}
-	
+
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
 	float f = bound(0, kaball_statuschange_elapsedtime*2, 1);
-	
+
 	if(kaball_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
-	
+
 	if(kaball)
 		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
 }
@@ -3093,12 +3072,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 		if (p > 1)
 			p = 2 - p;
 
-		//Draw the filling
-		HUD_Panel_GetProgressBarColor(nexball);
-		if(mySize_x > mySize_y)
-			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, 0, 0, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		else
-			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, 1, 0, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, (mySize_x <= mySize_y), 0, autocvar_hud_progressbar_nexball_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if (stat_items & IT_KEY1)
@@ -3123,7 +3097,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
-	if not((scores_flags[ps_primary] & SFL_TIME) && !teamplay) // race/cts record display on HUD
+	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record
@@ -3324,24 +3298,19 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
-	entity tm;
-	float teams_count = 0;
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != NUM_SPECTATOR)
-			++teams_count;
 
 	float layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * teams_count + rows) * rows) + rows + 0.5) / 2), teams_count);
-	columns = ceil(teams_count/rows);
+	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
 	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	for(i=0; i<teams_count; ++i)
+	for(i=0; i<team_count; ++i)
 	{
 		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
@@ -3356,6 +3325,22 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	}
 }
 
+void HUD_ModIcons_SetFunc()
+{
+	switch(gametype)
+	{
+		case MAPINFO_TYPE_KEYHUNT:		HUD_ModIcons_GameType = HUD_Mod_KH; break;
+		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
+		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
+		case MAPINFO_TYPE_CTS:
+		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
+		case MAPINFO_TYPE_CA:
+		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
+		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
+		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+	}
+}
+
 float mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
@@ -3365,17 +3350,12 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
+		if(!HUD_ModIcons_GameType) return;
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
-
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
 
 	if(mod_active != mod_prev) {
 		mod_change = time;
@@ -3392,25 +3372,14 @@ void HUD_ModIcons(void)
 
 	if(panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	// these MUST be ran in order to update mod_active
-	if(gametype == MAPINFO_TYPE_KEYHUNT)
-		HUD_Mod_KH(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
-		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == MAPINFO_TYPE_NEXBALL)
-		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
-		HUD_Mod_Race(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
-		HUD_Mod_CA(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_DOMINATION)
-		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
-		HUD_Mod_Keepaway(pos, mySize);
+	if(autocvar__hud_configure)
+		HUD_Mod_CTF(panel_pos, panel_size);
+	else
+		HUD_ModIcons_GameType(panel_pos, panel_size);
 
 	draw_endBoldFont();
 }
@@ -3426,7 +3395,6 @@ void HUD_PressedKeys(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3494,24 +3462,32 @@ void HUD_Chat(void)
 			return;
 		}
 		if(autocvar__con_chat_maximized)
+		{
 			if(!hud_draw_maximized) return;
+		}
+		else if(chat_panel_modified)
+		{
+			panel.update_time = time; // forces reload of panel attributes
+			chat_panel_modified = false;
+		}
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
 		panel_pos_y = panel_bg_border;
 		panel_size_y = vid_conheight - panel_bg_border * 2;
-		if(panel_bg == "0") // force a border when maximized
+		if(panel.current_panel_bg == "0") // force a border when maximized
 		{
-			if(precache_pic(panel_bg) == "") {
-				panel_bg = strcat(hud_skin_path, "/border_default");
-				if(precache_pic(panel_bg) == "") {
-					panel_bg = "gfx/hud/default/border_default";
-				}
-			}
+			string panel_bg;
+			panel_bg = strcat(hud_skin_path, "/border_default");
+			if(precache_pic(panel_bg) == "")
+				panel_bg = "gfx/hud/default/border_default";
+			if(panel.current_panel_bg)
+				strunzone(panel.current_panel_bg);
+			panel.current_panel_bg = strzone(panel_bg);
+			chat_panel_modified = true;
 		}
 		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
 	}
@@ -3572,7 +3548,6 @@ void HUD_EngineInfo(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3591,7 +3566,7 @@ void HUD_EngineInfo(void)
 		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
 		frametimeavg2 = frametimeavg1;
 		frametimeavg1 = frametimeavg;
-		
+
 		float weight;
 		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
 		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
@@ -3633,7 +3608,6 @@ void HUD_InfoMessages(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -3669,7 +3643,7 @@ void HUD_InfoMessages(void)
 
 	vector fontsize;
 	fontsize = '0.20 0.20 0' * mySize_y;
-	
+
 	float a;
 	a = panel_fg_alpha;
 
@@ -3704,9 +3678,7 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == MAPINFO_TYPE_ARENA)
-				s = _("^1Wait for your turn to join");
-			else if(gametype == MAPINFO_TYPE_LMS)
+			if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
@@ -3795,7 +3767,7 @@ void HUD_InfoMessages(void)
 			}
 		}
 	}
-	else 
+	else
 	{
 		s = _("^7Press ^3ESC ^7to show HUD options.");
 		drawInfoMessage(s)
@@ -3822,7 +3794,6 @@ void HUD_Physics(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
 
@@ -3871,7 +3842,7 @@ void HUD_Physics(void)
 			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 			break;
 	}
-	
+
 	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
@@ -3894,9 +3865,9 @@ void HUD_Physics(void)
 			acceleration = (vlen(vel) - vlen(acc_prevspeed));
 		else
 			acceleration = (vlen(vel - '0 0 1' * vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
-		
+
 		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
-		
+
 		acc_prevspeed = vel;
 		acc_prevtime = time;
 
@@ -3944,10 +3915,7 @@ void HUD_Physics(void)
 	//draw speed
 	if(speed)
 	if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
-	{
-		HUD_Panel_GetProgressBarColor(speed);
-		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
+		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
@@ -4014,18 +3982,15 @@ void HUD_Physics(void)
 					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
                 else // if (speed_baralign == 2)
                     peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
-				//if speed is not 0 the speed progressbar already fetched the color
-				if (speed == 0)
-					HUD_Panel_GetProgressBarColor(speed);
 				peak_size_x = floor(panel_size_x * 0.01 + 1.5);
                 peak_size_y = panel_size_y;
                 if (speed_baralign == 2) // draw two peaks, on both sides
                 {
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x + peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x - peak_offset_x + peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x + peak_offset_x - peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x - peak_offset_x + peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 }
                 else
-                    drawfill(panel_pos + speed_offset + eX * (peak_offset_x - peak_size_x), peak_size, progressbar_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (peak_offset_x - peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
@@ -4043,10 +4008,11 @@ void HUD_Physics(void)
 	if(acceleration)
 	if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 3)
 	{
-		if (acceleration < 0)
-			HUD_Panel_GetProgressBarColor(acceleration_neg);
+		vector progressbar_color;
+		if(acceleration < 0)
+			progressbar_color = autocvar_hud_progressbar_acceleration_neg_color;
 		else
-			HUD_Panel_GetProgressBarColor(acceleration);
+			progressbar_color = autocvar_hud_progressbar_acceleration_color;
 
 		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
@@ -4097,7 +4063,7 @@ float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
 {
-	//print(sprintf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num));
+	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
 	float i, j;
 
 	if(strMessage == "" && new_id == 0)
@@ -4217,21 +4183,26 @@ void HUD_CenterPrint (void)
 		}
 	}
 
+	// this panel fades only when the menu does
+	float hud_fade_alpha_save = 0;
+	if(scoreboard_fade_alpha)
+	{
+		hud_fade_alpha_save = hud_fade_alpha;
+		hud_fade_alpha = 1 - autocvar__menu_alpha;
+	}
 	HUD_Panel_UpdateCvars();
-
-	// this panel doesn't fade when showing the scoreboard
-	if(autocvar__menu_alpha)
-		HUD_Panel_ApplyFadeAlpha();
 
 	if(scoreboard_fade_alpha)
 	{
+		hud_fade_alpha = hud_fade_alpha_save;
+
 		// move the panel below the scoreboard
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
-		
+
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
-		
+
 		if(target_pos_y > panel_pos_y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
@@ -4263,8 +4234,7 @@ void HUD_CenterPrint (void)
 	float a, sz, align, current_msg_pos_y = 0, msg_size;
 	vector pos;
 	string ts;
-
-	n = -1; // if no msg will be displayed, n stays -1
+	float all_messages_expired = TRUE;
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
@@ -4287,31 +4257,36 @@ void HUD_CenterPrint (void)
 				continue;
 		}
 
+		all_messages_expired = FALSE;
 
-		// fade the centerprint_hud in/out 
-		if(centerprint_time[j] < 0)
-			a = bound(0, (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
-			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		else if(centerprint_expire_time[j] > time)
+		// fade the centerprint_hud in/out
+		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
+			a = (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)  // Regularily printed. Not fading out yet.
+			a = (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in);
+		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
-		else
-			a = 0;
-		
+
+		if (a <= 0.5/255.0)  // Guaranteed invisible - don't show.
+			continue;
+		if (a > 1)
+			a = 1;
+
 		// set the size from fading in/out before subsequent fading
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
-		
+		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
 		}
-		
+		a *= panel_fg_alpha;
+
 		// finally set the size based on the new theAlpha from subsequent fading
-		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize)); 
+		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
 		drawfontscale = sz * '1 1 0';
-		
+
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
@@ -4346,7 +4321,8 @@ void HUD_CenterPrint (void)
 				{
 					if (align)
 						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
-					drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
+						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos_y += fontsize_y;
 				}
 				else
@@ -4354,15 +4330,15 @@ void HUD_CenterPrint (void)
 			}
 		}
 
-		++g; // move next position number up 
-		
+		++g; // move next position number up
+
 		msg_size = pos_y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
-				
+
 			if (pos_y < panel_pos_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
@@ -4374,7 +4350,7 @@ void HUD_CenterPrint (void)
 			pos_y += CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
-				
+
 			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
@@ -4383,7 +4359,7 @@ void HUD_CenterPrint (void)
 		}
 	}
 	drawfontscale = '1 1 0';
-	if (n == -1)
+	if (all_messages_expired)
 	{
 		centerprint_showing = FALSE;
 		reset_centerprint_messages();
@@ -4417,21 +4393,13 @@ void HUD_Main (void)
 	if(scoreboard_fade_alpha)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
-	if(autocvar__hud_configure)
-		if(isdemo())
-			HUD_Configure_Exit_Force();
+	HUD_Configure_Frame();
 
 	if(intermission == 2) // no hud during mapvote
-	{
-		if (autocvar__hud_configure)
-			HUD_Configure_Exit_Force();
 		hud_fade_alpha = 0;
-	}
-	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
-		hud_fade_alpha = 1;
 
 	// panels that we want to be active together with the scoreboard
-	// they must call HUD_Panel_ApplyFadeAlpha(); only when showing the menu
+	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
 		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
@@ -4450,24 +4418,6 @@ void HUD_Main (void)
 		if (hud_skin_prev)
 			strunzone(hud_skin_prev);
 		hud_skin_prev = strzone(autocvar_hud_skin);
-	}
-
-	// HUD configure visible grid
-	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
-	{
-		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
-		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
-		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
-		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
-		vector s;
-		// x-axis
-		s = eX + eY * vid_conheight;
-		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
-			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		// y-axis
-		s = eY + eX * vid_conwidth;
-		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
-			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
 #ifdef COMPAT_XON050_ENGINE
@@ -4570,34 +4520,7 @@ void HUD_Main (void)
 	if(autocvar__con_chat_maximized)
 		(panel = HUD_PANEL(CHAT)).panel_draw();
 
-	if(autocvar__hud_configure)
-	{
-		if(tab_panel)
-		{
-			panel = tab_panel;
-			HUD_Panel_UpdatePosSize()
-			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
-		}
-		if(highlightedPanel)
-		{
-			panel = highlightedPanel;
-			HUD_Panel_UpdatePosSize()
-			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
-		}
-		if(!hud_configure_prev || hud_configure_prev == -1)
-		{
-			if(autocvar_hud_cursormode) { setcursormode(1); }
-			hudShiftState = 0;
-			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-				hud_panel[panel_order[i]].update_time = time;
-		}
-	}
-	else if(hud_configure_prev && hud_configure_prev != -1 && autocvar_hud_cursormode)
-		setcursormode(0);
+	HUD_Configure_PostDraw();
 
 	hud_configure_prev = autocvar__hud_configure;
-
-	if (!autocvar__hud_configure) // hud config mode disabled, enable normal theAlpha stuff again
-		if (menu_enabled)
-			menu_enabled = 0;
 }

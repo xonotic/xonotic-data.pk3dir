@@ -51,7 +51,7 @@ void UziFlash()
 
 void W_UZI_Attack (float deathtype)
 {
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
+	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage));
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -62,10 +62,9 @@ void W_UZI_Attack (float deathtype)
 	ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_first_refire * W_WeaponRateFactor();
 
 	if (self.misc_bulletcounter == 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_first_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_first_damage, autocvar_g_balance_uzi_first_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+		fireBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_first_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_first_damage, autocvar_g_balance_uzi_first_force, deathtype, 0);
 	else
-		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_sustained_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, deathtype, 0, 1, autocvar_g_balance_uzi_bulletconstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_sustained_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, deathtype, 0);
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -93,7 +92,7 @@ void uzi_fire1_02()
 	if (self.BUTTON_ATCK)
 	{
 		if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			w_ready();
@@ -119,7 +118,7 @@ void uzi_mode1_fire_auto()
 	}
 
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1))
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -128,7 +127,7 @@ void uzi_mode1_fire_auto()
 
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
+	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -136,8 +135,7 @@ void uzi_mode1_fire_auto()
 	}
 
 	uzi_spread = bound(autocvar_g_balance_uzi_spread_min, autocvar_g_balance_uzi_spread_min + (autocvar_g_balance_uzi_spread_add * self.misc_bulletcounter), autocvar_g_balance_uzi_spread_max);
-	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
-	endFireBallisticBullet();
+	fireBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
@@ -155,16 +153,14 @@ void uzi_mode1_fire_auto()
 
 void uzi_mode1_fire_burst()
 {
-	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
+	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage);
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
 	}
 
-	fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_burst_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
-	endFireBallisticBullet();
-
+	fireBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_burst_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0);
 
 	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -216,7 +212,7 @@ float w_uzi(float req)
 			if(weapon_prepareattack(1, 0))
 			{
 				if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				{
 					W_SwitchWeapon_Force(self, w_getbestweapon(self));
 					w_ready();

@@ -17,6 +17,7 @@ CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
 
 	METHOD(XonoticCvarList, mouseRelease, float(entity, vector))
 	METHOD(XonoticCvarList, setSelected, void(entity, float))
+	METHOD(XonoticCvarList, updateCvarType, float(entity))
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarNameBox, entity, NULL)
@@ -24,6 +25,7 @@ CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCvarList, cvarTypeBox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarValueBox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarDefaultBox, entity, NULL)
+	ATTRIB(XonoticCvarList, cvarNeedsForcing, float, 0)
 
 	ATTRIB(XonoticCvarList, handle, float, -1)
 	ATTRIB(XonoticCvarList, cvarName, string, string_null)
@@ -58,6 +60,45 @@ void XonoticCvarList_destroy(entity me)
 {
 	buf_del(me.handle);
 }
+string autocvar_menu_forced_saved_cvars;
+string autocvar_menu_reverted_nonsaved_cvars;
+float XonoticCvarList_updateCvarType(entity me)
+{
+	float t;
+	t = cvar_type(me.cvarName);
+	me.cvarType = "";
+	float needsForcing;
+	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	{
+		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
+		needsForcing = 0;
+	}
+	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	{
+		// Currently claims to be saved, but won't be on next startup.
+		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
+		needsForcing = 1;
+	}
+	else if(t & CVAR_TYPEFLAG_SAVED)
+	{
+		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
+		needsForcing = 0;
+	}
+	else
+	{
+		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
+		needsForcing = 1;
+	}
+	if(t & CVAR_TYPEFLAG_PRIVATE)
+		me.cvarType = strcat(me.cvarType, ", ", _("private"));
+	if(t & CVAR_TYPEFLAG_ENGINE)
+		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
+	if(t & CVAR_TYPEFLAG_READONLY)
+		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
+	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
+	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);
+	return needsForcing;
+}
 void XonoticCvarList_setSelected(entity me, float i)
 {
 	string s;
@@ -65,7 +106,7 @@ void XonoticCvarList_setSelected(entity me, float i)
 	SUPER(XonoticCvarList).setSelected(me, i);
 	if(me.nItems == 0)
 		return;
-	
+
 	if(me.cvarName)
 		strunzone(me.cvarName);
 	if(me.cvarDescription)
@@ -77,30 +118,16 @@ void XonoticCvarList_setSelected(entity me, float i)
 	me.cvarName = strzone(bufstr_get(me.handle, me.selectedItem));
 	me.cvarDescription = strzone(cvar_description(me.cvarName));
 	me.cvarDefault = strzone(cvar_defstring(me.cvarName));
-
-	float t;
-	t = cvar_type(me.cvarName);
-	me.cvarType = "";
-	if(t & CVAR_TYPEFLAG_SAVED)
-		me.cvarType = strcat(me.cvarType, ", ", _("will be saved to config.cfg"));
-	else
-		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
-	if(t & CVAR_TYPEFLAG_PRIVATE)
-		me.cvarType = strcat(me.cvarType, ", ", _("private"));
-	if(t & CVAR_TYPEFLAG_ENGINE)
-		me.cvarType = strcat(me.cvarType, ", ", _("engine setting"));
-	if(t & CVAR_TYPEFLAG_READONLY)
-		me.cvarType = strcat(me.cvarType, ", ", _("read only"));
-	me.cvarType = strzone(substring(me.cvarType, 2, strlen(me.cvarType) - 2));
-
 	me.cvarNameBox.setText(me.cvarNameBox, me.cvarName);
 	me.cvarDescriptionBox.setText(me.cvarDescriptionBox, me.cvarDescription);
-	me.cvarTypeBox.setText(me.cvarTypeBox, me.cvarType);
+	float needsForcing = me.updateCvarType(me);
 	me.cvarDefaultBox.setText(me.cvarDefaultBox, me.cvarDefault);
 
 	// this one can handle tempstrings
 	s = cvar_string(me.cvarName);
+	me.cvarNeedsForcing = 0;
 	me.cvarValueBox.setText(me.cvarValueBox, s);
+	me.cvarNeedsForcing = needsForcing;
 	me.cvarValueBox.cursorPos = strlen(s);
 }
 void CvarList_Filter_Change(entity box, entity me)
@@ -137,13 +164,17 @@ void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	
+
 	k = bufstr_get(me.handle, i);
 
 	v = cvar_string(k);
 	d = cvar_defstring(k);
 	t = cvar_type(k);
-	if(t & CVAR_TYPEFLAG_SAVED)
+	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+		theAlpha = SKINALPHA_CVARLIST_SAVED;
+	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
+	else if(t & CVAR_TYPEFLAG_SAVED)
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
 	else
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
@@ -188,12 +219,32 @@ float XonoticCvarList_mouseRelease(entity me, vector pos)
 void CvarList_Value_Change(entity box, entity me)
 {
 	cvar_set(me.cvarNameBox.text, box.text);
+	if(me.cvarNeedsForcing)
+	{
+		localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", me.cvarName));
+		cvar_set("menu_reverted_nonsaved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " ")), 1, -2));
+		if (autocvar_menu_forced_saved_cvars == "")
+			cvar_set("menu_forced_saved_cvars", me.cvarName);
+		else
+			cvar_set("menu_forced_saved_cvars", strcat(autocvar_menu_forced_saved_cvars, " ", me.cvarName));
+		me.cvarNeedsForcing = 0;
+		me.updateCvarType(me);
+	}
 }
 
 void CvarList_Revert_Click(entity btn, entity me)
 {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
+	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	{
+		cvar_set("menu_forced_saved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_forced_saved_cvars, " ")), 1, -2));
+		if (autocvar_menu_reverted_nonsaved_cvars == "")
+			cvar_set("menu_reverted_nonsaved_cvars", me.cvarName);
+		else
+			cvar_set("menu_reverted_nonsaved_cvars", strcat(autocvar_menu_reverted_nonsaved_cvars, " ", me.cvarName));
+	}
+	me.cvarNeedsForcing = me.updateCvarType(me);
 }
 
 void CvarList_End_Editing(entity box, entity me)

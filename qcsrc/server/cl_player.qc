@@ -155,6 +155,7 @@ void CopyBody(float keepvelocity)
 	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
+	self.v_angle = oldself.v_angle;
 	self.avelocity = oldself.avelocity;
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
@@ -321,11 +322,107 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+	 (gametype_setting_tmp < 0) ? 0 : \
+	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 gametype_setting_tmp)
+
+
+void calculate_player_respawn_time()
+{
+	float gametype_setting_tmp;
+	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
+	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
+	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
+	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
+	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
+	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
+
+	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
+	entity pl;
+	if (teamplay)
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				if (pl.team == self.team)
+					++pcount;
+		if (sdelay_small_count == 0)
+			sdelay_small_count = 1;
+		if (sdelay_large_count == 0)
+			sdelay_large_count = 1;
+	}
+	else
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				++pcount;
+		if (sdelay_small_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_small_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_small_count = 2;
+			}
+		}
+		if (sdelay_large_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_large_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_large_count = 2;
+			}
+		}
+	}
+
+	float sdelay;
+
+	if (pcount <= sdelay_small_count)
+		sdelay = sdelay_small;
+	else if (pcount >= sdelay_large_count)
+		sdelay = sdelay_large;
+	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
+		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
+
+	if(waves)
+		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+	else
+		self.respawn_time = time + sdelay;
+
+	if(sdelay < sdelay_max)
+		self.respawn_time_max = time + sdelay_max;
+	else
+		self.respawn_time_max = self.respawn_time;
+
+	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
+		self.respawn_countdown = 10; // first number to count down from is 10
+	else
+		self.respawn_countdown = -1; // do not count down
+
+	if(g_cts || autocvar_g_forced_respawn)
+		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+}
+
 void ClientKill_Now_TeamChange();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	float take, save, waves, sdelay, dh, da, j;
+	float take, save, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -353,7 +450,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		ear1 += v_right * -10;
 		ear2 += v_right * +10;
 		d = inflictor.origin - self.origin;
-		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if (d)
+			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		else
+			f = 0;  // Assum ecenter.
 		force = v_right * vlen(force);
 		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
 		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
@@ -617,30 +717,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
-		sdelay = 0;
-		waves = 0;
-		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
-		if(!sdelay)
-		{
-			if(g_cts)
-				sdelay = 0; // no respawn delay in CTS
-			else
-				sdelay = autocvar_g_respawn_delay;
-		}
-		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
-		if(!waves)
-			waves = autocvar_g_respawn_waves;
-		if(waves)
-			self.respawn_time = ceil((time + sdelay) / waves) * waves;
-		else
-			self.respawn_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-			self.respawn_countdown = 10; // first number to count down from is 10
-		else
-			self.respawn_countdown = -1; // do not count down
-
-		if(g_cts || autocvar_g_forced_respawn)
-			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+		calculate_player_respawn_time();
 
 		self.death_time = time;
 		if (random() < 0.5)
@@ -694,7 +771,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if not(IS_PLAYER(source))
+	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -854,9 +931,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if not(IS_PLAYER(source))
+	if (!IS_PLAYER(source))
 	{
-		if not(intermission_running)
+		if (!intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
@@ -900,7 +977,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
-			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
@@ -922,7 +999,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
+			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
@@ -1011,7 +1088,7 @@ void PrecachePlayerSounds(string f)
 	}
 	fclose(fh);
 
-	if not(allvoicesamples)
+	if (!allvoicesamples)
 	{
 #define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
 		ALLVOICEMSGS

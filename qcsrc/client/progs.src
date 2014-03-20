@@ -29,6 +29,8 @@ Defs.qc
 ../common/animdecide.qh
 command/cl_cmd.qh
 
+../common/monsters/monsters.qh
+
 autocvars.qh
 
 ../common/notifications.qh // must be after autocvars
@@ -114,6 +116,8 @@ noise.qc
 ../common/urllib.qc
 command/cl_cmd.qc
 
+../common/monsters/monsters.qc
+
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
@@ -124,5 +128,3 @@ command/cl_cmd.qc
 
 player_skeleton.qc
 ../common/animdecide.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

@@ -48,7 +48,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 {
 	float v;
 
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	v = cvar(me.cvarName);
@@ -61,7 +61,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.value > me.valueMax - 0.5 * me.valueStep)
@@ -96,7 +96,7 @@ void _TEST_XonoticDecibelsSlider()
 		float v = fromDecibelOfSquare(db, -40);
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
-		print(sprintf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d));
+		printf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
 		TEST_Check(fabs(d) > 0.02);
 	}
 	TEST_OK();
