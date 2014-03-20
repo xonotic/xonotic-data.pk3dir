@@ -2729,14 +2729,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag, blueflag, yellowflag, pinkflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
-	float teams_count = 0;
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
-	entity tm;
-
-	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-	if(tm.team != NUM_SPECTATOR)
-		++teams_count;
 
 	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
@@ -2753,9 +2747,9 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		redflag = 1;
 		blueflag = 2;
-		if(teams_count >= 3)
+		if(team_count >= 3)
 			yellowflag = 2;
-		if(teams_count >= 4)
+		if(team_count >= 4)
 			pinkflag = 3;
 	}
 
@@ -2914,7 +2908,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			break;
 	}
 
-	switch(teams_count)
+	switch(team_count)
 	{
 		default:
 		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
