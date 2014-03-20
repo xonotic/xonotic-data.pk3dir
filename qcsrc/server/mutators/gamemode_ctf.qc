@@ -656,7 +656,7 @@ void ctf_FlagThink()
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
 		dprint("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
-		if(!trace_startsolid) // can we resize it without getting stuck?
+		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
@@ -793,7 +793,7 @@ void ctf_FlagTouch()
 	// special touch behaviors
 	if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
-		if(autocvar_g_ctf_allow_vehicle_touch)
+		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
