@@ -16,6 +16,7 @@ const      float IT_SUPERWEAPON               =    4096;
 const      float IT_STRENGTH                  =    8192;
 const      float IT_INVINCIBLE                =   16384;
 const      float IT_HEALTH                    =   32768;
+const      float IT_PLASMA                    =   65536;
 
 // shared value space (union):
 	// for items:
@@ -36,7 +37,7 @@ const      float IT_ARMOR_SHARD               = 2097152;
 const      float IT_ARMOR                     = 4194304;
 
 // item masks
-const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS;
+const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
 const      float IT_PICKUPMASK                =      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
 const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 

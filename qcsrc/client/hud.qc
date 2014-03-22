@@ -762,6 +762,7 @@ void HUD_Weapons(void)
 						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
 						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
 						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
 						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
@@ -924,7 +925,7 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	const float AMMO_COUNT = 4;
+	const float AMMO_COUNT = 5;
 	float rows = 0, columns, row, column;
 	vector ammo_size;
 	if(autocvar_hud_panel_ammo_onlycurrent)

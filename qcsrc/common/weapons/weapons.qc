@@ -269,6 +269,7 @@ string GetAmmoPicture(.float ammotype)
 		case ammo_nails:   return "ammo_bullets";
 		case ammo_rockets: return "ammo_rockets";
 		case ammo_cells:   return "ammo_cells";
+		case ammo_plasma:  return "ammo_cells";
 		case ammo_fuel:    return "ammo_fuel";
 		default: return ""; // wtf, no ammo type?
 	}
@@ -283,7 +284,8 @@ string GetAmmoPicture(.float ammotype)
 		case 1: return ammo_nails;
 		case 2: return ammo_rockets;
 		case 3: return ammo_cells;
-		case 4: return ammo_fuel;
+		case 4: return ammo_plasma;
+		case 5: return ammo_fuel;
 		default: return ammo_none;
 	}
 }
@@ -296,6 +298,7 @@ float GetAmmoStat(.float ammotype)
 		case ammo_nails: return STAT_NAILS;
 		case ammo_rockets: return STAT_ROCKETS;
 		case ammo_cells: return STAT_CELLS;
+		case ammo_plasma: return STAT_PLASMA;
 		case ammo_fuel: return STAT_FUEL;
 		default: return -1;
 	}

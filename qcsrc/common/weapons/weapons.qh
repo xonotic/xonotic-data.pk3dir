@@ -83,6 +83,7 @@ float GetAmmoStat(.float ammotype);
 .float ammo_nails;
 .float ammo_rockets;
 .float ammo_cells;
+.float ammo_plasma;
 .float ammo_fuel;
 .float ammo_none;
 
