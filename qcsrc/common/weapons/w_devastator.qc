@@ -161,21 +161,18 @@ void W_Devastator_DoRemoteExplode(void)
 		head = head.chain;
 	}
 
-	if(!handled_as_rocketjump)
-	{
-		RadiusDamage(
-			self,
-			self.realowner,
-			WEP_CVAR(devastator, remote_damage),
-			WEP_CVAR(devastator, remote_edgedamage),
-			WEP_CVAR(devastator, remote_radius),
-			self,
-			world,
-			WEP_CVAR(devastator, remote_force),
-			self.projectiledeathtype | HITTYPE_BOUNCE,
-			world
-		);
-	}
+	RadiusDamage(
+		self,
+		self.realowner,
+		WEP_CVAR(devastator, remote_damage),
+		WEP_CVAR(devastator, remote_edgedamage),
+		WEP_CVAR(devastator, remote_radius),
+		(handled_as_rocketjump ? head : world),
+		world,
+		WEP_CVAR(devastator, remote_force),
+		self.projectiledeathtype | HITTYPE_BOUNCE,
+		world
+	);
 
 	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
