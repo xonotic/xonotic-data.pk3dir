@@ -907,7 +907,7 @@ void Draw_ArcBeam(void)
 	}
 
 	setorigin(self, start_pos);
-	//self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
+	self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
 	vector beam_endpos = (start_pos + (beamdir * self.beam_range));
 	vector beam_controlpoint = start_pos + wantdir * (self.beam_range * (1 - self.beam_tightness));
@@ -946,9 +946,8 @@ void Draw_ArcBeam(void)
 			Draw_ArcBeam_callback
 		);
 
-		// Do all the transforms for warpzones right now, as we already
-		// "are" in the post-trace system (if we hit a player, that's
-		// always BEHIND the last passed wz).
+		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
+		// system (if we hit a player, that's always BEHIND the last passed wz).
 		last_origin = trace_endpos;
 		start_pos = WarpZone_TransformOrigin(WarpZone_trace_transform, start_pos);
 		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
@@ -957,17 +956,7 @@ void Draw_ArcBeam(void)
 		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
 		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
-		//printf("segment: %d, warpzone transform: %d\n", i, (WarpZone_trace_transform != world));
-
-		// WEAPONTODO:
-		// Figure out some way to detect a collision with geometry with callback...
-		// That way we can know when we are done drawing the beam and skip
-		// the rest of the segments without breaking warpzone support.
-		//
-		// Not needed to do this in the callback. trace_fraction != 1 is a good abort condition.
-
-		if (trace_fraction < 1)
-			break;
+		if(trace_fraction < 1) { break; }
 	}
 
 	// visual effects for startpoint and endpoint
