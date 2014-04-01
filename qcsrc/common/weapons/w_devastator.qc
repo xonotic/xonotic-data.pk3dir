@@ -134,6 +134,10 @@ void W_Devastator_DoRemoteExplode(void)
 			float distance_to_head = vlen(self.origin - head.WarpZone_findradius_nearest);
 			if(distance_to_head <= WEP_CVAR(devastator, remote_jump_radius))
 			{
+				// we handled this as a rocketjump :)
+				handled_as_rocketjump = TRUE;
+
+				// modify velocity 
 				head.velocity_x *= 0.9;
 				head.velocity_y *= 0.9;
 				head.velocity_z = bound(
@@ -142,7 +146,7 @@ void W_Devastator_DoRemoteExplode(void)
 					WEP_CVAR(devastator, remote_jump_velocity_z_max)
 				);
 
-				handled_as_rocketjump = TRUE;
+				// now do the damage
 				RadiusDamage(
 					self,
 					head,
