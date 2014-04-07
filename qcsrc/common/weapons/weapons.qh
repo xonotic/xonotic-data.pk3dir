@@ -109,7 +109,7 @@ float GetAmmoStat(.float ammotype);
 
 // create properties for weapon settings
 #define WEP_ADD_PROP(wepid,wepname,type,prop,name) \
-	.type ##prop; \
+	.type prop; \
 	[[last]] type autocvar_g_balance_##wepname##_##name;
 
 // read cvars from weapon settings
