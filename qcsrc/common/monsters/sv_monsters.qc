@@ -274,6 +274,8 @@ void UpdateMonsterSounds()
 
 void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float chan)
 {
+	if(!autocvar_g_monsters_sounds) { return; }
+
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early
@@ -353,13 +355,11 @@ float Monster_CanRespawn(entity ent)
 	return TRUE;
 }
 
-float Monster_CheckAppearFlags(entity ent, float monster_id);
 float monster_initialize(float mon_id);
 void monster_respawn()
 {
 	// is this function really needed?
-	if(!Monster_CheckAppearFlags(self, self.monsterid))
-		monster_initialize(self.monsterid);
+	monster_initialize(self.monsterid);
 }
 
 void Monster_Fade ()
@@ -552,8 +552,7 @@ vector monster_pickmovetarget(entity targ)
 				makevectors(self.angles);
 				pos = self.origin + v_forward * self.wander_distance;
 
-				if((self.flags & FL_FLY) || (self.flags & FL_SWIM))
-				if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
+				if(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM))
 				{
 					pos_z = random() * 200;
 					if(random() >= 0.5)
@@ -595,13 +594,14 @@ void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 	vector desired_direction = normalize(targpos - from);
 	if(turnrate) { mon.velocity = (normalize(normalize(mon.velocity) + (desired_direction * 50)) * movespeed); }
 	else { mon.velocity = (desired_direction * movespeed); }
-	
-	mon.angles = vectoangles(mon.velocity);
+
+	//mon.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
+	//mon.angles = vectoangles(mon.velocity);
 }
 
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
-	fixedmakevectors(self.angles);
+	//fixedmakevectors(self.angles);
 
 	if(self.target2)
 		self.goalentity = find(world, targetname, self.target2);
@@ -717,9 +717,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy && self.enemy.vehicle)
 		runspeed = 0;
 
-	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL))
-		v_forward = normalize(self.moveto - self.origin);
-	else
+	if(!(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM)))
+		//v_forward = normalize(self.moveto - self.origin);
+	//else
 		self.moveto_z = self.origin_z;
 
 	if(vlen(self.origin - self.moveto) > 64)
@@ -752,6 +752,18 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time > self.pain_finished)
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
+	}
+	
+	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	
+	vector real_angle = vectoangles(self.steerto) - self.angles;
+	float turny = 25;
+	if(self.state == MONSTER_STATE_ATTACK_MELEE)
+		turny = 0;
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		self.angles_y += turny;
 	}
 
 	monster_checkattack(self, self.enemy);
@@ -795,7 +807,7 @@ void monsters_setstatus()
 void Monster_Appear()
 {
 	self.enemy = activator;
-	//self.spawnflags &= ~MONSTERFLAG_APPEAR;
+	self.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
 	monster_initialize(self.monsterid);
 }
 
@@ -889,7 +901,7 @@ void monster_die(entity attacker, float gibbed)
 	self.state			= 0;
 	self.attack_finished_single = 0;
 
-	if(!(self.flags & FL_FLY))
+	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
 
 	MON_ACTION(self.monsterid, MR_DEATH);
@@ -1057,8 +1069,9 @@ float monster_spawn()
 
 float monster_initialize(float mon_id)
 {
-	if(!autocvar_g_monsters)
-		return FALSE;
+	if(!autocvar_g_monsters) { return FALSE; }
+		
+	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
 	entity mon = get_monsterinfo(mon_id);
 
@@ -1078,7 +1091,7 @@ float monster_initialize(float mon_id)
 		monsters_total += 1;
 
 	setmodel(self, mon.model);
-	setsize(self, mon.mins, mon.maxs);
+	//setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.takedamage			= DAMAGE_AIM;
 	self.bot_attack			= TRUE;
@@ -1106,12 +1119,14 @@ float monster_initialize(float mon_id)
 	self.oldtarget2			= self.target2;
 	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
-	self.scale				= 1;
-	self.noalign			= (mon.spawnflags & MONSTER_TYPE_FLY);
+	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+
+	if(!self.scale)
+		self.scale = 1;
 
 	if(autocvar_g_monsters_edit)
 		self.grab = 1; // owner may carry their monster
@@ -1132,7 +1147,10 @@ float monster_initialize(float mon_id)
 	}
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
-		self.scale = 1.3;
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+		self.scale *= 1.3;
+		
+	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	if(!self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

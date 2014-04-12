@@ -34,7 +34,13 @@ entity invasion_PickSpawn()
 	RandomSelection_Init();
 
 	for(e = world;(e = find(e, classname, "invasion_spawnpoint")); )
-		RandomSelection_Add(e, 0, string_null, 1, 1);
+	{
+		if(time >= e.spawnshieldtime)
+		{
+			e.spawnshieldtime = time + 2;
+			RandomSelection_Add(e, 0, string_null, 1, 1);
+		}
+	}
 
 	return RandomSelection_chosen_ent;
 }
@@ -51,9 +57,10 @@ void invasion_SpawnChosenMonster(float mon)
 		return;
 	}
 
-	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
+	monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
 	
 	monster.target2 = spawn_point.target2;
+	monster.spawnshieldtime = time;
 
 	if(inv_roundcnt >= inv_maxrounds)
 		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
@@ -74,12 +81,6 @@ float Invasion_CheckWinner()
 		FOR_EACH_MONSTER(head)
 			monster_remove(head);
 
-		if(inv_roundcnt >= inv_maxrounds)
-		{
-			NextLevel();
-			return 1;
-		}
-
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
@@ -95,7 +96,7 @@ float Invasion_CheckWinner()
 		++total_alive_monsters;
 	}
 
-	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < 10) // 10 at a time should be plenty
+	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned)
 	{
 		if(time >= inv_lastcheck)
 		{
@@ -108,12 +109,6 @@ float Invasion_CheckWinner()
 
 	if(inv_numspawned < 1 || inv_numkilled < inv_maxspawned)
 		return 0; // nothing has spawned yet, or there are still alive monsters
-
-	if(inv_roundcnt >= inv_maxrounds)
-	{
-		NextLevel();
-		return 1;
-	}
 
 	entity winner = world;
 	float winning_score = 0;
@@ -157,7 +152,8 @@ void Invasion_RoundStart()
 		++numplayers;
 	}
 
-	inv_roundcnt += 1;
+	if(inv_roundcnt < inv_maxrounds)
+		inv_roundcnt += 1; // a limiter to stop crazy counts
 
 	inv_monsterskill = inv_roundcnt + max(1, numplayers * 0.3);
 
@@ -185,10 +181,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
-	{
-		monster_remove(self);
-		return FALSE;
-	}
+		return TRUE;
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
@@ -203,6 +196,15 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
+{
+	if(startsWith(self.classname, "monster_"))
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+		return TRUE;
+	
 	return FALSE;
 }
 
@@ -300,12 +302,14 @@ void invasion_Initialize()
 	allowed_to_spawn = TRUE;
 
 	inv_roundcnt = 0;
+	inv_maxrounds = 15; // 15?
 }
 
 MUTATOR_DEFINITION(gamemode_invasion)
 {
 	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, invasion_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, invasion_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
