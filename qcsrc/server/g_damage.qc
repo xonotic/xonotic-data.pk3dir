@@ -1092,7 +1092,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		mintime = e.fire_endtime - time;
 		maxtime = max(mintime, t);
 
-		mindps = e.fire_damagepersec;
+		mindps = max(0.1, e.fire_damagepersec);
 		maxdps = max(mindps, dps);
 
 		if(maxtime > mintime || maxdps > mindps)
@@ -1217,6 +1217,7 @@ void Fire_ApplyDamage(entity e)
 	e.fire_hitsound = TRUE;
 
 	if (!IS_INDEPENDENT_PLAYER(e))
+	if(!e.freezetag_frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))
