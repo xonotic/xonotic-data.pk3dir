@@ -388,9 +388,6 @@ void Monster_Fade ()
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
-
 		SUB_SetFade(self, time + 3, 1);
 	}
 }
@@ -851,9 +848,6 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
-
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
 		self.event_damage = func_null;
@@ -881,9 +875,6 @@ void monster_die(entity attacker, float gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
-
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
 	}
 
 	if(self.candrop && self.weapon)
@@ -977,26 +968,43 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	}
 }
 
-void monster_setupcolors()
+void monster_setupcolors(entity mon)
 {
-	if(IS_PLAYER(self.monster_owner))
-		self.colormap = self.monster_owner.colormap;
-	else if(teamplay && self.team)
-		self.colormap = 1024 + (self.team - 1) * 17;
+	if(IS_PLAYER(mon.monster_owner))
+		mon.colormap = mon.monster_owner.colormap;
+	else if(teamplay && mon.team)
+		mon.colormap = 1024 + (mon.team - 1) * 17;
 	else
 	{
-		if(self.monster_skill <= MONSTER_SKILL_EASY)
-			self.colormap = 1029;
-		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
-			self.colormap = 1027;
-		else if(self.monster_skill <= MONSTER_SKILL_HARD)
-			self.colormap = 1038;
-		else if(self.monster_skill <= MONSTER_SKILL_INSANE)
-			self.colormap = 1028;
-		else if(self.monster_skill <= MONSTER_SKILL_NIGHTMARE)
-			self.colormap = 1032;
+		if(mon.monster_skill <= MONSTER_SKILL_EASY)
+			mon.colormap = 1029;
+		else if(mon.monster_skill <= MONSTER_SKILL_MEDIUM)
+			mon.colormap = 1027;
+		else if(mon.monster_skill <= MONSTER_SKILL_HARD)
+			mon.colormap = 1038;
+		else if(mon.monster_skill <= MONSTER_SKILL_INSANE)
+			mon.colormap = 1028;
+		else if(mon.monster_skill <= MONSTER_SKILL_NIGHTMARE)
+			mon.colormap = 1032;
 		else
-			self.colormap = 1024;
+			mon.colormap = 1024;
+	}
+}
+
+void monster_changeteam(entity ent, float newteam)
+{
+	if(!teamplay) { return; }
+	
+	ent.team = newteam;
+	ent.monster_attack = TRUE; // new team, activate attacking
+	monster_setupcolors(ent);
+	
+	if(ent.sprite)
+	{
+		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
+
+		ent.sprite.team = newteam;
+		ent.sprite.SendFlags |= 1;
 	}
 }
 
@@ -1070,7 +1078,7 @@ float monster_spawn()
 float monster_initialize(float mon_id)
 {
 	if(!autocvar_g_monsters) { return FALSE; }
-		
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
 	entity mon = get_monsterinfo(mon_id);
@@ -1180,7 +1188,7 @@ float monster_initialize(float mon_id)
 		return FALSE;
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-		monster_setupcolors();
+		monster_setupcolors(self);
 
 	CSQCMODEL_AUTOINIT();
 

@@ -22,13 +22,10 @@ QCCFLAGS ?= \
 XON_BUILDSYSTEM =
 
 all: qc
+.PHONY: all
 
 .PHONY: qc
-qc:
-	$(MAKE) qc-recursive
-
-.PHONY: qc-recursive
-qc-recursive: ../menu.dat ../progs.dat ../csprogs.dat
+qc: ../menu.dat ../progs.dat ../csprogs.dat
 
 .PHONY: clean
 clean:
