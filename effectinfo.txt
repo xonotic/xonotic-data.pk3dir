@@ -7702,6 +7702,22 @@ velocityjitter 300 300 300
 velocitymultiplier 0.5
 airfriction 3
 
+// neutralflag_touch -- effects for touching the neutral flag
+// used nowhere in code
+effect neutralflag_touch
+count 35
+type spark
+tex 40 40
+color 0xFFFFFF 0xFFFFFF
+size 1 3
+alpha 0 256 556
+gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 300 300 300
+velocitymultiplier 0.5
+airfriction 3
+
 // red_pass
 // used nowhere in code
 effect red_pass
@@ -7811,6 +7827,35 @@ sizeincrease 8
 velocityjitter 64 64 64
 type static
 effect pink_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+
+// neutral_pass
+// used nowhere in code
+effect neutral_pass
+trailspacing 64
+color 0xFFFFFF 0xFFFFFF
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+effect neutral_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+effect neutral_pass
 trailspacing 12
 color 0xFFFFFF 0xFFFFFF
 size 4 4
