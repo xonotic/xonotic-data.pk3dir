@@ -1516,7 +1516,9 @@ void GameCommand_trace(float request, float argc)
 			{
 				case "debug":
 				{
+					float hitcount = 0;
 					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
+					float worst_endpos_bug = 0;
 					for(;;)
 					{
 						org = world.mins;
@@ -1534,49 +1536,49 @@ void GameCommand_trace(float request, float argc)
 						end = stov(vtos(end));
 
 						tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-						if(!trace_startsolid)
+						if(!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
 							tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
-							if(trace_startsolid || trace_fraction == 1)
+							if(trace_startsolid)
 							{
 								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
 								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
 
-								if(trace_startsolid)
+								// how much do we need to back off?
+								safe = 1;
+								unsafe = 0;
+								for(;;)
 								{
-									// how much do we need to back off?
-									safe = 1;
-									unsafe = 0;
-									for(;;)
-									{
-										pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-										tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
-										if(trace_startsolid)
-										{
-											if((safe + unsafe) * 0.5 == unsafe)
-												break;
-											unsafe = (safe + unsafe) * 0.5;
-										}
-										else
-										{
-											if((safe + unsafe) * 0.5 == safe)
-												break;
-											safe = (safe + unsafe) * 0.5;
-										}
-									}
-
-									print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
-									print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
-
-									tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
+									tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
 									if(trace_startsolid)
-										print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+									{
+										if((safe + unsafe) * 0.5 == unsafe)
+											break;
+										unsafe = (safe + unsafe) * 0.5;
+									}
 									else
-										print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
-									break;
+									{
+										if((safe + unsafe) * 0.5 == safe)
+											break;
+										safe = (safe + unsafe) * 0.5;
+									}
 								}
 
+								print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
+								print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
+
+								tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+								if(trace_startsolid)
+									print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+								else
+									print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+								if (++hitcount >= 10)
+									break;
+							}
+							else
+							{
 								q0 = p;
 								dq = 0;
 								dqf = 1;
@@ -1593,11 +1595,13 @@ void GameCommand_trace(float request, float argc)
 									dqf *= 0.5;
 									q0 = q;
 								}
-								if(dq > 0)
+								if(dq > worst_endpos_bug)
 								{
+									worst_endpos_bug = dq;
 									print("trace_endpos still before solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 									print("could go ", ftos(dq), " units further to ", vtos(q), "\n");
-									break;
+									if (++hitcount >= 10)
+										break;
 								}
 							}
 						}
