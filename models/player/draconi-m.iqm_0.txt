@@ -1,5 +1,5 @@
 name Draconi M
-species human
+species alien
 sex Male
 weight 243
 age 31

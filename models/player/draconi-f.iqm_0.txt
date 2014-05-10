@@ -1,5 +1,5 @@
 name Draconi F
-species human
+species alien
 sex Female
 weight 216
 age 27
