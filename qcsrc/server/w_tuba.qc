@@ -1,5 +1,16 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "tuba", "tuba", _("@!#%'n Tuba"))
+REGISTER_WEAPON(
+/* WEP_##id  */ TUBA,
+/* function  */ w_tuba,
+/* ammotype  */ 0,
+/* impulse   */ 1,
+/* flags     */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "tuba",
+/* shortname */ "tuba",
+/* xgettext:no-c-format */
+/* fullname  */ _("@!#%'n Tuba")
+);
 #else
 #ifdef SVQC
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
@@ -61,7 +72,7 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 			mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
 		else
 			mmax = 240; // you won't try THAT hard... (tempo 1)
-		//print(sprintf("initial tempo rules: %f %f\n", mmin, mmax));
+		//printf("initial tempo rules: %f %f\n", mmin, mmax);
 
 		for(i = 0; i < n; ++i)
 		{
@@ -85,10 +96,10 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 
 				// vi_x <= vi_y <= vj_x <= vj_y
 				// ti <= tj
-				//print(sprintf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti));
-				//print(sprintf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj));
-				//print(sprintf("m1 = %f\n", (vi_x - vj_y) / (ti - tj)));
-				//print(sprintf("m2 = %f\n", (vi_y - vj_x) / (ti - tj)));
+				//printf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti);
+				//printf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj);
+				//printf("m1 = %f\n", (vi_x - vj_y) / (ti - tj));
+				//printf("m2 = %f\n", (vi_y - vj_x) / (ti - tj));
 				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
 				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
 			}
@@ -130,6 +141,9 @@ void W_Tuba_NoteOff()
 				case 1:
 					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Accordeon: ^7", s, "\n"));
 					break;
+				case 2:
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Klein Bottle: ^7", s, "\n"));
+					break;
 			}
 		}
 	}
@@ -145,6 +159,9 @@ float Tuba_GetNote(entity pl, float hittype)
 	if(pl.movement_x > 0) movestate += 3;
 	if(pl.movement_y < 0) movestate -= 1;
 	if(pl.movement_y > 0) movestate += 1;
+#ifdef GMQCC
+	note = 0;
+#endif
 	switch(movestate)
 	{
 	// layout: originally I wanted
@@ -173,14 +190,14 @@ float Tuba_GetNote(entity pl, float hittype)
 		note += 12;
 	if(hittype & HITTYPE_SECONDARY)
 		note += 7;
-	
+
 	// we support two kinds of tubas, those tuned in Eb and those tuned in C
 	// kind of tuba currently is player slot number, or team number if in
 	// teamplay
 	// that way, holes in the range of notes are "plugged"
 	if(teamplay)
 	{
-		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
+		if(pl.team == NUM_TEAM_2 || pl.team == NUM_TEAM_4)
 			note += 3;
 	}
 	else
@@ -188,7 +205,7 @@ float Tuba_GetNote(entity pl, float hittype)
 		if(pl.clientcolors & 1)
 			note += 3;
 	}
-	
+
 	// total range of notes:
 	//                       0
 	//                 ***  ** ****
@@ -284,8 +301,6 @@ void W_Tuba_NoteOn(float hittype)
 		hittype |= HITTYPE_SECONDARY;
 	if(self.tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
-	if(self.tuba_instrument & 4)
-		hittype |= HITTYPE_HEADSHOT;
 
 	if(self.tuba_note)
 	{
@@ -298,7 +313,7 @@ void W_Tuba_NoteOn(float hittype)
 		}
 	}
 
-	if not(self.tuba_note)
+	if (!self.tuba_note)
 	{
 		self.tuba_note = spawn();
 		self.tuba_note.owner = self.tuba_note.realowner = self;
@@ -374,9 +389,10 @@ float w_tuba(float req)
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
 		precache_model ("models/weapons/h_tuba.iqm");
-		precache_model ("models/weapons/g_akordeon.md3");
 		precache_model ("models/weapons/v_akordeon.md3");
 		precache_model ("models/weapons/h_akordeon.iqm");
+		precache_model ("models/weapons/v_kleinbottle.md3");
+		precache_model ("models/weapons/h_kleinbottle.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)
@@ -400,6 +416,10 @@ float w_tuba(float req)
 					self.weaponname = "akordeon";
 					break;
 				case 1:
+					self.tuba_instrument = 2;
+					self.weaponname = "kleinbottle";
+					break;
+				case 2:
 					self.tuba_instrument = 0;
 					self.weaponname = "tuba";
 					break;
@@ -414,62 +434,32 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_SUICIDE;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_SUICIDE;
+		else
+			return WEAPON_TUBA_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_MURDER;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_MURDER;
+		else
+			return WEAPON_TUBA_MURDER;
+	}
 	return TRUE;
 }
 #endif
 #ifdef CSQC
 float w_tuba(float req)
 {
-	if(req == WR_IMPACTEFFECT)
-	{
-		// nothing to do here; particles of tuba are handled differently
-	}
-	else if(req == WR_PRECACHE)
-	{
-		// nothing to do
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
-				break;
-		}
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
-				break;
-		}
-	}
+	// nothing to do here; particles of tuba are handled differently
+
 	return TRUE;
 }
 #endif

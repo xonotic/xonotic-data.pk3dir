@@ -8,7 +8,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
-	
+
 	vector axis, thickdir, A, B, C, D;
 	float length_tex;
 
@@ -59,7 +59,7 @@ void Draw_GrapplingHook()
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
@@ -129,22 +129,22 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			intensity = 1;
 			offset = 0;
-			if(t == COLOR_TEAM1)
+			if(t == NUM_TEAM_1)
 			{
 				tex = "particles/hook_red";
 				rgb = '1 .3 .3';
 			}
-			else if(t == COLOR_TEAM2)
+			else if(t == NUM_TEAM_2)
 			{
 				tex = "particles/hook_blue";
 				rgb = '.3 .3 1';
 			}
-			else if(t == COLOR_TEAM3)
+			else if(t == NUM_TEAM_3)
 			{
 				tex = "particles/hook_yellow";
 				rgb = '1 1 .3';
 			}
-			else if(t == COLOR_TEAM4)
+			else if(t == NUM_TEAM_4)
 			{
 				tex = "particles/hook_pink";
 				rgb = '1 .3 1';
@@ -215,7 +215,7 @@ void Draw_GrapplingHook()
 
 void Remove_GrapplingHook()
 {
-	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
@@ -226,7 +226,7 @@ void Ent_ReadHook(float bIsNew, float type)
 	sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
-	self.iflags = IFLAG_VELOCITY;
+	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
 	InterpolateOrigin_Undo();
 
@@ -275,10 +275,10 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_LGBEAM:
-				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
 			case ENT_CLIENT_GAUNTLET:
-				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}

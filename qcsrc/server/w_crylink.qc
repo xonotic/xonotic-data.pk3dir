@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(CRYLINK, w_crylink, IT_CELLS, 6, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "crylink", "crylink", _("Crylink"));
+REGISTER_WEAPON(
+/* WEP_##id  */ CRYLINK,
+/* function  */ w_crylink,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "crylink",
+/* shortname */ "crylink",
+/* fullname  */ _("Crylink")
+);
 #else
 #ifdef SVQC
 .float gravity;
@@ -84,10 +94,9 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 // stored in w_crylink_linkjoin_time.
 // could possibly network this origin and time, and display a special particle
 // effect when projectiles meet there :P
-// jspeed: MINIMUM jing speed
-// jtime: MAXIMUM jing time (0: none)
+// jspeed: joining speed (calculate this as join spread * initial speed)
 float w_crylink_linkjoin_time;
-vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
+vector W_Crylink_LinkJoin(entity e, float jspeed)
 {
 	vector avg_origin, avg_velocity;
 	vector targ_origin;
@@ -124,7 +133,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	if(avg_dist == 0)
 		return avg_origin; // no change needed
 
-	if(jspeed == 0 && jtime == 0)
+	if(jspeed == 0)
 	{
 		e.velocity = avg_velocity;
 		UpdateCSQCProjectile(e);
@@ -137,14 +146,6 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 	}
 	else
 	{
-		if(jtime)
-		{
-			if(jspeed)
-				w_crylink_linkjoin_time = min(jtime, avg_dist / jspeed);
-			else
-				w_crylink_linkjoin_time = jtime;
-		}
-		else
 			w_crylink_linkjoin_time = avg_dist / jspeed;
 		targ_origin = avg_origin + w_crylink_linkjoin_time * avg_velocity;
 
@@ -225,6 +226,28 @@ void W_Crylink_LinkJoinEffect_Think()
 	remove(self);
 }
 
+float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
+{
+	entity head = WarpZone_FindRadius((projectile.origin + (projectile.mins + projectile.maxs) * 0.5), rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	float hit_friendly = 0;
+	float hit_enemy = 0;
+
+	while(head)
+	{
+		if((head.takedamage != DAMAGE_NO) && (head.deadflag == DEAD_NO))
+		{
+			if(SAME_TEAM(head, projectile.realowner))
+				++hit_friendly;
+			else
+				++hit_enemy;
+		}
+
+		head = head.chain;
+	}
+
+	return (hit_enemy ? FALSE : hit_friendly);
+}
+
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch (void)
 {
@@ -242,7 +265,10 @@ void W_Crylink_Touch (void)
 		f = autocvar_g_balance_crylink_primary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_primary_linkexplode)
+
+	float totaldamage = RadiusDamage(self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other);
+
+	if(totaldamage && ((autocvar_g_balance_crylink_primary_linkexplode == 2) || ((autocvar_g_balance_crylink_primary_linkexplode == 1) && !W_Crylink_Touch_WouldHitFriendly(self, autocvar_g_balance_crylink_primary_radius))))
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
@@ -283,7 +309,10 @@ void W_Crylink_Touch2 (void)
 		f = autocvar_g_balance_crylink_secondary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_secondary_linkexplode)
+
+	float totaldamage = RadiusDamage(self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other);
+
+	if(totaldamage && ((autocvar_g_balance_crylink_secondary_linkexplode == 2) || ((autocvar_g_balance_crylink_secondary_linkexplode == 1) && !W_Crylink_Touch_WouldHitFriendly(self, autocvar_g_balance_crylink_secondary_radius))))
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
@@ -409,12 +438,13 @@ void W_Crylink_Attack (void)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
-	if(autocvar_g_balance_crylink_primary_joinspread != 0 || autocvar_g_balance_crylink_primary_jointime != 0)
+	if(autocvar_g_balance_crylink_primary_joinspread != 0)
 	{
 		self.crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -426,6 +456,8 @@ void W_Crylink_Attack2 (void)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
+	vector s;
+	vector forward, right, up;
 	float maxdmg;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_secondary_ammo, autocvar_g_balance_crylink_reload_ammo);
@@ -436,6 +468,9 @@ void W_Crylink_Attack2 (void)
 		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
 	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	forward = v_forward;
+	right = v_right;
+	up = v_up;
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
@@ -476,7 +511,26 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor), v_up, autocvar_g_balance_crylink_secondary_speed, 0, 0, 0, FALSE);
+		if(autocvar_g_balance_crylink_secondary_spreadtype == 1)
+		{
+			s = '0 0 0';
+			if (counter == 0)
+				s = '0 0 0';
+			else
+			{
+				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+				s_y = v_forward_x;
+				s_z = v_forward_y;
+			}
+			s = s * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor;
+			s = w_shotdir + right * s_y + up * s_z;
+		}
+		else
+		{
+			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor);
+		}
+
+		W_SetupProjectileVelocityEx(proj, s, v_up, autocvar_g_balance_crylink_secondary_speed, 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch2;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
@@ -500,12 +554,13 @@ void W_Crylink_Attack2 (void)
 		//proj.glow_size = 20;
 
 		proj.flags = FL_PROJECTILE;
+        proj.missile_flags = MIF_SPLASH;
 
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
-	if(autocvar_g_balance_crylink_secondary_joinspread != 0 || autocvar_g_balance_crylink_secondary_jointime != 0)
+	if(autocvar_g_balance_crylink_secondary_joinspread != 0)
 	{
 		self.crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
@@ -565,12 +620,12 @@ float w_crylink(float req)
 
 					if(self.crylink_waitrelease == 1)
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed, autocvar_g_balance_crylink_primary_jointime);
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_primary_joinspread * autocvar_g_balance_crylink_primary_speed);
 
 					}
 					else
 					{
-						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed, autocvar_g_balance_crylink_secondary_jointime);
+						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, autocvar_g_balance_crylink_secondary_joinspread * autocvar_g_balance_crylink_secondary_speed);
 					}
 
 					linkjoineffect = spawn();
@@ -582,7 +637,7 @@ float w_crylink(float req)
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				{
 					// ran out of ammo!
 					self.cnt = WEP_CRYLINK;
@@ -630,6 +685,14 @@ float w_crylink(float req)
 	{
 		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_CRYLINK_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_CRYLINK_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -644,32 +707,19 @@ float w_crylink(float req)
 		{
 			pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTEN_NORM);
 		}
 		else
 		{
 			pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/crylink_impact2.wav");
 		precache_sound("weapons/crylink_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = _("%s succeeded at self-destructing themself with the Crylink");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = _("%s could not hide from %s's Crylink"); // unchecked: SPLASH (SECONDARY can't be)
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s was too close to %s's Crylink"); // unchecked: SECONDARY
-		else
-			w_deathtypestring = _("%s took a close look at %s's Crylink"); // unchecked: SECONDARY
 	}
 	return TRUE;
 }

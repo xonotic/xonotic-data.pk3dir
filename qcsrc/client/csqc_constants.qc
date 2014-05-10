@@ -39,7 +39,7 @@ const float		VF_PERSPECTIVE					= 200;	//(float)
 const float		VF_CL_VIEWANGLES				= 33;	//(vector)
 const float		VF_CL_VIEWANGLES_X				= 34;	//(float)
 const float		VF_CL_VIEWANGLES_Y				= 35;	//(float)
-const float		VF_CL_VIEWANGLES_Z				= 36;	//(float) 
+const float		VF_CL_VIEWANGLES_Z				= 36;	//(float)
 
 // Server Autosent Stat Constants
 const float		STAT_HEALTH						= 0;
@@ -159,13 +159,13 @@ const float BUTTON_16 = 262144;
 #define        SOLID_BSP                               4               // bsp clip, touch on edge, block
 #define        SOLID_CORPSE                    5               // same as SOLID_BBOX, except it behaves as SOLID_NOT against SOLID_SLIDEBOX objects (players/monsters)
 
-float MOVE_NORMAL = 0; // same as FALSE
-float MOVE_NOMONSTERS = 1; // same as TRUE
-float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
-float MOVE_HITMODEL = 4;
-float MOVE_WORLDONLY = 3;
+const float MOVE_NORMAL = 0; // same as FALSE
+const float MOVE_NOMONSTERS = 1; // same as TRUE
+const float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
+const float MOVE_HITMODEL = 4;
+const float MOVE_WORLDONLY = 3;
 
-float CAMERA_FREE = 1;
-float CAMERA_CHASE = 2;
+const float CAMERA_FREE = 1;
+const float CAMERA_CHASE = 2;
 
-float EF_NOMODELFLAGS = 8388608;
+const float EF_NOMODELFLAGS = 8388608;

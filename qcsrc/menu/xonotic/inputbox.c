@@ -5,9 +5,9 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	METHOD(XonoticInputBox, setText, void(entity, string))
 	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX)
-	ATTRIB(XonoticInputBox, onChange, void(entity, entity), SUB_Null)
+	ATTRIB(XonoticInputBox, onChange, void(entity, entity), func_null)
 	ATTRIB(XonoticInputBox, onChangeEntity, entity, NULL)
-	ATTRIB(XonoticInputBox, onEnter, void(entity, entity), SUB_Null)
+	ATTRIB(XonoticInputBox, onEnter, void(entity, entity), func_null)
 	ATTRIB(XonoticInputBox, onEnterEntity, entity, NULL)
 	ATTRIB(XonoticInputBox, marginLeft, float, SKINMARGIN_INPUTBOX_CHARS)
 	ATTRIB(XonoticInputBox, marginRight, float, SKINMARGIN_INPUTBOX_CHARS)
@@ -15,6 +15,13 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	ATTRIB(XonoticInputBox, colorF, vector, SKINCOLOR_INPUTBOX_F)
 
 	ATTRIB(XonoticInputBox, alpha, float, SKINALPHA_TEXT)
+
+	// Clear button attributes
+	ATTRIB(XonoticInputBox, cb_offset, float, SKINOFFSET_CLEARBUTTON) // bound to range -1, 0
+	ATTRIB(XonoticInputBox, cb_src, string, SKINGFX_CLEARBUTTON)
+	ATTRIB(XonoticInputBox, cb_color, vector, SKINCOLOR_CLEARBUTTON_N)
+	ATTRIB(XonoticInputBox, cb_colorF, vector, SKINCOLOR_CLEARBUTTON_F)
+	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C)
 
 	ATTRIB(XonoticInputBox, cvarName, string, string_null)
 	METHOD(XonoticInputBox, loadCvars, void(entity))
@@ -55,7 +62,8 @@ void XonoticInputBox_setText(entity me, string new)
 	if(me.text != new)
 	{
 		SUPER(XonoticInputBox).setText(me, new);
-		me.onChange(me, me.onChangeEntity);
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 		if(me.saveImmediately)
 			me.saveCvars(me);
 	}
@@ -64,13 +72,13 @@ void XonoticInputBox_setText(entity me, string new)
 }
 void XonoticInputBox_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
 }
 void XonoticInputBox_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	cvar_set(me.cvarName, me.text);
 }
@@ -85,7 +93,8 @@ float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 			me.saveCvars(me);
 			r = 1;
 		}
-		me.onEnter(me, me.onEnterEntity);
+		if(me.onEnter)
+			me.onEnter(me, me.onEnterEntity);
 	}
 	if(SUPER(XonoticInputBox).keyDown(me, key, ascii, shift))
 		r = 1;

@@ -1,17 +1,27 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(RIFLE, w_rifle, IT_NAILS, 7, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "rifle", _("Rifle"))
+REGISTER_WEAPON(
+/* WEP_##id  */ RIFLE,
+/* function  */ w_rifle,
+/* ammotype  */ IT_NAILS,
+/* impulse   */ 7,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "campingrifle",
+/* shortname */ "rifle",
+/* fullname  */ _("Rifle")
+);
 #else
 #ifdef SVQC
 
 .float rifle_accumulator;
 
-void W_Rifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage, float pForce, float pSpeed, float pLifetime, float pAmmo, float deathtype, float pBulletConstant, float pTracer, float pShots, string pSound)
+void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, float deathtype, float pTracer, float pShots, string pSound)
 {
 	float i;
 
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_rifle_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CH_WEAPON_A, (pDamage + pHeadshotAddedDamage) * pShots);
+	W_SetupShot (self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
 	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -22,8 +32,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pHeadshotAddedDamage / pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE), 1, pBulletConstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if (autocvar_g_casings >= 2)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
@@ -31,12 +40,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage
 
 void W_Rifle_Attack()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_primary_spread, autocvar_g_balance_rifle_primary_damage, autocvar_g_balance_rifle_primary_headshotaddeddamage, autocvar_g_balance_rifle_primary_force, autocvar_g_balance_rifle_primary_speed, autocvar_g_balance_rifle_primary_lifetime, autocvar_g_balance_rifle_primary_ammo, WEP_RIFLE, autocvar_g_balance_rifle_primary_bulletconstant, autocvar_g_balance_rifle_primary_tracer, autocvar_g_balance_rifle_primary_shots, "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(autocvar_g_balance_rifle_primary_spread, autocvar_g_balance_rifle_primary_damage, autocvar_g_balance_rifle_primary_force, autocvar_g_balance_rifle_primary_solidpenetration, autocvar_g_balance_rifle_primary_ammo, WEP_RIFLE, autocvar_g_balance_rifle_primary_tracer, autocvar_g_balance_rifle_primary_shots, "weapons/campingrifle_fire.wav");
 }
 
 void W_Rifle_Attack2()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_headshotaddeddamage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_speed, autocvar_g_balance_rifle_secondary_lifetime, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_bulletconstant, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, "weapons/campingrifle_fire2.wav");
+	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_solidpenetration, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, "weapons/campingrifle_fire2.wav");
 }
 
 void spawnfunc_weapon_rifle (void)
@@ -116,7 +125,7 @@ float w_rifle(float req)
 			self.bot_secondary_riflemooth = 0;
 		if(self.bot_secondary_riflemooth == 0)
 		{
-			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
+			if(bot_aim(1000000, 0, 0.001, FALSE))
 			{
 				self.BUTTON_ATCK = TRUE;
 				if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -124,7 +133,7 @@ float w_rifle(float req)
 		}
 		else
 		{
-			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
+			if(bot_aim(1000000, 0, 0.001, FALSE))
 			{
 				self.BUTTON_ATCK2 = TRUE;
 				if(random() < 0.03) self.bot_secondary_riflemooth = 0;
@@ -200,6 +209,27 @@ float w_rifle(float req)
 	{
 		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
+			else
+				return WEAPON_RIFLE_MURDER_HAIL;
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_RIFLE_MURDER_PIERCING;
+			else
+				return WEAPON_RIFLE_MURDER;
+		}
+	}
 	return TRUE;
 }
 #endif
@@ -214,11 +244,11 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.4)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.5)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
@@ -227,35 +257,7 @@ float w_rifle(float req)
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = _("%s is now thinking with portals");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = _("%s failed to hide from %s's rifle bullet hail");
-			else
-				w_deathtypestring = _("%s died in %s's rifle bullet hail");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				// TODO special headshot message here too?
-				w_deathtypestring = _("%s failed to hide from %s's rifle");
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = _("%s got shot in the head with a rifle by %s");
-				else
-					w_deathtypestring = _("%s was sniped with a rifle by %s");
-			}
-		}
-	}
+
 	return TRUE;
 }
 #endif

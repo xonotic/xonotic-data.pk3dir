@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
+REGISTER_WEAPON(
+/* WEP_##id  */ HLAC,
+/* function  */ w_hlac,
+/* ammotype  */ IT_CELLS,
+/* impulse   */ 6,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "hlac",
+/* shortname */ "hlac",
+/* fullname  */ _("Heavy Laser Assault Cannon")
+);
 #else
 #ifdef SVQC
 
@@ -7,8 +17,8 @@ void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
-	
+	self.event_damage = func_null;
+
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 	else
@@ -31,7 +41,7 @@ void W_HLAC_Attack (void)
 
 	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, autocvar_g_balance_hlac_primary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	if (!g_norecoil)
+	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
@@ -102,6 +112,7 @@ void W_HLAC_Attack2f (void)
     missile.nextthink = time + autocvar_g_balance_hlac_secondary_lifetime;
 
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
@@ -118,7 +129,7 @@ void W_HLAC_Attack2 (void)
     for(i=autocvar_g_balance_hlac_secondary_shots;i>0;--i)
         W_HLAC_Attack2f();
 
-	if (!g_norecoil)
+	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;
@@ -137,7 +148,7 @@ void HLAC_fire1_02()
 	if (self.BUTTON_ATCK)
 	{
 		if (!weapon_action(self.weapon, WR_CHECKAMMO1))
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			w_ready();
@@ -218,6 +229,14 @@ float w_hlac(float req)
 	{
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_HLAC_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_HLAC_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -230,16 +249,12 @@ float w_hlac(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/laserimpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s should have used a smaller gun");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was cut down with a HLAC by %s");
 	return TRUE;
 }
 #endif

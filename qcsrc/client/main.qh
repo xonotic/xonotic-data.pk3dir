@@ -1,5 +1,3 @@
-const string string_null;
-
 // --------------------------------------------------------------------------
 // MENU Functionality
 
@@ -40,16 +38,6 @@ float gametype;
 //.float ctf_state;
 //.float health;
 
-// Constants
-const float COLOR_TEAM_RED = 64;
-const float COLOR_TEAM_BLUE = 208;
-
-const float COLOR_TEAM1       = 4;  // red
-const float COLOR_TEAM2       = 13; // blue
-const float COLOR_TEAM3       = 12; // yellow
-const float COLOR_TEAM4       = 9; // pink
-const float COLOR_SPECTATOR = 1337;
-
 #define FONT_DEFAULT 0
 #define FONT_USER 8
 
@@ -66,6 +54,7 @@ const float COLOR_SPECTATOR = 1337;
 #define SP_CLRATIO -5
 #define SP_PL -6
 #define SP_FRAGS -7
+#define SP_SUM -8
 
 #define SP_SEPARATOR -100
 
@@ -139,7 +128,6 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 #define ALPHA_MIN_VISIBLE 0.003
 
 float armorblockpercent;
-float g_weaponswitchdelay;
 
 //hooks
 float calledhooks;

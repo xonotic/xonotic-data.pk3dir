@@ -4,7 +4,7 @@ CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticInputSettingsTab, rows, float, 17)
-	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticInputSettingsTab)
 entity makeXonoticInputSettingsTab();
 #endif
@@ -40,6 +40,7 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear"), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Clear;
 			e.onClickEntity = kb;
+			kb.clearButton = e;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
@@ -83,8 +84,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
-		
-	
+
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_movement_track_canjump", COMMANDBUTTON_APPLY));
 }

@@ -16,11 +16,21 @@ void draw_drawMousePointer(vector where)
 
 void draw_reset(float cw, float ch, float ox, float oy)
 {
-	drawfont = FONT_USER+0;
 	draw_shift = '1 0 0' * ox + '0 1 0' * oy;
 	draw_scale = '1 0 0' * cw + '0 1 0' * ch;
 	draw_alpha = 1;
 	draw_fontscale = '1 1 0';
+	draw_endBoldFont();
+}
+
+void draw_beginBoldFont()
+{
+	drawfont = FONT_USER+3;
+}
+
+void draw_endBoldFont()
+{
+	drawfont = FONT_USER+0;
 }
 
 vector globalToBox(vector v, vector theOrigin, vector theScale)
@@ -266,8 +276,10 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 }
 void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
-	if(theSize_x <= 0 || theSize_y <= 0)
-		error("Drawing zero size text?\n");
+	if(theSize_x <= 0 || theSize_y <= 0) {
+		dprint("Drawing zero size text?\n");
+		return;
+	}
 
 	//float wi;
 	//wi = draw_TextWidth(theText, ICanHasKallerz, theSize);

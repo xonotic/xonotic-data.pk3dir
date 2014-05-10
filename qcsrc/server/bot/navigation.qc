@@ -1,3 +1,11 @@
+void bot_debug(string input)
+{
+	switch(autocvar_bot_debug)
+	{
+		case 1: dprint(input); break;
+		case 2: print(input); break;
+	}
+}
 
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
@@ -109,7 +117,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 							break;
 				}
 
-				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
+				if (!(pointcontents(org + '0 0 1') == CONTENT_EMPTY))
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
@@ -188,7 +196,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			{
 				float c;
 				c = pointcontents(org + '0 0 1');
-				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
+				if (!(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME))
 					swimming = FALSE;
 				else
 					continue;
@@ -358,7 +366,7 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 }
 
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
-entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
+entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfromwp, float bestdist, entity except)
 {
 	entity waylist, w, best;
 	vector v, org, pm1, pm2;
@@ -372,7 +380,7 @@ entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, flo
 	while (w)
 	{
 		// if object is touching spawnfunc_waypoint
-		if(w != ent)
+		if(w != ent && w != except)
 			if (boxesoverlap(pm1, pm2, w.absmin, w.absmax))
 				return w;
 		w = w.chain;
@@ -418,7 +426,14 @@ entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, flo
 }
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 {
-	return navigation_findnearestwaypoint_withdist(ent, walkfromwp, 1050);
+	entity wp = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, world);
+	if (autocvar_g_waypointeditor_auto)
+	{
+		entity wp2 = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, wp);
+		if (!wp2)
+			wp.wpflags |= WAYPOINTFLAG_PROTECTED;
+	}
+	return wp;
 }
 
 // finds the waypoints near the bot initiating a navigation query
@@ -674,7 +689,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 	{
 		vector pointa, pointb;
 
-	//	dprint("jetpack ai: evaluating path for ", e.classname,"\n");
+		bot_debug(strcat("jetpack ai: evaluating path for ", e.classname, "\n"));
 
 		// Point A
 		traceline(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
@@ -689,7 +704,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 		if(trace_fraction==1)
 		{
-		//	dprint("jetpack ai: can bridge these two points\n");
+			bot_debug("jetpack ai: can bridge these two points\n");
 
 			// Lower the altitude of these points as much as possible
 			float zdistance, xydistance, cost, t, fuel;
@@ -726,7 +741,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-		//	dprint("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel),"\n");
+			bot_debug(strcat("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel), "\n"));
 
 			// enough fuel ?
 			if(self.ammo_fuel>fuel)
@@ -744,7 +759,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 				if (navigation_bestrating < f)
 				{
-			//		dprint("jetpack path: added goal", e.classname, " (with rating ", ftos(f), ")\n");
+					bot_debug(strcat("jetpack path: added goal ", e.classname, " (with rating ", ftos(f), ")\n"));
 					navigation_bestrating = f;
 					navigation_bestgoal = e;
 					self.navigation_jetpack_goal = e;
@@ -771,7 +786,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 		if(e.flags & FL_ITEM)
 		{
-			if not(e.flags & FL_WEAPON)
+			if (!(e.flags & FL_WEAPON))
 			if(e.nearestwaypoint)
 				search = FALSE;
 		}
@@ -790,7 +805,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 				e.nearestwaypoint = nwp;
 			else
 			{
-				dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
+				bot_debug(strcat("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n"));
 
 				if(e.flags & FL_ITEM)
 					e.blacklisted = TRUE;
@@ -802,7 +817,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 				if(e.blacklisted)
 				{
-					dprint("The entity '", e.classname, "' is going to be excluded from path finding during this match\n");
+					bot_debug(strcat("The entity '", e.classname, "' is going to be excluded from path finding during this match\n"));
 					return;
 				}
 			}
@@ -816,23 +831,21 @@ void navigation_routerating(entity e, float f, float rangebias)
 		nwp = e.nearestwaypoint;
 	}
 
-	//dprint("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")\n");
+	bot_debug(strcat("-- checking ", e.classname, " (with cost ", ftos(nwp.wpcost), ")\n"));
 	if (nwp)
 	if (nwp.wpcost < 10000000)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
-	//	dprint(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
+		bot_debug(strcat(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = "));
 		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(o - nwp.wpnearestpoint)));
-		//dprint("considering ", e.classname, " (with rating ", ftos(f), ")\n");
-		//dprint(ftos(f));
+		bot_debug(strcat("considering ", e.classname, " (with rating ", ftos(f), ")\n"));
 		if (navigation_bestrating < f)
 		{
-		//	dprint("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")\n");
+			bot_debug(strcat("ground path: added goal ", e.classname, " (with rating ", ftos(f), ")\n"));
 			navigation_bestrating = f;
 			navigation_bestgoal = e;
 		}
 	}
-	//dprint("\n");
 }
 
 // adds an item to the the goal stack with the path to a given item
@@ -897,7 +910,7 @@ void navigation_poptouchedgoals()
 			if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 			{
-				self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+				self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
 			navigation_poproute();
@@ -911,7 +924,7 @@ void navigation_poptouchedgoals()
 	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-	///	dprint("path optimized for ", self.netname, ", removed a goal from the queue\n");
+		bot_debug(strcat("path optimized for ", self.netname, ", removed a goal from the queue\n"));
 		navigation_poproute();
 		// TODO this may also be a nice idea to do "early" (e.g. by
 		// manipulating the vlen() comparisons) to shorten paths in
@@ -923,7 +936,7 @@ void navigation_poptouchedgoals()
 
 	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
 	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-	if(self.goalcurrent.classname=="player")
+	if(IS_PLAYER(self.goalcurrent))
 		navigation_poproute();
 
 	// aid for detecting jump pads better (distance based check fails sometimes)
@@ -944,7 +957,7 @@ void navigation_poptouchedgoals()
 				if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 				if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 				{
-					self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 				}
 
@@ -959,7 +972,7 @@ void navigation_poptouchedgoals()
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 		if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 		{
-			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 		}
 
@@ -988,15 +1001,15 @@ void navigation_goalrating_end()
 		return;
 
 	navigation_routetogoal(navigation_bestgoal, self.origin);
-//	dprint("best goal ", self.goalcurrent.classname , "\n");
+	bot_debug(strcat("best goal ", self.goalcurrent.classname , "\n"));
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if not (self.navigation_hasgoals)
+	if (!self.navigation_hasgoals)
 	if (autocvar_bot_wander_enable)
 	{
-		if not(self.aistatus & AI_STATUS_STUCK)
+		if (!(self.aistatus & AI_STATUS_STUCK))
 		{
-			dprint(self.netname, " cannot walk to any goal\n");
+			bot_debug(strcat(self.netname, " cannot walk to any goal\n"));
 			self.aistatus |= AI_STATUS_STUCK;
 		}
 
@@ -1046,12 +1059,12 @@ void navigation_unstuck()
 {
 	float search_radius = 1000;
 
-	if not(autocvar_bot_wander_enable)
+	if (!autocvar_bot_wander_enable)
 		return;
 
-	if not(bot_waypoint_queue_owner)
+	if (!bot_waypoint_queue_owner)
 	{
-	//	dprint(self.netname, " sutck, taking over the waypoints queue\n");
+		bot_debug(strcat(self.netname, " sutck, taking over the waypoints queue\n"));
 		bot_waypoint_queue_owner = self;
 		bot_waypoint_queue_bestgoal = world;
 		bot_waypoint_queue_bestgoalrating = 0;
@@ -1064,7 +1077,7 @@ void navigation_unstuck()
 	{
 		// evaluate the next goal on the queue
 		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
-		// dprint(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n");
+		bot_debug(strcat(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n"));
 		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
@@ -1075,18 +1088,18 @@ void navigation_unstuck()
 		}
 		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
-		if not(bot_waypoint_queue_goal)
+		if (!bot_waypoint_queue_goal)
 		{
 			if (bot_waypoint_queue_bestgoal)
 			{
-				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
+				bot_debug(strcat(self.netname, " stuck, reachable waypoint found, heading to it\n"));
 				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-				self.aistatus &~= AI_STATUS_STUCK;
+				self.aistatus &= ~AI_STATUS_STUCK;
 			}
 			else
 			{
-				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+				bot_debug(strcat(self.netname, " stuck, cannot walk to any waypoint at all\n"));
 			}
 
 			bot_waypoint_queue_owner = world;
@@ -1098,7 +1111,7 @@ void navigation_unstuck()
 			return;
 
 		// build a new queue
-		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
+		bot_debug(strcat(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n"));
 
 		entity head, first;
 
@@ -1126,7 +1139,7 @@ void navigation_unstuck()
 			bot_waypoint_queue_goal = first;
 		else
 		{
-			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			bot_debug(strcat(self.netname, " stuck, cannot walk to any waypoint at all\n"));
 			bot_waypoint_queue_owner = world;
 		}
 	}
@@ -1141,7 +1154,7 @@ void debugresetnodes()
 
 void debugnode(vector node)
 {
-	if not(self.classname=="player")
+	if (!IS_PLAYER(self))
 		return;
 
 	if(debuglastnode=='0 0 0')

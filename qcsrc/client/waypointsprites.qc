@@ -38,14 +38,14 @@ float waypointsprite_alpha;
 .float build_starthealth;
 .float build_finished;
 
-float SPRITE_HEALTHBAR_WIDTH = 144;
-float SPRITE_HEALTHBAR_HEIGHT = 9;
-float SPRITE_HEALTHBAR_MARGIN = 6;
-float SPRITE_HEALTHBAR_BORDER = 2;
-float SPRITE_HEALTHBAR_BORDERALPHA = 1;
-float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
-float SPRITE_ARROW_SCALE = 1.0;
-float SPRITE_HELPME_BLINK = 2;
+const float SPRITE_HEALTHBAR_WIDTH = 144;
+const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_MARGIN = 6;
+const float SPRITE_HEALTHBAR_BORDER = 2;
+const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
+const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const float SPRITE_ARROW_SCALE = 1.0;
+const float SPRITE_HELPME_BLINK = 2;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -96,7 +96,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	o = hotspot;
 	ri = '1 0 0';
 	up = '0 1 0';
-	
+
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
 	o = rotate(o, rot) + org;
 	ri = rotate(ri, rot);
@@ -115,39 +115,31 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 // returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 {
-	float SQRT2 = 1.414;
-	float BORDER; BORDER = 1.5 * t;
-	float TSIZE; TSIZE = 8 * t;
-	float RLENGTH; RLENGTH = 8 * t;
-	float RWIDTH; RWIDTH = 4 * t;
-	float MLENGTH; MLENGTH = 4 * t;
+	float size   = 9.0 * t;
+	float border = 1.5 * t;
+	float margin = 4.0 * t;
+
+	float borderDiag = border * 1.414;
+	vector arrowX  = eX * size;
+	vector arrowY  = eY * (size+borderDiag);
+	vector borderX = eX * (size+borderDiag);
+	vector borderY = eY * (size+borderDiag+border);
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eY * -(        BORDER *      SQRT2),                          ang), '0 0 0', '0 0 0', a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('0 0 0',                  ang), '0 0 0', rgb, a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
 	R_EndPolygon();
 
-	return
-		o + rotate(eY * (TSIZE + RLENGTH + MLENGTH), ang);
+	return o + rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar
@@ -256,6 +248,7 @@ string spritelookuptext(string s)
 		case "as-defend": return _("Defend");
 		case "bluebase": return _("Blue base");
 		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
 		case "helpme": return _("Help me!");
@@ -422,7 +415,7 @@ void Draw_WaypointSprite()
 				spriteimage = self.netname;
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if(t == COLOR_SPECTATOR + 1)
+			if(t == NUM_SPECTATOR + 1)
 				spriteimage = self.netname3;
 			else if(self.team == t)
 				spriteimage = self.netname2;
@@ -438,10 +431,10 @@ void Draw_WaypointSprite()
 		return;
 
 	++waypointsprite_newcount;
-	
+
 	float dist;
 	dist = vlen(self.origin - view_origin);
-	
+
 	float a;
 	a = self.alpha * autocvar_hud_panel_fg_alpha;
 
@@ -456,7 +449,7 @@ void Draw_WaypointSprite()
 	if(rgb == '0 0 0')
 	{
 		self.teamradar_color = '1 0 1';
-		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
+		printf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
 	}
 
 	if(time - floor(time) > 0.5)
@@ -482,10 +475,10 @@ void Draw_WaypointSprite()
 	float ang;
 
 	o = project_3d_to_2d(self.origin);
-	if(o_z < 0 
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+	if(o_z < 0
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top)
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
 	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
@@ -542,9 +535,9 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
-	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
 	float vidscale;
@@ -584,7 +577,7 @@ void Draw_WaypointSprite()
 	}
 
 	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
-	
+
 	string txt;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");
@@ -595,6 +588,7 @@ void Draw_WaypointSprite()
 	if(autocvar_g_waypointsprite_uppercase)
 		txt = strtoupper(txt);
 
+	draw_beginBoldFont();
 	if(self.health >= 0)
 	{
 		o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
@@ -630,6 +624,7 @@ void Draw_WaypointSprite()
 	{
 		o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	}
+	draw_endBoldFont();
 }
 
 void Ent_RemoveWaypointSprite()
@@ -653,6 +648,7 @@ void Ent_WaypointSprite()
 	self.draw2d = Draw_WaypointSprite;
 
 	InterpolateOrigin_Undo();
+	self.iflags |= IFLAG_ORIGIN;
 
 	if(sendflags & 0x80)
 	{
@@ -685,6 +681,7 @@ void Ent_WaypointSprite()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(sendflags & 1)

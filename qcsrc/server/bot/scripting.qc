@@ -6,7 +6,7 @@
 void bot_clearqueue(entity bot)
 {
 	if(!bot.bot_cmdqueuebuf_allocated)
-		error("clearqueue but no queue allocated");
+		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
 	dprint("bot ", bot.netname, " queue cleared\n");
@@ -18,6 +18,8 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_start = 0;
+		bot.bot_cmdqueuebuf_end = 0;
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
@@ -29,17 +31,23 @@ void bot_queuecommand(entity bot, string cmdstring)
 		string parm;
 		string cmdstr;
 
-		sp = strstrofs(cmdstr, " ", 0);
-		if(sp < 0)
+		sp = strstrofs(cmdstring, " ", 0);
+		if(sp >= 0)
 		{
-			parm = "";
-		}
-		else
-		{
-			parm = substring(cmdstr, sp + 1, -1);
-			cmdstr = substring(cmdstr, 0, sp);
+			parm = substring(cmdstring, sp + 1, -1);
+			cmdstr = substring(cmdstring, 0, sp);
 			if(cmdstr == "sound")
-				precache_sound(cmdstr);
+			{
+				// find the LAST word
+				for(;;)
+				{
+					sp = strstrofs(parm, " ", 0);
+					if(sp < 0)
+						break;
+					parm = substring(parm, sp + 1, -1);
+				}
+				precache_sound(parm);
+			}
 		}
 	}
 
@@ -278,7 +286,7 @@ entity find_bot_by_name(string name)
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		if(bot.netname==name)
 			return bot;
 
@@ -300,7 +308,7 @@ entity find_bot_by_number(float number)
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
 	{
-		if(clienttype(bot) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(bot))
 		{
 			if(++c==number)
 				return bot;
@@ -543,7 +551,7 @@ float bot_cmd_impulse()
 
 float bot_cmd_continue()
 {
-	self.bot_exec_status &~= BOT_EXEC_STATUS_PAUSED;
+	self.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -554,7 +562,7 @@ float bot_cmd_wait()
 	{
 		if(time>=self.bot_cmd_wait_time)
 		{
-			self.bot_exec_status &~= BOT_EXEC_STATUS_WAITING;
+			self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 			return CMD_STATUS_FINISHED;
 		}
 		else
@@ -573,7 +581,7 @@ float bot_cmd_wait_until()
 		self.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
 		return CMD_STATUS_EXECUTING;
 	}
-	self.bot_exec_status &~= BOT_EXEC_STATUS_WAITING;
+	self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -750,7 +758,7 @@ float bot_cmd_if()
 
 float bot_cmd_else()
 {
-	self.bot_cmd_condition_status &~= CMD_CONDITION_TRUE_BLOCK;
+	self.bot_cmd_condition_status &= ~CMD_CONDITION_TRUE_BLOCK;
 	self.bot_cmd_condition_status |= CMD_CONDITION_FALSE_BLOCK;
 	return CMD_STATUS_FINISHED;
 }
@@ -944,79 +952,79 @@ float bot_cmd_keypress_handler(string key, float enabled)
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_FORWARD;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_BACKWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_FORWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			break;
 		case "backward":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_BACKWARD;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_FORWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_BACKWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			break;
 		case "left":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_LEFT;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_RIGHT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_LEFT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			break;
 		case "right":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_RIGHT;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_LEFT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_RIGHT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			break;
 		case "jump":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_JUMP;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_JUMP;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_JUMP;
 			break;
 		case "crouch":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_CROUCH;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_CROUCH;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_CROUCH;
 			break;
 		case "attack1":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK1;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_ATTACK1;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK1;
 			break;
 		case "attack2":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK2;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_ATTACK2;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK2;
 			break;
 		case "use":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_USE;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_USE;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_USE;
 			break;
 		case "hook":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_HOOK;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_HOOK;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_HOOK;
 			break;
 		case "chat":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_CHAT;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_CHAT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_CHAT;
 			break;
 		default:
 			break;
@@ -1089,8 +1097,24 @@ float bot_cmd_sound()
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
 
+	float n = tokenizebyseparator(f, " ");
+
+	string sample = f;
+	float chan = CH_WEAPON_B;
+	float vol = VOL_BASE;
+	float atten = ATTEN_MIN;
+
+	if(n >= 1)
+		sample = argv(n - 1);
+	if(n >= 2)
+		chan = stof(argv(0));
+	if(n >= 3)
+		vol = stof(argv(1));
+	if(n >= 4)
+		atten = stof(argv(2));
+
 	precache_sound(f);
-	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
+	sound(self, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }
@@ -1194,8 +1218,8 @@ void bot_resetqueues()
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
-		if(cl.bot_cmdqueuebuf_allocated)
-			bot_clearqueue(cl);
+		cl.bot_cmd_execution_index = 0;
+		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
 		for(i = 0; i < cl.bot_places_count; ++i)
@@ -1241,7 +1265,7 @@ float bot_execute_commands_once()
 	ispressingkey = !!bot_presskeys();
 
 	// Handle conditions
-	if not(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE)
+	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
 	if(self.bot_cmd_condition_status & CMD_CONDITION_TRUE && self.bot_cmd_condition_status & CMD_CONDITION_FALSE_BLOCK)
 	{
 		bot_command_executed(TRUE);

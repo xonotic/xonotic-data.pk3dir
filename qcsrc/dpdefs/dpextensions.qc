@@ -436,7 +436,7 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 //darkplaces implementation: Blub\0
 //cvar definitions:
 //   utf8_enable: enable utf8 encoding
-//description: utf8 characters are allowed inside cvars, protocol strings, files, progs strings, etc., 
+//description: utf8 characters are allowed inside cvars, protocol strings, files, progs strings, etc.,
 //and count as 1 char for string functions like strlen, substring, etc.
 // note: utf8_enable is run-time cvar, could be changed during execution
 // note: beware that str2chr() could return value bigger than 255 once utf8 is enabled
@@ -498,7 +498,7 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 // description: allows alternative 'static' lightstyle syntax : "=value"
 // examples: "=0.5", "=2.0", "=2.75"
 // could be used to control switchable lights or making styled lights with brightness > 2
-// Warning: this extension is experimental. It safely works in CSQC, but SVQC use is limited by the fact 
+// Warning: this extension is experimental. It safely works in CSQC, but SVQC use is limited by the fact
 // that other engines (which do not support this extension) could connect to a game and misunderstand this kind of lightstyle syntax
 
 //DP_LITSPRITES
@@ -593,9 +593,11 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 // string autocvar__cl_name;
 //NOTE: copying a string-typed autocvar to another variable/field, and then
 //changing the cvar or returning from progs is UNDEFINED. Writing to autocvar
-//globals is UNDEFINED.  Accessing autocvar globals after cvar_set()ing that
-//cvar in the same frame is IMPLEMENTATION DEFINED (an implementation may
-//either yield the previous, or the current, value). Whether autocvar globals,
+//globals is UNDEFINED. Accessing autocvar globals after changing that cvar in
+//the same frame by any means other than cvar_set() from the same QC VM is
+//IMPLEMENTATION DEFINED (an implementation may either yield the previous, or
+//the current, value). Changing them via cvar_set() in the same QC VM
+//immediately must reflect on the autocvar globals. Whether autocvar globals,
 //after restoring a savegame, have the cvar's current value, or the original
 //value at time of saving, is UNDEFINED. Restoring a savegame however must not
 //restore the cvar values themselves.
@@ -1356,14 +1358,14 @@ float(string sample) soundlength = #534; // returns length of sound sample in se
 //syntax of .dpsubs files: each line in .dpsubs file defines 1 subtitle, there are three tokens:
 //   <start> <end> "string"
 //   start: subtitle start time in seconds
-//     end: subtitle time-to-show in seconds, if 0 - subtitle will be showed until next subtitle is started, 
+//     end: subtitle time-to-show in seconds, if 0 - subtitle will be showed until next subtitle is started,
 //          if below 0 - show until next subtitles minus this number of seconds
 //    text: subtitle text, color codes (Q3-style and ^xRGB) are allowed
 //example of subtitle file:
 //   3	0	"Vengeance! Vengeance for my eternity of suffering!"
 //   9	0	"Whelp! As if you knew what eternity was!"
 //   13	0	"Grovel before your true master."
-//   17	0	"Never!" 
+//   17	0	"Never!"
 //   18	7	"I'll hack you from crotch to gizzard and feed what's left of you to your brides..."
 
 //DP_SOLIDCORPSE
@@ -1730,11 +1732,11 @@ const float FORCETYPE_TORQUE = 3;
 .vector massofs;      // offsets a mass center out of object center, if not set a center of model bounds is used
 .float  friction;     // a friction of object, get multiplied by second objects's friction on contact
 .float  bouncefactor;
-.float  bouncestop; 
+.float  bouncestop;
 .float  jointtype;    // type of joint
 .float  forcetype;    // type of force
-.float  erp;          // error restitution parameter, makes ODE solver attempt to fix errors in contacts, 
-                      // bringing together 2 joints or fixing object being stuch in other object, 
+.float  erp;          // error restitution parameter, makes ODE solver attempt to fix errors in contacts,
+                      // bringing together 2 joints or fixing object being stuch in other object,
 			          // a value of 0.1 will fix slightly, a value of 1.0 attempts to fix whole error in one frame
 			          // use with care as high values makes system unstable and likely to explode
 //builtin definitions:
@@ -2424,6 +2426,7 @@ string(float ccase, float calpha, float cnum, string s, ...) strconv = #224; // 
 string(float chars, string s, ...) strpad = #225; // pad string with spaces to a specified length, < 0 = left padding, > 0 = right padding
 string(string info, string key, string value, ...) infoadd = #226; // sets or adds a key/value pair to an infostring - note: forbidden characters are \ and "
 string(string info, string key) infoget = #227; // gets a key/value pair in an infostring, returns value or null if not found
+float(string s1, string s2) strcmp = #228; // compare two strings
 float(string s1, string s2, float len) strncmp = #228; // compare two strings up to the specified number of characters, if their length differs and is within the specified limit the result will be negative, otherwise it is the difference in value of their first non-matching character.
 float(string s1, string s2) strcasecmp = #229; // compare two strings with case-insensitive matching, characters a-z are considered equivalent to the matching A-Z character, no other differences, and this does not consider special characters equal even if they look similar
 float(string s1, string s2, float len) strncasecmp = #230; // same as strcasecmp but with a length limit, see strncmp
@@ -2484,6 +2487,28 @@ void(float bufhandle, float string_index) bufstr_free = #469;
 //functions to list cvars and store their names into a stringbuffer
 //cvars that start with pattern but not with antipattern will be stored into the buffer
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+
+//DP_QC_STRINGBUFFERS_EXT_WIP
+//idea: VorteX
+//darkplaces implementation: VorteX
+//constant definitions:
+const float MATCH_AUTO = 0;
+const float MATCH_WHOLE = 1;
+const float MATCH_LEFT = 2;
+const float MATCH_RIGHT = 3;
+const float MATCH_MIDDLE = 4;
+const float MATCH_PATTERN = 5;
+//builtin definitions:
+float(string filename, float bufhandle) buf_loadfile = #535; // append each line of file as new buffer string, return 1 if succesful
+float(float filehandle, float bufhandle, float startpos, float numstrings) buf_writefile = #536; // writes buffer strings as lines, returns 1 if succesful
+float(float bufhandle, string match, float matchrule, float startpos, float step) bufstr_find = #537; // returns string index
+float(string s, string pattern, float matchrule) matchpattern = #538; // returns 0/1
+float(string s, string pattern, float matchrule, float pos) matchpatternofs = #538;
+//description:
+//provides a set of functions to manipulate with string buffers
+//pattern wildcards: * - any character (or no characters), ? - any 1 character
+//Warning: This extension is work-in-progress, it may be changed/revamped/removed at any time, dont use it if you dont want any trouble
+//wip note: UTF8 is not supported yet
 
 //DP_QC_STRREPLACE
 //idea: Sajt

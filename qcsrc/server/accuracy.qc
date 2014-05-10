@@ -5,7 +5,7 @@
 
 float accuracy_byte(float n, float d)
 {
-	//print(sprintf("accuracy: %d / %d\n", n, d));
+	//printf("accuracy: %d / %d\n", n, d);
 	if(n <= 0)
 		return 0;
 	if(n > d)
@@ -20,22 +20,26 @@ float accuracy_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
 	a = self.owner;
-	if(a.classname == "spectator")
+	if(IS_SPEC(a))
 		a = a.enemy;
 	a = a.accuracy;
 
 	if(to != a.owner)
-		if not(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share)
+		if (!(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share))
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
 	if(sf == 0)
 		return TRUE;
 	// note: we know that client and server agree about SendFlags...
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
 		if(sf & f)
 			WriteByte(MSG_ENTITY, accuracy_byte(self.(accuracy_hit[w]), self.(accuracy_fired[w])));
+		if(f == 0x800000)
+			f = 1;
+		else
+			f *= 2;
 	}
 	return TRUE;
 }
@@ -95,27 +99,31 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
-	w = pow(2, w);
+	w = pow(2, mod(w, 24));
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
+		if(IS_SPEC(a))
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	if(!inWarmupStage)
-	if(targ.flags & FL_CLIENT)
+	frag_attacker = attacker;
+	frag_target = targ;
+	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid);
+
+	if(!warmup_stage)
 	if(targ.deadflag == DEAD_NO)
-	if(IsDifferentTeam(attacker, targ))
+	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
+	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;
 }
 
 float accuracy_canbegooddamage(entity attacker)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 		return TRUE;
 	return FALSE;
 }

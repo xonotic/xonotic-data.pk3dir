@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SHOTGUN, w_shotgun, IT_SHELLS, 2, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_LOW, "shotgun", "shotgun", _("Shotgun"))
+REGISTER_WEAPON(
+/* WEP_##id  */ SHOTGUN,
+/* function  */ w_shotgun,
+/* ammotype  */ IT_SHELLS,
+/* impulse   */ 2,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
+/* rating    */ BOT_PICKUP_RATING_LOW,
+/* model     */ "shotgun",
+/* shortname */ "shotgun",
+/* fullname  */ _("Shotgun")
+);
 #else
 #ifdef SVQC
 
@@ -11,8 +21,7 @@ void W_Shotgun_Attack (void)
 	float	d;
 	float	f;
 	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
+	float	solidpenetration;
 	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
@@ -20,15 +29,13 @@ void W_Shotgun_Attack (void)
 	d = autocvar_g_balance_shotgun_primary_damage;
 	f = autocvar_g_balance_shotgun_primary_force;
 	spread = autocvar_g_balance_shotgun_primary_spread;
-	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
-	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+	solidpenetration = autocvar_g_balance_shotgun_primary_solidpenetration;
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
+	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_SHOTGUN, 0, 1, bulletconstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
@@ -51,72 +58,73 @@ void W_Shotgun_Attack (void)
 void shotgun_meleethink (void)
 {
 	// declarations
-	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
+	float i, f, swing, swing_factor, swing_damage, meleetime, is_player, is_monster;
 	entity target_victim;
 	vector targpos;
 
 	if(!self.cnt) // set start time of melee
 	{
-		self.cnt = time; 
+		self.cnt = time;
 		W_PlayStrengthSound(self.realowner);
 	}
 
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
-	
+
 	// calculate swing percentage based on time
 	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
-	
+
 	// check to see if we can still continue, otherwise give up now
 	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
 	}
-	
-	// if okay, perform the traces needed for this frame 
+
+	// if okay, perform the traces needed for this frame
 	for(i=self.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / autocvar_g_balance_shotgun_secondary_melee_traces)) * 2 - 1);
-		
-		targpos = (self.realowner.origin + self.realowner.view_ofs 
+
+		targpos = (self.realowner.origin + self.realowner.view_ofs
 			+ (v_forward * autocvar_g_balance_shotgun_secondary_melee_range)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
-		
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
+
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
-		
-		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
+
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
+		is_monster = (trace_ent.flags & FL_MONSTER);
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
-			&& (trace_ent.takedamage == DAMAGE_AIM)  
+			&& (trace_ent.takedamage == DAMAGE_AIM)
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
+			&& ((is_player || is_monster) || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
-			
-			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
+
+			if(is_player || is_monster) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
 				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
 			else
 				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
-			
+
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
-			
-			Damage(target_victim, self.realowner, self.realowner, 
-				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY, 
-				self.realowner.origin + self.realowner.view_ofs, 
+
+			Damage(target_victim, self.realowner, self.realowner,
+				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY,
+				self.realowner.origin + self.realowner.view_ofs,
 				v_forward * autocvar_g_balance_shotgun_secondary_force);
-				
+
 			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
-				
+
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
-			
+
 			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				self.swing_alreadyhit = target_victim;
@@ -129,7 +137,7 @@ void shotgun_meleethink (void)
 			}
 		}
 	}
-	
+
 	if(time >= self.cnt + meleetime)
 	{
 		// melee is finished
@@ -138,7 +146,7 @@ void shotgun_meleethink (void)
 	}
 	else
 	{
-		// set up next frame 
+		// set up next frame
 		self.swing_prev = i;
 		self.nextthink = time;
 	}
@@ -146,12 +154,12 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = meleetemp.realowner = self;
+	meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -168,19 +176,14 @@ float w_shotgun(float req)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
-		{
-			if(autocvar_g_antilag_bullets)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-			else
-				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shotgun_primary_speed, 0, 0.001, FALSE);
-		}
+			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 
 	else if (req == WR_THINK)
 	{
 		if(autocvar_g_balance_shotgun_reload_ammo && self.clip_load < autocvar_g_balance_shotgun_primary_ammo) // forced reload
 		{
 			// don't force reload an empty shotgun if its melee attack is active
-			if not(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo)
+			if (!(autocvar_g_balance_shotgun_secondary && self.ammo_shells < autocvar_g_balance_shotgun_primary_ammo))
 				weapon_action(self.weapon, WR_RELOAD);
 		}
 		else
@@ -199,7 +202,7 @@ float w_shotgun(float req)
 			}
 		}
 		if (self.clip_load >= 0) // we are not currently reloading
-		if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
+		if (!self.crouch) // no crouchmelee please
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
@@ -238,6 +241,17 @@ float w_shotgun(float req)
 	{
 		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_SHOTGUN_MURDER_SLAP;
+		else
+			return WEAPON_SHOTGUN_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -253,11 +267,11 @@ float w_shotgun(float req)
 		if(!w_issilent && time - self.prevric > 0.25)
 		{
 			if(w_random < 0.0165)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.033)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 			self.prevric = time;
 		}
 	}
@@ -266,15 +280,6 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%2$s slapped %1$s around a bit with a large shotgun");
-		else
-			w_deathtypestring = _("%s was gunned down with a shotgun by %s");
 	}
 	return TRUE;
 }

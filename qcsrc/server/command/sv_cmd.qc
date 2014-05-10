@@ -74,31 +74,31 @@ void GameCommand_adminmsg(float request, float argc)
 		{
 			entity client;
 			float accepted;
-			
+
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string admin_message = argv(2);
 			float infobartime = stof(argv(3));
-			
+
 			string successful, t;
 			successful = string_null;
-			
+
 			if((targets) && (admin_message))
 			{
 				for(;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
-					
+
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, TRUE, FALSE);
-					
-					if not(accepted > 0) 
+
+					if(accepted <= 0)
 					{
-						print("adminmsg: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
+						print("adminmsg: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n"));
 						continue;
 					}
-					
+
 					// send the centerprint/console print or infomessage
 					if(infobartime)
 					{
@@ -109,21 +109,21 @@ void GameCommand_adminmsg(float request, float argc)
 						centerprint(client, strcat("^3", admin_name(), ":\n^7", admin_message));
 						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
 					}
-					
+
 					successful = strcat(successful, (successful ? ", " : ""), client.netname);
 					dprint("Message sent to ", client.netname, "\n");
 					continue;
 				}
-				
+
 				if(successful)
 					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
 				else
-					print("No players given (", original_targets, ") could recieve the message.\n");
-					
+					print("No players given (", original_targets, ") could receive the message.\n");
+
 				return;
 			}
 		}
-		
+
 		default:
 			print("Incorrect parameters for ^2adminmsg^7\n");
 		case CMD_REQUEST_USAGE:
@@ -139,6 +139,50 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
+void GameCommand_mobbutcher(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
+			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
+
+			float removed_count = 0;
+			entity head;
+
+			FOR_EACH_MONSTER(head)
+			{
+				monster_remove(head);
+				++removed_count;
+			}
+
+			FOR_EACH_PLAYER(head)
+				head.monstercount = 0;
+
+			monsters_total = 0; // reset stats?
+			monsters_killed = 0;
+
+			totalspawned = 0;
+
+			if(removed_count <= 0)
+				print("No monsters to kill\n");
+			else
+				printf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s"));
+
+			return; // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd mobbutcher\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_allready(float request)
 {
 	switch(request)
@@ -148,7 +192,7 @@ void GameCommand_allready(float request)
 			ReadyRestart();
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -160,7 +204,7 @@ void GameCommand_allready(float request)
 }
 
 void GameCommand_allspec(float request, float argc)
-{	
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -168,7 +212,7 @@ void GameCommand_allspec(float request, float argc)
 			entity client;
 			string reason = argv(1);
 			float i = 0;
-			
+
 			FOR_EACH_REALPLAYER(client)
 			{
 				self = client;
@@ -179,7 +223,7 @@ void GameCommand_allspec(float request, float argc)
 			else { print("No players found to spectate.\n"); }
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -191,7 +235,7 @@ void GameCommand_allspec(float request, float argc)
 	}
 }
 
-void GameCommand_anticheat(float request, float argc) 
+void GameCommand_anticheat(float request, float argc)
 {
 	switch(request)
 	{
@@ -199,8 +243,8 @@ void GameCommand_anticheat(float request, float argc)
 		{
 			entity client = GetIndexedEntity(argc, 1);
 			float accepted = VerifyClientEntity(client, FALSE, FALSE);
-			
-			if(accepted > 0) 
+
+			if(accepted > 0)
 			{
 				self = client;
 				anticheat_report();
@@ -208,10 +252,10 @@ void GameCommand_anticheat(float request, float argc)
 			}
 			else
 			{
-				print("anticheat: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				print("anticheat: ", GetClientErrorString(accepted, argv(1)), ".\n");
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2anticheat^7\n");
 		case CMD_REQUEST_USAGE:
@@ -223,7 +267,7 @@ void GameCommand_anticheat(float request, float argc)
 	}
 }
 
-void GameCommand_bbox(float request) 
+void GameCommand_bbox(float request)
 {
 	switch(request)
 	{
@@ -300,11 +344,11 @@ void GameCommand_bbox(float request)
 				print(" ", ftos(world.absmax_z));
 			else
 				print(" ", ftos(trace_endpos_z));
-				
+
 			print("\n");
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -316,17 +360,28 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc)
+void GameCommand_bot_cmd(float request, float argc, string command)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			entity bot;
-			
+
 			if(argv(1) == "reset")
 			{
 				bot_resetqueues();
+				return;
+			}
+			else if(argv(1) == "setbots")
+			{
+				cvar_settemp("bot_vs_human", "0");
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", "0");
+				bot_fixcount();
+				cvar_settemp("bot_number", argv(2));
+				if(!bot_fixcount())
+					print("Sorry, could not set requested bot count\n");
 				return;
 			}
 			else if(argv(1) == "load" && argc == 3)
@@ -353,7 +408,10 @@ void GameCommand_bot_cmd(float request, float argc)
 						}
 						else if(argv(2) == "setbots")
 						{
+							cvar_settemp("bot_vs_human", "0");
 							cvar_settemp("minplayers", "0");
+							cvar_settemp("bot_number", "0");
+							bot_fixcount();
 							cvar_settemp("bot_number", argv(3));
 							if(!bot_fixcount())
 								print("Sorry, could not set requested bot count\n");
@@ -365,7 +423,7 @@ void GameCommand_bot_cmd(float request, float argc)
 							if(bot == world)
 								bot = find_bot_by_name(argv(2));
 							if(bot)
-								bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+								bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
 						}
 					}
 					else
@@ -392,15 +450,15 @@ void GameCommand_bot_cmd(float request, float argc)
 					bot = find_bot_by_name(argv(1));
 				if(bot)
 				{
-					print(strcat("Command '", strcat(argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
-					bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
+					print(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+					bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
 					return;
 				}
 				else
 					print(strcat("Error: Can't find bot with the name or id '", argv(1),"' - Did you mistype the command?\n")); // don't return so that usage is shown
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2bot_cmd^7\n");
 		case CMD_REQUEST_USAGE:
@@ -425,13 +483,13 @@ void GameCommand_cointoss(float request, float argc)
 			string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
 			string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
 			string choice = ((random() > 0.5) ? result1 : result2);
-			
+
 			FOR_EACH_CLIENT(client)
 				centerprint(client, strcat("^3Throwing coin... Result: ", choice));
 			bprint(strcat("^3Throwing coin... Result: ", choice));
 			return;
 		}
-		
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -442,7 +500,7 @@ void GameCommand_cointoss(float request, float argc)
 	}
 }
 
-void GameCommand_database(float request, float argc) 
+void GameCommand_database(float request, float argc)
 {
 	switch(request)
 	{
@@ -471,7 +529,7 @@ void GameCommand_database(float request, float argc)
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2database^7\n");
 		case CMD_REQUEST_USAGE:
@@ -486,30 +544,30 @@ void GameCommand_database(float request, float argc)
 }
 
 void GameCommand_defer_clear(float request, float argc)
-{	
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
 			float accepted;
-			
+
 			if(argc >= 2)
 			{
 				client = GetIndexedEntity(argc, 1);
 				accepted = VerifyClientEntity(client, TRUE, FALSE);
-				
+
 				if(accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
 					print("defer clear stuffed to ", client.netname, "\n");
 				}
 				else { print("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".\n"); }
-				
+
 				return;
 			}
 		}
-		
+
 		default:
 			print("Incorrect parameters for ^2defer_clear^7\n");
 		case CMD_REQUEST_USAGE:
@@ -523,7 +581,7 @@ void GameCommand_defer_clear(float request, float argc)
 }
 
 void GameCommand_defer_clear_all(float request)
-{	
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -531,17 +589,17 @@ void GameCommand_defer_clear_all(float request)
 			entity client;
 			float i = 0;
 			float argc;
-			
+
 			FOR_EACH_CLIENT(client)
 			{
 				argc = tokenize_console(strcat("defer_clear ", ftos(num_for_edict(client))));
-				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);	
+				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++i;
 			}
-			if(i) { print(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
+			if(i) { print(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found?
 			return;
 		}
-		
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -567,8 +625,8 @@ void GameCommand_delrec(float request, float argc)  // perhaps merge later with 
 					race_deleteTime(GetMapname(), stof(argv(1)));
 				return;
 			}
-		}	
-		
+		}
+
 		default:
 			print("Incorrect parameters for ^2delrec^7\n");
 		case CMD_REQUEST_USAGE:
@@ -582,7 +640,7 @@ void GameCommand_delrec(float request, float argc)  // perhaps merge later with 
 	}
 }
 
-void GameCommand_effectindexdump(float request) 
+void GameCommand_effectindexdump(float request)
 {
 	switch(request)
 	{
@@ -590,7 +648,7 @@ void GameCommand_effectindexdump(float request)
 		{
 			float fh, d;
 			string s;
-			
+
 			d = db_create();
 			print("begin of effects list\n");
 			db_put(d, "TE_GUNSHOT", "1"); print("effect TE_GUNSHOT is ", ftos(particleeffectnum("TE_GUNSHOT")), "\n");
@@ -649,7 +707,7 @@ void GameCommand_effectindexdump(float request)
 			db_close(d);
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -660,7 +718,7 @@ void GameCommand_effectindexdump(float request)
 	}
 }
 
-void GameCommand_extendmatchtime(float request) 
+void GameCommand_extendmatchtime(float request)
 {
 	switch(request)
 	{
@@ -669,7 +727,7 @@ void GameCommand_extendmatchtime(float request)
 			changematchtime(autocvar_timelimit_increment * 60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -682,19 +740,19 @@ void GameCommand_extendmatchtime(float request)
 }
 
 void GameCommand_find(float request, float argc)  // is this even needed? We have prvm_edicts command and such ANYWAY
-{	
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
-			
+
 			for(client = world; (client = find(client, classname, argv(1))); )
 				print(etos(client), "\n");
-				
+
 			return;
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2find^7\n");
 		case CMD_REQUEST_USAGE:
@@ -706,8 +764,8 @@ void GameCommand_find(float request, float argc)  // is this even needed? We hav
 	}
 }
 
-void GameCommand_gametype(float request, float argc) 
-{	
+void GameCommand_gametype(float request, float argc)
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -716,13 +774,18 @@ void GameCommand_gametype(float request, float argc)
 			{
 				string s = argv(1);
 				float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
-				
+
 				if(t)
 				{
 					MapInfo_SwitchGameType(t);
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					if(MapInfo_count > 0)
+					{
+						// update lsmaps in case the gametype changed, this way people can easily list maps for it
+						if(lsmaps_reply != "") { strunzone(lsmaps_reply); }
+						lsmaps_reply = strzone(getlsmaps());
 						bprint("Game type successfully switched to ", s, "\n");
+					}
 					else
 					{
 						bprint("Cannot use this game type: no map for it found\n");
@@ -732,11 +795,11 @@ void GameCommand_gametype(float request, float argc)
 				}
 				else
 					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
-					
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2gametype^7\n");
 		case CMD_REQUEST_USAGE:
@@ -749,8 +812,8 @@ void GameCommand_gametype(float request, float argc)
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc) 
-{	
+void GameCommand_gettaginfo(float request, float argc)
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -758,7 +821,7 @@ void GameCommand_gettaginfo(float request, float argc)
 			entity tmp_entity;
 			float i;
 			vector v;
-			
+
 			if(argc >= 4)
 			{
 				tmp_entity = spawn();
@@ -792,12 +855,68 @@ void GameCommand_gettaginfo(float request, float argc)
 				}
 				else
 					print("bone not found\n");
-					
+
 				remove(tmp_entity);
 				return;
 			}
 		}
-			
+
+		default:
+			print("Incorrect parameters for ^2gettaginfo^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			print("See also: ^2bbox, trace^7\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_animbench(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity tmp_entity;
+
+			if(argc >= 4)
+			{
+				tmp_entity = spawn();
+				if(argv(1) == "w")
+					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+				else
+				{
+					precache_model(argv(1));
+					setmodel(tmp_entity, argv(1));
+				}
+				float f1 = stof(argv(2));
+				float f2 = stof(argv(3));
+				float t0;
+				float t1 = 0;
+				float t2 = 0;
+				float n = 0;
+
+				while(t1 + t2 < 1)
+				{
+					tmp_entity.frame = f1;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t1 += gettime(GETTIME_HIRES) - t0;
+					tmp_entity.frame = f2;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t2 += gettime(GETTIME_HIRES) - t0;
+					n += 1;
+				}
+				print("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
+				print("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
+
+				remove(tmp_entity);
+				return;
+			}
+		}
+
 		default:
 			print("Incorrect parameters for ^2gettaginfo^7\n");
 		case CMD_REQUEST_USAGE:
@@ -821,7 +940,7 @@ void GameCommand_gotomap(float request, float argc)
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2gotomap^7\n");
 		case CMD_REQUEST_USAGE:
@@ -851,7 +970,7 @@ void GameCommand_lockteams(float request)
 			}
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -863,14 +982,14 @@ void GameCommand_lockteams(float request)
 	}
 }
 
-void GameCommand_make_mapinfo(float request) 
+void GameCommand_make_mapinfo(float request)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
-		{ 
+		{
 			entity tmp_entity;
-			
+
 			tmp_entity = spawn();
 			tmp_entity.classname = "make_mapinfo";
 			tmp_entity.think = make_mapinfo_Think;
@@ -878,7 +997,7 @@ void GameCommand_make_mapinfo(float request)
 			MapInfo_Enumerate();
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -898,18 +1017,17 @@ void GameCommand_moveplayer(float request, float argc)
 		{
 			float accepted;
 			entity client;
-	
+
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
-			string notify = argv(3);
-			
+
 			string successful, t;
 			successful = string_null;
-			
+
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
-			{ 
+			{
 				for(;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
@@ -917,21 +1035,21 @@ void GameCommand_moveplayer(float request, float argc)
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, FALSE, FALSE);
-					
-					if not(accepted > 0) 
+
+					if(accepted <= 0)
 					{
-						print("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
+						print("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n"));
 						continue;
 					}
-					
+
 					// Where are we putting this player?
-					if(destination == "spec" || destination == "spectator") 
+					if(destination == "spec" || destination == "spectator")
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							self = client;
 							PutObserverInServer();
-							
+
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
 						else
@@ -942,49 +1060,50 @@ void GameCommand_moveplayer(float request, float argc)
 					}
 					else
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if(teamplay)
 							{
 								// set up
-								float team_color;
+								float team_id;
 								float save = client.team_forced;
 								client.team_forced = 0;
 
 								// find the team to move the player to
-								team_color = ColourToNumber(destination);
-								if(team_color == client.team) // already on the destination team
+								team_id = Team_ColorToTeam(destination);
+								if(team_id == client.team) // already on the destination team
 								{
 									// keep the forcing undone
-									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (targets ? ", skipping to next player.\n" : ".\n"));
+									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
-								} 
-								else if(team_color == 0)  // auto team
+								}
+								else if(team_id == 0)  // auto team
 								{
-									team_color = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+									CheckAllowedTeams(client);
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
 								{
 									CheckAllowedTeams(client);
 								}
 								client.team_forced = save;
-								
+
 								// Check to see if the destination team is even available
-								switch(team_color) 
+								switch(team_id)
 								{
-									case COLOR_TEAM1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
-									
+									case NUM_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+
 									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}
-								
+
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_color, 6, stof(notify));
+								MoveToTeam(client, team_id, 6);
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else
@@ -995,32 +1114,29 @@ void GameCommand_moveplayer(float request, float argc)
 						}
 						else
 						{
-							print("Can't change teams if the player isn't in the game.\n"); // well technically we could, but should we allow that? :P 
+							print("Can't change teams if the player isn't in the game.\n"); // well technically we could, but should we allow that? :P
 							return;
 						}
 					}
 				}
-				
+
 				if(successful)
 					bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
 				else
 					print("No players given (", original_targets, ") are able to move.\n");
-					
+
 				return; // still correct parameters so return to avoid usage print
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd moveplayer clients destination [notify]\n");
+			print("\nUsage:^3 sv_cmd moveplayer clients destination\n");
 			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
 			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
-			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
-			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
-			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
 			print("Examples: sv_cmd moveplayer 1,3,5 red 3\n");
 			print("          sv_cmd moveplayer 2 spec \n");
 			print("See also: ^2allspec, shuffleteams^7\n");
@@ -1029,7 +1145,7 @@ void GameCommand_moveplayer(float request, float argc)
 	}
 }
 
-void GameCommand_nospectators(float request) 
+void GameCommand_nospectators(float request)
 {
 	switch(request)
 	{
@@ -1039,16 +1155,16 @@ void GameCommand_nospectators(float request)
 			entity plr;
 			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			{
-				if(plr.classname == "spectator" || plr.classname == "observer")
+				if(IS_SPEC(plr) || IS_OBSERVER(plr))
 				{
 					plr.spectatortime = time;
-					sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+					Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
 			}
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1060,7 +1176,7 @@ void GameCommand_nospectators(float request)
 }
 
 void GameCommand_playerdemo(float request, float argc)
-{	
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1069,58 +1185,58 @@ void GameCommand_playerdemo(float request, float argc)
 			{
 				entity client;
 				float i, n, accepted;
-				
+
 				switch(argv(1))
 				{
 					case "read":
 					{
 						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, TRUE);
-						
-						if not(accepted > 0) 
+
+						if(accepted <= 0)
 						{
-							print("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
+							print("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".\n");
 							return;
 						}
-						
+
 						self = client;
 						playerdemo_open_read(argv(next_token));
 						return;
 					}
-					
+
 					case "write":
 					{
 						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, FALSE);
-						
-						if not(accepted > 0) 
+
+						if(accepted <= 0)
 						{
-							print("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
+							print("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".\n");
 							return;
 						}
-						
+
 						self = client;
 						playerdemo_open_write(argv(next_token));
 						return;
 					}
-					
+
 					case "auto_read_and_write":
 					{
 						n = GetFilteredNumber(argv(3));
 						cvar_set("bot_number", ftos(n));
-						
+
 						localcmd("wait; wait; wait\n");
 						for(i = 0; i < n; ++i) { localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", argv(2), ftos(i+1), "\n"); }
-						
+
 						localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
 						return;
 					}
-					
+
 					case "auto_read":
 					{
 						n = GetFilteredNumber(argv(3));
 						cvar_set("bot_number", ftos(n));
-						
+
 						localcmd("wait; wait; wait\n");
 						for(i = 0; i < n; ++i) { localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", argv(2), ftos(i+1), "\n"); }
 						return;
@@ -1128,7 +1244,7 @@ void GameCommand_playerdemo(float request, float argc)
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2playerdemo^7\n");
 		case CMD_REQUEST_USAGE:
@@ -1140,7 +1256,7 @@ void GameCommand_playerdemo(float request, float argc)
 	}
 }
 
-void GameCommand_printstats(float request) 
+void GameCommand_printstats(float request)
 {
 	switch(request)
 	{
@@ -1150,7 +1266,7 @@ void GameCommand_printstats(float request)
 			print("stats dumped.\n");
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1170,7 +1286,7 @@ void GameCommand_radarmap(float request, float argc)
 			if(RadarMap_Make(argc))
 				return;
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2radarmap^7\n");
 		case CMD_REQUEST_USAGE:
@@ -1184,7 +1300,7 @@ void GameCommand_radarmap(float request, float argc)
 	}
 }
 
-void GameCommand_reducematchtime(float request) 
+void GameCommand_reducematchtime(float request)
 {
 	switch(request)
 	{
@@ -1193,7 +1309,7 @@ void GameCommand_reducematchtime(float request)
 			changematchtime(autocvar_timelimit_decrement *-60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1219,7 +1335,7 @@ void GameCommand_setbots(float request, float argc)
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2setbots^7\n");
 		case CMD_REQUEST_USAGE:
@@ -1249,22 +1365,22 @@ void GameCommand_shuffleteams(float request)
 				FOR_EACH_PLAYER(tmp_player)
 				{
 					CheckAllowedTeams(tmp_player);
-					
+
 					if(c1 >= 0) t_teams = max(1, t_teams);
 					if(c2 >= 0) t_teams = max(2, t_teams);
 					if(c3 >= 0) t_teams = max(3, t_teams);
 					if(c4 >= 0) t_teams = max(4, t_teams);
-					
+
 					++t_players;
 				}
-				
+
 				// build a list of the players in a random order
 				FOR_EACH_PLAYER(tmp_player)
 				{
 					for(;;)
 					{
 						i = bound(1, floor(random() * maxclients) + 1, maxclients);
-						
+
 						if(shuffleteams_players[i])
 						{
 							continue; // a player is already assigned to this slot
@@ -1277,28 +1393,28 @@ void GameCommand_shuffleteams(float request)
 					}
 				}
 
-				// finally, from the list made earlier, re-join the players in different order. 
+				// finally, from the list made earlier, re-join the players in different order.
 				for(i = 1; i <= t_teams; ++i)
 				{
 					// find out how many players to assign to this team
 					x = (t_players / t_teams);
 					x = ((i == 1) ? ceil(x) : floor(x));
-					
-					team_color = NumberToTeamNumber(i);
-					
-					// sort through the random list of players made earlier 
+
+					team_color = Team_NumberToTeam(i);
+
+					// sort through the random list of players made earlier
 					for(z = 1; z <= maxclients; ++z)
-					{							
-						if not(shuffleteams_teams[i] >= x)
+					{
+						if (!(shuffleteams_teams[i] >= x))
 						{
-							if not(shuffleteams_players[z])
+							if (!(shuffleteams_players[z]))
 								continue; // not a player, move on to next random slot
-								
+
 							if(VerifyClientNumber(shuffleteams_players[z]))
 								self = edict_num(shuffleteams_players[z]);
 
-							if(self.team != team_color) 
-								MoveToTeam(self, team_color, 6, 0);
+							if(self.team != team_color)
+								MoveToTeam(self, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
@@ -1309,13 +1425,13 @@ void GameCommand_shuffleteams(float request)
 						}
 					}
 				}
-				
+
 				bprint("Successfully shuffled the players around randomly.\n");
-				
+
 				// clear the buffers now
 				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
 					shuffleteams_players[i] = 0;
-				
+
 				for (i=0; i<SHUFFLETEAMS_MAX_TEAMS; ++i)
 					shuffleteams_teams[i] = 0;
 			}
@@ -1323,10 +1439,10 @@ void GameCommand_shuffleteams(float request)
 			{
 				print("Can't shuffle teams when currently not playing a team game.\n");
 			}
-			
+
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1343,29 +1459,30 @@ void GameCommand_stuffto(float request, float argc)
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
-	
+
 	#ifdef STUFFTO_ENABLED
+	#message "stuffto command enabled"
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			if(argv(2))
 			{
-				entity client = GetIndexedEntity(argc, 1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
-				
+
 				if(accepted > 0)
 				{
 					stuffcmd(client, strcat("\n", argv(next_token), "\n"));
 					print(strcat("Command: \"", argv(next_token), "\" sent to ", GetCallerName(client), " (", argv(1) ,").\n"));
 				}
 				else
-					print("stuffto: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
-				
+					print("stuffto: ", GetClientErrorString(accepted, argv(1)), ".\n");
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2stuffto^7\n");
 		case CMD_REQUEST_USAGE:
@@ -1394,7 +1511,7 @@ void GameCommand_trace(float request, float argc)
 			entity e;
 			vector org, delta, start, end, p, q, q0, pos, vv, dv;
 			float i, f, safe, unsafe, dq, dqf;
-	
+
 			switch(argv(1))
 			{
 				case "debug":
@@ -1487,7 +1604,7 @@ void GameCommand_trace(float request, float argc)
 					}
 					return;
 				}
-					
+
 				case "debug2":
 				{
 					e = nextent(world);
@@ -1518,37 +1635,37 @@ void GameCommand_trace(float request, float argc)
 					print("highest possible dist: ", ftos(f), "\n");
 					return;
 				}
-				
+
 				case "walk":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
 						e = nextent(world);
-						if(tracewalk(e, stov(argv(1)), e.mins, e.maxs, stov(argv(2)), MOVE_NORMAL))
+						if(tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL))
 							print("can walk\n");
 						else
 							print("cannot walk\n");
 						return;
 					}
 				}
-				
+
 				case "showline":
 				{
-					if(argc == 3)
+					if(argc == 4)
 					{
-						vv = stov(argv(1));
-						dv = stov(argv(2));
+						vv = stov(argv(2));
+						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
 						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
 						return;
 					}
 				}
-				
+
 				// no default case, just go straight to invalid
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2trace^7\n");
 		case CMD_REQUEST_USAGE:
@@ -1578,7 +1695,7 @@ void GameCommand_unlockteams(float request)
 			}
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1602,7 +1719,7 @@ void GameCommand_warp(float request, float argc)
 				{
 					CampaignLevelWarp(stof(argv(1)));
 					print("Successfully warped to campaign level ", stof(argv(1)), ".\n");
-				}	
+				}
 				else
 				{
 					CampaignLevelWarp(-1);
@@ -1613,12 +1730,13 @@ void GameCommand_warp(float request, float argc)
 				print("Not in campaign, can't level warp\n");
 			return;
 		}
-		
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd level\n");
+			print("\nUsage:^3 sv_cmd warp [level]\n");
 			print("  'level' is the level to change campaign mode to.\n");
+			print("  if 'level' is not provided it will change to the next level.\n");
 			return;
 		}
 	}
@@ -1632,10 +1750,10 @@ void GameCommand_(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
+
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -1653,14 +1771,15 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// Common commands have double indentation to separate them a bit.
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
+	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
+	SERVER_COMMAND("animbench", GameCommand_animbench(request, arguments), "Benchmark model animation (LAGS)") \
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
-	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
+	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments, command), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
@@ -1692,10 +1811,10 @@ void GameCommand_macro_help()
 {
 	#define SERVER_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
-		
+
 	SERVER_COMMANDS(0, 0, "")
 	#undef SERVER_COMMAND
-	
+
 	return;
 }
 
@@ -1703,10 +1822,10 @@ float GameCommand_macro_command(float argc, string command)
 {
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
-		
+
 	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef SERVER_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -1714,10 +1833,10 @@ float GameCommand_macro_usage(float argc)
 {
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
-		
+
 	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef SERVER_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -1725,13 +1844,13 @@ void GameCommand_macro_write_aliases(float fh)
 {
 	#define SERVER_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
-		
+
 	SERVER_COMMANDS(0, 0, "")
 	#undef SERVER_COMMAND
-	
+
 	return;
 }
-	
+
 
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
@@ -1741,33 +1860,33 @@ void GameCommand_macro_write_aliases(float fh)
 void GameCommand(string command)
 {
 	float argc = tokenize_console(command);
-	
+
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
-	// argv:   0    - 1      - 2     - 3 
+	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
 
-	if(strtolower(argv(0)) == "help") 
+	if(strtolower(argv(0)) == "help")
 	{
-		if(argc == 1) 
+		if(argc == 1)
 		{
 			print("\nServer console commands:\n");
 			GameCommand_macro_help();
-			
+
 			print("\nBanning commands:\n");
 			BanCommand_macro_help();
-			
+
 			print("\nCommon networked commands:\n");
 			CommonCommand_macro_help(world);
-			
+
 			print("\nGeneric commands shared by all programs:\n");
 			GenericCommand_macro_help();
-			
+
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n");
 			print("For help about a specific command, type sv_cmd help COMMAND\n");
-			
+
 			return;
-		} 
+		}
 		else if(BanCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
@@ -1784,8 +1903,8 @@ void GameCommand(string command)
 		{
 			return;
 		}
-	} 
-	else if(BanCommand(command)) 
+	}
+	else if(BanCommand(command))
 	{
 		return; // handled by server/command/ipban.qc
 	}
@@ -1793,7 +1912,7 @@ void GameCommand(string command)
 	{
 		return; // handled by server/command/common.qc
 	}
-	else if(GenericCommand(command)) 
+	else if(GenericCommand(command))
 	{
 		return; // handled by common/command/generic.qc
 	}
@@ -1801,9 +1920,9 @@ void GameCommand(string command)
 	{
 		return; // handled by one of the above GameCommand_* functions
 	}
-	
+
 	// nothing above caught the command, must be invalid
 	print(((command != "") ? strcat("Unknown server command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try sv_cmd help.\n");
-	
+
 	return;
 }

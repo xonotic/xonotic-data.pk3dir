@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "gl", "grenadelauncher", _("Mortar"))
+REGISTER_WEAPON(
+/* WEP_##id  */ GRENADE_LAUNCHER,
+/* function  */ w_glauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 4,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "gl",
+/* shortname */ "grenadelauncher",
+/* fullname  */ _("Mortar")
+);
 #else
 #ifdef SVQC
 .float gl_detonate_later;
@@ -8,13 +18,13 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
-			if(IsDifferentTeam(self.realowner, other))
+		if(IS_PLAYER(other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -28,13 +38,13 @@ void W_Grenade_Explode (void)
 void W_Grenade_Explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
-			if(IsDifferentTeam(self.realowner, other))
+		if(IS_PLAYER(other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -49,12 +59,12 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 {
 	if (self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
@@ -85,23 +95,23 @@ void W_Grenade_Touch1 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTEN_NORM);
 		else
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
 	else if(autocvar_g_balance_grenadelauncher_primary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTEN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -129,27 +139,27 @@ void W_Grenade_Touch2 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTEN_NORM);
 		else
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
-		
+
 		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
 			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
-			
+
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTEN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -200,6 +210,7 @@ void W_Grenade_Attack (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -247,6 +258,7 @@ void W_Grenade_Attack2 (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -319,7 +331,7 @@ float w_glauncher(float req)
 					}
 				}
 				if(nadefound)
-					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTEN_NORM);
 			}
 			else if (weapon_prepareattack(1, autocvar_g_balance_grenadelauncher_secondary_refire))
 			{
@@ -364,6 +376,20 @@ float w_glauncher(float req)
 	{
 		W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_SUICIDE_BOUNCE;
+		else
+			return WEAPON_MORTAR_SUICIDE_EXPLODE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_MURDER_BOUNCE;
+		else
+			return WEAPON_MORTAR_MURDER_EXPLODE;
+	}
 	return TRUE;
 }
 #endif
@@ -376,28 +402,11 @@ float w_glauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/grenade_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s didn't see their own grenade");
-		else
-			w_deathtypestring = _("%s blew themself up with their grenadelauncher");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SPLASH)
-			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = _("%s didn't see %s's grenade");
-			else // unchecked: SECONDARY
-				w_deathtypestring = _("%s almost dodged %s's grenade");
-		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = _("%s ate %s's grenade");
 	}
 	return TRUE;
 }

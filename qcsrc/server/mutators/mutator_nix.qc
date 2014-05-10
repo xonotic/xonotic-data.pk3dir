@@ -17,7 +17,7 @@ float NIX_CanChooseWeapon(float wpn)
 		return FALSE;
 	if(g_weaponarena)
 	{
-		if not(WEPSET_CONTAINS_AW(g_weaponarena_weapons, wpn))
+		if(!(g_weaponarena_weapons & WepSet_FromWeapon(wpn)))
 			return FALSE;
 	}
 	else
@@ -26,7 +26,7 @@ float NIX_CanChooseWeapon(float wpn)
 			return FALSE;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return FALSE;
-		if not(e.spawnflags & WEP_FLAG_NORMAL)
+		if (!(e.spawnflags & WEP_FLAG_NORMAL))
 			return FALSE;
 	}
 	return TRUE;
@@ -96,7 +96,7 @@ void NIX_GiveCurrentWeapon()
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
-			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 0, 0);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
 		weapon_action(nix_weapon, WR_RESETPLAYER);
 
@@ -118,7 +118,7 @@ void NIX_GiveCurrentWeapon()
 	{
 		self.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
 		if(dt >= 1 && dt <= 5)
-			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^3%d^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon)), 1, dt);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
 	}
 
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
@@ -136,10 +136,10 @@ void NIX_GiveCurrentWeapon()
 		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	WEPSET_CLEAR_E(self);
+	self.weapons = '0 0 0';
 	if(g_nix_with_laser)
-		WEPSET_ANDNOT_EW(self, WEP_LASER);
-	WEPSET_OR_EW(self, nix_weapon);
+		self.weapons &= ~WEPSET_LASER;
+	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
 		if(!client_hasweapon(self, self.switchweapon, TRUE, FALSE))
@@ -205,7 +205,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 {
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 		NIX_GiveCurrentWeapon();
 	return 0;
 }
@@ -247,6 +247,11 @@ MUTATOR_DEFINITION(mutator_nix)
 		NIX_precache();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
 	MUTATOR_ONREMOVE
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
@@ -258,7 +263,7 @@ MUTATOR_DEFINITION(mutator_nix)
 			e.ammo_nails = start_ammo_nails;
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
-			WEPSET_COPY_EA(e, start_weapons);
+			e.weapons = start_weapons;
 			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
 				e.switchweapon = w_getbestweapon(self);
 		}

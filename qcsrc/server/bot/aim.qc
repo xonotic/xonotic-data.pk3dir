@@ -111,9 +111,8 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 
-	if(g_freezetag)
-		if(e.freezetag_frozen)
-			return FALSE;
+	if(e.freezetag_frozen)
+		return FALSE;
 
 	// If neither player has ball then don't attack unless the ball is on the
 	// ground.
@@ -127,7 +126,7 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 	else if(bot_ignore_bots)
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			return FALSE;
 
 	if (!e.takedamage)
@@ -136,11 +135,13 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if (e.BUTTON_CHAT)
 		return FALSE;
-	if(g_minstagib)
-	if(e.items & IT_STRENGTH)
-		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
+
+	checkentity = e;
+	if(MUTATOR_CALLHOOK(BotShouldAttack))
+		return FALSE;
+
 	return TRUE;
 }
 

@@ -38,7 +38,7 @@ void XonoticSliderCheckBox_configureXonoticSliderCheckBox(entity me, float theOf
 	if(theControlledSlider.value == median(theControlledSlider.valueMin, theControlledSlider.value, theControlledSlider.valueMax))
 		me.savedValue = theControlledSlider.value;
 	else
-		me.savedValue = theControlledSlider.valueMin; 
+		me.savedValue = theControlledSlider.valueMin;
 	me.controlledSlider = theControlledSlider;
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 	me.tooltip = theControlledSlider.tooltip;

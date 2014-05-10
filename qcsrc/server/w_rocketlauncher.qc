@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "rl", "rocketlauncher", _("Rocket Launcher"))
+REGISTER_WEAPON(
+/* WEP_##id  */ ROCKET_LAUNCHER,
+/* function  */ w_rlauncher,
+/* ammotype  */ IT_ROCKETS,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_HIGH,
+/* model     */ "rl",
+/* shortname */ "rocketlauncher",
+/* fullname  */ _("Rocket Launcher")
+);
 #else
 #ifdef SVQC
 .float rl_release;
@@ -19,13 +29,13 @@ void W_Rocket_Explode ()
 	W_Rocket_Unregister();
 
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
-			if(IsDifferentTeam(self.realowner, other))
+		if(IS_PLAYER(other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
@@ -46,7 +56,7 @@ void W_Rocket_DoRemoteExplode ()
 {
 	W_Rocket_Unregister();
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
@@ -137,8 +147,8 @@ void W_Rocket_Think (void)
 	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
 		if(self == self.realowner.lastrocket)
-		if not(self.realowner.rl_release)
-		if not(self.BUTTON_ATCK2)
+		if (!self.realowner.rl_release)
+		if (!self.BUTTON_ATCK2)
 		if(autocvar_g_balance_rocketlauncher_guiderate)
 		if(time > self.pushltime)
 		if(self.realowner.deadflag == DEAD_NO)
@@ -168,7 +178,7 @@ void W_Rocket_Think (void)
 			{
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTEN_NORM);
 				self.count = 1;
 			}
 		}
@@ -197,13 +207,13 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if (self.health <= 0)
 		return;
-	
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
 }
@@ -250,6 +260,7 @@ void W_Rocket_Attack (void)
 	missile.nextthink = time;
 	missile.cnt = time + autocvar_g_balance_rocketlauncher_lifetime;
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, autocvar_g_balance_rocketlauncher_guiderate == 0 && autocvar_g_balance_rocketlauncher_speedaccel == 0, PROJECTILE_ROCKET, FALSE); // because of fly sound
 
@@ -347,7 +358,7 @@ float w_rlauncher(float req)
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
 					if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
@@ -398,7 +409,7 @@ float w_rlauncher(float req)
 					}
 				}
 				if(rockfound)
-					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -424,6 +435,7 @@ float w_rlauncher(float req)
 		// don't switch while guiding a missile
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKET_LAUNCHER)
 		{
+			ammo_amount = FALSE;
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
 				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.(weapon_load[WEP_ROCKET_LAUNCHER]) < autocvar_g_balance_rocketlauncher_ammo)
@@ -444,6 +456,17 @@ float w_rlauncher(float req)
 	{
 		W_Reload(autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_ROCKETLAUNCHER_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+			return WEAPON_ROCKETLAUNCHER_MURDER_SPLASH;
+		else
+			return WEAPON_ROCKETLAUNCHER_MURDER_DIRECT;
+	}
 	return TRUE;
 }
 #endif
@@ -456,22 +479,11 @@ float w_rlauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/rocket_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s blew themself up with their rocketlauncher");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s got too close to %s's rocket");
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s almost dodged %s's rocket");
-		else
-			w_deathtypestring = _("%s ate %s's rocket");
 	}
 	return TRUE;
 }

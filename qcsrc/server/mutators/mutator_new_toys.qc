@@ -4,7 +4,7 @@ CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   
 									minsta  porto
 									tuba
 
-NEW             rifle   hlac    minel                           seeker   
+NEW             rifle   hlac    minel                           seeker
 IDEAS                                   OPEN    flak    OPEN            FUN FUN FUN FUN
 
 
@@ -110,7 +110,7 @@ string nt_GetReplacement(string w, float m)
 	if(m == NT_AUTOREPLACE_NEVER)
 		return w;
 	string s = nt_GetFullReplacement(w);
-	if not(s)
+	if (!s)
 		return w;
 	if(m == NT_AUTOREPLACE_RANDOM)
 		s = strcat(w, " ", s);
@@ -125,11 +125,11 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 
 	float i, j, k, n;
 
-	WEPSET_DECLARE_A(newdefault);
-	WEPSET_DECLARE_A(warmup_newdefault);
-	
-	WEPSET_CLEAR_A(newdefault);
-	WEPSET_CLEAR_A(warmup_newdefault);
+	WepSet newdefault;
+	WepSet warmup_newdefault;
+
+	newdefault = '0 0 0';
+	warmup_newdefault = '0 0 0';
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -143,20 +143,20 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 			for(k = WEP_FIRST; k <= WEP_LAST; ++k)
 				if(get_weaponinfo(k).netname == argv(j))
 				{
-					if(WEPSET_CONTAINS_AW(start_weapons, i))
-						WEPSET_OR_AW(newdefault, k);
-					if(WEPSET_CONTAINS_AW(warmup_start_weapons, i))
-						WEPSET_OR_AW(warmup_newdefault, k);
+					if(start_weapons & WepSet_FromWeapon(i))
+						newdefault |= WepSet_FromWeapon(k);
+					if(warmup_start_weapons & WepSet_FromWeapon(i))
+						warmup_newdefault |= WepSet_FromWeapon(k);
 				}
 	}
 
-	WEPSET_AND_AA(newdefault, start_weapons_defaultmask);
-	WEPSET_ANDNOT_AA(start_weapons, start_weapons_defaultmask);
-	WEPSET_OR_AA(start_weapons, newdefault);
+	newdefault &= start_weapons_defaultmask;
+	start_weapons &= ~start_weapons_defaultmask;
+	start_weapons |= newdefault;
 
-	WEPSET_AND_AA(warmup_newdefault, warmup_start_weapons_defaultmask);
-	WEPSET_ANDNOT_AA(warmup_start_weapons, warmup_start_weapons_defaultmask);
-	WEPSET_OR_AA(warmup_start_weapons, warmup_newdefault);
+	warmup_newdefault &= warmup_start_weapons_defaultmask;
+	warmup_start_weapons &= ~warmup_start_weapons_defaultmask;
+	warmup_start_weapons |= warmup_newdefault;
 
 	return 0;
 }
@@ -184,7 +184,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
 	if(nt_IsNewToy(self.weapon))
-		self.item_pickupsound = "weapons/weaponpickup_new_toys.ogg";
+		self.item_pickupsound = "weapons/weaponpickup_new_toys.wav";
 	return 0;
 }
 
@@ -200,17 +200,27 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
 
-		precache_sound("weapons/weaponpickup_new_toys.ogg");
+		precache_sound("weapons/weaponpickup_new_toys.wav");
 
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
+				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		float i;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(nt_IsNewToy(i))
+				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This cannot be removed at runtime\n");
+		print("This cannot be removed at runtime\n");
+		return -1;
 	}
 
 	return 0;

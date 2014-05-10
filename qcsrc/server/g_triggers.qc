@@ -61,12 +61,12 @@ void SUB_UseTargets()
 //
 // print the message
 //
-	if (activator.classname == "player" && self.message != "")
+	if (IS_PLAYER(activator) && self.message != "")
 	{
-		if(clienttype(activator) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(activator))
 		{
 			centerprint (activator, self.message);
-			if (!self.noise)
+			if (self.noise == "")
 				play2(activator, "misc/talk.wav");
 		}
 	}
@@ -137,8 +137,8 @@ void SUB_UseTargets()
 
 //=============================================================================
 
-float	SPAWNFLAG_NOMESSAGE = 1;
-float	SPAWNFLAG_NOTOUCH = 1;
+const float	SPAWNFLAG_NOMESSAGE = 1;
+const float	SPAWNFLAG_NOTOUCH = 1;
 
 // the wait time has passed, so set back up for another activation
 void multi_wait()
@@ -164,14 +164,14 @@ void multi_trigger()
 
 	if (self.classname == "trigger_secret")
 	{
-		if (self.enemy.classname != "player")
+		if (!IS_PLAYER(self.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
 	}
 
 	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -192,7 +192,7 @@ void multi_trigger()
 	else
 	{	// we can't just remove (self) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = SUB_Null;
+		self.touch = func_null;
 	}
 }
 
@@ -205,12 +205,12 @@ void multi_use()
 
 void multi_touch()
 {
-	if not(self.spawnflags & 2)
-		if not(other.iscreature)
+	if (!(self.spawnflags & 2))
+		if (!other.iscreature)
 			return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
@@ -254,7 +254,8 @@ void multi_reset()
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 	self.team = self.team_saved;
 }
 
@@ -359,7 +360,8 @@ void delay_use()
 
 void delay_reset()
 {
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void spawnfunc_trigger_delay()
@@ -382,7 +384,7 @@ void counter_use()
 
 	if (self.count != 0)
 	{
-		if (activator.classname == "player"
+		if (IS_PLAYER(activator)
 		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 		{
 			if (self.count >= 4)
@@ -397,7 +399,7 @@ void counter_use()
 		return;
 	}
 
-	if (activator.classname == "player"
+	if (IS_PLAYER(activator)
 	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 		centerprint(activator, "Sequence completed!");
 	self.enemy = activator;
@@ -430,7 +432,7 @@ void spawnfunc_trigger_counter()
 
 void trigger_hurt_use()
 {
-	if(activator.classname == "player")
+	if(IS_PLAYER(activator))
 		self.enemy = activator;
 	else
 		self.enemy = world; // let's just destroy it, if taking over is too much work
@@ -439,11 +441,11 @@ void trigger_hurt_use()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
@@ -457,7 +459,7 @@ void trigger_hurt_touch()
 
 			entity own;
 			own = self.enemy;
-			if(own.classname != "player")
+			if (!IS_PLAYER(own))
 			{
 				own = self;
 				self.enemy = world; // I still hate you all
@@ -466,20 +468,12 @@ void trigger_hurt_touch()
 			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
-	else
+	else if(other.damagedbytriggers)
 	{
-		if (!other.owner)
+		if(other.takedamage)
 		{
-			if (other.items & IT_KEY1 || other.items & IT_KEY2)	// reset flag
-			{
-				EXACTTRIGGER_TOUCH;
-				other.pain_finished = min(other.pain_finished, time + 2);
-			}
-			else if (other.classname == "rune")			// reset runes
-			{
-				EXACTTRIGGER_TOUCH;
-				other.nextthink = min(other.nextthink, time + 1);
-			}
+			EXACTTRIGGER_TOUCH;
+			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
 
@@ -503,9 +497,9 @@ void spawnfunc_trigger_hurt()
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;
-	if (!self.message)
+	if (self.message == "")
 		self.message = "was in the wrong place";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was thrown into a world of hurt by";
 	// self.message = "someone like %s always gets wrongplaced";
 
@@ -538,23 +532,24 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 .float triggerhealtime;
 void trigger_heal_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
 		if (other.takedamage)
+		if (!other.deadflag)
 		if (other.triggerhealtime < time)
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhealtime = time + 1;
-			
+
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -563,7 +558,7 @@ void trigger_heal_touch()
 void spawnfunc_trigger_heal()
 {
 	self.active = ACTIVE_ACTIVE;
-	
+
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
@@ -633,7 +628,7 @@ void trigger_gravity_touch()
 
 	g = self.gravity;
 
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 	{
 		if(other.trigger_gravity_check)
 		{
@@ -665,7 +660,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 }
@@ -696,7 +691,7 @@ void spawnfunc_trigger_gravity()
 void target_speaker_use_off();
 void target_speaker_use_activator()
 {
-	if(clienttype(activator) != CLIENTTYPE_REAL)
+	if (!IS_REAL_CLIENT(activator))
 		return;
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
@@ -780,9 +775,9 @@ void spawnfunc_target_speaker()
 	if(!self.atten && !(self.spawnflags & 4))
 	{
 		IFTARGETED
-			self.atten = ATTN_NORM;
+			self.atten = ATTEN_NORM;
 		else
-			self.atten = ATTN_STATIC;
+			self.atten = ATTEN_STATIC;
 	}
 	else if(self.atten < 0)
 		self.atten = 0;
@@ -947,14 +942,14 @@ void spawnfunc_func_pointparticles()
 		setmodel(self, self.model);
 	if(self.noise != "")
 		precache_sound (self.noise);
-	
+
 	if(!self.bgmscriptsustain)
 		self.bgmscriptsustain = 1;
 	else if(self.bgmscriptsustain < 0)
 		self.bgmscriptsustain = 0;
 
 	if(!self.atten)
-		self.atten = ATTN_NORM;
+		self.atten = ATTEN_NORM;
 	else if(self.atten < 0)
 		self.atten = 0;
 	if(!self.volume)
@@ -1169,7 +1164,7 @@ void misc_laser_think()
 	if(self.enemy)
 	{
 		o = self.enemy.origin;
-		if not(self.spawnflags & 2)
+		if (!(self.spawnflags & 2))
 			o = self.origin + normalize(o - self.origin) * 32768;
 	}
 	else
@@ -1219,7 +1214,7 @@ void misc_laser_think()
 	if(self.dmg)
 	{
 		if(self.team)
-			if((self.spawnflags & 8 == 0) == (self.team != hitent.team))
+			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
 				return;
 		if(hitent.takedamage)
 			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER, hitloc, '0 0 0');
@@ -1333,9 +1328,9 @@ void spawnfunc_misc_laser()
 	if(self.colormod == '0 0 0')
 		if(!self.alpha)
 			self.colormod = '1 0 0';
-	if(!self.message)
+	if(self.message == "")
 		self.message = "saw the light";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed into a laser by";
 	if(!self.scale)
 		self.scale = 1;
@@ -1374,7 +1369,7 @@ void trigger_impulse_touch1()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1405,7 +1400,7 @@ void trigger_impulse_touch1()
     if(!pushdeltatime) return;
 
     other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-    other.flags &~= FL_ONGROUND;
+    other.flags &= ~FL_ONGROUND;
     UpdateCSQCProjectile(other);
 }
 
@@ -1414,7 +1409,7 @@ void trigger_impulse_touch2()
 {
     float pushdeltatime;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1438,7 +1433,7 @@ void trigger_impulse_touch3()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1771,7 +1766,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if(vs.message == "")
 		return;
-	if(pl.classname != "player")
+	if (!IS_PLAYER(pl))
 		return;
 	if(gameover)
 		return;
@@ -1824,7 +1819,7 @@ void spawnfunc_target_voicescript()
 	//          added after this message
 	// wait: average time between messages
 	// delay: initial delay before the first message
-	
+
 	float i, n;
 	self.use = target_voicescript_use;
 
@@ -1920,16 +1915,16 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	magicear_matched = FALSE;
 
-	dotrigger = ((source.classname == "player") && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
-	if not(domatch)
+	if (!domatch)
 		return msgin;
 
-	if not(msgin)
+	if (!msgin)
 	{
 		// we are in TUBA mode!
-		if not(ear.spawnflags & 256)
+		if (!(ear.spawnflags & 256))
 			return msgin;
 
 		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
@@ -1975,7 +1970,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 			if(ear.spawnflags & 8)
 				return msgin;
 	}
-	
+
 	matchstart = -1;
 	l = strlen(ear.message);
 
@@ -2067,7 +2062,7 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	for(ear = magicears; ear; ear = ear.enemy)
 	{
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
-		if not(ear.spawnflags & 64)
+		if (!(ear.spawnflags & 64))
 			if(magicear_matched)
 				return msgout;
 		msgin = msgout;
@@ -2115,9 +2110,9 @@ void spawnfunc_trigger_magicear()
 void relay_activators_use()
 {
 	entity trg, os;
-	
+
 	os = self;
-	
+
 	for(trg = world; (trg = find(trg, targetname, os.target)); )
 	{
 		self = trg;
@@ -2129,11 +2124,11 @@ void relay_activators_use()
 			if(os.cnt == ACTIVE_TOGGLE)
 				if(trg.active == ACTIVE_ACTIVE)
 					trg.active = ACTIVE_NOT;
-				else	
+				else
 					trg.active = ACTIVE_ACTIVE;
 			else
 				trg.active = os.cnt;
-		}		
+		}
 	}
 	self = os;
 }
@@ -2147,13 +2142,13 @@ void spawnfunc_relay_activate()
 void spawnfunc_relay_deactivate()
 {
 	self.cnt = ACTIVE_NOT;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 void spawnfunc_relay_activatetoggle()
 {
 	self.cnt = ACTIVE_TOGGLE;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 .string chmap, gametype;

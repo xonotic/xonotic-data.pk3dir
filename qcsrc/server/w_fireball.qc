@@ -1,5 +1,15 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(
+/* WEP_##id  */ FIREBALL,
+/* function  */ w_fireball,
+/* ammotype  */ 0,
+/* impulse   */ 9,
+/* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
+/* rating    */ BOT_PICKUP_RATING_MID,
+/* model     */ "fireball",
+/* shortname */ "fireball",
+/* fullname  */ _("Fireball")
+);
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -14,7 +24,7 @@ void W_Fireball_Explode (void)
 	vector dir;
 	float d;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	// 1. dist damage
@@ -28,7 +38,7 @@ void W_Fireball_Explode (void)
 		// 2. bfg effect
 		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
 		for(e = findradius(self.origin, autocvar_g_balance_fireball_primary_bfgradius); e; e = e.chain)
-		if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
+		if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
 		{
 			// can we see fireball?
 			traceline(e.origin + e.view_ofs, self.origin, MOVE_NORMAL, e);
@@ -73,7 +83,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
-	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(e.classname != "player" || !self.realowner || IsDifferentTeam(e, self))
+	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
 	{
 		p = e.origin;
 		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
@@ -115,10 +125,10 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float d
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
@@ -159,6 +169,7 @@ void W_Fireball_Attack1()
 	proj.touch = W_Fireball_TouchExplode;
 	setsize(proj, '-16 -16 -16', '16 16 16');
 	proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREBALL, TRUE);
 
@@ -199,7 +210,7 @@ void W_Fireball_Attack1_Frame1()
 void W_Fireball_Attack1_Frame0()
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_fireball_primary_animtime, W_Fireball_Attack1_Frame1);
 }
 
@@ -233,7 +244,7 @@ void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype) >= 0)
 	{
 		remove(self);
 		return;
@@ -289,6 +300,7 @@ void W_Fireball_Attack2()
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 
@@ -372,6 +384,24 @@ float w_fireball(float req)
 	{
 		self.fireball_primarytime = time;
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_FIREBALL_SUICIDE_FIREMINE;
+		else
+			return WEAPON_FIREBALL_SUICIDE_BLAST;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			return WEAPON_FIREBALL_MURDER_FIREMINE;
+		}
+		else
+		{
+			return WEAPON_FIREBALL_MURDER_BLAST;
+		}
+	}
 	return TRUE;
 }
 #endif
@@ -390,44 +420,14 @@ float w_fireball(float req)
 			org2 = w_org + w_backoff * 16;
 			pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM * 0.25); // long range boom
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/fireball_impact2.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s forgot about some firemine");
-		else
-			w_deathtypestring = _("%s should have used a smaller gun");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = _("%s tried to catch %s's firemine");
-			else
-				w_deathtypestring = _("%s fatefully ignored %s's firemine");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
-					w_deathtypestring = _("%s could not hide from %s's fireball");
-				else // laser
-					w_deathtypestring = _("%s saw the pretty lights of %s's fireball");
-			}
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = _("%s got too close to %s's fireball");
-			else
-				w_deathtypestring = _("%s tasted %s's fireball");
-		}
-	}
+
 	return TRUE;
 }
 #endif

@@ -46,8 +46,19 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
+	// allow only weapon change impulses when not in round time
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
+		return;
+
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
+
+    if(self.vehicle)
+        if(self.vehicle.deadflag == DEAD_NO)
+            if(self.vehicle.vehicles_impulse)
+                if(self.vehicle.vehicles_impulse(imp))
+                    return;
 
 	if(CheatImpulse(imp))
 	{
@@ -88,8 +99,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon (2);
 					break;
 				case 17:
-					if (!g_minstagib)
-						W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
+					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
 					W_NextWeapon (1);
@@ -159,11 +169,14 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
-					if(!wp)
-						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
-					else
-						WaypointSprite_Ping(wp);
+					if (!MUTATOR_CALLHOOK(HelpMePing))
+					{
+						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
+						if(!wp)
+							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
+						else
+							WaypointSprite_Ping(wp);
+					}
 					sprint(self, "HELP ME attached\n");
 				}
 				break;
@@ -244,7 +257,7 @@ void ImpulseCommands (void)
 				case 104:
 					e = navigation_findnearestwaypoint(self, FALSE);
 					if (e)
-					if not(e.wpflags & WAYPOINTFLAG_GENERATED)
+					if (!(e.wpflags & WAYPOINTFLAG_GENERATED))
 					{
 						bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
 						waypoint_remove(e);
@@ -260,7 +273,7 @@ void ImpulseCommands (void)
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						e.colormod = '0.5 0.5 0.5';
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
 					navigation_markroutes(e2);
@@ -287,7 +300,7 @@ void ImpulseCommands (void)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
-							if not(e.effects & EF_NODEPTHTEST) // not already reported before
+							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							++i;
@@ -306,7 +319,7 @@ void ImpulseCommands (void)
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{
 							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST;
+							e.effects &= ~EF_NODEPTHTEST;
 							e.model = "";
 						}
 						else
@@ -329,7 +342,7 @@ void ImpulseCommands (void)
 					start = findchainflags(flags, FL_ITEM);
 					for(e = start; e; e = e.chain)
 					{
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 						e.colormod = '0.5 0.5 0.5';
 					}
 					for(e = start; e; e = e.chain)

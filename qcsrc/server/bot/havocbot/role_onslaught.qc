@@ -39,7 +39,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(WEPSET_CONTAINS_EW(self, i))
+		if(self.weapons & WepSet_FromWeapon(i))
 		if(++c>=4)
 			break;
 	}
@@ -59,7 +59,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	{
 		// gather health and armor only
 		if (head.solid)
-		if ( ((head.health || head.armorvalue) && needarmor) || (!WEPSET_EMPTY_E(head) && needweapons ) )
+		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
 		if (vlen(head.origin - org) < sradius)
 		{
 			t = head.bot_pickupevalfunc(self, head);
@@ -127,12 +127,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 		{
 			if( (cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) && !(cp2.isgenneighbor_red || cp2.iscpneighbor_red) )
 				continue;
 		}
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == NUM_TEAM_2)
 		{
 			if( (cp2.isgenneighbor_red || cp2.iscpneighbor_red) && !(cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) )
 				continue;
@@ -156,7 +156,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	cp = world;
 	for (; cp1; cp1 = cp1.chain)
 	{
-		if not(cp1.wpconsidered)
+		if (!cp1.wpconsidered)
 			continue;
 
 		if(cp1.wpcost<bestvalue)
@@ -167,7 +167,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		}
 	}
 
-	if not(cp)
+	if (!cp)
 		return;
 
 //	dprint(self.netname, " chose cp ranked ", ftos(bestvalue), "\n");
@@ -217,9 +217,10 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	{
 		// Should be touched
 		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
+		found = FALSE;
 
 		// Look for auto generated waypoint
-		if not(bot_waypoints_for_items)
+		if (!bot_waypoints_for_items)
 		for (wp = findradius(cp.origin,100); wp; wp = wp.chain)
 		{
 			if(wp.classname=="waypoint")
@@ -230,7 +231,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		}
 
 		// Nothing found, rate the controlpoint itself
-		if not(found)
+		if (!found)
 			navigation_routerating(cp, ratingscale, 10000);
 	}
 }
