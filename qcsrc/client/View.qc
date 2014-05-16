@@ -269,7 +269,7 @@ float EnemyHitCheck()
 
 float TrueAimCheck()
 {
-	float nudge = 1; // added to traceline target and subtracted from result
+	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
 	float shottype;
