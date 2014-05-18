@@ -1,7 +1,0 @@
-name Draconi F
-species alien
-sex Female
-weight 216
-age 27
-
-Heavyweight Xonotic Solider

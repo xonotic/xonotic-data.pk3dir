@@ -1,17 +1,17 @@
-draconi-m
+draconi_male
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/draconi-m.tga
+		map textures/draconi_male.tga
 		rgbgen lightingDiffuse
 	}
 }
 
-draconi-f
+draconi_female
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/draconi-f.tga
+		map textures/draconi_female.tga
 		rgbgen lightingDiffuse
 	}
 }

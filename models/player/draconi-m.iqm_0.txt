@@ -1,7 +1,0 @@
-name Draconi M
-species alien
-sex Male
-weight 243
-age 31
-
-Heavyweight Xonotic Solider
