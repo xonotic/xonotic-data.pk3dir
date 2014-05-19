@@ -189,7 +189,7 @@ void W_Arc_Beam_Think(void)
 		||
 		self.owner.deadflag != DEAD_NO
 		||
-		(!self.owner.BUTTON_ATCK && !self.beam_bursting)
+		(!self.owner.BUTTON_ATCK /* FIXME(Samual): && !self.beam_bursting */)
 		||
 		self.owner.freezetag_frozen
 	)
@@ -505,6 +505,12 @@ void W_Arc_Beam_Think(void)
 
 void W_Arc_Beam(float burst)
 {
+	// FIXME(Samual): remove this when overheat and burst work.
+	if (burst)
+	{
+		centerprint(self, "^4NOTE:^7 Arc burst (secondary) is not implemented yet.");
+	}
+
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
 	{
@@ -564,7 +570,7 @@ float W_Arc(float req)
 			}
 			#endif
 
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting)
+			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 /* FIXME(Samual): || self.arc_beam.beam_bursting */)
 			{
 				if(self.BUTTON_ATCK_prev)
 				{
