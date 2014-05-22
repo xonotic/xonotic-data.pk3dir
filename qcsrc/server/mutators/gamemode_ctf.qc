@@ -388,6 +388,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 
 	if (!player) { return; } // without someone to give the reward to, we can't possibly cap
 
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
+
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
@@ -448,6 +450,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+
+		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -500,6 +504,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
 		case PICKUP_BASE:
@@ -791,7 +796,8 @@ void ctf_FlagTouch()
 	}
 
 	// special touch behaviors
-	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	if(toucher.frozen) { return; }
+	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other

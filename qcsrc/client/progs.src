@@ -16,6 +16,7 @@ Defs.qc
 
 ../common/teams.qh
 ../common/util.qh
+../common/nades.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -116,6 +117,8 @@ noise.qc
 command/cl_cmd.qc
 
 ../common/monsters/monsters.qc
+
+../common/nades.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

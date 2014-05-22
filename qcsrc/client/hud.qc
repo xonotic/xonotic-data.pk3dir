@@ -886,6 +886,54 @@ string GetAmmoPicture(float i)
 	}
 }
 
+void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
+{
+	
+	HUD_Panel_DrawProgressBar(
+		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		autocvar_hud_panel_ammo_progressbar_name, 
+		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color, 
+		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+}
+
+void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
+{
+	float theAlpha = 1, a, b;
+	vector nade_color, picpos, numpos;
+	
+	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
+	
+	a = getstatf(STAT_NADE_BONUS);
+	b = getstatf(STAT_NADE_BONUS_SCORE);
+	
+	if(autocvar_hud_panel_ammo_iconalign)
+	{
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
+	}
+	else
+	{
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
+	}
+
+	DrawNadeScoreBar(myPos, mySize, nade_color);
+
+	if(b > 0 || a > 0)
+	{
+		if(autocvar_hud_panel_ammo_text)
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		
+		if(draw_expanding)
+			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			
+		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	}
+}
+
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
 {
 	float a;
@@ -942,6 +990,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
+float nade_prevstatus;
+float nade_prevframe;
+float nade_statuschange_time;
 void HUD_Ammo(void)
 {
 	if(hud != HUD_NORMAL) return;
@@ -966,21 +1017,39 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	const float AMMO_COUNT = 4;
 	float rows = 0, columns, row, column;
+	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float draw_nades = (nade_cnt > 0 || nade_score > 0), nade_statuschange_elapsedtime;
+	float total_ammo_count;
+
 	vector ammo_size;
+	float AMMO_COUNT = 4;
 	if (autocvar_hud_panel_ammo_onlycurrent)
-		ammo_size = mySize;
+		total_ammo_count = 1;
 	else
+		total_ammo_count = AMMO_COUNT - 1; // fuel
+
+	if(draw_nades)
 	{
-		rows = mySize_y/mySize_x;
-		rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
-		//                               ^^^ ammo item aspect goes here
-
-		columns = ceil(AMMO_COUNT/rows);
-
-		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		++total_ammo_count;
+		if (nade_cnt != nade_prevframe)
+		{
+			nade_statuschange_time = time;
+			nade_prevstatus = nade_prevframe;
+			nade_prevframe = nade_cnt;
+		}
 	}
+	else
+		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
+
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
+	//                               ^^^ ammo item aspect goes here
+
+	columns = ceil((total_ammo_count)/rows);
+
+	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	
 
 	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -1001,6 +1070,9 @@ void HUD_Ammo(void)
 
 	float i, stat_items, currently_selected, infinite_ammo;
 	infinite_ammo = FALSE;
+
+	row = column = 0;
+
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
@@ -1021,13 +1093,19 @@ void HUD_Ammo(void)
 				}
 			}
 		}
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
 	}
 	else
 	{
 		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
-		row = column = 0;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
@@ -1038,6 +1116,15 @@ void HUD_Ammo(void)
 				column = column + 1;
 			}
 		}
+	}
+
+	if (draw_nades)
+	{
+		nade_statuschange_elapsedtime = time - nade_statuschange_time;
+
+		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
+
+		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
 	}
 
 	draw_endBoldFont();

@@ -101,24 +101,16 @@ void Projectile_Draw()
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
-			case PROJECTILE_NADE_RED_BURN:
-			case PROJECTILE_NADE_RED:
-			case PROJECTILE_NADE_BLUE_BURN:
-			case PROJECTILE_NADE_BLUE:
-			case PROJECTILE_NADE_YELLOW_BURN:
-			case PROJECTILE_NADE_YELLOW:
-			case PROJECTILE_NADE_PINK_BURN:
-			case PROJECTILE_NADE_PINK:
-			case PROJECTILE_NADE_BURN:
-			case PROJECTILE_NADE:
-				rot = self.avelocity;
-				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
 				break;
 			default:
 				break;
 		}
+
+		if(Nade_IDFromProjectile(self.cnt) != 0)
+			rot = self.avelocity;
+
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
 	}
 
@@ -136,18 +128,6 @@ void Projectile_Draw()
 	trailorigin = self.origin;
 	switch(self.cnt)
 	{
-	    case PROJECTILE_NADE_RED_BURN:
-		case PROJECTILE_NADE_RED:
-		case PROJECTILE_NADE_BLUE_BURN:
-		case PROJECTILE_NADE_BLUE:
-		case PROJECTILE_NADE_YELLOW_BURN:
-		case PROJECTILE_NADE_YELLOW:
-		case PROJECTILE_NADE_PINK_BURN:
-		case PROJECTILE_NADE_PINK:
-		case PROJECTILE_NADE_BURN:
-		case PROJECTILE_NADE:
-			trailorigin += v_up * 4;
-			break;
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
@@ -155,6 +135,10 @@ void Projectile_Draw()
 		default:
 			break;
 	}
+
+	if(Nade_IDFromProjectile(self.cnt) != 0)
+		trailorigin += v_up * 4;
+
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
@@ -274,6 +258,8 @@ void Ent_Projectile()
 			self.fade_time = 0;
 			self.fade_rate = 0;
 		}
+
+		self.team = ReadByte() - 1;
 	}
 
 	if(f & 2)
@@ -302,6 +288,7 @@ void Ent_Projectile()
 			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
 			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
+			case PROJECTILE_NAPALM_FOUNTAIN: //self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("torch_small"); break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
@@ -322,18 +309,8 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
-			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
-			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
-			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
-			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
-			case PROJECTILE_NADE_YELLOW: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
-			case PROJECTILE_NADE_YELLOW_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow_burn"); break;
-			case PROJECTILE_NADE_PINK: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink"); break;
-			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
-			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
-			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
-
 			default:
+				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
 		}
@@ -366,17 +343,6 @@ void Ent_Projectile()
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
-			case PROJECTILE_NADE_RED_BURN:
-			case PROJECTILE_NADE_RED:
-			case PROJECTILE_NADE_BLUE_BURN:
-			case PROJECTILE_NADE_BLUE:
-				self.mins = '-3 -3 -3';
-				self.maxs = '3 3 3';
-				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = func_null;
-				self.scale = 1.5;
-				self.avelocity = randomvec() * 720;
-				break;
 			case PROJECTILE_GRENADE_BOUNCING:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
@@ -384,23 +350,6 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
-				break;
-			case PROJECTILE_NADE_RED_BURN:
-			case PROJECTILE_NADE_RED:
-			case PROJECTILE_NADE_BLUE_BURN:
-			case PROJECTILE_NADE_BLUE:
-			case PROJECTILE_NADE_YELLOW_BURN:
-			case PROJECTILE_NADE_YELLOW:
-			case PROJECTILE_NADE_PINK_BURN:
-			case PROJECTILE_NADE_PINK:
-			case PROJECTILE_NADE_BURN:
-			case PROJECTILE_NADE:
-				self.mins = '-16 -16 -16';
-				self.maxs = '16 16 16';
-				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = func_null;
-				self.scale = 1.5;
-				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				self.mins = '-8 -8 -8';
@@ -432,6 +381,7 @@ void Ent_Projectile()
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				break;
+			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
@@ -488,6 +438,21 @@ void Ent_Projectile()
 			default:
 				break;
 		}
+
+		if(Nade_IDFromProjectile(self.cnt) != 0)
+		{
+			self.mins = '-16 -16 -16';
+			self.maxs = '16 16 16';
+			self.colormod = Nade_Color(Nade_IDFromProjectile(self.cnt));
+			self.move_movetype = MOVETYPE_BOUNCE;
+			self.move_touch = func_null;
+			self.scale = 1.5;
+			self.avelocity = randomvec() * 720;
+			
+			if(Nade_IDFromProjectile(self.cnt) == NADE_TYPE_TRANSLOCATE)
+				self.solid = SOLID_TRIGGER;
+		}
+
 		setsize(self, self.mins, self.maxs);
 	}
 
@@ -526,6 +491,7 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	precache_model("models/sphere/sphere.md3");
 
 	precache_model("models/weapons/v_ok_grenade.md3");
 

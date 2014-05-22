@@ -87,6 +87,9 @@ void CSQC_Init(void)
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default");
 
+	registercvar("cl_nade_type", "3");
+	registercvar("cl_pokenade_type", "zombie");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!

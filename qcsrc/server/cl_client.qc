@@ -168,6 +168,8 @@ void PutObserverInServer (void)
 
 	Portal_ClearAll(self);
 
+	Unfreeze(self);
+
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
@@ -239,6 +241,7 @@ void PutObserverInServer (void)
 	self.angles_z = 0;
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
+	self.revival_time = 0;
 
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
@@ -519,6 +522,7 @@ void PutClientInServer (void)
 		self.punchvector = '0 0 0';
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
+		self.revival_time = 0;
 
 		entity spawnevent = spawn();
 		spawnevent.owner = self;
@@ -591,6 +595,8 @@ void PutClientInServer (void)
 				self.target = s;
 			activator = world;
 		self = oldself;
+
+		Unfreeze(self);
 
 		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
@@ -941,7 +947,7 @@ void ClientKill (void)
 {
 	if(gameover) return;
 	if(self.player_blocked) return;
-	if(self.freezetag_frozen) return;
+	if(self.frozen) return;
 
 	ClientKill_TeamChange(0);
 }
@@ -1292,6 +1298,8 @@ void ClientDisconnect (void)
 
 	Portal_ClearAll(self);
 
+	Unfreeze(self);
+
 	RemoveGrapplingHook(self);
 
 	// Here, everything has been done that requires this player to be a client.
@@ -1586,6 +1594,7 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 void player_regen (void)
 {
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
+	if(!self.frozen)
 	{
 		float minh, mina, maxh, maxa, limith, limita, max_mod, regen_mod, rot_mod, limit_mod;
 		maxh = autocvar_g_balance_health_rotstable;
@@ -1731,6 +1740,8 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
+	self.frozen = spectatee.frozen;
+	self.revive_progress = spectatee.revive_progress;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
@@ -1936,6 +1947,7 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
 			self.classname = "player";
+			nades_RemoveBonus(self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }
@@ -2241,6 +2253,30 @@ void PlayerPreThink (void)
 		return;
 #endif
 
+	if(self.frozen == 2)
+	{
+		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
+		self.health = max(1, self.revive_progress * start_health);
+		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
+
+		if(self.revive_progress >= 1)
+			Unfreeze(self);
+	}
+	else if(self.frozen == 3)
+	{
+		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
+		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
+		
+		if(self.health < 1)
+		{
+			if(self.vehicle)
+				vehicles_exit(VHEF_RELESE);
+			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+		}
+		else if ( self.revive_progress <= 0 )
+			Unfreeze(self);
+	}
+
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
@@ -2365,7 +2401,7 @@ void PlayerPreThink (void)
 			do_crouch = 0;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.freezetag_frozen)
+		if(self.frozen)
 			do_crouch = 0;
 		if(self.weapon == WEP_SHOTGUN && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;

@@ -15,6 +15,7 @@ sys-post.qh
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
+../common/nades.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -213,6 +214,8 @@ func_breakable.qc
 target_music.qc
 
 ../common/items.qc
+
+../common/nades.qc
 
 
 accuracy.qc

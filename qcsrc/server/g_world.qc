@@ -794,6 +794,10 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 
+	// freeze attacks
+	addstat(STAT_FROZEN, AS_INT, frozen);
+	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
+
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
