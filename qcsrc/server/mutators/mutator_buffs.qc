@@ -322,7 +322,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
-	if(DEATH_ISBUFF(frag_deathtype)) { return FALSE; } // oh no you don't
+	if(frag_deathtype == DEATH_BUFF_VENGEANCE) { return FALSE; } // oh no you don't
 
 	if(frag_target.buffs & BUFF_RESISTANCE)
 	{
@@ -336,7 +336,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
-	if(DEATH_ISBUFF(frag_deathtype)) { return FALSE; } // oh no you don't
+	if(frag_deathtype == DEATH_BUFF_VENGEANCE) { return FALSE; } // oh no you don't
 
 	if(frag_target.buffs & BUFF_SPEED)
 	if(frag_target != frag_attacker)

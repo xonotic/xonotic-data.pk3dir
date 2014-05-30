@@ -4,8 +4,7 @@
 
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
-	DEATHTYPE(DEATH_BUFF_VAMPIRE,           NO_MSG,                             DEATH_MURDER_VAMPIRE,          DEATH_BUFF_FIRST) \
-	DEATHTYPE(DEATH_BUFF_VENGEANCE,         NO_MSG,                             DEATH_MURDER_VENGEANCE,        DEATH_BUFF_LAST) \
+	DEATHTYPE(DEATH_BUFF_VENGEANCE,         NO_MSG,                             DEATH_MURDER_VENGEANCE,        NORMAL_POS) \
 	DEATHTYPE(DEATH_CAMP,                   DEATH_SELF_CAMP,                    NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_CHEAT,                  DEATH_SELF_CHEAT,                   DEATH_MURDER_CHEAT,            NORMAL_POS) \
 	DEATHTYPE(DEATH_CUSTOM,                 DEATH_SELF_CUSTOM,                  NO_MSG,                        NORMAL_POS) \
@@ -97,7 +96,6 @@ DEATHTYPES
 #define DEATH_ISVEHICLE(t)            ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 #define DEATH_ISTURRET(t)             ((t) >= DEATH_TURRET_FIRST && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER_FIRST && (t) <= DEATH_MONSTER_LAST)
-#define DEATH_ISBUFF(t)               ((t) >= DEATH_BUFF_FIRST && (t) <= DEATH_BUFF_LAST)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
