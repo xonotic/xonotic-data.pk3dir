@@ -370,10 +370,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
 		entity dmgent = spawn();
-		vector v = healtharmor_applydamage(frag_attacker.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_BUFF_VENGEANCE, frag_damage * autocvar_g_buffs_vengeance_damage_multiplier);
-		float take = v_x;
-		
-		dmgent.dmg = take;
+
+		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
 		dmgent.enemy = frag_attacker;
 		dmgent.owner = frag_target;
 		dmgent.think = buff_Vengeance_DelayedDamage;
