@@ -145,8 +145,9 @@ void anticheat_physics()
 	// new generic speedhack detection
 	if (self.anticheat_speedhack_lasttime > 0) {
 		float dt = time - self.anticheat_speedhack_lasttime;
-		self.anticheat_speedhack_accu *= exp(-dt / 5);
-		self.anticheat_speedhack_accu += frametime;
+		const float falloff = 0.2;
+		self.anticheat_speedhack_accu *= exp(-dt * f);
+		self.anticheat_speedhack_accu += frametime * f;
 		self.anticheat_speedhack_lasttime = time;
 		MEAN_ACCUMULATE(anticheat_speedhack_m1, self.anticheat_speedhack_accu, frametime);
 		MEAN_ACCUMULATE(anticheat_speedhack_m2, self.anticheat_speedhack_accu, frametime);
