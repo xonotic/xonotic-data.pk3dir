@@ -148,6 +148,8 @@ void anticheat_physics()
 		const float falloff = 0.2;
 		self.anticheat_speedhack_accu *= exp(-dt * falloff);
 		self.anticheat_speedhack_accu += frametime * falloff;
+		// NOTE: at cl_netfps x, this actually averages not to 1, but to 1/x * falloff / (1 - exp(-1/x * falloff))
+		// For 15 netfps (absolute minimum bearable), and 0.2 falloff, this is: 1.0067
 		self.anticheat_speedhack_lasttime = time;
 		MEAN_ACCUMULATE(anticheat_speedhack_m1, self.anticheat_speedhack_accu, frametime);
 		MEAN_ACCUMULATE(anticheat_speedhack_m2, self.anticheat_speedhack_accu, frametime);
