@@ -23,7 +23,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 {
     if(!self.owner.buff_active && !self.owner.buff_activetime)
         return FALSE;
-		
+
 	if(plr.buffs)
 	{
 		if(plr.cvar_cl_buffs_autoreplace)
@@ -69,6 +69,8 @@ void buff_Respawn(entity ent)
 		setorigin(self, (spot.origin + '0 0 200') + (randomvec() * 300));
 		self.angles = spot.angles;
 	}
+	
+	ent.movetype = MOVETYPE_TOSS;
 	
 	makevectors(ent.angles);
 	ent.velocity = '0 0 200';
@@ -288,6 +290,9 @@ void buff_Init(entity ent)
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
+	
+	if(self.noalign)
+		self.movetype = MOVETYPE_NONE; // reset by random location
 
 	setmodel(self, "models/relics/relic.md3");
 	setsize(self, BUFF_MIN, BUFF_MAX);
@@ -334,6 +339,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	return FALSE;
 }
 
+void buff_Vengeance_DelayedDamage()
+{
+	if(self.enemy)
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF_VENGEANCE, self.enemy.origin, '0 0 0');
+	
+	remove(self);
+	return;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF_VENGEANCE) { return FALSE; } // oh no you don't
@@ -347,6 +361,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
+	if(frag_target.health - autocvar_g_buffs_medic_survive_health > 0) // not if the final result would be less than 0, medic must get health
 		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
 		
 	if(frag_target.buffs & BUFF_VENGEANCE)
@@ -354,9 +369,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
+		entity dmgent = spawn();
 		vector v = healtharmor_applydamage(frag_attacker.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_BUFF_VENGEANCE, frag_damage * autocvar_g_buffs_vengeance_damage_multiplier);
 		float take = v_x;
-		Damage(frag_attacker, frag_target, frag_target, take, DEATH_BUFF_VENGEANCE, frag_attacker.origin, '0 0 0');
+		
+		dmgent.dmg = take;
+		dmgent.enemy = frag_attacker;
+		dmgent.owner = frag_target;
+		dmgent.think = buff_Vengeance_DelayedDamage;
+		dmgent.nextthink = time + 0.1;
 	}
 
 	if(frag_target.buffs & BUFF_BASH)
