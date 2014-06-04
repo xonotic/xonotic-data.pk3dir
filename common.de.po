@@ -10,14 +10,15 @@
 # Yepoleb <huberg18@gmail.com>, 2013
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
+# Sless <sless@gmx.net>, 2014
 # Yepoleb <huberg18@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-04 15:59+0200\n"
-"PO-Revision-Date: 2014-06-04 13:59+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2014-06-04 14:09+0000\n"
+"Last-Translator: Sless <sless@gmx.net>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
 "Language: de\n"
@@ -774,7 +775,7 @@ msgstr "Zuschauer"
 #: qcsrc/client/scoreboard.qc:1352
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "spielend ^3%s^7 auf ^2%s^7"
 
 #: qcsrc/client/scoreboard.qc:1359 qcsrc/client/scoreboard.qc:1364
 #, c-format
@@ -933,7 +934,7 @@ msgstr "Start"
 
 #: qcsrc/client/waypointsprites.qc:280
 msgid "Goal"
-msgstr ""
+msgstr "Tor"
 
 #: qcsrc/client/waypointsprites.qc:281 qcsrc/client/waypointsprites.qc:282
 msgid "Ball"
@@ -2883,7 +2884,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:640
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGDu hast den Ball aufgenommen"
 
 #: qcsrc/common/notifications.qh:641
 msgid "^BGKilling people while you don't have the ball gives no points!"
@@ -5938,23 +5939,24 @@ msgstr "Verwendung des Spielernamens für Spielerstatistiken erlauben"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:4
 msgid "Warning"
-msgstr ""
+msgstr "Warnung"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:17
 msgid "While connected language changes will be applied only to the menu,"
 msgstr ""
+"Während du verbunden bist werden Sprachänderungen nur auf das Menü angewandt"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:19
 msgid "full language changes will take effect starting from the next game"
-msgstr ""
+msgstr "volle Sprachänderungen finden erst nach dem Neustart des Spiels statt"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:23
 msgid "Disconnect now"
-msgstr ""
+msgstr "Verbindung jetzt unterbrechen"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:24
 msgid "Switch language"
-msgstr ""
+msgstr "Sprache ändern"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:26
 msgid "Resolution:"

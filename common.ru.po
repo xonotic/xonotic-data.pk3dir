@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# adem4ik, 2014
 # Alex Talker <alextalker7@gmail.com>, 2014
 # adem4ik, 2014
 # Lord Canistra <lordcanistra@gmail.com>, 2011
