@@ -277,7 +277,7 @@ MUTATOR_DEFINITION(gamemode_race)
 	MUTATOR_HOOK(PlayerSpawn, race_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PutClientInServer, race_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, race_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, race_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, race_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetPressedKeys, race_PlayerPostThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, race_ForbidClearPlayerScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, race_GetTeamCount, CBC_ORDER_ANY);
