@@ -267,7 +267,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		{
 			entity e;
 			string tospawn;
-			float moveflag;
+			float moveflag, monstercount = 0;
 			
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
@@ -278,14 +278,21 @@ void ClientCommand_mobspawn(float request, float argc)
 				return;
 			}
 			
+			FOR_EACH_MONSTER(e)
+			{
+				if(e.realowner == self)
+					++monstercount;
+			}
+			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
 			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); return; }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); return; }
+			else if(self.freezetag_frozen) { sprint(self, "You can't spawn monsters while frozen.\n"); return; }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
 			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
-			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
+			else if(monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
 			else if(tospawn != "")
 			{
@@ -302,16 +309,15 @@ void ClientCommand_mobspawn(float request, float argc)
 					}
 				}
 
-				if(found)
+				if(found || tospawn == "random")
 				{
-					self.monstercount += 1;
 					totalspawned += 1;
 				
 					makevectors(self.v_angle);
 					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
 					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 				
-					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
 					
 					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
 					
@@ -456,8 +462,9 @@ void ClientCommand_selectteam(float request, float argc)
 									{
 										if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 										{
+											CheckAllowedTeams(self);
 											GetTeamCounts(self);
-											if(!TeamSmallerEqThanTeam(selection, self.team, self))
+											if(!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
 											{
 												sprint(self, "Cannot change to a larger/better/shinier team\n");
 												return;

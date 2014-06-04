@@ -230,7 +230,7 @@ void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
