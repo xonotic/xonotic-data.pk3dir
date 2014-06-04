@@ -721,10 +721,10 @@ void havocbot_movetogoal()
 			vector dst_ahead, dst_down;
 			makevectors(self.v_angle_y * '0 1 0');
 			dst_ahead = self.origin + self.view_ofs + (self.velocity * 0.4) + (v_forward * 32 * 3);
-			dst_down = dst_ahead + '0 0 -1500';
+			dst_down = dst_ahead - '0 0 1500';
 
 			// Look ahead
-			traceline(self.origin + self.view_ofs , dst_ahead, TRUE, world);
+			traceline(self.origin + self.view_ofs, dst_ahead, TRUE, world);
 
 			// Check head-banging against walls
 			if(vlen(self.origin + self.view_ofs - trace_endpos) < 25 && !(self.aistatus & AI_STATUS_OUT_WATER))
