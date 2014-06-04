@@ -19,6 +19,9 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	if(self.player_blocked)
+		return; // no jumping while blocked
+
 	float doublejump = FALSE;
 
 	player_multijump = doublejump;
@@ -636,9 +639,7 @@ void SV_PlayerPhysics()
 
 	maxspd_mod = 1;
 	if(self.ballcarried)
-		if(g_nexball)
-			maxspd_mod *= autocvar_g_nexball_basketball_carrier_highspeed;
-		else if(g_keepaway)
+		if(g_keepaway)
 			maxspd_mod *= autocvar_g_keepaway_ballcarrier_highspeed;
 
 	maxspd_mod *= autocvar_g_movement_highspeed;
