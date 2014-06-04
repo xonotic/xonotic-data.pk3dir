@@ -17,7 +17,8 @@ void ctf_FakeTimeLimit(entity e, float t)
 void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(sprintf(":ctf:%s:%d:%d:%s", mode, flagteam, actor.team, ((actor != world) ? ftos(actor.playerid) : "")));
+		//GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 void ctf_CaptureRecord(entity flag, entity player)
@@ -1131,7 +1132,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 flag" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 flag" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 flag" : ((teamnumber == NUM_TEAM_4) ? "^6PINK^7 flag" : "^7NEUTRAL flag"))));
+	flag.netname = sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -1306,7 +1307,7 @@ float havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 
 	FOR_EACH_PLAYER(head)
 	{
-		if(head.team!=bot.team || head.deadflag != DEAD_NO || head == bot)
+		if(DIFF_TEAM(head, bot) || head.deadflag != DEAD_NO || head == bot)
 			continue;
 
 		if(vlen(head.origin - org) < tc_radius)
@@ -1487,7 +1488,7 @@ void havocbot_ctf_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==bot.team)
+	if(SAME_TEAM(head, bot))
 		++c;
 
 	if(c==1)
@@ -1856,7 +1857,7 @@ void havocbot_role_ctf_defense()
 		}
 
 		if(closestplayer)
-		if(closestplayer.team!=self.team)
+		if(DIFF_TEAM(closestplayer, self))
 		if(vlen(org - self.origin)>1000)
 		if(checkpvs(self.origin,closestplayer)||random()<0.5)
 			havocbot_goalrating_ctf_ourbase(30000);
