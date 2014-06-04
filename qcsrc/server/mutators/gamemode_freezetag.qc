@@ -663,7 +663,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerJump, freezetag_PlayerJump, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, freezetag_ItemTouch, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(VehicleTouch, freezetag_VehicleTouch, CBC_ORDER_ANY);
