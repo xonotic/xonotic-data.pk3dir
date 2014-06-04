@@ -63,7 +63,7 @@ REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=10
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20");
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20");
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"pointlimit=1 timelimit=30");
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
 REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0");

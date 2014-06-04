@@ -293,7 +293,7 @@ string HUD_DefaultColumnLayout()
 		"ping pl name | ",
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
 		"+tdm/kills +tdm/deaths +tdm/suicides ",
-		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
+		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes ",
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
@@ -937,6 +937,8 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 float HUD_WouldDrawScoreboard() {
 	if (autocvar__hud_configure)
+		return 0;
+	else if (HUD_Radar_Clickable())
 		return 0;
 	else if (scoreboard_showscores)
 		return 1;

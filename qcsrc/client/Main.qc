@@ -343,6 +343,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
+		return true;
+
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
@@ -739,7 +742,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
