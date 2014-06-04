@@ -19,6 +19,9 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	if(self.player_blocked)
+		return; // no jumping while blocked
+
 	float doublejump = FALSE;
 
 	player_multijump = doublejump;
