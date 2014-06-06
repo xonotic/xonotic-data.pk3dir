@@ -237,7 +237,7 @@ void anticheat_report()
 		return;
 	// TODO(divVerent): Use xonstat to acquire good thresholds.
 	GameLogEcho(strcat(":anticheat:_time:", ftos(self.playerid), ":", ftos(servertime - self.anticheat_jointime)));
-	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack), 240, 0.25, 0.4)));
+	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack), 240, 0, 9999))); // Actually this one seems broken.
 	GameLogEcho(strcat(":anticheat:speedhack_m1:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m1), 240, 1.01, 1.25)));
 	GameLogEcho(strcat(":anticheat:speedhack_m2:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m2), 240, 1.01, 1.25)));
 	GameLogEcho(strcat(":anticheat:speedhack_m3:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m3), 240, 1.01, 1.25)));
