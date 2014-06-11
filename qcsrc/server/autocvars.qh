@@ -260,6 +260,7 @@ float autocvar_g_balance_grapplehook_speed_fly;
 float autocvar_g_balance_grapplehook_speed_pull;
 float autocvar_g_balance_grapplehook_stretch;
 float autocvar_g_balance_grapplehook_damagedbycontents;
+float autocvar_g_balance_grapplehook_refire;
 float autocvar_g_balance_grenadelauncher_bouncefactor;
 float autocvar_g_balance_grenadelauncher_bouncestop;
 float autocvar_g_balance_grenadelauncher_primary_ammo;
@@ -1226,6 +1227,7 @@ float autocvar_g_physical_items_damageforcescale;
 float autocvar_g_physical_items_reset;
 float autocvar_g_monsters;
 float autocvar_g_monsters_edit;
+float autocvar_g_monsters_sounds;
 float autocvar_g_monsters_think_delay;
 float autocvar_g_monsters_max;
 float autocvar_g_monsters_max_perplayer;
@@ -1249,7 +1251,10 @@ float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;
 float autocvar_g_touchexplode_force;
 float autocvar_g_invasion_round_timelimit;
-#define autocvar_g_invasion_round_limit cvar("g_invasion_round_limit")
+float autocvar_g_invasion_teams;
+float autocvar_g_invasion_team_spawns;
+float autocvar_g_invasion_spawnpoint_spawn_delay;
+#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 float autocvar_g_invasion_warmup;
 float autocvar_g_invasion_monster_count;
 float autocvar_g_invasion_zombies_only;

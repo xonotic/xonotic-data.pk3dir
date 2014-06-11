@@ -77,12 +77,13 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointli
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=5",_("Survive against waves of monsters"));
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;
 const float MAPINFO_FEATURE_TURRETS       = 4;
+const float MAPINFO_FEATURE_MONSTERS      = 8;
 
 const float MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
 const float MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
