@@ -717,12 +717,15 @@ float nade_customize()
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
-		//self.alpha = -1;
-		return FALSE; // or not
+		if(self.traileffectnum)
+			self.traileffectnum = 0;
+		self.alpha = -1;
 	}
 	else
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		if(!self.traileffectnum)
+			self.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(self.nade_type, FALSE), self.team));
 		self.alpha = 1;
 	}
 	
