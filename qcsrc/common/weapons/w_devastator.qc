@@ -36,6 +36,11 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, remote_damage) \
 	w_cvar(id, sn, NONE, remote_edgedamage) \
 	w_cvar(id, sn, NONE, remote_force) \
+	w_cvar(id, sn, NONE, remote_jump_damage) \
+	w_cvar(id, sn, NONE, remote_jump_radius) \
+	w_cvar(id, sn, NONE, remote_jump_velocity_z_add) \
+	w_cvar(id, sn, NONE, remote_jump_velocity_z_max) \
+	w_cvar(id, sn, NONE, remote_jump_velocity_z_min) \
 	w_cvar(id, sn, NONE, remote_radius) \
 	w_cvar(id, sn, NONE, speed) \
 	w_cvar(id, sn, NONE, speedaccel) \
@@ -82,7 +87,18 @@ void W_Devastator_Explode(void)
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage(self, self.realowner, WEP_CVAR(devastator, damage), WEP_CVAR(devastator, edgedamage), WEP_CVAR(devastator, radius), world, world, WEP_CVAR(devastator, force), self.projectiledeathtype, other);
+	RadiusDamage(
+		self,
+		self.realowner,
+		WEP_CVAR(devastator, damage),
+		WEP_CVAR(devastator, edgedamage),
+		WEP_CVAR(devastator, radius),
+		world,
+		world,
+		WEP_CVAR(devastator, force),
+		self.projectiledeathtype,
+		other
+	);
 
 	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
@@ -103,7 +119,64 @@ void W_Devastator_DoRemoteExplode(void)
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage(self, self.realowner, WEP_CVAR(devastator, remote_damage), WEP_CVAR(devastator, remote_edgedamage), WEP_CVAR(devastator, remote_radius), world, world, WEP_CVAR(devastator, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	float handled_as_rocketjump = FALSE;
+
+	entity head = WarpZone_FindRadius(
+		self.origin,
+		WEP_CVAR(devastator, remote_jump_radius),
+		FALSE
+	);
+	
+	while(head)
+	{
+		if(head.takedamage && (head == self.realowner))
+		{
+			float distance_to_head = vlen(self.origin - head.WarpZone_findradius_nearest);
+			if(distance_to_head <= WEP_CVAR(devastator, remote_jump_radius))
+			{
+				// we handled this as a rocketjump :)
+				handled_as_rocketjump = TRUE;
+
+				// modify velocity 
+				head.velocity_x *= 0.9;
+				head.velocity_y *= 0.9;
+				head.velocity_z = bound(
+					WEP_CVAR(devastator, remote_jump_velocity_z_min),
+					head.velocity_z + WEP_CVAR(devastator, remote_jump_velocity_z_add),
+					WEP_CVAR(devastator, remote_jump_velocity_z_max)
+				);
+
+				// now do the damage
+				RadiusDamage(
+					self,
+					head,
+					WEP_CVAR(devastator, remote_jump_damage),
+					WEP_CVAR(devastator, remote_jump_damage),
+					WEP_CVAR(devastator, remote_jump_radius),
+					world,
+					head,
+					0,
+					self.projectiledeathtype | HITTYPE_BOUNCE,
+					world
+				);
+				break;
+			}
+		}
+		head = head.chain;
+	}
+
+	RadiusDamage(
+		self,
+		self.realowner,
+		WEP_CVAR(devastator, remote_damage),
+		WEP_CVAR(devastator, remote_edgedamage),
+		WEP_CVAR(devastator, remote_radius),
+		(handled_as_rocketjump ? head : world),
+		world,
+		WEP_CVAR(devastator, remote_force),
+		self.projectiledeathtype | HITTYPE_BOUNCE,
+		world
+	);
 
 	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
@@ -168,9 +241,6 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 void W_Devastator_Think(void)
 {
 	vector desireddir, olddir, newdir, desiredorigin, goal;
-#if 0
-	float cosminang, cosmaxang, cosang;
-#endif
 	float velspeed, f;
 	self.nextthink = time;
 	if(time > self.cnt)
