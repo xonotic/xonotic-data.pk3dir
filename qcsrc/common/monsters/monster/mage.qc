@@ -234,7 +234,8 @@ void mage_heal()
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
-			WaypointSprite_UpdateHealth(head.sprite, head.health);
+			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE))
+				WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
 
@@ -336,12 +337,7 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	self.monster_spawnfunc = spawnfunc_monster_mage;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -398,7 +394,7 @@ float m_mage(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/mage.dpm");
+			precache_model("models/monsters/mage.dpm");
 			precache_sound ("weapons/grenade_impact.wav");
 			precache_sound ("weapons/tagexp1.wav");
 			return TRUE;
@@ -416,7 +412,6 @@ float m_mage(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/mage.dpm");
 			return TRUE;
 		}
 	}

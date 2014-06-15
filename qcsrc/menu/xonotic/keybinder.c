@@ -143,6 +143,13 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	if(key == K_ESCAPE)
 		return;
 
+	// forbid these keys from being bound in the menu
+	if(key == K_CAPSLOCK || key == K_NUMLOCK)
+	{
+		KeyBinder_Bind_Change(me, me);
+		return;
+	}
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;

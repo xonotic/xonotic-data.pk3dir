@@ -338,7 +338,7 @@ string getlsmaps()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available%s: %s\n", (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+	return sprintf("^7Maps available (%d)%s: %s\n", tokenize_console(lsmaps), (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
 }
 
 string getmonsterlist()

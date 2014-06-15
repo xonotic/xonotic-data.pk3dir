@@ -96,12 +96,7 @@ void spawnfunc_monster_wyvern()
 {
 	self.classname = "monster_wyvern";
 
-	self.monster_spawnfunc = spawnfunc_monster_wyvern;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_WYVERN, TRUE)) { remove(self); return; }
+	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -136,7 +131,7 @@ float m_wyvern(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
+			precache_model("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
@@ -152,7 +147,6 @@ float m_wyvern(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
