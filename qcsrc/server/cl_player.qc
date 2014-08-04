@@ -214,6 +214,7 @@ void CopyBody(float keepvelocity)
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
+	animdecide_init(self);
 	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
@@ -651,7 +652,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		}
 
 		// print an obituary message
-		Obituary (attacker, inflictor, self, deathtype);
+		if(self.classname != "body")
+			Obituary (attacker, inflictor, self, deathtype);
 
         // increment frag counter for used weapon type
         float w;
@@ -679,7 +681,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(self.health >= 1 || !IS_PLAYER(self))
+		if(self.health >= 1 || !(IS_PLAYER(self) || self.classname == "body"))
 			return;
 
 		// when we get here, player actually dies
@@ -729,6 +731,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
+
+		// reset body think wrapper broken by SUB_SetFade
+		if(self.classname == "body" && self.think != CopyBody_Think) {
+			self.CopyBody_think = self.think;
+			self.CopyBody_nextthink = self.nextthink;
+			self.think = CopyBody_Think;
+			self.nextthink = time;
+		}
 
 		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
