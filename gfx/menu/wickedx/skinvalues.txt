@@ -208,7 +208,6 @@ ALPHA_KEYGRABBER_KEYS           0.7
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
 // item: player name editor
 //   uses "charmap" images
