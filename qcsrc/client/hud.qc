@@ -1604,6 +1604,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	if (icon == "")
 		return;
 
+	++notify_count;
 	--notify_index;
 
 	if (notify_index == -1)
@@ -1612,8 +1613,10 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	// Free old strings
 	if (notify_attackers[notify_index])
 		strunzone(notify_attackers[notify_index]);
+
 	if (notify_victims[notify_index])
 		strunzone(notify_victims[notify_index]);
+
 	if (notify_icons[notify_index])
 		strunzone(notify_icons[notify_index]);
 
@@ -1645,6 +1648,10 @@ void HUD_Notify(void)
 	HUD_Panel_UpdateCvars();
 	HUD_Panel_DrawBg(1);
 
+	if (!autocvar__hud_configure)
+		if (notify_count == 0)
+			return;
+
 	vector pos, size;
 	pos  = panel_pos;
 	size = panel_size;
@@ -1673,7 +1680,7 @@ void HUD_Notify(void)
 
 	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
-	float i, j, step, limit, alpha;
+	float i, j, count, step, limit, alpha;
 
 	if (autocvar_hud_panel_notify_flip)
 	{
@@ -1690,19 +1697,14 @@ void HUD_Notify(void)
 		limit = -1;
 	}
 
-	for (j = notify_index; i != limit; i += step, ++j)
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (step == +1)
-				alpha = i;
-			else // inverse order
-				alpha = entry_count - 1 - i;
-
-			attacker = textShortenToWidth(sprintf(_("Player %d"), alpha+1), 0.48 * size_x - entry_height, font_size, stringwidth_colors);
-			victim = textShortenToWidth(sprintf(_("Player %d"), alpha+2), 0.48 * size_x - entry_height, font_size, stringwidth_colors);
-			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(alpha*2.4), WEP_LAST)).netname);
-			alpha = bound(0, (fade_start - alpha) / 4, 1);
+			attacker = sprintf(_("Player %d"), count + 1);
+			victim = sprintf(_("Player %d"), count + 2);
+			icon = strcat("weapon", get_weaponinfo(min(WEP_FIRST + count * 2, WEP_LAST)).netname);
+			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else
 		{
@@ -1744,6 +1746,8 @@ void HUD_Notify(void)
 			}
 		}
 	}
+
+	notify_count = count;
 }
 
 // Timer (#5)

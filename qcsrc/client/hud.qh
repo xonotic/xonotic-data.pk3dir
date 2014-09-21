@@ -342,6 +342,7 @@ HUD_Panel_GetBorder() \
 #define NOTIFY_ICON_MARGIN 0.02
 
 float notify_index;
+float notify_count;
 float notify_times[NOTIFY_MAX_ENTRIES];
 string notify_attackers[NOTIFY_MAX_ENTRIES];
 string notify_victims[NOTIFY_MAX_ENTRIES];
