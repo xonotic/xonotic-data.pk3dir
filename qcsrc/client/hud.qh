@@ -338,7 +338,6 @@ HUD_Panel_GetBorder() \
 } ENDS_WITH_CURLY_BRACE
 
 #define NOTIFY_MAX_ENTRIES 10
-#define NOTIFY_ICON_ASPECT 1.78
 #define NOTIFY_ICON_MARGIN 0.02
 
 float notify_index;

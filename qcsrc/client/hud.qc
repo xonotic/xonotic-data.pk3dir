@@ -1662,18 +1662,19 @@ void HUD_Notify(void)
 		size -= '2 2 0' * panel_bg_padding;
 	}
 
+	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
+	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
+
 	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
 	float entry_height = size_y / entry_count;
 
-	float fade_start = max(0, autocvar_hud_panel_notify_time);
-	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
-
 	float panel_width_half = size_x * 0.5;
-	float icon_width_half = entry_height * NOTIFY_ICON_ASPECT / 2;
+	float icon_width_half = entry_height * icon_aspect / 2;
 	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
 
 	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
-	vector icon_size = (eX * NOTIFY_ICON_ASPECT + eY) * entry_height;
+	vector icon_size = (eX * icon_aspect + eY) * entry_height;
 	vector icon_left = eX * (panel_width_half - icon_width_half);
 	vector attacker_right = eX * name_maxwidth;
 	vector victim_left = eX * (size_x - name_maxwidth);
