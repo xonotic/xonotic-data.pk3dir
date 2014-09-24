@@ -165,7 +165,6 @@ ALPHAS_MAINMENU                 '1 1 1'
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
 // item: player model
 COLOR_MODELTITLE                '1 1 1'

@@ -203,7 +203,6 @@ SKINBEGIN
 
 	// item: player color button
 	SKINSTRING(GFX_COLORBUTTON, "colorbutton");
-	SKINSTRING(GFX_COLORBUTTON_COLOR, "color");
 
 	// item: player model
 	SKINVECTOR(COLOR_MODELTITLE, '1 1 1');
