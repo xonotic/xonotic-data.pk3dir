@@ -423,25 +423,3 @@ g_uzi_luma
 		blendfunc blend
 	}
 }
-
-g_vaporizer_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/weapons/g_vaporizer_luma
-		blendfunc blend
-	}
-}
-
-g_vortex_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/weapons/g_vortex_luma
-		blendfunc blend
-	}
-}
