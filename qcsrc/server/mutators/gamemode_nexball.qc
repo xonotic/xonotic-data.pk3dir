@@ -976,7 +976,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -985,7 +985,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -1011,7 +1011,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
 
-		w_porto(WR_PRECACHE); // abuse
+		W_Porto(WR_INIT); // abuse
 
 		// General settings
 		/*
