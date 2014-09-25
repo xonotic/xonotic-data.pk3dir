@@ -543,15 +543,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		if(IS_REAL_CLIENT(self))
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
+		self.fixangle = TRUE;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
@@ -628,7 +620,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
 	entity head;
@@ -673,14 +665,19 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		namestr = source.netname;
 
+	if(strdecolorize(namestr) == namestr)
+		colorprefix = "^3";
+	else
+		colorprefix = "^7";
+
 	if(msgin != "")
 	{
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 			else
@@ -688,12 +685,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint

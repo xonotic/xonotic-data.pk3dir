@@ -174,7 +174,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	if (me.numModels <= 0)
 	{
-		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, '1 1 1', 0.6, FALSE);
+		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, SKINCOLOR_TEXT, 0.6, FALSE);
 		return;
 	}
 
@@ -190,7 +190,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 	o = '0.5 1 0' - eY * me.realFontSize_y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
 	for(i = 0; i < n; ++i)
 	{
-		draw_CenterText(o, argv(i), me.realFontSize, '1 1 1', 1, FALSE);
+		draw_CenterText(o, argv(i), me.realFontSize, SKINCOLOR_TEXT, 1, FALSE);
 		o += eY * me.realFontSize_y;
 	}
 }

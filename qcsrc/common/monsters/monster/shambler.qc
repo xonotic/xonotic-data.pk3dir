@@ -168,6 +168,7 @@ float shambler_attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(time >= self.shambler_lastattack) // shambler doesn't attack much
+			if(self.flags & FL_ONGROUND)
 			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
 			{
 				self.frame = shambler_anim_smash;
@@ -196,12 +197,7 @@ void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	self.monster_spawnfunc = spawnfunc_monster_shambler;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
 }
 
 float m_shambler(float req)
@@ -232,7 +228,7 @@ float m_shambler(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
+			precache_model("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}
@@ -248,7 +244,6 @@ float m_shambler(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}
