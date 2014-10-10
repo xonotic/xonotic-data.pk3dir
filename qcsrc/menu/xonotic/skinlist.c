@@ -162,8 +162,7 @@ void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float i
 	s = me.skinParameter(me, i, SKINPARM_PREVIEW);
 	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);
 
-	s = me.skinParameter(me, i, SKINPARM_NAME);
-	s = sprintf(_("%s: %s"), s, me.skinParameter(me, i, SKINPARM_TITLE));
+	s = me.skinParameter(me, i, SKINPARM_TITLE);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_SKINLIST_TITLE, SKINALPHA_TEXT, 0);
 
