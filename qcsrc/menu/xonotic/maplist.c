@@ -144,6 +144,22 @@ void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
 		if(where_x >= 0)
 			me.g_maplistCacheToggle(me, i);
+
+	if(where_x >= me.columnNameOrigin)
+		if(where_x <= 1)
+		{
+			if(i == me.lastClickedMap)
+				if(time < me.lastClickedTime + 0.3)
+				{
+					// DOUBLE CLICK!
+					// pop up map info screen
+					main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
+					DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+					return;
+				}
+			me.lastClickedMap = i;
+			me.lastClickedTime = time;
+		}
 }
 
 void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
@@ -284,7 +300,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	string ch, save;
 	if(me.nItems <= 0)
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
-	if(scan == K_MOUSE2 || scan == K_SPACE)
+	if(scan == K_MOUSE2 || scan == K_SPACE || scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
