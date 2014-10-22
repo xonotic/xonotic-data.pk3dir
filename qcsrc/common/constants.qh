@@ -295,7 +295,7 @@ const float CH_PAIN = -6;
 const float CH_PAIN_SINGLE = 6;
 const float CH_PLAYER = -7;
 const float CH_PLAYER_SINGLE = 7;
-const float CH_TUBA = 5;
+const float CH_TUBA_SINGLE = 5;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
