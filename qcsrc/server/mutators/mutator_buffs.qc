@@ -1,10 +1,16 @@
 float buffs_BuffModel_Customize()
 {
-	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
-	if(self.owner.alpha <= 0.5 && !same_team && self.owner.alpha != 0)
+	entity player, myowner;
+	float same_team;
+
+	player = WaypointSprite_getviewentity(other);
+	myowner = self.owner;
+	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
+
+	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
 		return FALSE;
-		
-	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
+
+	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
 	{
 		// somewhat hide the model, but keep the glow
 		self.effects = 0;
@@ -66,9 +72,13 @@ void buff_Respawn(entity ent)
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(TRUE);
-		setorigin(self, (spot.origin + '0 0 200') + (randomvec() * 300));
-		self.angles = spot.angles;
+		setorigin(ent, ((spot.origin + '0 0 200') + (randomvec() * 300)));
+		ent.angles = spot.angles;
 	}
+	
+	tracebox(ent.origin, ent.mins * 1.5, self.maxs * 1.5, ent.origin, MOVE_NOMONSTERS, ent);
+	
+	setorigin(ent, trace_endpos); // attempt to unstick
 	
 	ent.movetype = MOVETYPE_TOSS;
 	
