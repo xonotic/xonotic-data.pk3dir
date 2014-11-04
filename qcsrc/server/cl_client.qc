@@ -283,7 +283,7 @@ void FixPlayermodel()
 		if(teamplay)
 		{
 			string s;
-			s = Team_ColorName_Lower(self.team);
+			s = Static_Team_ColorName_Lower(self.team);
 			if(s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
@@ -523,6 +523,9 @@ void PutClientInServer (void)
 		entity spawnevent = spawn();
 		spawnevent.owner = self;
 		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
+
+		// Cut off any still running player sounds.
+		stopsound(self, CH_PLAYER_SINGLE);
 
 		self.model = "";
 		FixPlayermodel();
