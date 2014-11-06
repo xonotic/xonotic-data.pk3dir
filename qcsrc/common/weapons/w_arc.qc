@@ -208,7 +208,7 @@ void W_Arc_Beam_Think(void)
 	}
 
 	float burst = 0;
-	if(self.owner.BUTTON_ATCK2 || self.beam_bursting)
+	if(/*self.owner.BUTTON_ATCK2 || */self.beam_bursting)
 	{
 		if(!self.beam_bursting)
 			self.beam_bursting = TRUE;
@@ -1235,7 +1235,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("nex_beam");
+				self.beam_traileffect = FALSE;
 				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
