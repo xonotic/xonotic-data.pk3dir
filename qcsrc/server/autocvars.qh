@@ -472,7 +472,6 @@ float autocvar_g_spawn_furthest;
 float autocvar_g_spawn_useallspawns;
 float autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
-#define autocvar_g_start_weapon_laser cvar("g_start_weapon_laser")
 float autocvar_g_tdm_team_spawns;
 float autocvar_g_tdm_teams;
 float autocvar_g_tdm_teams_override;
