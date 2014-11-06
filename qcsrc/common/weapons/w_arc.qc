@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '1 1 1',
-/* modelname */ "hlac",
+/* modelname */ "arc",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
 /* wepimg    */ "weaponhlac",
