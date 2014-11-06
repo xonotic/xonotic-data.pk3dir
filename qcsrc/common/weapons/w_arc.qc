@@ -641,7 +641,9 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			// arc currently has no secondary attack
+			return FALSE;
+			//return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{

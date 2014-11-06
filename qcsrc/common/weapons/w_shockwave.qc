@@ -94,7 +94,7 @@ void spawnfunc_weapon_shockwave(void)
 }
 
 #define MAX_SHOCKWAVE_HITS 10
-#define DEBUG_SHOCKWAVE
+//#define DEBUG_SHOCKWAVE
 
 .float swing_prev;
 .entity swing_alreadyhit;

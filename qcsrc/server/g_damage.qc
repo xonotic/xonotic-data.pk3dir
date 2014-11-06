@@ -904,6 +904,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
+					if(deathtype & WEP_BLASTER)
+						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+
 					if(targ != directhitentity)
 					{
 						float hits;
