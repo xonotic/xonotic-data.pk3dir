@@ -708,9 +708,9 @@ float W_Shockwave(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shockwave.md3");
-			precache_model("models/weapons/v_shockwave.md3");
-			precache_model("models/weapons/h_shockwave.iqm");
+			precache_model("models/weapons/g_shotgun.md3");
+			precache_model("models/weapons/v_shotgun.md3");
+			precache_model("models/weapons/h_shotgun.iqm");
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/shockwave_fire.wav");
 			precache_sound("weapons/shockwave_melee.wav");
