@@ -137,14 +137,14 @@ void ItemRead(float _IsNew)
 
 
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix));
+            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
