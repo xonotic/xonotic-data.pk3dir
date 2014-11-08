@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ W_Shockwave,
 /* ammotype  */ ammo_none,
 /* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED,
+/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
 /* modelname */ "shotgun",
@@ -153,10 +153,12 @@ void W_Shockwave_Melee_Think(void)
 		);
 		
 		// draw lightning beams for debugging
+#ifdef DEBUG_SHOCKWAVE
 		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
 		te_customflash(targpos, 40,  2, '1 1 1');
+#endif
 		
-		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
