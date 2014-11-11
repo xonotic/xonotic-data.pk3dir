@@ -46,7 +46,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(Buff_Sprite(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -518,6 +518,19 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE) && (e == other))
+	if(DIFF_TEAM(self.owner, e))
+		return TRUE;
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 {
 	if(autocvar_g_buffs_replace_powerups)
@@ -753,7 +766,7 @@ void buffs_Initialize()
 MUTATOR_DEFINITION(mutator_buffs)
 {
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
@@ -767,6 +780,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);
