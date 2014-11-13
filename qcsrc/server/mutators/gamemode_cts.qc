@@ -266,10 +266,15 @@ MUTATOR_HOOKFUNCTION(cts_ForbidClearPlayerScore)
 	return TRUE; // in CTS, you don't lose score by observing
 }
 
-void cts_Initialize()
+MUTATOR_HOOKFUNCTION(cts_SetMods)
 {
 	g_cloaked = 1; // always enable cloak in CTS
 
+	return FALSE;
+}
+
+void cts_Initialize()
+{
 	cts_ScoreRules();
 }
 
@@ -289,6 +294,7 @@ MUTATOR_DEFINITION(gamemode_cts)
 	MUTATOR_HOOK(FilterItem, cts_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, cts_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, cts_ForbidClearPlayerScore, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, cts_SetMods, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
