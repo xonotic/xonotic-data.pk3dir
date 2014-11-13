@@ -414,7 +414,7 @@ void calculate_player_respawn_time()
 	else
 		self.respawn_countdown = -1; // do not count down
 
-	if(g_cts || autocvar_g_forced_respawn)
+	if(autocvar_g_forced_respawn)
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
 
@@ -652,7 +652,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
 
         // increment frag counter for used weapon type
         float w;

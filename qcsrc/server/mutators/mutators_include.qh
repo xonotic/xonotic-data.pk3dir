@@ -9,6 +9,8 @@
 #include "gamemode_nexball.qh"
 #include "gamemode_lms.qh"
 #include "gamemode_invasion.qh"
+#include "gamemode_race.qh"
+#include "gamemode_cts.qh"
 
 #include "mutator_dodging.qh"
 #include "mutator_nades.qh"

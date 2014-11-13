@@ -10,6 +10,8 @@
 #include "gamemode_onslaught.qc"
 #include "gamemode_lms.qc"
 #include "gamemode_invasion.qc"
+#include "gamemode_race.qc"
+#include "gamemode_cts.qc"
 
 #include "mutator_invincibleproj.qc"
 #include "mutator_new_toys.qc"
