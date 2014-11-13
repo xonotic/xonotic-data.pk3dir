@@ -641,7 +641,7 @@ float autocvar_sv_maxairstrafespeed;
 float autocvar_sv_maxspeed;
 string autocvar_sv_motd;
 float autocvar_sv_precacheplayermodels;
-float autocvar_sv_precacheweapons;
+//float autocvar_sv_precacheweapons; // WEAPONTODO?
 float autocvar_sv_q3acompat_machineshotgunswap;
 float autocvar_sv_ready_restart;
 float autocvar_sv_ready_restart_after_countdown;
