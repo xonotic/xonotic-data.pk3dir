@@ -456,7 +456,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 {
 	if(self.buffs & BUFF_JUMP)
-		player_jumpheight = autocvar_g_buffs_jump_height;
+		player_jumpheight = max(autocvar_g_buffs_jump_height, player_jumpheight);
 
 	return FALSE;
 }
@@ -550,9 +550,11 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_SPEED)
+	if(autocvar_g_buffs_speed_rate > 0)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
 		
 	if(time < self.buff_disability_time)
+	if(autocvar_g_buffs_disability_rate > 0)
 		weapon_rate *= autocvar_g_buffs_disability_rate;
 	
 	return FALSE;
