@@ -12,3 +12,4 @@
 
 #include "mutator_dodging.qh"
 #include "mutator_nades.qh"
+#include "mutator_buffs.qh"

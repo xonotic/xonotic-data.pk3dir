@@ -13,8 +13,10 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/stats.qh
 ../common/teams.qh
 ../common/util.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -76,6 +78,8 @@ scores.qh
 
 spawnpoints.qh
 
+mapvoting.qh
+
 ipban.qh
 
 race.qh
@@ -120,6 +124,8 @@ pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
+
+mapvoting.qc
 
 t_jumppads.qc
 t_teleporters.qc
@@ -203,6 +209,8 @@ func_breakable.qc
 target_music.qc
 
 ../common/items.qc
+
+../common/buffs.qc
 
 
 accuracy.qc

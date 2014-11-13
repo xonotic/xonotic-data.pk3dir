@@ -31,3 +31,4 @@
 #include "mutator_melee_only.qc"
 #include "mutator_nades.qc"
 #include "mutator_campcheck.qc"
+#include "mutator_buffs.qc"

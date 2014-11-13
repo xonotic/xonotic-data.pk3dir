@@ -524,6 +524,9 @@ void PutClientInServer (void)
 		spawnevent.owner = self;
 		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
 
+		// Cut off any still running player sounds.
+		stopsound(self, CH_PLAYER_SINGLE);
+
 		self.model = "";
 		FixPlayermodel();
 		self.drawonlytoclient = world;
@@ -1585,17 +1588,26 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
+	float max_mod, regen_mod, rot_mod, limit_mod;
+	max_mod = regen_mod = rot_mod = limit_mod = 1;
+	regen_mod_max = max_mod;
+	regen_mod_regen = regen_mod;
+	regen_mod_rot = rot_mod;
+	regen_mod_limit = limit_mod;
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	{
-		float minh, mina, maxh, maxa, limith, limita, max_mod, regen_mod, rot_mod, limit_mod;
+		float minh, mina, maxh, maxa, limith, limita;
 		maxh = autocvar_g_balance_health_rotstable;
 		maxa = autocvar_g_balance_armor_rotstable;
 		minh = autocvar_g_balance_health_regenstable;
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
-
-		max_mod = regen_mod = rot_mod = limit_mod = 1;
+		
+		max_mod = regen_mod_max;
+		regen_mod = regen_mod_regen;
+		rot_mod = regen_mod_rot;
+		limit_mod = regen_mod_limit;
 
 		maxh = maxh * max_mod;
 		minh = minh * max_mod;
