@@ -159,7 +159,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -172,6 +171,8 @@ void InitGameplayMode()
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -179,6 +180,7 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
@@ -197,8 +199,13 @@ void InitGameplayMode()
 
 	if(g_invasion)
 	{
-		timelimit_override = 0; // no timelimit in invasion, round based
-		fraglimit_override = autocvar_g_invasion_round_limit;
+		fraglimit_override = autocvar_g_invasion_point_limit;
+		if(autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if(autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
@@ -241,20 +248,10 @@ void InitGameplayMode()
 		else
 			g_race_qualifying = 0;
 	}
-	
-	if(g_invasion)
-	{
-		inv_maxrounds = cvar("fraglimit");
-		cvar_set("fraglimit", "0");
-	}
 
 	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
-	}
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -424,10 +421,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);

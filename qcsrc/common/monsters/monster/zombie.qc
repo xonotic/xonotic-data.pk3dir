@@ -130,14 +130,7 @@ void spawnfunc_monster_zombie()
 {
 	self.classname = "monster_zombie";
 
-	self.monster_spawnfunc = spawnfunc_monster_zombie;
-
-	self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_ZOMBIE, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
 }
 
 float m_zombie(float req)
@@ -163,6 +156,8 @@ float m_zombie(float req)
 			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
 				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
+			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
+
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= zombie_attack;
 			self.frame = zombie_anim_spawn;
@@ -174,7 +169,7 @@ float m_zombie(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/zombie.dpm");
+			precache_model("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 	}
@@ -190,7 +185,6 @@ float m_zombie(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 	}

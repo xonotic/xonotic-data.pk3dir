@@ -5,6 +5,7 @@ CLASS(XonoticPlayerModelSelector) EXTENDS(XonoticImage)
 	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity))
 	METHOD(XonoticPlayerModelSelector, draw, void(entity))
 	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(XonoticPlayerModelSelector, showNotify, void(entity))
 	ATTRIB(XonoticPlayerModelSelector, currentModel, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentSkin, float, 0)
 	ATTRIB(XonoticPlayerModelSelector, currentModelImage, string, string_null)
@@ -174,7 +175,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	if (me.numModels <= 0)
 	{
-		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, '1 1 1', 0.6, FALSE);
+		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, SKINCOLOR_TEXT, 0.6, FALSE);
 		return;
 	}
 
@@ -190,7 +191,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 	o = '0.5 1 0' - eY * me.realFontSize_y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
 	for(i = 0; i < n; ++i)
 	{
-		draw_CenterText(o, argv(i), me.realFontSize, '1 1 1', 1, FALSE);
+		draw_CenterText(o, argv(i), me.realFontSize, SKINCOLOR_TEXT, 1, FALSE);
 		o += eY * me.realFontSize_y;
 	}
 }
@@ -200,5 +201,10 @@ void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector
 	SUPER(XonoticPlayerModelSelector).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
+}
+
+void XonoticPlayerModelSelector_showNotify(entity me)
+{
+	me.configureXonoticPlayerModelSelector(me);
 }
 #endif

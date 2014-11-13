@@ -3,30 +3,13 @@
 // =========================
 
 
-void monster_item_spawn()
-{
-	if(self.monster_loot)
-		self.monster_loot();
-
-	self.gravity = 1;
-	self.reset = SUB_Remove;
-	self.noalign = TRUE;
-	self.velocity = randomvec() * 175 + '0 0 325';
-	self.classname = "droppedweapon"; // hax
-	self.item_spawnshieldtime = time + 0.7;
-
-	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
-}
-
 void monster_dropitem()
 {
 	if(!self.candrop || !self.monster_loot)
 		return;
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
-	entity e = spawn();
-
-	setorigin(e, org);
+	entity e = spawn(), oldself = self;
 
 	e.monster_loot = self.monster_loot;
 
@@ -34,10 +17,20 @@ void monster_dropitem()
 	MUTATOR_CALLHOOK(MonsterDropItem);
 	e = other;
 
-	if(e)
+	if(e && e.monster_loot)
 	{
-		e.think = monster_item_spawn;
-		e.nextthink = time + 0.3;
+		self = e;
+		e.noalign = TRUE;
+		e.monster_loot();
+		e.gravity = 1;
+		e.movetype = MOVETYPE_TOSS;
+		e.reset = SUB_Remove;
+		setorigin(e, org);
+		e.velocity = randomvec() * 175 + '0 0 325';
+		e.item_spawnshieldtime = time + 0.7;
+		e.classname = "droppedweapon"; // use weapon handling to remove it on touch
+		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
+		self = oldself;
 	}
 }
 
@@ -56,10 +49,10 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ == ent)
 		return FALSE; // don't attack ourselves
 
-	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
+	//traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
 
-	if(trace_ent != targ)
-		return FALSE;
+	//if(trace_ent != targ)
+		//return FALSE;
 
 	if(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(!((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED))
@@ -67,9 +60,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started
-
-	if(vlen(targ.origin - ent.origin) >= ent.target_range)
-		return FALSE; // enemy is too far away
 
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
@@ -107,7 +97,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if (targ.frozen)
 		return FALSE; // ignore frozen
 
-	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
+	if(autocvar_g_monsters_target_infront || (ent.spawnflags & MONSTERFLAG_INFRONT))
 	if(ent.enemy != targ)
 	{
 		float dot;
@@ -128,6 +118,7 @@ entity FindTarget (entity ent)
 
 	entity head, closest_target = world;
 	head = findradius(ent.origin, ent.target_range);
+	//head = WarpZone_FindRadius(ent.origin, ent.target_range, TRUE);
 
 	while(head) // find the closest acceptable target to pass to
 	{
@@ -136,12 +127,16 @@ entity FindTarget (entity ent)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
 			vector head_center = CENTER_OR_VIEWOFS(head);
+			//vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 			vector ent_center = CENTER_OR_VIEWOFS(ent);
 
-			//if(ctf_CheckPassDirection(head_center, ent_center, ent.v_angle, head.WarpZone_findradius_nearest))
+			traceline(ent_center, head_center, MOVE_NORMAL, ent);
+
+			if(trace_ent == head)
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
+				//vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
 				if(vlen(ent_center - head_center) < vlen(ent_center - closest_target_center))
 					{ closest_target = head; }
 			}
@@ -279,7 +274,10 @@ void UpdateMonsterSounds()
 
 void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float chan)
 {
-	if(delaytoo && time < self.msound_delay)
+	if(!autocvar_g_monsters_sounds) { return; }
+
+	if(delaytoo)
+	if(time < self.msound_delay)
 		return; // too early
 	GlobalSound(self.samplefield, chan, VOICETYPE_PLAYERSOUND);
 
@@ -357,14 +355,21 @@ float Monster_CanRespawn(entity ent)
 	return TRUE;
 }
 
+float monster_initialize(float mon_id);
+void monster_respawn()
+{
+	// is this function really needed?
+	monster_initialize(self.monsterid);
+}
+
 void Monster_Fade ()
 {
 	if(Monster_CanRespawn(self))
 	{
 		self.spawnflags |= MONSTERFLAG_RESPAWNED;
-		self.think = self.monster_spawnfunc;
+		self.think = monster_respawn;
 		self.nextthink = time + self.respawntime;
-		self.ltime = 0;
+		self.monster_lifetime = 0;
 		self.deadflag = DEAD_RESPAWNING;
 		if(self.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
 		{
@@ -382,9 +387,6 @@ void Monster_Fade ()
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
-
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
 
 		SUB_SetFade(self, time + 3, 1);
 	}
@@ -472,10 +474,40 @@ vector monster_pickmovetarget(entity targ)
 	// enemy is always preferred target
 	if(self.enemy)
 	{
-		makevectors(self.angles);
+		vector targ_origin = ((self.enemy.absmin + self.enemy.absmax) * 0.5);
+		targ_origin = WarpZone_RefSys_TransformOrigin(self.enemy, self, targ_origin); // origin of target as seen by the monster (us)
+		WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+		
+		if((self.enemy == world)
+			|| (self.enemy.deadflag != DEAD_NO || self.enemy.health < 1)
+			|| (self.enemy.frozen)
+			|| (self.enemy.flags & FL_NOTARGET)
+			|| (self.enemy.alpha < 0.5)
+			|| (self.enemy.takedamage == DAMAGE_NO)
+			|| (vlen(self.origin - targ_origin) > self.target_range)
+			|| ((trace_fraction < 1) && (trace_ent != self.enemy)))
+			//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
+		{
+			self.enemy = world;
+			self.pass_distance = 0;
+		}
+		
+		if(self.enemy)
+		{
+			/*WarpZone_TrailParticles(world, particleeffectnum("red_pass"), self.origin, targ_origin);
+			print("Trace origin: ", vtos(targ_origin), "\n");
+			print("Target origin: ", vtos(self.enemy.origin), "\n");
+			print("My origin: ", vtos(self.origin), "\n"); */
+			
+			self.monster_movestate = MONSTER_MOVE_ENEMY;
+			self.last_trace = time + 1.2;
+			return targ_origin;
+		}
+	
+		/*makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
-		return self.enemy.origin;
+		return self.enemy.origin; */
 	}
 
 	switch(self.monster_moveflags)
@@ -503,24 +535,26 @@ vector monster_pickmovetarget(entity targ)
 		{
 			vector pos;
 			self.monster_movestate = MONSTER_MOVE_WANDER;
-			self.last_trace = time + 2;
-
-			self.angles_y = rint(random() * 500);
-			makevectors(self.angles);
-			pos = self.origin + v_forward * 600;
-
-			if(self.flags & FL_FLY || self.flags & FL_SWIM)
-			if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
-			{
-				pos_z = random() * 200;
-				if(random() >= 0.5)
-					pos_z *= -1;
-			}
 
 			if(targ)
 			{
 				self.last_trace = time + 0.5;
 				pos = targ.origin;
+			}
+			else
+			{
+				self.last_trace = time + self.wander_delay;
+
+				self.angles_y = rint(random() * 500);
+				makevectors(self.angles);
+				pos = self.origin + v_forward * self.wander_distance;
+
+				if(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM))
+				{
+					pos_z = random() * 200;
+					if(random() >= 0.5)
+						pos_z *= -1;
+				}
 			}
 
 			return pos;
@@ -528,9 +562,43 @@ vector monster_pickmovetarget(entity targ)
 	}
 }
 
+void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrate, float movespeed)
+{
+	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
+	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
+	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
+	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
+
+	vector targpos;
+	if(current_height) // make sure we can actually do this arcing path
+	{
+		targpos = (to + ('0 0 1' * current_height));
+		WarpZone_TraceLine(mon.origin, targpos, MOVE_NOMONSTERS, mon);
+		if(trace_fraction < 1)
+		{
+			//print("normal arc line failed, trying to find new pos...");
+			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, mon);
+			targpos = (trace_endpos + '0 0 -10');
+			WarpZone_TraceLine(mon.origin, targpos, MOVE_NOMONSTERS, mon);
+			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
+			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
+		}
+	}
+	else { targpos = to; }
+
+	//mon.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
+
+	vector desired_direction = normalize(targpos - from);
+	if(turnrate) { mon.velocity = (normalize(normalize(mon.velocity) + (desired_direction * 50)) * movespeed); }
+	else { mon.velocity = (desired_direction * movespeed); }
+
+	//mon.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
+	//mon.angles = vectoangles(mon.velocity);
+}
+
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
-	fixedmakevectors(self.angles);
+	//fixedmakevectors(self.angles);
 
 	if(self.target2)
 		self.goalentity = find(world, targetname, self.target2);
@@ -626,7 +694,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	monster_speed_run = runspeed;
 	monster_speed_walk = walkspeed;
 
-	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || self.draggedby != world || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
@@ -650,22 +718,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(DIFF_TEAM(self.monster_owner, self))
 		self.monster_owner = world;
 
-	if(self.enemy && self.enemy.health < 1)
-		self.enemy = world; // enough!
-
 	if(time >= self.last_enemycheck)
 	{
-		if(!monster_isvalidtarget(self.enemy, self))
-			self.enemy = world;
-
 		if(!self.enemy)
 		{
 			self.enemy = FindTarget(self);
 			if(self.enemy)
+			{
+				WarpZone_RefSys_Copy(self.enemy, self);
+				WarpZone_RefSys_AddInverse(self.enemy, self); // wz1^-1 ... wzn^-1 receiver
+				self.moveto = WarpZone_RefSys_TransformOrigin(self.enemy, self, (0.5 * (self.enemy.absmin + self.enemy.absmax)));
+				
+				self.pass_distance = vlen((('1 0 0' * self.enemy.origin_x) + ('0 1 0' * self.enemy.origin_y)) - (('1 0 0' *  self.origin_x) + ('0 1 0' *  self.origin_y)));
 				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
+			}
 		}
 
-		self.last_enemycheck = time + 0.5;
+		self.last_enemycheck = time + 1; // check for enemies every second
 	}
 
 	if(self.state == MONSTER_STATE_ATTACK_MELEE && time >= self.attack_finished_single)
@@ -678,30 +747,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(!self.enemy)
 		MonsterSound(monstersound_idle, 7, TRUE, CH_VOICE);
 
-	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
 	{
 		self.state = 0;
 		self.touch = MonsterTouch;
-	}
-
-	//self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-
-	float turny = 0;
-	vector real_angle = vectoangles(self.steerto) - self.angles;
-
-	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		turny = 20;
-
-	if(self.flags & FL_SWIM)
-		turny = vlen(self.angles - self.moveto);
-
-	if(turny)
-	{
-		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
-		self.angles_y += turny;
 	}
 
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
@@ -710,17 +759,20 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy && self.enemy.vehicle)
 		runspeed = 0;
 
-	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
-		v_forward = normalize(self.moveto - self.origin);
-	else
+	if(!(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM)))
+		//v_forward = normalize(self.moveto - self.origin);
+	//else
 		self.moveto_z = self.origin_z;
 
 	if(vlen(self.origin - self.moveto) > 64)
 	{
-		if(self.flags & FL_FLY || self.flags & FL_SWIM)
+		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
+			monster_CalculateVelocity(self, self.moveto, self.origin, TRUE, ((self.enemy) ? runspeed : walkspeed));
+		
+		/*&if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
-			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
+			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6); */
 
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
@@ -742,6 +794,18 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time > self.pain_finished)
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
+	}
+	
+	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	
+	vector real_angle = vectoangles(self.steerto) - self.angles;
+	float turny = 25;
+	if(self.state == MONSTER_STATE_ATTACK_MELEE)
+		turny = 0;
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		self.angles_y += turny;
 	}
 
 	monster_checkattack(self, self.enemy);
@@ -771,8 +835,8 @@ void monster_dead_think()
 
 	CSQCMODEL_AUTOUPDATE();
 
-	if(self.ltime != 0)
-	if(time >= self.ltime)
+	if(self.monster_lifetime != 0)
+	if(time >= self.monster_lifetime)
 	{
 		Monster_Fade();
 		return;
@@ -788,16 +852,17 @@ void monsters_setstatus()
 void Monster_Appear()
 {
 	self.enemy = activator;
-	self.spawnflags &= ~MONSTERFLAG_APPEAR;
-	self.monster_spawnfunc();
+	self.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
+	monster_initialize(self.monsterid);
 }
 
-float Monster_CheckAppearFlags(entity ent)
+float Monster_CheckAppearFlags(entity ent, float monster_id)
 {
 	if(!(ent.spawnflags & MONSTERFLAG_APPEAR))
 		return FALSE;
 
 	ent.think = func_null;
+	ent.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	ent.nextthink = 0;
 	ent.use = Monster_Appear;
 	ent.flags = FL_MONSTER; // set so this monster can get butchered
@@ -833,11 +898,9 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
-
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
+		self.event_damage = func_null;
 	}
 }
 
@@ -845,7 +908,7 @@ void monster_die(entity attacker, float gibbed)
 {
 	self.think = monster_dead_think;
 	self.nextthink = time;
-	self.ltime = time + 5;
+	self.monster_lifetime = time + 5;
 
 	if(self.frozen)
 	{
@@ -868,15 +931,12 @@ void monster_die(entity attacker, float gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
-
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
 	}
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 
-	self.event_damage	= monsters_corpse_damage;
+	self.event_damage	= ((gibbed) ? func_null : monsters_corpse_damage);
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_AIM;
 	self.deadflag		= DEAD_DEAD;
@@ -888,7 +948,7 @@ void monster_die(entity attacker, float gibbed)
 	self.state			= 0;
 	self.attack_finished_single = 0;
 
-	if(!(self.flags & FL_FLY))
+	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
 
 	MON_ACTION(self.monsterid, MR_DEATH);
@@ -899,10 +959,16 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;
 
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
+		return;
+
 	if(time < self.pain_finished && deathtype != DEATH_KILL)
 		return;
 
 	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
+		return;
+
+	if(deathtype == DEATH_FALL && self.draggedby != world)
 		return;
 
 	vector v;
@@ -961,26 +1027,43 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	}
 }
 
-void monster_setupcolors()
+void monster_setupcolors(entity mon)
 {
-	if(IS_PLAYER(self.monster_owner))
-		self.colormap = self.monster_owner.colormap;
-	else if(teamplay && self.team)
-		self.colormap = 1024 + (self.team - 1) * 17;
+	if(IS_PLAYER(mon.monster_owner))
+		mon.colormap = mon.monster_owner.colormap;
+	else if(teamplay && mon.team)
+		mon.colormap = 1024 + (mon.team - 1) * 17;
 	else
 	{
-		if(self.monster_skill <= MONSTER_SKILL_EASY)
-			self.colormap = 1029;
-		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
-			self.colormap = 1027;
-		else if(self.monster_skill <= MONSTER_SKILL_HARD)
-			self.colormap = 1038;
-		else if(self.monster_skill <= MONSTER_SKILL_INSANE)
-			self.colormap = 1028;
-		else if(self.monster_skill <= MONSTER_SKILL_NIGHTMARE)
-			self.colormap = 1032;
+		if(mon.monster_skill <= MONSTER_SKILL_EASY)
+			mon.colormap = 1029;
+		else if(mon.monster_skill <= MONSTER_SKILL_MEDIUM)
+			mon.colormap = 1027;
+		else if(mon.monster_skill <= MONSTER_SKILL_HARD)
+			mon.colormap = 1038;
+		else if(mon.monster_skill <= MONSTER_SKILL_INSANE)
+			mon.colormap = 1028;
+		else if(mon.monster_skill <= MONSTER_SKILL_NIGHTMARE)
+			mon.colormap = 1032;
 		else
-			self.colormap = 1024;
+			mon.colormap = 1024;
+	}
+}
+
+void monster_changeteam(entity ent, float newteam)
+{
+	if(!teamplay) { return; }
+	
+	ent.team = newteam;
+	ent.monster_attack = TRUE; // new team, activate attacking
+	monster_setupcolors(ent);
+	
+	if(ent.sprite)
+	{
+		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
+
+		ent.sprite.team = newteam;
+		ent.sprite.SendFlags |= 1;
 	}
 }
 
@@ -989,8 +1072,8 @@ void monster_think()
 	self.think = monster_think;
 	self.nextthink = self.ticrate;
 
-	if(self.ltime)
-	if(time >= self.ltime)
+	if(self.monster_lifetime)
+	if(time >= self.monster_lifetime)
 	{
 		Damage(self, self, self, self.health + self.max_health, DEATH_KILL, self.origin, self.origin);
 		return;
@@ -1024,6 +1107,9 @@ float monster_spawn()
 	if(!self.attack_range)
 		self.attack_range = autocvar_g_monsters_attack_range;
 
+	if(!self.wander_delay) { self.wander_delay = 2; }
+	if(!self.wander_distance) { self.wander_distance = 600; }
+
 	precache_monstersounds();
 	UpdateMonsterSounds();
 
@@ -1033,8 +1119,11 @@ float monster_spawn()
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 
 	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+	{
+		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+	}
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
@@ -1045,10 +1134,11 @@ float monster_spawn()
 	return TRUE;
 }
 
-float monster_initialize(float mon_id, float nodrop)
+float monster_initialize(float mon_id)
 {
-	if(!autocvar_g_monsters)
-		return FALSE;
+	if(!autocvar_g_monsters) { return FALSE; }
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
+	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
 	entity mon = get_monsterinfo(mon_id);
 
@@ -1064,11 +1154,11 @@ float monster_initialize(float mon_id, float nodrop)
 		self.team = 0;
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
 	setmodel(self, mon.model);
-	setsize(self, mon.mins, mon.maxs);
+	//setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.takedamage			= DAMAGE_AIM;
 	self.bot_attack			= TRUE;
@@ -1094,13 +1184,19 @@ float monster_initialize(float mon_id, float nodrop)
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
+	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
-	self.scale				= 1;
-	self.noalign			= nodrop;
+	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+
+	if(!self.scale)
+		self.scale = 1;
+
+	if(autocvar_g_monsters_edit)
+		self.grab = 1; // owner may carry their monster
 
 	if(autocvar_g_fullbrightplayers)
 		self.effects |= EF_FULLBRIGHT;
@@ -1118,7 +1214,10 @@ float monster_initialize(float mon_id, float nodrop)
 	}
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
-		self.scale = 1.3;
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+		self.scale *= 1.3;
+		
+	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	if(!self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
@@ -1148,7 +1247,7 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-		monster_setupcolors();
+		monster_setupcolors(self);
 
 	CSQCMODEL_AUTOINIT();
 

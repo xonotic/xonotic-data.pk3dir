@@ -849,12 +849,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 
 		if (targ == attacker)
-		{
-			if(g_cts && !autocvar_g_cts_selfdamage)
-				damage = 0;
-			else
-				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
-		}
+			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// count the damage
 		if(attacker)
@@ -1353,7 +1348,7 @@ void Fire_ApplyDamage(entity e)
 	e.fire_hitsound = TRUE;
 
 	if (!IS_INDEPENDENT_PLAYER(e))
-	if (!e.frozen)
+	if(!e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))

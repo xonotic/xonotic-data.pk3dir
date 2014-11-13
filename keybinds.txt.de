@@ -58,6 +58,7 @@
 "dropweapon"                            "Waffe wegwerfen"
 "+use"                                  "Schlüssel oder Flagge wegwerfen"
 "+button8"                              "Objekt ziehen"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Benutzerdefiniert"
 "+userbind 1"                           "$userbind1"

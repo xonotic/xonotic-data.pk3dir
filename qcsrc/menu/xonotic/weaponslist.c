@@ -100,7 +100,7 @@ void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, floa
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		msg = sprintf(_("%s (mutator weapon)"), msg);
-	draw_Text(me.realUpperMargin * eY, msg, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY, msg, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
 
 float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)
