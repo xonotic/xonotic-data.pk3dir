@@ -549,6 +549,7 @@ void nade_boom()
 
 void nade_touch()
 {
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 	PROJECTILE_TOUCH;
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);
