@@ -343,7 +343,7 @@ void nade_translocate_boom()
 
 	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
 	tracebox(locout, self.realowner.mins, self.realowner.maxs, locout, MOVE_NOMONSTERS, self.realowner);
-	locout = trace_endpos
+	locout = trace_endpos;
 
 	makevectors(self.realowner.angles);
 
@@ -467,7 +467,8 @@ void nade_monster_boom()
 {
 	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, FALSE, 1);
 	
-	//e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
+	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
+		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 
