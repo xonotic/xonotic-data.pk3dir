@@ -9,6 +9,8 @@ MUTATOR_DECLARATION(gamemode_onslaught);
 MUTATOR_DECLARATION(gamemode_domination);
 MUTATOR_DECLARATION(gamemode_lms);
 MUTATOR_DECLARATION(gamemode_invasion);
+MUTATOR_DECLARATION(gamemode_cts);
+MUTATOR_DECLARATION(gamemode_race);
 
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);
@@ -29,5 +31,6 @@ MUTATOR_DECLARATION(mutator_multijump);
 MUTATOR_DECLARATION(mutator_melee_only);
 MUTATOR_DECLARATION(mutator_nades);
 MUTATOR_DECLARATION(mutator_campcheck);
+MUTATOR_DECLARATION(mutator_buffs);
 
 MUTATOR_DECLARATION(sandbox);

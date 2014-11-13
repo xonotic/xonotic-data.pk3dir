@@ -8,3 +8,4 @@ weapons.qc.tmp
 *.lno
 qcsrc/qccversion*
 qcsrc/server/precache-for-csqc.inc
+.DS_Store

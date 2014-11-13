@@ -94,6 +94,10 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
 		MUTATOR_ADD(gamemode_domination);
+
+		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -159,7 +163,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -172,6 +175,8 @@ void InitGameplayMode()
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -179,6 +184,7 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
@@ -248,12 +254,8 @@ void InitGameplayMode()
 	}
 
 	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
-	}
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -316,6 +318,9 @@ string getwelcomemessage(void)
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+
+	if (cvar("g_nades"))
+		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -420,10 +425,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);

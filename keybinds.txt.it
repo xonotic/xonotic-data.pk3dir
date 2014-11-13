@@ -58,6 +58,7 @@
 "dropweapon"                            "abbandona arma"
 "+use"                                  "abbandona chiave / bandiera"
 "+button8"                              "trascina oggetto"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Definiti dall'utente"
 "+userbind 1"                           "$userbind1"

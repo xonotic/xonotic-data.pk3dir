@@ -57,7 +57,8 @@
 "spec"                                  "mode spectateur"
 "dropweapon"                            "lâcher l'arme"
 "+use"                                  "lâcher la clé / lâcher le drapeau"
-"+button8"                              "drag object (FIXME)"
+"+button8"                              “déplacer l'objet
+"toggle chase_active"                   “vue à la 3ème personne”
 ""                                      ""
 ""                                      "Utilisateur"
 "+userbind 1"                           "$userbind1"
