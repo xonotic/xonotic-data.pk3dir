@@ -662,6 +662,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.event_damage = nade_damage;
 	_nade.customizeentityforclient = func_null;
 	_nade.exteriormodeltoclient = world;
+	_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = TRUE;
 	_nade.pushable = TRUE;
