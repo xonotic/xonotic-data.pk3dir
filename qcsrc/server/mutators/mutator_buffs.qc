@@ -107,7 +107,7 @@ void buff_Touch()
 	}
 
 	if((self.team && DIFF_TEAM(other, self))
-	|| (other.freezetag_frozen)
+	|| (other.frozen)
 	|| (other.vehicle)
 	|| (!IS_PLAYER(other))
 	|| (!self.buff_active)
@@ -200,7 +200,7 @@ void buff_Think()
     }
 
 	if(!self.buff_active && !self.buff_activetime)
-	if(!self.owner || self.owner.freezetag_frozen || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
+	if(!self.owner || self.owner.frozen || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
 		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
 		self.owner = world;
@@ -419,7 +419,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_target.deadflag == DEAD_NO)
 	if(IS_PLAYER(frag_target) || (frag_target.flags & FL_MONSTER))
 	if(frag_attacker != frag_target)
-	if(!frag_target.freezetag_frozen)
+	if(!frag_target.frozen)
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
@@ -570,7 +570,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_disability_effect_time = time + 0.5;
 	}
 	
-	if(self.freezetag_frozen)
+	if(self.frozen)
 	{
 		if(self.buffs)
 		{

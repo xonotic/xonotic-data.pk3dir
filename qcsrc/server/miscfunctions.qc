@@ -1268,6 +1268,7 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
+	precache_model("models/ice/ice.md3");
 
 #ifdef TTURRETS_ENABLED
     if (autocvar_g_turrets)

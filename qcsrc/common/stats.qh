@@ -71,7 +71,7 @@ const float STAT_VEHICLESTAT_AMMO2      = 65;
 const float STAT_VEHICLESTAT_RELOAD2    = 66;
 const float STAT_VEHICLESTAT_W2MODE     = 67;
 // 68 empty?
-// 69 empty?
+const float STAT_NADE_TIMER             = 69;
 const float STAT_SECRETS_TOTAL          = 70;
 const float STAT_SECRETS_FOUND          = 71;
 const float STAT_RESPAWN_TIME           = 72;
@@ -81,8 +81,13 @@ const float STAT_WEAPONS3               = 75;
 const float STAT_MONSTERS_TOTAL         = 76;
 const float STAT_MONSTERS_KILLED        = 77;
 const float STAT_BUFFS                  = 78;
-// 79 empty?
-// 80 empty?
+const float STAT_NADE_BONUS             = 79;
+const float STAT_NADE_BONUS_TYPE        = 80;
+const float STAT_NADE_BONUS_SCORE       = 81;
+const float STAT_HEALING_ORB            = 82;
+const float STAT_HEALING_ORB_ALPHA      = 83;
+// 84 empty?
+// 85 empty?
 // 86 empty?
 // 87 empty?
 // 88 empty?

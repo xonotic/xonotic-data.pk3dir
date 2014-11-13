@@ -17,6 +17,7 @@ Defs.qc
 
 ../common/teams.qh
 ../common/util.qh
+../common/nades.qh
 ../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
@@ -119,6 +120,7 @@ command/cl_cmd.qc
 
 ../common/monsters/monsters.qc
 
+../common/nades.qc
 ../common/buffs.qc
 
 ../warpzonelib/anglestransform.qc

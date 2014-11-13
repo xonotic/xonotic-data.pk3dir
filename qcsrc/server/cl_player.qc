@@ -246,7 +246,7 @@ void player_anim (void)
 		else
 			deadbits = ANIMSTATE_DEAD2;
 	float animbits = deadbits;
-	if(self.freezetag_frozen)
+	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
@@ -683,6 +683,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			return;
 
 		// when we get here, player actually dies
+
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
 		WaypointSprite_PlayerDead();
