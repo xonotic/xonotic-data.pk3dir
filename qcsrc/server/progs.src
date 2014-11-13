@@ -13,8 +13,10 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/stats.qh
 ../common/teams.qh
 ../common/util.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -52,6 +54,7 @@ mutators/gamemode_cts.qh
 mutators/gamemode_race.qh
 mutators/mutator_dodging.qh
 mutators/mutator_nades.qh
+mutators/mutator_buffs.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -89,6 +92,8 @@ w_laser.qh
 scores.qh
 
 spawnpoints.qh
+
+mapvoting.qh
 
 ipban.qh
 
@@ -132,6 +137,8 @@ pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
+
+mapvoting.qc
 
 t_jumppads.qc
 t_teleporters.qc
@@ -216,6 +223,8 @@ target_music.qc
 
 ../common/items.qc
 
+../common/buffs.qc
+
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc
@@ -270,6 +279,7 @@ mutators/mutator_multijump.qc
 mutators/mutator_melee_only.qc
 mutators/mutator_nades.qc
 mutators/mutator_campcheck.qc
+mutators/mutator_buffs.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

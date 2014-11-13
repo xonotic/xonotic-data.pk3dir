@@ -1013,8 +1013,8 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 				strcat(catent.cat_string, ":"),
 #endif
 				me.realFontSize,
-				'1 1 1',
-				SKINALPHA_TEXT,
+				SKINCOLOR_SERVERLIST_CATEGORY,
+				SKINALPHA_SERVERLIST_CATEGORY,
 				0
 			);
 			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
