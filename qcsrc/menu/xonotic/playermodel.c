@@ -5,6 +5,7 @@ CLASS(XonoticPlayerModelSelector) EXTENDS(XonoticImage)
 	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity))
 	METHOD(XonoticPlayerModelSelector, draw, void(entity))
 	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(XonoticPlayerModelSelector, showNotify, void(entity))
 	ATTRIB(XonoticPlayerModelSelector, currentModel, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentSkin, float, 0)
 	ATTRIB(XonoticPlayerModelSelector, currentModelImage, string, string_null)
@@ -200,5 +201,10 @@ void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector
 	SUPER(XonoticPlayerModelSelector).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.realFontSize_y = me.fontSize / absSize_y;
 	me.realFontSize_x = me.fontSize / absSize_x;
+}
+
+void XonoticPlayerModelSelector_showNotify(entity me)
+{
+	me.configureXonoticPlayerModelSelector(me);
 }
 #endif
