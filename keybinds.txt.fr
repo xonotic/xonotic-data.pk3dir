@@ -58,7 +58,7 @@
 "dropweapon"                            "lâcher l'arme"
 "+use"                                  "lâcher la clef / drapeau"
 "+button8"                              "traîner l'objet"
-"toggle chase_active"                   “vue à la 3ème personne”
+"toggle chase_active"                   “vue à la 3ème personne"
 ""                                      ""
 ""                                      "Raccourcis personnalisés"
 "+userbind 1"                           "$userbind1"
