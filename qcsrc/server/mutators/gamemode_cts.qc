@@ -43,6 +43,12 @@ void cts_ScoreRules()
 	ScoreRules_basics_end();
 }
 
+void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
+
 MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 {
 	// force kbd movement for fairness
@@ -112,7 +118,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 			if(!s)
 				e.race_place = 0;
 		}
-		print(e.netname, " = ", ftos(e.race_place), "\n");
+		cts_EventLog(ftos(e.race_place), e);
 	}
 
 	if(g_race_qualifying == 2)
