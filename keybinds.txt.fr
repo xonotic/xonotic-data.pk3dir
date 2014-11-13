@@ -58,6 +58,7 @@
 "dropweapon"                            "lâcher l'arme"
 "+use"                                  "lâcher la clé / lâcher le drapeau"
 "+button8"                              "drag object (FIXME)"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Utilisateur"
 "+userbind 1"                           "$userbind1"

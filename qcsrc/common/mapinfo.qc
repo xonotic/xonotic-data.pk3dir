@@ -313,6 +313,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+				else if(v == "invasion_spawnpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -341,6 +343,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
 				else if(startsWith(v, "vehicle_"))
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
+				else if(startsWith(v, "monster_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_MONSTERS;
 				else if(v == "target_music" || v == "trigger_music")
 					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
 			}
@@ -600,14 +604,11 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		p = strstrofs(sa, "=", 0);
 		if(p < 0)
 		{
-			k = "timelimit";
-			v = s;
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
+			continue;
 		}
-		else
-		{
-			k = substring(sa, 0, p);
-			v = substring(sa, p+1, -1);
-		}
+		k = substring(sa, 0, p);
+		v = substring(sa, p+1, -1);
 
 		if(k == "timelimit")
 		{
@@ -632,6 +633,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_freezetag_teams", v);
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
+			cvar_set("g_invasion_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{
@@ -643,7 +645,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		}
 		else
 		{
-			print("Invalid gametype key in mapinfo: ", k, "\n");
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
 		}
 	}
 
@@ -680,12 +682,27 @@ float MapInfo_Type_FromString(string t)
 		t = "ka";
 		print("'. Should use '", t, "'.\n");
 	}
+	if(t == "invasion")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "inv";
+		print("'. Should use '", t, "'.\n");
+	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.mdl)
 			return e.items;
 	return 0;
+}
+
+string MapInfo_Type_Description(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.items)
+			return e.gametype_description;
+	return "";
 }
 
 string MapInfo_Type_ToString(float t)
@@ -973,6 +990,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else if(t == "turrets") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
 			else if(t == "vehicles") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
+			else if(t == "monsters") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_MONSTERS;
 			else if(t == "new_toys") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else
 				dprint("Map ", pFilename, " supports unknown feature ", t, ", ignored\n");
@@ -1256,14 +1274,14 @@ void MapInfo_LoadMap(string s, float reinit)
 		localcmd(strcat("\nchangelevel ", s, "\n"));
 }
 
-string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
+string MapInfo_ListAllowedMaps(float type, float pRequiredFlags, float pForbiddenFlags)
 {
 	string out;
 	float i;
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
+	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
 	for(i = 0; i < MapInfo_count; ++i)

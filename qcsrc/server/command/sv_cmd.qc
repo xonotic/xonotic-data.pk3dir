@@ -139,6 +139,47 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
+void GameCommand_mobbutcher(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
+			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
+
+			float removed_count = 0;
+			entity head;
+
+			FOR_EACH_MONSTER(head)
+			{
+				monster_remove(head);
+				++removed_count;
+			}
+
+			monsters_total = 0; // reset stats?
+			monsters_killed = 0;
+
+			totalspawned = 0;
+
+			if(removed_count <= 0)
+				print("No monsters to kill\n");
+			else
+				printf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s"));
+
+			return; // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd mobbutcher\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_allready(float request)
 {
 	switch(request)
@@ -1035,6 +1076,7 @@ void GameCommand_moveplayer(float request, float argc)
 								}
 								else if(team_id == 0)  // auto team
 								{
+									CheckAllowedTeams(client);
 									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
@@ -1471,7 +1513,9 @@ void GameCommand_trace(float request, float argc)
 			{
 				case "debug":
 				{
+					float hitcount = 0;
 					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
+					float worst_endpos_bug = 0;
 					for(;;)
 					{
 						org = world.mins;
@@ -1489,49 +1533,49 @@ void GameCommand_trace(float request, float argc)
 						end = stov(vtos(end));
 
 						tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-						if(!trace_startsolid)
+						if(!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
 							tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
-							if(trace_startsolid || trace_fraction == 1)
+							if(trace_startsolid)
 							{
 								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
 								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
 
-								if(trace_startsolid)
+								// how much do we need to back off?
+								safe = 1;
+								unsafe = 0;
+								for(;;)
 								{
-									// how much do we need to back off?
-									safe = 1;
-									unsafe = 0;
-									for(;;)
-									{
-										pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-										tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
-										if(trace_startsolid)
-										{
-											if((safe + unsafe) * 0.5 == unsafe)
-												break;
-											unsafe = (safe + unsafe) * 0.5;
-										}
-										else
-										{
-											if((safe + unsafe) * 0.5 == safe)
-												break;
-											safe = (safe + unsafe) * 0.5;
-										}
-									}
-
-									print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
-									print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
-
-									tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
+									tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
 									if(trace_startsolid)
-										print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+									{
+										if((safe + unsafe) * 0.5 == unsafe)
+											break;
+										unsafe = (safe + unsafe) * 0.5;
+									}
 									else
-										print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
-									break;
+									{
+										if((safe + unsafe) * 0.5 == safe)
+											break;
+										safe = (safe + unsafe) * 0.5;
+									}
 								}
 
+								print("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
+								print("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
+
+								tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+								if(trace_startsolid)
+									print("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+								else
+									print("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
+								if (++hitcount >= 10)
+									break;
+							}
+							else
+							{
 								q0 = p;
 								dq = 0;
 								dqf = 1;
@@ -1548,11 +1592,13 @@ void GameCommand_trace(float request, float argc)
 									dqf *= 0.5;
 									q0 = q;
 								}
-								if(dq > 0)
+								if(dq > worst_endpos_bug)
 								{
+									worst_endpos_bug = dq;
 									print("trace_endpos still before solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 									print("could go ", ftos(dq), " units further to ", vtos(q), "\n");
-									break;
+									if (++hitcount >= 10)
+										break;
 								}
 							}
 						}
@@ -1728,6 +1774,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
+	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

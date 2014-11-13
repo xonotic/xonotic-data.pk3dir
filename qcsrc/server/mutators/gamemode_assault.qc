@@ -212,31 +212,8 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void vehicles_clearrturn();
-void vehicles_spawn();
 void assault_new_round()
 {
-    entity oldself;
-	//bprint("ASSAULT: new round\n");
-
-	oldself = self;
-	// Eject players from vehicles
-    FOR_EACH_PLAYER(self)
-    {
-        if(self.vehicle)
-            vehicles_exit(VHEF_RELESE);
-    }
-
-    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
-    while(self)
-    {
-        vehicles_clearrturn();
-        vehicles_spawn();
-        self = self.chain;
-    }
-
-    self = oldself;
-
 	// up round counter
 	self.winning = self.winning + 1;
 
@@ -588,7 +565,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(PlayerSpawn, assault_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

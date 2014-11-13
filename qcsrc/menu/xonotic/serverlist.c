@@ -205,11 +205,11 @@ void RegisterSLCategories()
 				} \
 				else \
 				{ \
-					print(sprintf( \
+					printf( \
 						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
 						s, \
 						categories[i].cat_name \
-					)); \
+					); \
 				} \
 			} \
 			strunzone(categories[i].override_string); \
@@ -371,7 +371,7 @@ float CheckCategoryForEntry(float entry)
 			case "cts": 
 			case "xdf": { return CAT_DEFRAG; }
 			
-			default: { dprint(sprintf("Found strange mod type: %s\n", modtype)); return CAT_MODIFIED; }
+			default: { dprintf("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
 		}
 	}
 
@@ -979,7 +979,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
-	//print(sprintf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems));
+	//printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
 
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
@@ -1013,8 +1013,8 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 				strcat(catent.cat_string, ":"),
 #endif
 				me.realFontSize,
-				'1 1 1',
-				SKINALPHA_TEXT,
+				SKINCOLOR_SERVERLIST_CATEGORY,
+				SKINALPHA_SERVERLIST_CATEGORY,
 				0
 			);
 			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);

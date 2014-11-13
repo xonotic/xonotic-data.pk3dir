@@ -23,7 +23,7 @@ var float  autocvar_cl_fullbright_items = 0;
 var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
 var float  autocvar_cl_weapon_stay_alpha = 0.75;
 var float  autocvar_cl_simple_items = 0;
-var string autocvr_cl_simpleitems_postfix = "_simple";
+var string autocvar_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
@@ -154,14 +154,14 @@ void ItemRead(float _IsNew)
 
 
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix));
+            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
@@ -687,6 +687,8 @@ void Item_Touch (void)
 	if (self.solid != SOLID_TRIGGER)
 		return;
 	if (self.owner == other)
+		return;
+	if (time < self.item_spawnshieldtime)
 		return;
 
 	switch(MUTATOR_CALLHOOK(ItemTouch))

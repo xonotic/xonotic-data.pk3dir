@@ -30,7 +30,6 @@ const float AS_FLOAT = 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_ZCURVEPARTICLES = 102;
 const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
 const float TE_CSQC_LIGHTNINGARC = 104;
 const float TE_CSQC_TEAMNAGGER = 105;
@@ -140,75 +139,6 @@ const float CVAR_READONLY = 4;
 ///////////////////////////
 // csqc communication stuff
 
-const float STAT_KH_KEYS = 32;
-const float STAT_CTF_STATE = 33;
-const float STAT_WEAPONS = 35;
-const float STAT_SWITCHWEAPON = 36;
-const float STAT_GAMESTARTTIME = 37;
-const float STAT_STRENGTH_FINISHED = 38;
-const float STAT_INVINCIBLE_FINISHED = 39;
-const float STAT_PRESSED_KEYS = 42;
-const float STAT_ALLOW_OLDNEXBEAM = 43; // this stat could later contain some other bits of info, like, more server-side particle config
-const float STAT_FUEL = 44;
-const float STAT_NB_METERSTART = 45;
-const float STAT_SHOTORG = 46; // compressShotOrigin
-const float STAT_LEADLIMIT = 47;
-const float STAT_WEAPON_CLIPLOAD = 48;
-const float STAT_WEAPON_CLIPSIZE = 49;
-const float STAT_NEX_CHARGE = 50;
-const float STAT_LAST_PICKUP = 51;
-const float STAT_HUD = 52;
-const float STAT_NEX_CHARGEPOOL = 53;
-const float STAT_HIT_TIME = 54;
-const float STAT_TYPEHIT_TIME = 55;
-const float STAT_LAYED_MINES = 56;
-const float STAT_HAGAR_LOAD = 57;
-const float STAT_SWITCHINGWEAPON = 58;
-const float STAT_SUPERWEAPONS_FINISHED = 59;
-
-const float STAT_VEHICLESTAT_HEALTH = 60;
-const float STAT_VEHICLESTAT_SHIELD = 61;
-const float STAT_VEHICLESTAT_ENERGY = 62;
-const float STAT_VEHICLESTAT_AMMO1 = 63;
-const float STAT_VEHICLESTAT_RELOAD1 = 64;
-const float STAT_VEHICLESTAT_AMMO2 = 65;
-const float STAT_VEHICLESTAT_RELOAD2 = 66;
-
-const float STAT_SECRETS_TOTAL = 70;
-const float STAT_SECRETS_FOUND = 71;
-
-const float STAT_RESPAWN_TIME = 72;
-const float STAT_ROUNDSTARTTIME = 73;
-
-const float STAT_WEAPONS2 = 74;
-const float STAT_WEAPONS3 = 75;
-
-// mod stats (1xx)
-const float STAT_REDALIVE = 100;
-const float STAT_BLUEALIVE = 101;
-const float STAT_YELLOWALIVE = 102;
-const float STAT_PINKALIVE = 103;
-
-// freeze tag
-const float STAT_FROZEN = 104;
-const float STAT_REVIVE_PROGRESS = 105;
-
-// domination
-const float STAT_DOM_TOTAL_PPS = 99;
-const float STAT_DOM_PPS_RED = 100;
-const float STAT_DOM_PPS_BLUE = 101;
-const float STAT_DOM_PPS_YELLOW = 102;
-const float STAT_DOM_PPS_PINK = 103;
-
-//const float STAT_SPIDERBOT_AIM 53 // compressShotOrigin
-//const float STAT_SPIDERBOT_TARGET 54 // compressShotOrigin
-
-// see DP source, quakedef.h
-const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
-const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
-const float STAT_MOVEVARS_MAXSPEED = 244;
-const float STAT_MOVEVARS_AIRACCEL_QW = 254;
-
 const float CTF_STATE_ATTACK = 1;
 const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
@@ -228,7 +158,7 @@ const vector eZ = '0 0 1';
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
-#define MAPVOTE_COUNT 10
+#define MAPVOTE_COUNT 30
 
 /**
  * Lower scores are better (e.g. suicides)
@@ -278,23 +208,6 @@ const vector eZ = '0 0 1';
 #define SP_SCORE 3
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
-#ifdef COMPAT_XON010_CHANNELS
-const float CH_INFO = 0; // only on world and csqc
-const float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
-const float CH_WEAPON_A = 1; // only on players and entities
-const float CH_WEAPON_SINGLE = 5; // only on players and entities
-const float CH_VOICE = 2; // only on players
-const float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
-const float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
-const float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
-const float CH_SHOTS = 4; // only on players, entities, csqc
-const float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
-const float CH_WEAPON_B = 5; // only on players and entities
-const float CH_PAIN = 6; // only on players and csqc
-const float CH_PAIN_SINGLE = 6; // only on players and csqc
-const float CH_PLAYER = 7; // only on players and entities
-const float CH_TUBA = 5; // only on csqc
-#else
 const float CH_INFO = 0;
 const float CH_TRIGGER = -3;
 const float CH_WEAPON_A = -1;
@@ -309,8 +222,8 @@ const float CH_WEAPON_B = -1;
 const float CH_PAIN = -6;
 const float CH_PAIN_SINGLE = 6;
 const float CH_PLAYER = -7;
-const float CH_TUBA = 5;
-#endif
+const float CH_PLAYER_SINGLE = 7;
+const float CH_TUBA_SINGLE = 5;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
@@ -354,6 +267,9 @@ const float PROJECTILE_WAKICANNON = 29;
 
 const float PROJECTILE_BUMBLE_GUN = 30;
 const float PROJECTILE_BUMBLE_BEAM = 31;
+
+const float PROJECTILE_MAGE_SPIKE = 32;
+const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
 const float PROJECTILE_NADE_RED = 50;
 const float PROJECTILE_NADE_RED_BURN = 51;
@@ -450,3 +366,8 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define URI_GET_UPDATENOTIFICATION 33
 #define URI_GET_URLLIB 128
 #define URI_GET_URLLIB_END 191
+
+// gametype votes
+#define GTV_AVAILABLE 0
+// for later use in per-map gametype filtering
+#define GTV_FORBIDDEN 2

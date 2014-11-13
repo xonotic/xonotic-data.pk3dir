@@ -56,7 +56,7 @@ void m_init()
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
+	printf(_("^4MQC Build information: ^1%s\n"), WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -666,7 +666,7 @@ void m_tooltip(vector pos)
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				draw_Text(p, s, fontsize, '1 1 1', SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
+				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
 				p_y += fontsize_y;
 			}
 		}

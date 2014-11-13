@@ -125,6 +125,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		MUTATOR_ADD(gamemode_ca);
+		if(autocvar_g_ca_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_keyhunt)
@@ -141,6 +143,8 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
 		MUTATOR_ADD(gamemode_freezetag);
+		if(autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_assault)
@@ -159,7 +163,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -172,6 +175,8 @@ void InitGameplayMode()
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -179,6 +184,7 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
@@ -193,6 +199,18 @@ void InitGameplayMode()
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
+	}
+
+	if(g_invasion)
+	{
+		fraglimit_override = autocvar_g_invasion_point_limit;
+		if(autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if(autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
+		MUTATOR_ADD(gamemode_invasion);
 	}
 
 	if(teamplay)
@@ -236,12 +254,8 @@ void InitGameplayMode()
 	}
 
 	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
-	}
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -277,7 +291,7 @@ string getwelcomemessage(void)
 	}
 	if(autocvar_g_start_weapon_laser == 0)
 		modifications = strcat(modifications, ", No start weapons");
-	if(autocvar_sv_gravity < 800)
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
@@ -408,10 +422,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);

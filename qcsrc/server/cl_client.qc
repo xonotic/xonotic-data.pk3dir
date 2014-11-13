@@ -1,6 +1,3 @@
-void race_send_recordtime(float msg);
-void race_SendRankings(float pos, float prevpos, float del, float msg);
-
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
@@ -140,7 +137,6 @@ void PutObserverInServer (void)
 {
 	entity	spot;
     self.hud = HUD_NORMAL;
-	race_PreSpawnObserver();
 
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
@@ -154,15 +150,7 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
-	if((g_race && g_race_qualifying) || g_cts)
-	{
-		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
-			self.frags = FRAGS_LMS_LOSER;
-		else
-			self.frags = FRAGS_SPECTATOR;
-	}
-	else
-		self.frags = FRAGS_SPECTATOR;
+	self.frags = FRAGS_SPECTATOR;
 
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
@@ -186,6 +174,8 @@ void PutObserverInServer (void)
 	if(self.killcount != -666)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
+		if(autocvar_g_chat_nospectators == 1 || (cvar("g_warmup") && !(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -281,7 +271,7 @@ void FixPlayermodel()
 		if(teamplay)
 		{
 			string s;
-			s = Team_ColorName_Lower(self.team);
+			s = Static_Team_ColorName_Lower(self.team);
 			if(s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
@@ -389,8 +379,6 @@ void PutClientInServer (void)
 		if(self.team < 0)
 			JoinBestTeam(self, FALSE, TRUE);
 
-		race_PreSpawn();
-
 		spot = SelectSpawnPoint (FALSE);
 		if(!spot)
 		{
@@ -399,6 +387,9 @@ void PutClientInServer (void)
 		}
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
+
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELESE);
 
 		self.classname = "player";
 		self.wasplayer = TRUE;
@@ -519,6 +510,9 @@ void PutClientInServer (void)
 		spawnevent.owner = self;
 		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
 
+		// Cut off any still running player sounds.
+		stopsound(self, CH_PLAYER_SINGLE);
+
 		self.model = "";
 		FixPlayermodel();
 		self.drawonlytoclient = world;
@@ -538,6 +532,9 @@ void PutClientInServer (void)
 		self.event_damage = PlayerDamage;
 
 		self.bot_attack = TRUE;
+		self.monster_attack = TRUE;
+		
+		self.spider_slowness = 0;
 
 		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
@@ -553,8 +550,6 @@ void PutClientInServer (void)
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
 		self.speedrunning = FALSE;
-
-		race_PostSpawn(spot);
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
@@ -1049,8 +1044,6 @@ void ClientConnect (void)
 
 	anticheat_init();
 
-	race_PreSpawnObserver();
-
 	// identify the right forced team
 	if(autocvar_g_campaign)
 	{
@@ -1201,27 +1194,7 @@ void ClientConnect (void)
 	else
 		self.hitplotfh = -1;
 
-	if(g_race || g_cts) {
-		string rr;
-		if(g_cts)
-			rr = CTS_RECORD;
-		else
-			rr = RACE_RECORD;
-
-		msg_entity = self;
-		race_send_recordtime(MSG_ONE);
-		race_send_speedaward(MSG_ONE);
-
-		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
-		race_send_speedaward_alltimebest(MSG_ONE);
-
-		float i;
-		for (i = 1; i <= RANKINGS_CNT; ++i) {
-			race_SendRankings(i, 0, 0, MSG_ONE);
-		}
-	}
-	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
+	if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
 		send_CSQC_teamnagger();
 
 	CheatInitClient();
@@ -1417,7 +1390,7 @@ void player_powerups (void)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	olditems = self.items;
 
-	if((self.items & IT_USING_JETPACK) && !self.deadflag)
+	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
 		self.modelflags |= MF_ROCKET;
 	else
 		self.modelflags &= ~MF_ROCKET;
@@ -1577,44 +1550,51 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
-	float minh, mina, minf, maxh, maxa, maxf, limith, limita, limitf, max_mod, regen_mod, rot_mod, limit_mod;
-	maxh = autocvar_g_balance_health_rotstable;
-	maxa = autocvar_g_balance_armor_rotstable;
-	maxf = autocvar_g_balance_fuel_rotstable;
-	minh = autocvar_g_balance_health_regenstable;
-	mina = autocvar_g_balance_armor_regenstable;
-	minf = autocvar_g_balance_fuel_regenstable;
-	limith = autocvar_g_balance_health_limit;
-	limita = autocvar_g_balance_armor_limit;
-	limitf = autocvar_g_balance_fuel_limit;
-
+	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-
-	maxh = maxh * max_mod;
-	//maxa = maxa * max_mod;
-	//maxf = maxf * max_mod;
-	minh = minh * max_mod;
-	//mina = mina * max_mod;
-	//minf = minf * max_mod;
-	limith = limith * limit_mod;
-	limita = limita * limit_mod;
-	//limitf = limitf * limit_mod;
-
-	if(g_ca)
-		rot_mod = 0;
-
-	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
+	regen_mod_max = max_mod;
+	regen_mod_regen = regen_mod;
+	regen_mod_rot = rot_mod;
+	regen_mod_limit = limit_mod;
+	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	{
+		float minh, mina, maxh, maxa, limith, limita;
+		maxh = autocvar_g_balance_health_rotstable;
+		maxa = autocvar_g_balance_armor_rotstable;
+		minh = autocvar_g_balance_health_regenstable;
+		mina = autocvar_g_balance_armor_regenstable;
+		limith = autocvar_g_balance_health_limit;
+		limita = autocvar_g_balance_armor_limit;
+		
+		max_mod = regen_mod_max;
+		regen_mod = regen_mod_regen;
+		rot_mod = regen_mod_rot;
+		limit_mod = regen_mod_limit;
+
+		maxh = maxh * max_mod;
+		minh = minh * max_mod;
+		limith = limith * limit_mod;
+		limita = limita * limit_mod;
+
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
-
-		// if player rotted to death...  die!
-		if(self.health < 1)
-			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
+	// if player rotted to death...  die!
+	// check this outside above checks, as player may still be able to rot to death
+	if(self.health < 1)
+		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+	{
+		float minf, maxf, limitf;
+
+		maxf = autocvar_g_balance_fuel_rotstable;
+		minf = autocvar_g_balance_fuel_regenstable;
+		limitf = autocvar_g_balance_fuel_limit;
+
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+	}
 }
 
 float zoomstate_set;
@@ -2419,6 +2399,9 @@ void PlayerPreThink (void)
 		// secret status
 		secrets_setstatus();
 
+		// monsters status
+		monsters_setstatus();
+
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -2446,8 +2429,6 @@ void PlayerPreThink (void)
 	if(self.spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(self);
-		if(g_race || g_cts)
-			race_InitSpectator();
 	}
 
 	if(self.teamkill_soundtime)
@@ -2605,23 +2586,6 @@ void PlayerPostThink (void)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	playerdemo_write();
-
-	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
-	{
-		if (!self.stored_netname)
-			self.stored_netname = strzone(uid2name(self.crypto_idfp));
-		if(self.stored_netname != self.netname)
-		{
-			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
-			strunzone(self.stored_netname);
-			self.stored_netname = strzone(self.netname);
-		}
-	}
-
-	/*
-	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
-	*/
 
 	CSQCMODEL_AUTOUPDATE();
 }

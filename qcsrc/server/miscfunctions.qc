@@ -99,6 +99,8 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
 
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
@@ -902,34 +904,11 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
+void mutators_add(); // mutators.qc
 void readlevelcvars(void)
 {
 	// load mutators
-	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
-		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
-
-	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
-	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
-	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
-	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
-	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
-	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
-	CHECK_MUTATOR_ADD("g_pinata", mutator_pinata, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
-	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
-	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
-	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
-	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
-	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
-
-	#undef CHECK_MUTATOR_ADD
+	mutators_add();
 
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -955,8 +934,6 @@ void readlevelcvars(void)
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
-    if(g_cts)
-        g_cloaked = 1; // always enable cloak in CTS
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
@@ -1080,15 +1057,6 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
-#ifdef COMPAT_XON010_CHANNELS
-void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    builtin_sound(e, chan, samp, vol, atten);
-}
-#else
 #undef sound
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
@@ -1096,7 +1064,6 @@ void sound(entity e, float chan, string samp, float vol, float atten)
         return;
     sound7(e, chan, samp, vol, atten, 0, 0);
 }
-#endif
 
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
@@ -1722,7 +1689,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprint(sprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin)));
+		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1822,82 +1789,6 @@ string uid2name(string myuid) {
 	if(s == "")
 		s = "^1Unregistered Player";
 	return s;
-}
-
-float race_readTime(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
-}
-
-string race_readUID(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
-}
-
-float race_readPos(string map, float t) {
-	float i;
-	for (i = 1; i <= RANKINGS_CNT; ++i)
-		if (race_readTime(map, i) == 0 || race_readTime(map, i) > t)
-			return i;
-
-	return 0; // pos is zero if unranked
-}
-
-void race_writeTime(string map, float t, string myuid)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	float newpos;
-	newpos = race_readPos(map, t);
-
-	float i, prevpos = 0;
-	for(i = 1; i <= RANKINGS_CNT; ++i)
-	{
-		if(race_readUID(map, i) == myuid)
-			prevpos = i;
-	}
-	if (prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
-		for (i = prevpos; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	} else { // player has no ranked record yet
-		for (i = RANKINGS_CNT; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	}
-
-	// store new time itself
-	db_put(ServerProgsDB, strcat(map, rr, "time", ftos(newpos)), ftos(t));
-	db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(newpos)), myuid);
-}
-
-string race_readName(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
@@ -2009,65 +1900,6 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     }
     else
         return FALSE;
-}
-
-float zcurveparticles_effectno;
-vector zcurveparticles_start;
-float zcurveparticles_spd;
-
-void endzcurveparticles()
-{
-	if(zcurveparticles_effectno)
-	{
-		// terminator
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd | 0x8000);
-	}
-	zcurveparticles_effectno = 0;
-}
-
-void zcurveparticles(float effectno, vector start, vector end, float end_dz, float spd)
-{
-	spd = bound(0, floor(spd / 16), 32767);
-	if(effectno != zcurveparticles_effectno || start != zcurveparticles_start)
-	{
-		endzcurveparticles();
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
-		WriteShort(MSG_BROADCAST, effectno);
-		WriteCoord(MSG_BROADCAST, start_x);
-		WriteCoord(MSG_BROADCAST, start_y);
-		WriteCoord(MSG_BROADCAST, start_z);
-		zcurveparticles_effectno = effectno;
-		zcurveparticles_start = start;
-	}
-	else
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd);
-	WriteCoord(MSG_BROADCAST, end_x);
-	WriteCoord(MSG_BROADCAST, end_y);
-	WriteCoord(MSG_BROADCAST, end_z);
-	WriteCoord(MSG_BROADCAST, end_dz);
-	zcurveparticles_spd = spd;
-}
-
-void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, vector vel)
-{
-	float end_dz;
-	vector vecxy, velxy;
-
-	vecxy = end - start;
-	vecxy_z = 0;
-	velxy = vel;
-	velxy_z = 0;
-
-	if (vlen(velxy) < 0.000001 * fabs(vel_z))
-	{
-		endzcurveparticles();
-		trailparticles(world, effectno, start, end);
-		return;
-	}
-
-	end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
-	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)

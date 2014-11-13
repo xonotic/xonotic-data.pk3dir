@@ -14,6 +14,10 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
+	weapon_rate = t;
+	MUTATOR_CALLHOOK(WeaponRateFactor);
+	t = weapon_rate;
+
 	return t;
 }
 
@@ -98,7 +102,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(IS_CLIENT(trace_ent))
+		if(IS_CLIENT(trace_ent) || (trace_ent.flags & FL_MONSTER))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
@@ -547,14 +551,14 @@ void CL_Weaponentity_Think()
 	{
 		entity newwep = get_weaponinfo(self.owner.switchweapon);
 		f = f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)));
-		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time)));
+		//printf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_raise", newwep.netname), cvar(sprintf("g_balance_%s_switchdelay_raise", newwep.netname)), (self.owner.weapon_nextthink - time));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
 		entity oldwep = get_weaponinfo(self.owner.weapon);
 		f = 1 - f * g_weaponratefactor / max(f, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)));
-		//print(sprintf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time)));
+		//printf("CL_Weaponentity_Think(): cvar: %s, value: %f, nextthink: %f\n", sprintf("g_balance_%s_switchdelay_drop", oldwep.netname), cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), (self.owner.weapon_nextthink - time));
 		self.angles_x = -90 * f * f;
 	}
 	else if (self.state == WS_CLEAR)

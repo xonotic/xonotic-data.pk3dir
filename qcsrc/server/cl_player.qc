@@ -322,11 +322,107 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+	 (gametype_setting_tmp < 0) ? 0 : \
+	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 gametype_setting_tmp)
+
+
+void calculate_player_respawn_time()
+{
+	float gametype_setting_tmp;
+	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
+	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
+	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
+	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
+	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
+	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
+
+	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
+	entity pl;
+	if (teamplay)
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				if (pl.team == self.team)
+					++pcount;
+		if (sdelay_small_count == 0)
+			sdelay_small_count = 1;
+		if (sdelay_large_count == 0)
+			sdelay_large_count = 1;
+	}
+	else
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				++pcount;
+		if (sdelay_small_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_small_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_small_count = 2;
+			}
+		}
+		if (sdelay_large_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_large_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_large_count = 2;
+			}
+		}
+	}
+
+	float sdelay;
+
+	if (pcount <= sdelay_small_count)
+		sdelay = sdelay_small;
+	else if (pcount >= sdelay_large_count)
+		sdelay = sdelay_large;
+	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
+		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
+
+	if(waves)
+		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+	else
+		self.respawn_time = time + sdelay;
+
+	if(sdelay < sdelay_max)
+		self.respawn_time_max = time + sdelay_max;
+	else
+		self.respawn_time_max = self.respawn_time;
+
+	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
+		self.respawn_countdown = 10; // first number to count down from is 10
+	else
+		self.respawn_countdown = -1; // do not count down
+
+	if(autocvar_g_forced_respawn)
+		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+}
+
 void ClientKill_Now_TeamChange();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	float take, save, waves, sdelay, dh, da, j;
+	float take, save, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -556,7 +652,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
 
         // increment frag counter for used weapon type
         float w;
@@ -577,15 +672,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		if(IS_REAL_CLIENT(self))
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
+		self.fixangle = TRUE;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
@@ -621,34 +708,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
-		sdelay = 0;
-		waves = 0;
-		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
-		if(!sdelay)
-		{
-			if(g_cts)
-				sdelay = 0; // no respawn delay in CTS
-			else
-				sdelay = autocvar_g_respawn_delay;
-		}
-		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
-		if(!waves)
-			waves = autocvar_g_respawn_waves;
-		if(waves)
-			self.respawn_time = ceil((time + sdelay) / waves) * waves;
-		else
-			self.respawn_time = time + sdelay;
-		if(autocvar_g_respawn_delay_max > sdelay)
-			self.respawn_time_max = time + autocvar_g_respawn_delay_max;
-		else
-			self.respawn_time_max = self.respawn_time;
-		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-			self.respawn_countdown = 10; // first number to count down from is 10
-		else
-			self.respawn_countdown = -1; // do not count down
-
-		if(g_cts || autocvar_g_forced_respawn)
-			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+		calculate_player_respawn_time();
 
 		self.death_time = time;
 		if (random() < 0.5)
@@ -689,7 +749,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
 	entity head;
@@ -734,14 +794,19 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		namestr = source.netname;
 
+	if(strdecolorize(namestr) == namestr)
+		colorprefix = "^3";
+	else
+		colorprefix = "^7";
+
 	if(msgin != "")
 	{
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 			else
@@ -749,12 +814,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint

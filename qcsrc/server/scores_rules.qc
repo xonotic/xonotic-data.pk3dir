@@ -65,34 +65,6 @@ void ScoreRules_kh(float teams)
 	ScoreRules_basics_end();
 }
 
-// Race stuff
-#define ST_RACE_LAPS 1
-#define SP_RACE_LAPS 4
-#define SP_RACE_TIME 5
-#define SP_RACE_FASTEST 6
-void ScoreRules_race()
-{
-	ScoreRules_basics(race_teams, 0, 0, FALSE);
-	if(race_teams)
-	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	ScoreRules_basics_end();
-}
-
 // Nexball stuff
 #define ST_NEXBALL_GOALS 1
 #define SP_NEXBALL_GOALS 4
@@ -106,12 +78,18 @@ void ScoreRules_nexball(float teams)
 	ScoreRules_basics_end();
 }
 
-// FreezeTag stuff
 #define SP_FREEZETAG_REVIVALS 4
-void ScoreRules_freezetag()
+void ScoreRules_freezetag(float teams)
 {
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
+	ScoreRules_basics_end();
+}
+
+#define ST_CA_ROUNDS 1
+void ScoreRules_ca(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }

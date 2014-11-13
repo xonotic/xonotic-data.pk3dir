@@ -3,5 +3,12 @@ species robot_solid
 sex None
 weight 200
 age 1
+bone_upperbody Bip001 Neck
+bone_aim0 0.25 Bip001 Neck
+bone_aim1 0.4 Bip001 Neck
+bone_aim2 0.2 Bip001 L UpperArm
+bone_aim3 0.35 bip01 r hand
+bone_weapon bip01 r hand
+fixbone 1
 
 Overkill robot

@@ -193,7 +193,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 	    me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
 	        setDependent(e, "cl_decals", 1, 1);
-	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_time"));
+	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_fadetime"));
 	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);

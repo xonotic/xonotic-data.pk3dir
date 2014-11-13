@@ -25,28 +25,28 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
 
-	if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+	if(!MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
-		makevectors(self.angles);
-		self.movetype = MOVETYPE_BOUNCE;
-		self.velocity = '0 0 200';
-		self.angles = '0 0 0';
-		self.effects = autocvar_g_keepawayball_effects;
-		self.think = ka_RespawnBall;
-		self.nextthink = time + autocvar_g_keepawayball_respawntime;
-
-		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
-		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
-
-		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
-		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
-
-		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+		entity spot = SelectSpawnPoint(TRUE);
+		setorigin(self, spot.origin);
+		self.angles = spot.angles;
 	}
-	else
-	{
-		ka_RespawnBall(); // finding a location failed, retry
-	}
+
+	makevectors(self.angles);
+	self.movetype = MOVETYPE_BOUNCE;
+	self.velocity = '0 0 200';
+	self.angles = '0 0 0';
+	self.effects = autocvar_g_keepawayball_effects;
+	self.think = ka_RespawnBall;
+	self.nextthink = time + autocvar_g_keepawayball_respawntime;
+
+	pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
+	pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
+
+	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
+	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
+
+	sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void ka_TimeScoring()
@@ -102,7 +102,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	// messages and sounds
 	ka_EventLog("pickup", other);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
 	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
@@ -415,7 +416,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, ka_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

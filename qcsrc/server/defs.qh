@@ -20,7 +20,6 @@ float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_race_qualifying;
 float warmup_stage;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_superweapon;
@@ -244,6 +243,7 @@ float game_completion_ratio; // 0 at start, 1 near end
 float nJoinAllowed(entity ignore);
 
 .float spawnshieldtime;
+.float item_spawnshieldtime;
 
 .entity flagcarried;
 
@@ -459,7 +459,6 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
 .float stat_allow_oldnexbeam;
 
 // reset to 0 on weapon switch

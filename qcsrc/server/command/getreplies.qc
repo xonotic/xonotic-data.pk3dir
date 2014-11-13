@@ -113,10 +113,7 @@ string getladder()
 	float i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
+	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
 
 	for(k = 0; k < MapInfo_count; ++k)
 	{
@@ -338,5 +335,20 @@ string getlsmaps()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available%s: %s\n", (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+	return sprintf("^7Maps available (%d)%s: %s\n", tokenize_console(lsmaps), (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+}
+
+string getmonsterlist()
+{
+	string monsterlist = "", col;
+	float i;
+
+	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	{
+		if(mod(i, 2)) { col = "^2"; }
+		else { col = "^3"; }
+		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
+	}
+
+	return sprintf("^7Monsters available: %s\n", monsterlist);
 }

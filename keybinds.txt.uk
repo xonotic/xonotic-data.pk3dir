@@ -58,6 +58,7 @@
 "dropweapon"                            "викинути зброю"
 "+use"                                  "викинути ключ / прапор"
 "+button8"                              "drag object"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Визначені користувачем"
 "+userbind 1"                           "$userbind1"
