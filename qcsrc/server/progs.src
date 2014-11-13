@@ -13,6 +13,7 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/stats.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/buffs.qh
