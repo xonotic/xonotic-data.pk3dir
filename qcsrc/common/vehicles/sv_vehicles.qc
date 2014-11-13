@@ -104,7 +104,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(!((trace_ent.vehicle_flags & VHF_ISVEHICLE) || (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)))
 			trace_ent = world;
 
-		if(trace_ent.alpha <= 0.5)
+		if(trace_ent.alpha <= 0.5 && trace_ent.alpha)
 			trace_ent = world; // invisible
 	}
 
@@ -548,8 +548,16 @@ void vehicle_use()
 	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
 		dprint("Respawning vehicle: ", self.netname, "\n");
-		vehicles_setreturn(self);
-		vehicles_reset_colors();
+		if(self.effects & EF_NODRAW)
+		{
+			self.think = vehicles_spawn;
+			self.nextthink = time + 3;
+		}
+		else
+		{
+			vehicles_setreturn(self);
+			vehicles_reset_colors();
+		}
 	}
 }
 
@@ -926,7 +934,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.phase > time)
 		return;
 
-	if(pl.freezetag_frozen)
+	if(pl.frozen)
 		return;
 
 	if(pl.deadflag != DEAD_NO)
@@ -996,6 +1004,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
+	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, FALSE, pl);
 	pl.crouch = FALSE;
 	pl.view_ofs = PL_VIEW_OFS;
 	setsize (pl, PL_MIN, PL_MAX);
@@ -1144,13 +1153,16 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	if(!veh.vehicleid)
 		return FALSE;
+	
+	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
-	if(self.targetname)
+	if(self.targetname && self.targetname != "")
 	{
 		self.vehicle_controller = find(world, target, self.targetname);
 		if(!self.vehicle_controller)
 		{
 			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			self.active = ACTIVE_ACTIVE;
 		}
 		else
 		{
@@ -1166,6 +1178,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 			}
 		}
 	}
+	else { self.active = ACTIVE_ACTIVE; }
 
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;
@@ -1233,7 +1246,9 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	VEH_ACTION(vehicle_id, VR_SETUP);
 
-	if(autocvar_g_vehicles_delayspawn)
+	if(self.active == ACTIVE_NOT)
+		self.nextthink = 0; // wait until activated
+	else if(autocvar_g_vehicles_delayspawn)
 		self.nextthink = time + self.respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 	else
 		self.nextthink = time + game_starttime;

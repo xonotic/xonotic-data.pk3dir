@@ -490,7 +490,8 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview)
+		WepSet weapons_stat = WepSet_GetFromStat();
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview || (autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))))
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1152,15 +1153,20 @@ void CSQC_UpdateView(float w, float h)
 
 	//else
 	{
-		if(gametype == MAPINFO_TYPE_FREEZETAG)
+		if(getstati(STAT_FROZEN))
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		else if (getstatf(STAT_HEALING_ORB)>time)
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+		if(!intermission)
+		if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 		{
-			if(getstati(STAT_FROZEN))
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-			if(getstatf(STAT_REVIVE_PROGRESS))
-			{
-				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-				drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
-			}
+			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(getstatf(STAT_REVIVE_PROGRESS))
+		{
+			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 		}
 
 		if(autocvar_r_letterbox == 0)
