@@ -342,6 +342,8 @@ void nade_translocate_boom()
 		return;
 
 	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
+	tracebox(locout, self.realowner.mins, self.realowner.maxs, locout, MOVE_NOMONSTERS, self.realowner);
+	locout = trace_endpos
 
 	makevectors(self.realowner.angles);
 
