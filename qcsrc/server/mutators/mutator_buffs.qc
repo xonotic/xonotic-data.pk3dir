@@ -456,7 +456,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 {
 	if(self.buffs & BUFF_JUMP)
-		player_jumpheight = max(autocvar_g_buffs_jump_height, player_jumpheight);
+		player_jumpheight = autocvar_g_buffs_jump_height;
+	self.stat_jumpheight = player_jumpheight;
 
 	return FALSE;
 }
@@ -550,11 +551,9 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_SPEED)
-	if(autocvar_g_buffs_speed_rate > 0)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
 		
 	if(time < self.buff_disability_time)
-	if(autocvar_g_buffs_disability_rate > 0)
 		weapon_rate *= autocvar_g_buffs_disability_rate;
 	
 	return FALSE;
@@ -579,11 +578,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.buffs = 0;
 		}
 	}
-
-	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
-		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
-	else if((self.buffs & BUFF_JUMP) && self.stat_jumpheight != autocvar_g_buffs_jump_height)
-		self.stat_jumpheight = autocvar_g_buffs_jump_height;
 		
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
@@ -608,11 +602,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.ammo_nails) { self.ammo_nails = 20; }
 			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
 		}
-		
-		if(self.oldbuffs & BUFF_JUMP)
-			self.stat_jumpheight = autocvar_sv_jumpvelocity;
-		else if(self.buffs & BUFF_JUMP)
-			self.stat_jumpheight = autocvar_g_buffs_jump_height;
 		
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
