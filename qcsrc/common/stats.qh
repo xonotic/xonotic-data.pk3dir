@@ -80,7 +80,7 @@ const float STAT_WEAPONS2               = 74;
 const float STAT_WEAPONS3               = 75;
 const float STAT_MONSTERS_TOTAL         = 76;
 const float STAT_MONSTERS_KILLED        = 77;
-const float STAT_BUFFS					= 78;
+const float STAT_BUFFS                  = 78;
 // 79 empty?
 // 80 empty?
 // 86 empty?
