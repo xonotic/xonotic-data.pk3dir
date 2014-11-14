@@ -111,7 +111,7 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 
-	if(e.freezetag_frozen)
+	if(e.frozen)
 		return FALSE;
 
 	// If neither player has ball then don't attack unless the ball is on the

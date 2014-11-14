@@ -193,7 +193,7 @@ void W_Arc_Beam_Think(void)
 		||
 		(!self.owner.BUTTON_ATCK /* FIXME(Samual): && !self.beam_bursting */)
 		||
-		self.owner.freezetag_frozen
+		self.owner.frozen
 	)
 	{
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }

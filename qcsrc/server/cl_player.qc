@@ -123,7 +123,7 @@ void player_anim (void)
 		else
 			deadbits = ANIMSTATE_DEAD2;
 	float animbits = deadbits;
-	if(self.freezetag_frozen)
+	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
@@ -284,7 +284,7 @@ void calculate_player_respawn_time()
 	else
 		self.respawn_countdown = -1; // do not count down
 
-	if(g_cts || autocvar_g_forced_respawn)
+	if(autocvar_g_forced_respawn)
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
 
@@ -522,7 +522,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
 
         // increment frag counter for used weapon type
         float w;
@@ -554,6 +553,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			return;
 
 		// when we get here, player actually dies
+
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
 		WaypointSprite_PlayerDead();

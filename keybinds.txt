@@ -58,6 +58,7 @@
 "dropweapon"                            "drop weapon"
 "+use"                                  "drop key / drop flag"
 "+button8"                              "drag object"
+"toggle chase_active"                   "3rd person view"
 ""                                      ""
 ""                                      "User defined"
 "+userbind 1"                           "$userbind1"

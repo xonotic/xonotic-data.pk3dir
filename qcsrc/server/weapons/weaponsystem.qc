@@ -14,6 +14,10 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
+	weapon_rate = t;
+	MUTATOR_CALLHOOK(WeaponRateFactor);
+	t = weapon_rate;
+
 	return t;
 }
 
@@ -631,7 +635,7 @@ float forbidWeaponUse()
 		return 1;
 	if(self.player_blocked)
 		return 1;
-	if(self.freezetag_frozen)
+	if(self.frozen)
 		return 1;
 	return 0;
 }
