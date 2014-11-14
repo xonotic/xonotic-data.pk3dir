@@ -1,7 +1,7 @@
 /*
 
-CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
-									vaporizer  porto
+CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   hook
+									minsta  porto
 									tuba
 
 NEW             rifle   hlac    minel                           seeker
@@ -18,28 +18,28 @@ weaponreplace lists.
 Entity:
 
 {
-"classname" "weapon_vortex"
+"classname" "weapon_nex"
 "new_toys" "rifle"
 }
--> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
+-> This will spawn as Rifle in this mutator ONLY, and as Nex otherwise.
 
 {
-"classname" "weapon_vortext"
-"new_toys" "vortex rifle"
+"classname" "weapon_nex"
+"new_toys" "nex rifle"
 }
--> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.
+-> This will spawn as either Nex or Rifle in this mutator ONLY, and as Nex otherwise.
 
 {
-"classname" "weapon_vortex"
-"new_toys" "vortex"
+"classname" "weapon_nex"
+"new_toys" "nex"
 }
--> This is always a Vortex.
+-> This is always a Nex.
 
 If the map specifies no "new_toys" argument
 
 There will be two default replacements selectable: "replace all" and "replace random".
-In "replace all" mode, e.g. Vortex will have the default replacement "rifle".
-In "replace random" mode, Vortex will have the default replacement "vortex rifle".
+In "replace all" mode, e.g. Nex will have the default replacement "rifle".
+In "replace random" mode, Nex will have the default replacement "nex rifle".
 
 This mutator's replacements run BEFORE regular weaponreplace!
 
@@ -87,7 +87,6 @@ float nt_IsNewToy(float w)
 		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
-		case WEP_SHOTGUN:
 			return TRUE;
 		default:
 			return FALSE;
@@ -101,8 +100,7 @@ string nt_GetFullReplacement(string w)
 		case "hagar": return "seeker";
 		case "rocketlauncher": return "minelayer";
 		case "uzi": return "hlac";
-		case "vortex": return "rifle";
-		case "shockwave": return "shotgun";
+		case "nex": return "rifle";
 		default: return string_null;
 	}
 }

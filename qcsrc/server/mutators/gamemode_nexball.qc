@@ -142,7 +142,7 @@ void GiveBall(entity plyr, entity ball)
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
-	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
+	weapon_action(WEP_PORTO, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO;
 	W_SwitchWeapon(WEP_PORTO);
 	self = ownr;
@@ -784,7 +784,7 @@ void W_Nexball_Attack2(void)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
-	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
+	W_SetupProjectileVelocity(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
 	missile.think = SUB_Remove;
@@ -855,7 +855,7 @@ float w_nexball_weapon(float req)
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_INIT)
+	else if(req == WR_PRECACHE)
 	{
 		precache_model("models/weapons/g_porto.md3");
 		precache_model("models/weapons/v_porto.md3");
@@ -867,7 +867,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		//weapon_setup(WEP_PORTO);
+		weapon_setup(WEP_PORTO);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
@@ -930,7 +930,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
+				weapon_action(WEP_PORTO, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -976,7 +976,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_GRENADE_LAUNCHER)
 		return TRUE;
 
 	return FALSE;
@@ -985,7 +985,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_GRENADE_LAUNCHER)
 		return TRUE;
 
 	return FALSE;
@@ -1011,7 +1011,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
 
-		W_Porto(WR_INIT); // abuse
+		w_porto(WR_PRECACHE); // abuse
 
 		// General settings
 		/*

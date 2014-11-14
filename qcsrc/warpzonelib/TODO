@@ -6,7 +6,7 @@ Weapon support:
 
 - laser: YES
 - shotgun: YES
-- machinegun: YES
+- uzi: YES
 - grenadelauncher: YES
 - electro: YES
 - crylink: YES
@@ -15,7 +15,7 @@ Weapon support:
 - rocketlauncher: YES (except for trail bug)
 - porto: YES (bwahahahaha)
 - hlac: YES
-- vaporizer: YES
+- minstanex: YES
 - rifle: YES
 - fireball: YES (BFG effect cannot work through warpzones by design, so it's not available through warpzones)
 - hook: YES

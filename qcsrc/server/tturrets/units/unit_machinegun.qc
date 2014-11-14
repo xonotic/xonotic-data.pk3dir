@@ -7,7 +7,7 @@ void turret_machinegun_attack()
 {
     fireBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
 
-    W_MachineGun_MuzzleFlash(); // WEAPONTODO
+    UziFlash();
     setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 }
 

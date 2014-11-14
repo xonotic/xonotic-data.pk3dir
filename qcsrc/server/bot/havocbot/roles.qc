@@ -98,10 +98,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if (head.ammo_rockets && player.ammo_rockets > self.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && player.ammo_cells > self.ammo_cells)
-						continue;
-
-					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
+					if (head.ammo_cells && player.ammo_cells > self.ammo_cells )
 						continue;
 
 					discard = FALSE;

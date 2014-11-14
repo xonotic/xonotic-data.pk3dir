@@ -343,6 +343,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		
 		switch(substring(argv(i), 0, 1))
 		{
+			#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
 			case "V":
 			{
 				un_version = s;

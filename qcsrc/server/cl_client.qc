@@ -417,11 +417,11 @@ void PutClientInServer (void)
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
-		if(WEP_CVAR(vortex, charge))
+		if(autocvar_g_balance_nex_charge)
 		{
-			if(WEP_CVAR_SEC(vortex, chargepool))
-				self.vortex_chargepool_ammo = 1;
-			self.vortex_charge = WEP_CVAR(vortex, charge_start);
+			if(autocvar_g_balance_nex_secondary_chargepool)
+				self.nex_chargepool_ammo = 1;
+			self.nex_charge = autocvar_g_balance_nex_charge_start;
 		}
 
 		if(warmup_stage)
@@ -430,7 +430,6 @@ void PutClientInServer (void)
 			self.ammo_nails = warmup_start_ammo_nails;
 			self.ammo_rockets = warmup_start_ammo_rockets;
 			self.ammo_cells = warmup_start_ammo_cells;
-			self.ammo_plasma = warmup_start_ammo_plasma;
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
@@ -442,7 +441,6 @@ void PutClientInServer (void)
 			self.ammo_nails = start_ammo_nails;
 			self.ammo_rockets = start_ammo_rockets;
 			self.ammo_cells = start_ammo_cells;
-			self.ammo_plasma = start_ammo_plasma;
 			self.ammo_fuel = start_ammo_fuel;
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
@@ -454,13 +452,13 @@ void PutClientInServer (void)
 		else
 			self.superweapons_finished = 0;
 
-		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
+		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				self.weapons &= ~WEPSET_BLASTER;
+				self.weapons &= ~WEPSET_LASER;
 			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_laser)
-				self.weapons |= WEPSET_BLASTER;
+				self.weapons |= WEPSET_LASER;
 		}
 
 		self.items = start_items;
@@ -565,13 +563,13 @@ void PutClientInServer (void)
 		// reset fields the weapons may use
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			weapon_action(j, WR_RESETPLAYER);
 
 			// all weapons must be fully loaded when we spawn
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.(weapon_load[j]) = e.reloading_ammo;
+				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
@@ -625,27 +623,30 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[3]));
-
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(electro_shotorigin[3]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[0]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[1]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[2]));
+	WriteInt24_t(MSG_ENTITY, compressShotOrigin(gauntlet_shotorigin[3]));
 	if(sv_foginterval && world.fog != "")
 		WriteString(MSG_ENTITY, world.fog);
 	else
 		WriteString(MSG_ENTITY, "");
 	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(MSG_ENTITY, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_grenadelauncher_bouncestop
+	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_grenadelauncher_bouncefactor
+	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_grenadelauncher_bouncestop
+	WriteByte(MSG_ENTITY, autocvar_g_balance_nex_secondary); // client has to know if it should zoom or not
+	WriteByte(MSG_ENTITY, autocvar_g_balance_rifle_secondary); // client has to know if it should zoom or not
 	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
+	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
+	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
-	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 
@@ -657,14 +658,14 @@ void ClientInit_CheckUpdate()
 		self.count = autocvar_g_balance_armor_blockpercent;
 		self.SendFlags |= 1;
 	}
-	if(self.bouncefactor != autocvar_g_balance_mortar_bouncefactor) // WEAPONTODO
+	if(self.bouncefactor != autocvar_g_balance_grenadelauncher_bouncefactor)
 	{
-		self.bouncefactor = autocvar_g_balance_mortar_bouncefactor;
+		self.bouncefactor = autocvar_g_balance_grenadelauncher_bouncefactor;
 		self.SendFlags |= 1;
 	}
-	if(self.bouncestop != autocvar_g_balance_mortar_bouncestop)
+	if(self.bouncestop != autocvar_g_balance_grenadelauncher_bouncestop)
 	{
-		self.bouncestop = autocvar_g_balance_mortar_bouncestop;
+		self.bouncestop = autocvar_g_balance_grenadelauncher_bouncestop;
 		self.SendFlags |= 1;
 	}
 	if(self.ebouncefactor != autocvar_g_balance_electro_secondary_bouncefactor)
@@ -1191,7 +1192,13 @@ void ClientConnect (void)
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	W_HitPlotOpen(self);
+	if(autocvar_g_hitplots || strstrofs(strcat(" ", autocvar_g_hitplots_individuals, " "), strcat(" ", self.netaddress, " "), 0) >= 0)
+	{
+		self.hitplotfh = fopen(strcat("hits-", matchid, "-", self.netaddress, "-", ftos(self.playerid), ".plot"), FILE_WRITE);
+		fputs(self.hitplotfh, strcat("#name ", self.netname, "\n"));
+	}
+	else
+		self.hitplotfh = -1;
 
 	if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
 		send_CSQC_teamnagger();
@@ -1231,7 +1238,11 @@ void ClientDisconnect (void)
 
 	CheatShutdownClient();
 
-	W_HitPlotClose(self);
+	if(self.hitplotfh >= 0)
+	{
+		fclose(self.hitplotfh);
+		self.hitplotfh = -1;
+	}
 
 	anticheat_report();
 	anticheat_shutdown();
@@ -1671,7 +1682,6 @@ void SpectateCopy(entity spectatee) {
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
-	self.ammo_plasma = spectatee.ammo_plasma;
 	self.ammo_shells = spectatee.ammo_shells;
 	self.ammo_nails = spectatee.ammo_nails;
 	self.ammo_rockets = spectatee.ammo_rockets;
@@ -1692,8 +1702,8 @@ void SpectateCopy(entity spectatee) {
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
-	self.vortex_charge = spectatee.vortex_charge;
-	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
+	self.nex_charge = spectatee.nex_charge;
+	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
@@ -2274,17 +2284,17 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge))
+			if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
 			{
-				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
 
-				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
+				if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
 				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
 				}
 			}
 			else
@@ -2367,10 +2377,7 @@ void PlayerPreThink (void)
 			do_crouch = 0;
 		if(self.frozen)
 			do_crouch = 0;
-
-		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
-		// It cannot be predicted by the engine! 
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		if(self.weapon == WEP_SHOTGUN && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2418,10 +2425,9 @@ void PlayerPreThink (void)
 
 		player_regen();
 
-		// WEAPONTODO: Add a weapon request for this 
 		// rot nex charge to the charge limit
-		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
-			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+		if(autocvar_g_balance_nex_charge_rot_rate && self.nex_charge > autocvar_g_balance_nex_charge_limit && self.nex_charge_rottime < time)
+			self.nex_charge = bound(autocvar_g_balance_nex_charge_limit, self.nex_charge - autocvar_g_balance_nex_charge_rot_rate * frametime / W_TICSPERFRAME, 1);
 
 		if(frametime)
 			player_anim();
@@ -2445,9 +2451,8 @@ void PlayerPreThink (void)
 		SpectatorThink();
 	}
 
-	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_NEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && autocvar_g_balance_rifle_secondary == 0));
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -2487,7 +2492,6 @@ void PlayerPreThink (void)
 
 	target_voicescript_next(self);
 
-	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
 	if(!self.weapon)
 		self.clip_load = self.clip_size = 0;

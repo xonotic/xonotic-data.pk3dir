@@ -146,7 +146,7 @@ float checkCompatibility_weaponarena_weapon(entity me)
 		return 0;
 	if(cvar_string("g_weaponarena") == "0")
 		return 0;
-	if(cvar_string("g_balance_blaster_weaponstart") == "0")
+	if(cvar_string("g_start_weapon_laser") == "0")
 		return 0;
 	return 1;
 }
@@ -263,9 +263,9 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_balance_blaster_weaponstart", "0", _("No start weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_balance_shotgun_weaponstart g_balance_machinegun_weaponstart g_balance_devastator_weaponstart g_balance_minelayer_weaponstart g_balance_electro_weaponstart g_balance_crylink_weaponstart g_balance_hagar_weaponstart g_balance_porto_weaponstart g_balance_vaporizer_weaponstart g_balance_hook_weaponstart g_balance_rifle_weaponstart g_balance_fireball_weaponstart g_balance_seeker_weaponstart g_balance_tuba_weaponstart g_balance_shockwave_weaponstart g_balance_arc_weaponstart g_balance_vortex_weaponstart g_balance_mortar_weaponstart");
+			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_porto g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_hlac g_start_weapon_rifle g_start_weapon_fireball g_start_weapon_seeker g_start_weapon_tuba");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));

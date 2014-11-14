@@ -95,4 +95,3 @@ void Net_ReadLightningarc()
     }
 
 }
-void Net_ReadArc() { Net_ReadLightningarc(); }

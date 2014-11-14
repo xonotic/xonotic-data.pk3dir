@@ -30,18 +30,17 @@ const float AS_FLOAT = 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_VORTEXBEAMPARTICLE = 103;
-const float TE_CSQC_ARC = 104;
+const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
+const float TE_CSQC_LIGHTNINGARC = 104;
 const float TE_CSQC_TEAMNAGGER = 105;
 const float TE_CSQC_PINGPLREPORT = 106;
 const float TE_CSQC_TARGET_MUSIC = 107;
 const float TE_CSQC_WEAPONCOMPLAIN = 108;
-const float TE_CSQC_VORTEX_SCOPE = 109;
+const float TE_CSQC_NEX_SCOPE = 109;
 const float TE_CSQC_MINELAYER_MAXMINES = 110;
 const float TE_CSQC_HAGAR_MAXROCKETS = 111;
 const float TE_CSQC_VEHICLESETUP = 112;
 const float TE_CSQC_SVNOTICE = 113;
-const float TE_CSQC_SHOCKWAVEPARTICLE = 114;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -86,7 +85,8 @@ const float ENT_CLIENT_WARPZONE = 24;
 const float ENT_CLIENT_WARPZONE_CAMERA = 25;
 const float ENT_CLIENT_TRIGGER_MUSIC = 26;
 const float ENT_CLIENT_HOOK = 27;
-const float ENT_CLIENT_ARC_BEAM = 29; // WEAPONTODO: fix numbers
+const float ENT_CLIENT_LGBEAM = 28;
+const float ENT_CLIENT_GAUNTLET = 29;
 const float ENT_CLIENT_ACCURACY = 30;
 const float ENT_CLIENT_SHOWNAMES = 31;
 const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
@@ -238,7 +238,7 @@ const float ATTEN_MAX = 3.984375;
 #define VOL_BASE 0.7
 #define VOL_BASEVOICE 1.0
 
-// WEAPONTODO: move this into separate/new projectile handling code // this sets sounds and other properties of the projectiles in csqc
+// this sets sounds and other properties of the projectiles in csqc
 const float PROJECTILE_ELECTRO = 1;
 const float PROJECTILE_ROCKET = 2;
 const float PROJECTILE_TAG = 3;
@@ -247,7 +247,7 @@ const float PROJECTILE_ELECTRO_BEAM = 6;
 const float PROJECTILE_GRENADE = 7;
 const float PROJECTILE_GRENADE_BOUNCING = 8;
 const float PROJECTILE_MINE = 9;
-const float PROJECTILE_BLASTER = 10;
+const float PROJECTILE_LASER = 10;
 const float PROJECTILE_HLAC = 11;
 const float PROJECTILE_SEEKER = 12;
 const float PROJECTILE_FLAC = 13;
@@ -292,6 +292,25 @@ const float WATERLEVEL_NONE = 0;
 const float WATERLEVEL_WETFEET = 1;
 const float WATERLEVEL_SWIMMING = 2;
 const float WATERLEVEL_SUBMERGED = 3;
+
+const float MAX_SHOT_DISTANCE = 32768;
+
+// weapon requests
+const float WR_SETUP = 1; // (SVQC) setup weapon data
+const float WR_THINK = 2; // (SVQC) logic to run every frame
+const float WR_CHECKAMMO1 = 3; // (SVQC) checks ammo for weapon
+const float WR_CHECKAMMO2 = 4; // (SVQC) checks ammo for weapon
+const float WR_AIM = 5; // (SVQC) runs bot aiming code for this weapon
+const float WR_PRECACHE = 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
+const float WR_SUICIDEMESSAGE = 7; // (SVQC) notification number for suicide message (may inspect w_deathtype for details)
+const float WR_KILLMESSAGE = 8; // (SVQC) notification number for kill message (may inspect w_deathtype for details)
+const float WR_RELOAD = 9; // (SVQC) does not need to do anything
+const float WR_RESETPLAYER = 10; // (SVQC) does not need to do anything
+const float WR_IMPACTEFFECT = 11; // (CSQC) impact effect
+const float WR_SWITCHABLE = 12; // (CSQC) impact effect
+const float WR_PLAYERDEATH = 13; // (SVQC) does not need to do anything
+const float WR_GONETHINK = 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
+
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
 #define SERVERFLAG_PLAYERSTATS 4

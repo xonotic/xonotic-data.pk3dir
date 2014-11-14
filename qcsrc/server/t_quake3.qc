@@ -8,12 +8,13 @@
 void spawnfunc_ammo_shells()         { spawnfunc_item_shells();         }
 
 // MG -> MG
+void spawnfunc_weapon_machinegun()   { spawnfunc_weapon_uzi();          }
 void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
 
 // GL -> Mortar
 void spawnfunc_ammo_grenades()       { spawnfunc_item_rockets();        }
 
-// LG -> Lightning
+// LG -> Electro
 void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
 void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 
@@ -21,13 +22,13 @@ void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
-// Rail -> Vortex
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_vortex();          }
-void spawnfunc_ammo_slugs()          { spawnfunc_item_plasma();          }
+// Rail -> Nex
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_nex();          }
+void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
 
 // BFG -> Crylink
 void spawnfunc_weapon_bfg()          { spawnfunc_weapon_crylink();      }
-void spawnfunc_ammo_bfg()            { spawnfunc_item_plasma();          }
+void spawnfunc_ammo_bfg()            { spawnfunc_item_cells();          }
 
 // RL -> RL
 void spawnfunc_ammo_rockets()        { spawnfunc_item_rockets();        }
@@ -71,11 +72,11 @@ void target_give_init()
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher") {
-			self.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
+			self.ammo_rockets += targ.count * autocvar_g_balance_rocketlauncher_ammo;
 			self.netname = "rocketlauncher";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
+			self.ammo_rockets += targ.count * autocvar_g_balance_hagar_primary_ammo;
 			if(self.netname == "")
 				self.netname = "hagar";
 			else
@@ -89,7 +90,7 @@ void target_give_init()
 				self.netname = strcat(self.netname, " crylink");
 		}
 		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_mortar_primary_ammo; // WEAPONTODO
+			self.ammo_rockets += targ.count * autocvar_g_balance_grenadelauncher_primary_ammo;
 			if(self.netname == "")
 				self.netname = "grenadelauncher";
 			else
