@@ -15,6 +15,7 @@ CLASS(Container) EXTENDS(Item)
 	METHOD(Container, moveItemAfter, void(entity, entity, entity))
 	METHOD(Container, removeItem, void(entity, entity))
 	METHOD(Container, setFocus, void(entity, entity))
+	METHOD(Container, saveFocus, void(entity))
 	METHOD(Container, setAlphaOf, void(entity, entity, float))
 	METHOD(Container, itemFromPoint, entity(entity, vector))
 	METHOD(Container, showNotify, void(entity))
@@ -24,6 +25,7 @@ CLASS(Container) EXTENDS(Item)
 	ATTRIB(Container, firstChild, entity, NULL)
 	ATTRIB(Container, lastChild, entity, NULL)
 	ATTRIB(Container, focusedChild, entity, NULL)
+	ATTRIB(Container, savedFocus, entity, NULL)
 	ATTRIB(Container, shown, float, 0)
 
 	METHOD(Container, enterSubitem, void(entity, entity))
@@ -346,23 +348,46 @@ void Container_removeItem(entity me, entity other)
 
 void Container_setFocus(entity me, entity other)
 {
-	if(other)
-		if (!me.focused)
-			error("Trying to set focus in a non-focused control!");
 	if(me.focusedChild == other)
 		return;
-	//print(etos(me), ": focus changes from ", etos(me.focusedChild), " to ", etos(other), "\n");
+
 	if(me.focusedChild)
 	{
 		me.focusedChild.focused = 0;
 		me.focusedChild.focusLeave(me.focusedChild);
+		me.focusedChild = NULL;
 	}
+
 	if(other)
 	{
-		other.focused = 1;
-		other.focusEnter(other);
+		if(!me.focused)
+			error("Trying to set focus in a non-focused control!");
+
+		if(me.savedFocus)
+		{
+			me.focusedChild = me.savedFocus;
+			me.savedFocus = NULL;
+			me.focusedChild.focused = 1;
+			me.focusedChild.focusEnter(me.focusedChild);
+
+			if(me.focusedChild.instanceOfContainer)
+				me.focusedChild.setFocus(me.focusedChild, me.focusedChild.savedFocus);
+		}
+		else
+		{
+			me.focusedChild = other;
+			me.focusedChild.focused = 1;
+			me.focusedChild.focusEnter(me.focusedChild);
+		}
 	}
-	me.focusedChild = other;
+}
+
+void Container_saveFocus(entity me)
+{
+	me.savedFocus = me.focusedChild;
+
+	if(me.focusedChild.instanceOfContainer)
+		me.focusedChild.saveFocus(me.focusedChild);
 }
 
 void Container_moveItemAfter(entity me, entity other, entity dest)
