@@ -111,6 +111,6 @@ float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shif
 		return 1;
 	}
 
-	return SUPER(XonoticDemoList).keyDown(me, scan, ascii, shift);
+	return SUPER(XonoticGametypeList).keyDown(me, scan, ascii, shift);
 }
 #endif
