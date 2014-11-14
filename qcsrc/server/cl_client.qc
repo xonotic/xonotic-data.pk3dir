@@ -138,6 +138,8 @@ void PutObserverInServer (void)
 	entity	spot;
     self.hud = HUD_NORMAL;
 
+	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
@@ -1233,6 +1235,8 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
+
+	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 
 	PlayerStats_AddGlobalInfo(self);
 
