@@ -13,7 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-void tdm_init();
 void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
@@ -83,7 +82,10 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
-		tdm_init();
+		fraglimit_override = autocvar_g_tdm_point_limit;
+		leadlimit_override = autocvar_g_tdm_point_leadlimit;
+		MUTATOR_ADD(gamemode_tdm);
+
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
