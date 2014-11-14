@@ -663,16 +663,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_freezetag)
-			error("Too few teams available for freeze tag\n");
 		else
-			error("Too few teams available for team deathmatch\n");
+			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -827,7 +819,7 @@ void SV_ChangeTeam(float _color)
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -837,7 +829,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
@@ -998,7 +990,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
+	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }
 
 // code from here on is just to support maps that don't have team entities
