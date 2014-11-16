@@ -79,10 +79,12 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 		get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
 		if(get_model_parameters_sex)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nSex: %s", get_model_parameters_sex));
+#if 0 // (nyov) disabling the display of these has been voted on
 		if(get_model_parameters_weight)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nWeight: %g kg", get_model_parameters_weight));
 		if(get_model_parameters_age)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nAge: %g", get_model_parameters_age));
+#endif
 		while(substring(get_model_parameters_desc, -1, 1) == "\n")
 			get_model_parameters_desc = substring(get_model_parameters_desc, 0, -2);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_DESC, get_model_parameters_desc);
