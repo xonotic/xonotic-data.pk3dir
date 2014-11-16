@@ -886,11 +886,11 @@ float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
 float autocvar_g_midair_shieldtime;
-#define autocvar_g_minstagib cvar("g_minstagib")
-float autocvar_g_minstagib_ammo_drop;
-float autocvar_g_minstagib_extralives;
-float autocvar_g_minstagib_speed_highspeed;
-float autocvar_g_minstagib_invis_alpha;
+#define autocvar_g_instagib cvar("g_instagib")
+float autocvar_g_instagib_ammo_drop;
+float autocvar_g_instagib_extralives;
+float autocvar_g_instagib_speed_highspeed;
+float autocvar_g_instagib_invis_alpha;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 

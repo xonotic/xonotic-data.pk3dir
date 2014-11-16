@@ -420,7 +420,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
-		BADCVAR("g_minstagib");
+		BADCVAR("g_instagib");
 		BADCVAR("g_new_toys");
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");

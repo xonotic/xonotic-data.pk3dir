@@ -102,7 +102,7 @@ void turret_plasma_std_init()
     self.firecheck_flags |= TFL_FIRECHECK_AFF;
 
     // Our fireing routine
-    if(g_minstagib)
+    if(g_instagib)
         self.turret_firefunc  = turret_plasma_minsta_attack;
     else
         self.turret_firefunc  = turret_plasma_attack;
