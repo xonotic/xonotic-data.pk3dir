@@ -29,7 +29,7 @@ string WeaponArenaString()
 	s = cvar_string("g_weaponarena");
 	if(s == "0")
 		return "";
-	if(s == "all")
+	if(s == "all" || s == "1")
 		return _("All Weapons Arena");
 	if(s == "most")
 		return _("Most Weapons Arena");
@@ -130,7 +130,7 @@ float checkCompatibility_newtoys(entity me)
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 1;
-	if(cvar_string("g_weaponarena") == "all")
+	if(cvar_string("g_weaponarena") == "all" || cvar_string("g_weaponarena") == "1")
 		return 1;
 	if(cvar_string("g_weaponarena") != "0")
 		return 0;
@@ -142,7 +142,7 @@ float checkCompatibility_weaponarena_weapon(entity me)
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 0;
-	if(cvar_string("g_weaponarena") == "all")
+	if(cvar_string("g_weaponarena") == "all" || cvar_string("g_weaponarena") == "1")
 		return 0;
 	if(cvar_string("g_weaponarena") == "0")
 		return 0;

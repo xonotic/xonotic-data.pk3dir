@@ -34,20 +34,24 @@ entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueSte
 }
 void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar)
 {
-	float v, vk, vp;
-	v = theValueMin;
-	vk = theValueStep;
+	float vp;
 	vp = theValueStep * 10;
 	while(fabs(vp) < fabs(theValueMax - theValueMin) / 40)
 		vp *= 10;
+
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
-	me.configureSliderValues(me, theValueMin, v, theValueMax, theValueStep, vk, vp);
+
 	if(theCvar)
 	{
+		// Prevent flickering of the slider button by initialising the
+		// slider out of bounds to hide the button before loading the cvar
+		me.configureSliderValues(me, theValueMin, theValueMin-theValueStep, theValueMax, theValueStep, theValueStep, vp);
 		me.cvarName = theCvar;
 		me.loadCvars(me);
 		me.tooltip = getZonedTooltipForIdentifier(theCvar);
 	}
+	else
+		me.configureSliderValues(me, theValueMin, theValueMin, theValueMax, theValueStep, theValueStep, vp);
 }
 void XonoticSlider_setValue(entity me, float val)
 {

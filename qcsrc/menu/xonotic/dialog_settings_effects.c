@@ -172,7 +172,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Fade corona according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects")));
 			makeMulti(e, "hud_powerup");
@@ -184,7 +183,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.4; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_particles", _("Particles")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_spawn_point_particles", _("Spawnpoint effects")));
 			makeMulti(e, "cl_spawn_event_particles");
@@ -195,6 +193,18 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticParticlesSlider());
 			setDependent(e, "cl_particles", 1, 1);
+		me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
+			setDependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawdecals_drawdistance"));
+			setDependent(e, "cl_decals", 1, 1);
+		me.TR(me);
+		me.TDempty(me, 0.2);
+	    me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
+	        setDependent(e, "cl_decals", 1, 1);
+	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_fadetime"));
+	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));

@@ -8,6 +8,7 @@ sys-post.qh
 Defs.qc
 ../dpdefs/keycodes.qc
 ../common/constants.qh
+../common/stats.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
@@ -17,6 +18,8 @@ Defs.qc
 ../common/playerstats.qh
 ../common/teams.qh
 ../common/util.qh
+../common/nades.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -118,6 +121,9 @@ noise.qc
 command/cl_cmd.qc
 
 ../common/monsters/monsters.qc
+
+../common/nades.qc
+../common/buffs.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

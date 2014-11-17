@@ -376,7 +376,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_field[hud_num_fields] = SP_PL;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			hud_field[hud_num_fields] = SP_KDRATIO;
-		} else if(str == "sum" || str == "diff" || str == "f-d") {
+		} else if(str == "sum" || str == "diff" || str == "k-d") {
 			hud_field[hud_num_fields] = SP_SUM;
 		} else if(str == "name" || str == "nick") {
 			hud_field[hud_num_fields] = SP_NAME;
@@ -1313,7 +1313,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
-	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
+	else if(autocvar_scoreboard_accuracy && spectatee_status == 0 && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, Team_ColorRGB(myteam), bg_size);
 		else
@@ -1349,7 +1349,7 @@ void HUD_DrawScoreboard()
 
 	// Print info string
 	float tl, fl, ll;
-	str = sprintf(_("playing on ^2%s^7"), shortmapname);
+	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
@@ -1407,6 +1407,7 @@ void HUD_DrawScoreboard()
 
 	// print information about respawn status
 	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	if(!intermission)
 	if(respawn_time)
 	{
 		if(respawn_time < 0)

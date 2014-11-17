@@ -2,6 +2,7 @@
 CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 23)
@@ -211,6 +212,11 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
 
 	me.mapListBox.refilter(me.mapListBox);
+}
+
+void XonoticServerCreateTab_gameTypeSelectNotify(entity me)
+{
+	me.setFocus(me, me.mapListBox);
 }
 
 #endif

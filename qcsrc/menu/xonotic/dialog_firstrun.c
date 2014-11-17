@@ -29,6 +29,12 @@ float CheckFirstRunButton(entity me)
 	return 0;
 }
 
+void firstRun_setLanguage(entity me)
+{
+	if(prvm_language != cvar_string("_menu_prvm_language"))
+		localcmd("\nprvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart\n");
+}
+
 void XonoticFirstRunDialog_fill(entity me)
 {
 	entity e;
@@ -69,7 +75,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeXonoticLanguageList());
 			e.name = "languageselector_firstrun";
-			e.doubleClickCommand = "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart";
+			e.setLanguage = firstRun_setLanguage;
 	me.TR(me);
 	me.TR(me);
 

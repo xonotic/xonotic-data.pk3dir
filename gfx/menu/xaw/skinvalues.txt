@@ -14,6 +14,7 @@ MARGIN_TOOLTIP                  '5 5 0'
 BORDER_TOOLTIP                  '1 1 0'
 FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
+COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
 AVOID_TOOLTIP                   '8 8 0'
 
@@ -62,6 +63,7 @@ ALPHA_BACKGROUND_INGAME         0
 ALPHA_DISABLED                  0.2
 ALPHA_BEHIND                    1
 ALPHA_TEXT                      0.7
+COLOR_TEXT                      '1 1 1'
 
 // item: button
 //   uses "button" images
@@ -164,7 +166,6 @@ ALPHAS_MAINMENU                 '1 1 1'
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
 // item: player model
 COLOR_MODELTITLE                '1 1 1'
@@ -198,6 +199,8 @@ COLOR_SERVERLIST_HIGHPING       '1 0 0'
 ALPHA_SERVERLIST_HIGHPING       0.2
 ALPHA_SERVERLIST_FAVORITE       0.8
 COLOR_SERVERLIST_FAVORITE       '1 1 1'
+ALPHA_SERVERLIST_CATEGORY       0.7
+COLOR_SERVERLIST_CATEGORY       '1 1 1'
 
 // item: server info
 COLOR_SERVERINFO_NAME           '1 1 1'
