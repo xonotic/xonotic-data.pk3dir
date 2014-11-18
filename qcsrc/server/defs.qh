@@ -20,7 +20,6 @@ float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_race_qualifying;
 float warmup_stage;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_superweapon;
@@ -584,7 +583,12 @@ float serverflags;
 
 .float player_blocked;
 
-.float freezetag_frozen;
+.float frozen; // for freeze attacks
+.float revive_progress;
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.entity iceblock;
+.entity frozen_by; // for ice fields
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.

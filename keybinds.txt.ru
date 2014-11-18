@@ -58,6 +58,7 @@
 "dropweapon"                            "бросить оружие"
 "+use"                                  "бросить ключ или флаг"
 "+button8"                              "drag object"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Определенно пользователем"
 "+userbind 1"                           "$userbind1"

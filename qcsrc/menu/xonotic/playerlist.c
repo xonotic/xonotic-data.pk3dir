@@ -108,7 +108,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 	else if(t == 4)
 		rgb = colormapPaletteColor(9, 0);
 	else
-		rgb = '1 1 1';
+		rgb = SKINCOLOR_TEXT;
 
 	s = me.getPlayerList(me, i, PLAYERPARM_NAME);
 	score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
