@@ -606,6 +606,27 @@ void Ent_Nagger()
 	warmup_stage = (nags & 16);
 }
 
+void Ent_EliminatedPlayers()
+{
+	float sf, i, j, b, f;
+
+	sf = ReadByte();
+	if(sf & 1)
+	{
+		for(j = 0; j < maxclients; ++j)
+			if(playerslots[j])
+				playerslots[j].eliminated = 1;
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			f = ReadByte();
+			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
+				if (!(f & b))
+					if(playerslots[j])
+						playerslots[j].eliminated = 0;
+		}
+	}
+}
+
 void Ent_RandomSeed()
 {
 	float s;
@@ -804,6 +825,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_RAINSNOW: Ent_RainOrSnow(); break;
 		case ENT_CLIENT_LASER: Ent_Laser(); break;
 		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
+		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
 		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
 		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
 		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;

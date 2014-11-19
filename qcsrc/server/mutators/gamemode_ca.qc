@@ -143,9 +143,40 @@ float CA_CheckTeams()
 	return 0;
 }
 
+float EliminatedPlayers_SendEntity(entity to, float sendflags)
+{
+	float i, f, b;
+	entity e;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sendflags);
+
+	if(sendflags & 1)
+	{
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+			{
+				if(e.caplayer == 0.5 || (e.caplayer == 1 && (e.deadflag != DEAD_NO || e.frags == FRAGS_LMS_LOSER)))
+					f |= b;
+			}
+			WriteByte(MSG_ENTITY, f);
+		}
+	}
+
+	return TRUE;
+}
+
+void EliminatedPlayers_Init()
+{
+	Net_LinkEntity(eliminatedPlayers = spawn(), FALSE, 0, EliminatedPlayers_SendEntity);
+}
+
+
 MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 {
 	self.caplayer = 1;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 	return 1;
 }
 
@@ -236,6 +267,8 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDies)
 	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
 		self.respawn_flags =  RESPAWN_SILENT;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 	return 1;
 }
 
@@ -259,6 +292,8 @@ MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
 		self.caplayer = 0;
 	if(self.caplayer)
 		self.frags = FRAGS_LMS_LOSER;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 	return 1;
 }
 
@@ -345,6 +380,8 @@ void ca_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	EliminatedPlayers_Init();
 }
 
 MUTATOR_DEFINITION(gamemode_ca)

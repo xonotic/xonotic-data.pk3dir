@@ -541,6 +541,10 @@ string HUD_GetField(entity pl, float field)
 			{
 				hud_field_icon0 = "gfx/scoreboard/player_ready";
 			}
+			if(pl.eliminated)
+			{
+				hud_field_icon0 = "gfx/scoreboard/player_ready"; // TODO: different icon
+			}
 			else if(!teamplay)
 			{
 				f = stof(getplayerkeyvalue(pl.sv_entnum, "colors"));
