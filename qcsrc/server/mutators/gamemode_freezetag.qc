@@ -26,6 +26,8 @@ void freezetag_count_alive_players()
 		e.yellowalive_stat = yellowalive;
 		e.pinkalive_stat = pinkalive;
 	}
+
+	eliminatedPlayers.SendFlags |= 1;
 }
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
@@ -192,6 +194,13 @@ void freezetag_Unfreeze(entity attacker)
 	self.freezetag_frozen_timeout = 0;
 
 	Unfreeze(self);
+}
+
+float freezetag_isEliminated(entity e)
+{
+	if(e.frozen == 1 || e.deadflag != DEAD_NO)
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -544,6 +553,8 @@ void freezetag_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 
 MUTATOR_DEFINITION(gamemode_freezetag)
