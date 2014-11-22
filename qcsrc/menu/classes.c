@@ -35,6 +35,7 @@
 #include "xonotic/dialog_settings_effects.c"
 #include "xonotic/dialog_settings_audio.c"
 #include "xonotic/dialog_settings_user.c"
+#include "xonotic/dialog_settings_user_languagewarning.c"
 #include "xonotic/dialog_settings_misc.c"
 #include "xonotic/dialog_multiplayer.c"
 #include "xonotic/dialog_multiplayer_playersetup.c"
@@ -110,4 +111,5 @@
 #include "xonotic/dialog_hudpanel_weapons.c"
 #include "xonotic/dialog_hudpanel_physics.c"
 #include "xonotic/dialog_hudpanel_centerprint.c"
+#include "xonotic/dialog_hudpanel_buffs.c"
 #include "xonotic/slider_picmip.c"
