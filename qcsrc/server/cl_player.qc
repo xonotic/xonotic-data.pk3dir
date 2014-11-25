@@ -579,6 +579,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle_x, 90);
 			}
 		}
 		else
