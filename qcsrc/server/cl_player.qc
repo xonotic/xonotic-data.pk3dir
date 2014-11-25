@@ -573,9 +573,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 				// throw off bot aim temporarily
 				float shake;
-				shake = damage * 5 / (bound(0,skill,100) + 1);
-				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
-				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				if(IS_BOT_CLIENT(self) && self.health >= 1)
+				{
+					shake = damage * 5 / (bound(0,skill,100) + 1);
+					self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
+					self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				}
 			}
 		}
 		else
