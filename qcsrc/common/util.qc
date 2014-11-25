@@ -408,6 +408,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -2561,7 +2577,6 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 }
 
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2583,7 +2598,6 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

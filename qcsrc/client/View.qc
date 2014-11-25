@@ -164,7 +164,7 @@ vector GetCurrentFov(float fov)
 
 	makevectors(view_angles);
 
-	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type && autocvar_cl_velocityzoom_factor) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
@@ -183,7 +183,7 @@ vector GetCurrentFov(float fov)
 
 		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
 		avgspeed = avgspeed * (1 - velocityzoom) + (curspeed / autocvar_cl_velocityzoom_speed) * velocityzoom;
-		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
+		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom_factor / 1) * 1);
 
 		//print(ftos(avgspeed), " avgspeed, ", ftos(curspeed), " curspeed, ", ftos(velocityzoom), " return\n"); // for debugging
 	}
@@ -1199,7 +1199,18 @@ void CSQC_UpdateView(float w, float h)
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
-			if(autocvar_crosshair_hittest)
+			
+			if(
+				autocvar_crosshair_hittest
+				&&
+				(
+					autocvar_crosshair_hittest_blur
+					||
+					autocvar_crosshair_hittest_scale
+					||
+					autocvar_crosshair_hittest_showimpact
+				)
+			)
 			{
 				vector wcross_oldorigin;
 				wcross_oldorigin = wcross_origin;
@@ -1215,8 +1226,7 @@ void CSQC_UpdateView(float w, float h)
 				if(!autocvar_crosshair_hittest_showimpact)
 					wcross_origin = wcross_oldorigin;
 			}
-			else
-				shottype = SHOTTYPE_HITWORLD;
+			else { shottype = SHOTTYPE_HITWORLD; }
 
 			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
 			string wcross_wep = "", wcross_name;
@@ -1374,9 +1384,9 @@ void CSQC_UpdateView(float w, float h)
 			}
 
 			if(shottype == SHOTTYPE_HITENEMY)
-				wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+				wcross_scale *= autocvar_crosshair_hittest_scale; // is not queried if hittest is 0
 			if(shottype == SHOTTYPE_HITTEAM)
-				wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
+				wcross_scale /= autocvar_crosshair_hittest_scale; // is not queried if hittest is 0
 
 			f = fabs(autocvar_crosshair_effect_time);
 			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
