@@ -2122,6 +2122,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
