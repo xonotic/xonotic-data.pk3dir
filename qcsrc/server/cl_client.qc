@@ -503,6 +503,8 @@ void PutClientInServer (void)
 		self.angles = spot.angles;
 
 		self.angles_z = 0; // never spawn tilted even if the spot says to
+		if(IS_BOT_CLIENT(self))
+			self.v_angle = self.angles;
 		self.fixangle = TRUE; // turn this way immediately
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
