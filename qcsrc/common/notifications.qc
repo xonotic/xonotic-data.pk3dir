@@ -1041,7 +1041,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"0 = off, 1 = trigger subcalls"
+			"Enable this multiple notification"
 		);
 	}
 
@@ -1052,8 +1052,8 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY_CHOICE(
-			"0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
-			"0 = off, 1 = allowed in warmup mode, 2 = always allowed"
+			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
+			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
 		);
 	}
 
