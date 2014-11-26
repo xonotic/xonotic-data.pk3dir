@@ -1007,7 +1007,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
+			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
 	}
 
@@ -1018,7 +1018,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = print to console, "
+			"0 = off, 1 = print to console, "
 			"2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
 		);
 	}
@@ -1030,7 +1030,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = centerprint"
+			"0 = off, 1 = centerprint"
 		);
 	}
 
@@ -1041,7 +1041,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = trigger subcalls"
+			"0 = off, 1 = trigger subcalls"
 		);
 	}
 
@@ -1052,8 +1052,8 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY_CHOICE(
-			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
-			"Notification control cvar: 0 = off, 1 = allowed in warmup mode, 2 = always allowed"
+			"0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
+			"0 = off, 1 = allowed in warmup mode, 2 = always allowed"
 		);
 	}
 
