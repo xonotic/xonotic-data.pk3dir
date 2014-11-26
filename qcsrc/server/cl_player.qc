@@ -240,11 +240,18 @@ void player_setupanimsformodel()
 void player_anim (void)
 {
 	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag && !deadbits)
-		if(random() < 0.5)
-			deadbits = ANIMSTATE_DEAD1;
-		else
-			deadbits = ANIMSTATE_DEAD2;
+	if(self.deadflag) {
+		if (!deadbits) {
+			// Decide on which death animation to use.
+			if(random() < 0.5)
+				deadbits = ANIMSTATE_DEAD1;
+			else
+				deadbits = ANIMSTATE_DEAD2;
+		}
+	} else {
+		// Clear a previous death animation.
+		deadbits = 0;
+	}
 	float animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
