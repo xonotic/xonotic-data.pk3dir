@@ -1062,8 +1062,10 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	NOTIF_WRITE_HARDCODED(
 		"allow_chatboxprint", "1",
-		"Allow notifications to be printed to chat box by setting notification cvar to 2 "
-		"(You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)"
+		"Allow INFO notifications to be printed to chat box"
+		"0 = do not allow, "
+		"1 = allow only if allowed by individual notification_INFO* cvars, "
+		"2 = force all INFO notifications to be printed to the chatbox"
 	);
 
 	NOTIF_WRITE_HARDCODED(
