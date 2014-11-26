@@ -1007,7 +1007,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled)"
+			"Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
 	}
 
