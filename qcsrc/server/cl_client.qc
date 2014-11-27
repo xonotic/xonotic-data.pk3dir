@@ -2167,7 +2167,7 @@ void PlayerPreThink (void)
 
 	self.stat_game_starttime = game_starttime;
 	self.stat_round_starttime = round_starttime;
-	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
+	self.stat_allow_oldvortexbeam = autocvar_g_allow_oldvortexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
 	if(frametime)
