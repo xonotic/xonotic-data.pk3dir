@@ -99,8 +99,8 @@ string nt_GetFullReplacement(string w)
 	switch(w)
 	{
 		case "hagar": return "seeker";
-		case "rocketlauncher": return "minelayer";
-		case "uzi": return "hlac";
+		case "devastator": return "minelayer";
+		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
 		case "shotgun": return "shockwave";
 		default: return string_null;
