@@ -241,6 +241,7 @@ vector spritelookupcolor(string s, vector def)
 }
 string spritelookuptext(string s)
 {
+	if(substring(s, 0, 5) == "buff-") { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
 	switch(s)
 	{
 		case "as-push": return _("Push");
@@ -312,7 +313,7 @@ string spritelookuptext(string s)
 		case "item-shield": return _("Shield");
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
-		case "freezetag_frozen": return _("Frozen!");
+		case "frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
 		default: return s;

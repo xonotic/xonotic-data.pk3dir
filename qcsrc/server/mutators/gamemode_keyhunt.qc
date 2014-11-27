@@ -500,6 +500,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 		f = DistributeEvenly_Get(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
 		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		nades_GiveBonus(key.owner, autocvar_g_nades_bonus_score_high);
 	}
 
 	first = TRUE;

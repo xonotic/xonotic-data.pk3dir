@@ -46,6 +46,7 @@ ALPHA_BACKGROUND_INGAME         1
 ALPHA_DISABLED                  0.2
 ALPHA_BEHIND                    0.5
 ALPHA_TEXT                      0.7
+COLOR_TEXT                      '1 1 1'
 
 // mouse
 //   uses "cursor" images
@@ -67,6 +68,7 @@ MARGIN_TOOLTIP                  '8 8 0'
 BORDER_TOOLTIP                  '16 16 0'
 FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
+COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
 AVOID_TOOLTIP                   '8 8 0'
 
@@ -133,6 +135,8 @@ COLOR_SERVERLIST_HIGHPING       '1 0 0'
 ALPHA_SERVERLIST_HIGHPING       0.4
 ALPHA_SERVERLIST_FAVORITE       0.8
 COLOR_SERVERLIST_FAVORITE       '1 1 1'
+ALPHA_SERVERLIST_CATEGORY       0.7
+COLOR_SERVERLIST_CATEGORY       '1 1 1'
 
 // item: skin list
 COLOR_SKINLIST_TITLE            '1 1 1'
@@ -204,7 +208,6 @@ ALPHA_KEYGRABBER_KEYS           0.7
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
 // item: player name editor
 //   uses "charmap" images

@@ -441,6 +441,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	player.throw_prevtime = time;
 	player.throw_count = 0;
 
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
+
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((enemy_flag.team) ? APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_) : CENTER_CTF_CAPTURE_NEUTRAL));
 	ctf_CaptureRecord(enemy_flag, player);
@@ -501,6 +503,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+
+		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -583,6 +587,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
 		case PICKUP_BASE:
@@ -928,7 +933,8 @@ void ctf_FlagTouch()
 	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
 
 	// special touch behaviors
-	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	if(toucher.frozen) { return; }
+	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
