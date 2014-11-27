@@ -2440,7 +2440,7 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// WEAPONTODO: Add a weapon request for this 
-		// rot nex charge to the charge limit
+		// rot vortex charge to the charge limit
 		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
 			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 

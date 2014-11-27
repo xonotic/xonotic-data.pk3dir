@@ -955,7 +955,7 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
-	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/nex are hidden, no port-o-launch, no tuba
+	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
