@@ -826,7 +826,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			self = oldself;
 		}
 
-		if(!g_minstagib)
+		if(!g_instagib)
 		{
 			// apply strength multiplier
 			if (attacker.items & IT_STRENGTH)
