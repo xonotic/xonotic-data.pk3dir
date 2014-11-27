@@ -261,8 +261,8 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 			{
 				frag_target.armorvalue -= 1;
 				frag_damage = 0;
-				frag_target.hitsound += 1;
-				frag_attacker.hitsound += 1; // TODO: change this to a specific hitsound for armor hit
+				frag_target.damage_dealt += 1;
+				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
@@ -276,7 +276,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			frag_attacker.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_attacker.armorvalue);
-			frag_attacker.hitsound += 1;
+			frag_attacker.damage_dealt += 1;
 		}
 		frag_mirrordamage = 0;
 	}

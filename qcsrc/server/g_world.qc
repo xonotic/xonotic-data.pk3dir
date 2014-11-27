@@ -785,7 +785,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
 	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
-	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
@@ -2237,19 +2237,21 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
+		self.damage_dealt_total = 0;
+	
 		if(IS_SPEC(self))
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
-			else if(self.enemy.hitsound)
-				self.hit_time = time;
+			else if(self.enemy.damage_dealt)
+				self.damage_dealt_total = ceil(self.enemy.damage_dealt);
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
-			else if(self.hitsound)
-				self.hit_time = time;
+			else if(self.damage_dealt)
+				self.damage_dealt_total = ceil(self.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2260,10 +2262,12 @@ void EndFrame()
 	// needed!
 	FOR_EACH_CLIENT(self)
 	{
-		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
+		self.damage_dealt = 0;
 		antilag_record(self, altime);
 	}
+	FOR_EACH_MONSTER(self)
+		antilag_record(self, altime);
 }
 
 
