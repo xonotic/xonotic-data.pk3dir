@@ -1383,7 +1383,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");;
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1406,7 +1406,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");;
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1433,7 +1433,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam_heal");;
 				self.beam_hiteffect = particleeffectnum("healray_impact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1460,7 +1460,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");;
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
