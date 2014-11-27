@@ -265,8 +265,9 @@ float W_Shotgun(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			// melee does not use ammo
-			return TRUE;
+			if(WEP_CVAR(shotgun, secondary))
+				return TRUE; // melee does not use ammo
+			return FALSE; // secondary unavailable
 		}
 		case WR_CONFIG:
 		{
