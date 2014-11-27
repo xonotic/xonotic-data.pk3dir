@@ -438,10 +438,10 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 		break;
 	}
 
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
+
 	player.throw_prevtime = time;
 	player.throw_count = 0;
-
-	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
 
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((enemy_flag.team) ? APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_) : CENTER_CTF_CAPTURE_NEUTRAL));
@@ -915,6 +915,7 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(self.active != ACTIVE_ACTIVE) { return; }
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other, tmp_entity;
 	float is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
@@ -1069,27 +1070,9 @@ void ctf_Reset()
 void ctf_Use()
 {
 	if(self.ctf_status != FLAG_BASE) { return; }
-	
-	entity flag;
-	float flag_cnt = 0;
-	
-	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
-	{
-		if(flag != self)
-		if(SAME_TEAM(flag, self))
-		if(flag.active == ACTIVE_ACTIVE)
-			++flag_cnt;
-	}
-
-	if(self.active == ACTIVE_ACTIVE)
-	if(flag_cnt < 1)
-	{
-		dprint("ctf_Use: Unable to deactivate flag (not enough active flags on the map)\n");
-		return;
-	}
 
 	self.active = ((self.active) ? ACTIVE_NOT : ACTIVE_ACTIVE);
-	
+
 	if(self.active == ACTIVE_ACTIVE)
 		WaypointSprite_Ping(self.wps_flagbase);
 }
@@ -1151,6 +1134,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = TRUE;
 	flag.teleportable = TELEPORT_NORMAL;
+	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
@@ -2404,6 +2388,7 @@ Keys:
 void spawnfunc_item_flag_neutral()
 {
 	if(!g_ctf) { remove(self); return; }
+	if(!cvar("g_ctf_oneflag")) { remove(self); return; }
 
 	ctf_FlagSetup(0, self);
 }
