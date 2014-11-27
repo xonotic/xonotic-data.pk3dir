@@ -626,7 +626,7 @@ void Arc_Smoke()
 	}
 	
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time || 
-		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) )
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC )
 	{
 		self.arc_smoke_sound = 0;
 		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);

@@ -1405,7 +1405,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect grenade_explode
 notunderwater
 count 12
@@ -2272,7 +2272,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect rocket_explode
 notunderwater
 count 12
@@ -5500,7 +5500,7 @@ velocityjitter 250 250 150
 velocitymultiplier 0.2
 sizeincrease 100
 stretchfactor 7.6
-// derbis
+// debris
 effect spiderbot_minigun_impact
 notunderwater
 count 3
@@ -6248,7 +6248,7 @@ velocityoffset 0 0 370
 originjitter 160 160 160
 velocityjitter 924 924 924
 stretchfactor 0.7
-// derbis
+// debris
 effect explosion_big
 notunderwater
 count 16
@@ -8381,7 +8381,7 @@ airfriction 30
 originjitter 50 50 50
 velocityjitter 320 320 320
 rotate -180 180 -9 9
-// fire streched
+// fire stretched
 effect nade_blue_explode
 count 8
 type spark
@@ -8454,7 +8454,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect nade_blue_explode
 notunderwater
 count 12
@@ -8503,7 +8503,7 @@ airfriction 30
 originjitter 50 50 50
 velocityjitter 320 320 320
 rotate -180 180 -9 9
-// fire streched
+// fire stretched
 effect nade_red_explode
 count 8
 type spark
@@ -8576,7 +8576,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect nade_red_explode
 notunderwater
 count 8
@@ -8623,7 +8623,7 @@ airfriction 30
 originjitter 50 50 50
 velocityjitter 320 320 320
 rotate -180 180 -9 9
-// fire streched
+// fire stretched
 effect nade_yellow_explode
 count 8
 type spark
@@ -8696,7 +8696,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect nade_yellow_explode
 notunderwater
 count 8
@@ -8743,7 +8743,7 @@ airfriction 30
 originjitter 50 50 50
 velocityjitter 320 320 320
 rotate -180 180 -9 9
-// fire streched
+// fire stretched
 effect nade_pink_explode
 count 8
 type spark
@@ -8816,7 +8816,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect nade_pink_explode
 notunderwater
 count 8
@@ -8863,7 +8863,7 @@ airfriction 30
 originjitter 50 50 50
 velocityjitter 320 320 320
 rotate -180 180 -9 9
-// fire streched
+// fire stretched
 effect nade_explode
 count 8
 type spark
@@ -8936,7 +8936,7 @@ liquidfriction 0.8
 velocityoffset 0 0 80
 originjitter 16 16 16
 velocityjitter 424 424 624
-// derbis
+// debris
 effect nade_explode
 notunderwater
 count 8
