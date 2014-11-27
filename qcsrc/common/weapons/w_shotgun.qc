@@ -230,7 +230,8 @@ float W_Shotgun(float req)
 			}
 			if(self.clip_load >= 0) // we are not currently reloading
 			if(!self.crouch) // no crouchmelee please
-			if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary))
+			if(WEP_CVAR(shotgun, secondary))
+			if((self.BUTTON_ATCK && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || self.BUTTON_ATCK2)
 			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
