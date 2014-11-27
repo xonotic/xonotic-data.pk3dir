@@ -2027,7 +2027,7 @@ void Send_Notification(
 		#define RECURSE_FROM_CHOICE(ent,action) \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
-				switch(ent.msg_choice_choices[net_name]) \
+				switch(ent.msg_choice_choices[net_name - 1]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \

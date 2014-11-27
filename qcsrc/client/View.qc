@@ -374,9 +374,11 @@ entity nightvision_noise, nightvision_noise2;
 
 #define MAX_TIME_DIFF 5
 float pickup_crosshair_time, pickup_crosshair_size;
-float hit_time, typehit_time;
-float nextsound_hit_time, nextsound_typehit_time;
-float hitindication_crosshair_time, hitindication_crosshair_size;
+float hitsound_time_prev;
+float spectatee_status_prev; // for preventing hitsound when switching spectatee
+float damage_dealt_total, damage_dealt_total_prev;
+float typehit_time, typehit_time_prev;
+float hitindication_crosshair_size;
 float use_nex_chargepool;
 
 float myhealth, myhealth_prev;
@@ -1136,21 +1138,87 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	hit_time = getstatf(STAT_HIT_TIME);
-	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	// varying sound pitch
+	damage_dealt_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	
+	// detect overflow on server side
+	if (damage_dealt_total < damage_dealt_total_prev)
 	{
-		if(time - hit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
-
-		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+		dprint("resetting dmg total: ", ftos(damage_dealt_total), " prev: ", ftos(damage_dealt_total_prev), "\n");
+		damage_dealt_total_prev = 0;
 	}
-	typehit_time = getstatf(STAT_TYPEHIT_TIME);
-	if(typehit_time > nextsound_typehit_time)
-	{
-		if(time - typehit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTEN_NONE);
 
-		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
+	// prevent hitsound when switching spectatee
+	if (spectatee_status != spectatee_status_prev)
+	{
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	spectatee_status_prev = spectatee_status;
+
+	// amount of damage since last hit sound
+	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
+	
+
+	if (autocvar_cl_hitsound == 1)
+	{
+		if ( time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time )
+		if ( damage_dealt_total > 0 )
+		{
+			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
+			hitsound_time_prev = time;
+		}
+	}
+	else if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
+	{
+		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+		float a, b, c, x;
+		a = autocvar_cl_hitsound_max_pitch;
+		b = autocvar_cl_hitsound_min_pitch;
+		c = autocvar_cl_hitsound_nom_damage;
+		x = unaccounted_damage;
+		float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+		
+		// if sound variation is disabled, set pitch_shift to 1
+		if (autocvar_cl_hitsound == 1)
+		{
+			pitch_shift = 1;
+		}
+		
+		// if pitch shift is reversed, mirror in (max-min)/2 + min
+		if (autocvar_cl_hitsound == 3)
+		{
+			float mirror_value = (a-b)/2 + b;
+			pitch_shift = mirror_value + (mirror_value - pitch_shift);
+		}
+		
+		dprint("dmg total (dmg): ", ftos(damage_dealt_total), " (+", ftos(unaccounted_damage), "), pitch shift: ", ftos(pitch_shift), "\n");
+		
+		// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
+		// todo: normalize sound pressure levels? seems unnecessary
+		
+		// scale to fit function interface
+		float param_pitch_shift = pitch_shift * 100;
+		
+		// play sound
+		sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, param_pitch_shift, 0);
+		
+		// track damage accounted for
+		damage_dealt_total_prev = damage_dealt_total;
+
+		// remember when this sound was played to prevent sound spam
+		hitsound_time_prev = time;
+	}
+	else if (autocvar_cl_hitsound == 0)
+	{
+		// forget the damage to prevent hitsound when enabling it
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if(typehit_time - typehit_time_prev > autocvar_cl_hitsound_antispam_time)
+	{
+		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		typehit_time_prev = typehit_time;
 	}
 
 	//else
@@ -1350,16 +1418,14 @@ void CSQC_UpdateView(float w, float h)
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
 			}
 
+			// todo: make crosshair hit indication dependent on damage dealt
 			if(autocvar_crosshair_hitindication)
 			{
 				vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 
-				if(hitindication_crosshair_time < hit_time)
+				if(unaccounted_damage)
 				{
-					if(time - hit_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
-						hitindication_crosshair_size = 1;
-
-					hitindication_crosshair_time = hit_time;
+					hitindication_crosshair_size = 1;
 				}
 
 				if(hitindication_crosshair_size > 0)

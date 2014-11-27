@@ -4261,8 +4261,8 @@ msgid "Full item placement"
 msgstr "Вся зброя"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
-msgid "MinstaGib only"
-msgstr "Тільки MinstaGib"
+msgid "InstaGib only"
+msgstr "Тільки InstaGib"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:81
 msgid "Title:"
@@ -4313,8 +4313,8 @@ msgstr "Ухилення"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:254
-msgid "MinstaGib"
-msgstr "MinstaGib"
+msgid "InstaGib"
+msgstr "InstaGib"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
@@ -6197,7 +6197,7 @@ msgid "SLCAT^Overkill Mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:155
-msgid "SLCAT^MinstaGib Mode"
+msgid "SLCAT^InstaGib Mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:156
