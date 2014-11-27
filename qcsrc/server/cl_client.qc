@@ -462,10 +462,10 @@ void PutClientInServer (void)
 
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons &= ~WEPSET_BLASTER;
 			W_RandomWeapons(self, g_weaponarena_random);
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons |= WEPSET_BLASTER;
 		}
 

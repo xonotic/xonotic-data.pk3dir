@@ -115,7 +115,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_laser && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
+		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
 			// no exchange
 		}
