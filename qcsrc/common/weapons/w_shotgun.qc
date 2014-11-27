@@ -264,7 +264,7 @@ float W_Shotgun(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			// melee has infinite ammo
+			// melee does not use ammo
 			return TRUE;
 		}
 		case WR_CONFIG:
