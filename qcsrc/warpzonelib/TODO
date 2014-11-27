@@ -20,5 +20,5 @@ Weapon support:
 - fireball: YES (BFG effect cannot work through warpzones by design, so it's not available through warpzones)
 - hook: YES
 
-- shockwave: NO (needs confirming, blast effect does not pass through warpzones)
+- shockwave: NO (does not support warpzones currently)
 - tuba: NO (sound)
