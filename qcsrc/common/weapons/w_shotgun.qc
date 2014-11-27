@@ -193,6 +193,7 @@ void W_Shotgun_Attack2(void)
 
 float W_Shotgun(float req)
 {
+	float ammo_amount;
 	switch(req)
 	{
 		case WR_AIM:
@@ -256,9 +257,14 @@ float W_Shotgun(float req)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+			return ammo_amount;
+		}
 		case WR_CHECKAMMO2:
 		{
-			// shotgun has infinite ammo
+			// melee has infinite ammo
 			return TRUE;
 		}
 		case WR_CONFIG:
