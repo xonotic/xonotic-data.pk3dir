@@ -289,13 +289,13 @@ void Cmd_HUD_Help()
 
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
-"-teams,race,lms/kills +freezetag,tdm/kills -teams,lms/deaths +freezetag,tdm/deaths -teams,lms,race,ka/suicides +freezetag,tdm/suicides -race,dm,tdm,ka,freezetag/frags " /* tdm already has this in "score" */ \
+"-teams,race,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,race,ka/suicides +ft,tdm/suicides -race,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
 "?+race/laps ?+race/time ?+race/fastest " \
-"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals " \
-"-lms,race,nexball/score"
+"+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
+"-lms,race,nb/score"
 
 void Cmd_HUD_SetFields(float argc)
 {
