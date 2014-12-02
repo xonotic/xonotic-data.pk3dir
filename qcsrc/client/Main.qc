@@ -87,6 +87,9 @@ void CSQC_Init(void)
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default");
 
+	registercvar("cl_nade_type", "3");
+	registercvar("cl_pokenade_type", "zombie");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
@@ -110,6 +113,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
+	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	WaypointSprite_Load();
 
@@ -214,7 +218,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					printf(_("trying to switch to unsupported team %d\n"), Team);
+					dprintf("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -230,7 +234,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					printf(_("trying to switch to unsupported team %d\n"), Team);
+					dprintf("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -830,6 +834,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
+		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

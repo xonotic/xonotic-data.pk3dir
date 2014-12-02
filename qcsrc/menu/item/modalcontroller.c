@@ -87,6 +87,8 @@ void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrig
 		return;
 	if(button)
 		button.forcePressed = 1;
+	if(tab.parent.focusedChild)
+		tab.parent.focusedChild.saveFocus(tab.parent.focusedChild);
 	tab.ModalController_controllingButton = button;
 	tab.parent.showChild(tab.parent, tab, theOrigin, theSize, 0);
 }

@@ -7,6 +7,7 @@ CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
 	METHOD(XonoticGametypeList, setSelected, void(entity, float))
 	METHOD(XonoticGametypeList, loadCvars, void(entity))
 	METHOD(XonoticGametypeList, saveCvars, void(entity))
+	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float))
 
 	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticGametypeList, realUpperMargin1, float, 0)
@@ -83,9 +84,9 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s = GameType_GetName(i);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.5 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.5 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	//s = GameType_GetTeams(i);
-	//draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	//draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -100,5 +101,16 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.columnIconSize = me.itemAbsSize_y / me.itemAbsSize_x;
 	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize;
 	me.columnNameSize = 1 - me.columnIconSize - 2 * me.realFontSize_x;
+}
+
+float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shift)
+{
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		me.parent.gameTypeSelectNotify(me.parent);
+		return 1;
+	}
+
+	return SUPER(XonoticGametypeList).keyDown(me, scan, ascii, shift);
 }
 #endif

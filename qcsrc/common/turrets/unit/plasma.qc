@@ -19,7 +19,7 @@ float t_plasma(float req)
 	{
 		case TR_ATTACK:
 		{
-			if(g_minstagib)
+			if(g_instagib)
 			{
 				float flying;
 				flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
@@ -33,7 +33,7 @@ float t_plasma(float req)
 				vector v;
 				string s;
 				v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team));
+				s = strcat("TE_TEI_G3", ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
 				
 				WarpZone_TrailParticles(world, particleeffectnum(s), self.tur_shotorg, v);
 				
