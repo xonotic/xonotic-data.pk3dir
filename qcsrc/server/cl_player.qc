@@ -240,13 +240,20 @@ void player_setupanimsformodel()
 void player_anim (void)
 {
 	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag && !deadbits)
-		if(random() < 0.5)
-			deadbits = ANIMSTATE_DEAD1;
-		else
-			deadbits = ANIMSTATE_DEAD2;
+	if(self.deadflag) {
+		if (!deadbits) {
+			// Decide on which death animation to use.
+			if(random() < 0.5)
+				deadbits = ANIMSTATE_DEAD1;
+			else
+				deadbits = ANIMSTATE_DEAD2;
+		}
+	} else {
+		// Clear a previous death animation.
+		deadbits = 0;
+	}
 	float animbits = deadbits;
-	if(self.freezetag_frozen)
+	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
@@ -414,7 +421,7 @@ void calculate_player_respawn_time()
 	else
 		self.respawn_countdown = -1; // do not count down
 
-	if(g_cts || autocvar_g_forced_respawn)
+	if(autocvar_g_forced_respawn)
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
 
@@ -535,7 +542,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.health = self.health - take;
 			// pause regeneration for 5 seconds
 			if(take)
-                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
 			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 			{
@@ -570,12 +577,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
+			}
 
-				// throw off bot aim temporarily
-				float shake;
+			// throw off bot aim temporarily
+			float shake;
+			if(IS_BOT_CLIENT(self) && self.health >= 1)
+			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle_x, 90);
 			}
 		}
 		else
@@ -652,7 +663,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
 
         // increment frag counter for used weapon type
         float w;
@@ -673,15 +683,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		if(IS_REAL_CLIENT(self))
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
+		self.fixangle = TRUE;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
@@ -692,6 +694,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			return;
 
 		// when we get here, player actually dies
+
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
 		WaypointSprite_PlayerDead();
@@ -758,7 +763,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
 	entity head;
@@ -803,14 +808,19 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		namestr = source.netname;
 
+	if(strdecolorize(namestr) == namestr)
+		colorprefix = "^3";
+	else
+		colorprefix = "^7";
+
 	if(msgin != "")
 	{
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 			else
@@ -818,12 +828,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint

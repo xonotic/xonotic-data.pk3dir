@@ -58,6 +58,7 @@
 "dropweapon"                            "soltar arma"
 "+use"                                  "soltar llave / soltar bandera"
 "+button8"                              "drag object (FIXME)"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Definido por el usuario"
 "+userbind 1"                           "$userbind1"

@@ -528,7 +528,7 @@ void func_bobbing_controller_think()
 	vector v;
 	self.nextthink = time + 0.1;
 
-	if (!(self.owner.active == ACTIVE_ACTIVE))
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';
 		return;
@@ -745,7 +745,7 @@ void button_reset()
 
 void button_use()
 {
-	if (!(self.active == ACTIVE_ACTIVE))
+	if(self.active != ACTIVE_ACTIVE)
 		return;
 
 	self.enemy = activator;
@@ -788,7 +788,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 "speed"		override the default 40 speed
 "wait"		override the default 1 second wait (-1 = never return)
 "lip"		override the default 4 pixel lip remaining at end of move
-"health"	if set, the button must be killed instead of touched. If set to -1, the button will fire on ANY attack, even damageless ones like the MinstaGib laser
+"health"	if set, the button must be killed instead of touched. If set to -1, the button will fire on ANY attack, even damageless ones like the InstaGib laser
 "sounds"
 0) steam metal
 1) wooden clunk
@@ -1012,14 +1012,14 @@ float door_check_keys(void) {
 		// some keys were used
 		if (other.key_door_messagetime <= time) {
 			play2(other, "misc/talk.wav");
-			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 	} else {
 		// no keys were used
 		if (other.key_door_messagetime <= time) {
 			play2(other, "misc/talk.wav");
-			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 	}
@@ -1027,7 +1027,7 @@ float door_check_keys(void) {
 	if (door.itemkeys) {
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
-		centerprint(other, "Door unlocked!");
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 		return TRUE;
 	} else
 		return FALSE;
@@ -1940,7 +1940,7 @@ void func_fourier_controller_think()
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
-	if (!(self.owner.active == ACTIVE_ACTIVE))
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';
 		return;
@@ -2073,7 +2073,7 @@ void func_vectormamamam_controller_think()
 {
 	self.nextthink = time + 0.1;
 
-	if (!(self.owner.active == ACTIVE_ACTIVE))
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';
 		return;

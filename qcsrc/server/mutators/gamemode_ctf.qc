@@ -397,6 +397,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 
 	if (!player) { return; } // without someone to give the reward to, we can't possibly cap
 
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
+
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
@@ -457,6 +459,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+
+		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -518,6 +522,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
 		case PICKUP_BASE:
@@ -674,7 +679,7 @@ void ctf_FlagThink()
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
 		dprint("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
-		if(!trace_startsolid) // can we resize it without getting stuck?
+		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
@@ -809,7 +814,8 @@ void ctf_FlagTouch()
 	}
 
 	// special touch behaviors
-	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	if(toucher.frozen) { return; }
+	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
@@ -2203,7 +2209,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(VehicleEnter, ctf_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, ctf_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

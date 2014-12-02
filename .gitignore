@@ -6,4 +6,6 @@ qcsrc/menu/fteqcc.log
 qcsrc/server/fteqcc.log
 weapons.qc.tmp
 *.lno
-qcsrc/qccversion.*
+qcsrc/qccversion*
+qcsrc/server/precache-for-csqc.inc
+.DS_Store

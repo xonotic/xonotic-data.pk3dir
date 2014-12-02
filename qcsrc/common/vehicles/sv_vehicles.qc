@@ -926,7 +926,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.phase > time)
 		return;
 
-	if(pl.freezetag_frozen)
+	if(pl.frozen)
 		return;
 
 	if(pl.deadflag != DEAD_NO)

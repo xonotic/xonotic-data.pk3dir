@@ -301,8 +301,6 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_weaponarena)
 		return 0;
-	if (g_cts)
-		return 0;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return 0;
     if(w == 0)
@@ -330,6 +328,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
+	if(self.frozen)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
@@ -358,7 +358,7 @@ float forbidWeaponUse(entity player)
 		return 1;
 	if(player.player_blocked)
 		return 1;
-	if(player.freezetag_frozen)
+	if(player.frozen)
 		return 1;
 	return 0;
 }
