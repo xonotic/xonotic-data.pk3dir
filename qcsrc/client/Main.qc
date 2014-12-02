@@ -96,6 +96,8 @@ void CSQC_Init(void)
 	for(i = 0; i < MAX_HUD_FIELDS; ++i)
 		hud_title[i] = strzone("(null)");
 
+	Cmd_HUD_SetFields(0);
+
 	postinit = false;
 
 	calledhooks = 0;
@@ -316,8 +318,6 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
-
 	entity playerchecker;
 	playerchecker = spawn();
 	playerchecker.think = Playerchecker_Think;

@@ -304,6 +304,16 @@ void Cmd_HUD_SetFields(float argc)
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
 
+	if(!gametype)
+	{
+		// set up a temporary scoreboard layout
+		// no layout can be properly set up until score_info data haven't been received
+		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
+		ps_primary = 0;
+		scores_label[ps_primary] = strzone("score");
+		scores_flags[ps_primary] = SFL_ALLOW_HIDE;
+	}
+
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
 		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
