@@ -78,7 +78,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
-	if(cvar("g_balance_blast_weaponstart") == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
