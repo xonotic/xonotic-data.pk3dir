@@ -213,6 +213,9 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 
 void calculate_player_respawn_time()
 {
+	if(g_ca)
+		return;
+
 	float gametype_setting_tmp;
 	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
 	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
@@ -591,6 +594,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.flags &= ~FL_ONGROUND;
 		// dying animation
 		self.deadflag = DEAD_DYING;
+
 		// when to allow respawn
 		calculate_player_respawn_time();
 
