@@ -354,7 +354,6 @@ float next_pingtime;
 		_VOICEMSG(death) \
 		_VOICEMSG(drown) \
 		_VOICEMSG(fall) \
-		_VOICEMSG(fall) \
 		_VOICEMSG(falling) \
 		_VOICEMSG(gasp) \
 		_VOICEMSG(jump) \
