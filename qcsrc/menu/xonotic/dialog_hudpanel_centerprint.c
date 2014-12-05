@@ -26,7 +26,7 @@ void XonoticHUDCenterprintDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Fade time:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_centerprint_fadetime"));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_centerprint_fade_out"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_centerprint_flip", _("Flip messages order")));
