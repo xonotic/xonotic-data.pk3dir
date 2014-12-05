@@ -544,7 +544,6 @@ void PutClientInServer (void)
 		
 		self.spider_slowness = 0;
 
-		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 
 		if(self.killcount == -666) {
