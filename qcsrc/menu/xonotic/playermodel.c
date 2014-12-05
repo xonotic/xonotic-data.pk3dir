@@ -43,6 +43,8 @@ entity makeXonoticPlayerModelSelector()
 #define BUFMODELS_DESC 4
 #define BUFMODELS_COUNT 5
 
+#define XONVOTE186 1 // (nyov) removal of model text description
+
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {
 	float sortbuf, glob, i;
@@ -77,12 +79,19 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_MODEL, get_model_parameters_modelname);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_SKIN, ftos(get_model_parameters_modelskin));
 		get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
+#if XONVOTE186
+		if(get_model_parameters_sex)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\n%s", get_model_parameters_sex));
+#else
+		if(get_model_parameters_description)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\n%s\n", get_model_parameters_description));
 		if(get_model_parameters_sex)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nSex: %s", get_model_parameters_sex));
 		if(get_model_parameters_weight)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nWeight: %g kg", get_model_parameters_weight));
 		if(get_model_parameters_age)
 			get_model_parameters_desc = strcat(get_model_parameters_desc, sprintf("\nAge: %g", get_model_parameters_age));
+#endif
 		while(substring(get_model_parameters_desc, -1, 1) == "\n")
 			get_model_parameters_desc = substring(get_model_parameters_desc, 0, -2);
 		bufstr_set(me.bufModels, BUFMODELS_COUNT*i+BUFMODELS_DESC, get_model_parameters_desc);
@@ -184,7 +193,11 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	draw_beginBoldFont();
 
+#if XONVOTE186 // (nyov) lower name display looks better when there is no description text
+	draw_CenterText('0.5 0.8 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
+#else
 	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
+#endif
 
 	draw_endBoldFont();
 

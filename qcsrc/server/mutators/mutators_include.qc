@@ -12,6 +12,7 @@
 #include "gamemode_invasion.qc"
 #include "gamemode_race.qc"
 #include "gamemode_cts.qc"
+#include "gamemode_tdm.qc"
 
 #include "mutator_invincibleproj.qc"
 #include "mutator_new_toys.qc"
@@ -23,7 +24,7 @@
 #include "mutator_physical_items.qc"
 #include "sandbox.qc"
 #include "mutator_superspec.qc"
-#include "mutator_minstagib.qc"
+#include "mutator_instagib.qc"
 #include "mutator_touchexplode.qc"
 #include "mutator_pinata.qc"
 #include "mutator_midair.qc"

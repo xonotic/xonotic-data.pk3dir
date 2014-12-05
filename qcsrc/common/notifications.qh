@@ -248,9 +248,9 @@ void Send_Notification_WOCOVA(
 	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_20,             CH_INFO, "20kills",           VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_25,             CH_INFO, "25kills",           VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_30,             CH_INFO, "30kills",           VOL_BASEVOICE, ATTEN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_LASTSECOND,      CH_INFO, "lastsecond",        VOL_BASEVOICE, ATTEN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_NARROWLY,        CH_INFO, "narrowly",          VOL_BASEVOICE, ATTEN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_TERMINATED,      CH_INFO, "terminated",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_INSTAGIB_LASTSECOND,      CH_INFO, "lastsecond",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_INSTAGIB_NARROWLY,        CH_INFO, "narrowly",          VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_INSTAGIB_TERMINATED,      CH_INFO, "terminated",        VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(0, ANNCE_MULTIFRAG,                 CH_INFO, "multifrag",         VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(2, ANNCE_NUM_1,                     CH_INFO, "1",                 VOL_BASEVOICE, ATTEN_NONE) \
 	MSG_ANNCE_NOTIF(2, ANNCE_NUM_2,                     CH_INFO, "2",                 VOL_BASEVOICE, ATTEN_NONE) \
@@ -492,7 +492,9 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") \
-	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon"), "") \
+	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "") \
+	MSG_INFO_NOTIF(1, INFO_TEAMCHANGE_LARGERTEAM,          0, 0, "", "",                            "",                     _("^BGYou cannot change to a larger team"), "") \
+	MSG_INFO_NOTIF(1, INFO_TEAMCHANGE_NOTALLOWED,          0, 0, "", "",                            "",                     _("^BGYou are not allowed to change teams"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!"), "") \
@@ -637,6 +639,9 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,         1, 0, "s1",           NO_CPID,             "0 0", _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,      1, 0, "s1",           NO_CPID,             "0 0", _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,           0, 1, "",             CPID_IDLING,         "1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_LOCKED_NEED,            0, 0, "",             NO_CPID,             "0 0", _("^BGYou need %s^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_LOCKED_ALSONEED,        0, 0, "",             NO_CPID,             "0 0", _("^BGYou also need %s^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DOOR_UNLOCKED,               0, 0, "",             NO_CPID,             "0 0", _("^BGDoor unlocked!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_EXTRALIVES,             		0, 0, "",             NO_CPID,             "0 0", _("^F2You picked up some extra lives"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FREEZE,            1, 0, "s1",           NO_CPID,             "0 0", _("^K3You froze ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FROZEN,            1, 0, "s1",           NO_CPID,             "0 0", _("^K1You were frozen by ^BG%s"), "") \
@@ -691,6 +696,9 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have been lost"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You now have a superweapon"), "") \
@@ -1527,6 +1535,7 @@ void RegisterNotifications_First()
 	#endif
 
 	printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
+	#undef dedi
 
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)

@@ -152,7 +152,7 @@ float category_draw_count;
 	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Competitive Mode"))) \
 	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Modified Servers"))) \
 	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Overkill Mode"))) \
-	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  ZCTX(_("SLCAT^MinstaGib Mode"))) \
+	SLIST_CATEGORY(CAT_INSTAGIB,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^InstaGib Mode"))) \
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Defrag Mode")))
 
 #define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
@@ -361,8 +361,9 @@ float CheckCategoryForEntry(float entry)
 			// old servers which don't report their mod name are considered modified now
 			case "": { return CAT_MODIFIED; }
 			
-			case "xpm": { return CAT_XPM; } 
-			case "minstagib": { return CAT_MINSTAGIB; }
+			case "xpm": { return CAT_XPM; }
+			case "minstagib":
+			case "instagib": { return CAT_INSTAGIB; }
 			case "overkill": { return CAT_OVERKILL; }
 			//case "nix": { return CAT_NIX; }
 			//case "newtoys": { return CAT_NEWTOYS; }
@@ -1067,7 +1068,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	// list the mods here on which the pure server check actually works
 	if(modname != "Xonotic")
-	if(modname != "MinstaGib")
+	if(modname != "InstaGib" || modname != "MinstaGib")
 	if(modname != "CTS")
 	if(modname != "NIX")
 	if(modname != "NewToys")

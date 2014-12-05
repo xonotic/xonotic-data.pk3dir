@@ -75,7 +75,7 @@ void W_MinstaNex_Attack (void)
 			break;
 	}
 
-	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
+	W_DecreaseAmmo(ammo_cells, ((g_instagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
@@ -86,7 +86,7 @@ float w_minstanex(float req)
 	float minstanex_ammo;
 
 	// now multiple WR_s use this
-	minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
+	minstanex_ammo = ((g_instagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 
 	if (req == WR_AIM)
 	{
@@ -115,14 +115,14 @@ float w_minstanex(float req)
 			if (self.jump_interval <= time)
 			if (weapon_prepareattack(1, -1))
 			{
-				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
+				// handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
 				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
 
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
 
-				// ugly minstagib hack to reuse the fire mode of the laser
+				// ugly instagib hack to reuse the fire mode of the laser
 				float w;
 				w = self.weapon;
 				self.weapon = WEP_LASER;

@@ -5,13 +5,13 @@ Merlijn Hofstra
 Peter "Morphed" Pielak
 Samual "Ares" Lenks
 Tyler "-z-" Mulligan
+Zac "Mario" Jardine
 
 
 **Extended Team
 Debugger
 Jan "zykure" Behrens
 Łukasz "kuniu the frogg" Polek
-Mario
 Marvin "Mirio" Beck
 Matthias "matthiaskrgr" Krüger
 MrBougo
@@ -75,6 +75,7 @@ Samual "Ares" Lenks
 Rudolf "divVerent" Polzer
 Jakob "tZork" Markström Gröhn
 Rasmus "FruitieX" Eskola
+Zac "Mario" Jardine
 
 *Marketing / PR
 Tyler "-z-" Mulligan
@@ -114,6 +115,7 @@ Przemysław "atheros" Grzywacz
 Robert "ai" Kuroto
 The player with the unnecessarily long name
 Mattia "Melanosuchus" Basaglia
+TimePath
 
 
 **Translators

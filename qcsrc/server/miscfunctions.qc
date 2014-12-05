@@ -708,7 +708,7 @@ void readplayerstartcvars()
 	{
 		// forcibly turn off weaponarena
 	}
-	else if (s == "all")
+	else if (s == "all" || s == "1")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
@@ -929,7 +929,7 @@ void readlevelcvars(void)
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
 
-	g_minstagib = cvar("g_minstagib");
+	g_instagib = cvar("g_instagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");

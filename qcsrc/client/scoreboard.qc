@@ -287,19 +287,15 @@ void Cmd_HUD_Help()
 	        "other gamemodes except DM.\n"));
 }
 
-string HUD_DefaultColumnLayout()
-{
-	return strcat( // fteqcc sucks
-		"ping pl name | ",
-		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
-		"+tdm/kills +tdm/deaths +tdm/suicides ",
-		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
-		"+lms/lives +lms/rank ",
-		"+kh/caps +kh/pushes +kh/destroyed ",
-		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals ",
-		"-lms,race,nexball/score");
-}
+#define HUD_DefaultColumnLayout() \
+"ping pl name | " \
+"-teams,race,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,race,ka/suicides +ft,tdm/suicides -race,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"+lms/lives +lms/rank " \
+"+kh/caps +kh/pushes +kh/destroyed " \
+"?+race/laps ?+race/time ?+race/fastest " \
+"+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
+"-lms,race,nb/score"
 
 void Cmd_HUD_SetFields(float argc)
 {
@@ -307,6 +303,16 @@ void Cmd_HUD_SetFields(float argc)
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
+
+	if(!gametype)
+	{
+		// set up a temporary scoreboard layout
+		// no layout can be properly set up until score_info data haven't been received
+		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
+		ps_primary = 0;
+		scores_label[ps_primary] = strzone("score");
+		scores_flags[ps_primary] = SFL_ALLOW_HIDE;
+	}
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
@@ -971,7 +977,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
 	float weapon_width = sbwidth / weapon_cnt;
-	float g_minstagib = 0;
+	float g_instagib = 0;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
@@ -1005,7 +1011,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		pos_x += weapon_width / 2;
 
 	if(switchweapon == WEP_MINSTANEX)
-		g_minstagib = 1; // TODO: real detection for minstagib?
+		g_instagib = 1; // TODO: real detection for instagib?
 
 	float weapon_stats;
 	if(autocvar_scoreboard_accuracy_nocolors)
@@ -1018,7 +1024,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
+		if ((i == WEP_NEX && g_instagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
 			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 

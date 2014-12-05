@@ -46,7 +46,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.currentMapTitle = strzone(strdecolorize(MapInfo_Map_title));
 	me.currentMapAuthor = strzone(strdecolorize(MapInfo_Map_author));
 	me.currentMapDescription = strzone(MapInfo_Map_description);
-	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
+	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("InstaGib only"));
 	me.currentMapPreviewImage = strzone(strcat("/maps/", MapInfo_Map_bspname));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);

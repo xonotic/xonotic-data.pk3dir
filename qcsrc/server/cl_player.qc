@@ -240,11 +240,18 @@ void player_setupanimsformodel()
 void player_anim (void)
 {
 	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag && !deadbits)
-		if(random() < 0.5)
-			deadbits = ANIMSTATE_DEAD1;
-		else
-			deadbits = ANIMSTATE_DEAD2;
+	if(self.deadflag) {
+		if (!deadbits) {
+			// Decide on which death animation to use.
+			if(random() < 0.5)
+				deadbits = ANIMSTATE_DEAD1;
+			else
+				deadbits = ANIMSTATE_DEAD2;
+		}
+	} else {
+		// Clear a previous death animation.
+		deadbits = 0;
+	}
 	float animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
@@ -538,7 +545,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.health = self.health - take;
 			// pause regeneration for 5 seconds
 			if(take)
-                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
 			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 			{
@@ -573,12 +580,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
+			}
 
-				// throw off bot aim temporarily
-				float shake;
+			// throw off bot aim temporarily
+			float shake;
+			if(IS_BOT_CLIENT(self) && self.health >= 1)
+			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle_x, 90);
 			}
 		}
 		else

@@ -13,7 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-void tdm_init();
 void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
@@ -83,7 +82,10 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
-		tdm_init();
+		fraglimit_override = autocvar_g_tdm_point_limit;
+		leadlimit_override = autocvar_g_tdm_point_leadlimit;
+		MUTATOR_ADD(gamemode_tdm);
+
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
@@ -663,16 +665,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_freezetag)
-			error("Too few teams available for freeze tag\n");
 		else
-			error("Too few teams available for team deathmatch\n");
+			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -827,7 +821,7 @@ void SV_ChangeTeam(float _color)
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -837,7 +831,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
@@ -998,46 +992,5 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
-}
-
-// code from here on is just to support maps that don't have team entities
-void tdm_spawnteam (string teamname, float teamcolor)
-{
-	entity e;
-	e = spawn();
-	e.classname = "tdm_team";
-	e.netname = teamname;
-	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
-}
-
-// spawn some default teams if the map is not set up for tdm
-void tdm_spawnteams()
-{
-	float numteams;
-
-	numteams = autocvar_g_tdm_teams_override;
-	if(numteams < 2)
-		numteams = autocvar_g_tdm_teams;
-	numteams = bound(2, numteams, 4);
-
-	tdm_spawnteam("Red", NUM_TEAM_1-1);
-	tdm_spawnteam("Blue", NUM_TEAM_2-1);
-	if(numteams >= 3)
-		tdm_spawnteam("Yellow", NUM_TEAM_3-1);
-	if(numteams >= 4)
-		tdm_spawnteam("Pink", NUM_TEAM_4-1);
-}
-
-void tdm_delayedinit()
-{
-	// if no teams are found, spawn defaults
-	if (find(world, classname, "tdm_team") == world)
-		tdm_spawnteams();
-}
-
-void tdm_init()
-{
-	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
+	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }
