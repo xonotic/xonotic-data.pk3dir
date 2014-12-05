@@ -1,7 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticHUDCenterprintDialog) EXTENDS(XonoticRootDialog)
 	METHOD(XonoticHUDCenterprintDialog, fill, void(entity))
-	ATTRIB(XonoticHUDCenterprintDialog, title, string, _("Centerprint"))
+	ATTRIB(XonoticHUDCenterprintDialog, title, string, _("Centerprint Panel"))
 	ATTRIB(XonoticHUDCenterprintDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDCenterprintDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticHUDCenterprintDialog, rows, float, 15)
