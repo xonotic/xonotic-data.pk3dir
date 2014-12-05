@@ -253,7 +253,7 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
 }
 
 void W_CycleWeapon(string weaponorder, float dir)

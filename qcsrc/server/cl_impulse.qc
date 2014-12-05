@@ -108,7 +108,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					WEP_ACTION(self.weapon, WR_RELOAD);
+					if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
 					break;
 			}
 		}
