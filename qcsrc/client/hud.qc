@@ -4266,9 +4266,9 @@ void HUD_CenterPrint (void)
 		{
 			float r;
 			r = random();
-			if (r > 0.9)
+			if (r > 0.75)
 				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
-			else if (r > 0.8)
+			else if (r > 0.5)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
 				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
@@ -4360,7 +4360,8 @@ void HUD_CenterPrint (void)
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
-		if (a <= 0.5/255.0)  // Guaranteed invisible - don't show.
+		// while counting down show it anyway in order to hold the current message position
+		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
 		if (a > 1)
 			a = 1;
