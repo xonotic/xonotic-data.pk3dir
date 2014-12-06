@@ -66,8 +66,8 @@ string XonoticMutatorsDialog_toString(entity me)
 	s = "";
 	if(cvar("g_dodging"))
 		s = strcat(s, ", ", _("Dodging"));
-	if(cvar("g_minstagib"))
-		s = strcat(s, ", ", _("MinstaGib"));
+	if(cvar("g_instagib"))
+		s = strcat(s, ", ", _("InstaGib"));
 	if(cvar("g_new_toys"))
 		s = strcat(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
@@ -112,7 +112,7 @@ string XonoticMutatorsDialog_toString(entity me)
 
 float checkCompatibility_pinata(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar("g_nix"))
 		return 0;
@@ -126,7 +126,7 @@ float checkCompatibility_weaponstay(entity me)
 }
 float checkCompatibility_newtoys(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 1;
@@ -138,7 +138,7 @@ float checkCompatibility_newtoys(entity me)
 }
 float checkCompatibility_weaponarena_weapon(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 0;
@@ -172,12 +172,12 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_vampire", _("Vampire")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.6, s);
@@ -202,7 +202,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
@@ -210,7 +210,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
@@ -251,7 +251,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", "1", _("MinstaGib")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_instagib", "1", _("InstaGib")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);

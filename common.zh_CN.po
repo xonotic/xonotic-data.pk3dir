@@ -4198,7 +4198,7 @@ msgid "Full item placement"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
-msgid "MinstaGib only"
+msgid "InstaGib only"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:81
@@ -4250,7 +4250,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:254
-msgid "MinstaGib"
+msgid "InstaGib"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
@@ -6130,7 +6130,7 @@ msgid "SLCAT^Overkill Mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:155
-msgid "SLCAT^MinstaGib Mode"
+msgid "SLCAT^InstaGib Mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:156

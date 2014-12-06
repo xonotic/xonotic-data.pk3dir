@@ -1053,8 +1053,9 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+
 	flag.ctf_flagdamaged = 0;
-	
+
 	ctf_CheckStalemate();
 }
 

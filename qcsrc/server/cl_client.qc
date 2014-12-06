@@ -258,6 +258,7 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	self.event_damage = func_null;
 }
 
 .float model_randomizer;
@@ -503,6 +504,8 @@ void PutClientInServer (void)
 		self.angles = spot.angles;
 
 		self.angles_z = 0; // never spawn tilted even if the spot says to
+		if(IS_BOT_CLIENT(self))
+			self.v_angle = self.angles;
 		self.fixangle = TRUE; // turn this way immediately
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
@@ -781,8 +784,8 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
-	// in any case:
-	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+	if(IS_PLAYER(self))
+		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -1415,7 +1418,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if (!g_minstagib)
+	if (!g_instagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -1981,7 +1984,7 @@ float nJoinAllowed(entity ignore) {
 
 	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer == 1)
+		if(IS_PLAYER(e) || e.caplayer)
 			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
@@ -1995,7 +1998,10 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(IS_SPEC(self) || IS_OBSERVER(self)) {
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(!self.caplayer)
+	if(IS_REAL_CLIENT(self))
+	{
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(self);
