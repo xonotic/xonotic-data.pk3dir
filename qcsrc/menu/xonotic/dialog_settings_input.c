@@ -20,12 +20,15 @@ entity makeXonoticInputSettingsTab()
 void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
-	entity kb;
+	entity kb = makeXonoticKeyBinder();
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Key bindings:")));
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Key bindings:")));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Reset all"), '0 0 0'));
+			e.onClick = KeyBinder_Bind_Reset_All;
+			e.onClickEntity = kb;
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, kb = makeXonoticKeyBinder());
+		me.TD(me, me.rows - 4, 3, kb);
 	me.gotoRC(me, me.rows - 3, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
