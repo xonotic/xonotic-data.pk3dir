@@ -21,7 +21,7 @@ void Movetype_Physics_MatchServer(float sloppy);
 void Movetype_Physics_NoMatchServer();
 
 const float	MOVETYPE_NONE				= 0;
-const float	MOVETYPE_ANGLENOCLIP			= 1;
+const float	MOVETYPE_ANGLENOCLIP		= 1;
 const float	MOVETYPE_ANGLECLIP			= 2;
 const float	MOVETYPE_WALK				= 3;
 const float	MOVETYPE_STEP				= 4;
@@ -31,10 +31,15 @@ const float	MOVETYPE_PUSH				= 7;
 const float	MOVETYPE_NOCLIP				= 8;
 const float	MOVETYPE_FLYMISSILE			= 9;
 const float	MOVETYPE_BOUNCE				= 10;
-const float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
-const float MOVETYPE_FOLLOW = 12;
-const float MOVETYPE_FAKEPUSH = 13;
-const float MOVETYPE_FLY_WORLDONLY = 33;
+const float	MOVETYPE_BOUNCEMISSILE	    = 11;	// Like bounce but doesn't lose speed on bouncing
+const float MOVETYPE_FOLLOW             = 12;
+const float MOVETYPE_FAKEPUSH           = 13;
+const float MOVETYPE_FLY_WORLDONLY      = 33;
 
-const float   FL_ITEM                 = 256;
-const float	FL_ONGROUND				= 512;
+const float FL_ITEM                     = 256;
+const float	FL_ONGROUND                 = 512;
+
+const float MOVEFLAG_Q2AIRACCELERATE            = 1;
+const float MOVEFLAG_NOGRAVITYONGROUND          = 2;
+const float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+#define moveflags (getstati(STAT_MOVEFLAGS))
