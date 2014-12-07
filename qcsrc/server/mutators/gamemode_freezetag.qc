@@ -1,6 +1,5 @@
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
-.float freezetag_revive_progress;
 #define ICE_MAX_ALPHA 1
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
