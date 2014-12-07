@@ -119,7 +119,6 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-// TODO: cls.protocol == PROTOCOL_QUAKEWORLD ?
 // TODO: water prediction
 float pmove_waterjumptime; // weird engine flag we shouldn't really use but have to for now
 // TODO: move to a common header
@@ -609,10 +608,7 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 				neworigin2_z += s.mins_z;
 				neworigin3 = neworigin2;
 				neworigin3_z -= 34;
-//				if (cls.protocol == PROTOCOL_QUAKEWORLD)
-					tracebox(neworigin2, s.mins, s.maxs, neworigin3, MOVE_NORMAL, s);
-//				else
-//					traceline(neworigin2, neworigin3, MOVE_NORMAL, s);
+				traceline(neworigin2, neworigin3, MOVE_NORMAL, s);
 				if (trace_fraction == 1 && !trace_startsolid)
 					friction *= getstatf(STAT_MOVEVARS_EDGEFRICTION);
 			}
@@ -635,8 +631,6 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 			else
 				s.velocity_z -= gravity;
 		}
-//		if (cls.protocol == PROTOCOL_QUAKEWORLD)
-			s.velocity_z = 0;
 		if (vlen2(s.velocity))
 			CSQC_ClientMovement_Move(s);
 		if(!(moveflags & MOVEFLAG_NOGRAVITYONGROUND) || !(s.pmove_flags & PMF_ONGROUND))
