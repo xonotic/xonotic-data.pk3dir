@@ -119,7 +119,6 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-// TODO: replace cvar("cl_movement_"...) with getstatf(STAT_MOVEVARS_...)
 // TODO: cls.protocol == PROTOCOL_QUAKEWORLD ?
 // TODO: water prediction
 float pmove_waterjumptime; // weird engine flag we shouldn't really use but have to for now
@@ -335,9 +334,9 @@ void CSQC_ClientMovement_Move(entity s)
 			// may be a step or wall, try stepping up
 			// first move forward at a higher level
 			currentorigin2 = s.origin;
-			currentorigin2_z += cvar("cl_movement_stepheight");
+			currentorigin2_z += getstatf(STAT_MOVEVARS_STEPHEIGHT);
 			neworigin2 = neworigin;
-			neworigin2_z = s.origin_z + cvar("cl_movement_stepheight");
+			neworigin2_z = s.origin_z + getstatf(STAT_MOVEVARS_STEPHEIGHT);
 			tracebox(currentorigin2, s.mins, s.maxs, neworigin2, MOVE_NORMAL, s);
 			if (!trace_startsolid)
 			{
@@ -434,7 +433,7 @@ void CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(entity s, vector wishdir, flo
 	if(k <= 0)
 		return;
 
-	k *= bound(0, wishspeed / cvar("cl_movement_maxairspeed"), 1);
+	k *= bound(0, wishspeed / getstatf(STAT_MOVEVARS_MAXAIRSPEED), 1);
 
 	zspeed = s.velocity_z;
 	s.velocity_z = 0;
@@ -444,9 +443,9 @@ void CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(entity s, vector wishdir, flo
 	dot = dotproduct(s.velocity, wishdir);
 
 	if(dot > 0) { // we can't change direction while slowing down
-		k *= pow(dot, cvar("cl_movement_aircontrol_power"))*input_timelength;
-		speed = max(0, speed - cvar("cl_movement_aircontrol_penalty") * sqrt(max(0, 1 - dot*dot)) * k/32);
-		k *= cvar("cl_movement_aircontrol");
+		k *= pow(dot, getstatf(STAT_MOVEVARS_AIRCONTROL_POWER))*input_timelength;
+		speed = max(0, speed - getstatf(STAT_MOVEVARS_AIRCONTROL_PENALTY) * sqrt(max(0, 1 - dot*dot)) * k/32);
+		k *= getstatf(STAT_MOVEVARS_AIRCONTROL);
 		s.velocity = speed * s.velocity + k * wishdir;
 		s.velocity = normalize(s.velocity);
 	}
@@ -565,7 +564,7 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	{
 		if ((s.pmove_flags & PMF_ONGROUND) && ((s.pmove_flags & PMF_JUMP_HELD) == 0 || !cvar("cl_movement_track_canjump")))
 		{
-			s.velocity_z += cvar("cl_movement_jumpvelocity");
+			s.velocity_z += getstatf(STAT_MOVEVARS_JUMPVELOCITY);
 			s.pmove_flags &= ~PMF_ONGROUND;
 			s.pmove_flags |= PMF_JUMP_HELD; // canjump = false
 		}
@@ -588,7 +587,7 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	// check if onground
 	if ((s.pmove_flags & PMF_ONGROUND))
 	{
-		wishspeed = min(wishspeed, cvar("cl_movement_maxspeed"));
+		wishspeed = min(wishspeed, getstatf(STAT_MOVEVARS_MAXSPEED));
 		if (s.pmove_flags & PMF_DUCKED)
 			wishspeed *= 0.5;
 
@@ -596,8 +595,8 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 		f = sqrt(s.velocity_x * s.velocity_x + s.velocity_y * s.velocity_y);
 		if (f > 0)
 		{
-			friction = cvar("cl_movement_friction");
-			if (cvar("cl_movement_edgefriction") != 1)
+			friction = getstatf(STAT_MOVEVARS_FRICTION);
+			if (getstatf(STAT_MOVEVARS_EDGEFRICTION) != 1)
 			{
 				vector neworigin2;
 				vector neworigin3;
@@ -615,20 +614,20 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 //				else
 //					traceline(neworigin2, neworigin3, MOVE_NORMAL, s);
 				if (trace_fraction == 1 && !trace_startsolid)
-					friction *= cvar("cl_movement_edgefriction");
+					friction *= getstatf(STAT_MOVEVARS_EDGEFRICTION);
 			}
 			// apply ground friction
-			f = 1 - input_timelength * friction * ((f < cvar("cl_movement_stopspeed")) ? (cvar("cl_movement_stopspeed") / f) : 1);
+			f = 1 - input_timelength * friction * ((f < getstatf(STAT_MOVEVARS_STOPSPEED)) ? (getstatf(STAT_MOVEVARS_STOPSPEED) / f) : 1);
 			f = max(f, 0);
 			s.velocity *= f;
 		}
 		addspeed = wishspeed - dotproduct(s.velocity, wishdir);
 		if (addspeed > 0)
 		{
-			accelspeed = min(cvar("cl_movement_accelerate") * input_timelength * wishspeed, addspeed);
+			accelspeed = min(getstatf(STAT_MOVEVARS_ACCELERATE) * input_timelength * wishspeed, addspeed);
 			s.velocity += accelspeed * wishdir;
 		}
-		gravity = cvar("cl_movement_gravity") * cvar("cl_movement_entgravity") * input_timelength;
+		gravity = getstatf(STAT_MOVEVARS_GRAVITY) * getstatf(STAT_MOVEVARS_ENTGRAVITY) * input_timelength;
 		if(!(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
 		{
 			if(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
@@ -654,47 +653,47 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 			float accel, wishspeed0, wishspeed2, accelqw, strafity;
 			float accelerating;
 
-			accelqw = cvar("cl_movement_airaccel_qw");
+			accelqw = getstatf(STAT_MOVEVARS_AIRACCEL_QW);
 			wishspeed0 = wishspeed;
-			wishspeed = min(wishspeed, cvar("cl_movement_maxairspeed"));
+			wishspeed = min(wishspeed, getstatf(STAT_MOVEVARS_MAXAIRSPEED));
 			if (s.pmove_flags & PMF_DUCKED)
 				wishspeed *= 0.5;
-			accel = cvar("cl_movement_airaccelerate");
+			accel = getstatf(STAT_MOVEVARS_AIRACCELERATE);
 
 			accelerating = (dotproduct(s.velocity, wishdir) > 0);
 			wishspeed2 = wishspeed;
 
 			// CPM: air control
-			if(cvar("cl_movement_airstopaccelerate") != 0)
+			if(getstatf(STAT_MOVEVARS_AIRSTOPACCELERATE) != 0)
 			{
 				vector curdir;
 				curdir_x = s.velocity_x;
 				curdir_y = s.velocity_y;
 				curdir_z = 0;
 				curdir = normalize(curdir);
-				accel = accel + (cvar("cl_movement_airstopaccelerate") - accel) * max(0, -dotproduct(curdir, wishdir));
+				accel = accel + (getstatf(STAT_MOVEVARS_AIRSTOPACCELERATE) - accel) * max(0, -dotproduct(curdir, wishdir));
 			}
 			strafity = CSQC_IsMoveInDirection(input_movevalues_x, input_movevalues_y, -90) + CSQC_IsMoveInDirection(input_movevalues_x, input_movevalues_y, +90); // if one is nonzero, other is always zero
-			if(cvar("cl_movement_maxairstrafespeed"))
-				wishspeed = min(wishspeed, CSQC_GeomLerp(cvar("cl_movement_maxairspeed"), strafity, cvar("cl_movement_maxairstrafespeed")));
-			if(cvar("cl_movement_airstrafeaccelerate"))
-				accel = CSQC_GeomLerp(cvar("cl_movement_airaccelerate"), strafity, cvar("cl_movement_airstrafeaccelerate"));
-			if(cvar("cl_movement_airstrafeaccel_qw"))
+			if(getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED))
+				wishspeed = min(wishspeed, CSQC_GeomLerp(getstatf(STAT_MOVEVARS_MAXAIRSPEED), strafity, getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED)));
+			if(getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE))
+				accel = CSQC_GeomLerp(getstatf(STAT_MOVEVARS_AIRACCELERATE), strafity, getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE));
+			if(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))
 				accelqw =
-					(((strafity > 0.5 ? cvar("cl_movement_airstrafeaccel_qw") : cvar("cl_movement_airaccel_qw")) >= 0) ? +1 : -1)
+					(((strafity > 0.5 ? getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW) : getstatf(STAT_MOVEVARS_AIRACCEL_QW)) >= 0) ? +1 : -1)
 					*
-					(1 - CSQC_GeomLerp(1 - fabs(cvar("cl_movement_airaccel_qw")), strafity, 1 - fabs(cvar("cl_movement_airstrafeaccel_qw"))));
+					(1 - CSQC_GeomLerp(1 - fabs(getstatf(STAT_MOVEVARS_AIRACCEL_QW)), strafity, 1 - fabs(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))));
 			// !CPM
 
-//			if(cvar("cl_movement_warsowbunny_turnaccel") && accelerating && input_movevalues_y == 0 && input_movevalues_x != 0)
+//			if(getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL) && accelerating && input_movevalues_y == 0 && input_movevalues_x != 0)
 //				CSQC_ClientMovement_Physics_PM_AirAccelerate(s, wishdir, wishspeed2);
 //			else
-				CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed0, accel, accelqw, cvar("cl_movement_airaccel_qw_stretchfactor"), cvar("cl_movement_airaccel_sideways_friction") / cvar("cl_movement_maxairspeed"), cvar("cl_movement_airspeedlimit_nonqw"));
+				CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed0, accel, accelqw, getstatf(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR), getstatf(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION) / getstatf(STAT_MOVEVARS_MAXAIRSPEED), getstatf(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW));
 
-			if(cvar("cl_movement_aircontrol"))
+			if(getstatf(STAT_MOVEVARS_AIRCONTROL))
 				CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(s, wishdir, wishspeed2);
 		}
-		gravity = cvar("cl_movement_gravity") * cvar("cl_movement_entgravity") * input_timelength;
+		gravity = getstatf(STAT_MOVEVARS_GRAVITY) * getstatf(STAT_MOVEVARS_ENTGRAVITY) * input_timelength;
 		if(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 			s.velocity_z -= gravity * 0.5;
 		else
