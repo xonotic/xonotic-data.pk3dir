@@ -21,6 +21,7 @@
  */
 
 var float autocvar_cl_movement_errorcompensation = 0;
+var float autocvar_cl_movement = 2; // testing purposes
 
 // engine stuff
 #define REFDEFFLAG_TELEPORTED 1
@@ -738,10 +739,10 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity s)
 
 void CSQCPlayer_Physics(void)
 {
-	switch(cvar("cl_movement")) {
-		case 2: CSQC_ClientMovement_PlayerMove_Frame(self); break;
+	switch(autocvar_cl_movement)
+	{
 		case 1: runstandardplayerphysics(self); break;
-		default: break;
+		case 2: CSQC_ClientMovement_PlayerMove_Frame(self); break;
 	}
 }
 #undef vlen2
