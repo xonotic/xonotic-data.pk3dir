@@ -124,59 +124,56 @@ void CSQCPlayer_SavePrediction()
 float pmove_waterjumptime; // weird engine flag we shouldn't really use but have to for now
 // TODO: move to a common header
 #define vlen2(v) dotproduct(v, v)
-void AngleVectors (vector angles, vector forward, vector right, vector up)
+vector _AngleVectors_forward, _AngleVectors_right, _AngleVectors_up;
+void _AngleVectors (vector _angles, vector _forward, vector _right, vector _up)
 {
 	float angle, sr, sp, sy, cr, cp, cy;
 
-	angle = angles_y * (M_PI*2 / 360);
+	angle = _angles_y * (M_PI*2 / 360);
 	sy = sin(angle);
 	cy = cos(angle);
-	angle = angles_x * (M_PI*2 / 360);
+	angle = _angles_x * (M_PI*2 / 360);
 	sp = sin(angle);
 	cp = cos(angle);
-	if (forward)
+
+	_forward_x = cp*cy;
+	_forward_y = cp*sy;
+	_forward_z = -sp;
+
+	if (angles_z)
 	{
-		forward_x = cp*cy;
-		forward_y = cp*sy;
-		forward_z = -sp;
+		angle = _angles_z * (M_PI*2 / 360);
+		sr = sin(angle);
+		cr = cos(angle);
+
+		_right_x = -1*(sr*sp*cy+cr*-sy);
+		_right_y = -1*(sr*sp*sy+cr*cy);
+		_right_z = -1*(sr*cp);
+
+		_up_x = (cr*sp*cy+-sr*-sy);
+		_up_y = (cr*sp*sy+-sr*cy);
+		_up_z = cr*cp;
 	}
-	if (right || up)
+	else
 	{
-		if (angles_z)
-		{
-			angle = angles_z * (M_PI*2 / 360);
-			sr = sin(angle);
-			cr = cos(angle);
-			if (right)
-			{
-				right_x = -1*(sr*sp*cy+cr*-sy);
-				right_y = -1*(sr*sp*sy+cr*cy);
-				right_z = -1*(sr*cp);
-			}
-			if (up)
-			{
-				up_x = (cr*sp*cy+-sr*-sy);
-				up_y = (cr*sp*sy+-sr*cy);
-				up_z = cr*cp;
-			}
-		}
-		else
-		{
-			if (right)
-			{
-				right_x = sy;
-				right_y = -cy;
-				right_z = 0;
-			}
-			if (up)
-			{
-				up_x = (sp*cy);
-				up_y = (sp*sy);
-				up_z = cp;
-			}
-		}
+		_right_x = sy;
+		_right_y = -cy;
+		_right_z = 0;
+
+		_up_x = (sp*cy);
+		_up_y = (sp*sy);
+		_up_z = cp;
 	}
+	_AngleVectors_forward = _forward;
+	_AngleVectors_right = _right;
+	_AngleVectors_up = _up;
 }
+#define AngleVectors(angles, forward, right, up) do { \
+	_AngleVectors(angles, forward, right, up); \
+	forward = _AngleVectors_forward; \
+	right = _AngleVectors_right; \
+	up = _AngleVectors_up; \
+} while(0)
 
 // TODO: move these elsewhere
 vector cl_playerstandmins = '-16 -16 -24';
