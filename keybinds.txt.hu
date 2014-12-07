@@ -58,6 +58,7 @@
 "dropweapon"                            "fegyver eldobás"
 "+use"                                  "zászló eldobás, kiszállás"
 "+button8"                              "drag object"
+"toggle chase_active"                   "3rd person view (FIXME)"
 ""                                      ""
 ""                                      "Felhasználói hozzárendelések"
 "+userbind 1"                           "$userbind1"

@@ -65,13 +65,13 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 
 	p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
 	if(p != "")
 	{
 		p = draw_TextShortenToWidth(p, me.columnPercentageSize, 0, me.realFontSize);
-		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, me.realFontSize))) * eX, p, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, me.realFontSize))) * eX, p, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	}
 }
 

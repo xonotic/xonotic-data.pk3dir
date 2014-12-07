@@ -60,7 +60,7 @@ float friend_needshelp(entity e)
 		return FALSE;
 	if(DIFF_TEAM(e, self) && e != self.monster_owner)
 		return FALSE;
-	if(e.freezetag_frozen)
+	if(e.frozen)
 		return FALSE;
 	if(!IS_PLAYER(e))
 		return ((e.flags & FL_MONSTER) && e.health < e.max_health);

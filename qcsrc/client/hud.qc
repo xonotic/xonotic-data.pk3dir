@@ -886,6 +886,54 @@ string GetAmmoPicture(float i)
 	}
 }
 
+void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
+{
+	
+	HUD_Panel_DrawProgressBar(
+		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		autocvar_hud_panel_ammo_progressbar_name, 
+		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color, 
+		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+}
+
+void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
+{
+	float theAlpha = 1, a, b;
+	vector nade_color, picpos, numpos;
+	
+	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
+	
+	a = getstatf(STAT_NADE_BONUS);
+	b = getstatf(STAT_NADE_BONUS_SCORE);
+	
+	if(autocvar_hud_panel_ammo_iconalign)
+	{
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
+	}
+	else
+	{
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
+	}
+
+	DrawNadeScoreBar(myPos, mySize, nade_color);
+
+	if(b > 0 || a > 0)
+	{
+		if(autocvar_hud_panel_ammo_text)
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		
+		if(draw_expanding)
+			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			
+		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	}
+}
+
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
 {
 	float a;
@@ -942,6 +990,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
+float nade_prevstatus;
+float nade_prevframe;
+float nade_statuschange_time;
 void HUD_Ammo(void)
 {
 	if(hud != HUD_NORMAL) return;
@@ -966,21 +1017,39 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	const float AMMO_COUNT = 4;
 	float rows = 0, columns, row, column;
+	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float draw_nades = (nade_cnt > 0 || nade_score > 0), nade_statuschange_elapsedtime;
+	float total_ammo_count;
+
 	vector ammo_size;
+	float AMMO_COUNT = 4;
 	if (autocvar_hud_panel_ammo_onlycurrent)
-		ammo_size = mySize;
+		total_ammo_count = 1;
 	else
+		total_ammo_count = AMMO_COUNT - 1; // fuel
+
+	if(draw_nades)
 	{
-		rows = mySize_y/mySize_x;
-		rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
-		//                               ^^^ ammo item aspect goes here
-
-		columns = ceil(AMMO_COUNT/rows);
-
-		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		++total_ammo_count;
+		if (nade_cnt != nade_prevframe)
+		{
+			nade_statuschange_time = time;
+			nade_prevstatus = nade_prevframe;
+			nade_prevframe = nade_cnt;
+		}
 	}
+	else
+		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
+
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
+	//                               ^^^ ammo item aspect goes here
+
+	columns = ceil((total_ammo_count)/rows);
+
+	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	
 
 	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -1001,6 +1070,9 @@ void HUD_Ammo(void)
 
 	float i, stat_items, currently_selected, infinite_ammo;
 	infinite_ammo = FALSE;
+
+	row = column = 0;
+
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
@@ -1021,13 +1093,19 @@ void HUD_Ammo(void)
 				}
 			}
 		}
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
 	}
 	else
 	{
 		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
-		row = column = 0;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
@@ -1038,6 +1116,15 @@ void HUD_Ammo(void)
 				column = column + 1;
 			}
 		}
+	}
+
+	if (draw_nades)
+	{
+		nade_statuschange_elapsedtime = time - nade_statuschange_time;
+
+		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
+
+		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
 	}
 
 	draw_endBoldFont();
@@ -1601,148 +1688,154 @@ void HUD_HealthArmor(void)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
-	if(icon != "")
+	if (icon == "")
+		return;
+
+	++notify_count;
+	--notify_index;
+
+	if (notify_index == -1)
+		notify_index = NOTIFY_MAX_ENTRIES-1;
+
+	// Free old strings
+	if (notify_attackers[notify_index])
+		strunzone(notify_attackers[notify_index]);
+
+	if (notify_victims[notify_index])
+		strunzone(notify_victims[notify_index]);
+
+	if (notify_icons[notify_index])
+		strunzone(notify_icons[notify_index]);
+
+	// Allocate new strings
+	if (victim != "")
 	{
-		--kn_index;
-		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		notify_times[kn_index] = time;
-
-		// icon
-		if(notify_icon[kn_index]) { strunzone(notify_icon[kn_index]); }
-		notify_icon[kn_index] = strzone(icon);
-
-		// attacker
-		if(notify_attackers[kn_index]) { strunzone(notify_attackers[kn_index]); }
-		notify_attackers[kn_index] = strzone(attacker);
-
-		// victim
-		if(notify_victims[kn_index]) { strunzone(notify_victims[kn_index]); }
-		notify_victims[kn_index] = strzone(victim);
+		notify_attackers[notify_index] = strzone(attacker);
+		notify_victims[notify_index] = strzone(victim);
 	}
+	else
+	{
+		// In case of a notification without a victim, the attacker
+		// is displayed on the victim's side. Instead of special
+		// treatment later on, we can simply switch them here.
+		notify_attackers[notify_index] = string_null;
+		notify_victims[notify_index] = strzone(attacker);
+	}
+
+	notify_icons[notify_index] = strzone(icon);
+	notify_times[notify_index] = time;
 }
 
 void HUD_Notify(void)
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_notify) return;
-	}
+	if (!autocvar__hud_configure)
+		if (!autocvar_hud_panel_notify)
+			return;
 
 	HUD_Panel_UpdateCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
 	HUD_Panel_DrawBg(1);
-	if(panel_bg_padding)
+
+	if (!autocvar__hud_configure)
+		if (notify_count == 0)
+			return;
+
+	vector pos, size;
+	pos  = panel_pos;
+	size = panel_size;
+
+	if (panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		pos  += '1 1 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float entries, height;
-	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
-	height = mySize_y/entries;
+	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
+	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	vector fontsize;
-	float fontheight = height * autocvar_hud_panel_notify_fontsize;
-	fontsize = '0.5 0.5 0' * fontheight;
+	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size_y / entry_count;
 
-	float a;
-	float when;
-	when = autocvar_hud_panel_notify_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_notify_fadetime;
+	float panel_width_half = size_x * 0.5;
+	float icon_width_half = entry_height * icon_aspect / 2;
+	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
 
-	vector pos_attacker, pos_victim, pos_icon;
-	float width_attacker;
+	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
+	vector icon_size = (eX * icon_aspect + eY) * entry_height;
+	vector icon_left = eX * (panel_width_half - icon_width_half);
+	vector attacker_right = eX * name_maxwidth;
+	vector victim_left = eX * (size_x - name_maxwidth);
+
+	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
+	float i, j, count, step, limit, alpha;
 
-	float i, j, step, limit;
-	if(autocvar_hud_panel_notify_flip) //order items from the top down
+	if (autocvar_hud_panel_notify_flip)
 	{
+		// Order items from the top down
 		i = 0;
 		step = +1;
-		limit = entries;
+		limit = entry_count;
 	}
-	else //order items from the bottom up
+	else
 	{
-		i = entries - 1;
+		// Order items from the bottom up
+		i = entry_count - 1;
 		step = -1;
 		limit = -1;
 	}
 
-	for(j = kn_index;  i != limit;  i += step, ++j)
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (step == +1)
-				a = i;
-			else // inverse order
-				a = entries - 1 - i;
-			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
-			a = bound(0, (when - a) / 4, 1);
-			goto hud_config_notifyprint;
+			attacker = sprintf(_("Player %d"), count + 1);
+			victim = sprintf(_("Player %d"), count + 2);
+			icon = strcat("weapon", get_weaponinfo(min(WEP_FIRST + count * 2, WEP_LAST)).netname);
+			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else
 		{
-			if (j == KN_MAX_ENTRIES)
+			if (j == NOTIFY_MAX_ENTRIES)
 				j = 0;
 
-			if(notify_times[j] + when > time)
-				a = 1;
-			else if(fadetime)
+			if (notify_times[j] + fade_start > time)
+				alpha = 1;
+			else if (fade_time != 0)
 			{
-				a = bound(0, (notify_times[j] + when + fadetime - time) / fadetime, 1);
-				if(!a)
-				{
+				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+				if (alpha == 0)
 					break;
-				}
 			}
 			else
-			{
 				break;
-			}
 
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
-			icon = notify_icon[j];
+			icon = notify_icons[j];
 		}
 
-		//type = notify_deathtype[j];
-		//w = DEATH_WEAPONOF(type);
-
-		if(icon != "")
+		if (icon != "" && victim != "")
 		{
-			if((attacker != "") && (victim == ""))
-			{
-				// Y [used by] X
-				attacker = textShortenToWidth(attacker, 0.73 * mySize_x - height, fontsize, stringwidth_colors);
-				pos_attacker = pos + eX * (0.27 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.25 * mySize_x - eX * height + eY * i * height;
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size_y));
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			}
-			else if((attacker != "") && (victim != ""))
-			{
-				// X [did action to] Y
-				attacker = textShortenToWidth(attacker, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(victim, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-:hud_config_notifyprint
-				width_attacker = stringwidth(attacker, TRUE, fontsize);
-				pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+			icon_pos = pos + icon_left + eY * i * entry_height;
+			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			victim = textShortenToWidth(victim, name_maxwidth, font_size, stringwidth_colors);
+			victim_pos = pos + victim_left + name_top;
+			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+
+			if (attacker != "")
+			{
+				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
 	}
+
+	notify_count = count;
 }
 
 // Timer (#5)
@@ -4365,6 +4458,66 @@ void HUD_CenterPrint (void)
 		reset_centerprint_messages();
 	}
 }
+
+// Buffs (#18)
+//
+void HUD_Buffs(void)
+{
+	float buffs = getstati(STAT_BUFFS, 0, 24);
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_buffs) return;
+		if(spectatee_status == -1) return;
+		if(getstati(STAT_HEALTH) <= 0) return;
+		if(!buffs) return;
+	}
+	else
+	{
+		buffs = Buff_Type_first.items; // force first buff
+	}
+	
+	float b = 0; // counter to tell other functions that we have buffs
+	entity e;
+	string s = "";
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		++b;
+		string o = strcat(rgb_to_hexcolor(Buff_Color(e.items)), Buff_PrettyName(e.items));
+		if(s == "")
+			s = o;
+		else
+			s = strcat(s, " ", o);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(bound(0, b, 1));
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	//float panel_ar = mySize_x/mySize_y;
+	//float is_vertical = (panel_ar < 1);
+	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
+	vector buff_offset = '0 0 0';
+	
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
+		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+	}
+
+	draw_endBoldFont();
+}
+
 
 /*
 ==================

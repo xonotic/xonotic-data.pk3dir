@@ -2,6 +2,7 @@
 CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
@@ -163,6 +164,11 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		default:                      GameType_ConfigureSliders(e, l, l2, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 	me.mapListBox.refilter(me.mapListBox);
+}
+
+void XonoticServerCreateTab_gameTypeSelectNotify(entity me)
+{
+	me.setFocus(me, me.mapListBox);
 }
 
 #endif

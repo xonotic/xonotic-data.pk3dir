@@ -549,6 +549,86 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if(targ.killcount) { targ.killcount = 0; }
 }
 
+void Ice_Think()
+{
+	if(!self.owner.frozen || self.owner.iceblock != self)
+	{
+		remove(self);
+		return;
+	}
+	setorigin(self, self.owner.origin - '0 0 16');
+	self.nextthink = time;
+}
+
+void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+{
+	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
+		return;
+
+	if(targ.frozen)
+		return;
+
+	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : start_health);
+
+	targ.frozen = frozen_type;
+	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
+	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
+	targ.revive_speed = freeze_time;
+
+	entity ice, head;
+	ice = spawn();
+	ice.owner = targ;
+	ice.classname = "ice";
+	ice.scale = targ.scale;
+	ice.think = Ice_Think;
+	ice.nextthink = time;
+	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	setmodel(ice, "models/ice/ice.md3");
+	ice.alpha = 1;
+	ice.colormod = Team_ColorRGB(targ.team);
+	ice.glowmod = ice.colormod;
+	targ.iceblock = ice;
+	targ.revival_time = 0;
+
+	entity oldself;
+	oldself = self;
+	self = ice;
+	Ice_Think();
+	self = oldself;
+
+	RemoveGrapplingHook(targ);
+
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
+
+	// add waypoint
+	if(show_waypoint)	
+		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+}
+
+void Unfreeze (entity targ)
+{
+	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
+		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+
+	entity head;
+	targ.frozen = 0;
+	targ.revive_progress = 0;
+	targ.revival_time = time;
+	
+	WaypointSprite_Kill(targ.waypointsprite_attached);
+	
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
+
+	// remove the ice block
+	if(targ.iceblock)
+		remove(targ.iceblock);
+	targ.iceblock = world;
+}
+
 // these are updated by each Damage call for use in button triggering and such
 entity damage_targ;
 entity damage_inflictor;
@@ -690,7 +770,63 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 
-		if (!g_minstagib)
+		if(targ.frozen)
+		if(deathtype != DEATH_HURTTRIGGER && deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_AUTOTEAMCHANGE)
+		{
+			if(autocvar_g_freezetag_revive_falldamage > 0)
+			if(deathtype == DEATH_FALL)
+			if(damage >= autocvar_g_freezetag_revive_falldamage)
+			{
+				Unfreeze(targ);
+				targ.health = autocvar_g_freezetag_revive_falldamage_health;
+				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+			}
+
+			damage = 0;
+			force *= autocvar_g_freezetag_frozen_force;
+		}
+		
+		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
+		{
+			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+		
+			entity oldself = self;
+			self = targ;
+			entity spot = SelectSpawnPoint (FALSE);
+			
+			if(spot)
+			{
+				damage = 0;
+				self.deadflag = DEAD_NO;
+
+				self.angles = spot.angles;
+				
+				self.effects = 0;
+				self.effects |= EF_TELEPORT_BIT;
+
+				self.angles_z = 0; // never spawn tilted even if the spot says to
+				self.fixangle = TRUE; // turn this way immediately
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.punchangle = '0 0 0';
+				self.punchvector = '0 0 0';
+				self.oldvelocity = self.velocity;
+				
+				self.spawnorigin = spot.origin;
+				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+				// don't reset back to last position, even if new position is stuck in solid
+				self.oldorigin = self.origin;
+				self.prevorigin = self.origin;
+				
+				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+			}
+			
+			self = oldself;
+		}
+
+		if(!g_instagib)
 		{
 			// apply strength multiplier
 			if (attacker.items & IT_STRENGTH)
@@ -713,12 +849,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 
 		if (targ == attacker)
-		{
-			if(g_cts && !autocvar_g_cts_selfdamage)
-				damage = 0;
-			else
-				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
-		}
+			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// count the damage
 		if(attacker)
@@ -743,7 +874,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
-								attacker.hitsound += 1;
+								attacker.damage_dealt += damage;
 						}
 
 						damage_goodhits += 1;
@@ -1200,24 +1331,24 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.freezetag_frozen)
+	if(e.frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.hitsound;
+	hi = e.fire_owner.damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.hitsound = hi;
+		e.fire_owner.damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = TRUE;
 
 	if (!IS_INDEPENDENT_PLAYER(e))
-	if(!e.freezetag_frozen)
+	if(!e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))

@@ -608,6 +608,12 @@ void vehicles_enter()
 
     if(self.phase > time)
         return;
+    if(other.frozen)
+        return;
+    if(other.vehicle)
+        return;
+    if(other.deadflag != DEAD_NO)
+        return;
 
     if(teamplay)
     if(self.team)
