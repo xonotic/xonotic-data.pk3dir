@@ -385,6 +385,20 @@ void CSQC_ClientMovement_Move(entity s)
 		s.velocity = primalvelocity;
 }
 
+float IsMoveInDirection(vector mv, float angle) // key mix factor
+{
+	if(mv_x == 0 && mv_y == 0)
+		return 0; // avoid division by zero
+	angle -= RAD2DEG * atan2(mv_y, mv_x);
+	angle = remainder(angle, 360) / 45;
+	if(angle >  1)
+		return 0;
+	if(angle < -1)
+		return 0;
+	return 1 - fabs(angle);
+}
+
+// TODO: remove this and use above function
 float CSQC_IsMoveInDirection(float forward, float side, float angle)
 {
 	// TODO: move to a common header
@@ -403,7 +417,7 @@ float CSQC_IsMoveInDirection(float forward, float side, float angle)
 	#undef ANGLEMOD
 }
 
-float CSQC_GeomLerp(float a, float lerp, float b)
+float GeomLerp(float a, float lerp, float b)
 {
 	if(a == 0)
 	{
@@ -424,39 +438,42 @@ float CSQC_GeomLerp(float a, float lerp, float b)
 
 void CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(entity s, vector wishdir, float wishspeed)
 {
-	float zspeed, speed, dot, k;
+	float zspeed, xyspeed, dot, k;
 
-	k = 32 * (2 * CSQC_IsMoveInDirection(input_movevalues_x, input_movevalues_y, 0) - 1);
+#if 0
+	// this doesn't play well with analog input
+	if(s.movement_x == 0 || s.movement_y != 0)
+		return; // can't control movement if not moving forward or backward
+	k = 32;
+#else
+	k = 32 * (2 * IsMoveInDirection(input_movevalues, 0) - 1);
 	if(k <= 0)
 		return;
+#endif
 
 	k *= bound(0, wishspeed / getstatf(STAT_MOVEVARS_MAXAIRSPEED), 1);
 
 	zspeed = s.velocity_z;
 	s.velocity_z = 0;
-	speed = vlen(s.velocity);
-	if (speed) s.velocity /= speed;
+	xyspeed = vlen(s.velocity); s.velocity = normalize(s.velocity);
 
-	dot = dotproduct(s.velocity, wishdir);
+	dot = s.velocity * wishdir;
 
-	if(dot > 0) { // we can't change direction while slowing down
+	if(dot > 0) // we can't change direction while slowing down
+	{
 		k *= pow(dot, getstatf(STAT_MOVEVARS_AIRCONTROL_POWER))*input_timelength;
-		speed = max(0, speed - getstatf(STAT_MOVEVARS_AIRCONTROL_PENALTY) * sqrt(max(0, 1 - dot*dot)) * k/32);
+		xyspeed = max(0, xyspeed - getstatf(STAT_MOVEVARS_AIRCONTROL_PENALTY) * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= getstatf(STAT_MOVEVARS_AIRCONTROL);
-		s.velocity = speed * s.velocity + k * wishdir;
-		s.velocity = normalize(s.velocity);
+		s.velocity = normalize(s.velocity * xyspeed + wishdir * k);
 	}
 
-	s.velocity *= speed;
+	s.velocity = s.velocity * xyspeed;
 	s.velocity_z = zspeed;
 }
 
 float CSQC_ClientMovement_Physics_AdjustAirAccelQW(float accelqw, float factor)
 {
-	return
-		(accelqw < 0 ? -1 : +1)
-		*
-		bound(0.000001, 1 - (1 - fabs(accelqw)) * factor, 1);
+	return copysign(bound(0.000001, 1 - (1 - fabs(accelqw)) * factor, 1), accelqw);
 }
 
 void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
@@ -707,14 +724,14 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 			}
 			strafity = CSQC_IsMoveInDirection(input_movevalues_x, input_movevalues_y, -90) + CSQC_IsMoveInDirection(input_movevalues_x, input_movevalues_y, +90); // if one is nonzero, other is always zero
 			if(getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED))
-				wishspeed = min(wishspeed, CSQC_GeomLerp(getstatf(STAT_MOVEVARS_MAXAIRSPEED), strafity, getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED)));
+				wishspeed = min(wishspeed, GeomLerp(getstatf(STAT_MOVEVARS_MAXAIRSPEED), strafity, getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED)));
 			if(getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE))
-				accel = CSQC_GeomLerp(getstatf(STAT_MOVEVARS_AIRACCELERATE), strafity, getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE));
+				accel = GeomLerp(getstatf(STAT_MOVEVARS_AIRACCELERATE), strafity, getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE));
 			if(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))
 				accelqw =
 					(((strafity > 0.5 ? getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW) : getstatf(STAT_MOVEVARS_AIRACCEL_QW)) >= 0) ? +1 : -1)
 					*
-					(1 - CSQC_GeomLerp(1 - fabs(getstatf(STAT_MOVEVARS_AIRACCEL_QW)), strafity, 1 - fabs(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))));
+					(1 - GeomLerp(1 - fabs(getstatf(STAT_MOVEVARS_AIRACCEL_QW)), strafity, 1 - fabs(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))));
 			// !CPM
 
 			if(getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL) && accelerating && input_movevalues_y == 0 && input_movevalues_x != 0)
