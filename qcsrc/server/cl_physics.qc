@@ -449,6 +449,15 @@ float PM_check_keepaway(void)
 	return (self.ballcarried && g_keepaway) ? autocvar_g_keepaway_ballcarrier_highspeed : 1;
 }
 
+void PM_check_race_movetime(void)
+{
+	self.race_movetime_frac += frametime;
+	float f = floor(self.race_movetime_frac);
+	self.race_movetime_frac -= f;
+	self.race_movetime_count += f;
+	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+}
+
 float PM_check_specialcommand(float buttons)
 {
 	string c;
@@ -504,8 +513,9 @@ void PM_check_nickspam(void)
 	}
 }
 
-float PM_check_punch(float f)
+void PM_check_punch()
 {
+	float f;
 	if (self.punchangle != '0 0 0')
 	{
 		f = vlen(self.punchangle) - 10 * frametime;
@@ -523,7 +533,6 @@ float PM_check_punch(float f)
 		else
 			self.punchvector = '0 0 0';
 	}
-	return f;
 }
 
 void PM_check_spider(void)
@@ -996,11 +1005,7 @@ void SV_PlayerPhysics(void)
         if(self.PlayerPhysplug())
             return;
 
-	self.race_movetime_frac += frametime;
-	float f = floor(self.race_movetime_frac);
-	self.race_movetime_frac -= f;
-	self.race_movetime_count += f;
-	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+	PM_check_race_movetime();
 
 	anticheat_physics();
 
@@ -1021,7 +1026,7 @@ void SV_PlayerPhysics(void)
 
 	PM_check_nickspam();
 
-	f = PM_check_punch(f);
+	PM_check_punch();
 
 	if (IS_BOT_CLIENT(self))
 	{
