@@ -1000,6 +1000,7 @@ void SV_PlayerPhysics(void)
 		self.stat_sv_airstrafeaccel_qw = 0;
 	self.stat_sv_airspeedlimit_nonqw = autocvar_sv_airspeedlimit_nonqw * maxspd_mod;
 	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspd_mod; // also slow walking
+	self.stat_movement_highspeed = autocvar_g_movement_highspeed;
 
     if(self.PlayerPhysplug)
         if(self.PlayerPhysplug())

@@ -251,7 +251,7 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 216 empty?
 // 217 empty?
 // 218 empty?
-// 219 empty?
+const float STAT_MOVEVARS_HIGHSPEED                     = 219;
 const float STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR     = 220;
 const float STAT_MOVEVARS_AIRCONTROL_PENALTY            = 221;
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW           = 222;

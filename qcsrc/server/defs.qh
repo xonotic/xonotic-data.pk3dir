@@ -452,6 +452,7 @@ float round_starttime; //point in time when the countdown to round start is over
 .float stat_sv_airstrafeaccel_qw;
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_maxspeed;
+.float stat_movement_highspeed;
 
 void W_Porto_Remove (entity p);
 
