@@ -980,8 +980,7 @@ string GetMapname(void);
 
 void SV_PlayerPhysics(void)
 {
-	float maxspd_mod, spd, buttons;
-	string temps;
+	float maxspd_mod, buttons;
 	float buttons_prev;
 	float not_allowed_to_move;
 
@@ -1112,17 +1111,6 @@ void SV_PlayerPhysics(void)
 			self.impulse = 0;
 		}
 		maxspd_mod *= self.spectatorspeed;
-	}
-
-	spd = max(self.stat_sv_maxspeed, autocvar_sv_maxairspeed) * maxspd_mod;
-	if(self.speed != spd)
-	{
-		self.speed = spd;
-		temps = ftos(spd);
-		stuffcmd(self, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
 	}
 
 	// if dead, behave differently
