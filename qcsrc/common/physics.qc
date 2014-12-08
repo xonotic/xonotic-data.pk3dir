@@ -194,11 +194,11 @@ void CSQC_ClientMovement_Unstick(entity s)
 	vector neworigin;
 	for (i = 0; i < unstick_count; i++)
 	{
-		neworigin = unstick_offsets[i] + s.origin;
+		neworigin = unstick_offsets[i] + self.origin;
 		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, s);
 		if (!trace_startsolid)
 		{
-			s.origin = neworigin;
+			self.origin = neworigin;
 			return;// true;
 		}
 	}
@@ -210,77 +210,77 @@ void CSQC_ClientMovement_UpdateStatus(entity s)
 	vector origin1, origin2;
 
 	// make sure player is not stuck
-	CSQC_ClientMovement_Unstick(s);
+	CSQC_ClientMovement_Unstick(self);
 
 	// set crouched
-	if (PHYS_INPUT_BUTTONS(s) & 16)
+	if (PHYS_INPUT_BUTTONS(self) & 16)
 	{
 		// wants to crouch, this always works..
-		if (!IS_DUCKED(s))
-			SET_DUCKED(s);
+		if (!IS_DUCKED(self))
+			SET_DUCKED(self);
 	}
 	else
 	{
 		// wants to stand, if currently crouching we need to check for a
 		// low ceiling first
-		if (IS_DUCKED(s))
+		if (IS_DUCKED(self))
 		{
-			tracebox(s.origin, PL_MIN, PL_MAX, s.origin, MOVE_NORMAL, s);
+			tracebox(self.origin, PL_MIN, PL_MAX, self.origin, MOVE_NORMAL, s);
 			if (!trace_startsolid)
-				UNSET_DUCKED(s);
+				UNSET_DUCKED(self);
 		}
 	}
-	if (IS_DUCKED(s))
+	if (IS_DUCKED(self))
 	{
-		s.mins = PL_CROUCH_MIN;
-		s.maxs = PL_CROUCH_MAX;
+		self.mins = PL_CROUCH_MIN;
+		self.maxs = PL_CROUCH_MAX;
 	}
 	else
 	{
-		s.mins = PL_MIN;
-		s.maxs = PL_MAX;
+		self.mins = PL_MIN;
+		self.maxs = PL_MAX;
 	}
 
 	// set onground
-	origin1 = s.origin;
+	origin1 = self.origin;
 	origin1_z += 1;
-	origin2 = s.origin;
+	origin2 = self.origin;
     origin2_z -= 1; // -2 causes clientside doublejump bug at above 150fps, raising that to 300fps :)
 
-	tracebox(origin1, s.mins, s.maxs, origin2, MOVE_NORMAL, s);
+	tracebox(origin1, self.mins, self.maxs, origin2, MOVE_NORMAL, s);
 	if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
 	{
-		SET_ONGROUND(s);
+		SET_ONGROUND(self);
 
 		// this code actually "predicts" an impact; so let's clip velocity first
-		f = dotproduct(s.velocity, trace_plane_normal);
+		f = dotproduct(self.velocity, trace_plane_normal);
 		if(f < 0) // only if moving downwards actually
-			s.velocity -= f * trace_plane_normal;
+			self.velocity -= f * trace_plane_normal;
 	}
 	else
-		UNSET_ONGROUND(s);
+		UNSET_ONGROUND(self);
 
 	// set watertype/waterlevel
-	origin1 = s.origin;
-	origin1_z += s.mins_z + 1;
-	s.waterlevel = WATERLEVEL_NONE;
+	origin1 = self.origin;
+	origin1_z += self.mins_z + 1;
+	self.waterlevel = WATERLEVEL_NONE;
 	// TODO: convert
-//	s.watertype = CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK;
-//	if (s.watertype)
+//	self.watertype = CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK;
+//	if (self.watertype)
 //	{
-//		s.waterlevel = WATERLEVEL_WETFEET;
-//		origin1[2] = s.origin[2] + (s.mins[2] + s.maxs[2]) * 0.5f;
+//		self.waterlevel = WATERLEVEL_WETFEET;
+//		origin1[2] = self.origin[2] + (self.mins[2] + self.maxs[2]) * 0.5f;
 //		if (CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK)
 //		{
-//			s.waterlevel = WATERLEVEL_SWIMMING;
-//			origin1[2] = s.origin[2] + 22;
+//			self.waterlevel = WATERLEVEL_SWIMMING;
+//			origin1[2] = self.origin[2] + 22;
 //			if (CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK)
-//				s.waterlevel = WATERLEVEL_SUBMERGED;
+//				self.waterlevel = WATERLEVEL_SUBMERGED;
 //		}
 //	}
 //
 //	// water jump prediction
-//	if (IS_ONGROUND(s) || s.velocity_z <= 0 || pmove_waterjumptime <= 0)
+//	if (IS_ONGROUND(self) || self.velocity_z <= 0 || pmove_waterjumptime <= 0)
 //		pmove_waterjumptime = 0;
 }
 
@@ -298,12 +298,12 @@ void CSQC_ClientMovement_Move(entity s)
 	vector old_trace1_plane_normal;
 	float old_trace2_fraction;
 	vector old_trace2_plane_normal;
-	CSQC_ClientMovement_UpdateStatus(s);
-	primalvelocity = s.velocity;
-	for (bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && VLEN2(s.velocity) > 0; bump++)
+	CSQC_ClientMovement_UpdateStatus(self);
+	primalvelocity = self.velocity;
+	for (bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && VLEN2(self.velocity) > 0; bump++)
 	{
-		neworigin = s.origin + t * s.velocity;
-		tracebox(s.origin, s.mins, s.maxs, neworigin, MOVE_NORMAL, s);
+		neworigin = self.origin + t * self.velocity;
+		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, s);
 		old_trace1_fraction = trace_fraction;
 		old_trace1_endpos = trace_endpos;
 		old_trace1_plane_normal = trace_plane_normal;
@@ -311,20 +311,20 @@ void CSQC_ClientMovement_Move(entity s)
 		{
 			// may be a step or wall, try stepping up
 			// first move forward at a higher level
-			currentorigin2 = s.origin;
+			currentorigin2 = self.origin;
 			currentorigin2_z += PHYS_STEPHEIGHT;
 			neworigin2 = neworigin;
-			neworigin2_z = s.origin_z + PHYS_STEPHEIGHT;
-			tracebox(currentorigin2, s.mins, s.maxs, neworigin2, MOVE_NORMAL, s);
+			neworigin2_z = self.origin_z + PHYS_STEPHEIGHT;
+			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, s);
 			if (!trace_startsolid)
 			{
 				// then move down from there
 				currentorigin2 = trace_endpos;
 				neworigin2 = trace_endpos;
-				neworigin2_z = s.origin_z;
+				neworigin2_z = self.origin_z;
 				old_trace2_fraction = trace_fraction;
 				old_trace2_plane_normal = trace_plane_normal;
-				tracebox(currentorigin2, s.mins, s.maxs, neworigin2, MOVE_NORMAL, s);
+				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, s);
 				//Con_Printf("%f %f %f %f : %f %f %f %f : %f %f %f %f\n", trace.fraction, trace.endpos[0], trace.endpos[1], trace.endpos[2], trace2.fraction, trace2.endpos[0], trace2.endpos[1], trace2.endpos[2], trace3.fraction, trace3.endpos[0], trace3.endpos[1], trace3.endpos[2]);
 				// accept the new trace if it made some progress
 				if (fabs(trace_endpos_x - old_trace1_endpos_x) >= 0.03125 || fabs(trace_endpos_y - old_trace1_endpos_y) >= 0.03125)
@@ -344,7 +344,7 @@ void CSQC_ClientMovement_Move(entity s)
 
 		// check if it moved at all
 		if (trace_fraction >= 0.001)
-			s.origin = trace_endpos;
+			self.origin = trace_endpos;
 
 		// check if it moved all the way
 		if (trace_fraction == 1)
@@ -355,50 +355,51 @@ void CSQC_ClientMovement_Move(entity s)
 		// this got commented out in a change that supposedly makes the code match QW better
 		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
 		if (trace_plane_normal_z > 0.7)
-			SET_ONGROUND(s);
+			SET_ONGROUND(self);
 
 		t -= t * trace_fraction;
 
-		f = dotproduct(s.velocity, trace_plane_normal);
-		s.velocity -= f * trace_plane_normal;
+		f = dotproduct(self.velocity, trace_plane_normal);
+		self.velocity -= f * trace_plane_normal;
 	}
 	if (pmove_waterjumptime > 0)
-		s.velocity = primalvelocity;
+		self.velocity = primalvelocity;
 }
 
-void CPM_PM_Aircontrol(entity s, vector wishdir, float wishspeed)
+void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
 	float zspeed, xyspeed, dot, k;
 
 #if 0
 	// this doesn't play well with analog input
-	if(s.movement_x == 0 || s.movement_y != 0)
+	if(self.movement_x == 0 || self.movement_y != 0)
 		return; // can't control movement if not moving forward or backward
 	k = 32;
 #else
-	k = 32 * (2 * IsMoveInDirection(PHYS_INPUT_MOVEVALUES(s), 0) - 1);
+	k = 32 * (2 * IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), 0) - 1);
 	if(k <= 0)
 		return;
 #endif
 
 	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED, 1);
 
-	zspeed = s.velocity_z;
-	s.velocity_z = 0;
-	xyspeed = vlen(s.velocity); s.velocity = normalize(s.velocity);
+	zspeed = self.velocity_z;
+	self.velocity_z = 0;
+	xyspeed = vlen(self.velocity);
+	self.velocity = normalize(self.velocity);
 
-	dot = s.velocity * wishdir;
+	dot = self.velocity * wishdir;
 
 	if(dot > 0) // we can't change direction while slowing down
 	{
 		k *= pow(dot, PHYS_AIRCONTROL_POWER)*PHYS_INPUT_TIMELENGTH;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL;
-		s.velocity = normalize(s.velocity * xyspeed + wishdir * k);
+		self.velocity = normalize(self.velocity * xyspeed + wishdir * k);
 	}
 
-	s.velocity = s.velocity * xyspeed;
-	s.velocity_z = zspeed;
+	self.velocity = self.velocity * xyspeed;
+	self.velocity_z = zspeed;
 }
 
 float AdjustAirAccelQW(float accelqw, float factor)
@@ -411,7 +412,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 //   sv_airaccel_sideways_friction 0
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
-void PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
+void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
 {
 	float vel_straight;
 	float vel_z;
@@ -436,9 +437,9 @@ void PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, 
 	if(GAMEPLAYFIX_Q2AIRACCELERATE)
 		wishspeed0 = wishspeed; // don't need to emulate this Q1 bug
 
-	vel_straight = s.velocity * wishdir;
-	vel_z = s.velocity_z;
-	vel_xy = vec2(s.velocity);
+	vel_straight = self.velocity * wishdir;
+	vel_z = self.velocity_z;
+	vel_xy = vec2(self.velocity);
 	vel_perpend = vel_xy - vel_straight * wishdir;
 
 	step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
@@ -489,10 +490,10 @@ void PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, 
 		}
 	}
 
-	s.velocity = vel_xy + vel_z * '0 0 1';
+	self.velocity = vel_xy + vel_z * '0 0 1';
 }
 
-void PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
+void PM_AirAccelerate(vector wishdir, float wishspeed)
 {
 	vector curvel, wishvel, acceldir, curdir;
 	float addspeed, accelspeed, curspeed, f;
@@ -501,25 +502,25 @@ void PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
 	if(wishspeed == 0)
 		return;
 
-	curvel = s.velocity;
+	curvel = self.velocity;
 	curvel_z = 0;
 	curspeed = vlen(curvel);
 
 	if(wishspeed > curspeed * 1.01)
 	{
-		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH);
+		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL * PHYS_MAXSPEED(self) * PHYS_INPUT_TIMELENGTH);
 	}
 	else
 	{
-		f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED - PHYS_MAXSPEED(s)));
-		wishspeed = max(curspeed, PHYS_MAXSPEED(s)) + PHYS_WARSOWBUNNY_ACCEL * f * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH;
+		f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED - PHYS_MAXSPEED(self)));
+		wishspeed = max(curspeed, PHYS_MAXSPEED(self)) + PHYS_WARSOWBUNNY_ACCEL * f * PHYS_MAXSPEED(self) * PHYS_INPUT_TIMELENGTH;
 	}
 	wishvel = wishdir * wishspeed;
 	acceldir = wishvel - curvel;
 	addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
 
-	accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH);
+	accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL * PHYS_MAXSPEED(self) * PHYS_INPUT_TIMELENGTH);
 
 	if(PHYS_WARSOWBUNNY_BACKTOSIDERATIO < 1)
 	{
@@ -529,7 +530,7 @@ void PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
 			acceldir = acceldir - (1 - PHYS_WARSOWBUNNY_BACKTOSIDERATIO) * dot * curdir;
 	}
 
-	s.velocity += accelspeed * acceldir;
+	self.velocity += accelspeed * acceldir;
 }
 
 
@@ -1187,7 +1188,7 @@ void PM_fly(float maxspd_mod)
 	if (wishspeed > PHYS_MAXSPEED(self) * maxspd_mod)
 		wishspeed = PHYS_MAXSPEED(self) * maxspd_mod;
 	if (time >= self.teleport_time)
-		PM_Accelerate(self, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 }
 
 void PM_swim(float maxspd_mod)
@@ -1213,7 +1214,7 @@ void PM_swim(float maxspd_mod)
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
 
 	// water acceleration
-	PM_Accelerate(self, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
+	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
 }
 
 void PM_ladder(float maxspd_mod)
@@ -1265,7 +1266,7 @@ void PM_ladder(float maxspd_mod)
 	if (time >= self.teleport_time)
 	{
 		// water acceleration
-		PM_Accelerate(self, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
+		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
 	}
 #endif
 }
@@ -1460,7 +1461,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	}
 #else
 	if (time >= self.teleport_time)
-		PM_Accelerate(self, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 #endif
 }
 
@@ -1528,15 +1529,15 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		// !CPM
 
 		if(PHYS_WARSOWBUNNY_TURNACCEL && accelerating && PHYS_INPUT_MOVEVALUES(self).y == 0 && PHYS_INPUT_MOVEVALUES(self).x != 0)
-			PM_AirAccelerate(self, wishdir, wishspeed);
+			PM_AirAccelerate(wishdir, wishspeed);
 		else
-			PM_Accelerate(self, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(self), PHYS_AIRACCEL_SIDEWAYS_FRICTION / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(self));
+			PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(self), PHYS_AIRACCEL_SIDEWAYS_FRICTION / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(self));
 
 		if(PHYS_AIRCONTROL)
-			CPM_PM_Aircontrol(self, wishdir, wishspeed2);
+			CPM_PM_Aircontrol(wishdir, wishspeed2);
 	}
 #ifdef CSQC
-	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(s) * PHYS_INPUT_TIMELENGTH;
+	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
 	if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		self.velocity_z -= g * 0.5;
 	else
@@ -1565,14 +1566,14 @@ float IsFlying(entity a)
 }
 #endif
 
-void PM_Main(entity s)
+void PM_Main()
 {
 #ifdef CSQC
 	//Con_Printf(" %f", PHYS_INPUT_TIMELENGTH);
-	if (!(PHYS_INPUT_BUTTONS(s) & 2)) // !jump
-		UNSET_JUMP_HELD(s); // canjump = true
+	if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
+		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-	CSQC_ClientMovement_UpdateStatus(s);
+	CSQC_ClientMovement_UpdateStatus(self);
 #endif
 
 	float maxspd_mod, buttons;
@@ -1607,7 +1608,7 @@ void PM_Main(entity s)
 #ifdef SVQC
 	anticheat_physics();
 #endif
-	buttons = PHYS_INPUT_BUTTONS(s);
+	buttons = PHYS_INPUT_BUTTONS(self);
 
 	if (PM_check_specialcommand(buttons))
 		return;
@@ -1620,8 +1621,8 @@ void PM_Main(entity s)
 #endif
 	buttons_prev = self.buttons_old;
 	self.buttons_old = buttons;
-	self.movement_old = PHYS_INPUT_MOVEVALUES(s);
-	self.v_angle_old = PHYS_INPUT_ANGLES(s);
+	self.movement_old = PHYS_INPUT_MOVEVALUES(self);
+	self.v_angle_old = PHYS_INPUT_ANGLES(self);
 
 	PM_check_nickspam();
 
@@ -1813,22 +1814,22 @@ void PM_Main(entity s)
 		PM_jetpack(maxspd_mod);
 #endif
 
-	else // TODO: eliminate
+	else
 	{
 #ifdef CSQC
     	// jump if on ground with jump button pressed but only if it has been
     	// released at least once since the last jump
-    	if (PHYS_INPUT_BUTTONS(s) & 2)
+    	if (PHYS_INPUT_BUTTONS(self) & 2)
     	{
-    		if (IS_ONGROUND(s) && (!IS_JUMP_HELD(s) || !cvar("cl_movement_track_canjump")))
+    		if (IS_ONGROUND(self) && (!IS_JUMP_HELD(self) || !cvar("cl_movement_track_canjump")))
     		{
-    			s.velocity_z += PHYS_JUMPVELOCITY;
-    			UNSET_ONGROUND(s);
-    			SET_JUMP_HELD(s); // canjump = false
+    			self.velocity_z += PHYS_JUMPVELOCITY;
+    			UNSET_ONGROUND(self);
+    			SET_JUMP_HELD(self); // canjump = false
     		}
     	}
     	else
-    		UNSET_JUMP_HELD(s); // canjump = true
+    		UNSET_JUMP_HELD(self); // canjump = true
 #endif
     	if (IS_ONGROUND(self))
     	{
@@ -1860,24 +1861,24 @@ void PM_Main(entity s)
 	self.lastclassname = self.classname;
 }
 
-void CSQC_ClientMovement_PlayerMove_Frame(entity s)
+void CSQC_ClientMovement_PlayerMove_Frame()
 {
 	// if a move is more than 50ms, do it as two moves (matching qwsv)
-	//Con_Printf("%i ", s.cmd.msec);
+	//Con_Printf("%i ", self.cmd.msec);
 	if(PHYS_INPUT_TIMELENGTH > 0.0005)
 	{
 		if (PHYS_INPUT_TIMELENGTH > 0.05)
 		{
 			PHYS_INPUT_TIMELENGTH /= 2;
-			PM_Main(s);
+			PM_Main();
 		}
-		PM_Main(s);
+		PM_Main();
 	}
 	else
 	{
 		// we REALLY need this handling to happen, even if the move is not executed
-		if (!(PHYS_INPUT_BUTTONS(s) & 2)) // !jump
-			UNSET_JUMP_HELD(s); // canjump = true
+		if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
+			UNSET_JUMP_HELD(self); // canjump = true
 	}
 }
 
@@ -1939,6 +1940,6 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity s)
 // Entry point
 void SV_PlayerPhysics(void)
 {
-	PM_Main(self);
+	PM_Main();
 }
 #endif
