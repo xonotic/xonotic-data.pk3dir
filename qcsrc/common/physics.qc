@@ -48,7 +48,7 @@
 	#define PHYS_JUMPVELOCITY					getstatf(STAT_MOVEVARS_JUMPVELOCITY)
 	#define PHYS_MAXAIRSPEED					getstatf(STAT_MOVEVARS_MAXAIRSPEED)
 	#define PHYS_MAXAIRSTRAFESPEED				getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED)
-	#define PHYS_MAXSPEED						getstatf(STAT_MOVEVARS_MAXSPEED)
+	#define PHYS_MAXSPEED(s)					getstatf(STAT_MOVEVARS_MAXSPEED)
 	#define PHYS_STEPHEIGHT						getstatf(STAT_MOVEVARS_STEPHEIGHT)
 	#define PHYS_STOPSPEED						getstatf(STAT_MOVEVARS_STOPSPEED)
 	#define PHYS_WARSOWBUNNY_ACCEL				getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL)
@@ -102,7 +102,7 @@
 	#define PHYS_JUMPVELOCITY					autocvar_sv_jumpvelocity
 	#define PHYS_MAXAIRSPEED					autocvar_sv_maxairspeed
 	#define PHYS_MAXAIRSTRAFESPEED				autocvar_sv_maxairstrafespeed
-	#define PHYS_MAXSPEED						autocvar_sv_maxspeed
+	#define PHYS_MAXSPEED(s)					s.stat_sv_maxspeed
 	#define PHYS_STEPHEIGHT						autocvar_sv_stepheight
 	#define PHYS_STOPSPEED						autocvar_sv_stopspeed
 	#define PHYS_WARSOWBUNNY_ACCEL				autocvar_sv_warsowbunny_accel
@@ -349,7 +349,7 @@ void CSQC_ClientMovement_Move(entity s)
 		s.velocity = primalvelocity;
 }
 
-void CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(entity s, vector wishdir, float wishspeed)
+void CPM_PM_Aircontrol(entity s, vector wishdir, float wishspeed)
 {
 	float zspeed, xyspeed, dot, k;
 
@@ -384,17 +384,23 @@ void CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(entity s, vector wishdir, flo
 	s.velocity_z = zspeed;
 }
 
-float CSQC_ClientMovement_Physics_AdjustAirAccelQW(float accelqw, float factor)
+float AdjustAirAccelQW(float accelqw, float factor)
 {
 	return copysign(bound(0.000001, 1 - (1 - fabs(accelqw)) * factor, 1), accelqw);
 }
 
-void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
+// example config for alternate speed clamping:
+//   sv_airaccel_qw 0.8
+//   sv_airaccel_sideways_friction 0
+//   prvm_globalset server speedclamp_mode 1
+//     (or 2)
+void PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
 {
 	float vel_straight;
 	float vel_z;
 	vector vel_perpend;
 	float step;
+
 	vector vel_xy;
 	float vel_xy_current;
 	float vel_xy_backward, vel_xy_forward;
@@ -403,7 +409,7 @@ void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float w
 	if(stretchfactor > 0)
 		speedclamp = stretchfactor;
 	else if(accelqw < 0)
-		speedclamp = 1;
+		speedclamp = 1; // full clamping, no stretch
 	else
 		speedclamp = -1; // no clamping
 
@@ -413,17 +419,16 @@ void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float w
 	if(GAMEPLAYFIX_Q2AIRACCELERATE)
 		wishspeed0 = wishspeed; // don't need to emulate this Q1 bug
 
-	vel_straight = dotproduct(s.velocity, wishdir);
+	vel_straight = s.velocity * wishdir;
 	vel_z = s.velocity_z;
-	vel_xy = s.velocity;
-	vel_xy_z -= vel_z;
+	vel_xy = vec2(s.velocity);
 	vel_perpend = vel_xy - vel_straight * wishdir;
 
 	step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
 
 	vel_xy_current  = vlen(vel_xy);
-	if(speedlimit > 0)
-		accelqw = CSQC_ClientMovement_Physics_AdjustAirAccelQW(accelqw, (speedlimit - bound(wishspeed, vel_xy_current, speedlimit)) / max(1, speedlimit - wishspeed));
+	if(speedlimit)
+		accelqw = AdjustAirAccelQW(accelqw, (speedlimit - bound(wishspeed, vel_xy_current, speedlimit)) / max(1, speedlimit - wishspeed));
 	vel_xy_forward  = vel_xy_current + bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
 	vel_xy_backward = vel_xy_current - bound(0, wishspeed + vel_xy_current, step) * accelqw - step * (1 - accelqw);
 	if(vel_xy_backward < 0)
@@ -431,12 +436,12 @@ void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float w
 
 	vel_straight    = vel_straight   + bound(0, wishspeed - vel_straight,   step) * accelqw + step * (1 - accelqw);
 
-	if(sidefric < 0 && VLEN2(vel_perpend))
+	if(sidefric < 0 && (vel_perpend*vel_perpend))
 		// negative: only apply so much sideways friction to stay below the speed you could get by "braking"
 	{
 		float f, fmin;
 		f = max(0, 1 + PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
-		fmin = (vel_xy_backward*vel_xy_backward - vel_straight*vel_straight) / VLEN2(vel_perpend);
+		fmin = (vel_xy_backward*vel_xy_backward - vel_straight*vel_straight) / (vel_perpend*vel_perpend);
 		// assume: fmin > 1
 		// vel_xy_backward*vel_xy_backward - vel_straight*vel_straight > vel_perpend*vel_perpend
 		// vel_xy_backward*vel_xy_backward > vel_straight*vel_straight + vel_perpend*vel_perpend
@@ -453,24 +458,24 @@ void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float w
 	else
 		vel_perpend *= max(0, 1 - PHYS_INPUT_TIMELENGTH * wishspeed * sidefric);
 
-	s.velocity = vel_perpend + vel_straight * wishdir;
+	vel_xy = vel_straight * wishdir + vel_perpend;
 
 	if(speedclamp >= 0)
 	{
 		float vel_xy_preclamp;
-		vel_xy_preclamp = vlen(s.velocity);
+		vel_xy_preclamp = vlen(vel_xy);
 		if(vel_xy_preclamp > 0) // prevent division by zero
 		{
 			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
 			if(vel_xy_current < vel_xy_preclamp)
-				s.velocity *= (vel_xy_current / vel_xy_preclamp);
+				vel_xy *= (vel_xy_current / vel_xy_preclamp);
 		}
 	}
 
-	s.velocity_z += vel_z;
+	s.velocity = vel_xy + vel_z * '0 0 1';
 }
 
-void CSQC_ClientMovement_Physics_PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
+void PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
 {
 	vector curvel, wishvel, acceldir, curdir;
 	float addspeed, accelspeed, curspeed, f;
@@ -485,19 +490,19 @@ void CSQC_ClientMovement_Physics_PM_AirAccelerate(entity s, vector wishdir, floa
 
 	if(wishspeed > curspeed * 1.01)
 	{
-		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL * PHYS_MAXSPEED * PHYS_INPUT_TIMELENGTH);
+		wishspeed = min(wishspeed, curspeed + PHYS_WARSOWBUNNY_AIRFORWARDACCEL * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH);
 	}
 	else
 	{
-		f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED - PHYS_MAXSPEED));
-		wishspeed = max(curspeed, PHYS_WARSOWBUNNY_ACCEL) + PHYS_WARSOWBUNNY_ACCEL * f * PHYS_WARSOWBUNNY_ACCEL * PHYS_INPUT_TIMELENGTH;
+		f = max(0, (PHYS_WARSOWBUNNY_TOPSPEED - curspeed) / (PHYS_WARSOWBUNNY_TOPSPEED - PHYS_MAXSPEED(s)));
+		wishspeed = max(curspeed, PHYS_MAXSPEED(s)) + PHYS_WARSOWBUNNY_ACCEL * f * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH;
 	}
 	wishvel = wishdir * wishspeed;
 	acceldir = wishvel - curvel;
 	addspeed = vlen(acceldir);
 	acceldir = normalize(acceldir);
 
-	accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL * PHYS_WARSOWBUNNY_ACCEL * PHYS_INPUT_TIMELENGTH);
+	accelspeed = min(addspeed, PHYS_WARSOWBUNNY_TURNACCEL * PHYS_MAXSPEED(s) * PHYS_INPUT_TIMELENGTH);
 
 	if(PHYS_WARSOWBUNNY_BACKTOSIDERATIO < 1)
 	{
@@ -551,7 +556,7 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	// check if onground
 	if (IS_ONGROUND(s))
 	{
-		wishspeed = min(wishspeed, PHYS_MAXSPEED);
+		wishspeed = min(wishspeed, PHYS_MAXSPEED(s));
 		if (IS_DUCKED(s))
 			wishspeed *= 0.5;
 
@@ -645,12 +650,12 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 			// !CPM
 
 			if(PHYS_WARSOWBUNNY_TURNACCEL && accelerating && PHYS_INPUT_MOVEVALUES(s)_y == 0 && PHYS_INPUT_MOVEVALUES(s)_x != 0)
-				CSQC_ClientMovement_Physics_PM_AirAccelerate(s, wishdir, wishspeed2);
+				PM_AirAccelerate(s, wishdir, wishspeed2);
 			else
-				CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed0, accel, accelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR, PHYS_AIRACCEL_SIDEWAYS_FRICTION / PHYS_MAXAIRSPEED, PHYS_AIRSPEEDLIMIT_NONQW);
+				PM_Accelerate(s, wishdir, wishspeed, wishspeed0, accel, accelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR, PHYS_AIRACCEL_SIDEWAYS_FRICTION / PHYS_MAXAIRSPEED, PHYS_AIRSPEEDLIMIT_NONQW);
 
 			if(PHYS_AIRCONTROL)
-				CSQC_ClientMovement_Physics_CPM_PM_Aircontrol(s, wishdir, wishspeed2);
+				CPM_PM_Aircontrol(s, wishdir, wishspeed2);
 		}
 		g = PHYS_GRAVITY * PHYS_ENTGRAVITY(s) * PHYS_INPUT_TIMELENGTH;
 		if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
@@ -680,15 +685,15 @@ void CSQC_ClientMovement_Physics_Swim(entity s)
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
-	if (wishspeed > PHYS_MAXSPEED)
-		wishspeed = PHYS_MAXSPEED;
+	if (wishspeed > PHYS_MAXSPEED(s))
+		wishspeed = PHYS_MAXSPEED(s);
 	wishspeed = wishspeed * 0.7;
 
 	// water friction
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
 
 	// water acceleration
-	CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE, 1, 0, 0, 0);
+	PM_Accelerate(s, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE, 1, 0, 0, 0);
 }
 
 void CSQC_ClientMovement_PlayerMove(entity s)

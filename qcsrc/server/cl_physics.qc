@@ -391,167 +391,13 @@ float IsMoveInDirection(vector mv, float angle);
 
 float GeomLerp(float a, float lerp, float b);
 
-void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
-{
-	float zspeed, xyspeed, dot, k;
+void CPM_PM_Aircontrol(entity s, vector wishdir, float wishspeed);
 
-#if 0
-	// this doesn't play well with analog input
-	if(self.movement_x == 0 || self.movement_y != 0)
-		return; // can't control movement if not moving forward or backward
-	k = 32;
-#else
-	k = 32 * (2 * IsMoveInDirection(self.movement, 0) - 1);
-	if(k <= 0)
-		return;
-#endif
+float AdjustAirAccelQW(float accelqw, float factor);
 
-	k *= bound(0, wishspeed / autocvar_sv_maxairspeed, 1);
+void PM_Accelerate(entity s, vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit);
 
-	zspeed = self.velocity_z;
-	self.velocity_z = 0;
-	xyspeed = vlen(self.velocity); self.velocity = normalize(self.velocity);
-
-	dot = self.velocity * wishdir;
-
-	if(dot > 0) // we can't change direction while slowing down
-	{
-		k *= pow(dot, autocvar_sv_aircontrol_power)*frametime;
-		xyspeed = max(0, xyspeed - autocvar_sv_aircontrol_penalty * sqrt(max(0, 1 - dot*dot)) * k/32);
-		k *= autocvar_sv_aircontrol;
-		self.velocity = normalize(self.velocity * xyspeed + wishdir * k);
-	}
-
-	self.velocity = self.velocity * xyspeed;
-	self.velocity_z = zspeed;
-}
-
-float AdjustAirAccelQW(float accelqw, float factor)
-{
-	return copysign(bound(0.000001, 1 - (1 - fabs(accelqw)) * factor, 1), accelqw);
-}
-
-// example config for alternate speed clamping:
-//   sv_airaccel_qw 0.8
-//   sv_airaccel_sideways_friction 0
-//   prvm_globalset server speedclamp_mode 1
-//     (or 2)
-void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
-{
-	float vel_straight;
-	float vel_z;
-	vector vel_perpend;
-	float step;
-
-	vector vel_xy;
-	float vel_xy_current;
-	float vel_xy_backward, vel_xy_forward;
-	float speedclamp;
-
-	if(stretchfactor > 0)
-		speedclamp = stretchfactor;
-	else if(accelqw < 0)
-		speedclamp = 1; // full clamping, no stretch
-	else
-		speedclamp = -1; // no clamping
-
-	if(accelqw < 0)
-		accelqw = -accelqw;
-
-	if(autocvar_sv_gameplayfix_q2airaccelerate)
-		wishspeed0 = wishspeed;
-
-	vel_straight = self.velocity * wishdir;
-	vel_z = self.velocity_z;
-	vel_xy = vec2(self.velocity);
-	vel_perpend = vel_xy - vel_straight * wishdir;
-
-	step = accel * frametime * wishspeed0;
-
-	vel_xy_current  = vlen(vel_xy);
-	if(speedlimit)
-		accelqw = AdjustAirAccelQW(accelqw, (speedlimit - bound(wishspeed, vel_xy_current, speedlimit)) / max(1, speedlimit - wishspeed));
-	vel_xy_forward  = vel_xy_current + bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
-	vel_xy_backward = vel_xy_current - bound(0, wishspeed + vel_xy_current, step) * accelqw - step * (1 - accelqw);
-	if(vel_xy_backward < 0)
-		vel_xy_backward = 0; // not that it REALLY occurs that this would cause wrong behaviour afterwards
-
-	vel_straight = vel_straight + bound(0, wishspeed - vel_straight, step) * accelqw + step * (1 - accelqw);
-
-	if(sidefric < 0 && (vel_perpend*vel_perpend))
-		// negative: only apply so much sideways friction to stay below the speed you could get by "braking"
-	{
-		float f, fminimum;
-		f = max(0, 1 + frametime * wishspeed * sidefric);
-		fminimum = (vel_xy_backward*vel_xy_backward - vel_straight*vel_straight) / (vel_perpend*vel_perpend);
-		// this cannot be > 1
-		if(fminimum <= 0)
-			vel_perpend = vel_perpend * max(0, f);
-		else
-		{
-			fminimum = sqrt(fminimum);
-			vel_perpend = vel_perpend * max(fminimum, f);
-		}
-	}
-	else
-		vel_perpend = vel_perpend * max(0, 1 - frametime * wishspeed * sidefric);
-
-	vel_xy = vel_straight * wishdir + vel_perpend;
-
-	if(speedclamp >= 0)
-	{
-		float vel_xy_preclamp;
-		vel_xy_preclamp = vlen(vel_xy);
-		if(vel_xy_preclamp > 0) // prevent division by zero
-		{
-			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
-			if(vel_xy_current < vel_xy_preclamp)
-				vel_xy = vel_xy * (vel_xy_current / vel_xy_preclamp);
-		}
-	}
-
-	self.velocity = vel_xy + vel_z * '0 0 1';
-}
-
-void PM_AirAccelerate(vector wishdir, float wishspeed)
-{
-	vector curvel, wishvel, acceldir, curdir;
-	float addspeed, accelspeed, curspeed, f;
-	float dot;
-
-	if(wishspeed == 0)
-		return;
-
-	curvel = self.velocity;
-	curvel_z = 0;
-	curspeed = vlen(curvel);
-
-	if(wishspeed > curspeed * 1.01)
-	{
-		wishspeed = min(wishspeed, curspeed + autocvar_sv_warsowbunny_airforwardaccel * self.stat_sv_maxspeed * frametime);
-	}
-	else
-	{
-		f = max(0, (autocvar_sv_warsowbunny_topspeed - curspeed) / (autocvar_sv_warsowbunny_topspeed - self.stat_sv_maxspeed));
-		wishspeed = max(curspeed, self.stat_sv_maxspeed) + autocvar_sv_warsowbunny_accel * f * self.stat_sv_maxspeed * frametime;
-	}
-	wishvel = wishdir * wishspeed;
-	acceldir = wishvel - curvel;
-	addspeed = vlen(acceldir);
-	acceldir = normalize(acceldir);
-
-	accelspeed = min(addspeed, autocvar_sv_warsowbunny_turnaccel * self.stat_sv_maxspeed * frametime);
-
-	if(autocvar_sv_warsowbunny_backtosideratio < 1)
-	{
-		curdir = normalize(curvel);
-		dot = acceldir * curdir;
-		if(dot < 0)
-			acceldir = acceldir - (1 - autocvar_sv_warsowbunny_backtosideratio) * dot * curdir;
-	}
-
-	self.velocity += accelspeed * acceldir;
-}
+void PM_AirAccelerate(entity s, vector wishdir, float wishspeed);
 
 .vector movement_old;
 .float buttons_old;
@@ -914,7 +760,7 @@ void SV_PlayerPhysics()
 		if (wishspeed > self.stat_sv_maxspeed*maxspd_mod)
 			wishspeed = self.stat_sv_maxspeed*maxspd_mod;
 		if (time >= self.teleport_time)
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
+			PM_Accelerate(self, wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
@@ -937,7 +783,7 @@ void SV_PlayerPhysics()
 		self.velocity = self.velocity * (1 - frametime * autocvar_sv_friction);
 
 		// water acceleration
-		PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
+		PM_Accelerate(self, wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else if (time < self.ladder_time)
 	{
@@ -987,7 +833,7 @@ void SV_PlayerPhysics()
 		if (time >= self.teleport_time)
 		{
 			// water acceleration
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
+			PM_Accelerate(self, wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
 	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
@@ -1169,7 +1015,7 @@ void SV_PlayerPhysics()
 		if (self.crouch)
 			wishspeed = wishspeed * 0.5;
 		if (time >= self.teleport_time)
-			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
+			PM_Accelerate(self, wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 	}
 	else
 	{
@@ -1238,12 +1084,12 @@ void SV_PlayerPhysics()
 			// !CPM
 
 			if(autocvar_sv_warsowbunny_turnaccel && accelerating && self.movement_y == 0 && self.movement_x != 0)
-				PM_AirAccelerate(wishdir, wishspeed);
+				PM_AirAccelerate(self, wishdir, wishspeed);
 			else
-				PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, autocvar_sv_airaccel_qw_stretchfactor, autocvar_sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
+				PM_Accelerate(self, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, autocvar_sv_airaccel_qw_stretchfactor, autocvar_sv_airaccel_sideways_friction / maxairspd, self.stat_sv_airspeedlimit_nonqw);
 
 			if(autocvar_sv_aircontrol)
-				CPM_PM_Aircontrol(wishdir, wishspeed2);
+				CPM_PM_Aircontrol(self, wishdir, wishspeed2);
 		}
 	}
 
