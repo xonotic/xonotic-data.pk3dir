@@ -540,6 +540,46 @@ void CSQC_ClientMovement_Physics_PM_Accelerate(entity s, vector wishdir, float w
 	s.velocity_z += vel_z;
 }
 
+void CSQC_ClientMovement_Physics_PM_AirAccelerate(entity s, vector wishdir, float wishspeed)
+{
+	vector curvel, wishvel, acceldir, curdir;
+	float addspeed, accelspeed, curspeed, f;
+	float dot;
+
+	if(wishspeed == 0)
+		return;
+
+	curvel = s.velocity;
+	curvel_z = 0;
+	curspeed = vlen(curvel);
+
+	if(wishspeed > curspeed * 1.01)
+	{
+		wishspeed = min(wishspeed, curspeed + getstatf(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL) * getstatf(STAT_MOVEVARS_MAXSPEED) * input_timelength);
+	}
+	else
+	{
+		f = max(0, (getstatf(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED) - curspeed) / (getstatf(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED) - getstatf(STAT_MOVEVARS_MAXSPEED)));
+		wishspeed = max(curspeed, getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL)) + getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL) * f * getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL) * input_timelength;
+	}
+	wishvel = wishdir * wishspeed;
+	acceldir = wishvel - curvel;
+	addspeed = vlen(acceldir);
+	acceldir = normalize(acceldir);
+
+	accelspeed = min(addspeed, getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL) * getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL) * input_timelength);
+
+	if(getstatf(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO) < 1)
+	{
+		curdir = normalize(curvel);
+		dot = acceldir * curdir;
+		if(dot < 0)
+			acceldir = acceldir - (1 - getstatf(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO)) * dot * curdir;
+	}
+
+	s.velocity += accelspeed * acceldir;
+}
+
 void CSQC_ClientMovement_Physics_Walk(entity s)
 {
 	float friction;
@@ -677,9 +717,9 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 					(1 - CSQC_GeomLerp(1 - fabs(getstatf(STAT_MOVEVARS_AIRACCEL_QW)), strafity, 1 - fabs(getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW))));
 			// !CPM
 
-//			if(getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL) && accelerating && input_movevalues_y == 0 && input_movevalues_x != 0)
-//				CSQC_ClientMovement_Physics_PM_AirAccelerate(s, wishdir, wishspeed2);
-//			else
+			if(getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL) && accelerating && input_movevalues_y == 0 && input_movevalues_x != 0)
+				CSQC_ClientMovement_Physics_PM_AirAccelerate(s, wishdir, wishspeed2);
+			else
 				CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed0, accel, accelqw, getstatf(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR), getstatf(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION) / getstatf(STAT_MOVEVARS_MAXAIRSPEED), getstatf(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW));
 
 			if(getstatf(STAT_MOVEVARS_AIRCONTROL))
