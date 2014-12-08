@@ -387,37 +387,9 @@ void RaceCarPhysics()
 	self.angles_z =  smoothangles_z;
 }
 
-float IsMoveInDirection(vector mv, float angle) // key mix factor
-{
-	if(mv_x == 0 && mv_y == 0)
-		return 0; // avoid division by zero
-	angle -= RAD2DEG * atan2(mv_y, mv_x);
-	angle = remainder(angle, 360) / 45;
-	if(angle >  1)
-		return 0;
-	if(angle < -1)
-		return 0;
-	return 1 - fabs(angle);
-}
+float IsMoveInDirection(vector mv, float angle);
 
-float GeomLerp(float a, float lerp, float b)
-{
-	if(a == 0)
-	{
-		if(lerp < 1)
-			return 0;
-		else
-			return b;
-	}
-	if(b == 0)
-	{
-		if(lerp > 0)
-			return 0;
-		else
-			return a;
-	}
-	return a * pow(fabs(b / a), lerp);
-}
+float GeomLerp(float a, float lerp, float b);
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {

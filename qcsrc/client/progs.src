@@ -122,6 +122,7 @@ command/cl_cmd.qc
 
 ../common/nades.qc
 ../common/buffs.qc
+../common/physics.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

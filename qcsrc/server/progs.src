@@ -213,7 +213,7 @@ target_music.qc
 
 ../common/nades.qc
 ../common/buffs.qc
-
+../common/physics.qc
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc
