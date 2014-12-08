@@ -116,7 +116,7 @@ g_damage.qc
 
 teamplay.qc
 
-cl_physics.qc
+../common/physics.qc
 
 // tZork's libs
 movelib.qc
@@ -213,7 +213,6 @@ target_music.qc
 
 ../common/nades.qc
 ../common/buffs.qc
-../common/physics.qc
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc

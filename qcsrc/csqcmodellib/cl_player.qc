@@ -120,14 +120,14 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-void CSQC_ClientMovement_PlayerMove_Frame(entity s);
+void PM_Main(entity s);
 
 void CSQCPlayer_Physics(void)
 {
 	switch(autocvar_cl_movement)
 	{
 		case 1: runstandardplayerphysics(self); break;
-		case 2: CSQC_ClientMovement_PlayerMove_Frame(self); break;
+		case 2: PM_Main(self); break;
 	}
 }
 
