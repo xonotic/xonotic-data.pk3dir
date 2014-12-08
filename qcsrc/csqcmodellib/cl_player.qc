@@ -124,62 +124,6 @@ void CSQCPlayer_SavePrediction()
 float pmove_waterjumptime; // weird engine flag we shouldn't really use but have to for now
 // TODO: move to a common header
 #define vlen2(v) dotproduct(v, v)
-vector _AngleVectors_forward, _AngleVectors_right, _AngleVectors_up;
-void _AngleVectors (vector _angles, vector _forward, vector _right, vector _up)
-{
-	float angle, sr, sp, sy, cr, cp, cy;
-
-	angle = _angles_y * (M_PI*2 / 360);
-	sy = sin(angle);
-	cy = cos(angle);
-	angle = _angles_x * (M_PI*2 / 360);
-	sp = sin(angle);
-	cp = cos(angle);
-
-	_forward_x = cp*cy;
-	_forward_y = cp*sy;
-	_forward_z = -sp;
-
-	if (angles_z)
-	{
-		angle = _angles_z * (M_PI*2 / 360);
-		sr = sin(angle);
-		cr = cos(angle);
-
-		_right_x = -1*(sr*sp*cy+cr*-sy);
-		_right_y = -1*(sr*sp*sy+cr*cy);
-		_right_z = -1*(sr*cp);
-
-		_up_x = (cr*sp*cy+-sr*-sy);
-		_up_y = (cr*sp*sy+-sr*cy);
-		_up_z = cr*cp;
-	}
-	else
-	{
-		_right_x = sy;
-		_right_y = -cy;
-		_right_z = 0;
-
-		_up_x = (sp*cy);
-		_up_y = (sp*sy);
-		_up_z = cp;
-	}
-	_AngleVectors_forward = _forward;
-	_AngleVectors_right = _right;
-	_AngleVectors_up = _up;
-}
-#define AngleVectors(angles, forward, right, up) do { \
-	_AngleVectors(angles, forward, right, up); \
-	forward = _AngleVectors_forward; \
-	right = _AngleVectors_right; \
-	up = _AngleVectors_up; \
-} while(0)
-
-// TODO: move these elsewhere
-vector cl_playerstandmins = '-16 -16 -24';
-vector cl_playerstandmaxs = '16 16 45';
-vector cl_playercrouchmins = '-16 -16 -24';
-vector cl_playercrouchmaxs = '16 16 25';
 
 const float unstick_count = 27;
 vector unstick_offsets[unstick_count] =
@@ -212,7 +156,7 @@ float CSQC_ClientMovement_Unstick(entity s)
 	for (i = 0; i < unstick_count; i++)
 	{
 		neworigin = unstick_offsets[i] + s.origin;
-		tracebox(neworigin, cl_playercrouchmins, cl_playercrouchmaxs, neworigin, MOVE_NORMAL, s);
+		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, s);
 		if (!trace_startsolid)
 		{
 			s.origin = neworigin;
@@ -244,20 +188,20 @@ void CSQC_ClientMovement_UpdateStatus(entity s)
 		// low ceiling first
 		if (s.pmove_flags & PMF_DUCKED)
 		{
-			tracebox(s.origin, cl_playerstandmins, cl_playerstandmaxs, s.origin, MOVE_NORMAL, s);
+			tracebox(s.origin, PL_MIN, PL_MAX, s.origin, MOVE_NORMAL, s);
 			if (!trace_startsolid)
 				s.pmove_flags &= ~PMF_DUCKED;
 		}
 	}
 	if (s.pmove_flags & PMF_DUCKED)
 	{
-		s.mins = cl_playercrouchmins;
-		s.maxs = cl_playercrouchmaxs;
+		s.mins = PL_CROUCH_MIN;
+		s.maxs = PL_CROUCH_MAX;
 	}
 	else
 	{
-		s.mins = cl_playerstandmins;
-		s.maxs = cl_playerstandmaxs;
+		s.mins = PL_MIN;
+		s.maxs = PL_MAX;
 	}
 
 	// set onground
@@ -605,9 +549,6 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	float accelspeed;
 	float f;
 	float gravity;
-	vector forward = '0 0 0';
-	vector right = '0 0 0';
-	vector up = '0 0 0';
 	vector wishvel;
 	vector wishdir;
 	vector yawangles;
@@ -629,8 +570,8 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	// calculate movement vector
 	yawangles = '0 0 0';
 	yawangles_y = input_angles_y;
-	AngleVectors(yawangles, forward, right, up);
-	wishvel = input_movevalues_x * forward + input_movevalues_y * right;
+	makevectors(yawangles);
+	wishvel = input_movevalues_x * v_forward + input_movevalues_y * v_right;
 
 	// split wishvel into wishspeed and wishdir
 	wishspeed = vlen(wishvel);
@@ -756,6 +697,31 @@ void CSQC_ClientMovement_Physics_Walk(entity s)
 	}
 }
 
+// TODO: merge this with main physics frame
+void CSQC_ClientMovement_Physics_Swim(entity s)
+{
+	// swimming
+	self.flags &= ~FL_ONGROUND;
+
+	makevectors(input_angles);
+	//wishvel = v_forward * self.movement_x + v_right * self.movement_y + v_up * self.movement_z;
+	vector wishvel = v_forward * input_movevalues_x + v_right * input_movevalues_y + '0 0 1' * input_movevalues_z;
+	if (wishvel == '0 0 0')
+		wishvel = '0 0 -60'; // drift towards bottom
+
+	vector wishdir = normalize(wishvel);
+	float wishspeed = vlen(wishvel);
+	if (wishspeed > getstatf(STAT_MOVEVARS_MAXSPEED))
+		wishspeed = getstatf(STAT_MOVEVARS_MAXSPEED);
+	wishspeed = wishspeed * 0.7;
+
+	// water friction
+	self.velocity = self.velocity * (1 - input_timelength * getstatf(STAT_MOVEVARS_FRICTION));
+
+	// water acceleration
+	CSQC_ClientMovement_Physics_PM_Accelerate(s, wishdir, wishspeed, wishspeed, getstatf(STAT_MOVEVARS_ACCELERATE), 1, 0, 0, 0);
+}
+
 void CSQC_ClientMovement_PlayerMove(entity s)
 {
 	//Con_Printf(" %f", frametime);
@@ -763,10 +729,9 @@ void CSQC_ClientMovement_PlayerMove(entity s)
 		s.pmove_flags &= ~PMF_JUMP_HELD; // canjump = true
 	pmove_waterjumptime -= input_timelength;
 	CSQC_ClientMovement_UpdateStatus(s);
-	// TODO
-//	if (s.waterlevel >= WATERLEVEL_SWIMMING)
-//		CL_ClientMovement_Physics_Swim(s);
-//	else
+	if (s.waterlevel >= WATERLEVEL_SWIMMING)
+		CSQC_ClientMovement_Physics_Swim(s);
+	else
 		CSQC_ClientMovement_Physics_Walk(s);
 }
 
