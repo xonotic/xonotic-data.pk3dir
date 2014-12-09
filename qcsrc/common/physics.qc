@@ -1159,8 +1159,28 @@ void PM_swim(float maxspd_mod)
 	// water friction
 	self.velocity *= (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
 
+#ifdef CSQC
+	float addspeed = wishspeed - dotproduct(self.velocity, wishdir);
+	if (addspeed > 0)
+	{
+		float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
+		self.velocity += accelspeed * wishdir;
+	}
+	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
+		self.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
+	if (self.velocity * self.velocity)
+		CSQC_ClientMovement_Move();
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
+			self.velocity_z -= g * 0.5;
+#else
+	if (time >= self.teleport_time)
+		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+#endif
+
 	// water acceleration
-	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+	//PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 }
 
 void PM_ladder(float maxspd_mod)
