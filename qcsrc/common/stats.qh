@@ -245,12 +245,12 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 210 empty?
 // 211 empty?
 // 212 empty?
-// 213 empty?
-// 214 empty?
-// 215 empty?
-// 216 empty?
-// 217 empty?
-// 218 empty?
+const float STAT_JETPACK_MAXSPEED_UP                    = 213;
+const float STAT_JETPACK_MAXSPEED_SIDE                  = 214;
+const float STAT_JETPACK_FUEL                           = 215;
+const float STAT_JETPACK_ANTIGRAVITY                    = 216;
+const float STAT_JETPACK_ACCEL_SIDE                     = 217;
+const float STAT_JETPACK_ACCEL_UP                       = 218;
 const float STAT_MOVEVARS_HIGHSPEED                     = 219;
 const float STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR     = 220;
 const float STAT_MOVEVARS_AIRCONTROL_PENALTY            = 221;

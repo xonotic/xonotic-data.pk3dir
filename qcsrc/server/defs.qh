@@ -607,6 +607,13 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 
 string modname;
 
+.float stat_jetpack_accel_side;
+.float stat_jetpack_accel_up;
+.float stat_jetpack_antigravity;
+.float stat_jetpack_fuel;
+.float stat_jetpack_maxspeed_up;
+.float stat_jetpack_maxspeed_side;
+
 .float missile_flags;
 #define MIF_SPLASH 2
 #define MIF_ARC 4
