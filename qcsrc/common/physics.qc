@@ -263,7 +263,7 @@ void CSQC_ClientMovement_UpdateStatus()
 //		pmove_waterjumptime = 0;
 }
 
-void CSQC_ClientMovement_Move(entity s)
+void CSQC_ClientMovement_Move()
 {
 	float t = PHYS_INPUT_TIMELENGTH;
 	CSQC_ClientMovement_UpdateStatus();
@@ -272,7 +272,7 @@ void CSQC_ClientMovement_Move(entity s)
 	for (bump = 0; bump < 8 && self.velocity * self.velocity > 0; bump++)
 	{
 		vector neworigin = self.origin + t * self.velocity;
-		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, s);
+		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
 		float old_trace1_fraction = trace_fraction;
 		vector old_trace1_endpos = trace_endpos;
 		vector old_trace1_plane_normal = trace_plane_normal;
@@ -284,7 +284,7 @@ void CSQC_ClientMovement_Move(entity s)
 			currentorigin2_z += PHYS_STEPHEIGHT;
 			vector neworigin2 = neworigin;
 			neworigin2_z = self.origin_z + PHYS_STEPHEIGHT;
-			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, s);
+			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
 			if (!trace_startsolid)
 			{
 				// then move down from there
@@ -293,7 +293,7 @@ void CSQC_ClientMovement_Move(entity s)
 				neworigin2_z = self.origin_z;
 				float old_trace2_fraction = trace_fraction;
 				vector old_trace2_plane_normal = trace_plane_normal;
-				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, s);
+				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
 				//Con_Printf("%f %f %f %f : %f %f %f %f : %f %f %f %f\n", trace.fraction, trace.endpos[0], trace.endpos[1], trace.endpos[2], trace2.fraction, trace2.endpos[0], trace2.endpos[1], trace2.endpos[2], trace3.fraction, trace3.endpos[0], trace3.endpos[1], trace3.endpos[2]);
 				// accept the new trace if it made some progress
 				if (fabs(trace_endpos_x - old_trace1_endpos_x) >= 0.03125 || fabs(trace_endpos_y - old_trace1_endpos_y) >= 0.03125)
@@ -1374,7 +1374,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		self.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
 	if (self.velocity * self.velocity)
-		CSQC_ClientMovement_Move(self);
+		CSQC_ClientMovement_Move();
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 			self.velocity_z -= g * 0.5;
@@ -1452,7 +1452,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		self.velocity_z -= g * 0.5;
 	else
 		self.velocity_z -= g;
-	CSQC_ClientMovement_Move(self);
+	CSQC_ClientMovement_Move();
 	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			self.velocity_z -= g * 0.5;
