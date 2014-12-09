@@ -1521,6 +1521,9 @@ void PM_Main()
 	self.stat_jetpack_antigravity = autocvar_g_jetpack_antigravity;
 	self.stat_jetpack_accel_up = autocvar_g_jetpack_acceleration_up;
 	self.stat_jetpack_accel_side = autocvar_g_jetpack_acceleration_side;
+	self.stat_jetpack_maxspeed_side = autocvar_g_jetpack_maxspeed_side;
+	self.stat_jetpack_maxspeed_up = autocvar_g_jetpack_maxspeed_up;
+	self.stat_jetpack_fuel = autocvar_g_jetpack_fuel;
 #endif
 #ifdef SVQC
 	if (self.PlayerPhysplug)
