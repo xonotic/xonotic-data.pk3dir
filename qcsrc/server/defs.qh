@@ -593,6 +593,8 @@ float serverflags;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 
+.float stat_dodging_frozen;
+
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 

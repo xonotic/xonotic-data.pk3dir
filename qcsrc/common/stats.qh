@@ -244,7 +244,7 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 209 empty?
 // 210 empty?
 // 211 empty?
-// 212 empty?
+const float STAT_DODGING_FROZEN                         = 212;
 const float STAT_JETPACK_MAXSPEED_UP                    = 213;
 const float STAT_JETPACK_MAXSPEED_SIDE                  = 214;
 const float STAT_JETPACK_FUEL                           = 215;

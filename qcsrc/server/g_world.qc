@@ -814,6 +814,9 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_JETPACK_MAXSPEED_UP, AS_FLOAT, stat_jetpack_maxspeed_up);
 	addstat(STAT_JETPACK_MAXSPEED_SIDE, AS_FLOAT, stat_jetpack_maxspeed_side);
 
+	// dodging
+	addstat(STAT_DODGING_FROZEN, AS_INT, stat_dodging_frozen);
+
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);

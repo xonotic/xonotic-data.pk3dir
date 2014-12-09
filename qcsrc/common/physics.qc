@@ -85,6 +85,8 @@
 
 	#define PHYS_BUTTON_HOOK(s)					(input_buttons & 32)
 
+	#define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
+
 #elif defined(SVQC)
 
 	#define PHYS_INPUT_ANGLES(s)				s.v_angle
@@ -151,6 +153,8 @@
 	#define PHYS_JETPACK_MAXSPEED_SIDE			autocvar_g_jetpack_maxspeed_side
 
 	#define PHYS_BUTTON_HOOK(s)					s.BUTTON_HOOK
+
+	#define PHYS_DODGING_FROZEN					autocvar_sv_dodging_frozen
 
 #endif
 
@@ -506,7 +510,7 @@ When you press the jump key
 void PlayerJump (void)
 {
 #ifdef SVQC
-	if (self.frozen)
+	if (PHYS_FROZEN(self))
 		return; // no jumping in freezetag when frozen
 
 	if (self.player_blocked)
@@ -1033,12 +1037,16 @@ void PM_check_spider(void)
 #endif
 }
 
+// predict frozen movement, as frozen players CAN move in some cases
 void PM_check_frozen(void)
 {
-#ifdef SVQC
-	if (!self.frozen)
+	if (!PHYS_FROZEN(self))
 		return;
-	if (autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
+	if (PHYS_DODGING_FROZEN
+#ifdef SVQC
+	&& IS_REAL_CLIENT(self)
+#endif
+	)
 	{
 		PHYS_INPUT_MOVEVALUES(self)_x = bound(-5, PHYS_INPUT_MOVEVALUES(self).x, 5);
 		PHYS_INPUT_MOVEVALUES(self)_y = bound(-5, PHYS_INPUT_MOVEVALUES(self).y, 5);
@@ -1046,7 +1054,6 @@ void PM_check_frozen(void)
 	}
 	else
 		PHYS_INPUT_MOVEVALUES(self) = '0 0 0';
-	self.disableclientprediction = 1;
 
 	vector midpoint = ((self.absmin + self.absmax) * 0.5);
 	if (pointcontents(midpoint) == CONTENT_WATER)
@@ -1056,7 +1063,6 @@ void PM_check_frozen(void)
 		if (pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
 			self.velocity_z = 200;
 	}
-#endif
 }
 
 void PM_check_blocked(void)
@@ -1174,13 +1180,12 @@ void PM_swim(float maxspd_mod)
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 			self.velocity_z -= g * 0.5;
-#else
-	if (time >= self.teleport_time)
-		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 #endif
 
+#ifdef SVQC
 	// water acceleration
-	//PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+#endif
 }
 
 void PM_ladder(float maxspd_mod)
@@ -1402,6 +1407,11 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	wishspeed = min(wishspeed, PHYS_MAXSPEED(self) * maxspd_mod);
 	if (IS_DUCKED(self))
 		wishspeed *= 0.5;
+#ifdef SVQC
+	if (time >= self.teleport_time)
+		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+#endif
+
 #ifdef CSQC
 	float addspeed = wishspeed - dotproduct(self.velocity, wishdir);
 	if (addspeed > 0)
@@ -1417,9 +1427,6 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 			self.velocity_z -= g * 0.5;
-#else
-	if (time >= self.teleport_time)
-		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 #endif
 }
 
@@ -1498,10 +1505,10 @@ void PM_air(float buttons_prev, float maxspd_mod)
 #endif
 }
 
-// Copied from server/g_damage.qc, why is it even in there?
+// used for calculating airshots
 float PM_is_flying()
 {
-	if (self.flags & FL_ONGROUND)
+	if (IS_ONGROUND(self))
 		return 0;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 		return 0;
@@ -1536,7 +1543,7 @@ void PM_Main()
 		self.stat_sv_airstrafeaccel_qw = 0;
 	self.stat_sv_airspeedlimit_nonqw = autocvar_sv_airspeedlimit_nonqw * maxspeed_mod;
 	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspeed_mod; // also slow walking
-	self.stat_movement_highspeed = autocvar_g_movement_highspeed;
+	self.stat_movement_highspeed = autocvar_g_movement_highspeed; // TODO: remove this!
 
 	self.stat_jetpack_antigravity = autocvar_g_jetpack_antigravity;
 	self.stat_jetpack_accel_up = autocvar_g_jetpack_acceleration_up;
