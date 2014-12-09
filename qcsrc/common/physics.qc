@@ -186,87 +186,9 @@ void CSQC_ClientMovement_Unstick()
 	}
 }
 
-void CSQC_ClientMovement_UpdateStatus()
-{
-	// make sure player is not stuck
-	CSQC_ClientMovement_Unstick();
-
-	// set crouched
-	if (PHYS_INPUT_BUTTONS(self) & 16)
-	{
-		// wants to crouch, this always works..
-		if (!IS_DUCKED(self))
-			SET_DUCKED(self);
-	}
-	else
-	{
-		// wants to stand, if currently crouching we need to check for a
-		// low ceiling first
-		if (IS_DUCKED(self))
-		{
-			tracebox(self.origin, PL_MIN, PL_MAX, self.origin, MOVE_NORMAL, self);
-			if (!trace_startsolid)
-				UNSET_DUCKED(self);
-		}
-	}
-	if (IS_DUCKED(self))
-	{
-		self.mins = PL_CROUCH_MIN;
-		self.maxs = PL_CROUCH_MAX;
-	}
-	else
-	{
-		self.mins = PL_MIN;
-		self.maxs = PL_MAX;
-	}
-
-	// set onground
-	vector origin1 = self.origin;
-	origin1_z += 1;
-	vector origin2 = self.origin;
-	origin2_z -= 1; // -2 causes clientside doublejump bug at above 150fps, raising that to 300fps :)
-
-	tracebox(origin1, self.mins, self.maxs, origin2, MOVE_NORMAL, self);
-	if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
-	{
-		SET_ONGROUND(self);
-
-		// this code actually "predicts" an impact; so let's clip velocity first
-		float f = dotproduct(self.velocity, trace_plane_normal);
-		if (f < 0) // only if moving downwards actually
-			self.velocity -= f * trace_plane_normal;
-	}
-	else
-		UNSET_ONGROUND(self);
-
-	// set watertype/waterlevel
-	origin1 = self.origin;
-	origin1_z += self.mins_z + 1;
-	self.waterlevel = WATERLEVEL_NONE;
-	// TODO: convert
-//	self.watertype = CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK;
-//	if (self.watertype)
-//	{
-//		self.waterlevel = WATERLEVEL_WETFEET;
-//		origin1[2] = self.origin[2] + (self.mins[2] + self.maxs[2]) * 0.5f;
-//		if (CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK)
-//		{
-//			self.waterlevel = WATERLEVEL_SWIMMING;
-//			origin1[2] = self.origin[2] + 22;
-//			if (CL_TracePoint(origin1, MOVE_NOMONSTERS, s, 0, true, false, NULL, false).startsupercontents & SUPERCONTENTS_LIQUIDSMASK)
-//				self.waterlevel = WATERLEVEL_SUBMERGED;
-//		}
-//	}
-//
-//	// water jump prediction
-//	if (IS_ONGROUND(self) || self.velocity_z <= 0 || pmove_waterjumptime <= 0)
-//		pmove_waterjumptime = 0;
-}
-
 void CSQC_ClientMovement_Move()
 {
 	float t = PHYS_INPUT_TIMELENGTH;
-	CSQC_ClientMovement_UpdateStatus();
 //	vector primalvelocity = self.velocity; // FIXME: unused
 	float bump = 0;
 	for (bump = 0; bump < 8 && self.velocity * self.velocity > 0; bump++)
@@ -1477,7 +1399,6 @@ void PM_Main()
 	if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-	CSQC_ClientMovement_UpdateStatus();
 #endif
 
 #ifdef SVQC
