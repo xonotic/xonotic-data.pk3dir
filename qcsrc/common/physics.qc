@@ -16,6 +16,7 @@
 .string lastclassname;
 
 .float() PlayerPhysplug;
+float AdjustAirAccelQW(float accelqw, float factor);
 
 #ifdef SVQC
 .float stat_dodging_frozen;
@@ -193,6 +194,25 @@ void Physics_AddStats()
 
 	#define PHYS_DODGING_FROZEN					autocvar_sv_dodging_frozen
 
+
+void Physics_UpdateStats(float maxspd_mod)
+{
+	self.stat_sv_airaccel_qw = AdjustAirAccelQW(autocvar_sv_airaccel_qw, maxspd_mod);
+	if (autocvar_sv_airstrafeaccel_qw)
+		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(autocvar_sv_airstrafeaccel_qw, maxspd_mod);
+	else
+		self.stat_sv_airstrafeaccel_qw = 0;
+	self.stat_sv_airspeedlimit_nonqw = autocvar_sv_airspeedlimit_nonqw * maxspd_mod;
+	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspd_mod; // also slow walking
+	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
+
+	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
+	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
+	self.stat_jetpack_accel_side = PHYS_JETPACK_ACCEL_SIDE;
+	self.stat_jetpack_maxspeed_side = PHYS_JETPACK_MAXSPEED_SIDE;
+	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
+	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
+}
 #endif
 
 float IsMoveInDirection(vector mv, float angle) // key mix factor
@@ -1560,26 +1580,9 @@ void PM_Main()
 	maxspeed_mod *= PM_check_keepaway();
 	maxspeed_mod *= PHYS_HIGHSPEED;
 
-	// fix physics stats for g_movement_highspeed
-	// TODO maybe rather use maxairspeed? needs testing
 #ifdef SVQC
-	self.stat_sv_airaccel_qw = AdjustAirAccelQW(autocvar_sv_airaccel_qw, maxspeed_mod);
-	if (autocvar_sv_airstrafeaccel_qw)
-		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(autocvar_sv_airstrafeaccel_qw, maxspeed_mod);
-	else
-		self.stat_sv_airstrafeaccel_qw = 0;
-	self.stat_sv_airspeedlimit_nonqw = autocvar_sv_airspeedlimit_nonqw * maxspeed_mod;
-	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspeed_mod; // also slow walking
-	self.stat_movement_highspeed = autocvar_g_movement_highspeed; // TODO: remove this!
+	Physics_UpdateStats(maxspeed_mod);
 
-	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
-	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
-	self.stat_jetpack_accel_side = PHYS_JETPACK_ACCEL_SIDE;
-	self.stat_jetpack_maxspeed_side = PHYS_JETPACK_MAXSPEED_SIDE;
-	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
-	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
-#endif
-#ifdef SVQC
 	if (self.PlayerPhysplug)
 		if (self.PlayerPhysplug())
 			return;
