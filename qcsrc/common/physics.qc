@@ -554,7 +554,7 @@ void PlayerJump (void)
 		return; // no jumping while blocked
 
 	float doublejump = FALSE;
-	float mjumpheight = autocvar_sv_jumpvelocity;
+	float mjumpheight = PHYS_JUMPVELOCITY;
 
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
@@ -586,7 +586,7 @@ void PlayerJump (void)
 	}
 
 	if (!doublejump)
-		if (!(self.flags & FL_ONGROUND))
+		if (!IS_ONGROUND(self))
 			return;
 
 	if (self.cvar_cl_movement_track_canjump)
@@ -635,7 +635,7 @@ void PlayerJump (void)
 
 	self.oldvelocity_z = self.velocity_z += mjumpheight;
 
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 	self.flags &= ~FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
@@ -736,7 +736,7 @@ void RaceCarPhysics()
 	self.angles_z = 0;
 	makevectors(self.angles); // new forward direction!
 
-	if (self.flags & FL_ONGROUND || g_bugrigs_air_steering)
+	if (IS_ONGROUND(self) || g_bugrigs_air_steering)
 	{
 		float myspeed = self.velocity * v_forward;
 		float upspeed = self.velocity * v_up;
@@ -853,12 +853,12 @@ void RaceCarPhysics()
 					+
 					'0 0 1' * -(v_forward_x * trace_plane_normal_x + v_forward_y * trace_plane_normal_y)
 					);
-			self.flags |= FL_ONGROUND;
+			SET_ONGROUND(self);
 		}
 		else
 		{
 			// now set angles_x so that the car points forward, but is tilted in velocity direction
-			self.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(self);
 		}
 
 		self.velocity = (neworigin - self.origin) * (1.0 / PHYS_INPUT_TIMELENGTH);
@@ -1164,7 +1164,7 @@ void PM_check_vortex(void)
 void PM_fly(float maxspd_mod)
 {
 	// noclipping or flying
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
 	makevectors(PHYS_INPUT_ANGLES(self));
@@ -1174,9 +1174,7 @@ void PM_fly(float maxspd_mod)
 					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self).z;
 	// acceleration
 	vector wishdir = normalize(wishvel);
-	float wishspeed = vlen(wishvel);
-	if (wishspeed > PHYS_MAXSPEED(self) * maxspd_mod)
-		wishspeed = PHYS_MAXSPEED(self) * maxspd_mod;
+	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
 	if (time >= self.teleport_time)
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 }
@@ -1228,7 +1226,7 @@ void PM_ladder(float maxspd_mod)
 {
 #ifdef SVQC
 	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 
 	float g;
 	g = PHYS_GRAVITY * PHYS_INPUT_TIMELENGTH;
@@ -1581,12 +1579,12 @@ void PM_Main()
 	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspeed_mod; // also slow walking
 	self.stat_movement_highspeed = autocvar_g_movement_highspeed; // TODO: remove this!
 
-	self.stat_jetpack_antigravity = autocvar_g_jetpack_antigravity;
-	self.stat_jetpack_accel_up = autocvar_g_jetpack_acceleration_up;
-	self.stat_jetpack_accel_side = autocvar_g_jetpack_acceleration_side;
-	self.stat_jetpack_maxspeed_side = autocvar_g_jetpack_maxspeed_side;
-	self.stat_jetpack_maxspeed_up = autocvar_g_jetpack_maxspeed_up;
-	self.stat_jetpack_fuel = autocvar_g_jetpack_fuel;
+	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
+	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
+	self.stat_jetpack_accel_side = PHYS_JETPACK_ACCEL_SIDE;
+	self.stat_jetpack_maxspeed_side = PHYS_JETPACK_MAXSPEED_SIDE;
+	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
+	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
 #endif
 #ifdef SVQC
 	if (self.PlayerPhysplug)
@@ -1739,7 +1737,7 @@ void PM_Main()
 #endif
 
 #ifdef SVQC
-	if (self.flags & FL_ONGROUND)
+	if (IS_ONGROUND(self))
 	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
 	if (self.wasFlying)
 	{
@@ -1829,7 +1827,7 @@ void PM_Main()
 	PM_check_vortex();
 
 :end
-	if (self.flags & FL_ONGROUND)
+	if (IS_ONGROUND(self))
 		self.lastground = time;
 
 #ifdef SVQC
