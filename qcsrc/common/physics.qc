@@ -253,7 +253,7 @@ vector unstick_offsets[unstick_count] =
 	'-0.125  0.125 -0.125', '0.125  0.125 -0.125',
 };
 
-void CSQC_ClientMovement_Unstick()
+void PM_ClientMovement_Unstick()
 {
 	float i;
 	for (i = 0; i < unstick_count; i++)
@@ -268,11 +268,10 @@ void CSQC_ClientMovement_Unstick()
 	}
 }
 
-#ifdef CSQC
-void CSQC_ClientMovement_UpdateStatus()
+void PM_ClientMovement_UpdateStatus()
 {
 	// make sure player is not stuck
-	CSQC_ClientMovement_Unstick();
+	PM_ClientMovement_Unstick();
 
 	// set crouched
 	if (PHYS_INPUT_BUTTONS(self) & 16)
@@ -334,11 +333,12 @@ void CSQC_ClientMovement_UpdateStatus()
 		pmove_waterjumptime = 0;
 }
 
-void CSQC_ClientMovement_Move()
+void PM_ClientMovement_Move()
 {
+#ifdef CSQC
 	float t = PHYS_INPUT_TIMELENGTH;
 	vector primalvelocity = self.velocity;
-	CSQC_ClientMovement_UpdateStatus();
+	PM_ClientMovement_UpdateStatus();
 	float bump = 0;
 	for (bump = 0; bump < 8 && self.velocity * self.velocity > 0; bump++)
 	{
@@ -404,8 +404,8 @@ void CSQC_ClientMovement_Move()
 	}
 	if (pmove_waterjumptime > 0)
 		self.velocity = primalvelocity;
-}
 #endif
+}
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
@@ -1271,14 +1271,9 @@ void PM_swim(float maxspd_mod)
 #endif
 		}
 	}
-#ifdef CSQC
-	CSQC_ClientMovement_Move();
-#endif
-
-#ifdef SVQC
+	PM_ClientMovement_Move();
 	// water acceleration
 	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
-#endif
 }
 
 void PM_ladder(float maxspd_mod)
@@ -1443,13 +1438,6 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	// we get here if we ran out of ammo
 	if ((ITEMS(self) & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
 		sprint(self, "You don't have any fuel for the ^2Jetpack\n");
-#endif
-	// walking
-	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
-
-#ifdef SVQC
 	if (!(self.lastflags & FL_ONGROUND))
 	{
 		if (autocvar_speedmeter)
@@ -1461,12 +1449,24 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 		self.jumppadcount = 0;
 	}
 #endif
+	// walking
+	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
+	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
+					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
+	// acceleration
+	vector wishdir = normalize(wishvel);
+	float wishspeed = vlen(wishvel);
 
-	vector v = self.velocity;
-	v_z = 0;
-	float f = vlen(v);
+	wishspeed = min(wishspeed, PHYS_MAXSPEED(self) * maxspd_mod);
+	if (IS_DUCKED(self))
+		wishspeed *= 0.5;
+
+	// apply edge friction
+	float f = vlen(vec2(self.velocity));
 	if (f > 0)
 	{
+		// TODO: apply edge friction
+		// apply ground friction
 		f = 1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION * ((f < PHYS_STOPSPEED) ? (PHYS_STOPSPEED / f) : 1);
 		f = max(0, f);
 		self.velocity *= f;
@@ -1493,20 +1493,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 			v >= PHYS_STOPSPEED * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION)
 		 */
 	}
-
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = vlen(wishvel);
-	wishspeed = min(wishspeed, PHYS_MAXSPEED(self) * maxspd_mod);
-	if (IS_DUCKED(self))
-		wishspeed *= 0.5;
-#ifdef SVQC
-	if (time >= self.teleport_time)
-		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
-#endif
-
-#ifdef CSQC
-	float addspeed = wishspeed - dotproduct(self.velocity, wishdir);
+	float addspeed = wishspeed - self.velocity * wishdir;
 	if (addspeed > 0)
 	{
 		float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
@@ -1516,11 +1503,10 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		self.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
 	if (self.velocity * self.velocity)
-		CSQC_ClientMovement_Move();
+		PM_ClientMovement_Move();
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
+		if (!IS_ONGROUND(self) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
 			self.velocity_z -= g * 0.5;
-#endif
 }
 
 void PM_air(float buttons_prev, float maxspd_mod)
@@ -1591,7 +1577,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		self.velocity_z -= g * 0.5;
 	else
 		self.velocity_z -= g;
-	CSQC_ClientMovement_Move();
+	PM_ClientMovement_Move();
 	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			self.velocity_z -= g * 0.5;
@@ -1616,7 +1602,7 @@ void PM_Main()
 	if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-	CSQC_ClientMovement_UpdateStatus();
+	PM_ClientMovement_UpdateStatus();
 #endif
 
 #ifdef SVQC
