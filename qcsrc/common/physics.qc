@@ -81,7 +81,7 @@ void Physics_AddStats()
 	#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
 
 	#define ITEMS(s) 							getstati(STAT_ITEMS, 0, 24)
-	#define PHYS_AMMO_FUEL(s)					getstatf(STAT_FUEL)
+	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 
 	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
@@ -1332,8 +1332,8 @@ void PM_jetpack(float maxspd_mod)
 {
 	//makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	makevectors(PHYS_INPUT_ANGLES(self));
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
+	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x
+					+ v_right * PHYS_INPUT_MOVEVALUES(self)_y;
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED * max(1, maxspd_mod);
 	// fix speedhacks :P
@@ -1430,6 +1430,18 @@ void PM_jetpack(float maxspd_mod)
 		self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 #endif
 	}
+
+#ifdef CSQC
+	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+		self.velocity_z -= g * 0.5;
+	else
+		self.velocity_z -= g;
+	PM_ClientMovement_Move();
+	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
+		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+			self.velocity_z -= g * 0.5;
+#endif
 }
 
 void PM_walk(float buttons_prev, float maxspd_mod)
@@ -1822,10 +1834,12 @@ void PM_Main()
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 		PM_swim(maxspeed_mod);
 
+#ifdef SVQC
 	else if (time < self.ladder_time)
 		PM_ladder(maxspeed_mod);
+#endif
 
-	else if ((ITEMS(self) & IT_JETPACK) && PHYS_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) >= 0.01 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
+	else if ((ITEMS(self) & IT_JETPACK) && PHYS_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) > 0 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
 		PM_jetpack(maxspeed_mod);
 
 	else
