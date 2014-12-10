@@ -448,12 +448,6 @@ float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime;
 .float stat_round_starttime;
 
-.float stat_sv_airaccel_qw;
-.float stat_sv_airstrafeaccel_qw;
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-.float stat_movement_highspeed;
-
 void W_Porto_Remove (entity p);
 
 .float projectiledeathtype;
@@ -593,8 +587,6 @@ float serverflags;
 .entity iceblock;
 .entity frozen_by; // for ice fields
 
-.float stat_dodging_frozen;
-
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
@@ -608,13 +600,6 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .entity conveyor;
 
 string modname;
-
-.float stat_jetpack_accel_side;
-.float stat_jetpack_accel_up;
-.float stat_jetpack_antigravity;
-.float stat_jetpack_fuel;
-.float stat_jetpack_maxspeed_up;
-.float stat_jetpack_maxspeed_side;
 
 .float missile_flags;
 #define MIF_SPLASH 2
