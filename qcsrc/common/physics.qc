@@ -66,7 +66,7 @@ void Physics_AddStats()
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
-	#define GAMEPLAYFIX_Q2AIRACCELERATE				moveflags & MOVEFLAG_Q2AIRACCELERATE
+	#define GAMEPLAYFIX_Q2AIRACCELERATE				cvar("sv_gameplayfix_q2airaccelerate")
 
 	#define IS_DUCKED(s)    					(s.pmove_flags & PMF_DUCKED)
 	#define SET_DUCKED(s)   					s.pmove_flags |= PMF_DUCKED
