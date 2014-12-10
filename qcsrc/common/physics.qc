@@ -613,10 +613,8 @@ void PlayerJump (void)
 
 void CheckWaterJump()
 {
-#ifdef SVQC
-
 // check for a jump-out-of-water
-	makevectors(self.angles);
+	makevectors(PHYS_INPUT_ANGLES(self));
 	vector start = self.origin;
 	start_z += 8;
 	v_forward_z = 0;
@@ -631,13 +629,14 @@ void CheckWaterJump()
 		traceline(start, end, TRUE, self);
 		if (trace_fraction == 1)
 		{	// open at eye level
-			self.flags |= FL_WATERJUMP;
 			self.velocity_z = 225;
+#ifdef SVQC
+			self.flags |= FL_WATERJUMP;
 			self.flags &= ~FL_JUMPRELEASED;
 			self.teleport_time = time + 2;	// safety net
+#endif
 		}
 	}
-#endif
 }
 
 void CheckPlayerJump()
@@ -648,9 +647,9 @@ void CheckPlayerJump()
 	else
 		self.flags |= FL_JUMPRELEASED;
 
+#endif
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump();
-#endif
 }
 
 float racecar_angle(float forward, float down)
@@ -1731,8 +1730,9 @@ void PM_Main()
 
 #ifdef SVQC
 	if (IS_PLAYER(self))
-		CheckPlayerJump();
 #endif
+		CheckPlayerJump();
+
 
 	if (self.flags & /* FL_WATERJUMP */ 2048)
 	{
