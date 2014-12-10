@@ -335,6 +335,7 @@ void PM_ClientMovement_UpdateStatus()
 
 void PM_ClientMovement_Move()
 {
+#ifdef CSQC
 	float t = PHYS_INPUT_TIMELENGTH;
 	vector primalvelocity = self.velocity;
 	PM_ClientMovement_UpdateStatus();
@@ -403,6 +404,7 @@ void PM_ClientMovement_Move()
 	}
 	if (pmove_waterjumptime > 0)
 		self.velocity = primalvelocity;
+#endif
 }
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
