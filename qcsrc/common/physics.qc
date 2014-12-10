@@ -335,7 +335,6 @@ void PM_ClientMovement_UpdateStatus()
 
 void PM_ClientMovement_Move()
 {
-#ifdef CSQC
 	float t = PHYS_INPUT_TIMELENGTH;
 	vector primalvelocity = self.velocity;
 	PM_ClientMovement_UpdateStatus();
@@ -404,7 +403,6 @@ void PM_ClientMovement_Move()
 	}
 	if (pmove_waterjumptime > 0)
 		self.velocity = primalvelocity;
-#endif
 }
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
@@ -1516,31 +1514,33 @@ void PM_air(float buttons_prev, float maxspd_mod)
 	if ((ITEMS(self) & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && PHYS_AMMO_FUEL(self) < 0.01)
 		sprint(self, "You don't have any fuel for the ^2Jetpack\n");
 #endif
-	float maxairspd, airaccel;
-	maxairspd = PHYS_MAXAIRSPEED * min(maxspd_mod, 1);
-	airaccel = PHYS_AIRACCELERATE * min(maxspd_mod, 1);
-	// airborn
 	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
 					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
-	float wishspeed0 = min(wishspeed, PHYS_MAXSPEED(self) * maxspd_mod);
-	wishspeed = min(wishspeed, maxairspd);
-	if (IS_DUCKED(self))
-		wishspeed *= 0.5;
+
 #ifdef SVQC
 	if (time >= self.teleport_time)
 #else
 	if (pmove_waterjumptime <= 0)
 #endif
 	{
+		float maxairspd = PHYS_MAXAIRSPEED * min(maxspd_mod, 1);
+
+		// apply air speed limit
 		float airaccelqw = PHYS_AIRACCEL_QW(self);
+		float wishspeed0 = wishspeed;
+		wishspeed = min(wishspeed, maxairspd);
+		if (IS_DUCKED(self))
+			wishspeed *= 0.5;
+		float airaccel = PHYS_AIRACCELERATE * min(maxspd_mod, 1);
+
 		float accelerating = (self.velocity * wishdir > 0);
 		float wishspeed2 = wishspeed;
 
-		// CPM
+		// CPM: air control
 		if (PHYS_AIRSTOPACCELERATE)
 		{
 			vector curdir = normalize(vec2(self.velocity));
@@ -1560,18 +1560,20 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		if (PHYS_AIRSTRAFEACCELERATE)
 			airaccel = GeomLerp(airaccel, strafity, PHYS_AIRSTRAFEACCELERATE*maxspd_mod);
 		if (PHYS_AIRSTRAFEACCEL_QW(self))
-			airaccelqw = copysign(1-GeomLerp(1-fabs(PHYS_AIRACCEL_QW(self)), strafity, 1-fabs(PHYS_AIRSTRAFEACCEL_QW(self))), ((strafity > 0.5) ? PHYS_AIRSTRAFEACCEL_QW(self) : PHYS_AIRACCEL_QW(self)));
+			airaccelqw =
+            	(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(self) : PHYS_AIRACCEL_QW(self)) >= 0) ? +1 : -1)
+            	*
+            	(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(self)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(self))));
 		// !CPM
 
 		if (PHYS_WARSOWBUNNY_TURNACCEL && accelerating && PHYS_INPUT_MOVEVALUES(self).y == 0 && PHYS_INPUT_MOVEVALUES(self).x != 0)
-			PM_AirAccelerate(wishdir, wishspeed);
+			PM_AirAccelerate(wishdir, wishspeed2);
 		else
 			PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(self), PHYS_AIRACCEL_SIDEWAYS_FRICTION / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(self));
 
 		if (PHYS_AIRCONTROL)
 			CPM_PM_Aircontrol(wishdir, wishspeed2);
 	}
-#ifdef CSQC
 	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		self.velocity_z -= g * 0.5;
@@ -1581,7 +1583,6 @@ void PM_air(float buttons_prev, float maxspd_mod)
 	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			self.velocity_z -= g * 0.5;
-#endif
 }
 
 // used for calculating airshots
