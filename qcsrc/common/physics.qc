@@ -61,9 +61,7 @@ void Physics_AddStats()
 
 	#define PHYS_INPUT_ANGLES(s)   				input_angles
 	#define PHYS_INPUT_BUTTONS(s)   			input_buttons
-
 	#define PHYS_INPUT_TIMELENGTH				input_timelength
-
 	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE
@@ -130,9 +128,7 @@ void Physics_AddStats()
 	#define PHYS_INPUT_ANGLES(s)				s.v_angle
 	// TODO: cache
 	#define PHYS_INPUT_BUTTONS(s)   			(s.BUTTON_ATCK + 2 * s.BUTTON_JUMP + 4 * s.BUTTON_ATCK2 + 8 * s.BUTTON_ZOOM + 16 * s.BUTTON_CROUCH + 32 * s.BUTTON_HOOK + 64 * s.BUTTON_USE + 128 * (s.movement_x < 0) + 256 * (s.movement_x > 0) + 512 * (s.movement_y < 0) + 1024 * (s.movement_y > 0))
-
 	#define PHYS_INPUT_TIMELENGTH				frametime
-
 	#define PHYS_INPUT_MOVEVALUES(s)			s.movement
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	autocvar_sv_gameplayfix_gravityunaffectedbyticrate
@@ -231,9 +227,7 @@ float GeomLerp(float a, float lerp, float b)
 		: a * pow(fabs(b / a), lerp);
 }
 
-#ifdef CSQC
-float pmove_waterjumptime; // weird engine flag we shouldn't really use but have to for now
-#endif
+noref float pmove_waterjumptime;
 
 const float unstick_count = 27;
 vector unstick_offsets[unstick_count] =
@@ -1204,6 +1198,31 @@ void PM_swim(float maxspd_mod)
 	// swimming
 	UNSET_ONGROUND(self);
 
+	float jump = PHYS_INPUT_BUTTONS(self) & 2;
+	// water jump only in certain situations
+	// this mimics quakeworld code
+	if (jump && self.waterlevel == WATERLEVEL_SWIMMING && self.velocity_z >= -180)
+	{
+		vector yawangles = '0 1 0' * PHYS_INPUT_ANGLES(self).y;
+		makevectors(yawangles);
+		vector forward = v_forward;
+		vector spot = self.origin + 24 * forward;
+		spot_z += 8;
+		traceline(spot, spot, MOVE_NOMONSTERS, self);
+		if (trace_startsolid)
+		{
+			spot_z += 24;
+			traceline(spot, spot, MOVE_NOMONSTERS, self);
+			if (!trace_startsolid)
+			{
+				self.velocity = forward * 50;
+				self.velocity_z = 310;
+				pmove_waterjumptime = 2;
+				UNSET_ONGROUND(self);
+				SET_JUMP_HELD(self);
+			}
+		}
+	}
 	makevectors(PHYS_INPUT_ANGLES(self));
 	//wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x + v_right * PHYS_INPUT_MOVEVALUES(self).y + v_up * PHYS_INPUT_MOVEVALUES(self).z;
 	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
@@ -1213,19 +1232,46 @@ void PM_swim(float maxspd_mod)
 		wishvel = '0 0 -60'; // drift towards bottom
 
 	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
-	wishspeed = wishspeed * 0.7;
+	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod) * 0.7;
 
-	// water friction
-	self.velocity *= (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
+	if (IS_DUCKED(self))
+    	wishspeed *= 0.5;
 
-#ifdef CSQC
-	float addspeed = wishspeed - self.velocity * wishdir;
-	if (addspeed > 0)
-	{
-		float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
-		self.velocity += accelspeed * wishdir;
+//	if (pmove_waterjumptime <= 0) // TODO: use
+    {
+		// water friction
+		float f = 1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION;
+		f = min(max(0, f), 1);
+		self.velocity *= f;
+
+		f = wishspeed - self.velocity * wishdir;
+		if (f > 0)
+		{
+			float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, f);
+			self.velocity += accelspeed * wishdir;
+		}
+
+		// holding jump button swims upward slowly
+		if (jump)
+		{
+#if 0
+			if (self.watertype & CONTENT_LAVA)
+				self.velocity_z =  50;
+			else if (self.watertype & CONTENT_SLIME)
+				self.velocity_z =  80;
+			else
+			{
+				if (IS_NEXUIZ_DERIVED(gamemode))
+#endif
+					self.velocity_z = 200;
+#if 0
+				else
+					self.velocity_z = 100;
+			}
+#endif
+		}
 	}
+#ifdef CSQC
 	CSQC_ClientMovement_Move();
 #endif
 
@@ -1857,9 +1903,7 @@ void CSQC_ClientMovement_PlayerMove_Frame()
 
 #undef PHYS_INPUT_ANGLES
 #undef PHYS_INPUT_BUTTONS
-
 #undef PHYS_INPUT_TIMELENGTH
-
 #undef PHYS_INPUT_MOVEVALUES
 
 #undef GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE
