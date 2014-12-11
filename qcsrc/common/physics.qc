@@ -137,7 +137,7 @@ void PM_ClientMovement_UpdateStatus()
 	PM_ClientMovement_Unstick();
 
 	// set crouched
-	if (PHYS_INPUT_BUTTONS(self) & 16)
+	if (PHYS_INPUT_BUTTON_CROUCH(self))
 	{
 		// wants to crouch, this always works..
 		if (!IS_DUCKED(self))
@@ -1061,7 +1061,7 @@ void PM_swim(float maxspd_mod)
 	// swimming
 	UNSET_ONGROUND(self);
 
-	float jump = PHYS_INPUT_BUTTONS(self) & 2;
+	float jump = PHYS_INPUT_BUTTON_JUMP(self);
 	// water jump only in certain situations
 	// this mimics quakeworld code
 	if (jump && self.waterlevel == WATERLEVEL_SWIMMING && self.velocity_z >= -180)
@@ -1475,9 +1475,10 @@ float PM_is_flying()
 
 void PM_Main()
 {
+	float buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
 	//Con_Printf(" %f", PHYS_INPUT_TIMELENGTH);
-	if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
+	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
 	PM_ClientMovement_UpdateStatus();
@@ -1502,7 +1503,6 @@ void PM_Main()
 #ifdef SVQC
 	anticheat_physics();
 #endif
-	float buttons = PHYS_INPUT_BUTTONS(self);
 
 	if (PM_check_specialcommand(buttons))
 		return;
@@ -1585,13 +1585,6 @@ void PM_Main()
 
 	PM_check_frozen();
 
-#ifdef SVQC
-	MUTATOR_CALLHOOK(PlayerPhysics);
-#endif
-#ifdef CSQC
-	PM_dodging();
-#endif
-
 	PM_check_blocked();
 
 	maxspeed_mod = 1;
@@ -1607,6 +1600,19 @@ void PM_Main()
 	if (self.conveyor.state)
 		self.velocity -= self.conveyor.movedir;
 #endif
+
+#ifdef SVQC
+	MUTATOR_CALLHOOK(PlayerPhysics);
+#endif
+//	float forcedodge = 1;
+//	if(forcedodge) {
+//#ifdef CSQC
+//		PM_dodging_checkpressedkeys();
+//#endif
+//		PM_dodging();
+//		PM_ClientMovement_Move();
+//		return;
+//	}
 
 #ifdef SVQC
 	if (!IS_PLAYER(self))
@@ -1705,7 +1711,7 @@ void PM_Main()
 		PM_ladder(maxspeed_mod);
 #endif
 
-	else if ((ITEMS(self) & IT_JETPACK) && PHYS_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) > 0 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
+	else if ((ITEMS(self) & IT_JETPACK) && PHYS_INPUT_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) > 0 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
 		PM_jetpack(maxspeed_mod);
 
 	else
@@ -1713,7 +1719,7 @@ void PM_Main()
 #ifdef CSQC
 		// jump if on ground with jump button pressed but only if it has been
 		// released at least once since the last jump
-		if (PHYS_INPUT_BUTTONS(self) & 2)
+		if (PHYS_INPUT_BUTTON_JUMP(self))
 		{
 			if (IS_ONGROUND(self) && (!IS_JUMP_HELD(self) || !cvar("cl_movement_track_canjump")))
 			{
@@ -1765,13 +1771,8 @@ void CSQC_ClientMovement_PlayerMove_Frame()
 	}
 	else
 		// we REALLY need this handling to happen, even if the move is not executed
-		if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
+		if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 			UNSET_JUMP_HELD(self); // canjump = true
-
-#ifdef CSQC
-	PM_dodging_checkpressedkeys();
-	PM_dodging_updatepressedkeys();
-#endif
 }
 
 #ifdef SVQC

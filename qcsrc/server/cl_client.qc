@@ -1626,55 +1626,17 @@ void SetZoomState(float z)
 
 void GetPressedKeys(void) {
 	MUTATOR_CALLHOOK(GetPressedKeys);
-	if (self.movement_x > 0) // get if movement keys are pressed
-	{	// forward key pressed
-		self.pressedkeys |= KEY_FORWARD;
-		self.pressedkeys &= ~KEY_BACKWARD;
-	}
-	else if (self.movement_x < 0)
-	{	// backward key pressed
-		self.pressedkeys |= KEY_BACKWARD;
-		self.pressedkeys &= ~KEY_FORWARD;
-	}
-	else
-	{	// no x input
-		self.pressedkeys &= ~KEY_FORWARD;
-		self.pressedkeys &= ~KEY_BACKWARD;
-	}
+	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
+	X(self.pressedkeys, KEY_FORWARD, 	PHYS_INPUT_MOVEVALUES(self)_x > 0);
+	X(self.pressedkeys, KEY_BACKWARD, 	PHYS_INPUT_MOVEVALUES(self)_x < 0);
+	X(self.pressedkeys, KEY_RIGHT, 		PHYS_INPUT_MOVEVALUES(self)_y > 0);
+	X(self.pressedkeys, KEY_LEFT, 		PHYS_INPUT_MOVEVALUES(self)_y < 0);
 
-	if (self.movement_y > 0)
-	{	// right key pressed
-		self.pressedkeys |= KEY_RIGHT;
-		self.pressedkeys &= ~KEY_LEFT;
-	}
-	else if (self.movement_y < 0)
-	{	// left key pressed
-		self.pressedkeys |= KEY_LEFT;
-		self.pressedkeys &= ~KEY_RIGHT;
-	}
-	else
-	{	// no y input
-		self.pressedkeys &= ~KEY_RIGHT;
-		self.pressedkeys &= ~KEY_LEFT;
-	}
-
-	if (self.BUTTON_JUMP) // get if jump and crouch keys are pressed
-		self.pressedkeys |= KEY_JUMP;
-	else
-		self.pressedkeys &= ~KEY_JUMP;
-	if (self.BUTTON_CROUCH)
-		self.pressedkeys |= KEY_CROUCH;
-	else
-		self.pressedkeys &= ~KEY_CROUCH;
-
-	if (self.BUTTON_ATCK)
-		self.pressedkeys |= KEY_ATCK;
-	else
-		self.pressedkeys &= ~KEY_ATCK;
-	if (self.BUTTON_ATCK2)
-		self.pressedkeys |= KEY_ATCK2;
-	else
-		self.pressedkeys &= ~KEY_ATCK2;
+	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
+	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));
+	X(self.pressedkeys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(self));
+	X(self.pressedkeys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(self));
+	#undef X
 }
 
 /*

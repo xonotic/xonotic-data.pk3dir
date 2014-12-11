@@ -1,5 +1,5 @@
 #ifdef CSQC
-	#define PHYS_DODGING_FRAMETIME				(1 / frametime <= 0 ? 60 : frametime)
+	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
 	#define PHYS_DODGING 						getstati(STAT_DODGING)
 	#define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
 	#define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
@@ -108,23 +108,6 @@ void dodging_Initialize()
 }
 
 #endif
-#ifdef CSQC
-// instantly updates pressed keys, for use with dodging (may be out of date, but we can't care)
-void PM_dodging_updatepressedkeys()
-{
-	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
-	X(self.pressedkeys, KEY_FORWARD, 	PHYS_INPUT_MOVEVALUES(self)_x > 0);
-	X(self.pressedkeys, KEY_BACKWARD, 	PHYS_INPUT_MOVEVALUES(self)_x < 0);
-	X(self.pressedkeys, KEY_RIGHT, 		PHYS_INPUT_MOVEVALUES(self)_y > 0);
-	X(self.pressedkeys, KEY_LEFT, 		PHYS_INPUT_MOVEVALUES(self)_y < 0);
-
-	X(self.pressedkeys, KEY_ATCK, 		PHYS_INPUT_BUTTONS(self) & 1);
-	X(self.pressedkeys, KEY_ATCK2, 		PHYS_INPUT_BUTTONS(self) & 2);
-	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTONS(self) & 4);
-	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTONS(self) & 16);
-	#undef X
-}
-#endif
 
 // returns 1 if the player is close to a wall
 float check_close_to_wall(float threshold)
@@ -149,23 +132,23 @@ float check_close_to_ground(float threshold)
 	return IS_ONGROUND(self) ? TRUE : FALSE;
 }
 
-void PM_dodging_checkpressedkeys()
+float PM_dodging_checkpressedkeys()
 {
 	if(!PHYS_DODGING)
-		return;
+		return FALSE;
 
 	float frozen_dodging = (PHYS_FROZEN(self) && PHYS_DODGING_FROZEN);
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
-		return;
+		return FALSE;
 
 	makevectors(PHYS_WORLD_ANGLES(self));
 
 	if (check_close_to_ground(PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
-		return;
+		return TRUE;
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
@@ -180,10 +163,10 @@ void PM_dodging_checkpressedkeys()
 					dodge_detected = 1;													\
 				self.last_##BTN##_KEY_time = time;										\
 		}
- 	X(x > 0, FORWARD, x = 1);
- 	X(x < 0, BACKWARD, x = -1);
- 	X(y > 0, RIGHT, y = 1);
- 	X(y < 0, LEFT, y = -1);
+ 	X(x < 0, BACKWARD,	x--);
+ 	X(x > 0, FORWARD,	x++);
+ 	X(y < 0, LEFT,		y--);
+ 	X(y > 0, RIGHT,		y++);
  	#undef X
 
 	if (dodge_detected == 1)
@@ -203,9 +186,11 @@ void PM_dodging_checkpressedkeys()
 					+ self.dodging_direction_y * self.dodging_direction_y;
 		length = sqrt(length);
 
-		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
-		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
+		self.dodging_direction_x = self.dodging_direction_x * 1.0 / length;
+		self.dodging_direction_y = self.dodging_direction_y * 1.0 / length;
+		return TRUE;
 	}
+	return FALSE;
 }
 
 void PM_dodging()

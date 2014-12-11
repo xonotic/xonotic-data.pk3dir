@@ -3,15 +3,27 @@
 #ifdef CSQC
 
 	#define PHYS_INPUT_ANGLES(s)   				input_angles
-	#define PHYS_INPUT_BUTTONS(s)   			input_buttons
-	#define PHYS_INPUT_TIMELENGTH				input_timelength
-	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 // TODO
 	#define PHYS_WORLD_ANGLES(s)				input_angles
 
-	#define PHYS_DEAD(s)						s.csqcmodel_isdead
+	#define PHYS_INPUT_TIMELENGTH				input_timelength
 
-	#define PHYS_BUTTON_HOOK(s)					(input_buttons & 32)
+	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
+
+	#define PHYS_INPUT_BUTTON_MASK(s)   		(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
+	#define PHYS_INPUT_BUTTON_ATCK(s)			(input_buttons & 1)
+	#define PHYS_INPUT_BUTTON_JUMP(s)			(input_buttons & 2)
+	#define PHYS_INPUT_BUTTON_ATCK2(s)			(input_buttons & 4)
+	#define PHYS_INPUT_BUTTON_ZOOM(s)			(input_buttons & 8)
+	#define PHYS_INPUT_BUTTON_CROUCH(s)			(input_buttons & 16)
+	#define PHYS_INPUT_BUTTON_HOOK(s)			(input_buttons & 32)
+	#define PHYS_INPUT_BUTTON_USE(s)			(input_buttons & 64)
+	#define PHYS_INPUT_BUTTON_BACKWARD(s)		(input_buttons & 128)
+	#define PHYS_INPUT_BUTTON_FORWARD(s)		(input_buttons & 256)
+	#define PHYS_INPUT_BUTTON_LEFT(s)			(input_buttons & 512)
+	#define PHYS_INPUT_BUTTON_RIGHT(s)			(input_buttons & 1024)
+
+	#define PHYS_DEAD(s)						s.csqcmodel_isdead
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
@@ -75,16 +87,26 @@
 #elif defined(SVQC)
 
 	#define PHYS_INPUT_ANGLES(s)				s.v_angle
-	// TODO: cache
-	#define PHYS_INPUT_BUTTONS(s)   			(s.BUTTON_ATCK + 2 * s.BUTTON_JUMP + 4 * s.BUTTON_ATCK2 + 8 * s.BUTTON_ZOOM + 16 * s.BUTTON_CROUCH + 32 * s.BUTTON_HOOK + 64 * s.BUTTON_USE + 128 * (s.movement_x < 0) + 256 * (s.movement_x > 0) + 512 * (s.movement_y < 0) + 1024 * (s.movement_y > 0))
-	#define PHYS_INPUT_TIMELENGTH				frametime
-	#define PHYS_INPUT_MOVEVALUES(s)			s.movement
-
 	#define PHYS_WORLD_ANGLES(s)				s.angles
 
-	#define PHYS_DEAD(s)						s.deadflag != DEAD_NO
+	#define PHYS_INPUT_TIMELENGTH				frametime
 
-	#define PHYS_BUTTON_HOOK(s)					s.BUTTON_HOOK
+	#define PHYS_INPUT_MOVEVALUES(s)			s.movement
+	// TODO: cache
+	#define PHYS_INPUT_BUTTON_MASK(s)   		(s.BUTTON_ATCK | 2 * s.BUTTON_JUMP | 4 * s.BUTTON_ATCK2 | 8 * s.BUTTON_ZOOM | 16 * s.BUTTON_CROUCH | 32 * s.BUTTON_HOOK | 64 * s.BUTTON_USE | 128 * (s.movement_x < 0) | 256 * (s.movement_x > 0) | 512 * (s.movement_y < 0) | 1024 * (s.movement_y > 0))
+	#define PHYS_INPUT_BUTTON_ATCK(s)			s.BUTTON_ATCK
+	#define PHYS_INPUT_BUTTON_JUMP(s)			s.BUTTON_JUMP
+	#define PHYS_INPUT_BUTTON_ATCK2(s)			s.BUTTON_ATCK2
+	#define PHYS_INPUT_BUTTON_ZOOM(s)			s.BUTTON_ZOOM
+	#define PHYS_INPUT_BUTTON_CROUCH(s)			s.BUTTON_CROUCH
+	#define PHYS_INPUT_BUTTON_HOOK(s)			s.BUTTON_HOOK
+	#define PHYS_INPUT_BUTTON_USE(s)			s.BUTTON_USE
+	#define PHYS_INPUT_BUTTON_BACKWARD(s)		(s.movement_x < 0)
+	#define PHYS_INPUT_BUTTON_FORWARD(s)		(s.movement_x > 0)
+	#define PHYS_INPUT_BUTTON_LEFT(s)			(s.movement_y < 0)
+	#define PHYS_INPUT_BUTTON_RIGHT(s)			(s.movement_y > 0)
+
+	#define PHYS_DEAD(s)						s.deadflag != DEAD_NO
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	autocvar_sv_gameplayfix_gravityunaffectedbyticrate
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
