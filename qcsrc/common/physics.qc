@@ -19,7 +19,6 @@
 float AdjustAirAccelQW(float accelqw, float factor);
 
 #ifdef SVQC
-.float stat_dodging_frozen;
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
 .float stat_sv_airspeedlimit_nonqw;
@@ -41,9 +40,6 @@ void Physics_AddStats()
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 	addstat(STAT_MOVEVARS_HIGHSPEED, AS_FLOAT, stat_movement_highspeed);
-
-	// dodging
-	addstat(STAT_DODGING_FROZEN, AS_INT, stat_dodging_frozen);
 
 	// jet pack
 	addstat(STAT_JETPACK_ACCEL_SIDE, AS_FLOAT, stat_jetpack_accel_side);
@@ -119,9 +115,10 @@ void Physics_AddStats()
 	#define PHYS_JETPACK_MAXSPEED_UP			getstatf(STAT_JETPACK_MAXSPEED_UP)
 	#define PHYS_JETPACK_MAXSPEED_SIDE			getstatf(STAT_JETPACK_MAXSPEED_SIDE)
 
+	#define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
+
 	#define PHYS_BUTTON_HOOK(s)					(input_buttons & 32)
 
-	#define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
 
 #elif defined(SVQC)
 
@@ -186,9 +183,9 @@ void Physics_AddStats()
 	#define PHYS_JETPACK_MAXSPEED_UP			autocvar_g_jetpack_maxspeed_up
 	#define PHYS_JETPACK_MAXSPEED_SIDE			autocvar_g_jetpack_maxspeed_side
 
-	#define PHYS_BUTTON_HOOK(s)					s.BUTTON_HOOK
-
 	#define PHYS_DODGING_FROZEN					autocvar_sv_dodging_frozen
+
+	#define PHYS_BUTTON_HOOK(s)					s.BUTTON_HOOK
 
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -1725,6 +1722,9 @@ void PM_Main()
 #ifdef SVQC
 	MUTATOR_CALLHOOK(PlayerPhysics);
 #endif
+#ifdef CSQC
+	PM_dodging();
+#endif
 
 	PM_check_blocked();
 
@@ -1880,9 +1880,13 @@ void PM_Main()
 	if (self.conveyor.state)
 		self.velocity += self.conveyor.movedir;
 #endif
-
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
+
+#ifdef CSQC
+	PM_dodging_checkpressedkeys();
+	PM_dodging_updatepressedkeys();
+#endif
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame()
@@ -1908,6 +1912,9 @@ void CSQC_ClientMovement_PlayerMove_Frame()
 #undef PHYS_INPUT_BUTTONS
 #undef PHYS_INPUT_TIMELENGTH
 #undef PHYS_INPUT_MOVEVALUES
+
+#undef PHYS_FROZEN
+#undef PHYS_DODGING_FROZEN
 
 #undef GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE
 #undef GAMEPLAYFIX_NOGRAVITYONGROUND

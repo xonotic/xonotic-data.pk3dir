@@ -120,6 +120,8 @@ command/cl_cmd.qc
 
 ../common/monsters/monsters.qc
 
+../server/mutators/mutator_dodging.qc
+
 ../common/nades.qc
 ../common/buffs.qc
 ../common/physics.qc

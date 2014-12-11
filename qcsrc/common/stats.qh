@@ -233,17 +233,17 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 198 empty?
 // 199 empty?
 // 200 empty?
-// 201 empty?
-// 202 empty?
-// 203 empty?
-// 204 empty?
-// 205 empty?
-// 206 empty?
-// 207 empty?
-// 208 empty?
-// 209 empty?
-// 210 empty?
-// 211 empty?
+const float STAT_DODGING_TIMEOUT                        = 201;
+const float STAT_DODGING_WALL                           = 202;
+const float STAT_DODGING_UP_SPEED                       = 203;
+const float STAT_DODGING_RAMP_TIME                      = 204;
+const float STAT_DODGING_HEIGHT_THRESHOLD               = 205;
+const float STAT_DODGING_DISTANCE_THRESHOLD             = 206;
+const float STAT_DODGING_HORIZ_SPEED                    = 207;
+const float STAT_DODGING_DELAY                          = 208;
+const float STAT_DODGING_FROZEN_NO_DOUBLETAP            = 209;
+const float STAT_DODGING_HORIZ_SPEED_FROZEN             = 210;
+const float STAT_DODGING                                = 211;
 const float STAT_DODGING_FROZEN                         = 212;
 const float STAT_JETPACK_MAXSPEED_UP                    = 213;
 const float STAT_JETPACK_MAXSPEED_SIDE                  = 214;
