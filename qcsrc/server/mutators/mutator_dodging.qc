@@ -55,6 +55,8 @@
 #define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 #define IS_ONGROUND(s)    					(s.pmove_flags & PMF_ONGROUND)
 
+#define PHYS_DEAD(s)						s.csqcmodel_isdead
+
 #define PHYS_DODGING_FRAMETIME				frametime
 #define PHYS_DODGING 						getstati(STAT_DODGING)
 #define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
@@ -78,6 +80,8 @@
 #define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 #define PHYS_FROZEN(s)						s.frozen
 #define IS_ONGROUND(s)    					(s.flags & FL_ONGROUND)
+
+#define PHYS_DEAD(s)						s.deadflag != DEAD_NO
 
 #define PHYS_DODGING_FRAMETIME				sys_frametime
 #define PHYS_DODGING 						g_dodging
@@ -350,10 +354,8 @@ void PM_dodging()
 	if(PHYS_FROZEN(self))
 		horiz_speed = PHYS_DODGING_HORIZ_SPEED_FROZEN;
 
-#ifdef SVQC
-    if (self.deadflag != DEAD_NO)
+    if(PHYS_DEAD(self))
         return;
-#endif
 
 	new_velocity_gain = 0;
 	clean_up_and_do_nothing = 0;
