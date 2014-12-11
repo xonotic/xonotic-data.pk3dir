@@ -335,7 +335,7 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		self.effects |= EF_RED;
 		if(!self.weapon)
-			self.weapon = WEP_NEX;
+			self.weapon = WEP_VORTEX;
 	}
 }
 

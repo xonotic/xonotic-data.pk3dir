@@ -335,7 +335,7 @@ void FireGrapplingHook (void)
 
 	missile.state = 0; // not latched onto anything
 
-	W_SetupProjectileVelocityEx(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -476,7 +476,7 @@ void GrappleHookInit()
 	}
 	else
 	{
-		weapon_action(WEP_HOOK, WR_PRECACHE);
+		WEP_ACTION(WEP_HOOK, WR_INIT);
 		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
 		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
 		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);
