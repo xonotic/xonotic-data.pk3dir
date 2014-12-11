@@ -1767,6 +1767,11 @@ void CSQC_ClientMovement_PlayerMove_Frame()
 		// we REALLY need this handling to happen, even if the move is not executed
 		if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
 			UNSET_JUMP_HELD(self); // canjump = true
+
+#ifdef CSQC
+	PM_dodging_checkpressedkeys();
+	PM_dodging_updatepressedkeys();
+#endif
 }
 
 #ifdef SVQC

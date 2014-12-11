@@ -310,10 +310,6 @@ void PM_dodging_checkpressedkeys()
 		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
 		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
 	}
-
-#ifdef CSQC
-	PM_dodging_updatepressedkeys();
-#endif
 }
 
 void PM_dodging()
@@ -410,10 +406,6 @@ void PM_dodging()
 		self.dodging_direction_x = 0;
 		self.dodging_direction_y = 0;
 	}
-
-#ifdef CSQC
-	PM_dodging_checkpressedkeys();
-#endif
 }
 
 #ifdef SVQC
