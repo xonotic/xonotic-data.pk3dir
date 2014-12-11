@@ -1,3 +1,33 @@
+#ifdef CSQC
+	#define PHYS_DODGING_FRAMETIME				(1 / frametime <= 0 ? 60 : frametime)
+	#define PHYS_DODGING 						getstati(STAT_DODGING)
+	#define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
+	#define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
+	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	getstatf(STAT_DODGING_HORIZ_SPEED_FROZEN)
+	#define PHYS_DODGING_FROZEN_NODOUBLETAP		getstati(STAT_DODGING_FROZEN_NO_DOUBLETAP)
+	#define PHYS_DODGING_HORIZ_SPEED 			getstatf(STAT_DODGING_HORIZ_SPEED)
+	#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
+	#define PHYS_DODGING_HEIGHT_THRESHOLD 		getstatf(STAT_DODGING_HEIGHT_THRESHOLD)
+	#define PHYS_DODGING_DISTANCE_THRESHOLD 	getstatf(STAT_DODGING_DISTANCE_THRESHOLD)
+	#define PHYS_DODGING_RAMP_TIME 				getstatf(STAT_DODGING_RAMP_TIME)
+	#define PHYS_DODGING_UP_SPEED 				getstatf(STAT_DODGING_UP_SPEED)
+	#define PHYS_DODGING_WALL 					getstatf(STAT_DODGING_WALL)
+#elif defined(SVQC)
+	#define PHYS_DODGING_FRAMETIME				sys_frametime
+	#define PHYS_DODGING 						g_dodging
+	#define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
+	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
+	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
+	#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
+	#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
+	#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
+	#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
+	#define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
+	#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
+	#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
+	#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
+#endif
+
 #ifdef SVQC
 
 .float cvar_cl_dodging_timeout;
