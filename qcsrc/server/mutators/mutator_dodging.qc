@@ -57,7 +57,7 @@
 
 #define PHYS_DEAD(s)						s.csqcmodel_isdead
 
-#define PHYS_DODGING_FRAMETIME				frametime
+#define PHYS_DODGING_FRAMETIME				1 / frametime
 #define PHYS_DODGING 						getstati(STAT_DODGING)
 #define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
 #define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
@@ -190,7 +190,7 @@ void PM_dodging_updatepressedkeys()
 // returns 1 if the player is close to a wall
 float check_close_to_wall(float threshold)
 {
-	if (PHYS_DODGING_WALL == 0) { return 0; }
+	if (PHYS_DODGING_WALL == 0) { return FALSE; }
 
 	vector trace_start;
 	vector trace_end;
@@ -200,32 +200,32 @@ float check_close_to_wall(float threshold)
 	trace_end = self.origin + (1000*v_right);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return TRUE;
 
 	trace_end = self.origin - (1000*v_right);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return TRUE;
 
 	trace_end = self.origin + (1000*v_forward);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return TRUE;
 
 	trace_end = self.origin - (1000*v_forward);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return TRUE;
 
-	return 0;
+	return FALSE;
 }
 
 float check_close_to_ground(float threshold)
 {
 	if (IS_ONGROUND(self))
-		return 1;
+		return TRUE;
 
-	return 0;
+	return FALSE;
 }
 
 void PM_dodging_checkpressedkeys()
@@ -446,7 +446,7 @@ void PM_dodging()
 MUTATOR_HOOKFUNCTION(dodging_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
@@ -454,14 +454,14 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
 	// print("dodging_PlayerPhysics\n");
 	PM_dodging();
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys)
 {
 	PM_dodging_checkpressedkeys();
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_DEFINITION(mutator_dodging)
@@ -489,11 +489,7 @@ MUTATOR_DEFINITION(mutator_dodging)
 		g_dodging = 0;
 	}
 
-	MUTATOR_ONREMOVE
-	{
-	}
-
-	return 0;
+	return FALSE;
 }
 #endif
 
