@@ -146,7 +146,7 @@ float check_close_to_wall(float threshold)
 
 float check_close_to_ground(float threshold)
 {
-	return IS_ONGROUND(self);
+	return IS_ONGROUND(self) ? TRUE : FALSE;
 }
 
 void PM_dodging_checkpressedkeys()
