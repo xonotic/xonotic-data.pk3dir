@@ -1,3 +1,7 @@
+// WARNING: this kills the trace globals
+float WarpZoneLib_ExactTrigger_Touch();
+#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
+
 entity players;
 entity teams;
 var float team_count; // real teams

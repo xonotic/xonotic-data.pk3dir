@@ -1,8 +1,6 @@
 .float race_penalty;
 .float restart_jump;
 
-.float ladder_time;
-.entity ladder_entity;
 .float gravity;
 .float swamp_slowdown;
 .float lastflags;
@@ -458,7 +456,7 @@ void PlayerJump (void)
 
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
-		self.velocity_z = self.stat_sv_maxspeed * 0.7;
+		self.velocity_z = PHYS_MAXSPEED(self) * 0.7;
 		return;
 	}
 
@@ -593,8 +591,8 @@ void RaceCarPhysics()
 	vector rigvel;
 
 	vector angles_save = self.angles;
-	float accel = bound(-1, PHYS_INPUT_MOVEVALUES(self).x / self.stat_sv_maxspeed, 1);
-	float steer = bound(-1, PHYS_INPUT_MOVEVALUES(self).y / self.stat_sv_maxspeed, 1);
+	float accel = bound(-1, PHYS_INPUT_MOVEVALUES(self).x / PHYS_MAXSPEED(self), 1);
+	float steer = bound(-1, PHYS_INPUT_MOVEVALUES(self).y / PHYS_MAXSPEED(self), 1);
 
 	if (g_bugrigs_reverse_speeding)
 	{
@@ -945,7 +943,7 @@ void PM_check_spider(void)
 #ifdef SVQC
 	if (time >= self.spider_slowness)
 		return;
-	self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
+	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
 	self.stat_sv_airspeedlimit_nonqw *= 0.5;
 #endif
 }
@@ -1141,7 +1139,6 @@ void PM_swim(float maxspd_mod)
 
 void PM_ladder(float maxspd_mod)
 {
-#ifdef SVQC
 	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 	UNSET_ONGROUND(self);
 
@@ -1158,9 +1155,9 @@ void PM_ladder(float maxspd_mod)
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
 	makevectors(PHYS_INPUT_ANGLES(self));
 	//wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x + v_right * PHYS_INPUT_MOVEVALUES(self).y + v_up * PHYS_INPUT_MOVEVALUES(self).z;
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y
-					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self).z;
+	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x
+					+ v_right * PHYS_INPUT_MOVEVALUES(self)_y
+					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self)_z;
 	self.velocity_z += g;
 	if (self.ladder_entity.classname == "func_water")
 	{
@@ -1184,11 +1181,13 @@ void PM_ladder(float maxspd_mod)
 	}
 	// acceleration
 	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), self.stat_sv_maxspeed * maxspd_mod);
+	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
+	PM_ClientMovement_Move();
+#ifdef SVQC
 	if (time >= self.teleport_time)
+#endif
 		// water acceleration
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
-#endif
 }
 
 void PM_jetpack(float maxspd_mod)
@@ -1572,13 +1571,9 @@ void PM_Main()
 #ifdef SVQC
 	if (self.movetype == MOVETYPE_NONE)
 		return;
-#endif
 
-#ifdef SVQC
 	// when we get here, disableclientprediction cannot be 2
 	self.disableclientprediction = 0;
-	if (time < self.ladder_time)
-		self.disableclientprediction = 1;
 #endif
 
 	PM_check_spider();
@@ -1706,10 +1701,8 @@ void PM_Main()
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 		PM_swim(maxspeed_mod);
 
-#ifdef SVQC
 	else if (time < self.ladder_time)
 		PM_ladder(maxspeed_mod);
-#endif
 
 	else if ((ITEMS(self) & IT_JETPACK) && PHYS_INPUT_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) > 0 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
 		PM_jetpack(maxspeed_mod);

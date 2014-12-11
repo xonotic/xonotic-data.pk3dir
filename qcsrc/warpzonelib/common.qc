@@ -763,3 +763,8 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	WarpZone_RefSys_Copy(e, me);
 	return e;
 }
+
+float WarpZoneLib_ExactTrigger_Touch()
+{
+	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
+}

@@ -53,11 +53,6 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	return TRUE;
 }
 
-float WarpZoneLib_ExactTrigger_Touch()
-{
-	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
-}
-
 void WarpZoneLib_ExactTrigger_Init()
 {
 	vector mi, ma;
