@@ -33,7 +33,6 @@
 .float cvar_cl_dodging_timeout;
 
 .float stat_dodging;
-.float stat_dodging_timeout;
 .float stat_dodging_delay;
 .float stat_dodging_horiz_speed_frozen;
 .float stat_dodging_frozen_nodoubletap;
@@ -82,7 +81,6 @@ void dodging_UpdateStats()
 {
 	self.stat_dodging = PHYS_DODGING;
 	self.stat_dodging_delay = PHYS_DODGING_DELAY;
-	self.stat_dodging_timeout = PHYS_DODGING_TIMEOUT(self);
 	self.stat_dodging_horiz_speed_frozen = PHYS_DODGING_HORIZ_SPEED_FROZEN;
 	self.stat_dodging_frozen = PHYS_DODGING_FROZEN;
 	self.stat_dodging_frozen_nodoubletap = PHYS_DODGING_FROZEN_NODOUBLETAP;
