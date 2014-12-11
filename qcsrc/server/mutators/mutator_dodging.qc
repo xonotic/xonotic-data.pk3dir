@@ -394,11 +394,7 @@ void PM_dodging()
 	if (self.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
-#ifdef SVQC
-		if(self.movement_z > 0) self.movement_z = 0;
-#elif defined(CSQC)
-		if(input_movevalues_z > 0) input_movevalues_z = 0;
-#endif
+		if(PHYS_INPUT_MOVEVALUES(self)_z > 0) { PHYS_INPUT_MOVEVALUES(self)_z = 0; }
 
 		self.velocity =
 			  self.velocity
