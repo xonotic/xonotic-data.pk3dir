@@ -1882,11 +1882,6 @@ void PM_Main()
 #endif
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
-
-#ifdef CSQC
-	PM_dodging_checkpressedkeys();
-	PM_dodging_updatepressedkeys();
-#endif
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame()

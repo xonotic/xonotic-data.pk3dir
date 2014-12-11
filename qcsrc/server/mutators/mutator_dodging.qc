@@ -55,9 +55,9 @@
 #define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 #define IS_ONGROUND(s)    					(s.pmove_flags & PMF_ONGROUND)
 
-#define PHYS_DODGING_FRAMETIME				input_timelength
+#define PHYS_DODGING_FRAMETIME				frametime
 #define PHYS_DODGING 						getstati(STAT_DODGING)
-#define PHYS_DODGING_DELAY 					getstati(STAT_DODGING_DELAY)
+#define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
 #define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
 #define PHYS_DODGING_HORIZ_SPEED_FROZEN 	getstatf(STAT_DODGING_HORIZ_SPEED_FROZEN)
 #define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
@@ -239,9 +239,7 @@ void PM_dodging_checkpressedkeys()
 	frozen_dodging = (PHYS_FROZEN(self) && PHYS_DODGING_FROZEN);
 	frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
-	float dodge_detected;
-
-	dodge_detected = 0;
+	float dodge_detected = 0;
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
@@ -329,6 +327,10 @@ void PM_dodging_checkpressedkeys()
 		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
 		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
 	}
+
+#ifdef CSQC
+	PM_dodging_updatepressedkeys();
+#endif
 }
 
 void PM_dodging()
@@ -394,7 +396,6 @@ void PM_dodging()
 		if(self.movement_z > 0) self.movement_z = 0;
 #elif defined(CSQC)
 		if(input_movevalues_z > 0) input_movevalues_z = 0;
-		print("DODGE!\n");
 #endif
 
 		self.velocity =
@@ -432,6 +433,10 @@ void PM_dodging()
 		self.dodging_direction_x = 0;
 		self.dodging_direction_y = 0;
 	}
+
+#ifdef CSQC
+	PM_dodging_checkpressedkeys();
+#endif
 }
 
 #ifdef SVQC
