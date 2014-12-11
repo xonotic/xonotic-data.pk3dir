@@ -116,6 +116,7 @@ g_damage.qc
 
 teamplay.qc
 
+../common/physics.qh
 ../common/physics.qc
 
 // tZork's libs

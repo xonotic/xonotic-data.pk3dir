@@ -1,5 +1,3 @@
-#include "./physics.qh"
-
 .float race_penalty;
 .float restart_jump;
 

@@ -1,4 +1,3 @@
-#include "../../common/physics.qh"
 #ifdef SVQC
 
 .float cvar_cl_dodging_timeout;
