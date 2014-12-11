@@ -1,4 +1,4 @@
-
+#include "../../common/physics.qh"
 #ifdef SVQC
 
 .float cvar_cl_dodging_timeout;
@@ -47,57 +47,7 @@
 #ifdef CSQC
 .float pressedkeys;
 
-#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
-#define PHYS_INPUT_BUTTONS(s)   			input_buttons
-#define PHYS_INPUT_ANGLES(s)   				input_angles
-
-#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
-#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
-#define IS_ONGROUND(s)    					(s.pmove_flags & PMF_ONGROUND)
-
-#define PHYS_DEAD(s)						s.csqcmodel_isdead
-
-#define PHYS_DODGING_FRAMETIME				1 / frametime
-#define PHYS_DODGING 						getstati(STAT_DODGING)
-#define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
-#define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
-#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	getstatf(STAT_DODGING_HORIZ_SPEED_FROZEN)
-#define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
-#define PHYS_DODGING_FROZEN_NODOUBLETAP		getstati(STAT_DODGING_FROZEN_NO_DOUBLETAP)
-#define PHYS_DODGING_HORIZ_SPEED 			getstatf(STAT_DODGING_HORIZ_SPEED)
-#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
-#define PHYS_DODGING_HEIGHT_THRESHOLD 		getstatf(STAT_DODGING_HEIGHT_THRESHOLD)
-#define PHYS_DODGING_DISTANCE_THRESHOLD 	getstatf(STAT_DODGING_DISTANCE_THRESHOLD)
-#define PHYS_DODGING_RAMP_TIME 				getstatf(STAT_DODGING_RAMP_TIME)
-#define PHYS_DODGING_UP_SPEED 				getstatf(STAT_DODGING_UP_SPEED)
-#define PHYS_DODGING_WALL 					getstatf(STAT_DODGING_WALL)
-
 #elif defined(SVQC)
-
-#define PHYS_INPUT_ANGLES(s)   				s.angles
-#define PHYS_INPUT_MOVEVALUES(s)			s.movement
-#define PHYS_INPUT_BUTTONS(s)   			(s.BUTTON_ATCK + 2 * s.BUTTON_JUMP + 4 * s.BUTTON_ATCK2 + 8 * s.BUTTON_ZOOM + 16 * s.BUTTON_CROUCH + 32 * s.BUTTON_HOOK + 64 * s.BUTTON_USE + 128 * (s.movement_x < 0) + 256 * (s.movement_x > 0) + 512 * (s.movement_y < 0) + 1024 * (s.movement_y > 0))
-#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
-#define PHYS_FROZEN(s)						s.frozen
-#define IS_ONGROUND(s)    					(s.flags & FL_ONGROUND)
-
-#define PHYS_DEAD(s)						s.deadflag != DEAD_NO
-
-#define PHYS_DODGING_FRAMETIME				sys_frametime
-#define PHYS_DODGING 						g_dodging
-#define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
-#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
-#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
-#define PHYS_DODGING_FROZEN					autocvar_sv_dodging_frozen
-#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
-#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
-#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
-#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
-#define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
-#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
-#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
-#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
-
 
 void dodging_UpdateStats()
 {
@@ -249,7 +199,7 @@ void PM_dodging_checkpressedkeys()
 	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
 		return;
 
-	makevectors(PHYS_INPUT_ANGLES(self));
+	makevectors(PHYS_WORLD_ANGLES(self));
 
 	if (check_close_to_ground(PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
@@ -373,7 +323,7 @@ void PM_dodging()
 	}
 
 	// make sure v_up, v_right and v_forward are sane
-	makevectors(PHYS_INPUT_ANGLES(self));
+	makevectors(PHYS_WORLD_ANGLES(self));
 
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
@@ -488,12 +438,3 @@ MUTATOR_DEFINITION(mutator_dodging)
 	return FALSE;
 }
 #endif
-
-// we use this elsewhere, but let's undefine it anyway
-#undef PHYS_DODGING_FROZEN
-#undef PHYS_INPUT_MOVEVALUES
-#undef PHYS_INPUT_ANGLES
-#undef PHYS_INPUT_BUTTONS
-#undef UNSET_ONGROUND
-#undef PHYS_FROZEN
-#undef IS_ONGROUND

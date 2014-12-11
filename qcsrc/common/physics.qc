@@ -1,3 +1,5 @@
+#include "./physics.qh"
+
 .float race_penalty;
 .float restart_jump;
 
@@ -18,7 +20,11 @@
 .float() PlayerPhysplug;
 float AdjustAirAccelQW(float accelqw, float factor);
 
-#ifdef SVQC
+#ifdef CSQC
+
+.float watertype;
+
+#elif defined(SVQC)
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
 .float stat_sv_airspeedlimit_nonqw;
@@ -49,144 +55,6 @@ void Physics_AddStats()
 	addstat(STAT_JETPACK_MAXSPEED_UP, AS_FLOAT, stat_jetpack_maxspeed_up);
 	addstat(STAT_JETPACK_MAXSPEED_SIDE, AS_FLOAT, stat_jetpack_maxspeed_side);
 }
-#endif
-
-// Client/server mappings
-#ifdef CSQC
-.float watertype;
-
-	#define PHYS_INPUT_ANGLES(s)   				input_angles
-	#define PHYS_INPUT_BUTTONS(s)   			input_buttons
-	#define PHYS_INPUT_TIMELENGTH				input_timelength
-	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
-
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE
-	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
-	#define GAMEPLAYFIX_Q2AIRACCELERATE				cvar("sv_gameplayfix_q2airaccelerate")
-
-	#define IS_DUCKED(s)    					(s.pmove_flags & PMF_DUCKED)
-	#define SET_DUCKED(s)   					s.pmove_flags |= PMF_DUCKED
-	#define UNSET_DUCKED(s) 					s.pmove_flags &= ~PMF_DUCKED
-
-	#define IS_JUMP_HELD(s)    					(s.pmove_flags & PMF_JUMP_HELD)
-	#define SET_JUMP_HELD(s)   					s.pmove_flags |= PMF_JUMP_HELD
-	#define UNSET_JUMP_HELD(s) 					s.pmove_flags &= ~PMF_JUMP_HELD
-
-	#define IS_ONGROUND(s)    					(s.pmove_flags & PMF_ONGROUND)
-	#define SET_ONGROUND(s)   					s.pmove_flags |= PMF_ONGROUND
-	#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
-
-	#define ITEMS(s) 							getstati(STAT_ITEMS, 0, 24)
-	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
-	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
-
-	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
-	#define PHYS_AIRACCEL_QW(s)					getstatf(STAT_MOVEVARS_AIRACCEL_QW)
-	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	getstatf(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR)
-	#define PHYS_AIRACCEL_SIDEWAYS_FRICTION		getstatf(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION)
-	#define PHYS_AIRACCELERATE					getstatf(STAT_MOVEVARS_AIRACCELERATE)
-	#define PHYS_AIRCONTROL						getstatf(STAT_MOVEVARS_AIRCONTROL)
-	#define PHYS_AIRCONTROL_PENALTY				getstatf(STAT_MOVEVARS_AIRCONTROL_PENALTY)
-	#define PHYS_AIRCONTROL_POWER				getstatf(STAT_MOVEVARS_AIRCONTROL_POWER)
-	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			getstatf(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW)
-	#define PHYS_AIRSTOPACCELERATE				getstatf(STAT_MOVEVARS_AIRSTOPACCELERATE)
-	#define PHYS_AIRSTRAFEACCEL_QW(s)			getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW)
-	#define PHYS_AIRSTRAFEACCELERATE			getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE)
-	#define PHYS_ENTGRAVITY(s)					getstatf(STAT_MOVEVARS_ENTGRAVITY)
-	#define PHYS_FRICTION						getstatf(STAT_MOVEVARS_FRICTION)
-	#define PHYS_GRAVITY						getstatf(STAT_MOVEVARS_GRAVITY)
-	#define PHYS_HIGHSPEED						getstatf(STAT_MOVEVARS_HIGHSPEED)
-	#define PHYS_JUMPVELOCITY					getstatf(STAT_MOVEVARS_JUMPVELOCITY)
-	#define PHYS_MAXAIRSPEED					getstatf(STAT_MOVEVARS_MAXAIRSPEED)
-	#define PHYS_MAXAIRSTRAFESPEED				getstatf(STAT_MOVEVARS_MAXAIRSTRAFESPEED)
-	#define PHYS_MAXSPEED(s)					getstatf(STAT_MOVEVARS_MAXSPEED)
-	#define PHYS_STEPHEIGHT						getstatf(STAT_MOVEVARS_STEPHEIGHT)
-	#define PHYS_STOPSPEED						getstatf(STAT_MOVEVARS_STOPSPEED)
-	#define PHYS_WARSOWBUNNY_ACCEL				getstatf(STAT_MOVEVARS_WARSOWBUNNY_ACCEL)
-	#define PHYS_WARSOWBUNNY_BACKTOSIDERATIO	getstatf(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO)
-	#define PHYS_WARSOWBUNNY_AIRFORWARDACCEL	getstatf(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL)
-	#define PHYS_WARSOWBUNNY_TOPSPEED			getstatf(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED)
-	#define PHYS_WARSOWBUNNY_TURNACCEL			getstatf(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL)
-
-	#define PHYS_JETPACK_ACCEL_UP 				getstatf(STAT_JETPACK_ACCEL_UP)
-	#define PHYS_JETPACK_ACCEL_SIDE 			getstatf(STAT_JETPACK_ACCEL_SIDE)
-	#define PHYS_JETPACK_ANTIGRAVITY 			getstatf(STAT_JETPACK_ANTIGRAVITY)
-	#define PHYS_JETPACK_FUEL					getstatf(STAT_JETPACK_FUEL)
-	#define PHYS_JETPACK_MAXSPEED_UP			getstatf(STAT_JETPACK_MAXSPEED_UP)
-	#define PHYS_JETPACK_MAXSPEED_SIDE			getstatf(STAT_JETPACK_MAXSPEED_SIDE)
-
-	#define PHYS_DODGING_FROZEN					getstati(STAT_DODGING_FROZEN)
-
-	#define PHYS_BUTTON_HOOK(s)					(input_buttons & 32)
-
-
-#elif defined(SVQC)
-
-	#define PHYS_INPUT_ANGLES(s)				s.v_angle
-	// TODO: cache
-	#define PHYS_INPUT_BUTTONS(s)   			(s.BUTTON_ATCK + 2 * s.BUTTON_JUMP + 4 * s.BUTTON_ATCK2 + 8 * s.BUTTON_ZOOM + 16 * s.BUTTON_CROUCH + 32 * s.BUTTON_HOOK + 64 * s.BUTTON_USE + 128 * (s.movement_x < 0) + 256 * (s.movement_x > 0) + 512 * (s.movement_y < 0) + 1024 * (s.movement_y > 0))
-	#define PHYS_INPUT_TIMELENGTH				frametime
-	#define PHYS_INPUT_MOVEVALUES(s)			s.movement
-
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	autocvar_sv_gameplayfix_gravityunaffectedbyticrate
-	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
-	#define GAMEPLAYFIX_Q2AIRACCELERATE				autocvar_sv_gameplayfix_q2airaccelerate
-
-	#define IS_DUCKED(s)    					s.crouch
-	#define SET_DUCKED(s)   					s.crouch = TRUE
-	#define UNSET_DUCKED(s) 					s.crouch = FALSE
-
-	#define IS_JUMP_HELD(s)    					(s.flags & FL_JUMPRELEASED == 0)
-	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
-	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
-
-	#define IS_ONGROUND(s)    					(s.flags & FL_ONGROUND)
-	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
-	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
-
-	#define ITEMS(s)							s.items
-	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
-	#define PHYS_FROZEN(s)						s.frozen
-
-	#define PHYS_ACCELERATE						autocvar_sv_accelerate
-	#define PHYS_AIRACCEL_QW(s)					s.stat_sv_airaccel_qw
-	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	autocvar_sv_airaccel_qw_stretchfactor
-	#define PHYS_AIRACCEL_SIDEWAYS_FRICTION		autocvar_sv_airaccel_sideways_friction
-	#define PHYS_AIRACCELERATE					autocvar_sv_airaccelerate
-	#define PHYS_AIRCONTROL						autocvar_sv_aircontrol
-	#define PHYS_AIRCONTROL_PENALTY				autocvar_sv_aircontrol_penalty
-	#define PHYS_AIRCONTROL_POWER				autocvar_sv_aircontrol_power
-	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			s.stat_sv_airspeedlimit_nonqw
-	#define PHYS_AIRSTOPACCELERATE				autocvar_sv_airstopaccelerate
-	#define PHYS_AIRSTRAFEACCEL_QW(s)			s.stat_sv_airstrafeaccel_qw
-	#define PHYS_AIRSTRAFEACCELERATE			autocvar_sv_airstrafeaccelerate
-	#define PHYS_ENTGRAVITY(s)					s.gravity
-	#define PHYS_FRICTION						autocvar_sv_friction
-	#define PHYS_GRAVITY						autocvar_sv_gravity
-	#define PHYS_HIGHSPEED						autocvar_g_movement_highspeed
-	#define PHYS_JUMPVELOCITY					autocvar_sv_jumpvelocity
-	#define PHYS_MAXAIRSPEED					autocvar_sv_maxairspeed
-	#define PHYS_MAXAIRSTRAFESPEED				autocvar_sv_maxairstrafespeed
-	#define PHYS_MAXSPEED(s)					s.stat_sv_maxspeed
-	#define PHYS_STEPHEIGHT						autocvar_sv_stepheight
-	#define PHYS_STOPSPEED						autocvar_sv_stopspeed
-	#define PHYS_WARSOWBUNNY_ACCEL				autocvar_sv_warsowbunny_accel
-	#define PHYS_WARSOWBUNNY_BACKTOSIDERATIO	autocvar_sv_warsowbunny_backtosideratio
-	#define PHYS_WARSOWBUNNY_AIRFORWARDACCEL	autocvar_sv_warsowbunny_airforwardaccel
-	#define PHYS_WARSOWBUNNY_TOPSPEED			autocvar_sv_warsowbunny_topspeed
-	#define PHYS_WARSOWBUNNY_TURNACCEL			autocvar_sv_warsowbunny_turnaccel
-
-	#define PHYS_JETPACK_ACCEL_UP 				autocvar_g_jetpack_acceleration_up
-	#define PHYS_JETPACK_ACCEL_SIDE 			autocvar_g_jetpack_acceleration_side
-	#define PHYS_JETPACK_ANTIGRAVITY 			autocvar_g_jetpack_antigravity
-	#define PHYS_JETPACK_FUEL					autocvar_g_jetpack_fuel
-	#define PHYS_JETPACK_MAXSPEED_UP			autocvar_g_jetpack_maxspeed_up
-	#define PHYS_JETPACK_MAXSPEED_SIDE			autocvar_g_jetpack_maxspeed_side
-
-	#define PHYS_DODGING_FROZEN					autocvar_sv_dodging_frozen
-
-	#define PHYS_BUTTON_HOOK(s)					s.BUTTON_HOOK
-
 
 void Physics_UpdateStats(float maxspd_mod)
 {
@@ -1902,59 +1770,6 @@ void CSQC_ClientMovement_PlayerMove_Frame()
 		if (!(PHYS_INPUT_BUTTONS(self) & 2)) // !jump
 			UNSET_JUMP_HELD(self); // canjump = true
 }
-
-#undef PHYS_INPUT_ANGLES
-#undef PHYS_INPUT_BUTTONS
-#undef PHYS_INPUT_TIMELENGTH
-#undef PHYS_INPUT_MOVEVALUES
-
-#undef PHYS_FROZEN
-#undef PHYS_DODGING_FROZEN
-
-#undef GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE
-#undef GAMEPLAYFIX_NOGRAVITYONGROUND
-#undef GAMEPLAYFIX_Q2AIRACCELERATE
-
-#undef IS_DUCKED
-#undef SET_DUCKED
-#undef UNSET_DUCKED
-
-#undef IS_JUMP_HELD
-#undef SET_JUMP_HELD
-#undef UNSET_JUMP_HELD
-
-#undef IS_ONGROUND
-#undef SET_ONGROUND
-#undef UNSET_ONGROUND
-
-#undef PHYS_ACCELERATE
-#undef PHYS_AIRACCEL_QW
-#undef PHYS_AIRACCEL_QW_STRETCHFACTOR
-#undef PHYS_AIRACCEL_SIDEWAYS_FRICTION
-#undef PHYS_AIRACCELERATE
-#undef PHYS_AIRCONTROL
-#undef PHYS_AIRCONTROL_PENALTY
-#undef PHYS_AIRCONTROL_POWER
-#undef PHYS_AIRSPEEDLIMIT_NONQW
-#undef PHYS_AIRSTOPACCELERATE
-#undef PHYS_AIRSTRAFEACCEL_QW
-#undef PHYS_AIRSTRAFEACCELERATE
-#undef PHYS_EDGEFRICTION
-#undef PHYS_ENTGRAVITY
-#undef PHYS_FRICTION
-#undef PHYS_GRAVITY
-#undef PHYS_HIGHSPEED
-#undef PHYS_JUMPVELOCITY
-#undef PHYS_MAXAIRSPEED
-#undef PHYS_MAXAIRSTRAFESPEED
-#undef PHYS_MAXSPEED
-#undef PHYS_STEPHEIGHT
-#undef PHYS_STOPSPEED
-#undef PHYS_WARSOWBUNNY_ACCEL
-#undef PHYS_WARSOWBUNNY_BACKTOSIDERATIO
-#undef PHYS_WARSOWBUNNY_AIRFORWARDACCEL
-#undef PHYS_WARSOWBUNNY_TOPSPEED
-#undef PHYS_WARSOWBUNNY_TURNACCEL
 
 #ifdef SVQC
 // Entry point
