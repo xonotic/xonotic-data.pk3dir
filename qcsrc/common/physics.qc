@@ -185,7 +185,7 @@ void PM_ClientMovement_UpdateStatus()
 		SET_ONGROUND(self);
 
 		// this code actually "predicts" an impact; so let's clip velocity first
-		float f = dotproduct(self.velocity, trace_plane_normal);
+		float f = self.velocity * trace_plane_normal;
 		if (f < 0) // only if moving downwards actually
 			self.velocity -= f * trace_plane_normal;
 	}
@@ -281,7 +281,7 @@ void PM_ClientMovement_Move()
 
 		t -= t * trace_fraction;
 
-		float f = dotproduct(self.velocity, trace_plane_normal);
+		float f = self.velocity * trace_plane_normal;
 		self.velocity -= f * trace_plane_normal;
 	}
 	if (pmove_waterjumptime > 0)

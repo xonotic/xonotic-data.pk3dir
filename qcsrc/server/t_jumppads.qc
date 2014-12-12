@@ -4,7 +4,6 @@
 .float active;
 .string target;
 .string targetname;
-.float jpad_time;
 #define ACTIVE_NOT 		0
 #define ACTIVE_ACTIVE 	1
 #define ACTIVE_IDLE 	2
@@ -147,7 +146,6 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void PM_ClientMovement_Move();
 void trigger_push_touch()
 {
 	if (self.active == ACTIVE_NOT)
@@ -271,61 +269,9 @@ void trigger_push_touch()
 #endif
 }
 
-#ifdef SVQC
-float trigger_push_send(entity to, float sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
-	WriteByte(MSG_ENTITY, sf);
-
-	if(sf & 1)
-	{
-		WriteString(MSG_ENTITY, self.target);
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.active);
-		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-		WriteByte(MSG_ENTITY, self.height);
-		WriteByte(MSG_ENTITY, self.scale);
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
-
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
-
-		WriteCoord(MSG_ENTITY, self.movedir_x);
-		WriteCoord(MSG_ENTITY, self.movedir_y);
-		WriteCoord(MSG_ENTITY, self.movedir_z);
-
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
-	}
-
-	if(sf & 2)
-	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.active);
-	}
-
-	return TRUE;
-}
-
-void trigger_push_updatelink()
-{
-	self.SendFlags |= 1;
-}
-
-void trigger_push_link()
-{
-	Net_LinkEntity(self, FALSE, 0, trigger_push_send);
-}
-#endif
-
 .vector dest;
+void trigger_push_link();
+void trigger_push_updatelink();
 void trigger_push_findtarget()
 {
 	entity t;
@@ -389,6 +335,60 @@ void trigger_push_findtarget()
 #endif
 }
 
+#ifdef SVQC
+float trigger_push_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & 1)
+	{
+		WriteString(MSG_ENTITY, self.target);
+		WriteByte(MSG_ENTITY, self.team);
+		WriteInt24_t(MSG_ENTITY, self.spawnflags);
+		WriteByte(MSG_ENTITY, self.active);
+		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+		WriteByte(MSG_ENTITY, self.height);
+		WriteByte(MSG_ENTITY, self.scale);
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+
+		WriteCoord(MSG_ENTITY, self.mins_x);
+		WriteCoord(MSG_ENTITY, self.mins_y);
+		WriteCoord(MSG_ENTITY, self.mins_z);
+		WriteCoord(MSG_ENTITY, self.maxs_x);
+		WriteCoord(MSG_ENTITY, self.maxs_y);
+		WriteCoord(MSG_ENTITY, self.maxs_z);
+
+		WriteCoord(MSG_ENTITY, self.movedir_x);
+		WriteCoord(MSG_ENTITY, self.movedir_y);
+		WriteCoord(MSG_ENTITY, self.movedir_z);
+
+		WriteCoord(MSG_ENTITY, self.angles_x);
+		WriteCoord(MSG_ENTITY, self.angles_y);
+		WriteCoord(MSG_ENTITY, self.angles_z);
+	}
+
+	if(sf & 2)
+	{
+		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, self.active);
+	}
+
+	return TRUE;
+}
+
+void trigger_push_updatelink()
+{
+	self.SendFlags |= 1;
+}
+
+void trigger_push_link()
+{
+	Net_LinkEntity(self, FALSE, 0, trigger_push_send);
+}
+#endif
 #ifdef SVQC
 /*
  * ENTITY PARAMETERS:
@@ -463,11 +463,9 @@ void trigger_push_draw()
 
 	//if(trace_fraction < 1)
 	if(trace_ent)
-	if(time >= trace_ent.jpad_time)
 	{
 		other = trace_ent;
 		trigger_push_touch();
-		trace_ent.jpad_time = time + 0.2;
 	}
 }
 
@@ -480,6 +478,7 @@ void ent_trigger_push()
 		self.classname = "jumppad";
 		self.target = strzone(ReadString());
 		float mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+		self.spawnflags = ReadInt24_t();
 		self.active = ReadByte();
 		self.warpzone_isboxy = ReadByte();
 		self.height = ReadByte();
@@ -504,7 +503,7 @@ void ent_trigger_push()
 
 		self.solid = SOLID_TRIGGER;
 		//self.draw = trigger_push_draw;
-		self.drawmask = MASK_NORMAL;
+		self.drawmask = MASK_ENGINE;
 		self.move_time = time;
 		//self.touch = trigger_push_touch;
 		trigger_push_findtarget();
@@ -527,6 +526,6 @@ void ent_target_push()
 	self.origin_z = ReadCoord();
 	setorigin(self, self.origin);
 
-	self.drawmask = MASK_NORMAL;
+	self.drawmask = MASK_ENGINE;
 }
 #endif
