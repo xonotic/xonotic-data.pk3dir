@@ -248,7 +248,6 @@ void PM_ClientMovement_Move()
 				float old_trace2_fraction = trace_fraction;
 				vector old_trace2_plane_normal = trace_plane_normal;
 				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-				//Con_Printf("%f %f %f %f : %f %f %f %f : %f %f %f %f\n", trace.fraction, trace.endpos[0], trace.endpos[1], trace.endpos[2], trace2.fraction, trace2.endpos[0], trace2.endpos[1], trace2.endpos[2], trace3.fraction, trace3.endpos[0], trace3.endpos[1], trace3.endpos[2]);
 				// accept the new trace if it made some progress
 				if (fabs(trace_endpos_x - old_trace1_endpos_x) >= 0.03125 || fabs(trace_endpos_y - old_trace1_endpos_y) >= 0.03125)
 				{
@@ -292,17 +291,9 @@ void PM_ClientMovement_Move()
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
-	float k;
-#if 0
-	// this doesn't play well with analog input
-	if (PHYS_INPUT_MOVEVALUES(self).x == 0 || PHYS_INPUT_MOVEVALUES(self).y != 0)
-		return; // can't control movement if not moving forward or backward
-	k = 32;
-#else
-	k = 32 * (2 * IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), 0) - 1);
+	float k = 32 * (2 * IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), 0) - 1);
 	if (k <= 0)
 		return;
-#endif
 
 	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED, 1);
 
@@ -1516,11 +1507,9 @@ float PM_is_flying()
 
 void PM_Main()
 {
-	PM_check_jumppad();
 	float buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
 	self.team = myteam + 1; // is this correct?
-	//Con_Printf(" %f", PHYS_INPUT_TIMELENGTH);
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
@@ -1725,6 +1714,8 @@ void PM_Main()
 	if (IS_PLAYER(self))
 #endif
 		CheckPlayerJump();
+
+	PM_check_jumppad();
 
 	if (self.flags & /* FL_WATERJUMP */ 2048)
 	{
