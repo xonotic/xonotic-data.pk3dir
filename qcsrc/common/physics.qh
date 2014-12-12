@@ -13,34 +13,34 @@
 
 	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 
-	#define PHYS_INPUT_BUTTON_MASK(s)   		(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
-	#define PHYS_INPUT_BUTTON_ATCK(s)			(input_buttons & 1)
-	#define PHYS_INPUT_BUTTON_JUMP(s)			(input_buttons & 2)
-	#define PHYS_INPUT_BUTTON_ATCK2(s)			(input_buttons & 4)
-	#define PHYS_INPUT_BUTTON_ZOOM(s)			(input_buttons & 8)
-	#define PHYS_INPUT_BUTTON_CROUCH(s)			(input_buttons & 16)
-	#define PHYS_INPUT_BUTTON_HOOK(s)			(input_buttons & 32)
-	#define PHYS_INPUT_BUTTON_USE(s)			(input_buttons & 64)
-	#define PHYS_INPUT_BUTTON_BACKWARD(s)		(input_buttons & 128)
-	#define PHYS_INPUT_BUTTON_FORWARD(s)		(input_buttons & 256)
-	#define PHYS_INPUT_BUTTON_LEFT(s)			(input_buttons & 512)
-	#define PHYS_INPUT_BUTTON_RIGHT(s)			(input_buttons & 1024)
+	#define PHYS_INPUT_BUTTON_MASK(s)   		!!(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
+	#define PHYS_INPUT_BUTTON_ATCK(s)			!!(input_buttons & 1)
+	#define PHYS_INPUT_BUTTON_JUMP(s)			!!(input_buttons & 2)
+	#define PHYS_INPUT_BUTTON_ATCK2(s)			!!(input_buttons & 4)
+	#define PHYS_INPUT_BUTTON_ZOOM(s)			!!(input_buttons & 8)
+	#define PHYS_INPUT_BUTTON_CROUCH(s)			!!(input_buttons & 16)
+	#define PHYS_INPUT_BUTTON_HOOK(s)			!!(input_buttons & 32)
+	#define PHYS_INPUT_BUTTON_USE(s)			!!(input_buttons & 64)
+	#define PHYS_INPUT_BUTTON_BACKWARD(s)		!!(input_buttons & 128)
+	#define PHYS_INPUT_BUTTON_FORWARD(s)		!!(input_buttons & 256)
+	#define PHYS_INPUT_BUTTON_LEFT(s)			!!(input_buttons & 512)
+	#define PHYS_INPUT_BUTTON_RIGHT(s)			!!(input_buttons & 1024)
 
 	#define PHYS_DEAD(s)						s.csqcmodel_isdead
 
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	!!(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
 	#define GAMEPLAYFIX_Q2AIRACCELERATE				cvar("sv_gameplayfix_q2airaccelerate")
 
-	#define IS_DUCKED(s)    					(s.pmove_flags & PMF_DUCKED)
+	#define IS_DUCKED(s)    					!!(s.pmove_flags & PMF_DUCKED)
 	#define SET_DUCKED(s)   					s.pmove_flags |= PMF_DUCKED
 	#define UNSET_DUCKED(s) 					s.pmove_flags &= ~PMF_DUCKED
 
-	#define IS_JUMP_HELD(s)    					(s.pmove_flags & PMF_JUMP_HELD)
+	#define IS_JUMP_HELD(s)    					!!(s.pmove_flags & PMF_JUMP_HELD)
 	#define SET_JUMP_HELD(s)   					s.pmove_flags |= PMF_JUMP_HELD
 	#define UNSET_JUMP_HELD(s) 					s.pmove_flags &= ~PMF_JUMP_HELD
 
-	#define IS_ONGROUND(s)    					(s.pmove_flags & PMF_ONGROUND)
+	#define IS_ONGROUND(s)    					!!(s.pmove_flags & PMF_ONGROUND)
 	#define SET_ONGROUND(s)   					s.pmove_flags |= PMF_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
 
@@ -130,7 +130,7 @@
 	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
 	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
 
-	#define IS_ONGROUND(s)    					(s.flags & FL_ONGROUND)
+	#define IS_ONGROUND(s)    					!!(self.flags & FL_ONGROUND)
 	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 
