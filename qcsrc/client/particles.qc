@@ -225,7 +225,7 @@ void Ent_RainOrSnow()
 		self.draw = Draw_Snow;
 }
 
-void Net_ReadNexgunBeamParticle()
+void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
@@ -239,7 +239,7 @@ void Net_ReadNexgunBeamParticle()
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
-	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);

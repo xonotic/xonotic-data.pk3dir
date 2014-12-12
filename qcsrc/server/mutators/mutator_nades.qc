@@ -250,7 +250,7 @@ void nade_ice_think()
 			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+				autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 			Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 		}
@@ -525,12 +525,10 @@ void nade_boom()
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
-	self.takedamage = DAMAGE_NO;
-
 	if(nade_blast)
 	{
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+				 autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 
@@ -575,20 +573,19 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_LASER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_NEX) || DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
-	if(deathtype & HITTYPE_SECONDARY)
+	if((DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) && (deathtype & HITTYPE_SECONDARY)) // WEAPONTODO
 	{
 		damage = self.max_health * 0.1;
 		force *= 10;

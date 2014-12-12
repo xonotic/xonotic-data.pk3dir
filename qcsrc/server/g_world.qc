@@ -654,8 +654,6 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
-	ElectroInit();
-	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -774,7 +772,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
-	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
+	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
@@ -782,6 +780,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
+	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
@@ -791,10 +790,12 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
-	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
-	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
+	addstat(STAT_VORTEX_CHARGE, AS_FLOAT, vortex_charge);
+	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+	
+	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
