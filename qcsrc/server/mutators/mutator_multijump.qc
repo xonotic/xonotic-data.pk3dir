@@ -3,14 +3,12 @@
 
 #ifdef CSQC
 
-#define PHYS_MOVE_MULTIJUMP			pm_multijump
 #define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
 #define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
 #define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
 
 #elif defined(SVQC)
 
-#define PHYS_MOVE_MULTIJUMP			player_multijump
 #define PHYS_MULTIJUMP 				autocvar_g_multijump
 #define PHYS_MULTIJUMP_SPEED 		autocvar_g_multijump_speed
 #define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
@@ -62,7 +60,7 @@ float PM_multijump_checkjump()
 	else
 		self.multijump_ready = FALSE;
 
-	if(!PHYS_MOVE_MULTIJUMP && self.multijump_ready && self.multijump_count < PHYS_MULTIJUMP && self.velocity_z > PHYS_MULTIJUMP_SPEED)
+	if(!player_multijump && self.multijump_ready && self.multijump_count < PHYS_MULTIJUMP && self.velocity_z > PHYS_MULTIJUMP_SPEED)
 	{
 		if (PHYS_MULTIJUMP)
 		{
@@ -70,14 +68,14 @@ float PM_multijump_checkjump()
 			{
 				if (self.velocity_z < PHYS_JUMPVELOCITY)
 				{
-					PHYS_MOVE_MULTIJUMP = TRUE;
+					player_multijump = TRUE;
 					self.velocity_z = 0;
 				}
 			}
 			else
-				PHYS_MOVE_MULTIJUMP = TRUE;
+				player_multijump = TRUE;
 
-			if(PHYS_MOVE_MULTIJUMP)
+			if(player_multijump)
 			{
 				if(PHYS_INPUT_MOVEVALUES(self)_x != 0 || PHYS_INPUT_MOVEVALUES(self)_y != 0) // don't remove all speed if player isnt pressing any movement keys
 				{

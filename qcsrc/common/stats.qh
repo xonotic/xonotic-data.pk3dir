@@ -225,10 +225,10 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 190 empty?
 // 191 empty?
 // 192 empty?
-// 193 empty?
-// 194 empty?
-// 195 empty?
-// 196 empty?
+const float STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;
+const float STAT_MOVEVARS_JUMPSPEEDCAP_MAX              = 194;
+const float STAT_MOVEVARS_JUMPSPEEDCAP_MIN              = 195;
+const float STAT_DOUBLEJUMP                             = 196;
 const float STAT_MOVEVARS_TRACK_CANJUMP                 = 197;
 const float STAT_MULTIJUMP_ADD                          = 198;
 const float STAT_MULTIJUMP_SPEED                        = 199;

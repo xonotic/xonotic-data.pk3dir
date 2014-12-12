@@ -2,7 +2,8 @@
 
 #ifdef CSQC
 
-	float pm_multijump;
+	float player_multijump;
+	float player_jumpheight;
 
 	#define PHYS_INPUT_ANGLES(s)   				input_angles
 // TODO
@@ -48,6 +49,12 @@
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 
 	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
+
+	#define PHYS_DOUBLEJUMP						getstati(STAT_DOUBLEJUMP)
+
+	#define PHYS_JUMPSPEEDCAP_MIN				getstatf(STAT_MOVEVARS_JUMPSPEEDCAP_MIN)
+	#define PHYS_JUMPSPEEDCAP_MAX				getstatf(STAT_MOVEVARS_JUMPSPEEDCAP_MAX)
+	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	getstati(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
 
 	#define PHYS_TRACK_CANJUMP(s)				getstati(STAT_MOVEVARS_TRACK_CANJUMP)
 	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
@@ -132,6 +139,12 @@
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
 
 	#define PHYS_FROZEN(s)						s.frozen
+
+	#define PHYS_DOUBLEJUMP						autocvar_sv_doublejump
+
+	#define PHYS_JUMPSPEEDCAP_MIN				autocvar_sv_jumpspeedcap_min
+	#define PHYS_JUMPSPEEDCAP_MAX				autocvar_sv_jumpspeedcap_max
+	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	autocvar_sv_jumpspeedcap_max_disable_on_ramps
 
 	#define PHYS_TRACK_CANJUMP(s)				s.cvar_cl_movement_track_canjump
 	#define PHYS_ACCELERATE						autocvar_sv_accelerate

@@ -1,5 +1,4 @@
 .float race_penalty;
-.float restart_jump;
 
 .float gravity;
 .float swamp_slowdown;
@@ -27,6 +26,12 @@ float AdjustAirAccelQW(float accelqw, float factor);
 .float stat_sv_maxspeed;
 .float stat_movement_highspeed;
 
+.float stat_doublejump;
+
+.float stat_jumpspeedcap_min;
+.float stat_jumpspeedcap_max;
+.float stat_jumpspeedcap_disable_onramps;
+
 .float stat_jetpack_accel_side;
 .float stat_jetpack_accel_up;
 .float stat_jetpack_antigravity;
@@ -53,6 +58,14 @@ void Physics_AddStats()
 
 	// hack to fix track_canjump
 	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
+
+	// double jump
+	addstat(STAT_DOUBLEJUMP, AS_INT, stat_doublejump);
+
+	// jump speed caps
+	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
+	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
+	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, AS_INT, stat_jumpspeedcap_disable_onramps);
 }
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -66,12 +79,18 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspd_mod; // also slow walking
 	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
 
+	self.stat_doublejump = PHYS_DOUBLEJUMP;
+
 	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
 	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
 	self.stat_jetpack_accel_side = PHYS_JETPACK_ACCEL_SIDE;
 	self.stat_jetpack_maxspeed_side = PHYS_JETPACK_MAXSPEED_SIDE;
 	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
 	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
+
+	self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
+	self.stat_jumpspeedcap_max = PHYS_JUMPSPEEDCAP_MAX;
+	self.stat_jumpspeedcap_disable_onramps = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
 }
 #endif
 
@@ -424,25 +443,31 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-#ifdef SVQC
 	if (PHYS_FROZEN(self))
 		return; // no jumping in freezetag when frozen
 
+#ifdef SVQC
 	if (self.player_blocked)
 		return; // no jumping while blocked
+#endif
 
 	float doublejump = FALSE;
 	float mjumpheight = PHYS_JUMPVELOCITY;
 
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
+#ifdef SVQC
 	if (MUTATOR_CALLHOOK(PlayerJump))
 		return;
+#elif defined(CSQC)
+	if(PM_multijump_checkjump())
+		return;
+#endif
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
 
-	if (autocvar_sv_doublejump)
+	if (PHYS_DOUBLEJUMP)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
@@ -475,28 +500,29 @@ void PlayerJump (void)
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
 
-	if (autocvar_sv_jumpspeedcap_min != "")
+	if(PHYS_JUMPSPEEDCAP_MIN)
 	{
-		float minjumpspeed = mjumpheight * stof(autocvar_sv_jumpspeedcap_min);
+		float minjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MIN;
 
 		if (self.velocity_z < minjumpspeed)
 			mjumpheight += minjumpspeed - self.velocity_z;
 	}
 
-	if (autocvar_sv_jumpspeedcap_max != "")
+	if(PHYS_JUMPSPEEDCAP_MAX)
 	{
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 
-		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && autocvar_sv_jumpspeedcap_max_disable_on_ramps))
+		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS))
 		{
-			float maxjumpspeed = mjumpheight * stof(autocvar_sv_jumpspeedcap_max);
+			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX;
 
 			if (self.velocity_z > maxjumpspeed)
 				mjumpheight -= self.velocity_z - maxjumpspeed;
 		}
 	}
 
+#ifdef SVQC
 	if (!(self.lastflags & FL_ONGROUND))
 	{
 		if (autocvar_speedmeter)
@@ -510,19 +536,21 @@ void PlayerJump (void)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 	}
+#endif
 
-	self.oldvelocity_z = self.velocity_z += mjumpheight;
+	self.velocity_z += mjumpheight;
 
 	UNSET_ONGROUND(self);
 	SET_JUMP_HELD(self);
+
+#ifdef SVQC
+
+	self.oldvelocity_z = self.velocity_z;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
 	if (autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-
-	self.restart_jump = -1; // restart jump anim next time
-	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 #endif
 }
 
@@ -556,30 +584,11 @@ void CheckWaterJump()
 
 void CheckPlayerJump()
 {
-#ifdef SVQC
-	if (self.BUTTON_JUMP)
+	if(PHYS_INPUT_BUTTON_JUMP(self))
 		PlayerJump();
 	else
 		UNSET_JUMP_HELD(self);
 
-#endif
-#ifdef CSQC
-		// jump if on ground with jump button pressed but only if it has been
-		// released at least once since the last jump
-		if (PHYS_INPUT_BUTTON_JUMP(self))
-		{
-			pm_multijump = FALSE;
-			PM_multijump_checkjump();
-			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !PHYS_TRACK_CANJUMP(self)))
-			{
-				self.velocity_z += PHYS_JUMPVELOCITY;
-				UNSET_ONGROUND(self);
-				SET_JUMP_HELD(self); // canjump = false
-			}
-		}
-		else
-			UNSET_JUMP_HELD(self); // canjump = true
-#endif
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump();
 }
