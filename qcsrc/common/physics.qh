@@ -13,7 +13,7 @@
 
 	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 
-	#define PHYS_INPUT_BUTTON_MASK(s)   		!!(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
+	#define PHYS_INPUT_BUTTON_MASK(s)   		(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
 	#define PHYS_INPUT_BUTTON_ATCK(s)			!!(input_buttons & 1)
 	#define PHYS_INPUT_BUTTON_JUMP(s)			!!(input_buttons & 2)
 	#define PHYS_INPUT_BUTTON_ATCK2(s)			!!(input_buttons & 4)
