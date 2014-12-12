@@ -118,7 +118,7 @@
 	#define SET_DUCKED(s)   					s.crouch = TRUE
 	#define UNSET_DUCKED(s) 					s.crouch = FALSE
 
-	#define IS_JUMP_HELD(s)    					(s.flags & FL_JUMPRELEASED == 0)
+	#define IS_JUMP_HELD(s)    					!(s.flags & FL_JUMPRELEASED)
 	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
 	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
 

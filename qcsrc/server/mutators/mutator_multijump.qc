@@ -64,7 +64,7 @@ float PM_multijump_checkjump()
 
 	if(!PHYS_MOVE_MULTIJUMP && self.multijump_ready && self.multijump_count < PHYS_MULTIJUMP && self.velocity_z > PHYS_MULTIJUMP_SPEED)
 	{
-		if (PHYS_MOVE_MULTIJUMP)
+		if (PHYS_MULTIJUMP)
 		{
 			if (!PHYS_MULTIJUMP_ADD) // in this case we make the z velocity == jumpvelocity
 			{
@@ -84,10 +84,6 @@ float PM_multijump_checkjump()
 					float curspeed = vlen(vec2(self.velocity));
 					vector wishvel, wishdir;
 
-					/*curspeed = max(
-						vlen(vec2(self.velocity)), // current xy speed
-						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
-					);*/
 					makevectors(PHYS_INPUT_ANGLES(self)_y * '0 1 0');
 					wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x + v_right * PHYS_INPUT_MOVEVALUES(self)_y;
 					wishdir = normalize(wishvel);
