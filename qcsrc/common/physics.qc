@@ -50,6 +50,9 @@ void Physics_AddStats()
 	addstat(STAT_JETPACK_FUEL, AS_FLOAT, stat_jetpack_fuel);
 	addstat(STAT_JETPACK_MAXSPEED_UP, AS_FLOAT, stat_jetpack_maxspeed_up);
 	addstat(STAT_JETPACK_MAXSPEED_SIDE, AS_FLOAT, stat_jetpack_maxspeed_side);
+
+	// hack to fix track_canjump
+	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
 }
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -464,7 +467,7 @@ void PlayerJump (void)
 		if (!IS_ONGROUND(self))
 			return;
 
-	if (self.cvar_cl_movement_track_canjump)
+	if (PHYS_TRACK_CANJUMP(self))
 		if (IS_JUMP_HELD(self))
 			return;
 
@@ -1734,7 +1737,7 @@ void PM_Main()
 		{
 			pm_multijump = FALSE;
 			PM_multijump_checkjump();
-			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !cvar("cl_movement_track_canjump")))
+			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !PHYS_TRACK_CANJUMP(self)))
 			{
 				self.velocity_z += PHYS_JUMPVELOCITY;
 				UNSET_ONGROUND(self);

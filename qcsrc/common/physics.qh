@@ -49,6 +49,7 @@
 
 	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 
+	#define PHYS_TRACK_CANJUMP(s)				getstati(STAT_MOVEVARS_TRACK_CANJUMP)
 	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
 	#define PHYS_AIRACCEL_QW(s)					getstatf(STAT_MOVEVARS_AIRACCEL_QW)
 	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	getstatf(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR)
@@ -132,6 +133,7 @@
 
 	#define PHYS_FROZEN(s)						s.frozen
 
+	#define PHYS_TRACK_CANJUMP(s)				s.cvar_cl_movement_track_canjump
 	#define PHYS_ACCELERATE						autocvar_sv_accelerate
 	#define PHYS_AIRACCEL_QW(s)					s.stat_sv_airaccel_qw
 	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	autocvar_sv_airaccel_qw_stretchfactor
