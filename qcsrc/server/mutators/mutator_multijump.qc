@@ -45,10 +45,6 @@ void PM_multijump()
 		else
 			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
 	}
-
-#ifdef SVQC
-	multijump_UpdateStats();
-#endif
 }
 
 float PM_multijump_checkjump()
@@ -103,6 +99,7 @@ float PM_multijump_checkjump()
 #ifdef SVQC
 MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 {
+	multijump_UpdateStats();
 	PM_multijump();
 
 	return FALSE;
