@@ -120,6 +120,7 @@ command/cl_cmd.qc
 
 ../common/physics.qh
 ../server/mutators/mutator_dodging.qc
+../server/mutators/mutator_multijump.qc
 ../server/t_halflife.qc
 ../server/t_jumppads.qc
 

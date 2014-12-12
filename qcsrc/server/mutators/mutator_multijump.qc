@@ -1,61 +1,102 @@
 .float multijump_count;
 .float multijump_ready;
 
-MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
+#ifdef CSQC
+
+#define PHYS_MOVE_MULTIJUMP			pm_multijump
+#define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
+#define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
+#define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
+
+#elif defined(SVQC)
+
+#define PHYS_MOVE_MULTIJUMP			player_multijump
+#define PHYS_MULTIJUMP 				autocvar_g_multijump
+#define PHYS_MULTIJUMP_SPEED 		autocvar_g_multijump_speed
+#define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
+
+
+.float stat_multijump;
+.float stat_multijump_speed;
+.float stat_multijump_add;
+
+void multijump_UpdateStats()
 {
-	if(self.flags & FL_ONGROUND)
+	self.stat_multijump = PHYS_MULTIJUMP;
+	self.stat_multijump_speed = PHYS_MULTIJUMP_SPEED;
+	self.stat_multijump_add = PHYS_MULTIJUMP_ADD;
+}
+
+void multijump_AddStats()
+{
+	addstat(STAT_MULTIJUMP, AS_INT, stat_multijump);
+	addstat(STAT_MULTIJUMP_SPEED, AS_FLOAT, stat_multijump_speed);
+	addstat(STAT_MULTIJUMP_ADD, AS_INT, stat_multijump_add);
+}
+
+#endif
+
+void PM_multijump()
+{
+	if(!PHYS_MULTIJUMP) { return; }
+
+	if(IS_ONGROUND(self))
 	{
-		if (autocvar_g_multijump > 0)
+		if (PHYS_MULTIJUMP > 0)
 			self.multijump_count = 0;
 		else
 			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
 	}
 
-	return FALSE;
+#ifdef SVQC
+	multijump_UpdateStats();
+#endif
 }
 
-MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
+float PM_multijump_checkjump()
 {
-	if (self.flags & FL_JUMPRELEASED && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
+	if(!PHYS_MULTIJUMP) { return FALSE; }
+
+	if (!IS_JUMP_HELD(self) && !IS_ONGROUND(self)) // jump button pressed this frame and we are in midair
 		self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
 	else
 		self.multijump_ready = FALSE;
 
-	if(!player_multijump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
+	if(!PHYS_MOVE_MULTIJUMP && self.multijump_ready && self.multijump_count < PHYS_MULTIJUMP && self.velocity_z > PHYS_MULTIJUMP_SPEED)
 	{
-		if (autocvar_g_multijump)
+		if (PHYS_MOVE_MULTIJUMP)
 		{
-			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
+			if (!PHYS_MULTIJUMP_ADD) // in this case we make the z velocity == jumpvelocity
 			{
-				if (self.velocity_z < autocvar_sv_jumpvelocity)
+				if (self.velocity_z < PHYS_JUMPVELOCITY)
 				{
-					player_multijump = TRUE;
+					PHYS_MOVE_MULTIJUMP = TRUE;
 					self.velocity_z = 0;
 				}
 			}
 			else
-				player_multijump = TRUE;
+				PHYS_MOVE_MULTIJUMP = TRUE;
 
-			if(player_multijump)
+			if(PHYS_MOVE_MULTIJUMP)
 			{
-				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
+				if(PHYS_INPUT_MOVEVALUES(self)_x != 0 || PHYS_INPUT_MOVEVALUES(self)_y != 0) // don't remove all speed if player isnt pressing any movement keys
 				{
-					float curspeed;
+					float curspeed = vlen(vec2(self.velocity));
 					vector wishvel, wishdir;
 
-					curspeed = max(
+					/*curspeed = max(
 						vlen(vec2(self.velocity)), // current xy speed
 						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
-					);
-					makevectors(self.v_angle_y * '0 1 0');
-					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+					);*/
+					makevectors(PHYS_INPUT_ANGLES(self)_y * '0 1 0');
+					wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x + v_right * PHYS_INPUT_MOVEVALUES(self)_y;
 					wishdir = normalize(wishvel);
 
 					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				if (autocvar_g_multijump > 0)
+				if (PHYS_MULTIJUMP > 0)
 					self.multijump_count += 1;
 			}
 		}
@@ -63,6 +104,19 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 	}
 
 	return FALSE;
+}
+
+#ifdef SVQC
+MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
+{
+	PM_multijump();
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
+{
+	return PM_multijump_checkjump();
 }
 
 MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsString)
@@ -84,5 +138,11 @@ MUTATOR_DEFINITION(mutator_multijump)
 	MUTATOR_HOOK(BuildMutatorsString, multijump_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, multijump_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
+	MUTATOR_ONADD
+	{
+		multijump_AddStats();
+	}
+
 	return FALSE;
 }
+#endif

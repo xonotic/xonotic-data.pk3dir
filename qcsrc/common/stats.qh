@@ -230,9 +230,9 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 195 empty?
 // 196 empty?
 // 197 empty?
-// 198 empty?
-// 199 empty?
-// 200 empty?
+const float STAT_MULTIJUMP_ADD                          = 198;
+const float STAT_MULTIJUMP_SPEED                        = 199;
+const float STAT_MULTIJUMP                              = 200;
 const float STAT_DODGING_TIMEOUT                        = 201;
 const float STAT_DODGING_WALL                           = 202;
 const float STAT_DODGING_UP_SPEED                       = 203;

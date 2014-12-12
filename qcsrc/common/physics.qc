@@ -465,7 +465,7 @@ void PlayerJump (void)
 			return;
 
 	if (self.cvar_cl_movement_track_canjump)
-		if (!(self.flags & FL_JUMPRELEASED))
+		if (IS_JUMP_HELD(self))
 			return;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
@@ -511,7 +511,7 @@ void PlayerJump (void)
 	self.oldvelocity_z = self.velocity_z += mjumpheight;
 
 	UNSET_ONGROUND(self);
-	self.flags &= ~FL_JUMPRELEASED;
+	SET_JUMP_HELD(self);
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
@@ -544,7 +544,7 @@ void CheckWaterJump()
 			self.velocity_z = 225;
 #ifdef SVQC
 			self.flags |= FL_WATERJUMP;
-			self.flags &= ~FL_JUMPRELEASED;
+			SET_JUMP_HELD(self);
 			self.teleport_time = time + 2;	// safety net
 #endif
 		}
@@ -557,7 +557,7 @@ void CheckPlayerJump()
 	if (self.BUTTON_JUMP)
 		PlayerJump();
 	else
-		self.flags |= FL_JUMPRELEASED;
+		UNSET_JUMP_HELD(self);
 
 #endif
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
@@ -1614,6 +1614,10 @@ void PM_Main()
 #ifdef SVQC
 	MUTATOR_CALLHOOK(PlayerPhysics);
 #endif
+#ifdef CSQC
+	PM_multijump();
+#endif
+
 //	float forcedodge = 1;
 //	if(forcedodge) {
 //#ifdef CSQC
@@ -1728,7 +1732,9 @@ void PM_Main()
 		// released at least once since the last jump
 		if (PHYS_INPUT_BUTTON_JUMP(self))
 		{
-			if (IS_ONGROUND(self) && (!IS_JUMP_HELD(self) || !cvar("cl_movement_track_canjump")))
+			pm_multijump = FALSE;
+			PM_multijump_checkjump();
+			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !cvar("cl_movement_track_canjump")))
 			{
 				self.velocity_z += PHYS_JUMPVELOCITY;
 				UNSET_ONGROUND(self);

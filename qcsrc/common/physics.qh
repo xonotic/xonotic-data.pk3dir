@@ -2,6 +2,8 @@
 
 #ifdef CSQC
 
+	float pm_multijump;
+
 	#define PHYS_INPUT_ANGLES(s)   				input_angles
 // TODO
 	#define PHYS_WORLD_ANGLES(s)				input_angles
