@@ -563,6 +563,23 @@ void CheckPlayerJump()
 		UNSET_JUMP_HELD(self);
 
 #endif
+#ifdef CSQC
+		// jump if on ground with jump button pressed but only if it has been
+		// released at least once since the last jump
+		if (PHYS_INPUT_BUTTON_JUMP(self))
+		{
+			pm_multijump = FALSE;
+			PM_multijump_checkjump();
+			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !PHYS_TRACK_CANJUMP(self)))
+			{
+				self.velocity_z += PHYS_JUMPVELOCITY;
+				UNSET_ONGROUND(self);
+				SET_JUMP_HELD(self); // canjump = false
+			}
+		}
+		else
+			UNSET_JUMP_HELD(self); // canjump = true
+#endif
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump();
 }
@@ -1730,23 +1747,6 @@ void PM_Main()
 
 	else
 	{
-#ifdef CSQC
-		// jump if on ground with jump button pressed but only if it has been
-		// released at least once since the last jump
-		if (PHYS_INPUT_BUTTON_JUMP(self))
-		{
-			pm_multijump = FALSE;
-			PM_multijump_checkjump();
-			if((IS_ONGROUND(self) || pm_multijump) && (!IS_JUMP_HELD(self) || !PHYS_TRACK_CANJUMP(self)))
-			{
-				self.velocity_z += PHYS_JUMPVELOCITY;
-				UNSET_ONGROUND(self);
-				SET_JUMP_HELD(self); // canjump = false
-			}
-		}
-		else
-			UNSET_JUMP_HELD(self); // canjump = true
-#endif
 		if (IS_ONGROUND(self))
 			PM_walk(buttons_prev, maxspeed_mod);
 		else
