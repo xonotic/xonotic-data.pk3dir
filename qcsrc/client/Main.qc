@@ -772,6 +772,8 @@ void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
 void ent_func_ladder();
+void ent_trigger_push();
+void ent_target_push();
 void CSQC_Ent_Update(float bIsNewEntity)
 {
 	float t;
@@ -857,6 +859,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
+		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
+		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

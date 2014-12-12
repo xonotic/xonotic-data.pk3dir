@@ -1191,6 +1191,18 @@ void PM_ladder(float maxspd_mod)
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
 }
 
+void PM_check_jumppad()
+{
+#ifdef CSQC
+	entity oldself = self;
+
+	for(self = world; (self = find(self, classname, "jumppad")); )
+		trigger_push_draw();
+
+	self = oldself;
+#endif
+}
+
 void PM_jetpack(float maxspd_mod)
 {
 	//makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
@@ -1475,8 +1487,10 @@ float PM_is_flying()
 
 void PM_Main()
 {
+	PM_check_jumppad();
 	float buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
+	self.team = myteam + 1; // is this correct?
 	//Con_Printf(" %f", PHYS_INPUT_TIMELENGTH);
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
@@ -1678,7 +1692,6 @@ void PM_Main()
 	if (IS_PLAYER(self))
 #endif
 		CheckPlayerJump();
-
 
 	if (self.flags & /* FL_WATERJUMP */ 2048)
 	{

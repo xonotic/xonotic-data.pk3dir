@@ -121,6 +121,7 @@ command/cl_cmd.qc
 ../common/physics.qh
 ../server/mutators/mutator_dodging.qc
 ../server/t_halflife.qc
+../server/t_jumppads.qc
 
 ../common/nades.qc
 ../common/buffs.qc

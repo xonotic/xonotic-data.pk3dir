@@ -115,10 +115,16 @@ void spawnfunc_func_water()
 
 void func_ladder_draw()
 {
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0)
+		return;
+
 	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
 
 	//if(trace_fraction < 1)
 	if(trace_ent)
+	if(time >= trace_ent.ladder_time)
 	{
 		other = trace_ent;
 		func_ladder_touch();
@@ -153,5 +159,6 @@ void ent_func_ladder()
 	self.solid = SOLID_TRIGGER;
 	self.draw = func_ladder_draw;
 	self.drawmask = MASK_NORMAL;
+	self.move_time = time;
 }
 #endif

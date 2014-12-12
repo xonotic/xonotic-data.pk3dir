@@ -1,19 +1,38 @@
-const float PUSH_ONCE			= 1;
-const float PUSH_SILENT		= 2;
+.float height;
+
+#ifdef CSQC
+.float active;
+.string target;
+.string targetname;
+.float jpad_time;
+#define ACTIVE_NOT 		0
+#define ACTIVE_ACTIVE 	1
+#define ACTIVE_IDLE 	2
+#define ACTIVE_BUSY 	2
+#define ACTIVE_TOGGLE	3
+#endif
+
+#ifdef SVQC
+
+const float PUSH_ONCE = 1;
+const float PUSH_SILENT = 2;
 
 .float pushltime;
 .float istypefrag;
-.float height;
 
 void() SUB_UseTargets;
-
-float trigger_push_calculatevelocity_flighttime;
 
 void trigger_push_use()
 {
 	if(teamplay)
+	{
 		self.team = activator.team;
+		self.SendFlags |= 2;
+	}
 }
+#endif
+
+float trigger_push_calculatevelocity_flighttime;
 
 /*
 	trigger_push_calculatevelocity
@@ -36,9 +55,9 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = autocvar_sv_gravity;
-	if(other.gravity)
-		grav *= other.gravity;
+	grav = PHYS_GRAVITY;
+	if(PHYS_ENTGRAVITY(other))
+		grav *= PHYS_ENTGRAVITY(other);
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -128,16 +147,19 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
+void PM_ClientMovement_Move();
 void trigger_push_touch()
 {
 	if (self.active == ACTIVE_NOT)
 		return;
 
+#ifdef SVQC
 	if (!isPushable(other))
 		return;
+#endif
 
 	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (DIFF_TEAM(self, other)))
 			return;
 
 	EXACTTRIGGER_TOUCH;
@@ -164,8 +186,9 @@ void trigger_push_touch()
 		other.velocity = self.movedir;
 	}
 
-	other.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(other);
 
+#ifdef SVQC
 	if (IS_PLAYER(other))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
@@ -178,6 +201,7 @@ void trigger_push_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
+
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
 			float i;
@@ -244,12 +268,67 @@ void trigger_push_touch()
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}
+#endif
 }
+
+#ifdef SVQC
+float trigger_push_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & 1)
+	{
+		WriteString(MSG_ENTITY, self.target);
+		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, self.active);
+		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+		WriteByte(MSG_ENTITY, self.height);
+		WriteByte(MSG_ENTITY, self.scale);
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+
+		WriteCoord(MSG_ENTITY, self.mins_x);
+		WriteCoord(MSG_ENTITY, self.mins_y);
+		WriteCoord(MSG_ENTITY, self.mins_z);
+		WriteCoord(MSG_ENTITY, self.maxs_x);
+		WriteCoord(MSG_ENTITY, self.maxs_y);
+		WriteCoord(MSG_ENTITY, self.maxs_z);
+
+		WriteCoord(MSG_ENTITY, self.movedir_x);
+		WriteCoord(MSG_ENTITY, self.movedir_y);
+		WriteCoord(MSG_ENTITY, self.movedir_z);
+
+		WriteCoord(MSG_ENTITY, self.angles_x);
+		WriteCoord(MSG_ENTITY, self.angles_y);
+		WriteCoord(MSG_ENTITY, self.angles_z);
+	}
+
+	if(sf & 2)
+	{
+		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, self.active);
+	}
+
+	return TRUE;
+}
+
+void trigger_push_updatelink()
+{
+	self.SendFlags |= 1;
+}
+
+void trigger_push_link()
+{
+	Net_LinkEntity(self, FALSE, 0, trigger_push_send);
+}
+#endif
 
 .vector dest;
 void trigger_push_findtarget()
 {
-	entity e, t;
+	entity t;
 	vector org;
 
 	// first calculate a typical start point for the jump
@@ -258,12 +337,12 @@ void trigger_push_findtarget()
 
 	if (self.target)
 	{
-		float n;
-		n = 0;
+		float n = 0;
 		for(t = world; (t = find(t, targetname, self.target)); )
 		{
 			++n;
-			e = spawn();
+#ifdef SVQC
+			entity e = spawn();
 			setorigin(e, org);
 			setsize(e, PL_MIN, PL_MAX);
 			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
@@ -271,12 +350,15 @@ void trigger_push_findtarget()
 			if(e.movetype == MOVETYPE_NONE)
 				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 			remove(e);
+#endif
 		}
 
-		if(n == 0)
+		if(!n)
 		{
 			// no dest!
+#ifdef SVQC
 			objerror ("Jumppad with nonexistant target");
+#endif
 			return;
 		}
 		else if(n == 1)
@@ -290,9 +372,10 @@ void trigger_push_findtarget()
 			self.enemy = world;
 		}
 	}
+#ifdef SVQC
 	else
 	{
-		e = spawn();
+		entity e = spawn();
 		setorigin(e, org);
 		setsize(e, PL_MIN, PL_MAX);
 		e.velocity = self.movedir;
@@ -300,8 +383,13 @@ void trigger_push_findtarget()
 		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		remove(e);
 	}
+
+	trigger_push_link();
+	defer(0.1, trigger_push_updatelink);
+#endif
 }
 
+#ifdef SVQC
 /*
  * ENTITY PARAMETERS:
  *
@@ -337,6 +425,108 @@ void spawnfunc_trigger_push()
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_push() {}
-void spawnfunc_info_notnull() {}
-void spawnfunc_target_position() {}
+
+float target_push_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
+
+	WriteByte(MSG_ENTITY, self.cnt);
+	WriteString(MSG_ENTITY, self.targetname);
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	return TRUE;
+}
+
+void target_push_link()
+{
+	Net_LinkEntity(self, FALSE, 0, target_push_send);
+	self.SendFlags |= 1; // update
+}
+
+void spawnfunc_target_push() { target_push_link(); }
+void spawnfunc_info_notnull() { target_push_link(); }
+void spawnfunc_target_position() { target_push_link(); }
+
+#endif
+
+#ifdef CSQC
+void trigger_push_draw()
+{
+	/*float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0)
+		return;*/
+
+	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
+
+	//if(trace_fraction < 1)
+	if(trace_ent)
+	if(time >= trace_ent.jpad_time)
+	{
+		other = trace_ent;
+		trigger_push_touch();
+		trace_ent.jpad_time = time + 0.2;
+	}
+}
+
+void ent_trigger_push()
+{
+	float sf = ReadByte();
+
+	if(sf & 1)
+	{
+		self.classname = "jumppad";
+		self.target = strzone(ReadString());
+		float mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+		self.active = ReadByte();
+		self.warpzone_isboxy = ReadByte();
+		self.height = ReadByte();
+		self.scale = ReadByte();
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+		self.mins_x = ReadCoord();
+		self.mins_y = ReadCoord();
+		self.mins_z = ReadCoord();
+		self.maxs_x = ReadCoord();
+		self.maxs_y = ReadCoord();
+		self.maxs_z = ReadCoord();
+		setsize(self, self.mins, self.maxs);
+		self.movedir_x = ReadCoord();
+		self.movedir_y = ReadCoord();
+		self.movedir_z = ReadCoord();
+		self.angles_x = ReadCoord();
+		self.angles_y = ReadCoord();
+		self.angles_z = ReadCoord();
+
+		self.solid = SOLID_TRIGGER;
+		//self.draw = trigger_push_draw;
+		self.drawmask = MASK_NORMAL;
+		self.move_time = time;
+		//self.touch = trigger_push_touch;
+		trigger_push_findtarget();
+	}
+
+	if(sf & 2)
+	{
+		self.team = ReadByte();
+		self.active = ReadByte();
+	}
+}
+
+void ent_target_push()
+{
+	self.classname = "push_target";
+	self.cnt = ReadByte();
+	self.targetname = strzone(ReadString());
+	self.origin_x = ReadCoord();
+	self.origin_y = ReadCoord();
+	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
+
+	self.drawmask = MASK_NORMAL;
+}
+#endif
