@@ -53,10 +53,6 @@ void func_ladder_touch()
 
 	EXACTTRIGGER_TOUCH;
 
-#ifdef CSQC
-	print("Setting ladder time on ", other.classname, "\n");
-#endif
-
 	other.ladder_time = time + 0.1;
 	other.ladder_entity = self;
 }
@@ -95,9 +91,7 @@ float func_ladder_send(entity to, float sf)
 
 void func_ladder_link()
 {
-	self.nextthink = time;
 	Net_LinkEntity(self, FALSE, 0, func_ladder_send);
-	self.nextthink = 0;
 }
 
 void spawnfunc_func_ladder()
@@ -123,7 +117,7 @@ void func_ladder_draw()
 {
 	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
 
-	if(trace_fraction < 1)
+	//if(trace_fraction < 1)
 	if(trace_ent)
 	{
 		other = trace_ent;
