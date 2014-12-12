@@ -1772,29 +1772,11 @@ void PM_Main()
 	self.lastclassname = self.classname;
 }
 
-void CSQC_ClientMovement_PlayerMove_Frame()
-{
-	// if a move is more than 50ms, do it as two moves (matching qwsv)
-	//Con_Printf("%i ", self.cmd.msec);
-	if (PHYS_INPUT_TIMELENGTH > 0.0005)
-	{
-		if (PHYS_INPUT_TIMELENGTH > 0.05)
-		{
-			PHYS_INPUT_TIMELENGTH /= 2;
-			PM_Main();
-		}
-		PM_Main();
-	}
-	else
-		// we REALLY need this handling to happen, even if the move is not executed
-		if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
-			UNSET_JUMP_HELD(self); // canjump = true
-}
-
 #ifdef SVQC
-// Entry point
 void SV_PlayerPhysics(void)
+#elif defined(CSQC)
+void CSQC_ClientMovement_PlayerMove_Frame(void)
+#endif
 {
 	PM_Main();
 }
-#endif
