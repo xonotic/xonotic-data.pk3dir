@@ -113,10 +113,10 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 				bestdenom = denom;
 			}
 		}
-		me.insertValue(me, i, strzone(sprintf(_("%dx%d (%d:%d)"), w, h, bestnum, bestdenom)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+		me.insertValue(me, i, strzone(sprintf("%dx%d (%d:%d)", w, h, bestnum, bestdenom)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	}
 	else
-		me.insertValue(me, i, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+		me.insertValue(me, i, strzone(sprintf("%dx%d", w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 }
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)

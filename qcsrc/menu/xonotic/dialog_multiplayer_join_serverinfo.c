@@ -154,7 +154,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 
 	s = gethostcachestring(SLIST_FIELD_MOD, i);
 	if(s != "data")
-		modname = sprintf(_("%s (%s)"), modname, s);
+		modname = sprintf("%s (%s)", modname, s);
 
 	j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
@@ -171,7 +171,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
 	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
 	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
-	me.currentServerNumPlayers = strzone(sprintf(_("%d/%d"), numh, maxp));
+	me.currentServerNumPlayers = strzone(sprintf("%d/%d", numh, maxp));
 	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
 
 	s = ftos(numb);
@@ -190,7 +190,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerVersion = strzone(versionstr);
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
 
-	me.currentServerPure = ((pure < 0) ? "N/A" : (pure == 0) ? _("Official") : sprintf(_("%d modified"), pure));
+	me.currentServerPure = ((pure < 0) ? _("N/A") : (pure == 0) ? _("Official") : sprintf(_("%d modified"), pure));
 	me.currentServerPure = strzone(me.currentServerPure);
 	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
 

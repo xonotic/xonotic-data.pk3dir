@@ -61,7 +61,7 @@ void Slider_setSliderValue(entity me, float val)
 }
 string Slider_toString(entity me)
 {
-	return sprintf(_("%d (%s)"), me.value, me.valueToText(me, me.value));
+	return sprintf("%d (%s)", me.value, me.valueToText(me, me.value));
 }
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
