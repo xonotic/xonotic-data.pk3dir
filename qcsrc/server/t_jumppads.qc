@@ -1,5 +1,5 @@
-float PUSH_ONCE			= 1;
-float PUSH_SILENT		= 2;
+const float PUSH_ONCE			= 1;
+const float PUSH_SILENT		= 2;
 
 .float pushltime;
 .float istypefrag;
@@ -37,6 +37,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
 	grav = autocvar_sv_gravity;
+	if(other.gravity)
+		grav *= other.gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
@@ -69,7 +71,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	 */
 
 	// push him so high...
-	vz = sqrt(2 * grav * jumpheight); // NOTE: sqrt(positive)!
+	vz = sqrt(fabs(2 * grav * jumpheight)); // NOTE: sqrt(positive)!
 
 	// we start with downwards velocity only if it's a downjump and the jump apex should be outside the jump!
 	if(ht < 0)
@@ -135,7 +137,7 @@ void trigger_push_touch()
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;
@@ -162,9 +164,9 @@ void trigger_push_touch()
 		other.velocity = self.movedir;
 	}
 
-	other.flags &~= FL_ONGROUND;
+	other.flags &= ~FL_ONGROUND;
 
-	if (other.classname == "player")
+	if (IS_PLAYER(other))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
@@ -173,12 +175,10 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1);
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		float ct;
-		ct = clienttype(other);
-		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
+		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
 			float i;
 			float found;
@@ -192,7 +192,7 @@ void trigger_push_touch()
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
-			if(ct == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(other))
 			{
 				if(self.message)
 					centerprint(other, self.message);
@@ -200,14 +200,8 @@ void trigger_push_touch()
 			else
 				other.lastteleporttime = time;
 
-			if (!other.animstate_override)
 			if (other.deadflag == DEAD_NO)
-			{
-				if (other.crouch)
-					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
-				else
-					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
-			}
+				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
 		}
 		else
 			other.jumppadcount = TRUE;
@@ -246,7 +240,7 @@ void trigger_push_touch()
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}
@@ -335,7 +329,7 @@ void spawnfunc_trigger_push()
 		self.speed = 1000;
 	self.movedir = self.movedir * self.speed * 10;
 
-	if not(self.noise)
+	if (!self.noise)
 		self.noise = "misc/jumppad.wav";
 	precache_sound (self.noise);
 

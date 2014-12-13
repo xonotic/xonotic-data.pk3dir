@@ -13,7 +13,7 @@ void WarpZone_Fade_PreDraw()
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
 	else
 		self.alpha = 1;
-	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
 	if(self.alpha <= 0)
 		self.drawmask = 0;
 	else
@@ -25,7 +25,7 @@ void WarpZone_Read(float isnew)
 	float f;
 
 	warpzone_warpzones_exist = 1;
-	if not(self.enemy)
+	if (!self.enemy)
 	{
 		self.enemy = spawn();
 		self.enemy.classname = "warpzone_from";
@@ -239,8 +239,8 @@ void WarpZone_FixView()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
 	float f;
 
-	org = getpropertyvec(VF_ORIGIN);
-	ang = getpropertyvec(VF_ANGLES);
+	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
+	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
 #ifdef WORKAROUND_XON010
 	float dirty;
 	dirty = checkextension("DP_CSQC_ROTATEMOVES");

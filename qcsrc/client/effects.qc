@@ -85,13 +85,14 @@ void Net_ReadLightningarc()
     {
         float seglength, drifts, drifte, branchfactor, branchfactor_add;
 
-        seglength    = autocvar_cl_effects_lightningarc_segmentlength;
-        drifts       = autocvar_cl_effects_lightningarc_drift_start;
-        drifte       = autocvar_cl_effects_lightningarc_drift_end;
-        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_start;
-        branchfactor = autocvar_cl_effects_lightningarc_branchfactor_add;
+        seglength        = autocvar_cl_effects_lightningarc_segmentlength;
+        drifts           = autocvar_cl_effects_lightningarc_drift_start;
+        drifte           = autocvar_cl_effects_lightningarc_drift_end;
+        branchfactor     = autocvar_cl_effects_lightningarc_branchfactor_start;
+        branchfactor_add = autocvar_cl_effects_lightningarc_branchfactor_add;
 
         cl_effetcs_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
     }
 
 }
+void Net_ReadArc() { Net_ReadLightningarc(); }

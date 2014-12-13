@@ -7,17 +7,11 @@
 
 .float antilag_debug;
 
-void antilag_dummy()
-{
-	self.antilag_times = 0;
-	self.antilag_origins = '0 0 0';
-}
-
 void antilag_record(entity e, float t)
 {
     if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
         return;
-        
+
     if(e.vehicle)
         antilag_record(e.vehicle, t);
 

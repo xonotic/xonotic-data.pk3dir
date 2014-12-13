@@ -31,7 +31,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 		BITCLR_ASSIGN(player.flags, FL_ONGROUND);
 
 	WarpZone_PostTeleportPlayer_Callback(player);
@@ -56,7 +56,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
-	if(clienttype(player) != CLIENTTYPE_NOTACLIENT)
+	if (!IS_NOT_A_CLIENT(player))
 		a1 = WarpZone_TransformVAngles(wz, player.v_angle);
 	else
 		a1 = WarpZone_TransformAngles(wz, a0);
@@ -116,7 +116,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.warpzone_teleport_finishtime += sys_frametime - dt;
 
 #ifndef WARPZONE_USE_FIXANGLE
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
 		player.fixangle = FALSE;
@@ -172,7 +172,7 @@ void WarpZone_Touch (void)
 	//       96*frametime
 	float d;
 	d = 24 + max(vlen(other.mins), vlen(other.maxs));
-	if(clienttype(other) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(other))
 		f = -d / bound(frametime * d * 1, frametime * vlen(other.velocity), d);
 	else
 		f = -1;
@@ -184,16 +184,16 @@ void WarpZone_Touch (void)
 		save1 = self.target; self.target = string_null;
 		save2 = self.target3; self.target3 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target3) self.target3 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target3) self.target3 = save2;
 
 		oldself = self;
 		self = self.enemy;
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target2) self.target2 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target2) self.target2 = save2;
 		self = oldself;
 	}
 	else
@@ -348,15 +348,15 @@ float WarpZone_CheckProjectileImpact(entity player)
 		save1 = self.target; self.target = string_null;
 		save2 = self.target3; self.target3 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target3) self.target3 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target3) self.target3 = save2;
 
 		self = self.enemy;
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
-		if not(self.target) self.target = save1;
-		if not(self.target2) self.target2 = save2;
+		if (!self.target) self.target = save1;
+		if (!self.target2) self.target2 = save2;
 		self = oldself;
 	}
 	else
@@ -537,7 +537,7 @@ void WarpZone_InitStep_UpdateTransform()
 	for(i_s = 0; ; ++i_s)
 	{
 		tex = getsurfacetexture(self, i_s);
-		if not(tex)
+		if (!tex)
 			break; // this is beyond the last one
 		if(tex == "textures/common/trigger" || tex == "trigger")
 			continue;
@@ -570,6 +570,9 @@ void WarpZone_InitStep_UpdateTransform()
 		norm = normalize(norm);
 	}
 
+#ifdef GMQCC
+	ang = '0 0 0';
+#endif
 	if(self.aiment)
 	{
 		org = self.aiment.origin;
@@ -806,23 +809,22 @@ void WarpZone_StartFrame()
 	for(e = world; (e = nextent(e)); )
 	{
 		if(warpzone_warpzones_exist) { WarpZone_StoreProjectileData(e); }
-		
-		float f = clienttype(e);
-		if(f == CLIENTTYPE_REAL)
+
+		if(IS_REAL_CLIENT(e))
 		{
 			if(e.solid == SOLID_NOT) // not spectating?
 			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_FLY_WORLDONLY) // not spectating? (this is to catch observers)
 			{
 				other = e; // player
-			
+
 				// warpzones
-				if(warpzone_warpzones_exist) { 
-				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs); 
+				if(warpzone_warpzones_exist) {
+				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
 				if(!WarpZoneLib_ExactTrigger_Touch())
 					if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
 						WarpZone_Teleport(self, e, -1, 0); } // NOT triggering targets by this!
-			
+
 				// teleporters
 				self = Teleport_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
@@ -830,8 +832,8 @@ void WarpZone_StartFrame()
 					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
 			}
 		}
-		
-		if(f == CLIENTTYPE_NOTACLIENT)
+
+		if(IS_NOT_A_CLIENT(e))
 		{
 			if(warpzone_warpzones_exist)
 				for(; (e = nextent(e)); )
@@ -847,8 +849,8 @@ void WarpZone_StartFrame()
 float visible_to_some_client(entity ent)
 {
 	entity e;
-	for(e = nextent(world); clienttype(e) != CLIENTTYPE_NOTACLIENT; e = nextent(e))
-		if(e.classname == "player" && clienttype(e) == CLIENTTYPE_REAL)
+	for(e = nextent(world); !IS_NOT_A_CLIENT(e); e = nextent(e))
+		if(IS_PLAYER(e) && IS_REAL_CLIENT(e))
 			if(checkpvs(e.origin + e.view_ofs, ent))
 				return 1;
 	return 0;
@@ -891,7 +893,7 @@ void spawnfunc_target_warpzone_reconnect()
 void WarpZone_PlayerPhysics_FixVAngle(void)
 {
 #ifndef WARPZONE_DONT_FIX_VANGLE
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	if(self.v_angle_z <= 360) // if not already adjusted
 	if(time - self.ping * 0.001 < self.warpzone_teleport_time)
 	{

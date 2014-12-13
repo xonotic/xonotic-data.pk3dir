@@ -1,6 +1,3 @@
-#pragma flag off fastarrays // make dp behave with new fteqcc versions. remove when dp bug with fteqcc fastarrays is fixed
-
-
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.
@@ -226,8 +223,8 @@ string shortmapname;
 float tempdb;
 float ClientProgsDB;
 vector hook_shotorigin[4];
-vector electro_shotorigin[4];
-vector gauntlet_shotorigin[4];
+vector lightning_shotorigin[4];
+
 
 #ifdef BLURTEST
 float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
@@ -251,11 +248,10 @@ vector angles_held;
 .float silent;
 
 float w_deathtype, w_issilent, w_random;
-string w_deathtypestring;
 vector w_org, w_backoff;
 
 float rifle_scope;
-float nex_scope;
+float vortex_scope;
 
 float minelayer_maxmines;
 
@@ -266,7 +262,7 @@ float bgmtime;
 string weaponorder_byimpulse;
 string weaponorder_bypriority;
 
-float nex_charge_movingavg;
+float vortex_charge_movingavg;
 
 float serverflags;
 

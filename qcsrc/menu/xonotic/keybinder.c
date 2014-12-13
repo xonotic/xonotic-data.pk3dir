@@ -22,6 +22,7 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
+	ATTRIB(XonoticKeyBinder, clearButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity, NULL)
 	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string))
 ENDCLASS(XonoticKeyBinder)
@@ -33,7 +34,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
-string KEY_NOT_BOUND_CMD = "// not bound";
+const string KEY_NOT_BOUND_CMD = "// not bound";
 
 #define MAX_KEYS_PER_FUNCTION 2
 #define MAX_KEYBINDS 256
@@ -80,6 +81,8 @@ void replace_bind(string from, string to)
 		if(k != -1)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
 	}
+	if(n)
+		cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
@@ -126,6 +129,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 		return;
 
 	me.keyGrabButton.forcePressed = 1;
+	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
 void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
@@ -134,8 +138,17 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
+	me.clearButton.disabled = 0;
+
 	if(key == K_ESCAPE)
 		return;
+
+	// forbid these keys from being bound in the menu
+	if(key == K_CAPSLOCK || key == K_NUMLOCK)
+	{
+		KeyBinder_Bind_Change(me, me);
+		return;
+	}
 
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
@@ -161,6 +174,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -168,11 +182,11 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -189,11 +203,11 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -222,16 +236,17 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedServer)
+	if(i == me.lastClickedKey)
 		if(time < me.lastClickedTime + 0.3)
 		{
 			// DOUBLE CLICK!
 			KeyBinder_Bind_Change(NULL, me);
 		}
-	me.lastClickedServer = i;
+	me.lastClickedKey = i;
 	me.lastClickedTime = time;
 }
 void XonoticKeyBinder_setSelected(entity me, float i)

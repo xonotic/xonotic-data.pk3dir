@@ -7,6 +7,7 @@ CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 18)
 	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
+	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDWeaponsDialog)
 #endif
 
@@ -33,8 +34,8 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 		setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_timeout_effect"))));
 				e.addValue(e, ZCTX(_("EF^None")),  "0");
-				e.addValue(e, _("Slide"), "1");
-				e.addValue(e, _("Alpha"), "2");
+				e.addValue(e, _("Alpha"), "1");
+				e.addValue(e, _("Slide"), "2");
 				e.addValue(e, ZCTX(_("EF^Both")),  "3");
 				e.configureXonoticTextSliderValues(e);
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_timeout")), "0");

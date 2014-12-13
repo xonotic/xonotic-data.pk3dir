@@ -249,7 +249,6 @@ void XonoticCampaignList_clickListBoxItem(entity me, float i, vector where)
 void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
-	float p;
 	vector theColor;
 	float theAlpha;
 	float j, n;
@@ -274,7 +273,6 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	s = ftos(p);
 	if(draw_PictureSize(strcat("/maps/", campaign_mapname[i])) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	else
@@ -285,7 +283,7 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(i <= me.campaignIndex)
 		s = campaign_shortdesc[i]; // fteqcc sucks
 	else
-		s = _("???");
+		s = "???";
 	s = draw_TextShortenToWidth(sprintf(_("Level %d: %s"), i+1, s), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 

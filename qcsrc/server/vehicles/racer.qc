@@ -74,7 +74,6 @@ float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
-void racer_spawn(float _spawnflag);
 
 void racer_align4point(float _delta)
 {
@@ -129,7 +128,7 @@ void racer_fire_cannon(string tagname)
     bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
+                           DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
@@ -150,7 +149,7 @@ void racer_rocket_groundhugger()
         return;
     }
 
-    if not (self.realowner.vehicle)
+    if (!self.realowner.vehicle)
     {
         UpdateCSQCProjectile(self);
         return;
@@ -198,7 +197,7 @@ void racer_rocket_tracker()
         return;
     }
 
-    if not (self.realowner.vehicle)
+    if (!self.realowner.vehicle)
     {
         UpdateCSQCProjectile(self);
         return;
@@ -243,7 +242,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
+                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
@@ -319,7 +318,7 @@ float racer_frame()
         {
             self.sounds = 1;
             self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
-            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
     else
@@ -328,7 +327,7 @@ float racer_frame()
         {
             self.sounds = 0;
             self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
-            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
 
@@ -354,13 +353,13 @@ float racer_frame()
         if(racer.strength_finished < time)
         {
             racer.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-            sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
     else
     {
         racer.strength_finished = 0;
-        sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
     }
 
 	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
@@ -490,9 +489,9 @@ void racer_exit(float eject)
     self.think      = racer_think;
     self.nextthink  = time;
     self.movetype   = MOVETYPE_BOUNCE;
-    sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+    sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 
-    if not (self.owner)
+    if (!self.owner)
         return;
 
 	makevectors(self.angles);
@@ -529,8 +528,8 @@ void racer_exit(float eject)
 
 void racer_impact()
 {
-    if(autocvar_g_vehicle_racer_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+	if(autocvar_g_vehicle_racer_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
 void racer_blowup()
@@ -540,22 +539,20 @@ void racer_blowup()
 
     RadiusDamage (self, self.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
-					autocvar_g_vehicle_racer_blowup_radius, world,
+					autocvar_g_vehicle_racer_blowup_radius, world, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_WAKIBLOWUP, world);
+					DEATH_VH_WAKI_DEATH, world);
 
-    self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-    self.think      = racer_spawn;
+	self.alpha      = -1;
     self.movetype   = MOVETYPE_NONE;
     self.effects    = EF_NODRAW;
-
     self.colormod  = '0 0 0';
     self.avelocity = '0 0 0';
     self.velocity  = '0 0 0';
 
     setorigin(self, self.pos1);
-	self.think     = racer_spawn;
-	self.nextthink = time + autocvar_g_vehicle_racer_respawntime;
+	self.touch = func_null;
+	self.nextthink = 0;
 }
 
 void racer_deadtouch()
@@ -569,7 +566,7 @@ void racer_deadtouch()
 void racer_die()
 {
     self.health       = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = func_null;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;
@@ -627,16 +624,14 @@ void racer_spawn(float _spawnflag)
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
 
-
-
 void spawnfunc_vehicle_racer()
 {
     if(!autocvar_g_vehicle_racer)
     {
         remove(self);
         return;
-    }        
-    
+    }
+
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
@@ -664,7 +659,7 @@ void spawnfunc_vehicle_racer()
     if(autocvar_g_vehicle_racer_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Wakizashi",
              "models/vehicles/wakizashi.dpm",
              "null", // we need this so tur_head is networked and usable for sounds
@@ -677,7 +672,7 @@ void spawnfunc_vehicle_racer()
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             TRUE, 
+             TRUE,
              autocvar_g_vehicle_racer_health,
              autocvar_g_vehicle_racer_shield))
     {

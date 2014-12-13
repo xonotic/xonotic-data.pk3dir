@@ -111,9 +111,8 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 
-	if(g_freezetag)
-		if(e.freezetag_frozen)
-			return FALSE;
+	if(e.frozen)
+		return FALSE;
 
 	// If neither player has ball then don't attack unless the ball is on the
 	// ground.
@@ -127,7 +126,7 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 	else if(bot_ignore_bots)
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			return FALSE;
 
 	if (!e.takedamage)
@@ -136,11 +135,13 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if (e.BUTTON_CHAT)
 		return FALSE;
-	if(g_minstagib)
-	if(e.items & IT_STRENGTH)
-		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
+
+	checkentity = e;
+	if(MUTATOR_CALLHOOK(BotShouldAttack))
+		return FALSE;
+
 	return TRUE;
 }
 
@@ -338,12 +339,12 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotspeedupward *= g_weaponspeedfactor;
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", W_Name(self.weapon), " shotspeed is zero!\n");
+		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", W_Name(self.weapon), " maxshottime is zero!\n");
+		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);

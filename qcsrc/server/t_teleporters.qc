@@ -25,16 +25,16 @@ void trigger_teleport_use()
 		if(head != player) \
 			if(head.takedamage) \
 				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-	
+
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (player.classname == "player" && player.health >= 1)
+	if (IS_PLAYER(player) && player.health >= 1)
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
-				if(head.classname == "player")
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						return 1;
 		}
@@ -46,11 +46,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 {
 	TDEATHLOOP(player.origin)
 	{
-		if (player.classname == "player" && player.health >= 1)
+		if (IS_PLAYER(player) && player.health >= 1)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 			{
-				if(head.classname == "player")
+				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
 				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
@@ -80,6 +80,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_NORMAL 1 // play sounds/effects etc
 #define TELEPORT_SIMPLE 2 // only do teleport, nothing special
 
+void Reset_ArcBeam(entity player, vector forward);
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -97,7 +98,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
@@ -117,16 +118,18 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
+	makevectors(player.angles);
+	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
 
-	if(player.classname == "player")
+	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
 			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
-		player.flags &~= FL_ONGROUND;
+		player.flags &= ~FL_ONGROUND;
 
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
@@ -153,14 +156,14 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	vector locout;
 	entity e;
 	float p;
-	
+
 	// Find the output teleporter
 	if(teleporter.enemy)
 	{
 		e = teleporter.enemy;
 	}
 	else
-	{ 
+	{
 		RandomSelection_Init();
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
 		{
@@ -177,13 +180,13 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	}
 
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
-	
+
 	makevectors(e.mangle);
 
 	if(e.speed)
 		if(vlen(player.velocity) > e.speed)
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
-			
+
 	if(autocvar_g_teleport_maxspeed)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
@@ -201,36 +204,36 @@ void Teleport_Touch (void)
 
 	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
-	if not(other.teleportable)
+
+	if (!other.teleportable)
 		return;
-    
+
 	if(other.vehicle)
 	if(!other.vehicle.teleportable)
 		return;
-			
+
 	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 		return;
-        
+
 	if(other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;
 
-	if(other.classname == "player")
+	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
-		
+
 	entity e;
 	e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
 	SUB_UseTargets();
-	if not(self.target) self.target = s;
+	if (!self.target) self.target = s;
 
 	oldself = self;
 	self = e;
@@ -310,34 +313,42 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-entity teleport_first; 
+entity teleport_first;
 .entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;
-	
-	self.active = ACTIVE_ACTIVE;	
-	
+
+	self.active = ACTIVE_ACTIVE;
+
 	self.use = trigger_teleport_use;
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (!self.target)
+	if (self.target == "")
 	{
 		objerror ("Teleporter with no target");
 		return;
 	}
-	
+
 	self.teleport_next = teleport_first;
 	teleport_first = self;
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
+	makevectors(pl.angles);
+	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
+	{
+		entity oldself = self;
+		self = pl;
+		anticheat_fixangle();
+		self = oldself;
+	}
 	// "disown" projectiles after teleport
 	if(pl.owner)
 	if(pl.owner == pl.realowner)
@@ -346,7 +357,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 			print("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
 	}
-	if(pl.classname == "player")
+	if(IS_PLAYER(pl))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		pl.oldvelocity = pl.velocity;

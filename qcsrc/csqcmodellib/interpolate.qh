@@ -27,6 +27,10 @@
 #define IFLAG_VALID 8
 #define IFLAG_PREVALID 16
 #define IFLAG_TELEPORTED 32
+#define IFLAG_AUTOVELOCITY 64
+#define IFLAG_V_ANGLE 128
+#define IFLAG_V_ANGLE_X 256
+#define IFLAG_ORIGIN 512
 #define IFLAG_INTERNALMASK (IFLAG_VALID | IFLAG_PREVALID)
 
 // call this BEFORE reading an entity update
@@ -40,3 +44,6 @@ void InterpolateOrigin_Reset();
 
 // call this BEFORE drawing
 void InterpolateOrigin_Do();
+
+// in case we interpolate that:
+.vector v_angle;

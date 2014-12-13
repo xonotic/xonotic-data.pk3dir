@@ -16,12 +16,11 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
+float g_cloaked, g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_race_qualifying;
-float inWarmupStage;
+float warmup_stage;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_superweapon;
 float g_pickup_respawntime_ammo;
@@ -39,7 +38,6 @@ float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
 
 float sv_clones;
-float sv_gentle;
 float sv_foginterval;
 
 entity	activator;
@@ -47,9 +45,6 @@ entity	activator;
 float player_count;
 float currentbots;
 float bots_would_leave;
-float lms_lowest_lives;
-float lms_next_place;
-float LMS_NewPlayerLives();
 
 void UpdateFrags(entity player, float f);
 .float totalfrags;
@@ -57,6 +52,9 @@ void UpdateFrags(entity player, float f);
 float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
+
+// flag set on worldspawn so that the code knows if it is dedicated or not
+float server_is_dedicated;
 
 // Fields
 
@@ -74,7 +72,8 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
-.float  platmovetype;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
 
 .string killtarget;
 
@@ -83,7 +82,6 @@ float maxclients;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
-.float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
 .float  crouch;	// Crouching or not?
 
 .float	strength_finished;
@@ -102,7 +100,9 @@ float maxclients;
 //.float cnt2;
 
 .float play_time;
+.float respawn_flags;
 .float respawn_time;
+.float respawn_time_max;
 .float death_time;
 .float fade_time;
 .float fade_rate;
@@ -115,44 +115,6 @@ float maxclients;
 .float animstate_endtime;
 .float animstate_override;
 .float animstate_looping;
-
-// player animation data for this model
-// each vector is as follows:
-// _x = startframe
-// _y = numframes
-// _z = framerate
-.vector anim_die1; // player dies
-.vector anim_die2; // player dies differently
-.vector anim_draw; // player pulls out a weapon
-// .vector anim_duck; // player crouches (from idle to duckidle)
-.vector anim_duckwalk; // player walking while crouching
-.vector anim_duckjump; // player jumping from a crouch
-.vector anim_duckidle; // player idling while crouching
-.vector anim_idle; // player standing
-.vector anim_jump; // player jump
-.vector anim_pain1; // player flinches from pain
-.vector anim_pain2; // player flinches from pain, differently
-.vector anim_shoot; // player shoots
-.vector anim_taunt; // player taunts others (FIXME: no code references this)
-.vector anim_run; // player running forward
-.vector anim_runbackwards; // player running backward
-.vector anim_strafeleft; // player shuffling left quickly
-.vector anim_straferight; // player shuffling right quickly
-//.vector anim_dead1; // player dead (must be identical to last frame of die1)
-//.vector anim_dead2; // player dead (must be identical to last frame of die2)
-.vector anim_forwardright; // player running forward and right
-.vector anim_forwardleft; // player running forward and left
-.vector anim_backright; // player running backward and right
-.vector anim_backleft; // player running back and left
-.vector anim_melee; // player doing the melee action
-.vector anim_duck; // player doing the melee action
-.vector anim_duckwalkbackwards;
-.vector anim_duckwalkstrafeleft;
-.vector anim_duckwalkstraferight;
-.vector anim_duckwalkforwardright;
-.vector anim_duckwalkforwardleft;
-.vector anim_duckwalkbackright;
-.vector anim_duckwalkbackleft;
 
 // weapon animation vectors:
 .vector anim_fire1;
@@ -192,7 +154,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float		dmgtime;
 
 .float		killcount;
-.float hitsound, typehitsound;
+.float damage_dealt, typehitsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -209,7 +171,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .string item_pickupsound;
 
 // definitions for weaponsystem
-
+// more WEAPONTODO: move these to their proper files
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
@@ -219,8 +181,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 
+// WEAPONTODO
 .float autoswitch;
-float weapon_action(float wpn, float wrequest);
+//float WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 void w_clear();
 void w_ready();
@@ -228,23 +191,18 @@ void w_ready();
 .float weapon_nextthink;
 .void() weapon_think;
 
-//float	PLAYER_WEAPONSELECTION_DELAY = );
-float	PLAYER_WEAPONSELECTION_SPEED = 18;
-vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
 
 // weapon states (self.weaponentity.state)
-float WS_CLEAR			= 0; // no weapon selected
-float WS_RAISE			= 1; // raise frame
-float WS_DROP			= 2; // deselecting frame
-float WS_INUSE			= 3; // fire state
-float WS_READY			= 4; // idle frame
+const float WS_CLEAR			= 0; // no weapon selected
+const float WS_RAISE			= 1; // raise frame
+const float WS_DROP			= 2; // deselecting frame
+const float WS_INUSE			= 3; // fire state
+const float WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
 #define W_TICSPERFRAME 2
 
 void weapon_defaultspawnfunc(float wpn);
-
-string w_deathtypestring;
 
 .vector dest1, dest2;
 
@@ -252,9 +210,6 @@ float gameover;
 float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
-
-
-.float runes;
 
 // Keys player is holding
 .float itemkeys;
@@ -280,18 +235,14 @@ float game_completion_ratio; // 0 at start, 1 near end
 .float winning;
 .float jointime; // time of joining
 .float alivetime; // time of being alive
+.float motd_actived_time; // used for both motd and campaign_message
 
 float nJoinAllowed(entity ignore);
-#define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 .float spawnshieldtime;
-
-.float lms_nextcheck;
-.float lms_traveled_distance;
+.float item_spawnshieldtime;
 
 .entity flagcarried;
-
-.entity lastrocket;
 
 .float playerid;
 float playerid_last;
@@ -315,11 +266,6 @@ float default_weapon_alpha;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
-#ifdef ALLOW_FORCEMODELS
-.float cvar_cl_forceplayermodels;
-.float cvar_cl_forceplayermodelsfromxonotic;
-float sv_clforceplayermodels;
-#endif
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
@@ -328,9 +274,6 @@ float sv_clforceplayermodels;
 .float cvar_cl_allow_uid2name;
 .float cvar_cl_allow_uidtracking;
 .string stored_netname;
-
-void Announce(string snd);
-void AnnounceTo(entity e, string snd);
 
 .float version_nagtime;
 
@@ -342,20 +285,13 @@ string gamemode_name;
 
 float startitem_failed;
 
-void DropAllRunes(entity pl);
-
-
-typedef .float floatfield;
-floatfield Item_CounterField(float it);
-
-float W_AmmoItemCode(float wpn);
-string W_Name(float weaponid);
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-WEPSET_DECLARE_A(weaponsInMap);
+// WEAPONTODO: remove this
+WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
 
@@ -411,7 +347,6 @@ float next_pingtime;
 #define ALLPLAYERSOUNDS \
 		_VOICEMSG(death) \
 		_VOICEMSG(drown) \
-		_VOICEMSG(fall) \
 		_VOICEMSG(fall) \
 		_VOICEMSG(falling) \
 		_VOICEMSG(gasp) \
@@ -473,7 +408,7 @@ void GlobalSound(string samplestring, float channel, float voicetype);
 void FakeGlobalSound(string samplestring, float channel, float voicetype);
 void VoiceMessage(string type, string message);
 float GetPlayerSoundSampleField_notFound;
-.string GetVoiceMessageSampleField(string type)
+.string GetVoiceMessageSampleField(string type);
 
 // autotaunt system
 .float cvar_cl_autotaunt;
@@ -500,8 +435,10 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown is over
+float game_starttime; //point in time when the countdown to game start is over
+float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime;
+.float stat_round_starttime;
 
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
@@ -514,8 +451,7 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
-.float stat_allow_oldnexbeam;
+.float stat_allow_oldvortexbeam;
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -527,10 +463,11 @@ void target_voicescript_clear(entity pl);
 .string target2;
 .string target3;
 .string target4;
+.string curvetarget;
 .float target_random;
 .float trigger_reverse;
 
-// Nexball 
+// Nexball
 .entity ballcarried; // Also used for keepaway
 .float metertime;
 float g_nexball_meter_period;
@@ -549,8 +486,6 @@ void ClientData_Touch(entity e);
 
 float servertime, serverprevtime, serverframetime;
 
-.entity soundentity;
-
 .float ammo_fuel;
 
 .vector prevorigin;
@@ -567,12 +502,13 @@ float servertime, serverprevtime, serverframetime;
 .float stat_shotorg; // networked stat for trueaim HUD
 
 string matchid;
-.float hitplotfh;
 
 .float last_pickup;
 
-.float hit_time; 
-.float typehit_time; 
+.float hit_time;
+.float typehit_time;
+
+.float damage_dealt_total; 
 
 .float stat_leadlimit;
 
@@ -583,14 +519,18 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-..float current_ammo;
-
 .float weapon_load[WEP_MAXCOUNT];
 .float ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
+
+.entity lastrocket;
 .float minelayer_mines;
+.float vortex_charge;
+.float vortex_charge_rottime;
+.float vortex_chargepool_ammo;
+.float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -600,7 +540,6 @@ float client_cefc_accumulatortime;
 
 .float spectatee_status;
 .float zoomstate;
-.float bloodloss_timer;
 .float restriction;
 
 .entity clientdata;
@@ -609,9 +548,6 @@ float client_cefc_accumulatortime;
 string deathmessage;
 
 .float just_joined;
-
-.float cvar_cl_accuracy_data_share;
-.float cvar_cl_accuracy_data_receive;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
@@ -624,16 +560,8 @@ string deathmessage;
 #define ACTIVE_BUSY 	2
 #define ACTIVE_TOGGLE	3
 .float active;
-.float (float act_state) setactive;
+.void (float act_state) setactive;
 .entity realowner;
-
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
-
-.float hagar_load;
-
-float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
 float serverflags;
 
@@ -641,11 +569,17 @@ float serverflags;
 
 .float player_blocked;
 
-.float freezetag_frozen;
-.float freezetag_revive_progress;
+.float frozen; // for freeze attacks
+.float revive_progress;
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.entity iceblock;
+.entity frozen_by; // for ice fields
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
+
+.float stat_respawn_time; // shows respawn time, and is negative when awaiting respawn
 
 void PlayerUseKey();
 

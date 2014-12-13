@@ -1,7 +1,6 @@
-var float(string text, float handleColors, vector fontSize) stringwidth;
-
 entity players;
 entity teams;
+var float team_count; // real teams
 
 void AuditLists()
 {
@@ -83,6 +82,8 @@ float RegisterTeam(entity Team)
 	if(teams.sort_next)
 		teams.sort_next.sort_prev = Team;
 	teams.sort_next = Team;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		++team_count;
 	AuditLists();
 	return true;
 }
@@ -103,6 +104,8 @@ void RemoveTeam(entity Team)
 	parent.sort_next = Team.sort_next;
 	if(Team.sort_next)
 		Team.sort_next.sort_prev = parent;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		--team_count;
 	AuditLists();
 }
 
@@ -110,10 +113,10 @@ entity GetTeam(float Team, float add)
 {
 	float num;
 	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
+	num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
-	if not(add)
+	if (!add)
 		return world;
 	tm = spawn();
 	tm.team = Team;
@@ -149,7 +152,7 @@ float PreviewExists(string name)
 
 vector rotate(vector v, float a)
 {
-	vector w;
+	vector w = '0 0 0';
 	// FTEQCC SUCKS AGAIN
 	w_x =      v_x * cos(a) + v_y * sin(a);
 	w_y = -1 * v_x * sin(a) + v_y * cos(a);
@@ -164,20 +167,6 @@ string ColorTranslateRGB(string s)
 		return strdecolorize(s);
 	else
 		return s;
-}
-
-string Team_ColorCode(float teamid)
-{
-    if (teamid == COLOR_TEAM1)
-        return "^1";
-    else if (teamid == COLOR_TEAM2)
-        return "^4";
-    else if (teamid == COLOR_TEAM3)
-        return "^3";
-    else if (teamid == COLOR_TEAM4)
-        return "^6";
-    else
-        return "^7";
 }
 
 // decolorizes and team colors the player name when needed
@@ -231,7 +220,7 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
 {
-	vector line_dim;
+	vector line_dim = '0 0 0';
 
 	// left and right lines
 	pos_x -= thickness;
@@ -250,7 +239,7 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag)
 {
-	vector current_pos, end_pos, new_size, ratio;
+	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
 	current_pos_y = pos_y;
@@ -318,18 +307,18 @@ var string _drawpic_picpath;
 		_drawpic_picpath = string_null;\
 	} while(0)
 
-void drawpic_aspect_skin_expanding(vector position, string pic, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
-	drawpic_aspect_skin(position + expandingbox_resize_centered_box_offset(sz, scale, 1), pic, scale * sz, rgb, theAlpha * (1 - fadelerp), flag);
+	drawpic_aspect_skin(position + expandingbox_resize_centered_box_offset(sz, theScale, 1), pic, theScale * sz, rgb, theAlpha * (1 - fadelerp), flag);
 }
 
-void drawpic_aspect_skin_expanding_two(vector position, string pic, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
-	drawpic_aspect_skin_expanding(position, pic, scale, rgb, theAlpha, flag, fadelerp);
-	drawpic_skin(position, pic, scale, rgb, theAlpha * fadelerp, flag);
+	drawpic_aspect_skin_expanding(position, pic, theScale, rgb, theAlpha, flag, fadelerp);
+	drawpic_skin(position, pic, theScale, rgb, theAlpha * fadelerp, flag);
 }
 #define SET_POS_AND_SZ_Y_ASPECT(allow_colors)\
 	float textaspect, oldsz;\
@@ -357,14 +346,14 @@ void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAl
 }
 
 vector drawfontscale;
-void drawstring_expanding(vector position, string text, vector scale, vector rgb, float theAlpha, float flag, float fadelerp)
+void drawstring_expanding(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, FALSE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), rgb, theAlpha * (1 - fadelerp), flag);
+	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, FALSE, theScale * (sz / drawfontscale_x)) / (theScale_x * sz)), text, theScale * (sz / drawfontscale_x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
@@ -377,14 +366,14 @@ void drawstring_aspect_expanding(vector pos, string text, vector sz, vector colo
 	drawstring_expanding(pos, text, '1 1 0' * sz_y, color, theAlpha, drawflag, fadelerp);
 }
 
-void drawcolorcodedstring_expanding(vector position, string text, vector scale, float theAlpha, float flag, float fadelerp)
+void drawcolorcodedstring_expanding(vector position, string text, vector theScale, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, scale, stringwidth(text, TRUE, scale * (sz / drawfontscale_x)) / (scale_x * sz)), text, scale * (sz / drawfontscale_x), theAlpha * (1 - fadelerp), flag);
+	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, TRUE, theScale * (sz / drawfontscale_x)) / (theScale_x * sz)), text, theScale * (sz / drawfontscale_x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
 
@@ -401,7 +390,7 @@ float PolyDrawModelSurface(entity e, float i_s)
 	vector tri;
 	string tex;
 	tex = getsurfacetexture(e, i_s);
-	if not(tex)
+	if (!tex)
 		return 0; // this is beyond the last one
 	n_t = getsurfacenumtriangles(e, i_s);
 	for(i_t = 0; i_t < n_t; ++i_t)
@@ -576,18 +565,11 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
 vector getplayerorigin(float pl)
 {
-	string s;
 	entity e;
 
 	e = CSQCModel_server2csqc(pl + 1);
 	if(e)
 		return e.origin;
-
-#ifndef NO_LEGACY_NETWORKING
-	s = getplayerkeyvalue(pl, "TEMPHACK_origin");
-	if(s != "")
-		return stov(s);
-#endif
 
 	e = entcs_receiver[pl];
 	if(e)
@@ -596,14 +578,39 @@ vector getplayerorigin(float pl)
 	return GETPLAYERORIGIN_ERROR;
 }
 
+float getplayeralpha(float pl)
+{
+	entity e;
+
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.alpha;
+
+	return 1;
+}
+
+vector getcsqcplayercolor(float pl)
+{
+	entity e;
+
+	e = CSQCModel_server2csqc(pl);
+	if(e)
+	{
+		if(e.colormap > 0)
+			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, TRUE);
+	}
+
+	return '1 1 1';
+}
+
 float getplayerisdead(float pl)
 {
 	entity e;
-	
+
 	e = CSQCModel_server2csqc(pl + 1);
 	if(e)
 		return e.csqcmodel_isdead;
-	
+
 	return FALSE;
 }
 
@@ -624,7 +631,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -637,3 +644,61 @@ void draw_endBoldFont()
 {
 	drawfont = FONT_USER+1;
 }
+
+
+#define MAX_ACCURACY_LEVELS 10
+float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
+float acc_col_loadtime;
+float acc_levels;
+string acc_color_levels;
+void Accuracy_LoadLevels()
+{
+	float i;
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		if(acc_color_levels)
+			strunzone(acc_color_levels);
+		acc_color_levels = strzone(autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	float i;
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float j, factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
+}
+

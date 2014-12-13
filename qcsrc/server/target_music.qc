@@ -28,8 +28,13 @@ void target_music_use()
 {
 	if(!activator)
 		return;
-	msg_entity = activator;
-	target_music_sendto(MSG_ONE, 1);
+	if(IS_REAL_CLIENT(activator))
+	{
+		msg_entity = activator;
+		target_music_sendto(MSG_ONE, 1);
+	}
+	entity head;
+	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
 }
 void spawnfunc_target_music()
 {
@@ -63,7 +68,7 @@ void TargetMusic_RestoreGame()
 float trigger_music_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
-	sf &~= 0x80;
+	sf &= ~0x80;
 	if(self.cnt)
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);

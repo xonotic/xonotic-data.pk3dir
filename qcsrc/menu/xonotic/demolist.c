@@ -5,13 +5,13 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticDemoList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticDemoList, getDemos, void(entity))
-	METHOD(XonoticDemoList, startDemo, void(entity))	
+	METHOD(XonoticDemoList, startDemo, void(entity))
 	METHOD(XonoticDemoList, demoName, string(entity, float))
 	METHOD(XonoticDemoList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticDemoList, destroy, void(entity))
 	METHOD(XonoticDemoList, showNotify, void(entity))
-	
+
 	ATTRIB(XonoticDemoList, listDemo, float, -1)
 	ATTRIB(XonoticDemoList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticDemoList, columnNameOrigin, float, 0)
@@ -19,10 +19,10 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticDemoList, realUpperMargin, float, 0)
 	ATTRIB(XonoticDemoList, origin, vector, '0 0 0')
 	ATTRIB(XonoticDemoList, itemAbsSize, vector, '0 0 0')
-	
+
 	ATTRIB(XonoticDemoList, lastClickedDemo, float, -1)
 	ATTRIB(XonoticDemoList, lastClickedTime, float, 0)
-	ATTRIB(XonoticDemoList, filterString, string, string_null)	
+	ATTRIB(XonoticDemoList, filterString, string, string_null)
 ENDCLASS(XonoticDemoList)
 
 entity makeXonoticDemoList();
@@ -44,7 +44,7 @@ entity makeXonoticDemoList()
 void XonoticDemoList_configureXonoticDemoList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.getDemos(me);	
+	me.getDemos(me);
 }
 
 string XonoticDemoList_demoName(entity me, float i )
@@ -59,23 +59,23 @@ string XonoticDemoList_demoName(entity me, float i )
 void XonoticDemoList_getDemos(entity me)
 {
 	string s;
-	
+
 	if(me.filterString)
-		//subdirectory in filterString allowed	
-		s=strcat("demos/*", me.filterString, "*.dem");		
+		//subdirectory in filterString allowed
+		s=strcat("demos/*", me.filterString, "*.dem");
 	else
 		s="demos/*.dem";
-	
-	//dprint("Search demos with the pattern ", s, "\n");	
+
+	//dprint("Search demos with the pattern ", s, "\n");
 	if(me.listDemo >= 0)
 		search_end(me.listDemo);
-		
+
 	me.listDemo = search_begin(s, FALSE, TRUE);
 
 	if(me.listDemo < 0)
 		me.nItems=0;
 	else
-		me.nItems=search_getsize(me.listDemo);				
+		me.nItems=search_getsize(me.listDemo);
 }
 
 void XonoticDemoList_destroy(entity me)
@@ -101,10 +101,10 @@ void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float i
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-		
+
 	s = me.demoName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);		
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
 
 void XonoticDemoList_showNotify(entity me)
@@ -113,15 +113,15 @@ void XonoticDemoList_showNotify(entity me)
 }
 
 void DemoList_Filter_Change(entity box, entity me)
-{	
+{
 	if(me.filterString)
 		strunzone(me.filterString);
-	
+
 	if(box.text != "")
 		me.filterString = strzone(box.text);
 	else
 		me.filterString = string_null;
-		
+
 	me.getDemos(me);
 }
 
@@ -129,7 +129,7 @@ void XonoticDemoList_startDemo(entity me)
 {
 	string s;
 	s = me.demoName(me,me.selectedItem);
-	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");	
+	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
 }
 
 void StartDemo_Click(entity btn, entity me)
@@ -141,7 +141,7 @@ void TimeDemo_Click(entity btn, entity me)
 {
 	string s;
 	s = me.demoName(me,me.selectedItem);
-	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");	
+	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");
 }
 
 void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)

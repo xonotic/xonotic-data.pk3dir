@@ -9,7 +9,7 @@ CLASS(Button) EXTENDS(Label)
 	METHOD(Button, mouseDrag, float(entity, vector))
 	METHOD(Button, mouseRelease, float(entity, vector))
 	METHOD(Button, focusEnter, void(entity))
-	ATTRIB(Button, onClick, void(entity, entity), SUB_Null)
+	ATTRIB(Button, onClick, void(entity, entity), func_null)
 	ATTRIB(Button, onClickEntity, entity, NULL)
 	ATTRIB(Button, src, string, string_null)
 	ATTRIB(Button, srcSuffix, string, string_null)
@@ -77,11 +77,12 @@ float Button_mouseRelease(entity me, vector pos)
 	me.mouseDrag(me, pos); // verify coordinates
 	if(me.pressed)
 	{
-		if not(me.disabled)
+		if (!me.disabled)
 		{
 			if(cvar("menu_sounds"))
 				localsound("sound/misc/menu2.wav");
-			me.onClick(me, me.onClickEntity);
+			if(me.onClick)
+				me.onClick(me, me.onClickEntity);
 		}
 		me.pressed = 0;
 	}
@@ -161,8 +162,9 @@ void Button_draw(entity me)
 	if(me.clickTime > 0 && me.clickTime <= frametime)
 	{
 		// keyboard click timer expired? Fire the event then.
-		if not(me.disabled)
-			me.onClick(me, me.onClickEntity);
+		if (!me.disabled)
+			if(me.onClick)
+				me.onClick(me, me.onClickEntity);
 	}
 	me.clickTime -= frametime;
 

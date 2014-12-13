@@ -2,10 +2,11 @@
 CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
@@ -153,16 +154,21 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, l2, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
 		case MAPINFO_TYPE_DOMINATION: GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_domination_point_limit"); break;
 		case MAPINFO_TYPE_KEYHUNT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case MAPINFO_TYPE_RUNEMATCH:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_runematch_point_limit");  break;
 		case MAPINFO_TYPE_LMS:        GameType_ConfigureSliders(e, l, l2, _("Lives:"),           3,   50,  1, "g_lms_lives_override");     break;
 		case MAPINFO_TYPE_RACE:       GameType_ConfigureSliders(e, l, l2, _("Laps:"),            1,   25,  1, "g_race_laps_limit");        break;
 		case MAPINFO_TYPE_NEXBALL:    GameType_ConfigureSliders(e, l, l2, _("Goals:"),           1,   50,  1, "g_nexball_goallimit");      break;
 		case MAPINFO_TYPE_ASSAULT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
+		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, l2, _("Point limit:"),     5,    0,  5, "");                         break;
 		default:                      GameType_ConfigureSliders(e, l, l2, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 	me.mapListBox.refilter(me.mapListBox);
+}
+
+void XonoticServerCreateTab_gameTypeSelectNotify(entity me)
+{
+	me.setFocus(me, me.mapListBox);
 }
 
 #endif

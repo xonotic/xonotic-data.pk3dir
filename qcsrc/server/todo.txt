@@ -1,3 +1,0 @@
-http://dev.xonotic.org/projects/xonotic/issues
-
-also: Maybe actually decide upon what to do with this todo file? No one uses it :P Just use the development tracker.

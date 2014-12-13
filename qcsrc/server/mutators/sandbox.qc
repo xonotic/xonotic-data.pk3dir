@@ -20,13 +20,13 @@ void sandbox_ObjectFunction_Touch()
 	intensity = vlen(self.velocity) + vlen(other.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
-	if not(intensity >= autocvar_g_sandbox_object_material_velocity_min)
+	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
 		return; // impact not strong enough to do anything
 	// now offset intensity and apply it to the effects
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
@@ -56,6 +56,8 @@ void sandbox_ObjectFunction_Think()
 	}
 
 	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 .float old_solid, old_movetype;
@@ -72,9 +74,9 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return world; // entity is not an object
 	if(!permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
-	if(!trace_ent.crypto_idfp)
+	if(trace_ent.crypto_idfp == "")
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if not(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2)
+	if (!(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2))
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
@@ -137,7 +139,7 @@ entity sandbox_ObjectSpawn(float database)
 {
 	// spawn a new object with default properties
 
-	entity e;
+	entity e, oldself;
 	e = spawn();
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
@@ -172,6 +174,11 @@ entity sandbox_ObjectSpawn(float database)
 		setorigin(e, trace_endpos);
 		e.angles_y = self.v_angle_y;
 	}
+	
+	oldself = self;
+	self = e;
+	CSQCMODEL_AUTOINIT();
+	self = oldself;
 
 	object_count += 1;
 	return e;
@@ -283,7 +290,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
-	entity e, parent;
+	entity e = world, parent = world;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -294,7 +301,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	for(i = 0; i < n; ++i)
 	{
 		float argv_num;
-		string tagname;
+		string tagname = string_null;
 		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
@@ -389,7 +396,7 @@ void sandbox_Database_Load()
 		for(;;)
 		{
 			file_read = fgets(file_get);
-			if(!file_read)
+			if(file_read == "")
 				break;
 			if(substring(file_read, 0, 2) == "//")
 				continue;
@@ -403,7 +410,7 @@ void sandbox_Database_Load()
 			{
 				// since objects are being loaded for the first time, precache material sounds for each
 				for (i = 1; i <= 5; i++) // 5 sounds in total
-					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".ogg"));
+					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
@@ -484,7 +491,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return TRUE;
 				}
-				if not(fexists(argv(2)))
+				if (!(fexists(argv(2))))
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 					return TRUE;
@@ -538,7 +545,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 						self.object_flood = time + autocvar_g_sandbox_editor_flood;
-						if(!argv(3)) // no object in clipboard
+						if(argv(3) == "") // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
 							return TRUE;
@@ -610,7 +617,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: OBJECT, EDIT ----------------
 			case "object_edit":
-				if(!argv(2))
+				if(argv(2) == "")
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Too few parameters. You must specify a property to edit");
 					return TRUE;
@@ -675,7 +682,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							if(argv(3))
 							{
 								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else
@@ -815,6 +822,16 @@ MUTATOR_DEFINITION(sandbox)
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Database_Load();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// nothing to remove
 	}
 
 	return FALSE;

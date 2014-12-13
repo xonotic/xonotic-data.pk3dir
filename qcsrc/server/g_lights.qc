@@ -1,7 +1,7 @@
-float LOOP = 1;
+const float LOOP = 1;
 
-float DNOSHADOW = 2;
-float DFOLLOW = 4;
+const float DNOSHADOW = 2;
+const float DFOLLOW = 4;
 .float light_lev;
 .float lefty;
 .vector color;
@@ -96,7 +96,7 @@ void spawnfunc_dynlight()
 	setorigin (self, self.origin);
 	//self.pflags = PFLAGS_FULLDYNAMIC;
 	self.solid = SOLID_NOT;
-	//self.blocked = SUB_Null;
+	//self.blocked = func_null;
 	//if (self.spawnflags & DNOSHADOW)
 	//	self.pflags = self.pflags + PFLAGS_NOSHADOW;
 	//if (self.spawnflags & START_OFF)

@@ -1,132 +1,213 @@
-void freezetag_Initialize()
+.float freezetag_frozen_time;
+.float freezetag_frozen_timeout;
+#define ICE_MAX_ALPHA 1
+#define ICE_MIN_ALPHA 0.1
+float freezetag_teams;
+
+#define SP_FREEZETAG_REVIVALS 4
+void freezetag_ScoreRules(float teams)
 {
-	precache_model("models/ice/ice.md3");
-	warmup = time + autocvar_g_start_delay + autocvar_g_freezetag_warmup;
-	ScoreRules_freezetag();
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
+	ScoreRules_basics_end();
 }
 
-void freezetag_CheckWinner()
+void freezetag_count_alive_players()
 {
-	if(time <= game_starttime) // game didn't even start yet! nobody can win in that case.
-		return;
+	entity e;
+	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
+	FOR_EACH_PLAYER(e)
+	{
+		switch(e.team)
+		{
+			case NUM_TEAM_1: ++total_players; if(e.health >= 1 && e.frozen != 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(e.health >= 1 && e.frozen != 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(e.health >= 1 && e.frozen != 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(e.health >= 1 && e.frozen != 1) ++pinkalive; break;
+		}
+	}
+	FOR_EACH_REALCLIENT(e)
+	{
+		e.redalive_stat = redalive;
+		e.bluealive_stat = bluealive;
+		e.yellowalive_stat = yellowalive;
+		e.pinkalive_stat = pinkalive;
+	}
 
-	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
-		return; // already waiting for next round to start
+	eliminatedPlayers.SendFlags |= 1;
+}
+#define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
+#define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-	if((redalive >= 1 && bluealive >= 1)
-		|| (redalive >= 1 && yellowalive >= 1)
-		|| (redalive >= 1 && pinkalive >= 1)
-		|| (bluealive >= 1 && yellowalive >= 1)
-		|| (bluealive >= 1 && pinkalive >= 1)
-		|| (yellowalive >= 1 && pinkalive >= 1))
-		return; // we still have active players on two or more teams, nobody won yet
+float prev_missing_teams_mask;
+float freezetag_CheckTeams()
+{
+	if(FREEZETAG_ALIVE_TEAMS_OK())
+	{
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 1;
+	}
+	if(total_players == 0)
+	{
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 0;
+	}
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(freezetag_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(freezetag_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
+	}
+	return 0;
+}
 
-	entity e, winner;
-	string teamname;
-	winner = world;
+float freezetag_getWinnerTeam()
+{
+	float winner_team = 0;
+	if(redalive >= 1)
+		winner_team = NUM_TEAM_1;
+	if(bluealive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_2;
+	}
+	if(yellowalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(pinkalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no player left
+}
+
+float freezetag_CheckWinner()
+{
+	entity e;
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		FOR_EACH_PLAYER(e)
+		{
+			e.freezetag_frozen_timeout = 0;
+			nades_Clear(e);
+		}
+		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+		return 1;
+	}
+
+	if(FREEZETAG_ALIVE_TEAMS() > 1)
+		return 0;
+
+	float winner_team;
+	winner_team = freezetag_getWinnerTeam();
+	if(winner_team > 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
+	}
+	else if(winner_team == -1)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+	}
 
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
-		{
-			winner = e;
-			break; // break, we found the winner
-		}
+		e.freezetag_frozen_timeout = 0;
+		nades_Clear(e);
 	}
+	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+	return 1;
+}
 
-	if(winner != world) // just in case a winner wasn't found
+entity freezetag_LastPlayerForTeam()
+{
+	entity pl, last_pl = world;
+	FOR_EACH_PLAYER(pl)
 	{
-		if(winner.team == COLOR_TEAM1)
-			teamname = "^1Red Team";
-		else if(winner.team == COLOR_TEAM2)
-			teamname = "^4Blue Team";
-		else if(winner.team == COLOR_TEAM3)
-			teamname = "^3Yellow Team";
+		if(pl.health >= 1)
+		if(!pl.frozen)
+		if(pl != self)
+		if(pl.team == self.team)
+		if(!last_pl)
+			last_pl = pl;
 		else
-			teamname = "^6Pink Team";
-		FOR_EACH_PLAYER(e) {
-			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
-		}
-		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
-		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
+			return world;
 	}
-
-	next_round = time + 5;
+	return last_pl;
 }
 
-// this is needed to allow the player to turn his view around (fixangle can't
-// be used to freeze his view, as that also changes the angles), while not
-// turning that ice object with the player
-void freezetag_Ice_Think()
+void freezetag_LastPlayerForTeam_Notify()
 {
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
+	{
+		entity pl = freezetag_LastPlayerForTeam();
+		if(pl)
+			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+	}
 }
 
-void freezetag_Freeze(entity attacker)
+void freezetag_Add_Score(entity attacker)
 {
-	if(self.freezetag_frozen)
-		return;
-	self.freezetag_frozen = 1;
-	self.freezetag_revive_progress = 0;
-	self.health = 1;
-
-	entity ice;
-	ice = spawn();
-	ice.owner = self;
-	ice.classname = "freezetag_ice";
-	ice.think = freezetag_Ice_Think;
-	ice.nextthink = time;
-	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(ice, "models/ice/ice.md3");
-
-	entity oldself;
-	oldself = self;
-	self = ice;
-	freezetag_Ice_Think();
-	self = oldself;
-
-	RemoveGrapplingHook(self);
-
-	// add waypoint
-	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
-
 	if(attacker == self)
 	{
 		// you froze your own dumb self
 		// counted as "suicide" already
 		PlayerScore_Add(self, SP_SCORE, -1);
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already
 		PlayerScore_Add(self, SP_SCORE, -1);
 		PlayerScore_Add(attacker, SP_SCORE, +1);
 	}
-	else
-	{
-		// nothing - got frozen by the game type rules themselves
-	}
+	// else nothing - got frozen by the game type rules themselves
+}
+
+void freezetag_Freeze(entity attacker)
+{
+	if(self.frozen)
+		return;
+
+	if(autocvar_g_freezetag_frozen_maxtime > 0)
+		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
+
+	Freeze(self, 0, 1, TRUE);
+
+	freezetag_count_alive_players();
+
+	freezetag_Add_Score(attacker);
 }
 
 void freezetag_Unfreeze(entity attacker)
 {
-	self.freezetag_frozen = 0;
-	self.freezetag_revive_progress = 0;
-	self.health = autocvar_g_balance_health_start;
+	self.freezetag_frozen_time = 0;
+	self.freezetag_frozen_timeout = 0;
 
-	// remove the ice block
-	entity ice;
-	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
-	{
-		remove(ice);
-		break;
-	}
+	Unfreeze(self);
+}
 
-	// remove waypoint
-	if(self.waypointsprite_attached)
-		WaypointSprite_Kill(self.waypointsprite_attached);
+float freezetag_isEliminated(entity e)
+{
+	if(e.frozen == 1 || e.deadflag != DEAD_NO)
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -146,7 +227,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 	{
 		if ((head != self) && (head.team == self.team))
 		{
-			if (head.freezetag_frozen)
+			if (head.frozen == 1)
 			{
 				distance = vlen(head.origin - org);
 				if (distance > sradius)
@@ -178,12 +259,12 @@ void havocbot_role_ft_offense()
 	unfrozen = 0;
 	FOR_EACH_PLAYER(head)
 	{
-		if ((head.team == self.team) && (!head.freezetag_frozen))
+		if ((head.team == self.team) && (head.frozen != 1))
 			unfrozen++;
 	}
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (!self.freezetag_frozen)) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (!self.frozen)) || (time > self.havocbot_role_timeout))
 	{
 		dprint("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
@@ -240,82 +321,101 @@ void havocbot_role_ft_freeing()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	if(self.freezetag_frozen == 0 && self.health >= 1)
-	{
-		if(self.team == COLOR_TEAM1)
-			--redalive;
-		else if(self.team == COLOR_TEAM2)
-			--bluealive;
-		else if(self.team == COLOR_TEAM3)
-			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
-			--pinkalive;
-		--totalalive;
-	}
-
-	if(total_players > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
-		freezetag_CheckWinner();
-
+	self.health = 0; // neccessary to update correctly alive stats
+	if(!self.frozen)
+		freezetag_LastPlayerForTeam_Notify();
 	freezetag_Unfreeze(world);
-
+	freezetag_count_alive_players();
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
-	if(self.freezetag_frozen == 0)
+	if(round_handler_IsActive())
+	if(round_handler_CountdownRunning())
 	{
-		if(self.team == COLOR_TEAM1)
-			--redalive;
-		else if(self.team == COLOR_TEAM2)
-			--bluealive;
-		else if(self.team == COLOR_TEAM3)
-			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
-			--pinkalive;
-		--totalalive;
-
-		freezetag_Freeze(frag_attacker);
+		if(self.frozen)
+			freezetag_Unfreeze(world);
+		freezetag_count_alive_players();
+		return 1; // let the player die so that he can respawn whenever he wants
 	}
+
+	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
+	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
+	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
+		|| frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
+	{
+		// let the player die, he will be automatically frozen when he respawns
+		if(self.frozen != 1)
+		{
+			freezetag_Add_Score(frag_attacker);
+			freezetag_count_alive_players();
+			freezetag_LastPlayerForTeam_Notify();
+		}
+		else
+			freezetag_Unfreeze(world); // remove ice
+		self.health = 0; // Unfreeze resets health
+		self.freezetag_frozen_timeout = -2; // freeze on respawn
+		return 1;
+	}
+
+	if(self.frozen)
+		return 1;
+
+	freezetag_Freeze(frag_attacker);
+	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, "^1You froze yourself.\n");
-		bprint("^7", frag_target.netname, "^1 froze himself.\n");
+		if(IS_PLAYER(frag_target))
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
-		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
-		if(frag_attacker.classname == STR_PLAYER)
-			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
-		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
+		if(IS_PLAYER(frag_target))
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
+		if(IS_PLAYER(frag_attacker))
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
-
-	frag_target.health = 1; // "respawn" the player :P
-
-	freezetag_CheckWinner();
 
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
+	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
+		return 1; // do nothing, round is starting right now
 
-	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
-	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
+	if(self.freezetag_frozen_timeout == -2) // player was dead
 	{
-		next_round = time;
+		freezetag_Freeze(world);
 		return 1;
 	}
-	if(warmup && time > warmup) // spawn too late, freeze player
+
+	freezetag_count_alive_players();
+
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
 	{
-		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
 		freezetag_Freeze(world);
 	}
 
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
+{
+	FOR_EACH_PLAYER(self)
+	{
+		self.killcount = 0;
+		self.freezetag_frozen_timeout = -1;
+		PutClientInServer();
+		self.freezetag_frozen_timeout = 0;
+	}
+	freezetag_count_alive_players();
 	return 1;
 }
 
@@ -325,135 +425,143 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 	return 1;
 }
 
+.float reviving; // temp var
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;
-	vector revive_extra_size;
 
-	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+	if(gameover)
+		return 1;
+
+	if(self.frozen == 1)
+	{
+		// keep health = 1
+		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+	}
+
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+		return 1;
 
 	entity o;
 	o = world;
-	n = 0;
-	FOR_EACH_PLAYER(other) if(self != other)
+	//if(self.frozen)
+	//if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
+		//self.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
+
+	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+		n = -1;
+	else
 	{
-		if(other.freezetag_frozen == 0)
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+		n = 0;
+		FOR_EACH_PLAYER(other)
+		if(self != other)
+		if(other.frozen == 0)
+		if(other.deadflag == DEAD_NO)
+		if(SAME_TEAM(other, self))
+		if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
 		{
-			if(other.team == self.team)
-			{
-				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-				{
-					if(!o)
-						o = other;
-					++n;
-				}
-			}
+			if(!o)
+				o = other;
+			if(self.frozen == 1)
+				other.reviving = TRUE;
+			++n;
 		}
 	}
 
-	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
+	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 	{
-		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
 
-		if(self.freezetag_revive_progress >= 1)
+		if(self.revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
+			freezetag_count_alive_players();
+
+			if(n == -1)
+			{
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, self.netname, autocvar_g_freezetag_frozen_maxtime);
+				return 1;
+			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			FOR_EACH_PLAYER(other) if(self != other)
+			FOR_EACH_PLAYER(other)
 			{
-				if(other.freezetag_frozen == 0)
+				if(other.reviving)
 				{
-					if(other.team == self.team)
-					{
-						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						{
-							PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
-							PlayerScore_Add(other, SP_SCORE, +1);
-						}
-					}
+					PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
+					PlayerScore_Add(other, SP_SCORE, +1);
+
+					nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
 				}
 			}
 
-			if(n > 1)
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5 et al.\n"));
-			else
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
-			centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
-			if(n > 1)
-				bprint("^7", o.netname, "^5 et al revived ^7", self.netname, "^5.\n");
-			else
-				bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, self.netname, o.netname);
 		}
 
-		// now find EVERY teammate within reviving radius, set their revive_progress values correct
-		FOR_EACH_PLAYER(other) if(self != other)
+		FOR_EACH_PLAYER(other)
 		{
-			if(other.freezetag_frozen == 0)
+			if(other.reviving)
 			{
-				if(other.team == self.team)
-				{
-					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						other.freezetag_revive_progress = self.freezetag_revive_progress;
-				}
+				other.revive_progress = self.revive_progress;
+				other.reviving = FALSE;
 			}
 		}
 	}
-	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
+	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 	{
-		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
 	}
-	else if(!n)
+	else if(!n && !self.frozen)
 	{
-		self.freezetag_revive_progress = 0; // thawing nobody
+		self.revive_progress = 0; // thawing nobody
 	}
 
 	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
-{
-	if(self.freezetag_frozen)
-	{
-		self.movement = '0 0 0';
-		self.disableclientprediction = 1;
-	}
-	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
-{
-    if(g_freezetag)
-    {
-        if(frag_target.freezetag_frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
-        {
-            frag_damage = 0;
-            frag_force = frag_force * autocvar_g_freezetag_frozen_force;
-        }
-    }
-    return 1;
-}
-
-MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
-{
-	if (self.freezetag_frozen)
-		return 1;
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 {
-	if not(self.deadflag)
+	if (!self.deadflag)
 	{
 		if (random() < 0.5)
 			self.havocbot_role = havocbot_role_ft_freeing;
 		else
 			self.havocbot_role = havocbot_role_ft_offense;
 	}
-	
+
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
+{
+	ret_float = freezetag_teams;
+	return 0;
+}
+
+void freezetag_Initialize()
+{
+	freezetag_teams = autocvar_g_freezetag_teams_override;
+	if(freezetag_teams < 2)
+		freezetag_teams = autocvar_g_freezetag_teams;
+	freezetag_teams = bound(2, freezetag_teams, 4);
+	freezetag_ScoreRules(freezetag_teams);
+
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
+	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+
+	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 
 MUTATOR_DEFINITION(gamemode_freezetag)
@@ -462,12 +570,11 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(ClientDisconnect, freezetag_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, freezetag_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, freezetag_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_FIRST); //first, last or any? dunno.
-	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, freezetag_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 
 	MUTATOR_ONADD
 	{
@@ -476,9 +583,17 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 		freezetag_Initialize();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back freezetag_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

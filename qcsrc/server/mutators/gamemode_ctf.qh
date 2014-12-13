@@ -1,7 +1,8 @@
 // these are needed since mutators are compiled last
 
+#ifdef SVQC
 // used in cheats.qc
-void ctf_RespawnFlag(entity flag)
+void ctf_RespawnFlag(entity flag);
 
 // score rule declarations
 #define ST_CTF_CAPS 1
@@ -27,6 +28,7 @@ void ctf_RespawnFlag(entity flag)
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
 #define FLAG_FLOAT_OFFSET ('0 0 32')
+#define FLAG_PASS_ARC_OFFSET ('0 0 -10')
 
 #define VEHICLE_FLAG_OFFSET ('0 0 96')
 #define VEHICLE_FLAG_SCALE 1.0
@@ -36,7 +38,7 @@ void ctf_RespawnFlag(entity flag)
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
 #define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
 
-// sounds 
+// sounds
 #define snd_flag_taken noise
 #define snd_flag_returned noise1
 #define snd_flag_capture noise2
@@ -58,10 +60,11 @@ entity ctf_worldflaglist;
 // waypoint sprites
 .entity bot_basewaypoint; // flag waypointsprite
 .entity wps_helpme;
-.entity wps_flagbase; 
+.entity wps_flagbase;
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
 .entity wps_enemyflagcarrier;
+.float wps_helpme_time;
 float wpforenemy_announced;
 float wpforenemy_nextthink;
 
@@ -99,10 +102,13 @@ float ctf_captimerecord; // record time for capturing the flag
 .float max_flag_health;
 .float next_take_time;
 
-// passing properties
+// passing/throwing properties
+.float pass_distance;
 .entity pass_sender;
 .entity pass_target;
 .float throw_antispam;
+.float throw_prevtime;
+.float throw_count;
 
 // CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
 .float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
@@ -125,3 +131,4 @@ vector havocbot_ctf_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
+#endif

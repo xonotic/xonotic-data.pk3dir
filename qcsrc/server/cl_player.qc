@@ -1,126 +1,3 @@
-.entity accuracy;
-.float accuracy_frags[WEP_MAXCOUNT];
-
-float weaponstats_buffer;
-
-void WeaponStats_Init()
-{
-	if(autocvar_sv_weaponstats_file != "")
-		weaponstats_buffer = buf_create();
-	else
-		weaponstats_buffer = -1;
-}
-
-#define WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot) (((vwep) + (awep) * (WEP_LAST - WEP_FIRST + 1) - (WEP_FIRST + WEP_FIRST * (WEP_LAST - WEP_FIRST + 1))) * 4 + (abot) * 2 + (vbot))
-
-void WeaponStats_ready(entity fh, entity pass, float status)
-{
-	float i, j, n, ibot, jbot, idx;
-	vector v;
-	string prefix, s;
-	switch(status)
-	{
-		case URL_READY_CANWRITE:
-			// we can write
-			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
-			url_fputs(fh, "#begin statsfile\n");
-			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
-#ifdef WATERMARK
-			url_fputs(fh, strcat("#version ", WATERMARK(), "\n"));
-#endif
-			url_fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_purechanges)), "\n"));
-			url_fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
-			n = tokenizebyseparator(cvar_purechanges, "\n");
-			for(i = 0; i < n; ++i)
-				url_fputs(fh, strcat("#cvar_purechange ", argv(i), "\n"));
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i) for(ibot = 0; ibot <= 1; ++ibot)
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j) for(jbot = 0; jbot <= 1; ++jbot)
-				{
-					idx = WEAPONSTATS_GETINDEX(i, ibot, j, jbot);
-					v = stov(bufstr_get(weaponstats_buffer, idx));
-					if(v != '0 0 0')
-					{
-						//vector is: kills hits damage
-						url_fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
-						url_fputs(fh, sprintf("%d %d %g\n", v_x, v_y, v_z));
-					}
-				}
-			url_fputs(fh, "#end\n\n");
-			url_fclose(fh);
-			break;
-		case URL_READY_CANREAD:
-			// url_fclose is processing, we got a response for writing the data
-			// this must come from HTTP
-			print("Got response from weapon stats server:\n");
-			while((s = url_fgets(fh)))
-				print("  ", s, "\n");
-			print("End of response.\n");
-			url_fclose(fh);
-			break;
-		case URL_READY_CLOSED:
-			// url_fclose has finished
-			print("Weapon stats written\n");
-			buf_del(weaponstats_buffer);
-			weaponstats_buffer = -1;
-			break;
-		case URL_READY_ERROR:
-		default:
-			print("Weapon stats writing failed: ", ftos(status), "\n");
-			buf_del(weaponstats_buffer);
-			weaponstats_buffer = -1;
-			break;
-	}
-}
-
-void WeaponStats_Shutdown()
-{
-	if(weaponstats_buffer < 0)
-		return;
-	if(autocvar_sv_weaponstats_file != "")
-	{
-		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
-	}
-	else
-	{
-		buf_del(weaponstats_buffer);
-		weaponstats_buffer = -1;
-	}
-}
-
-void WeaponStats_LogItem(float awep, float abot, float vwep, float vbot, vector item)
-{
-	float idx;
-	if(weaponstats_buffer < 0)
-		return;
-	if(awep < WEP_FIRST || vwep < WEP_FIRST)
-		return;
-	if(awep > WEP_LAST || vwep > WEP_LAST)
-		return;
-	idx = WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot);
-	bufstr_set(weaponstats_buffer, idx, vtos(stov(bufstr_get(weaponstats_buffer, idx)) + item));
-}
-void WeaponStats_LogDamage(float awep, float abot, float vwep, float vbot, float damage)
-{
-	if(damage < 0)
-		error("negative damage?");
-	WeaponStats_LogItem(awep, abot, vwep, vbot, '0 0 1' * damage + '0 1 0');
-}
-void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
-{
-	WeaponStats_LogItem(awep, abot, vwep, vbot, '1 0 0');
-}
-
-// changes by LordHavoc on 03/29/04 and 03/30/04 at Vermeulen's request
-// merged player_run and player_stand to player_anim
-// added death animations to player_anim
-// can now spawn thrown weapons from anywhere, not just from players
-// thrown weapons now fade out after 20 seconds
-// created PlayerGib function
-// PlayerDie no longer uses hitloc or damage
-// PlayerDie now supports dying animations as well as gibbing
-// cleaned up PlayerDie a lot
-// added CopyBody
-
 .entity pusher;
 .float pushltime;
 .float istypefrag;
@@ -155,22 +32,27 @@ void CopyBody(float keepvelocity)
 	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
+	self.v_angle = oldself.v_angle;
 	self.avelocity = oldself.avelocity;
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
 	self.effects = oldself.effects;
 	self.glowmod = oldself.glowmod;
 	self.event_damage = oldself.event_damage;
-	self.animstate_startframe = oldself.animstate_startframe;
-	self.animstate_numframes = oldself.animstate_numframes;
-	self.animstate_framerate = oldself.animstate_framerate;
-	self.animstate_starttime = oldself.animstate_starttime;
-	self.animstate_endtime = oldself.animstate_endtime;
-	self.animstate_override = oldself.animstate_override;
-	self.animstate_looping = oldself.animstate_looping;
+	self.anim_state = oldself.anim_state;
+	self.anim_time = oldself.anim_time;
+	self.anim_lower_action = oldself.anim_lower_action;
+	self.anim_lower_time = oldself.anim_lower_time;
+	self.anim_upper_action = oldself.anim_upper_action;
+	self.anim_upper_time = oldself.anim_upper_time;
+	self.anim_implicit_state = oldself.anim_implicit_state;
+	self.anim_implicit_time = oldself.anim_implicit_time;
+	self.anim_lower_implicit_action = oldself.anim_lower_implicit_action;
+	self.anim_lower_implicit_time = oldself.anim_lower_implicit_time;
+	self.anim_upper_implicit_action = oldself.anim_upper_implicit_action;
+	self.anim_upper_implicit_time = oldself.anim_upper_implicit_time;
 	self.dphitcontentsmask = oldself.dphitcontentsmask;
 	self.death_time = oldself.death_time;
-	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
 	self.armorvalue = oldself.armorvalue;
@@ -208,6 +90,8 @@ void CopyBody(float keepvelocity)
 	self.CopyBody_think = oldself.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
+	// "bake" the current animation frame for clones (they don't get clientside animation)
+	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -225,154 +109,39 @@ float player_getspecies()
 
 void player_setupanimsformodel()
 {
-	// defaults for legacy .zym models without animinfo files
-	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
-	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
-	self.anim_draw = animfixfps(self, '2 1 3');
-	// self.anim_duck = '3 1 100'; // This anim is broken, use slot 3 as a new free slot in the future ;)
-	self.anim_duckwalk = animfixfps(self, '4 1 1');
-	self.anim_duckjump = '5 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_duckidle = animfixfps(self, '6 1 1');
-	self.anim_idle = animfixfps(self, '7 1 1');
-	self.anim_jump = '8 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_pain1 = animfixfps(self, '9 1 2'); // 0.5 seconds
-	self.anim_pain2 = animfixfps(self, '10 1 2'); // 0.5 seconds
-	self.anim_shoot = animfixfps(self, '11 1 5'); // analyze models and set framerate
-	self.anim_taunt = animfixfps(self, '12 1 0.33');
-	self.anim_run = animfixfps(self, '13 1 1');
-	self.anim_runbackwards = animfixfps(self, '14 1 1');
-	self.anim_strafeleft = animfixfps(self, '15 1 1');
-	self.anim_straferight = animfixfps(self, '16 1 1');
-	//self.anim_dead1 = animfixfps(self, '17 1 1');
-	//self.anim_dead2 = animfixfps(self, '18 1 1');
-	self.anim_forwardright = animfixfps(self, '19 1 1');
-	self.anim_forwardleft = animfixfps(self, '20 1 1');
-	self.anim_backright = animfixfps(self, '21 1 1');
-	self.anim_backleft  = animfixfps(self, '22 1 1');
-	self.anim_melee = animfixfps(self, '23 1 1');
-	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
-	self.anim_duckwalkstrafeleft = animfixfps(self, '25 1 1');
-	self.anim_duckwalkstraferight = animfixfps(self, '26 1 1');
-	self.anim_duckwalkforwardright = animfixfps(self, '27 1 1');
-	self.anim_duckwalkforwardleft = animfixfps(self, '28 1 1');
-	self.anim_duckwalkbackright = animfixfps(self, '29 1 1');
-	self.anim_duckwalkbackleft  = animfixfps(self, '30 1 1');
-	// TODO introspect models for finding right "fps" value (1/duration)
-	// reset animstate now
-	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+	// load animation info
+	animdecide_init(self);
+	animdecide_setstate(self, 0, FALSE);
 }
 
 void player_anim (void)
 {
-	updateanim(self);
+	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	if(self.deadflag) {
+		if (!deadbits) {
+			// Decide on which death animation to use.
+			if(random() < 0.5)
+				deadbits = ANIMSTATE_DEAD1;
+			else
+				deadbits = ANIMSTATE_DEAD2;
+		}
+	} else {
+		// Clear a previous death animation.
+		deadbits = 0;
+	}
+	float animbits = deadbits;
+	if(self.frozen)
+		animbits |= ANIMSTATE_FROZEN;
+	if(self.crouch)
+		animbits |= ANIMSTATE_DUCK;
+	animdecide_setstate(self, animbits, FALSE);
+	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+
 	if (self.weaponentity)
+	{
 		updateanim(self.weaponentity);
-
-	if (self.deadflag != DEAD_NO)
-		return;
-
-	if (!self.animstate_override)
-	{
-		if (self.freezetag_frozen)
-			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
-		{
-			if (self.crouch)
-			{
-				if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
-				{
-					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-					if(!trace_startsolid && trace_fraction == 1 || !(self.animstate_startframe == self.anim_duckwalk_x || self.animstate_startframe == self.anim_duckidle_x)) // don't get stuck on non-crouch anims
-					{
-						setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
-						self.restart_jump = FALSE;
-					}
-				}
-			}
-			else
-			{
-                if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
-                {
-                    traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-                    if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
-                    {
-                        setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-                        self.restart_jump = FALSE;
-                    }
-                }
-			}
-		}
-		else if (self.crouch)
-		{
-			if (self.movement_x > 0 && self.movement_y == 0)
-				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y == 0)
-				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkstraferight, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkstrafeleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkforwardright, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkforwardleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkbackright, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkbackleft, TRUE, FALSE, FALSE);
-			else
-				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);
-		}
-		else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20)
-		{
-			if (self.movement_x > 0 && self.movement_y == 0)
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y == 0)
-				setanim(self, self.anim_runbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y > 0)
-				setanim(self, self.anim_straferight, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y < 0)
-				setanim(self, self.anim_strafeleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y > 0)
-				setanim(self, self.anim_forwardright, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y < 0)
-				setanim(self, self.anim_forwardleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y > 0)
-				setanim(self, self.anim_backright, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y < 0)
-				setanim(self, self.anim_backleft, TRUE, FALSE, FALSE);
-			else
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
-		}
-		else
-			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-	}
-
-	if (self.weaponentity)
-	if (!self.weaponentity.animstate_override)
-		setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
-}
-
-void SpawnThrownWeapon (vector org, float w)
-{
-	if(g_minstagib)
-	if(self.ammo_cells <= 0)
-		return;
-
-	if(g_pinata)
-	{
-		float j;
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			if(WEPSET_CONTAINS_EW(self, j))
-				if(W_IsWeaponThrowable(j))
-					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
-		}
-	}
-	else
-	{
-		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+		if (!self.weaponentity.animstate_override)
+			setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
 	}
 }
 
@@ -385,18 +154,18 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v_x;
 	save = v_y;
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);
 	}
 
 	if (take > 50)
@@ -430,18 +199,113 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+	 (gametype_setting_tmp < 0) ? 0 : \
+	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 gametype_setting_tmp)
+
+
+void calculate_player_respawn_time()
+{
+	if(g_ca)
+		return;
+
+	float gametype_setting_tmp;
+	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
+	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
+	float sdelay_large = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large);
+	float sdelay_small_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small_count);
+	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
+	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
+
+	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
+	entity pl;
+	if (teamplay)
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				if (pl.team == self.team)
+					++pcount;
+		if (sdelay_small_count == 0)
+			sdelay_small_count = 1;
+		if (sdelay_large_count == 0)
+			sdelay_large_count = 1;
+	}
+	else
+	{
+		FOR_EACH_PLAYER(pl)
+			if (pl != self)
+				++pcount;
+		if (sdelay_small_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_small_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_small_count = 2;
+			}
+		}
+		if (sdelay_large_count == 0)
+		{
+			if (g_cts)
+			{
+				// Players play independently. No point in requiring enemies.
+				sdelay_large_count = 1;
+			}
+			else
+			{
+				// Players play AGAINST each other. Enemies required.
+				sdelay_large_count = 2;
+			}
+		}
+	}
+
+	float sdelay;
+
+	if (pcount <= sdelay_small_count)
+		sdelay = sdelay_small;
+	else if (pcount >= sdelay_large_count)
+		sdelay = sdelay_large;
+	else  // NOTE: this case implies sdelay_large_count > sdelay_small_count.
+		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
+
+	if(waves)
+		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+	else
+		self.respawn_time = time + sdelay;
+
+	if(sdelay < sdelay_max)
+		self.respawn_time_max = time + sdelay_max;
+	else
+		self.respawn_time_max = self.respawn_time;
+
+	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
+		self.respawn_countdown = 10; // first number to count down from is 10
+	else
+		self.respawn_countdown = -1; // do not count down
+
+	if(autocvar_g_forced_respawn)
+		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+}
+
 void ClientKill_Now_TeamChange();
-void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	float take, save, waves, sdelay, dh, da, j;
+	float take, save, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
-
-	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
-		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -466,7 +330,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		ear1 += v_right * -10;
 		ear2 += v_right * +10;
 		d = inflictor.origin - self.origin;
-		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if (d)
+			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		else
+			f = 0;  // Assum ecenter.
 		force = v_right * vlen(force);
 		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
 		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
@@ -484,101 +351,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if (!g_minstagib)
-	{
-		v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
-		take = v_x;
-		save = v_y;
-	}
-	else
-	{
-		save = 0;
-		take = damage;
-	}
 
-	frag_inflictor = inflictor;
-	frag_attacker = attacker;
-	frag_target = self;
-	damage_take = take;
-	damage_save = save;
-	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
-	take = bound(0, damage_take, self.health);
-	save = bound(0, damage_save, self.armorvalue);
-	excess = max(0, damage - take - save);
-
-	if(sound_allowed(MSG_BROADCAST, attacker))
-	{
-		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTN_NORM);
-		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM); // FIXME possibly remove them?
-	}
-
-	if (take > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
-	if (take > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
-
-	if (time >= self.spawnshieldtime)
-	{
-		if (!(self.flags & FL_GODMODE))
-		{
-			self.armorvalue = self.armorvalue - save;
-			self.health = self.health - take;
-			// pause regeneration for 5 seconds
-			if(take)
-                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
-
-			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
-			{
-				self.pain_finished = time + 0.5;	//Supajoe
-
-				if(sv_gentle < 1) {
-					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
-					{
-						if (!self.animstate_override)
-						{
-							if (random() > 0.5)
-								setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-							else
-								setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
-						}
-					}
-
-					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(!DEATH_ISWEAPON(deathtype, WEP_LASER) || attacker != self || self.health < 2 * autocvar_g_balance_laser_primary_damage * autocvar_g_balance_selfdamagepercent + 1)
-					if(self.health > 1)
-					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
-					{
-						if(deathtype == DEATH_FALL)
-							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else
-							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
-					}
-				}
-
-				// throw off bot aim temporarily
-				float shake;
-				shake = damage * 5 / (bound(0,skill,100) + 1);
-				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
-				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
-			}
-		}
-		else
-			self.max_armorvalue += (save + take);
-	}
-	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
-	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
-	self.dmg_inflictor = inflictor;
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	take = v_x;
+	save = v_y;
 
 	if(attacker == self)
 	{
@@ -587,7 +363,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		//self.pushltime = 0;
 		self.istypefrag = 0;
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -604,17 +380,106 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.istypefrag = 0;
 	}
 
+	frag_inflictor = inflictor;
+	frag_attacker = attacker;
+	frag_target = self;
+	frag_damage = damage;
+	damage_take = take;
+	damage_save = save;
+	damage_force = force;
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
+	take = bound(0, damage_take, self.health);
+	save = bound(0, damage_save, self.armorvalue);
+	excess = max(0, damage - take - save);
+
+	if(sound_allowed(MSG_BROADCAST, attacker))
+	{
+		if (save > 10)
+			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
+		else if (take > 30)
+			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
+		else if (take > 10)
+			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
+	}
+
+	if (take > 50)
+		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+	if (take > 100)
+		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+
+	if (time >= self.spawnshieldtime)
+	{
+		if (!(self.flags & FL_GODMODE))
+		{
+			self.armorvalue = self.armorvalue - save;
+			self.health = self.health - take;
+			// pause regeneration for 5 seconds
+			if(take)
+				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+
+			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
+			{
+				self.pain_finished = time + 0.5;	//Supajoe
+
+				if(autocvar_sv_gentle < 1) {
+					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
+					{
+						if (!self.animstate_override)
+						{
+							if (random() > 0.5)
+								animdecide_setaction(self, ANIMACTION_PAIN1, TRUE);
+							else
+								animdecide_setaction(self, ANIMACTION_PAIN2, TRUE);
+						}
+					}
+
+					if(sound_allowed(MSG_BROADCAST, attacker))
+					if((self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !((get_weaponinfo(DEATH_WEAPONOF(deathtype))).spawnflags & WEP_FLAG_CANCLIMB) || attacker != self) // WEAPONTODO: create separate limit for pain notification with laser
+					if(self.health > 1)
+					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
+					{
+						if(deathtype == DEATH_FALL)
+							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(self.health > 75) // TODO make a "gentle" version?
+							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(self.health > 50)
+							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(self.health > 25)
+							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else
+							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
+					}
+				}
+			}
+
+			// throw off bot aim temporarily
+			float shake;
+			if(IS_BOT_CLIENT(self) && self.health >= 1)
+			{
+				shake = damage * 5 / (bound(0,skill,100) + 1);
+				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
+				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle_x, 90);
+			}
+		}
+		else
+			self.max_armorvalue += (save + take);
+	}
+	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
+	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
+	self.dmg_inflictor = inflictor;
+
 	float abot, vbot, awep;
-	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
-	vbot = (clienttype(self) == CLIENTTYPE_BOT);
+	abot = (IS_BOT_CLIENT(attacker));
+	vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	awep = 0;
 
-	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
-	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
+	if(vbot || IS_REAL_CLIENT(self))
+	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && self != attacker)
-	if(IsDifferentTeam(self, attacker))
+	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.weapon;
@@ -644,7 +509,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
 
-		if(sv_gentle < 1) // TODO make a "gentle" version?
+		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
@@ -669,18 +534,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(!g_freezetag)
-		{
-			// become fully visible
-			self.alpha = default_player_alpha;
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
-		}
-
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		race_PreDie();
-		DropAllRunes(self);
 
         // increment frag counter for used weapon type
         float w;
@@ -689,48 +544,40 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
-		{
-			PutClientInServer();
-			count_alive_players(); // re-count players
-			freezetag_CheckWinner();
-			return;
-		}
-
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
-		weapon_action(self.weapon, WR_PLAYERDEATH);
+
+		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);
 
 		Portal_ClearAllLater(self);
 
-		if(clienttype(self) == CLIENTTYPE_REAL)
-		{
-			stuffcmd(self, "-zoom\n");
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
+		self.fixangle = TRUE;
 
-		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
-			ClientKill_Now_TeamChange();
+		if(defer_ClientKill_Now_TeamChange)
+			ClientKill_Now_TeamChange(); // can turn player into spectator
 
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(g_freezetag)
+		// player could have been miraculously resuscitated ;)
+		// e.g. players in freezetag get frozen, they don't really die
+		if(self.health >= 1 || !IS_PLAYER(self))
 			return;
 
 		// when we get here, player actually dies
-		// clear waypoints (do this AFTER FreezeTag)
-		WaypointSprite_PlayerDead();
 
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // Unfreeze resets health, so we need to set it back
+
+		// clear waypoints
+		WaypointSprite_PlayerDead();
+		// throw a weapon
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+
+		// become fully visible
+		self.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -744,36 +591,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.solid = SOLID_CORPSE;
 		self.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		// dying animation
 		self.deadflag = DEAD_DYING;
+
 		// when to allow respawn
-		sdelay = 0;
-		waves = 0;
-		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
-		if(!sdelay)
-		{
-			if(g_cts)
-				sdelay = 0; // no respawn delay in CTS
-			else
-				sdelay = autocvar_g_respawn_delay;
-		}
-		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
-		if(!waves)
-			waves = autocvar_g_respawn_waves;
-		if(waves)
-			self.respawn_time = ceil((time + sdelay) / waves) * waves;
-		else
-			self.respawn_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-			self.respawn_countdown = 10; // first number to count down from is 10
-		else
-			self.respawn_countdown = -1; // do not count down
+		calculate_player_respawn_time();
+
 		self.death_time = time;
 		if (random() < 0.5)
-			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
 		else
-			setanim(self, self.anim_die2, FALSE, TRUE, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, TRUE);
 		if (self.maxs_z > 5)
 		{
 			self.maxs_z = 5;
@@ -786,7 +615,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
 
-		if(sv_gentle > 0 || autocvar_ekg) {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
 			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
@@ -794,7 +623,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			weapon_action(j, WR_RESETPLAYER);
+			WEP_ACTION(j, WR_RESETPLAYER);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
@@ -808,7 +637,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
 	entity head;
@@ -821,7 +650,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if(source.classname != "player")
+	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -853,14 +682,19 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		namestr = source.netname;
 
+	if(strdecolorize(namestr) == namestr)
+		colorprefix = "^3";
+	else
+		colorprefix = "^7";
+
 	if(msgin != "")
 	{
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 			else
@@ -868,12 +702,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
@@ -981,10 +815,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if(source.classname != "player")
+	if (!IS_PLAYER(source))
 	{
-		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
+		if (!intermission_running)
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
 
@@ -1023,17 +857,18 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay) // private message, between 2 people only, not sent to server console
+		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -1047,15 +882,15 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
+			dedicated_print(msgstr); // send to server console too
+			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
@@ -1137,7 +972,7 @@ void PrecachePlayerSounds(string f)
 	}
 	fclose(fh);
 
-	if not(allvoicesamples)
+	if (!allvoicesamples)
 	{
 #define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
 		ALLVOICEMSGS
@@ -1221,51 +1056,51 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+				if(IS_REAL_CLIENT(msg_entity))
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
 			msg_entity = self;
 			if(msg_entity.cvar_cl_voice_directional == 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			break;
 		case VOICETYPE_AUTOTAUNT:
 			if(!sv_autotaunt)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			msg_entity = self;
 			if (tauntrand < msg_entity.cvar_cl_autotaunt)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			msg_entity = self;
 			if (msg_entity.cvar_cl_voice_directional >= 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			break;
 		case VOICETYPE_PLAYERSOUND:
 			msg_entity = self;
-			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NORM);
+			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");
@@ -1294,12 +1129,12 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			}
 			break;
@@ -1307,16 +1142,16 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
+				if(IS_REAL_CLIENT(msg_entity))
+					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_TEAMRADIO:
@@ -1324,9 +1159,9 @@ void GlobalSound(string sample, float chan, float voicetype)
 				if(!teamplay || msg_entity.team == self.team)
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			break;
 		case VOICETYPE_AUTOTAUNT:
@@ -1334,36 +1169,36 @@ void GlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			FOR_EACH_REALCLIENT(msg_entity)
 				if (tauntrand < msg_entity.cvar_cl_autotaunt)
 				{
 					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 				}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
 				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTN_MAX));
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
 				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
+					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
 			}
 			break;
 		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTN_NORM);
+			sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");
@@ -1394,20 +1229,14 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if (flood > 0)
-		GlobalSound(self.sample, CH_VOICE, voicetype);
-	else if (flood < 0)
+	if(IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
+	else if (flood > 0)
+		GlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
-void MoveToTeam(entity client, float team_colour, float type, float show_message)
+void MoveToTeam(entity client, float team_colour, float type)
 {
-// 	show_message
-// 	0 (00) automove centerprint, admin message
-// 	1 (01) automove centerprint, no admin message
-// 	2 (10) no centerprint, admin message
-// 	3 (11) no centerprint, no admin message
-
 	float lockteams_backup;
 
 	lockteams_backup = lockteams;  // backup any team lock
@@ -1416,14 +1245,9 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 
 	TeamchangeFrags(client);  // move the players frags
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, ((show_message & 2) ? DEATH_QUIET : DEATH_AUTOTEAMCHANGE), client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE, client.origin, '0 0 0');  // kill the player
 
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
-
-	if not(show_message & 1) // admin message
-		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorNameLowerCase(team_colour), " team\n"));  // send a chat message
-
-	bprint(strcat(client.netname, " joined the ", ColoredTeamName(client.team), "\n"));
 }

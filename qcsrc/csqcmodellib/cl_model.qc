@@ -28,9 +28,8 @@ var float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfractime;
 .float csqcmodel_lerpfrac2time;
 
-void CSQCModel_InterpolateAnimation_PreNote(float sf)
+void CSQCModel_InterpolateAnimation_2To4_PreNote(float sf)
 {
-#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame3 = self.frame;
@@ -47,42 +46,62 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 		self.csqcmodel_lerpfrac2time = self.csqcmodel_lerpfractime;
 		self.lerpfrac = self.csqcmodel_lerpfrac;
 	}
-#else
+}
+void CSQCModel_InterpolateAnimation_1To2_PreNote(float sf)
+{
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame2 = self.frame;
 		self.frame2time = self.frame1time;
 	}
+}
+void CSQCModel_InterpolateAnimation_PreNote(float sf)
+{
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
+	CSQCModel_InterpolateAnimation_2To4_PreNote(sf);
+#else
+	CSQCModel_InterpolateAnimation_1To2_PreNote(sf);
 #endif
 }
 
-void CSQCModel_InterpolateAnimation_Note(float sf)
+void CSQCModel_InterpolateAnimation_2To4_Note(float sf, float set_times)
 {
-#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
-		self.frame1time = time;
+		if(set_times)
+			self.frame1time = time;
 	}
 	if(sf & CSQCMODEL_PROPERTY_FRAME2)
 	{
-		self.frame2time = time;
+		if(set_times)
+			self.frame2time = time;
 	}
 	if(sf & CSQCMODEL_PROPERTY_LERPFRAC)
 	{
 		self.csqcmodel_lerpfrac = self.lerpfrac;
-		self.csqcmodel_lerpfractime = time;
+		if(set_times)
+			self.csqcmodel_lerpfractime = time;
 	}
-#else
+}
+void CSQCModel_InterpolateAnimation_1To2_Note(float sf, float set_times)
+{
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
-		self.frame1time = time;
+		if(set_times)
+			self.frame1time = time;
 	}
+}
+void CSQCModel_InterpolateAnimation_Note(float sf)
+{
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
+	CSQCModel_InterpolateAnimation_2To4_Note(sf, TRUE);
+#else
+	CSQCModel_InterpolateAnimation_1To2_Note(sf, TRUE);
 #endif
 }
 
-void CSQCModel_InterpolateAnimation_Do()
+void CSQCModel_InterpolateAnimation_2To4_Do()
 {
-#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
 	{
 		self.lerpfrac = self.csqcmodel_lerpfrac;
@@ -127,7 +146,9 @@ void CSQCModel_InterpolateAnimation_Do()
 			self.frame3time = 0;
 		}
 	}
-#else
+}
+void CSQCModel_InterpolateAnimation_1To2_Do()
+{
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
 	{
 		self.lerpfrac = 0;
@@ -139,22 +160,28 @@ void CSQCModel_InterpolateAnimation_Do()
 		else
 			self.lerpfrac = 1 - bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
 	}
+}
+void CSQCModel_InterpolateAnimation_Do()
+{
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
+	CSQCModel_InterpolateAnimation_2To4_Do();
+#else
+	CSQCModel_InterpolateAnimation_1To2_Do();
 #endif
 }
 
 void CSQCModel_Draw()
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	float islocalplayer = (self.entnum == player_localnum + 1);
-	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	local noref float islocalplayer = (self.entnum == player_localnum + 1);
+	local noref float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
 	if(!CSQCPlayer_IsLocalPlayer())
 		InterpolateOrigin_Do();
 
-	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
 
 	{ CSQCMODEL_HOOK_PREDRAW }
@@ -165,7 +192,7 @@ void CSQCModel_Draw()
 		root = root.tag_entity;
 	if(self != root)
 	{
-		self.renderflags &~= RF_EXTERNALMODEL | RF_VIEWMODEL;
+		self.renderflags &= ~(RF_EXTERNALMODEL | RF_VIEWMODEL);
 		self.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
 	}
 
@@ -176,15 +203,17 @@ void CSQCModel_Draw()
 void CSQCModel_Read(float isnew)
 {
 	float sf;
-	sf = ReadShort();
+	sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	float islocalplayer = (self.entnum == player_localnum + 1);
-	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	local noref float islocalplayer = (self.entnum == player_localnum + 1);
+	local noref float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	self.classname = "csqcmodel";
+	self.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
+	self.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
 
@@ -207,15 +236,18 @@ void CSQCModel_Read(float isnew)
 #undef CSQCMODEL_IF
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
+	{
+		vector pmin = self.mins, pmax = self.maxs;
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
-		// FIXME do we WANT this to override mins/maxs?
+		setsize(self, pmin, pmax);
+	}
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{
 		self.iflags |= IFLAG_TELEPORTED;
 		self.csqcmodel_teleported = 1;
 	}
-	
+
 	CSQCModel_InterpolateAnimation_Note(sf);
 	InterpolateOrigin_Note();
 	CSQCPlayer_PostUpdate();
@@ -238,7 +270,7 @@ void CSQCModel_Read(float isnew)
 #endif
 		self.renderflags |= RF_EXTERNALMODEL;
 	else
-		self.renderflags &~= RF_EXTERNALMODEL;
+		self.renderflags &= ~RF_EXTERNALMODEL;
 
 	// draw it
 	self.drawmask = MASK_NORMAL;

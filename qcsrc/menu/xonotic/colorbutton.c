@@ -3,9 +3,8 @@ CLASS(XonoticColorButton) EXTENDS(RadioButton)
 	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float))
 	METHOD(XonoticColorButton, setChecked, void(entity, float))
 	METHOD(XonoticColorButton, draw, void(entity))
-	ATTRIB(XonoticColorButton, fontSize, float, SKINFONTSIZE_NORMAL)
+	ATTRIB(XonoticColorButton, fontSize, float, 0)
 	ATTRIB(XonoticColorButton, image, string, SKINGFX_COLORBUTTON)
-	ATTRIB(XonoticColorButton, image2, string, SKINGFX_COLORBUTTON_COLOR)
 
 	ATTRIB(XonoticColorButton, useDownAsChecked, float, 1)
 
@@ -54,8 +53,6 @@ void XonoticColorButton_configureXonoticColorButton(entity me, float theGroup, f
 	me.cvarPart = theColor;
 	me.loadCvars(me);
 	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
-	me.srcMulti = 1;
-	me.src2 = me.image2;
 }
 void XonoticColorButton_setChecked(entity me, float val)
 {
@@ -67,7 +64,7 @@ void XonoticColorButton_setChecked(entity me, float val)
 }
 void XonoticColorButton_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(cvar_string(me.cvarName) == cvar_defstring(me.cvarName))
@@ -80,21 +77,24 @@ void XonoticColorButton_loadCvars(entity me)
 }
 void XonoticColorButton_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.checked)
 	{
 		if(me.cvarPart == 1)
-			cvar_set(me.cvarName, ftos(cvar(me.cvarName) & 15 + me.cvarValueFloat * 16));
+			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 15) + me.cvarValueFloat * 16));
 		else
-			cvar_set(me.cvarName, ftos(cvar(me.cvarName) & 240 + me.cvarValueFloat));
+			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 240) + me.cvarValueFloat));
 	}
 	// TODO on an apply button, read _cl_color and execute the color command for it
 }
 void XonoticColorButton_draw(entity me)
 {
-	me.color2 = colormapPaletteColor(me.cvarValueFloat, me.cvarPart);
+	me.color  = colormapPaletteColor(me.cvarValueFloat, me.cvarPart);
+	me.colorC = me.color;
+	me.colorF = me.color;
+	me.colorD = me.color;
 	SUPER(XonoticColorButton).draw(me);
 }
 #endif
