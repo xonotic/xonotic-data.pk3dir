@@ -64,7 +64,6 @@ float autocvar_bot_wander_enable;
 float autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
 #define autocvar_developer cvar("developer")
-float autocvar_developer_fteqccbugs;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
