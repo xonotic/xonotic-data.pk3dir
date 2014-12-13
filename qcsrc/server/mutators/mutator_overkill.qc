@@ -284,9 +284,6 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
 
-	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
-	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start;
-
 	return FALSE;
 }
 

@@ -843,7 +843,6 @@ float autocvar_g_overkill_powerups_replace;
 float autocvar_g_overkill_superguns_respawn_time;
 float autocvar_g_overkill_100h_anyway;
 float autocvar_g_overkill_100a_anyway;
-float autocvar_g_overkill_ammo_start;
 float autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;

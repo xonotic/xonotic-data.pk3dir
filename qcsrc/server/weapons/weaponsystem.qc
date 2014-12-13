@@ -641,6 +641,8 @@ float forbidWeaponUse()
 		return 1;
 	if(self.frozen)
 		return 1;
+	if(self.weapon_blocked)
+		return 1;
 	return 0;
 }
 
