@@ -53,7 +53,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	printf(_("^4CSQC Build information: ^1%s\n"), WATERMARK);
+	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	float i;
@@ -858,7 +858,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
-			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
+			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -1326,7 +1326,7 @@ string getcommandkey(string text, string command)
 			return text;
 	}
 	else if (autocvar_hud_showbinds > 1)
-		return sprintf(_("%s (%s)"), text, keys);
+		return sprintf("%s (%s)", text, keys);
 	else
 		return keys;
 }

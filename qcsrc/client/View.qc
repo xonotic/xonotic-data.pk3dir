@@ -162,13 +162,13 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	makevectors(view_angles);
-
 	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
 		{
+
+			makevectors(view_angles);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;

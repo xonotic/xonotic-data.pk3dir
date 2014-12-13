@@ -1042,7 +1042,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
 			string s;
-			s = sprintf(_("%d%%"), weapon_stats*100);
+			s = sprintf("%d%%", weapon_stats*100);
 
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value

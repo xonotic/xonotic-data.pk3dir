@@ -355,6 +355,10 @@ void reset_map(float dorespawn)
 		}
 	}
 
+	FOR_EACH_PLAYER(self)
+	if(self.frozen)
+		Unfreeze(self);
+
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
 	if(dorespawn)
