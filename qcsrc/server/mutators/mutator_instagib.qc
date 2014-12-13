@@ -6,7 +6,7 @@ void spawnfunc_item_minst_cells (void)
 
 	StartItem ("models/items/a_cells.md3",
 			   "misc/itempickup.wav", 45, 0,
-			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 void instagib_health_mega()
@@ -40,58 +40,58 @@ void instagib_ammocheck()
 	else
 	{
 		self.instagib_needammo = TRUE;
-		if (self.health == 5)
+		if (self.health <= 5)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
-		else if (self.health == 10)
+		else if (self.health <= 10)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
 		}
-		else if (self.health == 20)
+		else if (self.health <= 20)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
 		}
-		else if (self.health == 30)
+		else if (self.health <= 30)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
 		}
-		else if (self.health == 40)
+		else if (self.health <= 40)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
 		}
-		else if (self.health == 50)
+		else if (self.health <= 50)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
 		}
-		else if (self.health == 60)
+		else if (self.health <= 60)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
 		}
-		else if (self.health == 70)
+		else if (self.health <= 70)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
 		}
-		else if (self.health == 80)
+		else if (self.health <= 80)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
 		}
-		else if (self.health == 90)
+		else if (self.health <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
 		}
-		else if (self.health == 100)
+		else
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
@@ -245,28 +245,25 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
-		if(frag_target.armorvalue)
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
-			frag_target.armorvalue -= 1;
-			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
-			frag_damage = 0;
-			frag_target.damage_dealt += 1;
-			frag_attacker.damage_dealt += 1; // TODO change this to a future specific hitsound for armor hit
-		}
-
-		if(IS_PLAYER(frag_attacker))
-		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
-		{
-			frag_damage = 0;
-			frag_mirrordamage = 0;
-			if (frag_target != frag_attacker)
+			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				if (frag_target.health >= 1)
-					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
-				frag_force = '0 0 0';
-				// keep mirrorfrag_force
-				//frag_attacker = frag_target;
+				frag_damage = frag_mirrordamage = 0;
+				
+				if(frag_target != frag_attacker)
+				{
+					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY); }
+					frag_force = '0 0 0';
+				}
+			}
+			else if(frag_target.armorvalue)
+			{
+				frag_target.armorvalue -= 1;
+				frag_damage = 0;
+				frag_target.damage_dealt += 1;
+				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
 	}
@@ -296,8 +293,8 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 
 	start_health = 100;
 	start_armorvalue = 0;
-	start_weapons = WEPSET_MINSTANEX;
-	warmup_start_weapons = WEPSET_MINSTANEX;
+	start_weapons = WEPSET_VAPORIZER;
+	warmup_start_weapons = WEPSET_VAPORIZER;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
@@ -308,13 +305,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.classname == "item_cells")
 		return TRUE; // no normal cells?
 
-	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
+	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 		return FALSE;
 	}
 
-	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
+	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);
