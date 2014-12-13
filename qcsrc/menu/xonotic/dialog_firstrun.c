@@ -17,7 +17,7 @@ ENDCLASS(XonoticFirstRunDialog)
 #ifdef IMPLEMENTATION
 float CheckFirstRunButton(entity me)
 {
-	if(cvar_string("_cl_name") != "Player")
+	if(cvar_string("_cl_name") != cvar_defstring("_cl_name"))
 		return 1;
 
 	if(cvar_string("_menu_prvm_language") != prvm_language)

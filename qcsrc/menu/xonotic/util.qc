@@ -305,17 +305,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	}
 	if(status != 0)
 	{
-		printf(_("error receiving update notification: status is %d\n"), status);
+		dprintf("error receiving update notification: status is %d\n", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		print(_("error: received HTML instead of an update notification\n"));
+		dprint("error: received HTML instead of an update notification\n");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		print(_("error: received carriage returns from update notification server\n"));
+		dprint("error: received carriage returns from update notification server\n");
 		return;
 	}
 
@@ -343,7 +343,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		
 		switch(substring(argv(i), 0, 1))
 		{
-			#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
 			case "V":
 			{
 				un_version = s;
