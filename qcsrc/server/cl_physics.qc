@@ -19,15 +19,22 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	if(self.frozen)
+		return; // no jumping in freezetag when frozen
+
+	if(self.player_blocked)
+		return; // no jumping while blocked
+
 	float doublejump = FALSE;
+	float mjumpheight = autocvar_sv_jumpvelocity;
 
 	player_multijump = doublejump;
+	player_jumpheight = mjumpheight;
 	if(MUTATOR_CALLHOOK(PlayerJump))
 		return;
 
 	doublejump = player_multijump;
-
-	float mjumpheight;
+	mjumpheight = player_jumpheight;
 
 	if (autocvar_sv_doublejump)
 	{
@@ -44,7 +51,6 @@ void PlayerJump (void)
 		}
 	}
 
-	mjumpheight = autocvar_sv_jumpvelocity;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		self.velocity_z = self.stat_sv_maxspeed * 0.7;
@@ -636,9 +642,7 @@ void SV_PlayerPhysics()
 
 	maxspd_mod = 1;
 	if(self.ballcarried)
-		if(g_nexball)
-			maxspd_mod *= autocvar_g_nexball_basketball_carrier_highspeed;
-		else if(g_keepaway)
+		if(g_keepaway)
 			maxspd_mod *= autocvar_g_keepaway_ballcarrier_highspeed;
 
 	maxspd_mod *= autocvar_g_movement_highspeed;
@@ -789,6 +793,28 @@ void SV_PlayerPhysics()
 	{
 		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
 		self.stat_sv_airspeedlimit_nonqw *= 0.5;
+	}
+
+	if(self.frozen)
+	{
+		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
+		{
+			self.movement_x = bound(-5, self.movement_x, 5);
+			self.movement_y = bound(-5, self.movement_y, 5);
+			self.movement_z = bound(-5, self.movement_z, 5);
+		}
+		else
+			self.movement = '0 0 0';
+		self.disableclientprediction = 1;
+
+		vector midpoint = ((self.absmin + self.absmax) * 0.5);
+		if(pointcontents(midpoint) == CONTENT_WATER)
+		{
+			self.velocity = self.velocity * 0.5;
+
+			if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+				{ self.velocity_z = 200; }
+		}
 	}
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
@@ -992,7 +1018,7 @@ void SV_PlayerPhysics()
 			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
-	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.freezetag_frozen)
+	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
 	{
 		//makevectors(self.v_angle_y * '0 1 0');
 		makevectors(self.v_angle);
@@ -1249,22 +1275,22 @@ void SV_PlayerPhysics()
 		}
 	}
 
-	if((g_cts || g_race) && !IS_OBSERVER(self)) {
-		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed) {
+	if((g_cts || g_race) && !IS_OBSERVER(self))
+	{
+		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
+		{
 			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
 			speedaward_holder = self.netname;
 			speedaward_uid = self.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
-		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1) {
-			string rr;
-			if(g_cts)
-				rr = CTS_RECORD;
-			else
-				rr = RACE_RECORD;
+		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
+		{
+			string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
 			race_send_speedaward(MSG_ALL);
 			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "") {
+			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
+			{
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
 				speedaward_alltimebest_uid = speedaward_uid;
@@ -1275,15 +1301,16 @@ void SV_PlayerPhysics()
 		}
 	}
 
+	// WEAPONTODO
 	float xyspeed;
 	xyspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
-	if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge && autocvar_g_balance_nex_charge_velocity_rate && xyspeed > autocvar_g_balance_nex_charge_minspeed)
+	if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
-	        xyspeed = min(xyspeed, autocvar_g_balance_nex_charge_maxspeed);
-		f = (xyspeed - autocvar_g_balance_nex_charge_minspeed) / (autocvar_g_balance_nex_charge_maxspeed - autocvar_g_balance_nex_charge_minspeed);
+	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
+		f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
 		// add the extra charge
-		self.nex_charge = min(1, self.nex_charge + autocvar_g_balance_nex_charge_velocity_rate * f * frametime);
+		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * frametime);
 	}
 :end
 	if(self.flags & FL_ONGROUND)

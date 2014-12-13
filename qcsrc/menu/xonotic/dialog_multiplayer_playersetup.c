@@ -22,7 +22,7 @@ entity makeXonoticPlayerSettingsTab()
 }
 void XonoticPlayerSettingsTab_draw(entity me)
 {
-	if(cvar_string("_cl_name") == "Player")
+	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
 		me.playerNameLabel.alpha = ((mod(time * 2, 2) < 1) ? 1 : 0);
 	else
 		me.playerNameLabel.alpha = me.playerNameLabelAlpha;

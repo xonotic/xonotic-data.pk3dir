@@ -1,4 +1,3 @@
-#define WANT_CONST
 // commonly used, but better make them macros
 #define TRUE 1
 #define FALSE 0
@@ -273,6 +272,7 @@ float get_model_parameters_species;
 string get_model_parameters_sex;
 float get_model_parameters_weight;
 float get_model_parameters_age;
+string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
 #define MAX_AIM_BONES 4
@@ -305,9 +305,9 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-#ifndef COMPAT_XON010_CHANNELS
+// Play all sounds via sound7, for access to the extra channels.
+// Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
-#endif
 
 float lowestbit(float f);
 
@@ -363,6 +363,11 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
 typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_t;
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z);
+vector get_corner_position(entity box, float corner);
+#endif
 
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
@@ -445,3 +450,5 @@ float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
 // Quadratic splines (bezier)
 vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
 vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
+
+#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))

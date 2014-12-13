@@ -41,8 +41,7 @@
 \g_pinata\A játékosok eldobnak minden fegyvert, amit birtokoltak a haláluk előtt
 \g_weapon_stay\A fegyverek a helyükön maradnak, még azután is, hogy valaki felvette őket
 \g_weaponarena\A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét
-\menu_weaponarena_with_laser\A lézer is engedélyezett a fegyver arénában
-\g_minstagib\A játékosok egy Minstanex-et kapnak, ami egy azonnal ölő mesterlövész fegyver. Ha a játékos kifogy a lőszerből, 10 másodperce van muníciót találni, vagy meghal. A másodlagos tűz mód a lézer, amely nem okoz kárt, de jól jön trükkös ugrások végrehajtásánál
+\g_instagib\A játékosok egy Minstanex-et kapnak, ami egy azonnal ölő mesterlövész fegyver. Ha a játékos kifogy a lőszerből, 10 másodperce van muníciót találni, vagy meghal. A másodlagos tűz mód a lézer, amely nem okoz kárt, de jól jön trükkös ugrások végrehajtásánál
 \g_nix\Xonotic felvehető fegyverek nélkül – Mindenki ugyanazzal a fegyverrel játszik. Kis idő után visszaszámlálás indul, amely végén mindenki fegyvert vált
 \g_nix_with_laser\Mindig legyen a lézer a Nix mellett kiegészítésül 
 

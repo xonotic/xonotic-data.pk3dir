@@ -343,7 +343,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		
 		switch(substring(argv(i), 0, 1))
 		{
-			#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
 			case "V":
 			{
 				un_version = s;
@@ -656,7 +655,7 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_LMS) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
-	GAMETYPE(MAPINFO_TYPE_RACE) \
+	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
 	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	//GAMETYPE(MAPINFO_TYPE_INVASION) \
@@ -667,7 +666,7 @@ float GameType_GetID(float cnt)
 	float i;
 	i = 0;
 
-	#define GAMETYPE(id) if(i++ == cnt) return id;
+	#define GAMETYPE(id) { if(i++ == cnt) return id; }
 	GAMETYPES
 	#undef GAMETYPE
 

@@ -13,7 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-void tdm_init();
 void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
@@ -83,7 +82,10 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
-		tdm_init();
+		fraglimit_override = autocvar_g_tdm_point_limit;
+		leadlimit_override = autocvar_g_tdm_point_leadlimit;
+		MUTATOR_ADD(gamemode_tdm);
+
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
@@ -94,6 +96,10 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
 		MUTATOR_ADD(gamemode_domination);
+
+		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -159,7 +165,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -172,6 +177,8 @@ void InitGameplayMode()
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -179,6 +186,7 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
@@ -197,8 +205,13 @@ void InitGameplayMode()
 
 	if(g_invasion)
 	{
-		timelimit_override = 0; // no timelimit in invasion, round based
-		fraglimit_override = autocvar_g_invasion_round_limit;
+		fraglimit_override = autocvar_g_invasion_point_limit;
+		if(autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if(autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
@@ -241,20 +254,10 @@ void InitGameplayMode()
 		else
 			g_race_qualifying = 0;
 	}
-	
-	if(g_invasion)
-	{
-		inv_maxrounds = cvar("fraglimit");
-		cvar_set("fraglimit", "0");
-	}
 
 	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
-	}
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -288,7 +291,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(autocvar_g_start_weapon_laser == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -317,6 +320,9 @@ string getwelcomemessage(void)
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+
+	if (cvar("g_nades"))
+		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -421,10 +427,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);
@@ -512,7 +515,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(head) || head.caplayer)
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot
@@ -662,16 +665,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_freezetag)
-			error("Too few teams available for freeze tag\n");
 		else
-			error("Too few teams available for team deathmatch\n");
+			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -826,7 +821,7 @@ void SV_ChangeTeam(float _color)
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -836,7 +831,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
@@ -997,46 +992,5 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
-}
-
-// code from here on is just to support maps that don't have team entities
-void tdm_spawnteam (string teamname, float teamcolor)
-{
-	entity e;
-	e = spawn();
-	e.classname = "tdm_team";
-	e.netname = teamname;
-	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
-}
-
-// spawn some default teams if the map is not set up for tdm
-void tdm_spawnteams()
-{
-	float numteams;
-
-	numteams = autocvar_g_tdm_teams_override;
-	if(numteams < 2)
-		numteams = autocvar_g_tdm_teams;
-	numteams = bound(2, numteams, 4);
-
-	tdm_spawnteam("Red", NUM_TEAM_1-1);
-	tdm_spawnteam("Blue", NUM_TEAM_2-1);
-	if(numteams >= 3)
-		tdm_spawnteam("Yellow", NUM_TEAM_3-1);
-	if(numteams >= 4)
-		tdm_spawnteam("Pink", NUM_TEAM_4-1);
-}
-
-void tdm_delayedinit()
-{
-	// if no teams are found, spawn defaults
-	if (find(world, classname, "tdm_team") == world)
-		tdm_spawnteams();
-}
-
-void tdm_init()
-{
-	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
+	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

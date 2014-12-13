@@ -35,7 +35,7 @@ void wyvern_fireball_explode()
 	{
 		pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
 
-		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
 
 		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= (autocvar_g_monster_wyvern_attack_fireball_radius))
 			Fire_AddDamage(e, self, 5 * Monster_SkillModifier(), (autocvar_g_monster_wyvern_attack_fireball_damagetime), self.projectiledeathtype);
@@ -96,12 +96,7 @@ void spawnfunc_monster_wyvern()
 {
 	self.classname = "monster_wyvern";
 
-	self.monster_spawnfunc = spawnfunc_monster_wyvern;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_WYVERN, TRUE)) { remove(self); return; }
+	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -136,7 +131,7 @@ float m_wyvern(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
+			precache_model("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
@@ -152,7 +147,6 @@ float m_wyvern(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
