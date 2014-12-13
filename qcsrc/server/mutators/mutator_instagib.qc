@@ -28,14 +28,14 @@ void instagib_stop_countdown(entity e)
 }
 void instagib_ammocheck()
 {
-	if (!IS_PLAYER(self))
-		return; // not a player
-	if (time < self.instagib_nextthink)
+	if(time < self.instagib_nextthink)
 		return;
+	if(!IS_PLAYER(self))
+		return; // not a player
 
-	if (self.deadflag || gameover)
+	if(self.deadflag || gameover)
 		instagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
 	else
 	{
