@@ -57,7 +57,6 @@ void Projectile_Draw()
 	float dt = time - self.proj_time;
 
 	self.proj_time = time;
-	if(dt <= 0) { return; }
 
 	f = self.move_flags;
 
@@ -144,6 +143,7 @@ void Projectile_Draw()
 	if(Nade_IDFromProjectile(self.cnt) != 0)
 		trailorigin += v_up * 4;
 
+	if(dt > 0)
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
