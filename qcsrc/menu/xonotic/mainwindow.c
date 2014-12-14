@@ -148,7 +148,6 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
-	me.languageWarningDialog = i = spawnXonoticLanguageWarningDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
