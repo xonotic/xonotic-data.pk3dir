@@ -3,7 +3,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticEffectsSettingsTab, rows, float, 17)
+	ATTRIB(XonoticEffectsSettingsTab, rows, float, 14.5)
 	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
@@ -130,22 +130,30 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_particles", _("Particles")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_spawn_point_particles", _("Spawnpoint effects")));
+			makeMulti(e, "cl_spawn_event_particles");
+			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
-			setDependent(e, "cl_decals", 1, 1);
-	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality:")));
+			setDependent(e, "cl_particles", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticParticlesSlider());
+			setDependent(e, "cl_particles", 1, 1);
+		me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
-			setDependent(e, "cl_decals", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawdecals_drawdistance"));
-			setDependent(e, "cl_decals", 1, 1);
-	me.TR(me);
+			setDependent(e, "cl_particles", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_particles_drawdistance"));
+			setDependent(e, "cl_particles", 1, 1);
+		me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
-			setDependent(e, "cl_decals", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_fadetime"));
-			setDependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Damage effects:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
+			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, _("Skeletal"), "1");
+			e.addValue(e, _("All"), "2");
+			e.configureXonoticTextSliderValues(e);
 
 	me.gotoRC(me, 1.25, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "r_coronas", "0", _("No dynamic lighting")));
@@ -172,7 +180,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Fade corona according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects")));
 			makeMulti(e, "hud_powerup");
@@ -185,23 +192,16 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_particles", _("Particles")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_spawn_point_particles", _("Spawnpoint effects")));
-			makeMulti(e, "cl_spawn_event_particles");
-			setDependent(e, "cl_particles", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
+			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality:")));
-			setDependent(e, "cl_particles", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticParticlesSlider());
-			setDependent(e, "cl_particles", 1, 1);
-		me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_decals", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawdecals_drawdistance"));
 			setDependent(e, "cl_decals", 1, 1);
-		me.TR(me);
+	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
 			setDependent(e, "cl_decals", 1, 1);

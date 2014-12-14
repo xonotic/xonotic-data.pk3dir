@@ -619,7 +619,7 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
-	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
+	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
@@ -1499,11 +1499,7 @@ void NextLevel()
 	DumpStats(TRUE);
 
 	// send statistics
-	entity e;
-	PlayerStats_EndMatch(1);
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
+	PlayerStats_GameReport(TRUE);
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2309,8 +2305,6 @@ void RestoreGame()
 
 void Shutdown()
 {
-	entity e;
-
 	gameover = 2;
 
 	if(world_initialized > 0)
@@ -2319,10 +2313,8 @@ void Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
-		PlayerStats_EndMatch(0);
-		FOR_EACH_CLIENT(e)
-			PlayerStats_AddGlobalInfo(e);
-		PlayerStats_Shutdown();
+		// playerstats with unfinished match
+		PlayerStats_GameReport(FALSE);
 
 		if(!cheatcount_total)
 		{
