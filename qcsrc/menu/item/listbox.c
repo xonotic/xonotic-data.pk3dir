@@ -309,7 +309,7 @@ void ListBox_updateControlTopBottom(entity me)
 		me.controlBottom = min((me.scrollPos + 1) / me.getTotalHeight(me), 1);
 
 		float minfactor;
-		minfactor = 1 * me.controlWidth / me.size_y * me.size_x;
+		minfactor = 2 * me.controlWidth / me.size_y * me.size_x;
 		f = me.controlBottom - me.controlTop;
 		if(f < minfactor) // FIXME good default?
 		{
