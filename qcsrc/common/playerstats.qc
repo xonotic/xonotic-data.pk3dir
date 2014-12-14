@@ -382,9 +382,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			print("Got response from player stats server:\n");
-			while((s = url_fgets(fh))) { print("  ", s, "\n"); }
-			print("End of response.\n");
+			dprint("Got response from player stats server:\n");
+			while((s = url_fgets(fh))) { dprint("  ", s, "\n"); }
+			dprint("End of response.\n");
 			url_fclose(fh);
 			break;
 		}
@@ -392,7 +392,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("Player stats written\n");
+			dprint("Player stats written\n");
 			PlayerStats_GameReport_DelayMapVote = FALSE;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -434,7 +434,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
-			print("Retrieving playerstats from URL: ", uri, "\n");
+			dprint("Retrieving playerstats from URL: ", uri, "\n");
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -499,7 +499,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			print("-- Sending data to player stats server\n");
+			dprint("-- Sending data to player stats server\n");
 			/*url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -517,11 +517,11 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 		case URL_READY_CANREAD:
 		{
 			string s = "";
-			print("-- Got response from player stats server:\n");
+			dprint("-- Got response from player stats server:\n");
 			//string gametype = string_null;
 			while((s = url_fgets(fh)))
 			{
-				print("  ", s, "\n");
+				dprint("  ", s, "\n");
 				/*
 				string key = "", value = "", data = "";
 
@@ -572,7 +572,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 				continue;
 				*/
 			}
-			print("-- End of response.\n");
+			dprint("-- End of response.\n");
 			url_fclose(fh);
 			break;
 		}
