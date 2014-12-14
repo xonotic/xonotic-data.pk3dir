@@ -270,8 +270,10 @@ void trigger_push_touch()
 }
 
 .vector dest;
+#ifdef SVQC
 void trigger_push_link();
 void trigger_push_updatelink();
+#endif
 void trigger_push_findtarget()
 {
 	entity t;

@@ -1513,8 +1513,8 @@ void PM_Main()
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-	PM_ClientMovement_UpdateStatus();
 #endif
+	PM_ClientMovement_UpdateStatus();
 
 #ifdef SVQC
 	WarpZone_PlayerPhysics_FixVAngle();
