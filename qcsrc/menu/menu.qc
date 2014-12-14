@@ -53,10 +53,8 @@ void m_init()
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
 
-	check_unacceptable_compiler_bugs();
-
 #ifdef WATERMARK
-	printf(_("^4MQC Build information: ^1%s\n"), WATERMARK);
+	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -93,6 +91,9 @@ void m_init()
 			m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+
+	//PlayerInfo_Details();
+	PlayerStats_PlayerDetail_CheckUpdate();
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024

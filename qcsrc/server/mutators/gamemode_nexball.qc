@@ -22,6 +22,17 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
+#define ST_NEXBALL_GOALS 1
+#define SP_NEXBALL_GOALS 4
+#define SP_NEXBALL_FAULTS 5
+void nb_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, 0, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
 
 void LogNB(string mode, entity actor)
 {
@@ -288,7 +299,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && !other.frozen && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -455,16 +466,6 @@ void nb_spawnteams(void)
 			break;
 		}
 	}
-}
-
-// scoreboard setup
-void nb_ScoreRules(float teams)
-{
-	ScoreRules_basics(teams, 0, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
 }
 
 void nb_delayedinit(void)
@@ -694,7 +695,7 @@ void W_Nexball_Touch(void)
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			other.flags &= ~FL_ONGROUND;
@@ -1010,8 +1011,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
-
-		W_Porto(WR_INIT); // abuse
 
 		// General settings
 		/*

@@ -162,13 +162,13 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	makevectors(view_angles);
-
-	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
 		{
+
+			makevectors(view_angles);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
@@ -183,7 +183,7 @@ vector GetCurrentFov(float fov)
 
 		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
 		avgspeed = avgspeed * (1 - velocityzoom) + (curspeed / autocvar_cl_velocityzoom_speed) * velocityzoom;
-		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
+		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom_factor / 1) * 1);
 
 		//print(ftos(avgspeed), " avgspeed, ", ftos(curspeed), " curspeed, ", ftos(velocityzoom), " return\n"); // for debugging
 	}
@@ -821,10 +821,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		// apply night vision effect
 		vector tc_00, tc_01, tc_10, tc_11;
-		vector rgb;
-		rgb_x = 0; // fteqcc sucks
-		rgb_y = 0; // fteqcc sucks
-		rgb_z = 0; // fteqcc sucks
+		vector rgb = '0 0 0';
 
 		if(!nightvision_noise)
 		{

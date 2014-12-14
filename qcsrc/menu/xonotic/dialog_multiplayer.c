@@ -13,15 +13,17 @@ ENDCLASS(XonoticMultiplayerDialog)
 void XonoticMultiplayerDialog_fill(entity me)
 {
 	entity mc, e;
-	mc = makeXonoticTabController(me.rows - 2);
+	mc = makeXonoticTabController(me.rows - 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"), makeXonoticServerListTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"), makeXonoticServerCreateTab()));
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Player Setup"), makeXonoticPlayerSettingsTab()));
+		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
+		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
+		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Players"), makeXonoticDemoBrowserTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Media"), makeXonoticMediaTab()));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Profile"), makeXonoticProfileTab()));
 
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, me.rows - 2, me.columns, mc);
+		me.TD(me, me.rows - 1, me.columns, mc);
 }
 #endif

@@ -218,9 +218,9 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, sprintf(_("%s (%s)"), cpname, timestr));
+		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else
-		return strcat(col, sprintf(_("%s (%s %s)"), cpname, timestr, strcat(hisname, col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(hisname, col, lapstr)));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
@@ -985,7 +985,7 @@ void HUD_Ammo(void)
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		total_ammo_count = AMMO_COUNT - 1; // fuel
+		total_ammo_count = AMMO_COUNT;
 
 	if(draw_nades)
 	{
@@ -1059,7 +1059,6 @@ void HUD_Ammo(void)
 		row = column = 0;
 		for(i = 0; i < AMMO_COUNT; ++i)
 		{
-			if(i == 4) continue; // fuel
 			ammotype = GetAmmoFieldFromNum(i);
 			DrawAmmoItem(
 				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
@@ -4226,9 +4225,9 @@ void HUD_CenterPrint (void)
 		{
 			float r;
 			r = random();
-			if (r > 0.9)
+			if (r > 0.75)
 				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
-			else if (r > 0.8)
+			else if (r > 0.5)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
 				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
@@ -4320,7 +4319,8 @@ void HUD_CenterPrint (void)
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
-		if (a <= 0.5/255.0)  // Guaranteed invisible - don't show.
+		// while counting down show it anyway in order to hold the current message position
+		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
 		if (a > 1)
 			a = 1;
@@ -4607,7 +4607,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			print(_("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"));
+			dprint("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)

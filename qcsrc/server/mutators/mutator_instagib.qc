@@ -23,19 +23,19 @@ void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
 		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_MINSTA_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = FALSE;
 }
 void instagib_ammocheck()
 {
-	if (!IS_PLAYER(self))
-		return; // not a player
-	if (time < self.instagib_nextthink)
+	if(time < self.instagib_nextthink)
 		return;
+	if(!IS_PLAYER(self))
+		return; // not a player
 
-	if (self.deadflag || gameover)
+	if(self.deadflag || gameover)
 		instagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
 	else
 	{
@@ -87,13 +87,13 @@ void instagib_ammocheck()
 		}
 		else if (self.health <= 90)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_MINSTA_FINDAMMO);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 		}
 	}
@@ -253,7 +253,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 				
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY); }
+					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_SECONDARY); }
 					frag_force = '0 0 0';
 				}
 			}
@@ -263,7 +263,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
 				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
 	}
@@ -275,7 +275,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		if(frag_attacker.armorvalue > 0)
 		{
 			frag_attacker.armorvalue -= 1;
-			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_attacker.armorvalue);
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
 			frag_attacker.damage_dealt += 1;
 		}
 		frag_mirrordamage = 0;
