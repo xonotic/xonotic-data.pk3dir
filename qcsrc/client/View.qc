@@ -394,6 +394,7 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float eventchase_current_distance;
+float eventchase_running;
 float WantEventchase()
 {
 	if(autocvar_cl_orthoview)
@@ -402,10 +403,18 @@ float WantEventchase()
 		return TRUE;
 	if(spectatee_status >= 0)
 	{
-		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
-			return TRUE;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
 			return TRUE;
+		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
+		{
+			if(autocvar_cl_eventchase_death == 2)
+			{
+				// don't stop eventchase once it's started (even if velocity changes afterwards)
+				if(self.velocity == '0 0 0' || eventchase_running)
+					return TRUE;
+			}
+			else return TRUE;
+		}
 	}
 	return FALSE;
 }
@@ -512,6 +521,8 @@ void CSQC_UpdateView(float w, float h)
 	{
 		if(WantEventchase())
 		{
+			eventchase_running = TRUE;
+
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
 
@@ -552,6 +563,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
+			eventchase_running = FALSE;
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
