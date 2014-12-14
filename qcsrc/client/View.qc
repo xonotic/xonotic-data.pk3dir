@@ -496,7 +496,7 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		WepSet weapons_stat = WepSet_GetFromStat();
-		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview || (autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))))
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission) && !autocvar_cl_orthoview || (autocvar_cl_eventchase_nexball && spectatee_status >= 0 && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))))
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
