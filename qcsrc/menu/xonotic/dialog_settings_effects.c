@@ -144,7 +144,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_particles", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_particles_drawdistance"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawparticles_drawdistance"));
 			setDependent(e, "cl_particles", 1, 1);
 		me.TR(me);
 		me.TDempty(me, 0.2);
