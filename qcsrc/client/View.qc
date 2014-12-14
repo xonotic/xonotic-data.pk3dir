@@ -821,10 +821,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		// apply night vision effect
 		vector tc_00, tc_01, tc_10, tc_11;
-		vector rgb;
-		rgb_x = 0; // fteqcc sucks
-		rgb_y = 0; // fteqcc sucks
-		rgb_z = 0; // fteqcc sucks
+		vector rgb = '0 0 0';
 
 		if(!nightvision_noise)
 		{

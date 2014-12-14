@@ -53,8 +53,6 @@ void m_init()
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
 
-	check_unacceptable_compiler_bugs();
-
 #ifdef WATERMARK
 	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
