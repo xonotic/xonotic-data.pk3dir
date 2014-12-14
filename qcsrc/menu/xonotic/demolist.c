@@ -192,7 +192,7 @@ void XonoticDemoList_timeDemo(entity me)
 
 void DemoConfirm_ListClick_Check_Gamestatus(entity me)
 {
-	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, lets watch the demo
+	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, lets watch the demo
 	{
 		me.startDemo(me);
 	}
