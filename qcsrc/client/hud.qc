@@ -985,7 +985,7 @@ void HUD_Ammo(void)
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		total_ammo_count = AMMO_COUNT - 1; // fuel
+		total_ammo_count = AMMO_COUNT;
 
 	if(draw_nades)
 	{
@@ -1059,7 +1059,6 @@ void HUD_Ammo(void)
 		row = column = 0;
 		for(i = 0; i < AMMO_COUNT; ++i)
 		{
-			if(i == 4) continue; // fuel
 			ammotype = GetAmmoFieldFromNum(i);
 			DrawAmmoItem(
 				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
