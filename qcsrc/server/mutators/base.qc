@@ -91,7 +91,7 @@ float CallbackChain_Call(entity cb)
 	return r; // callbacks return an error status, so 0 is default return value
 }
 
-#define MAX_MUTATORS 8
+#define MAX_MUTATORS 15
 string loaded_mutators[MAX_MUTATORS];
 float Mutator_Add(mutatorfunc_t func, string name)
 {
@@ -101,7 +101,7 @@ float Mutator_Add(mutatorfunc_t func, string name)
 	{
 		if(name == loaded_mutators[i])
 			return 1; // already added
-		if not(loaded_mutators[i])
+		if (!(loaded_mutators[i]))
 			j = i;
 	}
 	if(j < 0)

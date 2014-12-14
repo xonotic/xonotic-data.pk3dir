@@ -97,12 +97,12 @@ float bumb_gunner_frame()
 	self = vehic;
 
 
-	
-	
+
+
 	vehic.solid = SOLID_NOT;
 	//setorigin(gunner, vehic.origin);
 	gunner.velocity = vehic.velocity;
-	
+
 	float _in, _out;
 	vehic.angles_x *= -1;
 	makevectors(vehic.angles);
@@ -117,9 +117,9 @@ float bumb_gunner_frame()
 	{
 		_in = autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
 		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
-		setorigin(gunner, vehic.origin + v_up * -16 + v_forward * -16 + v_right * -128);		
+		setorigin(gunner, vehic.origin + v_up * -16 + v_forward * -16 + v_right * -128);
 	}
-	
+
 	crosshair_trace(gunner);
 	vector _ct = trace_endpos;
 	vector ad;
@@ -225,7 +225,7 @@ void bumb_gunner_exit(float _exitflag)
 		WriteAngle(MSG_ONE, self.vehicle.angles_y);
 		WriteAngle(MSG_ONE, 0);
 	}
-	
+
 	CSQCVehicleSetup(self, HUD_NORMAL);
 	setsize(self, PL_MIN, PL_MAX);
 
@@ -252,16 +252,16 @@ void bumb_gunner_exit(float _exitflag)
 
 	if(self == self.vehicle.owner.gunner1)
 	{
-		self.vehicle.owner.gunner1 = world;		
+		self.vehicle.owner.gunner1 = world;
 	}
 	else if(self == self.vehicle.owner.gunner2)
 	{
-		self.vehicle.owner.gunner2 = world;	
+		self.vehicle.owner.gunner2 = world;
 		v_right *= -1;
-	}	
+	}
 	else
 		dprint("^1self != gunner1 or gunner2, this is a BIG PROBLEM, tell tZork this happend.\n");
-		
+
 	vector spot = self.vehicle.owner.origin + + v_up * 128 + v_right * 300;
 	spot = vehicles_findgoodexit(spot);
 	//setorigin(self , spot);
@@ -327,7 +327,7 @@ float bumb_gunner_enter()
 	_gun.vehicle_hudmodel.viewmodelforclient = other;
 
 	CSQCVehicleSetup(other, other.hud);
-	
+
     vh_player = other;
     vh_vehicle = _gun;
     MUTATOR_CALLHOOK(VehicleEnter);
@@ -339,7 +339,7 @@ float bumb_gunner_enter()
 
 float vehicles_valid_pilot()
 {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return FALSE;
 
 	if(other.deadflag != DEAD_NO)
@@ -348,7 +348,7 @@ float vehicles_valid_pilot()
 	if(other.vehicle != world)
 		return FALSE;
 
-	if not(IS_REAL_CLIENT(other))
+	if (!IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
 			return FALSE;
 
@@ -442,9 +442,9 @@ float bumb_pilot_frame()
 
 	// Pitch
 	ftmp = 0;
-	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit) 
+	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = 4;
-	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit) 
+	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = -8;
 
 	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x , autocvar_g_vehicle_bumblebee_pitchlimit);
@@ -490,10 +490,10 @@ float bumb_pilot_frame()
 
 	vehic.velocity  += newvel * frametime;
 	pilot.velocity = pilot.movement  = vehic.velocity;
-	
+
 
 	if(autocvar_g_vehicle_bumblebee_healgun_locktime)
-	{		
+	{
 		if(vehic.tur_head.lock_time < time || vehic.tur_head.enemy.deadflag)
 			vehic.tur_head.enemy = world;
 
@@ -511,19 +511,19 @@ float bumb_pilot_frame()
 				}
 			}
 			else
-			{            
+			{
 				vehic.tur_head.enemy = trace_ent;
 				vehic.tur_head.lock_time = time + autocvar_g_vehicle_bumblebee_healgun_locktime;
 			}
 		}
-			
+
 		if(vehic.tur_head.enemy)
 		{
-			trace_endpos = real_origin(vehic.tur_head.enemy);			
-			UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.75 0', 0);		
+			trace_endpos = real_origin(vehic.tur_head.enemy);
+			UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.75 0', 0);
 		}
 	}
-	
+
 	vang = vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
@@ -532,12 +532,12 @@ float bumb_pilot_frame()
 	{
 		vehic.gun3.enemy.realowner = pilot;
 		vehic.gun3.enemy.effects &= ~EF_NODRAW;
-		
+
 		vehic.gun3.enemy.hook_start = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
 		vehic.gun3.enemy.SendFlags |= BRG_START;
-		
+
 		traceline(vehic.gun3.enemy.hook_start, vehic.gun3.enemy.hook_start + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
-		
+
 		if(trace_ent)
 		{
 			if(autocvar_g_vehicle_bumblebee_raygun)
@@ -580,11 +580,11 @@ float bumb_pilot_frame()
 					}
 			}
 		}
-		
+
 		vehic.gun3.enemy.hook_end = trace_endpos;
 		setorigin(vehic.gun3.enemy, trace_endpos);
 		vehic.gun3.enemy.SendFlags |= BRG_END;
-		
+
 		vehic.wait = time + 1;
 	}
 	else
@@ -596,7 +596,7 @@ float bumb_pilot_frame()
 		vehic.gun3.enemy = world;
 	}
 	*/
-	
+
 	VEHICLE_UPDATE_PLAYER(pilot, health, bumblebee);
 	VEHICLE_UPDATE_PLAYER(pilot, energy, bumblebee);
 
@@ -605,7 +605,7 @@ float bumb_pilot_frame()
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(pilot, shield, bumblebee);
-		
+
 	vehic.angles_x *= -1;
 	makevectors(vehic.angles);
 	vehic.angles_x *= -1;
@@ -620,16 +620,16 @@ float bumb_pilot_frame()
 void bumb_think()
 {
 	self.movetype = MOVETYPE_TOSS;
-		
+
 		//self.velocity = self.velocity * 0.5;
 	self.angles_z *= 0.8;
 	self.angles_x *= 0.8;
-	
+
 	self.nextthink = time + 0.05;
-	
+
 	if(!self.owner)
 	{
-		entity oldself = self;		
+		entity oldself = self;
 		if(self.gunner1)
 		{
 			self = self.gunner1;
@@ -642,7 +642,7 @@ void bumb_think()
 			other = oldother;
 			return;
 		}
-		
+
 		if(self.gunner2)
 		{
 			self = self.gunner2;
@@ -654,9 +654,9 @@ void bumb_think()
 			self.touch();
 			other = oldother;
 			return;
-		}		
+		}
 	}
-	
+
 }
 
 void bumb_enter()
@@ -672,19 +672,19 @@ void bumb_exit(float eject)
 	self.touch = vehicles_touch;
 	self.think = bumb_think;
 	self.nextthink = time;
-	
+
 	if(!self.owner)
 		return;
-	
+
 	fixedmakevectors(self.angles);
 	vector spot;
-	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)		
+	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)
 		spot = self.origin + v_up * 128 + v_forward * 200;
 	else
 		spot = self.origin + v_up * 128 - v_forward * 200;
-	
+
 	spot = vehicles_findgoodexit(spot);
-	
+
 	// Hide beam
 	if(self.gun3.enemy || !wasfreed(self.gun3.enemy)) {
 		self.gun3.enemy.effects |= EF_NODRAW;
@@ -693,7 +693,7 @@ void bumb_exit(float eject)
 	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
 	self.owner.velocity_z += 10;
 	setorigin(self.owner, spot);
-	
+
 	antilag_clear(self.owner);
     self.owner = world;
 }
@@ -702,16 +702,16 @@ void bumb_blowup()
 {
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
+				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
-	
+
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
-	
+
 	remove(self);
 }
 
@@ -732,11 +732,11 @@ void bumb_diethink()
 void bumb_die()
 {
 	entity oldself = self;
-	
+
 	// Hide beam
 	if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
 		self.gun3.enemy.effects |= EF_NODRAW;
-	
+
 	if(self.gunner1)
 	{
 		self = self.gunner1;
@@ -764,15 +764,15 @@ void bumb_die()
 		_body.touch = bumb_blowup;
 	else
 		_body.touch = func_null;
-		
+
 	_body.think = bumb_diethink;
 	_body.nextthink = time;
 	_body.wait = time + 2 + (random() * 8);
 	_body.owner = self;
 	_body.enemy = self.enemy;
-	
+
 	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
-	
+
 	self.health			= 0;
 	self.event_damage	= func_null;
 	self.solid			= SOLID_CORPSE;
@@ -787,15 +787,12 @@ void bumb_die()
 	self.nextthink 		= 0;
 
 	setorigin(self, self.pos1);
-
 }
 
 void bumb_impact()
 {
-    if(autocvar_g_vehicle_bumblebee_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, 
-						autocvar_g_vehicle_bumblebee_bouncepain_y, 
-						autocvar_g_vehicle_bumblebee_bouncepain_z);
+	if(autocvar_g_vehicle_bumblebee_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 }
 
 void bumb_spawn(float _f)
@@ -861,14 +858,14 @@ void bumb_spawn(float _f)
 		setorigin(self.gun2.vehicle_viewport, '-85 0 50');
 
 		self.scale = 1.5;
-		
+
 		// Raygun beam
 		if(self.gun3.enemy == world)
-		{			
+		{
 			self.gun3.enemy = spawn();
 			Net_LinkEntity(self.gun3.enemy, TRUE, 0, bumble_raygun_send);
-			self.gun3.enemy.SendFlags = BRG_SETUP;			
-			self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;			
+			self.gun3.enemy.SendFlags = BRG_SETUP;
+			self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
 			self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
 		}
 	}
@@ -880,7 +877,7 @@ void bumb_spawn(float _f)
 	self.movetype 		= MOVETYPE_TOSS;
 	self.vehicle_impact = bumb_impact;
 	self.damageforcescale = 0.025;
-	
+
 	setorigin(self, self.origin + '0 0 25');
 }
 
@@ -913,7 +910,7 @@ void spawnfunc_vehicle_bumblebee()
 	if(autocvar_g_vehicle_bumblebee_health_regen)
 		self.vehicle_flags |= VHF_HEALTHREGEN;
 
-	if not(vehicle_initialize(
+	if(!vehicle_initialize(
 			   "Bumblebee", "models/vehicles/bumblebee_body.dpm",
 			   "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
 			   HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,
@@ -971,7 +968,7 @@ void bumble_raygun_draw()
 
 	_len = vlen(self.origin - self.move_origin);
 	_dir = normalize(self.move_origin - self.origin);
-	
+
 	if(self.total_damages < time)
 	{
 		boxparticles(self.traileffect, self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
@@ -1010,19 +1007,19 @@ void bumble_raygun_read(float bIsNew)
 		self.cnt  = ReadByte();
 		self.team = ReadByte();
 		self.cnt  = ReadByte();
-		
+
 		if(self.cnt)
 			self.colormod = '1 0 0';
 		else
 			self.colormod = '0 1 0';
 
 		self.traileffect = particleeffectnum("healray_muzzleflash");
-		self.lip = particleeffectnum("healray_impact");		
+		self.lip = particleeffectnum("healray_impact");
 
 		self.draw = bumble_raygun_draw;
 	}
-	
-	
+
+
 	if(sf & BRG_START)
 	{
 		self.origin_x = ReadCoord();

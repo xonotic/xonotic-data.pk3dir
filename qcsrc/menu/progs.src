@@ -18,13 +18,14 @@ oo/base.h
 ../common/constants.qh
 ../common/mapinfo.qh
 ../common/campaign_common.qh
-../common/items.qh
+../common/weapons/weapons.qh // TODO
 ../common/counting.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/urllib.qh
+../common/monsters/monsters.qh
 
 command/menu_cmd.qh
 menu.qh
@@ -50,9 +51,8 @@ xonotic/util.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
-../common/items.qc
+../common/weapons/weapons.qc // TODO
 ../common/urllib.qc
+../common/monsters/monsters.qc
 
 ../warpzonelib/mathlib.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

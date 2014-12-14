@@ -34,7 +34,7 @@ float CSQCModel_Send(entity to, float sf)
 	unused_float = isnolocalplayer;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
-	WriteShort(MSG_ENTITY, sf);
+	WriteInt24_t(MSG_ENTITY, sf);
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
@@ -100,7 +100,7 @@ void CSQCModel_CheckUpdate()
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	{ \
-		t tmp = bound(mi, s * self.f, ma) - mi; \
+		t tmp = rint(bound(mi, s * self.f, ma) - mi); \
 		if(tmp != self.csqcmodel_##f) \
 		{ \
 			self.csqcmodel_##f = tmp; \

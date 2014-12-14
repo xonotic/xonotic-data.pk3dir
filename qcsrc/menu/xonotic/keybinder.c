@@ -143,6 +143,13 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	if(key == K_ESCAPE)
 		return;
 
+	// forbid these keys from being bound in the menu
+	if(key == K_CAPSLOCK || key == K_NUMLOCK)
+	{
+		KeyBinder_Bind_Change(me, me);
+		return;
+	}
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
@@ -233,13 +240,13 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 }
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedServer)
+	if(i == me.lastClickedKey)
 		if(time < me.lastClickedTime + 0.3)
 		{
 			// DOUBLE CLICK!
 			KeyBinder_Bind_Change(NULL, me);
 		}
-	me.lastClickedServer = i;
+	me.lastClickedKey = i;
 	me.lastClickedTime = time;
 }
 void XonoticKeyBinder_setSelected(entity me, float i)

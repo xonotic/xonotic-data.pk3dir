@@ -43,7 +43,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if (autocvar_g_campaign && !campaign_bots_may_start)
+	if (!IS_PLAYER(self) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
 		self.bot_nextthink = time + 0.5;
 		return;
@@ -363,7 +363,7 @@ void bot_relinkplayerlist()
 
 void bot_clientdisconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
 	if(self.cleanname)
@@ -386,7 +386,7 @@ void bot_clientdisconnect()
 
 void bot_clientconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
@@ -551,7 +551,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(IS_PLAYER(head) || g_lms || g_arena || head.caplayer == 1)
+		if(IS_PLAYER(head) || g_lms || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

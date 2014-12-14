@@ -2,10 +2,11 @@
 CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
@@ -159,9 +160,15 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_ASSAULT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "");                         break;
+		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, l2, _("Point limit:"),     5,    0,  5, "");                         break;
 		default:                      GameType_ConfigureSliders(e, l, l2, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 	me.mapListBox.refilter(me.mapListBox);
+}
+
+void XonoticServerCreateTab_gameTypeSelectNotify(entity me)
+{
+	me.setFocus(me, me.mapListBox);
 }
 
 #endif

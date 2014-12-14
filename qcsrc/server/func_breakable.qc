@@ -70,7 +70,7 @@ void LaunchDebris (string debrisname, vector force)
 void func_breakable_colormod()
 {
 	float h;
-	if not(self.spawnflags & 2)
+	if (!(self.spawnflags & 2))
 		return;
 	h = self.health / self.max_health;
 	if(h < 0.25)
@@ -79,6 +79,8 @@ void func_breakable_colormod()
 		self.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		self.colormod = '1 1 1';
+		
+	CSQCMODEL_AUTOUPDATE();
 }
 
 void func_breakable_look_destroyed()
@@ -140,12 +142,16 @@ void func_breakable_destroyed()
 {
 	func_breakable_look_destroyed();
 	func_breakable_behave_destroyed();
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 void func_breakable_restore()
 {
 	func_breakable_look_restore();
 	func_breakable_behave_restore();
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 vector debrisforce; // global, set before calling this
@@ -167,7 +173,7 @@ void func_breakable_destroy() {
 		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	if(self.dmg)
-		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
+		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER, world);
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
@@ -217,6 +223,8 @@ void func_breakable_reset()
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
+		
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
@@ -268,6 +276,8 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+	
+	CSQCMODEL_AUTOINIT();
 }
 
 // for use in maps with a "model" key set
