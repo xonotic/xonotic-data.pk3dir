@@ -19,7 +19,7 @@
 "reload"                                "recargar"
 "weapon_group_1"                        "Blaster"
 "weapon_group_2"                        "Shotgun"
-"weapon_group_3"                        "Machine Gun"
+"weapon_group_3"                        "Machine Gun / Arc"
 "weapon_group_4"                        "Mortar / Mine Layer"
 "weapon_group_5"                        "Electro"
 "weapon_group_6"                        "Crylink / HLAC"
