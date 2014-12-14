@@ -180,6 +180,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Fade corona according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_cubemaps_extra", _("Extra reflective effects")));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects")));
 			makeMulti(e, "hud_powerup");
