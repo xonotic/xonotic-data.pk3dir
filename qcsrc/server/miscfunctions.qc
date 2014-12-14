@@ -355,12 +355,13 @@ string formatmessage(string msg)
 				wep = self.switchweapon;
 			if (!wep)
 				wep = self.cnt;
-			replacement = W_Name(wep);
+			replacement = WEP_NAME(wep);
 		} else if (escape == "W") {
 			if (self.items & IT_SHELLS) replacement = "shells";
 			else if (self.items & IT_NAILS) replacement = "bullets";
 			else if (self.items & IT_ROCKETS) replacement = "rockets";
 			else if (self.items & IT_CELLS) replacement = "cells";
+			else if (self.items & IT_PLASMA) replacement = "plasma";
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
 			replacement = cursor_ent.netname;
@@ -460,7 +461,6 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o;
@@ -563,6 +563,8 @@ float g_pickup_rockets;
 float g_pickup_rockets_max;
 float g_pickup_cells;
 float g_pickup_cells_max;
+float g_pickup_plasma;
+float g_pickup_plasma_max;
 float g_pickup_fuel;
 float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
@@ -595,7 +597,7 @@ float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
 float g_weaponarena_random;
-float g_weaponarena_random_with_laser;
+float g_weaponarena_random_with_blaster;
 string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;
@@ -611,6 +613,7 @@ float start_ammo_shells;
 float start_ammo_nails;
 float start_ammo_rockets;
 float start_ammo_cells;
+float start_ammo_plasma;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
@@ -622,14 +625,13 @@ float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
 float warmup_start_ammo_cells;
+float warmup_start_ammo_plasma;
 float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-entity get_weaponinfo(float w);
-
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -649,14 +651,14 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		d = !(!weaponinfo.weaponstart);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
-	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	var float t = weaponinfo.weaponstartoverride;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 
@@ -687,6 +689,7 @@ void readplayerstartcvars()
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
+	start_ammo_plasma = 0;
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -766,7 +769,7 @@ void readplayerstartcvars()
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;
-	g_weaponarena_random_with_laser = cvar("g_weaponarena_random_with_laser");
+	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
@@ -779,7 +782,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon("g_start_weapon_", e, FALSE);
+			float w = want_weapon(e, FALSE);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -797,6 +800,7 @@ void readplayerstartcvars()
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
 		start_ammo_cells = 999;
+		start_ammo_plasma = 999;
 		start_ammo_nails = 999;
 		start_ammo_fuel = 999;
 	}
@@ -806,6 +810,7 @@ void readplayerstartcvars()
 		start_ammo_nails = cvar("g_start_ammo_nails");
 		start_ammo_rockets = cvar("g_start_ammo_rockets");
 		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
@@ -837,7 +842,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
+				float w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
@@ -868,18 +873,20 @@ void readplayerstartcvars()
 	{
 		e = get_weaponinfo(i);
 		if(precache_weapons & WepSet_FromWeapon(i))
-			weapon_action(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_cells = max(0, start_ammo_cells);
+	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
+	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
@@ -929,7 +936,7 @@ void readlevelcvars(void)
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
 
-	g_minstagib = cvar("g_minstagib");
+	g_instagib = cvar("g_instagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
@@ -979,6 +986,8 @@ void readlevelcvars(void)
 	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
 	g_pickup_cells = cvar("g_pickup_cells");
 	g_pickup_cells_max = cvar("g_pickup_cells_max");
+	g_pickup_plasma = cvar("g_pickup_plasma");
+	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
 	g_pickup_fuel = cvar("g_pickup_fuel");
 	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
@@ -1357,18 +1366,6 @@ void precache()
         precache_sound ("weapons/hook_impact.wav"); // hook
     }
 
-    if(autocvar_sv_precacheweapons)
-    {
-        //precache weapon models/sounds
-        float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_action(wep, WR_PRECACHE);
-            wep = wep + 1;
-        }
-    }
-
     precache_model("models/elaser.mdl");
     precache_model("models/laser.mdl");
     precache_model("models/ebomb.mdl");
@@ -1589,6 +1586,44 @@ void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendf
         e.think = SUB_Remove;
     }
 }
+
+
+entity eliminatedPlayers;
+.float(entity) isEliminated;
+float EliminatedPlayers_SendEntity(entity to, float sendflags)
+{
+	float i, f, b;
+	entity e;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sendflags);
+
+	if(sendflags & 1)
+	{
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+			{
+				if(eliminatedPlayers.isEliminated(e))
+					f |= b;
+			}
+			WriteByte(MSG_ENTITY, f);
+		}
+	}
+
+	return TRUE;
+}
+
+void EliminatedPlayers_Init(float(entity) isEliminated_func)
+{
+	if(eliminatedPlayers)
+	{
+		backtrace("Can't spawn eliminatedPlayers again!");
+		return;
+	}
+	Net_LinkEntity(eliminatedPlayers = spawn(), FALSE, 0, EliminatedPlayers_SendEntity);
+	eliminatedPlayers.isEliminated = isEliminated_func;
+}
+
 
 void adaptor_think2touch()
 {

@@ -201,10 +201,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_decals", 1, 1);
 		me.TR(me);
 		me.TDempty(me, 0.2);
-	    me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
-	        setDependent(e, "cl_decals", 1, 1);
-	    me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_fadetime"));
-	        setDependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Time:")));
+			setDependent(e, "cl_decals", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(1, 20, 1, "cl_decals_fadetime"));
+			setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));

@@ -241,7 +241,7 @@ void MainWindow_configureMainWindow(entity me)
 
 	me.initializeDialog(me, n);
 
-	if(cvar_string("_cl_name") == "Player")
+	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
 		me.dialogToShow = me.firstRunDialog;
 }
 #endif

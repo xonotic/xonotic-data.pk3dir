@@ -1,0 +1,6 @@
+1 8 20 0 // fire
+9 23 20 0 // fire2
+32 200 20 1 // idle
+232 40 20 0 // reload
+// compile opts used in the iqm exporter (apparently needed to prevent insane ram usage):
+// fire:1:8, fire2:1:23, idle:1:200, reload:1:40

@@ -52,10 +52,10 @@ REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,FALSE,"timelimit=20 skill=-1",_("R
 REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,TRUE,"timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Kill all enemy teammates"));
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
-REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,TRUE,"timelimit=20 caplimit=10 leadlimit=0",_("Find and bring the enemy flag to your base to capture it"));
+REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,TRUE,"timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it"));
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,TRUE,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill all enemy teammates to win the round"));
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,TRUE,"timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill all enemy teammates to win the round"));
 #define g_ca IS_GAMETYPE(CA)
 
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,TRUE,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture all the control points to win"));
@@ -82,7 +82,7 @@ REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,TRUE,"timelimit=20 pointl
 REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,FALSE,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
-const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
+const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;
 const float MAPINFO_FEATURE_TURRETS       = 4;
 const float MAPINFO_FEATURE_MONSTERS      = 8;

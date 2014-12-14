@@ -66,8 +66,8 @@ string XonoticMutatorsDialog_toString(entity me)
 	s = "";
 	if(cvar("g_dodging"))
 		s = strcat(s, ", ", _("Dodging"));
-	if(cvar("g_minstagib"))
-		s = strcat(s, ", ", _("MinstaGib"));
+	if(cvar("g_instagib"))
+		s = strcat(s, ", ", _("InstaGib"));
 	if(cvar("g_new_toys"))
 		s = strcat(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
@@ -78,7 +78,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
-	if(cvar("g_start_weapon_laser") == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
@@ -112,7 +112,7 @@ string XonoticMutatorsDialog_toString(entity me)
 
 float checkCompatibility_pinata(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar("g_nix"))
 		return 0;
@@ -126,7 +126,7 @@ float checkCompatibility_weaponstay(entity me)
 }
 float checkCompatibility_newtoys(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 1;
@@ -138,7 +138,7 @@ float checkCompatibility_newtoys(entity me)
 }
 float checkCompatibility_weaponarena_weapon(entity me)
 {
-	if(cvar("g_minstagib"))
+	if(cvar("g_instagib"))
 		return 0;
 	if(cvar_string("g_weaponarena") == "most")
 		return 0;
@@ -146,7 +146,7 @@ float checkCompatibility_weaponarena_weapon(entity me)
 		return 0;
 	if(cvar_string("g_weaponarena") == "0")
 		return 0;
-	if(cvar_string("g_start_weapon_laser") == "0")
+	if(cvar_string("g_balance_blaster_weaponstart") == "0")
 		return 0;
 	return 1;
 }
@@ -172,12 +172,12 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_vampire", _("Vampire")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.6, s);
@@ -202,7 +202,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
@@ -210,7 +210,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
-			setDependent(e, "g_minstagib", 0, 0);
+			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
@@ -251,7 +251,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", "1", _("MinstaGib")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_instagib", "1", _("InstaGib")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -263,9 +263,9 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_balance_blaster_weaponstart", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_porto g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_hlac g_start_weapon_rifle g_start_weapon_fireball g_start_weapon_seeker g_start_weapon_tuba");
+			makeMulti(e, "g_balance_shotgun_weaponstart g_balance_machinegun_weaponstart g_balance_devastator_weaponstart g_balance_minelayer_weaponstart g_balance_electro_weaponstart g_balance_crylink_weaponstart g_balance_hagar_weaponstart g_balance_porto_weaponstart g_balance_vaporizer_weaponstart g_balance_hook_weaponstart g_balance_rifle_weaponstart g_balance_fireball_weaponstart g_balance_seeker_weaponstart g_balance_tuba_weaponstart g_balance_arc_weaponstart g_balance_vortex_weaponstart g_balance_mortar_weaponstart");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));

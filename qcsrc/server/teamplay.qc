@@ -291,7 +291,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(autocvar_g_start_weapon_laser == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -515,7 +515,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(head) || head.caplayer)
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot

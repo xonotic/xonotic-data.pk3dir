@@ -56,7 +56,7 @@ void m_init()
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	printf(_("^4MQC Build information: ^1%s\n"), WATERMARK);
+	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)

@@ -1142,7 +1142,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
 		MapInfo_Map_titlestring = MapInfo_Map_title;
 	else
-		MapInfo_Map_titlestring = sprintf(_("%s: %s"), MapInfo_Map_bspname, MapInfo_Map_title);
+		MapInfo_Map_titlestring = sprintf("%s: %s", MapInfo_Map_bspname, MapInfo_Map_title);
 
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
@@ -1233,7 +1233,7 @@ float MapInfo_CurrentFeatures()
 {
 	float req;
 	req = 0;
-	if(!(cvar("g_lms") || cvar("g_minstagib") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
+	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }

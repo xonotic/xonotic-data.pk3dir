@@ -43,20 +43,20 @@ const float STAT_GAMESTARTTIME          = 37;
 const float STAT_STRENGTH_FINISHED      = 38;
 const float STAT_INVINCIBLE_FINISHED    = 39;
 // 40 empty?
-// 41 empty?
+const float STAT_ARC_HEAT               = 41;
 const float STAT_PRESSED_KEYS           = 42;
-const float STAT_ALLOW_OLDNEXBEAM       = 43; // this stat could later contain some other bits of info, like, more server-side particle config
+const float STAT_ALLOW_OLDVORTEXBEAM    = 43; // this stat could later contain some other bits of info, like, more server-side particle config
 const float STAT_FUEL                   = 44;
 const float STAT_NB_METERSTART          = 45;
 const float STAT_SHOTORG                = 46; // compressShotOrigin
 const float STAT_LEADLIMIT              = 47;
 const float STAT_WEAPON_CLIPLOAD        = 48;
 const float STAT_WEAPON_CLIPSIZE        = 49;
-const float STAT_NEX_CHARGE             = 50;
+const float STAT_VORTEX_CHARGE          = 50;
 const float STAT_LAST_PICKUP            = 51;
 const float STAT_HUD                    = 52;
-const float STAT_NEX_CHARGEPOOL         = 53;
-const float STAT_HIT_TIME               = 54;
+const float STAT_VORTEX_CHARGEPOOL      = 53;
+const float STAT_DAMAGE_DEALT_TOTAL     = 54;
 const float STAT_TYPEHIT_TIME           = 55;
 const float STAT_LAYED_MINES            = 56;
 const float STAT_HAGAR_LOAD             = 57;
@@ -86,7 +86,7 @@ const float STAT_NADE_BONUS_TYPE        = 80;
 const float STAT_NADE_BONUS_SCORE       = 81;
 const float STAT_HEALING_ORB            = 82;
 const float STAT_HEALING_ORB_ALPHA      = 83;
-// 84 empty?
+const float STAT_PLASMA                 = 84;
 // 85 empty?
 // 86 empty?
 // 87 empty?

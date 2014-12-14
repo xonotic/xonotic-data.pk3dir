@@ -317,8 +317,6 @@ void Container_addItem(entity me, entity other, vector theOrigin, vector theSize
 	other.prevSibling = l;
 	other.nextSibling = NULL;
 	me.lastChild = other;
-
-	draw_NeedResizeNotify = 1;
 }
 
 void Container_removeItem(entity me, entity other)
