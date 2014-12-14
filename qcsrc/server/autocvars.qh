@@ -446,7 +446,6 @@ float autocvar_g_pickup_shells_max;
 float autocvar_g_player_alpha;
 float autocvar_g_player_brightness;
 float autocvar_g_playerclip_collisions;
-string autocvar_g_playerstats_uri;
 float autocvar_g_powerups;
 float autocvar_g_projectiles_damage;
 float autocvar_g_projectiles_keep_owner;
