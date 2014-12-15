@@ -47,6 +47,8 @@ ALPHA_DISABLED                  0.2
 ALPHA_BEHIND                    0.5
 ALPHA_TEXT                      0.7
 COLOR_TEXT                      '1 1 1'
+ALPHA_HEADER                    0.5
+COLOR_HEADER                    '1 1 1'
 
 // mouse
 //   uses "cursor" images

@@ -7,7 +7,7 @@ CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space
 	ATTRIB(XonoticProfileTab, playerNameLabel, entity, NULL)
-	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, 0)
+	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, SKINALPHA_HEADER)
 ENDCLASS(XonoticProfileTab)
 entity makeXonoticProfileTab();
 #endif
@@ -37,9 +37,7 @@ void XonoticProfileTab_fill(entity me)
 	//  NAME SECTION
 	// ==============
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 3, me.playerNameLabel = makeXonoticTextLabel(0.5, _("Name")));
-			me.playerNameLabel.isBold = TRUE;
-			me.playerNameLabelAlpha = 0.5;
+		me.TD(me, 1, 3, me.playerNameLabel = makeXonoticHeaderLabel(_("Name")));
 
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, 1, 3, label = makeXonoticTextLabel(0.5, string_null));
@@ -66,9 +64,8 @@ void XonoticProfileTab_fill(entity me)
 	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP RIGHT
 	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM RIGHT
 	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn); // BOTTOM LEFT
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Model")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Model")));
+
 	me.TR(me);
 		//me.TDempty(me, 0); // MODEL LEFT, COLOR RIGHT
 		me.TDempty(me, 1); // MODEL RIGHT, COLOR LEFT
@@ -84,9 +81,7 @@ void XonoticProfileTab_fill(entity me)
 	//me.setFirstColumn(me, me.currentColumn + 2); // MODEL LEFT, COLOR RIGHT
 	me.gotoRC(me, me.currentRow, 0); me.setFirstColumn(me, me.currentColumn); // MODEL RIGHT, COLOR LEFT
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Glowing color")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 1, e = makeXonoticHeaderLabel(_("Glowing color")));
 		for(i = 0; i < 15; ++i)
 		{
 			if(mod(i, 5) == 0)
@@ -95,9 +90,7 @@ void XonoticProfileTab_fill(entity me)
 		}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0.5, _("Detail color")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 1, e = makeXonoticHeaderLabel(_("Detail color")));
 		for(i = 0; i < 15; ++i)
 		{
 			if(mod(i, 5) == 0)
@@ -111,9 +104,8 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP RIGHT
 	//me.gotoRC(me, 9, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM RIGHT
 	//me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn); // BOTTOM LEFT
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Statistics")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Statistics")));
+
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
@@ -134,9 +126,8 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, 16, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 13.5, 3.1); me.setFirstColumn(me, me.currentColumn); // BOTTOM SECTION, TOP POS
 	//me.gotoRC(me, 0.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, TOP POS
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Country")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Country")));
+
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 4.5, 2, e = makeXonoticLanguageList()); // todo: cl_country: create proper country list
@@ -156,9 +147,7 @@ void XonoticProfileTab_fill(entity me)
 			e.addValue(e, ZCTX(_("GENDER^Male")), "2");
 			e.configureXonoticTextSliderValues(e);
 	#else
-			me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Gender")));
-				e.isBold = TRUE;
-				e.alpha = 0.5;
+			me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gender")));
 		me.TR(me);
 			#define GENDERWIDTH_OFFSET 0.25
 			#define GENDERWIDTH_LENGTH 2.5
