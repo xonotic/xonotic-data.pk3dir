@@ -28,32 +28,15 @@ void menu_sub_null()
 {
 }
 
-#ifdef USE_FTE
-float __engine_check;
-#endif
-
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-#ifdef USE_FTE
-#pragma target ID
-	__engine_check = checkextension("DP_SV_WRITEPICTURE");
-	if(!__engine_check)
-	{
-		print(_("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n"));
-		localcmd("\ndisconnect\n");
-		return;
-	}
-#pragma target FTE
-#endif
-
-	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	printf(_("^4CSQC Build information: ^1%s\n"), WATERMARK);
+	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	float i;
@@ -167,13 +150,6 @@ void CSQC_Init(void)
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown(void)
 {
-#ifdef USE_FTE
-#pragma TARGET id
-	if(!__engine_check)
-		return 0;
-#pragma TARGET fte
-#endif
-
 	WarpZone_Shutdown();
 
 	remove(teams);
@@ -858,7 +834,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
-			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
+			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -1326,7 +1302,7 @@ string getcommandkey(string text, string command)
 			return text;
 	}
 	else if (autocvar_hud_showbinds > 1)
-		return sprintf(_("%s (%s)"), text, keys);
+		return sprintf("%s (%s)", text, keys);
 	else
 		return keys;
 }

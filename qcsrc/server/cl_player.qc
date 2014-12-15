@@ -502,7 +502,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(self.alivetime)
 		{
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 			self.alivetime = 0;
 		}
 
@@ -1229,10 +1229,10 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if (flood > 0)
-		GlobalSound(self.sample, CH_VOICE, voicetype);
-	else if (flood < 0)
+	if(IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
+	else if (flood > 0)
+		GlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type)

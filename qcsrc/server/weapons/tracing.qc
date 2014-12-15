@@ -290,7 +290,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
-		if(accuracy_isgooddamage(self.realowner, ent))
+		if(accuracy_isgooddamage(self, ent))
 			totaldmg += bdamage * f;
 
 		// apply the damage

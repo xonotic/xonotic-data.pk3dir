@@ -61,7 +61,7 @@ void Slider_setSliderValue(entity me, float val)
 }
 string Slider_toString(entity me)
 {
-	return sprintf(_("%d (%s)"), me.value, me.valueToText(me, me.value));
+	return sprintf("%d (%s)", me.value, me.valueToText(me, me.value));
 }
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -104,7 +104,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 	if(me.disabled)
 		return 0;
 	inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
-	if(key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELUP)
+	if(key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELDOWN)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
@@ -112,7 +112,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELDOWN)
+	if(key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
@@ -120,7 +120,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMin);
 		return 1;
 	}
-	if(key == K_PGUP || key == K_KP_PGUP)
+	if(key == K_PGDN || key == K_KP_PGDN)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
@@ -128,7 +128,7 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 			me.setValue(me, me.valueMax);
 		return 1;
 	}
-	if(key == K_PGDN || key == K_KP_PGDN)
+	if(key == K_PGUP || key == K_KP_PGUP)
 	{
 		if(inRange)
 			me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));

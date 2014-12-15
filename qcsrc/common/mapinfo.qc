@@ -566,6 +566,15 @@ string _MapInfo_GetDefaultEx(float t)
 	return "";
 }
 
+float _MapInfo_GetTeamPlayBool(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.items)
+			return e.team;
+	return FALSE;
+}
+
 void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 {
 	string sa, k, v;
@@ -1133,7 +1142,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
 		MapInfo_Map_titlestring = MapInfo_Map_title;
 	else
-		MapInfo_Map_titlestring = sprintf(_("%s: %s"), MapInfo_Map_bspname, MapInfo_Map_title);
+		MapInfo_Map_titlestring = sprintf("%s: %s", MapInfo_Map_bspname, MapInfo_Map_title);
 
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)
