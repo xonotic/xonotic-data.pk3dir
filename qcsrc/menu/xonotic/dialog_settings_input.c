@@ -27,13 +27,13 @@ void CheckBox_Click_Redisplay(entity me, entity checkbox)
 void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
-	entity kb;
+	entity kb = makeXonoticKeyBinder();
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Key Bindings")));
 	me.TR(me);
-		me.TD(me, me.rows - 2.5, 3, kb = makeXonoticKeyBinder());
-	me.gotoRC(me, me.rows - 1.5, 0);
+		me.TD(me, me.rows - 4, 3, kb);
+	me.gotoRC(me, me.rows - 3, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
 			e.onClickEntity = kb;
@@ -48,6 +48,10 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClick = KeyBinder_Bind_Clear;
 			e.onClickEntity = kb;
 			kb.clearButton = e;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticButton(_("Reset all"), '0 0 0'));
+			e.onClick = KeyBinder_Bind_Reset_All;
+			e.onClickEntity = kb;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Mouse")));

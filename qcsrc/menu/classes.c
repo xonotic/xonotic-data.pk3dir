@@ -124,3 +124,4 @@
 #include "xonotic/slider_picmip.c"
 #include "xonotic/slider_particles.c"
 #include "xonotic/slider_sbfadetime.c"
+#include "xonotic/dialog_settings_misc_reset.c"
