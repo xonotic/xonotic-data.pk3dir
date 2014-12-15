@@ -368,6 +368,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
+		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INFECTION;       // INFECTION always works
 
 		if(spawnpoints >= 8  && diameter > 4096) {
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
@@ -426,6 +427,7 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_NEXBALL:         return "5 20 0";
 		case MAPINFO_TYPE_CTS:             return "20 0 0";
 		case MAPINFO_TYPE_FREEZETAG:       return "10 20 0";
+		case MAPINFO_TYPE_INFECTION:       return "5 20 0";
 		// NOTE: DO NOT ADD ANY MORE GAME TYPES HERE
 		// THIS IS JUST LEGACY SUPPORT FOR NEXUIZ MAPS
 		// ONLY ADD NEW STUFF TO _MapInfo_GetDefaultEx
@@ -494,6 +496,22 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 	}
 
 	if(pWantedType == MAPINFO_TYPE_CTF)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
+		s = cdr(s);
+	}
+	
+	if(pWantedType == MAPINFO_TYPE_INFECTION)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
+		s = cdr(s);
+	}
+	
+	if(pWantedType == MAPINFO_TYPE_INFECTION)
 	{
 		sa = car(s);
 		if(sa != "")

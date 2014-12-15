@@ -3063,6 +3063,17 @@ float kaball_statuschange_time; // time when the status changed
 // we don't need to reset for keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
 
+void HUD_Mod_Infection(vector pos, vector mySize)
+{
+	mod_active = 1; // Infection should never hide the mod icons panel
+
+	float f = stof(getplayerkeyvalue(player_localentnum - 1, "colors"));
+
+	vector rgb = colormapPaletteColor(floor(f / 16), 0);
+
+	drawpic_aspect_skin(pos, "player", mySize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
 	mod_active = 1; // keepaway should always show the mod HUD
@@ -3381,15 +3392,16 @@ void HUD_ModIcons_SetFunc()
 {
 	switch(gametype)
 	{
-		case MAPINFO_TYPE_KEYHUNT:		HUD_ModIcons_GameType = HUD_Mod_KH; break;
-		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
-		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
+		case MAPINFO_TYPE_KEYHUNT:      HUD_ModIcons_GameType = HUD_Mod_KH;         break;
+		case MAPINFO_TYPE_CTF:          HUD_ModIcons_GameType = HUD_Mod_CTF;        break;
+		case MAPINFO_TYPE_NEXBALL:      HUD_ModIcons_GameType = HUD_Mod_NexBall;    break;
 		case MAPINFO_TYPE_CTS:
-		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
+		case MAPINFO_TYPE_RACE:         HUD_ModIcons_GameType = HUD_Mod_Race;       break;
 		case MAPINFO_TYPE_CA:
-		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
-		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
-		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+		case MAPINFO_TYPE_FREEZETAG:    HUD_ModIcons_GameType = HUD_Mod_CA;         break;
+		case MAPINFO_TYPE_DOMINATION:   HUD_ModIcons_GameType = HUD_Mod_Dom;        break;
+		case MAPINFO_TYPE_KEEPAWAY:     HUD_ModIcons_GameType = HUD_Mod_Keepaway;   break;
+		case MAPINFO_TYPE_INFECTION:    HUD_ModIcons_GameType = HUD_Mod_Infection;  break;
 	}
 }
 
@@ -3429,9 +3441,9 @@ void HUD_ModIcons(void)
 	}
 
 	if(autocvar__hud_configure)
-		HUD_Mod_CTF(panel_pos, panel_size);
-	else
-		HUD_ModIcons_GameType(panel_pos, panel_size);
+    		HUD_Mod_CTF(panel_pos, panel_size);
+    	else
+    		HUD_ModIcons_GameType(panel_pos, panel_size);
 
 	draw_endBoldFont();
 }

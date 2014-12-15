@@ -565,6 +565,10 @@ string deathmessage;
 
 float serverflags;
 
+.float infection_playernum;
+.float infectioncolor;
+.float infectioncolor_original;
+
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;

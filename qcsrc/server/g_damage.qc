@@ -849,7 +849,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 
 		if (targ == attacker)
-			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
+			damage *= //g_infection ? 0 :
+			        autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// count the damage
 		if(attacker)

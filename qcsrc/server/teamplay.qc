@@ -202,6 +202,11 @@ void InitGameplayMode()
 	{
 		MUTATOR_ADD(gamemode_keepaway);
 	}
+	
+	if(g_infection)
+	{
+		MUTATOR_ADD(gamemode_infection);
+	}
 
 	if(g_invasion)
 	{

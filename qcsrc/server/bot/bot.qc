@@ -408,6 +408,8 @@ void bot_clientconnect()
 	else
 		JoinBestTeam(self, FALSE, TRUE);
 
+	self.infection_playernum = -1;
+	
 	havocbot_setupbot();
 }
 

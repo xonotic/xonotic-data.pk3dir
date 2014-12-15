@@ -1,4 +1,3 @@
-
 entity ka_ball;
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
@@ -110,6 +109,9 @@ float bot_shouldattack(entity e)
 		if (e.team != 0)
 			return FALSE;
 	}
+
+	if(g_infection && e.infectioncolor == self.infectioncolor)
+        return FALSE;
 
 	if(e.frozen)
 		return FALSE;
