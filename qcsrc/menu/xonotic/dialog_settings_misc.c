@@ -23,9 +23,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	//entity sk;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Network")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Network")));
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Client UDP port:")));
 		me.TD(me, 1, 1.5, e = makeXonoticInputBox(0, "cl_port"));
@@ -71,9 +69,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available"))); // TODO: move up
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Framerate")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Framerate")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
@@ -119,9 +115,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Other")));
-		e.isBold = TRUE;
-		e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));

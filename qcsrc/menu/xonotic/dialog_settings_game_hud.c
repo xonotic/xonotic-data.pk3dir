@@ -46,9 +46,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	//me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Scoreboard")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	//me.TR(me);
 	//	me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
 	//	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
@@ -68,9 +66,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Waypoints")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Waypoints")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_hidewaypoints", _("Display waypoint markers for objectives on the map")));
 	me.TR(me);
@@ -101,9 +97,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 
 	#if 0
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Damage")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Damage")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
@@ -121,9 +115,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	#endif
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Player Names")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Player Names")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
 
