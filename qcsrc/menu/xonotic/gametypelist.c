@@ -90,7 +90,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 	else
 		s = _("free for all");
 
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.5 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.0 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	//s = GameType_GetTeams(i);
 	//draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 }
