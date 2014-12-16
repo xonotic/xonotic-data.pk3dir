@@ -345,7 +345,7 @@ void FixPlayermodel()
 		UpdatePlayerSounds(); // update skin sounds
 	}
 
-	if(!(teamplay || g_infection))
+	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(self.clientcolors != stof(autocvar_sv_defaultplayercolors))
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));

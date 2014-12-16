@@ -299,7 +299,6 @@ void calculate_player_respawn_time()
 }
 
 void ClientKill_Now_TeamChange();
-void infection_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -537,23 +536,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
-		
-		if(g_infection)
-		{
-			if(deathtype == DEATH_HURTTRIGGER || deathtype == DEATH_KILL)
-			{
-				PutClientInServer(); // respawn with a random color
-				infection_CheckWinner();
-				return;
-			}
-		}
 
         // increment frag counter for used weapon type
         float w;
         w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
-	if(accuracy_isgooddamage(attacker, self))
-        attacker.accuracy.(accuracy_frags[w-1]) += 1;
+			if(accuracy_isgooddamage(attacker, self))
+				attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
