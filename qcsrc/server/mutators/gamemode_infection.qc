@@ -225,7 +225,7 @@ MUTATOR_HOOKFUNCTION(infection_PlayerPreThink)
 MUTATOR_HOOKFUNCTION(infection_PlayerDamage_Calculate)
 {
 	if (
-	(frag_attacker.infectioncolor == frag_target.infectioncolor && frag_attacker != frag_target)
+	(IS_PLAYER(frag_attacker) && frag_attacker.infectioncolor == frag_target.infectioncolor && frag_attacker != frag_target)
 	|| (frag_deathtype == DEATH_FALL)
 	|| (frag_deathtype == DEATH_DROWN)
 	|| (frag_deathtype == DEATH_SLIME)
@@ -235,7 +235,7 @@ MUTATOR_HOOKFUNCTION(infection_PlayerDamage_Calculate)
 		frag_damage = 0;
 		frag_force = '0 0 0';
 	}
-	return TRUE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(infection_BotShouldAttack)
