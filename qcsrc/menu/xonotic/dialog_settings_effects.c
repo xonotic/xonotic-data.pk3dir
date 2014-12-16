@@ -144,7 +144,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Distance:")));
 			setDependent(e, "cl_particles", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_particles_drawdistance"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(200, 500, 20, "r_drawparticles_drawdistance"));
 			setDependent(e, "cl_particles", 1, 1);
 		me.TR(me);
 		me.TDempty(me, 0.2);
@@ -179,6 +179,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Fade corona according to visibility")));
 			setDependent(e, "r_coronas", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_cubemaps_extra", _("Extra reflective effects")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects")));

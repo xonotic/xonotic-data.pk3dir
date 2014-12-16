@@ -34,13 +34,11 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	// later I would like quite a few more options in this tab.
 
 	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Items")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Items")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_simple_items", _("Use simple 2D images instead of item models")));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unvailable alpha:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable alpha:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_ghost_items"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Unavailable color:")));
@@ -55,9 +53,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Players")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Players")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);

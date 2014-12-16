@@ -296,7 +296,7 @@ void XonoticScreenshotList_clickListBoxItem(entity me, float i, vector where)
 
 float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
+	if(scan == K_ENTER || scan == K_KP_ENTER || scan == K_MOUSE2 || scan == K_SPACE) {
 		me.startScreenshot(me);
 		return 1;
 	}

@@ -27,15 +27,13 @@ void CheckBox_Click_Redisplay(entity me, entity checkbox)
 void XonoticInputSettingsTab_fill(entity me)
 {
 	entity e;
-	entity kb;
+	entity kb = makeXonoticKeyBinder();
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Key Bindings")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Key Bindings")));
 	me.TR(me);
-		me.TD(me, me.rows - 2.5, 3, kb = makeXonoticKeyBinder());
-	me.gotoRC(me, me.rows - 1.5, 0);
+		me.TD(me, me.rows - 4, 3, kb);
+	me.gotoRC(me, me.rows - 3, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
 			e.onClickEntity = kb;
@@ -50,11 +48,13 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClick = KeyBinder_Bind_Clear;
 			e.onClickEntity = kb;
 			kb.clearButton = e;
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticButton(_("Reset all"), '0 0 0'));
+			e.onClick = KeyBinder_Bind_Reset_All;
+			e.onClickEntity = kb;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Mouse")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Mouse")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(1, 32, 0.2, "sensitivity"));
@@ -82,9 +82,7 @@ void XonoticInputSettingsTab_fill(entity me)
 
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0.5, _("Other")));
-			e.isBold = TRUE;
-			e.alpha = 0.5;
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
 	me.TR(me);

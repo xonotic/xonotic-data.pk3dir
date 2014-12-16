@@ -19,6 +19,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
 	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
 	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, resetDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 
@@ -140,6 +141,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.resetDialog = i = spawnXonoticResetDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
