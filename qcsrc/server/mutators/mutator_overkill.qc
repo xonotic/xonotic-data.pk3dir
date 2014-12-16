@@ -91,8 +91,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 		other = world;
 	}
 
-	self.ok_lastwep = self.weapon;
-	self.ok_deathloc = self.origin;
 	self = spawn();
 	self.ok_item = TRUE;
 	self.noalign = TRUE;
@@ -106,6 +104,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
+
+	self.ok_lastwep = self.switchweapon;
 
 	return FALSE;
 }
@@ -141,6 +141,12 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
 		return FALSE;
+
+	if(self.ok_lastwep)
+	{
+		self.switchweapon = self.ok_lastwep;
+		self.ok_lastwep = 0;
+	}
 
 	ok_IncreaseCharge(self, self.weapon);
 
@@ -205,9 +211,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 		self.ok_use_ammocharge = 0;
 		
 	self.ok_pauseregen_finished = time + 2;
-
-	self.switchweapon = self.ok_lastwep;
-	self.ok_lastwep = 0;
 
 	return FALSE;
 }
