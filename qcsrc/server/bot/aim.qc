@@ -110,9 +110,6 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 
-	if(g_infection && e.infectioncolor == self.infectioncolor)
-        return FALSE;
-
 	if(e.frozen)
 		return FALSE;
 

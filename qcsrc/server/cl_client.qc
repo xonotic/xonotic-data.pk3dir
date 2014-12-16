@@ -345,7 +345,7 @@ void FixPlayermodel()
 		UpdatePlayerSounds(); // update skin sounds
 	}
 
-	if(!teamplay || !g_infection) //&& ?
+	if(!(teamplay || g_infection))
 		if(strlen(autocvar_sv_defaultplayercolors))
 			if(self.clientcolors != stof(autocvar_sv_defaultplayercolors))
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
@@ -1188,8 +1188,6 @@ void ClientConnect (void)
 
 	if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
 		send_CSQC_teamnagger();
-		
-	self.infection_playernum = -1;
 
 	CheatInitClient();
 
