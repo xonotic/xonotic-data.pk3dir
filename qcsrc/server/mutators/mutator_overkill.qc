@@ -206,6 +206,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 		
 	self.ok_pauseregen_finished = time + 2;
 
+	self.switchweapon = self.ok_lastwep;
+	self.ok_lastwep = 0;
+
 	return FALSE;
 }
 
