@@ -69,7 +69,8 @@ void Image_updateAspect(entity me)
 		vector sz = '0 0 0';
 		if(me.forcedAspect < 0)
 		{
-			sz = draw_PictureSize(me.src);
+			if (me.src != "")
+				sz = draw_PictureSize(me.src);
 			if(sz_x <= 0 || sz_y <= 0)
 			{
 				// image is broken or doesn't exist, set the size for the placeholder image
