@@ -165,7 +165,7 @@ void PutObserverInServer (void)
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -967,23 +967,6 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
-	/*
-	 * we no longer need to stuff this. Remove this comment block if you feel
-	 * 2.3 and higher (or was it 2.2.3?) don't need these any more
-	stuffcmd(e, strcat("cl_gravity ", ftos(autocvar_sv_gravity), "\n"));
-	stuffcmd(e, strcat("cl_movement_accelerate ", ftos(autocvar_sv_accelerate), "\n"));
-	stuffcmd(e, strcat("cl_movement_friction ", ftos(autocvar_sv_friction), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxspeed ", ftos(autocvar_sv_maxspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_airaccelerate ", ftos(autocvar_sv_airaccelerate), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxairspeed ", ftos(autocvar_sv_maxairspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_stopspeed ", ftos(autocvar_sv_stopspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_jumpvelocity ", ftos(autocvar_sv_jumpvelocity), "\n"));
-	stuffcmd(e, strcat("cl_movement_stepheight ", ftos(autocvar_sv_stepheight), "\n"));
-	stuffcmd(e, strcat("set cl_movement_friction_on_land ", ftos(autocvar_sv_friction_on_land), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_qw ", ftos(autocvar_sv_airaccel_qw), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_sideways_friction ", ftos(autocvar_sv_airaccel_sideways_friction), "\n"));
-	stuffcmd(e, "cl_movement_edgefriction 1\n");
-	 */
 }
 
 float PlayerInIDList(entity p, string idlist)
@@ -1046,6 +1029,8 @@ void ClientConnect (void)
 		dprint("BUG player count is lower than zero, this cannot happen!\n");
 		player_count = 0;
 	}
+
+	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
@@ -1125,10 +1110,10 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
-	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
 
     if(IS_BOT_CLIENT(self))
-        PlayerStats_AddPlayer(self);
+        PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
@@ -1235,9 +1220,9 @@ void ClientDisconnect (void)
 		return;
 	}
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	PlayerStats_GameReport_FinalizePlayer(self);
 
-	PlayerStats_AddGlobalInfo(self);
+	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
 

@@ -855,7 +855,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 		else if(wi.items & IT_PLASMA)
 			need_plasma = TRUE;
 		else if(wi.items & IT_FUEL)
-			need_cells = TRUE;
+			need_fuel = TRUE;
 	}
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
