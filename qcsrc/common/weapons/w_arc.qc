@@ -1292,7 +1292,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_muzzlelight[3] = 1;
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1345,7 +1344,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1372,7 +1370,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1397,10 +1394,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_BURST_WALL:
@@ -1422,7 +1422,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1449,7 +1448,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1476,7 +1474,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1505,7 +1502,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
