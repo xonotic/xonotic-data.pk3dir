@@ -309,6 +309,8 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
+			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+
 			default:
 				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -334,6 +336,7 @@ void Ent_Projectile()
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
+			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
@@ -495,6 +498,7 @@ void Projectile_Precache()
 	precache_model("models/sphere/sphere.md3");
 
 	precache_model("models/weapons/v_ok_grenade.md3");
+	precache_model("models/weapons/ok_rocket.md3");
 
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
