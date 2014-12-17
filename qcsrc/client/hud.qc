@@ -1029,7 +1029,6 @@ void HUD_Ammo(void)
 	float i;
 	float infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;
-	if(!infinite_ammo)
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
