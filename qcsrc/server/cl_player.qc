@@ -547,8 +547,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_damage = excess;
 		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
+		excess = frag_damage;
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
