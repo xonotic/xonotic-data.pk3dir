@@ -862,7 +862,6 @@ void readplayerstartcvars()
 
 	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
