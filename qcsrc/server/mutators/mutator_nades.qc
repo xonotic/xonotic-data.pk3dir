@@ -606,7 +606,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		self.think = nade_beep;
 	}
 
-	self.health	  -= damage;
+	self.health -= damage;
 	
 	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
 		self.realowner = attacker;

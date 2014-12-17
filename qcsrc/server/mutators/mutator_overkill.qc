@@ -323,14 +323,6 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
-	WEP_ACTION(WEP_MACHINEGUN, WR_INIT);
-	WEP_ACTION(WEP_VORTEX, WR_INIT);
-	WEP_ACTION(WEP_SHOTGUN, WR_INIT);
-	WEP_ACTION(WEP_BLASTER, WR_INIT);
-	
-	WEP_ACTION(WEP_RPC, WR_INIT);
-	WEP_ACTION(WEP_HMG, WR_INIT);
-
 	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
