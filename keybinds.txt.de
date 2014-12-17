@@ -5,7 +5,7 @@
 "+moveright"                            "rechts"
 "+jump"                                 "springen / schwimmen"
 "+crouch"                               "ducken / sinken"
-"+hook"                                 "Enterhaken / Jetpack"
+"+hook"                                 "Enterhaken"
 ""                                      ""
 ""                                      "Angriff"
 "+fire"                                 "1. Feuermodus"

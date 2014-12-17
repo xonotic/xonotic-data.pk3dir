@@ -5,7 +5,7 @@
 "+moveright"                            "derecha"
 "+jump"                                 "saltar / nadar"
 "+crouch"                               "agacharse / bajar"
-"+hook"                                 "gancho / jet pack"
+"+hook"                                 "gancho"
 ""                                      ""
 ""                                      "Ataque"
 "+fire"                                 "ataque primario"

@@ -5,7 +5,7 @@
 "+moveright"                            "jobbra lépés"
 "+jump"                                 "ugrás / úszás"
 "+crouch"                               "guggolás / süllyedés"
-"+hook"                                 "kézi kampó / rakéta puttony"
+"+hook"                                 "kézi kampó"
 ""                                      ""
 ""                                      "Tüzelés"
 "+fire"                                 "Elsődleges"

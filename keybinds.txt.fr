@@ -5,7 +5,7 @@
 "+moveright"                            "droite"
 "+jump"                                 "sauter / nager"
 "+crouch"                               "s'accroupir / couler"
-"+hook"                                 "grappin / jet pack"
+"+hook"                                 "grappin"
 ""                                      ""
 ""                                      "Attaque"
 "+fire"                                 "tir primaire"
