@@ -225,11 +225,9 @@ MUTATOR_HOOKFUNCTION(infection_PlayerPreThink)
 MUTATOR_HOOKFUNCTION(infection_PlayerDamage_Calculate)
 {
 	if (
-	(IS_PLAYER(frag_attacker) && frag_attacker.infectioncolor == frag_target.infectioncolor && frag_attacker != frag_target)
-	|| (frag_deathtype == DEATH_FALL)
-	|| (frag_deathtype == DEATH_DROWN)
-	|| (frag_deathtype == DEATH_SLIME)
-	|| (frag_deathtype == DEATH_LAVA)
+	IS_PLAYER(frag_attacker) // Allow environment damage
+	&& frag_attacker != frag_target  // Allow self damage
+	&& frag_attacker.infectioncolor == frag_target.infectioncolor // Block friendly fire
 	)
 	{
 		frag_damage = 0;
