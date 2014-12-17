@@ -70,6 +70,11 @@ float autocvar_g_vehicle_raptor_shield;
 float autocvar_g_vehicle_raptor_shield_regen;
 float autocvar_g_vehicle_raptor_shield_regen_pause;
 
+float autocvar_g_vehicle_raptor_blowup_radius;
+float autocvar_g_vehicle_raptor_blowup_coredamage;
+float autocvar_g_vehicle_raptor_blowup_edgedamage;
+float autocvar_g_vehicle_raptor_blowup_forceintensity;
+
 float autocvar_g_vehicle_raptor_bouncefactor;
 float autocvar_g_vehicle_raptor_bouncestop;
 vector autocvar_g_vehicle_raptor_bouncepain;
@@ -92,7 +97,7 @@ void raptor_bomblet_boom()
 {
     RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
-                                    autocvar_g_vehicle_raptor_bomblet_radius, world,
+                                    autocvar_g_vehicle_raptor_bomblet_radius, world, world,
                                     autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB, world);
     remove(self);
 }
@@ -690,7 +695,11 @@ void raptor_blowup()
 {
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_RAPT_DEATH, world);
+
+	RadiusDamage(self, self.enemy, autocvar_g_vehicle_raptor_blowup_coredamage,
+				autocvar_g_vehicle_raptor_blowup_edgedamage,
+				autocvar_g_vehicle_raptor_blowup_radius, world, world,
+				autocvar_g_vehicle_raptor_blowup_forceintensity, DEATH_VH_RAPT_DEATH, world);
 
     self.alpha          = -1;
     self.movetype       = MOVETYPE_NONE;
@@ -742,8 +751,8 @@ void raptor_die()
 
 void raptor_impact()
 {
-    if(autocvar_g_vehicle_raptor_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+	if(autocvar_g_vehicle_raptor_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 
 // If we dont do this ever now and then, the raptors rotors
@@ -798,7 +807,7 @@ void raptor_spawn(float _f)
         //FIXME: Camera is in a bad place in HUD model.
         //setorigin(self.vehicle_viewport, '25 0 5');
 
-        self.vehicles_impusle   = raptor_impulse;
+        self.vehicles_impulse   = raptor_impulse;
 
         self.frame = 0;
 

@@ -92,6 +92,13 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(lms_PlayerRegen)
+{
+	if(autocvar_g_lms_regenerate)
+		return FALSE;
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
 {
 	// forbode!
@@ -122,13 +129,14 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 {
 	start_items &= ~IT_UNLIMITED_AMMO;
-	start_ammo_shells = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells = cvar("g_lms_start_ammo_cells");
-	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-	start_health = cvar("g_lms_start_health");
-	start_armorvalue = cvar("g_lms_start_armor");
+	start_health       = warmup_start_health       = cvar("g_lms_start_health");
+	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
 	return FALSE;
 }
@@ -189,6 +197,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, lms_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);

@@ -326,9 +326,7 @@ void reset_map(float dorespawn)
 	if(time <= game_starttime && round_handler_IsActive())
 		round_handler_Reset(game_starttime);
 
-	if(g_race || g_cts)
-		race_ReadyRestart();
-	else MUTATOR_CALLHOOK(reset_map_global);
+	MUTATOR_CALLHOOK(reset_map_global);
 
 	for(self = world; (self = nextent(self)); )
 	if(IS_NOT_A_CLIENT(self))
@@ -356,6 +354,10 @@ void reset_map(float dorespawn)
 			continue;
 		}
 	}
+
+	FOR_EACH_PLAYER(self)
+	if(self.frozen)
+		Unfreeze(self);
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -423,7 +425,7 @@ void ReadyRestart_force()
 	{
 		tmp_player.alivetime = 0;
 		tmp_player.killcount = 0;
-		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
+		PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
@@ -668,10 +670,10 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 
 	first_command = argv(startpos);
 
-	/*dprint(sprintf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
+	/*printf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
 		substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)),
 		strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)))
-	));*/
+	);*/
 
 	if(
 		(autocvar_sv_vote_limit > 0)
@@ -1013,7 +1015,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if(caller.vote_selection != VOTE_SELECT_NULL && autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 
 			else // everything went okay, continue changing vote
 			{

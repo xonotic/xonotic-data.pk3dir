@@ -152,7 +152,7 @@ float category_draw_count;
 	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Competitive Mode"))) \
 	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Modified Servers"))) \
 	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Overkill Mode"))) \
-	SLIST_CATEGORY(CAT_MINSTAGIB,    "",            "CAT_SERVERS",  ZCTX(_("SLCAT^MinstaGib Mode"))) \
+	SLIST_CATEGORY(CAT_INSTAGIB,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^InstaGib Mode"))) \
 	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Defrag Mode")))
 
 #define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
@@ -205,11 +205,11 @@ void RegisterSLCategories()
 				} \
 				else \
 				{ \
-					print(sprintf( \
+					printf( \
 						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
 						s, \
 						categories[i].cat_name \
-					)); \
+					); \
 				} \
 			} \
 			strunzone(categories[i].override_string); \
@@ -361,8 +361,9 @@ float CheckCategoryForEntry(float entry)
 			// old servers which don't report their mod name are considered modified now
 			case "": { return CAT_MODIFIED; }
 			
-			case "xpm": { return CAT_XPM; } 
-			case "minstagib": { return CAT_MINSTAGIB; }
+			case "xpm": { return CAT_XPM; }
+			case "minstagib":
+			case "instagib": { return CAT_INSTAGIB; }
 			case "overkill": { return CAT_OVERKILL; }
 			//case "nix": { return CAT_NIX; }
 			//case "newtoys": { return CAT_NEWTOYS; }
@@ -371,7 +372,7 @@ float CheckCategoryForEntry(float entry)
 			case "cts": 
 			case "xdf": { return CAT_DEFRAG; }
 			
-			default: { dprint(sprintf("Found strange mod type: %s\n", modtype)); return CAT_MODIFIED; }
+			default: { dprintf("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
 		}
 	}
 
@@ -956,7 +957,10 @@ void ServerList_Info_Click(entity btn, entity me)
 {
 	if (me.nItems != 0)
 		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-	DialogOpenButton_Click(me, main.serverInfoDialog);
+
+	vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
@@ -979,7 +983,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
-	//print(sprintf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems));
+	//printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
 
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
@@ -1013,8 +1017,8 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 				strcat(catent.cat_string, ":"),
 #endif
 				me.realFontSize,
-				'1 1 1',
-				SKINALPHA_TEXT,
+				SKINCOLOR_SERVERLIST_CATEGORY,
+				SKINALPHA_SERVERLIST_CATEGORY,
 				0
 			);
 			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
@@ -1067,7 +1071,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	// list the mods here on which the pure server check actually works
 	if(modname != "Xonotic")
-	if(modname != "MinstaGib")
+	if(modname != "InstaGib" || modname != "MinstaGib")
 	if(modname != "CTS")
 	if(modname != "NIX")
 	if(modname != "NewToys")

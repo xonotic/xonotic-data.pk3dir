@@ -5,20 +5,21 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, firstRunDialog, entity, NULL)
 	ATTRIB(MainWindow, advancedDialog, entity, NULL)
 	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)
-	ATTRIB(MainWindow, weaponsDialog, entity, NULL)
 	ATTRIB(MainWindow, mapInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, userbindEditDialog, entity, NULL)
 	ATTRIB(MainWindow, winnerDialog, entity, NULL)
 	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
 	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
+	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
 	ATTRIB(MainWindow, viewDialog, entity, NULL)
-	ATTRIB(MainWindow, modelDialog, entity, NULL)
-	ATTRIB(MainWindow, crosshairDialog, entity, NULL)
-	ATTRIB(MainWindow, hudDialog, entity, NULL)
 	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, languageWarningDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
 	ATTRIB(MainWindow, dialogToShow, entity, NULL)
+	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
+	ATTRIB(MainWindow, resetDialog, entity, NULL)
 ENDCLASS(MainWindow)
 #endif
 
@@ -116,12 +117,20 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticHUDInfoMessagesDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
+	
 	i = spawnXonoticHUDPhysicsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.screenshotViewerDialog = i = spawnXonoticScreenshotViewerDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	i = spawnXonoticHUDCenterprintDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = spawnXonoticHUDBuffsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -132,6 +141,18 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.resetDialog = i = spawnXonoticResetDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.languageWarningDialog = i = spawnXonoticLanguageWarningDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -146,6 +167,14 @@ void MainWindow_configureMainWindow(entity me)
 	me.serverInfoDialog = i = spawnXonoticServerInfoDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	me.demostartconfirmDialog = i = spawnXonoticDemoStartConfirmDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.demotimeconfirmDialog = i = spawnXonoticDemoTimeConfirmDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialogs used by multiplayer/create
@@ -153,40 +182,9 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.advancedDialog = i = spawnXonoticAdvancedDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 	me.mutatorsDialog = i = spawnXonoticMutatorsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-
-	// dialogs used by multiplayer/player setup
-	me.crosshairDialog = i = spawnXonoticCrosshairDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.hudDialog = i = spawnXonoticHUDDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.modelDialog = i = spawnXonoticModelDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.viewDialog = i = spawnXonoticViewDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.weaponsDialog = i = spawnXonoticWeaponsDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 
 	// mutator dialogs
 	i = spawnXonoticSandboxToolsDialog();
@@ -198,6 +196,10 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticTeamSelectDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = spawnXonoticMonsterToolsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
 
 
 	// main dialogs/windows
@@ -243,7 +245,7 @@ void MainWindow_configureMainWindow(entity me)
 
 	me.initializeDialog(me, n);
 
-	if(cvar_string("_cl_name") == "Player")
+	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
 		me.dialogToShow = me.firstRunDialog;
 }
 #endif

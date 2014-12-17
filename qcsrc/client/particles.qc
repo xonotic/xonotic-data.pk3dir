@@ -225,65 +225,7 @@ void Ent_RainOrSnow()
 		self.draw = Draw_Snow;
 }
 
-entity zcurve;
-void zcurveparticles(float effectnum, vector start, vector end, float end_dz, float speed, float depth)
-{
-	// end_dz:
-	//   IF IT WERE A STRAIGHT LINE, it'd end end_dz above end
-
-	vector mid;
-	mid = (start + end) * 0.5;
-
-	end_dz *= 0.25;
-	mid_z += end_dz;
-
-	--depth;
-	if(depth < 0 || normalize(mid - start) * normalize(end - start) > 0.999999)
-	// TODO make this a variable threshold
-	// currently: 0.081 degrees
-	// 0.99999 would be 0.256 degrees and is visible
-	{
-		zcurve.velocity = speed * normalize(end - start);
-		trailparticles(zcurve, effectnum, start, end);
-	}
-	else
-	{
-		zcurveparticles(effectnum, start, mid, end_dz, speed, depth);
-		zcurveparticles(effectnum, mid, end, end_dz, speed, depth);
-	}
-}
-
-void Net_ReadZCurveParticles()
-{
-	vector start, end;
-	float end_dz;
-	float effectnum, speed;
-
-	if(!zcurve)
-	{
-		zcurve = spawn();
-		zcurve.classname = "zcurve";
-	}
-
-	effectnum = ReadShort();
-
-	start_x = ReadCoord();
-	start_y = ReadCoord();
-	start_z = ReadCoord();
-
-	do
-	{
-		end_x = ReadCoord();
-		end_y = ReadCoord();
-		end_z = ReadCoord();
-		end_dz = ReadCoord();
-		speed = ReadShort();
-		zcurveparticles(effectnum, start, end, end_dz, 16 * (speed & 0x7FFF), 5); // at most 32 segments
-	}
-	while(!(speed & 0x8000));
-}
-
-void Net_ReadNexgunBeamParticle()
+void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
@@ -297,7 +239,7 @@ void Net_ReadNexgunBeamParticle()
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
-	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);

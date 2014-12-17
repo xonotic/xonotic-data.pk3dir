@@ -20,7 +20,7 @@ CLASS(Label) EXTENDS(Item)
 	ATTRIB(Label, realFontSize, vector, '0 0 0')
 	ATTRIB(Label, realOrigin, vector, '0 0 0')
 	ATTRIB(Label, alpha, float, 0.7)
-	ATTRIB(Label, colorL, vector, '1 1 1')
+	ATTRIB(Label, colorL, vector, SKINCOLOR_TEXT)
 	ATTRIB(Label, disabled, float, 0)
 	ATTRIB(Label, disabledAlpha, float, 0.3)
 	ATTRIB(Label, textEntity, entity, NULL)
@@ -79,7 +79,7 @@ void Label_recalcPositionWithText(entity me, string t)
 			me.realOrigin_x = me.keepspaceLeft;
 		if(!me.overrideCondenseFactor)
 			me.condenseFactor = spaceAvail / spaceUsed;
-		dprint(sprintf(_("NOTE: label text %s too wide for label, condensed by factor %f\n"), t, me.condenseFactor));
+		dprintf("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
 	}
 
 	if(!me.overrideRealOrigin_y)

@@ -702,7 +702,7 @@ void bumb_blowup()
 {
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
+				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
@@ -787,15 +787,12 @@ void bumb_die()
 	self.nextthink 		= 0;
 
 	setorigin(self, self.pos1);
-
 }
 
 void bumb_impact()
 {
-    if(autocvar_g_vehicle_bumblebee_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_bumblebee_bouncepain_x,
-						autocvar_g_vehicle_bumblebee_bouncepain_y,
-						autocvar_g_vehicle_bumblebee_bouncepain_z);
+	if(autocvar_g_vehicle_bumblebee_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 }
 
 void bumb_spawn(float _f)

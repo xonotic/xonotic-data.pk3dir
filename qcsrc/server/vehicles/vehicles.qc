@@ -3,10 +3,10 @@ float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 
-var float autocvar_g_vehicles_nex_damagerate = 0.5;
-var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_vortex_damagerate = 0.5;
+var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 var float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
@@ -16,7 +16,7 @@ void vehicles_return();
 void vehicles_enter();
 void vehicles_touch();
 void vehicles_reset_colors();
-void vehicles_clearrturn();
+void vehicles_clearreturn();
 void vehicles_setreturn();
 
 
@@ -397,7 +397,7 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
     remove (self);
 }
@@ -456,6 +456,30 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 }
 // End generic vehile projectile system
 
+void vehicles_reset()
+{
+	if(self.owner)
+	{
+		entity oldself = self;
+		self = self.owner;
+		vehicles_exit(VHEF_RELESE);
+		self = oldself;
+	}
+	self.alpha      = -1;
+	self.movetype   = MOVETYPE_NONE;
+	self.effects    = EF_NODRAW;
+	self.colormod  = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.velocity  = '0 0 0';
+	self.event_damage = func_null;
+	self.solid = SOLID_NOT;
+	self.deadflag = DEAD_NO;
+
+	self.touch = func_null;
+	self.nextthink = 0;
+	vehicles_setreturn();
+}
+
 /** vehicles_spawn
     Exetuted for all vehicles on (re)spawn.
     Sets defaults for newly spawned units.
@@ -470,6 +494,7 @@ void vehicles_spawn()
     self.owner              = world;
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
+    self.reset              = vehicles_reset;
     self.iscreature         = TRUE;
     self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
@@ -512,7 +537,7 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
-void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
+void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return;
@@ -583,6 +608,12 @@ void vehicles_enter()
 
     if(self.phase > time)
         return;
+    if(other.frozen)
+        return;
+    if(other.vehicle)
+        return;
+    if(other.deadflag != DEAD_NO)
+        return;
 
     if(teamplay)
     if(self.team)
@@ -636,6 +667,7 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
+    self.monster_attack       = TRUE;
 
     if (IS_REAL_CLIENT(other))
     {
@@ -658,7 +690,7 @@ void vehicles_enter()
         }
     }
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     CSQCVehicleSetup(self.owner, self.hud);
 
@@ -813,6 +845,7 @@ void vehicles_exit(float eject)
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;
     _vehicle.phase = time + 1;
+    _vehicle.monster_attack = FALSE;
 
     _vehicle.vehicle_exit(eject);
 
@@ -881,17 +914,18 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
     self.dmg_time = time;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
-        damage *= autocvar_g_vehicles_nex_damagerate;
+	// WEAPONTODO
+    if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+        damage *= autocvar_g_vehicles_vortex_damagerate;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_UZI))
-        damage *= autocvar_g_vehicles_uzi_damagerate;
+    if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+        damage *= autocvar_g_vehicles_machinegun_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
         damage *= autocvar_g_vehicles_rifle_damagerate;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
-        damage *= autocvar_g_vehicles_minstanex_damagerate;
+    if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+        damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
         damage *= autocvar_g_vehicles_tag_damagerate;
@@ -964,7 +998,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
 }
 
-void vehicles_clearrturn()
+void vehicles_clearreturn()
 {
     entity ret;
     // Remove "return helper", if any.
@@ -1055,7 +1089,7 @@ void vehicles_setreturn()
 {
     entity ret;
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     ret = spawn();
     ret.classname   = "vehicle_return";
@@ -1063,19 +1097,16 @@ void vehicles_setreturn()
     ret.team        = self.team;
     ret.think       = vehicles_showwp;
 
-    if(self.deadflag != DEAD_NO)
-    {
-        ret.cnt         = time + self.vehicle_respawntime;
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 5);
-    }
-    else
-    {
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 1);
-    }
+	if(self.deadflag != DEAD_NO)
+	{
+		ret.cnt = max(game_starttime, time) + self.vehicle_respawntime;
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 5);
+	}
+	else
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 1);
 
     setmodel(ret, "null");
     setorigin(ret, self.pos1 + '0 0 96');
-
 }
 
 void vehicles_reset_colors()
@@ -1273,15 +1304,14 @@ float vehicle_initialize(string  net_name,
     self.event_damage        = func_null;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
-    self.nextthink           = time;
-    self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
+	self.vehicle_respawntime = max(0, _respawntime);
     self.effects             = EF_NODRAW;
 	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
-    if(!autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + game_starttime;
-    else
-        self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+	if(!autocvar_g_vehicles_delayspawn || !self.vehicle_respawntime)
+		self.nextthink = time;
+	else
+		self.nextthink = max(time, game_starttime) + max(0, self.vehicle_respawntime + ((random() * 2 - 1) * autocvar_g_vehicles_delayspawn_jitter));
 
 	if(autocvar_g_playerclip_collisions)
 		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;

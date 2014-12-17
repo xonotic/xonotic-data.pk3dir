@@ -148,11 +148,11 @@ void turret_projectile_explode()
     self.event_damage = func_null;
 #ifdef TURRET_DEBUG
     float d;
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
     self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
     self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+    RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 #endif
     remove(self);
 }
@@ -1102,6 +1102,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
+    self.bot_attack = TRUE;
+    self.monster_attack = TRUE;
 
     if (!self.turrcaps_flags)
         self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
@@ -1334,7 +1336,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.turret_score_target    = turret_stdproc_targetscore_generic;
 
     self.use = turret_stdproc_use;
-    self.bot_attack = TRUE;
 
     ++turret_count;
     self.nextthink = time + 1;

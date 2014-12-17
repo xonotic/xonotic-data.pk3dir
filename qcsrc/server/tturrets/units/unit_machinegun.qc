@@ -5,10 +5,9 @@ void turret_machinegun_attack();
 //.float bulletcounter;
 void turret_machinegun_attack()
 {
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0, autocvar_g_balance_uzi_bulletconstant);
-    endFireBallisticBullet();
+    fireBullet (self.tur_shotorg, self.tur_shotdir_updated,self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
 
-    UziFlash();
+    W_MachineGun_MuzzleFlash(); // WEAPONTODO
     setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 }
 

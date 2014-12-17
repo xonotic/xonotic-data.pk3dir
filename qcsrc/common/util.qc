@@ -408,6 +408,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -874,7 +890,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -911,7 +927,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -1312,7 +1328,7 @@ string find_last_color_code(string s)
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
@@ -1701,19 +1717,6 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 
 	// real Newtonian
 	return myvel + spd * mydir;
-}
-
-void check_unacceptable_compiler_bugs()
-{
-	if(cvar("_allow_unacceptable_compiler_bugs"))
-		return;
-	tokenize_console("foo bar");
-	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
-		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
-
-	string s = "";
-	if (!s)
-		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -2106,6 +2109,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
@@ -2558,8 +2563,31 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z)
+{
+	vector result; result_x = x; result_y = y; result_z = z;
+	return result;
+}
+
+vector get_corner_position(entity box, float corner)
+{
+	switch(corner)
+	{
+		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
+		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
+		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
+		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
+		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
+		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
+		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
+		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
+		default: return '0 0 0';
+	}
+}
+#endif
+
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2581,7 +2609,6 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
@@ -2752,3 +2779,55 @@ float Announcer_PickNumber(float type, float num)
 	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
+{
+	switch(nativecontents)
+	{
+		case CONTENT_EMPTY:
+			return 0;
+		case CONTENT_SOLID:
+			return DPCONTENTS_SOLID | DPCONTENTS_OPAQUE;
+		case CONTENT_WATER:
+			return DPCONTENTS_WATER;
+		case CONTENT_SLIME:
+			return DPCONTENTS_SLIME;
+		case CONTENT_LAVA:
+			return DPCONTENTS_LAVA | DPCONTENTS_NODROP;
+		case CONTENT_SKY:
+			return DPCONTENTS_SKY | DPCONTENTS_NODROP | DPCONTENTS_OPAQUE; // to match behaviour of Q3 maps, let sky count as opaque
+	}
+	return 0;
+}
+
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
+{
+	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
+		return CONTENT_SOLID;
+	if(supercontents & DPCONTENTS_SKY)
+		return CONTENT_SKY;
+	if(supercontents & DPCONTENTS_LAVA)
+		return CONTENT_LAVA;
+	if(supercontents & DPCONTENTS_SLIME)
+		return CONTENT_SLIME;
+	if(supercontents & DPCONTENTS_WATER)
+		return CONTENT_WATER;
+	return CONTENT_EMPTY;
+}
+#endif
+
+vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (t * t) +
+		(b - a) * (2 * t) +
+		a;
+}
+
+vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (2 * t) +
+		(b - a) * 2;
+}

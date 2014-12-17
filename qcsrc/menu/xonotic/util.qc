@@ -87,7 +87,14 @@ void saveCvarsMulti(entity me)
 
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
-		cvar_set(argv(i), s);
+	{
+		if(substring(argv(i), 0, 1) == "!")
+			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		else
+			cvar_set(argv(i), s);
+
+		CheckSendCvars(me, argv(i));
+	}
 }
 void makeMulti(entity e, string otherCvars)
 {
@@ -280,7 +287,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf("Received HTTP request data for an invalid id %d.\n", id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -300,17 +307,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	}
 	if(status != 0)
 	{
-		print(sprintf(_("error receiving update notification: status is %d\n"), status));
+		dprintf("error receiving update notification: status is %d\n", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		print(_("error: received HTML instead of an update notification\n"));
+		dprint("error: received HTML instead of an update notification\n");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		print(_("error: received carriage returns from update notification server\n"));
+		dprint("error: received carriage returns from update notification server\n");
 		return;
 	}
 
@@ -338,7 +345,6 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		
 		switch(substring(argv(i), 0, 1))
 		{
-			#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
 			case "V":
 			{
 				un_version = s;
@@ -389,7 +395,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { print(sprintf(_("Update can be downloaded at:\n%s\n"), un_download)); }
+			if(un_download) { printf(_("Update can be downloaded at:\n%s\n"), un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
@@ -651,9 +657,10 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_LMS) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
-	GAMETYPE(MAPINFO_TYPE_RACE) \
+	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
 	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
+	//GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
@@ -661,7 +668,7 @@ float GameType_GetID(float cnt)
 	float i;
 	i = 0;
 
-	#define GAMETYPE(id) if(i++ == cnt) return id;
+	#define GAMETYPE(id) { if(i++ == cnt) return id; }
 	GAMETYPES
 	#undef GAMETYPE
 
@@ -701,22 +708,6 @@ string GameType_GetIcon(float cnt)
 
 	return "";
 }
-
-/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
-{
-	float i = GameType_GetID(cnt);
-	string s = _MapInfo_GetDefaultEx(i);
-
-	if(i)
-	{
-		if(strstrofs(s, "teams", 0) >= 0)
-			return _("teamplay");
-		else
-			return _("free for all");
-	}
-
-	return _("tuba for all");
-}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {
@@ -775,4 +766,16 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+void CheckSendCvars(entity me, string cvarnamestring)
+{
+	if(me.sendCvars)
+	{
+		printf("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
+		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+		{
+			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
+		}
+	}
 }

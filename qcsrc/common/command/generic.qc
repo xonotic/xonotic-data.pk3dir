@@ -28,7 +28,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		print(sprintf(_("error: status is %d\n"), status));
+		dprintf("error: status is %d\n", status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;
@@ -239,12 +239,12 @@ void GenericCommand_dumpnotifs(float request)
 
 			if(filename == "")
 			{
-				filename = "notifications.cfg";
+				filename = "notifications_dump.cfg";
 				alsoprint = FALSE;
 			}
 			else if(filename == "-")
 			{
-				filename = "notifications.cfg";
+				filename = "notifications_dump.cfg";
 				alsoprint = TRUE;
 			}
 			fh = fopen(filename, FILE_WRITE);
@@ -252,12 +252,12 @@ void GenericCommand_dumpnotifs(float request)
 			if(fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				print(sprintf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename));
+				printf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
 				fclose(fh);
 			}
 			else
 			{
-				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+				printf("^1Error: ^7Could not open file '%s'!\n", filename);
 			}
 			#else
 			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
@@ -269,7 +269,60 @@ void GenericCommand_dumpnotifs(float request)
 		case CMD_REQUEST_USAGE:
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
+			print("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work with other progs than just server
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifdef SVQC
+			wep_config_file = -1;
+			wep_config_alsoprint = -1;
+			string filename = argv(1);
+			
+			if(filename == "")
+			{
+				filename = "weapons_dump.cfg";
+				wep_config_alsoprint = FALSE;
+			}
+			else if(filename == "-")
+			{
+				filename = "weapons_dump.cfg";
+				wep_config_alsoprint = TRUE;
+			}
+			wep_config_file = fopen(filename, FILE_WRITE);
+			
+			if(wep_config_file >= 0)
+			{
+				Dump_Weapon_Settings();
+				print(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+				fclose(wep_config_file);
+				wep_config_file = -1;
+				wep_config_alsoprint = -1;
+			}
+			else
+			{
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+			}
+			#else
+			print(_("Weapons dump command only works with sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
+			print("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
 			print("  if supplied with '-' output to console as well as default,\n");
 			print("  if left blank, it will only write to default.\n");
 			return;
@@ -433,7 +486,7 @@ void GenericCommand_restartnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
-			print(sprintf(
+			printf(
 				strcat(
 					"Restart_Notifications(): Restarting %d notifications... ",
 					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
@@ -450,7 +503,7 @@ void GenericCommand_restartnotifs(float request)
 				NOTIF_CENTER_COUNT,
 				NOTIF_MULTI_COUNT,
 				NOTIF_CHOICE_COUNT
-			));
+			);
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else
@@ -585,6 +638,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
+	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \

@@ -43,8 +43,7 @@ float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
 float autocvar_g_vehicle_spiderbot_minigun_force;
-float autocvar_g_vehicle_spiderbot_minigun_speed;
-float autocvar_g_vehicle_spiderbot_minigun_bulletconstant;
+float autocvar_g_vehicle_spiderbot_minigun_solidpenetration;
 
 float autocvar_g_vehicle_spiderbot_rocket_damage;
 float autocvar_g_vehicle_spiderbot_rocket_force;
@@ -58,6 +57,11 @@ float autocvar_g_vehicle_spiderbot_rocket_health;
 float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
+
+float autocvar_g_vehicle_spiderbot_blowup_radius;
+float autocvar_g_vehicle_spiderbot_blowup_coredamage;
+float autocvar_g_vehicle_spiderbot_blowup_edgedamage;
+float autocvar_g_vehicle_spiderbot_blowup_forceintensity;
 
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
@@ -495,12 +499,8 @@ float spiderbot_frame()
             v_forward = normalize(v_forward);
             v += v_forward * 50;
 
-//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant)
-
-            fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
-                                5, autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
-
-            endFireBallisticBullet();
+            fireBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+                                autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0);
 
 //            fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
 //                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_VH_SPID_MINIGUN, 0);
@@ -639,8 +639,8 @@ void spiderbot_exit(float eject)
 
 void spider_impact()
 {
-    if(autocvar_g_vehicle_spiderbot_bouncepain_x)
-        vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
+	if(autocvar_g_vehicle_spiderbot_bouncepain_x)
+		vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 }
 
 void spiderbot_headfade()
@@ -723,14 +723,18 @@ void spiderbot_blowup()
     SUB_SetFade(g1, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
     SUB_SetFade(g2, time, min(autocvar_g_vehicle_spiderbot_respawntime, 10));
 
-    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
+	RadiusDamage(self, self.enemy, autocvar_g_vehicle_spiderbot_blowup_coredamage,
+				autocvar_g_vehicle_spiderbot_blowup_edgedamage,
+				autocvar_g_vehicle_spiderbot_blowup_radius, world, world,
+				autocvar_g_vehicle_spiderbot_blowup_forceintensity, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
     self.movetype   = MOVETYPE_NONE;
     self.deadflag   = DEAD_DEAD;
     self.solid      = SOLID_NOT;
     self.tur_head.effects  &=  ~EF_FLAME;
-    self.vehicle_hudmodel.viewmodelforclient = self;
+	self.vehicle_hudmodel.viewmodelforclient = self;
+	setorigin(self, self.pos1);
 }
 
 void spiderbot_die()
@@ -789,7 +793,7 @@ void spiderbot_spawn(float _f)
 {
     if(!self.gun1)
     {
-        self.vehicles_impusle   = spiderbot_impulse;
+        self.vehicles_impulse   = spiderbot_impulse;
         self.gun1               = spawn();
         self.gun2               = spawn();
         setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
