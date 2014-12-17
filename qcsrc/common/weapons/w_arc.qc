@@ -811,8 +811,8 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	vector top    = hitorigin + (thickdir * thickness);
 	vector bottom = hitorigin - (thickdir * thickness);
 	
-	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
-	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+	//vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+	//vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
 	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
 	R_PolygonVertex(
@@ -821,7 +821,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		beam.beam_color,
 		beam.beam_alpha
 	);
-	R_PolygonVertex(
+	/*R_PolygonVertex(
 		last_top,
 		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
 		beam.beam_color,
@@ -838,7 +838,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
 		beam.beam_color,
 		beam.beam_alpha
-	);
+	);*/
 	R_EndPolygon();
 
 	// draw trailing particles
