@@ -11,6 +11,10 @@ float infection_players_count;
 const float INFECTIONTEAM_NONE = -1;
 const float INFECTIONTEAM_UNDEFINED = -2;
 
+// safe team comparisons
+#define INF_SAMETEAM(a,b) ((a.infectioncolor == b.infectioncolor) ? 1 : 0)
+#define INF_DIFFTEAM(a,b) ((a.infectioncolor != b.infectioncolor) ? 1 : 0)
+
 void infection_SetColor(entity _e, float _color)
 {
 	_e.infectioncolor = _color;
@@ -127,7 +131,7 @@ void infection_RoundStart()
 	infection_CheckWinner();
 }
 
-void infection_Initialize()
+void inf_Initialize()
 {
 	infection_players_count = 0;
 	round_handler_Spawn(infection_CheckTeams, infection_CheckWinner, infection_RoundStart);
@@ -184,7 +188,7 @@ MUTATOR_HOOKFUNCTION(infection_GiveFragsForKill)
 		entity e;
 		FOR_EACH_PLAYER(e) // check other players...
 		{
-			if (e.infectioncolor == frag_target.infectioncolor) // And see if they have our original infection color
+			if (INF_SAMETEAM(e, frag_target)) // And see if they have our original infection color
 			{
 				// If so, remove it, our infection color has now "died out" from this round and we can not win anymore.
 				// The attacker will "summon" all of our previously fragged targets, and also us.
@@ -227,7 +231,7 @@ MUTATOR_HOOKFUNCTION(infection_PlayerDamage_Calculate)
 	if (
 	IS_PLAYER(frag_attacker) // Allow environment damage
 	&& frag_attacker != frag_target  // Allow self damage
-	&& frag_attacker.infectioncolor == frag_target.infectioncolor // Block friendly fire
+	&& INF_SAMETEAM(frag_attacker, frag_target) // Block friendly fire
 	)
 	{
 		frag_damage = 0;
@@ -238,7 +242,7 @@ MUTATOR_HOOKFUNCTION(infection_PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(infection_BotShouldAttack)
 {
-	return checkentity.infectioncolor == self.infectioncolor;
+	return INF_SAMETEAM(checkentity, self);
 }
 
 MUTATOR_HOOKFUNCTION(infection_ClientConnect)
@@ -263,18 +267,21 @@ MUTATOR_DEFINITION(gamemode_infection)
 
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
+		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		infection_Initialize();
+		inf_Initialize();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
+		// we actually cannot roll back inf_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 
