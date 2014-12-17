@@ -19,6 +19,7 @@ REGISTER_WEAPON(
 #define VAPORIZER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, PRI, ammo) \
 	w_cvar(id, sn, PRI, animtime) \
+	w_cvar(id, sn, PRI, damage) \
 	w_cvar(id, sn, PRI, refire) \
 	w_cvar(id, sn, SEC, ammo) \
 	w_cvar(id, sn, SEC, animtime) \
@@ -53,17 +54,18 @@ void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
 void W_Vaporizer_Attack(void)
 {
-	float flying;
+	float flying, vaporizer_damage;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+	vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, 10000);
+	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
