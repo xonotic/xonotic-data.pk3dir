@@ -34,26 +34,6 @@ float ok_CheckWeaponCharge(entity ent, float wep)
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-void start_hmg()
-{
-	self.classname = "weapon_hmg";
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	self.ok_item = TRUE;
-	setmodel(self, "models/weapons/g_ok_hmg.md3");
-	self.pickup_anyway = TRUE;
-	spawnfunc_weapon_hmg();
-}
-
-void start_rpc()
-{
-	self.classname = "weapon_rpc";
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	self.ok_item = TRUE;
-	self.pickup_anyway = TRUE;
-	setmodel(self, "models/weapons/g_ok_rl.md3");
-	spawnfunc_weapon_rpc();
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
