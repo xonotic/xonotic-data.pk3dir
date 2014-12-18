@@ -163,6 +163,7 @@ void CheckPlayerJump()
 	{
 		if (self.BUTTON_JUMP && (!PlayerJump() || self.multijump_count > 0) || self.BUTTON_JETPACK)
 		{
+			if (self.cvar_cl_jetpack_jump || self.BUTTON_JETPACK)
 			if (!self.jetpack_stopped && (!autocvar_g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
 			{
 				self.items |= IT_USING_JETPACK;

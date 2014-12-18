@@ -261,6 +261,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
+.float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
