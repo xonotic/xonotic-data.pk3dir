@@ -37,7 +37,7 @@ FONTSIZE_TITLE                  16
 HEIGHT_TITLE                    1.5
 HEIGHT_ZOOMEDTITLE              -1
 
-// general 
+// general
 //   uses "background" images
 //   uses "background_ingame" images
 ALIGN_BACKGROUND                h5h5
@@ -98,8 +98,8 @@ WIDTH_CREDITS                   0.5
 
 // item: cvar list
 ALPHA_CVARLIST_SAVED            1
-ALPHA_CVARLIST_TEMPORARY        0.7    
-COLOR_CVARLIST_CHANGED          '0 0.375 0.75' 
+ALPHA_CVARLIST_TEMPORARY        0.7
+COLOR_CVARLIST_CHANGED          '0 0.375 0.75'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
@@ -218,9 +218,11 @@ ALPHA_KEYGRABBER_KEYS           0.7
 // item: player color button
 //   uses "colorbutton" images
 
-// item: player name editor
-//   uses "charmap" images
-//   uses "charmapbutton" images
+// item: charmap
+ALPHA_CHARMAP_CHAR              0.85
+COLOR_CHARMAP_CHAR              '1 1 1'
+ALPHA_CHARMAP_FOCUS             0.75
+COLOR_CHARMAP_FOCUS             '0 0.375 0.75'
 
 // item: radio button
 //   uses "radiobutton" images
