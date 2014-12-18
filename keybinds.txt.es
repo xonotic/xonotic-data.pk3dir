@@ -6,6 +6,7 @@
 "+jump"                                 "saltar / nadar"
 "+crouch"                               "agacharse / bajar"
 "+hook"                                 "gancho"
+"+jetpack"                              "jet pack"
 ""                                      ""
 ""                                      "Ataque"
 "+fire"                                 "ataque primario"

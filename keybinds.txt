@@ -6,6 +6,7 @@
 "+jump"                                 "jump / swim"
 "+crouch"                               "crouch / sink"
 "+hook"                                 "off-hand hook"
+"+jetpack"                              "jet pack"
 ""                                      ""
 ""                                      "Attacking"
 "+fire"                                 "primary fire"

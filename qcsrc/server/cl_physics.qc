@@ -159,9 +159,9 @@ void CheckWaterJump()
 .float multijump_count;
 void CheckPlayerJump()
 {
-	if (self.BUTTON_JUMP)
+	if (self.BUTTON_JUMP || self.BUTTON_JETPACK)
 	{
-		if (!PlayerJump() || self.multijump_count > 0)
+		if (self.BUTTON_JUMP && (!PlayerJump() || self.multijump_count > 0) || self.BUTTON_JETPACK)
 		{
 			if (!self.jetpack_stopped && (!autocvar_g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
 			{
@@ -179,10 +179,11 @@ void CheckPlayerJump()
 	}
 	else
 	{
-		self.flags |= FL_JUMPRELEASED;
 		self.jetpack_stopped = FALSE;
 		self.items &= ~IT_USING_JETPACK;
 	}
+	if (!self.BUTTON_JUMP)
+		self.flags |= FL_JUMPRELEASED;
 
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump ();

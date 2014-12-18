@@ -6,6 +6,7 @@
 "+jump"                                 "springen / schwimmen"
 "+crouch"                               "ducken / sinken"
 "+hook"                                 "Enterhaken"
+"+jetpack"                              "Jetpack"
 ""                                      ""
 ""                                      "Angriff"
 "+fire"                                 "1. Feuermodus"

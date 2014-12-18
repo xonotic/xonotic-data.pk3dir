@@ -6,6 +6,7 @@
 "+jump"                                 "salta / risalire in acqua"
 "+crouch"                               "abbassarsi / scendere in acqua"
 "+hook"                                 "off-hand hook"
+"+jetpack"                              "jet pack"
 ""                                      ""
 ""                                      "Attacco"
 "+fire"                                 "fuoco primario"

@@ -1140,6 +1140,10 @@ void ClientConnect (void)
 	// Wazat's grappling hook
 	SetGrappleHookBindings();
 
+	// Jetpack binds
+	stuffcmd(self, "alias +jetpack +button10\n");
+	stuffcmd(self, "alias -jetpack -button10\n");
+
 	// get version info from player
 	stuffcmd(self, "cmd clientversion $gameversion\n");
 

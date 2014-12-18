@@ -13,6 +13,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 #define BUTTON_USE        buttonuse
 #define BUTTON_DRAG       button8
 #define BUTTON_ZOOMSCRIPT button9
+#define BUTTON_JETPACK    button10
 
 // Globals
 

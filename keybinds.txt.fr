@@ -6,6 +6,7 @@
 "+jump"                                 "sauter / nager"
 "+crouch"                               "s'accroupir / couler"
 "+hook"                                 "grappin"
+"+jetpack"                              "jet pack"
 ""                                      ""
 ""                                      "Attaque"
 "+fire"                                 "tir primaire"
