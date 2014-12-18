@@ -1769,7 +1769,7 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 			W_Crylink_Dequeue(self);
 			remove(self);
 		}
-		else
+		else if(self.classname != "nade") // nade handles itself manually
 			remove(self);
 		return TRUE;
 	}

@@ -520,7 +520,8 @@ void nade_boom()
 			}
 	}
 
-	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	if(expef != "")
+		pointparticles(particleeffectnum(expef), findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
@@ -532,6 +533,7 @@ void nade_boom()
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 
+	if(self.health != -1337)
 	switch ( self.nade_type )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
@@ -547,8 +549,14 @@ void nade_boom()
 
 void nade_touch()
 {
-	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
+	if(ITEM_TOUCH_NEEDKILL())
+	{
+		remove(self);
+		return;
+	}
+	
 	PROJECTILE_TOUCH;
+
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);
 	if(self.health == self.max_health)
@@ -570,6 +578,13 @@ void nade_beep()
 
 void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+	{
+		self.health = -1337; // hack
+		nade_boom();
+		return;
+	}
+
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
