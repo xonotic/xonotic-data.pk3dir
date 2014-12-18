@@ -8110,7 +8110,7 @@ bounce 1.5
 liquidfriction 4
 velocityjitter 16 16 16
 
-effect nade
+effect nade_neutral
 trailspacing 1
 type smoke
 color 0xFFFFFF 0xFFFFFF
@@ -8120,7 +8120,7 @@ sizeincrease -1
 alpha 100 100 250
 //gravity -0.11
 // fire
-effect nade
+effect nade_neutral
 notunderwater
 trailspacing 8
 type smoke
@@ -8130,7 +8130,7 @@ size 15 25
 sizeincrease -10
 alpha 30 30 150
 // bubbles
-effect nade
+effect nade_neutral
 underwater
 trailspacing 16
 type bubble
@@ -8307,7 +8307,7 @@ tex 33 33
 size 25 25
 sizeincrease -30
 
-effect nade_burn
+effect nade_neutral_burn
 trailspacing 1
 type smoke
 color 0xFFFFFF 0xFFFFFF
@@ -8317,7 +8317,7 @@ sizeincrease -1
 alpha 100 100 250
 //gravity -0.11
 // fire
-effect nade_burn
+effect nade_neutral_burn
 notunderwater
 trailspacing 64
 type smoke
@@ -8327,7 +8327,7 @@ size 45 25
 sizeincrease -30
 alpha 200 200 1000
 // bubbles
-effect nade_burn
+effect nade_neutral_burn
 underwater
 trailspacing 16
 type bubble
@@ -8339,7 +8339,7 @@ gravity -0.125
 bounce 1.5
 liquidfriction 4
 velocityjitter 16 16 16
-effect nade_burn
+effect nade_neutral_burn
 trailspacing 16
 type smoke
 color 0xFFFFFF 0xFFFFFF

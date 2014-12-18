@@ -1762,14 +1762,16 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		return TRUE;
 	if(SUB_NoImpactCheck())
 	{
-		if(self.classname == "grapplinghook")
+		if(self.classname == "nade")
+			return FALSE; // no checks here
+		else if(self.classname == "grapplinghook")
 			RemoveGrapplingHook(self.realowner);
 		else if(self.classname == "spike")
 		{
 			W_Crylink_Dequeue(self);
 			remove(self);
 		}
-		else if(self.classname != "nade") // nade handles itself manually
+		else
 			remove(self);
 		return TRUE;
 	}
