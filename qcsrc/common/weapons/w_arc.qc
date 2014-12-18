@@ -613,7 +613,7 @@ void Arc_Smoke()
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
-				sound(self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/arc_loop_overheat.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -724,7 +724,7 @@ float W_Arc(float req)
 			precache_sound("weapons/arc_fire.wav");
 			precache_sound("weapons/arc_loop.wav");
 			precache_sound("weapons/arc_stop.wav");
-			precache_sound("weapons/gauntletbeam_fly.wav");
+			precache_sound("weapons/arc_loop_overheat.wav");
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
