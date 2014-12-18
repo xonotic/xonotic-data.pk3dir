@@ -154,6 +154,7 @@ void CheckWaterJump()
 	}
 }
 
+.float jetpack_stopped;
 // Hack: shouldn't need to know about this
 .float multijump_count;
 void CheckPlayerJump()
@@ -162,14 +163,27 @@ void CheckPlayerJump()
 	{
 		if (!PlayerJump() || self.multijump_count > 0)
 		{
-			self.items |= IT_USING_JETPACK;
+			if (!self.jetpack_stopped && (!autocvar_g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
+			{
+				self.items |= IT_USING_JETPACK;
+			}
+			else
+			{
+				// we get here if we ran out of ammo
+				if (!self.jetpack_stopped)
+					sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+				self.jetpack_stopped = TRUE;
+				self.items &= ~IT_USING_JETPACK;
+			}
 		}
 	}
 	else
 	{
 		self.flags |= FL_JUMPRELEASED;
+		self.jetpack_stopped = FALSE;
 		self.items &= ~IT_USING_JETPACK;
 	}
+
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump ();
 }
@@ -1030,7 +1044,7 @@ void SV_PlayerPhysics()
 			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
-	else if ((self.items & IT_USING_JETPACK) && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
+	else if (self.items & IT_USING_JETPACK)
 	{
 		//makevectors(self.v_angle_y * '0 1 0');
 		makevectors(self.v_angle);
@@ -1130,10 +1144,6 @@ void SV_PlayerPhysics()
 	}
 	else if (self.flags & FL_ONGROUND)
 	{
-		// we get here if we ran out of ammo
-		if((self.items & IT_USING_JETPACK) && !(buttons_prev & 2) && self.ammo_fuel < 0.01)
-			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
-
 		// walking
 		makevectors(self.v_angle_y * '0 1 0');
 		wishvel = v_forward * self.movement_x + v_right * self.movement_y;
@@ -1199,9 +1209,6 @@ void SV_PlayerPhysics()
 	else
 	{
 		float wishspeed0;
-		// we get here if we ran out of ammo
-		if((self.items & IT_USING_JETPACK) && !(buttons_prev & 2) && self.ammo_fuel < 0.01)
-			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
 
 		if(maxspd_mod < 1)
 		{
