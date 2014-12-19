@@ -1543,6 +1543,10 @@ void CSQC_UpdateView(float w, float h)
 					weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
 					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
 
+					float ok_ammo_charge, ok_ammo_chargepool;
+					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
+					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
+
 					float vortex_charge, vortex_chargepool;
 					vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 					vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
@@ -1588,8 +1592,14 @@ void CSQC_UpdateView(float w, float h)
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring.tga";
 					}
-
-					if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
+					else if (ok_ammo_charge)
+					{
+						ring_value = ok_ammo_chargepool;
+						ring_alpha = autocvar_crosshair_ring_reload_alpha;
+						ring_rgb = wcross_color;
+						ring_image = "gfx/crosshair_ring.tga";
+					}
+					else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
 					{
 						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
 						ring_scale = autocvar_crosshair_ring_reload_size;

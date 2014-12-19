@@ -309,6 +309,8 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
+			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+
 			default:
 				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -334,6 +336,7 @@ void Ent_Projectile()
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
+			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
@@ -441,17 +444,19 @@ void Ent_Projectile()
 
 		if(Nade_IDFromProjectile(self.cnt) != 0)
 		{
+			float nade_type = Nade_IDFromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
-			self.colormod = Nade_Color(Nade_IDFromProjectile(self.cnt));
-			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			self.colormod = Nade_Color(nade_type);
 			self.move_movetype = MOVETYPE_BOUNCE;
 			self.move_touch = func_null;
 			self.scale = 1.5;
 			self.avelocity = randomvec() * 720;
-			
-			if(Nade_IDFromProjectile(self.cnt) == NADE_TYPE_TRANSLOCATE)
-				self.solid = SOLID_TRIGGER;
+
+			if(nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+			else
+				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 		}
 
 		setsize(self, self.mins, self.maxs);
@@ -495,6 +500,7 @@ void Projectile_Precache()
 	precache_model("models/sphere/sphere.md3");
 
 	precache_model("models/weapons/v_ok_grenade.md3");
+	precache_model("models/weapons/ok_rocket.md3");
 
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");

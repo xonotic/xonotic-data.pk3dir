@@ -641,6 +641,8 @@ float forbidWeaponUse()
 		return 1;
 	if(self.frozen)
 		return 1;
+	if(self.weapon_blocked)
+		return 1;
 	return 0;
 }
 
@@ -811,6 +813,13 @@ void W_DecreaseAmmo(float ammo_use)
 {
 	entity wep = get_weaponinfo(self.weapon);
 
+	if(cvar("g_overkill"))
+	if(self.ok_use_ammocharge)
+	{
+		ok_DecreaseCharge(self, self.weapon);
+		return; // TODO
+	}
+
 	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo)
 		return;
 
@@ -877,6 +886,10 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	// set global values to work with
 	entity e;
 	e = get_weaponinfo(self.weapon);
+
+	if(cvar("g_overkill"))
+	if(self.ok_use_ammocharge)
+		return; // TODO
 
 	self.reload_ammo_min = sent_ammo_min;
 	self.reload_ammo_amount = e.reloading_ammo;;

@@ -273,6 +273,8 @@ const float PROJECTILE_BUMBLE_BEAM = 31;
 const float PROJECTILE_MAGE_SPIKE = 32;
 const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
+const float PROJECTILE_RPC = 60;
+
 const float SPECIES_HUMAN = 0;
 const float SPECIES_ROBOT_SOLID = 1;
 const float SPECIES_ALIEN = 2;

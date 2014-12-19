@@ -87,8 +87,8 @@ const float STAT_NADE_BONUS_SCORE       = 81;
 const float STAT_HEALING_ORB            = 82;
 const float STAT_HEALING_ORB_ALPHA      = 83;
 const float STAT_PLASMA                 = 84;
-// 85 empty?
-// 86 empty?
+const float STAT_OK_AMMO_CHARGE         = 85;
+const float STAT_OK_AMMO_CHARGEPOOl     = 86;
 // 87 empty?
 // 88 empty?
 // 89 empty?
