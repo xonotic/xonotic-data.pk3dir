@@ -449,7 +449,9 @@ void UpdateHitsound()
 	// varying sound pitch
 
 	static float hitsound_time_prev = 0;
-	if (COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
+	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
+	float arc_hack = activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
+	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
 		{
