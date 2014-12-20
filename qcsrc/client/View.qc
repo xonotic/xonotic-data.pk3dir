@@ -419,8 +419,543 @@ vector damage_blurpostprocess, content_blurpostprocess;
 
 float checkfail[16];
 
-float rainbow_last_flicker;
-vector rainbow_prev_color;
+float unaccounted_damage = 0;
+void UpdateDamage()
+{
+	// accumulate damage with each stat update
+	float unaccounted_damage_new = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	static float damage_dealt_time_prev = 0;
+	float damage_dealt_time = getstatf(STAT_HIT_TIME);
+	if (damage_dealt_time != damage_dealt_time_prev)
+	{
+		unaccounted_damage += unaccounted_damage_new;
+		dprint("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
+	}
+	damage_dealt_time_prev = damage_dealt_time;
+
+	// prevent hitsound when switching spectatee
+	static float spectatee_status_prev = 0;
+	if (spectatee_status != spectatee_status_prev)
+		unaccounted_damage = 0;
+	spectatee_status_prev = spectatee_status;
+}
+
+void UpdateHitsound()
+{
+	// varying sound pitch
+
+	static float hitsound_time_prev = 0;
+	if (COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
+	{
+		if (autocvar_cl_hitsound && unaccounted_damage)
+		{
+			// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+			float a = autocvar_cl_hitsound_max_pitch;
+			float b = autocvar_cl_hitsound_min_pitch;
+			float c = autocvar_cl_hitsound_nom_damage;
+			float x = unaccounted_damage;
+			float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+
+			// if sound variation is disabled, set pitch_shift to 1
+			if (autocvar_cl_hitsound == 1)
+				pitch_shift = 1;
+
+			// if pitch shift is reversed, mirror in (max-min)/2 + min
+			if (autocvar_cl_hitsound == 3)
+			{
+				float mirror_value = (a-b)/2 + b;
+				pitch_shift = mirror_value + (mirror_value - pitch_shift);
+			}
+
+			dprint("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
+
+			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
+			// todo: normalize sound pressure levels? seems unnecessary
+
+			sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+		}
+		unaccounted_damage = 0;
+		hitsound_time_prev = time;
+	}
+
+	static float typehit_time_prev = 0;
+	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
+	{
+		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		typehit_time_prev = typehit_time;
+	}
+}
+
+void UpdateCrosshair()
+{
+	static float rainbow_last_flicker;
+    static vector rainbow_prev_color;
+	entity e = self;
+	float f, i, j;
+	vector v;
+	if(getstati(STAT_FROZEN))
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+	else if (getstatf(STAT_HEALING_ORB)>time)
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+	if(!intermission)
+	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+	{
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+	else if(getstatf(STAT_REVIVE_PROGRESS))
+	{
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+
+	if(autocvar_r_letterbox == 0)
+		if(autocvar_viewsize < 120)
+			CSQC_common_hud();
+
+	// crosshair goes VERY LAST
+	if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL)
+	{
+		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
+			return;
+
+		string wcross_style;
+		float wcross_alpha, wcross_resolution;
+		wcross_style = autocvar_crosshair;
+		if (wcross_style == "0")
+			return;
+		wcross_resolution = autocvar_crosshair_size;
+		if (wcross_resolution == 0)
+			return;
+		wcross_alpha = autocvar_crosshair_alpha;
+		if (wcross_alpha == 0)
+			return;
+
+		// TrueAim check
+		float shottype;
+
+		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+		wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+		wcross_origin_z = 0;
+		if(autocvar_crosshair_hittest)
+		{
+			vector wcross_oldorigin;
+			wcross_oldorigin = wcross_origin;
+			shottype = TrueAimCheck();
+			if(shottype == SHOTTYPE_HITWORLD)
+			{
+				v = wcross_origin - wcross_oldorigin;
+				v_x /= vid_conwidth;
+				v_y /= vid_conheight;
+				if(vlen(v) > 0.01)
+					shottype = SHOTTYPE_HITOBSTRUCTION;
+			}
+			if(!autocvar_crosshair_hittest_showimpact)
+				wcross_origin = wcross_oldorigin;
+		}
+		else
+			shottype = SHOTTYPE_HITWORLD;
+
+		vector wcross_color = '0 0 0', wcross_size = '0 0 0';
+		string wcross_name = "";
+		float wcross_scale, wcross_blur;
+
+		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
+		{
+			e = get_weaponinfo(switchingweapon);
+			if(e)
+			{
+				if(autocvar_crosshair_per_weapon)
+				{
+					// WEAPONTODO: access these through some general settings (with non-balance config settings)
+					//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+					//if (wcross_resolution == 0)
+						//return;
+
+					//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+					wcross_resolution *= e.w_crosshair_size;
+					wcross_name = e.w_crosshair;
+				}
+			}
+		}
+
+		if(wcross_name == "")
+			wcross_name = strcat("gfx/crosshair", wcross_style);
+
+		// MAIN CROSSHAIR COLOR DECISION
+		switch(autocvar_crosshair_color_special)
+		{
+			case 1: // crosshair_color_per_weapon
+			{
+				if(e)
+				{
+					wcross_color = e.wpcolor;
+					break;
+				}
+				else { goto normalcolor; }
+			}
+
+			case 2: // crosshair_color_by_health
+			{
+				float x = getstati(STAT_HEALTH);
+
+				//x = red
+				//y = green
+				//z = blue
+
+				wcross_color_z = 0;
+
+				if(x > 200)
+				{
+					wcross_color_x = 0;
+					wcross_color_y = 1;
+				}
+				else if(x > 150)
+				{
+					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+				}
+				else if(x > 100)
+				{
+					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color_z = 1 - (x-100)*0.02;
+				}
+				else if(x > 50)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 1;
+					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
+				}
+				else if(x > 20)
+				{
+					wcross_color_x = 1;
+					wcross_color_y = (x-20)*90/27/100;
+					wcross_color_z = (x-20)*90/27/100 * 0.2;
+				}
+				else
+				{
+					wcross_color_x = 1;
+					wcross_color_y = 0;
+				}
+				break;
+			}
+
+			case 3: // crosshair_color_rainbow
+			{
+				if(time >= rainbow_last_flicker)
+				{
+					rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+					rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+				}
+				wcross_color = rainbow_prev_color;
+				break;
+			}
+			:normalcolor
+			default: { wcross_color = stov(autocvar_crosshair_color); break; }
+		}
+
+		if(autocvar_crosshair_effect_scalefade)
+		{
+			wcross_scale = wcross_resolution;
+			wcross_resolution = 1;
+		}
+		else
+		{
+			wcross_scale = 1;
+		}
+
+		if(autocvar_crosshair_pickup)
+		{
+			float stat_pickup_time = getstatf(STAT_LAST_PICKUP);
+
+			if(pickup_crosshair_time < stat_pickup_time)
+			{
+				if(time - stat_pickup_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
+					pickup_crosshair_size = 1;
+
+				pickup_crosshair_time = stat_pickup_time;
+			}
+
+			if(pickup_crosshair_size > 0)
+				pickup_crosshair_size -= autocvar_crosshair_pickup_speed * frametime;
+			else
+				pickup_crosshair_size = 0;
+
+			wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
+		}
+
+		// todo: make crosshair hit indication dependent on damage dealt
+		if(autocvar_crosshair_hitindication)
+		{
+			vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+
+			if(unaccounted_damage)
+			{
+				hitindication_crosshair_size = 1;
+			}
+
+			if(hitindication_crosshair_size > 0)
+				hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
+			else
+				hitindication_crosshair_size = 0;
+
+			wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
+			wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
+			wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
+			wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
+		}
+
+		if(shottype == SHOTTYPE_HITENEMY)
+			wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
+		if(shottype == SHOTTYPE_HITTEAM)
+			wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
+
+		f = fabs(autocvar_crosshair_effect_time);
+		if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
+		{
+			wcross_changedonetime = time + f;
+		}
+		if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
+		{
+			wcross_name_changestarttime = time;
+			wcross_name_changedonetime = time + f;
+			if(wcross_name_goal_prev_prev)
+				strunzone(wcross_name_goal_prev_prev);
+			wcross_name_goal_prev_prev = wcross_name_goal_prev;
+			wcross_name_goal_prev = strzone(wcross_name);
+			wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
+			wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
+			wcross_resolution_goal_prev = wcross_resolution;
+		}
+
+		wcross_scale_goal_prev = wcross_scale;
+		wcross_alpha_goal_prev = wcross_alpha;
+		wcross_color_goal_prev = wcross_color;
+
+		if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
+		{
+			wcross_blur = 1;
+			wcross_alpha *= 0.75;
+		}
+		else
+			wcross_blur = 0;
+		// *_prev is at time-frametime
+		// * is at wcross_changedonetime+f
+		// what do we have at time?
+		if(time < wcross_changedonetime)
+		{
+			f = frametime / (wcross_changedonetime - time + frametime);
+			wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
+			wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
+			wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
+		}
+
+		wcross_scale_prev = wcross_scale;
+		wcross_alpha_prev = wcross_alpha;
+		wcross_color_prev = wcross_color;
+
+		wcross_scale *= 1 - autocvar__menu_alpha;
+		wcross_alpha *= 1 - autocvar__menu_alpha;
+		wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
+
+		if(wcross_scale >= 0.001 && wcross_alpha >= 0.001)
+		{
+			// crosshair rings for weapon stats
+			if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
+			{
+				// declarations and stats
+				float ring_value = 0, ring_scale = 0, ring_alpha = 0, ring_inner_value = 0, ring_inner_alpha = 0;
+				string ring_image = string_null, ring_inner_image = string_null;
+				vector ring_rgb = '0 0 0', ring_inner_rgb = '0 0 0';
+
+				ring_scale = autocvar_crosshair_ring_size;
+
+				float weapon_clipload, weapon_clipsize;
+				weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
+				weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
+
+				float ok_ammo_charge, ok_ammo_chargepool;
+				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
+				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
+
+				float vortex_charge, vortex_chargepool;
+				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
+				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
+
+				float arc_heat = getstatf(STAT_ARC_HEAT);
+
+				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+					vortex_charge_movingavg = vortex_charge;
+
+
+				// handle the values
+				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				{
+					if (vortex_chargepool || use_vortex_chargepool) {
+						use_vortex_chargepool = 1;
+						ring_inner_value = vortex_chargepool;
+					} else {
+						vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * vortex_charge;
+						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (vortex_charge - vortex_charge_movingavg), 1);
+					}
+
+					ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
+					ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
+					ring_inner_image = "gfx/crosshair_ring_inner.tga";
+
+					// draw the outer ring to show the current charge of the weapon
+					ring_value = vortex_charge;
+					ring_alpha = autocvar_crosshair_ring_vortex_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring_nexgun.tga";
+				}
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				{
+					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				{
+					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if (ok_ammo_charge)
+				{
+					ring_value = ok_ammo_chargepool;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_rgb = wcross_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
+				{
+					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
+					ring_scale = autocvar_crosshair_ring_reload_size;
+					ring_alpha = autocvar_crosshair_ring_reload_alpha;
+					ring_rgb = wcross_color;
+
+					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
+					// if a new image for another weapon is added, add the code (and its respective file/value) here
+					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+						ring_image = "gfx/crosshair_ring_rifle.tga";
+					else
+						ring_image = "gfx/crosshair_ring.tga";
+				}
+				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
+				{
+					ring_value = arc_heat;
+					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
+						arc_heat*autocvar_crosshair_ring_arc_hot_alpha;
+					ring_rgb = (1-arc_heat)*wcross_color + arc_heat*autocvar_crosshair_ring_arc_hot_color;
+					ring_image = "gfx/crosshair_ring.tga";
+				}
+
+				// if in weapon switch animation, fade ring out/in
+				if(autocvar_crosshair_effect_time > 0)
+				{
+					f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
+					if (!(f < 1))
+					{
+						wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
+					}
+
+					if(wcross_ring_prev)
+					{
+						if(f < 1)
+							ring_alpha *= fabs(1 - bound(0, f, 1));
+					}
+					else
+					{
+						if(f < 1)
+							ring_alpha *= bound(0, f, 1);
+					}
+				}
+
+				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
+
+				if (ring_value)
+					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
+			}
+
+#define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
+			do \
+			{ \
+				if(wcross_blur > 0) \
+				{ \
+					for(i = -2; i <= 2; ++i) \
+					for(j = -2; j <= 2; ++j) \
+					M(i,j,sz,wcross_name,wcross_alpha*0.04); \
+				} \
+				else \
+				{ \
+					M(0,0,sz,wcross_name,wcross_alpha); \
+				} \
+			} \
+			while(0)
+
+#define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
+			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+
+#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
+			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
+
+			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			{
+				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
+				wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
+				CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
+				f = 1 - f;
+			}
+			else
+			{
+				f = 1;
+			}
+			wcross_name_alpha_goal_prev = f;
+
+			wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
+			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
+
+			if(autocvar_crosshair_dot)
+			{
+				vector wcross_color_old;
+				wcross_color_old = wcross_color;
+
+				if((autocvar_crosshair_dot_color_custom) && (autocvar_crosshair_dot_color != "0"))
+					wcross_color = stov(autocvar_crosshair_dot_color);
+
+				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
+				// FIXME why don't we use wcross_alpha here?cl_notice_run();
+				wcross_color = wcross_color_old;
+			}
+		}
+	}
+	else
+	{
+		wcross_scale_prev = 0;
+		wcross_alpha_prev = 0;
+		wcross_scale_goal_prev = 0;
+		wcross_alpha_goal_prev = 0;
+		wcross_changedonetime = 0;
+		if(wcross_name_goal_prev)
+			strunzone(wcross_name_goal_prev);
+		wcross_name_goal_prev = string_null;
+		if(wcross_name_goal_prev_prev)
+			strunzone(wcross_name_goal_prev_prev);
+		wcross_name_goal_prev_prev = string_null;
+		wcross_name_changestarttime = 0;
+		wcross_name_changedonetime = 0;
+		wcross_name_alpha_goal_prev = 0;
+		wcross_name_alpha_goal_prev_prev = 0;
+		wcross_resolution_goal_prev = 0;
+		wcross_resolution_goal_prev_prev = 0;
+	}
+}
 
 #define BUTTON_3 4
 #define BUTTON_4 8
@@ -430,8 +965,7 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	float fov;
-	float f, i, j;
-	vector v;
+	float f, i;
 	vector vf_size, vf_min;
 	float a;
 
@@ -1172,532 +1706,9 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	// varying sound pitch
-
-	// accumulate damage with each stat update
-	static float unaccounted_damage = 0;
-	float unaccounted_damage_new = getstati(STAT_DAMAGE_DEALT_TOTAL);
-	static float damage_dealt_time_prev = 0;
-	float damage_dealt_time = getstatf(STAT_HIT_TIME);
-	if (damage_dealt_time != damage_dealt_time_prev)
-	{
-		unaccounted_damage += unaccounted_damage_new;
-		dprint("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
-	}
-	damage_dealt_time_prev = damage_dealt_time;
-
-	// prevent hitsound when switching spectatee
-	static float spectatee_status_prev = 0;
-	if (spectatee_status != spectatee_status_prev)
-		unaccounted_damage = 0;
-	spectatee_status_prev = spectatee_status;
-
-	static float hitsound_time_prev = 0;
-	if (COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
-	{
-		if (autocvar_cl_hitsound && unaccounted_damage)
-		{
-			// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
-			float a = autocvar_cl_hitsound_max_pitch;
-			float b = autocvar_cl_hitsound_min_pitch;
-			float c = autocvar_cl_hitsound_nom_damage;
-			float x = unaccounted_damage;
-			float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
-
-			// if sound variation is disabled, set pitch_shift to 1
-			if (autocvar_cl_hitsound == 1)
-				pitch_shift = 1;
-
-			// if pitch shift is reversed, mirror in (max-min)/2 + min
-			if (autocvar_cl_hitsound == 3)
-			{
-				float mirror_value = (a-b)/2 + b;
-				pitch_shift = mirror_value + (mirror_value - pitch_shift);
-			}
-
-			dprint("dmg total (dmg): ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), "), pitch shift: ", ftos(pitch_shift), "\n");
-
-			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
-			// todo: normalize sound pressure levels? seems unnecessary
-
-			sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
-		}
-		unaccounted_damage = 0;
-		hitsound_time_prev = time;
-	}
-
-	static float typehit_time_prev = 0;
-	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
-	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
-	{
-		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
-		typehit_time_prev = typehit_time;
-	}
-
-	//else
-	{
-		if(getstati(STAT_FROZEN))
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		else if (getstatf(STAT_HEALING_ORB)>time)
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
-		if(!intermission)
-		if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
-		{
-			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
-		}
-		else if(getstatf(STAT_REVIVE_PROGRESS))
-		{
-			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
-		}
-
-		if(autocvar_r_letterbox == 0)
-			if(autocvar_viewsize < 120)
-				CSQC_common_hud();
-
-		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL)
-		{
-			if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
-				return;
-
-			string wcross_style;
-			float wcross_alpha, wcross_resolution;
-			wcross_style = autocvar_crosshair;
-			if (wcross_style == "0")
-				return;
-			wcross_resolution = autocvar_crosshair_size;
-			if (wcross_resolution == 0)
-				return;
-			wcross_alpha = autocvar_crosshair_alpha;
-			if (wcross_alpha == 0)
-				return;
-
-			// TrueAim check
-			float shottype;
-
-			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
-			wcross_origin_z = 0;
-			if(autocvar_crosshair_hittest)
-			{
-				vector wcross_oldorigin;
-				wcross_oldorigin = wcross_origin;
-				shottype = TrueAimCheck();
-				if(shottype == SHOTTYPE_HITWORLD)
-				{
-					v = wcross_origin - wcross_oldorigin;
-					v_x /= vid_conwidth;
-					v_y /= vid_conheight;
-					if(vlen(v) > 0.01)
-						shottype = SHOTTYPE_HITOBSTRUCTION;
-				}
-				if(!autocvar_crosshair_hittest_showimpact)
-					wcross_origin = wcross_oldorigin;
-			}
-			else
-				shottype = SHOTTYPE_HITWORLD;
-
-			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
-			string wcross_name = "";
-			float wcross_scale, wcross_blur;
-
-			if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
-			{
-				e = get_weaponinfo(switchingweapon);
-				if(e)
-				{
-					if(autocvar_crosshair_per_weapon)
-					{
-						// WEAPONTODO: access these through some general settings (with non-balance config settings)
-						//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-						//if (wcross_resolution == 0)
-							//return;
-
-						//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-						wcross_resolution *= e.w_crosshair_size;
-						wcross_name = e.w_crosshair;
-					}
-				}
-			}
-
-			if(wcross_name == "")
-				wcross_name = strcat("gfx/crosshair", wcross_style);
-
-			// MAIN CROSSHAIR COLOR DECISION
-			switch(autocvar_crosshair_color_special)
-			{
-				case 1: // crosshair_color_per_weapon
-				{
-					if(e)
-					{
-						wcross_color = e.wpcolor;
-						break;
-					}
-					else { goto normalcolor; }
-				}
-
-				case 2: // crosshair_color_by_health
-				{
-					float x = getstati(STAT_HEALTH);
-
-					//x = red
-					//y = green
-					//z = blue
-
-					wcross_color_z = 0;
-
-					if(x > 200)
-					{
-						wcross_color_x = 0;
-						wcross_color_y = 1;
-					}
-					else if(x > 150)
-					{
-						wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
-						wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
-					}
-					else if(x > 100)
-					{
-						wcross_color_x = 1 - (x-100)*0.02 * 0.6;
-						wcross_color_y = 1 - (x-100)*0.02 * 0.1;
-						wcross_color_z = 1 - (x-100)*0.02;
-					}
-					else if(x > 50)
-					{
-						wcross_color_x = 1;
-						wcross_color_y = 1;
-						wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
-					}
-					else if(x > 20)
-					{
-						wcross_color_x = 1;
-						wcross_color_y = (x-20)*90/27/100;
-						wcross_color_z = (x-20)*90/27/100 * 0.2;
-					}
-					else
-					{
-						wcross_color_x = 1;
-						wcross_color_y = 0;
-					}
-					break;
-				}
-
-				case 3: // crosshair_color_rainbow
-				{
-					if(time >= rainbow_last_flicker)
-					{
-						rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
-						rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
-					}
-					wcross_color = rainbow_prev_color;
-					break;
-				}
-				:normalcolor
-				default: { wcross_color = stov(autocvar_crosshair_color); break; }
-			}
-
-			if(autocvar_crosshair_effect_scalefade)
-			{
-				wcross_scale = wcross_resolution;
-				wcross_resolution = 1;
-			}
-			else
-			{
-				wcross_scale = 1;
-			}
-
-			if(autocvar_crosshair_pickup)
-			{
-				float stat_pickup_time = getstatf(STAT_LAST_PICKUP);
-
-				if(pickup_crosshair_time < stat_pickup_time)
-				{
-					if(time - stat_pickup_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
-						pickup_crosshair_size = 1;
-
-					pickup_crosshair_time = stat_pickup_time;
-				}
-
-				if(pickup_crosshair_size > 0)
-					pickup_crosshair_size -= autocvar_crosshair_pickup_speed * frametime;
-				else
-					pickup_crosshair_size = 0;
-
-				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
-			}
-
-			// todo: make crosshair hit indication dependent on damage dealt
-			if(autocvar_crosshair_hitindication)
-			{
-				vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
-
-				if(unaccounted_damage)
-				{
-					hitindication_crosshair_size = 1;
-				}
-
-				if(hitindication_crosshair_size > 0)
-					hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
-				else
-					hitindication_crosshair_size = 0;
-
-				wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
-				wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
-				wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
-				wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
-			}
-
-			if(shottype == SHOTTYPE_HITENEMY)
-				wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
-			if(shottype == SHOTTYPE_HITTEAM)
-				wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
-
-			f = fabs(autocvar_crosshair_effect_time);
-			if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
-			{
-				wcross_changedonetime = time + f;
-			}
-			if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
-			{
-				wcross_name_changestarttime = time;
-				wcross_name_changedonetime = time + f;
-				if(wcross_name_goal_prev_prev)
-					strunzone(wcross_name_goal_prev_prev);
-				wcross_name_goal_prev_prev = wcross_name_goal_prev;
-				wcross_name_goal_prev = strzone(wcross_name);
-				wcross_name_alpha_goal_prev_prev = wcross_name_alpha_goal_prev;
-				wcross_resolution_goal_prev_prev = wcross_resolution_goal_prev;
-				wcross_resolution_goal_prev = wcross_resolution;
-			}
-
-			wcross_scale_goal_prev = wcross_scale;
-			wcross_alpha_goal_prev = wcross_alpha;
-			wcross_color_goal_prev = wcross_color;
-
-			if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
-			{
-				wcross_blur = 1;
-				wcross_alpha *= 0.75;
-			}
-			else
-				wcross_blur = 0;
-			// *_prev is at time-frametime
-			// * is at wcross_changedonetime+f
-			// what do we have at time?
-			if(time < wcross_changedonetime)
-			{
-				f = frametime / (wcross_changedonetime - time + frametime);
-				wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
-				wcross_alpha = f * wcross_alpha + (1 - f) * wcross_alpha_prev;
-				wcross_color = f * wcross_color + (1 - f) * wcross_color_prev;
-			}
-
-			wcross_scale_prev = wcross_scale;
-			wcross_alpha_prev = wcross_alpha;
-			wcross_color_prev = wcross_color;
-
-			wcross_scale *= 1 - autocvar__menu_alpha;
-			wcross_alpha *= 1 - autocvar__menu_alpha;
-			wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
-
-			if(wcross_scale >= 0.001 && wcross_alpha >= 0.001)
-			{
-				// crosshair rings for weapon stats
-				if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
-				{
-					// declarations and stats
-					float ring_value = 0, ring_scale = 0, ring_alpha = 0, ring_inner_value = 0, ring_inner_alpha = 0;
-					string ring_image = string_null, ring_inner_image = string_null;
-					vector ring_rgb = '0 0 0', ring_inner_rgb = '0 0 0';
-
-					ring_scale = autocvar_crosshair_ring_size;
-
-					float weapon_clipload, weapon_clipsize;
-					weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
-					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
-
-					float ok_ammo_charge, ok_ammo_chargepool;
-					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
-
-					float vortex_charge, vortex_chargepool;
-					vortex_charge = getstatf(STAT_VORTEX_CHARGE);
-					vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
-
-					float arc_heat = getstatf(STAT_ARC_HEAT);
-
-					if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
-						vortex_charge_movingavg = vortex_charge;
-
-
-					// handle the values
-					if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
-					{
-						if (vortex_chargepool || use_vortex_chargepool) {
-							use_vortex_chargepool = 1;
-							ring_inner_value = vortex_chargepool;
-						} else {
-							vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * vortex_charge;
-							ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (vortex_charge - vortex_charge_movingavg), 1);
-						}
-
-						ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
-						ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
-						ring_inner_image = "gfx/crosshair_ring_inner.tga";
-
-						// draw the outer ring to show the current charge of the weapon
-						ring_value = vortex_charge;
-						ring_alpha = autocvar_crosshair_ring_vortex_alpha;
-						ring_rgb = wcross_color;
-						ring_image = "gfx/crosshair_ring_nexgun.tga";
-					}
-					else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
-					{
-						ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
-						ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
-						ring_rgb = wcross_color;
-						ring_image = "gfx/crosshair_ring.tga";
-					}
-					else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
-					{
-						ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
-						ring_alpha = autocvar_crosshair_ring_hagar_alpha;
-						ring_rgb = wcross_color;
-						ring_image = "gfx/crosshair_ring.tga";
-					}
-					else if (ok_ammo_charge)
-					{
-						ring_value = ok_ammo_chargepool;
-						ring_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_rgb = wcross_color;
-						ring_image = "gfx/crosshair_ring.tga";
-					}
-					else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
-					{
-						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
-						ring_scale = autocvar_crosshair_ring_reload_size;
-						ring_alpha = autocvar_crosshair_ring_reload_alpha;
-						ring_rgb = wcross_color;
-
-						// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
-						// if a new image for another weapon is added, add the code (and its respective file/value) here
-						if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
-							ring_image = "gfx/crosshair_ring_rifle.tga";
-						else
-							ring_image = "gfx/crosshair_ring.tga";
-					}
-					else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
-					{
-						ring_value = arc_heat;
-						ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
-							arc_heat*autocvar_crosshair_ring_arc_hot_alpha;
-						ring_rgb = (1-arc_heat)*wcross_color + arc_heat*autocvar_crosshair_ring_arc_hot_color;
-						ring_image = "gfx/crosshair_ring.tga";
-					}
-
-					// if in weapon switch animation, fade ring out/in
-					if(autocvar_crosshair_effect_time > 0)
-					{
-						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
-						if (!(f < 1))
-						{
-							wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
-						}
-
-						if(wcross_ring_prev)
-						{
-							if(f < 1)
-								ring_alpha *= fabs(1 - bound(0, f, 1));
-						}
-						else
-						{
-							if(f < 1)
-								ring_alpha *= bound(0, f, 1);
-						}
-					}
-
-					if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-						DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
-
-					if (ring_value)
-						DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
-				}
-
-#define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-				do \
-				{ \
-					if(wcross_blur > 0) \
-					{ \
-						for(i = -2; i <= 2; ++i) \
-						for(j = -2; j <= 2; ++j) \
-						M(i,j,sz,wcross_name,wcross_alpha*0.04); \
-					} \
-					else \
-					{ \
-						M(0,0,sz,wcross_name,wcross_alpha); \
-					} \
-				} \
-				while(0)
-
-#define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-				drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
-
-#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
-				CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
-
-				if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
-				{
-					f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
-					wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
-					CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
-					f = 1 - f;
-				}
-				else
-				{
-					f = 1;
-				}
-				wcross_name_alpha_goal_prev = f;
-
-				wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
-				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
-
-				if(autocvar_crosshair_dot)
-				{
-					vector wcross_color_old;
-					wcross_color_old = wcross_color;
-
-					if((autocvar_crosshair_dot_color_custom) && (autocvar_crosshair_dot_color != "0"))
-						wcross_color = stov(autocvar_crosshair_dot_color);
-
-					CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
-					// FIXME why don't we use wcross_alpha here?cl_notice_run();
-					wcross_color = wcross_color_old;
-				}
-			}
-		}
-		else
-		{
-			wcross_scale_prev = 0;
-			wcross_alpha_prev = 0;
-			wcross_scale_goal_prev = 0;
-			wcross_alpha_goal_prev = 0;
-			wcross_changedonetime = 0;
-			if(wcross_name_goal_prev)
-				strunzone(wcross_name_goal_prev);
-			wcross_name_goal_prev = string_null;
-			if(wcross_name_goal_prev_prev)
-				strunzone(wcross_name_goal_prev_prev);
-			wcross_name_goal_prev_prev = string_null;
-			wcross_name_changestarttime = 0;
-			wcross_name_changedonetime = 0;
-			wcross_name_alpha_goal_prev = 0;
-			wcross_name_alpha_goal_prev_prev = 0;
-			wcross_resolution_goal_prev = 0;
-			wcross_resolution_goal_prev_prev = 0;
-		}
-	}
+	UpdateDamage();
+	UpdateHitsound();
+	UpdateCrosshair();
 
 	if(NextFrameCommand)
 	{
