@@ -61,6 +61,7 @@ void SUB_UseTargets()
 //
 // print the message
 //
+	if(self)
 	if(IS_PLAYER(activator) && self.message != "")
 	if(IS_REAL_CLIENT(activator))
 	{
@@ -203,8 +204,8 @@ void multi_use()
 
 void multi_touch()
 {
-	if (!(self.spawnflags & 2))
-		if (!other.iscreature)
+	if(!(self.spawnflags & 2))
+	if(!other.iscreature)
 			return;
 
 	if(self.team)
@@ -384,7 +385,7 @@ void counter_use()
 	{
 		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
-			
+
 		self.enemy = activator;
 		multi_trigger ();
 	}
@@ -2051,9 +2052,9 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	for(ear = magicears; ear; ear = ear.enemy)
 	{
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
-		if (!(ear.spawnflags & 64))
-			if(magicear_matched)
-				return msgout;
+		if(!(ear.spawnflags & 64))
+		if(magicear_matched)
+			return msgout;
 		msgin = msgout;
 	}
 	return msgin;

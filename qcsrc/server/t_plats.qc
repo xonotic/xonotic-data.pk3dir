@@ -1176,7 +1176,7 @@ void door_touch()
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
-			centerprint(other, self.message);
+			centerprint(other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
 }
