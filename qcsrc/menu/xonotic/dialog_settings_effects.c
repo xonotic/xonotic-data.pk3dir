@@ -130,8 +130,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_cubemaps_extra", _("Extra reflective effects")));
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
 			setDependent(e, "cl_decals", 1, 1);

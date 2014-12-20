@@ -9041,15 +9041,6 @@ effect arc_lightning // impact sparks (underwater)
 	airfriction 5
 	liquidfriction 5
 
-effect arc_beam // beam core
-	type beam
-	countabsolute 1
-	tex 200 200
-	color 0xFFFFFF 0xFFFFFF
-	size 4 4
-	alpha 512 512 0
-	time 0.005 0.005
-
 effect arc_beam // sparks on beam
 	type spark
 	stretchfactor 1
