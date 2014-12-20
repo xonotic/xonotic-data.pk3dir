@@ -375,10 +375,6 @@ entity nightvision_noise, nightvision_noise2;
 
 #define MAX_TIME_DIFF 5
 float pickup_crosshair_time, pickup_crosshair_size;
-float hitsound_time_prev;
-float spectatee_status_prev; // for preventing hitsound when switching spectatee
-float damage_dealt_total, damage_dealt_total_prev;
-float typehit_time, typehit_time_prev;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
 
@@ -1177,83 +1173,62 @@ void CSQC_UpdateView(float w, float h)
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
 	// varying sound pitch
-	damage_dealt_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
-	
-	// detect overflow on server side
-	if (damage_dealt_total < damage_dealt_total_prev)
+
+	// accumulate damage with each stat update
+	static float unaccounted_damage = 0;
+	float unaccounted_damage_new = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	static float damage_dealt_time_prev = 0;
+	float damage_dealt_time = getstatf(STAT_HIT_TIME);
+	if (damage_dealt_time != damage_dealt_time_prev)
 	{
-		dprint("resetting dmg total: ", ftos(damage_dealt_total), " prev: ", ftos(damage_dealt_total_prev), "\n");
-		damage_dealt_total_prev = 0;
+		unaccounted_damage += unaccounted_damage_new;
+		dprint("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
 	}
+	damage_dealt_time_prev = damage_dealt_time;
 
 	// prevent hitsound when switching spectatee
+	static float spectatee_status_prev = 0;
 	if (spectatee_status != spectatee_status_prev)
-	{
-		damage_dealt_total_prev = damage_dealt_total;
-	}
+		unaccounted_damage = 0;
 	spectatee_status_prev = spectatee_status;
 
-	// amount of damage since last hit sound
-	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
-	
-
-	if (autocvar_cl_hitsound == 1)
+	static float hitsound_time_prev = 0;
+	if (COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		if ( time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time )
-		if ( damage_dealt_total > 0 )
+		if (autocvar_cl_hitsound && unaccounted_damage)
 		{
-			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
-			hitsound_time_prev = time;
-		}
-	}
-	else if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
-	{
-		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
-		float a, b, c, x;
-		a = autocvar_cl_hitsound_max_pitch;
-		b = autocvar_cl_hitsound_min_pitch;
-		c = autocvar_cl_hitsound_nom_damage;
-		x = unaccounted_damage;
-		float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
-		
-		// if sound variation is disabled, set pitch_shift to 1
-		if (autocvar_cl_hitsound == 1)
-		{
-			pitch_shift = 1;
-		}
-		
-		// if pitch shift is reversed, mirror in (max-min)/2 + min
-		if (autocvar_cl_hitsound == 3)
-		{
-			float mirror_value = (a-b)/2 + b;
-			pitch_shift = mirror_value + (mirror_value - pitch_shift);
-		}
-		
-		dprint("dmg total (dmg): ", ftos(damage_dealt_total), " (+", ftos(unaccounted_damage), "), pitch shift: ", ftos(pitch_shift), "\n");
-		
-		// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
-		// todo: normalize sound pressure levels? seems unnecessary
-		
-		// scale to fit function interface
-		float param_pitch_shift = pitch_shift * 100;
-		
-		// play sound
-		sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, param_pitch_shift, 0);
-		
-		// track damage accounted for
-		damage_dealt_total_prev = damage_dealt_total;
+			// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+			float a = autocvar_cl_hitsound_max_pitch;
+			float b = autocvar_cl_hitsound_min_pitch;
+			float c = autocvar_cl_hitsound_nom_damage;
+			float x = unaccounted_damage;
+			float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
 
-		// remember when this sound was played to prevent sound spam
+			// if sound variation is disabled, set pitch_shift to 1
+			if (autocvar_cl_hitsound == 1)
+				pitch_shift = 1;
+
+			// if pitch shift is reversed, mirror in (max-min)/2 + min
+			if (autocvar_cl_hitsound == 3)
+			{
+				float mirror_value = (a-b)/2 + b;
+				pitch_shift = mirror_value + (mirror_value - pitch_shift);
+			}
+
+			dprint("dmg total (dmg): ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), "), pitch shift: ", ftos(pitch_shift), "\n");
+
+			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
+			// todo: normalize sound pressure levels? seems unnecessary
+
+			sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+		}
+		unaccounted_damage = 0;
 		hitsound_time_prev = time;
 	}
-	else if (autocvar_cl_hitsound == 0)
-	{
-		// forget the damage to prevent hitsound when enabling it
-		damage_dealt_total_prev = damage_dealt_total;
-	}
-	
-	typehit_time = getstatf(STAT_TYPEHIT_TIME);
-	if(typehit_time - typehit_time_prev > autocvar_cl_hitsound_antispam_time)
+
+	static float typehit_time_prev = 0;
+	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
