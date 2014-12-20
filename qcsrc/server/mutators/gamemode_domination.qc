@@ -9,9 +9,9 @@ void set_dom_state(entity e)
 	e.dom_total_pps = total_pps;
 	e.dom_pps_red = pps_red;
 	e.dom_pps_blue = pps_blue;
-	if(c3 >= 0)
+	if(domination_teams >= 3)
 		e.dom_pps_yellow = pps_yellow;
-	if(c4 >= 0)
+	if(domination_teams >= 4)
 		e.dom_pps_pink = pps_pink;
 }
 
@@ -34,7 +34,7 @@ void dompoint_captured ()
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-	
+
 	float points, wait_time;
 	if (autocvar_g_domination_point_amt)
 		points = autocvar_g_domination_point_amt;
@@ -45,11 +45,10 @@ void dompoint_captured ()
 	else
 		wait_time = self.wait;
 
-	bprint("^3", head.netname, "^3", self.message);
-	if (points != 1)
-		bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
+	if(domination_roundbased)
+		bprint(sprintf("^3%s^3%s\n", head.netname, self.message));
 	else
-		bprint(" ^7(", ftos(points), " point every ", ftos(wait_time), " seconds)\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, self.message, points, wait_time);
 
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
@@ -75,7 +74,7 @@ void dompoint_captured ()
 	SUB_UseTargets ();
 	self.delay = old_delay;
 	self.team = old_team;
-	
+
 	switch(self.team)
 	{
 		case NUM_TEAM_1: msg = "dom-red"; break;
@@ -85,7 +84,7 @@ void dompoint_captured ()
 	}
 
 	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
-	
+
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
 	{
@@ -110,6 +109,7 @@ void dompoint_captured ()
 				break;
 			case NUM_TEAM_4:
 				pps_pink += points/wait_time;
+				break;
 		}
 		total_pps += points/wait_time;
 	}
@@ -159,6 +159,7 @@ void dompointthink()
 
 	// give credit to the team
 	// NOTE: this defaults to 0
+	if (!domination_roundbased)
 	if (self.goalentity.netname != "")
 	{
 		if(autocvar_g_domination_point_amt)
@@ -182,9 +183,12 @@ void dompointthink()
 void dompointtouch()
 {
 	entity head;
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (other.health < 1)
+		return;
+
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
 	if(time < self.captime + 0.3)
@@ -286,6 +290,94 @@ void dom_controlpoint_setup()
 	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
 }
 
+float total_controlpoints, redowned, blueowned, yellowowned, pinkowned;
+void Domination_count_controlpoints()
+{
+	entity e;
+	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
+	for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
+	{
+		++total_controlpoints;
+		redowned += (e.goalentity.team == NUM_TEAM_1);
+		blueowned += (e.goalentity.team == NUM_TEAM_2);
+		yellowowned += (e.goalentity.team == NUM_TEAM_3);
+		pinkowned += (e.goalentity.team == NUM_TEAM_4);
+	}
+}
+
+float Domination_GetWinnerTeam()
+{
+	float winner_team = 0;
+	if(redowned == total_controlpoints)
+		winner_team = NUM_TEAM_1;
+	if(blueowned == total_controlpoints)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_2;
+	}
+	if(yellowowned == total_controlpoints)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(pinkowned == total_controlpoints)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no control points left?
+}
+
+#define DOM_OWNED_CONTROLPOINTS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
+#define DOM_OWNED_CONTROLPOINTS_OK() (DOM_OWNED_CONTROLPOINTS() < total_controlpoints)
+float Domination_CheckWinner()
+{
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+		return 1;
+	}
+
+	Domination_count_controlpoints();
+
+	float winner_team = Domination_GetWinnerTeam();
+
+	if(winner_team == -1)
+		return 0;
+
+	if(winner_team > 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		TeamScore_AddToTeam(winner_team, ST_DOM_CAPS, +1);
+	}
+	else if(winner_team == -1)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+	}
+
+	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+
+	return 1;
+}
+
+float Domination_CheckPlayers()
+{
+	return 1;
+}
+
+void Domination_RoundStart()
+{
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.player_blocked = 0;
+}
+
 //go to best items, or control points you don't own
 void havocbot_role_dom()
 {
@@ -302,6 +394,35 @@ void havocbot_role_dom()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
+}
+
+MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
+{
+	ret_float = domination_teams;
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(dom_ResetMap)
+{
+	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
+	FOR_EACH_PLAYER(self)
+	{
+		PutClientInServer();
+		self.player_blocked = 1;
+		if(IS_REAL_CLIENT(self))
+			set_dom_state(self);
+	}
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
+{
+	if(domination_roundbased)
+	if(!round_handler_IsRoundStarted())
+		self.player_blocked = 1;
+	else
+		self.player_blocked = 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ClientConnect)
@@ -388,20 +509,29 @@ void spawnfunc_dom_team()
 }
 
 // scoreboard setup
-void ScoreRules_dom()
+void ScoreRules_dom(float teams)
 {
-	float sp_domticks, sp_score;
-	sp_score = sp_domticks = 0;
-	if(autocvar_g_domination_disable_frags)
-		sp_domticks = SFL_SORT_PRIO_PRIMARY;
+	if(domination_roundbased)
+	{
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
+		ScoreRules_basics_end();
+	}
 	else
-		sp_score = SFL_SORT_PRIO_PRIMARY;
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-	ScoreRules_basics_end();
+	{
+		float sp_domticks, sp_score;
+		sp_score = sp_domticks = 0;
+		if(autocvar_g_domination_disable_frags)
+			sp_domticks = SFL_SORT_PRIO_PRIMARY;
+		else
+			sp_score = SFL_SORT_PRIO_PRIMARY;
+		ScoreRules_basics(teams, sp_score, sp_score, TRUE);
+		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
+		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
+		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
+		ScoreRules_basics_end();
+	}
 }
 
 // code from here on is just to support maps that don't have control point and team entities
@@ -446,15 +576,13 @@ void dom_spawnpoint(vector org)
 }
 
 // spawn some default teams if the map is not set up for domination
-void dom_spawnteams()
+void dom_spawnteams(float teams)
 {
-	float numteams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
-
 	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
 	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-	if(numteams > 2)
+	if(teams >= 3)
 		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
-	if(numteams > 3)
+	if(teams >= 4)
 		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
@@ -465,10 +593,28 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
 		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
-		dom_spawnteams();
+		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
+		dom_spawnteams(domination_teams);
 	}
 	
-	ScoreRules_dom();
+	CheckAllowedTeams(world);
+	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+
+	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
+	if(domination_teams >= 3) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	if(domination_teams >= 4) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
+
+	domination_roundbased = autocvar_g_domination_roundbased;
+
+	ScoreRules_dom(domination_teams);
+
+	if(domination_roundbased)
+	{
+		round_handler_Spawn(Domination_CheckPlayers, Domination_CheckWinner, Domination_RoundStart);
+		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+	}
 }
 
 void dom_Initialize()
@@ -479,22 +625,19 @@ void dom_Initialize()
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	
-	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
-	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
-	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
-	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
-	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
-	
+
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
 MUTATOR_DEFINITION(gamemode_domination)
 {
+	MUTATOR_HOOK(GetTeamCount, dom_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, dom_BotRoles, CBC_ORDER_ANY);
-	
+	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
@@ -504,7 +647,8 @@ MUTATOR_DEFINITION(gamemode_domination)
 
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

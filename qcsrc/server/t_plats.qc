@@ -95,7 +95,7 @@ void plat_go_up()
 
 void plat_center_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
@@ -110,7 +110,7 @@ void plat_center_touch()
 
 void plat_outside_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
@@ -258,7 +258,7 @@ void spawnfunc_func_plat()
 	self.angles = '0 0 0';
 
 	self.classname = "plat";
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
@@ -414,6 +414,10 @@ void spawnfunc_func_train()
 	if (!self.speed)
 		self.speed = 100;
 
+	if (!InitMovingBrushTrigger())
+		return;
+	self.effects |= EF_LOWPRECISION;
+	
 	if (self.spawnflags & 2)
 	{
 		self.platmovetype_turn = TRUE;
@@ -421,10 +425,6 @@ void spawnfunc_func_train()
 	}
 	else
 		self.view_ofs = self.mins;
-
-	if not(InitMovingBrushTrigger())
-		return;
-	self.effects |= EF_LOWPRECISION;
 
 	// wait for targets to spawn
 	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
@@ -448,9 +448,9 @@ void spawnfunc_func_train()
 
 void func_rotating_setactive(float astate)
 {
-	
+
 	if (astate == ACTIVE_TOGGLE)
-	{		
+	{
 		if(self.active == ACTIVE_ACTIVE)
 			self.active = ACTIVE_NOT;
 		else
@@ -458,8 +458,8 @@ void func_rotating_setactive(float astate)
 	}
 	else
 		self.active = astate;
-		
-	if(self.active  == ACTIVE_NOT)		
+
+	if(self.active  == ACTIVE_NOT)
 		self.avelocity = '0 0 0';
 	else
 		self.avelocity = self.pos1;
@@ -480,10 +480,10 @@ void spawnfunc_func_rotating()
 		precache_sound(self.noise);
 		ambientsound(self.origin, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
-	
+
 	self.active = ACTIVE_ACTIVE;
 	self.setactive = func_rotating_setactive;
-	
+
 	if (!self.speed)
 		self.speed = 100;
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
@@ -495,9 +495,9 @@ void spawnfunc_func_rotating()
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
-	
+
 	self.pos1 = self.avelocity;
-    
+
     if(self.dmg && (self.message == ""))
         self.message = " was squished";
     if(self.dmg && (self.message2 == ""))
@@ -509,7 +509,7 @@ void spawnfunc_func_rotating()
 
     self.dmgtime2 = time;
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	// no EF_LOWPRECISION here, as rounding angles is bad
 
@@ -527,13 +527,13 @@ void func_bobbing_controller_think()
 {
 	vector v;
 	self.nextthink = time + 0.1;
-	
-	if not (self.owner.active == ACTIVE_ACTIVE)
+
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
-		
+
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
@@ -588,7 +588,7 @@ void spawnfunc_func_bobbing()
 	else // Z
 		self.movedir = '0 0 1' * self.height;
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	// wait for targets to spawn
@@ -612,7 +612,7 @@ void func_pendulum_controller_think()
 	float v;
 	self.nextthink = time + 0.1;
 
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if (!(self.owner.active == ACTIVE_ACTIVE))
 	{
 		self.owner.avelocity_x = 0;
 		return;
@@ -656,7 +656,7 @@ void spawnfunc_func_pendulum()
 	self.blocked = generic_plat_blocked;
 
 	self.avelocity_z = 0.0000001;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	if(!self.freq)
@@ -745,7 +745,7 @@ void button_reset()
 
 void button_use()
 {
-	if not (self.active == ACTIVE_ACTIVE)
+	if(self.active != ACTIVE_ACTIVE)
 		return;
 
 	self.enemy = activator;
@@ -756,7 +756,7 @@ void button_touch()
 {
 	if (!other)
 		return;
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if(other.velocity * self.movedir < 0)
 		return;
@@ -788,7 +788,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 "speed"		override the default 40 speed
 "wait"		override the default 1 second wait (-1 = never return)
 "lip"		override the default 4 pixel lip remaining at end of move
-"health"	if set, the button must be killed instead of touched. If set to -1, the button will fire on ANY attack, even damageless ones like the MinstaGib laser
+"health"	if set, the button must be killed instead of touched. If set to -1, the button will fire on ANY attack, even damageless ones like the InstaGib laser
 "sounds"
 0) steam metal
 1) wooden clunk
@@ -799,7 +799,7 @@ void spawnfunc_func_button()
 {
 	SetMovedir ();
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -992,22 +992,22 @@ ACTIVATION FUNCTIONS
 
 float door_check_keys(void) {
 	local entity door;
-	
-	
+
+
 	if (self.owner)
 		door = self.owner;
 	else
 		door = self;
-	
+
 	// no key needed
-	if not(door.itemkeys)
+	if (!door.itemkeys)
 		return TRUE;
 
 	// this door require a key
 	// only a player can have a key
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return FALSE;
-	
+
 	if (item_keys_usekey(door, other)) {
 		// some keys were used
 		if (other.key_door_messagetime <= time) {
@@ -1099,7 +1099,7 @@ void door_use()
 	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
-	
+
 	if (self.owner)
 	{
 		oself = self;
@@ -1113,16 +1113,16 @@ void door_use()
 void door_trigger_touch()
 {
 	if (other.health < 1)
-		if not(other.iscreature && other.deadflag == DEAD_NO)
+		if (!(other.iscreature && other.deadflag == DEAD_NO))
 			return;
 
 	if (time < self.attack_finished_single)
 		return;
-	
+
 	// check if door is locked
 	if (!door_check_keys())
 		return;
-	
+
 	self.attack_finished_single = time + 1;
 
 	activator = other;
@@ -1139,12 +1139,12 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
-	
+
 	if (self.itemkeys) {
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
-	
+
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1166,7 +1166,7 @@ Prints messages
 */
 void door_touch()
 {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1489,13 +1489,13 @@ void spawnfunc_func_door()
 		self.itemkeys |= ITEM_KEY_BIT(0);
 	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(1);
-		
+
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
 
 	self.max_health = self.health;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
@@ -1621,7 +1621,7 @@ void spawnfunc_func_door_rotating()
 
 	self.max_health = self.health;
 	self.avelocity = self.movedir;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.velocity = '0 0 0';
 	//self.effects |= EF_LOWPRECISION;
@@ -1839,7 +1839,7 @@ Prints messages
 */
 void secret_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if (self.attack_finished_single > time)
 		return;
@@ -1895,7 +1895,7 @@ void spawnfunc_func_door_secret()
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "door";
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -1940,9 +1940,9 @@ void func_fourier_controller_think()
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
 
@@ -1991,7 +1991,7 @@ void spawnfunc_func_fourier()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	self.active = ACTIVE_ACTIVE;
@@ -2073,9 +2073,9 @@ void func_vectormamamam_controller_think()
 {
 	self.nextthink = time + 0.1;
 
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
 
@@ -2154,7 +2154,7 @@ void spawnfunc_func_vectormamamam()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	// wait for targets to spawn

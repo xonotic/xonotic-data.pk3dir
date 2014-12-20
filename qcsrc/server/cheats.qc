@@ -50,7 +50,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
-	
+
 	// sv_clones
 	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
 		if(self.lip < sv_clones)
@@ -59,20 +59,20 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// haha
 	if(self.maycheat)
 		return 1;
-	
+
 	// sv_cheats
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprint(sprintf("Player %s^7 tried to use cheat 'impulse %d'\n", self.netname, i));
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", self.netname, i);
 	else if(argc)
-		bprint(sprintf("Player %s^7 tried to use cheat '%s'\n", self.netname, argv(0)));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", self.netname, argv(0));
 	else if(fr)
-		bprint(sprintf("Player %s^7 tried to use cheat frame %d\n", self.netname, fr));
+		bprintf("Player %s^7 tried to use cheat frame %d\n", self.netname, fr);
 	else
-		bprint(sprintf("Player %s^7 tried to use an unknown cheat\n", self.netname));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", self.netname);
 
 	return 0;
 }
@@ -140,6 +140,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_rockets = self.ammo_rockets;
 			self.personal.ammo_nails = self.ammo_nails;
 			self.personal.ammo_cells = self.ammo_cells;
+			self.personal.ammo_plasma = self.ammo_plasma;
 			self.personal.ammo_shells = self.ammo_shells;
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;
@@ -190,13 +191,14 @@ float CheatImpulse(float i)
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
 					self.fixangle = TRUE;
-					
+
 					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
 
 				self.ammo_rockets = self.personal.ammo_rockets;
 				self.ammo_nails = self.personal.ammo_nails;
 				self.ammo_cells = self.personal.ammo_cells;
+				self.ammo_plasma = self.personal.ammo_plasma;
 				self.ammo_shells = self.personal.ammo_shells;
 				self.ammo_fuel = self.personal.ammo_fuel;
 				self.health = self.personal.health;
@@ -264,7 +266,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
 			print("404 Sportsmanship not found.\n");

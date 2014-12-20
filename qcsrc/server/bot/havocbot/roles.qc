@@ -98,7 +98,10 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if (head.ammo_rockets && player.ammo_rockets > self.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && player.ammo_cells > self.ammo_cells )
+					if (head.ammo_cells && player.ammo_cells > self.ammo_cells)
+						continue;
+
+					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
 						continue;
 
 					discard = FALSE;
@@ -221,60 +224,19 @@ void havocbot_role_dm()
 	}
 }
 
-//Race:
-//go to next checkpoint, and annoy enemies
-.float race_checkpoint;
-void havocbot_role_race()
-{
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	entity e;
-	if (self.bot_strategytime < time)
-	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		/*
-		havocbot_goalrating_items(100, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(500, self.origin, 20000);
-		*/
-
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
-		{
-			if(e.cnt == self.race_checkpoint)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-			else if(self.race_checkpoint == -1)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-		}
-
-		navigation_goalrating_end();
-	}
-}
-
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
-}
-
-void havocbot_chooserole_race()
-{
-	self.havocbot_role = havocbot_role_race;
 }
 
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch

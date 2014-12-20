@@ -84,7 +84,7 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 	string a, b, c, s, bspname;
 	float n;
 	s = me.g_maplistCache;
-	if not(s)
+	if (!s)
 		return;
 	b = substring(s, i, 1);
 	if(b == "0")
@@ -98,7 +98,7 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 	strunzone(s);
 	me.g_maplistCache = strzone(strcat(a, b, c));
 	// TODO also update the actual cvar
-	if not((bspname = MapInfo_BSPName_ByID(i)))
+	if (!((bspname = MapInfo_BSPName_ByID(i))))
 		return;
 	if(b == "1")
 		cvar_set("g_maplist", strcat(bspname, " ", cvar_string("g_maplist")));
@@ -142,25 +142,24 @@ void XonoticMapList_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
-	{
 		if(where_x >= 0)
 			me.g_maplistCacheToggle(me, i);
-	}
+
 	if(where_x >= me.columnNameOrigin)
 		if(where_x <= 1)
-			{
-				if(i == me.lastClickedMap)
-					if(time < me.lastClickedTime + 0.3)
-					{
-						// DOUBLE CLICK!
-						// pop up map info screen
-						main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
-						DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
-						return;
-					}
-				me.lastClickedMap = i;
-				me.lastClickedTime = time;
-			}
+		{
+			if(i == me.lastClickedMap)
+				if(time < me.lastClickedTime + 0.3)
+				{
+					// DOUBLE CLICK!
+					// pop up map info screen
+					main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
+					DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+					return;
+				}
+			me.lastClickedMap = i;
+			me.lastClickedTime = time;
+		}
 }
 
 void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
@@ -275,7 +274,7 @@ void MapList_LoadMap(entity btn, entity me)
 		return;
 
 	m = MapInfo_BSPName_ByID(i);
-	if not(m)
+	if (!m)
 	{
 		print(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
@@ -301,19 +300,19 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	string ch, save;
 	if(me.nItems <= 0)
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
-	if(scan == K_ENTER || scan == K_KP_ENTER)
+	if(scan == K_MOUSE2 || scan == K_SPACE || scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 	}
-	else if(scan == K_SPACE)
+	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
 	{
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
 	else if(ascii == 43) // +
 	{
-		if not(me.g_maplistCacheQuery(me, me.selectedItem))
+		if (!me.g_maplistCacheQuery(me, me.selectedItem))
 			me.g_maplistCacheToggle(me, me.selectedItem);
 	}
 	else if(ascii == 45) // -
