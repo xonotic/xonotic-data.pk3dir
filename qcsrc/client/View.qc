@@ -423,7 +423,11 @@ float unaccounted_damage = 0;
 void UpdateDamage()
 {
 	// accumulate damage with each stat update
-	float unaccounted_damage_new = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	static float damage_total_prev = 0;
+	float damage_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
+	damage_total_prev = damage_total;
+
 	static float damage_dealt_time_prev = 0;
 	float damage_dealt_time = getstatf(STAT_HIT_TIME);
 	if (damage_dealt_time != damage_dealt_time_prev)

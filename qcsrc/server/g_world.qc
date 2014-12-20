@@ -2204,27 +2204,13 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
-		self.damage_dealt_total = 0;
-	
-		if(IS_SPEC(self))
+		entity e = IS_SPEC(self) ? self.enemy : self;
+		if(e.typehitsound)
+			self.typehit_time = time;
+		else if(e.damage_dealt)
 		{
-			if(self.enemy.typehitsound)
-				self.typehit_time = time;
-			else if(self.enemy.damage_dealt)
-			{
-				self.hit_time = time;
-				self.damage_dealt_total = ceil(self.enemy.damage_dealt);
-			}
-		}
-		else
-		{
-			if(self.typehitsound)
-				self.typehit_time = time;
-			else if(self.damage_dealt)
-			{
-				self.hit_time = time;
-				self.damage_dealt_total = ceil(self.damage_dealt);
-			}
+			self.hit_time = time;
+			self.damage_dealt_total += ceil(e.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
