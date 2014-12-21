@@ -159,24 +159,28 @@ void CheckWaterJump()
 .float multijump_count;
 void CheckPlayerJump()
 {
+	float was_flying = self.items & IT_USING_JETPACK;
+
+	if (self.cvar_cl_jetpack_jump < 2)
+		self.items &= ~IT_USING_JETPACK;
+
 	if (self.BUTTON_JUMP || self.BUTTON_JETPACK)
 	{
-		if (self.BUTTON_JUMP && (!PlayerJump() || self.multijump_count > 0) || self.BUTTON_JETPACK)
+		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
+		float activate = self.cvar_cl_jetpack_jump && air_jump && self.BUTTON_JUMP || self.BUTTON_JETPACK;
+		float has_fuel = !autocvar_g_jetpack_fuel || self.ammo_fuel || self.items & IT_UNLIMITED_WEAPON_AMMO;
+		if (self.jetpack_stopped) { }
+		else if (!has_fuel)
 		{
-			if (self.cvar_cl_jetpack_jump || self.BUTTON_JETPACK)
-			if (!self.jetpack_stopped && (!autocvar_g_jetpack_fuel || self.ammo_fuel > 0 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.frozen)
-			{
-				self.items |= IT_USING_JETPACK;
-			}
+			if (was_flying)
+				sprint(self, "You ran out of fuel for the ^2Jetpack\n");
 			else
-			{
-				// we get here if we ran out of ammo
-				if (!self.jetpack_stopped)
-					sprint(self, "You don't have any fuel for the ^2Jetpack\n");
-				self.jetpack_stopped = TRUE;
-				self.items &= ~IT_USING_JETPACK;
-			}
+				sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+			self.jetpack_stopped = TRUE;
+			self.items &= ~IT_USING_JETPACK;
 		}
+		else if (activate && !self.frozen)
+			self.items |= IT_USING_JETPACK;
 	}
 	else
 	{
@@ -779,8 +783,6 @@ void SV_PlayerPhysics()
 			return;
 		bot_think();
 	}
-
-	self.items &= ~IT_USING_JETPACK;
 
 	if(IS_PLAYER(self))
 	{

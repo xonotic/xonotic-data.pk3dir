@@ -89,7 +89,12 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
 			e.sendCvars = TRUE;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_jetpack_jump", _("Activate jetpack by pressing jump in the air")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Jetpack on jump:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_jetpack_jump"));
+			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, _("Air only"), "1");
+			e.addValue(e, _("All"), "2");
+			e.configureXonoticTextSliderValues(e);
 			e.sendCvars = TRUE;
 	me.TR(me);
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
