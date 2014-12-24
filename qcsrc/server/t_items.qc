@@ -1458,8 +1458,6 @@ void spawnfunc_item_fuel_regen(void)
 
 void spawnfunc_item_jetpack(void)
 {
-	if(g_grappling_hook)
-		return; // sorry, but these two can't coexist (same button); spawn fuel instead
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & IT_JETPACK)
