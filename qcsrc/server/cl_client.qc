@@ -1562,7 +1562,7 @@ void player_regen (void)
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
-		
+
 		max_mod = regen_mod_max;
 		regen_mod = regen_mod_regen;
 		rot_mod = regen_mod_rot;
@@ -1755,7 +1755,6 @@ float SpectateUpdate()
 
 	return 1;
 }
-
 
 float SpectateSet()
 {
@@ -2626,8 +2625,6 @@ void PlayerPostThink (void)
 		}
 	}
 	*/
-
-	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));

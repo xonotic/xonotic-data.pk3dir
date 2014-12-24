@@ -172,10 +172,10 @@ void CheckPlayerJump()
 		if (self.jetpack_stopped) { }
 		else if (!has_fuel)
 		{
-			if (was_flying)
-				sprint(self, "You ran out of fuel for the ^2Jetpack\n");
+			if (was_flying) // TODO: ran out of fuel message
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 			else
-				sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 			self.jetpack_stopped = TRUE;
 			self.items &= ~IT_USING_JETPACK;
 		}
@@ -1148,6 +1148,10 @@ void SV_PlayerPhysics()
 	}
 	else if (self.flags & FL_ONGROUND)
 	{
+		// we get here if we ran out of ammo
+		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
+
 		// walking
 		makevectors(self.v_angle_y * '0 1 0');
 		wishvel = v_forward * self.movement_x + v_right * self.movement_y;
@@ -1213,6 +1217,9 @@ void SV_PlayerPhysics()
 	else
 	{
 		float wishspeed0;
+		// we get here if we ran out of ammo
+		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 
 		if(maxspd_mod < 1)
 		{

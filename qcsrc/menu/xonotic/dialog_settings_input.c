@@ -3,7 +3,7 @@ CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticInputSettingsTab, rows, float, 14.5)
+	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticInputSettingsTab)
 entity makeXonoticInputSettingsTab();
@@ -32,8 +32,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Key Bindings")));
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, kb);
-	me.gotoRC(me, me.rows - 3, 0);
+		me.TD(me, me.rows - 3, 3, kb);
+	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
 			e.onClickEntity = kb;
