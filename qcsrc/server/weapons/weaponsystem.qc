@@ -891,7 +891,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 		return; // TODO
 
 	self.reload_ammo_min = sent_ammo_min;
-	self.reload_ammo_amount = e.reloading_ammo;;
+	self.reload_ammo_amount = e.reloading_ammo;
 	self.reload_time = e.reloading_time;
 	self.reload_sound = sent_sound;
 

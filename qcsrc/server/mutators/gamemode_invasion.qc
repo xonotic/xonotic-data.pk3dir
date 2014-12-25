@@ -126,7 +126,7 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 
-	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;;
+	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
