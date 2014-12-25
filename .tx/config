@@ -1,5 +1,5 @@
 [main]
-host = http://www.transifex.com
+host = https://www.transifex.com
 
 [xonotic.commonpot]
 file_filter = translations/xonotic.commonpot/<lang>..po

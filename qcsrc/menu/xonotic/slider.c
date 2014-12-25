@@ -16,6 +16,7 @@ CLASS(XonoticSlider) EXTENDS(Slider)
 	ATTRIB(XonoticSlider, cvarName, string, string_null)
 	METHOD(XonoticSlider, loadCvars, void(entity))
 	METHOD(XonoticSlider, saveCvars, void(entity))
+	ATTRIB(XonoticSlider, sendCvars, float, 0)
 
 	ATTRIB(XonoticSlider, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticSlider, disabledAlpha, float, SKINALPHA_DISABLED)
@@ -73,5 +74,7 @@ void XonoticSlider_saveCvars(entity me)
 		return;
 
 	cvar_set(me.cvarName, ftos(me.value));
+
+	CheckSendCvars(me, me.cvarName);
 }
 #endif

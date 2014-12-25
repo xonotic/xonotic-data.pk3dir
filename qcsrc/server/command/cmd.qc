@@ -150,7 +150,7 @@ void ClientCommand_join(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(!IS_PLAYER(self) && !lockteams)
+				if(!IS_PLAYER(self) && !lockteams && !gameover)
 				{
 					if(self.caplayer)
 						return;
@@ -508,7 +508,7 @@ void ClientCommand_selectteam(float request, float argc)
 											GetTeamCounts(self);
 											if(!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
 											{
-												sprint(self, "Cannot change to a larger/better/shinier team\n");
+												Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 												return;
 											}
 										}
