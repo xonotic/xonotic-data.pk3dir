@@ -25,10 +25,13 @@ float Physics_Valid(string thecvar)
 
 float Physics_ClientOption(entity pl, string option)
 {
-	if(Physics_Valid(pl.cvar_cl_physics) && (cvar_type(sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option)) & 1))
-		return cvar(sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option));
-	else
-		return cvar(strcat("sv_", option));
+	if (Physics_Valid(pl.cvar_cl_physics))
+	{
+		string var = sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option);
+		if (cvar_type(var) & 1)
+			return cvar(var);
+	}
+	return cvar(strcat("sv_", option));
 }
 
 /*
