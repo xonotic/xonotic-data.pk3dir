@@ -451,3 +451,6 @@ vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
 vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
 
 #define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
+
+// Returns the correct difference between two always increasing numbers
+#define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)
