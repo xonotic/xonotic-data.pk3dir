@@ -188,7 +188,7 @@ void trigger_push_touch()
 					found = TRUE;
 			if(!found)
 			{
-				other.(jumppadsused[mod(other.jumppadcount, NUM_JUMPPADSUSED)]) = self;
+				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = self;
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 

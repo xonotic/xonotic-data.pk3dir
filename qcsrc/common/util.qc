@@ -346,14 +346,14 @@ void db_close(float db)
 string db_get(float db, string pKey)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), pKey));
 }
 
 void db_put(float db, string pKey, string pValue)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
 }
 
@@ -2261,10 +2261,10 @@ const string XENCODE_22 = "0123456789abcdefABCDEF";
 string xencode(float f)
 {
 	float a, b, c, d;
-	d = mod(f, 22); f = floor(f / 22);
-	c = mod(f, 22); f = floor(f / 22);
-	b = mod(f, 22); f = floor(f / 22);
-	a = mod(f,  2); // f = floor(f /  2);
+	d = f % 22; f = floor(f / 22);
+	c = f % 22; f = floor(f / 22);
+	b = f % 22; f = floor(f / 22);
+	a = f %  2; // f = floor(f /  2);
 	return strcat(
 		"^",
 		substring(XENCODE_2,  a, 1),

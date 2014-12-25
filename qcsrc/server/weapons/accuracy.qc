@@ -94,7 +94,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
-	w = pow(2, mod(w, 24));
+	w = pow(2, w % 24);
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
 		if(IS_SPEC(a))

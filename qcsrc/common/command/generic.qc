@@ -153,7 +153,7 @@ void GenericCommand_qc_curl(float request, float argc)
 			{
 				curl_uri_get_exec[curl_uri_get_pos] = do_exec;
 				curl_uri_get_cvar[curl_uri_get_pos] = do_cvar;
-				curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
+				curl_uri_get_pos = (curl_uri_get_pos + 1) % (URI_GET_CURL_END - URI_GET_CURL + 1);
 			}
 			else
 				print(_("error creating curl handle\n"));

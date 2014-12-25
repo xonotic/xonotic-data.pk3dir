@@ -810,13 +810,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			}
 			if (!tab_backward)
 			{
-				level = mod(level + level_height, vid_conheight);
+				level = (level + level_height) % vid_conheight;
 				start_pos_x = 0;
 				candidate_pos_x = vid_conwidth;
 			}
 			else
 			{
-				level = mod(level - level_height, vid_conheight);
+				level = (level - level_height) % vid_conheight;
 				start_pos_x = vid_conwidth;
 				candidate_pos_x = 0;
 			}

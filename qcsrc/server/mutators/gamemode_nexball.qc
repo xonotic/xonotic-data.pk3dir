@@ -741,7 +741,7 @@ void W_Nexball_Attack(float t)
 		mi = autocvar_g_nexball_basketball_meter_minpower;
 		ma = max(mi, autocvar_g_nexball_basketball_meter_maxpower); // avoid confusion
 		//One triangle wave period with 1 as max
-		mul = 2 * mod(t, g_nexball_meter_period) / g_nexball_meter_period;
+		mul = 2 * (t % g_nexball_meter_period) / g_nexball_meter_period;
 		if(mul > 1)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
