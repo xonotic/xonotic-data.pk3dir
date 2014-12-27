@@ -83,7 +83,8 @@ void XonoticSoundList_getSounds(entity me)
 
 void XonoticSoundList_destroy(entity me)
 {
-	search_end(me.listSound);
+	if(me.listSound >= 0)
+		search_end(me.listSound);
 }
 
 void XonoticSoundList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
