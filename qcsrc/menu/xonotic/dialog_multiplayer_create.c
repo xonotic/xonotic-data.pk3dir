@@ -197,7 +197,6 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_CA:               x = TRUE; e.configureXonoticTextSlider(e, "g_ca_teams_override");          break;
 		case MAPINFO_TYPE_DOMINATION:       x = TRUE; e.configureXonoticTextSlider(e, "g_domination_teams_override");  break;
 		case MAPINFO_TYPE_FREEZETAG:        x = TRUE; e.configureXonoticTextSlider(e, "g_freezetag_teams_override");   break;
-		case MAPINFO_TYPE_KEEPAWAY:         x = TRUE; e.configureXonoticTextSlider(e, "g_keepaway_teams_override");    break;
 		case MAPINFO_TYPE_KEYHUNT:          x = TRUE; e.configureXonoticTextSlider(e, "g_keyhunt_teams_override");     break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = TRUE; e.configureXonoticTextSlider(e, "g_tdm_teams_override");         break;
 
