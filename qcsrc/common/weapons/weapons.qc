@@ -222,7 +222,7 @@ float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
 	float d;
 	e1 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[i]);
 	e2 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[j]);
-	d = mod(e1.impulse + 9, 10) - mod(e2.impulse + 9, 10);
+	d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if(d != 0)
 		return -d; // high impulse first!
 	return

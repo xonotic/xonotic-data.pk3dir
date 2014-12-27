@@ -3114,7 +3114,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		dt = mod(time - nb_pb_starttime, nb_pb_period);
+		dt = (time - nb_pb_starttime) % nb_pb_period;
 		// one period of positive triangle
 		p = 2 * dt / nb_pb_period;
 		if (p > 1)
@@ -3754,7 +3754,7 @@ void HUD_InfoMessages(void)
 		}
 
 		string blinkcolor;
-		if(mod(time, 1) >= 0.5)
+		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
@@ -4551,7 +4551,7 @@ void HUD_Main (void)
 			}
 			else if(hud_dock_color == "pants") {
 				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-				color = colormapPaletteColor(mod(f, 16), 1);
+				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
 				color = stov(hud_dock_color);

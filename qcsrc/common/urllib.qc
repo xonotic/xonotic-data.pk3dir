@@ -159,7 +159,7 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				url_fromid[i] = e;
 
 				// make sure this slot won't be reused quickly even on map change
-				cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
+				cvar_set("_urllib_nextslot", ftos((i + 1) % NUM_URL_ID));
 				break;
 		}
 	}
@@ -262,7 +262,7 @@ void url_fclose(entity e)
 			url_fromid[i] = e;
 
 			// make sure this slot won't be reused quickly even on map change
-			cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
+			cvar_set("_urllib_nextslot", ftos((i + 1) % NUM_URL_ID));
 		}
 		else
 		{
