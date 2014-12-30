@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
+"PO-Revision-Date: 2014-12-30 11:30+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
@@ -4832,7 +4832,7 @@ msgstr "Spezielle Arenen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
 msgid "with blaster"
-msgstr ""
+msgstr "mit Blaster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
@@ -6320,11 +6320,11 @@ msgstr "Auto-Springen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:92
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "Jetpack aktiveren durch Springen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:95
 msgid "Air only"
-msgstr ""
+msgstr "nur solange in der Luft"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:102
 #: qcsrc/menu/xonotic/dialog_settings_input.c:107

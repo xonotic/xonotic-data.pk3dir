@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2014-12-30 11:41+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/xonotic/language/"
 "fr/)\n"
 "Language: fr\n"
@@ -5700,13 +5700,13 @@ msgstr "Durée :"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:150
 msgid "Damage effects:"
-msgstr "Effets de dégâts :"
+msgstr "Effets des dégâts :"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:152
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:55
 #: qcsrc/menu/xonotic/dialog_settings_input.c:94
 msgid "Disabled"
-msgstr "Désactivés"
+msgstr "Désactivé"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:153
 msgid "Skeletal"
@@ -5996,7 +5996,7 @@ msgstr "Seulement s'il s'agit de prouesses"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:43
 msgid "Show spree information in centerprints"
-msgstr "Les afficher dans l'affichage central"
+msgstr "Les montrer dans l'affichage central"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:47
 msgid "Show spree information in death messages"
@@ -6073,7 +6073,7 @@ msgstr "Notifications des armes dans l'affichage central"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:101
 msgid "Weapon info message notifications"
-msgstr "Notifications des messages d'information à propos des armes"
+msgstr "Notifications des messages d'information sur les armes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:105
 msgid "Announcers"
@@ -6154,15 +6154,15 @@ msgstr "Aucun"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:68
 msgid "GIBS^Few"
-msgstr "Léger"
+msgstr "Légers"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:69
 msgid "GIBS^Many"
-msgstr "Moyen"
+msgstr "Quelques-uns"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:70
 msgid "GIBS^Lots"
-msgstr "Gore"
+msgstr "Gores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:32
 msgid "1st person perspective"
@@ -6757,7 +6757,7 @@ msgstr "Anisotropie :"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:57
 msgid "ANISO^Disabled"
-msgstr "Désactivé"
+msgstr "Désactivée"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:58
 #: qcsrc/menu/xonotic/dialog_settings_video.c:68
