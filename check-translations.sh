@@ -35,41 +35,43 @@ if [ x"$mode" = x"pot" ]; then
 fi
 
 if [ x"$mode" = x"txt" ]; then
-	echo "en English \"English\""
-	for X in common.*.po; do
-		[ -f "$X" ] || continue
-		if [ -n "$language" ]; then
-			if [ x"${X#common.}" != x"$language.po" ]; then
-				continue
+	{
+		echo "en English \"English\""
+		for X in common.*.po; do
+			[ -f "$X" ] || continue
+			if [ -n "$language" ]; then
+				if [ x"${X#common.}" != x"$language.po" ]; then
+					continue
+				fi
+			else
+				if [ x"${X#common.}" = x"en.po" ]; then
+					continue
+				fi
 			fi
-		else
-			if [ x"${X#common.}" = x"en.po" ]; then
-				continue
+			po=`msgmerge -N "$X" common.pot`
+			ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
+			nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
+			nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#:`
+			nt=`printf "%s\n" "$po" | grep -c ^#:`
+			n=$(($ne + $nu + $nf))
+			p=$(( (nt - n) * 100 / nt ))
+			echo >&2 "TODO for translation $X:"
+			echo >&2 "Errors:       $ne"
+			echo >&2 "Untranslated: $nu"
+			echo >&2 "Fuzzy:        $nf"
+			echo >&2 "Total:        $nt"
+			echo >&2 "Percent:      $p"
+			l=${X#common.}
+			l=${l%.po}
+			if ! item=`grep "^$l " languages.txt`; then
+				if [ "$p" -lt 50 ]; then
+					continue
+				fi
+				item="$l $l \"$l (0%)\""
 			fi
-		fi
-		po=`msgmerge -N "$X" common.pot`
-		ne=`printf "%s\n" "$po" | msgfmt -o /dev/null --check-format --check-header --use-fuzzy - 2>&1 | grep . | wc -l`
-		nu=`printf "%s\n" "$po" | msgattrib --untranslated - | grep -c ^#:`
-		nf=`printf "%s\n" "$po" | msgattrib --fuzzy - | grep -c ^#:`
-		nt=`printf "%s\n" "$po" | grep -c ^#:`
-		n=$(($ne + $nu + $nf))
-		p=$(( (nt - n) * 100 / nt ))
-		echo >&2 "TODO for translation $X:"
-		echo >&2 "Errors:       $ne"
-		echo >&2 "Untranslated: $nu"
-		echo >&2 "Fuzzy:        $nf"
-		echo >&2 "Total:        $nt"
-		echo >&2 "Percent:      $p"
-		l=${X#common.}
-		l=${l%.po}
-		if ! item=`grep "^$l " languages.txt`; then
-			if [ "$p" -lt 50 ]; then
-				continue
-			fi
-			item="$l $l \"$l (0%)\""
-		fi
-		printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
-	done
+			printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
+		done
+	} | tr '"' '\t' | sort -k3 | tr '\t' '"'
 fi
 
 if [ x"$mode" = x"po" ]; then
