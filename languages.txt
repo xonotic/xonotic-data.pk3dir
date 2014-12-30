@@ -1,7 +1,7 @@
 de German "Deutsch (100%)"
 en English "English"
 es Spanish "Español (63%)"
-fr French "Français (99%)"
+fr French "Français (100%)"
 it Italian "Italiano (99%)"
 hu Hungarian "Magyar (53%)"
 nl Dutch "Nederlands (57%)"
