@@ -67,7 +67,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Play")), '0 0 0'));
 			e.onClick = StartSound_Click;
 			e.onClickEntity = playList;
-		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Pause/Play")), '0 0 0'));
+		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Pause")), '0 0 0'));
 			e.onClick = PauseSound_Click;
 			e.onClickEntity = playList;
 		me.TD(me, 1, columns_nospacing / 10, e = makeXonoticButton(ZCTX(_("MUSICPL^Prev")), '0 0 0'));
