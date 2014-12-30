@@ -266,7 +266,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_blaster", _("with blaster")));
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
