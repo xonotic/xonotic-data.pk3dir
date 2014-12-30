@@ -7,6 +7,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	METHOD(XonoticPlayList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticPlayList, stopSound, void(entity))
 	METHOD(XonoticPlayList, startSound, void(entity, float))
+	METHOD(XonoticPlayList, resumeSound, void(entity))
 	METHOD(XonoticPlayList, pauseSound, void(entity))
 	METHOD(XonoticPlayList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float))
@@ -222,7 +223,18 @@ void XonoticPlayList_startSound(entity me, float offset)
 			return;
 	}
 	else
+	{
 		f = me.selectedItem;
+		// if it was paused then resume
+		if(f == cvar("music_playlist_current0"))
+		if(cvar("music_playlist_index") == 999)
+		{
+			me.resumeSound(me);
+			return;
+		}
+		// if it was not paused then proceed with restart
+	}
+
 	// START: list 0 is disabled by setting the index to 999
 	// we set current0 to the selected track and sampleposition0 to 0 to forget the position that the engine saves in this frame (for this reason we need to wait a frame)
 	// then we switch back to list 0
@@ -246,16 +258,20 @@ void NextSound_Click(entity btn, entity me)
 	me.startSound(me, +1);
 }
 
+void XonoticPlayList_resumeSound(entity me)
+{
+	// RESUME: list 0 is enabled by setting the index to 0
+	// (we reset sampleposition0 to 0 to mark the track as in playing back state)
+	if(cvar("music_playlist_index") == 999)
+		localcmd("\nmusic_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
+}
 void XonoticPlayList_pauseSound(entity me)
 {
 	// PAUSE: list 0 is disabled by setting the index to 999
 	// (we know the track is paused because the engine sets sampleposition0 to remember current position)
-	// RESUME: list 0 is enabled by setting the index to 0
-	// (we reset sampleposition0 to 0 to mark the track as in playing back state)
 	if(cvar("music_playlist_index") == 0)
 		localcmd("\nmusic_playlist_index 999\n");
-	else if(cvar("music_playlist_index") == 999)
-		localcmd("\nmusic_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
+	else me.resumeSound(me);
 }
 
 void PauseSound_Click(entity btn, entity me)
