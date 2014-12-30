@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-21 07:48+0100\n"
-"PO-Revision-Date: 2014-12-21 06:48+0000\n"
+"POT-Creation-Date: 2014-12-30 12:18+0100\n"
+"PO-Revision-Date: 2014-12-30 11:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/xonotic/"
 "language/hu/)\n"
@@ -25,16 +25,16 @@ msgstr ""
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
 msgstr "HIBA - A MENÜ LÁTHATÓ, DE NEM VOLT DEFINIÁLVA!"
 
-#: qcsrc/client/Main.qc:1300
+#: qcsrc/client/Main.qc:1295
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nincs kiosztva)"
 
-#: qcsrc/client/View.qc:1272
+#: qcsrc/client/View.qc:511
 msgid "Nade timer"
 msgstr ""
 
-#: qcsrc/client/View.qc:1277
+#: qcsrc/client/View.qc:516
 msgid "Revival progress"
 msgstr ""
 
@@ -78,189 +78,189 @@ msgstr "nem elérhető"
 msgid "Player %d"
 msgstr "Játékos %d"
 
-#: qcsrc/client/hud.qc:2421
+#: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Közepes 1 (+15.42)"
 
-#: qcsrc/client/hud.qc:2423 qcsrc/client/hud.qc:2465 qcsrc/client/hud.qc:2506
+#: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1BÜNTETÉS: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:2508
+#: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2BÜNTETÉS: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:2538
+#: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr "^1Választanod kell, mielőtt beléphetsz a HUD beállításokba\n"
 
-#: qcsrc/client/hud.qc:2543
+#: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr "^2Név^7 mutatása \"^1Anonymous player^7\" helyett a statisztikákban"
 
-#: qcsrc/client/hud.qc:2622
+#: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
 msgstr "Szavaznod kell az alábbi ügyben:"
 
-#: qcsrc/client/hud.qc:2624
+#: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
 msgstr "Megengeded, hogy a szerver eltárolja én megjelenítse a neved?"
 
-#: qcsrc/client/hud.qc:2628
+#: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
 msgstr "^1A HUD beállításai"
 
-#: qcsrc/client/hud.qc:2632
+#: qcsrc/client/hud.qc:2628
 #, c-format
 msgid "Yes (%s): %d"
 msgstr "Igen (%s): %d"
 
-#: qcsrc/client/hud.qc:2634
+#: qcsrc/client/hud.qc:2630
 #, c-format
 msgid "No (%s): %d"
 msgstr "Nem (%s): %d"
 
-#: qcsrc/client/hud.qc:3195 qcsrc/client/hud.qc:3198 qcsrc/client/hud.qc:3200
+#: qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3194 qcsrc/client/hud.qc:3196
 msgid "Personal best"
 msgstr "Saját legjobb idő"
 
-#: qcsrc/client/hud.qc:3213 qcsrc/client/hud.qc:3216 qcsrc/client/hud.qc:3218
+#: qcsrc/client/hud.qc:3209 qcsrc/client/hud.qc:3212 qcsrc/client/hud.qc:3214
 msgid "Server best"
 msgstr "Szerver legjobb idő"
 
-#: qcsrc/client/hud.qc:3580
+#: qcsrc/client/hud.qc:3576
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Player^7: Ez a csevej terület"
 
-#: qcsrc/client/hud.qc:3645
+#: qcsrc/client/hud.qc:3641
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud.qc:3709
+#: qcsrc/client/hud.qc:3705
 msgid "^1Observing"
 msgstr "^1Néző"
 
-#: qcsrc/client/hud.qc:3712 qcsrc/client/hud.qc:3714
+#: qcsrc/client/hud.qc:3707
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^7%s^1-t nézed és követed"
 
-#: qcsrc/client/hud.qc:3719
+#: qcsrc/client/hud.qc:3711
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy nézőként lépj be!"
 
-#: qcsrc/client/hud.qc:3721
+#: qcsrc/client/hud.qc:3713
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3725
+#: qcsrc/client/hud.qc:3717
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Használd a ^3%s^1 vagy ^3%s^1 gombokat a sebesség változtatásához!"
 
-#: qcsrc/client/hud.qc:3727
+#: qcsrc/client/hud.qc:3719
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr "^1Nyomd meg a ^3%s^1 gombot, hogy néző lehess!"
 
-#: qcsrc/client/hud.qc:3730
+#: qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Nyomd meg a ^3%s^1 gombot a játékmód információkért!"
 
-#: qcsrc/client/hud.qc:3738
+#: qcsrc/client/hud.qc:3730
 msgid "^1Match has already begun"
 msgstr "^1A játék már elkezdődött"
 
-#: qcsrc/client/hud.qc:3740
+#: qcsrc/client/hud.qc:3732
 msgid "^1You have no more lives left"
 msgstr "^1Nincs több életed"
 
-#: qcsrc/client/hud.qc:3742 qcsrc/client/hud.qc:3745
+#: qcsrc/client/hud.qc:3734 qcsrc/client/hud.qc:3737
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Nyomd meg a ^3%s^1 gombot a játékba való belépéshez!"
 
-#: qcsrc/client/hud.qc:3753
+#: qcsrc/client/hud.qc:3745
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1A játék ^3%d^1 másodpercen belül elkezdődik!"
 
-#: qcsrc/client/hud.qc:3760
+#: qcsrc/client/hud.qc:3752
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Jelenleg ^1BEMELEGÍTÉS^7 zajlik!"
 
-#: qcsrc/client/hud.qc:3775
+#: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%s, kérlek nyomd meg a ^3%s%s gombot a bemelegítés befejezéséhez!"
 
-#: qcsrc/client/hud.qc:3777
+#: qcsrc/client/hud.qc:3769
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr "%s, kérlek nyomd meg a ^3%s%s gombot, amint készen állsz!"
 
-#: qcsrc/client/hud.qc:3782
+#: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2Várakozás a többiekre, hogy befejezzék a bemelegítést..."
 
-#: qcsrc/client/hud.qc:3784
+#: qcsrc/client/hud.qc:3776
 msgid "^2Waiting for others to ready up..."
 msgstr "^2Várj kérlek, amíg a többiek készen állnak..."
 
-#: qcsrc/client/hud.qc:3790
+#: qcsrc/client/hud.qc:3782
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Nyomd meg a ^3%s^2 gombot a bemelegítés befejezéséhez!"
 
-#: qcsrc/client/hud.qc:3811
+#: qcsrc/client/hud.qc:3803
 msgid "Teamnumbers are unbalanced!"
 msgstr "A csapatok egyenlőtlenül vannak elosztva!"
 
-#: qcsrc/client/hud.qc:3816
+#: qcsrc/client/hud.qc:3808
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " Nyomd meg a ^3%s%s gombot a kiegyenlítéshez!"
 
-#: qcsrc/client/hud.qc:3824
+#: qcsrc/client/hud.qc:3816
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Nyomd meg az ^3ESC^7 gombot a HUD beállításának lehetőségeihez!"
 
-#: qcsrc/client/hud.qc:3826
+#: qcsrc/client/hud.qc:3818
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3Kattints duplán^7 egy panelre a panel-specifikus beállításokhoz!"
 
-#: qcsrc/client/hud.qc:3828
+#: qcsrc/client/hud.qc:3820
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 "A ^3CTRL^7 gomb segítségével kikapcsolhatod az illesztést, a ^3SHIFT^7 és"
 
-#: qcsrc/client/hud.qc:3830
+#: qcsrc/client/hud.qc:3822
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "az ^3ALT^7 + ^3NYÍLGOMBOK^7-kal finoman mozgathatsz!"
 
-#: qcsrc/client/hud.qc:3877
+#: qcsrc/client/hud.qc:3869
 msgid " qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/hud.qc:3881
+#: qcsrc/client/hud.qc:3873
 msgid " m/s"
 msgstr "m/s"
 
-#: qcsrc/client/hud.qc:3885
+#: qcsrc/client/hud.qc:3877
 msgid " km/h"
 msgstr "km/h"
 
-#: qcsrc/client/hud.qc:3889
+#: qcsrc/client/hud.qc:3881
 msgid " mph"
 msgstr "mph"
 
-#: qcsrc/client/hud.qc:3893
+#: qcsrc/client/hud.qc:3885
 msgid " knots"
 msgstr "Csomó"
 
@@ -4716,8 +4716,8 @@ msgid "Special arenas:"
 msgstr "Különleges Arénák:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
-msgid "with laser"
-msgstr "lézerrel"
+msgid "with blaster"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
@@ -5562,6 +5562,7 @@ msgstr "Sebzési effektek:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:152
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:55
+#: qcsrc/menu/xonotic/dialog_settings_input.c:94
 msgid "Disabled"
 msgstr ""
 
@@ -5570,6 +5571,7 @@ msgid "Skeletal"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:154
+#: qcsrc/menu/xonotic/dialog_settings_input.c:96
 msgid "All"
 msgstr ""
 
@@ -6199,9 +6201,17 @@ msgstr "\"belépés a konzolba\" bezárásra is alkalmas"
 msgid "Automatically repeat jumping if holding jump"
 msgstr "Automatikus ugrás az \"ugrás\" billentyű lenyomva tartásakor"
 
+#: qcsrc/menu/xonotic/dialog_settings_input.c:92
+msgid "Jetpack on jump:"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_settings_input.c:95
-#: qcsrc/menu/xonotic/dialog_settings_input.c:100
-#: qcsrc/menu/xonotic/dialog_settings_input.c:105
+msgid "Air only"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:102
+#: qcsrc/menu/xonotic/dialog_settings_input.c:107
+#: qcsrc/menu/xonotic/dialog_settings_input.c:112
 msgid "Use joystick input"
 msgstr "Botkormány bemenet használata"
 

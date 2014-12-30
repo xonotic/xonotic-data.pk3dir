@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-21 07:48+0100\n"
-"PO-Revision-Date: 2014-12-21 06:48+0000\n"
+"POT-Creation-Date: 2014-12-30 12:18+0100\n"
+"PO-Revision-Date: 2014-12-30 11:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/xonotic/language/"
 "cs/)\n"
@@ -22,16 +22,16 @@ msgstr ""
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
 msgstr ""
 
-#: qcsrc/client/Main.qc:1300
+#: qcsrc/client/Main.qc:1295
 #, c-format
 msgid "%s (not bound)"
 msgstr ""
 
-#: qcsrc/client/View.qc:1272
+#: qcsrc/client/View.qc:511
 msgid "Nade timer"
 msgstr ""
 
-#: qcsrc/client/View.qc:1277
+#: qcsrc/client/View.qc:516
 msgid "Revival progress"
 msgstr ""
 
@@ -75,188 +75,188 @@ msgstr ""
 msgid "Player %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2421
+#: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2423 qcsrc/client/hud.qc:2465 qcsrc/client/hud.qc:2506
+#: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2508
+#: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2538
+#: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2543
+#: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2622
+#: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2624
+#: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2628
+#: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2632
+#: qcsrc/client/hud.qc:2628
 #, c-format
 msgid "Yes (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:2634
+#: qcsrc/client/hud.qc:2630
 #, c-format
 msgid "No (%s): %d"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3195 qcsrc/client/hud.qc:3198 qcsrc/client/hud.qc:3200
+#: qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3194 qcsrc/client/hud.qc:3196
 msgid "Personal best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3213 qcsrc/client/hud.qc:3216 qcsrc/client/hud.qc:3218
+#: qcsrc/client/hud.qc:3209 qcsrc/client/hud.qc:3212 qcsrc/client/hud.qc:3214
 msgid "Server best"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3580
+#: qcsrc/client/hud.qc:3576
 msgid "^3Player^7: This is the chat area."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3645
+#: qcsrc/client/hud.qc:3641
 #, c-format
 msgid "FPS: %.*f"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3709
+#: qcsrc/client/hud.qc:3705
 msgid "^1Observing"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3712 qcsrc/client/hud.qc:3714
+#: qcsrc/client/hud.qc:3707
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3719
+#: qcsrc/client/hud.qc:3711
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3721
+#: qcsrc/client/hud.qc:3713
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3725
+#: qcsrc/client/hud.qc:3717
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3727
+#: qcsrc/client/hud.qc:3719
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3730
+#: qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3738
+#: qcsrc/client/hud.qc:3730
 msgid "^1Match has already begun"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3740
+#: qcsrc/client/hud.qc:3732
 msgid "^1You have no more lives left"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3742 qcsrc/client/hud.qc:3745
+#: qcsrc/client/hud.qc:3734 qcsrc/client/hud.qc:3737
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3753
+#: qcsrc/client/hud.qc:3745
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3760
+#: qcsrc/client/hud.qc:3752
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3775
+#: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3777
+#: qcsrc/client/hud.qc:3769
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3782
+#: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3784
+#: qcsrc/client/hud.qc:3776
 msgid "^2Waiting for others to ready up..."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3790
+#: qcsrc/client/hud.qc:3782
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3811
+#: qcsrc/client/hud.qc:3803
 msgid "Teamnumbers are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3816
+#: qcsrc/client/hud.qc:3808
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3824
+#: qcsrc/client/hud.qc:3816
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3826
+#: qcsrc/client/hud.qc:3818
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3828
+#: qcsrc/client/hud.qc:3820
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3830
+#: qcsrc/client/hud.qc:3822
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr ""
 
-#: qcsrc/client/hud.qc:3877
+#: qcsrc/client/hud.qc:3869
 msgid " qu/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3881
+#: qcsrc/client/hud.qc:3873
 msgid " m/s"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3885
+#: qcsrc/client/hud.qc:3877
 msgid " km/h"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3889
+#: qcsrc/client/hud.qc:3881
 msgid " mph"
 msgstr ""
 
-#: qcsrc/client/hud.qc:3893
+#: qcsrc/client/hud.qc:3885
 msgid " knots"
 msgstr ""
 
@@ -4676,7 +4676,7 @@ msgid "Special arenas:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
-msgid "with laser"
+msgid "with blaster"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
@@ -5522,6 +5522,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:152
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:55
+#: qcsrc/menu/xonotic/dialog_settings_input.c:94
 msgid "Disabled"
 msgstr ""
 
@@ -5530,6 +5531,7 @@ msgid "Skeletal"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:154
+#: qcsrc/menu/xonotic/dialog_settings_input.c:96
 msgid "All"
 msgstr ""
 
@@ -6159,9 +6161,17 @@ msgstr ""
 msgid "Automatically repeat jumping if holding jump"
 msgstr ""
 
+#: qcsrc/menu/xonotic/dialog_settings_input.c:92
+msgid "Jetpack on jump:"
+msgstr ""
+
 #: qcsrc/menu/xonotic/dialog_settings_input.c:95
-#: qcsrc/menu/xonotic/dialog_settings_input.c:100
-#: qcsrc/menu/xonotic/dialog_settings_input.c:105
+msgid "Air only"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_input.c:102
+#: qcsrc/menu/xonotic/dialog_settings_input.c:107
+#: qcsrc/menu/xonotic/dialog_settings_input.c:112
 msgid "Use joystick input"
 msgstr ""
 
