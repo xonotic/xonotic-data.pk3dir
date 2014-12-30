@@ -169,12 +169,13 @@ void CheckPlayerJump()
 		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
 		float activate = self.cvar_cl_jetpack_jump && air_jump && self.BUTTON_JUMP || self.BUTTON_JETPACK;
 		float has_fuel = !autocvar_g_jetpack_fuel || self.ammo_fuel || self.items & IT_UNLIMITED_WEAPON_AMMO;
-		if (self.jetpack_stopped) { }
+		if (!(self.items & IT_JETPACK)) { }
+		else if (self.jetpack_stopped) { }
 		else if (!has_fuel)
 		{
 			if (was_flying) // TODO: ran out of fuel message
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
-			else
+			else if (activate)
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 			self.jetpack_stopped = TRUE;
 			self.items &= ~IT_USING_JETPACK;

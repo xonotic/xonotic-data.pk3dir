@@ -2144,6 +2144,33 @@ void PlayerUseKey()
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
+float isInvisibleString(string s)
+{
+	float i, n, c;
+	s = strdecolorize(s);
+	for((i = 0), (n = strlen(s)); i < n; ++i)
+	{
+		c = str2chr(s, i);
+		switch(c)
+		{
+			case 0:
+			case 32: // space
+				break;
+			case 192: // charmap space
+				if (!autocvar_utf8_enable)
+					break;
+				return FALSE;
+			case 160: // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (autocvar_utf8_enable)
+					break;
+			default:
+				return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 /*
 =============
 PlayerPreThink
@@ -2175,8 +2202,17 @@ void PlayerPreThink (void)
 
 	zoomstate_set = 0;
 
-	if(self.netname_previous != self.netname)
-	{
+	// Savage: Check for nameless players
+	if (isInvisibleString(self.netname)) {
+		string new_name = strzone(strcat("Player@", self.netaddress));
+		if(autocvar_sv_eventlog)
+			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", new_name));
+		if(self.netname_previous)
+			strunzone(self.netname_previous);
+		self.netname_previous = strzone(new_name);
+		self.netname = self.netname_previous;
+		// stuffcmd(self, strcat("name ", self.netname, "\n"));
+	} else if(self.netname_previous != self.netname) {
 		if(autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", self.netname));
 		if(self.netname_previous)
@@ -2507,33 +2543,6 @@ void PlayerPreThink (void)
 		self.clip_load = self.clip_size = 0;
 }
 
-float isInvisibleString(string s)
-{
-	float i, n, c;
-	s = strdecolorize(s);
-	for((i = 0), (n = strlen(s)); i < n; ++i)
-	{
-		c = str2chr(s, i);
-		switch(c)
-		{
-			case 0:
-			case 32: // space
-				break;
-			case 192: // charmap space
-				if (!autocvar_utf8_enable)
-					break;
-				return FALSE;
-			case 160: // space in unicode fonts
-			case 0xE000 + 192: // utf8 charmap space
-				if (autocvar_utf8_enable)
-					break;
-			default:
-				return FALSE;
-		}
-	}
-	return TRUE;
-}
-
 /*
 =============
 PlayerPostThink
@@ -2544,12 +2553,6 @@ Called every frame for each client after the physics are run
 .float idlekick_lasttimeleft;
 void PlayerPostThink (void)
 {
-	// Savage: Check for nameless players
-	if (isInvisibleString(self.netname)) {
-		self.netname = "Player";
-		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
-	}
-
 	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if(IS_PLAYER(self) || sv_maxidle_spectatorsareidle)
 	{

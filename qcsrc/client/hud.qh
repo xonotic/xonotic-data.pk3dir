@@ -189,7 +189,7 @@ if((teamplay) && panel_bg_color_team) {\
 		if(panel_bg_color_str == "shirt") {\
 			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player - 1, "colors")) / 16), 0);\
 		} else if(panel_bg_color_str == "pants") {\
-			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkeyvalue(current_player - 1, "colors")), 16), 1);\
+			panel_bg_color = colormapPaletteColor(stof(getplayerkeyvalue(current_player - 1, "colors")) % 16, 1);\
 		} else {\
 			panel_bg_color = stov(panel_bg_color_str);\
 		}\

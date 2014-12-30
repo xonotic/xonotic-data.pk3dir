@@ -60,10 +60,10 @@ string count_ordinal(float interval)
 	// Basically, it just allows you to represent a number or count in different ways
 	// depending on the number... like, with count_ordinal you can provide integers
 	// and retrieve 1st, 2nd, 3rd, nth ordinal numbers in a clean and simple way.
-	if(floor((mod(interval, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
+	if(floor((interval % 100)/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
 	{
 		// otherwise, check normally for 1st,2nd,3rd insertions
-		switch(mod(interval, 10))
+		switch(interval % 10)
 		{
 			case 1: return sprintf(_("%dst"), interval);
 			case 2: return sprintf(_("%dnd"), interval);
