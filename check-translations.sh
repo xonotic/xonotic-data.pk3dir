@@ -62,10 +62,13 @@ if [ x"$mode" = x"txt" ]; then
 		echo >&2 "Percent:      $p"
 		l=${X#common.}
 		l=${l%.po}
-		item=`grep "^$l " languages.txt || echo "$l $l \"$l (0%)\""`
-		if [ "$p" -gt 50 ]; then
-			printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
+		if ! item=`grep "^$l " languages.txt`; then
+			if [ "$p" -lt 50 ]; then
+				continue
+			fi
+			item="$l $l \"$l (0%)\""
 		fi
+		printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
 	done
 fi
 
