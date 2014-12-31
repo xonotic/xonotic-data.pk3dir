@@ -160,22 +160,6 @@ void ModalController_draw(entity me)
 
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
-		f = (e.ModalController_factor = min(1, e.ModalController_factor + df));
-		if(e.ModalController_state)
-			if(f < 1)
-				animating = 1;
-
-		if(f < 1)
-		{
-			prevFactor   = (1 - f) / (1 - f + df);
-			targetFactor =     df  / (1 - f + df);
-		}
-		else
-		{
-			prevFactor = 0;
-			targetFactor = 1;
-		}
-
 		if(e.ModalController_state == 2)
 		{
 			// fading out partially
@@ -193,25 +177,30 @@ void ModalController_draw(entity me)
 		else
 		{
 			// fading out
-			if(f < 1)
-				animating = 1;
 			targetOrigin = e.Container_origin; // stay as is
 			targetSize = e.Container_size; // stay as is
 			targetAlpha = 0;
 		}
 
+		f = (e.ModalController_factor = min(1, e.ModalController_factor + df));
 		if(f == 1)
 		{
+			prevFactor = 0;
+			targetFactor = 1;
 			e.Container_origin = targetOrigin;
 			e.Container_size = targetSize;
 			me.setAlphaOf(me, e, targetAlpha);
 		}
 		else
 		{
+			prevFactor = (1 - f) / (1 - f + df);
 			if(!e.ModalController_state) // optimize code and avoid precision errors
 				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor);
 			else
 			{
+				animating = 1;
+				targetFactor = df / (1 - f + df);
+
 				if(e.ModalController_state == 1)
 				{
 					e.Container_origin = e.Container_origin * prevFactor + targetOrigin * targetFactor;
