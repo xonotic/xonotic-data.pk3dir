@@ -208,9 +208,17 @@ void ModalController_draw(entity me)
 		}
 		else
 		{
-			e.Container_origin = e.Container_origin * prevFactor + targetOrigin * targetFactor;
-			e.Container_size   = e.Container_size   * prevFactor + targetSize   * targetFactor;
-			me.setAlphaOf(me, e, e.Container_alpha  * prevFactor + targetAlpha  * targetFactor);
+			if(!e.ModalController_state) // optimize code and avoid precision errors
+				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor);
+			else
+			{
+				if(e.ModalController_state == 1)
+				{
+					e.Container_origin = e.Container_origin * prevFactor + targetOrigin * targetFactor;
+					e.Container_size   = e.Container_size   * prevFactor + targetSize   * targetFactor;
+				}
+				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor + targetAlpha  * targetFactor);
+			}
 		}
 		// assume: o == to * f_prev + X * (1 - f_prev)
 		// make:   o' = to * f  + X * (1 - f)
@@ -220,9 +228,12 @@ void ModalController_draw(entity me)
 		// --> (maxima)
 		// o' = (to * (f - f_prev) + o * (1 - f)) / (1 - f_prev)
 
-		fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
-		e.Container_fontscale_x = fs_x * e.ModalController_initialFontScale_x;
-		e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
+		if(e.ModalController_state == 1)
+		{
+			fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+			e.Container_fontscale_x = fs_x * e.ModalController_initialFontScale_x;
+			e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
+		}
 	}
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);
