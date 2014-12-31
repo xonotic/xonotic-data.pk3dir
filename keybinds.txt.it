@@ -32,7 +32,7 @@
 ""                                      "Vista"
 "+zoom"                                 "tieni zoom"
 "togglezoom"                            "attiva/disattiva zoom"
-"+showscores"                           "mostra scoreboard"
+"+showscores"                           "mostra punteggi"
 "screenshot"                            "screenshot"
 "+hud_panel_radar_maximized"            "massimizza radar"
 ""                                      ""
