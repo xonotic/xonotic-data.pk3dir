@@ -150,11 +150,22 @@ void ModalController_draw(entity me)
 		if(e.ModalController_state)
 		{
 			if(front)
+			{
 				me.switchState(me, front, 2, 0);
+				if(front.ModalController_factor < 1)
+					animating = 1;
+			}
 			front = e;
 		}
 	if(front)
+	{
 		me.switchState(me, front, 1, 0);
+		if(front.ModalController_factor < 1)
+			animating = 1;
+	}
+
+	if(front && front.Container_alpha == front.ModalController_initialAlpha)
+		goto update_done; // update isn't needed, everything stay as is
 
 	df = frametime * 3; // animation speed
 
@@ -198,7 +209,6 @@ void ModalController_draw(entity me)
 				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor);
 			else
 			{
-				animating = 1;
 				targetFactor = df / (1 - f + df);
 
 				if(e.ModalController_state == 1)
@@ -224,6 +234,8 @@ void ModalController_draw(entity me)
 			e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
 		}
 	}
+	:update_done
+
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);
 	else
