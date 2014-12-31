@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-31 07:32+0100\n"
-"PO-Revision-Date: 2014-12-30 13:31+0000\n"
+"POT-Creation-Date: 2014-12-31 22:22+0100\n"
+"PO-Revision-Date: 2014-12-31 12:40+0000\n"
 "Last-Translator: Mihail Varantsou <meequz@gmail.com>\n"
 "Language-Team: Belarusian (http://www.transifex.com/projects/p/xonotic/"
 "language/be/)\n"
@@ -22,30 +22,30 @@ msgstr ""
 
 #: qcsrc/client/Main.qc:21
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr "ПАМЫЛКА - МЕНЮ БАЧНАЕ, АЛЕ НЕ ВЫЗНАЧАНАЕ"
+msgstr "ПАМЫЛКА - МЕНЮ БАЧНАЕ, АЛЕ НЕ ВЫЗНАЧАНАЕ!"
 
 #: qcsrc/client/Main.qc:1295
 #, c-format
 msgid "%s (not bound)"
-msgstr ""
+msgstr "%s (не звязаны)"
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
-msgstr ""
+msgstr "Таймер гранаты"
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
-msgstr ""
+msgstr "Рух адраджэння"
 
 #: qcsrc/client/hud.qc:186
 #, c-format
 msgid " (-%dL)"
-msgstr ""
+msgstr " (-%dL)"
 
 #: qcsrc/client/hud.qc:191
 #, c-format
 msgid " (+%dL)"
-msgstr ""
+msgstr " (+%dL)"
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
@@ -58,19 +58,19 @@ msgstr "Фініш"
 #: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Сярэдняе %d"
 
 #: qcsrc/client/hud.qc:805
 msgid "Out of ammo"
-msgstr "Няма боепрыпасаў"
+msgstr "Няма патронаў"
 
 #: qcsrc/client/hud.qc:809
 msgid "Don't have"
-msgstr ""
+msgstr "Няма"
 
 #: qcsrc/client/hud.qc:813
 msgid "Unavailable"
-msgstr "Недаступна"
+msgstr "Недаступны"
 
 #: qcsrc/client/hud.qc:1751 qcsrc/client/hud.qc:1752 qcsrc/client/hud.qc:2109
 #, c-format
@@ -79,17 +79,17 @@ msgstr "Гулец %d"
 
 #: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
-msgstr ""
+msgstr "^1Сярэдняе 1 (+15.42)"
 
 #: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^1ШТРАФ: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^2ШТРАФ: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Імя ^7замест \"^1Anonymous player^7\" у статыстыцы"
 
 #: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
@@ -105,11 +105,11 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Дазволіць серверам захоўваць і паказваць вашае імя?"
 
 #: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Наставіць HUD"
 
 #: qcsrc/client/hud.qc:2628
 #, c-format
@@ -179,7 +179,7 @@ msgstr "^1Матч ужо пачаўся"
 
 #: qcsrc/client/hud.qc:3732
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1У вас скончыліся жыцці"
 
 #: qcsrc/client/hud.qc:3734 qcsrc/client/hud.qc:3737
 #, c-format
@@ -193,12 +193,12 @@ msgstr "^1Гульня пачнецца праз ^3%d^1 секунд"
 
 #: qcsrc/client/hud.qc:3752
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Зараз у ^1разміначным^2 этапе!"
 
 #: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sНацісніце ^3%s%s каб скончыць размінку"
 
 #: qcsrc/client/hud.qc:3769
 #, c-format
@@ -207,16 +207,16 @@ msgstr "%sНацісніце ^3%s%s калі будзеце гатовы"
 
 #: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Чаканне іншых для сканчэння размінкі..."
 
 #: qcsrc/client/hud.qc:3776
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2Чаканне іншых гульцоў..."
 
 #: qcsrc/client/hud.qc:3782
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Націсніце ^3%s^2 каб скончыць размінку"
 
 #: qcsrc/client/hud.qc:3803
 msgid "Teamnumbers are unbalanced!"
@@ -261,7 +261,7 @@ msgstr " м/г"
 
 #: qcsrc/client/hud.qc:3885
 msgid " knots"
-msgstr " вузлоў"
+msgstr " вузлы"
 
 #: qcsrc/client/hud_config.qc:197
 #, c-format
@@ -292,7 +292,7 @@ msgstr "Абярыце тып гульні"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Vote for a map"
-msgstr "Абранне мапы"
+msgstr "Галасаванка за мапу"
 
 #: qcsrc/client/mapvoting.qc:331
 #, c-format
@@ -310,7 +310,7 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:434
 msgid "Requesting preview...\n"
-msgstr "Запыт перадпрагляду...\n"
+msgstr "Запыт на перадпрагляд...\n"
 
 #: qcsrc/client/miscfunctions.qc:101
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -406,7 +406,7 @@ msgstr "SCO^мянушка"
 
 #: qcsrc/client/scoreboard.qc:41
 msgid "SCO^objectives"
-msgstr ""
+msgstr "SCO^мэты"
 
 #: qcsrc/client/scoreboard.qc:42
 msgid "SCO^pickups"
@@ -422,7 +422,7 @@ msgstr "SCO^пз"
 
 #: qcsrc/client/scoreboard.qc:45
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^штуршкі"
 
 #: qcsrc/client/scoreboard.qc:46
 msgid "SCO^rank"
@@ -430,15 +430,15 @@ msgstr "SCO^рэйтынг"
 
 #: qcsrc/client/scoreboard.qc:47
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^вяртанні"
 
 #: qcsrc/client/scoreboard.qc:48
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^адраджэнні"
 
 #: qcsrc/client/scoreboard.qc:49
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^лік"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^suicides"
@@ -475,7 +475,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
-msgstr "Распазнаюцца наступныя назвы палёў (рэгістр не ўлічваецца):\n"
+msgstr "Распазнаны наступныя назвы палёў (рэгістр не ўлічваецца):\n"
 
 #: qcsrc/client/scoreboard.qc:243
 msgid ""
@@ -513,11 +513,11 @@ msgstr "^3фрагі^7                    забойствы - самагубс�
 
 #: qcsrc/client/scoreboard.qc:252
 msgid "^3kd^7                       The kill-death ratio\n"
-msgstr ""
+msgstr "^3kd^7                       Стасунак забойствы/смерці\n"
 
 #: qcsrc/client/scoreboard.qc:253
 msgid "^3sum^7                      frags - deaths\n"
-msgstr ""
+msgstr "^3сума^7                      фрагі - смерці\n"
 
 #: qcsrc/client/scoreboard.qc:254
 msgid ""
@@ -525,7 +525,7 @@ msgid ""
 "captured\n"
 msgstr ""
 "^3узяцці^7                     Як часта сцяг (CTF) ці ключ (KeyHunt) быў "
-"узяты\n"
+"захоплены\n"
 
 #: qcsrc/client/scoreboard.qc:255
 msgid ""
@@ -667,7 +667,7 @@ msgstr "Пачвар забіта:"
 
 #: qcsrc/client/scoreboard.qc:1136
 msgid "Secrets found:"
-msgstr "Адшукана схованак:"
+msgstr "Схованак адшукана:"
 
 #: qcsrc/client/scoreboard.qc:1164
 msgid "Rankings"
@@ -734,7 +734,7 @@ msgstr "^1Адраджэнне праз ^3%s^1..."
 #: qcsrc/client/scoreboard.qc:1445
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "Вы мёртвы, засталося чакаць ^3%s^7 да адраджэння"
+msgstr "Вы мёртвы, пачакайце ^3%s^7 да адраджэння"
 
 #: qcsrc/client/scoreboard.qc:1454
 #, c-format
@@ -760,15 +760,15 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:236
 msgid "Push"
-msgstr ""
+msgstr "Націснуць"
 
 #: qcsrc/client/waypointsprites.qc:237
 msgid "Destroy"
-msgstr ""
+msgstr "Знішчыць"
 
 #: qcsrc/client/waypointsprites.qc:238
 msgid "Defend"
-msgstr ""
+msgstr "Абараніць"
 
 #: qcsrc/client/waypointsprites.qc:239
 msgid "Blue base"
@@ -881,7 +881,7 @@ msgstr "Панцыр"
 
 #: qcsrc/client/waypointsprites.qc:284
 msgid "Fuel regen"
-msgstr ""
+msgstr "Энергія рэгенерацыі"
 
 #: qcsrc/client/waypointsprites.qc:285
 msgid "Jet Pack"
@@ -893,7 +893,7 @@ msgstr "Замарожаны!"
 
 #: qcsrc/client/waypointsprites.qc:287
 msgid "Tagged"
-msgstr ""
+msgstr "Адзначаны"
 
 #: qcsrc/client/waypointsprites.qc:288
 msgid "Vehicle"
@@ -910,15 +910,15 @@ msgstr "Боепрыпасы"
 
 #: qcsrc/common/buffs.qh:37
 msgid "Resistance"
-msgstr ""
+msgstr "Супраціў"
 
 #: qcsrc/common/buffs.qh:39
 msgid "Medic"
-msgstr ""
+msgstr "Медык"
 
 #: qcsrc/common/buffs.qh:40
 msgid "Bash"
-msgstr ""
+msgstr "Удар"
 
 #: qcsrc/common/buffs.qh:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
@@ -928,15 +928,15 @@ msgstr "Вампірызм"
 
 #: qcsrc/common/buffs.qh:42
 msgid "Disability"
-msgstr ""
+msgstr "Немач"
 
 #: qcsrc/common/buffs.qh:43
 msgid "Vengeance"
-msgstr ""
+msgstr "Помста"
 
 #: qcsrc/common/buffs.qh:44
 msgid "Jump"
-msgstr ""
+msgstr "Падскок"
 
 #: qcsrc/common/buffs.qh:45
 msgid "Flight"
@@ -944,7 +944,7 @@ msgstr "Палёт"
 
 #: qcsrc/common/buffs.qh:46
 msgid "Invisible"
-msgstr ""
+msgstr "Нябачны"
 
 #: qcsrc/common/command/generic.qc:159
 msgid "error creating curl handle\n"
@@ -965,182 +965,182 @@ msgstr "Перазапуск сістэмы абвяшчэнняў працуе 
 #: qcsrc/common/counting.qh:5
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "CI_DEC^%s гадоў"
 
 #: qcsrc/common/counting.qh:7
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "CI_ZER^%d гадоў"
 
 #: qcsrc/common/counting.qh:8
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "CI_FIR^%d год"
 
 #: qcsrc/common/counting.qh:9
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "CI_SEC^%d гады"
 
 #: qcsrc/common/counting.qh:10
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "CI_THI^%d гады"
 
 #: qcsrc/common/counting.qh:11
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "CI_MUL^%d гадоў"
 
 #: qcsrc/common/counting.qh:13
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "CI_DEC^%s тыдняў"
 
 #: qcsrc/common/counting.qh:15
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "CI_ZER^%d тыдняў"
 
 #: qcsrc/common/counting.qh:16
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "CI_FIR^%d тыдзень"
 
 #: qcsrc/common/counting.qh:17
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "CI_SEC^%d тыдні"
 
 #: qcsrc/common/counting.qh:18
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "CI_THI^%d тыдні"
 
 #: qcsrc/common/counting.qh:19
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "CI_MUL^%d тыдняў"
 
 #: qcsrc/common/counting.qh:21
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "CI_DEC^%s дзён"
 
 #: qcsrc/common/counting.qh:23
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "CI_ZER^%d дзён"
 
 #: qcsrc/common/counting.qh:24
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "CI_FIR^%d дзень"
 
 #: qcsrc/common/counting.qh:25
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "CI_SEC^%d дні"
 
 #: qcsrc/common/counting.qh:26
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "CI_THI^%d дні"
 
 #: qcsrc/common/counting.qh:27
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "CI_MUL^%d дзён"
 
 #: qcsrc/common/counting.qh:29
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "CI_DEC^%s гадзін"
 
 #: qcsrc/common/counting.qh:31
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "CI_ZER^%d гадзін"
 
 #: qcsrc/common/counting.qh:32
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "CI_FIR^%d гадзіна"
 
 #: qcsrc/common/counting.qh:33
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "CI_SEC^%d гадзіны"
 
 #: qcsrc/common/counting.qh:34
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "CI_THI^%d гадзіны"
 
 #: qcsrc/common/counting.qh:35
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "CI_MUL^%d гадзін"
 
 #: qcsrc/common/counting.qh:38
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "CI_DEC^%s хвілін"
 
 #: qcsrc/common/counting.qh:40
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "CI_ZER^%d хвілін"
 
 #: qcsrc/common/counting.qh:41
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "CI_FIR^%d хвіліна"
 
 #: qcsrc/common/counting.qh:42
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "CI_SEC^%d хвіліны"
 
 #: qcsrc/common/counting.qh:43
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "CI_THI^%d хвіліны"
 
 #: qcsrc/common/counting.qh:44
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "CI_MUL^%d хвілін"
 
 #: qcsrc/common/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "CI_DEC^%s секунд"
 
 #: qcsrc/common/counting.qh:48
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "CI_ZER^%d секунд"
 
 #: qcsrc/common/counting.qh:49
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "CI_FIR^%d секунда"
 
 #: qcsrc/common/counting.qh:50
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "CI_SEC^%d секунды"
 
 #: qcsrc/common/counting.qh:51
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "CI_THI^%d секунды"
 
 #: qcsrc/common/counting.qh:52
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr ""
+msgstr "CI_MUL^%d секунд"
 
 #: qcsrc/common/counting.qh:68
 #, c-format
@@ -1165,7 +1165,7 @@ msgstr "%d-ты"
 #: qcsrc/common/mapinfo.qc:747
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
-msgstr ""
+msgstr "@!#%'n Шпулянне Тубай"
 
 #: qcsrc/common/mapinfo.qh:40
 msgid "Deathmatch"
