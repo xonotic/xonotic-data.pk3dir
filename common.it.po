@@ -5,15 +5,16 @@
 # Translators:
 # Antonio <piuntn@gmail.com>, 2013-2014
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
+# Costa <yesbubu@hotmail.it>, 2014
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
 # Antonio <piuntn@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2014-12-31 07:32+0100\n"
+"PO-Revision-Date: 2014-12-31 00:10+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/xonotic/language/"
 "it/)\n"
 "Language: it\n"
@@ -457,7 +458,8 @@ msgstr "tick"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
-"Puoi modificare lo scoreboard usando il comando ^2scoreboard_columns_set.\n"
+"Puoi modificare la tabella dei punteggi usando il comando "
+"^2scoreboard_columns_set.\n"
 
 #: qcsrc/client/scoreboard.qc:238
 msgid "^3|---------------------------------------------------------------|\n"
@@ -710,7 +712,7 @@ msgstr "Classifica"
 #: qcsrc/client/scoreboard.qc:1260
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:49
 msgid "Scoreboard"
-msgstr "Tabella dei punteggi"
+msgstr "Punteggi"
 
 #: qcsrc/client/scoreboard.qc:1319
 #, c-format
@@ -4860,7 +4862,7 @@ msgstr "Arene speciali:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
 msgid "with blaster"
-msgstr ""
+msgstr "con blaster"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:4
 msgid "Join"
@@ -5065,7 +5067,7 @@ msgstr "Cronometrare un demo comporta la disconnessione dalla partita corrente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.c:50
 msgid "Auto screenshot scoreboard"
-msgstr "Auto screenshot dello scoreboard"
+msgstr "Auto screenshot dei punteggi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.c:70
 msgid "Open in the viewer"
@@ -5114,7 +5116,7 @@ msgstr "Consenti alle statistiche dei giocatori di tracciare il tuo client"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:114
 msgid "Allow player statistics to use your nickname"
-msgstr "Consenti alle statistiche dei giocatori di usare il tuo nome (nick)"
+msgstr "Consenti alle statistiche dei giocatori di usare il tuo nome"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:129
 msgid "Country"
@@ -5892,7 +5894,7 @@ msgstr "Mostra decimali nel conto alla rovescia per la rinascita"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:65
 msgid "Show accuracy underneath scoreboard"
-msgstr "Mostra accuratezza sotto lo scoreboard"
+msgstr "Mostra accuratezza sotto i punteggi"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:69
 msgid "Waypoints"
@@ -6347,11 +6349,11 @@ msgstr "Salta di nuovo automaticamente tenendo premuto salto"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:92
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "Jetpack quando salti:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:95
 msgid "Air only"
-msgstr ""
+msgstr "Solo aria"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:102
 #: qcsrc/menu/xonotic/dialog_settings_input.c:107

@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2014-12-31 07:32+0100\n"
+"PO-Revision-Date: 2014-12-30 22:41+0000\n"
+"Last-Translator: Ḷḷumex03 <tornes@opmbx.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/projects/p/xonotic/"
 "language/ast/)\n"
 "Language: ast\n"
@@ -247,7 +247,7 @@ msgstr "^3ALT ^7+ ^3ARROW KEYS ^7pa axustes finos."
 
 #: qcsrc/client/hud.qc:3869
 msgid " qu/s"
-msgstr ""
+msgstr " qu/s"
 
 #: qcsrc/client/hud.qc:3873
 msgid " m/s"
@@ -2683,7 +2683,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:617
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2¡ConsiguiEstI una ^K1GRANADA BONUS^F2!"
 
 #: qcsrc/common/notifications.qh:618
 #, c-format
@@ -2691,6 +2691,8 @@ msgid ""
 "^BGYou have been moved into a different team\n"
 "You are now on: %s"
 msgstr ""
+"^BGMoviósete a un equipu distintu\n"
+"Agora tas: %s"
 
 #: qcsrc/common/notifications.qh:619
 msgid "^K1Don't go against your team mates!"
@@ -2916,11 +2918,11 @@ msgstr ""
 #: qcsrc/common/notifications.qh:657
 #, c-format
 msgid "^BGYou also need %s^BG!"
-msgstr ""
+msgstr "^BGTamién necesites %s^BG!"
 
 #: qcsrc/common/notifications.qh:658
 msgid "^BGDoor unlocked!"
-msgstr ""
+msgstr "^BG¡Puerta desbloquiada!"
 
 #: qcsrc/common/notifications.qh:659
 msgid "^F2You picked up some extra lives"
@@ -2986,11 +2988,11 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:683
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGCoyisti la bola"
 
 #: qcsrc/common/notifications.qh:684
 msgid "^BGKilling people while you don't have the ball gives no points!"
-msgstr ""
+msgstr "^BG¡Amortir a xente entrín nun tienes la bola, nun da puntos!"
 
 #: qcsrc/common/notifications.qh:685
 msgid ""
@@ -3036,7 +3038,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:694
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
-msgstr ""
+msgstr "^BGEsperando por %s xugador(es) pa xunise..."
 
 #: qcsrc/common/notifications.qh:695
 msgid "^F4^COUNT^BG left to find some ammo!"
@@ -3044,7 +3046,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:696
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
-msgstr ""
+msgstr "^BGConsigui dél munición o tarás muertu en ^F4^COUNT^BG!"
 
 #: qcsrc/common/notifications.qh:696
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
@@ -3065,7 +3067,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:700
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
-msgstr ""
+msgstr "^F2Arma activa: ^F1%s"
 
 #: qcsrc/common/notifications.qh:701
 msgid "^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"
@@ -3154,7 +3156,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:717
 msgid "^F2The race is over, finish your lap!"
-msgstr ""
+msgstr "^F2Acobóse la carrera, ¡fina al to vuelta!"
 
 #: qcsrc/common/notifications.qh:718
 msgid "^BGSecondary fire inflicts no damage!"
@@ -3162,7 +3164,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:719
 msgid "^BGSequence completed!"
-msgstr ""
+msgstr "^BG¡Secuencia completada!"
 
 #: qcsrc/common/notifications.qh:720
 msgid "^BGThere are more to go..."
@@ -4340,75 +4342,75 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:77
 msgid "TIMLIM^1 minute"
-msgstr ""
+msgstr "TIMLIM^1 minutu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:78
 msgid "TIMLIM^2 minutes"
-msgstr ""
+msgstr "TIMLIM^2 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:79
 msgid "TIMLIM^3 minutes"
-msgstr ""
+msgstr "TIMLIM^3 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:80
 msgid "TIMLIM^4 minutes"
-msgstr ""
+msgstr "TIMLIM^4 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:81
 msgid "TIMLIM^5 minutes"
-msgstr ""
+msgstr "TIMLIM^5 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:82
 msgid "TIMLIM^6 minutes"
-msgstr ""
+msgstr "TIMLIM^6 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:83
 msgid "TIMLIM^7 minutes"
-msgstr ""
+msgstr "TIMLIM^7 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:84
 msgid "TIMLIM^8 minutes"
-msgstr ""
+msgstr "TIMLIM^8 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:85
 msgid "TIMLIM^9 minutes"
-msgstr ""
+msgstr "TIMLIM^9 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:86
 msgid "TIMLIM^10 minutes"
-msgstr ""
+msgstr "TIMLIM^10 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:87
 msgid "TIMLIM^15 minutes"
-msgstr ""
+msgstr "TIMLIM^15 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:88
 msgid "TIMLIM^20 minutes"
-msgstr ""
+msgstr "TIMLIM^20 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:89
 msgid "TIMLIM^25 minutes"
-msgstr ""
+msgstr "TIMLIM^25 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:90
 msgid "TIMLIM^30 minutes"
-msgstr ""
+msgstr "TIMLIM^30 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:91
 msgid "TIMLIM^40 minutes"
-msgstr ""
+msgstr "TIMLIM^40 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:92
 msgid "TIMLIM^50 minutes"
-msgstr ""
+msgstr "TIMLIM^50 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:93
 msgid "TIMLIM^60 minutes"
-msgstr ""
+msgstr "TIMLIM^60 minutos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:94
 msgid "TIMLIM^Infinite"
-msgstr ""
+msgstr "TIMLIM^Infinitu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:97
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:99
@@ -4975,11 +4977,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:146
 msgid "GENDER^Female"
-msgstr ""
+msgstr "GENDER^Fema"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:147
 msgid "GENDER^Male"
-msgstr ""
+msgstr "GENDER^Machu"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:150
 msgid "Gender"
@@ -6262,7 +6264,7 @@ msgstr "Paquetes entrantes/seg:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:44
 msgid "Server queries/s:"
-msgstr ""
+msgstr "Peticiones del sirvidor/s:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:48
 msgid "Downloads:"
@@ -6274,7 +6276,7 @@ msgstr "Velocidá (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:57
 msgid "Local latency:"
-msgstr ""
+msgstr "Llatencia llocal:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:61
 msgid "Show netgraph"
@@ -6298,7 +6300,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:74
 msgid "Maximum:"
-msgstr ""
+msgstr "Máximu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:76
 msgid "MAXFPS^5 fps"
@@ -6942,51 +6944,51 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.c:54
 msgid "January"
-msgstr ""
+msgstr "Xineru"
 
 #: qcsrc/menu/xonotic/statslist.c:55
 msgid "February"
-msgstr ""
+msgstr "Febreru"
 
 #: qcsrc/menu/xonotic/statslist.c:56
 msgid "March"
-msgstr ""
+msgstr "Marzu"
 
 #: qcsrc/menu/xonotic/statslist.c:57
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: qcsrc/menu/xonotic/statslist.c:58
 msgid "May"
-msgstr ""
+msgstr "Mayu"
 
 #: qcsrc/menu/xonotic/statslist.c:59
 msgid "June"
-msgstr ""
+msgstr "Xunu"
 
 #: qcsrc/menu/xonotic/statslist.c:60
 msgid "July"
-msgstr ""
+msgstr "Xunetu"
 
 #: qcsrc/menu/xonotic/statslist.c:61
 msgid "August"
-msgstr ""
+msgstr "Agostu"
 
 #: qcsrc/menu/xonotic/statslist.c:62
 msgid "September"
-msgstr ""
+msgstr "Setiembre"
 
 #: qcsrc/menu/xonotic/statslist.c:63
 msgid "October"
-msgstr ""
+msgstr "Ochobre"
 
 #: qcsrc/menu/xonotic/statslist.c:64
 msgid "November"
-msgstr ""
+msgstr "Payares"
 
 #: qcsrc/menu/xonotic/statslist.c:65
 msgid "December"
-msgstr ""
+msgstr "Avientu"
 
 #: qcsrc/menu/xonotic/statslist.c:121
 msgid "Joined:"
@@ -7055,7 +7057,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:542
 #, c-format
 msgid "Update to %s now!"
-msgstr ""
+msgstr "¡Anovar agora a %s!"
 
 #: qcsrc/menu/xonotic/util.qc:627
 msgid ""
