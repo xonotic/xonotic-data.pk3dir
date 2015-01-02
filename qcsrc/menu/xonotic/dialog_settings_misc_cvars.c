@@ -28,6 +28,9 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 		cvarlist.colorC =
 		SKINCOLOR_CVARLIST_CONTROLS;
 
+	// todo:
+	// add button which does cvar_resettodefaults_saveonly
+
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticInputBox(0, string_null));

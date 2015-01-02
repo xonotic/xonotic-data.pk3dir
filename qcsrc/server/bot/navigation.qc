@@ -117,7 +117,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 							break;
 				}
 
-				if (!(pointcontents(org + '0 0 1') == CONTENT_EMPTY))
+				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);

@@ -23,7 +23,7 @@ check_files()
 	done
 }
 
-check_files "balanceXonotic.cfg" "balance*.cfg" "/^seta? g_/"
+check_files "balance-xonotic.cfg" "balance-*.cfg" "/^seta? g_/"
 check_files "_hud_descriptions.cfg" "hud_*.cfg" "/^seta? hud_/"
 
 if $errord; then

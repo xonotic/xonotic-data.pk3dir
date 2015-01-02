@@ -38,7 +38,5 @@ vector boxToGlobalSize(vector v, vector scale);
 vector globalToBox(vector v, vector shift, vector scale);
 vector globalToBoxSize(vector v, vector scale);
 
-float draw_NeedResizeNotify;
-
 float draw_TextWidth_WithColors(string s, vector size);
 float draw_TextWidth_WithoutColors(string s, vector size);

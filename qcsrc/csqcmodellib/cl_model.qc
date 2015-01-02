@@ -263,11 +263,7 @@ void CSQCModel_Read(float isnew)
 	setorigin(self, self.origin);
 
 	// set obvious render flags
-#ifdef COMPAT_XON050_ENGINE
-	if(self.entnum == player_localentnum || self.entnum == spectatee_status)
-#else
 	if(self.entnum == player_localentnum)
-#endif
 		self.renderflags |= RF_EXTERNALMODEL;
 	else
 		self.renderflags &= ~RF_EXTERNALMODEL;

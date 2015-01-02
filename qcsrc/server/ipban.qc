@@ -138,7 +138,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 	else
 		n = tokenizebyseparator(data, "\n");
 
-	if(mod(n, 4) != 0)
+	if((n % 4) != 0)
 	{
 		print("error: received invalid item count: ", ftos(n), "\n");
 		return;

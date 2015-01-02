@@ -213,6 +213,8 @@ void GameCommand_allspec(float request, float argc)
 			FOR_EACH_REALPLAYER(client)
 			{
 				self = client;
+				if(self.caplayer)
+					self.caplayer = 0;
 				PutObserverInServer();
 				++i;
 			}
@@ -476,14 +478,11 @@ void GameCommand_cointoss(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
-			string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
+			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
+			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
-
-			FOR_EACH_CLIENT(client)
-				centerprint(client, strcat("^3Throwing coin... Result: ", choice));
-			bprint(strcat("^3Throwing coin... Result: ", choice));
+			
+			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
 			return;
 		}
 
@@ -1045,6 +1044,8 @@ void GameCommand_moveplayer(float request, float argc)
 						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							self = client;
+							if(self.caplayer)
+								self.caplayer = 0;
 							PutObserverInServer();
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
@@ -1150,9 +1151,10 @@ void GameCommand_nospectators(float request)
 		{
 			blockSpectators = 1;
 			entity plr;
-			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+			FOR_EACH_REALCLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			{
 				if(IS_SPEC(plr) || IS_OBSERVER(plr))
+				if(!plr.caplayer)
 				{
 					plr.spectatortime = time;
 					Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
