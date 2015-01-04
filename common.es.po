@@ -12,14 +12,14 @@
 # kammy smb <kammysmb@gmail.com>, 2013
 # roader_gentoo <ivanviso123@gmail.com>, 2014
 # Rodrigo Mouton Laudin <ratogenesis@gmail.com>, 2011
-# Simon <0000sion@gmail.com>, 2014
+# Simon <0000sion@gmail.com>, 2014-2015
 # Ari_tent <xonotic@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-03 09:32+0100\n"
-"PO-Revision-Date: 2015-01-03 01:30+0000\n"
+"POT-Creation-Date: 2015-01-04 20:59+0100\n"
+"PO-Revision-Date: 2015-01-04 19:51+0000\n"
 "Last-Translator: Alan García <bearz_x@hotmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/xonotic/language/"
 "es/)\n"
@@ -40,7 +40,7 @@ msgstr "%s (sin asignar)"
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
-msgstr ""
+msgstr "Nade Cronometro"
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
@@ -298,7 +298,7 @@ msgstr "No importa"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Elegir el modo de juego"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Vote for a map"
@@ -328,11 +328,11 @@ msgstr "¡Intentado eliminar un equipo que no esta en la lista de equipos !"
 
 #: qcsrc/client/scoreboard.qc:19
 msgid "SCO^bckills"
-msgstr ""
+msgstr "SCO^bckills"
 
 #: qcsrc/client/scoreboard.qc:20
 msgid "SCO^bctime"
-msgstr ""
+msgstr "SCO^bctime"
 
 #: qcsrc/client/scoreboard.qc:21
 msgid "SCO^caps"
@@ -340,7 +340,7 @@ msgstr "SCO^capturas"
 
 #: qcsrc/client/scoreboard.qc:22
 msgid "SCO^captime"
-msgstr ""
+msgstr "SCO^captime"
 
 #: qcsrc/client/scoreboard.qc:23
 msgid "SCO^deaths"
@@ -360,7 +360,7 @@ msgstr "SCO^faltas"
 
 #: qcsrc/client/scoreboard.qc:27
 msgid "SCO^fckills"
-msgstr ""
+msgstr "SCO^fckills"
 
 #: qcsrc/client/scoreboard.qc:28
 msgid "SCO^goals"
@@ -368,23 +368,23 @@ msgstr "SCO^metas"
 
 #: qcsrc/client/scoreboard.qc:29
 msgid "SCO^kckills"
-msgstr ""
+msgstr "SCO^kckills"
 
 #: qcsrc/client/scoreboard.qc:30
 msgid "SCO^kdratio"
-msgstr ""
+msgstr "SCO^kdratio"
 
 #: qcsrc/client/scoreboard.qc:31
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^k/d"
 
 #: qcsrc/client/scoreboard.qc:32
 msgid "SCO^kd"
-msgstr ""
+msgstr "SCO^kd"
 
 #: qcsrc/client/scoreboard.qc:33
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^kdr"
 
 #: qcsrc/client/scoreboard.qc:34
 msgid "SCO^kills"
@@ -392,7 +392,7 @@ msgstr "SCO^kills"
 
 #: qcsrc/client/scoreboard.qc:35
 msgid "SCO^laps"
-msgstr ""
+msgstr "SCO^laps"
 
 #: qcsrc/client/scoreboard.qc:36
 msgid "SCO^lives"
@@ -408,11 +408,11 @@ msgstr "SCO^nombre"
 
 #: qcsrc/client/scoreboard.qc:39
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^sum"
 
 #: qcsrc/client/scoreboard.qc:40
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^nick"
 
 #: qcsrc/client/scoreboard.qc:41
 msgid "SCO^objectives"
@@ -420,7 +420,7 @@ msgstr "SCO^objetivos"
 
 #: qcsrc/client/scoreboard.qc:42
 msgid "SCO^pickups"
-msgstr ""
+msgstr "SCO^pickups"
 
 #: qcsrc/client/scoreboard.qc:43
 msgid "SCO^ping"
@@ -428,15 +428,15 @@ msgstr "Ping"
 
 #: qcsrc/client/scoreboard.qc:44
 msgid "SCO^pl"
-msgstr ""
+msgstr "SCO^pl"
 
 #: qcsrc/client/scoreboard.qc:45
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^pushes"
 
 #: qcsrc/client/scoreboard.qc:46
 msgid "SCO^rank"
-msgstr ""
+msgstr "SCO^rank"
 
 #: qcsrc/client/scoreboard.qc:47
 msgid "SCO^returns"
@@ -444,11 +444,11 @@ msgstr "SCO^devoluciones"
 
 #: qcsrc/client/scoreboard.qc:48
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^revivals"
 
 #: qcsrc/client/scoreboard.qc:49
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^score"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^suicides"
@@ -456,11 +456,11 @@ msgstr "SCO^suicidios"
 
 #: qcsrc/client/scoreboard.qc:51
 msgid "SCO^takes"
-msgstr ""
+msgstr "SCO^takes"
 
 #: qcsrc/client/scoreboard.qc:52
 msgid "SCO^ticks"
-msgstr ""
+msgstr "SCO^ticks"
 
 #: qcsrc/client/scoreboard.qc:237
 msgid ""
@@ -480,11 +480,11 @@ msgstr "Uso:\n"
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set default\n"
 
 #: qcsrc/client/scoreboard.qc:241
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
@@ -596,6 +596,7 @@ msgstr ""
 #: qcsrc/client/scoreboard.qc:264
 msgid "^3kckills^7                  Number of keys carrier kills\n"
 msgstr ""
+"^3kckills^7                  Numero de muertes del acarreador de la llave\n"
 
 #: qcsrc/client/scoreboard.qc:265
 msgid "^3losses^7                   Number of times a key was lost\n"
@@ -604,10 +605,12 @@ msgstr "^3losses^7                 Numero de veces que se perdió la llave\n"
 #: qcsrc/client/scoreboard.qc:266
 msgid "^3laps^7                     Number of laps finished (race/cts)\n"
 msgstr ""
+"^3laps^7                     Numero de vueltas terminadas (carrera/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:267
 msgid "^3time^7                     Total time raced (race/cts)\n"
 msgstr ""
+"^3time^7                     Tiempo total de la carrera (carrera/cts)\n"
 
 #: qcsrc/client/scoreboard.qc:268
 msgid "^3fastest^7                  Time of fastest lap (race/cts)\n"
@@ -616,7 +619,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:269
 msgid "^3ticks^7                    Number of ticks (DOM)\n"
-msgstr ""
+msgstr "^3ticks^7                    Numero de toques (DOM)\n"
 
 #: qcsrc/client/scoreboard.qc:270
 msgid "^3takes^7                    Number of domination points taken (DOM)\n"
@@ -625,13 +628,14 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:271
 msgid "^3bckills^7                  Number of ball carrier kills\n"
-msgstr ""
+msgstr "^3bckills^7                  Number of ball carrier kills\n"
 
 #: qcsrc/client/scoreboard.qc:272
 msgid ""
 "^3bctime^7                   Total amount of time holding the ball in "
 "Keepaway\n"
 msgstr ""
+"^3bctime^7                   Tiempo total reteniendo la pelota en Keepaway\n"
 
 #: qcsrc/client/scoreboard.qc:273
 msgid ""
@@ -661,22 +665,30 @@ msgid ""
 "include/exclude ALL teams/noteams game modes.\n"
 "\n"
 msgstr ""
+"El tipo de juego especial llamado 'equipos' y 'sinequipo' puede ser usado "
+"para incluir/excluir TODOS los equipos/sinequipo del modo de juego.\n"
+"\n"
 
 #: qcsrc/client/scoreboard.qc:283
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 msgstr ""
+"Ejemplo: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
 
 #: qcsrc/client/scoreboard.qc:284
 msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right.\n"
 msgstr ""
+"Se mostrará el nombre, ping y pl alinieaos a la izquierda, y los campos a la "
+"derecha de la barra vertical alineada en la derecha.\n"
 
 #: qcsrc/client/scoreboard.qc:286
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gamemodes except DM.\n"
 msgstr ""
+"'field3' solo será mostrado en CTF, y 'field4' será mostrado en todos los "
+"modos de juego excepto DM.\n"
 
 #: qcsrc/client/scoreboard.qc:526 qcsrc/client/scoreboard.qc:533
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:121
@@ -690,175 +702,175 @@ msgstr "N/A"
 #: qcsrc/client/scoreboard.qc:982
 #, c-format
 msgid "Accuracy stats (average %d%%)"
-msgstr ""
+msgstr "Estadística de precisión (promedio %d%%)"
 
 #: qcsrc/client/scoreboard.qc:1111
 msgid "Map stats:"
-msgstr ""
+msgstr "Estadistícas del Mapas:"
 
 #: qcsrc/client/scoreboard.qc:1129
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Monstruos muertos:"
 
 #: qcsrc/client/scoreboard.qc:1136
 msgid "Secrets found:"
-msgstr ""
+msgstr "Secretos encontrados:"
 
 #: qcsrc/client/scoreboard.qc:1164
 msgid "Rankings"
-msgstr ""
+msgstr "Clasificatorias"
 
 #: qcsrc/client/scoreboard.qc:1260
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:49
 msgid "Scoreboard"
-msgstr ""
+msgstr "Tabla de puntuación"
 
 #: qcsrc/client/scoreboard.qc:1319
 #, c-format
 msgid "Speed award: %d ^7(%s^7)"
-msgstr ""
+msgstr "Premio de velocidad: %d ^7(%s^7)"
 
 #: qcsrc/client/scoreboard.qc:1323
 #, c-format
 msgid "All-time fastest: %d ^7(%s^7)"
-msgstr ""
+msgstr "Mejor tiempo de todos: %d ^7(%s^7)"
 
 #: qcsrc/client/scoreboard.qc:1361
 msgid "Spectators"
-msgstr ""
+msgstr "Espectadores"
 
 #: qcsrc/client/scoreboard.qc:1368
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr ""
+msgstr "jugando ^3%s^7 on ^2%s^7"
 
 #: qcsrc/client/scoreboard.qc:1375 qcsrc/client/scoreboard.qc:1380
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr ""
+msgstr "para un máximo de ^1%1.0f minutes^7"
 
 #: qcsrc/client/scoreboard.qc:1384 qcsrc/client/scoreboard.qc:1403
 msgid " or"
-msgstr ""
+msgstr " ó"
 
 #: qcsrc/client/scoreboard.qc:1387 qcsrc/client/scoreboard.qc:1394
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr ""
+msgstr "hasta ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1388 qcsrc/client/scoreboard.qc:1395
 #: qcsrc/client/scoreboard.qc:1407 qcsrc/client/scoreboard.qc:1414
 msgid "SCO^points"
-msgstr ""
+msgstr "SCO^points"
 
 #: qcsrc/client/scoreboard.qc:1389 qcsrc/client/scoreboard.qc:1396
 #: qcsrc/client/scoreboard.qc:1408 qcsrc/client/scoreboard.qc:1415
 msgid "SCO^is beaten"
-msgstr ""
+msgstr "SCO^es vencido"
 
 #: qcsrc/client/scoreboard.qc:1406 qcsrc/client/scoreboard.qc:1413
 #, c-format
 msgid " until a lead of ^3%s %s^7"
-msgstr ""
+msgstr " hasta una ventaja de ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1435
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr ""
+msgstr "^1Respawning in ^3%s^1..."
 
 #: qcsrc/client/scoreboard.qc:1445
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Estás muerto, espera ^3%s^7 antes de resurgir"
 
 #: qcsrc/client/scoreboard.qc:1454
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Estás muerto, presiona ^2%s^7 para resurgir"
 
 #: qcsrc/client/tturrets.qc:299 qcsrc/client/waypointsprites.qc:558
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: qcsrc/client/tturrets.qc:308
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%s bajo ataque!"
 
 #: qcsrc/client/vehicles/vehicles.qc:331 qcsrc/client/vehicles/vehicles.qc:333
 msgid "No right gunner!"
-msgstr ""
+msgstr "Sin ametralladora derecha!"
 
 #: qcsrc/client/vehicles/vehicles.qc:353 qcsrc/client/vehicles/vehicles.qc:355
 msgid "No left gunner!"
-msgstr ""
+msgstr "Sin ametralladora izquierda!"
 
 #: qcsrc/client/waypointsprites.qc:236
 msgid "Push"
-msgstr ""
+msgstr "Empujar"
 
 #: qcsrc/client/waypointsprites.qc:237
 msgid "Destroy"
-msgstr ""
+msgstr "Destruir"
 
 #: qcsrc/client/waypointsprites.qc:238
 msgid "Defend"
-msgstr ""
+msgstr "Defender"
 
 #: qcsrc/client/waypointsprites.qc:239
 msgid "Blue base"
-msgstr ""
+msgstr "Base azul"
 
 #: qcsrc/client/waypointsprites.qc:240
 msgid "DANGER"
-msgstr ""
+msgstr "PELIGRO"
 
 #: qcsrc/client/waypointsprites.qc:241
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Acarreador enemigo"
 
 #: qcsrc/client/waypointsprites.qc:242
 msgid "Flag carrier"
-msgstr ""
+msgstr "Acarreador de bandera"
 
 #: qcsrc/client/waypointsprites.qc:243
 msgid "Dropped flag"
-msgstr ""
+msgstr "Bandera suelta"
 
 #: qcsrc/client/waypointsprites.qc:244
 msgid "Help me!"
-msgstr ""
+msgstr "Ayudame!"
 
 #: qcsrc/client/waypointsprites.qc:245
 msgid "Here"
-msgstr ""
+msgstr "Aquí"
 
 #: qcsrc/client/waypointsprites.qc:246
 msgid "Dropped key"
-msgstr ""
+msgstr "Llave suelta"
 
 #: qcsrc/client/waypointsprites.qc:247 qcsrc/client/waypointsprites.qc:249
 #: qcsrc/client/waypointsprites.qc:250 qcsrc/client/waypointsprites.qc:251
 #: qcsrc/client/waypointsprites.qc:252
 msgid "Key carrier"
-msgstr ""
+msgstr "Acarreador de la llave"
 
 #: qcsrc/client/waypointsprites.qc:248
 msgid "Run here"
-msgstr ""
+msgstr "Corre aquí"
 
 #: qcsrc/client/waypointsprites.qc:253
 msgid "Red base"
-msgstr ""
+msgstr "Base roja"
 
 #: qcsrc/client/waypointsprites.qc:254
 msgid "Waypoint"
-msgstr ""
+msgstr "Punto de encuentro"
 
 #: qcsrc/client/waypointsprites.qc:255 qcsrc/client/waypointsprites.qc:256
 #: qcsrc/client/waypointsprites.qc:257
 msgid "Generator"
-msgstr ""
+msgstr "Generador"
 
 #: qcsrc/client/waypointsprites.qc:258 qcsrc/client/waypointsprites.qc:259
 #: qcsrc/client/waypointsprites.qc:260 qcsrc/client/waypointsprites.qc:261
@@ -868,92 +880,92 @@ msgstr ""
 #: qcsrc/client/waypointsprites.qc:276 qcsrc/client/waypointsprites.qc:277
 #: qcsrc/client/waypointsprites.qc:278
 msgid "Control point"
-msgstr ""
+msgstr "Punto de control"
 
 #: qcsrc/client/waypointsprites.qc:266
 msgid "Checkpoint"
-msgstr ""
+msgstr "Punto de revisión"
 
 #: qcsrc/client/waypointsprites.qc:267 qcsrc/client/waypointsprites.qc:269
 msgid "Finish"
-msgstr ""
+msgstr "Finalizar"
 
 #: qcsrc/client/waypointsprites.qc:268 qcsrc/client/waypointsprites.qc:269
 msgid "Start"
-msgstr ""
+msgstr "Comenzar"
 
 #: qcsrc/client/waypointsprites.qc:270
 msgid "Goal"
-msgstr ""
+msgstr "Objetivo"
 
 #: qcsrc/client/waypointsprites.qc:271 qcsrc/client/waypointsprites.qc:272
 msgid "Ball"
-msgstr ""
+msgstr "Pelota"
 
 #: qcsrc/client/waypointsprites.qc:273
 msgid "Ball carrier"
-msgstr ""
+msgstr "Acarreador de la pelota"
 
 #: qcsrc/client/waypointsprites.qc:279
 msgid "Invisibility"
-msgstr ""
+msgstr "Invicibilidad"
 
 #: qcsrc/client/waypointsprites.qc:280
 msgid "Extra life"
-msgstr ""
+msgstr "Vida extra"
 
 #: qcsrc/client/waypointsprites.qc:281 qcsrc/common/buffs.qh:38
 msgid "Speed"
-msgstr ""
+msgstr "Velocidad"
 
 #: qcsrc/client/waypointsprites.qc:282
 msgid "Strength"
-msgstr ""
+msgstr "Fuerza"
 
 #: qcsrc/client/waypointsprites.qc:283
 msgid "Shield"
-msgstr ""
+msgstr "Escudo"
 
 #: qcsrc/client/waypointsprites.qc:284
 msgid "Fuel regen"
-msgstr ""
+msgstr "Regeneración de combustible"
 
 #: qcsrc/client/waypointsprites.qc:285
 msgid "Jet Pack"
-msgstr ""
+msgstr "Paquete jet"
 
 #: qcsrc/client/waypointsprites.qc:286
 msgid "Frozen!"
-msgstr ""
+msgstr "Congelado!"
 
 #: qcsrc/client/waypointsprites.qc:287
 msgid "Tagged"
-msgstr ""
+msgstr "Marcado"
 
 #: qcsrc/client/waypointsprites.qc:288
 msgid "Vehicle"
-msgstr ""
+msgstr "Vehiculo"
 
 #: qcsrc/client/waypointsprites.qc:562
 #, c-format
 msgid "%s needing help!"
-msgstr ""
+msgstr "%s solicitando ayuda!"
 
 #: qcsrc/common/buffs.qh:36
 msgid "Ammo"
-msgstr ""
+msgstr "Munición"
 
 #: qcsrc/common/buffs.qh:37
 msgid "Resistance"
-msgstr ""
+msgstr "Resistencia"
 
 #: qcsrc/common/buffs.qh:39
 msgid "Medic"
-msgstr ""
+msgstr "Medico"
 
 #: qcsrc/common/buffs.qh:40
 msgid "Bash"
-msgstr ""
+msgstr "Golpetazo"
 
 #: qcsrc/common/buffs.qh:41
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
@@ -963,23 +975,23 @@ msgstr "Vampiro"
 
 #: qcsrc/common/buffs.qh:42
 msgid "Disability"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: qcsrc/common/buffs.qh:43
 msgid "Vengeance"
-msgstr ""
+msgstr "Venganza"
 
 #: qcsrc/common/buffs.qh:44
 msgid "Jump"
-msgstr ""
+msgstr "Salto"
 
 #: qcsrc/common/buffs.qh:45
 msgid "Flight"
-msgstr ""
+msgstr "Vuelo"
 
 #: qcsrc/common/buffs.qh:46
 msgid "Invisible"
-msgstr ""
+msgstr "Invicible"
 
 #: qcsrc/common/command/generic.qc:159
 msgid "error creating curl handle\n"
@@ -991,7 +1003,7 @@ msgstr "Comando de despligue solo funciona con cl_cmd y sv_cmd.\n"
 
 #: qcsrc/common/command/generic.qc:316
 msgid "Weapons dump command only works with sv_cmd.\n"
-msgstr ""
+msgstr "Armas sueltas solo funcionan con el comando sv_cmd.\n"
 
 #: qcsrc/common/command/generic.qc:510
 msgid "Notification restart command only works with cl_cmd and sv_cmd.\n"
@@ -1209,7 +1221,7 @@ msgstr "Combate a muerte"
 
 #: qcsrc/common/mapinfo.qh:40
 msgid "Kill all enemies"
-msgstr ""
+msgstr "Mata a todos los enemigos"
 
 #: qcsrc/common/mapinfo.qh:43
 msgid "Last Man Standing"
@@ -1217,7 +1229,7 @@ msgstr "Ultimo Sobreviviente"
 
 #: qcsrc/common/mapinfo.qh:43
 msgid "Survive and kill until the enemies have no lives left"
-msgstr ""
+msgstr "Sobrevive y mata a todos los enemigos hasta que no les queden vidas"
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race"
@@ -1225,7 +1237,7 @@ msgstr "Carrera"
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race against other players to the finish line"
-msgstr ""
+msgstr "Carrera contra todos los jugadores hasta finalizar la meta"
 
 #: qcsrc/common/mapinfo.qh:49
 msgid "Race CTS"
@@ -1233,11 +1245,11 @@ msgstr "Carrera CTS"
 
 #: qcsrc/common/mapinfo.qh:49
 msgid "Race for fastest time"
-msgstr ""
+msgstr "Carrera por el mejor tiempo"
 
 #: qcsrc/common/mapinfo.qh:52
 msgid "Kill all enemy teammates"
-msgstr ""
+msgstr "Mata todos los compañeros del enemigo"
 
 #: qcsrc/common/mapinfo.qh:52
 msgid "Team Deathmatch"
@@ -1249,7 +1261,7 @@ msgstr "Capture the Flag"
 
 #: qcsrc/common/mapinfo.qh:55
 msgid "Find and bring the enemy flag to your base to capture it"
-msgstr ""
+msgstr "Encuentra y trae la bandera enemiga a tu base para capturarla"
 
 #: qcsrc/common/mapinfo.qh:58
 msgid "Clan Arena"
@@ -1257,11 +1269,11 @@ msgstr "Clan arena"
 
 #: qcsrc/common/mapinfo.qh:58
 msgid "Kill all enemy teammates to win the round"
-msgstr ""
+msgstr "Mata a todos los compañeros del enemigo para ganar el juego"
 
 #: qcsrc/common/mapinfo.qh:61
 msgid "Capture all the control points to win"
-msgstr ""
+msgstr "Capturar todos los puntos de control para ganar"
 
 #: qcsrc/common/mapinfo.qh:61
 msgid "Domination"
@@ -1269,7 +1281,7 @@ msgstr "Dominación"
 
 #: qcsrc/common/mapinfo.qh:64
 msgid "Gather all the keys to win the round"
-msgstr ""
+msgstr "Colecta todas las llaves para ganar la partida"
 
 #: qcsrc/common/mapinfo.qh:64
 msgid "Key Hunt"
@@ -1308,10 +1320,12 @@ msgstr "Freeze Tag"
 #: qcsrc/common/mapinfo.qh:76
 msgid "Kill enemies to freeze them, stand next to teammates to revive them"
 msgstr ""
+"Mata a lo enemigos para congelarlos, parate enseguida de un compañero de "
+"equipo para revivirlo."
 
 #: qcsrc/common/mapinfo.qh:79
 msgid "Hold the ball to get points for kills"
-msgstr ""
+msgstr "Mantén la pelota para ganar puntos de muertes"
 
 #: qcsrc/common/mapinfo.qh:79
 msgid "Keepaway"
@@ -1319,11 +1333,11 @@ msgstr "Keepaway"
 
 #: qcsrc/common/mapinfo.qh:82
 msgid "Invasion"
-msgstr ""
+msgstr "Invasión "
 
 #: qcsrc/common/mapinfo.qh:82
 msgid "Survive against waves of monsters"
-msgstr ""
+msgstr "Sobrevive en contra de las olas de monstruos "
 
 #: qcsrc/common/monsters/monster/mage.qc:9
 #: qcsrc/menu/xonotic/dialog_monstertools.c:24
@@ -1362,15 +1376,17 @@ msgstr "^7%s(^3%d segundos restantes)"
 #: qcsrc/common/notifications.qh:342
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
+"^F4NOTA: ^BGEl chat de espectador no se envía a los jugadores durante el "
+"juego"
 
 #: qcsrc/common/notifications.qh:343 qcsrc/common/notifications.qh:590
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr ""
+msgstr "^F2Tirando moneda... Resulto %s^F2!"
 
 #: qcsrc/common/notifications.qh:344
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr ""
+msgstr "^BGNo tienes mas combustible para el ^F1Jetpack"
 
 #: qcsrc/common/notifications.qh:345
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -1378,16 +1394,16 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:346
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr ""
+msgstr "^F1La ronda ya empezó, entraras al juego en la siguiente ronda"
 
 #: qcsrc/common/notifications.qh:347
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Tendras que mirar la siguiente ronda"
 
 #: qcsrc/common/notifications.qh:348
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG capturo la ^TC^TT^BG bandera"
 
 #: qcsrc/common/notifications.qh:349
 #, c-format
@@ -1395,11 +1411,13 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG"
 "%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
+"^BG%s^BG capturo la ^TC^TT^BG bandera en ^F1%s^BG segundos, rompiendo ^BG"
+"%s^BG's el record anterior de ^F2%s^BG segundos"
 
 #: qcsrc/common/notifications.qh:350
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG capturo la ^TC^TT^BG bandera en ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications.qh:351
 #, c-format
@@ -1407,24 +1425,28 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG capturo la ^TC^TT^BG bandera en ^F2%s^BG segundos, fallando para "
+"romper ^BG%s^BG's record anterior de ^F1%s^BG segundos"
 
 #: qcsrc/common/notifications.qh:352
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BGLa ^TC^TT^BG bandera fue regresada a su base por su dueño"
 
 #: qcsrc/common/notifications.qh:353
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGLa ^TC^TT^BG bandera fue destruida y regresada a su base"
 
 #: qcsrc/common/notifications.qh:354
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGLa ^TC^TT^BG bandera se aventada en la base y ha regresado sola"
 
 #: qcsrc/common/notifications.qh:355
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
+"^BGTLa ^TC^TT^BG bandera cayó en algún lugar y no puede alcanzar a regresar "
+"a la base"
 
 #: qcsrc/common/notifications.qh:356
 #, c-format
@@ -1432,70 +1454,72 @@ msgid ""
 "^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned "
 "itself"
 msgstr ""
+"^BGLa ^TC^TT^BG bandera se desespero despues de ^F1%.2f^BG segundos y se "
+"regreso sola"
 
 #: qcsrc/common/notifications.qh:357
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr ""
+msgstr "^BGLa ^TC^TT^BG bandera fue regresada a la base"
 
 #: qcsrc/common/notifications.qh:358
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG perdió la ^TC^TT^BG bandera"
 
 #: qcsrc/common/notifications.qh:359
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG tiene la ^TC^TT^BG bandera"
 
 #: qcsrc/common/notifications.qh:360 qcsrc/common/notifications.qh:361
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG regresó la ^TC^TT^BG bandera"
 
 #: qcsrc/common/notifications.qh:362
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue eliminado injustamente por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:363
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue ahogado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:364
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue castigado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:365
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 se siente calientito por ^BG%s^K1's fuego^K1%s%s"
 
 #: qcsrc/common/notifications.qh:365
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue crujientemente quemado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:366
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue cocinado por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:367
 #, c-format
 msgid "^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue empujado enfrente del monstruo por ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:368
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 fue explotado por ^BG%s^K1's Granda%s%s"
 
 #: qcsrc/common/notifications.qh:369
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 se acerco demasiado a la explosión de la napalm %s%s"
 
 #: qcsrc/common/notifications.qh:369
 #, c-format
@@ -6136,19 +6160,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:115
 msgid "Display reticle 2D overlay while zooming"
-msgstr ""
+msgstr "Mostrar retraso del retículo 2D mientras hace acercamiento"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:118
 msgid "Release zoom when you die or respawn"
-msgstr ""
+msgstr "Soltar acercamiento cuando muere o reaparece"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:122
 msgid "Release zoom when you switch weapons"
-msgstr ""
+msgstr "Soltar acercamiento cuando cambia entre armas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.c:34
 msgid "Weapon Priority List"
-msgstr ""
+msgstr "Lista prioritaria de armas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.c:39
 msgid "Up"
@@ -6172,7 +6196,7 @@ msgstr "Cambiar de arma al recojer"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.c:54
 msgid "Release attack buttons when you switch weapons"
-msgstr ""
+msgstr "Soltar botones de ataque cuando cambia entre armas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.c:57
 msgid "Draw 1st person weapon model"
@@ -6188,7 +6212,7 @@ msgstr "Agitado de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:33
 msgid "Key Bindings"
-msgstr ""
+msgstr "Atajos del teclado"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:37
 msgid "Change key..."
@@ -6204,11 +6228,11 @@ msgstr "Limpiar"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:52
 msgid "Reset all"
-msgstr ""
+msgstr "Reiniciar todo"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:57
 msgid "Mouse"
-msgstr ""
+msgstr "Ratón"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:59
 msgid "Sensitivity:"
@@ -6224,7 +6248,7 @@ msgstr "Invertir apuntado"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:66
 msgid "Use system mouse positioning"
-msgstr ""
+msgstr "Usar sistema de posicionamiento del ratón"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:71
 msgid "Enable built in mouse acceleration"
@@ -6247,11 +6271,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:92
 msgid "Jetpack on jump:"
-msgstr ""
+msgstr "Jetpack al brincar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:95
 msgid "Air only"
-msgstr ""
+msgstr "Solo aire"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:102
 #: qcsrc/menu/xonotic/dialog_settings_input.c:107
@@ -6281,7 +6305,7 @@ msgstr "Cancelar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:26
 msgid "Network"
-msgstr ""
+msgstr "Red"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:28
 msgid "Client UDP port:"
@@ -6289,7 +6313,7 @@ msgstr "Puerto UDP del Cliente:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:32
 msgid "Bandwidth:"
-msgstr ""
+msgstr "Ancho de banda:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:34
 msgid "56k"
@@ -6489,7 +6513,7 @@ msgstr "Avanzado"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:127
 msgid "Show current date and time"
-msgstr ""
+msgstr "Mostrar fecha y hora actual"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:130
 msgid "Enable developer mode"
@@ -6502,7 +6526,7 @@ msgstr "Configuración avanzada..."
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:139
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.c:4
 msgid "Factory reset"
-msgstr ""
+msgstr "Reiniciar a configuraciones de fábrica"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
@@ -6530,15 +6554,15 @@ msgstr "Descripción:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.c:18
 msgid "Are you sure you want to reset all settings?"
-msgstr ""
+msgstr "¿Está seguro que desea reiniciar todas las configuraciones?"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.c:20
 msgid "This will create a backup config in your data directory"
-msgstr ""
+msgstr "Esto creará un respaldo de la configuración en el directorio data"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:28
 msgid "Menu Skins"
-msgstr ""
+msgstr "Menú de Apariencias"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:33
 msgid "Set skin"
@@ -6546,7 +6570,7 @@ msgstr "Definir apariencia"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:67
 msgid "Text Language"
-msgstr ""
+msgstr "Texto del Lenguaje"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:72
 msgid "Set language"

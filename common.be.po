@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-03 09:32+0100\n"
-"PO-Revision-Date: 2015-01-02 23:30+0000\n"
+"POT-Creation-Date: 2015-01-04 20:59+0100\n"
+"PO-Revision-Date: 2015-01-04 09:20+0000\n"
 "Last-Translator: Mihail Varantsou <meequz@gmail.com>\n"
 "Language-Team: Belarusian (http://www.transifex.com/projects/p/xonotic/"
 "language/be/)\n"
@@ -94,7 +94,7 @@ msgstr "^2ШТРАФ: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr ""
+msgstr "^1Вы мусіце адказаць перад пачаткам настáўлення HUD\n"
 
 #: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -234,15 +234,15 @@ msgstr "^7Націсніце ^3ESC ^7каб паглядзець настáўл�
 
 #: qcsrc/client/hud.qc:3818
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Двойчы пстрыкніце ^7па панэлі для панэльна-спецыфічных параметраў."
 
 #: qcsrc/client/hud.qc:3820
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7каб адключыць тэст калізій, ^3SHIFT ^7і"
 
 #: qcsrc/client/hud.qc:3822
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3СТРЭЛКІ ^7для дакладнага рэгулявання."
 
 #: qcsrc/client/hud.qc:3869
 msgid " qu/s"
@@ -267,7 +267,7 @@ msgstr " вузлы"
 #: qcsrc/client/hud_config.qc:197
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr ""
+msgstr "^2Паспяхова экспартавана ў %s! (Заўвага: захавана ў data/data/)\n"
 
 #: qcsrc/client/hud_config.qc:201
 #, c-format
@@ -303,11 +303,11 @@ msgstr "%d секунд засталося"
 #: qcsrc/client/mapvoting.qc:415
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr ""
+msgstr "mv_mapdownload: ^3Вы не павінны ўжываць гэты загад па сваім жаданні!\n"
 
 #: qcsrc/client/mapvoting.qc:425
 msgid "^1Error:^7 Couldn't find pak index.\n"
-msgstr ""
+msgstr "^1Памылка:^7 Індэкс паку не знойдзены.\n"
 
 #: qcsrc/client/mapvoting.qc:434
 msgid "Requesting preview...\n"
@@ -457,6 +457,7 @@ msgstr "SCO^цікі"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
+"Можна мадыфікаваць табло ліку з дапамогай загаду ^2scoreboard_columns_set.\n"
 
 #: qcsrc/client/scoreboard.qc:238
 msgid "^3|---------------------------------------------------------------|\n"
@@ -468,11 +469,11 @@ msgstr "Карыстанне:\n"
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "Стандартнае значэнне ^2scoreboard_columns_set\n"
 
 #: qcsrc/client/scoreboard.qc:241
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set ^7поле1 поле2 ...\n"
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
@@ -483,6 +484,8 @@ msgid ""
 "You can use a ^3|^7 to start the right-aligned fields.\n"
 "\n"
 msgstr ""
+"Можна выкарыстоўваць ^3|^7 для раўнання палёў па правым краі.\n"
+"\n"
 
 #: qcsrc/client/scoreboard.qc:245
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
@@ -1434,7 +1437,7 @@ msgstr "^BG%s^BG вярнуў ^TC^TT^BG сцяг"
 #: qcsrc/common/notifications.qh:362
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 быў ганебна ліквідаваны ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:363
 #, c-format
@@ -1601,7 +1604,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:392
 #, c-format
 msgid "^BG%s^K1 was moved into the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 быў перанесены ў %s%s"
 
 #: qcsrc/common/notifications.qh:393
 #, c-format
@@ -1616,7 +1619,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:395
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themself%s%s"
-msgstr ""
+msgstr "^BG%s^K1 ганебна самаліквідаваўся%s%s"
 
 #: qcsrc/common/notifications.qh:397
 #, c-format
@@ -1651,12 +1654,12 @@ msgstr ""
 #: qcsrc/common/notifications.qh:400
 #, c-format
 msgid "^BG%s^K1 died%s%s"
-msgstr ""
+msgstr "^BG%s^K1 памёр%s%s"
 
 #: qcsrc/common/notifications.qh:401
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 знайшоў спякотнае месца%s%s"
 
 #: qcsrc/common/notifications.qh:401
 #, c-format
@@ -1696,7 +1699,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:408
 #, c-format
 msgid "^BG%s^K1 joins the Zombies%s%s"
-msgstr ""
+msgstr "^BG%s^K1 далучыўся да Зомбі%s%s"
 
 #: qcsrc/common/notifications.qh:409
 #, c-format
@@ -1742,12 +1745,12 @@ msgstr ""
 #: qcsrc/common/notifications.qh:415
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr ""
+msgstr "^BG%s^K1 пазбавіўся ўсіх патронаў%s%s"
 
 #: qcsrc/common/notifications.qh:416
 #, c-format
 msgid "^BG%s^K1 rotted away%s%s"
-msgstr ""
+msgstr "^BG%s^K1 згінуў%s%s"
 
 #: qcsrc/common/notifications.qh:417
 #, c-format
@@ -1772,7 +1775,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:421
 #, c-format
 msgid "^BG%s^K1 switched to the %s%s"
-msgstr ""
+msgstr "^BG%s^K1 перайшоў у %s%s"
 
 #: qcsrc/common/notifications.qh:422
 #, c-format
@@ -1902,27 +1905,27 @@ msgstr ""
 #: qcsrc/common/notifications.qh:447
 #, c-format
 msgid "^BG%s^K1 was frozen by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K1 быў замарожаны ^BG%s"
 
 #: qcsrc/common/notifications.qh:448
 #, c-format
 msgid "^BG%s^K3 was revived by ^BG%s"
-msgstr ""
+msgstr "^BG%s^K3 быў ажыўлены ^BG%s"
 
 #: qcsrc/common/notifications.qh:449
 #, c-format
 msgid "^BG%s^K3 was revived by falling"
-msgstr ""
+msgstr "^BG%s^K3 вярнуўся да жыцця пасля падзення"
 
 #: qcsrc/common/notifications.qh:450
 #, c-format
 msgid "^BG%s^K3 was revived by their Nade explosion"
-msgstr ""
+msgstr "^BG%s^K3 быў ажыўлены выбухам гранаты"
 
 #: qcsrc/common/notifications.qh:451
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s second(s)"
-msgstr ""
+msgstr "^BG%s^K3 быў аўтаматычна ажыўлены пасял %s секунд(ы)"
 
 #: qcsrc/common/notifications.qh:452 qcsrc/common/notifications.qh:666
 msgid "^TC^TT^BG team wins the round"
@@ -2044,7 +2047,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:476
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG узяў ^TC^TT Ключ"
 
 #: qcsrc/common/notifications.qh:477
 #, c-format
@@ -2063,32 +2066,32 @@ msgstr ""
 #: qcsrc/common/notifications.qh:480
 #, c-format
 msgid "^BG%s^K1 picked up Invisibility"
-msgstr ""
+msgstr "^BG%s^K1 узяў Нябачнасць"
 
 #: qcsrc/common/notifications.qh:481
 #, c-format
 msgid "^BG%s^K1 picked up Shield"
-msgstr ""
+msgstr "^BG%s^K1 узяў Панцыр"
 
 #: qcsrc/common/notifications.qh:482
 #, c-format
 msgid "^BG%s^K1 picked up Speed"
-msgstr ""
+msgstr "^BG%s^K1 узяў Хуткасць"
 
 #: qcsrc/common/notifications.qh:483
 #, c-format
 msgid "^BG%s^K1 picked up Strength"
-msgstr ""
+msgstr "^BG%s^K1 узяў Сілу"
 
 #: qcsrc/common/notifications.qh:484
 #, c-format
 msgid "^BG%s^F3 disconnected"
-msgstr ""
+msgstr "^BG%s^F3 адлучыўся"
 
 #: qcsrc/common/notifications.qh:485
 #, c-format
 msgid "^BG%s^F3 was kicked for idling"
-msgstr ""
+msgstr "^BG%s^F3 быў выкінуты за бяздзейнасць"
 
 #: qcsrc/common/notifications.qh:486
 msgid ""
@@ -2100,12 +2103,12 @@ msgstr ""
 #: qcsrc/common/notifications.qh:487
 #, c-format
 msgid "^BG%s^F3 is now spectating"
-msgstr ""
+msgstr "^BG%s^F3 цяпер назірае"
 
 #: qcsrc/common/notifications.qh:488
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr ""
+msgstr "^BG%s^BG пакінуў гонку"
 
 #: qcsrc/common/notifications.qh:489
 #, c-format
@@ -2120,7 +2123,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:491
 #, c-format
 msgid "^BG%s^BG has finished the race"
-msgstr ""
+msgstr "^BG%s^BG скончыў гонку"
 
 #: qcsrc/common/notifications.qh:492
 #, c-format
@@ -2146,7 +2149,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:496
 msgid "^TC^TT ^BGteam scores!"
-msgstr ""
+msgstr "^TC^TT ^BGкаманда атрымала бал(ы)!"
 
 #: qcsrc/common/notifications.qh:497
 #, c-format
@@ -2158,7 +2161,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:498
 #, c-format
 msgid "^BG%s^K1 picked up a Superweapon"
-msgstr ""
+msgstr "^BG%s^K1 узяў Суперзброю"
 
 #: qcsrc/common/notifications.qh:499
 msgid "^BGYou cannot change to a larger team"
@@ -2936,7 +2939,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:659
 msgid "^F2You picked up some extra lives"
-msgstr ""
+msgstr "^F2Вы ўзялі некалькі дадатковых жыццяў"
 
 #: qcsrc/common/notifications.qh:660
 #, c-format
@@ -2994,7 +2997,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:683
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGВы ўзялі мяч"
 
 #: qcsrc/common/notifications.qh:684
 msgid "^BGKilling people while you don't have the ball gives no points!"
@@ -3061,7 +3064,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:697
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr ""
+msgstr "^F2Дадатковых жыццяў засталося: ^K1%s"
 
 #: qcsrc/common/notifications.qh:699
 #, c-format
@@ -3073,7 +3076,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:700
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
-msgstr ""
+msgstr "^F2Дзейная зброя: ^F1%s"
 
 #: qcsrc/common/notifications.qh:701
 msgid "^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"
@@ -3115,11 +3118,11 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:706
 msgid "^K1In^BG-portal created"
-msgstr ""
+msgstr "^K1Уваходны^BG партал створаны"
 
 #: qcsrc/common/notifications.qh:707
 msgid "^F3Out^BG-portal created"
-msgstr ""
+msgstr "^F3Выходны^BG партал створаны"
 
 #: qcsrc/common/notifications.qh:708
 msgid ""
@@ -3130,19 +3133,19 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:709
 msgid "^F2Invisibility has worn off"
-msgstr ""
+msgstr "^F2Нябачнасць скончылася"
 
 #: qcsrc/common/notifications.qh:710
 msgid "^F2Shield has worn off"
-msgstr ""
+msgstr "^F2Панцыр скончыўся"
 
 #: qcsrc/common/notifications.qh:711
 msgid "^F2Speed has worn off"
-msgstr ""
+msgstr "^F2Хуткасць скончылася"
 
 #: qcsrc/common/notifications.qh:712
 msgid "^F2Strength has worn off"
-msgstr ""
+msgstr "^F2Сіла скончылася"
 
 #: qcsrc/common/notifications.qh:713
 msgid "^F2You are invisible"
@@ -4861,7 +4864,7 @@ msgstr "Дэма"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.c:27
 msgid "Demos"
-msgstr "Дэмы"
+msgstr "Дэмкі"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.c:28
 msgid "Screenshots"
@@ -4910,7 +4913,7 @@ msgstr "DMCNFRM^Не"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo_timeconfirm.c:19
 msgid "Timing a demo will disconnect you from the current match."
-msgstr "Гранне дэма адлучыць вас ад дзейнага матчу."
+msgstr "Прайграванне дэма адлучыць вас ад дзейнага матчу."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.c:50
 msgid "Auto screenshot scoreboard"

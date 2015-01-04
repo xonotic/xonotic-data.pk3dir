@@ -4,7 +4,7 @@
 #
 # Translators:
 # adem4ik, 2014
-# Alex Talker <alextalker7@gmail.com>, 2014
+# Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
 # Andrei Stepanov, 2014-2015
 # Lord Canistra <lordcanistra@gmail.com>, 2011
@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-03 09:32+0100\n"
-"PO-Revision-Date: 2015-01-02 13:10+0000\n"
-"Last-Translator: Andrei Stepanov\n"
+"POT-Creation-Date: 2015-01-04 20:59+0100\n"
+"PO-Revision-Date: 2015-01-04 17:11+0000\n"
+"Last-Translator: Alex Talker <alextalker7@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/xonotic/language/"
 "ru/)\n"
 "Language: ru\n"
@@ -174,7 +174,7 @@ msgstr "^1Нажмите ^3%s^1 для свободного обзора"
 #: qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Нажмите ^3%s^1 для информации о игровом режиме"
+msgstr "^1Нажмите ^3%s^1 для информации об игровом режиме"
 
 #: qcsrc/client/hud.qc:3730
 msgid "^1Match has already begun"
@@ -206,7 +206,7 @@ msgstr "%sНажмите ^3%s%s для завершения разминки"
 #: qcsrc/client/hud.qc:3769
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sНажмите ^3%s%s когда вы будете готовы"
+msgstr "%sНажмите ^3%s%s, когда вы будете готовы"
 
 #: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
@@ -283,11 +283,11 @@ msgstr "(1 голос)"
 #: qcsrc/client/mapvoting.qc:39
 #, c-format
 msgid " (%d votes)"
-msgstr "(%d голосов)"
+msgstr "(Голосов: %d)"
 
 #: qcsrc/client/mapvoting.qc:226
 msgid "Don't care"
-msgstr "Не волнуйтесь"
+msgstr "Всё равно"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Decide the gametype"
@@ -306,7 +306,7 @@ msgstr "%d секунд осталось"
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
 msgstr ""
-"mv_mapdownload: ^3Вы не должены использовать эту команду по своему "
+"mv_mapdownload: ^3Вы не должны использовать эту команду по своему "
 "усмотрению!\n"
 
 #: qcsrc/client/mapvoting.qc:425
@@ -319,7 +319,7 @@ msgstr "Запрос эскиза...\n"
 
 #: qcsrc/client/miscfunctions.qc:101
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "Старайтесь избавится от команды, которой нет в списке команд!"
+msgstr "Попытка удалить команду, отсутствующей в списке команд!"
 
 #: qcsrc/client/scoreboard.qc:19
 msgid "SCO^bckills"
@@ -497,7 +497,7 @@ msgstr "^3имя^7 или ^3ник^7 Имя игрока\n"
 
 #: qcsrc/client/scoreboard.qc:246
 msgid "^3ping^7                     Ping time\n"
-msgstr "^3ping^7 время пинга\n"
+msgstr "^3ping^7 Время пинга\n"
 
 #: qcsrc/client/scoreboard.qc:247
 msgid "^3pl^7                       Packet loss\n"
@@ -1207,7 +1207,7 @@ msgstr "Выживайте и уничтожайте, пока у врагов �
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race"
-msgstr "Race"
+msgstr "Гонка"
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race against other players to the finish line"
@@ -1215,7 +1215,7 @@ msgstr "Мчитесь к финишной черте быстрее сопер�
 
 #: qcsrc/common/mapinfo.qh:49
 msgid "Race CTS"
-msgstr "Race CTS"
+msgstr "Гонка CTS"
 
 #: qcsrc/common/mapinfo.qh:49
 msgid "Race for fastest time"
@@ -2945,12 +2945,12 @@ msgstr "^K1Смотри куда идёшь!"
 #: qcsrc/common/notifications.qh:653
 #, c-format
 msgid "^K1Moron! You fragged ^BG%s^K1, a team mate!"
-msgstr "^K1Кретин! Ты убил ^BG%s^K1, своего товарища по команде!"
+msgstr "^K1Негодник! Ты убил ^BG%s^K1, своего товарища по команде!"
 
 #: qcsrc/common/notifications.qh:653
 #, c-format
 msgid "^K1Moron! You went against ^BG%s^K1, a team mate!"
-msgstr "^K1Кретин! Ты напал на ^BG%s^K1, своего товарища по команде!"
+msgstr "^K1Негодник! Ты напал на ^BG%s^K1, своего товарища по команде!"
 
 #: qcsrc/common/notifications.qh:654
 #, c-format
@@ -3036,7 +3036,7 @@ msgid ""
 "Hope your team can fix it..."
 msgstr ""
 "^K1Вас негде возродить!\n"
-"Остаётся надеяться что ваша команда сможет это исправить..."
+"Надейтесь, что ваша команда сможет это исправить..."
 
 #: qcsrc/common/notifications.qh:680
 msgid ""
@@ -4052,7 +4052,7 @@ msgstr "Соотношение:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.c:4
 msgid "Race Timer Panel"
-msgstr "Панель Гоночного Таймера"
+msgstr "Гоночная панель таймера"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:4
 msgid "Radar Panel"
@@ -6122,7 +6122,7 @@ msgstr "Раскачивание при ходьбе"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:57
 msgid "3rd person perspective"
-msgstr "Вид от 3-его лица"
+msgstr "Вид от 3-го лица"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:61
 msgid "Back distance"
