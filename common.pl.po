@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 00:00+0100\n"
-"PO-Revision-Date: 2015-01-04 16:50+0000\n"
+"POT-Creation-Date: 2015-01-06 00:00+0100\n"
+"PO-Revision-Date: 2015-01-05 17:21+0000\n"
 "Last-Translator: Amadeusz Sławiński <amade@asmblr.net>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/xonotic/language/"
 "pl/)\n"
@@ -343,7 +343,7 @@ msgstr "zniszczony"
 
 #: qcsrc/client/scoreboard.qc:25
 msgid "SCO^drops"
-msgstr ""
+msgstr "porzucenia"
 
 #: qcsrc/client/scoreboard.qc:26
 msgid "SCO^faults"
@@ -470,11 +470,11 @@ msgstr " Stosowanie:\n"
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set default\n"
 
 #: qcsrc/client/scoreboard.qc:241
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set ^7pole1 pole2 ...\n"
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
@@ -485,7 +485,7 @@ msgstr ""
 msgid ""
 "You can use a ^3|^7 to start the right-aligned fields.\n"
 "\n"
-msgstr ""
+msgstr "Możesz użyć ^3|^7 by wyrównać pola do prawej.\n"
 
 #: qcsrc/client/scoreboard.qc:245
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
@@ -549,7 +549,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:259
 msgid "^3drops^7                    Number of flag drops\n"
-msgstr ""
+msgstr "^3porzucenia^7 Ile razy flaga została porzucona\n"
 
 #: qcsrc/client/scoreboard.qc:260
 msgid "^3lives^7                    Number of lives (LMS)\n"
@@ -628,6 +628,8 @@ msgid ""
 "include/exclude ALL teams/noteams game modes.\n"
 "\n"
 msgstr ""
+"Specjalne nazwy typów gier 'teams' i 'noteams' mogą zostać użyte do\n"
+"włączenia/wyłączenie WSZYSTKICH drużynowych/nie drużynowych trybów gry.\n"
 
 #: qcsrc/client/scoreboard.qc:283
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"
@@ -1147,22 +1149,22 @@ msgstr "%d sekund"
 #: qcsrc/common/counting.qh:68
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d-szy"
 
 #: qcsrc/common/counting.qh:69
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d-gi"
 
 #: qcsrc/common/counting.qh:70
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d-ci"
 
 #: qcsrc/common/counting.qh:71 qcsrc/common/counting.qh:74
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d-ty"
 
 #: qcsrc/common/mapinfo.qc:747
 #, no-c-format
@@ -1250,10 +1252,12 @@ msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
 msgstr ""
+"Zniszcz wszystkie przeszkody, a następnie zniszcz rdzeń przed upływem "
+"wyznaczonego czasu"
 
 #: qcsrc/common/mapinfo.qh:70
 msgid "Capture control points to reach and destroy the enemy generator"
-msgstr ""
+msgstr "Zdobądź punkty kontroli, by dosięgnąć i zniszczyć wrog generator"
 
 #: qcsrc/common/mapinfo.qh:70
 msgid "Onslaught"
@@ -1330,6 +1334,8 @@ msgstr ""
 #: qcsrc/common/notifications.qh:342
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
 msgstr ""
+"^F4NOTKA: ^BGCzat obserwujących nie jest wysyłany do graczy w trakcie "
+"rozgrywki"
 
 #: qcsrc/common/notifications.qh:343 qcsrc/common/notifications.qh:590
 #, c-format
@@ -1350,12 +1356,12 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:347
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Będziesz obserwował w kolejnej rundzie"
 
 #: qcsrc/common/notifications.qh:348
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG zdobył ^TC^TT^BG flagę"
 
 #: qcsrc/common/notifications.qh:349
 #, c-format
@@ -1367,7 +1373,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:350
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"
-msgstr ""
+msgstr "^BG%s^BG zdobył ^TC^TT^BG flagę w ^F1%s^BG sekundy"
 
 #: qcsrc/common/notifications.qh:351
 #, c-format
@@ -1375,10 +1381,12 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"^BG%s^BG zdobył ^TC^TT^BG flagę w ^F2%s^BG sekundy, nie pobiwszy rekordu ^BG"
+"%s^BG ^F1%s^BG sekund"
 
 #: qcsrc/common/notifications.qh:352
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BG^TC^TT^BG flaga została wrócona do bazy przez jej właściciela"
 
 #: qcsrc/common/notifications.qh:353
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -1386,13 +1394,15 @@ msgstr "^BG^TC^TT^BG flaga uległa zniszczeniu i została przywrócona w bazie"
 
 #: qcsrc/common/notifications.qh:354
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BG^TC^TT^BG flaga została porzucona w bazie i została przywrócona"
 
 #: qcsrc/common/notifications.qh:355
 msgid ""
 "^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to "
 "base"
 msgstr ""
+"^BG^TC^TT^BG flaga spadła gdzieś, gdzie nie mogła być osiągnięta i została "
+"zwrócona do bazy"
 
 #: qcsrc/common/notifications.qh:356
 #, c-format
@@ -1433,7 +1443,7 @@ msgstr "^BG%s%s^K1 został utopiony przez ^BG%s^K1%s%s"
 #: qcsrc/common/notifications.qh:364
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został uziemiony przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:365
 #, c-format
@@ -1463,7 +1473,7 @@ msgstr "^BG%s%s^K1 został wysadzony przez granat ^BG%s^K1%s%s"
 #: qcsrc/common/notifications.qh:369
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 zbliżył się za nadto do eksplozji napalmu%s%s"
 
 #: qcsrc/common/notifications.qh:369
 #, c-format
@@ -1968,7 +1978,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:463 qcsrc/common/notifications.qh:674
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr ""
+msgstr "^BGPorzuciłeś ^F1%s^BG%s"
 
 #: qcsrc/common/notifications.qh:464 qcsrc/common/notifications.qh:675
 #, c-format
@@ -2023,7 +2033,7 @@ msgstr ""
 #: qcsrc/common/notifications.qh:474
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG upuścił ^TC^TT Klucz"
 
 #: qcsrc/common/notifications.qh:475
 #, c-format
@@ -2164,12 +2174,13 @@ msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have "
 "^F2Xonotic %s"
 msgstr ""
+"^F4NOTKA: ^BGSerwer używa ^F1Xonotic %s (beta)^BG, ty masz ^F2Xonotic %s"
 
 #: qcsrc/common/notifications.qh:502
 #, c-format
 msgid ""
 "^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"
-msgstr ""
+msgstr "^F4NOTKA: ^BGServer uzywa ^F1Xonotic %s^BG, ty masz ^F2Xonotic %s"
 
 #: qcsrc/common/notifications.qh:503
 #, c-format
@@ -2177,6 +2188,8 @@ msgid ""
 "^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get "
 "the update from ^F3http://www.xonotic.org/^BG!"
 msgstr ""
+"^F4NOTKA: Wyszedł ^F1Xonotic %s^BG, a ty wciąż masz ^F2Xonotic %s^BG - "
+"pobierz aktualizację z ^F3http://www.xonotic.org/^BG!"
 
 #: qcsrc/common/notifications.qh:504
 #, c-format
@@ -2676,7 +2689,7 @@ msgstr "^K1%sZabiłeś piszącego ^BG%s^BG%s"
 
 #: qcsrc/common/notifications.qh:616
 msgid "^BGPress ^F2DROPWEAPON^BG again to toss the nade!"
-msgstr ""
+msgstr "^BGWciśnij ponownie ^F2DROPWEAPON^BG by rzucić granat!"
 
 #: qcsrc/common/notifications.qh:617
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
