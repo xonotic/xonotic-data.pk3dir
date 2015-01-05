@@ -177,6 +177,9 @@ Vindex
 Ruszkai "C.Brutail" Ákos
 xaN1C4n3
 
+*Japanese
+Lento
+
 *Italian
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
