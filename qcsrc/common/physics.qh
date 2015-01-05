@@ -1,5 +1,7 @@
 // Client/server mappings
 
+.entity conveyor;
+
 #ifdef CSQC
 
 	float player_multijump;
@@ -10,6 +12,7 @@
 	#define PHYS_WORLD_ANGLES(s)				input_angles
 
 	#define PHYS_INPUT_TIMELENGTH				input_timelength
+	#define PHYS_INPUT_FRAMETIME				serverdeltatime
 
 	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 
@@ -45,6 +48,8 @@
 	#define SET_ONGROUND(s)   					s.pmove_flags |= PMF_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
 
+	#define WAS_ONGROUND(s)						!!(s.lastflags & PMF_ONGROUND)
+
 	#define ITEMS(s) 							getstati(STAT_ITEMS, 0, 24)
 
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
@@ -72,6 +77,7 @@
 	#define PHYS_AIRSTRAFEACCELERATE			getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE)
 	#define PHYS_ENTGRAVITY(s)					getstatf(STAT_MOVEVARS_ENTGRAVITY)
 	#define PHYS_FRICTION						getstatf(STAT_MOVEVARS_FRICTION)
+	#define PHYS_FRICTION_ONLAND				getstatf(STAT_MOVEVARS_FRICTION_ONLAND)
 	#define PHYS_GRAVITY						getstatf(STAT_MOVEVARS_GRAVITY)
 	#define PHYS_HIGHSPEED						getstatf(STAT_MOVEVARS_HIGHSPEED)
 	#define PHYS_JUMPVELOCITY					getstatf(STAT_MOVEVARS_JUMPVELOCITY)
@@ -101,6 +107,7 @@
 	#define PHYS_WORLD_ANGLES(s)				s.angles
 
 	#define PHYS_INPUT_TIMELENGTH				frametime
+	#define PHYS_INPUT_FRAMETIME				sys_frametime
 
 	#define PHYS_INPUT_MOVEVALUES(s)			s.movement
 	// TODO: cache
@@ -136,6 +143,8 @@
 	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 
+	#define WAS_ONGROUND(s)						!!((s).lastflags & FL_ONGROUND)
+
 	#define ITEMS(s)							s.items
 
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
@@ -163,6 +172,7 @@
 	#define PHYS_AIRSTRAFEACCELERATE			autocvar_sv_airstrafeaccelerate
 	#define PHYS_ENTGRAVITY(s)					s.gravity
 	#define PHYS_FRICTION						autocvar_sv_friction
+	#define PHYS_FRICTION_ONLAND				autocvar_sv_friction_on_land
 	#define PHYS_GRAVITY						autocvar_sv_gravity
 	#define PHYS_HIGHSPEED						autocvar_g_movement_highspeed
 	#define PHYS_JUMPVELOCITY					autocvar_sv_jumpvelocity

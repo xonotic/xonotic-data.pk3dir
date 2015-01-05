@@ -77,8 +77,6 @@ float DistributeEvenly_GetRandomized(float weight)
     return f;
 }
 
-#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
-
 const string STR_PLAYER = "player";
 const string STR_SPECTATOR = "spectator";
 const string STR_OBSERVER = "observer";

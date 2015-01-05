@@ -148,3 +148,5 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 float hud;
 float view_quality;
 float framecount;
+
+.float jumppadcount;

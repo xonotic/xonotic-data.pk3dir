@@ -420,6 +420,7 @@ float( float a, ... ) min = #94;
 float( float b, ... ) max = #95;
 float(float minimum, float val, float maximum) bound = #96;
 float(float f, float f) pow = #97;
+entity(entity start, .entity fld, entity match) findentity = #98;
 entity(entity start, .float fld, float match) findfloat = #98;
 float(string s) checkextension = #99;
 // FrikaC and Telejano range #100-#199

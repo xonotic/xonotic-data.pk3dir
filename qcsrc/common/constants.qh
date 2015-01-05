@@ -103,6 +103,7 @@ const float ENT_CLIENT_VEHICLE = 60;
 const float ENT_CLIENT_LADDER = 61;
 const float ENT_CLIENT_TRIGGER_PUSH = 62;
 const float ENT_CLIENT_TARGET_PUSH = 63;
+const float ENT_CLIENT_CONVEYOR = 64;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 

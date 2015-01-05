@@ -513,21 +513,19 @@ float PlayerJump (void)
 		}
 	}
 
-#ifdef SVQC
-	if (!(self.lastflags & FL_ONGROUND))
+	if (!WAS_ONGROUND(self))
 	{
-		if (autocvar_speedmeter)
+		if(autocvar_speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
-		if (self.lastground < time - 0.3)
+		if(self.lastground < time - 0.3)
 		{
-			self.velocity_x *= (1 - autocvar_sv_friction_on_land);
-			self.velocity_y *= (1 - autocvar_sv_friction_on_land);
+			self.velocity_x *= (1 - PHYS_FRICTION_ONLAND);
+			self.velocity_y *= (1 - PHYS_FRICTION_ONLAND);
 		}
-		if (self.jumppadcount > 1)
+		if(self.jumppadcount > 1)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 	}
-#endif
 
 	self.velocity_z += mjumpheight;
 
@@ -1572,18 +1570,16 @@ void SV_WalkMove ()
 #endif
 void PM_walk(float buttons_prev, float maxspd_mod)
 {
-#ifdef SVQC
-	if (!(self.lastflags & FL_ONGROUND))
+	if (!WAS_ONGROUND(self))
 	{
 		if (autocvar_speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 		if (self.lastground < time - 0.3)
-			self.velocity *= (1 - autocvar_sv_friction_on_land);
+			self.velocity *= (1 - PHYS_FRICTION_ONLAND);
 		if (self.jumppadcount > 1)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 	}
-#endif
 	// walking
 	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
@@ -1844,11 +1840,9 @@ void PM_Main()
 	}
 #endif
 
-#ifdef SVQC
 	// conveyors: first fix velocity
 	if (self.conveyor.state)
 		self.velocity -= self.conveyor.movedir;
-#endif
 
 #ifdef SVQC
 	MUTATOR_CALLHOOK(PlayerPhysics);
@@ -1984,12 +1978,16 @@ void PM_Main()
 	if (IS_ONGROUND(self))
 		self.lastground = time;
 
-#ifdef SVQC
 	// conveyors: then break velocity again
 	if (self.conveyor.state)
 		self.velocity += self.conveyor.movedir;
-#endif
+
+#ifdef SVQC
 	self.lastflags = self.flags;
+#elif defined(CSQC)
+	self.lastflags = self.pmove_flags;
+#endif
+	
 	self.lastclassname = self.classname;
 }
 
