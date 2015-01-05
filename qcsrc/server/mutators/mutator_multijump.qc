@@ -75,12 +75,15 @@ float PM_multijump_checkjump()
 					float curspeed;
 					vector wishvel, wishdir;
 
-					curspeed = max(
-						vlen(vec2(self.velocity)) // current xy speed
 #ifdef SVQC
-						,vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
-#endif
+					curspeed = max(
+						vlen(vec2(self.velocity)), // current xy speed
+						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
 					);
+#elif defined(CSQC)
+					curspeed = vlen(vec2(self.velocity));
+#endif
+
 					makevectors(PHYS_INPUT_ANGLES(self)_y * '0 1 0');
 					wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x + v_right * PHYS_INPUT_MOVEVALUES(self)_y;
 					wishdir = normalize(wishvel);
