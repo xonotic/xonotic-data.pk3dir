@@ -456,19 +456,11 @@ void spawnfunc_target_position() { target_push_link(); }
 #ifdef CSQC
 void trigger_push_draw()
 {
-	/*float dt = time - self.move_time;
+	float dt = time - self.move_time;
 	self.move_time = time;
-	if(dt <= 0)
-		return;*/
+	if(dt <= 0) { return; }
 
-	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
-
-	//if(trace_fraction < 1)
-	if(trace_ent)
-	{
-		other = trace_ent;
-		trigger_push_touch();
-	}
+	trigger_touch_generic(trigger_push_touch);
 }
 
 void ent_trigger_push()
