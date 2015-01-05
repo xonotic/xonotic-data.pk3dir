@@ -26,6 +26,9 @@ float AdjustAirAccelQW(float accelqw, float factor);
 .float stat_sv_maxspeed;
 .float stat_movement_highspeed;
 
+.float stat_sv_friction_on_land;
+.float stat_sv_friction_slick;
+
 .float stat_doublejump;
 
 .float stat_jumpspeedcap_min;
@@ -66,6 +69,10 @@ void Physics_AddStats()
 	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
 	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
 	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, AS_INT, stat_jumpspeedcap_disable_onramps);
+
+	// hacks
+	addstat(STAT_MOVEVARS_FRICTION_ONLAND, AS_FLOAT, stat_sv_friction_on_land);
+	addstat(STAT_MOVEVARS_FRICTION_SLICK, AS_FLOAT, stat_sv_friction_slick);
 }
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -91,6 +98,9 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
 	self.stat_jumpspeedcap_max = PHYS_JUMPSPEEDCAP_MAX;
 	self.stat_jumpspeedcap_disable_onramps = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
+
+	self.stat_sv_friction_on_land = PHYS_FRICTION_ONLAND;
+	self.stat_sv_friction_slick = PHYS_FRICTION_SLICK;
 }
 #endif
 
@@ -1596,9 +1606,17 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	float f = vlen(vec2(self.velocity));
 	if (f > 0)
 	{
+		float realfriction;
+		trace_dphitq3surfaceflags = 0;
+		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
 		// TODO: apply edge friction
 		// apply ground friction
-		f = 1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION * ((f < PHYS_STOPSPEED) ? (PHYS_STOPSPEED / f) : 1);
+		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+			realfriction = PHYS_FRICTION_SLICK;
+		else
+			realfriction = PHYS_FRICTION;
+
+		f = 1 - PHYS_INPUT_TIMELENGTH * realfriction * ((f < PHYS_STOPSPEED) ? (PHYS_STOPSPEED / f) : 1);
 		f = max(0, f);
 		self.velocity *= f;
 		/*

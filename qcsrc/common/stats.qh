@@ -223,7 +223,7 @@ const float STAT_REVIVE_PROGRESS        = 106;
 // 188 empty?
 // 189 empty?
 // 190 empty?
-// 191 empty?
+const float STAT_MOVEVARS_FRICTION_SLICK                = 191;
 const float STAT_MOVEVARS_FRICTION_ONLAND               = 192;
 const float STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;
 const float STAT_MOVEVARS_JUMPSPEEDCAP_MAX              = 194;
