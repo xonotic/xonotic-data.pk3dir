@@ -56,21 +56,21 @@ const float STAT_VORTEX_CHARGE          = 50;
 const float STAT_LAST_PICKUP            = 51;
 const float STAT_HUD                    = 52;
 const float STAT_VORTEX_CHARGEPOOL      = 53;
-const float STAT_DAMAGE_DEALT_TOTAL     = 54;
-const float STAT_TYPEHIT_TIME           = 55;
-const float STAT_LAYED_MINES            = 56;
-const float STAT_HAGAR_LOAD             = 57;
-const float STAT_SWITCHINGWEAPON        = 58;
-const float STAT_SUPERWEAPONS_FINISHED  = 59;
-const float STAT_VEHICLESTAT_HEALTH     = 60;
-const float STAT_VEHICLESTAT_SHIELD     = 61;
-const float STAT_VEHICLESTAT_ENERGY     = 62;
-const float STAT_VEHICLESTAT_AMMO1      = 63;
-const float STAT_VEHICLESTAT_RELOAD1    = 64;
-const float STAT_VEHICLESTAT_AMMO2      = 65;
-const float STAT_VEHICLESTAT_RELOAD2    = 66;
-const float STAT_VEHICLESTAT_W2MODE     = 67;
-// 68 empty?
+const float STAT_HIT_TIME               = 54;
+const float STAT_DAMAGE_DEALT_TOTAL     = 55;
+const float STAT_TYPEHIT_TIME           = 56;
+const float STAT_LAYED_MINES            = 57;
+const float STAT_HAGAR_LOAD             = 58;
+const float STAT_SWITCHINGWEAPON        = 59;
+const float STAT_SUPERWEAPONS_FINISHED  = 60;
+const float STAT_VEHICLESTAT_HEALTH     = 61;
+const float STAT_VEHICLESTAT_SHIELD     = 62;
+const float STAT_VEHICLESTAT_ENERGY     = 63;
+const float STAT_VEHICLESTAT_AMMO1      = 64;
+const float STAT_VEHICLESTAT_RELOAD1    = 65;
+const float STAT_VEHICLESTAT_AMMO2      = 66;
+const float STAT_VEHICLESTAT_RELOAD2    = 67;
+const float STAT_VEHICLESTAT_W2MODE     = 68;
 const float STAT_NADE_TIMER             = 69;
 const float STAT_SECRETS_TOTAL          = 70;
 const float STAT_SECRETS_FOUND          = 71;
@@ -87,8 +87,8 @@ const float STAT_NADE_BONUS_SCORE       = 81;
 const float STAT_HEALING_ORB            = 82;
 const float STAT_HEALING_ORB_ALPHA      = 83;
 const float STAT_PLASMA                 = 84;
-// 85 empty?
-// 86 empty?
+const float STAT_OK_AMMO_CHARGE         = 85;
+const float STAT_OK_AMMO_CHARGEPOOl     = 86;
 // 87 empty?
 // 88 empty?
 // 89 empty?

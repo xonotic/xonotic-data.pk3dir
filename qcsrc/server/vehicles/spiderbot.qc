@@ -494,7 +494,7 @@ float spiderbot_frame()
 
             self = player;
 
-            mod(spider.misc_bulletcounter, 2) ? gun = spider.gun1 : gun = spider.gun2;
+            (spider.misc_bulletcounter % 2) ? gun = spider.gun1 : gun = spider.gun2;
             v = gettaginfo(gun, gettagindex(gun, "barrels"));
             v_forward = normalize(v_forward);
             v += v_forward * 50;

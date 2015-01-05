@@ -25,6 +25,7 @@
 	#define PHYS_INPUT_BUTTON_FORWARD(s)		!!(input_buttons & 256)
 	#define PHYS_INPUT_BUTTON_LEFT(s)			!!(input_buttons & 512)
 	#define PHYS_INPUT_BUTTON_RIGHT(s)			!!(input_buttons & 1024)
+	#define PHYS_INPUT_BUTTON_JETPACK(s)		!!(input_buttons & 2048)
 
 	#define PHYS_DEAD(s)						s.csqcmodel_isdead
 
@@ -115,6 +116,7 @@
 	#define PHYS_INPUT_BUTTON_FORWARD(s)		(s.movement_x > 0)
 	#define PHYS_INPUT_BUTTON_LEFT(s)			(s.movement_y < 0)
 	#define PHYS_INPUT_BUTTON_RIGHT(s)			(s.movement_y > 0)
+	#define PHYS_INPUT_BUTTON_JETPACK(s)		s.BUTTON_JETPACK
 
 	#define PHYS_DEAD(s)						s.deadflag != DEAD_NO
 

@@ -40,10 +40,7 @@ void PM_multijump()
 
 	if(IS_ONGROUND(self))
 	{
-		if (PHYS_MULTIJUMP > 0)
-			self.multijump_count = 0;
-		else
-			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+		self.multijump_count = 0;
 	}
 }
 
@@ -56,7 +53,7 @@ float PM_multijump_checkjump()
 	else
 		self.multijump_ready = FALSE;
 
-	if(!player_multijump && self.multijump_ready && self.multijump_count < PHYS_MULTIJUMP && self.velocity_z > PHYS_MULTIJUMP_SPEED)
+	if(!player_multijump && self.multijump_ready && (self.multijump_count < PHYS_MULTIJUMP || PHYS_MULTIJUMP == -1) && self.velocity_z > PHYS_MULTIJUMP_SPEED)
 	{
 		if (PHYS_MULTIJUMP)
 		{
@@ -75,9 +72,15 @@ float PM_multijump_checkjump()
 			{
 				if(PHYS_INPUT_MOVEVALUES(self)_x != 0 || PHYS_INPUT_MOVEVALUES(self)_y != 0) // don't remove all speed if player isnt pressing any movement keys
 				{
-					float curspeed = vlen(vec2(self.velocity));
+					float curspeed;
 					vector wishvel, wishdir;
 
+					curspeed = max(
+						vlen(vec2(self.velocity)) // current xy speed
+#ifdef SVQC
+						,vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
+#endif
+					);
 					makevectors(PHYS_INPUT_ANGLES(self)_y * '0 1 0');
 					wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x + v_right * PHYS_INPUT_MOVEVALUES(self)_y;
 					wishdir = normalize(wishvel);
@@ -86,8 +89,7 @@ float PM_multijump_checkjump()
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				if (PHYS_MULTIJUMP > 0)
-					self.multijump_count += 1;
+				self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump

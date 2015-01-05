@@ -430,16 +430,17 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 PlayerJump
 
 When you press the jump key
+returns TRUE if handled
 =============
 */
-void PlayerJump (void)
+float PlayerJump (void)
 {
 	if (PHYS_FROZEN(self))
-		return; // no jumping in freezetag when frozen
+		return TRUE; // no jumping in freezetag when frozen
 
 #ifdef SVQC
 	if (self.player_blocked)
-		return; // no jumping while blocked
+		return TRUE; // no jumping while blocked
 #endif
 
 	float doublejump = FALSE;
@@ -449,11 +450,10 @@ void PlayerJump (void)
 	player_jumpheight = mjumpheight;
 #ifdef SVQC
 	if (MUTATOR_CALLHOOK(PlayerJump))
-		return;
 #elif defined(CSQC)
 	if(PM_multijump_checkjump())
-		return;
 #endif
+		return TRUE;
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
@@ -476,16 +476,16 @@ void PlayerJump (void)
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		self.velocity_z = PHYS_MAXSPEED(self) * 0.7;
-		return;
+		return TRUE;
 	}
 
 	if (!doublejump)
 		if (!IS_ONGROUND(self))
-			return;
+			return IS_JUMP_HELD(self);
 
 	if (PHYS_TRACK_CANJUMP(self))
 		if (IS_JUMP_HELD(self))
-			return;
+			return TRUE;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -543,6 +543,7 @@ void PlayerJump (void)
 	if (autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
+	return TRUE;
 }
 
 void CheckWaterJump()
@@ -573,11 +574,64 @@ void CheckWaterJump()
 	}
 }
 
+
+#ifdef SVQC
+	#define JETPACK_JUMP(s)	s.cvar_cl_jetpack_jump
+#elif defined(CSQC)
+	float autocvar_cl_jetpack_jump;
+	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
+#endif
+.float jetpack_stopped;
+// Hack: shouldn't need to know about this
+.float multijump_count;
 void CheckPlayerJump()
 {
-	if(PHYS_INPUT_BUTTON_JUMP(self))
-		PlayerJump();
+#ifdef SVQC
+	float was_flying = ITEMS(self) & IT_USING_JETPACK;
+#endif
+	if (JETPACK_JUMP(self) < 2)
+#ifdef SVQC
+		ITEMS(self) &= ~IT_USING_JETPACK;
+#endif
+
+	if(PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self))
+	{
+#ifdef SVQC
+		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
+		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
+		float has_fuel = !autocvar_g_jetpack_fuel || self.ammo_fuel || ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO;
+#else
+		PlayerJump(); // Client only
+		float has_fuel = TRUE; // TODO
+#endif
+		if (!(ITEMS(self) & IT_JETPACK)) { }
+		else if (self.jetpack_stopped) { }
+		else if (!has_fuel)
+		{
+#ifdef SVQC
+			if (was_flying) // TODO: ran out of fuel message
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
+			else if (activate)
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
+#endif
+			self.jetpack_stopped = TRUE;
+#ifdef SVQC
+			ITEMS(self) &= ~IT_USING_JETPACK;
+#endif
+		}
+#ifdef SVQC
+		else if (activate && !PHYS_FROZEN(self))
+			ITEMS(self) |= IT_USING_JETPACK;
+#endif
+	}
 	else
+	{
+		self.jetpack_stopped = FALSE;
+#ifdef SVQC
+		ITEMS(self) &= ~IT_USING_JETPACK;
+#endif
+	}
+	if (!PHYS_INPUT_BUTTON_JUMP(self))
 		UNSET_JUMP_HELD(self);
 
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
@@ -1319,7 +1373,7 @@ void PM_jetpack(float maxspd_mod)
 		if (!(ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO))
 			self.ammo_fuel -= PHYS_JETPACK_FUEL * PHYS_INPUT_TIMELENGTH * fvel * f;
 
-		self.items |= IT_USING_JETPACK;
+		ITEMS(self) |= IT_USING_JETPACK;
 
 		// jetpack also inhibits health regeneration, but only for 1 second
 		self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
@@ -1519,9 +1573,6 @@ void SV_WalkMove ()
 void PM_walk(float buttons_prev, float maxspd_mod)
 {
 #ifdef SVQC
-	// we get here if we ran out of ammo
-	if ((ITEMS(self) & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
-		sprint(self, "You don't have any fuel for the ^2Jetpack\n");
 	if (!(self.lastflags & FL_ONGROUND))
 	{
 		if (autocvar_speedmeter)
@@ -1595,11 +1646,6 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 
 void PM_air(float buttons_prev, float maxspd_mod)
 {
-#ifdef SVQC
-	// we get here if we ran out of ammo
-	if ((ITEMS(self) & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && PHYS_AMMO_FUEL(self) < 0.01)
-		sprint(self, "You don't have any fuel for the ^2Jetpack\n");
-#endif
 	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
 					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
@@ -1737,8 +1783,6 @@ void PM_Main()
 			return;
 		bot_think();
 	}
-
-	self.items &= ~IT_USING_JETPACK;
 
 	if (IS_PLAYER(self))
 #endif
@@ -1919,7 +1963,7 @@ void PM_Main()
 	else if (time < self.ladder_time)
 		PM_ladder(maxspeed_mod);
 
-	else if ((ITEMS(self) & IT_JETPACK) && PHYS_INPUT_BUTTON_HOOK(self) && (!PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) > 0 || (ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO)) && !PHYS_FROZEN(self))
+	else if (ITEMS(self) & IT_USING_JETPACK)
 		PM_jetpack(maxspeed_mod);
 
 	else

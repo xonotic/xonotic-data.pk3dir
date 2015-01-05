@@ -520,10 +520,13 @@ void nade_boom()
 			}
 	}
 
-	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	if(expef != "")
+		pointparticles(particleeffectnum(expef), findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+
+	self.event_damage = func_null; // prevent somehow calling damage in the next call
 
 	if(nade_blast)
 	{
@@ -532,6 +535,7 @@ void nade_boom()
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 
+	if(self.takedamage)
 	switch ( self.nade_type )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
@@ -547,8 +551,19 @@ void nade_boom()
 
 void nade_touch()
 {
-	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
+	float is_weapclip = 0;
+	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
+	if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
+		is_weapclip = 1;
+	if(ITEM_TOUCH_NEEDKILL() || is_weapclip)
+	{
+		remove(self);
+		return;
+	}
+	
 	PROJECTILE_TOUCH;
+
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);
 	if(self.health == self.max_health)
@@ -570,11 +585,27 @@ void nade_beep()
 
 void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+	{
+		self.takedamage = DAMAGE_NO;
+		nade_boom();
+		return;
+	}
+
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
-		return;
+	{
+		force *= 1.5;
+		damage = 0;
+	}
+
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	{
+		force *= 0.5; // too much
+		frag_damage = 0;
+	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
@@ -582,20 +613,22 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
 		damage = self.max_health * 0.1;
 
-	if((DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) && (deathtype & HITTYPE_SECONDARY)) // WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
+	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
 		force *= 10;
 	}
 	else
-		damage = self.max_health * 1.1;
+		damage = self.max_health * 1.15;
 
 	self.velocity += force;
+	UpdateCSQCProjectile(self);
 
-	if(!damage || (self.flags & FL_ONGROUND && IS_PLAYER(attacker)))
+	if(damage <= 0 || ((self.flags & FL_ONGROUND) && IS_PLAYER(attacker)))
 		return;
 
 	if(self.health == self.max_health)
@@ -605,7 +638,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		self.think = nade_beep;
 	}
 
-	self.health	  -= damage;
+	self.health -= damage;
 	
 	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
 		self.realowner = attacker;
@@ -660,7 +693,6 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.event_damage = nade_damage;
 	_nade.customizeentityforclient = func_null;
 	_nade.exteriormodeltoclient = world;
-	_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = TRUE;
 	_nade.pushable = TRUE;
@@ -672,6 +704,11 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
+
+	if(_nade.nade_type == NADE_TYPE_TRANSLOCATE || _nade.nade_type == NADE_TYPE_SPAWN)
+		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+	else
+		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 
 	nade_spawn(_nade);
 
@@ -873,8 +910,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
 
-	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
-		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
+	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK))
+		key_pressed = self.button16; // if hook is enabled, use an alternate key
 		
 	if(self.nade)
 	{

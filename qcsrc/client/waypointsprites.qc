@@ -701,7 +701,7 @@ void Ent_WaypointSprite()
 		if(f & 0x80)
 		{
 			self.(teamradar_times[self.teamradar_time_index]) = time;
-			self.teamradar_time_index = mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
+			self.teamradar_time_index = (self.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
 		}
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;

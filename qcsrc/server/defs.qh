@@ -13,6 +13,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 #define BUTTON_USE        buttonuse
 #define BUTTON_DRAG       button8
 #define BUTTON_ZOOMSCRIPT button9
+#define BUTTON_JETPACK    button10
 
 // Globals
 
@@ -260,6 +261,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
+.float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
@@ -563,6 +565,7 @@ float serverflags;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
+.float weapon_blocked; // weapon use disabled
 
 .float frozen; // for freeze attacks
 .float revive_progress;

@@ -3,7 +3,7 @@ CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticInputSettingsTab, rows, float, 14.5)
+	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticInputSettingsTab)
 entity makeXonoticInputSettingsTab();
@@ -32,8 +32,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Key Bindings")));
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, kb);
-	me.gotoRC(me, me.rows - 3, 0);
+		me.TD(me, me.rows - 3, 3, kb);
+	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Change key..."), '0 0 0'));
 			e.onClick = KeyBinder_Bind_Change;
 			e.onClickEntity = kb;
@@ -89,6 +89,13 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
 			e.sendCvars = TRUE;
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Jetpack on jump:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_jetpack_jump"));
+			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, _("Air only"), "1");
+			e.addValue(e, _("All"), "2");
+			e.configureXonoticTextSliderValues(e);
+			e.sendCvars = TRUE;
 	me.TR(me);
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
 		{

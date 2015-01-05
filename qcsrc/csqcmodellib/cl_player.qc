@@ -194,11 +194,7 @@ void CSQCPlayer_SetCamera()
 		oldself = self;
 		self = csqcplayer;
 
-#ifdef COMPAT_XON050_ENGINE
-		if(servercommandframe == 0 || clientcommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
-#else
 		if(servercommandframe == 0 || clientcommandframe == 0)
-#endif
 		{
 			InterpolateOrigin_Do();
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
@@ -277,11 +273,7 @@ void CSQCPlayer_SetCamera()
 	}
 
 	entity view;
-#ifdef COMPAT_XON050_ENGINE
-	view = CSQCModel_server2csqc((spectatee_status > 0) ? spectatee_status : player_localentnum);
-#else
 	view = CSQCModel_server2csqc(player_localentnum);
-#endif
 
 	if(view && view != csqcplayer)
 	{
@@ -292,15 +284,6 @@ void CSQCPlayer_SetCamera()
 		self = oldself;
 	}
 
-#ifdef COMPAT_XON050_ENGINE
-	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
-	{
-		// legacy code, not totally correct, but good enough for not having V_CalcRefdef
-		setproperty(VF_ORIGIN, view.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT));
-		setproperty(VF_ANGLES, view_angles);
-	}
-	else
-#endif
 	if(view)
 	{
 		var float refdefflags = 0;
