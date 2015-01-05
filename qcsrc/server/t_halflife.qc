@@ -117,18 +117,27 @@ void func_ladder_draw()
 {
 	float dt = time - self.move_time;
 	self.move_time = time;
-	if(dt <= 0)
-		return;
+	if(dt <= 0) { return; }
 
-	tracebox(self.origin, self.mins, self.maxs, self.origin, MOVE_NORMAL, self);
+	entity e;
 
-	//if(trace_fraction < 1)
-	if(trace_ent)
-	if(time >= trace_ent.ladder_time)
-	{
-		other = trace_ent;
-		func_ladder_touch();
-	}
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+				if(e.isplayermodel)
+				{
+					vector emin = e.absmin;
+					vector emax = e.absmax;
+					if(self.solid == SOLID_BSP)
+					{
+						emin -= '1 1 1';
+						emax += '1 1 1';
+					}
+					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+						{
+							other = e;
+							func_ladder_touch();
+						}
+				}
 }
 
 void ent_func_ladder()
