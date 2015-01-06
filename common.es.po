@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-06 00:00+0100\n"
-"PO-Revision-Date: 2015-01-04 19:51+0000\n"
+"POT-Creation-Date: 2015-01-07 00:00+0100\n"
+"PO-Revision-Date: 2015-01-06 00:11+0000\n"
 "Last-Translator: Alan García <bearz_x@hotmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/xonotic/language/"
 "es/)\n"
@@ -40,7 +40,7 @@ msgstr "%s (sin asignar)"
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
-msgstr "Nade Cronometro"
+msgstr "Cronometro de granada"
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
@@ -6856,11 +6856,11 @@ msgstr "rosa"
 msgid "spectate"
 msgstr "espectador"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr ""
 

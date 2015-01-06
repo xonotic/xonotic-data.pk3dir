@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-06 00:00+0100\n"
+"POT-Creation-Date: 2015-01-07 00:00+0100\n"
 "PO-Revision-Date: 2015-01-04 18:10+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/xonotic/language/"
@@ -6937,11 +6937,11 @@ msgstr "rose"
 msgid "spectate"
 msgstr "mode spectateur"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr "en équipe"
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr "chacun pour soi"
 
