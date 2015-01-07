@@ -104,7 +104,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(!((trace_ent.vehicle_flags & VHF_ISVEHICLE) || (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)))
 			trace_ent = world;
 
-		if(trace_ent.alpha <= 0.5 && trace_ent.alpha)
+		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
 			trace_ent = world; // invisible
 	}
 
@@ -209,7 +209,7 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
 	remove (self);
 }
@@ -617,17 +617,18 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
 	self.dmg_time = time;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_NEX))
-		damage *= autocvar_g_vehicles_nex_damagerate;
+	// WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+		damage *= autocvar_g_vehicles_vortex_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
-		damage *= autocvar_g_vehicles_uzi_damagerate;
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+		damage *= autocvar_g_vehicles_machinegun_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
-		damage *= autocvar_g_vehicles_minstanex_damagerate;
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+		damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;

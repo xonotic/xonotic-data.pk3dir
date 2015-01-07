@@ -234,7 +234,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 vector MapVote_GridVec(vector gridspec, float i, float m)
 {
 	float r;
-	r = mod(i, m);
+	r = i % m;
 	return
 		'1 0 0' * (gridspec_x * r)
 		+

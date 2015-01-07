@@ -41,7 +41,7 @@ void PingPLReport_Think()
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = mod(self.cnt + 1, maxclients);
+	self.cnt = (self.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
@@ -79,32 +79,6 @@ void SetDefaultAlpha()
 			default_player_alpha = 1;
 		default_weapon_alpha = default_player_alpha;
 	}
-}
-
-void fteqcc_testbugs()
-{
-	float a, b;
-
-	if(!autocvar_developer_fteqccbugs)
-		return;
-
-	dprint("*** fteqcc test: checking for bugs...\n");
-
-	a = 1;
-	b = 5;
-	if(sqrt(a) - sqrt(b - a) == 0)
-		dprint("*** fteqcc test: found same-function-twice bug\n");
-	else
-		dprint("*** fteqcc test: same-function-twice bug got FINALLY FIXED! HOORAY!\n");
-
-	world.cnt = -10;
-	world.enemy = world;
-	world.enemy.cnt += 10;
-	if(world.cnt > 0.2 || world.cnt < -0.2) // don't error out if it's just roundoff errors
-		dprint("*** fteqcc test: found += bug\n");
-	else
-		dprint("*** fteqcc test: += bug got FINALLY FIXED! HOORAY!\n");
-	world.cnt = 0;
 }
 
 void GotoFirstMap()
@@ -573,8 +547,6 @@ void spawnfunc_worldspawn (void)
 
 	remove = remove_safely; // during spawning, watch what you remove!
 
-	check_unacceptable_compiler_bugs();
-
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
 	compressShortVector_init();
@@ -649,14 +621,12 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
-	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
+	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
-	ElectroInit();
-	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -726,8 +696,6 @@ void spawnfunc_worldspawn (void)
 	if(autocvar_g_campaign)
 		CampaignPostInit();
 
-	fteqcc_testbugs();
-
 	Ban_LoadBans();
 
 	MapInfo_Enumerate();
@@ -775,7 +743,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
-	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
+	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
@@ -783,19 +751,23 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
+	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
 	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
+	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
 	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
-	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
-	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
+	addstat(STAT_VORTEX_CHARGE, AS_FLOAT, vortex_charge);
+	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+	
+	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
@@ -1066,7 +1038,7 @@ float() MaplistMethod_Iterate = // usual method
 		for(i = 1; i < Map_Count; ++i)
 		{
 			float mapindex;
-			mapindex = mod(i + Map_Current, Map_Count);
+			mapindex = (i + Map_Current) % Map_Count;
 			if(Map_Check(mapindex, pass))
 				return mapindex;
 		}
@@ -1094,7 +1066,7 @@ float() MaplistMethod_Random = // random map selection
 	for(i = 0; i <= imax; ++i)
 	{
 		float mapindex;
-		mapindex = mod(Map_Current + floor(random() * (Map_Count - 1) + 1), Map_Count); // any OTHER map
+		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(mapindex, 1))
 			return mapindex;
 	}
@@ -1530,11 +1502,7 @@ void NextLevel()
 	DumpStats(TRUE);
 
 	// send statistics
-	entity e;
-	PlayerStats_EndMatch(1);
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
+	PlayerStats_GameReport(TRUE);
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2238,21 +2206,13 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
-		self.damage_dealt_total = 0;
-	
-		if(IS_SPEC(self))
+		entity e = IS_SPEC(self) ? self.enemy : self;
+		if(e.typehitsound)
+			self.typehit_time = time;
+		else if(e.damage_dealt)
 		{
-			if(self.enemy.typehitsound)
-				self.typehit_time = time;
-			else if(self.enemy.damage_dealt)
-				self.damage_dealt_total = ceil(self.enemy.damage_dealt);
-		}
-		else
-		{
-			if(self.typehitsound)
-				self.typehit_time = time;
-			else if(self.damage_dealt)
-				self.damage_dealt_total = ceil(self.damage_dealt);
+			self.hit_time = time;
+			self.damage_dealt_total += ceil(e.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2340,8 +2300,6 @@ void RestoreGame()
 
 void Shutdown()
 {
-	entity e;
-
 	gameover = 2;
 
 	if(world_initialized > 0)
@@ -2350,10 +2308,8 @@ void Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
-		PlayerStats_EndMatch(0);
-		FOR_EACH_CLIENT(e)
-			PlayerStats_AddGlobalInfo(e);
-		PlayerStats_Shutdown();
+		// playerstats with unfinished match
+		PlayerStats_GameReport(FALSE);
 
 		if(!cheatcount_total)
 		{

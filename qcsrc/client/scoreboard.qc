@@ -519,7 +519,7 @@ string HUD_GetField(entity pl, float field)
 	{
 		case SP_PING:
 			if (!pl.gotscores)
-				return "\xEE\x82\x8D\xEE\x82\x8D\xEE\x82\x8D"; // >>> sign
+				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
@@ -555,7 +555,7 @@ string HUD_GetField(entity pl, float field)
 					hud_field_icon1 = "gfx/scoreboard/playercolor_shirt";
 					hud_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
 					hud_field_icon2 = "gfx/scoreboard/playercolor_pants";
-					hud_field_icon2_rgb = colormapPaletteColor(mod(f, 16), 1);
+					hud_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 				}
 			}
 			return GetPlayerName(pl.sv_entnum);
@@ -676,7 +676,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 	return str;
 }
 
-void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
+void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, float pl_number)
 {
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
@@ -690,18 +690,17 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 		rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
 		rgb_z = autocvar_scoreboard_color_bg_b + 0.5; }
 
-	// Layout:
-	tmp_x = sbwidth;
-	tmp_y = hud_fontsize_y * 1.25;
-	tmp_z = 0;
-
+	vector h_pos = pos - '1 1 0';
+	vector h_size = item_size + '2 0 0';
 	// alternated rows highlighting
 	if(is_self)
-		drawfill(pos - '1 1 0', tmp + '2 0 0', rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
-	else if((scoreboard_highlight) && (!mod(pl_number,2)))
-		drawfill(pos - '1 1 0', tmp + '2 0 0', rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
+		drawfill(h_pos, h_size, rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
+	else if((scoreboard_highlight) && (!(pl_number % 2)))
+		drawfill(h_pos, h_size, rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 
+	tmp_x = item_size_x;
 	tmp_y = 0;
+	tmp_z = 0;
 
 	for(i = 0; i < hud_num_fields; ++i)
 	{
@@ -800,6 +799,9 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 			pos_x -= hud_size[i] + hud_fontsize_x;
 		}
 	}
+
+	if(pl.eliminated)
+		drawfill(h_pos, h_size, '0 0 0', 0.5, DRAWFLAG_NORMAL);
 }
 
 /*
@@ -872,7 +874,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		column_dim_x = hud_size[i] + hud_fontsize_x;
 		if (scoreboard_highlight)
 		{
-			if (mod(i,2))
+			if (i % 2)
 				drawfill(pos - '0 1 0' - hud_fontsize_x / 2 * '1 0 0', column_dim, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 		}
 		drawstring(pos, hud_title[i], hud_fontsize, rgb * 1.5, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -891,7 +893,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 			if (scoreboard_highlight)
 			{
-				if (!mod(i,2))
+				if (!(i % 2))
 				{
 					if (i == hud_num_fields-1)
 						column_dim_x = hud_size[i] + hud_fontsize_x / 2 + 1;
@@ -913,6 +915,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	pos_y += 1.25 * hud_fontsize_y; // skip the header
 	pos_y += autocvar_scoreboard_border_thickness;
 
+	// item size
+	tmp_x = sbwidth;
+	tmp_y = hud_fontsize_y * 1.25;
+
 	// fill the table and draw the rows
 	i = 0;
 	if (teamplay)
@@ -920,7 +926,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team != tm.team)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
+			HUD_PrintScoreboardItem(pos, tmp, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -929,7 +935,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team == NUM_SPECTATOR)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
+			HUD_PrintScoreboardItem(pos, tmp, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -961,7 +967,7 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	float i;
-	float weapon_cnt = WEP_COUNT - 3; // either minstanex/nex are hidden, no port-o-launch, no tuba
+	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
@@ -988,7 +994,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	// column highlighting
 	for(i = 0; i < weapon_cnt/rows; ++i)
 	{
-		if(!mod(i, 2))
+		if(!(i % 2))
 			drawfill(pos + '1 0 0' * weapon_width * rows * i, '0 1 0' * height * rows + '1 0 0' * weapon_width * rows, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 	}
 
@@ -1004,7 +1010,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(rows == 2)
 		pos_x += weapon_width / 2;
 
-	if(switchweapon == WEP_MINSTANEX)
+	if(switchweapon == WEP_VAPORIZER)
 		g_instagib = 1; // TODO: real detection for instagib?
 
 	float weapon_stats;
@@ -1018,7 +1024,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_NEX && g_instagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
+		if ((i == WEP_VORTEX && g_instagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
 			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 
@@ -1029,14 +1035,14 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_stats >= 0) {
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
 			string s;
-			s = sprintf(_("%d%%"), weapon_stats*100);
+			s = sprintf("%d%%", weapon_stats*100);
 
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
@@ -1082,7 +1088,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	float stat_monsters_killed, stat_monsters_total;
 	float rows = 0;
 	string val;
-	
+
 	// get monster stats
 	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
 	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
@@ -1179,7 +1185,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		p = count_ordinal(i+1);
 		if(grecordholder[i] == GetPlayerName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
-		else if(!mod(i, 2) && scoreboard_highlight)
+		else if(!(i % 2) && scoreboard_highlight)
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos, p, '1 1 0' * hud_fontsize_y, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		drawstring(pos + '3 0 0' * hud_fontsize_y, TIME_ENCODED_TOSTRING(t), '1 1 0' * hud_fontsize_y, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1336,12 +1342,16 @@ void HUD_DrawScoreboard()
 	float specs;
 	specs = 0;
 	tmp = pos;
+	vector item_size;
+	item_size_x = sbwidth;
+	item_size_y = hud_fontsize_y * 1.25;
+	item_size_z = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos_y += 1.25 * hud_fontsize_y;
-		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), specs);
+		HUD_PrintScoreboardItem(pos, item_size, pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 

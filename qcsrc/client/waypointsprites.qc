@@ -217,31 +217,20 @@ float spritelookupblinkvalue(string s)
 }
 vector spritelookupcolor(string s, vector def)
 {
+	if(substring(s, 0, 4) == "wpn-")
+		return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).wpcolor);
+
 	switch(s)
 	{
 		case "keycarrier-friend": return '0 1 0';
-		case "wpn-laser":         return '1 0.5 0.5';
-		case "wpn-shotgun":       return '0.5 0.25 0';
-		case "wpn-uzi":           return '1 1 0';
-		case "wpn-gl":            return '1 0 0';
-		case "wpn-electro":       return '0 0.5 1';
-		case "wpn-crylink":       return '1 0.5 1';
-		case "wpn-nex":           return '0.5 1 1';
-		case "wpn-hagar":         return '1 1 0.5';
-		case "wpn-rl":            return '1 1 0';
-		case "wpn-porto":         return '0.5 0.5 0.5';
-		case "wpn-minstanex":     return '0.5 1 1';
-		case "wpn-hookgun":       return '0 0.5 0';
-		case "wpn-fireball":      return '1 0.5 0';
-		case "wpn-hlac":          return '0 1 0';
-		case "wpn-campingrifle":  return '0.5 1 0';
-		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
 }
 string spritelookuptext(string s)
 {
+	if(substring(s, 0, 4) == "wpn-") { return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message); }
 	if(substring(s, 0, 5) == "buff-") { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
+
 	switch(s)
 	{
 		case "as-push": return _("Push");
@@ -282,22 +271,6 @@ string spritelookuptext(string s)
 		case "nb-ball": return _("Ball");
 		case "ka-ball": return _("Ball");
 		case "ka-ballcarrier": return _("Ball carrier");
-		case "wpn-laser": return _("Laser");
-		case "wpn-shotgun": return _("Shotgun");
-		case "wpn-uzi": return _("Machine Gun");
-		case "wpn-gl": return _("Mortar");
-		case "wpn-electro": return _("Electro");
-		case "wpn-crylink": return _("Crylink");
-		case "wpn-nex": return _("Nex");
-		case "wpn-hagar": return _("Hagar");
-		case "wpn-rl": return _("Rocket Launcher");
-		case "wpn-porto": return _("Port-O-Launch");
-		case "wpn-minstanex": return _("Minstanex");
-		case "wpn-hookgun": return _("Hook");
-		case "wpn-fireball": return _("Fireball");
-		case "wpn-hlac": return _("HLAC");
-		case "wpn-campingrifle": return _("Rifle");
-		case "wpn-minelayer": return _("Mine Layer");
 		case "dom-neut": return _("Control point");
 		case "dom-red": return _("Control point");
 		case "dom-blue": return _("Control point");
@@ -729,7 +702,7 @@ void Ent_WaypointSprite()
 		if(f & 0x80)
 		{
 			self.(teamradar_times[self.teamradar_time_index]) = time;
-			self.teamradar_time_index = mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
+			self.teamradar_time_index = (self.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
 		}
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;

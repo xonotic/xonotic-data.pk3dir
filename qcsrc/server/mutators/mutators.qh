@@ -35,3 +35,5 @@ MUTATOR_DECLARATION(mutator_campcheck);
 MUTATOR_DECLARATION(mutator_buffs);
 
 MUTATOR_DECLARATION(sandbox);
+MUTATOR_DECLARATION(mutator_overkill);
+

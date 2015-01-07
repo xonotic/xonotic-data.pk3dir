@@ -176,7 +176,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
+	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -775,6 +775,7 @@ void ctf_FlagThink()
 
 			if((self.pass_target == world)
 				|| (self.pass_target.deadflag != DEAD_NO)
+				|| (self.pass_target.flagcarried)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
@@ -801,6 +802,7 @@ void ctf_FlagThink()
 void ctf_FlagTouch()
 {
 	if(gameover) { return; }
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other;
 	float is_not_monster = (!(toucher.flags & FL_MONSTER));
@@ -928,6 +930,8 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+
+	ctf_CheckStalemate();
 }
 
 void ctf_Reset()
@@ -1285,7 +1289,7 @@ void havocbot_ctf_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==bot.team)
+	if(SAME_TEAM(head, bot))
 		++c;
 
 	if(c==1)
@@ -1651,7 +1655,7 @@ void havocbot_role_ctf_defense()
 		}
 
 		if(closestplayer)
-		if(closestplayer.team!=self.team)
+		if(DIFF_TEAM(closestplayer, self))
 		if(vlen(org - self.origin)>1000)
 		if(checkpvs(self.origin,closestplayer)||random()<0.5)
 			havocbot_goalrating_ctf_ourbase(30000);
