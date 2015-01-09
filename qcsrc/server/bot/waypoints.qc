@@ -1141,6 +1141,7 @@ void botframe_autowaypoints()
 		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
 	}
 
-	botframe_deleteuselesswaypoints();
+	// TODO(divVerent): For some reason this always removes newly created WPs. Need to figure out why.
+	//botframe_deleteuselesswaypoints();
 }
 
