@@ -747,7 +747,7 @@ msgstr "jugando ^3%s^7 on ^2%s^7"
 #: qcsrc/client/scoreboard.qc:1375 qcsrc/client/scoreboard.qc:1380
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr "para un máximo de ^1%1.0f minutes^7"
+msgstr " para un máximo de ^1%1.0f minutes^7"
 
 #: qcsrc/client/scoreboard.qc:1384 qcsrc/client/scoreboard.qc:1403
 msgid " or"
@@ -756,7 +756,7 @@ msgstr " ó"
 #: qcsrc/client/scoreboard.qc:1387 qcsrc/client/scoreboard.qc:1394
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr "hasta ^3%s %s^7"
+msgstr " hasta ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1388 qcsrc/client/scoreboard.qc:1395
 #: qcsrc/client/scoreboard.qc:1407 qcsrc/client/scoreboard.qc:1414
