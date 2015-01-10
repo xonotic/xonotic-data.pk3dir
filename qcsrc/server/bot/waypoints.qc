@@ -1136,7 +1136,7 @@ void botframe_deleteuselesswaypoints()
 		}
 	}
 	for (w = world; (w = find(w, classname, "waypoint")); )
-		w.wpflags &= ~WAYPOINTFLAG_USEFUL; // temp flag
+		w.wpflags &= ~(WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END); // temp flag
 }
 
 void botframe_autowaypoints()
