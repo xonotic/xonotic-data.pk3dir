@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 00:00+0100\n"
+"POT-Creation-Date: 2015-01-11 07:35+0100\n"
 "PO-Revision-Date: 2015-01-04 09:20+0000\n"
 "Last-Translator: Mihail Varantsou <meequz@gmail.com>\n"
 "Language-Team: Belarusian (http://www.transifex.com/projects/p/xonotic/"
@@ -6782,11 +6782,11 @@ msgstr "ружовая"
 msgid "spectate"
 msgstr "назіраць"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr "камандныя"
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr "free for all"
 

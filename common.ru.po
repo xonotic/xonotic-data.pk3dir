@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 00:00+0100\n"
+"POT-Creation-Date: 2015-01-11 07:35+0100\n"
 "PO-Revision-Date: 2015-01-04 17:11+0000\n"
 "Last-Translator: Alex Talker <alextalker7@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/xonotic/language/"
@@ -722,16 +722,16 @@ msgstr "играет ^3%s^7 на ^2%s^7"
 #: qcsrc/client/scoreboard.qc:1375 qcsrc/client/scoreboard.qc:1380
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr "на время ^1%1.0f minutes^7"
+msgstr " на время ^1%1.0f minutes^7"
 
 #: qcsrc/client/scoreboard.qc:1384 qcsrc/client/scoreboard.qc:1403
 msgid " or"
-msgstr "или"
+msgstr " или"
 
 #: qcsrc/client/scoreboard.qc:1387 qcsrc/client/scoreboard.qc:1394
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr "до  ^3%s %s^7"
+msgstr " до  ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1388 qcsrc/client/scoreboard.qc:1395
 #: qcsrc/client/scoreboard.qc:1407 qcsrc/client/scoreboard.qc:1414
@@ -6863,11 +6863,11 @@ msgstr "розовая"
 msgid "spectate"
 msgstr "наблюдать"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr "командные"
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr "игра для всех"
 
