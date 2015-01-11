@@ -623,8 +623,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.nextthink = time;
 		}
 
-		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg || self.classname == "body") {
 			// remove corpse
+			// clones don't run any animation code any more, so we must gib them when they die :(
 			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
 
