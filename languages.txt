@@ -1,3 +1,4 @@
+ast Asturian "Asturianu (52%)"
 de German "Deutsch (100%)"
 en English "English"
 es Spanish "Español (78%)"
