@@ -649,7 +649,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
 			}
-			animdecide_init(self);
+			animdecide_load_if_needed(self);
 			animdecide_setimplicitstate(self, onground);
 			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
 			float sf = 0;

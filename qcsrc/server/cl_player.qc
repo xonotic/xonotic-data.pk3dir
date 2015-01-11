@@ -91,7 +91,7 @@ void CopyBody(float keepvelocity)
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
-	animdecide_init(self);
+	animdecide_load_if_needed(self);
 	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
@@ -111,7 +111,7 @@ float player_getspecies()
 void player_setupanimsformodel()
 {
 	// load animation info
-	animdecide_init(self);
+	animdecide_load_if_needed(self);
 	animdecide_setstate(self, 0, FALSE);
 }
 
