@@ -612,9 +612,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
+
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
-
 		// reset body think wrapper broken by SUB_SetFade
 		if(self.classname == "body" && self.think != CopyBody_Think) {
 			self.CopyBody_think = self.think;
