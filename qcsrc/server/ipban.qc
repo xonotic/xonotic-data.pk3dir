@@ -459,7 +459,7 @@ float Ban_MaybeEnforceBanOnce(entity client)
 	if(client.ban_checked)
 		return FALSE;
 	client.ban_checked = TRUE;
-	return Ban_MaybeEnforceBan(self);
+	return Ban_MaybeEnforceBan(client);
 }
 
 string Ban_Enforce(float i, string reason)
@@ -604,6 +604,6 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him
 	sprint(client, strcat("Kickbanned: ", reason, "\n"));
-	dropclient(client);
 	 */
+	dropclient(client);
 }
