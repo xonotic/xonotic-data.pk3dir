@@ -605,5 +605,6 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	// and kick him
 	sprint(client, strcat("Kickbanned: ", reason, "\n"));
 	 */
-	dropclient(client);
+	if (IS_REAL_CLIENT(client))
+		dropclient(client);
 }
