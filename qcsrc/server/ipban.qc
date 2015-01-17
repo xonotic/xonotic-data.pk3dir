@@ -469,7 +469,8 @@ string Ban_Enforce(float i, string reason)
 
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_REALCLIENT(e)
+	for(e = world; (e = nextent(e)) && (num_for_edict(e) <= maxclients); )
+		if (IS_REAL_CLIENT(e))
 		if(Ban_IsClientBanned(e, i))
 		{
 			if(reason != "")
@@ -604,7 +605,6 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him
 	sprint(client, strcat("Kickbanned: ", reason, "\n"));
+	dropclient(client);
 	 */
-	if (IS_REAL_CLIENT(client))
-		dropclient(client);
 }
