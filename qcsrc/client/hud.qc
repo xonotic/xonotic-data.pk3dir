@@ -919,11 +919,11 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	vector iconColor = isShadowed ? '0 0 0' : '1 1 1';
 	vector textColor;
 	if(isInfinite)
-		textColor = '0 0.5 0.75';
+		textColor = '0.2 0.95 0';
 	else if(isShadowed)
 		textColor = '0 0 0';
 	else if(ammo < 10)
-		textColor = '0.7 0 0';
+		textColor = '0.8 0.04 0';
 	else
 		textColor = '1 1 1';
 
