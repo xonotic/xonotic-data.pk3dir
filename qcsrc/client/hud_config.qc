@@ -88,6 +88,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
+					HUD_Write_PanelCvar_q("_noncurrent_alpha");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_name");

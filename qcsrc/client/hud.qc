@@ -924,9 +924,9 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	if(isCurrent)
 		alpha = panel_fg_alpha;
 	else if(isShadowed)
-		alpha = panel_fg_alpha * 0.7 * 0.5;
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1) * 0.5;
 	else
-		alpha = panel_fg_alpha * 0.7;
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1);
 
 	// Draw item
 
