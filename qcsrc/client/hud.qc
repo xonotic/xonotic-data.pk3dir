@@ -907,7 +907,7 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 		textPos = myPos + eX * mySize_y;
 	}
 
-	float isShadowed = (ammo <= 0 && !isInfinite);
+	float isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
 
 	vector iconColor = isShadowed ? '0 0 0' : '1 1 1';
 	vector textColor;
