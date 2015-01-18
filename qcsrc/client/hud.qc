@@ -895,6 +895,13 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	else
 		ammo = getstati(GetAmmoStat(ammoType));
 
+	if(!isCurrent)
+	{
+		float scale = bound(0, autocvar_hud_panel_ammo_noncurrent_scale, 1);
+		myPos = myPos + (mySize - mySize * scale) * 0.5;
+		mySize = mySize * scale;
+	}
+
 	vector iconPos, textPos;
 	if(autocvar_hud_panel_ammo_iconalign)
 	{

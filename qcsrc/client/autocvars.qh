@@ -222,6 +222,7 @@ float autocvar_hud_panel_ammo_iconalign;
 float autocvar_hud_panel_ammo_maxammo;
 float autocvar_hud_panel_ammo_onlycurrent;
 float autocvar_hud_panel_ammo_noncurrent_alpha = 0.7;
+float autocvar_hud_panel_ammo_noncurrent_scale = 1;
 float autocvar_hud_panel_ammo_progressbar;
 string autocvar_hud_panel_ammo_progressbar_name;
 float autocvar_hud_panel_ammo_progressbar_xoffset;
