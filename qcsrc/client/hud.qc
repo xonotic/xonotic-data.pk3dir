@@ -935,6 +935,8 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	else
 		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1);
 
+	string text = isInfinite ? "\xE2\x88\x9E" : ftos(ammo); // Use infinity symbol (U+221E)
+
 	// Draw item
 
 	if(isCurrent)
@@ -944,7 +946,7 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_panel_ammo_text)
-		drawstring_aspect(textPos, ftos(ammo), eX * (2/3) * mySize_x + eY * mySize_y, textColor, alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, text, eX * (2/3) * mySize_x + eY * mySize_y, textColor, alpha, DRAWFLAG_NORMAL);
 
 	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize_y, iconColor, alpha, DRAWFLAG_NORMAL);
 }
