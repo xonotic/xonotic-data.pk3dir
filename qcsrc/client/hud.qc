@@ -4411,7 +4411,7 @@ void HUD_CenterPrint (void)
 	}
 }
 
-// Buffs (#18)
+// Buffs (#17)
 //
 void HUD_Buffs(void)
 {
@@ -4470,7 +4470,7 @@ void HUD_Buffs(void)
 	draw_endBoldFont();
 }
 
-// QuickMenu (#19)
+// QuickMenu (#18)
 //
 // QUICKMENU_MAXLINES must be <= 10
 #define QUICKMENU_MAXLINES 10
