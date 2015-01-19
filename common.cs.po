@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# NONE <nechtom@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-31 22:22+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
+"PO-Revision-Date: 2015-01-03 19:51+0000\n"
+"Last-Translator: NONE <nechtom@gmail.com>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/xonotic/language/"
 "cs/)\n"
 "Language: cs\n"
@@ -33,7 +34,7 @@ msgstr ""
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
-msgstr ""
+msgstr "Průběh oživování"
 
 #: qcsrc/client/hud.qc:186
 #, c-format
@@ -47,11 +48,11 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
-msgstr ""
+msgstr "Startovní čára"
 
 #: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
-msgstr ""
+msgstr "Cílová čára"
 
 #: qcsrc/client/hud.qc:214
 #, c-format
@@ -60,20 +61,20 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:805
 msgid "Out of ammo"
-msgstr ""
+msgstr "Chybí munice"
 
 #: qcsrc/client/hud.qc:809
 msgid "Don't have"
-msgstr ""
+msgstr "Chybí"
 
 #: qcsrc/client/hud.qc:813
 msgid "Unavailable"
-msgstr ""
+msgstr "Nedostupné"
 
 #: qcsrc/client/hud.qc:1751 qcsrc/client/hud.qc:1752 qcsrc/client/hud.qc:2109
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Hráč %d"
 
 #: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
@@ -82,54 +83,54 @@ msgstr ""
 #: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^1PENALTA: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^2PENALTA: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr ""
+msgstr "^1Musíte odpovědět před vstupem do módu HUD konfigurace\n"
 
 #: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Jméno ^7místo \"^1Anonymous player^7\" v hráčské statistice"
 
 #: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
-msgstr ""
+msgstr "Bylo vyvoláno hlasování:"
 
 #: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Povolit serveru ukládat a zobrazovat Vaší přezdívku?"
 
 #: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Nastavit HUD"
 
 #: qcsrc/client/hud.qc:2628
 #, c-format
 msgid "Yes (%s): %d"
-msgstr ""
+msgstr "Ano (%s): %d"
 
 #: qcsrc/client/hud.qc:2630
 #, c-format
 msgid "No (%s): %d"
-msgstr ""
+msgstr "Ne (%s): %d"
 
 #: qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3194 qcsrc/client/hud.qc:3196
 msgid "Personal best"
-msgstr ""
+msgstr "Vlastní rekord"
 
 #: qcsrc/client/hud.qc:3209 qcsrc/client/hud.qc:3212 qcsrc/client/hud.qc:3214
 msgid "Server best"
-msgstr ""
+msgstr "Rekord serveru"
 
 #: qcsrc/client/hud.qc:3576
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3Hráč^7: Toto je komunikační oblast."
 
 #: qcsrc/client/hud.qc:3641
 #, c-format
@@ -3619,6 +3620,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.c:83
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"Povolit hráčské statistice používání Vaší přezdívky na stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:87
 msgid "ALWU2N^Yes"
@@ -4922,15 +4924,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:107
 msgid "Statistics"
-msgstr ""
+msgstr "Statistika"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:111
 msgid "Allow player statistics to track your client"
-msgstr ""
+msgstr "Povolit sledování Vašeho klienta v hráčské statistice"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:114
 msgid "Allow player statistics to use your nickname"
-msgstr ""
+msgstr "Povolit používání Vaší přezdívky v hráčské statistice"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.c:129
 msgid "Country"
@@ -6746,11 +6748,11 @@ msgstr ""
 msgid "spectate"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr ""
 
@@ -6766,7 +6768,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/maplist.c:287
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr ""
+msgstr "Xonotic server hráče %s"
 
 #: qcsrc/menu/xonotic/maplist.c:292
 msgid ""
