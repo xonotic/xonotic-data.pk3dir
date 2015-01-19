@@ -176,7 +176,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
+	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -257,8 +257,17 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.owner.flagcarried = flag;
 
 	// reset flag
-	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_OFFSET);
+	if(player.vehicle)
+	{
+		setattachment(flag, player.vehicle, "");
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
+		flag.scale = VEHICLE_FLAG_SCALE;
+	}
+	else
+	{
+		setattachment(flag, player, "");
+		setorigin(flag, FLAG_CARRY_OFFSET);
+	}
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
@@ -388,6 +397,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 
 	if (!player) { return; } // without someone to give the reward to, we can't possibly cap
 
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
+
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
@@ -448,6 +459,8 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+
+		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -471,8 +484,17 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	// attach the flag to the player
 	flag.owner = player;
 	player.flagcarried = flag;
-	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_OFFSET);
+	if(player.vehicle)
+	{
+		setattachment(flag, player.vehicle, "");
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
+		flag.scale = VEHICLE_FLAG_SCALE;
+	}
+	else
+	{
+		setattachment(flag, player, "");
+		setorigin(flag, FLAG_CARRY_OFFSET);
+	}
 
 	// flag setup
 	flag.movetype = MOVETYPE_NONE;
@@ -500,6 +522,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
 		case PICKUP_BASE:
@@ -656,7 +679,7 @@ void ctf_FlagThink()
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
 		dprint("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
-		if(!trace_startsolid) // can we resize it without getting stuck?
+		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
@@ -752,6 +775,7 @@ void ctf_FlagThink()
 
 			if((self.pass_target == world)
 				|| (self.pass_target.deadflag != DEAD_NO)
+				|| (self.pass_target.flagcarried)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
@@ -778,6 +802,7 @@ void ctf_FlagThink()
 void ctf_FlagTouch()
 {
 	if(gameover) { return; }
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other;
 	float is_not_monster = (!(toucher.flags & FL_MONSTER));
@@ -791,9 +816,10 @@ void ctf_FlagTouch()
 	}
 
 	// special touch behaviors
-	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	if(toucher.frozen) { return; }
+	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
-		if(autocvar_g_ctf_allow_vehicle_touch)
+		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
@@ -878,6 +904,9 @@ void ctf_RespawnFlag(entity flag)
 			ctf_FakeTimeLimit(flag.owner, -1);
 	}
 
+	if((flag.owner) && (flag.owner.vehicle))
+		flag.scale = FLAG_SCALE;
+
 	if((flag.ctf_status == FLAG_DROPPED) && (flag.wps_flagdropped))
 		{ WaypointSprite_Kill(flag.wps_flagdropped); }
 
@@ -901,6 +930,8 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+
+	ctf_CheckStalemate();
 }
 
 void ctf_Reset()
@@ -1258,7 +1289,7 @@ void havocbot_ctf_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==bot.team)
+	if(SAME_TEAM(head, bot))
 		++c;
 
 	if(c==1)
@@ -1624,7 +1655,7 @@ void havocbot_role_ctf_defense()
 		}
 
 		if(closestplayer)
-		if(closestplayer.team!=self.team)
+		if(DIFF_TEAM(closestplayer, self))
 		if(vlen(org - self.origin)>1000)
 		if(checkpvs(self.origin,closestplayer)||random()<0.5)
 			havocbot_goalrating_ctf_ourbase(30000);
@@ -2182,7 +2213,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(VehicleEnter, ctf_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, ctf_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

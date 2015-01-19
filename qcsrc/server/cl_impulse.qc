@@ -68,8 +68,8 @@ void ImpulseCommands (void)
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
 			W_NextWeaponOnImpulse(imp);
-		else
-			self.impulse = imp; // retry in next frame
+		//else
+		//	self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= 10 && imp <= 20)
 	{
@@ -78,37 +78,37 @@ void ImpulseCommands (void)
 			switch(imp)
 			{
 				case 10:
-					W_NextWeapon (0);
+					W_NextWeapon(0);
 					break;
 				case 11:
 					W_LastWeapon();
 					break;
 				case 12:
-					W_PreviousWeapon (0);
+					W_PreviousWeapon(0);
 					break;
 				case 13:
-					W_SwitchWeapon (w_getbestweapon(self));
+					W_SwitchWeapon(w_getbestweapon(self));
 					break;
 				case 14:
 					W_NextWeaponOnImpulse(0);
 					break;
 				case 15:
-					W_NextWeapon (2);
+					W_NextWeapon(2);
 					break;
 				case 16:
-					W_PreviousWeapon (2);
+					W_PreviousWeapon(2);
 					break;
 				case 17:
 					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
-					W_NextWeapon (1);
+					W_NextWeapon(1);
 					break;
 				case 19:
-					W_PreviousWeapon (1);
+					W_PreviousWeapon(1);
 					break;
 				case 20:
-					W_TriggerReload ();
+					if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
 					break;
 			}
 		}
@@ -124,7 +124,7 @@ void ImpulseCommands (void)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = mod(imp, 10);
+			i = imp % 10;
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}

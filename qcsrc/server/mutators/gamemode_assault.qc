@@ -63,20 +63,13 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator;
+			entity oldself, oldactivator, head;
 
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-			{
-				entity player;
-				string s;
-				FOR_EACH_PLAYER(player)
-				{
-					s = strcat(self.message, "\n");
-					centerprint(player, s);
-				}
-			}
+			FOR_EACH_PLAYER(head)
+				centerprint(head, self.message);
 
 			oldactivator = activator;
 			activator = oldself;
@@ -523,9 +516,9 @@ void havocbot_ast_reset_role(entity bot)
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 {
 	if(self.team == assault_attacker_team)
-		centerprint(self, "You are attacking!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
-		centerprint(self, "You are defending!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 
 	return FALSE;
 }
@@ -565,7 +558,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(PlayerSpawn, assault_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

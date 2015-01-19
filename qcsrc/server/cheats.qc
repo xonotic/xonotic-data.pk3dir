@@ -140,6 +140,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_rockets = self.ammo_rockets;
 			self.personal.ammo_nails = self.ammo_nails;
 			self.personal.ammo_cells = self.ammo_cells;
+			self.personal.ammo_plasma = self.ammo_plasma;
 			self.personal.ammo_shells = self.ammo_shells;
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;
@@ -197,6 +198,7 @@ float CheatImpulse(float i)
 				self.ammo_rockets = self.personal.ammo_rockets;
 				self.ammo_nails = self.personal.ammo_nails;
 				self.ammo_cells = self.personal.ammo_cells;
+				self.ammo_plasma = self.personal.ammo_plasma;
 				self.ammo_shells = self.personal.ammo_shells;
 				self.ammo_fuel = self.personal.ammo_fuel;
 				self.health = self.personal.health;
@@ -264,7 +266,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
 			print("404 Sportsmanship not found.\n");
@@ -1073,7 +1075,7 @@ void DragBox_Think()
 	}
 	else
 	{
-		setmodel(self.killindicator, strcat("models/sprites/", ftos(mod(self.cnt, 10)), ".spr32"));
+		setmodel(self.killindicator, strcat("models/sprites/", ftos(self.cnt % 10), ".spr32"));
 		setmodel(self.killindicator.killindicator, strcat("models/sprites/", ftos(floor(self.cnt / 10)), ".spr32"));
 	}
 
