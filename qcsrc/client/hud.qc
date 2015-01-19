@@ -5075,7 +5075,7 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 }
 QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
-	HUD_Quickmenu_PlayerListEntries("commandmode tell %s", FALSE);
+	HUD_Quickmenu_PlayerListEntries("commandmode tell \"%s\"", FALSE);
 QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
 
 
