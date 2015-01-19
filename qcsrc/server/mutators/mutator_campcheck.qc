@@ -4,7 +4,7 @@
 MUTATOR_HOOKFUNCTION(campcheck_PlayerDies)
 {
 	Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
-	
+
 	return FALSE;
 }
 
@@ -17,7 +17,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 		frag_target.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 		frag_attacker.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 	}
-	
+
 	return FALSE;
 }
 
@@ -25,6 +25,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 {
 	if(IS_PLAYER(self))
 	if(self.deadflag == DEAD_NO)
+	if(!self.frozen)
 	if(autocvar_g_campcheck_interval)
 	{
 		vector dist;
@@ -62,7 +63,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
 {
 	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
 	self.campcheck_traveled_distance = 0;
-		
+
 	return FALSE;
 }
 

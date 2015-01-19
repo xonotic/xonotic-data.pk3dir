@@ -4,6 +4,7 @@
 
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
+	DEATHTYPE(DEATH_BUFF_VENGEANCE,         NO_MSG,                             DEATH_MURDER_VENGEANCE,        NORMAL_POS) \
 	DEATHTYPE(DEATH_CAMP,                   DEATH_SELF_CAMP,                    NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_CHEAT,                  DEATH_SELF_CHEAT,                   DEATH_MURDER_CHEAT,            NORMAL_POS) \
 	DEATHTYPE(DEATH_CUSTOM,                 DEATH_SELF_CUSTOM,                  NO_MSG,                        NORMAL_POS) \
@@ -15,7 +16,19 @@
 	DEATHTYPE(DEATH_KILL,                   DEATH_SELF_SUICIDE,                 NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_LAVA,                   DEATH_SELF_LAVA,                    DEATH_MURDER_LAVA,             NORMAL_POS) \
 	DEATHTYPE(DEATH_MIRRORDAMAGE,           DEATH_SELF_BETRAYAL,                NO_MSG,                        NORMAL_POS) \
-	DEATHTYPE(DEATH_NADE,					DEATH_SELF_NADE,					DEATH_MURDER_NADE,	   		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_MAGE,			DEATH_SELF_MON_MAGE,				DEATH_MURDER_MONSTER,		   DEATH_MONSTER_FIRST) \
+	DEATHTYPE(DEATH_MONSTER_SHAMBLER_CLAW,	DEATH_SELF_MON_SHAMBLER_CLAW,		DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_SHAMBLER_SMASH,	DEATH_SELF_MON_SHAMBLER_SMASH,		DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_SHAMBLER_ZAP,	DEATH_SELF_MON_SHAMBLER_ZAP,		DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_SPIDER,			DEATH_SELF_MON_SPIDER,				DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_WYVERN,			DEATH_SELF_MON_WYVERN,				DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_ZOMBIE_JUMP,	DEATH_SELF_MON_ZOMBIE_JUMP,			DEATH_MURDER_MONSTER,		   NORMAL_POS) \
+	DEATHTYPE(DEATH_MONSTER_ZOMBIE_MELEE,	DEATH_SELF_MON_ZOMBIE_MELEE,		DEATH_MURDER_MONSTER,		   DEATH_MONSTER_LAST) \
+	DEATHTYPE(DEATH_NADE,                   DEATH_SELF_NADE,                    DEATH_MURDER_NADE,             NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_NAPALM,            DEATH_SELF_NADE_NAPALM,             DEATH_MURDER_NADE_NAPALM,      NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_ICE,               DEATH_SELF_NADE_ICE,                DEATH_MURDER_NADE_ICE,         NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_ICE_FREEZE,        DEATH_SELF_NADE_ICE_FREEZE,         DEATH_MURDER_NADE_ICE_FREEZE,  NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_HEAL,              DEATH_SELF_NADE_HEAL,               DEATH_MURDER_NADE_HEAL,        NORMAL_POS) \
 	DEATHTYPE(DEATH_NOAMMO,                 DEATH_SELF_NOAMMO,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_ROT,                    DEATH_SELF_ROT,                     NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_SHOOTING_STAR,          DEATH_SELF_SHOOTING_STAR,           DEATH_MURDER_SHOOTING_STAR,    NORMAL_POS) \
@@ -73,14 +86,12 @@ entity deathtypes[DT_MAX];
 		deathtypes[(name - DT_FIRST)] = deathent; \
 		deathent.classname = "deathtype"; \
 		deathent.nent_name = #name; \
-		#if (msg_death != NO_MSG) \
+		if (msg_death != NO_MSG) \
 			deathent.death_msgself = msg_multi_notifs[msg_death - 1]; \
-		#endif \
-		#if (msg_death_by != NO_MSG) \
+		if (msg_death_by != NO_MSG) \
 			deathent.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
-		#endif \
 	} \
-	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
+	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name);
 
 DEATHTYPES
 #undef DEATHTYPE
@@ -88,6 +99,7 @@ DEATHTYPES
 #define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
 #define DEATH_ISVEHICLE(t)            ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 #define DEATH_ISTURRET(t)             ((t) >= DEATH_TURRET_FIRST && (t) <= DEATH_TURRET_LAST)
+#define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER_FIRST && (t) <= DEATH_MONSTER_LAST)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
@@ -98,7 +110,7 @@ string Deathtype_Name(float deathtype)
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		entity deathent = deathtypes[(deathtype - DT_FIRST)];
-		if not(deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
+		if (!deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
 		return deathent.nent_name;
 	}
 	else { return ftos(deathtype); }

@@ -22,7 +22,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetMap)
 {
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
-	
+
 	return FALSE;
 }
 
@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 	FOR_EACH_CLIENT(self)
 	if(IS_PLAYER(self))
 		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
-	
+
 	return FALSE;
 }
 
@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
-	
+
 	return FALSE;
 }
 
@@ -60,13 +60,13 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 		self.frags = FRAGS_SPECTATOR;
 	else
 		self.frags = FRAGS_LMS_LOSER;
-		
+
 	if(self.killcount != -666)
 		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
 		else
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
-		
+
 	return FALSE;
 }
 
@@ -74,13 +74,13 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
 	self.classname = "player";
 	campaign_bots_may_start = 1;
-	
+
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
 		PlayerScore_Add(self, SP_LMS_RANK, 666);
 		self.frags = FRAGS_SPECTATOR;
 	}
-			
+
 	return FALSE;
 }
 
@@ -88,8 +88,15 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 {
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
-		
+
 	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_PlayerRegen)
+{
+	if(autocvar_g_lms_regenerate)
+		return FALSE;
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
@@ -115,20 +122,21 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 		--lms_next_place;
 	}
 	frag_score = 0;
-		
+
 	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 {
 	start_items &= ~IT_UNLIMITED_AMMO;
-	start_ammo_shells = cvar("g_lms_start_ammo_shells");
-	start_ammo_nails = cvar("g_lms_start_ammo_nails");
-	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
-	start_ammo_cells = cvar("g_lms_start_ammo_cells");
-	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
-	start_health = cvar("g_lms_start_health");
-	start_armorvalue = cvar("g_lms_start_armor");
+	start_health       = warmup_start_health       = cvar("g_lms_start_health");
+	start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
 	return FALSE;
 }
@@ -147,7 +155,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 		self.max_health = 1;
 		return FALSE;
 	}
-	
+
 	return TRUE;
 }
 
@@ -159,7 +167,7 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
 	}
-	
+
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
@@ -176,7 +184,7 @@ void lms_Initialize()
 {
 	lms_lowest_lives = 9999;
 	lms_next_place = 0;
-	
+
 	lms_ScoreRules();
 }
 
@@ -189,6 +197,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, lms_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);

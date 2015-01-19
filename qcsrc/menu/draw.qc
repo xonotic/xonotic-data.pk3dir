@@ -276,8 +276,10 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 }
 void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
-	if(theSize_x <= 0 || theSize_y <= 0)
-		error("Drawing zero size text?\n");
+	if(theSize_x <= 0 || theSize_y <= 0) {
+		dprint("Drawing zero size text?\n");
+		return;
+	}
 
 	//float wi;
 	//wi = draw_TextWidth(theText, ICanHasKallerz, theSize);
@@ -304,6 +306,16 @@ float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 	v_x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
 	v = globalToBoxSize(v, draw_scale);
 	return v_x;
+}
+
+float draw_CondensedFontFactor(string theText, float ICanHasKallerz, vector SizeThxBye, float maxWidth)
+{
+	float w = draw_TextWidth(theText, ICanHasKallerz, SizeThxBye);
+	if (w > maxWidth) {
+		//dprintf("NOTE: label text %s too wide for label, condensed by factor %f\n", theText, maxWidth / w);
+		return maxWidth / w;
+	}
+	return 1.0;
 }
 
 float draw_clipSet;

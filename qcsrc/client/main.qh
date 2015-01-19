@@ -54,6 +54,7 @@ float gametype;
 #define SP_CLRATIO -5
 #define SP_PL -6
 #define SP_FRAGS -7
+#define SP_SUM -8
 
 #define SP_SEPARATOR -100
 
@@ -85,6 +86,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float gotscores;
 .entity owner;
 .float ready;
+.float eliminated;
 
 .void(void) draw;
 .void(void) draw2d;
@@ -135,8 +137,8 @@ float calledhooks;
 
 .float ping, ping_packetloss, ping_movementloss;
 
-float g_balance_grenadelauncher_bouncefactor;
-float g_balance_grenadelauncher_bouncestop;
+float g_balance_mortar_bouncefactor;
+float g_balance_mortar_bouncestop;
 float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;

@@ -8,7 +8,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
-	
+
 	vector axis, thickdir, A, B, C, D;
 	float length_tex;
 
@@ -75,15 +75,12 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			vs = hook_shotorigin[s];
 			break;
-		case ENT_CLIENT_LGBEAM:
-			vs = electro_shotorigin[s];
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			vs = gauntlet_shotorigin[s];
+		case ENT_CLIENT_ARC_BEAM:
+			vs = lightning_shotorigin[s];
 			break;
 	}
 
-	if((self.owner.sv_entnum == player_localentnum - 1))
+	if((self.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
 	{
 		switch(self.HookType)
 		{
@@ -92,8 +89,7 @@ void Draw_GrapplingHook()
 				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
+			case ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -113,8 +109,7 @@ void Draw_GrapplingHook()
 				a = self.velocity;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
+			case ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
 				break;
@@ -129,42 +124,19 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			intensity = 1;
 			offset = 0;
-			if(t == NUM_TEAM_1)
+			switch(t)
 			{
-				tex = "particles/hook_red";
-				rgb = '1 .3 .3';
-			}
-			else if(t == NUM_TEAM_2)
-			{
-				tex = "particles/hook_blue";
-				rgb = '.3 .3 1';
-			}
-			else if(t == NUM_TEAM_3)
-			{
-				tex = "particles/hook_yellow";
-				rgb = '1 1 .3';
-			}
-			else if(t == NUM_TEAM_4)
-			{
-				tex = "particles/hook_pink";
-				rgb = '1 .3 1';
-			}
-			else
-			{
-				tex = "particles/hook_green";
-				rgb = '.3 1 .3';
+				case NUM_TEAM_1: tex = "particles/hook_red"; rgb = '1 0.3 0.3'; break;
+				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
+				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
+				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
+				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
 			}
 			break;
-		case ENT_CLIENT_LGBEAM:
+		case ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
-			rgb = '1 1 1';
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			intensity = 1;
-			offset = Noise_White(self, frametime);
-			tex = "particles/gauntletbeam";
 			rgb = '1 1 1';
 			break;
 	}
@@ -193,8 +165,7 @@ void Draw_GrapplingHook()
 				self.drawmask = 0;
 			}
 			break;
-		case ENT_CLIENT_LGBEAM:
-		case ENT_CLIENT_GAUNTLET:
+		case ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -204,11 +175,8 @@ void Draw_GrapplingHook()
 		default:
 		case ENT_CLIENT_HOOK:
 			break;
-		case ENT_CLIENT_LGBEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity);
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime * intensity);
+		case ENT_CLIENT_ARC_BEAM:
+			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
 }
@@ -232,15 +200,16 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	if(sf & 1)
 	{
-		self.owner = playerslots[ReadByte() - 1];
+		float myowner = ReadByte();
+		self.owner = playerslots[myowner - 1];
+		self.sv_entnum = myowner;
 		switch(self.HookType)
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-			case ENT_CLIENT_GAUNTLET:
 				self.HookRange = 0;
 				break;
-			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
 		}
@@ -274,11 +243,8 @@ void Ent_ReadHook(float bIsNew, float type)
 				setmodel(self, "models/hook.md3");
 				self.drawmask = MASK_NORMAL;
 				break;
-			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
-				break;
-			case ENT_CLIENT_GAUNTLET:
-				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
@@ -289,7 +255,6 @@ void Ent_ReadHook(float bIsNew, float type)
 void Hook_Precache()
 {
 	precache_sound("weapons/lgbeam_fly.wav");
-	precache_sound("weapons/gauntletbeam_fly.wav");
 	precache_model("models/hook.md3");
 }
 

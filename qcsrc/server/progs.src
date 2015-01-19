@@ -11,14 +11,14 @@ sys-post.qh
 ../warpzonelib/common.qh
 ../warpzonelib/util_server.qh
 ../warpzonelib/server.qh
-
 ../common/constants.qh
+../common/stats.qh
 ../common/teams.qh
 ../common/util.qh
+../common/nades.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
 ../common/urllib.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -26,6 +26,24 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
+../common/monsters/monsters.qh
+../common/monsters/sv_monsters.qh
+../common/monsters/spawn.qh
+
+../common/weapons/config.qh
+../common/weapons/weapons.qh // TODO
+weapons/accuracy.qh
+weapons/common.qh
+weapons/csqcprojectile.qh // TODO
+weapons/hitplot.qh
+weapons/selection.qh
+weapons/spawning.qh
+weapons/throwing.qh
+weapons/tracing.qh
+weapons/weaponstats.qh
+weapons/weaponsystem.qh
+
+t_items.qh
 
 autocvars.qh
 constants.qh
@@ -34,19 +52,7 @@ defs.qh		// Should rename this, it has fields and globals
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
-mutators/base.qh
-mutators/mutators.qh
-mutators/gamemode_assault.qh
-mutators/gamemode_arena.qh
-mutators/gamemode_ca.qh
-mutators/gamemode_ctf.qh
-mutators/gamemode_domination.qh
-mutators/gamemode_keyhunt.qh // TODO fix this
-mutators/gamemode_keepaway.qh
-mutators/gamemode_nexball.qh 
-mutators/gamemode_lms.qh
-mutators/mutator_dodging.qh
-mutators/mutator_nades.qh
+mutators/mutators_include.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -64,8 +70,7 @@ command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
-accuracy.qh
-csqcprojectile.qh
+
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/sv_model.qh
@@ -73,17 +78,17 @@ csqceffects.qc
 
 anticheat.qh
 cheats.qh
-playerstats.qh
+../common/playerstats.qh
 
 portals.qh
 
-g_hook.qh
-w_electro.qh
-w_laser.qh
+g_hook.qh // TODO
 
 scores.qh
 
 spawnpoints.qh
+
+mapvoting.qh
 
 ipban.qh
 
@@ -102,6 +107,8 @@ secret.qh
 scores_rules.qc
 
 miscfunctions.qc
+
+mutators/mutators.qc
 
 waypointsprites.qc
 
@@ -128,6 +135,8 @@ pathlib/pathlib.qh
 g_world.qc
 g_casings.qc
 
+mapvoting.qc
+
 t_jumppads.qc
 t_teleporters.qc
 
@@ -140,13 +149,20 @@ g_models.qc
 item_key.qc
 secret.qc
 
-cl_weaponsystem.qc
-w_common.qc
-
-w_all.qc
+weapons/accuracy.qc
+weapons/common.qc
+weapons/csqcprojectile.qc // TODO
+weapons/hitplot.qc
+weapons/selection.qc
+weapons/spawning.qc
+weapons/throwing.qc
+weapons/tracing.qc
+weapons/weaponstats.qc
+weapons/weaponsystem.qc
+../common/weapons/config.qc
+../common/weapons/weapons.qc // TODO
 
 t_items.qc
-cl_weapons.qc
 cl_impulse.qc
 
 ent_cs.qc
@@ -209,55 +225,25 @@ target_spawn.qc
 func_breakable.qc
 target_music.qc
 
-../common/items.qc
+../common/nades.qc
+../common/buffs.qc
 
-
-accuracy.qc
 ../csqcmodellib/sv_model.qc
-csqcprojectile.qc
 
 playerdemo.qc
 
 anticheat.qc
 cheats.qc
-playerstats.qc
+../common/playerstats.qc
 
 round_handler.qc
 
-../common/explosion_equation.qc
+../common/monsters/sv_monsters.qc
+../common/monsters/monsters.qc
 
-mutators/base.qc
-mutators/gamemode_assault.qc
-mutators/gamemode_arena.qc
-mutators/gamemode_ca.qc
-mutators/gamemode_ctf.qc
-mutators/gamemode_domination.qc
-mutators/gamemode_freezetag.qc
-mutators/gamemode_keyhunt.qc
-mutators/gamemode_keepaway.qc
-mutators/gamemode_nexball.qc
-mutators/gamemode_onslaught.qc
-mutators/gamemode_lms.qc
-mutators/mutator_invincibleproj.qc
-mutators/mutator_new_toys.qc
-mutators/mutator_nix.qc
-mutators/mutator_dodging.qc
-mutators/mutator_rocketflying.qc
-mutators/mutator_vampire.qc
-mutators/mutator_spawn_near_teammate.qc
-mutators/mutator_physical_items.qc
-mutators/sandbox.qc
-mutators/mutator_superspec.qc
-mutators/mutator_minstagib.qc
-mutators/mutator_touchexplode.qc
-mutators/mutator_pinata.qc
-mutators/mutator_midair.qc
-mutators/mutator_bloodloss.qc
-mutators/mutator_random_gravity.qc
-mutators/mutator_multijump.qc
-mutators/mutator_melee_only.qc
-mutators/mutator_nades.qc
-mutators/mutator_campcheck.qc
+../common/monsters/spawn.qc
+
+mutators/mutators_include.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
@@ -269,5 +255,3 @@ mutators/mutator_campcheck.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
-
-../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

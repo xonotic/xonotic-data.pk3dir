@@ -7,10 +7,10 @@ CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
 	METHOD(XonoticGametypeList, setSelected, void(entity, float))
 	METHOD(XonoticGametypeList, loadCvars, void(entity))
 	METHOD(XonoticGametypeList, saveCvars, void(entity))
+	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float))
 
 	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticGametypeList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticGametypeList, realUpperMargin2, float, 0)
+	ATTRIB(XonoticGametypeList, realUpperMargin, float, 0)
 	ATTRIB(XonoticGametypeList, columnIconOrigin, float, 0)
 	ATTRIB(XonoticGametypeList, columnIconSize, float, 0)
 	ATTRIB(XonoticGametypeList, columnNameOrigin, float, 0)
@@ -76,29 +76,50 @@ void XonoticGametypeList_saveCvars(entity me)
 }
 void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
-	string s;
-	
+	string s1, s2;
+
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
-	s = GameType_GetName(i);
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.5 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
-	//s = GameType_GetTeams(i);
-	//draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	s1 = GameType_GetName(i);
+	
+	if(_MapInfo_GetTeamPlayBool(GameType_GetID(i)))
+		s2 = _("teamplay");
+	else
+		s2 = _("free for all");
+
+	vector save_fontscale = draw_fontscale;
+	float f = draw_CondensedFontFactor(strcat(s1, " ", s2), FALSE, me.realFontSize, 1);
+	draw_fontscale_x *= f;
+	vector fs = me.realFontSize;
+	fs_x *= f;
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s1, fs, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1.0 * (me.columnNameSize - draw_TextWidth(s2, 0, fs))) * eX, s2, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_fontscale = save_fontscale;
 }
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	
+
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin1 = 0.5 * (1 - me.realFontSize_y);
-	me.realUpperMargin2 = me.realUpperMargin1 + me.realFontSize_y;
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize_y / me.itemAbsSize_x;
-	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize;
-	me.columnNameSize = 1 - me.columnIconSize - 2 * me.realFontSize_x;
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize_x);
+	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize_x);
+}
+
+float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shift)
+{
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		me.parent.gameTypeSelectNotify(me.parent);
+		return 1;
+	}
+
+	return SUPER(XonoticGametypeList).keyDown(me, scan, ascii, shift);
 }
 #endif

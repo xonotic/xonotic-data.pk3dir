@@ -1,22 +1,37 @@
 **Core Team
 Rudolf "divVerent" Polzer
 Ant "Antibody" Zucaro
+Marvin "Mirio" Beck
 Merlijn Hofstra
-Morphed
+Peter "Morphed" Pielak
 Samual "Ares" Lenks
 Tyler "-z-" Mulligan
-
+Zac "Mario" Jardine
 
 **Extended Team
+Antonio "terencehill" Piu
+Archer
 Debugger
+GATTS
+Halogene
+IDWMaster
 Jan "zykure" Behrens
+JH0nny
 Łukasz "kuniu the frogg" Polek
-Mario
-Marvin "Mirio" Beck
 Matthias "matthiaskrgr" Krüger
 MrBougo
 Nick "bitbomb" Lucca
+nilyt/nyov
+Nitroxis
+packer
+Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
+s1lence
+Severin "sev" Meyer
+Soelen
+Sydes
+unfa
+TimePath
 
 
 *Website
@@ -31,7 +46,7 @@ Jan "zykure" Behrens
 *Art
 Severin "sev" Meyer
 Sahil "DiaboliK" Singhal
-Morphed
+Peter "Morphed" Pielak
 Sam "LJFHutch" Hutchinson
 Pearce "theShadow" Michal
 
@@ -50,7 +65,8 @@ Konrad "Justin" Slawinski
 Łukasz "kuniu the frogg" Polek
 Maik "SavageX" Merten
 Marvin "Mirio" Beck
-Mircea "Taoki" Kitsune
+MintOX
+packer
 Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
 Ruszkai "C.Brutail" Ákos
@@ -69,12 +85,14 @@ Saulo "mand1nga" Gil
 {SC0RP} - Ian "ID" Dorrell
 Stephan
 unfa
+AquaNova (Archer)
 
 *Game Code
 Samual "Ares" Lenks
 Rudolf "divVerent" Polzer
 Jakob "tZork" Markström Gröhn
 Rasmus "FruitieX" Eskola
+Zac "Mario" Jardine
 
 *Marketing / PR
 Tyler "-z-" Mulligan
@@ -103,29 +121,41 @@ Dale "graphitemaster" Weiler
 
 
 **Other Active Contributors
-Alexander "naryl" Suhoverhov
-Antonio "terencehill" Piu
 Erik "Ablu" Schilling
-Florian Paul "lda17h" Schmidt
-Halogene
 Jope "Sless" Withers
-Oleh "BlaXpirit" Prypin
-Przemysław "atheros" Grzywacz
+Mattia "Melanosuchus" Basaglia
+Mircea "Taoki" Kitsune
 Robert "ai" Kuroto
-The player with the unnecessarily long name
 
 
 **Translators
 
+*Asturian
+Llumex03
+Ximielga
+
+*Belarusian
+Mihail "meequz" Varantsou
+
+*Bulgarian
+lokster
+set_killer
+
+*Czech
+shogun assassin/woky
+
 *Dutch
 Alexander "freefang" van Dam
 PinkRobot
+vegiburger
 
 *German
-Rudolf "divVerent" Polzer
-Marvin "Mirio" Beck
+cvcxc
 Erik "Ablu" Schilling
 Jope "Sless" Withers
+Marvin "Mirio" Beck
+Rudolf "divVerent" Polzer
+Yepoleb
 
 *Finnish
 Henry "Exitium" Sanmark
@@ -134,35 +164,63 @@ Rasmus "FruitieX" Eskola
 *French
 Calinou
 Maxime "Taximus" Paradis
+RedGuff
 Yannick "SpiKe" Le Guen
 
 *Greek
 Γιάννης "Evropi" Α.
+Konstantinos "LDinos" Mihalenas
+Savoritias
+Vindex
 
 *Hungarian
 Ruszkai "C.Brutail" Ákos
 xaN1C4n3
 
+*Japanese
+Lento
+
 *Italian
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
 stdi
+XCostaX
+
+*Polish
+4m
+Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
 Ricardo "Hellgardia" Silva
+xXxCHAOTICxXx
 
 *Romanian
+BusterDBK
 Mircea "Taoki" Kitsune
 
 *Russian
+Alex "alextalker7" Talker
+Andrei "adem4ik" Stepanov
+gravicappa
 Hot Dog
 Lord Canistra
 Nikoli
 Sergej "Clearness High" Lutsyk
 
+*Serbian
+Саша "salepetronije" Петровић
+Pendulla
+Ristovski
+
 *Spanish
+0000simon
+Alan "aagp" Garcia
+Ari_tent
+brunodeleo
 Kammy
+roader_gentto
 Rodrigo Mouton Laudin
+SouL
 
 *Swedish
 Karl-Oskar "machine" Rikås
@@ -171,10 +229,12 @@ marcus256
 *Ukrainian
 Oleh "BlaXpirit" Prypin
 Vasyl "Harmata" Melnyk
+Yuriy "herrniemand" Ackermann
 
 
 **Past Contributors
 Akari
+Alexander "naryl" Suhoverhov
 Alexander "motorsep" Zubov
 Amos "torus" Dudley
 Andreas "Black" Kirsch
@@ -195,6 +255,7 @@ Edgenetwork
 Edward "Ed" Holness
 Eric "Munyul Verminard" Sambach
 Fabien "H. Reaper" Tschirhart
+Florian Paul "lda17h" Schmidt
 FrikaC
 Garth "Zombie" Hendy
 Gerd "Elysis" Raudenbusch
@@ -231,8 +292,10 @@ Paul "Strahlemann" Evers
 Paul Scott
 Petithomme
 PlasmaSheep
+Przemysław "atheros" Grzywacz
 Q1 Retexturing Project
 Qantourisc
+Oleh "BlaXpirit" Prypin
 Rick "Rat" Kelley
 Ronan
 Sajt
@@ -248,6 +311,7 @@ Stephan "esteel" Stahl
 Steve Vermeulen
 Supajoe
 Tei
+The player with the unnecessarily long name
 Tomaz
 Ulrich Galbraith
 Vortex

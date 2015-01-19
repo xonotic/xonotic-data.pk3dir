@@ -46,19 +46,20 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	// forbid impulses when not in round time
+	// allow only weapon change impulses when not in round time
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
 		return;
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
-    
+
     if(self.vehicle)
         if(self.vehicle.deadflag == DEAD_NO)
-            if(self.vehicle.vehicles_impusle)
-                if(self.vehicle.vehicles_impusle(imp))
+            if(self.vehicle.vehicles_impulse)
+                if(self.vehicle.vehicles_impulse(imp))
                     return;
-    
+
 	if(CheatImpulse(imp))
 	{
 	}
@@ -67,8 +68,8 @@ void ImpulseCommands (void)
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
 			W_NextWeaponOnImpulse(imp);
-		else
-			self.impulse = imp; // retry in next frame
+		//else
+		//	self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= 10 && imp <= 20)
 	{
@@ -77,37 +78,37 @@ void ImpulseCommands (void)
 			switch(imp)
 			{
 				case 10:
-					W_NextWeapon (0);
+					W_NextWeapon(0);
 					break;
 				case 11:
 					W_LastWeapon();
 					break;
 				case 12:
-					W_PreviousWeapon (0);
+					W_PreviousWeapon(0);
 					break;
 				case 13:
-					W_SwitchWeapon (w_getbestweapon(self));
+					W_SwitchWeapon(w_getbestweapon(self));
 					break;
 				case 14:
 					W_NextWeaponOnImpulse(0);
 					break;
 				case 15:
-					W_NextWeapon (2);
+					W_NextWeapon(2);
 					break;
 				case 16:
-					W_PreviousWeapon (2);
+					W_PreviousWeapon(2);
 					break;
 				case 17:
 					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
-					W_NextWeapon (1);
+					W_NextWeapon(1);
 					break;
 				case 19:
-					W_PreviousWeapon (1);
+					W_PreviousWeapon(1);
 					break;
 				case 20:
-					W_TriggerReload ();
+					if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
 					break;
 			}
 		}
@@ -123,7 +124,7 @@ void ImpulseCommands (void)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = mod(imp, 10);
+			i = imp % 10;
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}
@@ -168,7 +169,7 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					if not(MUTATOR_CALLHOOK(HelpMePing))
+					if (!MUTATOR_CALLHOOK(HelpMePing))
 					{
 						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
 						if(!wp)
@@ -256,7 +257,7 @@ void ImpulseCommands (void)
 				case 104:
 					e = navigation_findnearestwaypoint(self, FALSE);
 					if (e)
-					if not(e.wpflags & WAYPOINTFLAG_GENERATED)
+					if (!(e.wpflags & WAYPOINTFLAG_GENERATED))
 					{
 						bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
 						waypoint_remove(e);
@@ -299,7 +300,7 @@ void ImpulseCommands (void)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
-							if not(e.effects & EF_NODEPTHTEST) // not already reported before
+							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							++i;

@@ -96,7 +96,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	o = hotspot;
 	ri = '1 0 0';
 	up = '0 1 0';
-	
+
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
 	o = rotate(o, rot) + org;
 	ri = rotate(ri, rot);
@@ -115,39 +115,31 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 // returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 {
-	float SQRT2 = 1.414;
-	float BORDER; BORDER = 1.5 * t;
-	float TSIZE; TSIZE = 8 * t;
-	float RLENGTH; RLENGTH = 8 * t;
-	float RWIDTH; RWIDTH = 4 * t;
-	float MLENGTH; MLENGTH = 4 * t;
+	float size   = 9.0 * t;
+	float border = 1.5 * t;
+	float margin = 4.0 * t;
+
+	float borderDiag = border * 1.414;
+	vector arrowX  = eX * size;
+	vector arrowY  = eY * (size+borderDiag);
+	vector borderX = eX * (size+borderDiag);
+	vector borderY = eY * (size+borderDiag+border);
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eY * -(        BORDER *      SQRT2),                          ang), '0 0 0', '0 0 0', a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('0 0 0',                  ang), '0 0 0', rgb, a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
 	R_EndPolygon();
 
-	return
-		o + rotate(eY * (TSIZE + RLENGTH + MLENGTH), ang);
+	return o + rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar
@@ -225,30 +217,20 @@ float spritelookupblinkvalue(string s)
 }
 vector spritelookupcolor(string s, vector def)
 {
+	if(substring(s, 0, 4) == "wpn-")
+		return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).wpcolor);
+
 	switch(s)
 	{
 		case "keycarrier-friend": return '0 1 0';
-		case "wpn-laser":         return '1 0.5 0.5';
-		case "wpn-shotgun":       return '0.5 0.25 0';
-		case "wpn-uzi":           return '1 1 0';
-		case "wpn-gl":            return '1 0 0';
-		case "wpn-electro":       return '0 0.5 1';
-		case "wpn-crylink":       return '1 0.5 1';
-		case "wpn-nex":           return '0.5 1 1';
-		case "wpn-hagar":         return '1 1 0.5';
-		case "wpn-rl":            return '1 1 0';
-		case "wpn-porto":         return '0.5 0.5 0.5';
-		case "wpn-minstanex":     return '0.5 1 1';
-		case "wpn-hookgun":       return '0 0.5 0';
-		case "wpn-fireball":      return '1 0.5 0';
-		case "wpn-hlac":          return '0 1 0';
-		case "wpn-campingrifle":  return '0.5 1 0';
-		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
 }
 string spritelookuptext(string s)
 {
+	if(substring(s, 0, 4) == "wpn-") { return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message); }
+	if(substring(s, 0, 5) == "buff-") { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
+
 	switch(s)
 	{
 		case "as-push": return _("Push");
@@ -285,25 +267,10 @@ string spritelookuptext(string s)
 		case "race-finish": return _("Finish");
 		case "race-start": return _("Start");
 		case "race-start-finish": return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+		case "goal": return _("Goal");
 		case "nb-ball": return _("Ball");
 		case "ka-ball": return _("Ball");
 		case "ka-ballcarrier": return _("Ball carrier");
-		case "wpn-laser": return _("Laser");
-		case "wpn-shotgun": return _("Shotgun");
-		case "wpn-uzi": return _("Machine Gun");
-		case "wpn-gl": return _("Mortar");
-		case "wpn-electro": return _("Electro");
-		case "wpn-crylink": return _("Crylink");
-		case "wpn-nex": return _("Nex");
-		case "wpn-hagar": return _("Hagar");
-		case "wpn-rl": return _("Rocket Launcher");
-		case "wpn-porto": return _("Port-O-Launch");
-		case "wpn-minstanex": return _("Minstanex");
-		case "wpn-hookgun": return _("Hook");
-		case "wpn-fireball": return _("Fireball");
-		case "wpn-hlac": return _("HLAC");
-		case "wpn-campingrifle": return _("Rifle");
-		case "wpn-minelayer": return _("Mine Layer");
 		case "dom-neut": return _("Control point");
 		case "dom-red": return _("Control point");
 		case "dom-blue": return _("Control point");
@@ -316,7 +283,7 @@ string spritelookuptext(string s)
 		case "item-shield": return _("Shield");
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
-		case "freezetag_frozen": return _("Frozen!");
+		case "frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
 		default: return s;
@@ -439,10 +406,10 @@ void Draw_WaypointSprite()
 		return;
 
 	++waypointsprite_newcount;
-	
+
 	float dist;
 	dist = vlen(self.origin - view_origin);
-	
+
 	float a;
 	a = self.alpha * autocvar_hud_panel_fg_alpha;
 
@@ -457,7 +424,7 @@ void Draw_WaypointSprite()
 	if(rgb == '0 0 0')
 	{
 		self.teamradar_color = '1 0 1';
-		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
+		printf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
 	}
 
 	if(time - floor(time) > 0.5)
@@ -483,10 +450,10 @@ void Draw_WaypointSprite()
 	float ang;
 
 	o = project_3d_to_2d(self.origin);
-	if(o_z < 0 
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+	if(o_z < 0
+	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
+	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top)
+	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
 	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
@@ -543,9 +510,9 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
-	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
 
 	float vidscale;
@@ -585,7 +552,7 @@ void Draw_WaypointSprite()
 	}
 
 	o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
-	
+
 	string txt;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");
@@ -734,7 +701,7 @@ void Ent_WaypointSprite()
 		if(f & 0x80)
 		{
 			self.(teamradar_times[self.teamradar_time_index]) = time;
-			self.teamradar_time_index = mod(self.teamradar_time_index + 1, MAX_TEAMRADAR_TIMES);
+			self.teamradar_time_index = (self.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
 		}
 		self.teamradar_color_x = ReadByte() / 255.0;
 		self.teamradar_color_y = ReadByte() / 255.0;

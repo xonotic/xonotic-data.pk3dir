@@ -119,6 +119,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
 					HUD_Write_PanelCvar_q("_increment");
@@ -131,7 +132,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
 					HUD_Write_PanelCvar_q("_maximized_rotation");
-					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
+					HUD_Write_PanelCvar_q("_maximized_zoommode");
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");
@@ -193,11 +194,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		print(sprintf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename));
+		printf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
 		fclose(fh);
 	}
 	else
-		print(sprintf(_("^1Couldn't write to %s\n"), filename));
+		printf(_("^1Couldn't write to %s\n"), filename);
 }
 
 void HUD_Configure_Exit_Force()
@@ -651,14 +652,19 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(!autocvar__hud_configure)
 		return false;
 
-	// block any input while a menu dialog is fading
-	if(autocvar__menu_alpha)
-		return true;
-
 	if(bInputType == 3)
 	{
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
+		return true;
+	}
+
+	// block any input while a menu dialog is fading
+	// don't block mousepos read as it leads to cursor jumps in the interaction with the menu
+	if(autocvar__menu_alpha)
+	{
+		hudShiftState = 0;
+		mouseClicked = 0;
 		return true;
 	}
 
@@ -721,7 +727,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 		menu_enabled = 1;
-		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
@@ -805,13 +810,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			}
 			if (!tab_backward)
 			{
-				level = mod(level + level_height, vid_conheight);
+				level = (level + level_height) % vid_conheight;
 				start_pos_x = 0;
 				candidate_pos_x = vid_conwidth;
 			}
 			else
 			{
-				level = mod(level - level_height, vid_conheight);
+				level = (level - level_height) % vid_conheight;
 				start_pos_x = vid_conwidth;
 				candidate_pos_x = 0;
 			}
@@ -978,7 +983,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// now save the new top id
 	panel_order[0] = id;
-	
+
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
@@ -1068,29 +1073,18 @@ void HUD_Panel_Highlight(float allow_move)
 void HUD_Panel_EnableMenu()
 {
 	menu_enabled = 2;
-	menu_enabled_time = time;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
-	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
-	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
-		menu_enabled = 0;
-
-	/*
-	print("menu_enabled: ", ftos(menu_enabled), "\n");
-	print("Highlighted: ", ftos(highlightedPanel), "\n");
-	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
-	*/
-
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	if not(autocvar_hud_cursormode)
+	if (!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-		
+
 		mousepos_x = bound(0, mousepos_x, vid_conwidth);
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
@@ -1197,6 +1191,66 @@ void HUD_Panel_Mouse()
 
 	prevMouseClicked = mouseClicked;
 }
+void HUD_Configure_DrawGrid()
+{
+	float i;
+	if(autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	{
+		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
+		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
+		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
+		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
+		vector s;
+		// x-axis
+		s = eX + eY * vid_conheight;
+		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		// y-axis
+		s = eY + eX * vid_conwidth;
+		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+	}
+}
+
+float _menu_alpha_prev;
+void HUD_Configure_Frame()
+{
+	float i;
+	if(autocvar__hud_configure)
+	{
+		if(isdemo() || intermission == 2)
+		{
+			HUD_Configure_Exit_Force();
+			return;
+		}
+
+		if(!hud_configure_prev || hud_configure_prev == -1)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hudShiftState = 0;
+			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+				hud_panel[panel_order[i]].update_time = time;
+		}
+
+		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled
+		if(autocvar__menu_alpha != _menu_alpha_prev)
+		{
+			if(autocvar__menu_alpha == 0)
+				menu_enabled = 0;
+			_menu_alpha_prev = autocvar__menu_alpha;
+		}
+
+		HUD_Configure_DrawGrid();
+	}
+	else if(hud_configure_prev)
+	{
+		if(menu_enabled)
+			menu_enabled = 0;
+		if(autocvar_hud_cursormode)
+			setcursormode(0);
+	}
+}
 
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";
@@ -1208,4 +1262,23 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+}
+
+void HUD_Configure_PostDraw()
+{
+	if(autocvar__hud_configure)
+	{
+		if(tab_panel)
+		{
+			panel = tab_panel;
+			HUD_Panel_UpdatePosSize()
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		}
+		if(highlightedPanel)
+		{
+			panel = highlightedPanel;
+			HUD_Panel_UpdatePosSize()
+			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
+		}
+	}
 }

@@ -4,13 +4,8 @@
 MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 {
 	if(self.flags & FL_ONGROUND)
-	{
-		if (autocvar_g_multijump > 0)
-			self.multijump_count = 0;
-		else
-			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-	}
-		
+		self.multijump_count = 0;
+
 	return FALSE;
 }
 
@@ -20,8 +15,8 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 		self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
 	else
 		self.multijump_ready = FALSE;
-		
-	if(!player_multijump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed)
+
+	if(!player_multijump && self.multijump_ready && (autocvar_g_multijump == -1 || self.multijump_count < autocvar_g_multijump) && self.velocity_z > autocvar_g_multijump_speed)
 	{
 		if (autocvar_g_multijump)
 		{
@@ -55,8 +50,7 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				if (autocvar_g_multijump > 0)
-					self.multijump_count += 1;
+				self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
