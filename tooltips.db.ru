@@ -40,8 +40,7 @@
 \g_pinata\Во время смерти выбрасывается всё оружие, которое нёс "убитый", что даёт возможность его подобрать
 \g_weapon_stay\Всё собранное оружие остаётся после возрождений
 \g_weaponarena\Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.
-\menu_weaponarena_with_laser\Also enable the laser in the weapon arena
-\g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
+\g_instagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
 \g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nix_with_laser\Always carry the laser as an additional weapon in Nix
 \XonoticMultiplayerDialog/Select all\Выбрать все карты

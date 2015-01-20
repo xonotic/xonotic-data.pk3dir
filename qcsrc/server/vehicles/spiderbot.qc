@@ -494,7 +494,7 @@ float spiderbot_frame()
 
             self = player;
 
-            mod(spider.misc_bulletcounter, 2) ? gun = spider.gun1 : gun = spider.gun2;
+            (spider.misc_bulletcounter % 2) ? gun = spider.gun1 : gun = spider.gun2;
             v = gettaginfo(gun, gettagindex(gun, "barrels"));
             v_forward = normalize(v_forward);
             v += v_forward * 50;
@@ -725,7 +725,7 @@ void spiderbot_blowup()
 
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_spiderbot_blowup_coredamage,
 				autocvar_g_vehicle_spiderbot_blowup_edgedamage,
-				autocvar_g_vehicle_spiderbot_blowup_radius, world,
+				autocvar_g_vehicle_spiderbot_blowup_radius, world, world,
 				autocvar_g_vehicle_spiderbot_blowup_forceintensity, DEATH_VH_SPID_DEATH, world);
 
     self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;

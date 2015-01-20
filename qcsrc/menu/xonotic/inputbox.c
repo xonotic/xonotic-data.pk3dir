@@ -26,6 +26,7 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	ATTRIB(XonoticInputBox, cvarName, string, string_null)
 	METHOD(XonoticInputBox, loadCvars, void(entity))
 	METHOD(XonoticInputBox, saveCvars, void(entity))
+	ATTRIB(XonoticInputBox, sendCvars, float, 0)
 	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float))
 
 	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
@@ -81,6 +82,7 @@ void XonoticInputBox_saveCvars(entity me)
 	if (!me.cvarName)
 		return;
 	cvar_set(me.cvarName, me.text);
+	CheckSendCvars(me, me.cvarName);
 }
 float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {

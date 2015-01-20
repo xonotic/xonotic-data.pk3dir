@@ -22,6 +22,17 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
+#define ST_NEXBALL_GOALS 1
+#define SP_NEXBALL_GOALS 4
+#define SP_NEXBALL_FAULTS 5
+void nb_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, 0, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
 
 void LogNB(string mode, entity actor)
 {
@@ -142,7 +153,7 @@ void GiveBall(entity plyr, entity ball)
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
-	weapon_action(WEP_PORTO, WR_RESETPLAYER);
+	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO;
 	W_SwitchWeapon(WEP_PORTO);
 	self = ownr;
@@ -288,7 +299,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -455,16 +466,6 @@ void nb_spawnteams(void)
 			break;
 		}
 	}
-}
-
-// scoreboard setup
-void nb_ScoreRules(float teams)
-{
-	ScoreRules_basics(teams, 0, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
 }
 
 void nb_delayedinit(void)
@@ -694,7 +695,7 @@ void W_Nexball_Touch(void)
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			other.flags &= ~FL_ONGROUND;
@@ -740,7 +741,7 @@ void W_Nexball_Attack(float t)
 		mi = autocvar_g_nexball_basketball_meter_minpower;
 		ma = max(mi, autocvar_g_nexball_basketball_meter_maxpower); // avoid confusion
 		//One triangle wave period with 1 as max
-		mul = 2 * mod(t, g_nexball_meter_period) / g_nexball_meter_period;
+		mul = 2 * (t % g_nexball_meter_period) / g_nexball_meter_period;
 		if(mul > 1)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
@@ -784,7 +785,7 @@ void W_Nexball_Attack2(void)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
-	W_SetupProjectileVelocity(missile, autocvar_g_balance_nexball_secondary_speed, 0);
+	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
 	missile.think = SUB_Remove;
@@ -855,7 +856,7 @@ float w_nexball_weapon(float req)
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_PRECACHE)
+	else if(req == WR_INIT)
 	{
 		precache_model("models/weapons/g_porto.md3");
 		precache_model("models/weapons/v_porto.md3");
@@ -867,7 +868,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
@@ -930,7 +931,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				weapon_action(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -976,7 +977,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -985,7 +986,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -1010,8 +1011,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
-
-		w_porto(WR_PRECACHE); // abuse
 
 		// General settings
 		/*

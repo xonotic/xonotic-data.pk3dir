@@ -218,9 +218,9 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	if(histime < 0)
 		return strcat(col, cpname);
 	else if(hisname == "")
-		return strcat(col, sprintf(_("%s (%s)"), cpname, timestr));
+		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else
-		return strcat(col, sprintf(_("%s (%s %s)"), cpname, timestr, strcat(hisname, col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(hisname, col, lapstr)));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
@@ -408,42 +408,6 @@ float weaponorder_cmp(float i, float j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-float GetAmmoStat(float i)
-{
-	switch(i)
-	{
-		case 0: return STAT_SHELLS;
-		case 1: return STAT_NAILS;
-		case 2: return STAT_ROCKETS;
-		case 3: return STAT_CELLS;
-		case 4: return STAT_FUEL;
-		default: return -1;
-	}
-}
-
-float GetAmmoTypeForWep(float i)
-{
-	switch(i)
-	{
-		case WEP_SHOTGUN: return 0;
-		case WEP_UZI: return 1;
-		case WEP_GRENADE_LAUNCHER: return 2;
-		case WEP_MINE_LAYER: return 2;
-		case WEP_ELECTRO: return 3;
-		case WEP_CRYLINK: return 3;
-		case WEP_HLAC: return 3;
-		case WEP_MINSTANEX: return 3;
-		case WEP_NEX: return 3;
-		case WEP_RIFLE: return 1;
-		case WEP_HAGAR: return 2;
-		case WEP_ROCKET_LAUNCHER: return 2;
-		case WEP_SEEKER: return 2;
-		case WEP_FIREBALL: return 4;
-		case WEP_HOOK: return 3;
-		default: return -1;
-	}
-}
-
 void HUD_Weapons(void)
 {
 	// declarations
@@ -460,7 +424,7 @@ void HUD_Weapons(void)
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
 	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
-	float ammo_type, ammo_full;
+	float ammo_full;
 	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
@@ -764,7 +728,7 @@ void HUD_Weapons(void)
 		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -778,7 +742,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, self.netname, '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(self.message), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
@@ -786,21 +750,20 @@ void HUD_Weapons(void)
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
+			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
 			{
-				a = 0;
-				ammo_type = GetAmmoTypeForWep(self.weapon);
-				if(ammo_type != -1)
-					a = getstati(GetAmmoStat(ammo_type)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(ammo_type) {
-						case 0: ammo_full = autocvar_hud_panel_weapons_ammo_full_shells; break;
-						case 1: ammo_full = autocvar_hud_panel_weapons_ammo_full_nails; break;
-						case 2: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
-						case 3: ammo_full = autocvar_hud_panel_weapons_ammo_full_cells; break;
-						case 4: ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel; break;
+					switch(self.ammo_field)
+					{
+						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
 
@@ -808,15 +771,25 @@ void HUD_Weapons(void)
 						weapon_pos_x + baroffset_x,
 						weapon_pos_y + baroffset_y,
 						barsize_x * bound(0, a/ammo_full, 1),
-						barsize_y);
-					drawpic_aspect_skin(weapon_pos, "weapon_ammo", weapon_size, ammo_color, ammo_alpha, DRAWFLAG_NORMAL);
+						barsize_y
+					);
+
+					drawpic_aspect_skin(
+						weapon_pos,
+						"weapon_ammo",
+						weapon_size,
+						ammo_color,
+						ammo_alpha,
+						DRAWFLAG_NORMAL
+					);
+
 					drawresetcliparea();
 				}
 			}
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
@@ -858,60 +831,28 @@ void HUD_Weapons(void)
 }
 
 // Ammo (#1)
-//
-// TODO: macro
-float GetAmmoItemCode(float i)
+void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 {
-	switch(i)
-	{
-		case 0: return IT_SHELLS;
-		case 1: return IT_NAILS;
-		case 2: return IT_ROCKETS;
-		case 3: return IT_CELLS;
-		case 4: return IT_FUEL;
-		default: return -1;
-	}
+	
+	HUD_Panel_DrawProgressBar(
+		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		autocvar_hud_panel_ammo_progressbar_name, 
+		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color, 
+		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
 }
 
-string GetAmmoPicture(float i)
+void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
 {
-	switch(i)
-	{
-		case 0: return "ammo_shells";
-		case 1: return "ammo_bullets";
-		case 2: return "ammo_rockets";
-		case 3: return "ammo_cells";
-		case 4: return "ammo_fuel";
-		default: return "";
-	}
-}
-
-void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
-{
-	float a;
-	if(autocvar__hud_configure)
-	{
-		currently_selected = (itemcode == 2); //rockets always selected
-		a = 31 + mod(itemcode*93, 128);
-	}
-	else
-		a = getstati(GetAmmoStat(itemcode)); // how much ammo do we have of type itemcode?
-
-	vector color;
-	if(infinite_ammo)
-		color = '0 0.5 0.75';
-	else if(a < 10)
-		color = '0.7 0 0';
-	else
-		color = '1 1 1';
-
-	float theAlpha;
-	if(currently_selected)
-		theAlpha = 1;
-	else
-		theAlpha = 0.7;
-
-	vector picpos, numpos;
+	float theAlpha = 1, a, b;
+	vector nade_color, picpos, numpos;
+	
+	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
+	
+	a = getstatf(STAT_NADE_BONUS);
+	b = getstatf(STAT_NADE_BONUS_SCORE);
+	
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
 		numpos = myPos;
@@ -923,25 +864,96 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		picpos = myPos;
 	}
 
-	if (currently_selected)
-		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	DrawNadeScoreBar(myPos, mySize, nade_color);
 
-    if(a > 0 && autocvar_hud_panel_ammo_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-
-    if(autocvar_hud_panel_ammo_text)
-    {
-        if(a > 0 || infinite_ammo)
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-        else // "ghost" ammo count
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
-    }
-	if(a > 0 || infinite_ammo)
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+	if(b > 0 || a > 0)
+	{
+		if(autocvar_hud_panel_ammo_text)
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		
+		if(draw_expanding)
+			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			
+		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	}
 }
 
+void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent, float isInfinite)
+{
+	if(ammoType == ammo_none)
+		return;
+
+	// Initialize variables
+
+	float ammo;
+	if(autocvar__hud_configure)
+	{
+		isCurrent = (ammoType == ammo_rockets); // Rockets always current
+		ammo = 60;
+	}
+	else
+		ammo = getstati(GetAmmoStat(ammoType));
+
+	if(!isCurrent)
+	{
+		float scale = bound(0, autocvar_hud_panel_ammo_noncurrent_scale, 1);
+		myPos = myPos + (mySize - mySize * scale) * 0.5;
+		mySize = mySize * scale;
+	}
+
+	vector iconPos, textPos;
+	if(autocvar_hud_panel_ammo_iconalign)
+	{
+		iconPos = myPos + eX * 2 * mySize_y;
+		textPos = myPos;
+	}
+	else
+	{
+		iconPos = myPos;
+		textPos = myPos + eX * mySize_y;
+	}
+
+	float isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
+
+	vector iconColor = isShadowed ? '0 0 0' : '1 1 1';
+	vector textColor;
+	if(isInfinite)
+		textColor = '0.2 0.95 0';
+	else if(isShadowed)
+		textColor = '0 0 0';
+	else if(ammo < 10)
+		textColor = '0.8 0.04 0';
+	else
+		textColor = '1 1 1';
+
+	float alpha;
+	if(isCurrent)
+		alpha = panel_fg_alpha;
+	else if(isShadowed)
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1) * 0.5;
+	else
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1);
+
+	string text = isInfinite ? "\xE2\x88\x9E" : ftos(ammo); // Use infinity symbol (U+221E)
+
+	// Draw item
+
+	if(isCurrent)
+		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	if(ammo > 0 && autocvar_hud_panel_ammo_progressbar)
+		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
+
+	if(autocvar_hud_panel_ammo_text)
+		drawstring_aspect(textPos, text, eX * (2/3) * mySize_x + eY * mySize_y, textColor, alpha, DRAWFLAG_NORMAL);
+
+	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize_y, iconColor, alpha, DRAWFLAG_NORMAL);
+}
+
+float nade_prevstatus;
+float nade_prevframe;
+float nade_statuschange_time;
 void HUD_Ammo(void)
 {
 	if(hud != HUD_NORMAL) return;
@@ -966,21 +978,38 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	const float AMMO_COUNT = 4;
 	float rows = 0, columns, row, column;
+	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float draw_nades = (nade_cnt > 0 || nade_score > 0), nade_statuschange_elapsedtime;
+	float total_ammo_count;
+
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
-		ammo_size = mySize;
+		total_ammo_count = 1;
 	else
+		total_ammo_count = AMMO_COUNT;
+
+	if(draw_nades)
 	{
-		rows = mySize_y/mySize_x;
-		rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
-		//                               ^^^ ammo item aspect goes here
-
-		columns = ceil(AMMO_COUNT/rows);
-
-		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		++total_ammo_count;
+		if (nade_cnt != nade_prevframe)
+		{
+			nade_statuschange_time = time;
+			nade_prevstatus = nade_prevframe;
+			nade_prevframe = nade_cnt;
+		}
 	}
+	else
+		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
+
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
+	//                               ^^^ ammo item aspect goes here
+
+	columns = ceil((total_ammo_count)/rows);
+
+	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	
 
 	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -999,38 +1028,48 @@ void HUD_Ammo(void)
 		ammo_size_y = newSize;
 	}
 
-	float i, stat_items, currently_selected, infinite_ammo;
-	infinite_ammo = FALSE;
-	if (autocvar_hud_panel_ammo_onlycurrent)
+	float i;
+	float infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
+	row = column = 0;
+	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
+			DrawAmmoItem(pos, ammo_size, ammo_rockets, TRUE, FALSE);
 		}
 		else
 		{
-			stat_items = getstati(STAT_ITEMS, 0, 24);
-			if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
-				infinite_ammo = TRUE;
-			for (i = 0; i < AMMO_COUNT; ++i) {
-				currently_selected = stat_items & GetAmmoItemCode(i);
-				if (currently_selected)
-				{
-					DrawAmmoItem(pos, ammo_size, i, true, infinite_ammo);
-					break;
-				}
-			}
+			DrawAmmoItem(
+				pos,
+				ammo_size,
+				(get_weaponinfo(switchweapon)).ammo_field,
+				TRUE,
+				infinite_ammo
+			);
+		}
+
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
 		}
 	}
 	else
 	{
-		stat_items = getstati(STAT_ITEMS, 0, 24);
-		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
-			infinite_ammo = TRUE;
+		.float ammotype;
 		row = column = 0;
-		for (i = 0; i < AMMO_COUNT; ++i) {
-			currently_selected = stat_items & GetAmmoItemCode(i);
-			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
+		for(i = 0; i < AMMO_COUNT; ++i)
+		{
+			ammotype = GetAmmoFieldFromNum(i);
+			DrawAmmoItem(
+				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
+				ammo_size,
+				ammotype,
+				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
+				infinite_ammo
+			);
+
 			++row;
 			if(row >= rows)
 			{
@@ -1038,6 +1077,15 @@ void HUD_Ammo(void)
 				column = column + 1;
 			}
 		}
+	}
+
+	if (draw_nades)
+	{
+		nade_statuschange_elapsedtime = time - nade_statuschange_time;
+
+		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
+
+		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
 	}
 
 	draw_endBoldFont();
@@ -1601,148 +1649,154 @@ void HUD_HealthArmor(void)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
-	if(icon != "")
+	if (icon == "")
+		return;
+
+	++notify_count;
+	--notify_index;
+
+	if (notify_index == -1)
+		notify_index = NOTIFY_MAX_ENTRIES-1;
+
+	// Free old strings
+	if (notify_attackers[notify_index])
+		strunzone(notify_attackers[notify_index]);
+
+	if (notify_victims[notify_index])
+		strunzone(notify_victims[notify_index]);
+
+	if (notify_icons[notify_index])
+		strunzone(notify_icons[notify_index]);
+
+	// Allocate new strings
+	if (victim != "")
 	{
-		--kn_index;
-		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		notify_times[kn_index] = time;
-
-		// icon
-		if(notify_icon[kn_index]) { strunzone(notify_icon[kn_index]); }
-		notify_icon[kn_index] = strzone(icon);
-
-		// attacker
-		if(notify_attackers[kn_index]) { strunzone(notify_attackers[kn_index]); }
-		notify_attackers[kn_index] = strzone(attacker);
-
-		// victim
-		if(notify_victims[kn_index]) { strunzone(notify_victims[kn_index]); }
-		notify_victims[kn_index] = strzone(victim);
+		notify_attackers[notify_index] = strzone(attacker);
+		notify_victims[notify_index] = strzone(victim);
 	}
+	else
+	{
+		// In case of a notification without a victim, the attacker
+		// is displayed on the victim's side. Instead of special
+		// treatment later on, we can simply switch them here.
+		notify_attackers[notify_index] = string_null;
+		notify_victims[notify_index] = strzone(attacker);
+	}
+
+	notify_icons[notify_index] = strzone(icon);
+	notify_times[notify_index] = time;
 }
 
 void HUD_Notify(void)
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_notify) return;
-	}
+	if (!autocvar__hud_configure)
+		if (!autocvar_hud_panel_notify)
+			return;
 
 	HUD_Panel_UpdateCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
 	HUD_Panel_DrawBg(1);
-	if(panel_bg_padding)
+
+	if (!autocvar__hud_configure)
+		if (notify_count == 0)
+			return;
+
+	vector pos, size;
+	pos  = panel_pos;
+	size = panel_size;
+
+	if (panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		pos  += '1 1 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float entries, height;
-	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
-	height = mySize_y/entries;
+	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
+	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	vector fontsize;
-	float fontheight = height * autocvar_hud_panel_notify_fontsize;
-	fontsize = '0.5 0.5 0' * fontheight;
+	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size_y / entry_count;
 
-	float a;
-	float when;
-	when = autocvar_hud_panel_notify_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_notify_fadetime;
+	float panel_width_half = size_x * 0.5;
+	float icon_width_half = entry_height * icon_aspect / 2;
+	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
 
-	vector pos_attacker, pos_victim, pos_icon;
-	float width_attacker;
+	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
+	vector icon_size = (eX * icon_aspect + eY) * entry_height;
+	vector icon_left = eX * (panel_width_half - icon_width_half);
+	vector attacker_right = eX * name_maxwidth;
+	vector victim_left = eX * (size_x - name_maxwidth);
+
+	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
+	float i, j, count, step, limit, alpha;
 
-	float i, j, step, limit;
-	if(autocvar_hud_panel_notify_flip) //order items from the top down
+	if (autocvar_hud_panel_notify_flip)
 	{
+		// Order items from the top down
 		i = 0;
 		step = +1;
-		limit = entries;
+		limit = entry_count;
 	}
-	else //order items from the bottom up
+	else
 	{
-		i = entries - 1;
+		// Order items from the bottom up
+		i = entry_count - 1;
 		step = -1;
 		limit = -1;
 	}
 
-	for(j = kn_index;  i != limit;  i += step, ++j)
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (step == +1)
-				a = i;
-			else // inverse order
-				a = entries - 1 - i;
-			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
-			a = bound(0, (when - a) / 4, 1);
-			goto hud_config_notifyprint;
+			attacker = sprintf(_("Player %d"), count + 1);
+			victim = sprintf(_("Player %d"), count + 2);
+			icon = get_weaponinfo(min(WEP_FIRST + count * 2, WEP_LAST)).model2;
+			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else
 		{
-			if (j == KN_MAX_ENTRIES)
+			if (j == NOTIFY_MAX_ENTRIES)
 				j = 0;
 
-			if(notify_times[j] + when > time)
-				a = 1;
-			else if(fadetime)
+			if (notify_times[j] + fade_start > time)
+				alpha = 1;
+			else if (fade_time != 0)
 			{
-				a = bound(0, (notify_times[j] + when + fadetime - time) / fadetime, 1);
-				if(!a)
-				{
+				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+				if (alpha == 0)
 					break;
-				}
 			}
 			else
-			{
 				break;
-			}
 
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
-			icon = notify_icon[j];
+			icon = notify_icons[j];
 		}
 
-		//type = notify_deathtype[j];
-		//w = DEATH_WEAPONOF(type);
-
-		if(icon != "")
+		if (icon != "" && victim != "")
 		{
-			if((attacker != "") && (victim == ""))
-			{
-				// Y [used by] X
-				attacker = textShortenToWidth(attacker, 0.73 * mySize_x - height, fontsize, stringwidth_colors);
-				pos_attacker = pos + eX * (0.27 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.25 * mySize_x - eX * height + eY * i * height;
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size_y));
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			}
-			else if((attacker != "") && (victim != ""))
-			{
-				// X [did action to] Y
-				attacker = textShortenToWidth(attacker, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(victim, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-:hud_config_notifyprint
-				width_attacker = stringwidth(attacker, TRUE, fontsize);
-				pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+			icon_pos = pos + icon_left + eY * i * entry_height;
+			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			victim = textShortenToWidth(victim, name_maxwidth, font_size, stringwidth_colors);
+			victim_pos = pos + victim_left + name_top;
+			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+
+			if (attacker != "")
+			{
+				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
 	}
+
+	notify_count = count;
 }
 
 // Timer (#5)
@@ -2349,11 +2403,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-#ifdef COMPAT_XON050_ENGINE
-	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
-#else
 	me = playerslots[player_localentnum - 1];
-#endif
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -3264,7 +3314,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		dt = mod(time - nb_pb_starttime, nb_pb_period);
+		dt = (time - nb_pb_starttime) % nb_pb_period;
 		// one period of positive triangle
 		p = 2 * dt / nb_pb_period;
 		if (p > 1)
@@ -3854,11 +3904,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-#ifdef COMPAT_XON050_ENGINE
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
-#else
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
-#endif
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -3908,7 +3954,7 @@ void HUD_InfoMessages(void)
 		}
 
 		string blinkcolor;
-		if(mod(time, 1) >= 0.5)
+		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
@@ -4371,9 +4417,9 @@ void HUD_CenterPrint (void)
 		{
 			float r;
 			r = random();
-			if (r > 0.9)
+			if (r > 0.75)
 				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
-			else if (r > 0.8)
+			else if (r > 0.5)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
 				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
@@ -4473,7 +4519,8 @@ void HUD_CenterPrint (void)
 		else // Expiring soon, so fade it out.
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 
-		if (a <= 0.5/255.0)  // Guaranteed invisible - don't show.
+		// while counting down show it anyway in order to hold the current message position
+		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
 		if (a > 1)
 			a = 1;
@@ -4572,6 +4619,66 @@ void HUD_CenterPrint (void)
 	}
 }
 
+// Buffs (#18)
+//
+void HUD_Buffs(void)
+{
+	float buffs = getstati(STAT_BUFFS, 0, 24);
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_buffs) return;
+		if(spectatee_status == -1) return;
+		if(getstati(STAT_HEALTH) <= 0) return;
+		if(!buffs) return;
+	}
+	else
+	{
+		buffs = Buff_Type_first.items; // force first buff
+	}
+	
+	float b = 0; // counter to tell other functions that we have buffs
+	entity e;
+	string s = "";
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		++b;
+		string o = strcat(rgb_to_hexcolor(Buff_Color(e.items)), Buff_PrettyName(e.items));
+		if(s == "")
+			s = o;
+		else
+			s = strcat(s, " ", o);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(bound(0, b, 1));
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	//float panel_ar = mySize_x/mySize_y;
+	//float is_vertical = (panel_ar < 1);
+	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
+	vector buff_offset = '0 0 0';
+	
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
+		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+	}
+
+	draw_endBoldFont();
+}
+
+
 /*
 ==================
 Main HUD system
@@ -4626,11 +4733,7 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-#ifdef COMPAT_XON050_ENGINE
-    current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
-#else
     current_player = player_localentnum;
-#endif
 
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
@@ -4656,7 +4759,7 @@ void HUD_Main (void)
 			}
 			else if(hud_dock_color == "pants") {
 				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-				color = colormapPaletteColor(mod(f, 16), 1);
+				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
 				color = stov(hud_dock_color);
@@ -4700,7 +4803,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			print(_("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n"));
+			dprint("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)

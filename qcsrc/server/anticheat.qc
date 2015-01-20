@@ -76,8 +76,7 @@ float movement_oddity(vector m0, vector m1)
 
 void anticheat_physics()
 {
-	float f, wishspeed;
-	vector wishvel;
+	float f;
 
 	// div0_evade -> SPECTATORS
 	makevectors(self.v_angle);
@@ -160,52 +159,6 @@ void anticheat_physics()
 		self.anticheat_speedhack_accu = 1;
 		self.anticheat_speedhack_lasttime = servertime;
 	}
-
-	// race/CTS: force kbd movement for fairness
-	if(g_race || g_cts)
-	{
-		// if record times matter
-		// ensure nothing EVIL is being done (i.e. div0_evade)
-		// this hinders joystick users though
-		// but it still gives SOME analog control
-		wishvel_x = fabs(self.movement_x);
-		wishvel_y = fabs(self.movement_y);
-		if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
-		{
-			wishvel_z = 0;
-			wishspeed = vlen(wishvel);
-			if(wishvel_x >= 2 * wishvel_y)
-			{
-				// pure X motion
-				if(self.movement_x > 0)
-					self.movement_x = wishspeed;
-				else
-					self.movement_x = -wishspeed;
-				self.movement_y = 0;
-			}
-			else if(wishvel_y >= 2 * wishvel_x)
-			{
-				// pure Y motion
-				self.movement_x = 0;
-				if(self.movement_y > 0)
-					self.movement_y = wishspeed;
-				else
-					self.movement_y = -wishspeed;
-			}
-			else
-			{
-				// diagonal
-				if(self.movement_x > 0)
-					self.movement_x = M_SQRT1_2 * wishspeed;
-				else
-					self.movement_x = -M_SQRT1_2 * wishspeed;
-				if(self.movement_y > 0)
-					self.movement_y = M_SQRT1_2 * wishspeed;
-				else
-					self.movement_y = -M_SQRT1_2 * wishspeed;
-			}
-		}
-	}
 }
 
 void anticheat_spectatecopy(entity spectatee)
@@ -237,23 +190,23 @@ void anticheat_report()
 		return;
 	// TODO(divVerent): Use xonstat to acquire good thresholds.
 	GameLogEcho(strcat(":anticheat:_time:", ftos(self.playerid), ":", ftos(servertime - self.anticheat_jointime)));
-	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:speedhack_m1:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m1), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:speedhack_m2:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m2), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:speedhack_m3:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m3), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:speedhack_m4:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m4), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:speedhack_m5:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m5), 240, 0.1, 0.15)));
-	GameLogEcho(strcat(":anticheat:div0_strafebot_old:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_old), 120, 0.3, 0.4)));
-	GameLogEcho(strcat(":anticheat:div0_strafebot_new:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_new), 120, 0.3, 0.4)));
-	GameLogEcho(strcat(":anticheat:div0_evade:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_evade), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal) - MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_signal:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_noise:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_m2:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m2), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_m3:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m3), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_m4:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m4), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_m7:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m7), 120, 0.1, 0.2)));
-	GameLogEcho(strcat(":anticheat:idle_snapaim_m10:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m10), 120, 0.1, 0.2)));
+	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack), 240, 0, 9999))); // Actually this one seems broken.
+	GameLogEcho(strcat(":anticheat:speedhack_m1:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m1), 240, 1.01, 1.25)));
+	GameLogEcho(strcat(":anticheat:speedhack_m2:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m2), 240, 1.01, 1.25)));
+	GameLogEcho(strcat(":anticheat:speedhack_m3:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m3), 240, 1.01, 1.25)));
+	GameLogEcho(strcat(":anticheat:speedhack_m4:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m4), 240, 1.01, 1.25)));
+	GameLogEcho(strcat(":anticheat:speedhack_m5:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack_m5), 240, 1.01, 1.25)));
+	GameLogEcho(strcat(":anticheat:div0_strafebot_old:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_old), 120, 0.15, 0.4)));
+	GameLogEcho(strcat(":anticheat:div0_strafebot_new:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_new), 120, 0.25, 0.8)));
+	GameLogEcho(strcat(":anticheat:div0_evade:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_evade), 120, 0.2, 0.5)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal) - MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_signal:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_noise:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_m2:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m2), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_m3:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m3), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_m4:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m4), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_m7:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m7), 120, 0, 9999)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_m10:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_m10), 120, 0, 9999)));
 }
 
 float anticheat_getvalue(string id)

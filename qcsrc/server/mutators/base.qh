@@ -77,6 +77,7 @@ MUTATOR_HOOKABLE(PlayerJump);
 	// called when a player presses the jump key
 	// INPUT, OUTPUT:
 		float player_multijump;
+		float player_jumpheight;
 
 MUTATOR_HOOKABLE(GiveFragsForKill);
 	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill
@@ -102,8 +103,13 @@ MUTATOR_HOOKABLE(SpectateCopy);
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon);
 	// returns 1 if throwing the current weapon shall not be allowed
 
+MUTATOR_HOOKABLE(WeaponRateFactor);
+	// allows changing attack rate
+	// INPUT, OUTPUT:
+		float weapon_rate;
+
 MUTATOR_HOOKABLE(SetStartItems);
-	// adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}}
+	// adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}}
 
 MUTATOR_HOOKABLE(BuildMutatorsString);
 	// appends ":mutatorname" to ret_string for logging
@@ -222,6 +228,11 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 MUTATOR_HOOKABLE(PlayerRegen);
 	// called every player think frame
 	// return 1 to disable regen
+	// INPUT, OUTPUT:
+		float regen_mod_max;
+		float regen_mod_regen;
+		float regen_mod_rot;
+		float regen_mod_limit;
 
 MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed

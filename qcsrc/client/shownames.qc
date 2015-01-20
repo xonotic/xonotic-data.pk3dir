@@ -14,15 +14,9 @@ void Draw_ShowNames(entity ent)
 	if(!autocvar_hud_shownames)
 		return;
 
-#ifdef COMPAT_XON050_ENGINE
-	if((ent.sv_entnum == player_localentnum) || (ent.sv_entnum == spectatee_status)) // ent is me or person i'm spectating
-#else
 	if(ent.sv_entnum == player_localentnum) // ent is me or person i'm spectating
-#endif
 		if(!(autocvar_hud_shownames_self && autocvar_chase_active))
 			return;
-
-	makevectors(view_angles);
 
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
@@ -104,7 +98,7 @@ void Draw_ShowNames(entity ent)
 		if(!ent.sameteam || (ent.sv_entnum == player_localentnum))
 			ent.alpha *= getplayeralpha(ent.sv_entnum-1);
 
-		if(ent.alpha < ALPHA_MIN_VISIBLE)
+		if(ent.alpha < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS)
 			return;
 
 		float dist;

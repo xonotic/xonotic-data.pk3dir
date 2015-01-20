@@ -113,10 +113,7 @@ string getladder()
 	float i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
+	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
 
 	for(k = 0; k < MapInfo_count; ++k)
 	{
@@ -296,7 +293,7 @@ string getmaplist()
 	{
 		if(MapInfo_CheckMap(argv(i)))
 		{
-			if(mod(i, 2)) { col = "^2"; }
+			if(i % 2) { col = "^2"; }
 			else { col = "^3"; }
 			maplist = sprintf("%s%s%s ", maplist, col, argv(i));
 		}
@@ -324,12 +321,12 @@ string getlsmaps()
 			)
 			{
 				newmaps = TRUE;
-				if(mod(i, 2)) { col = "^4*"; }
+				if(i % 2) { col = "^4*"; }
 				else { col = "^5*"; }
 			}
 			else
 			{
-				if(mod(i, 2)) { col = "^2"; }
+				if(i % 2) { col = "^2"; }
 				else { col = "^3"; }
 			}
 
@@ -348,7 +345,7 @@ string getmonsterlist()
 
 	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
-		if(mod(i, 2)) { col = "^2"; }
+		if(i % 2) { col = "^2"; }
 		else { col = "^3"; }
 		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
 	}
