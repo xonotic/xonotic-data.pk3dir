@@ -86,7 +86,7 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {
-	RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
+	RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
 	remove (self);
 }
 
@@ -685,8 +685,6 @@ float t_walker(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/walker_body.md3");
-			precache_model ("models/turrets/walker_head_minigun.md3");
 			return TRUE;
 		}
 	}

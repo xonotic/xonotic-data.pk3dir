@@ -126,7 +126,7 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 
-	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;;
+	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
@@ -415,8 +415,6 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 
 	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
-
-	allowed_to_spawn = TRUE;
 
 	inv_roundcnt = 0;
 	inv_maxrounds = 15; // 15?

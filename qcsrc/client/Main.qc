@@ -28,40 +28,18 @@ void menu_sub_null()
 {
 }
 
-#ifdef USE_FTE
-float __engine_check;
-#endif
-
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-#ifdef USE_FTE
-#pragma target ID
-	__engine_check = checkextension("DP_SV_WRITEPICTURE");
-	if(!__engine_check)
-	{
-		print(_("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n"));
-		localcmd("\ndisconnect\n");
-		return;
-	}
-#pragma target FTE
-#endif
-
-	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	printf(_("^4CSQC Build information: ^1%s\n"), WATERMARK);
+	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	float i;
-
-#ifdef COMPAT_XON050_ENGINE
-	// old engine lacks implementation of player_localnum
-	player_localnum = player_localentnum - 1;
-#endif
 
 	binddb = db_create();
 	tempdb = db_create();
@@ -96,6 +74,8 @@ void CSQC_Init(void)
 	for(i = 0; i < MAX_HUD_FIELDS; ++i)
 		hud_title[i] = strzone("(null)");
 
+	Cmd_HUD_SetFields(0);
+
 	postinit = false;
 
 	calledhooks = 0;
@@ -126,15 +106,14 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	DamageInfo_Precache();
 	Vehicles_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
 	if(autocvar_cl_reticle)
 	{
-		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
-		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
+		precache_pic("gfx/reticle_normal");
+		// weapon reticles are precached in weapon files
 	}
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
@@ -166,13 +145,6 @@ void CSQC_Init(void)
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown(void)
 {
-#ifdef USE_FTE
-#pragma TARGET id
-	if(!__engine_check)
-		return 0;
-#pragma TARGET fte
-#endif
-
 	WarpZone_Shutdown();
 
 	remove(teams);
@@ -316,8 +288,6 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
-
 	entity playerchecker;
 	playerchecker = spawn();
 	playerchecker.think = Playerchecker_Think;
@@ -548,7 +518,7 @@ void Ent_ClientData()
 	}
 	spectatee_status = newspectatee_status;
 
-	// non-COMPAT_XON050_ENGINE: we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
+	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 }
 
 void Ent_Nagger()
@@ -604,6 +574,27 @@ void Ent_Nagger()
 	vote_waiting = (nags & 4);
 	vote_waiting_for_me = (nags & 8);
 	warmup_stage = (nags & 16);
+}
+
+void Ent_EliminatedPlayers()
+{
+	float sf, i, j, b, f;
+
+	sf = ReadByte();
+	if(sf & 1)
+	{
+		for(j = 0; j < maxclients; ++j)
+			if(playerslots[j])
+				playerslots[j].eliminated = 1;
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			f = ReadByte();
+			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
+				if (!(f & b))
+					if(playerslots[j])
+						playerslots[j].eliminated = 0;
+		}
+	}
 }
 
 void Ent_RandomSeed()
@@ -804,6 +795,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_RAINSNOW: Ent_RainOrSnow(); break;
 		case ENT_CLIENT_LASER: Ent_Laser(); break;
 		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
+		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
 		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
 		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
 		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
@@ -823,8 +815,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
-		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
-		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
+		case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
@@ -838,7 +829,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
-			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
+			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", self.enttype, num_for_edict(self), self.classname));
 			break;
 	}
 
@@ -942,11 +933,15 @@ void Ent_ScoresInfo()
 	HUD_ModIcons_SetFunc();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
+		if(scores_label[i])
+			strunzone(scores_label[i]);
 		scores_label[i] = strzone(ReadString());
 		scores_flags[i] = ReadByte();
 	}
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
+		if(teamscores_label[i])
+			strunzone(teamscores_label[i]);
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
@@ -964,14 +959,10 @@ void Ent_Init()
 	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -979,12 +970,12 @@ void Ent_Init()
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_grenadelauncher_bouncefactor = ReadCoord();
-	g_balance_grenadelauncher_bouncestop = ReadCoord();
+	g_balance_mortar_bouncefactor = ReadCoord();
+	g_balance_mortar_bouncestop = ReadCoord();
 	g_balance_electro_secondary_bouncefactor = ReadCoord();
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
-	nex_scope = !ReadByte();
+	vortex_scope = !ReadByte();
 	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
@@ -1181,7 +1172,7 @@ void Net_WeaponComplain()
 
 	if(complain_weapon_name)
 		strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(ReadString());
+	complain_weapon_name = strzone(WEP_NAME(complain_weapon));
 
 	complain_weapon_type = ReadByte();
 
@@ -1225,16 +1216,16 @@ float CSQC_Parse_TempEntity()
 			Net_ReadRace();
 			bHandled = true;
 			break;
-		case TE_CSQC_NEXGUNBEAMPARTICLE:
-			Net_ReadNexgunBeamParticle();
+		case TE_CSQC_VORTEXBEAMPARTICLE:
+			Net_ReadVortexBeamParticle();
 			bHandled = true;
 			break;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
 			bHandled = true;
 			break;
-		case TE_CSQC_LIGHTNINGARC:
-			Net_ReadLightningarc();
+		case TE_CSQC_ARC:
+			Net_ReadArc();
 			bHandled = true;
 			break;
 		case TE_CSQC_PINGPLREPORT:
@@ -1251,6 +1242,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
+			bHandled = true;
+			break;
+		case TE_CSQC_SHOCKWAVEPARTICLE:
+			Net_ReadShockwaveParticle();
 			bHandled = true;
 			break;
 		default:
@@ -1302,7 +1297,7 @@ string getcommandkey(string text, string command)
 			return text;
 	}
 	else if (autocvar_hud_showbinds > 1)
-		return sprintf(_("%s (%s)"), text, keys);
+		return sprintf("%s (%s)", text, keys);
 	else
 		return keys;
 }

@@ -3,10 +3,10 @@ float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 
-var float autocvar_g_vehicles_nex_damagerate = 0.5;
-var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_vortex_damagerate = 0.5;
+var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 var float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
@@ -395,7 +395,7 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
     remove (self);
 }
@@ -605,6 +605,12 @@ void vehicles_enter()
             return;
 
     if(self.phase > time)
+        return;
+    if(other.frozen)
+        return;
+    if(other.vehicle)
+        return;
+    if(other.deadflag != DEAD_NO)
         return;
 
     if(teamplay)
@@ -906,17 +912,18 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
     self.dmg_time = time;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
-        damage *= autocvar_g_vehicles_nex_damagerate;
+	// WEAPONTODO
+    if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+        damage *= autocvar_g_vehicles_vortex_damagerate;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_UZI))
-        damage *= autocvar_g_vehicles_uzi_damagerate;
+    if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+        damage *= autocvar_g_vehicles_machinegun_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
         damage *= autocvar_g_vehicles_rifle_damagerate;
 
-    if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
-        damage *= autocvar_g_vehicles_minstanex_damagerate;
+    if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+        damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
         damage *= autocvar_g_vehicles_tag_damagerate;

@@ -1,6 +1,7 @@
-// client side frame inferring
-void animdecide_init(entity e);
+// must be called at least once to initialize, or when modelindex is changed
+void animdecide_load_if_needed(entity e);
 
+// client side frame inferring
 void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time);
 

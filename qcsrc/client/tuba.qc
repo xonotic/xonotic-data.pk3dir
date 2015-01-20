@@ -30,7 +30,7 @@ void tubasound(entity e, float restart)
 		f2 = 0;
 		p2 = 1;
 
-		m = mod(e.note, Tuba_PitchStep);
+		m = e.note % Tuba_PitchStep;
 		if(m)
 		{
 			if(e.note - m < TUBA_MIN)
@@ -190,7 +190,7 @@ void Tuba_Precache()
 	}
 	for(n = TUBA_MIN; n <= TUBA_MAX; ++n)
 	{
-		if(!Tuba_PitchStep || (mod(n, Tuba_PitchStep) == 0))
+		if(!Tuba_PitchStep || ((n % Tuba_PitchStep) == 0))
 		{
 			for(i = 0; i < TUBA_INSTRUMENTS; ++i)
 				precache_sound(TUBA_STARTNOTE(i, n));

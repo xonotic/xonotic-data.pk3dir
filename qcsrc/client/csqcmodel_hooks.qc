@@ -470,8 +470,14 @@ void CSQCModel_Effects_PreUpdate(void)
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
 }
+void Reset_ArcBeam(void);
 void CSQCModel_Effects_PostUpdate(void)
 {
+	if (self == csqcplayer) {
+		if (self.csqcmodel_teleported) {
+			Reset_ArcBeam();
+		}
+	}
 	self.csqcmodel_effects = self.effects;
 	self.csqcmodel_modelflags = self.modelflags;
 	self.effects = 0;
@@ -643,7 +649,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
 			}
-			animdecide_init(self);
+			animdecide_load_if_needed(self);
 			animdecide_setimplicitstate(self, onground);
 			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
 			float sf = 0;
@@ -655,16 +661,15 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			self.anim_saveframe1time = self.anim_frame1time;
 			self.anim_saveframe2 = self.anim_frame2;
 			self.anim_saveframe2time = self.anim_frame2time;
-			if(sf)
-			{
-				CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
-				self.lerpfrac = (doblend ? 0.5 : 0);
-				self.frame = self.anim_frame;
-				self.frame1time = self.anim_frame1time;
-				self.frame2 = self.anim_frame2;
-				self.frame2time = self.anim_frame2time;
-				CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
-			}
+			// Note: we always consider lerpfrac "changed", as it uses fixed values every time anyway.
+			// This ensures that .frame etc. are always written.
+			CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
+			self.lerpfrac = (doblend ? 0.5 : 0);
+			self.frame = self.anim_frame;
+			self.frame1time = self.anim_frame1time;
+			self.frame2 = self.anim_frame2;
+			self.frame2time = self.anim_frame2time;
+			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{

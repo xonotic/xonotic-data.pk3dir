@@ -1,9 +1,16 @@
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
-.float freezetag_revive_progress;
 #define ICE_MAX_ALPHA 1
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
+
+#define SP_FREEZETAG_REVIVALS 4
+void freezetag_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
+	ScoreRules_basics_end();
+}
 
 void freezetag_count_alive_players()
 {
@@ -26,31 +33,36 @@ void freezetag_count_alive_players()
 		e.yellowalive_stat = yellowalive;
 		e.pinkalive_stat = pinkalive;
 	}
+
+	eliminatedPlayers.SendFlags |= 1;
 }
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-float prev_total_players;
+float prev_missing_teams_mask;
 float freezetag_CheckTeams()
 {
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
-		if(prev_total_players > 0)
+		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
-		prev_total_players = -1;
+		prev_missing_teams_mask = -1;
 		return 1;
 	}
-	if(prev_total_players != total_players)
+	if(total_players == 0)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!redalive) p1 = NUM_TEAM_1;
-		if(!bluealive) p2 = NUM_TEAM_2;
-		if(freezetag_teams >= 3)
-		if(!yellowalive) p3 = NUM_TEAM_3;
-		if(freezetag_teams >= 4)
-		if(!pinkalive) p4 = NUM_TEAM_4;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
-		prev_total_players = total_players;
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 0;
+	}
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(freezetag_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(freezetag_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
 }
@@ -122,6 +134,34 @@ float freezetag_CheckWinner()
 	return 1;
 }
 
+entity freezetag_LastPlayerForTeam()
+{
+	entity pl, last_pl = world;
+	FOR_EACH_PLAYER(pl)
+	{
+		if(pl.health >= 1)
+		if(!pl.frozen)
+		if(pl != self)
+		if(pl.team == self.team)
+		if(!last_pl)
+			last_pl = pl;
+		else
+			return world;
+	}
+	return last_pl;
+}
+
+void freezetag_LastPlayerForTeam_Notify()
+{
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
+	{
+		entity pl = freezetag_LastPlayerForTeam();
+		if(pl)
+			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+	}
+}
+
 void freezetag_Add_Score(entity attacker)
 {
 	if(attacker == self)
@@ -161,6 +201,13 @@ void freezetag_Unfreeze(entity attacker)
 	self.freezetag_frozen_timeout = 0;
 
 	Unfreeze(self);
+}
+
+float freezetag_isEliminated(entity e)
+{
+	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -275,6 +322,8 @@ void havocbot_role_ft_freeing()
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
+	if(!self.frozen)
+		freezetag_LastPlayerForTeam_Notify();
 	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
 	return 1;
@@ -301,6 +350,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		{
 			freezetag_Add_Score(frag_attacker);
 			freezetag_count_alive_players();
+			freezetag_LastPlayerForTeam_Notify();
 		}
 		else
 			freezetag_Unfreeze(world); // remove ice
@@ -313,6 +363,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		return 1;
 
 	freezetag_Freeze(frag_attacker);
+	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
@@ -500,7 +551,7 @@ void freezetag_Initialize()
 	if(freezetag_teams < 2)
 		freezetag_teams = autocvar_g_freezetag_teams;
 	freezetag_teams = bound(2, freezetag_teams, 4);
-	ScoreRules_freezetag(freezetag_teams);
+	freezetag_ScoreRules(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
@@ -509,6 +560,8 @@ void freezetag_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 
 MUTATOR_DEFINITION(gamemode_freezetag)

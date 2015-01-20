@@ -84,10 +84,9 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_tdm_point_limit;
 		leadlimit_override = autocvar_g_tdm_point_leadlimit;
-		MUTATOR_ADD(gamemode_tdm);
-
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_tdm);
 	}
 
 	if(g_domination)
@@ -95,12 +94,10 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
-		MUTATOR_ADD(gamemode_domination);
-
 		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
 			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_domination);
 	}
 
 	if(g_ctf)
@@ -108,8 +105,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_capturelimit_override;
 		leadlimit_override = autocvar_captureleadlimit_override;
-		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_ctf);
 	}
 
 	if(g_lms)
@@ -126,9 +123,9 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
-		MUTATOR_ADD(gamemode_ca);
 		if(autocvar_g_ca_team_spawns)
 			have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_ca);
 	}
 
 	if(g_keyhunt)
@@ -144,16 +141,16 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
-		MUTATOR_ADD(gamemode_freezetag);
 		if(autocvar_g_freezetag_team_spawns)
 			have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_freezetag);
 	}
 
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_assault);
 	}
 
 	if(g_onslaught)
@@ -173,10 +170,33 @@ void InitGameplayMode()
 		}
 		else
 			race_teams = 0;
-
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		// we need to find out the correct value for g_race_qualifying
+		float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
+
+		if(autocvar_g_campaign)
+		{
+			g_race_qualifying = 1;
+			independent_players = 1;
+		}
+		else if(!autocvar_g_campaign && want_qualifying)
+		{
+			g_race_qualifying = 2;
+			independent_players = 1;
+			race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
+			race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
+			race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
+			fraglimit_override = 0;
+			leadlimit_override = 0;
+			timelimit_override = autocvar_g_race_qualifying_timelimit;
+		}
+		else
+		{
+			g_race_qualifying = 0;
+		}
 
 		MUTATOR_ADD(gamemode_race);
 	}
@@ -186,16 +206,17 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		independent_players = 1;
 		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
 	{
-        fraglimit_override = autocvar_g_nexball_goallimit;
-        leadlimit_override = autocvar_g_nexball_goalleadlimit;
-        ActivateTeamplay();
-        have_team_spawns = -1; // request team spawns
-	    MUTATOR_ADD(gamemode_nexball);
+		fraglimit_override = autocvar_g_nexball_goallimit;
+		leadlimit_override = autocvar_g_nexball_goalleadlimit;
+		ActivateTeamplay();
+		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_nexball);
 	}
 
 	if(g_keepaway)
@@ -234,31 +255,6 @@ void InitGameplayMode()
 			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
 	}
 
-	if(g_race)
-	{
-		// we need to find out the correct value for g_race_qualifying
-		if(autocvar_g_campaign)
-		{
-			g_race_qualifying = 1;
-		}
-		else if(!autocvar_g_campaign && autocvar_g_race_qualifying_timelimit > 0)
-		{
-			g_race_qualifying = 2;
-			race_fraglimit = autocvar_fraglimit;
-			race_leadlimit = autocvar_leadlimit;
-			race_timelimit = autocvar_timelimit;
-			cvar_set("fraglimit", "0");
-			cvar_set("leadlimit", "0");
-			cvar_set("timelimit", ftos(autocvar_g_race_qualifying_timelimit));
-		}
-		else
-			g_race_qualifying = 0;
-	}
-
-	if(g_race || g_cts)
-	if(g_race_qualifying)
-		independent_players = 1;
-
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
@@ -291,7 +287,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(autocvar_g_start_weapon_laser == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -515,7 +511,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(head) || head.caplayer)
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot

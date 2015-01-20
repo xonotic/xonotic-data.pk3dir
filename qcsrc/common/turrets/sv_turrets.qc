@@ -219,13 +219,8 @@ void turret_damage (entity inflictor, entity attacker, float damage, float death
 	if(!self.active)
 		return;
 
-	if (teamplay)
-	if (self.team == attacker.team)
+	if(SAME_TEAM(self, attacker))
 	{
-		// This does not happen anymore. Re-enable if you fix that.
-		if(IS_REAL_CLIENT(attacker))
-			sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
-
 		if(autocvar_g_friendlyfire)
 			damage = damage * autocvar_g_friendlyfire;
 		else
@@ -437,11 +432,11 @@ void turret_projectile_explode()
 	self.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 	self.owner.tur_debug_dmg_t_h = self.owner.tur_debug_dmg_t_h + d;
 	self.owner.tur_debug_dmg_t_f = self.owner.tur_debug_dmg_t_f + self.owner.shot_dmg;
 #else
-	RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 #endif
 	remove(self);
 }
@@ -701,14 +696,17 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	//if(!validate_flags & TFL_TARGETSELECT_NOBUILTIN)
 	//	return -0.5;
 
+	if(!e_target)
+		return -2;
+
 	if(e_target.owner == e_turret)
 		return -0.5;
 
 	if(!checkpvs(e_target.origin, e_turret))
 		return -1;
 
-	if(!e_target)
-		return -2;
+	if(e_target.alpha <= 0.3)
+		return -1;
 
 	if(g_onslaught)
 		if (substring(e_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
@@ -1232,6 +1230,8 @@ float turret_initialize(float tur_id)
 	entity tur = get_turretinfo(tur_id);
 	if(tur.turretid == 0)
 		return FALSE; // invalid turret
+
+	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
 
 	e = find(world, classname, "turret_manager");
 	if(!e)
