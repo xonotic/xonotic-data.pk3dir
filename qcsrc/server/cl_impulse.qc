@@ -124,7 +124,7 @@ void ImpulseCommands (void)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = mod(imp, 10);
+			i = imp % 10;
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}

@@ -9,6 +9,7 @@ const float WAYPOINTFLAG_NORELINK = 1048576;
 const float WAYPOINTFLAG_PERSONAL = 524288;
 const float WAYPOINTFLAG_PROTECTED = 262144;  // Useless WP detection never kills these.
 const float WAYPOINTFLAG_USEFUL = 131072;  // Useless WP detection temporary flag.
+const float WAYPOINTFLAG_DEAD_END = 65536;  // Useless WP detection temporary flag.
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
 float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;

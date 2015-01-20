@@ -98,6 +98,10 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
+	if(cvar("g_buffs"))
+		s = strcat(s, ", ", _("Buffs"));
+	if(cvar("g_overkill"))
+		s = strcat(s, ", ", _("Overkill"));
 	if(cvar("g_powerups") == 0)
 		s = strcat(s, ", ", _("No powerups"));
 	if(cvar("g_powerups") > 0)
@@ -166,6 +170,9 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_cloaked", _("Cloaked")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_buffs", _("Buffs")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_midair", _("Midair")));
@@ -259,7 +266,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_blaster", _("with blaster")));
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);

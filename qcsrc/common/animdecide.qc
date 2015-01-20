@@ -34,7 +34,7 @@
 .vector anim_duckwalkbackleft;
 .float animdecide_modelindex;
 
-void animdecide_init(entity e)
+void animdecide_load_if_needed(entity e)
 {
 	if(e.modelindex == e.animdecide_modelindex)
 		return;

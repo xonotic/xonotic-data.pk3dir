@@ -31,6 +31,7 @@ Severin "sev" Meyer
 Soelen
 Sydes
 unfa
+TimePath
 
 
 *Website
@@ -65,7 +66,6 @@ Konrad "Justin" Slawinski
 Maik "SavageX" Merten
 Marvin "Mirio" Beck
 MintOX
-Mircea "Taoki" Kitsune
 packer
 Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
@@ -124,8 +124,8 @@ Dale "graphitemaster" Weiler
 Erik "Ablu" Schilling
 Jope "Sless" Withers
 Mattia "Melanosuchus" Basaglia
+Mircea "Taoki" Kitsune
 Robert "ai" Kuroto
-TimePath
 
 
 **Translators
@@ -140,6 +140,9 @@ Mihail "meequz" Varantsou
 *Bulgarian
 lokster
 set_killer
+
+*Czech
+shogun assassin/woky
 
 *Dutch
 Alexander "freefang" van Dam
@@ -166,6 +169,7 @@ Yannick "SpiKe" Le Guen
 
 *Greek
 Γιάννης "Evropi" Α.
+Konstantinos "LDinos" Mihalenas
 Savoritias
 Vindex
 
@@ -173,10 +177,18 @@ Vindex
 Ruszkai "C.Brutail" Ákos
 xaN1C4n3
 
+*Japanese
+Lento
+
 *Italian
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
 stdi
+XCostaX
+
+*Polish
+4m
+Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
 Ricardo "Hellgardia" Silva
@@ -202,6 +214,7 @@ Ristovski
 
 *Spanish
 0000simon
+Alan "aagp" Garcia
 Ari_tent
 brunodeleo
 Kammy

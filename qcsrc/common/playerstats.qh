@@ -1,18 +1,18 @@
 #ifdef SVQC
-//float PS_PM_IN_DB;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
-float PS_GR_OUT_DB;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
-//float PS_GR_IN_DB;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
-float PS_B_IN_DB;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+//float PS_PM_IN_DB = -1;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
+float PS_GR_OUT_DB = -1;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
+//float PS_GR_IN_DB = -1;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
+float PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
 #endif
 
 #ifdef MENUQC
-float PS_D_IN_DB; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+float PS_D_IN_DB = -1; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
 #endif
 
 #ifdef SVQC
 //string PS_PM_IN_EVL;   // playerstats_prematch_in_events_last
 string PS_GR_OUT_TL;   // playerstats_gamereport_out_teams_last
-string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_las
+string PS_GR_OUT_PL;   // playerstats_gamereport_out_players_last
 string PS_GR_OUT_EVL;  // playerstats_gamereport_out_events_last
 //string PS_GR_IN_PL;    // playerstats_gamereport_in_players_last
 //string PS_GR_IN_EVL;   // playerstats_gamereport_in_events_last

@@ -91,6 +91,7 @@ void CopyBody(float keepvelocity)
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
+	animdecide_load_if_needed(self);
 	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
@@ -110,7 +111,7 @@ float player_getspecies()
 void player_setupanimsformodel()
 {
 	// load animation info
-	animdecide_init(self);
+	animdecide_load_if_needed(self);
 	animdecide_setstate(self, 0, FALSE);
 }
 
@@ -173,13 +174,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	if (!(self.flags & FL_GODMODE))
-	{
-		self.armorvalue = self.armorvalue - save;
-		self.health = self.health - take;
-		// pause regeneration for 5 seconds
-		self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
-	}
+	self.armorvalue = self.armorvalue - save;
+	self.health = self.health - take;
+	// pause regeneration for 5 seconds
+	self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
@@ -535,7 +534,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		}
 
 		// print an obituary message
-		Obituary (attacker, inflictor, self, deathtype);
+		if(self.classname != "body")
+			Obituary (attacker, inflictor, self, deathtype);
 
         // increment frag counter for used weapon type
         float w;
@@ -565,7 +565,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(self.health >= 1 || !IS_PLAYER(self))
+		if(self.health >= 1 || !(IS_PLAYER(self) || self.classname == "body"))
 			return;
 
 		// when we get here, player actually dies
@@ -614,11 +614,20 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
+
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
+		// reset body think wrapper broken by SUB_SetFade
+		if(self.classname == "body" && self.think != CopyBody_Think) {
+			self.CopyBody_think = self.think;
+			self.CopyBody_nextthink = self.nextthink;
+			self.think = CopyBody_Think;
+			self.nextthink = time;
+		}
 
-		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg || self.classname == "body") {
 			// remove corpse
+			// clones don't run any animation code any more, so we must gib them when they die :(
 			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
 

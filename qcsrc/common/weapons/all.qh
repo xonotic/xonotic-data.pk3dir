@@ -25,3 +25,5 @@
 #include "w_seeker.qc"
 #include "w_shockwave.qc"
 #include "w_arc.qc"
+#include "w_hmg.qc"
+#include "w_rpc.qc"
