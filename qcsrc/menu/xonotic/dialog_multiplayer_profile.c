@@ -142,9 +142,9 @@ void XonoticProfileTab_fill(entity me)
 	#if 0
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_gender"));
-			e.addValue(e, ZCTX(_("GENDER^Undisclosed")), "0");
-			e.addValue(e, ZCTX(_("GENDER^Female")), "1");
-			e.addValue(e, ZCTX(_("GENDER^Male")), "2");
+			e.addValue(e, _("Undisclosed"), "0");
+			e.addValue(e, _("Female"), "1");
+			e.addValue(e, _("Male"), "2");
 			e.configureXonoticTextSliderValues(e);
 	#else
 			me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gender")));

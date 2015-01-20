@@ -149,9 +149,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Damage effects:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
-			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, ZCTX(_("DMGFX^Disabled")), "0");
 			e.addValue(e, _("Skeletal"), "1");
-			e.addValue(e, _("All"), "2");
+			e.addValue(e, ZCTX(_("DMGFX^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 
 	me.gotoRC(me, 1.25, 3.2); me.setFirstColumn(me, me.currentColumn);
