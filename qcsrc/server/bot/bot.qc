@@ -32,7 +32,7 @@ void bot_think()
 	if (self.bot_nextthink > time)
 		return;
 
-	self.flags &~= FL_GODMODE;
+	self.flags &= ~FL_GODMODE;
 	if(autocvar_bot_god)
 		self.flags |= FL_GODMODE;
 
@@ -43,7 +43,7 @@ void bot_think()
 	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
 	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
 
-	if (autocvar_g_campaign && !campaign_bots_may_start)
+	if (!IS_PLAYER(self) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
 		self.bot_nextthink = time + 0.5;
 		return;
@@ -148,7 +148,7 @@ void bot_setnameandstuff()
 			prio = 1;
 			FOR_EACH_CLIENT(p)
 			{
-				if(clienttype(p) == CLIENTTYPE_BOT)
+				if(IS_BOT_CLIENT(p))
 				if(s == p.cleanname)
 				{
 					prio = 0;
@@ -218,7 +218,7 @@ void bot_setnameandstuff()
 	i = 0;
 	FOR_EACH_CLIENT(p)
 	{
-		if(clienttype(p) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(p))
 			if(p.cleanname == name)
 				++i;
 	}
@@ -342,7 +342,7 @@ void bot_relinkplayerlist()
 	{
 		player_count = player_count + 1;
 		e.nextplayer = e.chain;
-		if (clienttype(e) == CLIENTTYPE_BOT)
+		if (IS_BOT_CLIENT(e))
 		{
 			if (prevbot)
 				prevbot.nextbot = e;
@@ -363,7 +363,7 @@ void bot_relinkplayerlist()
 
 void bot_clientdisconnect()
 {
-	if (clienttype(self) != CLIENTTYPE_BOT)
+	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
 	if(self.cleanname)
@@ -386,7 +386,7 @@ void bot_clientdisconnect()
 
 void bot_clientconnect()
 {
-	if (clienttype(self) != CLIENTTYPE_BOT)
+	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
@@ -491,7 +491,7 @@ void autoskill(float factor)
 	bestplayer = -1;
 	FOR_EACH_PLAYER(head)
 	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(head))
 			bestplayer = max(bestplayer, head.totalfrags - head.totalfrags_lastcheck);
 		else
 			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
@@ -551,7 +551,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(head.classname == "player" || g_lms || g_arena || g_ca)
+		if(IS_PLAYER(head) || g_lms || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

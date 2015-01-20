@@ -8,13 +8,12 @@
 void spawnfunc_ammo_shells()         { spawnfunc_item_shells();         }
 
 // MG -> MG
-void spawnfunc_weapon_machinegun()   { spawnfunc_weapon_uzi();          }
 void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
 
 // GL -> Mortar
 void spawnfunc_ammo_grenades()       { spawnfunc_item_rockets();        }
 
-// LG -> Electro
+// LG -> Lightning
 void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
 void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 
@@ -22,13 +21,13 @@ void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
-// Rail -> Nex
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_nex();          }
-void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
+// Rail -> Vortex
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_vortex();          }
+void spawnfunc_ammo_slugs()          { spawnfunc_item_plasma();          }
 
 // BFG -> Crylink
 void spawnfunc_weapon_bfg()          { spawnfunc_weapon_crylink();      }
-void spawnfunc_ammo_bfg()            { spawnfunc_item_cells();          }
+void spawnfunc_ammo_bfg()            { spawnfunc_item_plasma();          }
 
 // RL -> RL
 void spawnfunc_ammo_rockets()        { spawnfunc_item_rockets();        }
@@ -71,30 +70,30 @@ void target_give_init()
 {
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
-		if (targ.classname == "weapon_rocketlauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_rocketlauncher_ammo;
-			self.netname = "rocketlauncher";
+		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
+			self.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
+			self.netname = "devastator";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_hagar_primary_ammo;
+			self.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
 			if(self.netname == "")
 				self.netname = "hagar";
 			else
 				self.netname = strcat(self.netname, " hagar");
 		}
 		else if (targ.classname == "weapon_bfg") {
-			self.ammo_cells += targ.count * autocvar_g_balance_crylink_primary_ammo;
+			self.ammo_cells += targ.count * WEP_CVAR_PRI(crylink, ammo);
 			if(self.netname == "")
 				self.netname = "crylink";
 			else
 				self.netname = strcat(self.netname, " crylink");
 		}
-		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_grenadelauncher_primary_ammo;
+		else if (targ.classname == "weapon_grenadelauncher" || targ.classname == "weapon_mortar") {
+			self.ammo_rockets += targ.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
 			if(self.netname == "")
-				self.netname = "grenadelauncher";
+				self.netname = "mortar";
 			else
-				self.netname = strcat(self.netname, " grenadelauncher");
+				self.netname = strcat(self.netname, " mortar");
 		}
 		else if (targ.classname == "item_armor_body")
 			self.armorvalue = 100;
@@ -114,18 +113,24 @@ void spawnfunc_target_give()
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//void spawnfunc_item_flight()       /* not supported */
-//void spawnfunc_item_haste()        /* not supported */
+//void spawnfunc_item_flight()       /* handled by buffs mutator or jetpack */
+//void spawnfunc_item_haste()        /* handled by buffs mutator */
 //void spawnfunc_item_health()       /* handled in t_quake.qc */
 //void spawnfunc_item_health_large() /* handled in t_items.qc */
 //void spawnfunc_item_health_small() /* handled in t_items.qc */
 //void spawnfunc_item_health_mega()  /* handled in t_items.qc */
-//void spawnfunc_item_invis()        /* not supported */
-//void spawnfunc_item_regen()        /* not supported */
+//void spawnfunc_item_invis()        /* handled by buffs mutator */
+//void spawnfunc_item_regen()        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
-void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
+void spawnfunc_item_flight()
+{
+	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
+		spawnfunc_item_jetpack();
+	else
+		buff_Init_Compat(self, BUFF_FLIGHT);
+}
 
 .float notteam;
 .float notsingle;
@@ -142,7 +147,7 @@ float DoesQ3ARemoveThisEntity()
 			return 1;
 
 	if(self.notta)
-		if not(!teamplay || g_tdm || g_ctf)
+		if (!(!teamplay || g_tdm || g_ctf))
 			return 1;
 
 	if(self.notsingle)
@@ -164,8 +169,6 @@ float DoesQ3ARemoveThisEntity()
 		gametypename = "ffa";
 		if(teamplay)
 			gametypename = "team";
-		if(g_arena)
-			gametypename = "tournament";
 		if(g_ctf)
 			gametypename = "ctf";
 		if(maxclients == 1)

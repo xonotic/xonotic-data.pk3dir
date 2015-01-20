@@ -60,13 +60,13 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 	// commented out as this one did not help
 	if(onground_diff)
 	{
-		print(sprintf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v));
+		printf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v);
 		return;
 	}
 	*/
 	if(vlen(o) > 32 || vlen(v) > 192)
 	{
-		//print(sprintf("TOO BIG: x=%v v=%v\n", o, v));
+		//printf("TOO BIG: x=%v v=%v\n", o, v);
 		return;
 	}
 
@@ -182,18 +182,14 @@ void CSQCPlayer_SetCamera()
 		oldself = self;
 		self = csqcplayer;
 
-#ifdef COMPAT_XON050_ENGINE
-		if(servercommandframe == 0 || clientcommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
-#else
 		if(servercommandframe == 0 || clientcommandframe == 0)
-#endif
 		{
 			InterpolateOrigin_Do();
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 			// get crouch state from the server
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &~= PMF_DUCKED;
+				self.pmove_flags &= ~PMF_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 				self.pmove_flags |= PMF_DUCKED;
 
@@ -201,7 +197,7 @@ void CSQCPlayer_SetCamera()
 			if(pmove_onground)
 				self.pmove_flags |= PMF_ONGROUND;
 			else
-				self.pmove_flags &~= PMF_ONGROUND;
+				self.pmove_flags &= ~PMF_ONGROUND;
 
 			CSQCPlayer_SetMinsMaxs();
 
@@ -214,7 +210,7 @@ void CSQCPlayer_SetCamera()
 		else
 		{
 			float flg = self.iflags;
-			self.iflags &~= IFLAG_ORIGIN | IFLAG_ANGLES;
+			self.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
 			InterpolateOrigin_Do();
 			self.iflags = flg;
 
@@ -231,7 +227,7 @@ void CSQCPlayer_SetCamera()
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-					self.pmove_flags &~= PMF_DUCKED;
+					self.pmove_flags &= ~PMF_DUCKED;
 				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 					self.pmove_flags |= PMF_DUCKED;
 
@@ -239,7 +235,7 @@ void CSQCPlayer_SetCamera()
 				if(pmove_onground)
 					self.pmove_flags |= PMF_ONGROUND;
 				else
-					self.pmove_flags &~= PMF_ONGROUND;
+					self.pmove_flags &= ~PMF_ONGROUND;
 
 				CSQCPlayer_SavePrediction();
 			}
@@ -248,7 +244,7 @@ void CSQCPlayer_SetCamera()
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &~= PMF_DUCKED;
+				self.pmove_flags &= ~PMF_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 				self.pmove_flags |= PMF_DUCKED;
 #endif
@@ -265,11 +261,7 @@ void CSQCPlayer_SetCamera()
 	}
 
 	entity view;
-#ifdef COMPAT_XON050_ENGINE
-	view = CSQCModel_server2csqc((spectatee_status > 0) ? spectatee_status : player_localentnum);
-#else
 	view = CSQCModel_server2csqc(player_localentnum);
-#endif
 
 	if(view && view != csqcplayer)
 	{
@@ -280,15 +272,6 @@ void CSQCPlayer_SetCamera()
 		self = oldself;
 	}
 
-#ifdef COMPAT_XON050_ENGINE
-	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
-	{
-		// legacy code, not totally correct, but good enough for not having V_CalcRefdef
-		setproperty(VF_ORIGIN, view.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT));
-		setproperty(VF_ANGLES, view_angles);
-	}
-	else
-#endif
 	if(view)
 	{
 		var float refdefflags = 0;

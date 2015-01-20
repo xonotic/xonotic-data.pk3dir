@@ -68,13 +68,13 @@ float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 	float f, i;
 	i = me.selectedItem;
 	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
-	
+
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{
 		if(me.selectedItem != i)
 			cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
 	}
-	
+
 	return f;
 }
 string XonoticWeaponsList_toString(entity me)
@@ -100,7 +100,14 @@ void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, floa
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		msg = sprintf(_("%s (mutator weapon)"), msg);
-	draw_Text(me.realUpperMargin * eY, msg, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+
+	vector save_fontscale = draw_fontscale;
+	float f = draw_CondensedFontFactor(msg, FALSE, me.realFontSize, 1);
+	draw_fontscale_x *= f;
+	vector fs = me.realFontSize;
+	fs_x *= f;
+	draw_Text(me.realUpperMargin * eY, msg, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_fontscale = save_fontscale;
 }
 
 float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)

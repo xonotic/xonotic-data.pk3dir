@@ -3,11 +3,10 @@ species human
 sex Female
 weight 61
 age 25
+description Lightweight Xonotic Soldier
 bone_upperbody spine2
 bone_aim0 0.25 spine2
 bone_aim1 0.4 spine4
 bone_aim2 0.35 bip01 r hand
 bone_weapon bip01 r hand
 fixbone 1
-
-Lightweight Xonotic Solider

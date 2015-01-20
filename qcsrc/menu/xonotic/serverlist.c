@@ -7,6 +7,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	METHOD(XonoticServerList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticServerList, toggleFavorite, void(entity, string))
 
 	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
 
@@ -35,7 +36,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, ipAddressBox, entity, NULL)
 	ATTRIB(XonoticServerList, favoriteButton, entity, NULL)
 	ATTRIB(XonoticServerList, nextRefreshTime, float, 0)
-	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: 0 = just reparametrize, 1 = send new requests, 2 = clear
+	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: REFRESHSERVERLIST_*
 	ATTRIB(XonoticServerList, needsRefresh, float, 1)
 	METHOD(XonoticServerList, focusEnter, void(entity))
 	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)))
@@ -55,9 +56,70 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticServerList, seenIPv4, float, 0)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
+	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25)
+
+	METHOD(XonoticServerList, getTotalHeight, float(entity))
+	METHOD(XonoticServerList, getItemAtPos, float(entity, float))
+	METHOD(XonoticServerList, getItemStart, float(entity, float))
+	METHOD(XonoticServerList, getItemHeight, float(entity, float))
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
+
+#ifndef IMPLEMENTATION
+float autocvar_menu_slist_categories;
+float autocvar_menu_slist_categories_onlyifmultiple; 
+float autocvar_menu_slist_purethreshold;
+float autocvar_menu_slist_modimpurity;
+float autocvar_menu_slist_recommendations;
+float autocvar_menu_slist_recommendations_maxping;
+float autocvar_menu_slist_recommendations_minfreeslots; 
+float autocvar_menu_slist_recommendations_minhumans;
+float autocvar_menu_slist_recommendations_purethreshold; 
+
+// server cache fields
+#define SLIST_FIELDS \
+	SLIST_FIELD(CNAME,       "cname") \
+	SLIST_FIELD(PING,        "ping") \
+	SLIST_FIELD(GAME,        "game") \
+	SLIST_FIELD(MOD,         "mod") \
+	SLIST_FIELD(MAP,         "map") \
+	SLIST_FIELD(NAME,        "name") \
+	SLIST_FIELD(MAXPLAYERS,  "maxplayers") \
+	SLIST_FIELD(NUMPLAYERS,  "numplayers") \
+	SLIST_FIELD(NUMHUMANS,   "numhumans") \
+	SLIST_FIELD(NUMBOTS,     "numbots") \
+	SLIST_FIELD(PROTOCOL,    "protocol") \
+	SLIST_FIELD(FREESLOTS,   "freeslots") \
+	SLIST_FIELD(PLAYERS,     "players") \
+	SLIST_FIELD(QCSTATUS,    "qcstatus") \
+	SLIST_FIELD(CATEGORY,    "category") \
+	SLIST_FIELD(ISFAVORITE,  "isfavorite")
+
+#define SLIST_FIELD(suffix,name) float SLIST_FIELD_##suffix;
+SLIST_FIELDS
+#undef SLIST_FIELD
+
+const float REFRESHSERVERLIST_RESORT = 0;    // sort the server list again to update for changes to e.g. favorite status, categories
+const float REFRESHSERVERLIST_REFILTER = 1;  // ..., also update filter and sort criteria
+const float REFRESHSERVERLIST_ASK = 2;       // ..., also suggest querying servers now
+const float REFRESHSERVERLIST_RESET = 3;     // ..., also clear the list first
+
+// function declarations
+float IsServerInList(string list, string srv);
+#define IsFavorite(srv) IsServerInList(cvar_string("net_slist_favorites"), srv)
+#define IsPromoted(srv) IsServerInList(_Nex_ExtResponseSystem_PromotedServers, srv)
+#define IsRecommended(srv) IsServerInList(_Nex_ExtResponseSystem_RecommendedServers, srv)
+
+entity RetrieveCategoryEnt(float catnum);
+
+float CheckCategoryOverride(float cat);
+float CheckCategoryForEntry(float entry); 
+float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
+
+void RegisterSLCategories();
+
 void ServerList_Connect_Click(entity btn, entity me);
+void ServerList_Categories_Click(entity box, entity me);
 void ServerList_ShowEmpty_Click(entity box, entity me);
 void ServerList_ShowFull_Click(entity box, entity me);
 void ServerList_Filter_Change(entity box, entity me);
@@ -65,44 +127,114 @@ void ServerList_Favorite_Click(entity btn, entity me);
 void ServerList_Info_Click(entity btn, entity me);
 void ServerList_Update_favoriteButton(entity btn, entity me);
 
-float SLIST_FIELD_CNAME;
-float SLIST_FIELD_PING;
-float SLIST_FIELD_GAME;
-float SLIST_FIELD_MOD;
-float SLIST_FIELD_MAP;
-float SLIST_FIELD_NAME;
-float SLIST_FIELD_MAXPLAYERS;
-float SLIST_FIELD_NUMPLAYERS;
-float SLIST_FIELD_NUMHUMANS;
-float SLIST_FIELD_NUMBOTS;
-float SLIST_FIELD_PROTOCOL;
-float SLIST_FIELD_FREESLOTS;
-float SLIST_FIELD_PLAYERS;
-float SLIST_FIELD_QCSTATUS;
-float SLIST_FIELD_ISFAVORITE;
-#endif
+// fields for category entities
+#define MAX_CATEGORIES 9
+#define CATEGORY_FIRST 1
+entity categories[MAX_CATEGORIES];
+float category_ent_count;
+.string cat_name;
+.string cat_string;
+.string cat_enoverride_string;
+.string cat_dioverride_string;
+.float cat_enoverride;
+.float cat_dioverride;
 
+// fields for drawing categories
+float category_name[MAX_CATEGORIES];
+float category_item[MAX_CATEGORIES];
+float category_draw_count;
+
+#define SLIST_CATEGORIES \
+	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             ZCTX(_("SLCAT^Favorites"))) \
+	SLIST_CATEGORY(CAT_RECOMMENDED,  "",            "",             ZCTX(_("SLCAT^Recommended"))) \
+	SLIST_CATEGORY(CAT_NORMAL,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Normal Servers"))) \
+	SLIST_CATEGORY(CAT_SERVERS,      "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Servers"))) \
+	SLIST_CATEGORY(CAT_XPM,          "CAT_NORMAL",  "CAT_SERVERS",  ZCTX(_("SLCAT^Competitive Mode"))) \
+	SLIST_CATEGORY(CAT_MODIFIED,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Modified Servers"))) \
+	SLIST_CATEGORY(CAT_OVERKILL,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Overkill Mode"))) \
+	SLIST_CATEGORY(CAT_INSTAGIB,     "",            "CAT_SERVERS",  ZCTX(_("SLCAT^InstaGib Mode"))) \
+	SLIST_CATEGORY(CAT_DEFRAG,       "",            "CAT_SERVERS",  ZCTX(_("SLCAT^Defrag Mode")))
+
+#define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
+#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
+	float name; \
+	var string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
+SLIST_CATEGORIES
+#undef SLIST_CATEGORY
+
+#endif
+#endif
 #ifdef IMPLEMENTATION
-void ServerList_UpdateFieldIDs()
+
+void RegisterSLCategories()
 {
-	SLIST_FIELD_CNAME = gethostcacheindexforkey( "cname" );
-	SLIST_FIELD_PING = gethostcacheindexforkey( "ping" );
-	SLIST_FIELD_GAME = gethostcacheindexforkey( "game" );
-	SLIST_FIELD_MOD = gethostcacheindexforkey( "mod" );
-	SLIST_FIELD_MAP = gethostcacheindexforkey( "map" );
-	SLIST_FIELD_NAME = gethostcacheindexforkey( "name" );
-	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey( "maxplayers" );
-	SLIST_FIELD_NUMPLAYERS = gethostcacheindexforkey( "numplayers" );
-	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey( "numhumans" );
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey( "numbots" );
-	SLIST_FIELD_PROTOCOL = gethostcacheindexforkey( "protocol" );
-	SLIST_FIELD_FREESLOTS = gethostcacheindexforkey( "freeslots" );
-	SLIST_FIELD_PLAYERS = gethostcacheindexforkey( "players" );
-	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey( "qcstatus" );
-	SLIST_FIELD_ISFAVORITE = gethostcacheindexforkey( "isfavorite" );
+	entity cat;
+	#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
+		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
+		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
+		cat = spawn(); \
+		categories[name - 1] = cat; \
+		cat.classname = "slist_category"; \
+		cat.cat_name = strzone(#name); \
+		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
+		cat.cat_dioverride_string = strzone(dioverride); \
+		cat.cat_string = strzone(str);
+	SLIST_CATEGORIES
+	#undef SLIST_CATEGORY
+
+	float i, x, catnum;
+	string s;
+
+	#define PROCESS_OVERRIDE(override_string,override_field) \
+		for(i = 0; i < category_ent_count; ++i) \
+		{ \
+			s = categories[i].override_string; \
+			if((s != "") && (s != categories[i].cat_name)) \
+			{ \
+				catnum = 0; \
+				for(x = 0; x < category_ent_count; ++x) \
+				{ if(categories[x].cat_name == s) { \
+					catnum = (x+1); \
+					break; \
+				} } \
+				if(catnum) \
+				{ \
+					strunzone(categories[i].override_string); \
+					categories[i].override_field = catnum; \
+					continue; \
+				} \
+				else \
+				{ \
+					printf( \
+						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
+						s, \
+						categories[i].cat_name \
+					); \
+				} \
+			} \
+			strunzone(categories[i].override_string); \
+			categories[i].override_field = 0; \
+		}
+	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
+	PROCESS_OVERRIDE(cat_dioverride_string, cat_dioverride)
+	#undef PROCESS_OVERRIDE
 }
 
-float IsFavorite(string srv)
+// Supporting Functions
+entity RetrieveCategoryEnt(float catnum)
+{
+	if((catnum > 0) && (catnum <= category_ent_count))
+	{
+		return categories[catnum - 1];
+	}
+	else
+	{
+		error(sprintf("RetrieveCategoryEnt(%d): Improper category number!\n", catnum));
+		return world;
+	}
+}
+
+float IsServerInList(string list, string srv)
 {
 	string p;
 	float i, n;
@@ -112,7 +244,7 @@ float IsFavorite(string srv)
 	if(srv == "")
 		return FALSE;
 	p = crypto_getidfp(srv);
-	n = tokenize_console(cvar_string("net_slist_favorites"));
+	n = tokenize_console(list);
 	for(i = 0; i < n; ++i)
 	{
 		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
@@ -130,7 +262,125 @@ float IsFavorite(string srv)
 	return FALSE;
 }
 
-void ToggleFavorite(string srv)
+float CheckCategoryOverride(float cat)
+{
+	entity catent = RetrieveCategoryEnt(cat);
+	if(catent)
+	{
+		float override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride); 
+		if(override) { return override; }
+		else { return cat; }
+	}
+	else
+	{
+		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
+		return cat;
+	}
+}
+
+float CheckCategoryForEntry(float entry)
+{
+	string s, k, v, modtype = "";
+	float j, m, impure = 0, freeslots = 0, sflags = 0;
+	s = gethostcachestring(SLIST_FIELD_QCSTATUS, entry);
+	m = tokenizebyseparator(s, ":");
+
+	for(j = 2; j < m; ++j)
+	{
+		if(argv(j) == "") { break; }
+		k = substring(argv(j), 0, 1);
+		v = substring(argv(j), 1, -1);
+		switch(k)
+		{
+			case "P": { impure = stof(v); break; }
+			case "S": { freeslots = stof(v); break; }
+			case "F": { sflags = stof(v); break; }
+			case "M": { modtype = strtolower(v); break; }
+		}
+	}
+
+	if(modtype != "xonotic") { impure += autocvar_menu_slist_modimpurity; }
+
+	// check if this server is favorited
+	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, entry)) { return CAT_FAVORITED; }
+
+	// now check if it's recommended
+	if(autocvar_menu_slist_recommendations)
+	{
+		string cname = gethostcachestring(SLIST_FIELD_CNAME, entry);
+		
+		if(IsPromoted(cname)) { return CAT_RECOMMENDED; }
+		else
+		{
+			float recommended = 0;
+			if(autocvar_menu_slist_recommendations & 1)
+			{
+				if(IsRecommended(cname)) { ++recommended; }
+				else { --recommended; }
+			}
+			if(autocvar_menu_slist_recommendations & 2)
+			{
+				if(
+					///// check for minimum free slots
+					(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
+					
+					&& // check for purity requirement
+					(
+						(autocvar_menu_slist_recommendations_purethreshold < 0)
+						||
+						(impure <= autocvar_menu_slist_recommendations_purethreshold)
+					)
+					
+					&& // check for minimum amount of humans
+					(
+						gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
+						>=
+						autocvar_menu_slist_recommendations_minhumans
+					)
+					
+					&& // check for maximum latency
+					(
+						gethostcachenumber(SLIST_FIELD_PING, entry)
+						<=
+						autocvar_menu_slist_recommendations_maxping
+					)
+				)
+					{ ++recommended; }
+				else
+					{ --recommended; }
+			}
+			if(recommended > 0) { return CAT_RECOMMENDED; }
+		}
+	}
+
+	// if not favorited or recommended, check modname
+	if(modtype != "xonotic")
+	{
+		switch(modtype)
+		{
+			// old servers which don't report their mod name are considered modified now
+			case "": { return CAT_MODIFIED; }
+			
+			case "xpm": { return CAT_XPM; }
+			case "minstagib":
+			case "instagib": { return CAT_INSTAGIB; }
+			case "overkill": { return CAT_OVERKILL; }
+			//case "nix": { return CAT_NIX; }
+			//case "newtoys": { return CAT_NEWTOYS; }
+
+			// "cts" is allowed as compat, xdf is replacement
+			case "cts": 
+			case "xdf": { return CAT_DEFRAG; }
+			
+			default: { dprintf("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
+		}
+	}
+
+	// must be normal or impure server
+	return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
+}
+
+void XonoticServerList_toggleFavorite(entity me, string srv)
 {
 	string s, s0, s1, s2, srv_resolved, p;
 	float i, n, f;
@@ -165,7 +415,7 @@ void ToggleFavorite(string srv)
 		f = 1;
 		--i;
 	}
-	
+
 	if(!f)
 	{
 		s1 = "";
@@ -177,15 +427,16 @@ void ToggleFavorite(string srv)
 			cvar_set("net_slist_favorites", strcat(s, s1, srv));
 	}
 
-	resorthostcache();
+	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 }
 
 void ServerList_Update_favoriteButton(entity btn, entity me)
 {
-	if(IsFavorite(me.ipAddressBox.text))
-		me.favoriteButton.setText(me.favoriteButton, _("Remove"));
-	else
-		me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
+	me.favoriteButton.setText(me.favoriteButton,
+		(IsFavorite(me.ipAddressBox.text) ?
+			_("Remove") : _("Favorite")
+		)
+	);
 }
 
 entity makeXonoticServerList()
@@ -199,8 +450,12 @@ void XonoticServerList_configureXonoticServerList(entity me)
 {
 	me.configureXonoticListBox(me);
 
-	ServerList_UpdateFieldIDs();
+	// update field ID's
+	#define SLIST_FIELD(suffix,name) SLIST_FIELD_##suffix = gethostcacheindexforkey(name);
+	SLIST_FIELDS
+	#undef SLIST_FIELD
 
+	// clear list
 	me.nItems = 0;
 }
 void XonoticServerList_setSelected(entity me, float i)
@@ -227,20 +482,14 @@ void XonoticServerList_setSelected(entity me, float i)
 }
 void XonoticServerList_refreshServerList(entity me, float mode)
 {
-	// 0: just reparametrize
-	// 1: also ask for new servers
-	// 2: clear
 	//print("refresh of type ", ftos(mode), "\n");
-	/* if(mode == 2) // borken
+
+	if(mode >= REFRESHSERVERLIST_REFILTER)
 	{
-		// clear list
-		localcmd("net_slist\n");
-		me.needsRefresh = 1; // net_slist kills sort order, so we need to restore it later
-	}
-	else */
-	{
-		float m, o, i, n; // moin moin
+		float m, i, n;
+		float listflags = 0;
 		string s, typestr, modstr;
+
 		s = me.filterString;
 
 		m = strstrofs(s, ":", 0);
@@ -300,14 +549,17 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 			sethostcachemaskstring(++m, SLIST_FIELD_PLAYERS, s, SLIST_TEST_CONTAINS);
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(s, ":"), SLIST_TEST_STARTSWITH);
 		}
-		o = 2; // favorites first
-		if(me.currentSortOrder < 0)
-			o |= 1; // descending
-		sethostcachesort(me.currentSortField, o);
-		resorthostcache();
-		if(mode >= 1)
-			refreshhostcache();
+
+		// sorting flags
+		//listflags |= SLSF_FAVORITES;
+		listflags |= SLSF_CATEGORIES;
+		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
+		sethostcachesort(me.currentSortField, listflags);
 	}
+	
+	resorthostcache();
+	if(mode >= REFRESHSERVERLIST_ASK)
+		refreshhostcache(mode >= REFRESHSERVERLIST_RESET);
 }
 void XonoticServerList_focusEnter(entity me)
 {
@@ -317,8 +569,9 @@ void XonoticServerList_focusEnter(entity me)
 		return;
 	}
 	me.nextRefreshTime = time + 10;
-	me.refreshServerList(me, 1);
+	me.refreshServerList(me, REFRESHSERVERLIST_ASK);
 }
+
 void XonoticServerList_draw(entity me)
 {
 	float i, found, owned;
@@ -330,10 +583,24 @@ void XonoticServerList_draw(entity me)
 		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
 	}
 
+	if(_Nex_ExtResponseSystem_PromotedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 3;
+		_Nex_ExtResponseSystem_PromotedServersNeedsRefresh = 0;
+	}
+
+	if(_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 3;
+		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 0;
+	}
+
 	if(me.currentSortField == -1)
 	{
 		me.setSortOrder(me, SLIST_FIELD_PING, +1);
-		me.refreshServerList(me, 2);
+		me.refreshServerList(me, REFRESHSERVERLIST_RESET);
 	}
 	else if(me.needsRefresh == 1)
 	{
@@ -342,12 +609,107 @@ void XonoticServerList_draw(entity me)
 	else if(me.needsRefresh == 2)
 	{
 		me.needsRefresh = 0;
-		me.refreshServerList(me, 0);
+		me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
+	}
+	else if(me.needsRefresh == 3)
+	{
+		me.needsRefresh = 0;
+		me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 	}
 
 	owned = ((me.selectedServer == me.ipAddressBox.text) && (me.ipAddressBox.text != ""));
 
-	me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+	for(i = 0; i < category_draw_count; ++i) { category_name[i] = -1; category_item[i] = -1; }
+	category_draw_count = 0;
+
+	if(autocvar_menu_slist_categories >= 0) // if less than 0, don't even draw a category heading for favorites
+	{
+		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
+		me.nItems = itemcount;
+		
+		//float visible = floor(me.scrollPos / me.itemHeight);
+		// ^ unfortunately no such optimization can be made-- we must process through the
+		// entire list, otherwise there is no way to know which item is first in its category.
+
+		// binary search method suggested by div
+		float x;
+		float begin = 0;
+		for(x = 1; x <= category_ent_count; ++x) {
+			float first = begin;
+			float last = (itemcount - 1);
+			if (first > last) {
+				// List is empty.
+				break;
+			}
+			float catf = gethostcachenumber(SLIST_FIELD_CATEGORY, first);
+			float catl = gethostcachenumber(SLIST_FIELD_CATEGORY, last);
+			if (catf > x) {
+				// The first one is already > x.
+				// Therefore, category x does not exist.
+				// Higher numbered categories do exist though.
+			} else if (catl < x) {
+				// The last one is < x.
+				// Thus this category - and any following -
+				// don't exist.
+				break;
+			} else if (catf == x) {
+				// Starts at first. This breaks the loop
+				// invariant in the binary search and thus has
+				// to be handled separately.
+				if(gethostcachenumber(SLIST_FIELD_CATEGORY, first) != x)
+					error("Category mismatch I");
+				if(first > 0)
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, first - 1) == x)
+						error("Category mismatch II");
+				category_name[category_draw_count] = x;
+				category_item[category_draw_count] = first;
+				++category_draw_count;
+				begin = first + 1;
+			} else {
+				// At this point, catf <= x < catl, thus
+				// catf < catl, thus first < last.
+				// INVARIANTS:
+				// last - first >= 1
+				// catf == gethostcachenumber(SLIST_FIELD_CATEGORY(first)
+				// catl == gethostcachenumber(SLIST_FIELD_CATEGORY(last)
+				// catf < x
+				// catl >= x
+				while (last - first > 1) {
+					float middle = floor((first + last) / 2);
+					// By loop condition, middle != first && middle != last.
+					float cat = gethostcachenumber(SLIST_FIELD_CATEGORY, middle);
+					if (cat >= x) {
+						last = middle;
+						catl = cat;
+					} else {
+						first = middle;
+						catf = cat;
+					}
+				}
+				if (catl == x) {
+					if(gethostcachenumber(SLIST_FIELD_CATEGORY, last) != x)
+						error("Category mismatch III");
+					if(last > 0)
+						if(gethostcachenumber(SLIST_FIELD_CATEGORY, last - 1) == x)
+							error("Category mismatch IV");
+					category_name[category_draw_count] = x;
+					category_item[category_draw_count] = last;
+					++category_draw_count;
+					begin = last + 1; // already scanned through these, skip 'em
+				}
+				else
+					begin = last; // already scanned through these, skip 'em
+			}
+		}
+		if(autocvar_menu_slist_categories_onlyifmultiple && (category_draw_count == 1))
+		{
+			category_name[0] = -1;
+			category_item[0] = -1;
+			category_draw_count = 0;
+			me.nItems = itemcount;
+		}
+	}
+	else { me.nItems = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT); }
 
 	me.connectButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
@@ -357,6 +719,7 @@ void XonoticServerList_draw(entity me)
 	if(me.selectedServer)
 	{
 		for(i = 0; i < me.nItems; ++i)
+		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
 				if(i != me.selectedItem)
@@ -367,8 +730,10 @@ void XonoticServerList_draw(entity me)
 				found = 1;
 				break;
 			}
+		}
 	}
 	if(!found)
+	{
 		if(me.nItems > 0)
 		{
 			if(me.selectedItem >= me.nItems)
@@ -377,7 +742,8 @@ void XonoticServerList_draw(entity me)
 				strunzone(me.selectedServer);
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
-
+	}
+	
 	if(owned)
 	{
 		if(me.selectedServer != me.ipAddressBox.text)
@@ -467,7 +833,16 @@ void ServerList_Filter_Change(entity box, entity me)
 		me.filterString = strzone(box.text);
 	else
 		me.filterString = string_null;
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
+
+	me.ipAddressBox.setText(me.ipAddressBox, "");
+	me.ipAddressBox.cursorPos = 0;
+	me.ipAddressBoxFocused = -1;
+}
+void ServerList_Categories_Click(entity box, entity me)
+{
+	box.setChecked(box, autocvar_menu_slist_categories = !autocvar_menu_slist_categories);
+	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -476,7 +851,7 @@ void ServerList_Filter_Change(entity box, entity me)
 void ServerList_ShowEmpty_Click(entity box, entity me)
 {
 	box.setChecked(box, me.filterShowEmpty = !me.filterShowEmpty);
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -485,7 +860,7 @@ void ServerList_ShowEmpty_Click(entity box, entity me)
 void ServerList_ShowFull_Click(entity box, entity me)
 {
 	box.setChecked(box, me.filterShowFull = !me.filterShowFull);
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 
 	me.ipAddressBox.setText(me.ipAddressBox, "");
 	me.ipAddressBox.cursorPos = 0;
@@ -506,7 +881,7 @@ void XonoticServerList_setSortOrder(entity me, float fld, float direction)
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
 	me.selectedServer = string_null;
-	me.refreshServerList(me, 0);
+	me.refreshServerList(me, REFRESHSERVERLIST_REFILTER);
 }
 void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
@@ -562,10 +937,11 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 }
 void ServerList_Connect_Click(entity btn, entity me)
 {
-	if(me.ipAddressBox.text == "")
-		localcmd("connect ", me.selectedServer, "\n");
-	else
-		localcmd("connect ", me.ipAddressBox.text, "\n");
+	localcmd(sprintf("connect %s\n",
+		((me.ipAddressBox.text != "") ?
+			me.ipAddressBox.text : me.selectedServer
+		)
+	));
 }
 void ServerList_Favorite_Click(entity btn, entity me)
 {
@@ -573,14 +949,18 @@ void ServerList_Favorite_Click(entity btn, entity me)
 	ipstr = netaddress_resolve(me.ipAddressBox.text, 26000);
 	if(ipstr != "")
 	{
-		ToggleFavorite(me.ipAddressBox.text);
+		me.toggleFavorite(me, me.ipAddressBox.text);
 		me.ipAddressBoxFocused = -1;
 	}
 }
 void ServerList_Info_Click(entity btn, entity me)
 {
-	main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
-	DialogOpenButton_Click(me, main.serverInfoDialog);
+	if (me.nItems != 0)
+		main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
+
+	vector org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
+	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
+	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
 void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 {
@@ -603,6 +983,48 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	float m, pure, freeslots, j, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
+	//printf("time: %f, i: %d, item: %d, nitems: %d\n", time, i, item, me.nItems);
+
+	vector oldscale = draw_scale;
+	vector oldshift = draw_shift;
+#define SET_YRANGE(start,end) \
+	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
+	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
+
+	for (j = 0; j < category_draw_count; ++j) {
+		// Matches exactly the headings with increased height.
+		if (i == category_item[j])
+			break;
+	}
+
+	if (j < category_draw_count)
+	{
+		entity catent = RetrieveCategoryEnt(category_name[j]);
+		if(catent)
+		{
+			SET_YRANGE(
+				(me.categoriesHeight - 1) / (me.categoriesHeight + 1),
+				me.categoriesHeight / (me.categoriesHeight + 1)
+			);
+			draw_Text(
+				eY * me.realUpperMargin
+				+
+#if 0
+				eX * (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(catent.cat_string, 0, me.realFontSize)) * 0.5),
+				catent.cat_string,
+#else
+				eX * (me.columnNameOrigin),
+				strcat(catent.cat_string, ":"),
+#endif
+				me.realFontSize,
+				SKINCOLOR_SERVERLIST_CATEGORY,
+				SKINALPHA_SERVERLIST_CATEGORY,
+				0
+			);
+			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
+		}
+	}
+	
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
@@ -649,7 +1071,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	// list the mods here on which the pure server check actually works
 	if(modname != "Xonotic")
-	if(modname != "MinstaGib")
+	if(modname != "InstaGib" || modname != "MinstaGib")
 	if(modname != "CTS")
 	if(modname != "NIX")
 	if(modname != "NewToys")
@@ -659,7 +1081,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
 	else if(freeslots == 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
-	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
+	else if (!gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
 	else
 		theAlpha = 1;
@@ -732,83 +1154,96 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 4: AES recommended and will be used
 	// 5: AES required
 
+	// --------------
+	//  RENDER ICONS
+	// --------------
+	vector iconSize = '0 0 0';
+	iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
+	iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
+
+	vector iconPos = '0 0 0';
+	iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
+	iconPos_y = (1 - iconSize_y) * 0.5;
+
+	string n;
+
+	if (!(me.seenIPv4 && me.seenIPv6))
 	{
-		vector iconSize = '0 0 0';
-		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
-		iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
-
-		vector iconPos = '0 0 0';
-		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
-		iconPos_y = (1 - iconSize_y) * 0.5;
-
-		string n;
-
-		if not(me.seenIPv4 && me.seenIPv6)
-		{
-			iconPos_x += iconSize_x * 0.5;
-		}
-		else if(me.seenIPv4 && me.seenIPv6)
-		{
-			n = string_null;
-			if(isv6)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
-			else if(isv4)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
-			if(n)
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			iconPos_x += iconSize_x;
-		}
-
-		if(q > 0)
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
+		iconPos_x += iconSize_x * 0.5;
+	}
+	else if(me.seenIPv4 && me.seenIPv6)
+	{
+		n = string_null;
+		if(isv6)
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
+		else if(isv4)
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
+		if(n)
 			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
-		iconPos_x += iconSize_x;
-
-		if(modname == "Xonotic")
-		{
-			if(pure == 0)
-			{
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			}
-		}
-		else
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
-			if(draw_PictureSize(n) == '0 0 0')
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
-			if(pure == 0)
-				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-			else
-				draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
-		}
-		iconPos_x += iconSize_x;
-
-		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
 		iconPos_x += iconSize_x;
 	}
 
+	if(q > 0)
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
+		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+	}
+	iconPos_x += iconSize_x;
+
+	if(modname == "Xonotic")
+	{
+		if(pure == 0)
+		{
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		}
+	}
+	else
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
+		if(draw_PictureSize(n) == '0 0 0')
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
+		if(pure == 0)
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		else
+			draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
+	}
+	iconPos_x += iconSize_x;
+
+	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+	{
+		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
+		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+	}
+	iconPos_x += iconSize_x;
+	
+	// --------------
+	//  RENDER TEXT
+	// --------------
+	
+	// ping
 	s = ftos(p);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server name
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_NAME, i), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server map
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server gametype
 	s = draw_TextShortenToWidth(typestr, me.columnTypeSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+
+	// server playercount
 	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 }
 
 float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float i;
 	vector org, sz;
 
 	org = boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size);
@@ -831,10 +1266,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
-		i = me.selectedItem;
-		if(i < me.nItems)
+		if(me.nItems != 0)
 		{
-			ToggleFavorite(me.selectedServer);
+			me.toggleFavorite(me, me.selectedServer);
 			me.ipAddressBoxFocused = -1;
 			return 1;
 		}
@@ -847,4 +1281,47 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
 }
+
+float XonoticServerList_getTotalHeight(entity me) {
+	float num_normal_rows = me.nItems;
+	float num_headers = category_draw_count;
+	return me.itemHeight * (num_normal_rows + me.categoriesHeight * num_headers);
+}
+float XonoticServerList_getItemAtPos(entity me, float pos) {
+	pos = pos / me.itemHeight;
+	float i;
+	for (i = category_draw_count - 1; i >= 0; --i) {
+		float itemidx = category_item[i];
+		float itempos = i * me.categoriesHeight + category_item[i];
+		if (pos >= itempos + me.categoriesHeight + 1)
+			return itemidx + 1 + floor(pos - (itempos + me.categoriesHeight + 1));
+		if (pos >= itempos)
+			return itemidx;
+	}
+	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
+	return floor(pos);
+}
+float XonoticServerList_getItemStart(entity me, float item) {
+	float i;
+	for (i = category_draw_count - 1; i >= 0; --i) {
+		float itemidx = category_item[i];
+		float itempos = i * me.categoriesHeight + category_item[i];
+		if (item >= itemidx + 1)
+			return (itempos + me.categoriesHeight + 1 + item - (itemidx + 1)) * me.itemHeight;
+		if (item >= itemidx)
+			return itempos * me.itemHeight;
+	}
+	// No category matches? Note that category 0 is... 0. Therefore no headings exist at all.
+	return item * me.itemHeight;
+}
+float XonoticServerList_getItemHeight(entity me, float item) {
+	float i;
+	for (i = 0; i < category_draw_count; ++i) {
+		// Matches exactly the headings with increased height.
+		if (item == category_item[i])
+			return me.itemHeight * (me.categoriesHeight + 1);
+	}
+	return me.itemHeight;
+}
+
 #endif

@@ -34,7 +34,7 @@ void KeyBinder_Bind_Edit(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
-string KEY_NOT_BOUND_CMD = "// not bound";
+const string KEY_NOT_BOUND_CMD = "// not bound";
 
 #define MAX_KEYS_PER_FUNCTION 2
 #define MAX_KEYBINDS 256
@@ -143,6 +143,13 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	if(key == K_ESCAPE)
 		return;
 
+	// forbid these keys from being bound in the menu
+	if(key == K_CAPSLOCK || key == K_NUMLOCK)
+	{
+		KeyBinder_Bind_Change(me, me);
+		return;
+	}
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
@@ -231,15 +238,22 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
 }
+void KeyBinder_Bind_Reset_All(entity btn, entity me)
+{
+	localcmd("unbindall\n");
+	localcmd("exec binds-default.cfg\n");
+	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
+}
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedServer)
+	if(i == me.lastClickedKey)
 		if(time < me.lastClickedTime + 0.3)
 		{
 			// DOUBLE CLICK!
 			KeyBinder_Bind_Change(NULL, me);
 		}
-	me.lastClickedServer = i;
+	me.lastClickedKey = i;
 	me.lastClickedTime = time;
 }
 void XonoticKeyBinder_setSelected(entity me, float i)

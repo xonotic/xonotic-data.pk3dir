@@ -26,13 +26,13 @@ float entcs_customize()
 	o = self.owner;
 	if(o.deadflag != DEAD_NO)
 		return FALSE;
-	if(o.classname != "player")
+	if (!IS_PLAYER(o))
 		return FALSE;
 	if(other == o)
 		return FALSE;
-	if((other.classname == "player") || other.caplayer)
+	if((IS_PLAYER(other)) || other.caplayer)
 		if(!teamplay || o.team != other.team)
-			if not (radar_showennemies)
+			if (!radar_showennemies)
 				return FALSE;
 	return TRUE;
 }

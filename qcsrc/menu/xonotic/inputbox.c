@@ -16,9 +16,17 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 
 	ATTRIB(XonoticInputBox, alpha, float, SKINALPHA_TEXT)
 
+	// Clear button attributes
+	ATTRIB(XonoticInputBox, cb_offset, float, SKINOFFSET_CLEARBUTTON) // bound to range -1, 0
+	ATTRIB(XonoticInputBox, cb_src, string, SKINGFX_CLEARBUTTON)
+	ATTRIB(XonoticInputBox, cb_color, vector, SKINCOLOR_CLEARBUTTON_N)
+	ATTRIB(XonoticInputBox, cb_colorF, vector, SKINCOLOR_CLEARBUTTON_F)
+	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C)
+
 	ATTRIB(XonoticInputBox, cvarName, string, string_null)
 	METHOD(XonoticInputBox, loadCvars, void(entity))
 	METHOD(XonoticInputBox, saveCvars, void(entity))
+	ATTRIB(XonoticInputBox, sendCvars, float, 0)
 	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float))
 
 	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
@@ -65,15 +73,16 @@ void XonoticInputBox_setText(entity me, string new)
 }
 void XonoticInputBox_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
 }
 void XonoticInputBox_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	cvar_set(me.cvarName, me.text);
+	CheckSendCvars(me, me.cvarName);
 }
 float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {

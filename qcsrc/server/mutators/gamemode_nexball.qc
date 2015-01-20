@@ -22,6 +22,17 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
+#define ST_NEXBALL_GOALS 1
+#define SP_NEXBALL_GOALS 4
+#define SP_NEXBALL_FAULTS 5
+void nb_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, 0, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
 
 void LogNB(string mode, entity actor)
 {
@@ -44,7 +55,7 @@ void ball_restart(void)
 void nexball_setstatus(void)
 {
 	entity oldself;
-	self.items &~= IT_KEY1;
+	self.items &= ~IT_KEY1;
 	if(self.ballcarried)
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
@@ -85,7 +96,7 @@ void DropOwner(void)
 	DropBall(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle_y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &~= FL_ONGROUND;
+	ownr.flags &= ~FL_ONGROUND;
 }
 
 void GiveBall(entity plyr, entity ball)
@@ -94,7 +105,7 @@ void GiveBall(entity plyr, entity ball)
 
 	if((ownr = ball.owner))
 	{
-		ownr.effects &~= autocvar_g_nexball_basketball_effects_default;
+		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
 		ownr.ballcarried = world;
 		if(ownr.metertime)
 		{
@@ -107,7 +118,7 @@ void GiveBall(entity plyr, entity ball)
 	{
 		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
 	}
-	
+
 	//setattachment(ball, plyr, "");
 	setorigin(ball, plyr.origin + plyr.view_ofs);
 
@@ -120,7 +131,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.nb_dropper = plyr;
 
 	plyr.effects |= autocvar_g_nexball_basketball_effects_default;
-	ball.effects &~= autocvar_g_nexball_basketball_effects_default;
+	ball.effects &= ~autocvar_g_nexball_basketball_effects_default;
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
@@ -136,13 +147,13 @@ void GiveBall(entity plyr, entity ball)
 		ball.think = DropOwner;
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
-	
+
 	ownr = self;
-	self = plyr;	
-	WEPSET_COPY_EE(self.weaponentity, self);
+	self = plyr;
+	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
-	WEPSET_COPY_EW(self, WEP_PORTO);
-	weapon_action(WEP_PORTO, WR_RESETPLAYER);
+	self.weapons = WEPSET_PORTO;
+	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO;
 	W_SwitchWeapon(WEP_PORTO);
 	self = ownr;
@@ -151,13 +162,13 @@ void GiveBall(entity plyr, entity ball)
 void DropBall(entity ball, vector org, vector vel)
 {
 	ball.effects |= autocvar_g_nexball_basketball_effects_default;
-	ball.effects &~= EF_NOSHADOW;
-	ball.owner.effects &~= autocvar_g_nexball_basketball_effects_default;
+	ball.effects &= ~EF_NOSHADOW;
+	ball.owner.effects &= ~autocvar_g_nexball_basketball_effects_default;
 
 	setattachment(ball, world, "");
 	setorigin(ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &~= FL_ONGROUND;
+	ball.flags &= ~FL_ONGROUND;
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.nb_droptime = time;
@@ -182,7 +193,7 @@ void DropBall(entity ball, vector org, vector vel)
 void InitBall(void)
 {
 	if(gameover) return;
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 	self.movetype = MOVETYPE_BOUNCE;
 	if(self.classname == "nexball_basketball")
 		self.touch = basketball_touch;
@@ -194,7 +205,7 @@ void InitBall(void)
 	self.teamtime = 0;
 	self.pusher = world;
 	self.team = FALSE;
-	sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTN_NORM);
+	sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
 }
@@ -241,14 +252,14 @@ void football_touch(void)
 	{
 		if(time > self.lastground + 0.1)
 		{
-			sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.lastground = time;
 		}
 		if(vlen(self.velocity) && !self.cnt)
 			self.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if(other.classname != "player")
+	if (!IS_PLAYER(other))
 		return;
 	if(other.health < 1)
 		return;
@@ -288,7 +299,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && other.classname == "player" && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -297,7 +308,7 @@ void basketball_touch(void)
 	}
 	else if(other.solid == SOLID_BSP)
 	{
-		sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 		if(vlen(self.velocity) && !self.cnt)
 			self.nextthink = min(time + autocvar_g_nexball_delay_idle, self.teamtime);
 	}
@@ -327,7 +338,7 @@ void GoalTouch(void)
 	else
 		otherteam = 0;
 
-	if((isclient = ball.pusher.flags & FL_CLIENT))
+	if((isclient = IS_CLIENT(ball.pusher)))
 		pname = ball.pusher.netname;
 	else
 		pname = "Someone (?)";
@@ -363,7 +374,7 @@ void GoalTouch(void)
 		pscore = 1;
 	}
 
-	sound(ball, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NONE);
+	sound(ball, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NONE);
 
 	if(ball.team && pscore)
 	{
@@ -461,7 +472,7 @@ void nb_delayedinit(void)
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
-	ScoreRules_nexball(nb_teams);
+	nb_ScoreRules(nb_teams);
 }
 
 
@@ -471,15 +482,11 @@ void nb_delayedinit(void)
 
 void SpawnBall(void)
 {
-	if(!g_nexball)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_nexball) { remove(self); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
-	if(!self.model)
+	if(self.model == "")
 	{
 		self.model = "models/nexball/ball.md3";
 		self.scale = 1.3;
@@ -505,13 +512,13 @@ void SpawnBall(void)
 
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
-	else if(!self.noise)
+	else if(self.noise == "")
 		self.noise = "sound/nexball/bounce.wav";
 	//bounce sound placeholder (FIXME)
-	if(!self.noise1)
+	if(self.noise1 == "")
 		self.noise1 = "sound/nexball/drop.wav";
 	//ball drop sound placeholder (FIXME)
-	if(!self.noise2)
+	if(self.noise2 == "")
 		self.noise2 = "sound/nexball/steal.wav";
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
@@ -529,7 +536,7 @@ void spawnfunc_nexball_basketball(void)
 {
 	nexball_mode |= NBM_BASKETBALL;
 	self.classname = "nexball_basketball";
-	if not(balls & BALL_BASKET)
+	if (!(balls & BALL_BASKET))
 	{
 		/*
 		CVTOV(g_nexball_basketball_effects_default);
@@ -559,16 +566,30 @@ void spawnfunc_nexball_football(void)
 	SpawnBall();
 }
 
+float nb_Goal_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	if(SAME_TEAM(e, wp_owner)) { return FALSE; }
+
+	return TRUE;
+}
+
 void SpawnGoal(void)
 {
-	if(!g_nexball)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_nexball) { remove(self); return; }
+
 	EXACTTRIGGER_INIT;
+
+	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
+	{
+		WaypointSprite_SpawnFixed("goal", (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
+		self.sprite.customizeentityforclient = nb_Goal_Customize;
+	}
+
 	self.classname = "nexball_goal";
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "ctf/respawn.wav";
 	precache_sound(self.noise);
 	self.touch = GoalTouch;
@@ -598,7 +619,7 @@ void spawnfunc_nexball_pinkgoal(void)
 void spawnfunc_nexball_fault(void)
 {
 	self.team = GOAL_FAULT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
@@ -606,7 +627,7 @@ void spawnfunc_nexball_fault(void)
 void spawnfunc_nexball_out(void)
 {
 	self.team = GOAL_OUT;
-	if(!self.noise)
+	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
 	SpawnGoal();
 }
@@ -655,13 +676,13 @@ void W_Nexball_Think()
 	//dprint("W_Nexball_Think\n");
 	//vector new_dir = steerlib_arrive(self.enemy.origin, 2500);
 	vector new_dir = normalize(self.enemy.origin + '0 0 50' - self.origin);
-	vector old_dir = normalize(self.velocity);	 
-	float _speed = vlen(self.velocity);	
+	vector old_dir = normalize(self.velocity);
+	float _speed = vlen(self.velocity);
 	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
 	//vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
-	
+
 	self.velocity = new_vel;
-	
+
 	self.nextthink = time;
 }
 
@@ -671,19 +692,19 @@ void W_Nexball_Touch(void)
 	attacker = self.owner;
 	//self.think = func_null;
 	//self.enemy = world;
-	
+
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && (attacker.classname == "player"))
+		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
-			other.flags &~= FL_ONGROUND;
+			other.flags &= ~FL_ONGROUND;
 			if(!attacker.ballcarried)
 			{
 				LogNB("stole", attacker);
-				sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTN_NORM);
+				sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
 
-				if(attacker.team == other.team && time > attacker.teamkill_complain)
+				if(SAME_TEAM(attacker, other) && time > attacker.teamkill_complain)
 				{
 					attacker.teamkill_complain = time + 5;
 					attacker.teamkill_soundtime = time + 0.4;
@@ -720,14 +741,14 @@ void W_Nexball_Attack(float t)
 		mi = autocvar_g_nexball_basketball_meter_minpower;
 		ma = max(mi, autocvar_g_nexball_basketball_meter_maxpower); // avoid confusion
 		//One triangle wave period with 1 as max
-		mul = 2 * mod(t, g_nexball_meter_period) / g_nexball_meter_period;
+		mul = 2 * (t % g_nexball_meter_period) / g_nexball_meter_period;
 		if(mul > 1)
 			mul = 2 - mul;
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
-	
+
 	DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, FALSE));
-	
+
 
 	//TODO: use the speed_up cvar too ??
 }
@@ -743,10 +764,10 @@ void W_Nexball_Attack2(void)
 		_ball.nextthink = time;
 		return;
 	}
-	
+
 	if(!autocvar_g_nexball_tackling)
 		return;
-	
+
 	entity missile;
 	if(!(balls & BALL_BASKET))
 		return;
@@ -760,11 +781,11 @@ void W_Nexball_Attack2(void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setmodel(missile, "models/elaser.mdl");  // precision set below
+	//setmodel(missile, "models/elaser.mdl");  // precision set below
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
-	W_SetupProjectileVelocity(missile, autocvar_g_balance_nexball_secondary_speed, 0);
+	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
 	missile.think = SUB_Remove;
@@ -772,32 +793,34 @@ void W_Nexball_Attack2(void)
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
 	missile.flags = FL_PROJECTILE;
+
+	CSQCProjectile(missile, TRUE, PROJECTILE_ELECTRO, TRUE);
 }
 
 float ball_customize()
 {
 	if(!self.owner)
 	{
-		self.effects &~= EF_FLAME;
+		self.effects &= ~EF_FLAME;
 		self.scale = 1;
 		self.customizeentityforclient = func_null;
 		return TRUE;
-	}		
-	
+	}
+
 	if(other == self.owner)
 	{
 		self.scale = autocvar_g_nexball_viewmodel_scale;
 		if(self.enemy)
 			self.effects |= EF_FLAME;
 		else
-			self.effects &~= EF_FLAME;
-	}	
+			self.effects &= ~EF_FLAME;
+	}
 	else
 	{
-		self.effects &~= EF_FLAME;
+		self.effects &= ~EF_FLAME;
 		self.scale = 1;
 	}
-		
+
 	return TRUE;
 }
 
@@ -833,7 +856,7 @@ float w_nexball_weapon(float req)
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_PRECACHE)
+	else if(req == WR_INIT)
 	{
 		precache_model("models/weapons/g_porto.md3");
 		precache_model("models/weapons/v_porto.md3");
@@ -845,7 +868,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
@@ -859,34 +882,22 @@ MUTATOR_HOOKFUNCTION(nexball_BallDrop)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsString)
-{
-	ret_string = strcat(ret_string, ":NB");
-	return 0;
-}
-
-MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsPrettyString)
-{
-	ret_string = strcat(ret_string, ", NexBall");
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 {
 	makevectors(self.v_angle);
 	if(nexball_mode & NBM_BASKETBALL)
-	{		
+	{
 		if(self.ballcarried)
 		{
 			// 'view ball'
-			self.ballcarried.velocity = self.velocity;			
+			self.ballcarried.velocity = self.velocity;
 			self.ballcarried.customizeentityforclient = ball_customize;
-			
-			setorigin(self.ballcarried, self.origin + self.view_ofs + 
-					  v_forward * autocvar_g_nexball_viewmodel_offset_x + 
-					  v_right * autocvar_g_nexball_viewmodel_offset_y + 
-					  v_up * autocvar_g_nexball_viewmodel_offset_z);	
-					  
+
+			setorigin(self.ballcarried, self.origin + self.view_ofs +
+					  v_forward * autocvar_g_nexball_viewmodel_offset_x +
+					  v_right * autocvar_g_nexball_viewmodel_offset_y +
+					  v_up * autocvar_g_nexball_viewmodel_offset_z);
+
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)
 			{
@@ -895,51 +906,88 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 					//centerprint(self, sprintf("Lost lock on %s", self.ballcarried.enemy.netname));
 					self.ballcarried.enemy = world;
 				}
-					
-				
+
+
 				//tracebox(self.origin + self.view_ofs, '-2 -2 -2', '2 2 2', self.origin + self.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
 				crosshair_trace(self);
-				if( trace_ent && 
-					trace_ent.flags & FL_CLIENT &&
+				if( trace_ent &&
+					IS_CLIENT(trace_ent) &&
 					trace_ent.deadflag == DEAD_NO &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
 				{
-					
+
 					//if(self.ballcarried.enemy != trace_ent)
 					//	centerprint(self, sprintf("Locked to %s", trace_ent.netname));
 					self.ballcarried.enemy = trace_ent;
 					self.ballcarried.wait = time + autocvar_g_nexball_safepass_holdtime;
-					
-					
+
+
 				}
 			}
 		}
 		else
-		{			
-			if(!WEPSET_EMPTY_E(self.weaponentity))
+		{
+			if(self.weaponentity.weapons)
 			{
-				WEPSET_COPY_EE(self, self.weaponentity);
-				weapon_action(WEP_PORTO, WR_RESETPLAYER);
+				self.weapons = self.weaponentity.weapons;
+				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
-				
-		WEPSET_CLEAR_E(self.weaponentity);
+
+		self.weaponentity.weapons = '0 0 0';
 			}
 		}
-		
+
 	}
+
+	nexball_setstatus();
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
-{	
-	WEPSET_CLEAR_E(self.weaponentity);
-	
+{
+	self.weaponentity.weapons = '0 0 0';
+
 	if(nexball_mode & NBM_BASKETBALL)
-		WEPSET_OR_EW(self, WEP_PORTO);
+		self.weapons |= WEPSET_PORTO;
 	else
-		WEPSET_CLEAR_E(self);
+		self.weapons = '0 0 0';
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
+{
+	if(self.ballcarried)
+	{
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
+		self.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
+	}
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
+{
+	start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
+{
+	if(self.weapon == WEP_MORTAR)
+		return TRUE;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_FilterItem)
+{
+	if(self.classname == "droppedweapon")
+	if(self.weapon == WEP_MORTAR)
+		return TRUE;
 
 	return FALSE;
 }
@@ -949,10 +997,12 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, nexball_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

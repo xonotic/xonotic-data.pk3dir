@@ -56,7 +56,7 @@ float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 			{
 				for(ff = f.prevSibling; ff; ff = ff.prevSibling)
 				{
-					if not(ff.focusable)
+					if (!ff.focusable)
 						continue;
 					me.setFocus(me, ff);
 					return 1;
@@ -66,7 +66,7 @@ float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 			{
 				for(ff = me.lastChild; ff; ff = ff.prevSibling)
 				{
-					if not(ff.focusable)
+					if (!ff.focusable)
 						continue;
 					me.setFocus(me, ff);
 					return 1;
@@ -80,7 +80,7 @@ float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 			{
 				for(ff = f.nextSibling; ff; ff = ff.nextSibling)
 				{
-					if not(ff.focusable)
+					if (!ff.focusable)
 						continue;
 					me.setFocus(me, ff);
 					return 1;
@@ -90,7 +90,7 @@ float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 			{
 				for(ff = me.firstChild; ff; ff = ff.nextSibling)
 				{
-					if not(ff.focusable)
+					if (!ff.focusable)
 						continue;
 					me.setFocus(me, ff);
 					return 1;
@@ -108,7 +108,7 @@ float InputContainer__changeFocusXY(entity me, vector pos)
 	e = me.mouseFocusedChild;
 	ne = me.itemFromPoint(me, pos);
 	if(ne)
-		if not(ne.focusable)
+		if (!ne.focusable)
 			ne = NULL;
 	me.mouseFocusedChild = ne;
 	if(ne)
@@ -134,6 +134,8 @@ float InputContainer_mouseDrag(entity me, vector pos)
 }
 float InputContainer_mouseMove(entity me, vector pos)
 {
+	if(me.mouseFocusedChild != me.focusedChild) // if the keyboard moved the focus away
+		me.mouseFocusedChild = NULL; // force focusing
 	if(me._changeFocusXY(me, pos))
 		if(SUPER(InputContainer).mouseMove(me, pos))
 			return 1;

@@ -21,7 +21,7 @@ float CampaignBailout(string s)
 	return 1;
 }
 
-string cvar_campaignwrapper_list; // string of format ; var value; var value; var value; 
+string cvar_campaignwrapper_list; // string of format ; var value; var value; var value;
 string cvar_string_campaignwrapper(string theCvar)
 {
 	float p, q;
@@ -188,7 +188,7 @@ void CampaignPreIntermission()
 	head = findchain(classname, "player");
 	while(head)
 	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(head))
 		{
 			if(head.winning)
 				won = won + 1;

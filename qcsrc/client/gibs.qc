@@ -73,7 +73,7 @@ void Gib_Touch()
 	}
 
 	if(!self.silent)
-		sound(self, CH_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTN_NORM);
+		sound(self, CH_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
 	Gib_Delete();
@@ -176,7 +176,7 @@ void Ent_GibSplash(float isNew)
 	{
 		if(cl_gentle_gibs == 2)
 			gentle_prefix = "";
-		else if(cl_gentle_gibs == 3) 
+		else if(cl_gentle_gibs == 3)
 			gentle_prefix = "happy_";
 	}
 	else if(autocvar_cl_particlegibs)
@@ -185,7 +185,7 @@ void Ent_GibSplash(float isNew)
 		gentle_prefix = "particlegibs_";
 	}
 
-	if not(cl_gentle_gibs || autocvar_cl_gentle)
+	if (!(cl_gentle_gibs || autocvar_cl_gentle))
 		amount *= 1 - autocvar_cl_nogibs;
 
 	if(autocvar_ekg)
@@ -205,7 +205,7 @@ void Ent_GibSplash(float isNew)
 	{
 		case 0x01:
 			if(!issilent)
-				sound (self, CH_PAIN, "misc/gib.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_PAIN, "misc/gib.wav", VOL_BASE, ATTEN_NORM);
 
 			if(prandom() < amount)
 				TossGib ("models/gibs/eye.md3", org, org, vel, prandomvec() * 150, specnum, 0, issilent);

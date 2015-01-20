@@ -29,7 +29,7 @@ void turret_plasma_minsta_attack (void)
 {
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
-        
+
 	FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
 					   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
@@ -64,10 +64,10 @@ void turret_plasma_minsta_attack (void)
 }
 
 void turret_plasma_attack()
-{ 
-    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
+{
+    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
     missile.missile_flags = MIF_SPLASH;
-    
+
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
@@ -75,8 +75,8 @@ void turret_plasma_attack()
 
 void turret_plasma_dual_attack()
 {
-    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE); 
-    missile.missile_flags = MIF_SPLASH;   
+    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
+    missile.missile_flags = MIF_SPLASH;
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     self.tur_head.frame += 1;
 }
@@ -102,7 +102,7 @@ void turret_plasma_std_init()
     self.firecheck_flags |= TFL_FIRECHECK_AFF;
 
     // Our fireing routine
-    if(g_minstagib)
+    if(g_instagib)
         self.turret_firefunc  = turret_plasma_minsta_attack;
     else
         self.turret_firefunc  = turret_plasma_attack;

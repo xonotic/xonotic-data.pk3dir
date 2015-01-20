@@ -16,10 +16,13 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
+      realconwidth, realconheight;
+
 void m_sync()
 {
 	updateCompression();
-	updateConwidths();
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw.
 
 	loadAllCvars(main);
 }
@@ -50,10 +53,8 @@ void m_init()
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
 
-	check_unacceptable_compiler_bugs();
-
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
+	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -64,7 +65,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
@@ -74,12 +75,13 @@ void m_init()
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
+	RegisterSLCategories();
+
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
-	initConwidths();
 
 	if(!restarting)
 	{
@@ -89,21 +91,30 @@ void m_init()
 			m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+
 }
 
-float MENU_ASPECT = 1.25; // 1280x1024
-float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
+const float MENU_ASPECT = 1.25; // 1280x1024
+
 void draw_reset_cropped()
 {
-	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
+	draw_reset(conwidth, conheight, 0.5 * (realconwidth - conwidth), 0.5 * (realconheight - conheight));
 }
 void draw_reset_full()
 {
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
-void UpdateConWidthHeight()
+
+void UpdateConWidthHeight(float w, float h, float p)
 {
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
+	{
+		if (updateConwidths(w, h, p))
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		vidwidth_s = w;
+		vidheight_s = h;
+		vidpixelheight_s = p;
+	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
@@ -120,18 +131,6 @@ void UpdateConWidthHeight()
 		conwidth = realconwidth;
 		conheight = realconwidth / MENU_ASPECT;
 	}
-	screenconwidth = conwidth;
-	screenconheight = conheight;
-	if(conwidth < MENU_MINHEIGHT * MENU_ASPECT)
-	{
-		conheight *= MENU_MINHEIGHT * MENU_ASPECT / conwidth;
-		conwidth = MENU_MINHEIGHT * MENU_ASPECT;
-	}
-	if(conheight < MENU_MINHEIGHT)
-	{
-		conwidth *= MENU_MINHEIGHT / conheight;
-		conheight = MENU_MINHEIGHT;
-	}
 	if(main)
 	{
 		if(conwidth_s != conwidth || conheight_s != conheight)
@@ -139,6 +138,10 @@ void UpdateConWidthHeight()
 			draw_reset_cropped();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
+	}
+	else
+	{
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
 	}
 }
 
@@ -148,8 +151,6 @@ void m_init_delayed()
 	float fh, glob, n, i;
 	string s;
 
-	conwidth = conheight = -1;
-	UpdateConWidthHeight();
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -257,6 +258,19 @@ void m_keydown(float key, float ascii)
 		return;
 	if(!Menu_Active)
 		return;
+
+	if(menuMouseMode)
+	if(key >= K_MOUSE1 && key <= K_MOUSE3)
+	{
+		// detect a click outside of the game window
+		vector p = getmousepos();
+		if(p_x < 0 || p_x > realconwidth || p_y < 0 || p_y > realconheight)
+		{
+			++mouseButtonsPressed;
+			return;
+		}
+	}
+
 	if(keyGrabber)
 	{
 		entity e;
@@ -289,11 +303,11 @@ void m_keydown(float key, float ascii)
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
 }
 
-float SCALEMODE_CROP = 0;
-float SCALEMODE_LETTERBOX = 1;
-float SCALEMODE_WIDTH = 2;
-float SCALEMODE_HEIGHT = 3;
-float SCALEMODE_STRETCH = 4;
+const float SCALEMODE_CROP = 0;
+const float SCALEMODE_LETTERBOX = 1;
+const float SCALEMODE_WIDTH = 2;
+const float SCALEMODE_HEIGHT = 3;
+const float SCALEMODE_STRETCH = 4;
 void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 {
 	vector sz, org, isz, isz_w, isz_h;
@@ -428,7 +442,7 @@ float m_allocatetooltipbox(vector pos)
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// bottom center
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
@@ -448,12 +462,12 @@ float m_allocatetooltipbox(vector pos)
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// top right
 	v_x = pos_x + avoidplus_x;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	return FALSE;
 }
 entity m_findtooltipitem(entity root, vector pos)
@@ -651,14 +665,14 @@ void m_tooltip(vector pos)
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				draw_Text(p, s, fontsize, '1 1 1', SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
+				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
 				p_y += fontsize_y;
 			}
 		}
 	}
 }
 
-void m_draw()
+void m_draw(float width, float height)
 {
 	float t;
 	float realFrametime;
@@ -672,8 +686,7 @@ void m_draw()
 	if (anim)
 		anim.tickAll(anim);
 
-	if(main)
-		UpdateConWidthHeight();
+	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
 	if(!menuInitialized)
 	{
@@ -687,7 +700,7 @@ void m_draw()
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
@@ -784,7 +797,12 @@ void m_draw()
 
 	draw_alpha *= menuAlpha;
 
-	if(menuMouseMode)
+	if(!Menu_Active)
+	{
+		// do not update mouse position
+		// it prevents mouse jumping to '0 0 0' when menu is fading out
+	}
+	else if(menuMouseMode)
 	{
 		vector newMouse;
 		newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);
@@ -973,7 +991,8 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-		if(e)
+
+		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();
 			m_activate_window(e);

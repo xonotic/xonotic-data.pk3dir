@@ -69,7 +69,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 				if ( player.team == self.team )
 				{
-					if ( clienttype(player) != CLIENTTYPE_REAL || discard )
+					if ( !IS_REAL_CLIENT(player) || discard )
 						continue;
 
 					if( d > friend_distance)
@@ -85,8 +85,8 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if( head.armorvalue && player.armorvalue > self.armorvalue)
 						continue;
 
-					if( !WEPSET_EMPTY_E(head) )
-					if( !WEPSET_CONTAINS_ALL_EE(player, head) )
+					if( head.weapons )
+					if( head.weapons & ~player.weapons )
 						continue;
 
 					if (head.ammo_shells && player.ammo_shells > self.ammo_shells)
@@ -98,7 +98,10 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if (head.ammo_rockets && player.ammo_rockets > self.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && player.ammo_cells > self.ammo_cells )
+					if (head.ammo_cells && player.ammo_cells > self.ammo_cells)
+						continue;
+
+					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
 						continue;
 
 					discard = FALSE;
@@ -175,11 +178,11 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 				continue;
 			*/
 
-			if(head.flags & FL_INWATER || head.flags & FL_PARTIALGROUND)
+			if((head.flags & FL_INWATER) || (head.flags & FL_PARTIALGROUND))
 				continue;
 
 			// not falling
-			if(head.flags & FL_ONGROUND == 0)
+			if((head.flags & FL_ONGROUND) == 0)
 			{
 				traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');
@@ -221,64 +224,21 @@ void havocbot_role_dm()
 	}
 }
 
-//Race:
-//go to next checkpoint, and annoy enemies
-.float race_checkpoint;
-void havocbot_role_race()
-{
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	entity e;
-	if (self.bot_strategytime < time)
-	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		/*
-		havocbot_goalrating_items(100, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(500, self.origin, 20000);
-		*/
-
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
-		{
-			if(e.cnt == self.race_checkpoint)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-			else if(self.race_checkpoint == -1)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-		}
-
-		navigation_goalrating_end();
-	}
-}
-
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
-}
-
-void havocbot_chooserole_race()
-{
-	self.havocbot_role = havocbot_role_race;
 }
 
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
-	else if (g_assault)
-		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }

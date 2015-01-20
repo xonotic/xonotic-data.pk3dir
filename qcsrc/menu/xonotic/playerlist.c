@@ -108,8 +108,8 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 	else if(t == 4)
 		rgb = colormapPaletteColor(9, 0);
 	else
-		rgb = '1 1 1';
-	
+		rgb = SKINCOLOR_TEXT;
+
 	s = me.getPlayerList(me, i, PLAYERPARM_NAME);
 	score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
 
@@ -123,15 +123,15 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 			score = substring(score, 0, t);
 		if((t = strstrofs(score, ",", 0)) >= 0)
 			score = substring(score, 0, t);
-			
+
 		if(stof(score) == -666)
 			score = _("spectator");
 	}
 
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 1, me.realFontSize);
-	score = draw_TextShortenToWidth(score, me.columnScoreSize, 0, me.realFontSize);
-
 	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 1, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', 1, 1);
+
+	score = draw_TextShortenToWidth(score, me.columnScoreSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin2 * eY + (me.columnScoreOrigin + 1.00 * (me.columnScoreSize - draw_TextWidth(score, 1, me.realFontSize))) * eX, score, me.realFontSize, rgb, 1, 0);
 }
 

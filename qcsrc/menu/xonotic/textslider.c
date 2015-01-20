@@ -17,6 +17,7 @@ CLASS(XonoticTextSlider) EXTENDS(TextSlider)
 	ATTRIB(XonoticTextSlider, cvarName, string, string_null)
 	METHOD(XonoticTextSlider, loadCvars, void(entity))
 	METHOD(XonoticTextSlider, saveCvars, void(entity))
+	ATTRIB(XonoticTextSlider, sendCvars, float, 0)
 
 	ATTRIB(XonoticTextSlider, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticTextSlider, disabledAlpha, float, SKINALPHA_DISABLED)
@@ -52,7 +53,7 @@ void XonoticTextSlider_setValue(entity me, float val)
 }
 void XonoticTextSlider_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	var float n = tokenize_console(me.cvarName);
@@ -74,7 +75,7 @@ void XonoticTextSlider_loadCvars(entity me)
 }
 void XonoticTextSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.value >= 0 && me.value < me.nValues)
@@ -84,6 +85,7 @@ void XonoticTextSlider_saveCvars(entity me)
 		{
 			// this is a special case to allow spaces in the identifiers
 			cvar_set(argv(0), me.getIdentifier(me));
+			CheckSendCvars(me, argv(0));
 		}
 		else
 		{
@@ -92,12 +94,18 @@ void XonoticTextSlider_saveCvars(entity me)
 			if(m == n + 1)
 			{
 				for(i = 0; i < n; ++i)
+				{
 					cvar_set(argv(i), argv(n));
+					CheckSendCvars(me, argv(i));
+				}
 			}
 			else if(m == n * 2)
 			{
 				for(i = 0; i < n; ++i)
+				{
 					cvar_set(argv(i), argv(i + n));
+					CheckSendCvars(me, argv(i));
+				}
 			}
 			else
 				error("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.cvarName);
