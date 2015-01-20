@@ -3,34 +3,29 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Pendulla <djdjoric@gmail.com>, 2014
-# Pendulla <djdjoric@gmail.com>, 2014
-# Ristovski <rafael.ristovski@gmail.com>, 2014
-# Ristovski <rafael.ristovski@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-13 19:41+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
-"Language-Team: Serbian (http://www.transifex.com/projects/p/xonotic/language/"
-"sr/)\n"
-"Language: sr\n"
+"PO-Revision-Date: 2013-09-12 16:53+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: English (Australia) (http://www.transifex.com/projects/p/"
+"xonotic/language/en_AU/)\n"
+"Language: en_AU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: qcsrc/client/Main.qc:21
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr "GREŠKA - MENI JE VIDLJIV ALI NIJEDAN MENI NIJE DEFINISAN!"
+msgstr ""
 
 #: qcsrc/client/Main.qc:1295
 #, c-format
 msgid "%s (not bound)"
-msgstr "%s (nije obavezno)"
+msgstr ""
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
@@ -43,251 +38,250 @@ msgstr ""
 #: qcsrc/client/hud.qc:186
 #, c-format
 msgid " (-%dL)"
-msgstr "(-%dL)"
+msgstr ""
 
 #: qcsrc/client/hud.qc:191
 #, c-format
 msgid " (+%dL)"
-msgstr "(+%dL)"
+msgstr ""
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
-msgstr "Startna linija"
+msgstr ""
 
 #: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
-msgstr "Cilj"
+msgstr ""
 
 #: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
-msgstr "srednje %d"
+msgstr ""
 
 #: qcsrc/client/hud.qc:805
 msgid "Out of ammo"
-msgstr "Municija potrošena"
+msgstr ""
 
 #: qcsrc/client/hud.qc:809
 msgid "Don't have"
-msgstr "Nema"
+msgstr ""
 
 #: qcsrc/client/hud.qc:813
 msgid "Unavailable"
-msgstr "Nedostupno"
+msgstr ""
 
 #: qcsrc/client/hud.qc:1751 qcsrc/client/hud.qc:1752 qcsrc/client/hud.qc:2109
 #, c-format
 msgid "Player %d"
-msgstr "Igrač %d"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
-msgstr "^1Prosek 1 (+15.42)"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr "^1KAZNA: %.1f (%s)"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr "^2KAZNA: %.1f (%s)"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr "^1Potreban odgovor pre ulaska u hud podešavanje\n"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "^2Ime ^7umesto of \"^1Anonymous player^7\" u statistici"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
-msgstr "Glasanje je započeto za:"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
-msgstr "Dozvoli serverima da čuvaju i prikazuju tvoje ime?"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
-msgstr "^1Podešavanje HUD"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2628
 #, c-format
 msgid "Yes (%s): %d"
-msgstr "Da (%s): %d"
+msgstr ""
 
 #: qcsrc/client/hud.qc:2630
 #, c-format
 msgid "No (%s): %d"
-msgstr "Ne (%s): %d"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3194 qcsrc/client/hud.qc:3196
 msgid "Personal best"
-msgstr "Lični rekord"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3209 qcsrc/client/hud.qc:3212 qcsrc/client/hud.qc:3214
 msgid "Server best"
-msgstr "Rekord servera"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3576
 msgid "^3Player^7: This is the chat area."
-msgstr "^3Igrač^7: Ovo je mesto za ćaskanje."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3641
 #, c-format
 msgid "FPS: %.*f"
-msgstr "FPS: %.*f"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3705
 msgid "^1Observing"
-msgstr "^1Posmatranje"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3707
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Praćenje: ^7%s"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3711
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Pritisni ^3%s^1 da pratiš igrača"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3713
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr ""
-"^1Pritisni ^3%s^1 ili ^3%s^1 da posmatraš sledećeg ili prethodnog igrača"
 
 #: qcsrc/client/hud.qc:3717
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1Koristi ^3%s^1 ili ^3%s^1 za promenu brzine"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3719
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
-msgstr "^1Pritisni ^3%s^1 da slobodno posmatraš"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr "^1Pritisni ^3%s^1 za informacije o vrsti igre"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3730
 msgid "^1Match has already begun"
-msgstr "^1Igra je već počela"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3732
 msgid "^1You have no more lives left"
-msgstr "^1Nemaš više života"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3734 qcsrc/client/hud.qc:3737
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Pritisni ^3%s^1 da se pridružiš"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3745
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr "^1Igra počinje za ^3%d^1 sekundi"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3752
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2Trenutno u ^1zagrevnom^2 fazi!"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sPritisni ^3%s%s da završiš zagrevanje"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3769
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr "%sPritisni ^3%s%s kada si spreman/a"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr "^2Čekanje ostalih da se spreme i završe zagrevanje..."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3776
 msgid "^2Waiting for others to ready up..."
-msgstr "^2Čekanje ostalih da se spreme..."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3782
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr "^2Pritisni ^3%s^2 da završiš zagrevanje"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3803
 msgid "Teamnumbers are unbalanced!"
-msgstr "Timovi su neujednačeni!"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3808
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr "Pritisni ^3%s%s za podešavanje"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3816
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7Pritisni ^3ESC ^7da se pojave opcije za HUD."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3818
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr "^3Dupli klik ^7a na panel opcije u vezi panela."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3820
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr "^3CTRL ^7za onemogućavanje testiranja kolizije, ^3SHIFT ^7i"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3822
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr "^3ALT ^7+ ^3ARROW KEYS ^7za fina podešavanja."
+msgstr ""
 
 #: qcsrc/client/hud.qc:3869
 msgid " qu/s"
-msgstr "qu/s"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3873
 msgid " m/s"
-msgstr "m/s"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3877
 msgid " km/h"
-msgstr "km/h"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3881
 msgid " mph"
-msgstr "mph"
+msgstr ""
 
 #: qcsrc/client/hud.qc:3885
 msgid " knots"
-msgstr "knots"
+msgstr ""
 
 #: qcsrc/client/hud_config.qc:197
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr "^2Uspešno izvezeno u %s! (Beleška: Sačuvano u data/data/)\n"
+msgstr ""
 
 #: qcsrc/client/hud_config.qc:201
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr "^1Nemoguće upisivanje u %s\n"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:37
 msgid " (1 vote)"
-msgstr "(1glas)"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:39
 #, c-format
 msgid " (%d votes)"
-msgstr "(%d glasova)"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:226
 msgid "Don't care"
-msgstr "Svejedno"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Decide the gametype"
@@ -295,29 +289,29 @@ msgstr ""
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Vote for a map"
-msgstr "Glasaj za mapu"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:331
 #, c-format
 msgid "%d seconds left"
-msgstr "%d sekundi preostalo"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:415
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr "mv_mapdownload: ^3Nije predviđeno samostalno korišćenje komande!\n"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:425
 msgid "^1Error:^7 Couldn't find pak index.\n"
-msgstr "^1Greška:^7 Nije pronađen pak indeks.\n"
+msgstr ""
 
 #: qcsrc/client/mapvoting.qc:434
 msgid "Requesting preview...\n"
-msgstr "Zahtevanje pregleda...\n"
+msgstr ""
 
 #: qcsrc/client/miscfunctions.qc:101
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr "Pokušavanje odstranjivanja tima koji nije u listi!"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:19
 msgid "SCO^bckills"
@@ -459,36 +453,32 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
-"Možeš modifikovati tablu rezultata koristeći ^2scoreboard_columns_set "
-"komandu.\n"
 
 #: qcsrc/client/scoreboard.qc:238
 msgid "^3|---------------------------------------------------------------|\n"
-msgstr "^3|---------------------------------------------------------------|\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:239
 msgid "Usage:\n"
-msgstr "Korišćenje:\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^2scoreboard_columns_set default\n"
-msgstr "^2scoreboard_columns_set default\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:241
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
-msgstr "Sledeća imena polja su prepoznata (velika i mala slova dozvoljena):\n"
+msgstr ""
 
 #: qcsrc/client/scoreboard.qc:243
 msgid ""
 "You can use a ^3|^7 to start the right-aligned fields.\n"
 "\n"
 msgstr ""
-"Možeš koristiti ^3|^7 da pokreneš polja poravnana udesno.\n"
-"\n"
 
 #: qcsrc/client/scoreboard.qc:245
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
@@ -797,11 +787,11 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:244
 msgid "Help me!"
-msgstr "Pomozi mi!"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:245
 msgid "Here"
-msgstr "Ovde"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:246
 msgid "Dropped key"
@@ -815,7 +805,7 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:248
 msgid "Run here"
-msgstr "Istrcaj ovde"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:253
 msgid "Red base"
@@ -874,7 +864,7 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:281 qcsrc/common/buffs.qh:38
 msgid "Speed"
-msgstr "Brzina"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:282
 msgid "Strength"
@@ -902,7 +892,7 @@ msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:288
 msgid "Vehicle"
-msgstr "Vozila"
+msgstr ""
 
 #: qcsrc/client/waypointsprites.qc:562
 #, c-format
@@ -1190,7 +1180,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race"
-msgstr "Trka"
+msgstr ""
 
 #: qcsrc/common/mapinfo.qh:46
 msgid "Race against other players to the finish line"
@@ -1288,7 +1278,7 @@ msgstr ""
 
 #: qcsrc/common/mapinfo.qh:82
 msgid "Invasion"
-msgstr "Invazija"
+msgstr ""
 
 #: qcsrc/common/mapinfo.qh:82
 msgid "Survive against waves of monsters"
@@ -1307,7 +1297,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/spider.qc:9
 #: qcsrc/menu/xonotic/dialog_monstertools.c:22
 msgid "Spider"
-msgstr "Pauk"
+msgstr ""
 
 #: qcsrc/common/monsters/monster/wyvern.qc:9
 #: qcsrc/menu/xonotic/dialog_monstertools.c:25
@@ -1317,7 +1307,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster/zombie.qc:9
 #: qcsrc/menu/xonotic/dialog_monstertools.c:21
 msgid "Zombie"
-msgstr "Zombi"
+msgstr ""
 
 #: qcsrc/common/net_notice.qc:89
 msgid "^1Server notices:"
@@ -3481,7 +3471,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/w_hook.qc:15
 msgid "Grappling Hook"
-msgstr "Kuka"
+msgstr ""
 
 #: qcsrc/common/weapons/w_machinegun.qc:15
 msgid "Machine Gun"
@@ -3509,7 +3499,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/w_seeker.qc:15
 msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgstr ""
 
 #: qcsrc/common/weapons/w_shockwave.qc:15
 msgid "Shockwave"
@@ -3522,7 +3512,7 @@ msgstr ""
 #: qcsrc/common/weapons/w_tuba.qc:16
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
+msgstr ""
 
 #: qcsrc/common/weapons/w_vaporizer.qc:15
 msgid "Vaporizer"
@@ -3608,7 +3598,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr "Dobrodošli"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:46
 msgid ""
@@ -3620,7 +3610,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_firstrun.c:52
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:39
 msgid "Name:"
-msgstr "Ime:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:74
 msgid "Text language:"
@@ -3669,7 +3659,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:41
 msgid "Left"
-msgstr "Levo"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:39
@@ -3678,7 +3668,7 @@ msgstr "Levo"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:42
 msgid "Right"
-msgstr "Desno"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_buffs.c:4
 msgid "Buffs Panel"
@@ -3707,7 +3697,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:38
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.c:62
 msgid "Center"
-msgstr "Centar"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:42
 msgid "Font scale:"
@@ -3872,7 +3862,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:45
 msgid "Speed:"
-msgstr "Brzina:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:46
 msgid "Include vertical speed"
@@ -3904,7 +3894,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:65
 msgid "Show"
-msgstr "Prikaži"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:68
 msgid "Top speed"
@@ -4117,7 +4107,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:51
 msgid "Number"
-msgstr "Broj"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:52
 msgid "Bind"
@@ -4162,7 +4152,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:31
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:78 qcsrc/menu/xonotic/util.qc:726
 msgid "Color:"
-msgstr "Boja:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:36 qcsrc/menu/xonotic/util.qc:734
 msgid "Border size:"
@@ -5955,7 +5945,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:56
 #: qcsrc/menu/xonotic/serverlist.c:928
 msgid "Players"
-msgstr "Igrači"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:58
 msgid "Force player models to mine"
@@ -6650,7 +6640,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:99
 msgid "Contrast:"
-msgstr "Kontrast:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:102
 msgid "Gamma:"
@@ -6670,7 +6660,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:121
 msgid "Intensity:"
-msgstr "Intenzitet:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:125
 msgid "Wait for GPU to finish each frame"
@@ -6694,7 +6684,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr "Igra jednog igrača"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:116
 msgid "Instant action! (random map with bots)"
@@ -6726,7 +6716,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
-msgstr "Pobednik"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:5
 msgid "Team Selection"
@@ -6738,11 +6728,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:46
 msgid "red"
-msgstr "crvena"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:47
 msgid "blue"
-msgstr "plava"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:48
 msgid "yellow"
@@ -6754,7 +6744,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:52
 msgid "spectate"
-msgstr "posmatraj"
+msgstr ""
 
 #: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
@@ -6786,7 +6776,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.c:118 qcsrc/menu/xonotic/playerlist.c:128
 msgid "spectator"
-msgstr "posmatrač"
+msgstr ""
 
 #: qcsrc/menu/xonotic/playermodel.c:187
 msgid "<no model found>"
@@ -6834,7 +6824,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:924
 msgid "Ping"
-msgstr "Ping"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:925
 msgid "Host name"
@@ -6842,11 +6832,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:926
 msgid "Map"
-msgstr "Mapa"
+msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:927
 msgid "Type"
-msgstr "Tip"
+msgstr ""
 
 #: qcsrc/menu/xonotic/skinlist.c:105
 msgid "<TITLE>"
@@ -6901,7 +6891,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/slider_resolution.c:116
 #, c-format
 msgid "%dx%d (%d:%d)"
-msgstr "%dx%d (%d:%d)"
+msgstr ""
 
 #: qcsrc/menu/xonotic/slider_resolution.c:119
 #, c-format
@@ -7043,15 +7033,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:731
 msgid "Use default"
-msgstr "Koristi fabrička podešavanja"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:751
 msgid "Team Color:"
-msgstr "Boja tima:"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qh:43
 msgid "Enable panel"
-msgstr "Omogući panel"
+msgstr ""
 
 #: qcsrc/menu/xonotic/weaponslist.c:102
 #, c-format

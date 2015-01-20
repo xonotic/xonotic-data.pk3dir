@@ -1700,8 +1700,8 @@ void CSQC_UpdateView(float w, float h)
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
 	UpdateDamage();
-	UpdateHitsound();
 	UpdateCrosshair();
+	UpdateHitsound();
 
 	if(NextFrameCommand)
 	{

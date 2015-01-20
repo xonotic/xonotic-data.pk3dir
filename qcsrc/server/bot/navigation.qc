@@ -430,7 +430,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 	if (autocvar_g_waypointeditor_auto)
 	{
 		entity wp2 = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, wp);
-		if (!wp2)
+		if (wp && !wp2)
 			wp.wpflags |= WAYPOINTFLAG_PROTECTED;
 	}
 	return wp;

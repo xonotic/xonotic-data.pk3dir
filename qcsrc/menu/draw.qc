@@ -315,7 +315,7 @@ float draw_CondensedFontFactor(string theText, float ICanHasKallerz, vector Size
 		//dprintf("NOTE: label text %s too wide for label, condensed by factor %f\n", theText, maxWidth / w);
 		return maxWidth / w;
 	}
-	return 0.8;
+	return 1.0;
 }
 
 float draw_clipSet;
