@@ -298,7 +298,7 @@ void W_Fireball_Attack2(void)
 	vector f_diff;
 	float c;
 
-	c = mod(self.bulletcounter, 4);
+	c = self.bulletcounter % 4;
 	switch(c)
 	{
 		case 0:

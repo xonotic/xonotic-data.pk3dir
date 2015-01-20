@@ -211,7 +211,6 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 {
 	if(autocvar_g_playerstats_gamereport_uri == "") { return; }
 
-	PS_GR_OUT_DB = -1;
 	PS_GR_OUT_DB = db_create();
 
 	if(PS_GR_OUT_DB >= 0)
@@ -427,10 +426,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 		{
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
-			{
-				PS_B_IN_DB = -1;
 				PS_B_IN_DB = db_create();
-			}
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
@@ -635,10 +631,7 @@ void PlayerStats_PlayerDetail(void)
 	{
 		// create the database if it doesn't already exist
 		if(PS_D_IN_DB < 0)
-		{
-			PS_D_IN_DB = -1;
 			PS_D_IN_DB = db_create();
-		}
 
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
 		dprint("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
@@ -987,7 +980,6 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 
 void PlayerInfo_Init()
 {
-	playerinfo_db = -1;
 	playerinfo_db = db_create();
 }
 

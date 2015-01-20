@@ -112,8 +112,8 @@ WIDTH_CREDITS                   0.5
 
 // item: cvar list
 ALPHA_CVARLIST_SAVED            1
-ALPHA_CVARLIST_TEMPORARY        0.7    
-COLOR_CVARLIST_CHANGED          '1 0 0' 
+ALPHA_CVARLIST_TEMPORARY        0.7
+COLOR_CVARLIST_CHANGED          '1 0 0'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
@@ -173,9 +173,11 @@ ALPHAS_MAINMENU                 '1 1 1'
 COLOR_MODELTITLE                '1 1 1'
 ALPHA_MODELTITLE                1
 
-// item: player name editor
-//   uses "charmap" images
-//   uses "charmapbutton" images
+// item: charmap
+ALPHA_CHARMAP_CHAR              0.85
+COLOR_CHARMAP_CHAR              '1 1 1'
+ALPHA_CHARMAP_FOCUS             0.5
+COLOR_CHARMAP_FOCUS             '0 0 0'
 
 // item: radio button
 //   uses "radiobutton" images

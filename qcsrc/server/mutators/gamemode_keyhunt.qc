@@ -668,7 +668,7 @@ void kh_Key_Think()  // runs all the time
 	if(self.owner)
 	{
 #ifndef KH_PLAYER_USE_ATTACHMENT
-		makevectors('0 1 0' * (self.cnt + mod(time, 360) * KH_KEY_XYSPEED));
+		makevectors('0 1 0' * (self.cnt + (time % 360) * KH_KEY_XYSPEED));
 		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
 #endif
 	}

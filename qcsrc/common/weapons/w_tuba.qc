@@ -71,7 +71,7 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 	nolength = FALSE;
 	for(i = 0; i < n; ++i)
 	{
-		vector v = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+		vector v = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 		float ai = stof(argv(n - i - 1));
 		float np = floor(ai);
 		if(ai == np)
@@ -108,13 +108,13 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 
 		for(i = 0; i < n; ++i)
 		{
-			vector vi = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+			vector vi = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 			float ai = stof(argv(n - i - 1));
 			ti -= 1 / (ai - floor(ai));
 			float tj = ti;
 			for(j = i+1; j < n; ++j)
 			{
-				vector vj = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - j + MAX_TUBANOTES, MAX_TUBANOTES)]);
+				vector vj = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - j + MAX_TUBANOTES) % MAX_TUBANOTES]);
 				float aj = stof(argv(n - j - 1));
 				tj -= (aj - floor(aj));
 
@@ -154,7 +154,7 @@ void W_Tuba_NoteOff(void)
 	//   note: self.cnt
 	if(self.owner.tuba_note == self)
 	{
-		self.owner.tuba_lastnotes_last = mod(self.owner.tuba_lastnotes_last + 1, MAX_TUBANOTES);
+		self.owner.tuba_lastnotes_last = (self.owner.tuba_lastnotes_last + 1) % MAX_TUBANOTES;
 		self.owner.(tuba_lastnotes[self.owner.tuba_lastnotes_last]) = eX * self.spawnshieldtime + eY * time + eZ * self.cnt;
 		self.owner.tuba_note = world;
 		self.owner.tuba_lastnotes_cnt = bound(0, self.owner.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
