@@ -97,7 +97,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
 		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
-		
+
 		float minf, maxf, limitf;
 
 		maxf = autocvar_g_balance_fuel_rotstable;
@@ -136,7 +136,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	{
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
-		
+
 		W_Blaster_Attack(
 			WEP_BLASTER | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
-		
+
 	self.ok_pauseregen_finished = time + 2;
 
 	return FALSE;
@@ -352,6 +352,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_ONADD
 	{
 		ok_Initialize();
+		LoadConfig("overkill.cfg", TRUE);
 	}
 
 	MUTATOR_ONREMOVE

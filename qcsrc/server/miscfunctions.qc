@@ -632,7 +632,7 @@ float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -2372,4 +2372,26 @@ float isPushable(entity e)
 	if (e.projectiledeathtype)
 		return TRUE;
 	return FALSE;
+}
+
+float LoadConfig(string FileName, int AsTemp)
+{
+		string s;
+		float fh = fopen(FileName, FILE_READ);
+		if(fh >= 0)
+		{
+			while((s = fgets(fh)))
+			{
+				tokenize_console(s);
+				if not(argv(0) == "" || argv(1) == "//" || argv(1) == "")
+					if(AsTemp)
+                        cvar_settemp(argv(0), argv(1));
+                    else
+                        cvar_set(argv(0), argv(1));
+			}
+			fclose(fh);
+            return 0;
+		}
+		else
+			return 1;
 }
