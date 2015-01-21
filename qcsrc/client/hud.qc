@@ -2203,11 +2203,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-#ifdef COMPAT_XON050_ENGINE
-	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
-#else
 	me = playerslots[player_localentnum - 1];
-#endif
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -3129,7 +3125,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		dt = mod(time - nb_pb_starttime, nb_pb_period);
+		dt = (time - nb_pb_starttime) % nb_pb_period;
 		// one period of positive triangle
 		p = 2 * dt / nb_pb_period;
 		if (p > 1)
@@ -3720,11 +3716,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-#ifdef COMPAT_XON050_ENGINE
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
-#else
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
-#endif
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -3774,7 +3766,7 @@ void HUD_InfoMessages(void)
 		}
 
 		string blinkcolor;
-		if(mod(time, 1) >= 0.5)
+		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
@@ -4545,11 +4537,7 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-#ifdef COMPAT_XON050_ENGINE
-    current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
-#else
     current_player = player_localentnum;
-#endif
 
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
@@ -4575,7 +4563,7 @@ void HUD_Main (void)
 			}
 			else if(hud_dock_color == "pants") {
 				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-				color = colormapPaletteColor(mod(f, 16), 1);
+				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
 				color = stov(hud_dock_color);

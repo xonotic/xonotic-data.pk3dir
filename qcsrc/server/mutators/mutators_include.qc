@@ -25,6 +25,7 @@
 #include "mutator_physical_items.qc"
 #include "sandbox.qc"
 #include "mutator_superspec.qc"
+#include "mutator_overkill.qc"
 #include "mutator_instagib.qc"
 #include "mutator_touchexplode.qc"
 #include "mutator_pinata.qc"

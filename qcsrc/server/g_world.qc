@@ -41,7 +41,7 @@ void PingPLReport_Think()
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = mod(self.cnt + 1, maxclients);
+	self.cnt = (self.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
@@ -755,6 +755,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
 	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
+	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
 	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
@@ -1035,7 +1036,7 @@ float() MaplistMethod_Iterate = // usual method
 		for(i = 1; i < Map_Count; ++i)
 		{
 			float mapindex;
-			mapindex = mod(i + Map_Current, Map_Count);
+			mapindex = (i + Map_Current) % Map_Count;
 			if(Map_Check(mapindex, pass))
 				return mapindex;
 		}
@@ -1063,7 +1064,7 @@ float() MaplistMethod_Random = // random map selection
 	for(i = 0; i <= imax; ++i)
 	{
 		float mapindex;
-		mapindex = mod(Map_Current + floor(random() * (Map_Count - 1) + 1), Map_Count); // any OTHER map
+		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(mapindex, 1))
 			return mapindex;
 	}
@@ -2203,21 +2204,13 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
-		self.damage_dealt_total = 0;
-	
-		if(IS_SPEC(self))
+		entity e = IS_SPEC(self) ? self.enemy : self;
+		if(e.typehitsound)
+			self.typehit_time = time;
+		else if(e.damage_dealt)
 		{
-			if(self.enemy.typehitsound)
-				self.typehit_time = time;
-			else if(self.enemy.damage_dealt)
-				self.damage_dealt_total = ceil(self.enemy.damage_dealt);
-		}
-		else
-		{
-			if(self.typehitsound)
-				self.typehit_time = time;
-			else if(self.damage_dealt)
-				self.damage_dealt_total = ceil(self.damage_dealt);
+			self.hit_time = time;
+			self.damage_dealt_total += ceil(e.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);

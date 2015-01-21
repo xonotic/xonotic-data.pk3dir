@@ -1,4 +1,4 @@
-float g_nix_with_laser;
+float g_nix_with_blaster;
 // WEAPONTODO
 float nix_weapon;
 float nix_nextchange;
@@ -20,7 +20,7 @@ float NIX_CanChooseWeapon(float wpn)
 	}
 	else
 	{
-		if(wpn == WEP_BLASTER && g_nix_with_laser) // WEAPONTODO: rename to g_nix_with_blaster
+		if(wpn == WEP_BLASTER && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
 			return FALSE;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return FALSE;
@@ -137,8 +137,8 @@ void NIX_GiveCurrentWeapon()
 	}
 
 	self.weapons = '0 0 0';
-	if(g_nix_with_laser)
-		self.weapons &= ~WEPSET_BLASTER;
+	if(g_nix_with_blaster)
+		self.weapons |= WEPSET_BLASTER;
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
@@ -239,7 +239,7 @@ MUTATOR_DEFINITION(mutator_nix)
 
 	MUTATOR_ONADD
 	{
-		g_nix_with_laser = autocvar_g_nix_with_laser;
+		g_nix_with_blaster = autocvar_g_nix_with_blaster;
 
 		nix_nextchange = 0;
 		nix_nextweapon = 0;
