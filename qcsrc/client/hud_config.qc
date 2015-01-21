@@ -67,6 +67,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_accuracy");
 					HUD_Write_PanelCvar_q("_label");
+					HUD_Write_PanelCvar_q("_label_scale");
 					HUD_Write_PanelCvar_q("_complainbubble");
 					HUD_Write_PanelCvar_q("_complainbubble_padding");
 					HUD_Write_PanelCvar_q("_complainbubble_time");

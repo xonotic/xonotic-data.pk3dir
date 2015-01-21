@@ -692,7 +692,9 @@ void HUD_Weapons(void)
 	if(autocvar_hud_panel_weapons_accuracy)
 		Accuracy_LoadColors();
 
+	// draw items
 	row = column = 0;
+	vector label_size = '1 1 0' * min(weapon_size_x, weapon_size_y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
@@ -737,15 +739,15 @@ void HUD_Weapons(void)
 			switch(autocvar_hud_panel_weapons_label)
 			{
 				case 1: // weapon number
-					drawstring(weapon_pos, ftos(weapon_id), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, ftos(weapon_id), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				case 2: // bind
-					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, strtolower(self.message), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(self.message), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
