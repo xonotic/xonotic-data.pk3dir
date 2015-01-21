@@ -415,7 +415,7 @@ void HUD_Weapons(void)
 	float i, f, a;
 	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
-	float row, column, rows = 0, columns;
+	float row, column, rows = 0, columns = 0;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float panel_weapon_accuracy;
@@ -433,7 +433,7 @@ void HUD_Weapons(void)
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_pos, weapon_size = '0 0 0';
-	local noref vector old_panel_size; // fteqcc sucks
+	local noref vector max_panel_size; // fteqcc sucks
 	vector color;
 
 	// check to see if we want to continue
@@ -519,38 +519,41 @@ void HUD_Weapons(void)
 			return;
 		}
 
-		old_panel_size = panel_size;
-		if(panel_bg_padding)
-			old_panel_size -= '2 2 0' * panel_bg_padding;
+		max_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
-		// first find values for the standard table (with all the weapons)
-		rows = old_panel_size_y/old_panel_size_x;
-		rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
-		columns = ceil(WEP_COUNT/rows);
-		weapon_size_x = old_panel_size_x / columns;
-		weapon_size_y = old_panel_size_y / rows;
-
-		// change table values to include only the owned weapons
-		float columns_save = columns;
-		if(weapon_count <= rows)
+		// calculate distribution and size of table cells
+		if(max_panel_size_x > max_panel_size_y)
 		{
-			rows = weapon_count;
-			columns = 1;
+			while(weapon_count > columns * rows)
+			{
+				++rows;
+				columns = ceil(max_panel_size_x / (max_panel_size_y / rows * aspect));
+			}
+
+			weapon_size_x = max_panel_size_x / columns;
+			weapon_size_y = max_panel_size_y / rows;
+			columns = ceil(weapon_count / rows);
 		}
 		else
-			columns = ceil(weapon_count / rows);
+		{
+			while(weapon_count > columns * rows)
+			{
+				++columns;
+				rows = ceil(max_panel_size_y / (max_panel_size_x / columns / aspect));
+			}
 
-		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
-		if(columns < columns_save)
-			weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
+			weapon_size_x = max_panel_size_x / columns;
+			weapon_size_y = max_panel_size_y / rows;
+			rows = ceil(weapon_count / columns);
+		}
 
 		// reduce size of the panel
 		panel_size_x = columns * weapon_size_x;
 		panel_size_y = rows * weapon_size_y;
-		panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
-		panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
-		if(panel_bg_padding)
-			panel_size += '2 2 0' * panel_bg_padding;
+		panel_pos_x += (max_panel_size_x - panel_size_x) / 2;
+		panel_pos_y += (max_panel_size_y - panel_size_y) / 2;
+
+		panel_size += '2 2 0' * panel_bg_padding;
 	}
 	else
 		weapon_count = WEP_COUNT;
