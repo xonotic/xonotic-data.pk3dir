@@ -355,6 +355,10 @@ void reset_map(float dorespawn)
 		}
 	}
 
+	FOR_EACH_PLAYER(self)
+	if(self.frozen)
+		Unfreeze(self);
+
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
 	if(dorespawn)
@@ -421,7 +425,7 @@ void ReadyRestart_force()
 	{
 		tmp_player.alivetime = 0;
 		tmp_player.killcount = 0;
-		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
+		PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use

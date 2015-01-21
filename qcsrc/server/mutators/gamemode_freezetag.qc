@@ -1,9 +1,16 @@
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
-.float freezetag_revive_progress;
 #define ICE_MAX_ALPHA 1
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
+
+#define SP_FREEZETAG_REVIVALS 4
+void freezetag_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
+	ScoreRules_basics_end();
+}
 
 void freezetag_count_alive_players()
 {
@@ -198,7 +205,7 @@ void freezetag_Unfreeze(entity attacker)
 
 float freezetag_isEliminated(entity e)
 {
-	if(e.frozen == 1 || e.deadflag != DEAD_NO)
+	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
 		return TRUE;
 	return FALSE;
 }
@@ -544,7 +551,7 @@ void freezetag_Initialize()
 	if(freezetag_teams < 2)
 		freezetag_teams = autocvar_g_freezetag_teams;
 	freezetag_teams = bound(2, freezetag_teams, 4);
-	ScoreRules_freezetag(freezetag_teams);
+	freezetag_ScoreRules(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);

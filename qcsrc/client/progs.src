@@ -15,14 +15,14 @@ Defs.qc
 ../warpzonelib/common.qh
 ../warpzonelib/client.qh
 
+../common/playerstats.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/nades.qh
 ../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
+../common/weapons/weapons.qh // TODO
 ../common/mapinfo.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -59,13 +59,14 @@ vehicles/vehicles.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/cl_model.qh
 ../csqcmodellib/cl_player.qh
-projectile.qh
+weapons/projectile.qh // TODO
 player_skeleton.qh
 
 ../server/mutators/gamemode_ctf.qh // TODO: remove
 
 sortlist.qc
 miscfunctions.qc
+../server/t_items.qh
 ../server/t_items.qc
 
 teamradar.qc
@@ -80,7 +81,7 @@ rubble.qc
 hook.qc
 particles.qc
 laser.qc
-projectile.qc
+weapons/projectile.qc // TODO
 gibs.qc
 damage.qc
 casings.qc
@@ -109,14 +110,13 @@ noise.qc
 
 ../common/test.qc
 ../common/util.qc
+../common/playerstats.qc
 ../common/notifications.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 ../common/mapinfo.qc
-../common/items.qc
-../server/w_all.qc
-../common/explosion_equation.qc
+../common/weapons/weapons.qc // TODO
 ../common/urllib.qc
 command/cl_cmd.qc
 

@@ -424,11 +424,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	float old_time, new_time;
 
 	if(!player) { return; } // without someone to give the reward to, we can't possibly cap
-	if(ctf_oneflag) 
-	{
-		if(CTF_SAMETEAM(player, flag)) { return; }
-	}
-	else if(CTF_DIFFTEAM(player, flag)) { return; }
+	if(CTF_DIFFTEAM(player, flag)) { return; }
 	
 	if(ctf_oneflag)
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
@@ -686,7 +682,7 @@ void ctf_CheckStalemate(void)
 	{
 		if(autocvar_g_ctf_stalemate)
 		if(tmp_entity.ctf_status != FLAG_BASE)
-		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_stalemate_time)
+		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_stalemate_time || !tmp_entity.team) // instant stalemate in oneflag
 		{
 			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
 			ctf_staleflaglist = tmp_entity;
@@ -928,7 +924,7 @@ void ctf_FlagTouch()
 			self.health = 0;
 			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		}
-		return;
+		if(!self.ctf_flagdamaged) { return; }
 	}
 
 	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
@@ -965,7 +961,7 @@ void ctf_FlagTouch()
 		{
 			if(ctf_oneflag)
 			{
-				if(CTF_DIFFTEAM(toucher, self) && (toucher.flagcarried) && !toucher.flagcarried.team && is_not_monster)
+				if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && !toucher.flagcarried.team && is_not_monster)
 					ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the neutral flag to enemy base
 				else if(!self.team && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
 					ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the neutral flag
@@ -1053,7 +1049,6 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
-
 	flag.ctf_flagdamaged = 0;
 
 	ctf_CheckStalemate();
@@ -1111,7 +1106,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	ctf_CaptureShield_Spawn(self);
 }
 
-void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
+void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// declarations
 	self = flag; // for later usage with droptofloor()
@@ -1122,7 +1117,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
+	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -2487,7 +2482,7 @@ void ctf_Initialize()
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
-	
+
 	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
 
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
