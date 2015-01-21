@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 00:00+0100\n"
-"PO-Revision-Date: 2014-12-30 11:22+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
+"PO-Revision-Date: 2015-01-06 16:31+0000\n"
+"Last-Translator: Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail."
+"com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/projects/p/xonotic/"
 "language/pt/)\n"
 "Language: pt\n"
@@ -20,16 +22,16 @@ msgstr ""
 
 #: qcsrc/client/Main.qc:21
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr ""
+msgstr "ERRO - MENU ESTA VISÍVEL MAS NÃO HÁ MENU DEFINIDO!"
 
 #: qcsrc/client/Main.qc:1295
 #, c-format
 msgid "%s (not bound)"
-msgstr ""
+msgstr "%s (nao esta definido)"
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
-msgstr ""
+msgstr "Temporizador de granada"
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
@@ -47,20 +49,20 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:210
 msgid "Start line"
-msgstr ""
+msgstr "Linha de Partida"
 
 #: qcsrc/client/hud.qc:212 qcsrc/client/hud.qc:216
 msgid "Finish line"
-msgstr ""
+msgstr "Linha de Chegada"
 
 #: qcsrc/client/hud.qc:214
 #, c-format
 msgid "Intermediate %d"
-msgstr ""
+msgstr "Intermédio %d"
 
 #: qcsrc/client/hud.qc:805
 msgid "Out of ammo"
-msgstr ""
+msgstr "Sem munições"
 
 #: qcsrc/client/hud.qc:809
 msgid "Don't have"
@@ -68,177 +70,178 @@ msgstr ""
 
 #: qcsrc/client/hud.qc:813
 msgid "Unavailable"
-msgstr ""
+msgstr "Indisponível"
 
 #: qcsrc/client/hud.qc:1751 qcsrc/client/hud.qc:1752 qcsrc/client/hud.qc:2109
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Jogador %d"
 
 #: qcsrc/client/hud.qc:2417
 msgid "^1Intermediate 1 (+15.42)"
-msgstr ""
+msgstr "^1Intermédio 1 (+15.42)"
 
 #: qcsrc/client/hud.qc:2419 qcsrc/client/hud.qc:2461 qcsrc/client/hud.qc:2502
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^1PENALIDADE: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2504
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
-msgstr ""
+msgstr "^2PENALIDADE: %.1f (%s)"
 
 #: qcsrc/client/hud.qc:2534
 msgid "^1You must answer before entering hud configure mode\n"
-msgstr ""
+msgstr "^1Tem que responder antes de entrar no modo de configuração do HUD\n"
 
 #: qcsrc/client/hud.qc:2539
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr ""
+msgstr "^2Nome ^7em vez de \"^1Jogador anónimo^7\" nas estatisticas"
 
 #: qcsrc/client/hud.qc:2618
 msgid "A vote has been called for:"
-msgstr ""
+msgstr "Começou uma votação para:"
 
 #: qcsrc/client/hud.qc:2620
 msgid "Allow servers to store and display your name?"
-msgstr ""
+msgstr "Permitir que os servidores guardem e mostrem o seu nome?"
 
 #: qcsrc/client/hud.qc:2624
 msgid "^1Configure the HUD"
-msgstr ""
+msgstr "^1Configurar HUD"
 
 #: qcsrc/client/hud.qc:2628
 #, c-format
 msgid "Yes (%s): %d"
-msgstr ""
+msgstr "Sim (%s): %d"
 
 #: qcsrc/client/hud.qc:2630
 #, c-format
 msgid "No (%s): %d"
-msgstr ""
+msgstr "Não (%s): %d"
 
 #: qcsrc/client/hud.qc:3191 qcsrc/client/hud.qc:3194 qcsrc/client/hud.qc:3196
 msgid "Personal best"
-msgstr ""
+msgstr "Melhor pontuação pessoal"
 
 #: qcsrc/client/hud.qc:3209 qcsrc/client/hud.qc:3212 qcsrc/client/hud.qc:3214
 msgid "Server best"
-msgstr ""
+msgstr "Melhor pontuação do servidor"
 
 #: qcsrc/client/hud.qc:3576
 msgid "^3Player^7: This is the chat area."
-msgstr ""
+msgstr "^3Jogador^7: Isto é a área de conversação."
 
 #: qcsrc/client/hud.qc:3641
 #, c-format
 msgid "FPS: %.*f"
-msgstr ""
+msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud.qc:3705
 msgid "^1Observing"
-msgstr ""
+msgstr "^1Observando"
 
 #: qcsrc/client/hud.qc:3707
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr ""
+msgstr "^1Espectador: ^7%s"
 
 #: qcsrc/client/hud.qc:3711
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr ""
+msgstr "^1Carregue ^3%s^1 para passar a espectador"
 
 #: qcsrc/client/hud.qc:3713
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr ""
+msgstr "^1Carregue ^3%s^1 ou ^3%s^1 para o próximo ou anterior jogador"
 
 #: qcsrc/client/hud.qc:3717
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr ""
+msgstr "^1Utilize ^3%s^1 ou ^3%s^1 para alterar a velocidade"
 
 #: qcsrc/client/hud.qc:3719
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
-msgstr ""
+msgstr "^1Carregue ^3%s^1 para observar"
 
 #: qcsrc/client/hud.qc:3722
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
-msgstr ""
+msgstr "^1Carregue ^3%s^1 para informação sobre o modo de jogo"
 
 #: qcsrc/client/hud.qc:3730
 msgid "^1Match has already begun"
-msgstr ""
+msgstr "^1Partida já começou"
 
 #: qcsrc/client/hud.qc:3732
 msgid "^1You have no more lives left"
-msgstr ""
+msgstr "^1Não tem vidas restantes"
 
 #: qcsrc/client/hud.qc:3734 qcsrc/client/hud.qc:3737
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Carregue ^3%s^1 para se juntar"
 
 #: qcsrc/client/hud.qc:3745
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1Jogo começa em ^3%d^1 segundos"
 
 #: qcsrc/client/hud.qc:3752
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2De momento em fase de ^1aquecimento^2!"
 
 #: qcsrc/client/hud.qc:3767
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sCarregue ^3%s%s para terminar aquecimento"
 
 #: qcsrc/client/hud.qc:3769
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
-msgstr ""
+msgstr "%sCarregue ^3%s%s assim que estiver pronto"
 
 #: qcsrc/client/hud.qc:3774
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
+"^2À espera que os outros jogadores estejam prontos para acabar aquecimento..."
 
 #: qcsrc/client/hud.qc:3776
 msgid "^2Waiting for others to ready up..."
-msgstr ""
+msgstr "^2À espera que os outros jogadores estejam prontos..."
 
 #: qcsrc/client/hud.qc:3782
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Carregue ^3%s^2 para terminar aquecimento"
 
 #: qcsrc/client/hud.qc:3803
 msgid "Teamnumbers are unbalanced!"
-msgstr ""
+msgstr "Equipas estão desiquilibradas!"
 
 #: qcsrc/client/hud.qc:3808
 #, c-format
 msgid " Press ^3%s%s to adjust"
-msgstr ""
+msgstr "Carregue ^3%s%s para ajustar"
 
 #: qcsrc/client/hud.qc:3816
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr ""
+msgstr "^7Carregue ^3ESC ^7 para mostrar opçoes do HUD."
 
 #: qcsrc/client/hud.qc:3818
 msgid "^3Doubleclick ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Duplo-clique ^7um painel para opções específicas do painel."
 
 #: qcsrc/client/hud.qc:3820
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
+msgstr "^3CTRL ^7para desligar teste de colisão, ^3SHIFT ^7e"
 
 #: qcsrc/client/hud.qc:3822
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
-msgstr ""
+msgstr "^3ALT ^7+ ^3TECLAS DIRECCIONAIS ^7para pequenos ajustes."
 
 #: qcsrc/client/hud.qc:3869
 msgid " qu/s"
@@ -258,152 +261,152 @@ msgstr "mph"
 
 #: qcsrc/client/hud.qc:3885
 msgid " knots"
-msgstr ""
+msgstr "nós"
 
 #: qcsrc/client/hud_config.qc:197
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
-msgstr ""
+msgstr "^2Exportado com sucesso para%s! (Nota: Guardado em data/data/)\n"
 
 #: qcsrc/client/hud_config.qc:201
 #, c-format
 msgid "^1Couldn't write to %s\n"
-msgstr ""
+msgstr "^1Não é possível escrever para %s\n"
 
 #: qcsrc/client/mapvoting.qc:37
 msgid " (1 vote)"
-msgstr ""
+msgstr "(1 voto)"
 
 #: qcsrc/client/mapvoting.qc:39
 #, c-format
 msgid " (%d votes)"
-msgstr ""
+msgstr "(%d votos)"
 
 #: qcsrc/client/mapvoting.qc:226
 msgid "Don't care"
-msgstr ""
+msgstr "Não interessa"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Decide the gametype"
-msgstr ""
+msgstr "Decidir tipo de jogo"
 
 #: qcsrc/client/mapvoting.qc:318
 msgid "Vote for a map"
-msgstr ""
+msgstr "Votar num mapa"
 
 #: qcsrc/client/mapvoting.qc:331
 #, c-format
 msgid "%d seconds left"
-msgstr ""
+msgstr "Faltam %d segundos"
 
 #: qcsrc/client/mapvoting.qc:415
 msgid ""
 "mv_mapdownload: ^3You're not supposed to use this command on your own!\n"
-msgstr ""
+msgstr "mv_mapdownload: ^3Não é suposto usar este comando!\n"
 
 #: qcsrc/client/mapvoting.qc:425
 msgid "^1Error:^7 Couldn't find pak index.\n"
-msgstr ""
+msgstr "^1Erro:^7 Não foi possível encontrar o pak.\n"
 
 #: qcsrc/client/mapvoting.qc:434
 msgid "Requesting preview...\n"
-msgstr ""
+msgstr "Pedindo previsão...\n"
 
 #: qcsrc/client/miscfunctions.qc:101
 msgid "Trying to remove a team which is not in the teamlist!"
-msgstr ""
+msgstr "Tentando remover uma equipa que não está na lista de equipas!"
 
 #: qcsrc/client/scoreboard.qc:19
 msgid "SCO^bckills"
-msgstr ""
+msgstr "SCO^bcfrags"
 
 #: qcsrc/client/scoreboard.qc:20
 msgid "SCO^bctime"
-msgstr ""
+msgstr "SCO^bctempo"
 
 #: qcsrc/client/scoreboard.qc:21
 msgid "SCO^caps"
-msgstr ""
+msgstr "SCO^capturas"
 
 #: qcsrc/client/scoreboard.qc:22
 msgid "SCO^captime"
-msgstr ""
+msgstr "SCO^tempocaptura"
 
 #: qcsrc/client/scoreboard.qc:23
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^mortes"
 
 #: qcsrc/client/scoreboard.qc:24
 msgid "SCO^destroyed"
-msgstr ""
+msgstr "SCO^destruido"
 
 #: qcsrc/client/scoreboard.qc:25
 msgid "SCO^drops"
-msgstr ""
+msgstr "SCO^quedas"
 
 #: qcsrc/client/scoreboard.qc:26
 msgid "SCO^faults"
-msgstr ""
+msgstr "SCO^faltas"
 
 #: qcsrc/client/scoreboard.qc:27
 msgid "SCO^fckills"
-msgstr ""
+msgstr "SCO^fcfrags"
 
 #: qcsrc/client/scoreboard.qc:28
 msgid "SCO^goals"
-msgstr ""
+msgstr "SCO^golos"
 
 #: qcsrc/client/scoreboard.qc:29
 msgid "SCO^kckills"
-msgstr ""
+msgstr "SCO^kcfrags"
 
 #: qcsrc/client/scoreboard.qc:30
 msgid "SCO^kdratio"
-msgstr ""
+msgstr "SCO^raciofm"
 
 #: qcsrc/client/scoreboard.qc:31
 msgid "SCO^k/d"
-msgstr ""
+msgstr "SCO^f/m"
 
 #: qcsrc/client/scoreboard.qc:32
 msgid "SCO^kd"
-msgstr ""
+msgstr "SCO^fm"
 
 #: qcsrc/client/scoreboard.qc:33
 msgid "SCO^kdr"
-msgstr ""
+msgstr "SCO^rfm"
 
 #: qcsrc/client/scoreboard.qc:34
 msgid "SCO^kills"
-msgstr ""
+msgstr "SCO^frags"
 
 #: qcsrc/client/scoreboard.qc:35
 msgid "SCO^laps"
-msgstr ""
+msgstr "SCO^voltas"
 
 #: qcsrc/client/scoreboard.qc:36
 msgid "SCO^lives"
-msgstr ""
+msgstr "SCO^vidas"
 
 #: qcsrc/client/scoreboard.qc:37
 msgid "SCO^losses"
-msgstr ""
+msgstr "SCO^derrotas"
 
 #: qcsrc/client/scoreboard.qc:38
 msgid "SCO^name"
-msgstr ""
+msgstr "SCO^nome"
 
 #: qcsrc/client/scoreboard.qc:39
 msgid "SCO^sum"
-msgstr ""
+msgstr "SCO^soma"
 
 #: qcsrc/client/scoreboard.qc:40
 msgid "SCO^nick"
-msgstr ""
+msgstr "SCO^alcunha"
 
 #: qcsrc/client/scoreboard.qc:41
 msgid "SCO^objectives"
-msgstr ""
+msgstr "SCO^objectivos"
 
 #: qcsrc/client/scoreboard.qc:42
 msgid "SCO^pickups"
@@ -415,31 +418,31 @@ msgstr "Ping"
 
 #: qcsrc/client/scoreboard.qc:44
 msgid "SCO^pl"
-msgstr ""
+msgstr "SCO^pl"
 
 #: qcsrc/client/scoreboard.qc:45
 msgid "SCO^pushes"
-msgstr ""
+msgstr "SCO^empurrões"
 
 #: qcsrc/client/scoreboard.qc:46
 msgid "SCO^rank"
-msgstr ""
+msgstr "SCO^posição"
 
 #: qcsrc/client/scoreboard.qc:47
 msgid "SCO^returns"
-msgstr ""
+msgstr "SCO^devoluções"
 
 #: qcsrc/client/scoreboard.qc:48
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^ressureições"
 
 #: qcsrc/client/scoreboard.qc:49
 msgid "SCO^score"
-msgstr ""
+msgstr "SCO^pontuação"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^suicides"
-msgstr ""
+msgstr "SCO^suicídios"
 
 #: qcsrc/client/scoreboard.qc:51
 msgid "SCO^takes"
@@ -453,26 +456,29 @@ msgstr ""
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"
 msgstr ""
+"Pode modificar o mostrador de pontuação usando o comando "
+"^2scoreboard_columns_set .\n"
 
 #: qcsrc/client/scoreboard.qc:238
 msgid "^3|---------------------------------------------------------------|\n"
-msgstr ""
+msgstr "^3|---------------------------------------------------------------|\n"
 
 #: qcsrc/client/scoreboard.qc:239
 msgid "Usage:\n"
-msgstr ""
+msgstr "Utilização:\n"
 
 #: qcsrc/client/scoreboard.qc:240
 msgid "^2scoreboard_columns_set default\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set default\n"
 
 #: qcsrc/client/scoreboard.qc:241
 msgid "^2scoreboard_columns_set ^7field1 field2 ...\n"
-msgstr ""
+msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
 
 #: qcsrc/client/scoreboard.qc:242
 msgid "The following field names are recognized (case insensitive):\n"
 msgstr ""
+"Os seguintes nomes são reconhecidos (não relevante maíusculas/minúsculas):\n"
 
 #: qcsrc/client/scoreboard.qc:243
 msgid ""
@@ -5781,7 +5787,7 @@ msgstr "Mostrar posição da vida e armadura"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:163
 msgid "Damage overlay:"
-msgstr ""
+msgstr "Sobreposição do Dano:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.c:168
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.c:4
@@ -5806,85 +5812,85 @@ msgstr "HDCNFRM^Nao"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:33
 msgid "Frag Information"
-msgstr ""
+msgstr "Informação da Frag"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:35
 msgid "Display information about killing sprees"
-msgstr ""
+msgstr "Mostrar informação sobre sequências de mortes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:38
 msgid "Only display sprees if they are achievements"
-msgstr ""
+msgstr "Só mostrar sequências se forem conquistas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:43
 msgid "Show spree information in centerprints"
-msgstr ""
+msgstr "Mostrar informação de sequências em centerprints"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:47
 msgid "Show spree information in death messages"
-msgstr ""
+msgstr "Mostrar informação de sequências em mensagens de morte"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:52
 msgid "Sprees in info messages:"
-msgstr ""
+msgstr "Sequências em mensagens de informação:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:56
 msgid "Target"
-msgstr ""
+msgstr "Alvo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:57
 msgid "Attacker"
-msgstr ""
+msgstr "Atacante"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:58
 msgid "Both"
-msgstr ""
+msgstr "Ambos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:64
 msgid "Print on a seperate line"
-msgstr ""
+msgstr "Imprimir numa linha separada"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:67
 msgid "Add extra frag information to centerprint when available"
-msgstr ""
+msgstr "Adicionar informação extra do frag quando disponível"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:71
 msgid "Add frag location to death messages when available"
-msgstr ""
+msgstr "Adicionar localização do frag nas mensagens de morte quando disponível"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:74
 msgid "Gamemode Settings"
-msgstr ""
+msgstr "Definições do modo de jogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:76
 msgid "Display capture times in Capture The Flag"
-msgstr ""
+msgstr "Mostrar tempos de captura no Captura a Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:80
 msgid "Display name of flag stealer in Capture The Flag"
-msgstr ""
+msgstr "Mostrar nome do ladrão da bandeira no Captura a Bandeira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:85
 #: qcsrc/menu/xonotic/dialog_settings_input.c:85
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:118
 msgid "Other"
-msgstr ""
+msgstr "Outros"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:87
 msgid "Display console messages in the top left corner"
-msgstr ""
+msgstr "Mostrar mensagens da consola no canto superior esquerdo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:89
 msgid "Display all info messages in the chatbox"
-msgstr ""
+msgstr "Mostrar toda a informação no chat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:91
 msgid "Display player statuses in the chatbox"
-msgstr ""
+msgstr "Mostrar estado do jogador no chat"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:95
 msgid "Powerup notifications"
-msgstr ""
+msgstr "Notificações de Poderes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:98
 msgid "Weapon centerprint notifications"
@@ -5892,59 +5898,59 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:101
 msgid "Weapon info message notifications"
-msgstr ""
+msgstr "Notificações de informação de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:105
 msgid "Announcers"
-msgstr ""
+msgstr "Anunciadores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:109
 msgid "Respawn countdown sounds"
-msgstr ""
+msgstr "Sons de contador de Respawn"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:113
 msgid "Killstreak sounds"
-msgstr ""
+msgstr "Sons de sequências de mortes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.c:116
 msgid "Achievement sounds"
-msgstr ""
+msgstr "Sons de Conquistas"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:37
 msgid "Items"
-msgstr ""
+msgstr "Itens"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:39
 msgid "Use simple 2D images instead of item models"
-msgstr ""
+msgstr "Usar imagens 2D simples em vez de modelos de itens"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:41
 msgid "Unavailable alpha:"
-msgstr ""
+msgstr "Alfa indisponível:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:44
 msgid "Unavailable color:"
-msgstr ""
+msgstr "Cor indisponível:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:46
 msgid "GHOITEMS^Black"
-msgstr ""
+msgstr "GHOITEMS^Preto"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:47
 msgid "GHOITEMS^Dark"
-msgstr ""
+msgstr "GHOITEMS^Escuro"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:48
 msgid "GHOITEMS^Tinted"
-msgstr ""
+msgstr "GHOITEMS^Pintado"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:49
 msgid "GHOITEMS^Normal"
-msgstr ""
+msgstr "GHOITEMS^Normal"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:50
 msgid "GHOITEMS^Blue"
-msgstr ""
+msgstr "GHOITEMS^Azul"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.c:56
 #: qcsrc/menu/xonotic/serverlist.c:928
@@ -5989,7 +5995,7 @@ msgstr "Perspectiva na 1a pessoa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:36
 msgid "Slide to third person upon death"
-msgstr ""
+msgstr "Mudar para terceira pessoa quando morto"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.c:40
 msgid "Smooth the view when landing from a jump"
@@ -6750,11 +6756,11 @@ msgstr "rosa"
 msgid "spectate"
 msgstr "espectador"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr ""
 
@@ -6828,7 +6834,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.c:437
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: qcsrc/menu/xonotic/serverlist.c:924
 msgid "Ping"
@@ -6869,37 +6875,37 @@ msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_particles.c:21
 msgid "PART^OMG"
-msgstr ""
+msgstr "PART^OMG"
 
 #: qcsrc/menu/xonotic/slider_particles.c:22
 msgid "PART^Low"
-msgstr ""
+msgstr "PART^Baixo"
 
 #: qcsrc/menu/xonotic/slider_particles.c:23
 msgid "PART^Medium"
-msgstr ""
+msgstr "PART^Médio"
 
 #: qcsrc/menu/xonotic/slider_particles.c:24
 #: qcsrc/menu/xonotic/slider_sbfadetime.c:22
 msgid "PART^Normal"
-msgstr ""
+msgstr "PART^Normal"
 
 #: qcsrc/menu/xonotic/slider_particles.c:25
 msgid "PART^High"
-msgstr ""
+msgstr "PART^Alto"
 
 #: qcsrc/menu/xonotic/slider_particles.c:26
 msgid "PART^Ultra"
-msgstr ""
+msgstr "PART^Ultra"
 
 #: qcsrc/menu/xonotic/slider_particles.c:27
 msgid "PART^Ultimate"
-msgstr ""
+msgstr "PART^Ultimate"
 
 #: qcsrc/menu/xonotic/slider_resolution.c:116
 #, c-format
 msgid "%dx%d (%d:%d)"
-msgstr ""
+msgstr "%dx%d (%d:%d)"
 
 #: qcsrc/menu/xonotic/slider_resolution.c:119
 #, c-format
@@ -6908,109 +6914,109 @@ msgstr "%dx%d"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.c:21
 msgid "PART^Slow"
-msgstr ""
+msgstr "PART^Lento"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.c:23
 msgid "PART^Fast"
-msgstr ""
+msgstr "PART^Rápido"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.c:24
 msgid "PART^Instant"
-msgstr ""
+msgstr "PART^Instantâneo"
 
 #: qcsrc/menu/xonotic/statslist.c:54
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #: qcsrc/menu/xonotic/statslist.c:55
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #: qcsrc/menu/xonotic/statslist.c:56
 msgid "March"
-msgstr ""
+msgstr "Março"
 
 #: qcsrc/menu/xonotic/statslist.c:57
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: qcsrc/menu/xonotic/statslist.c:58
 msgid "May"
-msgstr ""
+msgstr "Maio"
 
 #: qcsrc/menu/xonotic/statslist.c:59
 msgid "June"
-msgstr ""
+msgstr "Junho"
 
 #: qcsrc/menu/xonotic/statslist.c:60
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #: qcsrc/menu/xonotic/statslist.c:61
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #: qcsrc/menu/xonotic/statslist.c:62
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #: qcsrc/menu/xonotic/statslist.c:63
 msgid "October"
-msgstr ""
+msgstr "Outubro"
 
 #: qcsrc/menu/xonotic/statslist.c:64
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #: qcsrc/menu/xonotic/statslist.c:65
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #: qcsrc/menu/xonotic/statslist.c:121
 msgid "Joined:"
-msgstr ""
+msgstr "Juntou-se:"
 
 #: qcsrc/menu/xonotic/statslist.c:128
 msgid "Last_Seen:"
-msgstr ""
+msgstr "Última_Visita:"
 
 #: qcsrc/menu/xonotic/statslist.c:135
 msgid "Time_Played:"
-msgstr ""
+msgstr "Tempo_Jogado:"
 
 #: qcsrc/menu/xonotic/statslist.c:142
 msgid "Favorite_Map:"
-msgstr ""
+msgstr "Mapa_Favorito:"
 
 #: qcsrc/menu/xonotic/statslist.c:226 qcsrc/menu/xonotic/statslist.c:270
 #, c-format
 msgid "%s_Matches:"
-msgstr ""
+msgstr "%s_Partidas:"
 
 #: qcsrc/menu/xonotic/statslist.c:233
 #, c-format
 msgid "%s_ELO:"
-msgstr ""
+msgstr "%s_ELO:"
 
 #: qcsrc/menu/xonotic/statslist.c:240
 #, c-format
 msgid "%s_Rank:"
-msgstr ""
+msgstr "%s_Posição:"
 
 #: qcsrc/menu/xonotic/statslist.c:247
 #, c-format
 msgid "%s_Percentile:"
-msgstr ""
+msgstr "%s_Percentil:"
 
 #: qcsrc/menu/xonotic/statslist.c:256
 #, c-format
 msgid "%s_Favorite_Map:"
-msgstr ""
+msgstr "%s_Mapa_Favorito:"
 
 #: qcsrc/menu/xonotic/statslist.c:271
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (não colocado)"
 
 #: qcsrc/menu/xonotic/util.qc:398
 #, c-format

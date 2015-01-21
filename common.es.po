@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 00:00+0100\n"
-"PO-Revision-Date: 2015-01-04 19:51+0000\n"
-"Last-Translator: Alan García <bearz_x@hotmail.com>\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
+"PO-Revision-Date: 2015-01-11 06:41+0000\n"
+"Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/xonotic/language/"
 "es/)\n"
 "Language: es\n"
@@ -40,7 +40,7 @@ msgstr "%s (sin asignar)"
 
 #: qcsrc/client/View.qc:511
 msgid "Nade timer"
-msgstr "Nade Cronometro"
+msgstr "Cronometro de granada"
 
 #: qcsrc/client/View.qc:516
 msgid "Revival progress"
@@ -747,7 +747,7 @@ msgstr "jugando ^3%s^7 on ^2%s^7"
 #: qcsrc/client/scoreboard.qc:1375 qcsrc/client/scoreboard.qc:1380
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr "para un máximo de ^1%1.0f minutes^7"
+msgstr " para un máximo de ^1%1.0f minutes^7"
 
 #: qcsrc/client/scoreboard.qc:1384 qcsrc/client/scoreboard.qc:1403
 msgid " or"
@@ -756,7 +756,7 @@ msgstr " ó"
 #: qcsrc/client/scoreboard.qc:1387 qcsrc/client/scoreboard.qc:1394
 #, c-format
 msgid " until ^3%s %s^7"
-msgstr "hasta ^3%s %s^7"
+msgstr " hasta ^3%s %s^7"
 
 #: qcsrc/client/scoreboard.qc:1388 qcsrc/client/scoreboard.qc:1395
 #: qcsrc/client/scoreboard.qc:1407 qcsrc/client/scoreboard.qc:1414
@@ -6856,11 +6856,11 @@ msgstr "rosa"
 msgid "spectate"
 msgstr "espectador"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr ""
 
