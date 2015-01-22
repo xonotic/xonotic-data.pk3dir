@@ -2910,148 +2910,132 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 }
 
 // Keyhunt HUD modicon section
-float kh_runheretime;
-
-void HUD_Mod_KH_Reset(void)
-{
-	kh_runheretime = 0;
-}
+vector KH_SLOTS[4];
 
 void HUD_Mod_KH(vector pos, vector mySize)
 {
 	mod_active = 1; // keyhunt should never hide the mod icons panel
-	float kh_keys;
-	float keyteam;
-	float a, aa;
-	vector p = '0 0 0', pa, kh_size = '0 0 0', kh_asize = '0 0 0';
 
-	kh_keys = getstati(STAT_KH_KEYS);
+	// Read current state
 
-	p_x = pos_x;
-	if(mySize_x > mySize_y)
-	{
-		p_y = pos_y + 0.25 * mySize_y;
-		pa = p - eY * 0.25 * mySize_y;
-
-		kh_size_x = mySize_x * 0.25;
-		kh_size_y = 0.75 * mySize_y;
-		kh_asize_x = mySize_x * 0.25;
-		kh_asize_y = mySize_y * 0.25;
-	}
-	else
-	{
-		p_y = pos_y + 0.125 * mySize_y;
-		pa = p - eY * 0.125 * mySize_y;
-
-		kh_size_x = mySize_x * 0.5;
-		kh_size_y = 0.375 * mySize_y;
-		kh_asize_x = mySize_x * 0.5;
-		kh_asize_y = mySize_y * 0.125;
-	}
-
-	float i, key;
-
-	float keycount;
-	keycount = 0;
-	for(i = 0; i < 4; ++i)
-	{
-		key = floor(kh_keys / pow(32, i)) & 31;
-		keyteam = key - 1;
-		if(keyteam == 30 && keycount <= 4)
-			keycount += 4;
-		if(keyteam == myteam || keyteam == -1 || keyteam == 30)
-			keycount += 1;
-	}
-
-	// this yields 8 exactly if "RUN HERE" shows
-
-	if(keycount == 8)
-	{
-		if(!kh_runheretime)
-			kh_runheretime = time;
-		pa_y -= fabs(sin((time - kh_runheretime) * 3.5)) * 6; // make the arrows jump in case of RUN HERE
-	}
-	else
-		kh_runheretime = 0;
+	float state = getstati(STAT_KH_KEYS);
+	float i, key_state;
+	float all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
+	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
 
 	for(i = 0; i < 4; ++i)
 	{
-		key = floor(kh_keys / pow(32, i)) & 31;
-		keyteam = key - 1;
-		switch(keyteam)
+		key_state = (bitshift(state, i * -5) & 31) - 1;
+
+		if(key_state == -1)
+			continue;
+
+		if(key_state == 30)
 		{
-			case 30: // my key
-				keyteam = myteam;
-				a = 1;
-				aa = 1;
-				break;
-			case -1: // no key
-				a = 0;
-				aa = 0;
-				break;
-			default: // owned or dropped
-				a = 0.2;
-				aa = 0.5;
-				break;
+			++carrying_keys;
+			key_state = myteam;
 		}
-		a = a * panel_fg_alpha;
-		aa = aa * panel_fg_alpha;
-		if(a > 0)
+
+		switch(key_state)
 		{
-			switch(keyteam)
-			{
-				case NUM_TEAM_1:
-					drawpic_aspect_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case NUM_TEAM_2:
-					drawpic_aspect_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case NUM_TEAM_3:
-					drawpic_aspect_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case NUM_TEAM_4:
-					drawpic_aspect_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				default:
-					break;
-			}
-			switch(i) // YAY! switch(i) inside a for loop for i. DailyWTF, here we come!
-			{
-				case 0:
-					drawpic_aspect_skin(p, "kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case 1:
-					drawpic_aspect_skin(p, "kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case 2:
-					drawpic_aspect_skin(p, "kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-				case 3:
-					drawpic_aspect_skin(p, "kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
-					break;
-			}
+			case NUM_TEAM_1: ++team1_keys; break;
+			case NUM_TEAM_2: ++team2_keys; break;
+			case NUM_TEAM_3: ++team3_keys; break;
+			case NUM_TEAM_4: ++team4_keys; break;
+			case 29: ++dropped_keys; break;
 		}
+
+		++all_keys;
+	}
+
+	// Calculate slot measurements
+
+	vector slot_size;
+
+	if(all_keys == 4 && mySize_x * 0.5 < mySize_y && mySize_y * 0.5 < mySize_x)
+	{
+		// Quadratic arrangement
+		slot_size = eX * mySize_x * 0.5 + eY * mySize_y * 0.5;
+		KH_SLOTS[0] = pos;
+		KH_SLOTS[1] = pos + eX * slot_size_x;
+		KH_SLOTS[2] = pos + eY * slot_size_y;
+		KH_SLOTS[3] = pos + eX * slot_size_x + eY * slot_size_y;
+	}
+	else
+	{
 		if(mySize_x > mySize_y)
 		{
-			p_x += 0.25 * mySize_x;
-			pa_x += 0.25 * mySize_x;
+			// Horizontal arrangement
+			slot_size = eX * mySize_x / all_keys + eY * mySize_y;
+			for(i = 0; i < all_keys; ++i)
+				KH_SLOTS[i] = pos + eX * slot_size_x * i;
 		}
 		else
 		{
-			if(i == 1)
-			{
-				p_y = pos_y + 0.625 * mySize_y;
-				pa_y = pos_y + 0.5 * mySize_y;
-				p_x = pos_x;
-				pa_x = pos_x;
-			}
-			else
-			{
-				p_x += 0.5 * mySize_x;
-				pa_x += 0.5 * mySize_x;
-			}
+			// Vertical arrangement
+			slot_size = eX * mySize_x + eY * mySize_y / all_keys;
+			for(i = 0; i < all_keys; ++i)
+				KH_SLOTS[i] = pos + eY * slot_size_y * i;
 		}
 	}
+
+	// Make icons blink in case of RUN HERE
+
+	float blink = 0.6 + sin(2*M_PI*time) / 2.5; // Oscillate between 0.2 and 1
+	float alpha;
+	alpha = 1;
+
+	if(carrying_keys)
+		switch(myteam)
+		{
+			case NUM_TEAM_1: if(team1_keys == all_keys) alpha = blink; break;
+			case NUM_TEAM_2: if(team2_keys == all_keys) alpha = blink; break;
+			case NUM_TEAM_3: if(team3_keys == all_keys) alpha = blink; break;
+			case NUM_TEAM_4: if(team4_keys == all_keys) alpha = blink; break;
+		}
+
+	// Draw icons
+
+	i = 0;
+
+	while(team1_keys--)
+		if(myteam == NUM_TEAM_1 && carrying_keys)
+		{
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_red_carrying", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			--carrying_keys;
+		}
+		else
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_red_taken", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+	while(team2_keys--)
+		if(myteam == NUM_TEAM_2 && carrying_keys)
+		{
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_blue_carrying", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			--carrying_keys;
+		}
+		else
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_blue_taken", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+	while(team3_keys--)
+		if(myteam == NUM_TEAM_3 && carrying_keys)
+		{
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_yellow_carrying", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			--carrying_keys;
+		}
+		else
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_yellow_taken", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+	while(team4_keys--)
+		if(myteam == NUM_TEAM_4 && carrying_keys)
+		{
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_pink_carrying", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			--carrying_keys;
+		}
+		else
+			drawpic_aspect_skin(KH_SLOTS[i++], "kh_pink_taken", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+	while(dropped_keys--)
+		drawpic_aspect_skin(KH_SLOTS[i++], "kh_dropped", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 }
 
 // Keepaway HUD mod icon
@@ -4482,9 +4466,7 @@ Main HUD system
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_KEYHUNT)
-		HUD_Mod_KH_Reset();
-	else if(gametype == MAPINFO_TYPE_CTF)
+	if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 
