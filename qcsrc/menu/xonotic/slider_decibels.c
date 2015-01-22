@@ -78,11 +78,11 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 	else if(v <= me.valueMin)
 		return CTX(_("VOL^OFF"));
 	else if(autocvar_menu_snd_sliderscale == 3) // fake percent scale
-		return sprintf(_("%d %%"), (v - me.valueMin) / (me.valueMax - me.valueMin) * 100);
+		return sprintf("%d %%", (v - me.valueMin) / (me.valueMax - me.valueMin) * 100);
 	else if(autocvar_menu_snd_sliderscale == 2) // 0..10 scale
-		return sprintf(_("%.1f"), (v - me.valueMin) / (me.valueMax - me.valueMin) * 10);
+		return sprintf("%.1f", (v - me.valueMin) / (me.valueMax - me.valueMin) * 10);
 	else if(autocvar_menu_snd_sliderscale == 1) // real percent scale
-		return sprintf(_("%.2f %%"), fromDecibelOfSquare(v, me.valueMin) * 100);
+		return sprintf("%.2f %%", fromDecibelOfSquare(v, me.valueMin) * 100);
 	else // decibel scale
 		return sprintf(_("%s dB"), ftos_decimals(toDecibelOfSquare(fromDecibelOfSquare(v, me.valueMin), 0), me.valueDigits));
 }

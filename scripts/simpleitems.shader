@@ -53,6 +53,19 @@ a_shells_simple // shells
 
 ////////// WEAPONS //////////
 
+g_arc_simple // arc
+{
+	deformVertexes autosprite
+	cull none
+ 	nopicmip
+
+	{
+		map models/weapons/g_arc_simple
+		blendfunc blend
+
+	}
+}
+
 g_crylink_simple // crylink
 {
 	deformVertexes autosprite
@@ -79,7 +92,7 @@ g_electro_simple // electro
 	}
 }
 
-g_nex_simple // nex
+g_nex_simple // vortex
 {
 	deformVertexes autosprite
 	cull none
@@ -118,7 +131,7 @@ g_gl_simple // mortar
 	}
 }
 
-g_rl_simple // rocket launcher
+g_rl_simple // devastator
 {
 	deformVertexes autosprite
 	cull none
@@ -139,19 +152,6 @@ g_shotgun_simple // shotgun
 
  	{
 		map models/weapons/g_shotgun_simple
-		blendfunc blend
-
-	}
-}
-
-g_uzi_simple // machine gun
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-
- 	{
-		map models/weapons/g_uzi_simple
 		blendfunc blend
 
 	}
@@ -222,7 +222,7 @@ g_hookgun_simple // hook gun
 	}
 }
 
-g_laser_simple // laser
+g_laser_simple // blaster
 {
 	deformVertexes autosprite
 	cull none
@@ -248,7 +248,7 @@ g_minelayer_simple // minelayer
 	}
 }
 
-g_minstanex_simple // minstanex
+g_minstanex_simple // vaporizer
 {
 	deformVertexes autosprite
 	cull none

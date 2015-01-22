@@ -88,6 +88,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
+					HUD_Write_PanelCvar_q("_noncurrent_alpha");
+					HUD_Write_PanelCvar_q("_noncurrent_scale");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_name");
@@ -119,6 +121,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
 					HUD_Write_PanelCvar_q("_increment");
@@ -809,13 +812,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			}
 			if (!tab_backward)
 			{
-				level = mod(level + level_height, vid_conheight);
+				level = (level + level_height) % vid_conheight;
 				start_pos_x = 0;
 				candidate_pos_x = vid_conwidth;
 			}
 			else
 			{
-				level = mod(level - level_height, vid_conheight);
+				level = (level - level_height) % vid_conheight;
 				start_pos_x = vid_conwidth;
 				candidate_pos_x = 0;
 			}

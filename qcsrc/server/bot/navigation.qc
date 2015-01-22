@@ -117,7 +117,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 							break;
 				}
 
-				if (!(pointcontents(org + '0 0 1') == CONTENT_EMPTY))
+				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
@@ -430,7 +430,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 	if (autocvar_g_waypointeditor_auto)
 	{
 		entity wp2 = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, wp);
-		if (!wp2)
+		if (wp && !wp2)
 			wp.wpflags |= WAYPOINTFLAG_PROTECTED;
 	}
 	return wp;

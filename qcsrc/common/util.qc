@@ -346,14 +346,14 @@ void db_close(float db)
 string db_get(float db, string pKey)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), pKey));
 }
 
 void db_put(float db, string pKey, string pValue)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
 }
 
@@ -406,6 +406,22 @@ void buf_save(float buf, string pFilename)
 	for(i = 0; i < n; ++i)
 		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
 	fclose(fh);
+}
+
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
 }
 
 string mmsss(float tenths)
@@ -1703,19 +1719,6 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
-void check_unacceptable_compiler_bugs()
-{
-	if(cvar("_allow_unacceptable_compiler_bugs"))
-		return;
-	tokenize_console("foo bar");
-	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
-		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
-
-	string s = "";
-	if (!s)
-		error("The empty string counts as false. We do not want that!");
-}
-
 float compressShotOrigin(vector v)
 {
 	float x, y, z;
@@ -2106,6 +2109,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
@@ -2256,10 +2261,10 @@ const string XENCODE_22 = "0123456789abcdefABCDEF";
 string xencode(float f)
 {
 	float a, b, c, d;
-	d = mod(f, 22); f = floor(f / 22);
-	c = mod(f, 22); f = floor(f / 22);
-	b = mod(f, 22); f = floor(f / 22);
-	a = mod(f,  2); // f = floor(f /  2);
+	d = f % 22; f = floor(f / 22);
+	c = f % 22; f = floor(f / 22);
+	b = f % 22; f = floor(f / 22);
+	a = f %  2; // f = floor(f /  2);
 	return strcat(
 		"^",
 		substring(XENCODE_2,  a, 1),
@@ -2558,8 +2563,31 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z)
+{
+	vector result; result_x = x; result_y = y; result_z = z;
+	return result;
+}
+
+vector get_corner_position(entity box, float corner)
+{
+	switch(corner)
+	{
+		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
+		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
+		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
+		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
+		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
+		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
+		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
+		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
+		default: return '0 0 0';
+	}
+}
+#endif
+
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2581,7 +2609,6 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

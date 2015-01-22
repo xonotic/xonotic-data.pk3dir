@@ -15,6 +15,7 @@ CLASS(XonoticCheckBox) EXTENDS(CheckBox)
 	ATTRIB(XonoticCheckBox, cvarName, string, string_null)
 	METHOD(XonoticCheckBox, loadCvars, void(entity))
 	METHOD(XonoticCheckBox, saveCvars, void(entity))
+	ATTRIB(XonoticCheckBox, sendCvars, float, 0)
 
 	ATTRIB(XonoticCheckBox, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticCheckBox, disabledAlpha, float, SKINALPHA_DISABLED)
@@ -97,5 +98,7 @@ void XonoticCheckBox_saveCvars(entity me)
 		cvar_set(me.cvarName, ftos(me.yesValue));
 	else
 		cvar_set(me.cvarName, ftos(me.noValue));
+
+	CheckSendCvars(me, me.cvarName);
 }
 #endif

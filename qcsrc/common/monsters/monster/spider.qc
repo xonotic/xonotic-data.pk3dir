@@ -35,9 +35,9 @@ void spider_web_explode()
 	if(self)
 	{
 		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		RadiusDamage(self, self.realowner, 0, 0, 25, world, 25, self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);
@@ -72,7 +72,7 @@ void spider_shootweb()
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SetupProjectileVelocityEx(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, FALSE);
 	proj.touch = spider_web_touch;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;
@@ -119,12 +119,7 @@ void spawnfunc_monster_spider()
 {
 	self.classname = "monster_spider";
 
-	self.monster_spawnfunc = spawnfunc_monster_spider;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SPIDER)) { remove(self); return; }
 }
 
 float m_spider(float req)
@@ -154,7 +149,7 @@ float m_spider(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/spider.dpm");
+			precache_model("models/monsters/spider.dpm");
 			precache_sound ("weapons/electro_fire2.wav");
 			return TRUE;
 		}
@@ -171,7 +166,6 @@ float m_spider(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/spider.dpm");
 			return TRUE;
 		}
 	}
