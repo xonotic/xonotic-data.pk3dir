@@ -253,7 +253,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 				
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_SECONDARY); }
+					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
 					frag_force = '0 0 0';
 				}
 			}
@@ -289,12 +289,17 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 {
-	start_ammo_cells = cvar("g_instagib_ammo_start");
+	start_health       = warmup_start_health       = 100;
+	start_armorvalue   = warmup_start_armorvalue   = 0;
 
-	start_health = 100;
-	start_armorvalue = 0;
-	start_weapons = WEPSET_VAPORIZER;
-	warmup_start_weapons = WEPSET_VAPORIZER;
+	start_ammo_shells  = warmup_start_ammo_shells  = 0;
+	start_ammo_nails   = warmup_start_ammo_nails   = 0;
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
+	start_ammo_rockets = warmup_start_ammo_rockets = 0;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+
+	start_weapons = warmup_start_weapons = WEPSET_VAPORIZER;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;

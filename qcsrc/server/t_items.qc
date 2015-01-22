@@ -599,7 +599,7 @@ float Item_GiveTo(entity item, entity player)
 	{
 		pickedup = TRUE;
 		player.items |= it;
-		sprint (player, strcat("You got the ^2", item.netname, "\n"));
+		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_ITEM_WEAPON_GOT, item.netname);
 	}
 
 	if (item.strength_finished)
@@ -855,7 +855,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 		else if(wi.items & IT_PLASMA)
 			need_plasma = TRUE;
 		else if(wi.items & IT_FUEL)
-			need_cells = TRUE;
+			need_fuel = TRUE;
 	}
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
@@ -1458,8 +1458,6 @@ void spawnfunc_item_fuel_regen(void)
 
 void spawnfunc_item_jetpack(void)
 {
-	if(g_grappling_hook)
-		return; // sorry, but these two can't coexist (same button); spawn fuel instead
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & IT_JETPACK)

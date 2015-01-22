@@ -205,7 +205,7 @@ void freezetag_Unfreeze(entity attacker)
 
 float freezetag_isEliminated(entity e)
 {
-	if(e.frozen == 1 || e.deadflag != DEAD_NO)
+	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
 		return TRUE;
 	return FALSE;
 }

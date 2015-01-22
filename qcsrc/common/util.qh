@@ -98,12 +98,8 @@ void db_put(float db, string key, string value);
 float buf_load(string filename);
 void buf_save(float buf, string filename);
 
-// modulo function
-#ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }
-#endif
-
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string format_time(float seconds);
 string mmsss(float t);
 string mmssss(float t);
 
@@ -376,9 +372,9 @@ vector get_corner_position(entity box, float corner);
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
-#ifndef MENUQC
+//#ifndef MENUQC
 void backtrace(string msg);
-#endif
+//#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
@@ -450,3 +446,6 @@ vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
 vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
 
 #define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
+
+// Returns the correct difference between two always increasing numbers
+#define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)

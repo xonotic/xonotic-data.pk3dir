@@ -94,7 +94,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
-	w = pow(2, mod(w, 24));
+	w = pow(2, w % 24);
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
 		if(IS_SPEC(a))
@@ -110,6 +110,7 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 
 	if(!warmup_stage)
 	if(targ.deadflag == DEAD_NO)
+	if(!targ.frozen)
 	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
 		return TRUE;

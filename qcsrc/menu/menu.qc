@@ -91,6 +91,7 @@ void m_init()
 			m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024

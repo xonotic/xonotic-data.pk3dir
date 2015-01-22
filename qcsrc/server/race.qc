@@ -1178,7 +1178,7 @@ float race_GetFractionalLapCount(entity e)
 	// race_timed_checkpoint == 0: then nextcp==0 means 0.9999x
 	float c, nc;
 	nc = race_highest_checkpoint + 1;
-	c = (mod(nextcpindex - race_timed_checkpoint + nc + nc - 1, nc) + 1) - bestfraction;
+	c = ((nextcpindex - race_timed_checkpoint + nc + nc - 1) % nc) + 1 - bestfraction;
 
 	return l + c / nc;
 }

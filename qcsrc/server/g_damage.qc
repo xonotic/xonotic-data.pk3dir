@@ -99,7 +99,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
 		if(targ.playerid)
-			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
+			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -419,7 +419,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				case counta: \
 				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
 			switch(attacker.killcount)
@@ -433,8 +433,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				checkrules_firstblood = TRUE;
 				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-				PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -541,7 +541,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
-			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 	}
 
@@ -910,7 +910,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime)
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || self == attacker)
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)

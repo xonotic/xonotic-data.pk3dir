@@ -323,7 +323,7 @@ void W_Seeker_Fire_Flac(void)
 
 	W_DecreaseAmmo(WEP_CVAR(seeker, flac_ammo));
 
-	c = mod(self.bulletcounter, 4);
+	c = self.bulletcounter % 4;
 	switch(c)
 	{
 		case 0:
@@ -430,7 +430,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	oldenemy = self.enemy;
 	self.enemy = oldself.enemy;
 
-	c = mod(self.cnt, 4);
+	c = self.cnt % 4;
 	switch(c)
 	{
 		case 0:
