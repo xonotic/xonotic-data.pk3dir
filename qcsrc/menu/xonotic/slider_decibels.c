@@ -48,7 +48,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 {
 	float v;
 
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	v = cvar(me.cvarName);
@@ -61,7 +61,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.value > me.valueMax - 0.5 * me.valueStep)
@@ -78,11 +78,11 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 	else if(v <= me.valueMin)
 		return CTX(_("VOL^OFF"));
 	else if(autocvar_menu_snd_sliderscale == 3) // fake percent scale
-		return sprintf(_("%d %%"), (v - me.valueMin) / (me.valueMax - me.valueMin) * 100);
+		return sprintf("%d %%", (v - me.valueMin) / (me.valueMax - me.valueMin) * 100);
 	else if(autocvar_menu_snd_sliderscale == 2) // 0..10 scale
-		return sprintf(_("%.1f"), (v - me.valueMin) / (me.valueMax - me.valueMin) * 10);
+		return sprintf("%.1f", (v - me.valueMin) / (me.valueMax - me.valueMin) * 10);
 	else if(autocvar_menu_snd_sliderscale == 1) // real percent scale
-		return sprintf(_("%.2f %%"), fromDecibelOfSquare(v, me.valueMin) * 100);
+		return sprintf("%.2f %%", fromDecibelOfSquare(v, me.valueMin) * 100);
 	else // decibel scale
 		return sprintf(_("%s dB"), ftos_decimals(toDecibelOfSquare(fromDecibelOfSquare(v, me.valueMin), 0), me.valueDigits));
 }
@@ -96,7 +96,7 @@ void _TEST_XonoticDecibelsSlider()
 		float v = fromDecibelOfSquare(db, -40);
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
-		print(sprintf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d));
+		printf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
 		TEST_Check(fabs(d) > 0.02);
 	}
 	TEST_OK();

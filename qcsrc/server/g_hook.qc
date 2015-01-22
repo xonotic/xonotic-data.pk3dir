@@ -274,12 +274,12 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
-			
+
 	self.health = self.health - damage;
-		
+
 	if (self.health <= 0)
 	{
 		if(attacker != self.realowner)
@@ -335,7 +335,7 @@ void FireGrapplingHook (void)
 
 	missile.state = 0; // not latched onto anything
 
-	W_SetupProjectileVelocityEx(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -383,7 +383,7 @@ void GrapplingHookFrame()
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
 		{
-			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire))
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
@@ -407,7 +407,7 @@ void GrapplingHookFrame()
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
-	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
+	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK)
 	{
 		if(self.BUTTON_HOOK && !self.hook_switchweapon)
 			W_SwitchWeapon(WEP_HOOK);
@@ -426,6 +426,7 @@ void GrapplingHookFrame()
 			RemoveGrapplingHook(self);
 		FireGrapplingHook();
 		self.hook_state &= ~HOOK_FIRING;
+		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
@@ -475,7 +476,7 @@ void GrappleHookInit()
 	}
 	else
 	{
-		weapon_action(WEP_HOOK, WR_PRECACHE);
+		WEP_ACTION(WEP_HOOK, WR_INIT);
 		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
 		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
 		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);

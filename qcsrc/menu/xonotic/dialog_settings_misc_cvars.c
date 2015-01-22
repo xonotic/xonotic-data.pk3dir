@@ -15,18 +15,21 @@ void XonoticCvarsDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls 
+void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls
 {
 
 	entity e, cvarlist;
 
 	cvarlist = makeXonoticCvarList();
 
-	cvarlist.color = 
-		cvarlist.colorF = 
-		cvarlist.color2 = 
-		cvarlist.colorC = 
+	cvarlist.color =
+		cvarlist.colorF =
+		cvarlist.color2 =
+		cvarlist.colorC =
 		SKINCOLOR_CVARLIST_CONTROLS;
+
+	// todo:
+	// add button which does cvar_resettodefaults_saveonly
 
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
@@ -40,8 +43,8 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onChangeEntity = cvarlist;
 			cvarlist.controlledTextbox = e; // this COULD also be the Value box, but this leads to accidentally editing stuff
 	me.TR(me);
-		me.TD(me, me.rows - me.currentRow - 7, me.columns, cvarlist);
-	me.gotoRC(me, me.rows - 6, 0);
+		me.TD(me, me.rows - me.currentRow - 9, me.columns, cvarlist);
+	me.gotoRC(me, me.rows - 8, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Setting:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
 			cvarlist.cvarNameBox = e;
@@ -68,6 +71,7 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onClickEntity = cvarlist;
 			e.allowCut = 1;
 			e.marginLeft = e.marginRight = 0.5;
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Description:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));

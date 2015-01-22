@@ -99,7 +99,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
 		if(targ.playerid)
-			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
+			PS_GR_P_ADDVAL(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -115,7 +115,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
+		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
 			// no exchange
 		}
@@ -128,7 +128,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 
 			if(warmup_stage)
-				GiveFrags_randomweapons.weapons = warmup_start_weapons;
+				GiveFrags_randomweapons.weapons = WARMUP_START_WEAPONS;
 			else
 				GiveFrags_randomweapons.weapons = start_weapons;
 
@@ -147,7 +147,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if not(attacker.weapons & WepSet_FromWeapon(attacker.weapon))
+		if (!(attacker.weapons & WepSet_FromWeapon(attacker.weapon)))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
@@ -225,7 +225,7 @@ void Obituary_SpecialDeath(
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		entity deathent = deathtypes[(deathtype - DT_FIRST)];
-		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
+		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
 		{
@@ -287,7 +287,7 @@ float Obituary_WeaponDeath(
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;
-		float death_message = weapon_action(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		float death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
 		w_deathtype = FALSE;
 
 		if(death_message)
@@ -311,11 +311,11 @@ float Obituary_WeaponDeath(
 		}
 		else
 		{
-			dprint(sprintf(
+			dprintf(
 				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
 				deathtype,
 				death_weapon
-			));
+			);
 		}
 
 		return TRUE;
@@ -326,7 +326,7 @@ float Obituary_WeaponDeath(
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
-	if not(IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
+	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
 	float notif_firstblood = FALSE;
@@ -349,7 +349,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		)
 	);
 	#endif
-	
+
 	// =======
 	// SUICIDE
 	// =======
@@ -370,7 +370,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
-					
+
 					default:
 					{
 						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -379,7 +379,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				}
 			}
 		}
-		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -399,7 +399,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			GiveFrags(attacker, targ, -1, deathtype);
 
 			attacker.killcount = 0;
-			
+
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, deathlocation, targ.killcount);
@@ -419,7 +419,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				case counta: \
 				{ \
 					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
-					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
+					PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
 			switch(attacker.killcount)
@@ -433,8 +433,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				checkrules_firstblood = TRUE;
 				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
-				PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
+				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -493,7 +493,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
-			if not(Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
+			if (!Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
 		}
 	}
@@ -527,7 +527,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					0);
 				break;
 			}
-			
+
 			default:
 			{
 				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
@@ -541,12 +541,92 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
 		{
 			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
-			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
+			PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 	}
 
 	// reset target kill count
 	if(targ.killcount) { targ.killcount = 0; }
+}
+
+void Ice_Think()
+{
+	if(!self.owner.frozen || self.owner.iceblock != self)
+	{
+		remove(self);
+		return;
+	}
+	setorigin(self, self.owner.origin - '0 0 16');
+	self.nextthink = time;
+}
+
+void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
+{
+	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
+		return;
+
+	if(targ.frozen)
+		return;
+
+	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : start_health);
+
+	targ.frozen = frozen_type;
+	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
+	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
+	targ.revive_speed = freeze_time;
+
+	entity ice, head;
+	ice = spawn();
+	ice.owner = targ;
+	ice.classname = "ice";
+	ice.scale = targ.scale;
+	ice.think = Ice_Think;
+	ice.nextthink = time;
+	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	setmodel(ice, "models/ice/ice.md3");
+	ice.alpha = 1;
+	ice.colormod = Team_ColorRGB(targ.team);
+	ice.glowmod = ice.colormod;
+	targ.iceblock = ice;
+	targ.revival_time = 0;
+
+	entity oldself;
+	oldself = self;
+	self = ice;
+	Ice_Think();
+	self = oldself;
+
+	RemoveGrapplingHook(targ);
+
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
+
+	// add waypoint
+	if(show_waypoint)	
+		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+}
+
+void Unfreeze (entity targ)
+{
+	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
+		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
+
+	entity head;
+	targ.frozen = 0;
+	targ.revive_progress = 0;
+	targ.revival_time = time;
+	
+	WaypointSprite_Kill(targ.waypointsprite_attached);
+	
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == targ)
+		RemoveGrapplingHook(head);
+
+	// remove the ice block
+	if(targ.iceblock)
+		remove(targ.iceblock);
+	targ.iceblock = world;
 }
 
 // these are updated by each Damage call for use in button triggering and such
@@ -558,7 +638,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float complainteamdamage = 0; 
+	float complainteamdamage = 0;
 	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
@@ -596,7 +676,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
 			vehicles_exit(VHEF_RELESE);
-	
+
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
@@ -647,7 +727,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = v_z; // = 0, to make fteqcc stfu
+								mirrordamage = v_z;
 								mirrorforce = 0;
 							}
 
@@ -669,7 +749,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if not(DEATH_ISSPECIAL(deathtype))
+		if (!DEATH_ISSPECIAL(deathtype))
 		{
 			damage *= g_weapondamagefactor;
 			mirrordamage *= g_weapondamagefactor;
@@ -677,20 +757,76 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
-		
+
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
-        frag_deathtype = deathtype;
+		frag_deathtype = deathtype;
 		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
+
+		if(targ.frozen)
+		if(deathtype != DEATH_HURTTRIGGER && deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_AUTOTEAMCHANGE)
+		{
+			if(autocvar_g_freezetag_revive_falldamage > 0)
+			if(deathtype == DEATH_FALL)
+			if(damage >= autocvar_g_freezetag_revive_falldamage)
+			{
+				Unfreeze(targ);
+				targ.health = autocvar_g_freezetag_revive_falldamage_health;
+				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+			}
+
+			damage = 0;
+			force *= autocvar_g_freezetag_frozen_force;
+		}
 		
-		if not(g_minstagib)
+		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
+		{
+			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+		
+			entity oldself = self;
+			self = targ;
+			entity spot = SelectSpawnPoint (FALSE);
+			
+			if(spot)
+			{
+				damage = 0;
+				self.deadflag = DEAD_NO;
+
+				self.angles = spot.angles;
+				
+				self.effects = 0;
+				self.effects |= EF_TELEPORT_BIT;
+
+				self.angles_z = 0; // never spawn tilted even if the spot says to
+				self.fixangle = TRUE; // turn this way immediately
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.punchangle = '0 0 0';
+				self.punchvector = '0 0 0';
+				self.oldvelocity = self.velocity;
+				
+				self.spawnorigin = spot.origin;
+				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+				// don't reset back to last position, even if new position is stuck in solid
+				self.oldorigin = self.origin;
+				self.prevorigin = self.origin;
+				
+				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+			}
+			
+			self = oldself;
+		}
+
+		if(!g_instagib)
 		{
 			// apply strength multiplier
 			if (attacker.items & IT_STRENGTH)
@@ -713,16 +849,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 
 		if (targ == attacker)
-		{
-			if(g_cts && !autocvar_g_cts_selfdamage)
-				damage = 0;
-			else
-				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
-		}
+			damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
+		if(deathtype != DEATH_BUFF_VENGEANCE)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
@@ -732,9 +864,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || (victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (victim.flags & FL_MONSTER))
 			{
-				if(DIFF_TEAM(victim, attacker))
+				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
 					if(damage > 0)
 					{
@@ -743,13 +875,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
-								attacker.hitsound += 1;
+								attacker.damage_dealt += damage;
 						}
 
 						damage_goodhits += 1;
 						damage_gooddamage += damage;
 
-						if not(DEATH_ISSPECIAL(deathtype))
+						if (!DEATH_ISSPECIAL(deathtype))
 						{
 							if(IS_PLAYER(targ)) // don't do this for vehicles
 							if(IsFlying(victim))
@@ -778,7 +910,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime)
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || self == attacker)
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
@@ -817,11 +949,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 }
 
 float RadiusDamage_running;
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
-	vector	blastorigin;
 	vector	force;
 	float   total_damage_to_creatures;
 	entity  next;
@@ -841,202 +972,161 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	tfloordmg = autocvar_g_throughfloor_damage;
 	tfloorforce = autocvar_g_throughfloor_force;
 
-	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
 	total_damage_to_creatures = 0;
 
 	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
-			force = inflictor.velocity;
+			force = inflictorvelocity;
 			if(vlen(force) == 0)
 				force = '0 0 -1';
 			else
 				force = normalize(force);
 			if(forceintensity >= 0)
-				Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 			else
-				Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 		}
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (blastorigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
 	while (targ)
 	{
 		next = targ.chain;
-		if (targ != inflictor)
-			if (ignore != targ) if(targ.takedamage)
+		if ((targ != inflictor) || inflictorselfdamage)
+		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
+		if (targ.takedamage)
+		{
+			vector nearest;
+			vector diff;
+			float power;
+
+			// LordHavoc: measure distance to nearest point on target (not origin)
+			// (this guarentees 100% damage on a touch impact)
+			nearest = targ.WarpZone_findradius_nearest;
+			diff = targ.WarpZone_findradius_dist;
+			// round up a little on the damage to ensure full damage on impacts
+			// and turn the distance into a fraction of the radius
+			power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+			//bprint(" ");
+			//bprint(ftos(power));
+			//if (targ == attacker)
+			//	print(ftos(power), "\n");
+			if (power > 0)
 			{
-				vector nearest;
-				vector diff;
-				float power;
-
-				// LordHavoc: measure distance to nearest point on target (not origin)
-				// (this guarentees 100% damage on a touch impact)
-				nearest = targ.WarpZone_findradius_nearest;
-				diff = targ.WarpZone_findradius_dist;
-				// round up a little on the damage to ensure full damage on impacts
-				// and turn the distance into a fraction of the radius
-				power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
-				//bprint(" ");
-				//bprint(ftos(power));
-				//if (targ == attacker)
-				//	print(ftos(power), "\n");
-				if (power > 0)
+				float finaldmg;
+				if (power > 1)
+					power = 1;
+				finaldmg = coredamage * power + edgedamage * (1 - power);
+				if (finaldmg > 0)
 				{
-					float finaldmg;
-					if (power > 1)
-						power = 1;
-					finaldmg = coredamage * power + edgedamage * (1 - power);
-					if (finaldmg > 0)
+					float a;
+					float c;
+					vector hitloc;
+					vector myblastorigin;
+					vector center;
+
+					myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
+
+					// if it's a player, use the view origin as reference
+					center = CENTER_OR_VIEWOFS(targ);
+
+					force = normalize(center - myblastorigin);
+					force = force * (finaldmg / coredamage) * forceintensity;
+					hitloc = nearest;
+
+					if(deathtype & WEP_BLASTER)
+						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
+
+					if(targ != directhitentity)
 					{
-						float a;
-						float c;
-						vector hitloc;
-						vector myblastorigin;
-						vector center;
+						float hits;
+						float total;
+						float hitratio;
+						float mininv_f, mininv_d;
 
-						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
+						// test line of sight to multiple positions on box,
+						// and do damage if any of them hit
+						hits = 0;
 
-						// if it's a player, use the view origin as reference
-						center = CENTER_OR_VIEWOFS(targ);
+						// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
+						// so for a given max stddev:
+						// n = (1 / (2 * max stddev of hitratio))^2
 
-						force = normalize(center - myblastorigin);
-						force = force * (finaldmg / coredamage) * forceintensity;
-						hitloc = nearest;
+						mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
+						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
 
-						if(targ != directhitentity)
+						if(autocvar_g_throughfloor_debug)
+							printf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
+
+
+						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
+
+						if(autocvar_g_throughfloor_debug)
+							printf(" steps=%f", total);
+
+
+						if (IS_PLAYER(targ))
+							total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
+						else
+							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
+
+						if(autocvar_g_throughfloor_debug)
+							printf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
+
+						for(c = 0; c < total; ++c)
 						{
-							float hits;
-							float total;
-							float hitratio;
-							float mininv_f, mininv_d;
-
-							// test line of sight to multiple positions on box,
-							// and do damage if any of them hit
-							hits = 0;
-
-							// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
-							// so for a given max stddev:
-							// n = (1 / (2 * max stddev of hitratio))^2
-
-							mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
-							mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
-
-							total = 0.25 * pow(max(mininv_f, mininv_d), 2);
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f", total));
-
-							if (IS_PLAYER(targ))
-								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
-							else
-								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
-
-							for(c = 0; c < total; ++c)
+							//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
+							WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
+							if (trace_fraction == 1 || trace_ent == targ)
 							{
-								//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
-								WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
-								if (trace_fraction == 1 || trace_ent == targ)
-								{
-									++hits;
-									if (hits > 1)
-										hitloc = hitloc + nearest;
-									else
-										hitloc = nearest;
-								}
-								nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-								nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-								nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
-							}
-
-							nearest = hitloc * (1 / max(1, hits));
-							hitratio = (hits / total);
-							a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
-							finaldmg = finaldmg * a;
-							a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
-							force = force * a;
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
-						}
-
-						// laser force adjustments :P
-						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
-						{
-							if (targ == attacker)
-							{
-								vector vel;
-
-								float force_zscale;
-								float force_velocitybiasramp;
-								float force_velocitybias;
-
-								force_velocitybiasramp = autocvar_sv_maxspeed;
-								if(deathtype & HITTYPE_SECONDARY)
-								{
-									force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
-									force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
-								}
+								++hits;
+								if (hits > 1)
+									hitloc = hitloc + nearest;
 								else
-								{
-									force_zscale = autocvar_g_balance_laser_primary_force_zscale;
-									force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
-								}
-
-								vel = targ.velocity;
-								vel_z = 0;
-								vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
-								force =
-									vlen(force)
-									*
-									normalize(normalize(force) + vel);
-
-								force_z *= force_zscale;
+									hitloc = nearest;
 							}
-							else
-							{
-								if(deathtype & HITTYPE_SECONDARY)
-								{
-									force *= autocvar_g_balance_laser_secondary_force_other_scale;
-								}
-								else
-								{
-									force *= autocvar_g_balance_laser_primary_force_other_scale;
-								}
-							}
+							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
+							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
+							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
 						}
 
-						//if (targ == attacker)
-						//{
-						//	print("hits ", ftos(hits), " / ", ftos(total));
-						//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
-						//	print(" (", ftos(a), ")\n");
-						//}
-						if(finaldmg || vlen(force))
+						nearest = hitloc * (1 / max(1, hits));
+						hitratio = (hits / total);
+						a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
+						finaldmg = finaldmg * a;
+						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
+						force = force * a;
+
+						if(autocvar_g_throughfloor_debug)
+							printf(" D=%f F=%f\n", finaldmg, vlen(force));
+					}
+
+					//if (targ == attacker)
+					//{
+					//	print("hits ", ftos(hits), " / ", ftos(total));
+					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
+					//	print(" (", ftos(a), ")\n");
+					//}
+					if(finaldmg || vlen(force))
+					{
+						if(targ.iscreature)
 						{
-							if(targ.iscreature)
-							{
-								total_damage_to_creatures += finaldmg;
+							total_damage_to_creatures += finaldmg;
 
-								if(accuracy_isgooddamage(attacker, targ))
-									stat_damagedone += finaldmg;
-							}
-
-							if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-								Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
-							else
-								Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
+							if(accuracy_isgooddamage(attacker, targ))
+								stat_damagedone += finaldmg;
 						}
+
+						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
+							Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+						else
+							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
 					}
 				}
 			}
+		}
 		targ = next;
 	}
 
@@ -1046,6 +1136,11 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		accuracy_add(attacker, DEATH_WEAPONOFWEAPONDEATH(deathtype), 0, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
+}
+
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
+{
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, FALSE, forceintensity, deathtype, directhitentity);
 }
 
 .float fire_damagepersec;
@@ -1098,7 +1193,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(maxtime > mintime || maxdps > mindps)
 		{
 			// Constraints:
-			
+
 			// damage we have right now
 			mindamage = mindps * mintime;
 
@@ -1187,7 +1282,7 @@ void Fire_ApplyDamage(entity e)
 	float t, d, hi, ty;
 	entity o;
 
-	if not(Fire_IsBurning(e))
+	if (!Fire_IsBurning(e))
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
@@ -1200,28 +1295,29 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.freezetag_frozen)
+	if(e.frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.hitsound;
+	hi = e.fire_owner.damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.hitsound = hi;
+		e.fire_owner.damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = TRUE;
 
-	if not(IS_INDEPENDENT_PLAYER(e))
+	if (!IS_INDEPENDENT_PLAYER(e))
+	if(!e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))
 		if(other.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(other))
+		if (!IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
 		{
 			t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);

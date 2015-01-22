@@ -1,4 +1,3 @@
-#define WANT_CONST
 // commonly used, but better make them macros
 #define TRUE 1
 #define FALSE 0
@@ -6,6 +5,12 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+#ifdef GMQCC
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	[[accumulate]] void func() { otherfunc(); }
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
 #ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
@@ -41,11 +46,12 @@ void ACCUMULATE_call(string func)
 # define CALL_ACCUMULATED_FUNCTION(func) \
 	ACCUMULATE_call(#func)
 #endif
+#endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs
 #define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
 #define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
@@ -92,12 +98,8 @@ void db_put(float db, string key, string value);
 float buf_load(string filename);
 void buf_save(float buf, string filename);
 
-// modulo function
-#ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }   
-#endif
-
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string format_time(float seconds);
 string mmsss(float t);
 string mmssss(float t);
 
@@ -202,13 +204,11 @@ vector solve_quadratic(float a, float b, float c);
 vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style);
 vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma);
 
-void check_unacceptable_compiler_bugs();
-
 float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];
 #endif
 
@@ -266,6 +266,7 @@ float get_model_parameters_species;
 string get_model_parameters_sex;
 float get_model_parameters_weight;
 float get_model_parameters_age;
+string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
 #define MAX_AIM_BONES 4
@@ -298,9 +299,9 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-#ifndef COMPAT_XON010_CHANNELS
+// Play all sounds via sound7, for access to the extra channels.
+// Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
-#endif
 
 float lowestbit(float f);
 
@@ -357,12 +358,23 @@ typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z);
+vector get_corner_position(entity box, float corner);
+#endif
+
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
-#ifndef MENUQC
+// Some common varargs functions. Lowercase as they match C.
+#define printf(...) print(sprintf(__VA_ARGS__))
+#define dprintf(...) dprint(sprintf(__VA_ARGS__))
+#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
+
+//#ifndef MENUQC
 void backtrace(string msg);
-#endif
+//#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
@@ -423,3 +435,17 @@ void dedicated_print(string input);
 #define CNT_ROUNDSTART 6
 float Announcer_PickNumber(float type, float num);
 #endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
+#endif
+
+// Quadratic splines (bezier)
+vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
+vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
+
+#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))
+
+// Returns the correct difference between two always increasing numbers
+#define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)

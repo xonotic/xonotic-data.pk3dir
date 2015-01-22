@@ -28,9 +28,9 @@ string TextSlider_valueToIdentifier(entity me, float val)
 string TextSlider_valueToText(entity me, float val)
 {
 	if(val >= me.nValues)
-		return _("custom");
+		return _("Custom");
 	if(val < 0)
-		return _("custom");
+		return _("Custom");
 	return me.(valueStrings[val]);
 }
 void TextSlider_setValueFromIdentifier(entity me, string id)
@@ -62,8 +62,10 @@ void TextSlider_insertValue(entity me, float pos, string theString, string theId
 {
 	float i;
 	for (i = me.nValues; i > pos; --i)
+	{
 		me.(valueStrings[i]) = me.(valueStrings[i-1]);
 		me.(valueIdentifiers[i]) = me.(valueIdentifiers[i-1]);
+	}
 	me.(valueStrings[pos]) = theString;
 	me.(valueIdentifiers[pos]) = theIdentifier;
 	me.nValues += 1;

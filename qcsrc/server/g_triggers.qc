@@ -61,14 +61,13 @@ void SUB_UseTargets()
 //
 // print the message
 //
-	if (IS_PLAYER(activator) && self.message != "")
+	if(self)
+	if(IS_PLAYER(activator) && self.message != "")
+	if(IS_REAL_CLIENT(activator))
 	{
-		if(IS_REAL_CLIENT(activator))
-		{
-			centerprint (activator, self.message);
-			if (self.noise == "")
-				play2(activator, "misc/talk.wav");
-		}
+		centerprint(activator, self.message);
+		if (self.noise == "")
+			play2(activator, "misc/talk.wav");
 	}
 
 //
@@ -164,7 +163,7 @@ void multi_trigger()
 
 	if (self.classname == "trigger_secret")
 	{
-		if not(IS_PLAYER(self.enemy))
+		if (!IS_PLAYER(self.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
@@ -205,8 +204,8 @@ void multi_use()
 
 void multi_touch()
 {
-	if not(self.spawnflags & 2)
-		if not(other.iscreature)
+	if(!(self.spawnflags & 2))
+	if(!other.iscreature)
 			return;
 
 	if(self.team)
@@ -378,32 +377,26 @@ void spawnfunc_trigger_delay()
 
 void counter_use()
 {
-	self.count = self.count - 1;
+	self.count -= 1;
 	if (self.count < 0)
 		return;
 
-	if (self.count != 0)
+	if (self.count == 0)
 	{
-		if (IS_PLAYER(activator)
-		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		{
-			if (self.count >= 4)
-				centerprint (activator, "There are more to go...");
-			else if (self.count == 3)
-				centerprint (activator, "Only 3 more to go...");
-			else if (self.count == 2)
-				centerprint (activator, "Only 2 more to go...");
-			else
-				centerprint (activator, "Only 1 more to go...");
-		}
-		return;
-	}
+		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-	if (IS_PLAYER(activator)
-	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		centerprint(activator, "Sequence completed!");
-	self.enemy = activator;
-	multi_trigger ();
+		self.enemy = activator;
+		multi_trigger ();
+	}
+	else
+	{
+		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		if(self.count >= 4)
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
+		else
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, self.count);
+	}
 }
 
 void counter_reset()
@@ -441,7 +434,7 @@ void trigger_hurt_use()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if(self.team)
@@ -459,7 +452,7 @@ void trigger_hurt_touch()
 
 			entity own;
 			own = self.enemy;
-			if not(IS_PLAYER(own))
+			if (!IS_PLAYER(own))
 			{
 				own = self;
 				self.enemy = world; // I still hate you all
@@ -532,9 +525,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 .float triggerhealtime;
 void trigger_heal_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
+
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
 	if (other.iscreature)
 	{
@@ -544,7 +537,7 @@ void trigger_heal_touch()
 		{
 			EXACTTRIGGER_TOUCH;
 			other.triggerhealtime = time + 1;
-			
+
 			if (other.health < self.max_health)
 			{
 				other.health = min(other.health + self.health, self.max_health);
@@ -558,7 +551,7 @@ void trigger_heal_touch()
 void spawnfunc_trigger_heal()
 {
 	self.active = ACTIVE_ACTIVE;
-	
+
 	EXACTTRIGGER_INIT;
 	self.touch = trigger_heal_touch;
 	if (!self.health)
@@ -628,7 +621,7 @@ void trigger_gravity_touch()
 
 	g = self.gravity;
 
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 	{
 		if(other.trigger_gravity_check)
 		{
@@ -691,7 +684,7 @@ void spawnfunc_trigger_gravity()
 void target_speaker_use_off();
 void target_speaker_use_activator()
 {
-	if not(IS_REAL_CLIENT(activator))
+	if (!IS_REAL_CLIENT(activator))
 		return;
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
@@ -942,7 +935,7 @@ void spawnfunc_func_pointparticles()
 		setmodel(self, self.model);
 	if(self.noise != "")
 		precache_sound (self.noise);
-	
+
 	if(!self.bgmscriptsustain)
 		self.bgmscriptsustain = 1;
 	else if(self.bgmscriptsustain < 0)
@@ -1097,9 +1090,6 @@ void spawnfunc_func_snow()
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
 }
 
-
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
-
 .float modelscale;
 void misc_laser_aim()
 {
@@ -1164,7 +1154,7 @@ void misc_laser_think()
 	if(self.enemy)
 	{
 		o = self.enemy.origin;
-		if not(self.spawnflags & 2)
+		if (!(self.spawnflags & 2))
 			o = self.origin + normalize(o - self.origin) * 32768;
 	}
 	else
@@ -1369,7 +1359,7 @@ void trigger_impulse_touch1()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1409,7 +1399,7 @@ void trigger_impulse_touch2()
 {
     float pushdeltatime;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1433,7 +1423,7 @@ void trigger_impulse_touch3()
     float pushdeltatime;
     float str;
 
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -1766,7 +1756,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if(vs.message == "")
 		return;
-	if not(IS_PLAYER(pl))
+	if (!IS_PLAYER(pl))
 		return;
 	if(gameover)
 		return;
@@ -1781,7 +1771,7 @@ void target_voicescript_next(entity pl)
 			if(pl.voicescript_index < vs.cnt)
 				i = pl.voicescript_index * 2;
 			else if(n > vs.cnt * 2)
-				i = mod(pl.voicescript_index - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
+				i = ((pl.voicescript_index - vs.cnt) % ((n - vs.cnt * 2 - 1) / 2)) * 2 + vs.cnt * 2 + 1;
 			else
 				i = -1;
 
@@ -1819,7 +1809,7 @@ void spawnfunc_target_voicescript()
 	//          added after this message
 	// wait: average time between messages
 	// delay: initial delay before the first message
-	
+
 	float i, n;
 	self.use = target_voicescript_use;
 
@@ -1918,13 +1908,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
-	if not(domatch)
+	if (!domatch)
 		return msgin;
 
-	if not(msgin)
+	if (!msgin)
 	{
 		// we are in TUBA mode!
-		if not(ear.spawnflags & 256)
+		if (!(ear.spawnflags & 256))
 			return msgin;
 
 		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
@@ -1970,7 +1960,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 			if(ear.spawnflags & 8)
 				return msgin;
 	}
-	
+
 	matchstart = -1;
 	l = strlen(ear.message);
 
@@ -2062,9 +2052,9 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	for(ear = magicears; ear; ear = ear.enemy)
 	{
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
-		if not(ear.spawnflags & 64)
-			if(magicear_matched)
-				return msgout;
+		if(!(ear.spawnflags & 64))
+		if(magicear_matched)
+			return msgout;
 		msgin = msgout;
 	}
 	return msgin;
@@ -2110,9 +2100,9 @@ void spawnfunc_trigger_magicear()
 void relay_activators_use()
 {
 	entity trg, os;
-	
+
 	os = self;
-	
+
 	for(trg = world; (trg = find(trg, targetname, os.target)); )
 	{
 		self = trg;
@@ -2124,11 +2114,11 @@ void relay_activators_use()
 			if(os.cnt == ACTIVE_TOGGLE)
 				if(trg.active == ACTIVE_ACTIVE)
 					trg.active = ACTIVE_NOT;
-				else	
+				else
 					trg.active = ACTIVE_ACTIVE;
 			else
 				trg.active = os.cnt;
-		}		
+		}
 	}
 	self = os;
 }
@@ -2142,13 +2132,13 @@ void spawnfunc_relay_activate()
 void spawnfunc_relay_deactivate()
 {
 	self.cnt = ACTIVE_NOT;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 void spawnfunc_relay_activatetoggle()
 {
 	self.cnt = ACTIVE_TOGGLE;
-	self.use = relay_activators_use;	
+	self.use = relay_activators_use;
 }
 
 .string chmap, gametype;

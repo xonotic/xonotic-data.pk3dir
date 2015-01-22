@@ -40,8 +40,7 @@
 \g_pinata\Los jugadores dejan todas las armas cuando mueren
 \g_weapon_stay\Las armas quedan despues de que son tomadas
 \g_weaponarena\Seleccionando un arma, dara a todos los jugadores cual arma se eligió asi como infinita munición, y deshabilita cualquier otra toma de arma.
-\menu_weaponarena_with_laser\Tambien habilita el láser en la arena
-\g_minstagib\Los jugadores tendran Minstanex, el cual es un railgun con daño infinito. Si el jugador queda sin munición, tendra 10 segundos para buscar mas o morira. El modo de disparo secundario es un laser que no inflige daño y es bueno para hacer bromas.
+\g_instagib\Los jugadores tendran Minstanex, el cual es un railgun con daño infinito. Si el jugador queda sin munición, tendra 10 segundos para buscar mas o morira. El modo de disparo secundario es un laser que no inflige daño y es bueno para hacer bromas.
 \g_nix\Xonotic sin items - en vez de recoger items, todos juegan con la misma arma. Despues de algún tiempo, comienza una cuenta regresiva, despues del cual todos juegan con otra arma.
 \g_nix_with_laser\Siempre lleva el láser como arma adicional en Nix
 \XonoticMultiplayerDialog/Select all\Seleccionar todos los mapas

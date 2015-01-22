@@ -1,5 +1,4 @@
 MUTATOR_DECLARATION(gamemode_assault);
-MUTATOR_DECLARATION(gamemode_arena);
 MUTATOR_DECLARATION(gamemode_ca);
 MUTATOR_DECLARATION(gamemode_keyhunt);
 MUTATOR_DECLARATION(gamemode_freezetag);
@@ -9,6 +8,10 @@ MUTATOR_DECLARATION(gamemode_nexball);
 MUTATOR_DECLARATION(gamemode_onslaught);
 MUTATOR_DECLARATION(gamemode_domination);
 MUTATOR_DECLARATION(gamemode_lms);
+MUTATOR_DECLARATION(gamemode_invasion);
+MUTATOR_DECLARATION(gamemode_cts);
+MUTATOR_DECLARATION(gamemode_race);
+MUTATOR_DECLARATION(gamemode_tdm);
 
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);
@@ -19,7 +22,7 @@ MUTATOR_DECLARATION(mutator_spawn_near_teammate);
 MUTATOR_DECLARATION(mutator_physical_items);
 MUTATOR_DECLARATION(mutator_vampire);
 MUTATOR_DECLARATION(mutator_superspec);
-MUTATOR_DECLARATION(mutator_minstagib);
+MUTATOR_DECLARATION(mutator_instagib);
 MUTATOR_DECLARATION(mutator_touchexplode);
 MUTATOR_DECLARATION(mutator_pinata);
 MUTATOR_DECLARATION(mutator_midair);
@@ -29,5 +32,8 @@ MUTATOR_DECLARATION(mutator_multijump);
 MUTATOR_DECLARATION(mutator_melee_only);
 MUTATOR_DECLARATION(mutator_nades);
 MUTATOR_DECLARATION(mutator_campcheck);
+MUTATOR_DECLARATION(mutator_buffs);
 
 MUTATOR_DECLARATION(sandbox);
+MUTATOR_DECLARATION(mutator_overkill);
+

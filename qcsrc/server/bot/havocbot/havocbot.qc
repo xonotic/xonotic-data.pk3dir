@@ -20,7 +20,7 @@ void havocbot_ai()
 		}
 		else
 		{
-			if not(self.jumppadcount)
+			if (!self.jumppadcount)
 				self.havocbot_role();
 		}
 
@@ -92,7 +92,7 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			weapon_action(self.weapon, WR_AIM);
+			WEP_ACTION(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = FALSE;
@@ -146,7 +146,7 @@ void havocbot_ai()
 	havocbot_movetogoal();
 
 	// if the bot is not attacking, consider reloading weapons
-	if not(self.aistatus & AI_STATUS_ATTACKING)
+	if (!(self.aistatus & AI_STATUS_ATTACKING))
 	{
 		float i;
 		entity e;
@@ -164,7 +164,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
 					self.switchweapon = i;
 			}
 		}
@@ -316,7 +316,7 @@ void havocbot_bunnyhop(vector dir)
 
 					if(self.aistatus & AI_STATUS_ROAMING)
 					if(self.goalcurrent.classname=="waypoint")
-					if not(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)
+					if (!(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco_z - self.origin_z) < self.maxs_z - self.mins_z)
 					if(self.goalstack01!=world)
 					{
@@ -422,7 +422,7 @@ void havocbot_movetogoal()
 		}
 
 		// Take off
-		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
+		if (!(self.aistatus & AI_STATUS_JETPACK_FLYING))
 		{
 			// Brake almost completely so it can get a good direction
 			if(vlen(self.velocity)>10)
@@ -546,7 +546,7 @@ void havocbot_movetogoal()
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
-	if not(self.flags & FL_ONGROUND)
+	if (!(self.flags & FL_ONGROUND))
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
 		if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
@@ -590,10 +590,10 @@ void havocbot_movetogoal()
 
 			return;
 		}
-		else if(self.health>autocvar_g_balance_rocketlauncher_damage*0.5)
+		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity_z < 0)
-			if(client_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
+			if(client_hasweapon(self, WEP_DEVASTATOR, TRUE, FALSE))
 			{
 				self.movement_x = maxspeed;
 
@@ -607,10 +607,10 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_ROCKET_LAUNCHER;
+				self.switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = TRUE;
-				self.rocketjumptime = time + autocvar_g_balance_rocketlauncher_detonatedelay;
+				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
 				return;
 			}
 		}
@@ -722,10 +722,10 @@ void havocbot_movetogoal()
 			vector dst_ahead, dst_down;
 			makevectors(self.v_angle_y * '0 1 0');
 			dst_ahead = self.origin + self.view_ofs + (self.velocity * 0.4) + (v_forward * 32 * 3);
-			dst_down = dst_ahead + '0 0 -1500';
+			dst_down = dst_ahead - '0 0 1500';
 
 			// Look ahead
-			traceline(self.origin + self.view_ofs , dst_ahead, TRUE, world);
+			traceline(self.origin + self.view_ofs, dst_ahead, TRUE, world);
 
 			// Check head-banging against walls
 			if(vlen(self.origin + self.view_ofs - trace_endpos) < 25 && !(self.aistatus & AI_STATUS_OUT_WATER))
@@ -956,7 +956,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
 				other_weapon_available = TRUE;
 		}
 		if(other_weapon_available)
@@ -982,7 +982,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i=WEP_LASER + 1; i < WEP_COUNT ; ++i)
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
 		{
 			if(client_hasweapon(self, i, TRUE, FALSE))
 			{

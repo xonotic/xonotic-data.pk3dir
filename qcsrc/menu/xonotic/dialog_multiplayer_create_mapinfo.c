@@ -5,7 +5,7 @@ CLASS(XonoticMapInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))
 	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
 	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0)
-	ATTRIB(XonoticMapInfoDialog, rows, float, 12)
+	ATTRIB(XonoticMapInfoDialog, rows, float, 11)
 	ATTRIB(XonoticMapInfoDialog, columns, float, 10)
 
 	ATTRIB(XonoticMapInfoDialog, previewImage, entity, NULL)
@@ -22,7 +22,6 @@ CLASS(XonoticMapInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMapInfoDialog, currentMapAuthor, string, string_null)
 	ATTRIB(XonoticMapInfoDialog, currentMapDescription, string, string_null)
 	ATTRIB(XonoticMapInfoDialog, currentMapPreviewImage, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapFeaturesText, string, string_null)
 ENDCLASS(XonoticMapInfoDialog)
 #endif
 
@@ -40,20 +39,17 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 		strunzone(me.currentMapAuthor);
 		strunzone(me.currentMapDescription);
 		strunzone(me.currentMapPreviewImage);
-		strunzone(me.currentMapFeaturesText);
 	}
 	me.currentMapBSPName = strzone(MapInfo_Map_bspname);
 	me.currentMapTitle = strzone(strdecolorize(MapInfo_Map_title));
 	me.currentMapAuthor = strzone(strdecolorize(MapInfo_Map_author));
 	me.currentMapDescription = strzone(MapInfo_Map_description);
-	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
 	me.currentMapPreviewImage = strzone(strcat("/maps/", MapInfo_Map_bspname));
 
 	me.frame.setText(me.frame, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
-	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
 	if(draw_PictureSize(me.currentMapPreviewImage) == '0 0 0')
 		me.previewImage.src = "nopreview_map";
 	else
@@ -89,11 +85,6 @@ void XonoticMapInfoDialog_fill(entity me)
 			e.colorL = SKINCOLOR_MAPLIST_AUTHOR;
 			e.allowCut = 1;
 			me.authorLabel = e;
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Features:")));
-		me.TD(me, 1, w-1, e = makeXonoticTextLabel(0, ""));
-			e.allowCut = 1;
-			me.featuresLabel = e;
 	me.TR(me);
 		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
 

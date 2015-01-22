@@ -2,18 +2,13 @@ void WarpZone_Fade_PreDraw()
 {
 	vector org;
 	org = getpropertyvec(VF_ORIGIN);
-	if(
-#ifdef COMPAT_XON060_DONTCRASH_CHECKPVS
-		cvar_string("g_xonoticversion") != "0.5.0" &&
-		cvar_string("g_xonoticversion") != "0.6.0" &&
-#endif
-		!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
 		self.alpha = 0;
 	else if(self.warpzone_fadestart)
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
 	else
 		self.alpha = 1;
-	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
 	if(self.alpha <= 0)
 		self.drawmask = 0;
 	else
@@ -25,7 +20,7 @@ void WarpZone_Read(float isnew)
 	float f;
 
 	warpzone_warpzones_exist = 1;
-	if not(self.enemy)
+	if (!self.enemy)
 	{
 		self.enemy = spawn();
 		self.enemy.classname = "warpzone_from";
@@ -239,21 +234,14 @@ void WarpZone_FixView()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
 	float f;
 
-	org = getpropertyvec(VF_ORIGIN);
-	ang = getpropertyvec(VF_ANGLES);
-#ifdef WORKAROUND_XON010
-	float dirty;
-	dirty = checkextension("DP_CSQC_ROTATEMOVES");
-#endif
+	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
+	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
 
 	e = WarpZone_Find(org, org);
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
 		ang = WarpZone_TransformVAngles(e, ang);
-#ifdef WORKAROUND_XON010
-		dirty = 1;
-#endif
 		WarpZone_View_Inside();
 	}
 	else
@@ -269,23 +257,11 @@ void WarpZone_FixView()
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
 	setproperty(VF_CL_VIEWANGLES_Z, rick);
-
-#ifdef WORKAROUND_XON010
-	if(ang_z > 1 || ang_z < -1)
-		dirty = 1;
-#endif
 	ang_z *= f;
 #endif
 
-#ifdef WORKAROUND_XON010
-	if(dirty)
-	{
-#endif
 	setproperty(VF_ORIGIN, org);
 	setproperty(VF_ANGLES, ang);
-#ifdef WORKAROUND_XON010
-	}
-#endif
 
 	nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);

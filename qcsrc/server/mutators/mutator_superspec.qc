@@ -33,7 +33,7 @@ void superspec_save_client_conf()
 	string fn = "superspec-local.options";
 	float fh;
 
-	if not(_ISLOCAL)
+	if (!_ISLOCAL)
 	{
 		if(self.crypto_idfp == "")
 			return;
@@ -68,7 +68,7 @@ void superspec_msg(string _center_title, string _con_title, entity _to, string _
 		return;
 
 	if(_spamlevel > 1)
-		if not(_to.superspec_flags & SSF_VERBOSE)
+		if (!(_to.superspec_flags & SSF_VERBOSE))
 			return;
 
 	centerprint(_to, strcat(_center_title, _msg));
@@ -429,9 +429,7 @@ MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
 void superspec_hello()
 {
 	if(self.enemy.crypto_idfp == "")
-		centerprint(self.enemy, "Your client have/allow no crypto id, superspec options will not be saved/restored.");
-	else
-		centerprint(self.enemy, sprintf("Hello %s\nSince your client has a Crypto ID, your superspec preferences will be persisted on this server.", self.enemy.netname));
+		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
 	remove(self);
 }
@@ -452,7 +450,7 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	_hello.think = superspec_hello;
 	_hello.nextthink = time + 5;
 
-	if not(_ISLOCAL)
+	if (!_ISLOCAL)
 	{
 		if(self.crypto_idfp == "")
 			return FALSE;

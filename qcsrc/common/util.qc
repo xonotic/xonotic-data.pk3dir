@@ -148,7 +148,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
-	
+
 	// remove the component in line direction
 	p = p - (p * ldir) * ldir;
 
@@ -241,7 +241,7 @@ vector colormapPaletteColor(float c, float isPants)
 string fstrunzone(string s)
 {
 	string sc;
-	if not(s)
+	if (!s)
 		return s;
 	sc = strcat(s, "");
 	strunzone(s);
@@ -264,7 +264,7 @@ void db_save(float db, string pFilename)
 {
 	float fh, i, n;
 	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0) 
+	if(fh < 0)
 	{
 		print(strcat("^1Can't write DB to ", pFilename));
 		return;
@@ -346,14 +346,14 @@ void db_close(float db)
 string db_get(float db, string pKey)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), pKey));
 }
 
 void db_put(float db, string pKey, string pValue)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(FALSE, pKey) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
 }
 
@@ -408,6 +408,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -458,7 +474,7 @@ string ScoreString(float pFlags, float pValue)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
 		valstr = ftos(pValue);
-	
+
 	return valstr;
 }
 
@@ -664,7 +680,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 				neworder = strcat(neworder, ftos(w), " ");
 		}
 	}
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -677,7 +693,7 @@ string mapPriorityList(string order, string(string) mapfunc)
 	neworder = "";
 	for(i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -702,7 +718,7 @@ string swapInPriorityList(string order, float i, float j)
 		}
 		return substring(s, 0, strlen(s) - 1);
 	}
-	
+
 	return order;
 }
 
@@ -866,7 +882,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	created_saved_value = 0;
 
-	if not(tmp_cvar || tmp_value)
+	if (!(tmp_cvar || tmp_value))
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
@@ -874,7 +890,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -911,7 +927,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -1100,7 +1116,7 @@ vector rgb_to_hsv(vector rgb)
 		hsv_y = 0;
 	else
 		hsv_y = 1 - mi/ma;
-	
+
 	return hsv;
 }
 
@@ -1118,7 +1134,7 @@ vector rgb_to_hsl(vector rgb)
 	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	
+
 	hsl_z = 0.5 * (mi + ma);
 	if(mi == ma)
 		hsl_y = 0;
@@ -1126,7 +1142,7 @@ vector rgb_to_hsl(vector rgb)
 		hsl_y = (ma - mi) / (2*hsl_z);
 	else // if(hsl_z > 0.5)
 		hsl_y = (ma - mi) / (2 - 2*hsl_z);
-	
+
 	return hsl;
 }
 
@@ -1138,7 +1154,7 @@ vector hsl_to_rgb(vector hsl)
 		maminusmi = hsl_y * 2 * hsl_z;
 	else
 		maminusmi = hsl_y * (2 - 2 * hsl_z);
-	
+
 	// hsl_z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
 	mi = hsl_z - 0.5 * maminusmi;
@@ -1199,7 +1215,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1227,7 +1243,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1263,7 +1279,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1291,7 +1307,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1312,7 +1328,7 @@ string find_last_color_code(string s)
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
@@ -1338,7 +1354,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -1384,7 +1400,7 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -1476,7 +1492,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
 		{
-			if not(subpattern4)
+			if (!subpattern4)
 				return 0;
 			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 				return 0;
@@ -1701,19 +1717,6 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 
 	// real Newtonian
 	return myvel + spd * mydir;
-}
-
-void check_unacceptable_compiler_bugs()
-{
-	if(cvar("_allow_unacceptable_compiler_bugs"))
-		return;
-	tokenize_console("foo bar");
-	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
-		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
-
-	string s = "";
-	if not(s)
-		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -2052,7 +2055,7 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
-	if not(m)
+	if (!m)
 		return 1;
 
 	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
@@ -2106,6 +2109,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
@@ -2256,10 +2261,10 @@ const string XENCODE_22 = "0123456789abcdefABCDEF";
 string xencode(float f)
 {
 	float a, b, c, d;
-	d = mod(f, 22); f = floor(f / 22);
-	c = mod(f, 22); f = floor(f / 22);
-	b = mod(f, 22); f = floor(f / 22);
-	a = mod(f,  2); // f = floor(f /  2);
+	d = f % 22; f = floor(f / 22);
+	c = f % 22; f = floor(f / 22);
+	b = f % 22; f = floor(f / 22);
+	a = f %  2; // f = floor(f /  2);
 	return strcat(
 		"^",
 		substring(XENCODE_2,  a, 1),
@@ -2323,12 +2328,12 @@ float InterpretBoolean(string input)
 		case "true":
 		case "on":
 			return TRUE;
-		
+
 		case "no":
 		case "false":
 		case "off":
 			return FALSE;
-		
+
 		default: return stof(input);
 	}
 }
@@ -2459,7 +2464,7 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	/*
 	// if this is the case, the possible zeros of the first derivative are outside
 	// 0..1
-	We can calculate this condition as condition 
+	We can calculate this condition as condition
 	if(se <= 3)
 		return TRUE;
 	*/
@@ -2492,6 +2497,28 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// (3, [0..3])
 	// (3.5, [0.2..2.3])
 	// (4, 1)
+
+	/*
+	   On another note:
+	   inflection point is always at (2s + e - 3) / (3s + 3e - 6).
+
+	   s + e - 2 == 0: no inflection
+
+	   s + e > 2:
+	   0 < inflection < 1 if:
+	   0 < 2s + e - 3 < 3s + 3e - 6
+	   2s + e > 3 and 2e + s > 3
+
+	   s + e < 2:
+	   0 < inflection < 1 if:
+	   0 > 2s + e - 3 > 3s + 3e - 6
+	   2s + e < 3 and 2e + s < 3
+
+	   Therefore: there is an inflection point iff:
+	   e outside (3 - s)/2 .. 3 - s*2
+
+	   in other words, if (s,e) in triangle (1,1)(0,3)(0,1.5) or in triangle (1,1)(3,0)(1.5,0)
+	*/
 }
 
 .float FindConnectedComponent_processing;
@@ -2536,8 +2563,31 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z)
+{
+	vector result; result_x = x; result_y = y; result_z = z;
+	return result;
+}
+
+vector get_corner_position(entity box, float corner)
+{
+	switch(corner)
+	{
+		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
+		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
+		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
+		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
+		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
+		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
+		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
+		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
+		default: return '0 0 0';
+	}
+}
+#endif
+
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2559,18 +2609,17 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
 {
 	// See the autocvar declarations in util.qh for default values
-	
+
 	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
 
 	// "kill" colors
 	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
@@ -2629,15 +2678,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_GAMESTART_10;
-				case 9:  return ANNCE_NUM_GAMESTART_9; 
-				case 8:  return ANNCE_NUM_GAMESTART_8; 
-				case 7:  return ANNCE_NUM_GAMESTART_7; 
-				case 6:  return ANNCE_NUM_GAMESTART_6; 
-				case 5:  return ANNCE_NUM_GAMESTART_5; 
-				case 4:  return ANNCE_NUM_GAMESTART_4; 
-				case 3:  return ANNCE_NUM_GAMESTART_3; 
-				case 2:  return ANNCE_NUM_GAMESTART_2; 
-				case 1:  return ANNCE_NUM_GAMESTART_1; 
+				case 9:  return ANNCE_NUM_GAMESTART_9;
+				case 8:  return ANNCE_NUM_GAMESTART_8;
+				case 7:  return ANNCE_NUM_GAMESTART_7;
+				case 6:  return ANNCE_NUM_GAMESTART_6;
+				case 5:  return ANNCE_NUM_GAMESTART_5;
+				case 4:  return ANNCE_NUM_GAMESTART_4;
+				case 3:  return ANNCE_NUM_GAMESTART_3;
+				case 2:  return ANNCE_NUM_GAMESTART_2;
+				case 1:  return ANNCE_NUM_GAMESTART_1;
 			}
 			break;
 		}
@@ -2646,15 +2695,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9; 
-				case 8:  return ANNCE_NUM_IDLE_8; 
-				case 7:  return ANNCE_NUM_IDLE_7; 
-				case 6:  return ANNCE_NUM_IDLE_6; 
-				case 5:  return ANNCE_NUM_IDLE_5; 
-				case 4:  return ANNCE_NUM_IDLE_4; 
-				case 3:  return ANNCE_NUM_IDLE_3; 
-				case 2:  return ANNCE_NUM_IDLE_2; 
-				case 1:  return ANNCE_NUM_IDLE_1; 
+				case 9:  return ANNCE_NUM_IDLE_9;
+				case 8:  return ANNCE_NUM_IDLE_8;
+				case 7:  return ANNCE_NUM_IDLE_7;
+				case 6:  return ANNCE_NUM_IDLE_6;
+				case 5:  return ANNCE_NUM_IDLE_5;
+				case 4:  return ANNCE_NUM_IDLE_4;
+				case 3:  return ANNCE_NUM_IDLE_3;
+				case 2:  return ANNCE_NUM_IDLE_2;
+				case 1:  return ANNCE_NUM_IDLE_1;
 			}
 			break;
 		}
@@ -2663,15 +2712,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_KILL_10;
-				case 9:  return ANNCE_NUM_KILL_9; 
-				case 8:  return ANNCE_NUM_KILL_8; 
-				case 7:  return ANNCE_NUM_KILL_7; 
-				case 6:  return ANNCE_NUM_KILL_6; 
-				case 5:  return ANNCE_NUM_KILL_5; 
-				case 4:  return ANNCE_NUM_KILL_4; 
-				case 3:  return ANNCE_NUM_KILL_3; 
-				case 2:  return ANNCE_NUM_KILL_2; 
-				case 1:  return ANNCE_NUM_KILL_1; 
+				case 9:  return ANNCE_NUM_KILL_9;
+				case 8:  return ANNCE_NUM_KILL_8;
+				case 7:  return ANNCE_NUM_KILL_7;
+				case 6:  return ANNCE_NUM_KILL_6;
+				case 5:  return ANNCE_NUM_KILL_5;
+				case 4:  return ANNCE_NUM_KILL_4;
+				case 3:  return ANNCE_NUM_KILL_3;
+				case 2:  return ANNCE_NUM_KILL_2;
+				case 1:  return ANNCE_NUM_KILL_1;
 			}
 			break;
 		}
@@ -2680,15 +2729,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_RESPAWN_10;
-				case 9:  return ANNCE_NUM_RESPAWN_9; 
-				case 8:  return ANNCE_NUM_RESPAWN_8; 
-				case 7:  return ANNCE_NUM_RESPAWN_7; 
-				case 6:  return ANNCE_NUM_RESPAWN_6; 
-				case 5:  return ANNCE_NUM_RESPAWN_5; 
-				case 4:  return ANNCE_NUM_RESPAWN_4; 
-				case 3:  return ANNCE_NUM_RESPAWN_3; 
-				case 2:  return ANNCE_NUM_RESPAWN_2; 
-				case 1:  return ANNCE_NUM_RESPAWN_1; 
+				case 9:  return ANNCE_NUM_RESPAWN_9;
+				case 8:  return ANNCE_NUM_RESPAWN_8;
+				case 7:  return ANNCE_NUM_RESPAWN_7;
+				case 6:  return ANNCE_NUM_RESPAWN_6;
+				case 5:  return ANNCE_NUM_RESPAWN_5;
+				case 4:  return ANNCE_NUM_RESPAWN_4;
+				case 3:  return ANNCE_NUM_RESPAWN_3;
+				case 2:  return ANNCE_NUM_RESPAWN_2;
+				case 1:  return ANNCE_NUM_RESPAWN_1;
 			}
 			break;
 		}
@@ -2697,15 +2746,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_ROUNDSTART_10;
-				case 9:  return ANNCE_NUM_ROUNDSTART_9; 
-				case 8:  return ANNCE_NUM_ROUNDSTART_8; 
-				case 7:  return ANNCE_NUM_ROUNDSTART_7; 
-				case 6:  return ANNCE_NUM_ROUNDSTART_6; 
-				case 5:  return ANNCE_NUM_ROUNDSTART_5; 
-				case 4:  return ANNCE_NUM_ROUNDSTART_4; 
-				case 3:  return ANNCE_NUM_ROUNDSTART_3; 
-				case 2:  return ANNCE_NUM_ROUNDSTART_2; 
-				case 1:  return ANNCE_NUM_ROUNDSTART_1; 
+				case 9:  return ANNCE_NUM_ROUNDSTART_9;
+				case 8:  return ANNCE_NUM_ROUNDSTART_8;
+				case 7:  return ANNCE_NUM_ROUNDSTART_7;
+				case 6:  return ANNCE_NUM_ROUNDSTART_6;
+				case 5:  return ANNCE_NUM_ROUNDSTART_5;
+				case 4:  return ANNCE_NUM_ROUNDSTART_4;
+				case 3:  return ANNCE_NUM_ROUNDSTART_3;
+				case 2:  return ANNCE_NUM_ROUNDSTART_2;
+				case 1:  return ANNCE_NUM_ROUNDSTART_1;
 			}
 			break;
 		}
@@ -2714,15 +2763,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_10;
-				case 9:  return ANNCE_NUM_9; 
-				case 8:  return ANNCE_NUM_8; 
-				case 7:  return ANNCE_NUM_7; 
-				case 6:  return ANNCE_NUM_6; 
-				case 5:  return ANNCE_NUM_5; 
-				case 4:  return ANNCE_NUM_4; 
-				case 3:  return ANNCE_NUM_3; 
-				case 2:  return ANNCE_NUM_2; 
-				case 1:  return ANNCE_NUM_1; 
+				case 9:  return ANNCE_NUM_9;
+				case 8:  return ANNCE_NUM_8;
+				case 7:  return ANNCE_NUM_7;
+				case 6:  return ANNCE_NUM_6;
+				case 5:  return ANNCE_NUM_5;
+				case 4:  return ANNCE_NUM_4;
+				case 3:  return ANNCE_NUM_3;
+				case 2:  return ANNCE_NUM_2;
+				case 1:  return ANNCE_NUM_1;
 			}
 			break;
 		}
@@ -2730,3 +2779,55 @@ float Announcer_PickNumber(float type, float num)
 	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
+{
+	switch(nativecontents)
+	{
+		case CONTENT_EMPTY:
+			return 0;
+		case CONTENT_SOLID:
+			return DPCONTENTS_SOLID | DPCONTENTS_OPAQUE;
+		case CONTENT_WATER:
+			return DPCONTENTS_WATER;
+		case CONTENT_SLIME:
+			return DPCONTENTS_SLIME;
+		case CONTENT_LAVA:
+			return DPCONTENTS_LAVA | DPCONTENTS_NODROP;
+		case CONTENT_SKY:
+			return DPCONTENTS_SKY | DPCONTENTS_NODROP | DPCONTENTS_OPAQUE; // to match behaviour of Q3 maps, let sky count as opaque
+	}
+	return 0;
+}
+
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
+{
+	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
+		return CONTENT_SOLID;
+	if(supercontents & DPCONTENTS_SKY)
+		return CONTENT_SKY;
+	if(supercontents & DPCONTENTS_LAVA)
+		return CONTENT_LAVA;
+	if(supercontents & DPCONTENTS_SLIME)
+		return CONTENT_SLIME;
+	if(supercontents & DPCONTENTS_WATER)
+		return CONTENT_WATER;
+	return CONTENT_EMPTY;
+}
+#endif
+
+vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (t * t) +
+		(b - a) * (2 * t) +
+		a;
+}
+
+vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (2 * t) +
+		(b - a) * 2;
+}

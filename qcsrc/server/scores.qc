@@ -88,7 +88,7 @@ void TeamScore_Spawn(float t, string name)
 	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
-	PlayerStats_AddTeam(t);
+	PlayerStats_GameReport_AddTeam(t);
 }
 
 float TeamScore_AddToTeam(float t, float scorefield, float score)
@@ -157,8 +157,8 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 	}
 	if(label != "")
 	{
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
 	}
 }
 
@@ -173,8 +173,8 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 	if(label != "")
 	{
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
 	}
 }
 
@@ -263,9 +263,6 @@ float PlayerScore_Clear(entity player)
 
 	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return 0;
 
-	if(g_cts) return 0; // in CTS, you don't lose score by observing
-	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
-
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
@@ -334,7 +331,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	entity s;
 
 	if(gameover)
-	if not(g_lms && scorefield == SP_LMS_RANK) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
@@ -350,7 +347,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
 	if(!warmup_stage)
-		PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
+		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
 }
 
@@ -532,12 +529,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && !g_arena && p.caplayer != 1 && !g_lms)
+			if(!IS_PLAYER(p) && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(IS_PLAYER(p) || g_arena || p.caplayer == 1 || g_lms)
+			if(IS_PLAYER(p) || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
@@ -688,7 +685,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 		if(teams < 0)
 			return 0;
 	}
-	
+
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
 
@@ -712,7 +709,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		plist = p;
 	}
 	// Now plist points to the whole list.
-	
+
 	pfirst = plast = world;
 
 	i = j = 0;
@@ -742,7 +739,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 		pbest.field = j;
 
-		if not(pfirst)
+		if (!pfirst)
 			pfirst = pbest;
 		if(plast)
 			plast.chain = pbest;
@@ -765,7 +762,7 @@ float TeamScore_GetCompareValue(float t)
 	}
 
 	sk = teamscorekeepers[t - 1];
-	if not(sk)
+	if (!sk)
 		return -999999999;
 	s = sk.teamscores_primary;
 	if(teamscores_flags_primary & SFL_ZERO_IS_WORST)
@@ -813,7 +810,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 		s = "Scores:";
 
 	s = strcat(s, strpad(max(0, NAMEWIDTH - strlennocol(s)), ""));
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -847,7 +844,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 			break;
 		}
 	}
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -896,12 +893,12 @@ void Score_NicePrint(entity to)
 		t = p.team;
 		p = p.chain;
 	}
-	
+
 	t = 0;
 	FOR_EACH_CLIENT(p)
-	if not(IS_PLAYER(p))
+	if (!IS_PLAYER(p))
 	{
-		if not(t)
+		if (!t)
 			Score_NicePrint_Spectators(to);
 		Score_NicePrint_Spectator(to, p);
 		t = 1;
@@ -917,7 +914,7 @@ void PlayerScore_PlayerStats(entity p)
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(s.(scores[i]) != 0)
 			if(scores_label[i] != "")
-				PlayerStats_Event(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
+				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
 }
 
 void PlayerScore_TeamStats(void)
@@ -933,6 +930,6 @@ void PlayerScore_TeamStats(void)
 			if(sk.(teamscores[i]) != 0)
 				if(teamscores_label[i] != "")
 					// the +1 is important here!
-					PlayerStats_TeamScore(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+					PS_GR_T_ADDVAL(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
 	}
 }
