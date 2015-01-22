@@ -6,7 +6,7 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	METHOD(XonoticSoundList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticSoundList, getSounds, void(entity))
 	METHOD(XonoticSoundList, soundName, string(entity, float))
-	METHOD(XonoticSoundList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticSoundList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticSoundList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticSoundList, destroy, void(entity))
 	METHOD(XonoticSoundList, showNotify, void(entity))
@@ -21,8 +21,6 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticSoundList, origin, vector, '0 0 0')
 	ATTRIB(XonoticSoundList, itemAbsSize, vector, '0 0 0')
 
-	ATTRIB(XonoticSoundList, lastClickedSound, float, -1)
-	ATTRIB(XonoticSoundList, lastClickedTime, float, 0)
 	ATTRIB(XonoticSoundList, filterString, string, string_null)
 	ATTRIB(XonoticSoundList, playlist, entity, world)
 ENDCLASS(XonoticSoundList)
@@ -159,17 +157,9 @@ void SoundList_Add_All(entity box, entity me)
 		me.playlist.addToPlayList(me.playlist, me.soundName(me, i));
 }
 
-void XonoticSoundList_clickListBoxItem(entity me, float i, vector where)
+void XonoticSoundList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedSound)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.playlist.addToPlayList(me.playlist, me.soundName(me, i));
-		}
-	me.lastClickedSound = i;
-	me.lastClickedTime = time;
+	me.playlist.addToPlayList(me.playlist, me.soundName(me, i));
 }
 
 float XonoticSoundList_keyDown(entity me, float scan, float ascii, float shift)
