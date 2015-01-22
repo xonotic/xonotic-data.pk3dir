@@ -784,7 +784,7 @@ void UpdateCrosshair()
 
 				float ok_ammo_charge, ok_ammo_chargepool;
 				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
+				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
 
 				float vortex_charge, vortex_chargepool;
 				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
@@ -1017,12 +1017,7 @@ void CSQC_UpdateView(float w, float h)
 
 	CSQCPlayer_SetCamera();
 
-#ifdef COMPAT_XON050_ENGINE
-	if(spectatee_status)
-		myteam = GetPlayerColor(spectatee_status - 1);
-	else
-#endif
-		myteam = GetPlayerColor(player_localentnum - 1);
+	myteam = GetPlayerColor(player_localentnum - 1);
 
 	if(myteam != prev_myteam)
 	{
@@ -1299,15 +1294,9 @@ void CSQC_UpdateView(float w, float h)
 
 	// ALWAYS Clear Current Scene First
 	clearscene();
-#ifdef WORKAROUND_XON010
-	if(checkextension("DP_CSQC_ROTATEMOVES"))
-	{
-#endif
+
 	setproperty(VF_ORIGIN, view_origin);
 	setproperty(VF_ANGLES, view_angles);
-#ifdef WORKAROUND_XON010
-	}
-#endif
 
 	// FIXME engine bug? VF_SIZE and VF_MIN are not restored to sensible values by this
 	setproperty(VF_SIZE, vf_size);
@@ -1713,8 +1702,8 @@ void CSQC_UpdateView(float w, float h)
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
 	UpdateDamage();
-	UpdateHitsound();
 	UpdateCrosshair();
+	UpdateHitsound();
 
 	if(NextFrameCommand)
 	{

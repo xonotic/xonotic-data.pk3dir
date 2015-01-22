@@ -879,74 +879,76 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	}
 }
 
-void DrawAmmoItem(vector myPos, vector mySize, .float ammotype, float currently_selected, float infinite_ammo)
+void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent, float isInfinite)
 {
-	float a = 0;
-	if(ammotype != ammo_none)
+	if(ammoType == ammo_none)
+		return;
+
+	// Initialize variables
+
+	float ammo;
+	if(autocvar__hud_configure)
 	{
-		if(autocvar__hud_configure)
-		{
-			currently_selected = (ammotype == ammo_rockets); //rockets always selected
-			a = 60;
-		}
-		else
-		{
-			// how much ammo do we have of this ammotype?
-			a = getstati(GetAmmoStat(ammotype));
-		}
+		isCurrent = (ammoType == ammo_rockets); // Rockets always current
+		ammo = 60;
 	}
 	else
+		ammo = getstati(GetAmmoStat(ammoType));
+
+	if(!isCurrent)
 	{
-		#if 0
-		infinite_ammo = TRUE;
-		#else
-		return; // just don't draw infinite ammo at all.
-		#endif
+		float scale = bound(0, autocvar_hud_panel_ammo_noncurrent_scale, 1);
+		myPos = myPos + (mySize - mySize * scale) * 0.5;
+		mySize = mySize * scale;
 	}
 
-	vector color;
-	if(infinite_ammo)
-		color = '0 0.5 0.75';
-	else if(a < 10)
-		color = '0.7 0 0';
-	else
-		color = '1 1 1';
-
-	float theAlpha;
-	if(currently_selected)
-		theAlpha = 1;
-	else
-		theAlpha = 0.7;
-
-	vector picpos, numpos;
+	vector iconPos, textPos;
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
-		numpos = myPos;
-		picpos = myPos + eX * 2 * mySize_y;
+		iconPos = myPos + eX * 2 * mySize_y;
+		textPos = myPos;
 	}
 	else
 	{
-		numpos = myPos + eX * mySize_y;
-		picpos = myPos;
+		iconPos = myPos;
+		textPos = myPos + eX * mySize_y;
 	}
 
-	if(currently_selected)
+	float isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
+
+	vector iconColor = isShadowed ? '0 0 0' : '1 1 1';
+	vector textColor;
+	if(isInfinite)
+		textColor = '0.2 0.95 0';
+	else if(isShadowed)
+		textColor = '0 0 0';
+	else if(ammo < 10)
+		textColor = '0.8 0.04 0';
+	else
+		textColor = '1 1 1';
+
+	float alpha;
+	if(isCurrent)
+		alpha = panel_fg_alpha;
+	else if(isShadowed)
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1) * 0.5;
+	else
+		alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_ammo_noncurrent_alpha, 1);
+
+	string text = isInfinite ? "\xE2\x88\x9E" : ftos(ammo); // Use infinity symbol (U+221E)
+
+	// Draw item
+
+	if(isCurrent)
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
-	if(a > 0 && autocvar_hud_panel_ammo_progressbar)
-		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	if(ammo > 0 && autocvar_hud_panel_ammo_progressbar)
+		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_panel_ammo_text)
-	{
-		if(a > 0 || infinite_ammo)
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		else // "ghost" ammo count
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
-	}
-	if(a > 0 || infinite_ammo)
-		drawpic_aspect_skin(picpos, GetAmmoPicture(ammotype), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, GetAmmoPicture(ammotype), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, text, eX * (2/3) * mySize_x + eY * mySize_y, textColor, alpha, DRAWFLAG_NORMAL);
+
+	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize_y, iconColor, alpha, DRAWFLAG_NORMAL);
 }
 
 float nade_prevstatus;
@@ -2203,11 +2205,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-#ifdef COMPAT_XON050_ENGINE
-	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
-#else
 	me = playerslots[player_localentnum - 1];
-#endif
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -3102,7 +3100,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	//Manage the progress bar if any
 	if (nb_pb_starttime > 0)
 	{
-		dt = mod(time - nb_pb_starttime, nb_pb_period);
+		dt = (time - nb_pb_starttime) % nb_pb_period;
 		// one period of positive triangle
 		p = 2 * dt / nb_pb_period;
 		if (p > 1)
@@ -3692,11 +3690,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-#ifdef COMPAT_XON050_ENGINE
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
-#else
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
-#endif
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -3746,7 +3740,7 @@ void HUD_InfoMessages(void)
 		}
 
 		string blinkcolor;
-		if(mod(time, 1) >= 0.5)
+		if(time % 1 >= 0.5)
 			blinkcolor = "^1";
 		else
 			blinkcolor = "^3";
@@ -4515,11 +4509,7 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-#ifdef COMPAT_XON050_ENGINE
-    current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
-#else
     current_player = player_localentnum;
-#endif
 
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
@@ -4545,7 +4535,7 @@ void HUD_Main (void)
 			}
 			else if(hud_dock_color == "pants") {
 				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-				color = colormapPaletteColor(mod(f, 16), 1);
+				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
 				color = stov(hud_dock_color);

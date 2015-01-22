@@ -426,7 +426,7 @@ float autocvar_g_nick_flood_penalty_red;
 float autocvar_g_nick_flood_penalty_yellow;
 //float autocvar_g_nick_flood_timeout;
 float autocvar_g_nix_with_healtharmor;
-float autocvar_g_nix_with_laser;
+float autocvar_g_nix_with_blaster;
 float autocvar_g_nix_with_powerups;
 float autocvar_g_nodepthtestitems;
 float autocvar_g_nodepthtestplayers;

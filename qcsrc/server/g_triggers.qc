@@ -1771,7 +1771,7 @@ void target_voicescript_next(entity pl)
 			if(pl.voicescript_index < vs.cnt)
 				i = pl.voicescript_index * 2;
 			else if(n > vs.cnt * 2)
-				i = mod(pl.voicescript_index - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
+				i = ((pl.voicescript_index - vs.cnt) % ((n - vs.cnt * 2 - 1) / 2)) * 2 + vs.cnt * 2 + 1;
 			else
 				i = -1;
 

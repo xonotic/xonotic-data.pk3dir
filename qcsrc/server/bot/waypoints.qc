@@ -1070,6 +1070,7 @@ void botframe_deleteuselesswaypoints()
 	}
 	for (w = world; (w = find(w, classname, "waypoint")); )
 	{
+		w.wpflags |= WAYPOINTFLAG_DEAD_END;
 		w.wpflags &= ~WAYPOINTFLAG_USEFUL;
 		// WP is useful if:
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
@@ -1097,11 +1098,17 @@ void botframe_deleteuselesswaypoints()
 				continue;
 			for (j = 0; j < 32; ++j)
 			{
-				w2 = waypoint_get_link(w1, i);
+				w2 = waypoint_get_link(w, j);
 				if (!w2)
 					break;
+				if (w1 == w2)
+					continue;
 				if (w2.wpflags & WAYPOINTFLAG_PERSONAL)
 					continue;
+				// If we got here, w1 != w2 exist with w1 -> w
+				// and w -> w2. That means the waypoint is not
+				// a dead end.
+				w.wpflags &= ~WAYPOINTFLAG_DEAD_END;
 				for (k = 0; k < 32; ++k)
 				{
 					if (waypoint_get_link(w1, k) == w2)
@@ -1109,14 +1116,18 @@ void botframe_deleteuselesswaypoints()
 					// IF WE GET HERE, w is proven useful
 					// to get from w1 to w2!
 					w.wpflags |= WAYPOINTFLAG_USEFUL;
-					continue;
+					goto next;
 				}
 			}
+:next
 		}
 	}
+	// d) The waypoint is a dead end. Dead end waypoints must be kept as
+	//     they are needed to complete routes while autowaypointing.
+
 	for (w = world; (w = find(w, classname, "waypoint")); )
 	{
-		if (!(w.wpflags & WAYPOINTFLAG_USEFUL))
+		if (!(w.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)))
 		{
 			printf("Removed a waypoint at %v. Try again for more!\n", w.origin);
 			te_explosion(w.origin);
@@ -1125,7 +1136,7 @@ void botframe_deleteuselesswaypoints()
 		}
 	}
 	for (w = world; (w = find(w, classname, "waypoint")); )
-		w.wpflags &= ~WAYPOINTFLAG_USEFUL; // temp flag
+		w.wpflags &= ~(WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END); // temp flag
 }
 
 void botframe_autowaypoints()
@@ -1141,6 +1152,8 @@ void botframe_autowaypoints()
 		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
 	}
 
-	botframe_deleteuselesswaypoints();
+	if (autocvar_g_waypointeditor_auto >= 2) {
+		botframe_deleteuselesswaypoints();
+	}
 }
 

@@ -98,11 +98,6 @@ void db_put(float db, string key, string value);
 float buf_load(string filename);
 void buf_save(float buf, string filename);
 
-// modulo function
-#ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }
-#endif
-
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string format_time(float seconds);
 string mmsss(float t);

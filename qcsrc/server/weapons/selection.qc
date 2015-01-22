@@ -182,7 +182,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	if(complain)
 	{
 		self.weaponcomplainindex += 1;
-		c = mod(self.weaponcomplainindex, c) + 1;
+		c = (self.weaponcomplainindex % c) + 1;
 		rest = weaponorder;
 		while(rest != "")
 		{
