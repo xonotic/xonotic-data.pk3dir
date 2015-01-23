@@ -469,7 +469,7 @@ string Ban_Enforce(float i, string reason)
 
 	// Enforce our new ban
 	s = "";
-	for(e = world; (e = nextent(e)) && (num_for_edict(e) <= maxclients); )
+	FOR_EACH_CLIENTSLOT(e)
 		if (IS_REAL_CLIENT(e))
 		if(Ban_IsClientBanned(e, i))
 		{
