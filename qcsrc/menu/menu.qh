@@ -42,7 +42,9 @@ void m_sync();
 // sounds
 
 const string MENU_SOUND_CLEAR   = "sound/menu/clear.wav";
+const string MENU_SOUND_CLOSE   = "sound/menu/close.wav";
 const string MENU_SOUND_EXECUTE = "sound/menu/execute.wav";
+const string MENU_SOUND_OPEN    = "sound/menu/open.wav";
 const string MENU_SOUND_SELECT  = "sound/menu/select.wav";
 const string MENU_SOUND_SLIDE   = "sound/menu/slide.wav";
 

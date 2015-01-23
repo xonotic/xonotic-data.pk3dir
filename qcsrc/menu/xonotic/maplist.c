@@ -153,6 +153,7 @@ void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
 		if(where_x <= 1)
 		{
 			// pop up map info screen
+			m_play_click_sound(MENU_SOUND_OPEN);
 			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
 			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 		}
@@ -299,6 +300,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	if(scan == K_MOUSE2 || scan == K_SPACE || scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
+		m_play_click_sound(MENU_SOUND_OPEN);
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 	}

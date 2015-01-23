@@ -1247,6 +1247,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		if(me.nItems != 0)
 		{
+			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 			return 1;

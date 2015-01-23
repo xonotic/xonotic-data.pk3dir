@@ -167,6 +167,11 @@ void Button_draw(entity me)
 }
 void Button_playClickSound(entity me)
 {
-	m_play_click_sound(MENU_SOUND_EXECUTE);
+	if(me.onClick == DialogOpenButton_Click)
+		m_play_click_sound(MENU_SOUND_OPEN);
+	else if(me.onClick == Dialog_Close)
+		m_play_click_sound(MENU_SOUND_CLOSE);
+	else
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 }
 #endif
