@@ -1012,3 +1012,9 @@ void m_play_focus_sound()
 			menuLastFocusSoundTime = time;
 		}
 }
+
+void m_play_click_sound(string soundfile)
+{
+	if(cvar("menu_sounds"))
+		localsound(soundfile);
+}

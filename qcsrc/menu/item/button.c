@@ -8,6 +8,7 @@ CLASS(Button) EXTENDS(Label)
 	METHOD(Button, mousePress, float(entity, vector))
 	METHOD(Button, mouseDrag, float(entity, vector))
 	METHOD(Button, mouseRelease, float(entity, vector))
+	METHOD(Button, playClickSound, void(entity))
 	ATTRIB(Button, onClick, void(entity, entity), func_null)
 	ATTRIB(Button, onClickEntity, entity, NULL)
 	ATTRIB(Button, src, string, string_null)
@@ -53,6 +54,7 @@ float Button_keyDown(entity me, float key, float ascii, float shift)
 {
 	if(key == K_ENTER || key == K_SPACE || key == K_KP_ENTER)
 	{
+		me.playClickSound(me);
 		me.clickTime = 0.1; // delayed for effect
 		return 1;
 	}
@@ -79,8 +81,7 @@ float Button_mouseRelease(entity me, vector pos)
 	{
 		if (!me.disabled)
 		{
-			if(cvar("menu_sounds"))
-				localsound("sound/misc/menu2.wav");
+			me.playClickSound(me);
 			if(me.onClick)
 				me.onClick(me, me.onClickEntity);
 		}
@@ -163,5 +164,9 @@ void Button_draw(entity me)
 	me.clickTime -= frametime;
 
 	SUPER(Button).draw(me);
+}
+void Button_playClickSound(entity me)
+{
+	m_play_click_sound(MENU_SOUND_EXECUTE);
 }
 #endif
