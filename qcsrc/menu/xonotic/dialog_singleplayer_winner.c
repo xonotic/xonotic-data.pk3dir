@@ -1,6 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticWinnerDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticWinnerDialog, fill, void(entity))
+	METHOD(XonoticWinnerDialog, focusEnter, void(entity))
 	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"))
 	ATTRIB(XonoticWinnerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticWinnerDialog, intendedWidth, float, 0.32)
@@ -21,5 +22,9 @@ void XonoticWinnerDialog_fill(entity me)
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
+}
+void XonoticWinnerDialog_focusEnter(entity me)
+{
+	m_play_click_sound(MENU_SOUND_WINNER);
 }
 #endif

@@ -47,6 +47,7 @@ const string MENU_SOUND_EXECUTE = "sound/menu/execute.wav";
 const string MENU_SOUND_OPEN    = "sound/menu/open.wav";
 const string MENU_SOUND_SELECT  = "sound/menu/select.wav";
 const string MENU_SOUND_SLIDE   = "sound/menu/slide.wav";
+const string MENU_SOUND_WINNER  = "sound/menu/winner.wav";
 
 void m_play_focus_sound();
 void m_play_click_sound(string soundfile);
