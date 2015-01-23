@@ -141,7 +141,10 @@ void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
 		if(where_x >= 0)
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, i);
+		}
 }
 
 void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
@@ -301,17 +304,24 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
 	{
+		m_play_click_sound(MENU_SOUND_SELECT);
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
 	else if(ascii == 43) // +
 	{
 		if (!me.g_maplistCacheQuery(me, me.selectedItem))
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, me.selectedItem);
+		}
 	}
 	else if(ascii == 45) // -
 	{
 		if(me.g_maplistCacheQuery(me, me.selectedItem))
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, me.selectedItem);
+		}
 	}
 	else if(scan == K_BACKSPACE)
 	{

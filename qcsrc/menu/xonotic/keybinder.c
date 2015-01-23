@@ -170,6 +170,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 				localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 		}
 	}
+	m_play_click_sound(MENU_SOUND_SELECT);
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
@@ -233,6 +234,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 			//localcmd("\nunbind \"", keynumtostring(k), "\"\n");
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
+	m_play_click_sound(MENU_SOUND_CLEAR);
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
 }

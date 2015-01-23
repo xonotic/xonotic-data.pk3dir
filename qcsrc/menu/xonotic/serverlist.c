@@ -944,6 +944,7 @@ void ServerList_Favorite_Click(entity btn, entity me)
 	ipstr = netaddress_resolve(me.ipAddressBox.text, 26000);
 	if(ipstr != "")
 	{
+		m_play_click_sound(MENU_SOUND_SELECT);
 		me.toggleFavorite(me, me.ipAddressBox.text);
 		me.ipAddressBoxFocused = -1;
 	}

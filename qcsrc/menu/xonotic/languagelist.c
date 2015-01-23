@@ -140,12 +140,15 @@ void XonoticLanguageList_saveCvars(entity me)
 
 void XonoticLanguageList_doubleClickListBoxItem(entity me, float i, vector where)
 {
+	m_play_click_sound(MENU_SOUND_EXECUTE);
 	me.setLanguage(me);
 }
 
 float XonoticLanguageList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.setLanguage(me);
 		return 1;
 	}
