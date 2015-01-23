@@ -1,7 +1,3 @@
-// commonly used, but better make them macros
-#define TRUE 1
-#define FALSE 0
-
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
