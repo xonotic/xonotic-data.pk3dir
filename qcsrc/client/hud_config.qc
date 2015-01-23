@@ -67,6 +67,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_accuracy");
 					HUD_Write_PanelCvar_q("_label");
+					HUD_Write_PanelCvar_q("_label_scale");
 					HUD_Write_PanelCvar_q("_complainbubble");
 					HUD_Write_PanelCvar_q("_complainbubble_padding");
 					HUD_Write_PanelCvar_q("_complainbubble_time");
@@ -1254,7 +1255,7 @@ void HUD_Configure_Frame()
 	}
 }
 
-const float hlBorderSize = 4;
+const float hlBorderSize = 2;
 const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";
 void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
@@ -1280,7 +1281,7 @@ void HUD_Configure_PostDraw()
 		{
 			panel = highlightedPanel;
 			HUD_Panel_UpdatePosSize()
-			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
+			HUD_Panel_HlBorder(panel_bg_border * hlBorderSize, '0 0.5 1', 0.4 * (1 - autocvar__menu_alpha));
 		}
 	}
 }

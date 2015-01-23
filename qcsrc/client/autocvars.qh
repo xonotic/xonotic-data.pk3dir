@@ -347,6 +347,7 @@ float autocvar_hud_panel_weapons_complainbubble_fadetime;
 float autocvar_hud_panel_weapons_complainbubble_padding;
 float autocvar_hud_panel_weapons_complainbubble_time;
 float autocvar_hud_panel_weapons_label;
+float autocvar_hud_panel_weapons_label_scale = 0.5;
 float autocvar_hud_panel_weapons_onlyowned;
 float autocvar_hud_panel_weapons_timeout;
 float autocvar_hud_panel_weapons_timeout_effect;
