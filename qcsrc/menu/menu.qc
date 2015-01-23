@@ -1008,7 +1008,7 @@ void m_play_focus_sound()
 	if(cvar("menu_sounds") > 1)
 		if(time - menuLastFocusSoundTime > 0.25)
 		{
-			localsound("sound/menu/focus.wav");
+			localsound(MENU_SOUND_FOCUS);
 			menuLastFocusSoundTime = time;
 		}
 }
