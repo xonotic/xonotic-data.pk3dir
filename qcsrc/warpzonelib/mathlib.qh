@@ -3,8 +3,6 @@
 // The commented-out functions need no implementation because DarkPlaces offers
 // them as builtins. They are listed here anyway for completeness sake.
 
-#define int float
-
 #define FP_NAN 0
 #define FP_INFINITE 1
 #define FP_ZERO 2

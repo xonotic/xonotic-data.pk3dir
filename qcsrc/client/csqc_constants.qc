@@ -49,12 +49,6 @@ const float		CONTENT_SLIME					= -4;
 const float		CONTENT_LAVA					= -5;
 const float		CONTENT_SKY						= -6;
 
-// Boolean Constants
-const float		true							= 1;
-const float		false							= 0;
-const float 	TRUE							= 1;
-const float 	FALSE							= 0;
-
 // Vector / Hull Constants
 const vector	VEC_1							= '1 1 1';
 const vector	VEC_0							= '0 0 0';

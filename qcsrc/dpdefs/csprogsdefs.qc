@@ -253,12 +253,6 @@ const float MOVE_NORMAL						= 0;
 const float MOVE_NOMONSTERS					= 1;
 const float MOVE_MISSILE					= 2;
 
-// Boolean Constants
-const float true	= 1;
-const float false	= 0;
-const float TRUE	= 1;
-const float FALSE	= 0;
-
 const float EXTRA_LOW = -99999999;
 const float EXTRA_HIGH = 99999999;
 
@@ -393,7 +387,7 @@ string(entity ent) etos = #65;
 string(string s) precache_file = #68;
 void(entity e) makestatic = #69;
 
-void(string var, string val) cvar_set = #72;
+void(string name, string value) cvar_set = #72;
 
 void(vector pos, string samp, float vol, float atten) ambientsound = #74;
 string(string s) precache_model2 = #75;

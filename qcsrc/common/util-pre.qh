@@ -1,3 +1,17 @@
 #ifndef NOCOMPAT
 # define COMPAT_NO_MOD_IS_XONOTIC
 #endif
+
+#ifndef QCC_SUPPORT_INT
+#define int float
+#endif
+
+#ifndef QCC_SUPPORT_BOOL
+#define bool float
+
+// Boolean Constants
+const float true 	= 1;
+const float false 	= 0;
+const float TRUE 	= 1;
+const float FALSE 	= 0;
+#endif

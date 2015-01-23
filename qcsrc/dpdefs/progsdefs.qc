@@ -225,9 +225,6 @@ void		end_sys_fields;			// flag for structure dumping
 // constants
 //
 
-float	FALSE					= 0;
-float 	TRUE					= 1;
-
 // edict.flags
 float	FL_FLY					= 1;
 float	FL_SWIM					= 2;
@@ -490,7 +487,7 @@ void(string s) changelevel = #70;
 
 //#71 was removed
 
-void(string var, string val) cvar_set = #72;	// sets cvar.value
+void(string name, string value) cvar_set = #72;	// sets cvar.value
 
 void(entity client, string s, ...) centerprint = #73;	// sprint, but in middle
 

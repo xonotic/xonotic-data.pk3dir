@@ -38,18 +38,6 @@ float FILE_APPEND = 1;
 float FILE_WRITE = 2;
 
 ///////////////////////////
-// logical constants (just for completeness)
-
-float TRUE 	= 1;
-float FALSE = 0;
-
-///////////////////////////
-// boolean constants
-
-float true = 1;
-float false = 0;
-
-///////////////////////////
 // msg constants
 
 float MSG_BROADCAST		= 0;		// unreliable to all
