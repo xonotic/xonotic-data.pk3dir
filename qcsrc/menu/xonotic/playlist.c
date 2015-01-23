@@ -180,7 +180,7 @@ void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float i
 	{
 		float f = cvar("music_playlist_sampleposition0");
 		if(f <= 0 || (((time * 2) & 1) && f > 0))
-			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, "\xE2\x96\xB6", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
 
 	s = ftos(i+1);
