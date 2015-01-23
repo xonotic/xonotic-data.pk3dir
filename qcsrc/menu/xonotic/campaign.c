@@ -4,7 +4,7 @@ CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
 	METHOD(XonoticCampaignList, draw, void(entity))
 	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticCampaignList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCampaignList, setSelected, void(entity, float))
 	METHOD(XonoticCampaignList, keyDown, float(entity, float, float, float))
@@ -23,9 +23,6 @@ CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCampaignList, checkMarkSize, vector, '0 0 0')
 	ATTRIB(XonoticCampaignList, realUpperMargin1, float, 0)
 	ATTRIB(XonoticCampaignList, realUpperMargin2, float, 0)
-
-	ATTRIB(XonoticCampaignList, lastClickedMap, float, -1)
-	ATTRIB(XonoticCampaignList, lastClickedTime, float, 0)
 
 	ATTRIB(XonoticCampaignList, origin, vector, '0 0 0')
 	ATTRIB(XonoticCampaignList, itemAbsSize, vector, '0 0 0')
@@ -233,18 +230,9 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 
 	rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 }
-void XonoticCampaignList_clickListBoxItem(entity me, float i, vector where)
+void XonoticCampaignList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedMap)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			// start game
-			CampaignList_LoadMap(me, me);
-			return;
-		}
-	me.lastClickedMap = i;
-	me.lastClickedTime = time;
+	CampaignList_LoadMap(me, me);
 }
 void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
