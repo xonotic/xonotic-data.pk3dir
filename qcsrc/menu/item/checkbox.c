@@ -3,6 +3,7 @@ void CheckBox_Click(entity me, entity other);
 CLASS(CheckBox) EXTENDS(Button)
 	METHOD(CheckBox, configureCheckBox, void(entity, string, float, string))
 	METHOD(CheckBox, draw, void(entity))
+	METHOD(CheckBox, playClickSound, void(entity))
 	METHOD(CheckBox, toString, string(entity))
 	METHOD(CheckBox, setChecked, void(entity, float))
 	ATTRIB(CheckBox, useDownAsChecked, float, 0)
@@ -44,5 +45,9 @@ void CheckBox_draw(entity me)
 		me.srcSuffix = (me.checked ? "1" : "0");
 	me.pressed = s;
 	SUPER(CheckBox).draw(me);
+}
+void CheckBox_playClickSound(entity me)
+{
+	m_play_click_sound(MENU_SOUND_SELECT);
 }
 #endif
