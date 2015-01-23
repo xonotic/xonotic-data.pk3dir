@@ -43,6 +43,7 @@ void m_sync();
 
 const string MENU_SOUND_EXECUTE = "sound/menu/execute.wav";
 const string MENU_SOUND_SELECT  = "sound/menu/select.wav";
+const string MENU_SOUND_SLIDE   = "sound/menu/slide.wav";
 
 void m_play_focus_sound();
 void m_play_click_sound(string soundfile);
