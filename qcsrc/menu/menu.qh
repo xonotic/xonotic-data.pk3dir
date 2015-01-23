@@ -38,3 +38,7 @@ void preMenuDraw(); // this is run before the menu is drawn. You may put some st
 void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
 
 void m_sync();
+
+// sounds
+
+void m_play_focus_sound();

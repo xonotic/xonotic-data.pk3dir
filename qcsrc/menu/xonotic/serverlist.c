@@ -561,6 +561,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 }
 void XonoticServerList_focusEnter(entity me)
 {
+	SUPER(XonoticServerList).focusEnter(me);
 	if(time < me.nextRefreshTime)
 	{
 		//print("sorry, no refresh yet\n");

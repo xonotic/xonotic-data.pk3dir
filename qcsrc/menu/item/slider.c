@@ -10,7 +10,6 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, mousePress, float(entity, vector))
 	METHOD(Slider, mouseDrag, float(entity, vector))
 	METHOD(Slider, mouseRelease, float(entity, vector))
-	METHOD(Slider, focusEnter, void(entity))
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
@@ -18,6 +17,7 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, showNotify, void(entity))
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
+	ATTRIB(Slider, allowFocusSound, float, 1)
 	ATTRIB(Slider, value, float, 0)
 	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
@@ -249,12 +249,6 @@ float Slider_mouseRelease(entity me, vector pos)
 void Slider_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
-}
-void Slider_focusEnter(entity me)
-{
-	if(cvar("menu_sounds") > 1)
-		localsound("sound/misc/menu1.wav");
-	SUPER(Slider).focusEnter(me);
 }
 void Slider_draw(entity me)
 {

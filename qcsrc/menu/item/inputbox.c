@@ -18,6 +18,7 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, scrollPos, float, 0) // widths
 
 	ATTRIB(InputBox, focusable, float, 1)
+	ATTRIB(InputBox, allowFocusSound, float, 1)
 	ATTRIB(InputBox, disabled, float, 0)
 	ATTRIB(InputBox, lastChangeTime, float, 0)
 	ATTRIB(InputBox, dragScrollTimer, float, 0)
