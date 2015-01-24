@@ -43,7 +43,7 @@ const float BUFMODELS_SKIN = 3;
 const float BUFMODELS_DESC = 4;
 const float BUFMODELS_COUNT = 5;
 
-const float XONVOTE186 = 1; // (nyov) removal of model text description
+#define XONVOTE186 1 // (nyov) removal of model text description
 
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {
