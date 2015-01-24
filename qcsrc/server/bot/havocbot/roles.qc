@@ -153,7 +153,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 {
 	entity head;
 	float t, noteam, distance;
-	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
+	noteam = ((self.team == 0) || !teamplay);
 
 	if (autocvar_bot_nofire)
 		return;

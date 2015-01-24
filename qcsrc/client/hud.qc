@@ -1015,7 +1015,7 @@ void HUD_Ammo(void)
 	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	
 
-	local vector offset = '0 0 0'; // fteqcc sucks
+	vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
 	if(ammo_size_x/ammo_size_y > 3)
 	{
