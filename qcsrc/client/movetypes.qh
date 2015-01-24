@@ -16,8 +16,8 @@
 // should match sv_gameplayfix_fixedcheckwatertransition
 var float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
-void Movetype_Physics_MatchTicrate(float tr, float sloppy);
-void Movetype_Physics_MatchServer(float sloppy);
+void Movetype_Physics_MatchTicrate(float tr, bool sloppy);
+void Movetype_Physics_MatchServer(bool sloppy);
 void Movetype_Physics_NoMatchServer();
 
 const float	MOVETYPE_NONE				= 0;

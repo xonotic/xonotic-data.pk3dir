@@ -461,12 +461,12 @@ void Movetype_Physics_NoMatchServer() // optimized
 	setorigin(self, self.move_origin);
 }
 
-void Movetype_Physics_MatchServer(float sloppy)
+void Movetype_Physics_MatchServer(bool sloppy)
 {
 	Movetype_Physics_MatchTicrate(ticrate, sloppy);
 }
 
-void Movetype_Physics_MatchTicrate(float tr, float sloppy) // SV_Physics_Entity
+void Movetype_Physics_MatchTicrate(float tr, bool sloppy) // SV_Physics_Entity
 {
 	float n, i, dt, movedt;
 

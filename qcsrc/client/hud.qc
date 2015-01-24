@@ -2671,7 +2671,7 @@ void HUD_Vote(void)
 
 float mod_active; // is there any active mod icon?
 
-void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
 	float stat;
 	string pic;
@@ -2733,7 +2733,7 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 
-	float layout;
+	int layout;
 	if(gametype == MAPINFO_TYPE_CA)
 		layout = autocvar_hud_panel_modicons_ca_layout;
 	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
@@ -3265,7 +3265,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	}
 }
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
 	float stat, pps_ratio;
 	string pic;
@@ -3338,7 +3338,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 
-	float layout = autocvar_hud_panel_modicons_dom_layout;
+	int layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
 	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
