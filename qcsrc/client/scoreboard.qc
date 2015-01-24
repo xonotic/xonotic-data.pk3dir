@@ -57,7 +57,7 @@ string TranslateScoresLabel(string l)
 void Cmd_HUD_SetFields(float argc);
 void HUD_InitScores()
 {
-	float i, f;
+	int i, f;
 
 	ps_primary = ps_secondary = ts_primary = ts_secondary = -1;
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -116,7 +116,7 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
-float HUD_CompareScore(float vl, float vr, float f)
+int HUD_CompareScore(float vl, float vr, int f)
 {
 	if(f & SFL_ZERO_IS_WORST)
 	{
@@ -192,7 +192,7 @@ void HUD_UpdatePlayerPos(entity player)
 
 float HUD_CompareTeamScores(entity left, entity right)
 {
-	float i, r;
+	int i, r;
 
 	if(left.team == NUM_SPECTATOR)
 		return 1;
@@ -299,7 +299,7 @@ void Cmd_HUD_Help()
 
 void Cmd_HUD_SetFields(float argc)
 {
-	float i, j, slash;
+	int i, j, slash;
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
@@ -611,7 +611,7 @@ float hud_fixscoreboardcolumnwidth_len;
 float hud_fixscoreboardcolumnwidth_iconlen;
 float hud_fixscoreboardcolumnwidth_marginlen;
 
-string HUD_FixScoreboardColumnWidth(float i, string str)
+string HUD_FixScoreboardColumnWidth(int i, string str)
 {
 	float field, f;
 	vector sz;
@@ -652,7 +652,8 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 
 	if(field == SP_NAME) // name gets all remaining space
 	{
-		float namesize, j;
+		int j;
+		float namesize;
 		namesize = sbwidth;// / hud_fontsize_x;
 		for(j = 0; j < hud_num_fields; ++j)
 			if(j != i)
@@ -676,12 +677,12 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 	return str;
 }
 
-void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, float pl_number)
+void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, int pl_number)
 {
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
 	string str;
-	float i, field;
+	float field;
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
 
@@ -701,7 +702,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_s
 	tmp_x = item_size_x;
 	tmp_y = 0;
 	tmp_z = 0;
-
+	int i;
 	for(i = 0; i < hud_num_fields; ++i)
 	{
 		field = hud_field[i];
@@ -966,7 +967,7 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
-	float i;
+	int i;
 	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
@@ -1144,7 +1145,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 
 vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_size)
 {
-	float i;
+	int i;
 	RANKINGS_RECEIVED_CNT = 0;
 	for (i=RANKINGS_CNT-1; i>=0; --i)
 		if (grecordtime[i])

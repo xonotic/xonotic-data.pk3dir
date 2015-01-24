@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Rudolf Polzer
+ * Copyright (c) 2011 Rudolf PolzerCSQCModel_InterpolateAnimation_2To4_PreNote
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -28,7 +28,7 @@ var float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfractime;
 .float csqcmodel_lerpfrac2time;
 
-void CSQCModel_InterpolateAnimation_2To4_PreNote(float sf)
+void CSQCModel_InterpolateAnimation_2To4_PreNote(int sf)
 {
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
@@ -47,7 +47,7 @@ void CSQCModel_InterpolateAnimation_2To4_PreNote(float sf)
 		self.lerpfrac = self.csqcmodel_lerpfrac;
 	}
 }
-void CSQCModel_InterpolateAnimation_1To2_PreNote(float sf)
+void CSQCModel_InterpolateAnimation_1To2_PreNote(int sf)
 {
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
@@ -64,7 +64,7 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 #endif
 }
 
-void CSQCModel_InterpolateAnimation_2To4_Note(float sf, float set_times)
+void CSQCModel_InterpolateAnimation_2To4_Note(int sf, float set_times)
 {
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
@@ -83,7 +83,7 @@ void CSQCModel_InterpolateAnimation_2To4_Note(float sf, float set_times)
 			self.csqcmodel_lerpfractime = time;
 	}
 }
-void CSQCModel_InterpolateAnimation_1To2_Note(float sf, float set_times)
+void CSQCModel_InterpolateAnimation_1To2_Note(int sf, float set_times)
 {
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
@@ -173,9 +173,9 @@ void CSQCModel_InterpolateAnimation_Do()
 void CSQCModel_Draw()
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	local noref float islocalplayer = (self.entnum == player_localnum + 1);
-	local noref float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	local noref bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	local noref bool islocalplayer = (self.entnum == player_localnum + 1);
+	local noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
@@ -202,13 +202,12 @@ void CSQCModel_Draw()
 
 void CSQCModel_Read(float isnew)
 {
-	float sf;
-	sf = ReadInt24_t();
+	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	local noref float islocalplayer = (self.entnum == player_localnum + 1);
-	local noref float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	local noref bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	local noref bool islocalplayer = (self.entnum == player_localnum + 1);
+	local noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	self.classname = "csqcmodel";
 	self.iflags |= IFLAG_ORIGIN; // interpolate origin too

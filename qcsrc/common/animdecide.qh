@@ -6,7 +6,7 @@ void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time);
 
 // please network this one
-.float anim_state;
+.int anim_state;
 .float anim_time;
 .float anim_lower_action;
 .float anim_lower_time;
@@ -14,7 +14,7 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 .float anim_upper_time;
 
 // when copying entities, copy these too
-.float anim_implicit_state;
+.int anim_implicit_state;
 .float anim_implicit_time;
 .float anim_lower_implicit_action;
 .float anim_lower_implicit_time;

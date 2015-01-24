@@ -16,8 +16,8 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum
-float 		player_localnum;	//the playernum
+int 		player_localentnum;	//the entnum
+int 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 
 float		clientcommandframe;	//player movement
@@ -59,7 +59,7 @@ vector		pmove_maxs;
 float		input_timelength;
 vector		input_angles;
 vector		input_movevalues;	//forwards, right, up.
-float		input_buttons;		//attack, use, jump (default physics only uses jump)
+int			input_buttons;		//attack, use, jump (default physics only uses jump)
 
 float		movevar_gravity;
 float		movevar_stopspeed;
@@ -91,7 +91,7 @@ void		end_sys_globals;		// flag for structure dumping
 .float		modelindex;		// *** model index in the precached list
 .vector		absmin, absmax;	// *** origin + mins / maxs
 
-.float		entnum;	// *** the ent number as on the server
+.int		entnum;	// *** the ent number as on the server
 .float		drawmask;
 .void()		predraw;
 
@@ -108,7 +108,7 @@ void		end_sys_globals;		// flag for structure dumping
 .string		model;
 .float		frame;
 .float		skin;
-.float		effects;
+.int		effects;
 
 .vector		mins, maxs;		// bounding box extents reletive to origin
 .vector		size;			// maxs - mins
@@ -126,9 +126,9 @@ void		end_sys_globals;		// flag for structure dumping
 
 .entity 	enemy;
 
-.float		flags;
+.int		flags;
 
-.float		colormap;
+.int		colormap;
 
 .entity		owner;		// who launched a missile
 
@@ -159,161 +159,162 @@ vector		view_punchvector; // from server
 ==============================================================================
 */
 
-const float MASK_ENGINE			= 1;
-const float MASK_ENGINEVIEWMODELS	= 2;
-const float MASK_NORMAL			= 4;
+const int MASK_ENGINE			= 1;
+const int MASK_ENGINEVIEWMODELS	= 2;
+const int MASK_NORMAL			= 4;
 
-const float RF_VIEWMODEL	= 1;
-const float RF_EXTERNALMODEL	= 2;
-const float RF_DEPTHHACK	= 4;
-const float RF_ADDITIVE		= 8;
-const float RF_USEAXIS		= 16;
+const int RF_VIEWMODEL			= 1;
+const int RF_EXTERNALMODEL		= 2;
+const int RF_DEPTHHACK			= 4;
+const int RF_ADDITIVE			= 8;
+const int RF_USEAXIS			= 16;
 
-const float VF_MIN		= 1;	//(vector)
-const float VF_MIN_X		= 2;	//(float)
-const float VF_MIN_Y		= 3;	//(float)
-const float VF_SIZE		= 4;	//(vector) (viewport size)
-const float VF_SIZE_Y		= 5;	//(float)
-const float VF_SIZE_X		= 6;	//(float)
-const float VF_VIEWPORT		= 7;	//(vector, vector)
-const float VF_FOV		= 8;	//(vector)
-const float VF_FOVX		= 9;	//(float)
-const float VF_FOVY		= 10;	//(float)
-const float VF_ORIGIN		= 11;	//(vector)
-const float VF_ORIGIN_X		= 12;	//(float)
-const float VF_ORIGIN_Y		= 13;	//(float)
-const float VF_ORIGIN_Z		= 14;	//(float)
-const float VF_ANGLES		= 15;	//(vector)
-const float VF_ANGLES_X		= 16;	//(float)
-const float VF_ANGLES_Y		= 17;	//(float)
-const float VF_ANGLES_Z		= 18;	//(float)
-const float VF_DRAWWORLD	= 19;	//(float)
-const float VF_DRAWENGINESBAR	= 20;	//(float)
-const float VF_DRAWCROSSHAIR	= 21;	//(float)
+const int VF_MIN				= 1;	//(vector)
+const int VF_MIN_X				= 2;	//(float)
+const int VF_MIN_Y				= 3;	//(float)
+const int VF_SIZE				= 4;	//(vector) (viewport size)
+const int VF_SIZE_Y				= 5;	//(float)
+const int VF_SIZE_X				= 6;	//(float)
+const int VF_VIEWPORT			= 7;	//(vector, vector)
+const int VF_FOV				= 8;	//(vector)
+const int VF_FOVX				= 9;	//(float)
+const int VF_FOVY				= 10;	//(float)
+const int VF_ORIGIN				= 11;	//(vector)
+const int VF_ORIGIN_X			= 12;	//(float)
+const int VF_ORIGIN_Y			= 13;	//(float)
+const int VF_ORIGIN_Z			= 14;	//(float)
+const int VF_ANGLES				= 15;	//(vector)
+const int VF_ANGLES_X			= 16;	//(float)
+const int VF_ANGLES_Y			= 17;	//(float)
+const int VF_ANGLES_Z			= 18;	//(float)
+const int VF_DRAWWORLD			= 19;	//(float)
+const int VF_DRAWENGINESBAR		= 20;	//(float)
+const int VF_DRAWCROSSHAIR		= 21;	//(float)
 
-const float VF_CL_VIEWANGLES	= 33;	//(vector)
-const float VF_CL_VIEWANGLES_X	= 34;	//(float)
-const float VF_CL_VIEWANGLES_Y	= 35;	//(float)
-const float VF_CL_VIEWANGLES_Z	= 36;	//(float)
+const int VF_CL_VIEWANGLES		= 33;	//(vector)
+const int VF_CL_VIEWANGLES_X	= 34;	//(float)
+const int VF_CL_VIEWANGLES_Y	= 35;	//(float)
+const int VF_CL_VIEWANGLES_Z	= 36;	//(float)
 
-const float VF_PERSPECTIVE      = 200;
+const int VF_PERSPECTIVE      	= 200;
 
-const float STAT_HEALTH		= 0;
-const float STAT_WEAPONMODEL	= 2;
-const float STAT_AMMO		= 3;
-const float STAT_ARMOR		= 4;
-const float STAT_WEAPONFRAME	= 5;
-const float STAT_SHELLS		= 6;
-const float STAT_NAILS		= 7;
-const float STAT_ROCKETS	= 8;
-const float STAT_CELLS		= 9;
-const float STAT_ACTIVEWEAPON	= 10;
-const float STAT_TOTALSECRETS	= 11;
-const float STAT_TOTALMONSTERS	= 12;
-const float STAT_SECRETS		= 13;
-const float STAT_MONSTERS		= 14;
-const float STAT_ITEMS		= 15;
-const float STAT_VIEWHEIGHT	= 16;
+const int STAT_HEALTH			= 0;
+const int STAT_WEAPONMODEL		= 2;
+const int STAT_AMMO				= 3;
+const int STAT_ARMOR			= 4;
+const int STAT_WEAPONFRAME		= 5;
+const int STAT_SHELLS			= 6;
+const int STAT_NAILS			= 7;
+const int STAT_ROCKETS			= 8;
+const int STAT_CELLS			= 9;
+const int STAT_ACTIVEWEAPON		= 10;
+const int STAT_TOTALSECRETS		= 11;
+const int STAT_TOTALMONSTERS	= 12;
+const int STAT_SECRETS			= 13;
+const int STAT_MONSTERS			= 14;
+const int STAT_ITEMS			= 15;
+const int STAT_VIEWHEIGHT		= 16;
 
 // Quake Sound Constants
-const float CHAN_AUTO			= 0;
-const float CHAN_WEAPON			= 1;
-const float CHAN_VOICE			= 2;
-const float CHAN_ITEM			= 3;
-const float CHAN_BODY			= 4;
+const int CHAN_AUTO				= 0;
+const int CHAN_WEAPON			= 1;
+const int CHAN_VOICE			= 2;
+const int CHAN_ITEM				= 3;
+const int CHAN_BODY				= 4;
 
-const float ATTN_NONE			= 0;
-const float ATTN_NORM			= 1;
-const float ATTN_IDLE			= 2;
-const float ATTN_STATIC			= 3;
+const int ATTN_NONE				= 0;
+const int ATTN_NORM				= 1;
+const int ATTN_IDLE				= 2;
+const int ATTN_STATIC			= 3;
 
 // Frik File Constants
-const float FILE_READ			= 0;
-const float FILE_APPEND			= 1;
-const float FILE_WRITE			= 2;
+const int FILE_READ				= 0;
+const int FILE_APPEND			= 1;
+const int FILE_WRITE			= 2;
 
 // Quake Point Contents
-const float CONTENT_EMPTY					= -1;
-const float CONTENT_SOLID					= -2;
-const float CONTENT_WATER					= -3;
-const float CONTENT_SLIME					= -4;
-const float CONTENT_LAVA					= -5;
-const float CONTENT_SKY						= -6;
+const int CONTENT_EMPTY			= -1;
+const int CONTENT_SOLID			= -2;
+const int CONTENT_WATER			= -3;
+const int CONTENT_SLIME			= -4;
+const int CONTENT_LAVA			= -5;
+const int CONTENT_SKY			= -6;
 
 // Quake Solid Constants
-const float SOLID_NOT						= 0;
-const float SOLID_TRIGGER					= 1;
-const float SOLID_BBOX						= 2;
-const float SOLID_SLIDEBOX					= 3;
-const float SOLID_BSP						= 4;
-const float SOLID_CORPSE					= 5;
+const int SOLID_NOT				= 0;
+const int SOLID_TRIGGER			= 1;
+const int SOLID_BBOX			= 2;
+const int SOLID_SLIDEBOX		= 3;
+const int SOLID_BSP				= 4;
+const int SOLID_CORPSE			= 5;
 
 // Quake Move Constants
-const float MOVE_NORMAL						= 0;
-const float MOVE_NOMONSTERS					= 1;
-const float MOVE_MISSILE					= 2;
+const int MOVE_NORMAL			= 0;
+const int MOVE_NOMONSTERS		= 1;
+const int MOVE_MISSILE			= 2;
 
-const float EXTRA_LOW = -99999999;
-const float EXTRA_HIGH = 99999999;
+const float EXTRA_LOW			= -99999999;
+const float EXTRA_HIGH			= 99999999;
 
-const vector VEC_1	= '1 1 1';
-const vector VEC_0	= '0 0 0';
-const vector VEC_M1	= '-1 -1 -1';
+const vector VEC_1				= '1 1 1';
+const vector VEC_0				= '0 0 0';
+const vector VEC_M1				= '-1 -1 -1';
 
-const float M_PI = 3.14159265358979323846;
+const float M_PI				= 3.14159265358979323846;
 
-vector	VEC_HULL_MIN = '-16 -16 -24';
-vector	VEC_HULL_MAX = '16 16 32';
+vector VEC_HULL_MIN				= '-16 -16 -24';
+vector VEC_HULL_MAX				= '16 16 32';
 
 // Quake Temporary Entity Constants
-const float TE_SPIKE						= 0;
-const float TE_SUPERSPIKE					= 1;
-const float TE_GUNSHOT						= 2;
-const float TE_EXPLOSION					= 3;
-const float TE_TAREXPLOSION					= 4;
-const float TE_LIGHTNING1					= 5;
-const float TE_LIGHTNING2					= 6;
-const float TE_WIZSPIKE						= 7;
-const float TE_KNIGHTSPIKE					= 8;
-const float TE_LIGHTNING3					= 9;
-const float TE_LAVASPLASH					= 10;
-const float TE_TELEPORT						= 11;
-const float TE_EXPLOSION2					= 12;
-	// Darkplaces Additions
-	const float TE_EXPLOSIONRGB					= 53;
-	const float TE_GUNSHOTQUAD					= 57;
-	const float TE_EXPLOSIONQUAD 				= 70;
-	const float TE_SPIKEQUAD					= 58;
-	const float TE_SUPERSPIKEQUAD				= 59;
+const int TE_SPIKE				= 0;
+const int TE_SUPERSPIKE			= 1;
+const int TE_GUNSHOT			= 2;
+const int TE_EXPLOSION			= 3;
+const int TE_TAREXPLOSION		= 4;
+const int TE_LIGHTNING1			= 5;
+const int TE_LIGHTNING2			= 6;
+const int TE_WIZSPIKE			= 7;
+const int TE_KNIGHTSPIKE		= 8;
+const int TE_LIGHTNING3			= 9;
+const int TE_LAVASPLASH			= 10;
+const int TE_TELEPORT			= 11;
+const int TE_EXPLOSION2			= 12;
+
+// Darkplaces Additions
+const int TE_EXPLOSIONRGB		= 53;
+const int TE_GUNSHOTQUAD		= 57;
+const int TE_EXPLOSIONQUAD 		= 70;
+const int TE_SPIKEQUAD			= 58;
+const int TE_SUPERSPIKEQUAD		= 59;
 
 // PFlags for Dynamic Lights
-const float PFLAGS_NOSHADOW					= 1;
-const float PFLAGS_CORONA					= 2;
-const float PFLAGS_FULLDYNAMIC				= 128;
+const int PFLAGS_NOSHADOW		= 1;
+const int PFLAGS_CORONA			= 2;
+const int PFLAGS_FULLDYNAMIC	= 128;
 
-const float EF_ADDITIVE		= 32;
-const float EF_BLUE		= 64;
-const float EF_FLAME		= 1024;
-const float EF_FULLBRIGHT	= 512;
-const float EF_NODEPTHTEST	= 8192;
-const float EF_NODRAW		= 16;
-const float EF_NOSHADOW		= 4096;
-const float EF_RED		= 128;
-const float EF_STARDUST		= 2048;
-const float EF_SELECTABLE 	= 16384;
+const int EF_ADDITIVE			= 32;
+const int EF_BLUE				= 64;
+const int EF_FLAME				= 1024;
+const int EF_FULLBRIGHT			= 512;
+const int EF_NODEPTHTEST		= 8192;
+const int EF_NODRAW				= 16;
+const int EF_NOSHADOW			= 4096;
+const int EF_RED				= 128;
+const int EF_STARDUST			= 2048;
+const int EF_SELECTABLE 		= 16384;
 
-const float PFL_ONGROUND	= 1;
-const float PFL_CROUCH		= 2;
-const float PFL_DEAD		= 4;
-const float PFL_GIBBED		= 8;
+const int PFL_ONGROUND			= 1;
+const int PFL_CROUCH			= 2;
+const int PFL_DEAD				= 4;
+const int PFL_GIBBED			= 8;
 
 // draw flags
-const float DRAWFLAG_NORMAL = 0;
-const float DRAWFLAG_ADDITIVE = 1;
-const float DRAWFLAG_MODULATE = 2;
-const float DRAWFLAG_2XMODULATE = 3;
-const float DRAWFLAG_SCREEN = 4;
-const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
+const int DRAWFLAG_NORMAL 		= 0;
+const int DRAWFLAG_ADDITIVE 	= 1;
+const int DRAWFLAG_MODULATE 	= 2;
+const int DRAWFLAG_2XMODULATE 	= 3;
+const int DRAWFLAG_SCREEN 		= 4;
+const int DRAWFLAG_MIPMAP 		= 0x100; // only for R_BeginPolygon
 
 /*
 ==============================================================================
@@ -359,9 +360,9 @@ float(float yaw, float dist, float settrace) walkmove = #32;
 
 float() droptofloor = #34;
 void(float style, string value) lightstyle = #35;
-float(float v) rint = #36;
-float(float v) floor = #37;
-float(float v) ceil = #38;
+int(float v) rint	= #36;
+int(float v) floor	= #37;
+int(float v) ceil	= #38;
 
 float(entity e) checkbottom = #40;
 float(vector v) pointcontents = #41;
@@ -506,14 +507,14 @@ float(entity ent) wasfreed = #353;
 string(string key) serverkey = #354;
 
 // Use proper case; refer to the id1 Write* functions!
-float() ReadByte = #360;
-float() ReadChar = #361;
-float() ReadShort = #362;
-float() ReadLong = #363;
-float() ReadCoord = #364;
-float() ReadAngle = #365;
-string() ReadString = #366;
-float() ReadFloat = #367;
+int() ReadByte		= #360;
+int() ReadChar		= #361;
+int() ReadShort		= #362;
+int() ReadLong		= #363;
+float() ReadCoord	= #364;
+float() ReadAngle	= #365;
+string() ReadString	= #366;
+float() ReadFloat	= #367;
 
 // LordHavoc's range #400-#499
 void(entity from, entity to) copyentity = #400;
@@ -889,7 +890,7 @@ float(string url, float id, string content_type, string delim, float buf, float 
 //idea: divVerent
 //darkplaces implementation: divVerent
 //constant definitions:
-const float VF_MAINVIEW         = 400;
+const int VF_MAINVIEW         = 400;
 //use setproperty(VF_MAINVIEW, 1); before calling R_RenderView for the render
 //that shall become the "main" view, which is e.g. used by PRYDON_CLIENTCURSOR
 //this flag is set for the first scene, and not cleared by R_ClearScene
@@ -900,7 +901,7 @@ const float VF_MAINVIEW         = 400;
 //idea: divVerent
 //darkplaces implementation: divVerent
 //constant definitions:
-const float VF_MINFPS_QUALITY   = 401;
+const int VF_MINFPS_QUALITY   = 401;
 //use getproperty(VF_MINFPS_QUALITY); to do CSQC based LOD based on cl_minfps
 //1 should lead to an unmodified view
 
@@ -911,12 +912,12 @@ const float VF_MINFPS_QUALITY   = 401;
 //builtin definitions:
 void(entity e, float refdefflags) V_CalcRefdef = #640;
 //constant definitions:
-float PMF_DUCKED = 4;
-float PMF_ONGROUND = 8;
-float REFDEFFLAG_TELEPORTED = 1;
-float REFDEFFLAG_JUMPING = 2;
-float REFDEFFLAG_DEAD = 4;
-float REFDEFFLAG_INTERMISSION = 8;
+const int PMF_DUCKED = 4;
+const int PMF_ONGROUND = 8;
+const int REFDEFFLAG_TELEPORTED = 1;
+const int REFDEFFLAG_JUMPING = 2;
+const int REFDEFFLAG_DEAD = 4;
+const int REFDEFFLAG_INTERMISSION = 8;
 //- use this on the player entity after performing prediction
 //- pass REFDEFFLAG_TELEPORTED if the player teleported since last frame
 //- pass REFDEFFLAG_JUMPING if jump button is pressed
@@ -1106,41 +1107,41 @@ float(entity num) num_for_edict = #512;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //globals:
-.float dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
+.int dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
 float trace_dpstartcontents; // DPCONTENTS_ value at start position of trace
-float trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not contents at impact point, just contents of the surface that was hit)
-float trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
+int trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not contents at impact point, just contents of the surface that was hit)
+int trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
 string trace_dphittexturename; // texture name of impacted surface
 //constants:
-float DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
-float DPCONTENTS_WATER = 2;
-float DPCONTENTS_SLIME = 4;
-float DPCONTENTS_LAVA = 8;
-float DPCONTENTS_SKY = 16;
-float DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
-float DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
-float DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
-float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-float DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
-float DPCONTENTS_DONOTENTER = 1024; // AI hint brush
-float DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
-float DPCONTENTS_BOTCLIP = 2048; // AI hint brush
-float DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
-float Q3SURFACEFLAG_NODAMAGE = 1;
-float Q3SURFACEFLAG_SLICK = 2; // low friction surface
-float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
-float Q3SURFACEFLAG_LADDER = 8; // climbable surface
-float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
-float Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
-float Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
-float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
+const int DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
+const int DPCONTENTS_WATER = 2;
+const int DPCONTENTS_SLIME = 4;
+const int DPCONTENTS_LAVA = 8;
+const int DPCONTENTS_SKY = 16;
+const int DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
+const int DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
+const int DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
+const int DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
+const int DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
+const int DPCONTENTS_DONOTENTER = 1024; // AI hint brush
+const int DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
+const int DPCONTENTS_BOTCLIP = 2048; // AI hint brush
+const int DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
+const int Q3SURFACEFLAG_NODAMAGE = 1;
+const int Q3SURFACEFLAG_SLICK = 2; // low friction surface
+const int Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
+const int Q3SURFACEFLAG_LADDER = 8; // climbable surface
+const int Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
+const int Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
+const int Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
+const int Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_HINT = 256; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_SKIP = 512; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NOLIGHTMAP = 1024; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_POINTLIGHT = 2048; // compiler hint (not important to qc)
-float Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
-float Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
-float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
+const int Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
+const int Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
+const int Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_LIGHTFILTER = 32768; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
@@ -1159,19 +1160,19 @@ float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
 //DarkPlaces implementation: divVerent
 //builtin definitions:
 float(string name) cvar_type = #495;
-float CVAR_TYPEFLAG_EXISTS = 1;
-float CVAR_TYPEFLAG_SAVED = 2;
-float CVAR_TYPEFLAG_PRIVATE = 4;
-float CVAR_TYPEFLAG_ENGINE = 8;
-float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
-float CVAR_TYPEFLAG_READONLY = 32;
+const int CVAR_TYPEFLAG_EXISTS = 1;
+const int CVAR_TYPEFLAG_SAVED = 2;
+const int CVAR_TYPEFLAG_PRIVATE = 4;
+const int CVAR_TYPEFLAG_ENGINE = 8;
+const int CVAR_TYPEFLAG_HASDESCRIPTION = 16;
+const int CVAR_TYPEFLAG_READONLY = 32;
 
 //DP_QC_CRC16
 //idea: divVerent
 //darkplaces implementation: divVerent
 //Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
 //When caseinsensitive is set, the CRC is calculated of the lower cased string.
-float(float caseinsensitive, string s, ...) crc16 = #494;
+int(bool caseinsensitive, string s, ...) crc16 = #494;
 
 //DP_QC_URI_ESCAPE
 //idea: divVerent
@@ -1430,18 +1431,18 @@ const float		STAT_FRAGLIMIT					= 235;
 const float		STAT_TIMELIMIT					= 236;
 const float     STAT_MOVEVARS_GRAVITY           = 242;
 string(void)						ReadPicture = #501;
-float PARTICLES_USEALPHA = 1;
+const int PARTICLES_USEALPHA = 1;
 float particles_alphamin, particles_alphamax;
-float PARTICLES_USECOLOR = 2;
+const int PARTICLES_USECOLOR = 2;
 vector particles_colormin, particles_colormax;
-float PARTICLES_USEFADE = 4;  // fades the COUNT (fade alpha using alphamin/alphamax)
+const int PARTICLES_USEFADE = 4;  // fades the COUNT (fade alpha using alphamin/alphamax)
 float particles_fade;
-float PARTICLES_DRAWASTRAIL = 128;
+const int PARTICLES_DRAWASTRAIL = 128;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags) boxparticles = #502;
 float trace_networkentity;
-const float RF_FULLBRIGHT	= 256;
-const float RF_NOSHADOW	= 512;
-float RF_DYNAMICMODELLIGHT = 8192;
+const int RF_FULLBRIGHT	= 256;
+const int RF_NOSHADOW	= 512;
+const int RF_DYNAMICMODELLIGHT = 8192;
 
 float gettaginfo_parent;
 string gettaginfo_name;

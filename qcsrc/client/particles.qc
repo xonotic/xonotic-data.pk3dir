@@ -1,10 +1,10 @@
 .float dphitcontentsmask;
 
-.float cnt; // effect number
+.int cnt; // effect number
 .vector velocity; // particle velocity
 .float waterlevel; // direction jitter
-.float count; // count multiplier
-.float impulse; // density
+.int count; // count multiplier
+.int impulse; // density
 .string noise; // sound
 .float atten;
 .float volume;
@@ -83,9 +83,9 @@ void Ent_PointParticles_Remove()
 
 void Ent_PointParticles()
 {
-	float f, i;
+	float i;
 	vector v;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)

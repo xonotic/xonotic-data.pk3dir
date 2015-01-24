@@ -1,4 +1,3 @@
-
 //DarkPlaces supported extension list, draft version 1.04
 
 //things that don't have extensions yet:
@@ -2419,7 +2418,7 @@ float checkpvs(vector viewpos, entity viewee) = #240;
 //idea: many
 //darkplaces implementation: KrimZon
 //builtin definitions:
-float(string str, string sub, float startpos) strstrofs = #221; // returns the offset into a string of the matching text, or -1 if not found, case sensitive
+int(string str, string sub, float startpos) strstrofs = #221; // returns the offset into a string of the matching text, or -1 if not found, case sensitive
 float(string str, float ofs) str2chr = #222; // returns the character at the specified offset as an integer, or 0 if an invalid index, or byte value - 256 if the engine supports UTF8 and the byte is part of an extended character
 string(float c, ...) chr2str = #223; // returns a string representing the character given, if the engine supports UTF8 this may be a multi-byte sequence (length may be more than 1) for characters over 127.
 string(float ccase, float calpha, float cnum, string s, ...) strconv = #224; // reformat a string with special color characters in the font, DO NOT USE THIS ON UTF8 ENGINES (if you are lucky they will emit ^4 and such color codes instead), the parameter values are 0=same/1=lower/2=upper for ccase, 0=same/1=white/2=red/5=alternate/6=alternate-alternate for redalpha, 0=same/1=white/2=red/3=redspecial/4=whitespecial/5=alternate/6=alternate-alternate for rednum.

@@ -1,22 +1,22 @@
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
-const float NUM_TEAM_1 = 1;  // red
-const float NUM_TEAM_2 = 2; // blue
-const float NUM_TEAM_3 = 3; // yellow
-const float NUM_TEAM_4 = 4; // pink
-const float NUM_SPECTATOR = 5;
+const int NUM_TEAM_1 = 1;  // red
+const int NUM_TEAM_2 = 2; // blue
+const int NUM_TEAM_3 = 3; // yellow
+const int NUM_TEAM_4 = 4; // pink
+const int NUM_SPECTATOR = 5;
 #else
 #ifdef CSQC
-const float NUM_TEAM_1 = 4;  // red
-const float NUM_TEAM_2 = 13; // blue
-const float NUM_TEAM_3 = 12; // yellow
-const float NUM_TEAM_4 = 9; // pink
+const int NUM_TEAM_1 = 4;  // red
+const int NUM_TEAM_2 = 13; // blue
+const int NUM_TEAM_3 = 12; // yellow
+const int NUM_TEAM_4 = 9; // pink
 #else
-const float NUM_TEAM_1 = 5;  // red
-const float NUM_TEAM_2 = 14; // blue
-const float NUM_TEAM_3 = 13; // yellow
-const float NUM_TEAM_4 = 10; // pink
+const int NUM_TEAM_1 = 5;  // red
+const int NUM_TEAM_2 = 14; // blue
+const int NUM_TEAM_3 = 13; // yellow
+const int NUM_TEAM_4 = 10; // pink
 #endif
-const float NUM_SPECTATOR = 1337;
+const int NUM_SPECTATOR = 1337;
 #endif
 
 const string COL_TEAM_1 = "^1";

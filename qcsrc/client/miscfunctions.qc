@@ -109,7 +109,7 @@ void RemoveTeam(entity Team)
 	AuditLists();
 }
 
-entity GetTeam(float Team, float add)
+entity GetTeam(int Team, bool add)
 {
 	float num;
 	entity tm;
@@ -159,7 +159,7 @@ vector rotate(vector v, float a)
 	return w;
 }
 
-float ColorTranslateMode;
+int ColorTranslateMode;
 
 string ColorTranslateRGB(string s)
 {
@@ -563,7 +563,7 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 }
 
 const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
-vector getplayerorigin(float pl)
+vector getplayerorigin(int pl)
 {
 	entity e;
 
@@ -650,11 +650,10 @@ const float MAX_ACCURACY_LEVELS = 10;
 float acc_lev[MAX_ACCURACY_LEVELS];
 vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_col_loadtime;
-float acc_levels;
+int acc_levels;
 string acc_color_levels;
 void Accuracy_LoadLevels()
 {
-	float i;
 	if(autocvar_accuracy_color_levels != acc_color_levels)
 	{
 		if(acc_color_levels)
@@ -666,6 +665,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels < 2)
 			print("Warning: accuracy_color_levels must contain at least 2 values\n");
 
+		int i;
 		for(i = 0; i < acc_levels; ++i)
 			acc_lev[i] = stof(argv(i)) / 100.0;
 	}
@@ -673,10 +673,10 @@ void Accuracy_LoadLevels()
 
 void Accuracy_LoadColors()
 {
-	float i;
 	if(time > acc_col_loadtime)
 	if(acc_levels >= 2)
 	{
+		int i;
 		for(i = 0; i < acc_levels; ++i)
 			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 		acc_col_loadtime = time + 2;
@@ -685,13 +685,13 @@ void Accuracy_LoadColors()
 
 vector Accuracy_GetColor(float accuracy)
 {
-	float j, factor;
+	float factor;
 	vector color;
 	if(acc_levels < 2)
 		return '0 0 0'; // return black, can't determine the right color
 
 	// find the max level lower than acc
-	j = acc_levels-1;
+	int j = acc_levels-1;
 	while(j && accuracy < acc_lev[j])
 		--j;
 

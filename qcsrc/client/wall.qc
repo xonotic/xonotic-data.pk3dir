@@ -71,7 +71,7 @@ void Ent_Wall_Remove()
 
 void Ent_Wall()
 {
-	float f;
+	int f;
 	var .vector fld;
 
 	InterpolateOrigin_Undo();
