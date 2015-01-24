@@ -1,5 +1,5 @@
-float announcer_1min;
-float announcer_5min;
+bool announcer_1min;
+bool announcer_5min;
 void Announcer_Countdown()
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
