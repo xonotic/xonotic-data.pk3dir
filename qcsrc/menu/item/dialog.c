@@ -182,6 +182,7 @@ float Dialog_keyDown(entity me, float key, float ascii, float shift)
 	{
 		if(key == K_ESCAPE)
 		{
+			m_play_click_sound(MENU_SOUND_CLOSE);
 			me.close(me);
 			return 1;
 		}

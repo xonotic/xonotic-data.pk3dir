@@ -1001,3 +1001,20 @@ void m_goto(string itemname)
 		}
 	}
 }
+
+float menuLastFocusSoundTime;
+void m_play_focus_sound()
+{
+	if(cvar("menu_sounds") > 1)
+		if(time - menuLastFocusSoundTime > 0.25)
+		{
+			localsound(MENU_SOUND_FOCUS);
+			menuLastFocusSoundTime = time;
+		}
+}
+
+void m_play_click_sound(string soundfile)
+{
+	if(cvar("menu_sounds"))
+		localsound(soundfile);
+}
