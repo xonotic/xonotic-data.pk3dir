@@ -144,7 +144,7 @@ void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, 
 	}
 }
 
-void draw_teamradar_link(vector start, vector end, float colors)
+void draw_teamradar_link(vector start, vector end, int colors)
 {
 	vector c0, c1, norm;
 
@@ -202,8 +202,7 @@ void teamradar_loadcvars()
 
 void Ent_RadarLink()
 {
-	float sendflags;
-	sendflags = ReadByte();
+	int sendflags = ReadByte();
 
 	InterpolateOrigin_Undo();
 

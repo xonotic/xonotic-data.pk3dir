@@ -12,8 +12,8 @@ entity MapInfo_Type_last;
 .string gametype_description; // game type description
 
 #define REGISTER_GAMETYPE(hname,sname,g_name,NAME,gteamplay,defaults,gdescription) \
-	var float MAPINFO_TYPE_##NAME; \
-	var entity MapInfo_Type##g_name; \
+	int MAPINFO_TYPE_##NAME; \
+	entity MapInfo_Type##g_name; \
 	void RegisterGametypes_##g_name() \
 	{ \
 		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
@@ -82,15 +82,15 @@ REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,TRUE,"timelimit=20 pointl
 REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,FALSE,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
-const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
-const float MAPINFO_FEATURE_VEHICLES      = 2;
-const float MAPINFO_FEATURE_TURRETS       = 4;
-const float MAPINFO_FEATURE_MONSTERS      = 8;
+const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
+const int MAPINFO_FEATURE_VEHICLES      = 2;
+const int MAPINFO_FEATURE_TURRETS       = 4;
+const int MAPINFO_FEATURE_MONSTERS      = 8;
 
-const float MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
-const float MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
-const float MAPINFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
-const float MAPINFO_FLAG_NOAUTOMAPLIST    = 8; // do not include when automatically building maplist (counts as hidden for maplist building purposes)
+const int MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
+const int MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
+const int MAPINFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
+const int MAPINFO_FLAG_NOAUTOMAPLIST    = 8; // do not include when automatically building maplist (counts as hidden for maplist building purposes)
 
 float MapInfo_count;
 
@@ -102,9 +102,9 @@ string MapInfo_Map_description;
 string MapInfo_Map_author;
 string MapInfo_Map_clientstuff; // not in cache, only for map load
 string MapInfo_Map_fog; // not in cache, only for map load
-float MapInfo_Map_supportedGametypes;
-float MapInfo_Map_supportedFeatures;
-float MapInfo_Map_flags;
+int MapInfo_Map_supportedGametypes;
+int MapInfo_Map_supportedFeatures;
+int MapInfo_Map_flags;
 vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
 vector MapInfo_Map_maxs; // these are '0 0 0' if not specified!
 
@@ -115,8 +115,8 @@ void MapInfo_Enumerate();
 // filter the info by game type mask (updates MapInfo_count)
 float MapInfo_progress;
 float MapInfo_FilterGametype(float gametype, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
-float MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
-float MapInfo_CurrentGametype(); // retrieves current gametype from cvars
+int MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
+int MapInfo_CurrentGametype(); // retrieves current gametype from cvars
 float MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
 float MapInfo_RequiredFlags(); // retrieves current flags from cvars
 

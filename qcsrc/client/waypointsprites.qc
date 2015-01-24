@@ -31,7 +31,7 @@ float waypointsprite_alpha;
 .float lifetime;
 .float fadetime;
 .float maxdistance;
-.float hideflags;
+.int hideflags;
 .float spawntime;
 .float health;
 .float build_started;
@@ -614,7 +614,7 @@ void Ent_RemoveWaypointSprite()
 
 void Ent_WaypointSprite()
 {
-	float sendflags, f, t;
+	int sendflags, f, t;
 	sendflags = ReadByte();
 
 	if(!self.spawntime)

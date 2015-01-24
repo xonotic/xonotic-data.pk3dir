@@ -1,10 +1,10 @@
-const float HUD_PANEL_MAX = 24;
+const int HUD_PANEL_MAX = 24;
 entity hud_panel[HUD_PANEL_MAX];
-const float HUD_PANEL_FIRST = 0;
-float HUD_PANEL_NUM;
-float HUD_PANEL_LAST;
+const int HUD_PANEL_FIRST = 0;
+int HUD_PANEL_NUM;
+int HUD_PANEL_LAST;
 
-float panel_order[HUD_PANEL_MAX];
+int panel_order[HUD_PANEL_MAX];
 string hud_panelorder_prev;
 
 float hud_draw_maximized;
@@ -21,15 +21,15 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
-float weapon_accuracy[WEP_MAXCOUNT];
+int weapon_accuracy[WEP_MAXCOUNT];
 
 float complain_weapon;
 string complain_weapon_name;
 float complain_weapon_type;
 float complain_weapon_time;
 
-float ps_primary, ps_secondary;
-float ts_primary, ts_secondary;
+int ps_primary, ps_secondary;
+int ts_primary, ts_secondary;
 
 float last_switchweapon;
 float last_activeweapon;
@@ -43,10 +43,10 @@ float hud_configure_prev;
 vector hud_configure_gridSize;
 vector hud_configure_realGridSize;
 
-float hudShiftState;
-const float S_SHIFT = 1;
-const float S_CTRL = 2;
-const float S_ALT = 4;
+int hudShiftState;
+const int S_SHIFT = 1;
+const int S_CTRL = 2;
+const int S_ALT = 4;
 
 float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
 
@@ -65,7 +65,7 @@ var vector panel_size_copied;
 
 entity panel;
 .string panel_name;
-.float panel_id;
+.int panel_id;
 .vector current_panel_pos;
 .vector current_panel_size;
 .string current_panel_bg;
@@ -118,7 +118,7 @@ float current_player;
 	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs) 
 
 #define HUD_PANEL(NAME,draw_func,name) \
-	float HUD_PANEL_##NAME; \
+	int HUD_PANEL_##NAME; \
 	void draw_func(void); \
 	void RegisterHUD_Panel_##NAME() \
 	{ \
@@ -341,8 +341,8 @@ HUD_Panel_GetBorder() \
 const float NOTIFY_MAX_ENTRIES = 10;
 const float NOTIFY_ICON_MARGIN = 0.02;
 
-float notify_index;
-float notify_count;
+int notify_index;
+int notify_count;
 float notify_times[NOTIFY_MAX_ENTRIES];
 string notify_attackers[NOTIFY_MAX_ENTRIES];
 string notify_victims[NOTIFY_MAX_ENTRIES];

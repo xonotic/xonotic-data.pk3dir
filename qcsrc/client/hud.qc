@@ -4476,7 +4476,7 @@ void HUD_Reset (void)
 
 void HUD_Main (void)
 {
-	float i;
+	int i;
 	// global hud theAlpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
