@@ -2291,7 +2291,7 @@ void HUD_Score(void)
 		draw_endBoldFont();
 	} else { // teamgames
 		float row, column, rows = 0, columns = 0;
-		local noref vector offset = '0 0 0';
+		vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
 		if(autocvar_hud_panel_score_rankings)
 		{
