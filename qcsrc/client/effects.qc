@@ -30,7 +30,7 @@ void b_make(vector s,vector e, string t,float l,float z)
 }
 */
 
-void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts,float drifte,float branchfactor,float branchfactor_add)
+void cl_effects_lightningarc(vector from, vector to,float seglength,float drifts,float drifte,float branchfactor,float branchfactor_add)
 {
     vector direction,dirnew, pos, pos_l;
     float length, steps, steplength, i,drift;
@@ -58,7 +58,7 @@ void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts
             pos = pos_l +  dirnew * steplength;
             te_lightning1(world,pos_l,pos);
             if(random() < branchfactor)
-                cl_effetcs_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
+                cl_effects_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
             pos_l = pos;
         }
@@ -91,7 +91,7 @@ void Net_ReadLightningarc()
         branchfactor     = autocvar_cl_effects_lightningarc_branchfactor_start;
         branchfactor_add = autocvar_cl_effects_lightningarc_branchfactor_add;
 
-        cl_effetcs_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
+        cl_effects_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
     }
 
 }
