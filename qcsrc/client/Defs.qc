@@ -235,8 +235,8 @@ float servertime, serverprevtime, serverdeltatime;
 float ticrate;
 
 .float damageforcescale;
-#define MIN_DAMAGEEXTRARADIUS 2
-#define MAX_DAMAGEEXTRARADIUS 16
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 .void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
 

@@ -1,5 +1,3 @@
-#define world world
-
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
 const float		MASK_ENGINE						= 1;
 const float		MASK_ENGINEVIEWMODELS			= 2;
@@ -123,12 +121,12 @@ const float BUTTON_14 = 65536;
 const float BUTTON_15 = 131072;
 const float BUTTON_16 = 262144;
 
-#define        SOLID_NOT                               0               // no interaction with other objects
-#define        SOLID_TRIGGER                   1               // touch on edge, but not blocking
-#define        SOLID_BBOX                              2               // touch on edge, block
-#define        SOLID_SLIDEBOX                  3               // touch on edge, but not an onground
-#define        SOLID_BSP                               4               // bsp clip, touch on edge, block
-#define        SOLID_CORPSE                    5               // same as SOLID_BBOX, except it behaves as SOLID_NOT against SOLID_SLIDEBOX objects (players/monsters)
+const float SOLID_NOT 		= 0; // no interaction with other objects
+const float SOLID_TRIGGER 	= 1; // touch on edge, but not blocking
+const float SOLID_BBOX 		= 2; // touch on edge, block
+const float SOLID_SLIDEBOX 	= 3; // touch on edge, but not an onground
+const float SOLID_BSP 		= 4; // bsp clip, touch on edge, block
+const float SOLID_CORPSE 	= 5; // same as SOLID_BBOX, except it behaves as SOLID_NOT against SOLID_SLIDEBOX objects (players/monsters)
 
 const float MOVE_NORMAL = 0; // same as FALSE
 const float MOVE_NOMONSTERS = 1; // same as TRUE

@@ -23,8 +23,8 @@
 var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
-#define REFDEFFLAG_TELEPORTED 1
-#define REFDEFFLAG_JUMPING 2
+float REFDEFFLAG_TELEPORTED = 1;
+float REFDEFFLAG_JUMPING = 2;
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 vector csqcplayer_origin, csqcplayer_velocity;

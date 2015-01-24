@@ -1,7 +1,7 @@
 // files
 .float url_fh;
-#define URL_FH_CURL   -1
-#define URL_FH_STDOUT -2
+const float URL_FH_CURL = -1;
+const float URL_FH_STDOUT = -2;
 
 // URLs
 .string url_url;

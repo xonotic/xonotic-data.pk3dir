@@ -1480,8 +1480,8 @@ void door_reset()
 }
 
 // spawnflags require key (for now only func_door)
-#define SPAWNFLAGS_GOLD_KEY 8
-#define SPAWNFLAGS_SILVER_KEY 16
+const float SPAWNFLAGS_GOLD_KEY = 8;
+const float SPAWNFLAGS_SILVER_KEY = 16;
 void spawnfunc_func_door()
 {
 	// Quake 1 keys compatibility

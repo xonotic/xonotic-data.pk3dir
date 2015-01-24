@@ -1,8 +1,8 @@
 // monster requests
-#define MR_SETUP		  1 // (SERVER) setup monster data
-#define MR_THINK		  2 // (SERVER) logic to run every frame
-#define MR_DEATH		  3 // (SERVER) called when monster dies
-#define MR_PRECACHE		  4 // (BOTH) precaches models/sounds used by this monster
+const float MR_SETUP = 1; // (SERVER) setup monster data
+const float MR_THINK = 2; // (SERVER) logic to run every frame
+const float MR_DEATH = 3; // (SERVER) called when monster dies
+const float MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
 
 // functions:
 entity get_monsterinfo(float id);
@@ -39,7 +39,7 @@ void register_monster(float id, float(float) func, float monsterflags, vector mi
 void register_monsters_done();
 
 const float MON_MAXCOUNT = 24;
-#define MON_FIRST 1
+const float MON_FIRST = 1;
 float MON_COUNT;
 float MON_LAST;
 

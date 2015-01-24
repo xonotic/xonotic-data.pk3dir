@@ -126,8 +126,8 @@ void ServerList_Info_Click(entity btn, entity me);
 void ServerList_Update_favoriteButton(entity btn, entity me);
 
 // fields for category entities
-#define MAX_CATEGORIES 9
-#define CATEGORY_FIRST 1
+const float MAX_CATEGORIES = 9;
+const float CATEGORY_FIRST = 1;
 entity categories[MAX_CATEGORIES];
 float category_ent_count;
 .string cat_name;
@@ -1074,9 +1074,9 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		theAlpha = 1;
 
 	p = gethostcachenumber(SLIST_FIELD_PING, i);
-#define PING_LOW 75
-#define PING_MED 200
-#define PING_HIGH 500
+	const float PING_LOW = 75;
+	const float PING_MED = 200;
+	const float PING_HIGH = 500;
 	if(p < PING_LOW)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * (p / PING_LOW);
 	else if(p < PING_MED)

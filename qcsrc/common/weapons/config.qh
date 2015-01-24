@@ -6,7 +6,7 @@ void Dump_Weapon_Settings(void);
 float wep_config_file;
 float wep_config_alsoprint;
 
-#define MAX_WEP_CONFIG 256
+const float MAX_WEP_CONFIG = 256;
 float WEP_CONFIG_COUNT;
 string wep_config_queue[MAX_WEP_CONFIG];
 

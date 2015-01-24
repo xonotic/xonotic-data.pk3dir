@@ -24,8 +24,8 @@ entity makeXonoticCharmap(entity controlledInputBox);
 
 #ifdef IMPLEMENTATION
 
-#define CHARMAP_COLS 14
-#define CHARMAP_ROWS 10
+const float CHARMAP_COLS = 14;
+const float CHARMAP_ROWS = 10;
 
 string CHARMAP =
 	"★◆■▮▰▬◣◤◥◢◀▲▶▼"

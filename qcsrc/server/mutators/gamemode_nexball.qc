@@ -8,9 +8,9 @@ vector autocvar_g_nexball_viewmodel_offset;
 void basketball_touch();
 void football_touch();
 void ResetBall();
-#define NBM_NONE 0
-#define NBM_FOOTBALL 2
-#define NBM_BASKETBALL 4
+const float NBM_NONE = 0;
+const float NBM_FOOTBALL = 2;
+const float NBM_BASKETBALL = 4;
 float nexball_mode;
 
 float OtherTeam(float t)  //works only if there are two teams on the map!
@@ -22,9 +22,9 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 	return e.team;
 }
 
-#define ST_NEXBALL_GOALS 1
-#define SP_NEXBALL_GOALS 4
-#define SP_NEXBALL_FAULTS 5
+const float ST_NEXBALL_GOALS = 1;
+const float SP_NEXBALL_GOALS = 4;
+const float SP_NEXBALL_FAULTS = 5;
 void nb_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, 0, 0, TRUE);

@@ -1,4 +1,4 @@
-#define LATENCY_THINKRATE 10
+const float LATENCY_THINKRATE = 10;
 .float latency_sum;
 .float latency_cnt;
 .float latency_time;

@@ -36,14 +36,14 @@ entity makeXonoticPlayerModelSelector()
 	return me;
 }
 
-#define BUFMODELS_TITLE 0
-#define BUFMODELS_IMAGE 1
-#define BUFMODELS_MODEL 2
-#define BUFMODELS_SKIN 3
-#define BUFMODELS_DESC 4
-#define BUFMODELS_COUNT 5
+const float BUFMODELS_TITLE = 0;
+const float BUFMODELS_IMAGE = 1;
+const float BUFMODELS_MODEL = 2;
+const float BUFMODELS_SKIN = 3;
+const float BUFMODELS_DESC = 4;
+const float BUFMODELS_COUNT = 5;
 
-#define XONVOTE186 1 // (nyov) removal of model text description
+const float XONVOTE186 = 1; // (nyov) removal of model text description
 
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {

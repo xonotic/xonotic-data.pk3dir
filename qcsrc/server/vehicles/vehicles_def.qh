@@ -40,7 +40,7 @@ const float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a mul
 .float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
 
 .float sound_nexttime;
-#define VOL_VEHICLEENGINE 1
+const float VOL_VEHICLEENGINE = 1;
 
 .float hud;
 .float dmg_time;
@@ -59,8 +59,8 @@ const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 
 .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
 .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
-#define VHSF_NORMAL 0
-#define VHSF_FACTORY 2
+const float VHSF_NORMAL = 0;
+const float VHSF_FACTORY = 2;
 .void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 .float(float _imp) vehicles_impulse;
 .float vehicle_weapon2mode = volly_counter;

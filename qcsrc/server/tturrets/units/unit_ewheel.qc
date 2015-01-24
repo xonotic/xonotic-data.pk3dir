@@ -1,8 +1,8 @@
-#define ewheel_amin_stop 0
-#define ewheel_amin_fwd_slow 1
-#define ewheel_amin_fwd_fast 2
-#define ewheel_amin_bck_slow 3
-#define ewheel_amin_bck_fast 4
+const float ewheel_amin_stop = 0;
+const float ewheel_amin_fwd_slow = 1;
+const float ewheel_amin_fwd_fast = 2;
+const float ewheel_amin_bck_slow = 3;
+const float ewheel_amin_bck_fast = 4;
 
 void ewheel_attack()
 {

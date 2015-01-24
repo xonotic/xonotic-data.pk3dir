@@ -1,7 +1,7 @@
-#define HAVOCBOT_ONS_ROLE_NONE 		0
-#define HAVOCBOT_ONS_ROLE_DEFENSE	2
-#define HAVOCBOT_ONS_ROLE_ASSISTANT	4
-#define HAVOCBOT_ONS_ROLE_OFFENSE	8
+const float HAVOCBOT_ONS_ROLE_NONE 		= 0;
+const float HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
+const float HAVOCBOT_ONS_ROLE_ASSISTANT = 4;
+const float HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
 
 .float havocbot_role_flags;
 .float havocbot_attack_time;

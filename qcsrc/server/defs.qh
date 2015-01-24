@@ -138,8 +138,8 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float	chasecam;
 
 .float	damageforcescale;
-#define MIN_DAMAGEEXTRARADIUS 2
-#define MAX_DAMAGEEXTRARADIUS 16
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 
 //.float          gravity;
@@ -196,12 +196,12 @@ void w_ready();
 // weapon states (self.weaponentity.state)
 const float WS_CLEAR			= 0; // no weapon selected
 const float WS_RAISE			= 1; // raise frame
-const float WS_DROP			= 2; // deselecting frame
+const float WS_DROP				= 2; // deselecting frame
 const float WS_INUSE			= 3; // fire state
 const float WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
-#define W_TICSPERFRAME 2
+const float W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(float wpn);
 
@@ -279,7 +279,7 @@ float default_weapon_alpha;
 
 .float version_nagtime;
 
-#define NUM_JUMPPADSUSED 3
+const float NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
@@ -394,12 +394,12 @@ string globalsound_metalfall;
 string globalsound_step;
 string globalsound_metalstep;
 
-#define VOICETYPE_PLAYERSOUND 10
-#define VOICETYPE_TEAMRADIO 11
-#define VOICETYPE_LASTATTACKER 12
-#define VOICETYPE_LASTATTACKER_ONLY 13
-#define VOICETYPE_AUTOTAUNT 14
-#define VOICETYPE_TAUNT 15
+const float VOICETYPE_PLAYERSOUND = 10;
+const float VOICETYPE_TEAMRADIO = 11;
+const float VOICETYPE_LASTATTACKER = 12;
+const float VOICETYPE_LASTATTACKER_ONLY = 13;
+const float VOICETYPE_AUTOTAUNT = 14;
+const float VOICETYPE_TAUNT = 15;
 
 void PrecachePlayerSounds(string f);
 void PrecacheGlobalSound(string samplestring);
@@ -556,11 +556,11 @@ string deathmessage;
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
-#define ACTIVE_NOT 		0
-#define ACTIVE_ACTIVE 	1
-#define ACTIVE_IDLE 	2
-#define ACTIVE_BUSY 	2
-#define ACTIVE_TOGGLE	3
+const float ACTIVE_NOT 		= 0;
+const float ACTIVE_ACTIVE 	= 1;
+const float ACTIVE_IDLE 	= 2;
+const float ACTIVE_BUSY 	= 2;
+const float ACTIVE_TOGGLE 	= 3;
 .float active;
 .void (float act_state) setactive;
 .entity realowner;
@@ -594,14 +594,14 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 string modname;
 
 .float missile_flags;
-#define MIF_SPLASH 2
-#define MIF_ARC 4
-#define MIF_PROXY 8
-#define MIF_GUIDED_MANUAL 16
-#define MIF_GUIDED_HEAT 32
-#define MIF_GUIDED_LASER 64
-#define MIF_GUIDED_AI 128
-#define MIF_GUIDED_TAG 128
+const float MIF_SPLASH = 2;
+const float MIF_ARC = 4;
+const float MIF_PROXY = 8;
+const float MIF_GUIDED_MANUAL = 16;
+const float MIF_GUIDED_HEAT = 32;
+const float MIF_GUIDED_LASER = 64;
+const float MIF_GUIDED_AI = 128;
+const float MIF_GUIDED_TAG = 128;
 #define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
 #define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
 #define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)

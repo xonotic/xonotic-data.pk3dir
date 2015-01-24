@@ -16,15 +16,15 @@ void Drag_MoveDrag(entity from, entity to) { }
 .float maycheat;
 float gamestart_sv_cheats;
 
-#define CHIMPULSE_SPEEDRUN_INIT 30
-#define CHIMPULSE_GIVE_ALL 99
-#define CHIMPULSE_CLONE_MOVING 140
-#define CHIMPULSE_SPEEDRUN 141
-#define CHIMPULSE_CLONE_STANDING 142
-#define CHIMPULSE_TELEPORT 143
-#define CHIMPULSE_R00T 148
+const float CHIMPULSE_SPEEDRUN_INIT = 30;
+const float CHIMPULSE_GIVE_ALL = 99;
+const float CHIMPULSE_CLONE_MOVING = 140;
+const float CHIMPULSE_SPEEDRUN = 141;
+const float CHIMPULSE_CLONE_STANDING = 142;
+const float CHIMPULSE_TELEPORT = 143;
+const float CHIMPULSE_R00T = 148;
 
-#define CHRAME_DRAG 8
+const float CHRAME_DRAG = 8;
 
 void CheatInit()
 {

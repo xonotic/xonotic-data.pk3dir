@@ -69,11 +69,11 @@ vector autocvar_g_vehicle_spiderbot_bouncepain;
 void spiderbot_exit(float eject);
 void spiderbot_enter();
 void spiderbot_spawn(float);
-#define SBRM_FIRST 0
-#define SBRM_VOLLY 0
-#define SBRM_GUIDE 1
-#define SBRM_ARTILLERY 2
-#define SBRM_LAST 2
+const float SBRM_FIRST = 0;
+const float SBRM_VOLLY = 0;
+const float SBRM_GUIDE = 1;
+const float SBRM_ARTILLERY = 2;
+const float SBRM_LAST = 2;
 
 void spiderbot_rocket_artillery()
 {

@@ -99,8 +99,8 @@ string format_time(float seconds);
 string mmsss(float t);
 string mmssss(float t);
 
-#define TIME_DECIMALS 2
-#define TIME_FACTOR 100
+const float TIME_DECIMALS = 2;
+const float TIME_FACTOR = 100;
 #define TIME_ENCODED_TOSTRING(n) mmssss(n)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
@@ -265,7 +265,7 @@ float get_model_parameters_age;
 string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
-#define MAX_AIM_BONES 4
+const float MAX_AIM_BONES = 4;
 string get_model_parameters_bone_aim[MAX_AIM_BONES];
 float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
 float get_model_parameters_fixbone;
@@ -423,12 +423,12 @@ void dedicated_print(string input);
 #endif
 
 #ifndef MENUQC
-#define CNT_NORMAL 1
-#define CNT_GAMESTART 2
-#define CNT_IDLE 3
-#define CNT_KILL 4
-#define CNT_RESPAWN 5
-#define CNT_ROUNDSTART 6
+const float CNT_NORMAL = 1;
+const float CNT_GAMESTART = 2;
+const float CNT_IDLE = 3;
+const float CNT_KILL = 4;
+const float CNT_RESPAWN = 5;
+const float CNT_ROUNDSTART = 6;
 float Announcer_PickNumber(float type, float num);
 #endif
 

@@ -1,6 +1,6 @@
-#define BRG_SETUP 2
-#define BRG_START 4
-#define BRG_END 8
+const float BRG_SETUP = 2;
+const float BRG_START = 4;
+const float BRG_END = 8;
 
 #ifdef SVQC
 // Auto cvars
@@ -77,8 +77,8 @@ var float autocvar_g_vehicle_bumblebee = 0;
 
 float bumble_raygun_send(entity to, float sf);
 
-#define BUMB_MIN '-130 -130 -130'
-#define BUMB_MAX '130 130 130'
+const vector BUMB_MIN = '-130 -130 -130';
+const vector BUMB_MAX = '130 130 130';
 
 void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 {

@@ -91,7 +91,7 @@ float bot_havecommand(entity bot, float idx)
 	return 1;
 }
 
-#define MAX_BOT_PLACES 4
+const float MAX_BOT_PLACES = 4;
 .float bot_places_count;
 .entity bot_places[MAX_BOT_PLACES];
 .string bot_placenames[MAX_BOT_PLACES];
@@ -138,35 +138,35 @@ entity bot_getplace(string placename)
 
 
 // NOTE: New commands should be added here. Do not forget to update BOT_CMD_COUNTER
-#define BOT_CMD_NULL			0
-#define BOT_CMD_PAUSE			1
-#define BOT_CMD_CONTINUE		2
-#define BOT_CMD_WAIT			3
-#define BOT_CMD_TURN			4
-#define BOT_CMD_MOVETO			5
-#define BOT_CMD_RESETGOAL		6	// Not implemented yet
-#define BOT_CMD_CC			7
-#define BOT_CMD_IF      		8
-#define BOT_CMD_ELSE    		9
-#define BOT_CMD_FI      		10
-#define BOT_CMD_RESETAIM   		11
-#define BOT_CMD_AIM			12
-#define BOT_CMD_PRESSKEY		13
-#define BOT_CMD_RELEASEKEY		14
-#define BOT_CMD_SELECTWEAPON		15
-#define BOT_CMD_IMPULSE			16
-#define BOT_CMD_WAIT_UNTIL		17
-#define BOT_CMD_MOVETOTARGET    18
-#define BOT_CMD_AIMTARGET       19
-#define BOT_CMD_BARRIER         20
-#define BOT_CMD_CONSOLE			21
-#define BOT_CMD_SOUND			22
-#define BOT_CMD_DEBUG_ASSERT_CANFIRE 23
-#define BOT_CMD_WHILE			24	// TODO: Not implemented yet
-#define BOT_CMD_WEND			25	// TODO: Not implemented yet
-#define BOT_CMD_CHASE			26	// TODO: Not implemented yet
+const float BOT_CMD_NULL 		= 0;
+const float BOT_CMD_PAUSE 		= 1;
+const float BOT_CMD_CONTINUE 	= 2;
+const float BOT_CMD_WAIT 		= 3;
+const float BOT_CMD_TURN 		= 4;
+const float BOT_CMD_MOVETO 		= 5;
+const float BOT_CMD_RESETGOAL 	= 6;	// Not implemented yet
+const float BOT_CMD_CC 			= 7;
+const float BOT_CMD_IF 			= 8;
+const float BOT_CMD_ELSE 		= 9;
+const float BOT_CMD_FI 			= 10;
+const float BOT_CMD_RESETAIM 	= 11;
+const float BOT_CMD_AIM 		= 12;
+const float BOT_CMD_PRESSKEY 	= 13;
+const float BOT_CMD_RELEASEKEY 	= 14;
+const float BOT_CMD_SELECTWEAPON 	= 15;
+const float BOT_CMD_IMPULSE 		= 16;
+const float BOT_CMD_WAIT_UNTIL 		= 17;
+const float BOT_CMD_MOVETOTARGET 	= 18;
+const float BOT_CMD_AIMTARGET 		= 19;
+const float BOT_CMD_BARRIER 		= 20;
+const float BOT_CMD_CONSOLE 		= 21;
+const float BOT_CMD_SOUND 		= 22;
+const float BOT_CMD_DEBUG_ASSERT_CANFIRE = 23;
+const float BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
+const float BOT_CMD_WEND 		= 25;	// TODO: Not implemented yet
+const float BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
 
-#define BOT_CMD_COUNTER			24	// Update this value if you add/remove a command
+const float BOT_CMD_COUNTER 	= 24;	// Update this value if you add/remove a command
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
@@ -174,10 +174,10 @@ entity bot_getplace(string placename)
 .float() cmd_resetgoal;
 
 //
-#define BOT_CMD_PARAMETER_NONE		0
-#define BOT_CMD_PARAMETER_FLOAT		1
-#define BOT_CMD_PARAMETER_STRING	2
-#define BOT_CMD_PARAMETER_VECTOR	3
+const float BOT_CMD_PARAMETER_NONE = 0;
+const float BOT_CMD_PARAMETER_FLOAT = 1;
+const float BOT_CMD_PARAMETER_STRING = 2;
+const float BOT_CMD_PARAMETER_VECTOR = 3;
 
 float bot_cmds_initialized;
 float bot_cmd_parm_type[BOT_CMD_COUNTER];
@@ -650,11 +650,11 @@ float bot_cmd_select_weapon()
 
 .float bot_cmd_condition_status;
 
-#define CMD_CONDITION_NONE		0
-#define CMD_CONDITION_TRUE		1
-#define CMD_CONDITION_FALSE		2
-#define CMD_CONDITION_TRUE_BLOCK	4
-#define CMD_CONDITION_FALSE_BLOCK	8
+const float CMD_CONDITION_NONE = 0;
+const float CMD_CONDITION_TRUE = 1;
+const float CMD_CONDITION_FALSE = 2;
+const float CMD_CONDITION_TRUE_BLOCK = 4;
+const float CMD_CONDITION_FALSE_BLOCK = 8;
 
 float bot_cmd_eval(string expr)
 {
@@ -877,18 +877,18 @@ float bot_cmd_aimtarget()
 
 .float bot_cmd_keys;
 
-#define BOT_CMD_KEY_NONE	0
-#define BOT_CMD_KEY_FORWARD 	1
-#define BOT_CMD_KEY_BACKWARD	2
-#define BOT_CMD_KEY_RIGHT	4
-#define BOT_CMD_KEY_LEFT	8
-#define BOT_CMD_KEY_JUMP	16
-#define BOT_CMD_KEY_ATTACK1 	32
-#define BOT_CMD_KEY_ATTACK2 	64
-#define BOT_CMD_KEY_USE		128
-#define BOT_CMD_KEY_HOOK	256
-#define BOT_CMD_KEY_CROUCH	512
-#define BOT_CMD_KEY_CHAT	1024
+const float BOT_CMD_KEY_NONE 		= 0;
+const float BOT_CMD_KEY_FORWARD 	= 1;
+const float BOT_CMD_KEY_BACKWARD 	= 2;
+const float BOT_CMD_KEY_RIGHT 		= 4;
+const float BOT_CMD_KEY_LEFT 		= 8;
+const float BOT_CMD_KEY_JUMP 		= 16;
+const float BOT_CMD_KEY_ATTACK1 	= 32;
+const float BOT_CMD_KEY_ATTACK2 	= 64;
+const float BOT_CMD_KEY_USE 		= 128;
+const float BOT_CMD_KEY_HOOK 		= 256;
+const float BOT_CMD_KEY_CROUCH 		= 512;
+const float BOT_CMD_KEY_CHAT 		= 1024;
 
 float bot_presskeys()
 {

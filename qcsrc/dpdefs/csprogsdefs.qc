@@ -930,13 +930,13 @@ float REFDEFFLAG_INTERMISSION = 8;
 // assorted builtins
 float	drawsubpic(vector position, vector size, string pic, vector srcPosition, vector srcSize, vector rgb, float alpha, float flag) = #328;
 vector	drawgetimagesize(string pic) = #318;
-#define SPA_POSITION 0
-#define SPA_S_AXIS 1
-#define SPA_T_AXIS 2
-#define SPA_R_AXIS 3
-#define SPA_TEXCOORDS0 4
-#define SPA_LIGHTMAP0_TEXCOORDS 5
-#define SPA_LIGHTMAP_COLOR 6
+const float SPA_POSITION =  0;
+const float SPA_S_AXIS =  1;
+const float SPA_T_AXIS =  2;
+const float SPA_R_AXIS =  3;
+const float SPA_TEXCOORDS0 =  4;
+const float SPA_LIGHTMAP0_TEXCOORDS =  5;
+const float SPA_LIGHTMAP_COLOR =  6;
 float (entity e, float s)						getsurfacenumpoints = #434;
 vector (entity e, float s, float n)					getsurfacepoint = #435;
 vector (entity e, float s)						getsurfacenormal = #436;

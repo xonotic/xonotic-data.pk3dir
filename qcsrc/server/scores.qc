@@ -773,8 +773,8 @@ float TeamScore_GetCompareValue(float t)
 	return s;
 }
 
-#define NAMEWIDTH 22
-#define SCORESWIDTH 58
+const float NAMEWIDTH = 22;
+const float SCORESWIDTH = 58;
 // TODO put this somewhere in common?
 string Score_NicePrint_ItemColor(float vflags)
 {

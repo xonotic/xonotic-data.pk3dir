@@ -520,7 +520,7 @@ float pathlib_h_diagonal3(vector a,vector b)
 }
 
 //#define PATHLIB_USE_NODESCRAP
-#define PATHLIB_NODEEXPIRE 0.05
+const float PATHLIB_NODEEXPIRE = 0.05;
 float pathlib_scraplist_cnt;
 entity newnode()
 {

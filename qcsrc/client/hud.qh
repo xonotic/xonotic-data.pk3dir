@@ -1,6 +1,6 @@
-#define HUD_PANEL_MAX 24
+const float HUD_PANEL_MAX = 24;
 entity hud_panel[HUD_PANEL_MAX];
-#define HUD_PANEL_FIRST 0
+const float HUD_PANEL_FIRST = 0;
 float HUD_PANEL_NUM;
 float HUD_PANEL_LAST;
 
@@ -338,8 +338,8 @@ panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_bo
 HUD_Panel_GetBorder() \
 } ENDS_WITH_CURLY_BRACE
 
-#define NOTIFY_MAX_ENTRIES 10
-#define NOTIFY_ICON_MARGIN 0.02
+const float NOTIFY_MAX_ENTRIES = 10;
+const float NOTIFY_ICON_MARGIN = 0.02;
 
 float notify_index;
 float notify_count;

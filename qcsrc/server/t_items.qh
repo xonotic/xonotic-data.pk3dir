@@ -44,20 +44,20 @@ const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWE
 const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
-#define ISF_LOCATION 2
-#define ISF_MODEL    4
-#define ISF_STATUS   8
-    #define ITS_STAYWEP   1
-    #define ITS_ANIMATE1  2
-    #define ITS_ANIMATE2  4
-    #define ITS_AVAILABLE 8
-    #define ITS_ALLOWFB   16
-    #define ITS_ALLOWSI   32
-    #define ITS_POWERUP   64
-#define ISF_COLORMAP 16
-#define ISF_DROP 32
-#define ISF_ANGLES 64
-#define ISF_SIZE 128
+const float ISF_LOCATION 		= 2;
+const float ISF_MODEL			= 4;
+const float ISF_STATUS 			= 8;
+    const float ITS_STAYWEP 	= 1;
+    const float ITS_ANIMATE1 	= 2;
+    const float ITS_ANIMATE2 	= 4;
+    const float ITS_AVAILABLE 	= 8;
+    const float ITS_ALLOWFB 	= 16;
+    const float ITS_ALLOWSI 	= 32;
+    const float ITS_POWERUP 	= 64;
+const float ISF_COLORMAP 		= 16;
+const float ISF_DROP 			= 32;
+const float ISF_ANGLES 			= 64;
+const float ISF_SIZE 			= 128;
 
 .float ItemStatus;
 
@@ -88,7 +88,7 @@ float ItemSend(entity to, float sf);
 
 float have_pickup_item(void);
 
-#define ITEM_RESPAWN_TICKS 10
+const float ITEM_RESPAWN_TICKS = 10;
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
 	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
@@ -142,11 +142,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 void target_items_use (void);
 
-#define OP_SET 0
-#define OP_MIN 1
-#define OP_MAX 2
-#define OP_PLUS 3
-#define OP_MINUS 4
+const float OP_SET = 0;
+const float OP_MIN = 1;
+const float OP_MAX = 2;
+const float OP_PLUS = 3;
+const float OP_MINUS = 4;
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

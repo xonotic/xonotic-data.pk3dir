@@ -1,5 +1,5 @@
-#define RACER_MIN '-120 -120 -40'
-#define RACER_MAX '120 120 40'
+const vector RACER_MIN = '-120 -120 -40';
+const vector RACER_MAX = '120 120 40';
 
 #ifdef SVQC
 void racer_exit(float eject);

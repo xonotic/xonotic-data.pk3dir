@@ -4,5 +4,5 @@
 // =========================================================
 
 // identifiers for subfunction requests by the command code structure
-#define CMD_REQUEST_COMMAND 1
-#define CMD_REQUEST_USAGE 2
+const float CMD_REQUEST_COMMAND = 1;
+const float CMD_REQUEST_USAGE = 2;

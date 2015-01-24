@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // MENU Functionality
 
-#define DATABUF_PING 0
+const float DATABUF_PING = 0;
 #define DATABUF_CAPTURES (1*maxclients)
 #define DATABUF_DEATHS (2*maxclients)
 #define DATABUF_RETURNS (3*maxclients)
@@ -38,25 +38,25 @@ float gametype;
 //.float ctf_state;
 //.float health;
 
-#define FONT_DEFAULT 0
-#define FONT_USER 8
+float FONT_DEFAULT = 0;
+float FONT_USER = 8;
 
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-#define MAX_HUD_FIELDS 16
+const float MAX_HUD_FIELDS = 16;
 
-#define SP_END -1
+const float SP_END = -1;
 
-#define SP_PING -2
-#define SP_NAME -3
-#define SP_KDRATIO -4
-#define SP_CLRATIO -5
-#define SP_PL -6
-#define SP_FRAGS -7
-#define SP_SUM -8
+const float SP_PING = -2;
+const float SP_NAME = -3;
+const float SP_KDRATIO = -4;
+const float SP_CLRATIO = -5;
+const float SP_PL = -6;
+const float SP_FRAGS = -7;
+const float SP_SUM = -8;
 
-#define SP_SEPARATOR -100
+const float SP_SEPARATOR = -100;
 
 float hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
@@ -126,14 +126,14 @@ vector camera_direction;
 void centerprint_hud(string strMessage);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
-#define ALPHA_MIN_VISIBLE 0.003
+const float ALPHA_MIN_VISIBLE = 0.003;
 
 float armorblockpercent;
 
 //hooks
 float calledhooks;
-#define HOOK_START    1
-#define HOOK_END      2
+const float HOOK_START =    1;
+const float HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 

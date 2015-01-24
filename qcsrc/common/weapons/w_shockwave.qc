@@ -93,7 +93,7 @@ void spawnfunc_weapon_shockwave(void)
 	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
 }
 
-#define MAX_SHOCKWAVE_HITS 10
+const float MAX_SHOCKWAVE_HITS = 10;
 //#define DEBUG_SHOCKWAVE
 
 .float swing_prev;
@@ -747,9 +747,9 @@ float W_Shockwave(float req)
 #endif
 #ifdef CSQC
 // WEAPONTODO: add client side settings for these
-#define SW_MAXALPHA 0.5
-#define SW_FADETIME 0.4
-#define SW_DISTTOMIN 200
+const float SW_MAXALPHA = 0.5;
+const float SW_FADETIME = 0.4;
+const float SW_DISTTOMIN = 200;
 void Draw_Shockwave()
 {
 	// fading/removal control

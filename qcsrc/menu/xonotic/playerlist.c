@@ -20,11 +20,11 @@ entity makeXonoticPlayerList();
 
 #ifdef IMPLEMENTATION
 
-#define PLAYERPARM_SCORE 0
-#define PLAYERPARM_PING 1
-#define PLAYERPARM_TEAM 2
-#define PLAYERPARM_NAME 3
-#define PLAYERPARM_COUNT 4
+const float PLAYERPARM_SCORE = 0;
+const float PLAYERPARM_PING = 1;
+const float PLAYERPARM_TEAM = 2;
+const float PLAYERPARM_NAME = 3;
+const float PLAYERPARM_COUNT = 4;
 
 entity makeXonoticPlayerList()
 {

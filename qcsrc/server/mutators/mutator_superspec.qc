@@ -1,21 +1,21 @@
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? TRUE : FALSE)
 
-#define ASF_STRENGTH        1
-#define ASF_SHIELD          2
-#define ASF_MEGA_AR         4
-#define ASF_MEGA_HP         8
-#define ASF_FLAG_GRAB       16
-#define ASF_OBSERVER_ONLY   32
-#define ASF_SHOWWHAT        64
-#define ASF_SSIM            128
-#define ASF_FOLLOWKILLER    256
-#define ASF_ALL             0xFFFFFF
+const float ASF_STRENGTH 		= 1;
+const float ASF_SHIELD 			= 2;
+const float ASF_MEGA_AR 		= 4;
+const float ASF_MEGA_HP 		= 8;
+const float ASF_FLAG_GRAB 		= 16;
+const float ASF_OBSERVER_ONLY 	= 32;
+const float ASF_SHOWWHAT 		= 64;
+const float ASF_SSIM 			= 128;
+const float ASF_FOLLOWKILLER 	= 256;
+const float ASF_ALL 			= 0xFFFFFF;
 .float autospec_flags;
 
-#define SSF_SILENT          1
-#define SSF_VERBOSE         2
-#define SSF_ITEMMSG         4
+const float SSF_SILENT = 1;
+const float SSF_VERBOSE = 2;
+const float SSF_ITEMMSG = 4;
 .float superspec_flags;
 
 .string superspec_itemfilter; //"classname1 classname2 ..."

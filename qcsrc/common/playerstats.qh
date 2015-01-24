@@ -87,11 +87,11 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 string autocvar_g_playerstats_gamereport_ladder;
 var string autocvar_g_playerstats_gamereport_uri = "http://stats.xonotic.org/stats/submit";
 
-#define PS_B_STATUS_ERROR -2
-#define PS_B_STATUS_IDLE -1
-#define PS_B_STATUS_WAITING 0
-#define PS_B_STATUS_RECEIVED 1
-#define PS_B_STATUS_UPDATING 2
+const float PS_B_STATUS_ERROR = -2;
+const float PS_B_STATUS_IDLE = -1;
+const float PS_B_STATUS_WAITING = 0;
+const float PS_B_STATUS_RECEIVED = 1;
+const float PS_B_STATUS_UPDATING = 2;
 .float playerstats_basicstatus;
 var string autocvar_g_playerstats_playerbasic_uri = "http://stats.xonotic.org";
 
@@ -102,10 +102,10 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status);
 #ifdef MENUQC
 float PS_D_NEXTUPDATETIME;
 float PS_D_LASTGAMECOUNT;
-#define PS_D_STATUS_ERROR -2
-#define PS_D_STATUS_IDLE -1
-#define PS_D_STATUS_WAITING 0
-#define PS_D_STATUS_RECEIVED 1
+const float PS_D_STATUS_ERROR = -2;
+const float PS_D_STATUS_IDLE = -1;
+const float PS_D_STATUS_WAITING = 0;
+const float PS_D_STATUS_RECEIVED = 1;
 var float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
 var string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
 var float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway

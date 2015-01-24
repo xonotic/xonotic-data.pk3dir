@@ -214,7 +214,7 @@ float InputBox_keyDown(entity me, float key, float ascii, float shift)
 
 void InputBox_draw(entity me)
 {
-#define CURSOR "_"
+	string CURSOR = "_";
 	float cursorPosInWidths, totalSizeInWidths;
 
 	if(me.pressed)

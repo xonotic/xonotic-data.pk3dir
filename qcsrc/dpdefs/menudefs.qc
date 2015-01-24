@@ -527,8 +527,8 @@ float(string s) tokenize_console = #514;
 float(float i) argv_start_index = #515;
 float(float i) argv_end_index = #516;
 string(float, float) getgamedirinfo = #626;
-#define GETGAMEDIRINFO_NAME 0
-#define GETGAMEDIRINFO_DESCRIPTION 1
+const float GETGAMEDIRINFO_NAME = 0;
+const float GETGAMEDIRINFO_DESCRIPTION = 1;
 float log(float f) = #532;
 string(string format, ...) sprintf = #627;
 string(string s) strdecolorize = #477;

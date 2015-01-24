@@ -67,13 +67,13 @@ string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
 
 float kh_key_dropped, kh_key_carried;
 
-#define ST_KH_CAPS 1
-#define SP_KH_CAPS 4
-#define SP_KH_PUSHES 5
-#define SP_KH_DESTROYS 6
-#define SP_KH_PICKUPS 7
-#define SP_KH_KCKILLS 8
-#define SP_KH_LOSSES 9
+const float ST_KH_CAPS = 1;
+const float SP_KH_CAPS = 4;
+const float SP_KH_PUSHES = 5;
+const float SP_KH_DESTROYS = 6;
+const float SP_KH_PICKUPS = 7;
+const float SP_KH_KCKILLS = 8;
+const float SP_KH_LOSSES = 9;
 void kh_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);

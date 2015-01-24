@@ -1,19 +1,19 @@
-#define ANIM_NO         0
-#define ANIM_TURN       1
-#define ANIM_WALK       2
-#define ANIM_RUN        3
-#define ANIM_STRAFE_L   4
-#define ANIM_STRAFE_R   5
-#define ANIM_JUMP       6
-#define ANIM_LAND       7
-#define ANIM_PAIN       8
-#define ANIM_MEELE      9
-#define ANIM_SWIM       10
-#define ANIM_ROAM       11
+const float ANIM_NO         = 0;
+const float ANIM_TURN       = 1;
+const float ANIM_WALK       = 2;
+const float ANIM_RUN        = 3;
+const float ANIM_STRAFE_L   = 4;
+const float ANIM_STRAFE_R   = 5;
+const float ANIM_JUMP       = 6;
+const float ANIM_LAND       = 7;
+const float ANIM_PAIN       = 8;
+const float ANIM_MEELE      = 9;
+const float ANIM_SWIM       = 10;
+const float ANIM_ROAM       = 11;
 .float animflag;
 
-#define WALKER_MIN '-70 -70 0'
-#define WALKER_MAX '70 70 95'
+const vector WALKER_MIN = '-70 -70 0';
+const vector WALKER_MAX = '70 70 95';
 
 #define WALKER_PATH(s,e) pathlib_astar(s,e)
 

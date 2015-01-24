@@ -1,10 +1,10 @@
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
-#define ICE_MAX_ALPHA 1
-#define ICE_MIN_ALPHA 0.1
+const float ICE_MAX_ALPHA = 1;
+const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
-#define SP_FREEZETAG_REVIVALS 4
+const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY

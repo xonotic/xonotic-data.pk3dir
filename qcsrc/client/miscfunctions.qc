@@ -646,7 +646,7 @@ void draw_endBoldFont()
 }
 
 
-#define MAX_ACCURACY_LEVELS 10
+const float MAX_ACCURACY_LEVELS = 10;
 float acc_lev[MAX_ACCURACY_LEVELS];
 vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_col_loadtime;

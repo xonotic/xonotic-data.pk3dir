@@ -259,7 +259,7 @@ float fexists(string f)
 }
 
 // Databases (hash tables)
-#define DB_BUCKETS 8192
+const float DB_BUCKETS = 8192;
 void db_save(float db, string pFilename)
 {
 	float fh, i, n;
@@ -2373,7 +2373,7 @@ void m_shutdown()
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
 
-#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 #define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 #define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 // this will use the value:

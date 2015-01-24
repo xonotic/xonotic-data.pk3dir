@@ -11,4 +11,4 @@ float inv_monsters_perteam[17];
 
 float inv_monsterskill;
 
-#define ST_INV_KILLS 1
+const float ST_INV_KILLS = 1;

@@ -1,8 +1,8 @@
 .float skeleton_info_modelindex;
 .float skeleton_info_skin;
-#define BONETYPE_LOWER 0
-#define BONETYPE_UPPER 1
-#define MAX_BONES 128
+const float BONETYPE_LOWER = 0;
+const float BONETYPE_UPPER = 1;
+const float MAX_BONES = 128;
 .float skeleton_bonetype[MAX_BONES];
 .float skeleton_numbones;
 

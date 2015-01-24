@@ -238,7 +238,7 @@ void OnlineBanList_Think()
 	remove(self);
 }
 
-#define BAN_MAX 256
+const float BAN_MAX = 256;
 float ban_loaded;
 string ban_ip[BAN_MAX];
 float ban_expire[BAN_MAX];

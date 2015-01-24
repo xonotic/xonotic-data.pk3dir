@@ -67,7 +67,7 @@ string race_readName(string map, float pos)
 }
 
 
-#define MAX_CHECKPOINTS 255
+const float MAX_CHECKPOINTS = 255;
 
 void spawnfunc_target_checkpoint();
 

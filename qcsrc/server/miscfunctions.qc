@@ -1037,10 +1037,10 @@ void readlevelcvars(void)
 string precache_sound (string s) = #19;
 float precache_sound_index (string s) = #19;
 
-#define SND_VOLUME      1
-#define SND_ATTENUATION 2
-#define SND_LARGEENTITY 8
-#define SND_LARGESOUND  16
+const float SND_VOLUME = 1;
+const float SND_ATTENUATION = 2;
+const float SND_LARGEENTITY = 8;
+const float SND_LARGESOUND = 16;
 
 float sound_allowed(float dest, entity e)
 {
@@ -1393,14 +1393,14 @@ void precache()
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
 
-#define INITPRIO_FIRST              0
-#define INITPRIO_GAMETYPE           0
-#define INITPRIO_GAMETYPE_FALLBACK  1
-#define INITPRIO_FINDTARGET        10
-#define INITPRIO_DROPTOFLOOR       20
-#define INITPRIO_SETLOCATION       90
-#define INITPRIO_LINKDOORS         91
-#define INITPRIO_LAST              99
+const float INITPRIO_FIRST 				= 0;
+const float INITPRIO_GAMETYPE 			= 0;
+const float INITPRIO_GAMETYPE_FALLBACK 	= 1;
+const float INITPRIO_FINDTARGET 		= 10;
+const float INITPRIO_DROPTOFLOOR 		= 20;
+const float INITPRIO_SETLOCATION 		= 90;
+const float INITPRIO_LINKDOORS 			= 91;
+const float INITPRIO_LAST 				= 99;
 
 .void(void) initialize_entity;
 .float initialize_entity_order;

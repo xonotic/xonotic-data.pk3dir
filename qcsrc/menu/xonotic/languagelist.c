@@ -34,11 +34,11 @@ void SetLanguage_Click(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
-#define LANGPARM_ID 0
-#define LANGPARM_NAME 1
-#define LANGPARM_NAME_LOCALIZED 2
-#define LANGPARM_PERCENTAGE 3
-#define LANGPARM_COUNT 4
+const float LANGPARM_ID = 0;
+const float LANGPARM_NAME = 1;
+const float LANGPARM_NAME_LOCALIZED = 2;
+const float LANGPARM_PERCENTAGE = 3;
+const float LANGPARM_COUNT = 4;
 
 entity makeXonoticLanguageList()
 {

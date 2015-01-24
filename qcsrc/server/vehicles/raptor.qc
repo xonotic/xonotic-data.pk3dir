@@ -1,10 +1,10 @@
-#define RSM_FIRST 0
-#define RSM_BOMB 0
-#define RSM_FLARE 1
-#define RSM_LAST 1
+const float RSM_FIRST = 0;
+const float RSM_BOMB = 0;
+const float RSM_FLARE = 1;
+const float RSM_LAST = 1;
 
-#define RAPTOR_MIN '-80 -80 0'
-#define RAPTOR_MAX '80 80 70'
+const vector RAPTOR_MIN = '-80 -80 0';
+const vector RAPTOR_MAX = '80 80 70';
 
 #ifdef SVQC
 float autocvar_g_vehicle_raptor;

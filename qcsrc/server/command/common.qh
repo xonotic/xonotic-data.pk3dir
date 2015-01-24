@@ -4,18 +4,18 @@
 // ============================================================
 
 // client verification results
-#define CLIENT_ACCEPTABLE 1
-#define CLIENT_DOESNT_EXIST -1
-#define CLIENT_NOT_REAL -2
-#define CLIENT_NOT_BOT -3
+const float CLIENT_ACCEPTABLE = 1;
+const float CLIENT_DOESNT_EXIST = -1;
+const float CLIENT_NOT_REAL = -2;
+const float CLIENT_NOT_BOT = -3;
 
 // definitions for timeouts
-#define TIMEOUT_INACTIVE 0
-#define TIMEOUT_LEADTIME 1
-#define TIMEOUT_ACTIVE 2
+const float TIMEOUT_INACTIVE = 0;
+const float TIMEOUT_LEADTIME = 1;
+const float TIMEOUT_ACTIVE = 2;
 
 // timeout which pauses the game by setting the slowmo value extremely low.
-#define TIMEOUT_SLOWMO_VALUE 0.0001
+const float TIMEOUT_SLOWMO_VALUE = 0.0001;
 
 // global timeout information declarations
 entity timeout_caller; // contains the entity of the player who started the last timeout

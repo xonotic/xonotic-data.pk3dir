@@ -75,10 +75,10 @@ void animdecide_load_if_needed(entity e)
 	e.anim_melee_z = 0.001;
 }
 
-#define ANIMPRIO_IDLE 0
-#define ANIMPRIO_ACTIVE 1
-#define ANIMPRIO_CROUCH 2
-#define ANIMPRIO_DEAD 3
+const float ANIMPRIO_IDLE = 0;
+const float ANIMPRIO_ACTIVE = 1;
+const float ANIMPRIO_CROUCH = 2;
+const float ANIMPRIO_DEAD = 3;
 
 vector animdecide_getupperanim(entity e)
 {

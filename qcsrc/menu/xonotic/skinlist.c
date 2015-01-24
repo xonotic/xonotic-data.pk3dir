@@ -33,11 +33,11 @@ void SetSkin_Click(entity btn, entity me);
 
 #ifdef IMPLEMENTATION
 
-#define SKINPARM_NAME 0
-#define SKINPARM_TITLE 1
-#define SKINPARM_AUTHOR 2
-#define SKINPARM_PREVIEW 3
-#define SKINPARM_COUNT 4
+const float SKINPARM_NAME = 0;
+const float SKINPARM_TITLE = 1;
+const float SKINPARM_AUTHOR = 2;
+const float SKINPARM_PREVIEW = 3;
+const float SKINPARM_COUNT = 4;
 
 entity makeXonoticSkinList()
 {

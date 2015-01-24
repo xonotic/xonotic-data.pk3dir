@@ -2068,8 +2068,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
 	entity tm = world, pl;
-#define SCOREPANEL_MAX_ENTRIES 6
-#define SCOREPANEL_ASPECTRATIO 2
+	float SCOREPANEL_MAX_ENTRIES = 6;
+	float SCOREPANEL_ASPECTRATIO = 2;
 	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
 	vector fontsize = '1 1 0' * (mySize_y/entries);
 
@@ -4085,9 +4085,9 @@ void HUD_Physics(void)
 
 // CenterPrint (#16)
 //
-#define CENTERPRINT_MAX_MSGS 10
-#define CENTERPRINT_MAX_ENTRIES 50
-#define CENTERPRINT_SPACING 0.7
+const float CENTERPRINT_MAX_MSGS = 10;
+const float CENTERPRINT_MAX_ENTRIES = 50;
+const float CENTERPRINT_SPACING = 0.7;
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];

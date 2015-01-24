@@ -1,7 +1,7 @@
-#define CBC_ORDER_EXCLUSIVE 3
-#define CBC_ORDER_FIRST 1
-#define CBC_ORDER_LAST 2
-#define CBC_ORDER_ANY 4
+const float CBC_ORDER_EXCLUSIVE = 3;
+const float CBC_ORDER_FIRST = 1;
+const float CBC_ORDER_LAST = 2;
+const float CBC_ORDER_ANY = 4;
 
 float CallbackChain_ReturnValue; // read-only field of the current return value
 
@@ -16,9 +16,9 @@ float CallbackChain_Remove(entity cb, float() func);
 // }
 float CallbackChain_Call(entity cb);
 
-#define MUTATOR_REMOVING 0
-#define MUTATOR_ADDING 1
-#define MUTATOR_ROLLING_BACK 2
+const float MUTATOR_REMOVING = 0;
+const float MUTATOR_ADDING = 1;
+const float MUTATOR_ROLLING_BACK = 2;
 typedef float(float) mutatorfunc_t;
 float Mutator_Add(mutatorfunc_t func, string name);
 void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
@@ -356,9 +356,9 @@ MUTATOR_HOOKABLE(ItemTouch);
 	// called at when a item is touched. Called early, can edit item properties.
 	entity self;	// item
 	entity other; 	// player
-	#define MUT_ITEMTOUCH_CONTINUE 0 // return this flag to make the function continue as normal
-	#define MUT_ITEMTOUCH_RETURN 1 // return this flag to make the function return (handled entirely by mutator)
-	#define MUT_ITEMTOUCH_PICKUP 2 // return this flag to have the item "picked up" and taken even after mutator handled it
+	const float MUT_ITEMTOUCH_CONTINUE = 0; // return this flag to make the function continue as normal
+	const float MUT_ITEMTOUCH_RETURN = 1; // return this flag to make the function return (handled entirely by mutator)
+	const float MUT_ITEMTOUCH_PICKUP = 2; // return this flag to have the item "picked up" and taken even after mutator handled it
 
 MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
@@ -371,6 +371,6 @@ MUTATOR_HOOKABLE(AccuracyTargetValid);
 	// called when a target is checked for accuracy
 	entity frag_attacker; // attacker
 	entity frag_target; // target
-	#define MUT_ACCADD_VALID 0 // return this flag to make the function continue if target is a client
-	#define MUT_ACCADD_INVALID 1 // return this flag to make the function always continue
-	#define MUT_ACCADD_INDIFFERENT 2 // return this flag to make the function always return
+	const float MUT_ACCADD_VALID = 0; // return this flag to make the function continue if target is a client
+	const float MUT_ACCADD_INVALID = 1; // return this flag to make the function always continue
+	const float MUT_ACCADD_INDIFFERENT = 2; // return this flag to make the function always return

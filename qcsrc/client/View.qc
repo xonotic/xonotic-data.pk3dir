@@ -230,10 +230,10 @@ float wcross_ring_prev;
 entity trueaim;
 entity trueaim_rifle;
 
-#define SHOTTYPE_HITTEAM 1
-#define SHOTTYPE_HITOBSTRUCTION 2
-#define SHOTTYPE_HITWORLD 3
-#define SHOTTYPE_HITENEMY 4
+const float SHOTTYPE_HITTEAM = 1;
+const float SHOTTYPE_HITOBSTRUCTION = 2;
+const float SHOTTYPE_HITWORLD = 3;
+const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
@@ -373,7 +373,7 @@ void CSQC_RAPTOR_HUD();
 vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
 
-#define MAX_TIME_DIFF 5
+const float MAX_TIME_DIFF = 5;
 float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
@@ -963,8 +963,8 @@ void UpdateCrosshair()
 	}
 }
 
-#define BUTTON_3 4
-#define BUTTON_4 8
+const float BUTTON_3 = 4;
+const float BUTTON_4 = 8;
 float cl_notice_run();
 float prev_myteam;
 void CSQC_UpdateView(float w, float h)

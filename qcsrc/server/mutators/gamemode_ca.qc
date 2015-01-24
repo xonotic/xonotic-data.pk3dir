@@ -4,7 +4,7 @@ float redalive, bluealive, yellowalive, pinkalive;
 float ca_teams;
 float allowed_to_spawn;
 
-#define ST_CA_ROUNDS 1
+const float ST_CA_ROUNDS = 1;
 void ca_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);

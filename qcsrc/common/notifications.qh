@@ -4,16 +4,16 @@
 // ================================================
 
 // main types/groups of notifications
-#define MSG_ANNCE 1 // "Global" AND "personal" announcer messages
-#define MSG_INFO 2 // "Global" information messages
-#define MSG_CENTER 3 // "Personal" centerprint messages
-#define MSG_CENTER_CPID 4 // Kill centerprint message
-#define MSG_MULTI 5 // Subcall MSG_INFO and/or MSG_CENTER notifications
-#define MSG_CHOICE 6 // Choose which subcall wrapper to activate
+const float MSG_ANNCE = 1; // "Global" AND "personal" announcer messages
+const float MSG_INFO = 2; // "Global" information messages
+const float MSG_CENTER = 3; // "Personal" centerprint messages
+const float MSG_CENTER_CPID = 4; // Kill centerprint message
+const float MSG_MULTI = 5; // Subcall MSG_INFO and/or MSG_CENTER notifications
+const float MSG_CHOICE = 6; // Choose which subcall wrapper to activate
 
 // negative confirmations
-#define NO_MSG       -12345  // allows various things to know when no information is added
-#define NOTIF_ABORT  -1234   // allows Send_Notification to safely abort sending
+const float NO_MSG = -12345;  // allows various things to know when no information is added
+const float NOTIF_ABORT = -1234;   // allows Send_Notification to safely abort sending
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
     VARITEM(1, 0, s1) \
@@ -94,12 +94,12 @@ float prev_soundtime;
 #endif
 
 #ifdef SVQC // SERVER ONLY
-#define NOTIF_ONE 1
-#define NOTIF_ONE_ONLY 2
-#define NOTIF_TEAM 3
-#define NOTIF_TEAM_EXCEPT 4
-#define NOTIF_ALL 5
-#define NOTIF_ALL_EXCEPT 6
+const float NOTIF_ONE = 1;
+const float NOTIF_ONE_ONLY = 2;
+const float NOTIF_TEAM = 3;
+const float NOTIF_TEAM_EXCEPT = 4;
+const float NOTIF_ALL = 5;
+const float NOTIF_ALL_EXCEPT = 6;
 
 void Kill_Notification(
     float broadcast, entity client,
@@ -1013,18 +1013,18 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
     death_team: show the full name of the team a player is switching from
 */
 
-#define NOTIF_MAX_ARGS 7
-#define NOTIF_MAX_HUDARGS 2
-#define NOTIF_MAX_DURCNT 2
+const float NOTIF_MAX_ARGS = 7;
+const float NOTIF_MAX_HUDARGS = 2;
+const float NOTIF_MAX_DURCNT = 2;
 
 string arg_slot[NOTIF_MAX_ARGS];
 
-#define ARG_CS_SV_HA 1 // enabled on CSQC, SVQC, and Hudargs
-#define ARG_CS_SV_DC 2 // enabled on CSQC, SVQC, and durcnt centerprint
-#define ARG_CS_SV 3 // enabled on CSQC and SVQC
-#define ARG_CS 4 // unique result to CSQC
-#define ARG_SV 5 // unique result to SVQC
-#define ARG_DC 6 // unique result to durcnt/centerprint
+const float ARG_CS_SV_HA = 1; // enabled on CSQC, SVQC, and Hudargs
+const float ARG_CS_SV_DC = 2; // enabled on CSQC, SVQC, and durcnt centerprint
+const float ARG_CS_SV = 3; // enabled on CSQC and SVQC
+const float ARG_CS = 4; // unique result to CSQC
+const float ARG_SV = 5; // unique result to SVQC
+const float ARG_DC = 6; // unique result to durcnt/centerprint
 
 // todo possible idea.... declare how many floats/strings each arg needs, and then dynamically increment the input
 // this way, we don't need to have duplicates like i.e. s2loc and s3loc?
@@ -1270,7 +1270,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 // ====================================
 
 // notification counts
-#define NOTIF_FIRST 1
+const float NOTIF_FIRST = 1;
 float NOTIF_ANNCE_COUNT;
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
@@ -1279,11 +1279,11 @@ float NOTIF_CHOICE_COUNT;
 float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
-#define NOTIF_ANNCE_MAX   100
-#define NOTIF_INFO_MAX    300
-#define NOTIF_CENTER_MAX  200
-#define NOTIF_MULTI_MAX   200
-#define NOTIF_CHOICE_MAX  20
+const float NOTIF_ANNCE_MAX   = 100;
+const float NOTIF_INFO_MAX    = 300;
+const float NOTIF_CENTER_MAX  = 200;
+const float NOTIF_MULTI_MAX   = 200;
+const float NOTIF_CHOICE_MAX  = 20;
 
 // notification entities
 entity msg_annce_notifs[NOTIF_ANNCE_MAX];

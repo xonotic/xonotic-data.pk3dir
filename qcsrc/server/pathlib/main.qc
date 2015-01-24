@@ -12,7 +12,7 @@ void pathlib_deletepath(entity start)
 }
 
 //#define PATHLIB_NODEEXPIRE 0.05
-#define PATHLIB_NODEEXPIRE 20
+const float PATHLIB_NODEEXPIRE = 20;
 
 void dumpnode(entity n)
 {

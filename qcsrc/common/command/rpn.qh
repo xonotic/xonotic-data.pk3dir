@@ -3,7 +3,7 @@
 //  Last updated: December 28th, 2011
 // =========================================================
 
-#define MAX_RPN_STACK 16
+const float MAX_RPN_STACK = 16;
 float rpn_db;
 float rpn_error;
 float rpn_sp;

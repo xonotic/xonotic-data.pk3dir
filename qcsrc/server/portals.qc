@@ -1,7 +1,7 @@
 #define PORTALS_ARE_NOT_SOLID
 
-#define SAFENUDGE '1 1 1'
-#define SAFERNUDGE '8 8 8'
+const vector SAFENUDGE = '1 1 1';
+const vector SAFERNUDGE = '8 8 8';
 
 .vector portal_transform;
 .vector portal_safe_origin;

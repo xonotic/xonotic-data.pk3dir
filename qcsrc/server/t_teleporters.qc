@@ -67,18 +67,18 @@ void spawn_tdeath(vector v0, entity e, vector v)
 }
 
 .entity pusher;
-#define TELEPORT_FLAG_SOUND 1
-#define TELEPORT_FLAG_PARTICLES 2
-#define TELEPORT_FLAG_TDEATH 4
-#define TELEPORT_FLAG_FORCE_TDEATH 8
+const float TELEPORT_FLAG_SOUND = 1;
+const float TELEPORT_FLAG_PARTICLES = 2;
+const float TELEPORT_FLAG_TDEATH = 4;
+const float TELEPORT_FLAG_FORCE_TDEATH = 8;
 
 #define TELEPORT_FLAGS_WARPZONE   0
 #define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
 
 // types for .teleportable entity setting
-#define TELEPORT_NORMAL 1 // play sounds/effects etc
-#define TELEPORT_SIMPLE 2 // only do teleport, nothing special
+const float TELEPORT_NORMAL = 1; // play sounds/effects etc
+const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
 
 void Reset_ArcBeam(entity player, vector forward);
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)

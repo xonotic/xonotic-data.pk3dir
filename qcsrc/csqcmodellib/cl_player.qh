@@ -22,15 +22,15 @@
 
 entity csqcplayer;
 float csqcplayer_status;
-#define CSQCPLAYERSTATUS_UNPREDICTED 0
-#define CSQCPLAYERSTATUS_FROMSERVER 1
-#define CSQCPLAYERSTATUS_PREDICTED 2
+const float CSQCPLAYERSTATUS_UNPREDICTED = 0;
+const float CSQCPLAYERSTATUS_FROMSERVER = 1;
+const float CSQCPLAYERSTATUS_PREDICTED = 2;
 
 // only ever READ these!
 .float pmove_flags;
-#define PMF_JUMP_HELD 1
-#define PMF_DUCKED 4
-#define PMF_ONGROUND 8
+float PMF_JUMP_HELD = 1;
+float PMF_DUCKED = 4;
+float PMF_ONGROUND = 8;
 
 void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate();

@@ -1,28 +1,3 @@
-// COMMIT-TODO: Update if necessary before committing
-// Revision 1: additional statistics sent (flag caps, returns, deaths)
-// Revision 2: Mapvote preview pictures
-// Revision 3: optimized map vote protocol
-// Revision 4: CSQC config var system
-// Revision 5: mapvote time fix
-// Revision 6: more robust against packet loss/delays, also show not yet connected clients
-// Revision 7: packet loss column
-// Revision 8: race
-// Revision 9: race delta
-// Revision 10: scoreboard force
-// Revision 11: scoreboard unforce; spectator support beginning
-// Revision 12: smaller scores updates (SERVER: requires new engine)
-// Revision 13: pointparticles
-// Revision 14: laser
-// Revision 15: zoom
-// Revision 16: multi-weapons
-// Revision 17: multi-weaponimpulses
-// Revision 18: warmup
-// Revision 19: fog
-// Revision 20: naggers
-// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
-// Revision 22: hook shot origin
-#define CSQC_REVISION 22
-
 const float AS_STRING = 1;
 const float AS_INT = 2;
 const float AS_FLOAT_TRUNCATED = 2;
@@ -160,32 +135,32 @@ const vector eZ = '0 0 1';
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
-#define MAPVOTE_COUNT 30
+const float MAPVOTE_COUNT = 30;
 
 /**
  * Lower scores are better (e.g. suicides)
  */
-#define SFL_LOWER_IS_BETTER 1
+const float SFL_LOWER_IS_BETTER = 1;
 
 /**
  * Don't show zero values as scores
  */
-#define SFL_HIDE_ZERO 2
+const float SFL_HIDE_ZERO = 2;
 
 /**
  * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
  */
-#define SFL_ALLOW_HIDE 16
+const float SFL_ALLOW_HIDE = 16;
 
 /**
  * Display as a rank (with st, nd, rd, th suffix)
  */
-#define SFL_RANK 32
+const float SFL_RANK = 32;
 
 /**
  * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
  */
-#define SFL_TIME 64
+const float SFL_TIME = 64;
 
 // not an extra constant yet
 #define SFL_ZERO_IS_WORST SFL_TIME
@@ -193,21 +168,21 @@ const vector eZ = '0 0 1';
 /**
  * Scoring priority (NOTE: PRIMARY is used for fraglimit)
  */
-#define SFL_SORT_PRIO_SECONDARY 4
-#define SFL_SORT_PRIO_PRIMARY 8
-#define SFL_SORT_PRIO_MASK 12
+const float SFL_SORT_PRIO_SECONDARY = 4;
+const float SFL_SORT_PRIO_PRIMARY = 8;
+const float SFL_SORT_PRIO_MASK = 12;
 
 /**
  * Score indices
  */
-#define MAX_SCORE 10
-#define MAX_TEAMSCORE 2
+const float MAX_SCORE = 10;
+const float MAX_TEAMSCORE = 2;
 
-#define ST_SCORE 0
-#define SP_KILLS 0
-#define SP_DEATHS 1
-#define SP_SUICIDES 2
-#define SP_SCORE 3
+const float ST_SCORE = 0;
+const float SP_KILLS = 0;
+const float SP_DEATHS = 1;
+const float SP_SUICIDES = 2;
+const float SP_SCORE = 3;
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 const float CH_INFO = 0;
@@ -235,8 +210,8 @@ const float ATTEN_IDLE = 2;
 const float ATTEN_STATIC = 3;
 const float ATTEN_MAX = 3.984375;
 
-#define VOL_BASE 0.7
-#define VOL_BASEVOICE 1.0
+const float VOL_BASE = 0.7;
+const float VOL_BASEVOICE = 1.0;
 
 // WEAPONTODO: move this into separate/new projectile handling code // this sets sounds and other properties of the projectiles in csqc
 const float PROJECTILE_ELECTRO = 1;
@@ -283,10 +258,10 @@ const float SPECIES_ROBOT_RUSTY = 4;
 const float SPECIES_ROBOT_SHINY = 5;
 const float SPECIES_RESERVED = 15;
 
-#define FRAGS_PLAYER 0
-#define FRAGS_SPECTATOR -666
-#define FRAGS_LMS_LOSER -616
-#define FRAGS_PLAYER_NONSOLID -616
+const float FRAGS_PLAYER = 0;
+const float FRAGS_SPECTATOR = -666;
+const float FRAGS_LMS_LOSER = -616;
+const float FRAGS_PLAYER_NONSOLID = -616;
 // we can use this frags value for both
 
 // water levels
@@ -294,9 +269,9 @@ const float WATERLEVEL_NONE = 0;
 const float WATERLEVEL_WETFEET = 1;
 const float WATERLEVEL_SWIMMING = 2;
 const float WATERLEVEL_SUBMERGED = 3;
-#define SERVERFLAG_ALLOW_FULLBRIGHT 1
-#define SERVERFLAG_TEAMPLAY 2
-#define SERVERFLAG_PLAYERSTATS 4
+const float SERVERFLAG_ALLOW_FULLBRIGHT = 1;
+const float SERVERFLAG_TEAMPLAY = 2;
+const float SERVERFLAG_PLAYERSTATS = 4;
 
 // FIXME/EXPLAINME: why?
 noref var vector autocvar_sv_player_maxs = '16 16 45';
@@ -326,22 +301,22 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_HEAD_z autocvar_sv_player_headsize_z
 
 // spawnpoint prios
-#define SPAWN_PRIO_NEAR_TEAMMATE_FOUND 200
-#define SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM 100
-#define SPAWN_PRIO_RACE_PREVIOUS_SPAWN 50
-#define SPAWN_PRIO_GOOD_DISTANCE 10
+const float SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
+const float SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
+const float SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
+const float SPAWN_PRIO_GOOD_DISTANCE = 10;
 
 // URI handles
-#define URI_GET_DISCARD 0
-#define URI_GET_IPBAN 1
-#define URI_GET_IPBAN_END 16
-#define URI_GET_CURL 17
-#define URI_GET_CURL_END 32
-#define URI_GET_UPDATENOTIFICATION 33
-#define URI_GET_URLLIB 128
-#define URI_GET_URLLIB_END 191
+const float URI_GET_DISCARD = 0;
+const float URI_GET_IPBAN = 1;
+const float URI_GET_IPBAN_END = 16;
+const float URI_GET_CURL = 17;
+const float URI_GET_CURL_END = 32;
+const float URI_GET_UPDATENOTIFICATION = 33;
+const float URI_GET_URLLIB = 128;
+const float URI_GET_URLLIB_END = 191;
 
 // gametype votes
-#define GTV_AVAILABLE 0
+const float GTV_AVAILABLE = 0;
 // for later use in per-map gametype filtering
-#define GTV_FORBIDDEN 2
+const float GTV_FORBIDDEN = 2;
