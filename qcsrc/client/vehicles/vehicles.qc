@@ -1,36 +1,36 @@
-#define hud_bg "gfx/vehicles/frame.tga"
-#define hud_sh "gfx/vehicles/vh-shield.tga"
+const string hud_bg = "gfx/vehicles/frame.tga";
+const string hud_sh "= gfx/vehicles/vh-shield.tga";
 
-#define hud_hp_bar "gfx/vehicles/bar_up_left.tga"
-#define hud_hp_ico "gfx/vehicles/health.tga"
-#define hud_sh_bar "gfx/vehicles/bar_dwn_left.tga"
-#define hud_sh_ico "gfx/vehicles/shield.tga"
+const string hud_hp_bar = "gfx/vehicles/bar_up_left.tga";
+const string hud_hp_ico = "gfx/vehicles/health.tga";
+const string hud_sh_bar = "gfx/vehicles/bar_dwn_left.tga";
+const string hud_sh_ico = "gfx/vehicles/shield.tga";
 
-#define hud_ammo1_bar "gfx/vehicles/bar_up_right.tga"
-#define hud_ammo1_ico "gfx/vehicles/bullets.tga"
-#define hud_ammo2_bar "gfx/vehicles/bar_dwn_right.tga"
-#define hud_ammo2_ico "gfx/vehicles/rocket.tga"
-#define hud_energy "gfx/vehicles/energy.tga"
+const string hud_ammo1_bar = "gfx/vehicles/bar_up_right.tga";
+const string hud_ammo1_ico = "gfx/vehicles/bullets.tga";
+const string hud_ammo2_bar = "gfx/vehicles/bar_dwn_right.tga";
+const string hud_ammo2_ico = "gfx/vehicles/rocket.tga";
+const string hud_energy = "gfx/vehicles/energy.tga";
 
-#define SBRM_FIRST 1
-#define SBRM_VOLLY 1
-#define SBRM_GUIDE 2
-#define SBRM_ARTILLERY 3
-#define SBRM_LAST 3
+const int SBRM_FIRST = 1;
+const int SBRM_VOLLY = 1;
+const int SBRM_GUIDE = 2;
+const int SBRM_ARTILLERY = 3;
+const int SBRM_LAST = 3;
 
-#define RSM_FIRST 1
-#define RSM_BOMB 1
-#define RSM_FLARE 2
-#define RSM_LAST 2
+const int RSM_FIRST = 1;
+const int RSM_BOMB = 1;
+const int RSM_FLARE = 2;
+const int RSM_LAST = 2;
 
 entity dropmark;
 var float autocvar_cl_vehicles_hudscale = 0.5;
 var float autocvar_cl_vehicles_hudalpha = 0.75;
 
-#define raptor_ico  "gfx/vehicles/raptor.tga"
-#define raptor_gun  "gfx/vehicles/raptor_guns.tga"
-#define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
-#define raptor_drop "gfx/vehicles/axh-dropcross.tga"
+const string raptor_ico =  "gfx/vehicles/raptor.tga";
+const string raptor_gun =  "gfx/vehicles/raptor_guns.tga";
+const string raptor_bomb = "gfx/vehicles/raptor_bombs.tga";
+const string raptor_drop = "gfx/vehicles/axh-dropcross.tga";
 string raptor_xhair;
 
 void CSQC_WAKIZASHI_HUD();
@@ -39,7 +39,7 @@ void CSQC_RAPTOR_HUD();
 void CSQC_BUMBLE_HUD();
 void CSQC_BUMBLE_GUN_HUD();
 
-#define MAX_AXH 4
+const int MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];
 
 .string axh_image;
@@ -47,27 +47,27 @@ entity AuxiliaryXhair[MAX_AXH];
 .float  axh_drawflag;
 .float  axh_scale;
 
-#define bumb_ico  "gfx/vehicles/bumb.tga"
-#define bumb_lgun  "gfx/vehicles/bumb_lgun.tga"
-#define bumb_rgun  "gfx/vehicles/bumb_rgun.tga"
+const string bumb_ico =  "gfx/vehicles/bumb.tga";
+const string bumb_lgun =  "gfx/vehicles/bumb_lgun.tga";
+const string bumb_rgun =  "gfx/vehicles/bumb_rgun.tga";
 
-#define bumb_gun_ico  "gfx/vehicles/bumb_side.tga"
-#define bumb_gun_gun  "gfx/vehicles/bumb_side_gun.tga"
+const string bumb_gun_ico =  "gfx/vehicles/bumb_side.tga";
+const string bumb_gun_gun =  "gfx/vehicles/bumb_side_gun.tga";
 
-#define spider_ico  "gfx/vehicles/sbot.tga"
-#define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
-#define spider_mgun "gfx/vehicles/sbot_mguns.tga"
+const string spider_ico =  "gfx/vehicles/sbot.tga";
+const string spider_rkt =  "gfx/vehicles/sbot_rpods.tga";
+const string spider_mgun = "gfx/vehicles/sbot_mguns.tga";
 string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
 
-#define waki_ico "gfx/vehicles/waki.tga"
-#define waki_eng "gfx/vehicles/waki_e.tga"
-#define waki_gun "gfx/vehicles/waki_guns.tga"
-#define waki_rkt "gfx/vehicles/waki_rockets.tga"
-#define waki_xhair "gfx/vehicles/axh-special1.tga"
+const string waki_ico = "gfx/vehicles/waki.tga";
+const string waki_eng = "gfx/vehicles/waki_e.tga";
+const string waki_gun = "gfx/vehicles/waki_guns.tga";
+const string waki_rkt = "gfx/vehicles/waki_rockets.tga";
+const string waki_xhair = "gfx/vehicles/axh-special1.tga";
 
 float alarm1time;
 float alarm2time;
-float weapon2mode;
+int weapon2mode;
 
 void AuxiliaryXhair_Draw2D()
 {
@@ -86,9 +86,9 @@ void AuxiliaryXhair_Draw2D()
         self.draw2d = func_null;
 }
 
-void Net_AuXair2(float bIsNew)
+void Net_AuXair2(bool bIsNew)
 {
-    float axh_id	= bound(0, ReadByte(), MAX_AXH);
+    int axh_id	= bound(0, ReadByte(), MAX_AXH);
     entity axh 		= AuxiliaryXhair[axh_id];
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
@@ -116,10 +116,8 @@ void Net_AuXair2(float bIsNew)
 
 void Net_VehicleSetup()
 {
-
-    float i;
-
-    float hud_id = ReadByte();
+    int i;
+    int hud_id = ReadByte();
 
     // Weapon update?
     if(hud_id > HUD_VEHICLE_LAST)
@@ -211,13 +209,13 @@ void Net_VehicleSetup()
     }
 }
 #define HUD_GETSTATS \
-    local noref float vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	local noref float shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
-	local noref float energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	local noref float ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	local noref float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
-	local noref float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
-	local noref float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+    local noref int vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
+	local noref int shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
+	local noref int energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
+	local noref int ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
+	local noref int reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
+	local noref int ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
+	local noref int reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
 
 void CSQC_BUMBLE_HUD()
 {
@@ -503,7 +501,7 @@ void CSQC_SPIDER_HUD()
         return;
 
     vector picsize, hudloc = '0 0 0', pic2size, picloc;
-    float i;
+    int i;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
