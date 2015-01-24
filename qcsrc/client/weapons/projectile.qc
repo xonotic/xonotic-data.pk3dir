@@ -11,11 +11,11 @@ void SUB_Stop()
 }
 
 .float alphamod;
-.float count; // set if clientside projectile
-.float cnt; // sound index
+.int count; // set if clientside projectile
+.int cnt; // sound index
 .float gravity;
-.float snd_looping;
-.float silent;
+.int snd_looping;
+.bool silent;
 
 void Projectile_ResetTrail(vector to)
 {
@@ -49,8 +49,8 @@ void Projectile_Draw()
 {
 	vector rot;
 	vector trailorigin;
-	float f;
-	float drawn;
+	int f;
+	bool drawn;
 	float t;
 	float a;
 
@@ -159,7 +159,7 @@ void Projectile_Draw()
 	self.drawmask = MASK_NORMAL;
 }
 
-void loopsound(entity e, float ch, string samp, float vol, float attn)
+void loopsound(entity e, int ch, string samp, float vol, float attn)
 {
 	if(self.silent)
 		return;
@@ -179,7 +179,7 @@ void Ent_RemoveProjectile()
 
 void Ent_Projectile()
 {
-	float f;
+	int f;
 
 	// projectile properties:
 	//   kind (interpolated, or clientside)
@@ -444,7 +444,7 @@ void Ent_Projectile()
 
 		if(Nade_IDFromProjectile(self.cnt) != 0)
 		{
-			float nade_type = Nade_IDFromProjectile(self.cnt);
+			int nade_type = Nade_IDFromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
 			self.colormod = Nade_Color(nade_type);
