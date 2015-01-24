@@ -523,14 +523,17 @@ void HUD_Weapons(void)
 		if(panel_bg_padding)
 			old_panel_size -= '2 2 0' * panel_bg_padding;
 
-		// first find values for the standard table (with all the weapons)
+		// NOTE: the goal is to use the all-weapons layout and remove unneeded cells
+		// this way weapon icons always have the same size regardless of owned weapon count
+		
+		// get the all-weapons layout
 		rows = old_panel_size_y/old_panel_size_x;
 		rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
 		columns = ceil(WEP_COUNT/rows);
 		weapon_size_x = old_panel_size_x / columns;
 		weapon_size_y = old_panel_size_y / rows;
 
-		// change table values to include only the owned weapons
+		// reduce rows and columns as needed
 		float columns_save = columns;
 		if(weapon_count <= rows)
 		{
