@@ -433,7 +433,6 @@ void HUD_Weapons(void)
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_pos, weapon_size = '0 0 0';
-	local noref vector max_panel_size; // fteqcc sucks
 	vector color;
 
 	// check to see if we want to continue
@@ -519,7 +518,7 @@ void HUD_Weapons(void)
 			return;
 		}
 
-		max_panel_size = panel_size - '2 2 0' * panel_bg_padding;
+		vector max_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// calculate distribution and size of table cells
 		if(max_panel_size_x > max_panel_size_y)
