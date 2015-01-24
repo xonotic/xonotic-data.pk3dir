@@ -112,7 +112,7 @@ void register_weapon(
 	e.netname = refname;
 	e.message = wepname;
 
-	#ifndef MENUQC
+	#ifdef CSQC
 	func(WR_INIT);
 	#endif
 }
