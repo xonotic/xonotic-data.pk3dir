@@ -40,8 +40,8 @@ float teamnagger;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
-noref vector hud_configure_gridSize; // fteqcc sucks
-noref vector hud_configure_realGridSize; // fteqcc sucks
+vector hud_configure_gridSize;
+vector hud_configure_realGridSize;
 
 float hudShiftState;
 const float S_SHIFT = 1;

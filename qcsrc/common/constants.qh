@@ -274,13 +274,13 @@ const float SERVERFLAG_TEAMPLAY = 2;
 const float SERVERFLAG_PLAYERSTATS = 4;
 
 // FIXME/EXPLAINME: why?
-noref var vector autocvar_sv_player_maxs = '16 16 45';
-noref var vector autocvar_sv_player_mins = '-16 -16 -24';
-noref var vector autocvar_sv_player_viewoffset = '0 0 20';
-noref var vector autocvar_sv_player_crouch_maxs = '16 16 25';
-noref var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
-noref var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
-noref var vector autocvar_sv_player_headsize = '24 24 12';
+vector autocvar_sv_player_maxs = '16 16 45';
+vector autocvar_sv_player_mins = '-16 -16 -24';
+vector autocvar_sv_player_viewoffset = '0 0 20';
+vector autocvar_sv_player_crouch_maxs = '16 16 25';
+vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
+vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
+vector autocvar_sv_player_headsize = '24 24 12';
 
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins

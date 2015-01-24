@@ -170,7 +170,7 @@ void draw_teamradar_link(vector start, vector end, float colors)
 float hud_panel_radar_scale;
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
-noref vector hud_panel_radar_size; // fteqcc sucks
+vector hud_panel_radar_size;
 float hud_panel_radar_zoommode;
 float hud_panel_radar_maximized_zoommode;
 float hud_panel_radar_maximized_rotation;
