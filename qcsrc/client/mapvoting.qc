@@ -1,4 +1,4 @@
-float mv_num_maps;
+int mv_num_maps;
 
 float mv_active;
 string mv_maps[MAPVOTE_COUNT];
@@ -17,17 +17,17 @@ float mv_top2_time;
 float mv_top2_alpha;
 
 vector mv_mousepos;
-float mv_selection;
-float mv_columns;
-float mv_mouse_selection;
-float mv_selection_keyboard;
+int mv_selection;
+int mv_columns;
+int mv_mouse_selection;
+int mv_selection_keyboard;
 
 float gametypevote;
 string mapvote_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
 
-string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, vector fontsize)
+string MapVote_FormatMapItem(int id, string map, float count, float maxwidth, vector fontsize)
 {
 	string pre, post;
 	pre = sprintf("%d. ", id+1);
@@ -52,7 +52,7 @@ string GameTypeVote_DescriptionByID(float id)
 	return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
 }
 
-vector MapVote_RGB(float id)
+vector MapVote_RGB(int id)
 {
 	if(mv_avail[id] != GTV_AVAILABLE)
 		return '1 1 1';
@@ -64,7 +64,7 @@ vector MapVote_RGB(float id)
 		return '1 1 1';
 }
 
-void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float count, float id)
+void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float count, int id)
 {
 	float alpha;
 	float desc_padding = gtv_text_size_x * 3;
@@ -158,7 +158,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	remove(title);
 }
 
-void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
+void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, int id)
 {
 	vector img_size = '0 0 0';
 	vector rgb;
@@ -213,7 +213,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
-void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, float id)
+void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, int id)
 {
 	vector rgb;
 	float text_size;
@@ -231,10 +231,9 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
 }
 
-vector MapVote_GridVec(vector gridspec, float i, float m)
+vector MapVote_GridVec(vector gridspec, int i, int m)
 {
-	float r;
-	r = i % m;
+	int r = i % m;
 	return
 		'1 0 0' * (gridspec_x * r)
 		+
@@ -276,7 +275,8 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 void MapVote_Draw()
 {
 	string map;
-	float i, tmp;
+	int i;
+	float tmp;
 	vector pos;
 	float isize;
 	float center;
@@ -436,7 +436,7 @@ void Cmd_MapVote_MapDownload(float argc)
 	}
 }
 
-void MapVote_CheckPK3(string pic, string pk3, float id)
+void MapVote_CheckPK3(string pic, string pk3, int id)
 {
 	entity pak;
 	pak = spawn();
@@ -457,7 +457,7 @@ void MapVote_CheckPK3(string pic, string pk3, float id)
 	}
 }
 
-void MapVote_CheckPic(string pic, string pk3, float id)
+void MapVote_CheckPic(string pic, string pk3, int id)
 {
 	// never try to retrieve a pic for the "don't care" 'map'
 	if(mv_abstain && id == mv_num_maps - 1)
@@ -473,10 +473,10 @@ void MapVote_CheckPic(string pic, string pk3, float id)
 
 void MapVote_ReadMask()
 {
-	float i;
+	int i;
 	if ( mv_num_maps < 24 )
 	{
-		float mask, power;
+		int mask, power;
 		if(mv_num_maps < 8)
 			mask = ReadByte();
 		else if(mv_num_maps < 16)
@@ -496,10 +496,10 @@ void MapVote_ReadMask()
 
 const float NUM_SSDIRS = 4;
 string ssdirs[NUM_SSDIRS];
-float n_ssdirs;
+int n_ssdirs;
 void MapVote_Init()
 {
-	float i, j;
+	int i, j;
 	string map, pk3, s;
 
 	precache_sound ("misc/invshot.wav");
@@ -608,9 +608,9 @@ void MapVote_SendChoice(float index)
 	localcmd(strcat("\nimpulse ", ftos(index+1), "\n"));
 }
 
-float MapVote_MoveLeft(float pos)
+int MapVote_MoveLeft(int pos)
 {
-	float imp;
+	int imp;
 	if ( pos < 0 ) 
 		imp = mv_num_maps - 1;
 	else
@@ -619,9 +619,9 @@ float MapVote_MoveLeft(float pos)
 		imp = MapVote_MoveLeft(imp);
 	return imp;
 }
-float MapVote_MoveRight(float pos)
+int MapVote_MoveRight(int pos)
 {
-	float imp;
+	int imp;
 	if ( pos < 0 ) 
 		imp = 0;
 	else
@@ -630,9 +630,9 @@ float MapVote_MoveRight(float pos)
 		imp = MapVote_MoveRight(imp);
 	return imp;
 }
-float MapVote_MoveUp(float pos)
+int MapVote_MoveUp(int pos)
 {
-	float imp;
+	int imp;
 	if ( pos < 0 ) 
 		imp = mv_num_maps - 1;
 	else
@@ -649,9 +649,9 @@ float MapVote_MoveUp(float pos)
 		imp = MapVote_MoveUp(imp);
 	return imp;
 }
-float MapVote_MoveDown(float pos)
+int MapVote_MoveDown(int pos)
 {
-	float imp;
+	int imp;
 	if ( pos < 0 ) 
 		imp = 0;
 	else
@@ -750,7 +750,7 @@ void MapVote_UpdateMask()
 
 void MapVote_UpdateVotes()
 {
-	float i;
+	int i;
 	for(i = 0; i < mv_num_maps; ++i)
 	{
 		if(mv_avail[i] == GTV_AVAILABLE)
@@ -769,9 +769,7 @@ void MapVote_UpdateVotes()
 
 void Ent_MapVote()
 {
-	float sf;
-
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & 1)
 		MapVote_Init();
@@ -785,8 +783,7 @@ void Ent_MapVote()
 
 void Net_MapVote_Picture()
 {
-	float type;
-	type = ReadByte();
+	int type = ReadByte();
 	mv_preview[type] = true;
 	mv_pics[type] = strzone(ReadPicture());
 }

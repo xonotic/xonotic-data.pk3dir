@@ -35,7 +35,7 @@ void InterpolateOrigin_Reset()
 void InterpolateOrigin_Note()
 {
 	float dt;
-	float f0;
+	int f0;
 
 	dt = time - self.itime2;
 

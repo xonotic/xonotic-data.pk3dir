@@ -1168,13 +1168,13 @@ void Remove_ArcBeam(void)
 
 void Ent_ReadArcBeam(float isnew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 	entity flash;
 
 	if(isnew)
 	{
 		// calculate shot origin offset from gun alignment
-		float gunalign = autocvar_cl_gunalign;
+		int gunalign = autocvar_cl_gunalign;
 		if(gunalign != 1 && gunalign != 2 && gunalign != 4)
 			gunalign = 3; // default value
 		--gunalign;

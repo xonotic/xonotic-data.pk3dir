@@ -1,10 +1,10 @@
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.float cnt; // end effect
+.int cnt; // end effect
 .vector colormod;
-.float state; // on-off
-.float count; // flags for the laser
+.int state; // on-off
+.int count; // flags for the laser
 .vector velocity;
 .float alpha;
 .float scale; // scaling factor of the thickness
@@ -63,11 +63,10 @@ void Draw_Laser()
 
 void Ent_Laser()
 {
-	float f;
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
-	f = ReadByte();
+	int f = ReadByte();
 	self.count = (f & 0xF0);
 
 	if(self.count & 0x80)

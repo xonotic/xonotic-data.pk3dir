@@ -247,7 +247,7 @@ float SetTeam(entity o, float Team)
 
 void Playerchecker_Think()
 {
-	float i;
+    int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
 	{
@@ -337,7 +337,7 @@ void Ent_RemoveEntCS()
 }
 void Ent_ReadEntCS()
 {
-	float sf;
+    int sf;
 	InterpolateOrigin_Undo();
 
 	self.classname = "entcs_receiver";
@@ -418,7 +418,7 @@ void Ent_ReadPlayerScore()
 	//	RegisterPlayer(o);
 	//playerchecker will do this for us later, if it has not already done so
 
-	float sf, lf;
+    int sf, lf;
 #if MAX_SCORE <= 8
 	sf = ReadByte();
 	lf = ReadByte();
@@ -426,7 +426,7 @@ void Ent_ReadPlayerScore()
 	sf = ReadShort();
 	lf = ReadShort();
 #endif
-	float p;
+    int p;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
 		if(sf & p)
 		{
@@ -450,7 +450,7 @@ void Ent_ReadTeamScore()
 	self.team = ReadByte();
 	o = self.owner = GetTeam(self.team, true); // these team numbers can always be trusted
 
-	float sf, lf;
+    int sf, lf;
 #if MAX_TEAMSCORE <= 8
 	sf = ReadByte();
 	lf = ReadByte();
@@ -473,10 +473,9 @@ void Ent_ReadTeamScore()
 
 void Ent_ClientData()
 {
-	float f;
 	float newspectatee_status;
 
-	f = ReadByte();
+    int f = ReadByte();
 
 	scoreboard_showscores_force = (f & 1);
 
@@ -523,9 +522,9 @@ void Ent_ClientData()
 
 void Ent_Nagger()
 {
-	float nags, i, j, b, f;
+    int i, j, b, f;
 
-	nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
+    int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
 	if(!(nags & 4))
 	{
@@ -578,9 +577,9 @@ void Ent_Nagger()
 
 void Ent_EliminatedPlayers()
 {
-	float sf, i, j, b, f;
+    int i, j, b, f;
 
-	sf = ReadByte();
+    int sf = ReadByte();
 	if(sf & 1)
 	{
 		for(j = 0; j < maxclients; ++j)
@@ -607,8 +606,8 @@ void Ent_RandomSeed()
 
 void Ent_ReadAccuracy(void)
 {
-	float sf, f, w, b;
-	sf = ReadInt24_t();
+    int f, w;
+    int sf = ReadInt24_t();
 	if(sf == 0)
 	{
 		for(w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
@@ -620,7 +619,7 @@ void Ent_ReadAccuracy(void)
 	{
 		if(sf & f)
 		{
-			b = ReadByte();
+            int b = ReadByte();
 			if(b == 0)
 				weapon_accuracy[w] = -1;
 			else if(b == 255)
@@ -927,7 +926,7 @@ void Fog_Force()
 void Gamemode_Init();
 void Ent_ScoresInfo()
 {
-	float i;
+    int i;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadInt24_t();
 	HUD_ModIcons_SetFunc();
@@ -1093,13 +1092,13 @@ void Net_ReadRace()
 			race_speedaward_alltimebest_holder = strzone(ReadString());
 			break;
 		case RACE_NET_SERVER_RANKINGS:
-			float pos, prevpos, del;
-			pos = ReadShort();
+			float prevpos, del;
+            int pos = ReadShort();
 			prevpos = ReadShort();
 			del = ReadShort();
 
 			// move other rankings out of the way
-			float i;
+            int i;
 			if (prevpos) {
 				for (i=prevpos-1;i>pos-1;--i) {
 					grecordtime[i] = grecordtime[i-1];

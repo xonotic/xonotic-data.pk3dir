@@ -223,8 +223,7 @@ vector animdecide_getloweranim(entity e)
 
 void animdecide_setimplicitstate(entity e, float onground)
 {
-	float s;
-	s = 0;
+	int s = 0;
 
 	makevectors(e.angles);
 	vector v;

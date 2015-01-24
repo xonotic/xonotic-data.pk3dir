@@ -138,7 +138,7 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 	return strcasecmp(a, b);
 }
 
-float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
+float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate)
 {
 	float i, j;
 	if (!_MapInfo_filtered_allocated)
@@ -434,7 +434,7 @@ string _MapInfo_GetDefault(float t)
 	}
 }
 
-void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, float load_default)
+void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int load_default)
 {
 	string sa;
 	MapInfo_Map_supportedGametypes |= pThisType;
@@ -575,7 +575,7 @@ float _MapInfo_GetTeamPlayBool(float t)
 	return FALSE;
 }
 
-void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
+void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 {
 	string sa, k, v;
 	float p;
@@ -873,12 +873,13 @@ float MapInfo_isRedundant(string fn, string t)
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
-float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int pGametypeToSet)
 {
 	string fn;
 	string s, t;
 	float fh;
-	float r, f, n, i, p;
+	int f, i;
+	float r, n, p;
 	string acl;
 
 	acl = MAPINFO_SETTEMP_ACL_USER;
@@ -1150,7 +1151,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	dprint("Map ", pFilename, " supports no game types, ignored\n");
 	return 0;
 }
-float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, int pGametypeToSet)
 {
 	float r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
@@ -1231,8 +1232,7 @@ string MapInfo_FixName(string s)
 
 float MapInfo_CurrentFeatures()
 {
-	float req;
-	req = 0;
+	int req = 0;
 	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
@@ -1240,9 +1240,8 @@ float MapInfo_CurrentFeatures()
 
 float MapInfo_CurrentGametype()
 {
-	float prev;
 	entity e;
-	prev = cvar("gamecfg");
+	int prev = cvar("gamecfg");
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(cvar(e.netname))
 			if(prev != e.items)
@@ -1401,8 +1400,7 @@ void MapInfo_Shutdown()
 
 float MapInfo_ForbiddenFlags()
 {
-	float f;
-	f = MAPINFO_FLAG_FORBIDDEN;
+	int f = MAPINFO_FLAG_FORBIDDEN;
 
 #ifndef MENUQC
 	if (!cvar("g_maplist_allow_hidden"))
@@ -1417,8 +1415,7 @@ float MapInfo_ForbiddenFlags()
 
 float MapInfo_RequiredFlags()
 {
-	float f;
-	f = 0;
+	int f = 0;
 
 	if(cvar("g_maplist_allow_frustrating") > 1)
 		f |= MAPINFO_FLAG_FRUSTRATING;

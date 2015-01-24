@@ -75,7 +75,7 @@ WepSet ReadWepSet()
 #endif
 
 void register_weapon(
-	float id,
+	int id,
 	WepSet bit,
 	float(float) func,
 	.float ammotype,
@@ -148,7 +148,7 @@ void register_weapons_done()
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
-entity get_weaponinfo(float id)
+entity get_weaponinfo(int id)
 {
 	entity w;
 	if(id < WEP_FIRST || id > WEP_LAST)
@@ -209,14 +209,14 @@ string W_NumberWeaponOrder(string order)
 
 float W_FixWeaponOrder_BuildImpulseList_buf[WEP_MAXCOUNT];
 string W_FixWeaponOrder_BuildImpulseList_order;
-void W_FixWeaponOrder_BuildImpulseList_swap(float i, float j, entity pass)
+void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {
 	float h;
 	h = W_FixWeaponOrder_BuildImpulseList_buf[i];
 	W_FixWeaponOrder_BuildImpulseList_buf[i] = W_FixWeaponOrder_BuildImpulseList_buf[j];
 	W_FixWeaponOrder_BuildImpulseList_buf[j] = h;
 }
-float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
+float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
 	entity e1, e2;
 	float d;
@@ -233,7 +233,7 @@ float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
 }
 string W_FixWeaponOrder_BuildImpulseList(string o)
 {
-	float i;
+	int i;
 	W_FixWeaponOrder_BuildImpulseList_order = o;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST] = i;

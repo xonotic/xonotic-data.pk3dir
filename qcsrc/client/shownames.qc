@@ -180,7 +180,7 @@ void Draw_ShowNames(entity ent)
 entity shownames_ent[255];
 void Draw_ShowNames_All()
 {
-	float i;
+	int i;
 	for(i = 0; i < maxclients; ++i)
 	{
 		float t;

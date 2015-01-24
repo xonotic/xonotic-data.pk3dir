@@ -1298,8 +1298,8 @@ entity msg_choice_notifs[NOTIF_CHOICE_MAX];
 .float nent_type;
 .float nent_id;
 .string nent_name;
-.float nent_stringcount;
-.float nent_floatcount;
+.int nent_stringcount;
+.int nent_floatcount;
 
 // MSG_ANNCE entity values
 .float nent_channel;
@@ -1385,7 +1385,7 @@ float notif_global_error;
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
-    float name; \
+    int name; \
     void RegisterNotification_##name() \
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \

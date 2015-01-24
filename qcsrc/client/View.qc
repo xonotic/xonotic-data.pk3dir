@@ -3,7 +3,7 @@ vector polyline[16];
 void Porto_Draw()
 {
 	vector p, dir, ang, q, nextdir;
-	float idx, portal_number, portal1_idx;
+	float portal_number, portal1_idx;
 
 	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
@@ -27,7 +27,7 @@ void Porto_Draw()
 	p = view_origin;
 
 	polyline[0] = p;
-	idx = 1;
+	int idx = 1;
 	portal_number = 0;
 	nextdir = dir;
 
@@ -865,7 +865,7 @@ void UpdateCrosshair()
 				if(autocvar_crosshair_effect_time > 0)
 				{
 					f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
-					if (!(f < 1))
+					if (f >= 1)
 					{
 						wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
 					}
@@ -971,7 +971,8 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	float fov;
-	float f, i;
+	float f;
+	int i;
 	vector vf_size, vf_min;
 	float a;
 

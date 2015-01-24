@@ -27,7 +27,7 @@ const float CSQCPLAYERSTATUS_FROMSERVER = 1;
 const float CSQCPLAYERSTATUS_PREDICTED = 2;
 
 // only ever READ these!
-.float pmove_flags;
+.int pmove_flags;
 float PMF_JUMP_HELD = 1;
 float PMF_DUCKED = 4;
 float PMF_ONGROUND = 8;

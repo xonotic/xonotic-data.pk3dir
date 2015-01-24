@@ -488,8 +488,7 @@ void CSQCModel_Effects_PostUpdate(void)
 .bool snd_looping;
 void CSQCModel_Effects_Apply(void)
 {
-	int eff = self.csqcmodel_effects;
-	eff &= ~CSQCMODEL_EF_RESPAWNGHOST;
+	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;

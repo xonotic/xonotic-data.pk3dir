@@ -2,9 +2,9 @@ entity Buff_Type_first;
 entity Buff_Type_last;
 .entity enemy; // internal next pointer
 
-var float BUFF_LAST = 1;
+float BUFF_LAST = 1;
 
-.float items; // buff ID
+.int items; // buff ID
 .string netname; // buff name
 .string message; // human readable name
 .vector colormod; // buff color

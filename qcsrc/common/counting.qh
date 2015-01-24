@@ -51,7 +51,7 @@
 		ZCTX(_("CI_THI^%d seconds")), /* third */ \
 		ZCTX(_("CI_MUL^%d seconds"))) /* multi */
 
-string count_ordinal(float interval)
+string count_ordinal(int interval)
 {
 	// This function is designed primarily for the English language, it's impossible
 	// to accomodate all languages unless we do a specific function for each one...

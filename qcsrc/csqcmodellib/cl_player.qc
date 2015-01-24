@@ -274,7 +274,7 @@ void CSQCPlayer_SetCamera()
 
 	if(view)
 	{
-		var float refdefflags = 0;
+		int refdefflags = 0;
 
 		if(view.csqcmodel_teleported)
 			refdefflags |= REFDEFFLAG_TELEPORTED;

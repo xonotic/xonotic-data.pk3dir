@@ -17,8 +17,6 @@ void WarpZone_Fade_PreDraw()
 
 void WarpZone_Read(float isnew)
 {
-	float f;
-
 	warpzone_warpzones_exist = 1;
 	if (!self.enemy)
 	{
@@ -27,7 +25,7 @@ void WarpZone_Read(float isnew)
 	}
 	self.classname = "trigger_warpzone";
 
-	f = ReadByte();
+	int f = ReadByte();
 	self.warpzone_isboxy = (f & 1);
 	if(f & 4)
 	{
@@ -84,11 +82,10 @@ void WarpZone_Read(float isnew)
 
 void WarpZone_Camera_Read(float isnew)
 {
-	float f;
 	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();

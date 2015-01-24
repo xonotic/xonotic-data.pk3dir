@@ -190,8 +190,7 @@ void Ent_ReadHook(float bIsNew, float type)
 {
 	self.HookType = type;
 
-	float sf;
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
@@ -200,7 +199,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	if(sf & 1)
 	{
-		float myowner = ReadByte();
+		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
 		switch(self.HookType)

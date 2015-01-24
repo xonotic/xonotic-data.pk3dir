@@ -61,13 +61,13 @@ const float SP_SEPARATOR = -100;
 float hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
 string hud_title[MAX_HUD_FIELDS + 1];
-float hud_num_fields;
+int hud_num_fields;
 
 string scores_label[MAX_SCORE];
-float scores_flags[MAX_SCORE];
+int scores_flags[MAX_SCORE];
 string teamscores_label[MAX_SCORE];
-float teamscores_flags[MAX_SCORE];
-.float scores[MAX_SCORE];
+int teamscores_flags[MAX_SCORE];
+.int scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
 
 #define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
@@ -131,9 +131,9 @@ const float ALPHA_MIN_VISIBLE = 0.003;
 float armorblockpercent;
 
 //hooks
-float calledhooks;
-const float HOOK_START =    1;
-const float HOOK_END =      2;
+int calledhooks;
+const int HOOK_START =    1;
+const int HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 

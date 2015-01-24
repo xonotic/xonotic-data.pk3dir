@@ -1000,7 +1000,7 @@ void bumble_raygun_draw()
 
 void bumble_raygun_read(float bIsNew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & BRG_SETUP)
 	{
