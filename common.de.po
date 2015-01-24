@@ -5,10 +5,11 @@
 # Translators:
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # divVerent <divVerent@xonotic.org>, 2011,2013
-# divVerent <divVerent@xonotic.org>, 2013-2014
+# divVerent <divVerent@xonotic.org>, 2013-2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # cvcxc <hans.andersen72@yahoo.com>, 2013
 # Yepoleb <huberg18@gmail.com>, 2013
+# Mirio <opivy@hotmail.de>, 2014
 # divVerent <divVerent@xonotic.org>, 2011
 # Sless <sless@gmx.net>, 2014
 # Sless <sless@gmx.net>, 2014
@@ -17,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:30+0000\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
+"PO-Revision-Date: 2015-01-09 06:50+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/xonotic/language/"
 "de/)\n"
@@ -730,12 +731,12 @@ msgstr "Zuschauer"
 #: qcsrc/client/scoreboard.qc:1368
 #, c-format
 msgid "playing ^3%s^7 on ^2%s^7"
-msgstr "spielend ^3%s^7 auf ^2%s^7"
+msgstr "^3%s^7 auf ^2%s^7"
 
 #: qcsrc/client/scoreboard.qc:1375 qcsrc/client/scoreboard.qc:1380
 #, c-format
 msgid " for up to ^1%1.0f minutes^7"
-msgstr "für bis zu ^1%1.0f Minuten^7"
+msgstr " für bis zu ^1%1.0f Minuten^7"
 
 #: qcsrc/client/scoreboard.qc:1384 qcsrc/client/scoreboard.qc:1403
 msgid " or"
@@ -5053,7 +5054,7 @@ msgstr "Zurück"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.c:161
 msgid "Next"
-msgstr "NVor"
+msgstr "Vor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot_viewer.c:166
 msgid "Slide show"
@@ -6905,11 +6906,11 @@ msgstr "pink"
 msgid "spectate"
 msgstr "zuschauen"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr "mit Teams"
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr "jeder gegen jeden"
 
@@ -7094,7 +7095,7 @@ msgstr "Mai"
 
 #: qcsrc/menu/xonotic/statslist.c:59
 msgid "June"
-msgstr "uni"
+msgstr "Juni"
 
 #: qcsrc/menu/xonotic/statslist.c:60
 msgid "July"

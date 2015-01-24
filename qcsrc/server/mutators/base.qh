@@ -158,26 +158,26 @@ MUTATOR_HOOKABLE(EditProjectile);
 	// INPUT:
 		entity self;
 		entity other;
-        
+
 MUTATOR_HOOKABLE(MonsterSpawn);
 	// called when a monster spawns
-    
+
 MUTATOR_HOOKABLE(MonsterDies);
 	// called when a monster dies
 	// INPUT:
 		entity frag_attacker;
-		
+
 MUTATOR_HOOKABLE(MonsterRespawn);
 	// called when a monster wants to respawn
 	// INPUT:
 		entity other;
-		
+
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:
 		.void() monster_loot;
 		entity other;
-	
+
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves
 	// returning TRUE makes the monster stop
@@ -185,10 +185,10 @@ MUTATOR_HOOKABLE(MonsterMove);
 		float monster_speed_run;
 		float monster_speed_walk;
 		entity monster_target;
-    
+
 MUTATOR_HOOKABLE(MonsterFindTarget);
 	// called when a monster looks for another target
-    
+
 MUTATOR_HOOKABLE(MonsterCheckBossFlag);
     // called to change a random monster to a miniboss
 

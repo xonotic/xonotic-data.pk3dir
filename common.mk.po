@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-30 12:18+0100\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
 "PO-Revision-Date: 2014-12-30 11:22+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Macedonian (http://www.transifex.com/projects/p/xonotic/"
@@ -6746,11 +6746,11 @@ msgstr ""
 msgid "spectate"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr ""
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr ""
 

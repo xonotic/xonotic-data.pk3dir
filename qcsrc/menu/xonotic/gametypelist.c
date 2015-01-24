@@ -76,23 +76,27 @@ void XonoticGametypeList_saveCvars(entity me)
 }
 void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
-	string s;
+	string s1, s2;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
-	s = GameType_GetName(i);
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	s1 = GameType_GetName(i);
 	
 	if(_MapInfo_GetTeamPlayBool(GameType_GetID(i)))
-		s = _("teamplay");
+		s2 = _("teamplay");
 	else
-		s = _("free for all");
+		s2 = _("free for all");
 
-	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.0 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
-	//s = GameType_GetTeams(i);
-	//draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	vector save_fontscale = draw_fontscale;
+	float f = draw_CondensedFontFactor(strcat(s1, " ", s2), FALSE, me.realFontSize, 1);
+	draw_fontscale_x *= f;
+	vector fs = me.realFontSize;
+	fs_x *= f;
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s1, fs, '1 1 1', SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1.0 * (me.columnNameSize - draw_TextWidth(s2, 0, fs))) * eX, s2, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_fontscale = save_fontscale;
 }
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {

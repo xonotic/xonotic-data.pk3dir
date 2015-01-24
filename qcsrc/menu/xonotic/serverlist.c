@@ -4,7 +4,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
 	METHOD(XonoticServerList, draw, void(entity))
 	METHOD(XonoticServerList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticServerList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticServerList, toggleFavorite, void(entity, string))
@@ -49,8 +49,6 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, infoButton, entity, NULL)
 	ATTRIB(XonoticServerList, currentSortOrder, float, 0)
 	ATTRIB(XonoticServerList, currentSortField, float, -1)
-	ATTRIB(XonoticServerList, lastClickedServer, float, -1)
-	ATTRIB(XonoticServerList, lastClickedTime, float, 0)
 
 	ATTRIB(XonoticServerList, ipAddressBoxFocused, float, -1)
 
@@ -722,11 +720,7 @@ void XonoticServerList_draw(entity me)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
-				if(i != me.selectedItem)
-				{
-					me.lastClickedServer = -1;
-					me.selectedItem = i;
-				}
+				me.selectedItem = i;
 				found = 1;
 				break;
 			}
@@ -962,16 +956,9 @@ void ServerList_Info_Click(entity btn, entity me)
 	vector sz = boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size);
 	DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 }
-void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
+void XonoticServerList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedServer)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			ServerList_Connect_Click(NULL, me);
-		}
-	me.lastClickedServer = i;
-	me.lastClickedTime = time;
+	ServerList_Connect_Click(NULL, me);
 }
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {

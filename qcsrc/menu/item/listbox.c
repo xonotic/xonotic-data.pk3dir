@@ -35,8 +35,13 @@ CLASS(ListBox) EXTENDS(Item)
 	ATTRIB(ListBox, itemHeight, float, 0)
 	ATTRIB(ListBox, colorBG, vector, '0 0 0')
 	ATTRIB(ListBox, alphaBG, float, 0)
+
+	ATTRIB(ListBox, lastClickedItem, float, -1)
+	ATTRIB(ListBox, lastClickedTime, float, 0)
+
 	METHOD(ListBox, drawListBoxItem, void(entity, float, vector, float)) // item number, width/height, selected
 	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
+	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
 	METHOD(ListBox, setSelected, void(entity, float))
 
 	METHOD(ListBox, getLastFullyVisibleItemAtScrollPos, float(entity, float))
@@ -260,7 +265,15 @@ float ListBox_mouseRelease(entity me, vector pos)
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
-			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.getItemStart(me, me.selectedItem) - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, me.selectedItem)));
+			vector where = globalToBox(pos, eY * (me.getItemStart(me, me.selectedItem) - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, me.selectedItem));
+
+			if((me.selectedItem == me.lastClickedItem) && (time < me.lastClickedTime + 0.3))
+				me.doubleClickListBoxItem(me, me.selectedItem, where);
+			else
+				me.clickListBoxItem(me, me.selectedItem, where);
+
+			me.lastClickedItem = me.selectedItem;
+			me.lastClickedTime = time;
 		}
 	}
 	me.pressed = 0;
@@ -374,7 +387,12 @@ void ListBox_draw(entity me)
 
 void ListBox_clickListBoxItem(entity me, float i, vector where)
 {
-	// itemclick, itemclick, does whatever itemclick does
+	// template method
+}
+
+void ListBox_doubleClickListBoxItem(entity me, float i, vector where)
+{
+	// template method
 }
 
 void ListBox_drawListBoxItem(entity me, float i, vector absSize, float selected)

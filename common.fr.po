@@ -10,13 +10,13 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Calinou, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2014
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-30 12:18+0100\n"
-"PO-Revision-Date: 2014-12-30 11:45+0000\n"
+"POT-Creation-Date: 2015-01-13 19:41+0100\n"
+"PO-Revision-Date: 2015-01-04 18:10+0000\n"
 "Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/xonotic/language/"
 "fr/)\n"
@@ -989,7 +989,7 @@ msgstr "Vol"
 
 #: qcsrc/common/buffs.qh:46
 msgid "Invisible"
-msgstr "Invisible"
+msgstr "Invisibilité"
 
 #: qcsrc/common/command/generic.qc:159
 msgid "error creating curl handle\n"
@@ -4280,11 +4280,11 @@ msgstr "Afficher uniquement les armes disponibles"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
 msgid "Show weapon ID as:"
-msgstr "Identifier les armes :"
+msgstr "Identification des armes :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
 msgid "SHOWAS^None"
-msgstr "Aucun"
+msgstr "Aucune"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:51
 msgid "Number"
@@ -5063,7 +5063,7 @@ msgstr "Chronométrer une démo vous déconnectera de la partie actuelle."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.c:50
 msgid "Auto screenshot scoreboard"
-msgstr "Capture d'écran automatique du tableau des scores"
+msgstr "Auto-capture du tableau des scores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.c:70
 msgid "Open in the viewer"
@@ -6645,7 +6645,7 @@ msgstr "Thèmes du menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:33
 msgid "Set skin"
-msgstr "Définir l'apparence"
+msgstr "Définir le thème"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:67
 msgid "Text Language"
@@ -6653,7 +6653,7 @@ msgstr "Langue du texte"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:72
 msgid "Set language"
-msgstr "Définir le langage"
+msgstr "Définir la langue"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:77
 msgid "Disable gore effects and harsh language"
@@ -6666,14 +6666,14 @@ msgstr "Avertissement"
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:17
 msgid "While connected language changes will be applied only to the menu,"
 msgstr ""
-"Lorsque vous êtes connecté les changements linguistiques seront appliqués "
-"seulement dans le menu,"
+"Lorsque vous êtes connecté les changements linguistiques sont appliqués "
+"uniquement dans le menu,"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:19
 msgid "full language changes will take effect starting from the next game"
 msgstr ""
 "les changements linguistiques complets prendront effet à partir de la "
-"prochaine partie"
+"prochaine partie."
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.c:23
 msgid "Disconnect now"
@@ -6937,11 +6937,11 @@ msgstr "rose"
 msgid "spectate"
 msgstr "mode spectateur"
 
-#: qcsrc/menu/xonotic/gametypelist.c:89
+#: qcsrc/menu/xonotic/gametypelist.c:88
 msgid "teamplay"
 msgstr "en équipe"
 
-#: qcsrc/menu/xonotic/gametypelist.c:91
+#: qcsrc/menu/xonotic/gametypelist.c:90
 msgid "free for all"
 msgstr "chacun pour soi"
 

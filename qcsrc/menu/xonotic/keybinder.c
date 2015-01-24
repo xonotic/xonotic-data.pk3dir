@@ -3,7 +3,7 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
 	ATTRIB(XonoticKeyBinder, rowsPerItem, float, 1)
 	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticKeyBinder, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticKeyBinder, setSelected, void(entity, float))
 	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float))
@@ -16,8 +16,6 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0)
 	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0)
 
-	ATTRIB(XonoticKeyBinder, lastClickedKey, float, -1)
-	ATTRIB(XonoticKeyBinder, lastClickedTime, float, 0)
 	ATTRIB(XonoticKeyBinder, previouslySelected, float, -1)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
@@ -245,16 +243,9 @@ void KeyBinder_Bind_Reset_All(entity btn, entity me)
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
 }
-void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
+void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedKey)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			KeyBinder_Bind_Change(NULL, me);
-		}
-	me.lastClickedKey = i;
-	me.lastClickedTime = time;
+	KeyBinder_Bind_Change(NULL, me);
 }
 void XonoticKeyBinder_setSelected(entity me, float i)
 {

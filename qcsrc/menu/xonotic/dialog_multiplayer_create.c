@@ -190,19 +190,17 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		default:                      GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 
-	float x = FALSE;
+	string x = string_null;
 	e = me.sliderTeams;
 	switch(gt)
 	{
-		case MAPINFO_TYPE_CA:               x = TRUE; e.configureXonoticTextSlider(e, "g_ca_teams_override");          break;
-		case MAPINFO_TYPE_DOMINATION:       x = TRUE; e.configureXonoticTextSlider(e, "g_domination_teams_override");  break;
-		case MAPINFO_TYPE_FREEZETAG:        x = TRUE; e.configureXonoticTextSlider(e, "g_freezetag_teams_override");   break;
-		case MAPINFO_TYPE_KEEPAWAY:         x = TRUE; e.configureXonoticTextSlider(e, "g_keepaway_teams_override");    break;
-		case MAPINFO_TYPE_KEYHUNT:          x = TRUE; e.configureXonoticTextSlider(e, "g_keyhunt_teams_override");     break;
-		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = TRUE; e.configureXonoticTextSlider(e, "g_tdm_teams_override");         break;
-
-		default: x = FALSE; e.configureXonoticTextSlider(e, string_null); break;
+		case MAPINFO_TYPE_CA:               x = "g_ca_teams_override";          break;
+		case MAPINFO_TYPE_DOMINATION:       x = "g_domination_teams_override";  break;
+		case MAPINFO_TYPE_FREEZETAG:        x = "g_freezetag_teams_override";   break;
+		case MAPINFO_TYPE_KEYHUNT:          x = "g_keyhunt_teams_override";     break;
+		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = "g_tdm_teams_override";         break;
 	}
+	e.configureXonoticTextSlider(e, x);
 	e.configureXonoticTextSliderValues(e);
 	if(!x)
 		e.value = 0;

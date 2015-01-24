@@ -15,10 +15,8 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticLanguageList, columnPercentageOrigin, float, 0)
 	ATTRIB(XonoticLanguageList, columnPercentageSize, float, 0)
 
-	METHOD(XonoticLanguageList, clickListBoxItem, void(entity, float, vector)) // double click handling
+	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)) // enter handling
-	ATTRIB(XonoticLanguageList, lastClickedLanguage, float, -1)
-	ATTRIB(XonoticLanguageList, lastClickedTime, float, 0)
 
 	METHOD(XonoticLanguageList, destroy, void(entity))
 
@@ -64,14 +62,25 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
-	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+
+	vector save_fontscale = draw_fontscale;
+	float f = draw_CondensedFontFactor(s, FALSE, me.realFontSize, 1);
+	draw_fontscale_x *= f;
+	vector fs = me.realFontSize;
+	fs_x *= f;
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_fontscale = save_fontscale;
 
 	p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
 	if(p != "")
 	{
-		p = draw_TextShortenToWidth(p, me.columnPercentageSize, 0, me.realFontSize);
-		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, me.realFontSize))) * eX, p, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+		vector save_fontscale = draw_fontscale;
+		float f = draw_CondensedFontFactor(p, FALSE, me.realFontSize, 1);
+		draw_fontscale_x *= f;
+		vector fs = me.realFontSize;
+		fs_x *= f;
+		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, fs))) * eX, p, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+		draw_fontscale = save_fontscale;
 	}
 }
 
@@ -129,17 +138,9 @@ void XonoticLanguageList_saveCvars(entity me)
 	cvar_set("_menu_prvm_language", me.languageParameter(me, me.selectedItem, LANGPARM_ID));
 }
 
-void XonoticLanguageList_clickListBoxItem(entity me, float i, vector where)
+void XonoticLanguageList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedLanguage)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.setLanguage(me);
-		}
-	me.lastClickedLanguage = i;
-	me.lastClickedTime = time;
+	me.setLanguage(me);
 }
 
 float XonoticLanguageList_keyDown(entity me, float scan, float ascii, float shift)
