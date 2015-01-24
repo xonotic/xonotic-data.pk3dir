@@ -418,13 +418,10 @@ void HUD_Weapons(void)
 	float row, column, rows = 0, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
-	float panel_weapon_accuracy;
-
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
 	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
-	float ammo_full;
 	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
@@ -433,7 +430,6 @@ void HUD_Weapons(void)
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_pos, weapon_size = '0 0 0';
-	local noref vector old_panel_size; // fteqcc sucks
 	vector color;
 
 	// check to see if we want to continue
@@ -519,7 +515,7 @@ void HUD_Weapons(void)
 			return;
 		}
 
-		old_panel_size = panel_size;
+		vector old_panel_size = panel_size;
 		if(panel_bg_padding)
 			old_panel_size -= '2 2 0' * panel_bg_padding;
 
@@ -721,7 +717,7 @@ void HUD_Weapons(void)
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
 		{
-			panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
+			float panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -757,6 +753,7 @@ void HUD_Weapons(void)
 			// draw ammo status bar
 			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
 			{
+				float ammo_full;
 				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
