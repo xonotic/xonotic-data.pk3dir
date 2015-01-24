@@ -44,7 +44,7 @@ void Casing_Touch()
 			if(time >= self.nextthink)
 			{
 				string s;
-				int f = floor(prandom() * 3) + 1;;
+				int f = floor(prandom() * 3) + 1;
 
 				switch(self.state)
 				{
