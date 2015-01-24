@@ -4,6 +4,9 @@
 
 #ifndef QCC_SUPPORT_INT
 #define int float
+
+#define stoi(s) stof(s)
+#define itos(s) ftos(s)
 #endif
 
 #ifndef QCC_SUPPORT_BOOL
@@ -14,6 +17,4 @@ const float true 	= 1;
 const float false 	= 0;
 const float TRUE 	= 1;
 const float FALSE 	= 0;
-
-#define stoi(s) stof(s)
 #endif

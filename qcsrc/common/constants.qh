@@ -176,7 +176,7 @@ const float SFL_SORT_PRIO_MASK = 12;
  * Score indices
  */
 #define MAX_SCORE 10
-const float MAX_TEAMSCORE = 2;
+#define MAX_TEAMSCORE 2
 
 const float ST_SCORE = 0;
 const float SP_KILLS = 0;

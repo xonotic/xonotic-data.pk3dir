@@ -31,11 +31,12 @@ void DamageEffect_Think()
 	pointparticles(self.team, org, '0 0 0', 1);
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum)
+void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, nearestbone = 0;
+	int nearestbone = 0;
+	float life;
 	string specstr, effectname;
 	entity e;
 
@@ -104,7 +105,9 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
+	float dmg, rad, edge, thisdmg;
+	bool hitplayer = FALSE;
+	int species, forcemul;
 	vector force, thisforce;
 	entity oldself;
 
@@ -329,9 +332,7 @@ void Ent_DamageInfo(float isNew)
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		float hitwep;
-
-		hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
+		int hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
