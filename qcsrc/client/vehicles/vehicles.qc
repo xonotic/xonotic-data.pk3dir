@@ -1,5 +1,5 @@
 const string hud_bg = "gfx/vehicles/frame.tga";
-const string hud_sh "= gfx/vehicles/vh-shield.tga";
+const string hud_sh = "gfx/vehicles/vh-shield.tga";
 
 const string hud_hp_bar = "gfx/vehicles/bar_up_left.tga";
 const string hud_hp_ico = "gfx/vehicles/health.tga";
