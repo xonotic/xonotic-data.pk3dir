@@ -14,4 +14,6 @@ const float true 	= 1;
 const float false 	= 0;
 const float TRUE 	= 1;
 const float FALSE 	= 0;
+
+#define stoi(s) stof(s)
 #endif

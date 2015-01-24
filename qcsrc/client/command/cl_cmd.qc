@@ -22,7 +22,7 @@ void DrawDebugModel()
 //  Command Sub-Functions
 // =======================
 
-void LocalCommand_blurtest(float request)
+void LocalCommand_blurtest(int request)
 {
 	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
 	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
@@ -57,7 +57,7 @@ void LocalCommand_blurtest(float request)
 	#endif
 }
 
-void LocalCommand_boxparticles(float request, float argc)
+void LocalCommand_boxparticles(int request, int argc)
 {
 	switch(request)
 	{
@@ -65,10 +65,10 @@ void LocalCommand_boxparticles(float request, float argc)
 		{
 			if (argc == 9)
 			{
-				float effect = particleeffectnum(argv(1));
+				int effect = particleeffectnum(argv(1));
 				if (effect >= 0)
 				{
-					float index = stof(argv(2));
+					int index = stoi(argv(2));
 					entity own;
 					if(index <= 0)
 						own = entitybyindex(-index);
@@ -78,8 +78,8 @@ void LocalCommand_boxparticles(float request, float argc)
 					vector org_to = stov(argv(4));
 					vector dir_from = stov(argv(5));
 					vector dir_to = stov(argv(6));
-					float countmultiplier = stof(argv(7));
-					float flags = stof(argv(8));
+					int countmultiplier = stoi(argv(7));
+					int flags = stoi(argv(8));
 					boxparticles(effect, own, org_from, org_to, dir_from, dir_to, countmultiplier, flags);
 					return;
 				}
@@ -108,15 +108,14 @@ void LocalCommand_boxparticles(float request, float argc)
 	}
 }
 
-void LocalCommand_create_scrshot_ent(float request)
+void LocalCommand_create_scrshot_ent(int request)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float fh;
 			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
-			fh = fopen(filename, FILE_WRITE);
+			int fh = fopen(filename, FILE_WRITE);
 
 			if(fh >= 0)
 			{
@@ -147,7 +146,7 @@ void LocalCommand_create_scrshot_ent(float request)
 	}
 }
 
-void LocalCommand_debugmodel(float request, float argc)
+void LocalCommand_debugmodel(int request, int argc)
 {
 	switch(request)
 	{
@@ -177,13 +176,13 @@ void LocalCommand_debugmodel(float request, float argc)
 	}
 }
 
-void LocalCommand_handlevote(float request, float argc)
+void LocalCommand_handlevote(int request, int argc)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float vote_selection;
+			int vote_selection;
 			string vote_string;
 
 			if(InterpretBoolean(argv(1)))
@@ -224,7 +223,7 @@ void LocalCommand_handlevote(float request, float argc)
 	}
 }
 
-void LocalCommand_hud(float request, float argc)
+void LocalCommand_hud(int request, int argc)
 {
 	switch(request)
 	{
@@ -289,7 +288,7 @@ void LocalCommand_hud(float request, float argc)
 	}
 }
 
-void LocalCommand_localprint(float request, float argc)
+void LocalCommand_localprint(int request, int argc)
 {
 	switch(request)
 	{
@@ -313,7 +312,7 @@ void LocalCommand_localprint(float request, float argc)
 	}
 }
 
-void LocalCommand_mv_download(float request, float argc)
+void LocalCommand_mv_download(int request, int argc)
 {
 	switch(request)
 	{
@@ -337,7 +336,7 @@ void LocalCommand_mv_download(float request, float argc)
 	}
 }
 
-void LocalCommand_sendcvar(float request, float argc)
+void LocalCommand_sendcvar(int request, int argc)
 {
 	switch(request)
 	{
@@ -373,7 +372,7 @@ void LocalCommand_sendcvar(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void LocalCommand_(float request)
+void LocalCommand_(int request)
 {
 	switch(request)
 	{
@@ -423,7 +422,7 @@ void LocalCommand_macro_help()
 	return;
 }
 
-float LocalCommand_macro_command(float argc)
+float LocalCommand_macro_command(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
@@ -434,7 +433,7 @@ float LocalCommand_macro_command(float argc)
 	return FALSE;
 }
 
-float LocalCommand_macro_usage(float argc)
+float LocalCommand_macro_usage(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
@@ -464,7 +463,7 @@ void LocalCommand_macro_write_aliases(float fh)
 
 void GameCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -569,7 +568,7 @@ void ConsoleCommand_macro_init()
 	return;
 }
 
-float ConsoleCommand_macro_normal(float argc)
+float ConsoleCommand_macro_normal(int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
 		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
@@ -580,7 +579,7 @@ float ConsoleCommand_macro_normal(float argc)
 	return FALSE;
 }
 
-float ConsoleCommand_macro_movement(float argc)
+float ConsoleCommand_macro_movement(int argc)
 {
 	if(camera_active)
 	{
@@ -602,7 +601,7 @@ float ConsoleCommand_macro_movement(float argc)
 
 float CSQC_ConsoleCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	if(ConsoleCommand_macro_normal(argc))
 	{
