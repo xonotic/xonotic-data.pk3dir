@@ -13,8 +13,8 @@
 #define bool float
 
 // Boolean Constants
-const float true 	= 1;
-const float false 	= 0;
-const float TRUE 	= 1;
-const float FALSE 	= 0;
+const bool true 	= 1;
+const bool false 	= 0;
+const bool TRUE 	= 1;
+const bool FALSE 	= 0;
 #endif
