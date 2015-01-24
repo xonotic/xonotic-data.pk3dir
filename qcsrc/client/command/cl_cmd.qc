@@ -422,7 +422,7 @@ void LocalCommand_macro_help()
 	return;
 }
 
-float LocalCommand_macro_command(int argc)
+bool LocalCommand_macro_command(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
@@ -433,7 +433,7 @@ float LocalCommand_macro_command(int argc)
 	return FALSE;
 }
 
-float LocalCommand_macro_usage(int argc)
+bool LocalCommand_macro_usage(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
@@ -444,7 +444,7 @@ float LocalCommand_macro_usage(int argc)
 	return FALSE;
 }
 
-void LocalCommand_macro_write_aliases(float fh)
+void LocalCommand_macro_write_aliases(int fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_cl", name, description); } }
@@ -568,7 +568,7 @@ void ConsoleCommand_macro_init()
 	return;
 }
 
-float ConsoleCommand_macro_normal(int argc)
+bool ConsoleCommand_macro_normal(int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
 		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
@@ -579,7 +579,7 @@ float ConsoleCommand_macro_normal(int argc)
 	return FALSE;
 }
 
-float ConsoleCommand_macro_movement(int argc)
+bool ConsoleCommand_macro_movement(int argc)
 {
 	if(camera_active)
 	{
@@ -599,7 +599,7 @@ float ConsoleCommand_macro_movement(int argc)
 // ======================================================
 // Used to parse commands in the console that have been registered with the "registercommand" function
 
-float CSQC_ConsoleCommand(string command)
+bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
 
