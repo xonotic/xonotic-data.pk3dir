@@ -41,9 +41,9 @@ void LaunchDebris (string debrisname, vector force)
 {
 	entity dbr = spawn();
 	setorigin(dbr, self.absmin
-	           + '1 0 0' * random() * (self.absmax_x - self.absmin_x)
-	           + '0 1 0' * random() * (self.absmax_y - self.absmin_y)
-	           + '0 0 1' * random() * (self.absmax_z - self.absmin_z));
+	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
+	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
+	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z));
 	setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
@@ -52,13 +52,13 @@ void LaunchDebris (string debrisname, vector force)
 	dbr.solid = self.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * crandom();
-	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * crandom();
-	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * crandom();
+	dbr.velocity_x = self.debrisvelocity.x + self.debrisvelocityjitter.x * crandom();
+	dbr.velocity_y = self.debrisvelocity.y + self.debrisvelocityjitter.y * crandom();
+	dbr.velocity_z = self.debrisvelocity.z + self.debrisvelocityjitter.z * crandom();
 	self.velocity = self.velocity + force * self.debrisdamageforcescale;
-	dbr.avelocity_x = random()*self.debrisavelocityjitter_x;
-	dbr.avelocity_y = random()*self.debrisavelocityjitter_y;
-	dbr.avelocity_z = random()*self.debrisavelocityjitter_z;
+	dbr.avelocity_x = random()*self.debrisavelocityjitter.x;
+	dbr.avelocity_y = random()*self.debrisavelocityjitter.y;
+	dbr.avelocity_z = random()*self.debrisavelocityjitter.z;
 	dbr.damageforcescale = self.debrisdamageforcescale;
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
@@ -83,7 +83,7 @@ void func_breakable_colormod()
 
 void func_breakable_look_destroyed()
 {
-	float floor_z;
+	float floorZ;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		self.dropped_origin = self.origin;
@@ -92,9 +92,9 @@ void func_breakable_look_destroyed()
 		self.model = "";
 	else {
 		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
-			floor_z = self.absmin_z;
+			floorZ = self.absmin.z;
 			setorigin(self,((self.absmax+self.absmin)*.5));
-			self.origin_z = floor_z;
+			self.origin_z = floorZ;
 		}
 		setmodel(self, self.mdl_dead);
 	}

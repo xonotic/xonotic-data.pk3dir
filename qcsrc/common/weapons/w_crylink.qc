@@ -404,11 +404,11 @@ void W_Crylink_Attack(void)
 		else
 		{
 			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s_y = v_forward_x;
-			s_z = v_forward_y;
+			s_y = v_forward.x;
+			s_z = v_forward.y;
 		}
 		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
-		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, FALSE);
+		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -514,11 +514,11 @@ void W_Crylink_Attack2(void)
 			else
 			{
 				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-				s_y = v_forward_x;
-				s_z = v_forward_y;
+				s_y = v_forward.x;
+				s_z = v_forward.y;
 			}
 			s = s * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor;
-			s = w_shotdir + right * s_y + up * s_z;
+			s = w_shotdir + right * s.y + up * s.z;
 		}
 		else
 		{

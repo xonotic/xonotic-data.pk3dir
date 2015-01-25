@@ -248,11 +248,11 @@ void turret_draw2d()
 	{
         // TODO: Vehicle tactical hud
         o = project_3d_to_2d(self.origin + '0 0 32');
-        if(o_z < 0
-        || o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
-        || o_y < (vid_conheight * waypointsprite_edgeoffset_top)
-        || o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
-        || o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+        if(o.z < 0
+        || o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
+        || o.y < (vid_conheight * waypointsprite_edgeoffset_top)
+        || o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
+        || o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
             return; // Dont draw wp's for turrets out of view
         o_z = 0;
         if(hud != HUD_NORMAL)
@@ -326,24 +326,24 @@ void turret_draw2d()
 	rgb = fixrgbexcess(rgb);
 
 	o = project_3d_to_2d(self.origin + '0 0 64');
-	if(o_z < 0
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top)
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
-	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+	if(o.z < 0
+	|| o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
+	|| o.y < (vid_conheight * waypointsprite_edgeoffset_top)
+	|| o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
+	|| o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	    return; // Dont draw wp's for turrets out of view
 
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
-	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
-	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
-	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
+		edgedistance_min = min((o.y - (vid_conheight * waypointsprite_edgeoffset_top)),
+	(o.x - (vid_conwidth * waypointsprite_edgeoffset_left)),
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
+	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
 	float vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
 
-	crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
+	crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
 	t = waypointsprite_scale * vidscale;
 	a *= waypointsprite_alpha;
@@ -395,7 +395,7 @@ void turret_walker_draw()
     movelib_groundalign4point(300, 100, 0.25, 45);
     setorigin(self, self.origin + self.velocity * dt);
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
-    self.angles_y = self.move_angles_y;
+    self.angles_y = self.move_angles.y;
 
     if (self.health < 127)
     if(random() < 0.15)
@@ -414,7 +414,7 @@ void turret_ewheel_draw()
     fixedmakevectors(self.angles);
     setorigin(self, self.origin + self.velocity * dt);
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
-    self.angles_y = self.move_angles_y;
+    self.angles_y = self.move_angles.y;
 
     if (self.health < 127)
     if(random() < 0.05)
@@ -584,7 +584,7 @@ void turret_die()
             {
                 headgib.angles = headgib.move_angles = self.tur_head.angles;
                 headgib.avelocity = headgib.move_avelocity = self.tur_head.move_avelocity + randomvec() * 45;
-                headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity_y * 5;
+                headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity.y * 5;
                 headgib.gravity = 0.5;
             }
         }

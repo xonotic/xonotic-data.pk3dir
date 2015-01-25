@@ -16,7 +16,7 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	vector point;
 
 	point = ent.move_origin;
-	point_z += (ent.mins_z + 1);
+	point_z += (ent.mins.z + 1);
 
 	nativecontents = pointcontents(point);
 
@@ -36,11 +36,11 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	{
 		ent.move_watertype = nativecontents;
 		ent.move_waterlevel = 1;
-		point_y = (ent.origin_y + ((ent.mins_z + ent.maxs_y) * 0.5));
+		point_y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			ent.move_waterlevel = 2;
-			point_y = ent.origin_y + ent.view_ofs_y;
+			point_y = ent.origin.y + ent.view_ofs.y;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				ent.move_waterlevel = 3;
 		}
@@ -162,21 +162,21 @@ void _Movetype_LinkEdict(float touch_triggers) // SV_LinkEdict
 
 	if(self.move_flags & FL_ITEM)
 	{
-		mi_x -= 15;
-		mi_y -= 15;
-		mi_z -= 1;
-		ma_x += 15;
-		ma_y += 15;
-		ma_z += 1;
+		mi.x -= 15;
+		mi.y -= 15;
+		mi.z -= 1;
+		ma.x += 15;
+		ma.y += 15;
+		ma.z += 1;
 	}
 	else
 	{
-		mi_x -= 1;
-		mi_y -= 1;
-		mi_z -= 1;
-		ma_x += 1;
-		ma_y += 1;
-		ma_z += 1;
+		mi.x -= 1;
+		mi.y -= 1;
+		mi.z -= 1;
+		ma.x += 1;
+		ma.y += 1;
+		ma.z += 1;
 	}
 
 	self.absmin = mi;
@@ -235,9 +235,9 @@ vector _Movetype_ClipVelocity(vector vel, vector norm, float f) // SV_ClipVeloci
 {
 	vel = vel - ((vel * norm) * norm) * f;
 
-	if(vel_x > -0.1 && vel_x < 0.1) vel_x = 0;
-	if(vel_y > -0.1 && vel_y < 0.1) vel_y = 0;
-	if(vel_z > -0.1 && vel_z < 0.1) vel_z = 0;
+	if(vel.x > -0.1 && vel.x < 0.1) vel_x = 0;
+	if(vel.y > -0.1 && vel.y < 0.1) vel_y = 0;
+	if(vel.z > -0.1 && vel.z < 0.1) vel_z = 0;
 
 	return vel;
 }
@@ -282,7 +282,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 {
 	if(self.move_flags & FL_ONGROUND)
 	{
-		if(self.move_velocity_z >= 1/32)
+		if(self.move_velocity.z >= 1/32)
 			self.move_flags &= ~FL_ONGROUND;
 		else if(!self.move_groundentity)
 			return;
@@ -360,7 +360,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 
 			d = trace_plane_normal * self.move_velocity;
-			if(trace_plane_normal_z > 0.7 && d < bouncestop && d > -bouncestop)
+			if(trace_plane_normal.z > 0.7 && d < bouncestop && d > -bouncestop)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
@@ -373,7 +373,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		else
 		{
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1.0);
-			if(trace_plane_normal_z > 0.7)
+			if(trace_plane_normal.z > 0.7)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;

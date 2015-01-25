@@ -142,7 +142,7 @@ void W_Devastator_DoRemoteExplode(void)
 				head.velocity_y *= 0.9;
 				head.velocity_z = bound(
 					WEP_CVAR(devastator, remote_jump_velocity_z_min),
-					head.velocity_z + WEP_CVAR(devastator, remote_jump_velocity_z_add),
+					head.velocity.z + WEP_CVAR(devastator, remote_jump_velocity_z_add),
 					WEP_CVAR(devastator, remote_jump_velocity_z_max)
 				);
 
@@ -226,7 +226,7 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 	//   0 = (m^2 - f^2) * x^2 + (2 * f * (m^2 - 1)) * x + (m^2 - 1)
 	m2 = maxturn_cos * maxturn_cos;
 	v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
-	return normalize(thisdir + goaldir * v_y); // the larger solution!
+	return normalize(thisdir + goaldir * v.y); // the larger solution!
 }
 // assume thisdir == -goaldir:
 //   f == -1
@@ -252,7 +252,7 @@ void W_Devastator_Think(void)
 	}
 
 	// accelerate
-	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
+	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
 	velspeed = WEP_CVAR(devastator, speed) * g_weaponspeedfactor - (self.velocity * v_forward);
 	if(velspeed > 0)
 		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * g_weaponspeedfactor * frametime, velspeed);

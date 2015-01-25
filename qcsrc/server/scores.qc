@@ -14,7 +14,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 {
 	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
 		return previous;
-	if((fieldflags & SFL_SORT_PRIO_MASK) < previous_y)
+	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)
 		return previous;
 	if(t1.field == t2.field)
 		return previous;
@@ -139,7 +139,7 @@ float TeamScore_Compare(entity t1, entity t2, float strict)
 	if (result_x == 0 && strict)
 		result_x = t1.team - t2.team;
 
-	return result_x;
+	return result.x;
 }
 
 /*
@@ -376,7 +376,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	if (result_x == 0 && strict)
 		result_x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
 
-	return result_x;
+	return result.x;
 }
 
 void WinningConditionHelper()

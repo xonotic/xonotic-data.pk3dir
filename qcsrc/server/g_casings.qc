@@ -2,13 +2,13 @@ float Casing_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-	WriteShort(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
-	WriteByte(MSG_ENTITY, self.angles_x * 256 / 360);
-	WriteByte(MSG_ENTITY, self.angles_y * 256 / 360);
-	WriteByte(MSG_ENTITY, self.angles_z * 256 / 360);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
+	WriteShort(MSG_ENTITY, self.oldorigin.x); // acrually compressed velocity
+	WriteByte(MSG_ENTITY, self.angles.x * 256 / 360);
+	WriteByte(MSG_ENTITY, self.angles.y * 256 / 360);
+	WriteByte(MSG_ENTITY, self.angles.z * 256 / 360);
 	return TRUE;
 }
 
@@ -17,7 +17,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	entity e;
 	vector org;
 
-	org = self.origin + self.view_ofs + self.weaponentity.spawnorigin_x * v_forward - self.weaponentity.spawnorigin_y * v_right + self.weaponentity.spawnorigin_z * v_up;
+	org = self.origin + self.view_ofs + self.weaponentity.spawnorigin.x * v_forward - self.weaponentity.spawnorigin.y * v_right + self.weaponentity.spawnorigin.z * v_up;
 
 	if(!sound_allowed(MSG_BROADCAST, casingowner))
 		casingtype |= 0x80;

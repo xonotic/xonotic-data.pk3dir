@@ -90,15 +90,15 @@ void XonoticSoundList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticSoundList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNumberOrigin = 0;
-	me.columnNumberSize = me.realFontSize_x * 3;
+	me.columnNumberSize = me.realFontSize.x * 3;
 
 	me.columnNameOrigin = me.columnNumberSize;
-	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize_x;
+	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize.x;
 }
 
 void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)

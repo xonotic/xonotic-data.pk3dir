@@ -81,12 +81,12 @@ void Dialog_fill(entity me)
 void Dialog_addItemSimple(entity me, float row, float col, float rowspan, float colspan, entity e, vector v)
 {
 	vector o, s;
-	o = me.itemOrigin + eX * ( col          * me.itemSpacing_x) + eY * ( row          * me.itemSpacing_y);
-	s = me.itemSize   + eX * ((colspan - 1) * me.itemSpacing_x) + eY * ((rowspan - 1) * me.itemSpacing_y);
-	o_x -= 0.5 * (me.itemSpacing_x - me.itemSize_x) * v_x;
-	s_x +=       (me.itemSpacing_x - me.itemSize_x) * v_x;
-	o_y -= 0.5 * (me.itemSpacing_y - me.itemSize_y) * v_y;
-	s_y +=       (me.itemSpacing_y - me.itemSize_y) * v_y;
+	o = me.itemOrigin + eX * ( col          * me.itemSpacing.x) + eY * ( row          * me.itemSpacing.y);
+	s = me.itemSize   + eX * ((colspan - 1) * me.itemSpacing.x) + eY * ((rowspan - 1) * me.itemSpacing.y);
+	o.x -= 0.5 * (me.itemSpacing.x - me.itemSize.x) * v.x;
+	s.x +=       (me.itemSpacing.x - me.itemSize.x) * v.x;
+	o.y -= 0.5 * (me.itemSpacing.y - me.itemSize.y) * v.y;
+	s.y +=       (me.itemSpacing.y - me.itemSize.y) * v.y;
 	me.addItem(me, e, o, s, 1);
 }
 

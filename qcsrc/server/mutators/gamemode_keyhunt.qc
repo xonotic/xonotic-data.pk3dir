@@ -200,7 +200,7 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 	if(e.tag_entity)
 	{
 		makevectors(e.tag_entity.angles);
-		return e.tag_entity.origin + e.origin_x * v_forward - e.origin_y * v_right + e.origin_z * v_up;
+		return e.tag_entity.origin + e.origin.x * v_forward - e.origin.y * v_right + e.origin.z * v_up;
 	}
 	else
 		return e.origin;
@@ -237,7 +237,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 #else
 	setattachment(key, key.owner, "");
 	setorigin(key, '0 0 1' * KH_KEY_ZSHIFT);  // fixing x, y in think
-	key.angles_y -= key.owner.angles_y;
+	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
 	key.solid = SOLID_NOT;
@@ -274,9 +274,9 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
-	setorigin(key, key.owner.origin + key.origin_z * '0 0 1');
+	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
 	setattachment(key, world, "");
-	key.angles_y += key.owner.angles_y;
+	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
@@ -669,7 +669,7 @@ void kh_Key_Think()  // runs all the time
 	{
 #ifndef KH_PLAYER_USE_ATTACHMENT
 		makevectors('0 1 0' * (self.cnt + (time % 360) * KH_KEY_XYSPEED));
-		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
+		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin.z);
 #endif
 	}
 

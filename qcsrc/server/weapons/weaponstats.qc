@@ -32,7 +32,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 					{
 						//vector is: kills hits damage
 						url_fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
-						url_fputs(fh, sprintf("%d %d %g\n", v_x, v_y, v_z));
+						url_fputs(fh, sprintf("%d %d %g\n", v.x, v.y, v.z));
 					}
 				}
 			url_fputs(fh, "#end\n\n");

@@ -201,19 +201,19 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	draw_endBoldFont();
 
-	o = '0.5 1 0' - eY * me.realFontSize_y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
+	o = '0.5 1 0' - eY * me.realFontSize.y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
 	for(i = 0; i < n; ++i)
 	{
 		draw_CenterText(o, argv(i), me.realFontSize, SKINCOLOR_TEXT, 1, FALSE);
-		o += eY * me.realFontSize_y;
+		o += eY * me.realFontSize.y;
 	}
 }
 
 void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticPlayerModelSelector).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.realFontSize_y = me.fontSize / absSize_y;
-	me.realFontSize_x = me.fontSize / absSize_x;
+	me.realFontSize_y = me.fontSize / absSize.y;
+	me.realFontSize_x = me.fontSize / absSize.x;
 }
 
 void XonoticPlayerModelSelector_showNotify(entity me)

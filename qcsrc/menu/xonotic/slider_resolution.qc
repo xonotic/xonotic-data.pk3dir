@@ -40,19 +40,19 @@ float updateConwidths(float width, float height, float pixelheight)
 	// calculate the base resolution
 	c_z = 0;
 	c_x = 800;
-	c_y = c_x * r_y * r_z / r_x;
-	if(c_y < 600)
+	c_y = c.x * r.y * r.z / r.x;
+	if(c.y < 600)
 	{
 		c_y = 600;
-		c_x = c_y * r_x / (r_y * r_z);
+		c_x = c.y * r.x / (r.y * r.z);
 	}
 
-	f = min(r_x / c_x, r_y / c_y);
+	f = min(r.x / c.x, r.y / c.y);
 	if(f < 1)
 		c = c * f; // ensures that c_x <= r_x and c_y <= r_y
 
-	minfactor = min(1, 640 / c_x);            // can be > 1 only if c_x is <640
-	maxfactor = max(1, r_x / c_x, r_y / c_y); // can be < 1 only if r_x < c_x and r_y < c_y
+	minfactor = min(1, 640 / c.x);            // can be > 1 only if c_x is <640
+	maxfactor = max(1, r.x / c.x, r.y / c.y); // can be < 1 only if r_x < c_x and r_y < c_y
 	dprint("min factor: ", ftos(minfactor), "\n");
 	dprint("max factor: ", ftos(maxfactor), "\n");
 
@@ -64,16 +64,16 @@ float updateConwidths(float width, float height, float pixelheight)
 		f = 1;
 	c = c * f; // fteqcc fail
 
-	c_x = rint(c_x);
-	c_y = rint(c_y);
+	c_x = rint(c.x);
+	c_y = rint(c.y);
 
 	// Please reload resolutions list and such stuff.
 	XonoticResolutionSlider_DataHasChanged = TRUE;
 
-	if (c_x != cvar("vid_conwidth") || c_y != cvar("vid_conheight"))
+	if (c.x != cvar("vid_conwidth") || c.y != cvar("vid_conheight"))
 	{
-		cvar_set("vid_conwidth", ftos(c_x));
-		cvar_set("vid_conheight", ftos(c_y));
+		cvar_set("vid_conwidth", ftos(c.x));
+		cvar_set("vid_conheight", ftos(c.y));
 		return 1;
 	}
 	return 0;
@@ -146,16 +146,16 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 			r = getresolution(i);
 			if(r_x == 0 && r_y == 0)
 				break;
-			if(r_x < 640 || r_y < 480)
+			if(r.x < 640 || r.y < 480)
 				continue;
-			if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
+			if(r.x > 2 * r.y) // likely dualscreen resolution, skip this one
 				if(autocvar_menu_vid_allowdualscreenresolution <= 0)
 					continue;
-			me.addResolution(me, r_x, r_y, r_z);
+			me.addResolution(me, r.x, r.y, r.z);
 		}
 		r = getresolution(-1);
-		if(r_x != 0 || r_y != 0)
-			me.addResolution(me, r_x, r_y, r_z);
+		if(r.x != 0 || r.y != 0)
+			me.addResolution(me, r.x, r.y, r.z);
 		dprint("Added system resolutions.\n");
 	}
 
@@ -197,7 +197,7 @@ void XonoticResolutionSlider_saveCvars(entity me)
 		cvar_set("_menu_vid_height", argv(1));
 		cvar_set("_menu_vid_pixelheight", argv(2));
 		vector r = getresolution(-1);
-		if (stof(argv(0)) == r_x && stof(argv(1)) == r_y && fabs(stof(argv(2)) - r_z) < 0.01)
+		if (stof(argv(0)) == r.x && stof(argv(1)) == r.y && fabs(stof(argv(2)) - r.z) < 0.01)
 			cvar_set("_menu_vid_desktopfullscreen", "1");
 		else
 			cvar_set("_menu_vid_desktopfullscreen", "0");

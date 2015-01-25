@@ -72,14 +72,14 @@ void Nexposee_Calc_Scale(entity me, float scale)
 	{
 		e.Nexposee_smallOrigin = (e.Nexposee_initialOrigin - e.Nexposee_scaleCenter) * scale + e.Nexposee_scaleCenter;
 		e.Nexposee_smallSize = e.Nexposee_initialSize * scale;
-		if(e.Nexposee_align_x > 0)
-			e.Nexposee_smallOrigin_x = 1 - e.Nexposee_align_x * scale;
-		if(e.Nexposee_align_x < 0)
-			e.Nexposee_smallOrigin_x = -e.Nexposee_smallSize_x + e.Nexposee_align_x * scale;
-		if(e.Nexposee_align_y > 0)
-			e.Nexposee_smallOrigin_y = 1 - e.Nexposee_align_y * scale;
-		if(e.Nexposee_align_y < 0)
-			e.Nexposee_smallOrigin_y = -e.Nexposee_smallSize_y + e.Nexposee_align_y * scale;
+		if(e.Nexposee_align.x > 0)
+			e.Nexposee_smallOrigin_x = 1 - e.Nexposee_align.x * scale;
+		if(e.Nexposee_align.x < 0)
+			e.Nexposee_smallOrigin_x = -e.Nexposee_smallSize.x + e.Nexposee_align.x * scale;
+		if(e.Nexposee_align.y > 0)
+			e.Nexposee_smallOrigin_y = 1 - e.Nexposee_align.y * scale;
+		if(e.Nexposee_align.y < 0)
+			e.Nexposee_smallOrigin_y = -e.Nexposee_smallSize.y + e.Nexposee_align.y * scale;
 	}
 }
 
@@ -111,8 +111,8 @@ void Nexposee_calc(entity me)
 				// for which suffices
 				//   bmins < amaxs
 				//   amins < bmaxs
-				if((e2mins_x - emaxs_x) * (emins_x - e2maxs_x) > 0) // x overlap
-					if((e2mins_y - emaxs_y) * (emins_y - e2maxs_y) > 0) // y overlap
+				if((e2mins.x - emaxs.x) * (emins.x - e2maxs.x) > 0) // x overlap
+					if((e2mins.y - emaxs.y) * (emins.y - e2maxs.y) > 0) // y overlap
 					{
 						goto have_overlap;
 					}
@@ -204,8 +204,8 @@ void Nexposee_draw(entity me)
 		me.setAlphaOf(me, e, e.Container_alpha * (1 - f) + a * f);
 
 		fs = globalToBoxSize(e.Container_size, e.Nexposee_initialSize);
-		e.Container_fontscale_x = fs_x * e.Nexposee_initialFontScale_x;
-		e.Container_fontscale_y = fs_y * e.Nexposee_initialFontScale_y;
+		e.Container_fontscale_x = fs.x * e.Nexposee_initialFontScale.x;
+		e.Container_fontscale_y = fs.y * e.Nexposee_initialFontScale.y;
 	}
 
 	SUPER(Nexposee).draw(me);

@@ -65,9 +65,9 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	vector save_fontscale = draw_fontscale;
 	float f = draw_CondensedFontFactor(s, FALSE, me.realFontSize, 1);
-	draw_fontscale_x *= f;
+	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
-	fs_x *= f;
+	fs.x *= f;
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
 
@@ -76,9 +76,9 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 	{
 		vector save_fontscale = draw_fontscale;
 		float f = draw_CondensedFontFactor(p, FALSE, me.realFontSize, 1);
-		draw_fontscale_x *= f;
+		draw_fontscale.x *= f;
 		vector fs = me.realFontSize;
-		fs_x *= f;
+		fs.x *= f;
 		draw_Text(me.realUpperMargin * eY + (me.columnPercentageOrigin + (me.columnPercentageSize - draw_TextWidth(p, 0, fs))) * eX, p, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 		draw_fontscale = save_fontscale;
 	}
@@ -87,10 +87,10 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 void XonoticLanguageList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticLanguageList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
-	me.columnPercentageSize = me.realFontSize_x * 3;
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+	me.columnPercentageSize = me.realFontSize.x * 3;
 	me.columnPercentageOrigin = 1 - me.columnPercentageSize;
 	me.columnNameOrigin = 0;
 	me.columnNameSize = me.columnPercentageOrigin;

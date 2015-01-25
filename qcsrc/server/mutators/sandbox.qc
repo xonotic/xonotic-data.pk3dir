@@ -172,7 +172,7 @@ entity sandbox_ObjectSpawn(float database)
 		makevectors(self.v_angle);
 		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
 		setorigin(e, trace_endpos);
-		e.angles_y = self.v_angle_y;
+		e.angles_y = self.v_angle.y;
 	}
 	
 	oldself = self;

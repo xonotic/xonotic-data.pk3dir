@@ -155,10 +155,10 @@ entity Container_itemFromPoint(entity me, vector pos)
 	{
 		o = e.Container_origin;
 		s = e.Container_size;
-		if(pos_x < o_x) continue;
-		if(pos_y < o_y) continue;
-		if(pos_x >= o_x + s_x) continue;
-		if(pos_y >= o_y + s_y) continue;
+		if(pos.x < o.x) continue;
+		if(pos.y < o.y) continue;
+		if(pos.x >= o.x + s.x) continue;
+		if(pos.y >= o.y + s.y) continue;
 		return e;
 	}
 	return NULL;
@@ -288,18 +288,18 @@ void Container_addItem(entity me, entity other, vector theOrigin, vector theSize
 	if(other.focusable)
 		me.focusable += 1;
 
-	if(theSize_x > 1)
+	if(theSize.x > 1)
 	{
-		theOrigin_x -= 0.5 * (theSize_x - 1);
+		theOrigin.x -= 0.5 * (theSize.x - 1);
 		theSize_x = 1;
 	}
-	if(theSize_y > 1)
+	if(theSize.y > 1)
 	{
-		theOrigin_y -= 0.5 * (theSize_y - 1);
+		theOrigin.y -= 0.5 * (theSize.y - 1);
 		theSize_y = 1;
 	}
-	theOrigin_x = bound(0, theOrigin_x, 1 - theSize_x);
-	theOrigin_y = bound(0, theOrigin_y, 1 - theSize_y);
+	theOrigin_x = bound(0, theOrigin.x, 1 - theSize.x);
+	theOrigin_y = bound(0, theOrigin.y, 1 - theSize.y);
 
 	other.parent = me;
 	other.Container_origin = theOrigin;

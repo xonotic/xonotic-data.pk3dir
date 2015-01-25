@@ -64,12 +64,12 @@ void SendCSQCVortexBeamParticle(float charge) {
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg_x);
-	WriteCoord(MSG_BROADCAST, w_shotorg_y);
-	WriteCoord(MSG_BROADCAST, w_shotorg_z);
-	WriteCoord(MSG_BROADCAST, v_x);
-	WriteCoord(MSG_BROADCAST, v_y);
-	WriteCoord(MSG_BROADCAST, v_z);
+	WriteCoord(MSG_BROADCAST, w_shotorg.x);
+	WriteCoord(MSG_BROADCAST, w_shotorg.y);
+	WriteCoord(MSG_BROADCAST, w_shotorg.z);
+	WriteCoord(MSG_BROADCAST, v.x);
+	WriteCoord(MSG_BROADCAST, v.y);
+	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 

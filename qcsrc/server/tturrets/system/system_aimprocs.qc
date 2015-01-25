@@ -45,12 +45,12 @@ vector turret_stdproc_aim_generic()
 			if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
-				prep_z = pre_pos_z;
-				vz = self.enemy.velocity_z;
+				prep_z = pre_pos.z;
+				vz = self.enemy.velocity.z;
 				for(i = 0; i < impact_time; i += sys_frametime)
 				{
 					vz = vz - (autocvar_sv_gravity * sys_frametime);
-					prep_z = prep_z + vz * sys_frametime;
+					prep_z = prep.z + vz * sys_frametime;
 				}
 			}
 			pre_pos = prep;

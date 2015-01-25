@@ -46,7 +46,7 @@ string CHARMAP =
 
 string charmap_cellToChar(vector cell)
 {
-	string character = substring(CHARMAP, cell_y * CHARMAP_COLS + cell_x, 1);
+	string character = substring(CHARMAP, cell.y * CHARMAP_COLS + cell.x, 1);
 
 	if (character != " ")
 		return character;
@@ -72,31 +72,31 @@ void XonoticCharmap_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 {
 	SUPER(XonoticCharmap).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	float maxFontWidth = SKINFONTSIZE_NORMAL / absSize_x;
-	float maxFontHeight = SKINFONTSIZE_NORMAL / absSize_y;
+	float maxFontWidth = SKINFONTSIZE_NORMAL / absSize.x;
+	float maxFontHeight = SKINFONTSIZE_NORMAL / absSize.y;
 
-	if((me.realCellSize_x * absSize_x) > (me.realCellSize_y * absSize_y))
+	if((me.realCellSize.x * absSize.x) > (me.realCellSize.y * absSize.y))
 	{
-		me.realFontSize_x = me.realCellSize_y * absSize_y / absSize_x;
-		me.realFontSize_y = me.realCellSize_y;
+		me.realFontSize_x = me.realCellSize.y * absSize.y / absSize.x;
+		me.realFontSize_y = me.realCellSize.y;
 	}
 	else
 	{
-		me.realFontSize_x = me.realCellSize_x;
-		me.realFontSize_y = me.realCellSize_x * absSize_x / absSize_y;
+		me.realFontSize_x = me.realCellSize.x;
+		me.realFontSize_y = me.realCellSize.x * absSize.x / absSize.y;
 	}
 
-	if(me.realFontSize_x > maxFontWidth || me.realFontSize_y > maxFontHeight)
+	if(me.realFontSize.x > maxFontWidth || me.realFontSize.y > maxFontHeight)
 		me.realFontSize = eX * maxFontWidth + eY * maxFontHeight;
 }
 
 float XonoticCharmap_mouseMove(entity me, vector coords)
 {
-	me.focusedCell_x = floor(coords_x * CHARMAP_COLS);
-	me.focusedCell_y = floor(coords_y * CHARMAP_ROWS);
+	me.focusedCell_x = floor(coords.x * CHARMAP_COLS);
+	me.focusedCell_y = floor(coords.y * CHARMAP_ROWS);
 
-	if(me.focusedCell_x < 0 || me.focusedCell_y < 0 ||
-	   me.focusedCell_x >= CHARMAP_COLS || me.focusedCell_y >= CHARMAP_ROWS)
+	if(me.focusedCell.x < 0 || me.focusedCell.y < 0 ||
+	   me.focusedCell.x >= CHARMAP_COLS || me.focusedCell.y >= CHARMAP_ROWS)
 	{
 		me.focusedCell = '-1 -1 0';
 		return 0;
@@ -114,7 +114,7 @@ float XonoticCharmap_mousePress(entity me, vector coords)
 {
 	me.mouseMove(me, coords);
 
-	if(me.focusedCell_x >= 0)
+	if(me.focusedCell.x >= 0)
 	{
 		me.pressed = 1;
 		me.previouslyFocusedCell = me.focusedCell;
@@ -179,8 +179,8 @@ float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 
 void XonoticCharmap_moveFocus(entity me, vector initialCell, vector step)
 {
-	me.focusedCell_x = mod(me.focusedCell_x + step_x + CHARMAP_COLS, CHARMAP_COLS);
-	me.focusedCell_y = mod(me.focusedCell_y + step_y + CHARMAP_ROWS, CHARMAP_ROWS);
+	me.focusedCell_x = mod(me.focusedCell.x + step.x + CHARMAP_COLS, CHARMAP_COLS);
+	me.focusedCell_y = mod(me.focusedCell.y + step.y + CHARMAP_ROWS, CHARMAP_ROWS);
 
 	if(me.focusedCell != initialCell) // Recursion break
 		if(charmap_cellToChar(me.focusedCell) == "")
@@ -207,13 +207,13 @@ void XonoticCharmap_draw(entity me)
 	cellPos = '0 0 0';
 	charPos = '0 0 0';
 
-	float CHAR_OFFSET_X = me.realCellSize_x / 2;
-	float CHAR_OFFSET_Y = (me.realCellSize_y - me.realFontSize_y) / 2;
+	float CHAR_OFFSET_X = me.realCellSize.x / 2;
+	float CHAR_OFFSET_Y = (me.realCellSize.y - me.realFontSize.y) / 2;
 
-	for(cell_y = 0; cell_y < CHARMAP_ROWS; ++cell_y)
+	for(cell_y = 0; cell.y < CHARMAP_ROWS; ++cell.y)
 	{
-		charPos_y = cell_y / CHARMAP_ROWS + CHAR_OFFSET_Y;
-		for(cell_x = 0; cell_x < CHARMAP_COLS; ++cell_x)
+		charPos_y = cell.y / CHARMAP_ROWS + CHAR_OFFSET_Y;
+		for(cell_x = 0; cell.x < CHARMAP_COLS; ++cell.x)
 		{
 			character = charmap_cellToChar(cell);
 
@@ -225,14 +225,14 @@ void XonoticCharmap_draw(entity me)
 			{
 				if(!me.pressed || me.focusedCell == me.previouslyFocusedCell)
 				{
-					cellPos_x = mod(me.focusedCell_x, CHARMAP_COLS) / CHARMAP_COLS;
-					cellPos_y = mod(me.focusedCell_y, CHARMAP_ROWS) / CHARMAP_ROWS;
+					cellPos_x = mod(me.focusedCell.x, CHARMAP_COLS) / CHARMAP_COLS;
+					cellPos_y = mod(me.focusedCell.y, CHARMAP_ROWS) / CHARMAP_ROWS;
 					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_CHARMAP_FOCUS, SKINALPHA_CHARMAP_FOCUS);
 				}
 			}
 
 			// Draw character
-			charPos_x = cell_x / CHARMAP_COLS + CHAR_OFFSET_X;
+			charPos_x = cell.x / CHARMAP_COLS + CHAR_OFFSET_X;
 			draw_CenterText(charPos, character, me.realFontSize, SKINCOLOR_CHARMAP_CHAR, SKINALPHA_CHARMAP_CHAR, 0);
 		}
 	}

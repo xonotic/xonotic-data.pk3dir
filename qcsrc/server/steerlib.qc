@@ -420,7 +420,7 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
     float bm_forward, bm_right, bm_left,p;
     vector vr,vl;
 
-    dir_z *= 0.15;
+    dir.z *= 0.15;
     vr = vectoangles(dir);
     //vr_x *= -1;
 
@@ -508,9 +508,9 @@ void flocker_think()
     vector dodgemove,swarmmove;
     vector reprellmove,wandermove,newmove;
 
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
     makevectors(self.angles);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
 
     dodgemove   = steerlib_traceavoid(0.35,1000);
     swarmmove   = steerlib_flock(500,75,700,500);
@@ -585,9 +585,9 @@ void flocker_hunter_think()
     entity e,ee;
     float d,bd;
 
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
     makevectors(self.angles);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
 
     if(self.enemy)
     if(vlen(self.enemy.origin - self.origin) < 64)

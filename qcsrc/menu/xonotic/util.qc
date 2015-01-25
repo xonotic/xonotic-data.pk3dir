@@ -494,11 +494,11 @@ float preMenuInit()
 	{
 		draw_reset_cropped();
 
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale.x / draw_scale.y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz.y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
 
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		boxA = '0.05 0.5 0' + 0.25 * sz.y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz.y * eY;
 		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
 
 		boxA += sz * 0.1;
@@ -536,8 +536,8 @@ void preMenuDraw()
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
 		// TODO rather turn this into a dialog
-		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
-		line = eY * fs_y;
+		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
+		line = eY * fs.y;
 		string l1, l2;
 		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
 		l2 = "http://www.xonotic.org/";
@@ -548,11 +548,11 @@ void preMenuDraw()
 				draw_TextWidth(l1, 0, fs),
 				draw_TextWidth(l2, 0, fs)
 			);
-		sz_y = 3 * fs_y;
+		sz_y = 3 * fs.y;
 
 		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
-		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
-		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
+		mid = eX * (0.5 + 0.5 * (1 - sz.x) * cos(time * 0.071))
+		    + eY * (0.5 + 0.5 * (1 - sz.y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);

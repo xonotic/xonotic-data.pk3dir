@@ -231,7 +231,7 @@ void CL_WeaponEntity_SetModel(string name)
 
 	self.view_ofs = '0 0 0';
 
-	if(self.movedir_x >= 0)
+	if(self.movedir.x >= 0)
 	{
 		vector v0;
 		v0 = self.movedir;
@@ -270,7 +270,7 @@ void CL_Weaponentity_Think()
 	float tb;
 	self.nextthink = time;
 	if (intermission_running)
-		self.frame = self.anim_idle_x;
+		self.frame = self.anim_idle.x;
 	if (self.owner.weaponentity != self)
 	{
 		if (self.weaponentity)
@@ -587,7 +587,7 @@ void weapon_thinkf(float fr, float t, void() func)
 			a = self.weaponentity.anim_fire2;
 		else // if (fr == WFRAME_RELOAD)
 			a = self.weaponentity.anim_reload;
-		a_z *= g_weaponratefactor;
+		a.z *= g_weaponratefactor;
 		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
 	}
 
@@ -794,7 +794,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 
 	flash.viewmodelforclient = self;
 
-	if(self.weaponentity.oldorigin_x > 0)
+	if(self.weaponentity.oldorigin.x > 0)
 	{
 		setattachment(xflash, self.exteriorweaponentity, "");
 		setorigin(xflash, self.weaponentity.oldorigin + offset);

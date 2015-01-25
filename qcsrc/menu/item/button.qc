@@ -41,7 +41,7 @@ void Button_resizeNotify(entity me, vector relOrigin, vector relSize, vector abs
 	if(me.srcMulti)
 		me.keepspaceLeft = 0;
 	else
-		me.keepspaceLeft = min(0.8, absSize_y / absSize_x);
+		me.keepspaceLeft = min(0.8, absSize.y / absSize.x);
 	SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 void Button_configureButton(entity me, string txt, float sz, string gfx)
@@ -61,10 +61,10 @@ float Button_keyDown(entity me, float key, float ascii, float shift)
 float Button_mouseDrag(entity me, vector pos)
 {
 	me.pressed = 1;
-	if(pos_x < 0) me.pressed = 0;
-	if(pos_y < 0) me.pressed = 0;
-	if(pos_x >= 1) me.pressed = 0;
-	if(pos_y >= 1) me.pressed = 0;
+	if(pos.x < 0) me.pressed = 0;
+	if(pos.y < 0) me.pressed = 0;
+	if(pos.x >= 1) me.pressed = 0;
+	if(pos.y >= 1) me.pressed = 0;
 	return 1;
 }
 float Button_mousePress(entity me, vector pos)
@@ -133,7 +133,7 @@ void Button_draw(entity me)
 			}
 			else
 			{
-				bOrigin = eY * (0.5 * (1 - me.realFontSize_y)) + eX * (0.5 * (me.keepspaceLeft - me.realFontSize_x));
+				bOrigin = eY * (0.5 * (1 - me.realFontSize.y)) + eX * (0.5 * (me.keepspaceLeft - me.realFontSize.x));
 				bSize = me.realFontSize;
 			}
 			if(me.disabled)

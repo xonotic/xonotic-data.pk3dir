@@ -342,7 +342,7 @@ void walker_postthink()
                     }
 
                     self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
-                    self.moveto_z = self.origin_z + 64;
+                    self.moveto_z = self.origin.z + 64;
                     walker_move_to(self.moveto, 0);
                 }
 
@@ -374,7 +374,7 @@ void walker_postthink()
 
             wish_angle = angleofs(self, self.enemy);
             if (self.animflag != ANIM_SWIM)
-            if (fabs(wish_angle_y) < 15)
+            if (fabs(wish_angle.y) < 15)
             {
                 self.moveto   = self.enemy.origin;
                 self.steerto  = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
@@ -419,7 +419,7 @@ void walker_postthink()
         float  vz;
 
         real_angle = vectoangles(self.steerto) - self.angles;
-        vz         = self.velocity_z;
+        vz         = self.velocity.z;
 
         switch (self.animflag)
         {
@@ -479,7 +479,7 @@ void walker_postthink()
                 turny = autocvar_g_turrets_unit_walker_turn_swim;
                 turnx = autocvar_g_turrets_unit_walker_turn_swim;
 
-                self.angles_x += bound(-10, shortangle_f(real_angle_x, self.angles_x), 10);
+                self.angles_x += bound(-10, shortangle_f(real_angle.x, self.angles.x), 10);
                 movelib_move_simple(v_forward, autocvar_g_turrets_unit_walker_speed_swim, 0.3);
                 vz = self.velocity_z + sin(time * 4) * 8;
                 break;
@@ -492,13 +492,13 @@ void walker_postthink()
 
         if(turny)
         {
-            turny = bound( turny * -1, shortangle_f(real_angle_y, self.angles_y), turny );
+            turny = bound( turny * -1, shortangle_f(real_angle.y, self.angles.y), turny );
             self.angles_y += turny;
         }
 
         if(turnx)
         {
-            turnx = bound( turnx * -1, shortangle_f(real_angle_x, self.angles_x), turnx );
+            turnx = bound( turnx * -1, shortangle_f(real_angle.x, self.angles.x), turnx );
             self.angles_x += turnx;
         }
 

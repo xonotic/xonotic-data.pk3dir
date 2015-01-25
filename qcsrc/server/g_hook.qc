@@ -99,15 +99,15 @@ float GrapplingHookSend(entity to, float sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
+		WriteCoord(MSG_ENTITY, self.hook_start.x);
+		WriteCoord(MSG_ENTITY, self.hook_start.y);
+		WriteCoord(MSG_ENTITY, self.hook_start.z);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
+		WriteCoord(MSG_ENTITY, self.hook_end.x);
+		WriteCoord(MSG_ENTITY, self.hook_end.y);
+		WriteCoord(MSG_ENTITY, self.hook_end.z);
 	}
 	return TRUE;
 }
@@ -138,7 +138,7 @@ void GrapplingHookThink()
 	vs = hook_shotorigin[s];
 
 	makevectors(self.realowner.v_angle);
-	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 	myorg = WarpZone_RefSys_TransformOrigin(self.realowner, self, org);
 
 	if(self.hook_length < 0)
@@ -239,7 +239,7 @@ void GrapplingHookThink()
 		}
 	}
 
-	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
+	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.realowner, self.origin); // + v_forward * (-9);
 
 	if(myorg != self.hook_start)
@@ -312,7 +312,7 @@ void FireGrapplingHook (void)
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
 	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTEN_NORM);
-	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
 	org = trace_endpos;

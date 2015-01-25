@@ -336,12 +336,12 @@ void W_Shockwave_Send(void)
 {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg_x);
-	WriteCoord(MSG_BROADCAST, w_shotorg_y);
-	WriteCoord(MSG_BROADCAST, w_shotorg_z);
-	WriteCoord(MSG_BROADCAST, w_shotdir_x);
-	WriteCoord(MSG_BROADCAST, w_shotdir_y);
-	WriteCoord(MSG_BROADCAST, w_shotdir_z);
+	WriteCoord(MSG_BROADCAST, w_shotorg.x);
+	WriteCoord(MSG_BROADCAST, w_shotorg.y);
+	WriteCoord(MSG_BROADCAST, w_shotorg.z);
+	WriteCoord(MSG_BROADCAST, w_shotdir.x);
+	WriteCoord(MSG_BROADCAST, w_shotdir.y);
+	WriteCoord(MSG_BROADCAST, w_shotdir.z);
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
@@ -436,7 +436,7 @@ void W_Shockwave_Attack(void)
 					);
 
 				// figure out the direction of force
-				vel = normalize(combine_to_vector(head.velocity_x, head.velocity_y, 0));
+				vel = normalize(combine_to_vector(head.velocity.x, head.velocity.y, 0));
 				vel *=
 					(
 						bound(0, (vlen(vel) / autocvar_sv_maxspeed), 1)
@@ -447,7 +447,7 @@ void W_Shockwave_Attack(void)
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_jump_force) * multiplier);
-				final_force_z *= WEP_CVAR(shockwave, blast_jump_force_zscale);
+				final_force.z *= WEP_CVAR(shockwave, blast_jump_force_zscale);
 
 				// trigger damage with this calculated info
 				Damage(
@@ -518,7 +518,7 @@ void W_Shockwave_Attack(void)
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_splash_force) * multiplier);
-				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
+				final_force.z *= WEP_CVAR(shockwave, blast_force_zscale);
 
 				// queue damage with this calculated info
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
@@ -609,7 +609,7 @@ void W_Shockwave_Attack(void)
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_force) * multiplier);
-				final_force_z *= WEP_CVAR(shockwave, blast_force_zscale);
+				final_force.z *= WEP_CVAR(shockwave, blast_force_zscale);
 
 				// queue damage with this calculated info
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
@@ -782,19 +782,19 @@ void Draw_Shockwave()
 	{
 		// perfect circle effect lines
 		makevectors('0 360 0' * (0.75 + (counter - 0.5) / divisions));
-		angle_y = v_forward_x;
-		angle_z = v_forward_y;
+		angle_y = v_forward.x;
+		angle_z = v_forward.y;
 
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;
-		deviation = ((self.sw_shotdir + (right * deviation_y) + (up * deviation_z)));
+		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_min_dist = SW_DISTTOMIN;
 		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
 		//te_lightning2(world, new_min_end, self.sw_shotorg);
 
 		// then calculate spread_to_max effect
 		deviation = angle * spread_to_max;
-		deviation = ((self.sw_shotdir + (right * deviation_y) + (up * deviation_z)));
+		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_max_dist = vlen(new_min_end - endpos);
 		new_max_end = (new_min_end + (deviation * new_max_dist));
 		//te_lightning2(world, new_end, prev_min_end);
@@ -855,7 +855,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.draw = Draw_Shockwave;
 	
 	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
-	shockwave.sw_shotdir_x  = ReadCoord(); shockwave.sw_shotdir_y  = ReadCoord(); shockwave.sw_shotdir_z  = ReadCoord();
+	shockwave.sw_shotdir_x = ReadCoord(); shockwave.sw_shotdir_y = ReadCoord(); shockwave.sw_shotdir_z = ReadCoord();
 
 	shockwave.sw_distance = ReadShort();
 	shockwave.sw_spread_max = ReadByte();

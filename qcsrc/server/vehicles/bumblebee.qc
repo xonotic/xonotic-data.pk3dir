@@ -157,7 +157,7 @@ float bumb_gunner_frame()
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
 		if(gun.enemy.movetype == MOVETYPE_WALK)
-			_vel_z *= 0.1;
+			_vel.z *= 0.1;
 
 
 		ad = vf;
@@ -222,7 +222,7 @@ void bumb_gunner_exit(float _exitflag)
 
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 0);
-		WriteAngle(MSG_ONE, self.vehicle.angles_y);
+		WriteAngle(MSG_ONE, self.vehicle.angles.y);
 		WriteAngle(MSG_ONE, 0);
 	}
 
@@ -321,8 +321,8 @@ float bumb_gunner_enter()
 	WriteByte(MSG_ONE, SVC_SETVIEWPORT);
 	WriteEntity(MSG_ONE, _gun.vehicle_viewport);
 	WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
-	WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
-	WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
+	WriteAngle(MSG_ONE, _gun.angles.x + self.angles.x);    // tilt
+	WriteAngle(MSG_ONE, _gun.angles.y + self.angles.y);    // yaw
 	WriteAngle(MSG_ONE, 0);                             // roll
 	_gun.vehicle_hudmodel.viewmodelforclient = other;
 
@@ -428,58 +428,58 @@ float bumb_pilot_frame()
 
 	vang = vehic.angles;
 	newvel = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
-	vang_x *= -1;
-	newvel_x *= -1;
-	if(newvel_x > 180)  newvel_x -= 360;
-	if(newvel_x < -180) newvel_x += 360;
-	if(newvel_y > 180)  newvel_y -= 360;
-	if(newvel_y < -180) newvel_y += 360;
+	vang.x *= -1;
+	newvel.x *= -1;
+	if(newvel.x > 180)  newvel.x -= 360;
+	if(newvel.x < -180) newvel.x += 360;
+	if(newvel.y > 180)  newvel.y -= 360;
+	if(newvel.y < -180) newvel.y += 360;
 
-	ftmp = shortangle_f(pilot.v_angle_y - vang_y, vang_y);
+	ftmp = shortangle_f(pilot.v_angle.y - vang.y, vang.y);
 	if(ftmp > 180)  ftmp -= 360;
 	if(ftmp < -180) ftmp += 360;
-	vehic.avelocity_y = bound(-autocvar_g_vehicle_bumblebee_turnspeed, ftmp + vehic.avelocity_y * 0.9, autocvar_g_vehicle_bumblebee_turnspeed);
+	vehic.avelocity_y = bound(-autocvar_g_vehicle_bumblebee_turnspeed, ftmp + vehic.avelocity.y * 0.9, autocvar_g_vehicle_bumblebee_turnspeed);
 
 	// Pitch
 	ftmp = 0;
-	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit)
+	if(pilot.movement.x > 0 && vang.x < autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = 4;
-	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit)
+	else if(pilot.movement.x < 0 && vang.x > -autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = -8;
 
-	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x , autocvar_g_vehicle_bumblebee_pitchlimit);
-	ftmp = vang_x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
-	vehic.avelocity_x = bound(-autocvar_g_vehicle_bumblebee_pitchspeed, ftmp + vehic.avelocity_x * 0.9, autocvar_g_vehicle_bumblebee_pitchspeed);
+	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x , autocvar_g_vehicle_bumblebee_pitchlimit);
+	ftmp = vang.x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
+	vehic.avelocity_x = bound(-autocvar_g_vehicle_bumblebee_pitchspeed, ftmp + vehic.avelocity.x * 0.9, autocvar_g_vehicle_bumblebee_pitchspeed);
 
-	vehic.angles_x = anglemods(vehic.angles_x);
-	vehic.angles_y = anglemods(vehic.angles_y);
-	vehic.angles_z = anglemods(vehic.angles_z);
+	vehic.angles_x = anglemods(vehic.angles.x);
+	vehic.angles_y = anglemods(vehic.angles.y);
+	vehic.angles_z = anglemods(vehic.angles.z);
 
-	makevectors('0 1 0' * vehic.angles_y);
+	makevectors('0 1 0' * vehic.angles.y);
 	newvel = vehic.velocity * -autocvar_g_vehicle_bumblebee_friction;
 
-	if(pilot.movement_x != 0)
+	if(pilot.movement.x != 0)
 	{
-		if(pilot.movement_x > 0)
+		if(pilot.movement.x > 0)
 			newvel += v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
-		else if(pilot.movement_x < 0)
+		else if(pilot.movement.x < 0)
 			newvel -= v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
 	}
 
-	if(pilot.movement_y != 0)
+	if(pilot.movement.y != 0)
 	{
-		if(pilot.movement_y < 0)
+		if(pilot.movement.y < 0)
 			newvel -= v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
-		else if(pilot.movement_y > 0)
+		else if(pilot.movement.y > 0)
 			newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
 		ftmp = newvel * v_right;
 		ftmp *= frametime * 0.1;
-		vehic.angles_z = bound(-15, vehic.angles_z + ftmp, 15);
+		vehic.angles_z = bound(-15, vehic.angles.z + ftmp, 15);
 	}
 	else
 	{
 		vehic.angles_z *= 0.95;
-		if(vehic.angles_z >= -1 && vehic.angles_z <= -1)
+		if(vehic.angles.z >= -1 && vehic.angles.z <= -1)
 			vehic.angles_z = 0;
 	}
 
@@ -791,8 +791,8 @@ void bumb_die()
 
 void bumb_impact()
 {
-	if(autocvar_g_vehicle_bumblebee_bouncepain_x)
-		vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
+	if(autocvar_g_vehicle_bumblebee_bouncepain.x)
+		vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain.x, autocvar_g_vehicle_bumblebee_bouncepain.y, autocvar_g_vehicle_bumblebee_bouncepain.z);
 }
 
 void bumb_spawn(float _f)
@@ -937,16 +937,16 @@ float bumble_raygun_send(entity to, float sf)
 
 	if(sf & BRG_START)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
+		WriteCoord(MSG_ENTITY, self.hook_start.x);
+		WriteCoord(MSG_ENTITY, self.hook_start.y);
+		WriteCoord(MSG_ENTITY, self.hook_start.z);
 	}
 
 	if(sf & BRG_END)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
+		WriteCoord(MSG_ENTITY, self.hook_end.x);
+		WriteCoord(MSG_ENTITY, self.hook_end.y);
+		WriteCoord(MSG_ENTITY, self.hook_end.z);
 	}
 
 	return TRUE;

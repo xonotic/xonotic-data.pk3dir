@@ -55,9 +55,9 @@ void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, ve
 
 	// hotspot-relative coordinates of the corners
 	v1 = hotspot;
-	v2 = hotspot + '1 0 0' * sz_x;
-	v3 = hotspot + '1 0 0' * sz_x + '0 1 0' * sz_y;
-	v4 = hotspot                  + '0 1 0' * sz_y;
+	v2 = hotspot + '1 0 0' * sz.x;
+	v3 = hotspot + '1 0 0' * sz.x + '0 1 0' * sz.y;
+	v4 = hotspot                  + '0 1 0' * sz.y;
 
 	// rotate them, and make them absolute
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
@@ -103,7 +103,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	up = rotate(up, rot);
 
 	owidth = width + 2 * border;
-	o = o - up * (margin + border + height) + ri * (sz_x - owidth) * 0.5;
+	o = o - up * (margin + border + height) + ri * (sz.x - owidth) * 0.5;
 
 	drawquad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
 	drawquad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
@@ -154,7 +154,7 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 		w = sw;
 	else
 		w = minwidth;
-	h = fontsize_y;
+	h = fontsize.y;
 
 	// how do corners work?
 	aspect = vid_conwidth / vid_conheight;
@@ -172,25 +172,25 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 	}
 
 	// align
-	o_x -= w * algnx;
-	o_y -= h * algny;
+	o.x -= w * algnx;
+	o.y -= h * algny;
 
 	// we want to be onscreen
-	if(o_x < 0)
+	if(o.x < 0)
 		o_x = 0;
-	if(o_y < 0)
+	if(o.y < 0)
 		o_y = 0;
-	if(o_x > vid_conwidth - w)
+	if(o.x > vid_conwidth - w)
 		o_x = vid_conwidth - w;
-	if(o_y > vid_conheight - h)
+	if(o.y > vid_conheight - h)
 		o_x = vid_conheight - h;
 
-	o_x += 0.5 * (w - sw);
+	o.x += 0.5 * (w - sw);
 
 	drawstring(o, s, fontsize, rgb, a, DRAWFLAG_NORMAL);
 
-	o_x += 0.5 * sw;
-	o_y += 0.5 * h;
+	o.x += 0.5 * sw;
+	o.y += 0.5 * h;
 
 	return o;
 }
@@ -297,51 +297,51 @@ vector fixrgbexcess_move(vector rgb, vector src, vector dst)
 }
 vector fixrgbexcess(vector rgb)
 {
-	if(rgb_x > 1)
+	if(rgb.x > 1)
 	{
 		rgb = fixrgbexcess_move(rgb, '1 0 0', '0 1 1');
-		if(rgb_y > 1)
+		if(rgb.y > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 1 0', '0 0 1');
-			if(rgb_z > 1)
+			if(rgb.z > 1)
 				rgb_z = 1;
 		}
-		else if(rgb_z > 1)
+		else if(rgb.z > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 0 1', '0 1 0');
-			if(rgb_y > 1)
+			if(rgb.y > 1)
 				rgb_y = 1;
 		}
 	}
-	else if(rgb_y > 1)
+	else if(rgb.y > 1)
 	{
 		rgb = fixrgbexcess_move(rgb, '0 1 0', '1 0 1');
-		if(rgb_x > 1)
+		if(rgb.x > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 0 1');
-			if(rgb_z > 1)
+			if(rgb.z > 1)
 				rgb_z = 1;
 		}
-		else if(rgb_z > 1)
+		else if(rgb.z > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 0 1', '1 0 0');
-			if(rgb_x > 1)
+			if(rgb.x > 1)
 				rgb_x = 1;
 		}
 	}
-	else if(rgb_z > 1)
+	else if(rgb.z > 1)
 	{
 		rgb = fixrgbexcess_move(rgb, '0 0 1', '1 1 0');
-		if(rgb_x > 1)
+		if(rgb.x > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 1 0');
-			if(rgb_y > 1)
+			if(rgb.y > 1)
 				rgb_y = 1;
 		}
-		else if(rgb_y > 1)
+		else if(rgb.y > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 1 0', '1 0 0');
-			if(rgb_x > 1)
+			if(rgb.x > 1)
 				rgb_x = 1;
 		}
 	}
@@ -450,27 +450,27 @@ void Draw_WaypointSprite()
 	float ang;
 
 	o = project_3d_to_2d(self.origin);
-	if(o_z < 0
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left)
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top)
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
-	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+	if(o.z < 0
+	|| o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
+	|| o.y < (vid_conheight * waypointsprite_edgeoffset_top)
+	|| o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
+	|| o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
 		vector d;
 		float f1, f2;
 
 		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
-		ang = atan2(-d_x, -d_y);
-		if(o_z < 0)
+		ang = atan2(-d.x, -d.y);
+		if(o.z < 0)
 			ang += M_PI;
 
-		f1 = d_x / vid_conwidth;
-		f2 = d_y / vid_conheight;
+		f1 = d.x / vid_conwidth;
+		f2 = d.y / vid_conheight;
 
 		if(max(f1, -f1) > max(f2, -f2))
 		{
-			if(d_z * f1 > 0)
+			if(d.z * f1 > 0)
 			{
 				// RIGHT edge
 				d = d * ((0.5 - waypointsprite_edgeoffset_right) / f1);
@@ -483,7 +483,7 @@ void Draw_WaypointSprite()
 		}
 		else
 		{
-			if(d_z * f2 > 0)
+			if(d.z * f2 > 0)
 			{
 				// BOTTOM edge
 				d = d * ((0.5 - waypointsprite_edgeoffset_bottom) / f2);
@@ -504,21 +504,21 @@ void Draw_WaypointSprite()
 #else
 		vector d;
 		d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
-		ang = atan2(-d_x, -d_y);
+		ang = atan2(-d.x, -d.y);
 #endif
 	}
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)),
-	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
-	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x,
-	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);
+		edgedistance_min = min((o.y - (vid_conheight * waypointsprite_edgeoffset_top)),
+	(o.x - (vid_conwidth * waypointsprite_edgeoffset_left)),
+	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o.x,
+	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o.y);
 
 	float vidscale;
 	vidscale = max(vid_conwidth / vid_width, vid_conheight / vid_height);
 
-	crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
+	crosshairdistance = sqrt( pow(o.x - vid_conwidth/2, 2) + pow(o.y - vid_conheight/2, 2) );
 
 	t = waypointsprite_scale * vidscale;
 	a *= waypointsprite_alpha;

@@ -99,7 +99,7 @@ void racer_align4point(float _delta)
    self.velocity += push_vector * _delta;
 
     // Anti ocilation
-    if(self.velocity_z > 0)
+    if(self.velocity.z > 0)
         self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
 
     push_vector_x =  (fl_push - bl_push);
@@ -111,8 +111,8 @@ void racer_align4point(float _delta)
     push_vector_z *= 360;
 
     // Apply angle diffrance
-    self.angles_z += push_vector_z * _delta;
-    self.angles_x += push_vector_x * _delta;
+    self.angles_z += push_vector.z * _delta;
+    self.angles_x += push_vector.x * _delta;
 
     // Apply stabilizer
     self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
@@ -132,7 +132,7 @@ void racer_fire_cannon(string tagname)
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
-    v_forward_z = v_z * 0.5;
+    v_forward_z = v.z * 0.5;
     bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
 }
 
@@ -215,7 +215,7 @@ void racer_rocket_tracker()
     newdir = normalize(predicted_origin - self.origin);
 
     //vector
-	float height_diff = predicted_origin_z - self.origin_z;
+	float height_diff = predicted_origin.z - self.origin.z;
 
     if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
     {
@@ -226,7 +226,7 @@ void racer_rocket_tracker()
     }
 
     if(trace_fraction != 1.0 && trace_ent != self.enemy)
-        newdir_z += 16 * sys_frametime;
+        newdir.z += 16 * sys_frametime;
 
     self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
     self.velocity_z -= 800 * sys_frametime;
@@ -288,16 +288,16 @@ float racer_frame()
 
     // Yaw
     ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
-    ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
-    racer.angles_y = anglemods(racer.angles_y + ftmp);
+    ftmp = bound(-ftmp, shortangle_f(player.v_angle.y - racer.angles.y, racer.angles.y), ftmp);
+    racer.angles_y = anglemods(racer.angles.y + ftmp);
 
     // Roll
     racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * frametime;
 
     // Pitch
     ftmp = autocvar_g_vehicle_racer_pitchspeed  * frametime;
-    ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
-    racer.angles_x = bound(-30, anglemods(racer.angles_x + ftmp), 30);
+    ftmp = bound(-ftmp, shortangle_f(player.v_angle.x - racer.angles.x, racer.angles.x), ftmp);
+    racer.angles_x = bound(-30, anglemods(racer.angles.x + ftmp), 30);
 
     makevectors(racer.angles);
     racer.angles_x *= -1;
@@ -309,10 +309,10 @@ float racer_frame()
     if(vlen(player.movement) != 0)
     {
         if(player.movement_x)
-            df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
+            df += v_forward * ((player.movement.x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
 
         if(player.movement_y)
-            df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
+            df += v_right * ((player.movement.y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
 
         if(self.sound_nexttime < time || self.sounds != 1)
         {
@@ -460,10 +460,10 @@ void racer_think()
     tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NORMAL, self);
 
     vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
-	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
+	df.z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
 	self.velocity += df * pushdeltatime;
-    if(self.velocity_z > 0)
+    if(self.velocity.z > 0)
         self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
 
     self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
@@ -528,8 +528,8 @@ void racer_exit(float eject)
 
 void racer_impact()
 {
-	if(autocvar_g_vehicle_racer_bouncepain_x)
-		vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+	if(autocvar_g_vehicle_racer_bouncepain.x)
+		vehicles_impact(autocvar_g_vehicle_racer_bouncepain.x, autocvar_g_vehicle_racer_bouncepain.y, autocvar_g_vehicle_racer_bouncepain.z);
 }
 
 void racer_blowup()
@@ -578,9 +578,9 @@ void racer_die()
     pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 
     if(random() < 0.5)
-        self.avelocity_z  = 32;
+        self.avelocity_z = 32;
     else
-        self.avelocity_z  = -32;
+        self.avelocity_z = -32;
 
     self.avelocity_x = -vlen(self.velocity) * 0.2;
     self.velocity   += '0 0 700';

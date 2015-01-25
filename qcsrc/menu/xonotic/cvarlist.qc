@@ -141,14 +141,14 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 {
 	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNameOrigin = 0;
-	me.columnValueSize = me.realFontSize_x * 20;
-	me.columnNameSize = 1 - me.columnValueSize - me.realFontSize_x;
-	me.columnValueOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x;
+	me.columnValueSize = me.realFontSize.x * 20;
+	me.columnNameSize = 1 - me.columnValueSize - me.realFontSize.x;
+	me.columnValueOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 
 	me.setSelected(me, me.selectedItem);
 }

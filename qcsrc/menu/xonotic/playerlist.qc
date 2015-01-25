@@ -79,16 +79,16 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticPlayerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	// this list does 1 char left and right margin
-	me.columnScoreSize = 5 * me.realFontSize_x;
-	me.columnNameSize = 1 - 3 * me.realFontSize_x - me.columnScoreSize;
+	me.columnScoreSize = 5 * me.realFontSize.x;
+	me.columnNameSize = 1 - 3 * me.realFontSize.x - me.columnScoreSize;
 
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x;
+	me.columnNameOrigin = me.realFontSize.x;
+	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 }
 
 void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)

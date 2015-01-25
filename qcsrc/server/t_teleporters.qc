@@ -13,12 +13,12 @@ void trigger_teleport_use()
 	deathmax = (o) + player.maxs; \
 	if(telefragmin != telefragmax) \
 	{ \
-		if(deathmin_x > telefragmin_x) deathmin_x = telefragmin_x; \
-		if(deathmin_y > telefragmin_y) deathmin_y = telefragmin_y; \
-		if(deathmin_z > telefragmin_z) deathmin_z = telefragmin_z; \
-		if(deathmax_x < telefragmax_x) deathmax_x = telefragmax_x; \
-		if(deathmax_y < telefragmax_y) deathmax_y = telefragmax_y; \
-		if(deathmax_z < telefragmax_z) deathmax_z = telefragmax_z; \
+		if(deathmin.x > telefragmin.x) deathmin_x = telefragmin.x; \
+		if(deathmin.y > telefragmin.y) deathmin_y = telefragmin.y; \
+		if(deathmin.z > telefragmin.z) deathmin_z = telefragmin.z; \
+		if(deathmax.x < telefragmax.x) deathmax_x = telefragmax.x; \
+		if(deathmax.y < telefragmax.y) deathmax_y = telefragmax.y; \
+		if(deathmax.z < telefragmax.z) deathmax_z = telefragmax.z; \
 	} \
 	deathradius = max(vlen(deathmin), vlen(deathmax)); \
 	for(head = findradius(o, deathradius); head; head = head.chain) \
@@ -170,7 +170,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 			p = 1;
 			if(autocvar_g_telefrags_avoid)
 			{
-				locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
@@ -191,7 +191,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
-	locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
 	return e;

@@ -251,7 +251,7 @@ void CSQCPlayer_SetCamera()
 
 			CSQCPlayer_SetMinsMaxs();
 
-			self.angles_y = input_angles_y;
+			self.angles_y = input_angles.y;
 		}
 
 		// relink

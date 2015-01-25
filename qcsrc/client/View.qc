@@ -47,7 +47,7 @@ void Porto_Draw()
 			continue;
 		++portal_number;
 		ang = vectoangles2(trace_plane_normal, dir);
-		ang_x = -ang_x;
+		ang_x = -ang.x;
 		makevectors(ang);
 		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 			return;
@@ -202,8 +202,8 @@ vector GetCurrentFov(float fov)
 vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
 {
 	float fovx, fovy;
-	float width = (ov_worldmax_x - ov_worldmin_x);
-	float height = (ov_worldmax_y - ov_worldmin_y);
+	float width = (ov_worldmax.x - ov_worldmin.x);
+	float height = (ov_worldmax.y - ov_worldmin.y);
 	float distance_to_middle_of_world = vlen(ov_mid - ov_org);
 	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
 	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
@@ -328,16 +328,16 @@ float TrueAimCheck()
 	if(vlen(trueaimpoint - traceorigin) < g_trueaim_minrange)
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
-	if(vecs_x > 0)
-		vecs_y = -vecs_y;
+	if(vecs.x > 0)
+		vecs_y = -vecs.y;
 	else
 		vecs = '0 0 0';
 
-	dv = view_right * vecs_y + view_up * vecs_z;
+	dv = view_right * vecs.y + view_up * vecs.z;
 	w_shotorg = traceorigin + dv;
 
 	// now move the vecs forward as much as requested if possible
-	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs_x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
+	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs.x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
 	w_shotorg = trace_endpos - view_forward * nudge;
 
 	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
@@ -552,8 +552,8 @@ void UpdateCrosshair()
 			if(shottype == SHOTTYPE_HITWORLD)
 			{
 				v = wcross_origin - wcross_oldorigin;
-				v_x /= vid_conwidth;
-				v_y /= vid_conheight;
+				v.x /= vid_conwidth;
+				v.y /= vid_conheight;
 				if(vlen(v) > 0.01)
 					shottype = SHOTTYPE_HITOBSTRUCTION;
 			}
@@ -708,9 +708,9 @@ void UpdateCrosshair()
 				hitindication_crosshair_size = 0;
 
 			wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
-			wcross_color_x += sin(hitindication_crosshair_size) * hitindication_color_x;
-			wcross_color_y += sin(hitindication_crosshair_size) * hitindication_color_y;
-			wcross_color_z += sin(hitindication_crosshair_size) * hitindication_color_z;
+			wcross_color.x += sin(hitindication_crosshair_size) * hitindication_color.x;
+			wcross_color.y += sin(hitindication_crosshair_size) * hitindication_color.y;
+			wcross_color.z += sin(hitindication_crosshair_size) * hitindication_color.z;
 		}
 
 		if(shottype == SHOTTYPE_HITENEMY)
@@ -883,10 +883,10 @@ void UpdateCrosshair()
 				}
 
 				if (autocvar_crosshair_ring_inner && ring_inner_value) // lets draw a ring inside a ring so you can ring while you ring
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_inner_image, ring_inner_value, ring_inner_rgb, wcross_alpha * ring_inner_alpha, DRAWFLAG_ADDITIVE);
 
 				if (ring_value)
-					DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
+					DrawCircleClippedPic(wcross_origin, wcross_size.x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
@@ -906,7 +906,7 @@ void UpdateCrosshair()
 			while(0)
 
 #define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
-			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size_x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size_y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size.x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size.y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
 #define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
 			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
@@ -1008,8 +1008,8 @@ void CSQC_UpdateView(float w, float h)
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
-	vid_width = vf_size_x;
-	vid_height = vf_size_y;
+	vid_width = vf_size.x;
+	vid_height = vf_size.y;
 
 	vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
 	vector splash_pos = '0 0 0', splash_size = '0 0 0';
@@ -1061,9 +1061,9 @@ void CSQC_UpdateView(float w, float h)
 			// detect maximum viewoffset and use it
 			if(autocvar_cl_eventchase_viewoffset)
 			{
-				WarpZone_TraceLine(current_view_origin, current_view_origin + autocvar_cl_eventchase_viewoffset + ('0 0 1' * autocvar_cl_eventchase_maxs_z), MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, current_view_origin + autocvar_cl_eventchase_viewoffset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, self);
 				if(trace_fraction == 1) { current_view_origin += autocvar_cl_eventchase_viewoffset; }
-				else { current_view_origin_z += max(0, (trace_endpos_z - current_view_origin_z) - autocvar_cl_eventchase_maxs_z); }
+				else { current_view_origin.z += max(0, (trace_endpos.z - current_view_origin.z) - autocvar_cl_eventchase_maxs.z); }
 			}
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
@@ -1087,7 +1087,7 @@ void CSQC_UpdateView(float w, float h)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
 				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
-				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins_z)));
+				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
@@ -1132,30 +1132,30 @@ void CSQC_UpdateView(float w, float h)
 		ov_worldmin = mi_picmin;
 		ov_worldmax = mi_picmax;
 
-		float ov_width = (ov_worldmax_x - ov_worldmin_x);
-		float ov_height = (ov_worldmax_y - ov_worldmin_y);
+		float ov_width = (ov_worldmax.x - ov_worldmin.x);
+		float ov_height = (ov_worldmax.y - ov_worldmin.y);
 		float ov_distance = (max(vid_width, vid_height) * max(ov_width, ov_height));
 
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
-		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
+		ov_org = vec3(ov_mid.x, ov_mid.y, (ov_mid.z + ov_distance));
 
 		float ov_nearest = vlen(ov_org - vec3(
-			bound(ov_worldmin_x, ov_org_x, ov_worldmax_x),
-			bound(ov_worldmin_y, ov_org_y, ov_worldmax_y),
-			bound(ov_worldmin_z, ov_org_z, ov_worldmax_z)
+			bound(ov_worldmin.x, ov_org.x, ov_worldmax.x),
+			bound(ov_worldmin.y, ov_org.y, ov_worldmax.y),
+			bound(ov_worldmin.z, ov_org.z, ov_worldmax.z)
 		));
 
 		float ov_furthest = 0;
 		float dist = 0;
 
-		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 
 		cvar_settemp("r_nearclip", ftos(ov_nearest));
 		cvar_settemp("r_farclip_base", ftos(ov_furthest));
@@ -1454,8 +1454,8 @@ void CSQC_UpdateView(float w, float h)
 			{
 				reticle_size_x = max(vid_conwidth, vid_conheight);
 				reticle_size_y = max(vid_conwidth, vid_conheight);
-				reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-				reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+				reticle_pos_x = (vid_conwidth - reticle_size.x) / 2;
+				reticle_pos_y = (vid_conheight - reticle_size.y) / 2;
 			}
 
 			if(zoomscript_caught)
@@ -1548,8 +1548,8 @@ void CSQC_UpdateView(float w, float h)
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
-		splash_pos_x = (vid_conwidth - splash_size_x) / 2;
-		splash_pos_y = (vid_conheight - splash_size_y) / 2;
+		splash_pos_x = (vid_conwidth - splash_size.x) / 2;
+		splash_pos_y = (vid_conheight - splash_size.y) / 2;
 
 		float myhealth_flash_temp;
 		myhealth = getstati(STAT_HEALTH);
@@ -1639,10 +1639,10 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
 
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
-		if((damage_blurpostprocess_x || content_blurpostprocess_x))
+		if((damage_blurpostprocess.x || content_blurpostprocess.x))
 		{
-			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
-			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
+			float blurradius = bound(0, damage_blurpostprocess.y + content_blurpostprocess.y, autocvar_hud_postprocessing_maxblurradius);
+			float bluralpha = bound(0, damage_blurpostprocess.z + content_blurpostprocess.z, autocvar_hud_postprocessing_maxbluralpha);
 			if(blurradius != old_blurradius || bluralpha != old_bluralpha) // reduce cvar_set spam as much as possible
 			{
 				cvar_set("r_glsl_postprocess_uservec1", strcat(ftos(blurradius), " ", ftos(bluralpha), " 0 0"));
@@ -1794,9 +1794,9 @@ void CSQC_Demo_Camera()
 		camera_offset = '0 0 0';
 		current_angles = '0 0 0';
 		camera_direction = '0 0 0';
-		camera_offset_z += 30;
-		camera_offset_x += 30 * -cos(current_angles_y * DEG2RAD);
-		camera_offset_y += 30 * -sin(current_angles_y * DEG2RAD);
+		camera_offset.z += 30;
+		camera_offset.x += 30 * -cos(current_angles.y * DEG2RAD);
+		camera_offset.y += 30 * -sin(current_angles.y * DEG2RAD);
 		current_origin = view_origin;
 		current_camera_offset  = camera_offset;
 		cvar_set("camera_reset", "0");
@@ -1805,7 +1805,7 @@ void CSQC_Demo_Camera()
 
 	// Camera angles
 	if( camera_roll )
-		mouse_angles_z += camera_roll * autocvar_camera_speed_roll;
+		mouse_angles.z += camera_roll * autocvar_camera_speed_roll;
 
 	if(autocvar_camera_look_player)
 	{
@@ -1813,9 +1813,9 @@ void CSQC_Demo_Camera()
 		float n;
 
 		dir = normalize(view_origin - current_position);
-		n = mouse_angles_z;
+		n = mouse_angles.z;
 		mouse_angles = vectoangles(dir);
-		mouse_angles_x = mouse_angles_x * -1;
+		mouse_angles_x = mouse_angles.x * -1;
 		mouse_angles_z = n;
 	}
 	else
@@ -1823,21 +1823,21 @@ void CSQC_Demo_Camera()
 		tmp = getmousepos() * 0.1;
 		if(vlen(tmp)>autocvar_camera_mouse_threshold)
 		{
-			mouse_angles_x += tmp_y * cos(mouse_angles_z * DEG2RAD) + (tmp_x * sin(mouse_angles_z * DEG2RAD));
-			mouse_angles_y -= tmp_x * cos(mouse_angles_z * DEG2RAD) + (tmp_y * -sin(mouse_angles_z * DEG2RAD));
+			mouse_angles.x += tmp.y * cos(mouse_angles.z * DEG2RAD) + (tmp.x * sin(mouse_angles.z * DEG2RAD));
+			mouse_angles.y -= tmp.x * cos(mouse_angles.z * DEG2RAD) + (tmp.y * -sin(mouse_angles.z * DEG2RAD));
 		}
 	}
 
-	while (mouse_angles_x < -180) mouse_angles_x = mouse_angles_x + 360;
-	while (mouse_angles_x > 180) mouse_angles_x = mouse_angles_x - 360;
-	while (mouse_angles_y < -180) mouse_angles_y = mouse_angles_y + 360;
-	while (mouse_angles_y > 180) mouse_angles_y = mouse_angles_y - 360;
+	while (mouse_angles.x < -180) mouse_angles_x = mouse_angles.x + 360;
+	while (mouse_angles.x > 180) mouse_angles_x = mouse_angles.x - 360;
+	while (mouse_angles.y < -180) mouse_angles_y = mouse_angles.y + 360;
+	while (mouse_angles.y > 180) mouse_angles_y = mouse_angles.y - 360;
 
 	// Fix difference when angles don't have the same sign
 	delta = '0 0 0';
-	if(mouse_angles_y < -60 && current_angles_y > 60)
+	if(mouse_angles.y < -60 && current_angles.y > 60)
 		delta = '0 360 0';
-	if(mouse_angles_y > 60 && current_angles_y < -60)
+	if(mouse_angles.y > 60 && current_angles.y < -60)
 		delta = '0 -360 0';
 
 	if(autocvar_camera_look_player)
@@ -1848,35 +1848,35 @@ void CSQC_Demo_Camera()
 	attenuation = 1 / max(1, attenuation);
 	current_angles += (mouse_angles - current_angles + delta) * attenuation;
 
-	while (current_angles_x < -180) current_angles_x = current_angles_x + 360;
-	while (current_angles_x > 180) current_angles_x = current_angles_x - 360;
-	while (current_angles_y < -180) current_angles_y = current_angles_y + 360;
-	while (current_angles_y > 180) current_angles_y = current_angles_y - 360;
+	while (current_angles.x < -180) current_angles_x = current_angles.x + 360;
+	while (current_angles.x > 180) current_angles_x = current_angles.x - 360;
+	while (current_angles.y < -180) current_angles_y = current_angles.y + 360;
+	while (current_angles.y > 180) current_angles_y = current_angles.y - 360;
 
 	// Camera position
 	tmp = '0 0 0';
 	dimensions = 0;
 
-	if( camera_direction_x )
+	if( camera_direction.x )
 	{
-		tmp_x = camera_direction_x * cos(current_angles_y * DEG2RAD);
-		tmp_y = camera_direction_x * sin(current_angles_y * DEG2RAD);
+		tmp_x = camera_direction.x * cos(current_angles.y * DEG2RAD);
+		tmp_y = camera_direction.x * sin(current_angles.y * DEG2RAD);
 		if( autocvar_camera_forward_follows && !autocvar_camera_look_player )
-			tmp_z = camera_direction_x * -sin(current_angles_x * DEG2RAD);
+			tmp_z = camera_direction.x * -sin(current_angles.x * DEG2RAD);
 		++dimensions;
 	}
 
-	if( camera_direction_y )
+	if( camera_direction.y )
 	{
-		tmp_x += camera_direction_y * -sin(current_angles_y * DEG2RAD);
-		tmp_y += camera_direction_y * cos(current_angles_y * DEG2RAD) * cos(current_angles_z * DEG2RAD);
-		tmp_z += camera_direction_y * sin(current_angles_z * DEG2RAD);
+		tmp.x += camera_direction.y * -sin(current_angles.y * DEG2RAD);
+		tmp.y += camera_direction.y * cos(current_angles.y * DEG2RAD) * cos(current_angles.z * DEG2RAD);
+		tmp.z += camera_direction.y * sin(current_angles.z * DEG2RAD);
 		++dimensions;
 	}
 
-	if( camera_direction_z )
+	if( camera_direction.z )
 	{
-		tmp_z += camera_direction_z * cos(current_angles_z * DEG2RAD);
+		tmp.z += camera_direction.z * cos(current_angles.z * DEG2RAD);
 		++dimensions;
 	}
 

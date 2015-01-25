@@ -37,24 +37,24 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir_x > 0)
+	if(ent.weaponentity.movedir.x > 0)
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
 
-	dv = v_right * -vecs_y + v_up * vecs_z;
+	dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
 	{
 		if(ent.antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
 		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 	}
 	else
-		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
+		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(w_shotend - w_shotorg);
@@ -146,7 +146,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 		error("Unowned missile");
 
 	dir = dir + upDir * (pUpSpeed / pSpeed);
-	dir_z += pZSpeed / pSpeed;
+	dir.z += pZSpeed / pSpeed;
 	pSpeed *= vlen(dir);
 	dir = normalize(dir);
 
@@ -421,7 +421,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// go through solid!
 		// outside the world? forget it
-		if(start_x > world.maxs_x || start_y > world.maxs_y || start_z > world.maxs_z || start_x < world.mins_x || start_y < world.mins_y || start_z < world.mins_z)
+		if(start.x > world.maxs.x || start.y > world.maxs.y || start.z > world.maxs.z || start.x < world.mins.x || start.y < world.mins.y || start.z < world.mins.z)
 			break;
 
 		float maxdist;

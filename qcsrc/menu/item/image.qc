@@ -47,17 +47,17 @@ void Image_initZoom(entity me)
 
 void Image_draw(entity me)
 {
-	if(me.imgSize_x > 1 || me.imgSize_y > 1)
+	if(me.imgSize.x > 1 || me.imgSize.y > 1)
 		draw_SetClip();
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
-	if(me.imgSize_x > 1 || me.imgSize_y > 1)
+	if(me.imgSize.x > 1 || me.imgSize.y > 1)
 		draw_ClearClip();
 	SUPER(Image).draw(me);
 }
 void Image_updateAspect(entity me)
 {
 	float asp = 0;
-	if(me.size_x <= 0 || me.size_y <= 0)
+	if(me.size.x <= 0 || me.size.y <= 0)
 		return;
 	if(me.forcedAspect == 0)
 	{
@@ -71,42 +71,42 @@ void Image_updateAspect(entity me)
 		{
 			if (me.src != "")
 				sz = draw_PictureSize(me.src);
-			if(sz_x <= 0 || sz_y <= 0)
+			if(sz.x <= 0 || sz.y <= 0)
 			{
 				// image is broken or doesn't exist, set the size for the placeholder image
-				sz_x = me.size_x;
-				sz_y = me.size_y;
+				sz_x = me.size.x;
+				sz_y = me.size.y;
 			}
-			asp = sz_x / sz_y;
+			asp = sz.x / sz.y;
 		}
 		else
 			asp = me.forcedAspect;
 
 		if(me.forcedAspect <= -2)
 		{
-			me.imgSize_x = sz_x / me.size_x;
-			me.imgSize_y = sz_y / me.size_y;
-			if(me.zoomBox < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
+			me.imgSize_x = sz.x / me.size.x;
+			me.imgSize_y = sz.y / me.size.y;
+			if(me.zoomBox < 0 && (me.imgSize.x > 1 || me.imgSize.y > 1))
 			{
 				// image larger than the containing box, zoom it out to fit into the box
-				if(me.size_x > asp * me.size_y)
-					me.zoomBox = (me.size_y * asp / me.size_x) / me.imgSize_x;
+				if(me.size.x > asp * me.size.y)
+					me.zoomBox = (me.size.y * asp / me.size.x) / me.imgSize.x;
 				else
-					me.zoomBox = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+					me.zoomBox = (me.size.x / (asp * me.size.y)) / me.imgSize.y;
 				me.zoomFactor = me.zoomBox;
 			}
 		}
 		else
 		{
-			if(me.size_x > asp * me.size_y)
+			if(me.size.x > asp * me.size.y)
 			{
 				// x too large, so center x-wise
-				me.imgSize = eY + eX * (me.size_y * asp / me.size_x);
+				me.imgSize = eY + eX * (me.size.y * asp / me.size.x);
 			}
 			else
 			{
 				// y too large, so center y-wise
-				me.imgSize = eX + eY * (me.size_x / (asp * me.size_y));
+				me.imgSize = eX + eY * (me.size.x / (asp * me.size.y));
 			}
 		}
 	}
@@ -117,10 +117,10 @@ void Image_updateAspect(entity me)
 			me.zoomMax = me.zoomBox;
 		else
 		{
-			if(me.size_x > asp * me.size_y)
-				me.zoomMax = (me.size_y * asp / me.size_x) / me.imgSize_x;
+			if(me.size.x > asp * me.size.y)
+				me.zoomMax = (me.size.y * asp / me.size.x) / me.imgSize.x;
 			else
-				me.zoomMax = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+				me.zoomMax = (me.size.x / (asp * me.size.y)) / me.imgSize.y;
 		}
 	}
 
@@ -129,31 +129,31 @@ void Image_updateAspect(entity me)
 	if (me.zoomFactor)
 		me.imgSize = me.imgSize * me.zoomFactor;
 
-	if(me.imgSize_x > 1 || me.imgSize_y > 1)
+	if(me.imgSize.x > 1 || me.imgSize.y > 1)
 	{
 		if(me.zoomSnapToTheBox)
 		{
-			if(me.imgSize_x > 1)
-				me.zoomOffset_x = bound(0.5/me.imgSize_x, me.zoomOffset_x, 1 - 0.5/me.imgSize_x);
+			if(me.imgSize.x > 1)
+				me.zoomOffset_x = bound(0.5/me.imgSize.x, me.zoomOffset.x, 1 - 0.5/me.imgSize.x);
 			else
-				me.zoomOffset_x = bound(1 - 0.5/me.imgSize_x, me.zoomOffset_x, 0.5/me.imgSize_x);
+				me.zoomOffset_x = bound(1 - 0.5/me.imgSize.x, me.zoomOffset.x, 0.5/me.imgSize.x);
 
-			if(me.imgSize_y > 1)
-				me.zoomOffset_y = bound(0.5/me.imgSize_y, me.zoomOffset_y, 1 - 0.5/me.imgSize_y);
+			if(me.imgSize.y > 1)
+				me.zoomOffset_y = bound(0.5/me.imgSize.y, me.zoomOffset.y, 1 - 0.5/me.imgSize.y);
 			else
-				me.zoomOffset_y = bound(1 - 0.5/me.imgSize_y, me.zoomOffset_y, 0.5/me.imgSize_y);
+				me.zoomOffset_y = bound(1 - 0.5/me.imgSize.y, me.zoomOffset.y, 0.5/me.imgSize.y);
 		}
 		else
 		{
-			me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
-			me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
+			me.zoomOffset_x = bound(0, me.zoomOffset.x, 1);
+			me.zoomOffset_y = bound(0, me.zoomOffset.y, 1);
 		}
 	}
 	else
 		me.zoomOffset = '0.5 0.5 0';
 
-	me.imgOrigin_x = 0.5 - me.zoomOffset_x * me.imgSize_x;
-	me.imgOrigin_y = 0.5 - me.zoomOffset_y * me.imgSize_y;
+	me.imgOrigin_x = 0.5 - me.zoomOffset.x * me.imgSize.x;
+	me.imgOrigin_y = 0.5 - me.zoomOffset.y * me.imgSize.y;
 }
 float Image_drag_setStartPos(entity me, vector coords)
 {
@@ -166,10 +166,10 @@ float Image_drag_setStartPos(entity me, vector coords)
 }
 float Image_drag(entity me, vector coords)
 {
-	if(me.imgSize_x > 1 || me.imgSize_y > 1)
+	if(me.imgSize.x > 1 || me.imgSize.y > 1)
 	{
-		me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - coords_x) / me.imgSize_x;
-		me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - coords_y) / me.imgSize_y;
+		me.zoomOffset_x = me.start_zoomOffset.x + (me.start_coords.x - coords.x) / me.imgSize.x;
+		me.zoomOffset_y = me.start_zoomOffset.y + (me.start_coords.y - coords.y) / me.imgSize.y;
 		me.updateAspect(me);
 	}
 	return 1;
@@ -214,8 +214,8 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 		me.zoomTime = time;
 		if (atMousePosition)
 		{
-			me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - 0.5) / me.imgSize_x;
-			me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - 0.5) / me.imgSize_y;
+			me.zoomOffset_x = me.start_zoomOffset.x + (me.start_coords.x - 0.5) / me.imgSize.x;
+			me.zoomOffset_y = me.start_zoomOffset.y + (me.start_coords.y - 0.5) / me.imgSize.y;
 			// updateAspect will reset zoomOffset to '0.5 0.5 0' if
 			// with this zoomFactor the image will not be zoomed in
 			// (updateAspect will check the new values of imgSize).

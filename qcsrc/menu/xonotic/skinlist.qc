@@ -138,15 +138,15 @@ void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticSkinList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize_y);
-	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize_y;
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
+	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize.y;
 
 	me.columnPreviewOrigin = 0;
-	me.columnPreviewSize = me.itemAbsSize_y / me.itemAbsSize_x * 4 / 3;
-	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize_x;
-	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize_x;
+	me.columnPreviewSize = me.itemAbsSize.y / me.itemAbsSize.x * 4 / 3;
+	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize.x;
+	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize.x;
 }
 
 void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)

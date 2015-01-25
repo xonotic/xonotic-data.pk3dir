@@ -37,24 +37,24 @@ void plat_spawn_inside_trigger()
 
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
-	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
+	tmin_z = tmax.z - (self.pos1_z - self.pos2_z + 8);
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
-		tmax_z = tmin_z + 8;
+		tmax_z = tmin.z + 8;
 
-	if (self.size_x <= 50)
+	if (self.size.x <= 50)
 	{
-		tmin_x = (self.mins_x + self.maxs_x) / 2;
-		tmax_x = tmin_x + 1;
+		tmin_x = (self.mins.x + self.maxs.x) / 2;
+		tmax_x = tmin.x + 1;
 	}
-	if (self.size_y <= 50)
+	if (self.size.y <= 50)
 	{
-		tmin_y = (self.mins_y + self.maxs_y) / 2;
-		tmax_y = tmin_y + 1;
+		tmin_y = (self.mins.y + self.maxs.y) / 2;
+		tmax_y = tmin.y + 1;
 	}
 
-	if(tmin_x < tmax_x)
-		if(tmin_y < tmax_y)
-			if(tmin_z < tmax_z)
+	if(tmin.x < tmax.x)
+		if(tmin.y < tmax.y)
+			if(tmin.z < tmax.z)
 			{
 				setsize (trigger, tmin, tmax);
 				return;
@@ -270,11 +270,11 @@ void spawnfunc_func_plat()
 	if (!self.lip)
 		self.lip = 16;
 	if (!self.height)
-		self.height = self.size_z - self.lip;
+		self.height = self.size.z - self.lip;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.height;
+	self.pos2_z = self.origin.z - self.height;
 
 	self.reset = plat_reset;
 	plat_reset();
@@ -309,7 +309,7 @@ void train_wait()
 		else // linear movement
 			ang = targ.origin - (self.origin - self.view_ofs); // use the origin of the next path_corner
 		ang = vectoangles(ang);
-		ang_x = -ang_x; // flip up / down orientation
+		ang_x = -ang.x; // flip up / down orientation
 
 		if(self.wait > 0) // slow turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
@@ -536,7 +536,7 @@ void func_bobbing_controller_think()
 
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
-	v = self.owner.destvec + self.owner.movedir * v_forward_y;
+	v = self.owner.destvec + self.owner.movedir * v_forward.y;
 	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
@@ -620,11 +620,11 @@ void func_pendulum_controller_think()
 
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
-	v = self.owner.speed * v_forward_y + self.cnt;
+	v = self.owner.speed * v_forward.y + self.cnt;
 	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
+		self.owner.avelocity_z = (remainder(v - self.owner.angles.z, 360)) * 10;
 	}
 }
 
@@ -662,11 +662,11 @@ void spawnfunc_func_pendulum()
 	if(!self.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
+		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins.z))));
 	}
 
 	// copy initial angle
-	self.cnt = self.angles_z;
+	self.cnt = self.angles.z;
 
 	// wait for targets to spawn
 	controller = spawn();
@@ -1317,17 +1317,17 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 float LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
 	float DELTA = 4;
-	if (e1.absmin_x > e2.absmax_x + DELTA)
+	if (e1.absmin.x > e2.absmax.x + DELTA)
 		return FALSE;
-	if (e1.absmin_y > e2.absmax_y + DELTA)
+	if (e1.absmin.y > e2.absmax.y + DELTA)
 		return FALSE;
-	if (e1.absmin_z > e2.absmax_z + DELTA)
+	if (e1.absmin.z > e2.absmax.z + DELTA)
 		return FALSE;
-	if (e2.absmin_x > e1.absmax_x + DELTA)
+	if (e2.absmin.x > e1.absmax.x + DELTA)
 		return FALSE;
-	if (e2.absmin_y > e1.absmax_y + DELTA)
+	if (e2.absmin.y > e1.absmax.y + DELTA)
 		return FALSE;
-	if (e2.absmin_z > e1.absmax_z + DELTA)
+	if (e2.absmin.z > e1.absmax.z + DELTA)
 		return FALSE;
 	return TRUE;
 }
@@ -1388,18 +1388,18 @@ void LinkDoors()
 			self.targetname = t.targetname;
 		if((t.message != "") && (self.message == ""))
 			self.message = t.message;
-		if (t.absmin_x < cmins_x)
-			cmins_x = t.absmin_x;
-		if (t.absmin_y < cmins_y)
-			cmins_y = t.absmin_y;
-		if (t.absmin_z < cmins_z)
-			cmins_z = t.absmin_z;
-		if (t.absmax_x > cmaxs_x)
-			cmaxs_x = t.absmax_x;
-		if (t.absmax_y > cmaxs_y)
-			cmaxs_y = t.absmax_y;
-		if (t.absmax_z > cmaxs_z)
-			cmaxs_z = t.absmax_z;
+		if (t.absmin.x < cmins.x)
+			cmins_x = t.absmin.x;
+		if (t.absmin.y < cmins.y)
+			cmins_y = t.absmin.y;
+		if (t.absmin.z < cmins.z)
+			cmins_z = t.absmin.z;
+		if (t.absmax.x > cmaxs.x)
+			cmaxs_x = t.absmax.x;
+		if (t.absmax.y > cmaxs.y)
+			cmaxs_y = t.absmax.y;
+		if (t.absmax.z > cmaxs.z)
+			cmaxs_z = t.absmax.z;
 		if(t.enemy == self)
 			break;
 	}
@@ -1608,9 +1608,9 @@ void spawnfunc_func_door_rotating()
 	else // Z
 		self.movedir = '0 1 0';
 
-	if (self.angles_y==0) self.angles_y = 90;
+	if (self.angles_y ==0) self.angles_y = 90;
 
-	self.movedir = self.movedir * self.angles_y;
+	self.movedir = self.movedir * self.angles.y;
 	self.angles = '0 0 0';
 
 	self.max_health = self.health;
@@ -1949,7 +1949,7 @@ void func_fourier_controller_think()
 	for(i = 0; i < n; ++i)
 	{
 		makevectors((t * stof(argv(i*5)) + stof(argv(i*5+1)) * 360) * '0 1 0');
-		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
+		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward.y;
 	}
 
 	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed

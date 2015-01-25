@@ -29,9 +29,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 		else
 			return;
 	}
-	e.animstate_startframe = anim_x;
-	e.animstate_numframes = anim_y;
-	e.animstate_framerate = anim_z;
+	e.animstate_startframe = anim.x;
+	e.animstate_numframes = anim.y;
+	e.animstate_framerate = anim.z;
 	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
 	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
 	e.animstate_looping = looping;
@@ -180,12 +180,12 @@ void SUB_CalcMove_controller_think (void)
 			vector destangle;
 			destangle = delta + 2 * delta2 * phasepos;
 			destangle = vectoangles(destangle);
-			destangle_x = -destangle_x; // flip up / down orientation
+			destangle_x = -destangle.x; // flip up / down orientation
 
 			// take the shortest distance for the angles
-			self.owner.angles_x -= 360 * floor((self.owner.angles_x - destangle_x) / 360 + 0.5);
-			self.owner.angles_y -= 360 * floor((self.owner.angles_y - destangle_y) / 360 + 0.5);
-			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
+			self.owner.angles_x -= 360 * floor((self.owner.angles.x - destangle.x) / 360 + 0.5);
+			self.owner.angles_y -= 360 * floor((self.owner.angles.y - destangle.y) / 360 + 0.5);
+			self.owner.angles_z -= 360 * floor((self.owner.angles.z - destangle.z) / 360 + 0.5);
 			angloc = destangle - self.owner.angles;
 			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
 			self.owner.avelocity = angloc;
@@ -392,9 +392,9 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 		objerror ("No speed is defined!");
 
 	// take the shortest distance for the angles
-	self.angles_x -= 360 * floor((self.angles_x - destangle_x) / 360 + 0.5);
-	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
-	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
+	self.angles_x -= 360 * floor((self.angles.x - destangle.x) / 360 + 0.5);
+	self.angles_y -= 360 * floor((self.angles.y - destangle.y) / 360 + 0.5);
+	self.angles_z -= 360 * floor((self.angles.z - destangle.z) / 360 + 0.5);
 	delta = destangle - self.angles;
 
 	switch(tspeedtype)
@@ -651,9 +651,9 @@ vector findbetterlocation (vector org, float mindist)
 		}
 		if (c & 1)
 		{
-			h = vec_y;
-			vec_y = vec_x;
-			vec_x = vec_z;
+			h = vec.y;
+			vec_y = vec.x;
+			vec_x = vec.z;
 			vec_z = h;
 		}
 		c = c + 1;
@@ -809,24 +809,24 @@ void LODmodel_attach()
 
 void ApplyMinMaxScaleAngles(entity e)
 {
-	if(e.angles_x != 0 || e.angles_z != 0 || self.avelocity_x != 0 || self.avelocity_z != 0) // "weird" rotation
+	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
-			'1 0 0' * max(-e.mins_x, e.maxs_x) +
-			'0 1 0' * max(-e.mins_y, e.maxs_y) +
-			'0 0 1' * max(-e.mins_z, e.maxs_z)
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y) +
+			'0 0 1' * max(-e.mins.z, e.maxs.z)
 		);
 		e.mins = -e.maxs;
 	}
-	else if(e.angles_y != 0 || self.avelocity_y != 0) // yaw only is a bit better
+	else if(e.angles.y != 0 || self.avelocity.y != 0) // yaw only is a bit better
 	{
 		e.maxs_x = vlen(
-			'1 0 0' * max(-e.mins_x, e.maxs_x) +
-			'0 1 0' * max(-e.mins_y, e.maxs_y)
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y)
 		);
-		e.maxs_y = e.maxs_x;
-		e.mins_x = -e.maxs_x;
-		e.mins_y = -e.maxs_x;
+		e.maxs_y = e.maxs.x;
+		e.mins_x = -e.maxs.x;
+		e.mins_y = -e.maxs.x;
 	}
 	if(e.scale)
 		setsize(e, e.mins * e.scale, e.maxs * e.scale);

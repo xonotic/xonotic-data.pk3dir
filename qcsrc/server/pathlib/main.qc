@@ -443,12 +443,12 @@ entity pathlib_astar(vector from,vector to)
     //movenode_maxdrop  = '0 0 512';
     movenode_boxup    = '0 0 72';
 
-    from_x = fsnap(from_x, pathlib_gridsize);
-    from_y = fsnap(from_y, pathlib_gridsize);
+    from_x = fsnap(from.x, pathlib_gridsize);
+    from_y = fsnap(from.y, pathlib_gridsize);
     //from_z += 32;
 
-    to_x = fsnap(to_x, pathlib_gridsize);
-    to_y = fsnap(to_y, pathlib_gridsize);
+    to_x = fsnap(to.x, pathlib_gridsize);
+    to_y = fsnap(to.y, pathlib_gridsize);
     //to_z += 32;
 
     dprint("AStar init\n");

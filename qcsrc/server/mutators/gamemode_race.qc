@@ -66,26 +66,26 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel_x = fabs(self.movement_x);
-	wishvel_y = fabs(self.movement_y);
-	if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
+	wishvel_x = fabs(self.movement.x);
+	wishvel_y = fabs(self.movement.y);
+	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel_z = 0;
 		wishspeed = vlen(wishvel);
-		if(wishvel_x >= 2 * wishvel_y)
+		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = wishspeed;
 			else
 				self.movement_x = -wishspeed;
 			self.movement_y = 0;
 		}
-		else if(wishvel_y >= 2 * wishvel_x)
+		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
 			self.movement_x = 0;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = wishspeed;
 			else
 				self.movement_y = -wishspeed;
@@ -93,11 +93,11 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 		else
 		{
 			// diagonal
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_x = -M_SQRT1_2 * wishspeed;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_y = -M_SQRT1_2 * wishspeed;

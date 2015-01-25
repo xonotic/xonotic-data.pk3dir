@@ -1362,7 +1362,7 @@ void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 	v_y = u * parentright;
 	v_z = u * parentup;
 	vector ang = vectoangles2(v, relup);
-	ang_x = 0 - ang_x;
+	ang_x = 0 - ang.x;
 	makevectors(ang);
 	// set the relative bone matrix
 	skel_set_bone(self.skeletonindex, bonenum, relorg);

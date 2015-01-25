@@ -212,26 +212,26 @@ float ItemSend(entity to, float sf)
 	//WriteByte(MSG_ENTITY, self.cnt);
     if(sf & ISF_LOCATION)
     {
-        WriteCoord(MSG_ENTITY, self.origin_x);
-        WriteCoord(MSG_ENTITY, self.origin_y);
-        WriteCoord(MSG_ENTITY, self.origin_z);
+        WriteCoord(MSG_ENTITY, self.origin.x);
+        WriteCoord(MSG_ENTITY, self.origin.y);
+        WriteCoord(MSG_ENTITY, self.origin.z);
     }
 
     if(sf & ISF_ANGLES)
     {
-        WriteCoord(MSG_ENTITY, self.angles_x);
-        WriteCoord(MSG_ENTITY, self.angles_y);
-        WriteCoord(MSG_ENTITY, self.angles_z);
+        WriteCoord(MSG_ENTITY, self.angles.x);
+        WriteCoord(MSG_ENTITY, self.angles.y);
+        WriteCoord(MSG_ENTITY, self.angles.z);
     }
 
     if(sf & ISF_SIZE)
     {
-        WriteCoord(MSG_ENTITY, self.mins_x);
-        WriteCoord(MSG_ENTITY, self.mins_y);
-        WriteCoord(MSG_ENTITY, self.mins_z);
-        WriteCoord(MSG_ENTITY, self.maxs_x);
-        WriteCoord(MSG_ENTITY, self.maxs_y);
-        WriteCoord(MSG_ENTITY, self.maxs_z);
+        WriteCoord(MSG_ENTITY, self.mins.x);
+        WriteCoord(MSG_ENTITY, self.mins.y);
+        WriteCoord(MSG_ENTITY, self.mins.z);
+        WriteCoord(MSG_ENTITY, self.maxs.x);
+        WriteCoord(MSG_ENTITY, self.maxs.y);
+        WriteCoord(MSG_ENTITY, self.maxs.z);
     }
 
     if(sf & ISF_STATUS)
@@ -252,9 +252,9 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_DROP)
     {
-        WriteCoord(MSG_ENTITY, self.velocity_x);
-        WriteCoord(MSG_ENTITY, self.velocity_y);
-        WriteCoord(MSG_ENTITY, self.velocity_z);
+        WriteCoord(MSG_ENTITY, self.velocity.x);
+        WriteCoord(MSG_ENTITY, self.velocity.y);
+        WriteCoord(MSG_ENTITY, self.velocity.z);
     }
 
     return TRUE;

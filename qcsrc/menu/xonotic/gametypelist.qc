@@ -91,9 +91,9 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	vector save_fontscale = draw_fontscale;
 	float f = draw_CondensedFontFactor(strcat(s1, " ", s2), FALSE, me.realFontSize, 1);
-	draw_fontscale_x *= f;
+	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
-	fs_x *= f;
+	fs.x *= f;
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s1, fs, '1 1 1', SKINALPHA_TEXT, 0);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1.0 * (me.columnNameSize - draw_TextWidth(s2, 0, fs))) * eX, s2, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
@@ -103,13 +103,13 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 	me.columnIconOrigin = 0;
-	me.columnIconSize = me.itemAbsSize_y / me.itemAbsSize_x;
-	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize_x);
-	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize_x);
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
+	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x);
 }
 
 float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shift)

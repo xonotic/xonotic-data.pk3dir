@@ -122,12 +122,12 @@ void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticDemoList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnNameSize = 1 - 2 * me.realFontSize_x;
+	me.columnNameOrigin = me.realFontSize.x;
+	me.columnNameSize = 1 - 2 * me.realFontSize.x;
 }
 
 void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)

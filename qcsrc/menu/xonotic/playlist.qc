@@ -58,15 +58,15 @@ void XonoticPlayList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticPlayList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnNumberOrigin = 0;
-	me.columnNumberSize = 3 * me.realFontSize_x;
+	me.columnNumberSize = 3 * me.realFontSize.x;
 
-	me.columnNameOrigin = me.columnNumberSize + me.realFontSize_x;
-	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize_x;
+	me.columnNameOrigin = me.columnNumberSize + me.realFontSize.x;
+	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize.x;
 }
 
 void XonoticPlayList_addToPlayList(entity me, string track)

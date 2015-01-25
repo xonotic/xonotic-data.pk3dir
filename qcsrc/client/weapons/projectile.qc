@@ -36,7 +36,7 @@ void Projectile_DrawTrail(vector to)
 	// force the effect even for stationary firemine
 	if(self.cnt == PROJECTILE_FIREMINE)
 		if(from == to)
-			from_z += 1;
+			from.z += 1;
 
 	if (self.traileffect)
 	{
@@ -116,7 +116,7 @@ void Projectile_Draw()
 
 	vector ang;
 	ang = self.angles;
-	ang_x = -ang_x;
+	ang_x = -ang.x;
 	makevectors(ang);
 
 	a = 1 - (time - self.fade_time) * self.fade_rate;

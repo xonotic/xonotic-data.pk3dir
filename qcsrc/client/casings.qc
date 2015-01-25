@@ -66,7 +66,7 @@ void Casing_Touch()
 
 void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
 {
-	if(thisforce_z < 0)
+	if(thisforce.z < 0)
 		thisforce_z = 0;
 	self.move_velocity = self.move_velocity + thisforce + '0 0 100';
 	self.move_flags &= ~FL_ONGROUND;

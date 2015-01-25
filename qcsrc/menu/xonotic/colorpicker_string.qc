@@ -63,9 +63,9 @@ void XonoticColorPickerString_saveCvars(entity me)
 	if(substring(me.cvarName, -1, 1) == "_")
 	{
 		vector v = hslimage_color(me.prevcoords, me.imagemargin);
-		cvar_set(strcat(me.cvarName, "red"), ftos(v_x));
-		cvar_set(strcat(me.cvarName, "green"), ftos(v_y));
-		cvar_set(strcat(me.cvarName, "blue"), ftos(v_z));
+		cvar_set(strcat(me.cvarName, "red"), ftos(v.x));
+		cvar_set(strcat(me.cvarName, "green"), ftos(v.y));
+		cvar_set(strcat(me.cvarName, "blue"), ftos(v.z));
 	}
 	else
 		cvar_set(me.cvarName, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
@@ -83,10 +83,10 @@ float XonoticColorpickerString_mouseDrag(entity me, vector coords)
 		return 0;
 	vector margin;
 	margin = me.imagemargin;
-	if(coords_x >= margin_x)
-	if(coords_y >= margin_y)
-	if(coords_x <= 1 - margin_x)
-	if(coords_y <= 1 - margin_y)
+	if(coords.x >= margin.x)
+	if(coords.y >= margin.y)
+	if(coords.x <= 1 - margin.x)
+	if(coords.y <= 1 - margin.y)
 	{
 		me.prevcoords = coords;
 		me.saveCvars(me);

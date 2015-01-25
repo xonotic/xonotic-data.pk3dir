@@ -221,8 +221,8 @@ void ModalController_draw(entity me)
 		// o' = (to * (f - f_prev) + o * (1 - f)) / (1 - f_prev)
 
 		fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
-		e.Container_fontscale_x = fs_x * e.ModalController_initialFontScale_x;
-		e.Container_fontscale_y = fs_y * e.ModalController_initialFontScale_y;
+		e.Container_fontscale_x = fs.x * e.ModalController_initialFontScale.x;
+		e.Container_fontscale_y = fs.y * e.ModalController_initialFontScale.y;
 	}
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);

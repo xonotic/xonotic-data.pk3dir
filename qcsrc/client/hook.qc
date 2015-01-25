@@ -86,7 +86,7 @@ void Draw_GrapplingHook()
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = self.origin;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
@@ -96,7 +96,7 @@ void Draw_GrapplingHook()
 					b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				break;
 		}
 	}

@@ -42,10 +42,10 @@ void havocbot_ai()
 				if(distance>10000)
 					continue;
 
-				if(head.origin_z < self.origin_z)
+				if(head.origin.z < self.origin.z)
 					continue;
 
-				if(head.origin_z - self.origin_z - self.view_ofs_z > 100)
+				if(head.origin.z - self.origin.z - self.view_ofs.z > 100)
 					continue;
 
 				if (pointcontents(head.origin + head.maxs + '0 0 1') != CONTENT_EMPTY)
@@ -202,13 +202,13 @@ void havocbot_keyboard_movement(vector destorg)
 	// at skill < 2.5 only individual directions
 	// at skill < 4.5 only individual directions, and forward diagonals
 	// at skill >= 4.5, all cases allowed
-	if (keyboard_x > trigger)
+	if (keyboard.x > trigger)
 	{
 		keyboard_x = 1;
 		if (sk < 2.5)
 			keyboard_y = 0;
 	}
-	else if (keyboard_x < trigger1 && sk > 1.5)
+	else if (keyboard.x < trigger1 && sk > 1.5)
 	{
 		keyboard_x = -1;
 		if (sk < 4.5)
@@ -223,16 +223,16 @@ void havocbot_keyboard_movement(vector destorg)
 	if (sk < 4.5)
 		keyboard_z = 0;
 
-	if (keyboard_y > trigger)
+	if (keyboard.y > trigger)
 		keyboard_y = 1;
-	else if (keyboard_y < trigger1)
+	else if (keyboard.y < trigger1)
 		keyboard_y = -1;
 	else
 		keyboard_y = 0;
 
-	if (keyboard_z > trigger)
+	if (keyboard.z > trigger)
 		keyboard_z = 1;
-	else if (keyboard_z < trigger1)
+	else if (keyboard.z < trigger1)
 		keyboard_z = -1;
 	else
 		keyboard_z = 0;
@@ -317,17 +317,17 @@ void havocbot_bunnyhop(vector dir)
 					if(self.aistatus & AI_STATUS_ROAMING)
 					if(self.goalcurrent.classname=="waypoint")
 					if (!(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
-					if(fabs(gco_z - self.origin_z) < self.maxs_z - self.mins_z)
+					if(fabs(gco.z - self.origin.z) < self.maxs.z - self.mins.z)
 					if(self.goalstack01!=world)
 					{
 						gno = (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - self.origin) - vectoangles(gco - self.origin);
-						while (deviation_y < -180) deviation_y = deviation_y + 360;
-						while (deviation_y > 180) deviation_y = deviation_y - 360;
+						while (deviation.y < -180) deviation_y = deviation.y + 360;
+						while (deviation.y > 180) deviation_y = deviation.y - 360;
 
-						if(fabs(deviation_y) < 20)
+						if(fabs(deviation.y) < 20)
 						if(bunnyhopdistance < vlen(self.origin - gno))
-						if(fabs(gno_z - gco_z) < self.maxs_z - self.mins_z)
+						if(fabs(gno.z - gco.z) < self.maxs.z - self.mins.z)
 						{
 							if(vlen(gco - gno) > autocvar_bot_ai_bunnyhop_startdistance)
 							if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
@@ -365,7 +365,7 @@ void havocbot_bunnyhop(vector dir)
 	if(!cvar("sv_pogostick"))
 	if((self.flags & FL_ONGROUND) == 0)
 	{
-		if(self.velocity_z < 0 || vlen(self.velocity)<maxspeed)
+		if(self.velocity.z < 0 || vlen(self.velocity)<maxspeed)
 			self.BUTTON_JUMP = FALSE;
 
 		// Strafe
@@ -373,15 +373,15 @@ void havocbot_bunnyhop(vector dir)
 		if(vlen(self.velocity)>maxspeed)
 		{
 			deviation = vectoangles(dir) - vectoangles(self.velocity);
-			while (deviation_y < -180) deviation_y = deviation_y + 360;
-			while (deviation_y > 180) deviation_y = deviation_y - 360;
+			while (deviation.y < -180) deviation_y = deviation.y + 360;
+			while (deviation.y > 180) deviation_y = deviation.y - 360;
 
-			if(fabs(deviation_y)>10)
+			if(fabs(deviation.y)>10)
 				self.movement_x = 0;
 
-			if(deviation_y>10)
+			if(deviation.y>10)
 				self.movement_y = maxspeed * -1;
-			else if(deviation_y<10)
+			else if(deviation.y<10)
 				self.movement_y = maxspeed;
 
 		}
@@ -430,7 +430,7 @@ void havocbot_movetogoal()
 			self.aistatus |= AI_STATUS_JETPACK_FLYING;
 		}
 
-		makevectors(self.v_angle_y * '0 1 0');
+		makevectors(self.v_angle.y * '0 1 0');
 		dir = normalize(self.navigation_jetpack_point - self.origin);
 
 		// Landing
@@ -442,13 +442,13 @@ void havocbot_movetogoal()
 
 			dxy = self.origin - ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ); dxy_z = 0;
 			d = vlen(dxy);
-			v = vlen(self.velocity -  self.velocity_z * '0 0 1');
+			v = vlen(self.velocity -  self.velocity.z * '0 0 1');
 			db = (pow(v,2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
 		//	dprint("distance ", ftos(ceil(d)), " velocity ", ftos(ceil(v)), " brake at ", ftos(ceil(db)), "\n");
 			if(d < db || d < 500)
 			{
 				// Brake
-				if(fabs(self.velocity_x)>maxspeed*0.3)
+				if(fabs(self.velocity.x)>maxspeed*0.3)
 				{
 					self.movement_x = dir * v_forward * -maxspeed;
 					return;
@@ -470,7 +470,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = TRUE;
-		if(self.navigation_jetpack_point_z - PL_MAX_z + PL_MIN_z < self.origin_z)
+		if(self.navigation_jetpack_point.z - PL_MAX_z + PL_MIN_z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;
@@ -484,7 +484,7 @@ void havocbot_movetogoal()
 		// If got stuck on the jump pad try to reach the farthest visible waypoint
 		if(self.aistatus & AI_STATUS_OUT_JUMPPAD)
 		{
-			if(fabs(self.velocity_z)<50)
+			if(fabs(self.velocity.z)<50)
 			{
 				entity head, newgoal = world;
 				float distance, bestdistance = 0;
@@ -522,7 +522,7 @@ void havocbot_movetogoal()
 		}
 		else
 		{
-			if(self.velocity_z>0)
+			if(self.velocity.z>0)
 			{
 				float threshold, sxy;
 				vector velxy = self.velocity; velxy_z = 0;
@@ -555,7 +555,7 @@ void havocbot_movetogoal()
 			tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 65536', MOVE_NOMONSTERS, self);
 			if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos + '0 0 1' ))
 			{
-				if(self.velocity_z<0)
+				if(self.velocity.z<0)
 				{
 					self.BUTTON_HOOK = TRUE;
 				}
@@ -575,7 +575,7 @@ void havocbot_movetogoal()
 
 			if(xyspeed < (maxspeed / 2))
 			{
-				makevectors(self.v_angle_y * '0 1 0');
+				makevectors(self.v_angle.y * '0 1 0');
 				tracebox(self.origin, self.mins, self.maxs, self.origin + (dir * maxspeed * 3), MOVE_NOMONSTERS, self);
 				if(trace_fraction==1)
 				{
@@ -592,7 +592,7 @@ void havocbot_movetogoal()
 		}
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
-			if(self.velocity_z < 0)
+			if(self.velocity.z < 0)
 			if(client_hasweapon(self, WEP_DEVASTATOR, TRUE, FALSE))
 			{
 				self.movement_x = maxspeed;
@@ -629,11 +629,11 @@ void havocbot_movetogoal()
 		dir = '0 0 0';
 		if(self.waterlevel>WATERLEVEL_SWIMMING)
 			dir_z = 1;
-		else if(self.velocity_z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
+		else if(self.velocity.z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
 			self.BUTTON_JUMP = TRUE;
 		else
 			self.BUTTON_JUMP = FALSE;
-		makevectors(self.v_angle_y * '0 1 0');
+		makevectors(self.v_angle.y * '0 1 0');
 		self.movement_x = dir * v_forward * maxspeed;
 		self.movement_y = dir * v_right * maxspeed;
 		self.movement_z = dir * v_up * maxspeed;
@@ -660,9 +660,9 @@ void havocbot_movetogoal()
 	m1 = self.goalcurrent.origin + self.goalcurrent.mins;
 	m2 = self.goalcurrent.origin + self.goalcurrent.maxs;
 	destorg = self.origin;
-	destorg_x = bound(m1_x, destorg_x, m2_x);
-	destorg_y = bound(m1_y, destorg_y, m2_y);
-	destorg_z = bound(m1_z, destorg_z, m2_z);
+	destorg_x = bound(m1_x, destorg.x, m2_x);
+	destorg_y = bound(m1_y, destorg.y, m2_y);
+	destorg_z = bound(m1_z, destorg.z, m2_z);
 	diff = destorg - self.origin;
 	//dist = vlen(diff);
 	dir = normalize(diff);
@@ -686,14 +686,14 @@ void havocbot_movetogoal()
 			}
 			else
 			{
-				if(self.velocity_z >= 0 && !(self.watertype == CONTENT_WATER && gco_z < self.origin_z) &&
+				if(self.velocity.z >= 0 && !(self.watertype == CONTENT_WATER && gco.z < self.origin.z) &&
 					( !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
 					self.BUTTON_JUMP = TRUE;
 				else
 					self.BUTTON_JUMP = FALSE;
 			}
 			dir = normalize(flatdir);
-			makevectors(self.v_angle_y * '0 1 0');
+			makevectors(self.v_angle.y * '0 1 0');
 		}
 		else
 		{
@@ -704,12 +704,12 @@ void havocbot_movetogoal()
 			// can walk up directly
 			tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.2, FALSE, self);
 			if (trace_fraction < 1)
-			if (trace_plane_normal_z < 0.7)
+			if (trace_plane_normal.z < 0.7)
 			{
 				s = trace_fraction;
 				tracebox(self.origin + stepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + stepheightvec, FALSE, self);
 				if (trace_fraction < s + 0.01)
-				if (trace_plane_normal_z < 0.7)
+				if (trace_plane_normal.z < 0.7)
 				{
 					s = trace_fraction;
 					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, FALSE, self);
@@ -720,7 +720,7 @@ void havocbot_movetogoal()
 
 			// avoiding dangers and obstacles
 			vector dst_ahead, dst_down;
-			makevectors(self.v_angle_y * '0 1 0');
+			makevectors(self.v_angle.y * '0 1 0');
 			dst_ahead = self.origin + self.view_ofs + (self.velocity * 0.4) + (v_forward * 32 * 3);
 			dst_down = dst_ahead - '0 0 1500';
 
@@ -765,7 +765,7 @@ void havocbot_movetogoal()
 				traceline(dst_ahead , dst_down, TRUE, world);
 			//	te_lightning2(world, self.origin, dst_ahead);	// Draw "ahead" look
 			//	te_lightning2(world, dst_ahead, dst_down);		// Draw "downwards" look
-				if(trace_endpos_z < self.origin_z + self.mins_z)
+				if(trace_endpos.z < self.origin.z + self.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
 					if (s != CONTENT_SOLID)
@@ -792,7 +792,7 @@ void havocbot_movetogoal()
 			dir = flatdir;
 			evadeobstacle_z = 0;
 			evadelava_z = 0;
-			makevectors(self.v_angle_y * '0 1 0');
+			makevectors(self.v_angle.y * '0 1 0');
 
 			if(evadeobstacle!='0 0 0'||evadelava!='0 0 0')
 				self.aistatus |= AI_STATUS_DANGER_AHEAD;
@@ -812,14 +812,14 @@ void havocbot_movetogoal()
 
 	if(time < self.ladder_time)
 	{
-		if(self.goalcurrent.origin_z + self.goalcurrent.mins_z > self.origin_z + self.mins_z)
+		if(self.goalcurrent.origin.z + self.goalcurrent.mins.z > self.origin.z + self.mins.z)
 		{
-			if(self.origin_z + self.mins_z  < self.ladder_entity.origin_z + self.ladder_entity.maxs_z)
+			if(self.origin.z + self.mins.z  < self.ladder_entity.origin.z + self.ladder_entity.maxs.z)
 				dir_z = 1;
 		}
 		else
 		{
-			if(self.origin_z + self.mins_z  > self.ladder_entity.origin_z + self.ladder_entity.mins_z)
+			if(self.origin.z + self.mins.z  > self.ladder_entity.origin.z + self.ladder_entity.mins.z)
 				dir_z = -1;
 		}
 	}

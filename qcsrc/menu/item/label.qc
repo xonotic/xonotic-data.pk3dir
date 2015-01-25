@@ -90,10 +90,10 @@ void Label_recalcPositionWithText(entity me, string t)
 
 		// set up variables to draw in condensed size, but use hinting for original size
 		fs = me.realFontSize;
-		fs_x *= me.condenseFactor;
+		fs.x *= me.condenseFactor;
 
 		dfs = draw_fontscale;
-		draw_fontscale_x *= me.condenseFactor;
+		draw_fontscale.x *= me.condenseFactor;
 
 		if(me.allowCut) // FIXME allowCut incompatible with align != 0
 			lines = 1;
@@ -115,7 +115,7 @@ void Label_recalcPositionWithText(entity me, string t)
 
 		draw_fontscale = dfs;
 
-		me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize_y);
+		me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize.y);
 	}
 
 	if(me.isBold)
@@ -128,12 +128,12 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	// absSize_y is height of label
-	me.realFontSize_y = me.fontSize / absSize_y;
-	me.realFontSize_x = me.fontSize / absSize_x;
+	me.realFontSize_y = me.fontSize / absSize.y;
+	me.realFontSize_x = me.fontSize / absSize.x;
 	if(me.marginLeft)
-		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
+		me.keepspaceLeft = me.marginLeft * me.realFontSize.x;
 	if(me.marginRight)
-		me.keepspaceRight = me.marginRight * me.realFontSize_x;
+		me.keepspaceRight = me.marginRight * me.realFontSize.x;
 
 	me.recalcPos = 1;
 }
@@ -178,10 +178,10 @@ void Label_draw(entity me)
 
 			// set up variables to draw in condensed size, but use hinting for original size
 			fs = me.realFontSize;
-			fs_x *= me.condenseFactor;
+			fs.x *= me.condenseFactor;
 
 			dfs = draw_fontscale;
-			draw_fontscale_x *= me.condenseFactor;
+			draw_fontscale.x *= me.condenseFactor;
 
 			if(me.allowCut) // FIXME allowCut incompatible with align != 0
 				draw_Text(me.realOrigin, draw_TextShortenToWidth(t, (1 - me.keepspaceLeft - me.keepspaceRight), me.allowColors, fs), fs, me.colorL, me.alpha, me.allowColors);
@@ -196,7 +196,7 @@ void Label_draw(entity me)
 					else
 						t = getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
 					draw_Text(o, t, fs, me.colorL, me.alpha, me.allowColors);
-					o_y += me.realFontSize_y;
+					o.y += me.realFontSize.y;
 				}
 			}
 			else

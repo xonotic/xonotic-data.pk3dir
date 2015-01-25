@@ -156,8 +156,8 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	damage = max(damage - 5, 1);
 
 	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
-	take = v_x;
-	save = v_y;
+	take = v.x;
+	save = v.y;
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
@@ -323,7 +323,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		vector d;
 		float f;
 		ear1 = self.origin;
-		ear1_z += 0.125 * self.view_ofs_z + 0.875 * self.maxs_z; // 7/8
+		ear1_z += 0.125 * self.view_ofs.z + 0.875 * self.maxs.z; // 7/8
 		ear2 = ear1;
 		makevectors(self.angles);
 		ear1 += v_right * -10;
@@ -352,8 +352,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 
 	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
-	take = v_x;
-	save = v_y;
+	take = v.x;
+	save = v.y;
 
 	if(attacker == self)
 	{
@@ -456,9 +456,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			if(IS_BOT_CLIENT(self) && self.health >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
-				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
-				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
-				self.v_angle_x = bound(-90, self.v_angle_x, 90);
+				self.v_angle_x = self.v_angle.x + (random() * 2 - 1) * shake;
+				self.v_angle_y = self.v_angle.y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle.x, 90);
 			}
 		}
 		else
@@ -603,7 +603,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
 		else
 			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, TRUE);
-		if (self.maxs_z > 5)
+		if (self.maxs.z > 5)
 		{
 			self.maxs_z = 5;
 			setsize(self, self.mins, self.maxs);

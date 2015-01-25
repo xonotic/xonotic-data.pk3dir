@@ -877,7 +877,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector
 			return '-1 0 0';
 		// try reusing the previous spawn
 		if(self == player.race_respawn_spotref || spot == player.race_respawn_spotref)
-			current_x += SPAWN_PRIO_RACE_PREVIOUS_SPAWN;
+			current.x += SPAWN_PRIO_RACE_PREVIOUS_SPAWN;
 		if(self.race_checkpoint == 0)
 		{
 			float pl;
@@ -905,7 +905,7 @@ void spawnfunc_trigger_race_checkpoint()
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o_z - self.absmin_z), MOVE_NORMAL, self);
+	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
@@ -954,7 +954,7 @@ void spawnfunc_target_checkpoint() // defrag entity
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o_z - self.absmin_z), MOVE_NORMAL, self);
+	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 

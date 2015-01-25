@@ -59,9 +59,9 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 {
 	SUPER(XonoticWeaponsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
@@ -103,9 +103,9 @@ void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, floa
 
 	vector save_fontscale = draw_fontscale;
 	float f = draw_CondensedFontFactor(msg, FALSE, me.realFontSize, 1);
-	draw_fontscale_x *= f;
+	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
-	fs_x *= f;
+	fs.x *= f;
 	draw_Text(me.realUpperMargin * eY, msg, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
 }

@@ -75,7 +75,7 @@ void Net_ReadLightningarc()
 	vector from, to;
 
     from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
-    to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+    to_x = ReadCoord(); to_y = ReadCoord(); to_z = ReadCoord();
 
     if(autocvar_cl_effects_lightningarc_simple)
     {

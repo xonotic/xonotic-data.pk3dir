@@ -121,8 +121,8 @@ void LocalCommand_create_scrshot_ent(int request)
 			{
 				fputs(fh, "{\n");
 				fputs(fh, strcat("\"classname\" \"info_autoscreenshot\"\n"));
-				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin_x), " ", ftos(view_origin_y), " ", ftos(view_origin_z)), "\"\n"));
-				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles_x), " ", ftos(view_angles_y), " ", ftos(view_angles_z)), "\"\n"));
+				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin.x), " ", ftos(view_origin.y), " ", ftos(view_origin.z)), "\"\n"));
+				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles.x), " ", ftos(view_angles.y), " ", ftos(view_angles.z)), "\"\n"));
 				fputs(fh, "}\n");
 
 				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
@@ -524,18 +524,18 @@ void GameCommand(string command)
 	/* nothing */
 
 #define CONSOLE_COMMANDS_MOVEMENT \
-	CONSOLE_COMMAND("+forward", { ++camera_direction_x; }) \
-	CONSOLE_COMMAND("-forward", { --camera_direction_x; }) \
-	CONSOLE_COMMAND("+back", { --camera_direction_x; }) \
-	CONSOLE_COMMAND("-back", { ++camera_direction_x; }) \
-	CONSOLE_COMMAND("+moveup", { ++camera_direction_z; }) \
-	CONSOLE_COMMAND("-moveup", { --camera_direction_z; }) \
-	CONSOLE_COMMAND("+movedown", { --camera_direction_z; }) \
-	CONSOLE_COMMAND("-movedown", { ++camera_direction_z; }) \
-	CONSOLE_COMMAND("+moveright", { --camera_direction_y; }) \
-	CONSOLE_COMMAND("-moveright", { ++camera_direction_y; }) \
-	CONSOLE_COMMAND("+moveleft", { ++camera_direction_y; }) \
-	CONSOLE_COMMAND("-moveleft", { --camera_direction_y; }) \
+	CONSOLE_COMMAND("+forward", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("-forward", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("+back", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("-back", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("+moveup", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("-moveup", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("+movedown", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("-movedown", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("+moveright", { --camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveright", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("+moveleft", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveleft", { --camera_direction.y; }) \
 	CONSOLE_COMMAND("+roll_right", { ++camera_roll; }) \
 	CONSOLE_COMMAND("-roll_right", { --camera_roll; }) \
 	CONSOLE_COMMAND("+roll_left", { --camera_roll; }) \

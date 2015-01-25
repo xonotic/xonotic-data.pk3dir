@@ -36,8 +36,8 @@ float ClientData_Send(entity to, float sf)
 
 	if(sf & 8)
 	{
-		WriteAngle(MSG_ENTITY, e.v_angle_x);
-		WriteAngle(MSG_ENTITY, e.v_angle_y);
+		WriteAngle(MSG_ENTITY, e.v_angle.x);
+		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
 
 	return TRUE;
@@ -536,7 +536,7 @@ void PutClientInServer (void)
 		self.view_ofs = PL_VIEW_OFS;
 		setsize (self, PL_MIN, PL_MAX);
 		self.spawnorigin = spot.origin;
-		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+		setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
 		self.oldorigin = self.origin;
 		self.prevorigin = self.origin;
@@ -1327,7 +1327,7 @@ void UpdateChatBubble()
 		self.chatbubbleentity.nextthink = time;
 		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
+		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs.z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
 		self.chatbubbleentity.model = "";
@@ -1607,12 +1607,12 @@ void SetZoomState(float z)
 
 void GetPressedKeys(void) {
 	MUTATOR_CALLHOOK(GetPressedKeys);
-	if (self.movement_x > 0) // get if movement keys are pressed
+	if (self.movement.x > 0) // get if movement keys are pressed
 	{	// forward key pressed
 		self.pressedkeys |= KEY_FORWARD;
 		self.pressedkeys &= ~KEY_BACKWARD;
 	}
-	else if (self.movement_x < 0)
+	else if (self.movement.x < 0)
 	{	// backward key pressed
 		self.pressedkeys |= KEY_BACKWARD;
 		self.pressedkeys &= ~KEY_FORWARD;
@@ -1623,12 +1623,12 @@ void GetPressedKeys(void) {
 		self.pressedkeys &= ~KEY_BACKWARD;
 	}
 
-	if (self.movement_y > 0)
+	if (self.movement.y > 0)
 	{	// right key pressed
 		self.pressedkeys |= KEY_RIGHT;
 		self.pressedkeys &= ~KEY_LEFT;
 	}
-	else if (self.movement_y < 0)
+	else if (self.movement.y < 0)
 	{	// left key pressed
 		self.pressedkeys |= KEY_LEFT;
 		self.pressedkeys &= ~KEY_RIGHT;
@@ -1729,9 +1729,9 @@ void SpectateCopy(entity spectatee) {
         msg_entity = self;
 
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle_x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle_y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle_z);
+            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, self);
@@ -2332,9 +2332,9 @@ void PlayerPreThink (void)
 
 				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
 				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod.x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod.y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod.z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
 				}
 			}
 			else

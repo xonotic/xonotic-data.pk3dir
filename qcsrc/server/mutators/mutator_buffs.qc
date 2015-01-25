@@ -46,7 +46,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_Sprite(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(Buff_Sprite(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -342,8 +342,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	if(frag_target.buffs & BUFF_RESISTANCE)
 	{
 		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage);
-		damage_take = v_x;
-		damage_save = v_y;
+		damage_take = v.x;
+		damage_save = v.y;
 	}
 
 	return FALSE;
@@ -636,7 +636,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				setmodel(self.buff_model, "models/relics/relic.md3");
 				setsize(self.buff_model, '0 0 -40', '0 0 40');
 				setattachment(self.buff_model, self, "");
-				setorigin(self.buff_model, '0 0 1' * (self.buff_model.maxs_z * 1));
+				setorigin(self.buff_model, '0 0 1' * (self.buff_model.maxs.z * 1));
 				self.buff_model.owner = self;
 				self.buff_model.scale = 0.7;
 				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;

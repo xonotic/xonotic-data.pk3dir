@@ -379,20 +379,20 @@ void SV_OnEntityPreSpawnFunction()
 	else if (self.angles == '0 -2 0')
 		self.angles = '+90 0 0';
 
-	if(self.originjitter_x != 0)
-		self.origin_x = self.origin_x + (random() * 2 - 1) * self.originjitter_x;
-	if(self.originjitter_y != 0)
-		self.origin_y = self.origin_y + (random() * 2 - 1) * self.originjitter_y;
-	if(self.originjitter_z != 0)
-		self.origin_z = self.origin_z + (random() * 2 - 1) * self.originjitter_z;
-	if(self.anglesjitter_x != 0)
-		self.angles_x = self.angles_x + (random() * 2 - 1) * self.anglesjitter_x;
-	if(self.anglesjitter_y != 0)
-		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglesjitter_y;
-	if(self.anglesjitter_z != 0)
-		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
+	if(self.originjitter.x != 0)
+		self.origin_x = self.origin.x + (random() * 2 - 1) * self.originjitter.x;
+	if(self.originjitter.y != 0)
+		self.origin_y = self.origin.y + (random() * 2 - 1) * self.originjitter.y;
+	if(self.originjitter.z != 0)
+		self.origin_z = self.origin.z + (random() * 2 - 1) * self.originjitter.z;
+	if(self.anglesjitter.x != 0)
+		self.angles_x = self.angles.x + (random() * 2 - 1) * self.anglesjitter.x;
+	if(self.anglesjitter.y != 0)
+		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglesjitter.y;
+	if(self.anglesjitter.z != 0)
+		self.angles_z = self.angles.z + (random() * 2 - 1) * self.anglesjitter.z;
 	if(self.anglejitter != 0)
-		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglejitter;
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
 	{

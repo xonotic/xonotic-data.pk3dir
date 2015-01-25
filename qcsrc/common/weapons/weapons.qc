@@ -45,7 +45,7 @@ void WriteWepSet(float dst, WepSet w)
 #elif WEP_MAXCOUNT > 24
 	WriteInt48_t(dst, w);
 #else
-	WriteInt24_t(dst, w_x);
+	WriteInt24_t(dst, w.x);
 #endif
 }
 #endif

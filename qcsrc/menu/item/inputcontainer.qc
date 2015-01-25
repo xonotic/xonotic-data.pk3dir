@@ -128,7 +128,7 @@ float InputContainer_mouseDrag(entity me, vector pos)
 {
 	if(SUPER(InputContainer).mouseDrag(me, pos))
 		return 1;
-	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
+	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
 		return 1;
 	return 0;
 }
@@ -139,7 +139,7 @@ float InputContainer_mouseMove(entity me, vector pos)
 	if(me._changeFocusXY(me, pos))
 		if(SUPER(InputContainer).mouseMove(me, pos))
 			return 1;
-	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
+	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
 		return 1;
 	return 0;
 }
@@ -149,7 +149,7 @@ float InputContainer_mousePress(entity me, vector pos)
 	if(me._changeFocusXY(me, pos))
 		if(SUPER(InputContainer).mousePress(me, pos))
 			return 1;
-	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
+	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
 		return 1;
 	return 0;
 }
@@ -159,7 +159,7 @@ float InputContainer_mouseRelease(entity me, vector pos)
 	if(me.focused) // am I still eligible for this? (UGLY HACK, but a mouse event could have changed focus away)
 		if(me._changeFocusXY(me, pos))
 			return 1;
-	if(pos_x >= 0 && pos_y >= 0 && pos_x < 1 && pos_y < 1)
+	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
 		return 1;
 	return 0;
 }

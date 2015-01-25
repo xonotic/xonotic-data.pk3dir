@@ -123,35 +123,35 @@ void XonoticMapList_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticMapList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize_y);
-	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize_y;
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin1 = 0.5 * (1 - 2.5 * me.realFontSize.y);
+	me.realUpperMargin2 = me.realUpperMargin1 + 1.5 * me.realFontSize.y;
 
 	me.columnPreviewOrigin = 0;
-	me.columnPreviewSize = me.itemAbsSize_y / me.itemAbsSize_x * 4 / 3;
-	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize_x;
-	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize_x;
+	me.columnPreviewSize = me.itemAbsSize.y / me.itemAbsSize.x * 4 / 3;
+	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize.x;
+	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize.x;
 
-	me.checkMarkSize = (eX * (me.itemAbsSize_y / me.itemAbsSize_x) + eY) * 0.5;
+	me.checkMarkSize = (eX * (me.itemAbsSize.y / me.itemAbsSize.x) + eY) * 0.5;
 	me.checkMarkOrigin = eY + eX * (me.columnPreviewOrigin + me.columnPreviewSize) - me.checkMarkSize;
 }
 
 void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 {
-	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
-		if(where_x >= 0)
+	if(where.x <= me.columnPreviewOrigin + me.columnPreviewSize)
+		if(where.x >= 0)
 			me.g_maplistCacheToggle(me, i);
 }
 
 void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(where_x >= me.columnNameOrigin)
-		if(where_x <= 1)
+	if(where.x >= me.columnNameOrigin)
+		if(where.x <= 1)
 		{
 			// pop up map info screen
 			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
-			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size.x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size.y), eY * me.itemAbsSize.y + eX * (me.itemAbsSize.x * me.columnNameSize));
 		}
 }
 
@@ -297,7 +297,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		// pop up map info screen
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
-		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
+		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size.x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size.y), eY * me.itemAbsSize.y + eX * (me.itemAbsSize.x * me.columnNameSize));
 	}
 	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
 	{

@@ -53,9 +53,9 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 {
 	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
 void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {

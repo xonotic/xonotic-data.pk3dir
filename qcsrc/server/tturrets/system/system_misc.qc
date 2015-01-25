@@ -83,11 +83,11 @@ vector angleofs(entity from, entity to)
     v_res = vectoangles(v_res);
     v_res = v_res - from.angles;
 
-    if (v_res_x < 0) 	v_res_x += 360;
-    if (v_res_x > 180) 	v_res_x -= 360;
+    if (v_res.x < 0) 	v_res.x += 360;
+    if (v_res.x > 180) 	v_res.x -= 360;
 
-    if (v_res_y < 0) 	v_res_y += 360;
-    if (v_res_y > 180) 	v_res_y -= 360;
+    if (v_res.y < 0) 	v_res.y += 360;
+    if (v_res.y > 180) 	v_res.y -= 360;
 
     return v_res;
 }
@@ -100,11 +100,11 @@ vector angleofs3(vector from, vector from_a, entity to)
     v_res = vectoangles(v_res);
     v_res = v_res - from_a;
 
-    if (v_res_x < 0) 	v_res_x += 360;
-    if (v_res_x > 180) 	v_res_x -= 360;
+    if (v_res.x < 0) 	v_res.x += 360;
+    if (v_res.x > 180) 	v_res.x -= 360;
 
-    if (v_res_y < 0) 	v_res_y += 360;
-    if (v_res_y > 180) 	v_res_y -= 360;
+    if (v_res.y < 0) 	v_res.y += 360;
+    if (v_res.y > 180) 	v_res.y -= 360;
 
     return v_res;
 }

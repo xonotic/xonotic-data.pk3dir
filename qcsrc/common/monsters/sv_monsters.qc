@@ -290,7 +290,7 @@ void monster_makevectors(entity e)
 
 	v = e.origin + (e.mins + e.maxs) * 0.5;
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-	self.v_angle_x = -self.v_angle_x;
+	self.v_angle_x = -self.v_angle.x;
 
 	makevectors(self.v_angle);
 }
@@ -553,7 +553,7 @@ vector monster_pickmovetarget(entity targ)
 				{
 					pos_z = random() * 200;
 					if(random() >= 0.5)
-						pos_z *= -1;
+						pos.z *= -1;
 				}
 			}
 
@@ -564,7 +564,7 @@ vector monster_pickmovetarget(entity targ)
 
 void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrate, float movespeed)
 {
-	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
+	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
 	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
 	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
@@ -729,7 +729,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 				WarpZone_RefSys_AddInverse(self.enemy, self); // wz1^-1 ... wzn^-1 receiver
 				self.moveto = WarpZone_RefSys_TransformOrigin(self.enemy, self, (0.5 * (self.enemy.absmin + self.enemy.absmax)));
 				
-				self.pass_distance = vlen((('1 0 0' * self.enemy.origin_x) + ('0 1 0' * self.enemy.origin_y)) - (('1 0 0' *  self.origin_x) + ('0 1 0' *  self.origin_y)));
+				self.pass_distance = vlen((('1 0 0' * self.enemy.origin.x) + ('0 1 0' * self.enemy.origin.y)) - (('1 0 0' *  self.origin.x) + ('0 1 0' *  self.origin.y)));
 				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
 			}
 		}
@@ -762,7 +762,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(!(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM)))
 		//v_forward = normalize(self.moveto - self.origin);
 	//else
-		self.moveto_z = self.origin_z;
+		self.moveto_z = self.origin.z;
 
 	if(vlen(self.origin - self.moveto) > 64)
 	{
@@ -804,7 +804,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		turny = 0;
 	if(turny)
 	{
-		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		turny = bound(turny * -1, shortangle_f(real_angle.y, self.angles.y), turny);
 		self.angles_y += turny;
 	}
 
@@ -975,8 +975,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	float take, save;
 
 	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, deathtype, damage);
-	take = v_x;
-	save = v_y;
+	take = v.x;
+	save = v.y;
 
 	self.health -= take;
 
@@ -1118,7 +1118,7 @@ float monster_spawn()
 
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 
-	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
+	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs.z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
 	if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
 	{
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
@@ -1182,7 +1182,7 @@ float monster_initialize(float mon_id)
 	self.netname			= mon.netname;
 	self.monster_name		= M_NAME(mon_id);
 	self.candrop			= TRUE;
-	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
+	self.view_ofs			= '0 0 1' * (self.maxs.z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;

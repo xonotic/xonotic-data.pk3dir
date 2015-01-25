@@ -9,9 +9,9 @@ float healer_send(entity to, float sf)
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 
 		WriteByte(MSG_ENTITY, self.healer_lifetime);
 		//WriteByte(MSG_ENTITY, self.ltime - time + 1);
@@ -44,7 +44,7 @@ void healer_setup()
 
 	setorigin(self, self.origin);
 	
-	float model_radius = self.maxs_x;
+	float model_radius = self.maxs.x;
 	vector size = '1 1 1' * self.healer_radius / 2;
 	setsize(self,-size,size);
 	self.healer_radius = self.healer_radius/model_radius*0.6;

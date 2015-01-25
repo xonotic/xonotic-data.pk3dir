@@ -9,8 +9,7 @@
 .float last_RIGHT_KEY_time;
 
 // these store the movement direction at the time of the dodge action happening.
-.float dodging_direction_x;
-.float dodging_direction_y;
+.vector dodging_direction;
 
 // this indicates the last time a dodge was executed. used to check if another one is allowed
 // and to ramp up the dodge acceleration in the physics hook.
@@ -79,12 +78,12 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
 	if (self.dodging_action == 1) {
 		//disable jump key during dodge accel phase
-		if (self.movement_z > 0) self.movement_z = 0;
+		if (self.movement.z > 0) self.movement_z = 0;
 
 		self.velocity =
 			  self.velocity
-			+ ((self.dodging_direction_y * velocity_difference) * v_right)
-			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
+			+ ((self.dodging_direction.y * velocity_difference) * v_right)
+			+ ((self.dodging_direction.x * velocity_difference) * v_forward);
 
 		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
 	}
@@ -163,11 +162,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	// print("dodging_PlayerPhysics\n");
 
 	float length;
-	float tap_direction_x;
-	float tap_direction_y;
-
-	tap_direction_x = 0;
-	tap_direction_y = 0;
+	vector tap_direction = '0 0 0';
 
 	float frozen_dodging, frozen_no_doubletap;
 	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
@@ -187,7 +182,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		&& check_close_to_wall(autocvar_sv_dodging_wall_distance_threshold) != 1)
 		return 0;
 
-	if (self.movement_x > 0) {
+	if (self.movement.x > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD) || frozen_no_doubletap) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{
@@ -198,7 +193,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
-	if (self.movement_x < 0) {
+	if (self.movement.x < 0) {
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_no_doubletap) {
 			tap_direction_x = -1.0;
@@ -209,7 +204,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
-	if (self.movement_y > 0) {
+	if (self.movement.y > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT) || frozen_no_doubletap) {
 			tap_direction_y = 1.0;
@@ -220,7 +215,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
-	if (self.movement_y < 0) {
+	if (self.movement.y < 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT) || frozen_no_doubletap) {
 			tap_direction_y = -1.0;
@@ -239,16 +234,16 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 		self.dodging_velocity_gain = autocvar_sv_dodging_horiz_speed;
 
-		self.dodging_direction_x = tap_direction_x;
-		self.dodging_direction_y = tap_direction_y;
+		self.dodging_direction_x = tap_direction.x;
+		self.dodging_direction_y = tap_direction.y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
-		length =          self.dodging_direction_x * self.dodging_direction_x;
-		length = length + self.dodging_direction_y * self.dodging_direction_y;
+		length =          self.dodging_direction.x * self.dodging_direction.x;
+		length = length + self.dodging_direction.y * self.dodging_direction.y;
 		length = sqrt(length);
 
-		self.dodging_direction_x = self.dodging_direction_x * 1.0/length;
-		self.dodging_direction_y = self.dodging_direction_y * 1.0/length;
+		self.dodging_direction_x = self.dodging_direction.x * 1.0/length;
+		self.dodging_direction_y = self.dodging_direction.y * 1.0/length;
 	}
 
 	return 0;

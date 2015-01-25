@@ -153,21 +153,21 @@ float W_Arc_Beam_Send(entity to, float sf)
 	}
 	if(sf & ARC_SF_START) // starting location
 	{
-		WriteCoord(MSG_ENTITY, self.beam_start_x);
-		WriteCoord(MSG_ENTITY, self.beam_start_y);
-		WriteCoord(MSG_ENTITY, self.beam_start_z);
+		WriteCoord(MSG_ENTITY, self.beam_start.x);
+		WriteCoord(MSG_ENTITY, self.beam_start.y);
+		WriteCoord(MSG_ENTITY, self.beam_start.z);
 	}
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		WriteCoord(MSG_ENTITY, self.beam_wantdir_x);
-		WriteCoord(MSG_ENTITY, self.beam_wantdir_y);
-		WriteCoord(MSG_ENTITY, self.beam_wantdir_z);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir.x);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir.y);
+		WriteCoord(MSG_ENTITY, self.beam_wantdir.z);
 	}
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		WriteCoord(MSG_ENTITY, self.beam_dir_x);
-		WriteCoord(MSG_ENTITY, self.beam_dir_y);
-		WriteCoord(MSG_ENTITY, self.beam_dir_z);
+		WriteCoord(MSG_ENTITY, self.beam_dir.x);
+		WriteCoord(MSG_ENTITY, self.beam_dir.y);
+		WriteCoord(MSG_ENTITY, self.beam_dir.z);
 	}
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
@@ -671,7 +671,7 @@ float W_Arc(float req)
 				if(self.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
-					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
+					if(self.animstate_startframe == self.anim_shoot.x && self.animstate_numframes == self.anim_shoot.y)
 						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else
 					#endif
@@ -924,13 +924,13 @@ void Draw_ArcBeam(void)
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset =
-			  right * -self.beam_shotorigin_y 
-			+ up * self.beam_shotorigin_z;
+			  right * -self.beam_shotorigin.y
+			+ up * self.beam_shotorigin.z;
 
 		start_pos = start_pos + origin_offset;
 
 		// Move it also forward, but only as far as possible without hitting anything. Don't poke into walls!
-		traceline(start_pos, start_pos + forward * self.beam_shotorigin_x, MOVE_NORMAL, self);
+		traceline(start_pos, start_pos + forward * self.beam_shotorigin.x, MOVE_NORMAL, self);
 		start_pos = trace_endpos;
 
 		// calculate the aim direction now

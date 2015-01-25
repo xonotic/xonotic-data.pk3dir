@@ -268,12 +268,12 @@ void W_Hagar_Attack2_Load_Release(void)
 		else
 		{
 			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s_y = v_forward_x;
-			s_z = v_forward_y;
+			s_y = v_forward.x;
+			s_z = v_forward.y;
 		}
 		s = s * WEP_CVAR_SEC(hagar, load_spread) * g_weaponspreadfactor;
 		
-		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s_y + up * s_z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, FALSE);
+		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles(missile.velocity);
 		missile.flags = FL_PROJECTILE;

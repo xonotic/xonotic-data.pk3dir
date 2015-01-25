@@ -82,11 +82,11 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 		// _z is note pitch
 		if(ignorepitch && i == 0)
 		{
-			pitchshift = np - v_z;
+			pitchshift = np - v.z;
 		}
 		else
 		{
-			if(v_z + pitchshift != np)
+			if(v.z + pitchshift != np)
 				return FALSE;
 		}
 	}
@@ -132,8 +132,8 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 				//printf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj);
 				//printf("m1 = %f\n", (vi_x - vj_y) / (ti - tj));
 				//printf("m2 = %f\n", (vi_y - vj_x) / (ti - tj));
-				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
-				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
+				mmin = max(mmin, (vi.x - vj.y) / (ti - tj)); // lower bound
+				mmax = min(mmax, (vi.y - vj.x) / (ti - tj)); // upper bound
 			}
 		}
 
@@ -185,10 +185,10 @@ void W_Tuba_NoteOff(void)
 float W_Tuba_GetNote(entity pl, float hittype)
 {
 	float movestate = 5;
-	if (pl.movement_x < 0)		movestate -= 3;
-	else if (pl.movement_x > 0)	movestate += 3;
-	if (pl.movement_y < 0)		movestate -= 1;
-	else if (pl.movement_y > 0)	movestate += 1;
+	if (pl.movement.x < 0)		movestate -= 3;
+	else if (pl.movement.x > 0)	movestate += 3;
+	if (pl.movement.y < 0)		movestate -= 1;
+	else if (pl.movement.y > 0)	movestate += 1;
 
 	float note = 0;
 	switch(movestate)
@@ -271,9 +271,9 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	return TRUE;
 }

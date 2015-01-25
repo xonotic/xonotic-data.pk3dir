@@ -276,9 +276,9 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 
 	if(sendflags & 64)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
 	if(sendflags & 1)
@@ -313,9 +313,9 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 	if(sendflags & 32)
 	{
 		WriteByte(MSG_ENTITY, self.cnt); // icon on radar
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.x * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.y * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.z * 255.0);
 
 		if(WaypointSprite_isteammate(self.owner, WaypointSprite_getviewentity(to)))
 		{

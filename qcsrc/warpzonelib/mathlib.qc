@@ -74,7 +74,7 @@ vector frexp(float x)
 	vector v;
 	v_z = 0;
 	v_y = ilogb(x) + 1;
-	v_x = x / exp2(v_y);
+	v_x = x / exp2(v.y);
 	return v;
 }
 int ilogb(float x)
@@ -147,9 +147,9 @@ vector lgamma(float x)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))
 		// sign of gamma(1-z) = sign of gamma(z) * sign of sin(pi*z)
 		v_z = sin(M_PI * x);
-		v_x = log(M_PI) - log(fabs(v_z)) - v_x;
-		if(v_z < 0)
-			v_y = -v_y;
+		v_x = log(M_PI) - log(fabs(v.z)) - v.x;
+		if(v.z < 0)
+			v_y = -v.y;
 		v_z = 0;
 		return v;
 	}
@@ -162,7 +162,7 @@ float tgamma(float x)
 {
 	vector v;
 	v = lgamma(x);
-	return exp(v_x) * v_y;
+	return exp(v.x) * v.y;
 }
 
 float nearbyint(float x)
@@ -187,7 +187,7 @@ vector remquo(float x, float y)
 	vector v;
 	v_z = 0;
 	v_y = rint(x / y);
-	v_x = x - y * v_y;
+	v_x = x - y * v.y;
 	return v;
 }
 

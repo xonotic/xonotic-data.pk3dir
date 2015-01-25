@@ -49,9 +49,9 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		if(!e.frozen)
 		{
 			p = e.origin;
-			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
-			p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
-			p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+			p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
+			p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
+			p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
 			d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
 			if(d < dist)
 			{
@@ -341,7 +341,7 @@ void nade_translocate_boom()
 	if(self.realowner.vehicle)
 		return;
 
-	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
+	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins.z - 24);
 	tracebox(locout, self.realowner.mins, self.realowner.maxs, locout, MOVE_NOMONSTERS, self.realowner);
 	locout = trace_endpos;
 
@@ -677,7 +677,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(self.v_angle_x >= 70 && self.v_angle_x <= 110)
+	if(self.v_angle.x >= 70 && self.v_angle.x <= 110)
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
@@ -921,7 +921,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		self.nade.velocity = self.velocity;
 
 		setorigin(self.nade, self.origin + self.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
-		self.nade.angles_y = self.angles_y;
+		self.nade.angles_y = self.angles.y;
 	}
 
 	if(self.nade)

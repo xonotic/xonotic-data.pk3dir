@@ -31,7 +31,7 @@ void XonoticListBox_configureXonoticListBox(entity me)
 }
 void XonoticListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
-	me.itemHeight = me.rowsPerItem * me.fontSize / absSize_y;
+	me.itemHeight = me.rowsPerItem * me.fontSize / absSize.y;
 	SUPER(XonoticListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 #endif

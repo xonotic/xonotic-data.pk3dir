@@ -45,12 +45,12 @@ float entcs_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner)-1);
 	if(sf & 2)
 	{
-		WriteShort(MSG_ENTITY, self.origin_x);
-		WriteShort(MSG_ENTITY, self.origin_y);
-		WriteShort(MSG_ENTITY, self.origin_z);
+		WriteShort(MSG_ENTITY, self.origin.x);
+		WriteShort(MSG_ENTITY, self.origin.y);
+		WriteShort(MSG_ENTITY, self.origin.z);
 	}
 	if(sf & 4)
-		WriteByte(MSG_ENTITY, self.angles_y * 256.0 / 360);
+		WriteByte(MSG_ENTITY, self.angles.y * 256.0 / 360);
 	if(sf & 8)
 		WriteByte(MSG_ENTITY, self.health / 10); // FIXME use a better scale?
 	if(sf & 16)
@@ -70,7 +70,7 @@ void entcs_think()
 		setorigin(self, o.origin);
 		self.SendFlags |= 2;
 	}
-	if(o.angles_y != self.angles_y)
+	if(o.angles.y != self.angles.y)
 	{
 		self.angles = o.angles;
 		self.SendFlags |= 4;

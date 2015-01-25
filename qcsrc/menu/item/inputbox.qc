@@ -53,7 +53,7 @@ void InputBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector a
 	SUPER(InputBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	if (me.enableClearButton)
 	{
-		me.cb_width = absSize_y / absSize_x;
+		me.cb_width = absSize.y / absSize.x;
 		me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_width; // bound to range -1, 0
 		me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_width;
 	}
@@ -73,10 +73,10 @@ void InputBox_Clear_Click(entity btn, entity me)
 
 float over_ClearButton(entity me, vector pos)
 {
-	if (pos_x >= 1 + me.cb_offset - me.cb_width)
-	if (pos_x < 1 + me.cb_offset)
-	if (pos_y >= 0)
-	if (pos_y < 1)
+	if (pos.x >= 1 + me.cb_offset - me.cb_width)
+	if (pos.x < 1 + me.cb_offset)
+	if (pos.y >= 0)
+	if (pos.y < 1)
 		return 1;
 	return 0;
 }
@@ -101,7 +101,7 @@ float InputBox_mouseDrag(entity me, vector pos)
 	if(me.pressed)
 	{
 		me.dragScrollPos = pos;
-		p = me.scrollPos + pos_x - me.keepspaceLeft;
+		p = me.scrollPos + pos.x - me.keepspaceLeft;
 		me.cursorPos = draw_TextLengthUpToWidth(me.text, p, 0, me.realFontSize);
 		me.lastChangeTime = time;
 	}
@@ -276,7 +276,7 @@ void InputBox_draw(entity me)
 				w = draw_TextWidth(strcat(ch, ch2), 0, me.realFontSize);
 				if(ch2 == "^")
 				{
-					draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
+					draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 					draw_Text(p + eX * 0.25 * w, "^", me.realFontSize, theColor, theAlpha, 0);
 				}
 				else if(ch2 == "0" || stof(ch2)) // digit?
@@ -294,7 +294,7 @@ void InputBox_draw(entity me)
 						case 8: theColor = '1 1 1'; theAlpha = 0.5; break;
 						case 9: theColor = '0.5 0.5 0.5'; theAlpha = 1; break;
 					}
-					draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
+					draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 					draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 				}
 				else if(ch2 == "x") // ^x found
@@ -318,7 +318,7 @@ void InputBox_draw(entity me)
 								theColor = theTempColor;
 								w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
 
-								draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
+								draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 								draw_Text(p, substring(me.text, i, 5), me.realFontSize, theColor, 1, 0);    // theVariableAlpha instead of 1 using alpha tags ^ax
 								i += 3;
 							}
@@ -326,7 +326,7 @@ void InputBox_draw(entity me)
 							{
 								// blue missing
 								w = draw_TextWidth(substring(me.text, i, 4), 0, me.realFontSize);
-								draw_Fill(p, eX * w + eY * me.realFontSize_y, eZ, 0.5);
+								draw_Fill(p, eX * w + eY * me.realFontSize.y, eZ, 0.5);
 								draw_Text(p, substring(me.text, i, 4), me.realFontSize, '1 1 1', theAlpha, 0);
 								i += 2;
 							}
@@ -335,7 +335,7 @@ void InputBox_draw(entity me)
 						{
 							// green missing
 							w = draw_TextWidth(substring(me.text, i, 3), 0, me.realFontSize);
-							draw_Fill(p, eX * w + eY * me.realFontSize_y, eY, 0.5);
+							draw_Fill(p, eX * w + eY * me.realFontSize.y, eY, 0.5);
 							draw_Text(p, substring(me.text, i, 3), me.realFontSize, '1 1 1', theAlpha, 0);
 							i += 1;
 						}
@@ -344,13 +344,13 @@ void InputBox_draw(entity me)
 					{
 						// red missing
 						//w = draw_TextWidth(substring(me.text, i, 2), 0) * me.realFontSize_x;
-						draw_Fill(p, eX * w + eY * me.realFontSize_y, eX, 0.5);
+						draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, 0.5);
 						draw_Text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 					}
 				}
 				else
 				{
-					draw_Fill(p, eX * w + eY * me.realFontSize_y, '1 1 1', 0.5);
+					draw_Fill(p, eX * w + eY * me.realFontSize.y, '1 1 1', 0.5);
 					draw_Text(p, strcat(ch, ch2), me.realFontSize, theColor, theAlpha, 0);
 				}
 				p += w * eX;

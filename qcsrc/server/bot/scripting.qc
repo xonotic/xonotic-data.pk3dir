@@ -626,8 +626,8 @@ float bot_cmd_barrier()
 
 float bot_cmd_turn()
 {
-	self.v_angle_y = self.v_angle_y + bot_cmd.bot_cmd_parm_float;
-	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
+	self.v_angle_y = self.v_angle.y + bot_cmd.bot_cmd_parm_float;
+	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -821,8 +821,8 @@ float bot_cmd_aim()
 
 	self.bot_cmd_aim_begin = self.v_angle;
 
-	self.bot_cmd_aim_end_x = self.v_angle_x - stof(argv(1));
-	self.bot_cmd_aim_end_y = self.v_angle_y + stof(argv(0));
+	self.bot_cmd_aim_end_x = self.v_angle.x - stof(argv(1));
+	self.bot_cmd_aim_end_y = self.v_angle.y + stof(argv(0));
 	self.bot_cmd_aim_end_z = 0;
 
 	self.bot_cmd_aim_begintime = time;
@@ -856,7 +856,7 @@ float bot_cmd_aimtarget()
 	if(tokens==1)
 	{
 		self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-		self.v_angle_x = -self.v_angle_x;
+		self.v_angle_x = -self.v_angle.x;
 		return CMD_STATUS_FINISHED;
 	}
 
@@ -867,7 +867,7 @@ float bot_cmd_aimtarget()
 
 	self.bot_cmd_aim_begin = self.v_angle;
 	self.bot_cmd_aim_end = vectoangles(v - (self.origin + self.view_ofs));
-	self.bot_cmd_aim_end_x = -self.bot_cmd_aim_end_x;
+	self.bot_cmd_aim_end_x = -self.bot_cmd_aim_end.x;
 
 	self.bot_cmd_aim_begintime = time;
 	self.bot_cmd_aim_endtime = time + step;

@@ -13,9 +13,9 @@ float PlayerEdgeDistance(entity p, vector v)
 {
 	vector vbest;
 
-	if(v_x < 0) vbest_x = p.mins_x; else vbest_x = p.maxs_x;
-	if(v_y < 0) vbest_y = p.mins_y; else vbest_y = p.maxs_y;
-	if(v_z < 0) vbest_z = p.mins_z; else vbest_z = p.maxs_z;
+	if(v.x < 0) vbest_x = p.mins.x; else vbest_x = p.maxs.x;
+	if(v.y < 0) vbest_y = p.mins.y; else vbest_y = p.maxs.y;
+	if(v.z < 0) vbest_z = p.mins.z; else vbest_z = p.maxs.z;
 
 	return vbest * v;
 }
@@ -36,7 +36,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 
 	// PLAYERS use different math
 #ifndef POSITIVE_PITCH_IS_DOWN
-	ang_x = -ang_x;
+	ang_x = -ang.x;
 #endif
 
 	//print("reference: ", vtos(AnglesTransform_ApplyToVAngles(transform, ang)), "\n");
@@ -44,7 +44,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	fixedmakevectors(ang);
 	old_forward = v_forward;
 	old_up = v_up;
-	fixedmakevectors(ang_y * '0 1 0');
+	fixedmakevectors(ang.y * '0 1 0');
 	old_yawforward = v_forward;
 
 	// their aiming directions are portalled...
@@ -59,7 +59,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	//
 	// new_up could now point forward OR backward... which direction to choose?
 
-	if(new_forward_z > 0.7 || new_forward_z < -0.7) // far up; in this case, the "up" vector points backwards
+	if(new_forward.z > 0.7 || new_forward.z < -0.7) // far up; in this case, the "up" vector points backwards
 	{
 		// new_yawforward and new_yawup define the new aiming half-circle
 		// we "just" need to find out whether new_up or -new_up is in that half circle
@@ -77,9 +77,9 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	}
 
 #ifndef POSITIVE_PITCH_IS_DOWN
-	ang_x = -ang_x;
+	ang_x = -ang.x;
 #endif
-	ang_z = vangle_z;
+	ang_z = vangle.z;
 	return ang;
 }
 
@@ -216,9 +216,9 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 	vector v;
 
 	dist = (eorg - porg) * pnorm;
-	dist += min(emins_x * pnorm_x, emaxs_x * pnorm_x);
-	dist += min(emins_y * pnorm_y, emaxs_y * pnorm_y);
-	dist += min(emins_z * pnorm_z, emaxs_z * pnorm_z);
+	dist += min(emins.x * pnorm.x, emaxs.x * pnorm.x);
+	dist += min(emins.y * pnorm.y, emaxs.y * pnorm.y);
+	dist += min(emins.z * pnorm.z, emaxs.z * pnorm.z);
 	if(dist < -1) // other side?
 		return 0;
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -286,7 +286,7 @@ void Portal_Touch()
 				return; // cannot go through someone else's portal
 	fixedmakevectors(self.mangle);
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs_x))
+	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs.x))
 		return;
 
 	/*
@@ -424,7 +424,7 @@ void Portal_Damage(entity inflictor, entity attacker, float damage, float deatht
 
 void Portal_Think_TryTeleportPlayer(entity e, vector g)
 {
-	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs_x))
+	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs.x))
 		return;
 
 	// if e would hit the portal in a frame...
@@ -612,7 +612,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	setorigin(portal, org);
 	portal.mangle = ang;
 	portal.angles = ang;
-	portal.angles_x = -portal.angles_x; // is a bmodel
+	portal.angles_x = -portal.angles.x; // is a bmodel
 	portal.think = Portal_Think;
 	portal.nextthink = 0;
 	portal.portal_activatetime = time + 0.1;

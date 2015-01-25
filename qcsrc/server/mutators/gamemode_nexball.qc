@@ -82,9 +82,9 @@ void relocate_nexball(void)
 		if(!move_out_of_solid(self))
 			objerror("could not get out of solid at all!");
 		print("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
-		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
-		print(" ", ftos(self.origin_y - o_y));
-		print(" ", ftos(self.origin_z - o_z), "'\n");
+		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
+		print(" ", ftos(self.origin.y - o.y));
+		print(" ", ftos(self.origin.z - o.z), "'\n");
 		self.origin = o;
 	}
 }
@@ -94,7 +94,7 @@ void DropOwner(void)
 	entity ownr;
 	ownr = self.owner;
 	DropBall(self, ownr.origin, ownr.velocity);
-	makevectors(ownr.v_angle_y * '0 1 0');
+	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
 	ownr.flags &= ~FL_ONGROUND;
 }
@@ -281,7 +281,7 @@ void football_touch(void)
 	}
 	else if(autocvar_g_nexball_football_physics == 2)	  // 2nd mod try: totally independant. Really playable!
 	{
-		makevectors(other.v_angle_y * '0 1 0');
+		makevectors(other.v_angle.y * '0 1 0');
 		self.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
 	}
 	else	 // Revenant's original style (from the original mod's disassembly, acknowledged by Revenant)
@@ -430,38 +430,38 @@ void nb_spawnteam(string teamname, float teamcolor)
 
 void nb_spawnteams(void)
 {
-	float t_r = 0, t_b = 0, t_y = 0, t_p = 0;
+	bool t_red = false, t_blue = false, t_yellow = false, t_pink = false;
 	entity e;
 	for(e = world; (e = find(e, classname, "nexball_goal"));)
 	{
 		switch(e.team)
 		{
 		case NUM_TEAM_1:
-			if(!t_r)
+			if(!t_red)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
-				t_r = 1;
+				t_red = true;
 			}
 			break;
 		case NUM_TEAM_2:
-			if(!t_b)
+			if(!t_blue)
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
-				t_b = 1;
+				t_blue = true;
 			}
 			break;
 		case NUM_TEAM_3:
-			if(!t_y)
+			if(!t_yellow)
 			{
 				nb_spawnteam("Yellow", e.team-1);
-				t_y = 1;
+				t_yellow = true;
 			}
 			break;
 		case NUM_TEAM_4:
-			if(!t_p)
+			if(!t_pink)
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
-				t_p = 1;
+				t_pink = true;
 			}
 			break;
 		}
@@ -894,9 +894,9 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			self.ballcarried.customizeentityforclient = ball_customize;
 
 			setorigin(self.ballcarried, self.origin + self.view_ofs +
-					  v_forward * autocvar_g_nexball_viewmodel_offset_x +
-					  v_right * autocvar_g_nexball_viewmodel_offset_y +
-					  v_up * autocvar_g_nexball_viewmodel_offset_z);
+					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
+					  v_right * autocvar_g_nexball_viewmodel_offset.y +
+					  v_up * autocvar_g_nexball_viewmodel_offset.z);
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)

@@ -89,7 +89,7 @@ void XonoticScreenshotImage_draw(entity me)
 void XonoticScreenshotImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticScreenshotImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.realFontSize_y = me.fontSize / absSize_y;
-	me.realFontSize_x = me.fontSize / absSize_x;
+	me.realFontSize_y = me.fontSize / absSize.y;
+	me.realFontSize_x = me.fontSize / absSize.x;
 }
 #endif

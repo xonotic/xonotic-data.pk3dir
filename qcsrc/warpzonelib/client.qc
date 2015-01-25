@@ -185,12 +185,12 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	entity e;
 	float pd;
 
-	mi_x = min(o_x, c0_x, c1_x, c2_x, c3_x);
-	ma_x = max(o_x, c0_x, c1_x, c2_x, c3_x);
-	mi_y = min(o_y, c0_y, c1_y, c2_y, c3_y);
-	ma_y = max(o_y, c0_y, c1_y, c2_y, c3_y);
-	mi_z = min(o_z, c0_z, c1_z, c2_z, c3_z);
-	ma_z = max(o_z, c0_z, c1_z, c2_z, c3_z);
+	mi_x = min(o.x, c0_x, c1_x, c2_x, c3_x);
+	ma_x = max(o.x, c0_x, c1_x, c2_x, c3_x);
+	mi_y = min(o.y, c0_y, c1_y, c2_y, c3_y);
+	ma_y = max(o.y, c0_y, c1_y, c2_y, c3_y);
+	mi_z = min(o.z, c0_z, c1_z, c2_z, c3_z);
+	ma_z = max(o.z, c0_z, c1_z, c2_z, c3_z);
 
 	e = WarpZone_Find(mi, ma);
 	if(e)
@@ -254,7 +254,7 @@ void WarpZone_FixView()
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
 	setproperty(VF_CL_VIEWANGLES_Z, rick);
-	ang_z *= f;
+	ang.z *= f;
 #endif
 
 	setproperty(VF_ORIGIN, org);

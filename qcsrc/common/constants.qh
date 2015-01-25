@@ -291,14 +291,14 @@ vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_HEAD autocvar_sv_player_headsize
 
 // helpers
-#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset_z
-#define PL_MIN_z autocvar_sv_player_mins_z
-#define PL_MAX_z autocvar_sv_player_maxs_z
-#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset_z
-#define PL_CROUCH_MIN_z autocvar_sv_player_mins_z
-#define PL_HEAD_x autocvar_sv_player_headsize_x
-#define PL_HEAD_y autocvar_sv_player_headsize_y
-#define PL_HEAD_z autocvar_sv_player_headsize_z
+#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset.z
+#define PL_MIN_z autocvar_sv_player_mins.z
+#define PL_MAX_z autocvar_sv_player_maxs.z
+#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset.z
+#define PL_CROUCH_MIN_z autocvar_sv_player_mins.z
+#define PL_HEAD_x autocvar_sv_player_headsize.x
+#define PL_HEAD_y autocvar_sv_player_headsize.y
+#define PL_HEAD_z autocvar_sv_player_headsize.z
 
 // spawnpoint prios
 const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;

@@ -272,77 +272,77 @@ void GameCommand_bbox(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
-			print(" ", ftos(world.absmax_x), " ", ftos(world.absmax_y), " ", ftos(world.absmax_z), "\n");
-			print("Currently set size: ", ftos(world.mins_x), " ", ftos(world.mins_y), " ", ftos(world.mins_z));
-			print(" ", ftos(world.maxs_x), " ", ftos(world.maxs_y), " ", ftos(world.maxs_z), "\n");
+			print("Original size: ", ftos(world.absmin.x), " ", ftos(world.absmin.y), " ", ftos(world.absmin.z));
+			print(" ", ftos(world.absmax.x), " ", ftos(world.absmax.y), " ", ftos(world.absmax.z), "\n");
+			print("Currently set size: ", ftos(world.mins.x), " ", ftos(world.mins.y), " ", ftos(world.mins.z));
+			print(" ", ftos(world.maxs.x), " ", ftos(world.maxs.y), " ", ftos(world.maxs.z), "\n");
 			print("Solid bounding box size:");
 
-			tracebox('1 0 0' * world.absmin_x,
-							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmax_x,
+			tracebox('1 0 0' * world.absmin.x,
+							'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
+							'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmax.x,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_x));
+				print(" ", ftos(world.absmin.x));
 			else
-				print(" ", ftos(trace_endpos_x));
+				print(" ", ftos(trace_endpos.x));
 
-			tracebox('0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-							'0 1 0' * world.absmax_y,
+			tracebox('0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
+							'0 1 0' * world.absmax.y,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_y));
+				print(" ", ftos(world.absmin.y));
 			else
-				print(" ", ftos(trace_endpos_y));
+				print(" ", ftos(trace_endpos.y));
 
-			tracebox('0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-							'0 0 1' * world.absmax_z,
+			tracebox('0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
+							'0 0 1' * world.absmax.z,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_z));
+				print(" ", ftos(world.absmin.z));
 			else
-				print(" ", ftos(trace_endpos_z));
+				print(" ", ftos(trace_endpos.z));
 
-			tracebox('1 0 0' * world.absmax_x,
-							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmin_x,
+			tracebox('1 0 0' * world.absmax.x,
+							'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
+							'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmin.x,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_x));
+				print(" ", ftos(world.absmax.x));
 			else
-				print(" ", ftos(trace_endpos_x));
+				print(" ", ftos(trace_endpos.x));
 
-			tracebox('0 1 0' * world.absmax_y,
-							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-							'0 1 0' * world.absmin_y,
+			tracebox('0 1 0' * world.absmax.y,
+							'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
+							'0 1 0' * world.absmin.y,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_y));
+				print(" ", ftos(world.absmax.y));
 			else
-				print(" ", ftos(trace_endpos_y));
+				print(" ", ftos(trace_endpos.y));
 
-			tracebox('0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-							'0 0 1' * world.absmin_z,
+			tracebox('0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
+							'0 0 1' * world.absmin.z,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_z));
+				print(" ", ftos(world.absmax.z));
 			else
-				print(" ", ftos(trace_endpos_z));
+				print(" ", ftos(trace_endpos.z));
 
 			print("\n");
 			return;
@@ -838,14 +838,14 @@ void GameCommand_gettaginfo(float request, float argc)
 					v = gettaginfo(tmp_entity, i);
 					print("model ", tmp_entity.model, " frame ", ftos(tmp_entity.frame), " tag ", gettaginfo_name);
 					print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
-					print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
-					print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
-					print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
-					print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
-					print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
+					print(" vector = ", ftos(v.x), " ", ftos(v.y), " ", ftos(v.z), "\n");
+					print(" offset = ", ftos(gettaginfo_offset.x), " ", ftos(gettaginfo_offset.y), " ", ftos(gettaginfo_offset.z), "\n");
+					print(" forward = ", ftos(gettaginfo_forward.x), " ", ftos(gettaginfo_forward.y), " ", ftos(gettaginfo_forward.z), "\n");
+					print(" right = ", ftos(gettaginfo_right.x), " ", ftos(gettaginfo_right.y), " ", ftos(gettaginfo_right.z), "\n");
+					print(" up = ", ftos(gettaginfo_up.x), " ", ftos(gettaginfo_up.y), " ", ftos(gettaginfo_up.z), "\n");
 					if(argc >= 6)
 					{
-						v_y = -v_y;
+						v_y = -v.y;
 						localcmd(strcat(argv(4), vtos(v), argv(5), "\n"));
 					}
 				}
@@ -1523,13 +1523,13 @@ void GameCommand_trace(float request, float argc)
 						org = world.mins;
 						delta = world.maxs - world.mins;
 
-						start_x = org_x + random() * delta_x;
-						start_y = org_y + random() * delta_y;
-						start_z = org_z + random() * delta_z;
+						start_x = org.x + random() * delta.x;
+						start_y = org.y + random() * delta.y;
+						start_z = org.z + random() * delta.z;
 
-						end_x = org_x + random() * delta_x;
-						end_y = org_y + random() * delta_y;
-						end_z = org_z + random() * delta_z;
+						end_x = org.x + random() * delta.x;
+						end_y = org.y + random() * delta.y;
+						end_z = org.z + random() * delta.z;
 
 						start = stov(vtos(start));
 						end = stov(vtos(end));
@@ -1622,17 +1622,17 @@ void GameCommand_trace(float request, float argc)
 					for(i = 0; i < 100000; ++i)
 					{
 						dv = randomvec();
-						if(dv_z > 0)
+						if(dv.z > 0)
 							dv = -1 * dv;
 						tracebox(vv, e.mins, e.maxs, vv + dv, MOVE_NORMAL, e);
 						if(trace_startsolid)
 							print("bug 1\n");
 						if(trace_fraction == 1)
-						if(dv_z < f)
+						if(dv.z < f)
 						{
-							print("bug 2: ", ftos(dv_x), " ", ftos(dv_y), " ", ftos(dv_z));
-							print(" (", ftos(asin(dv_z / vlen(dv)) * 180 / M_PI), " degrees)\n");
-							f = dv_z;
+							print("bug 2: ", ftos(dv.x), " ", ftos(dv.y), " ", ftos(dv.z));
+							print(" (", ftos(asin(dv.z / vlen(dv)) * 180 / M_PI), " degrees)\n");
+							f = dv.z;
 						}
 					}
 					print("highest possible dist: ", ftos(f), "\n");

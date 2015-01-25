@@ -67,8 +67,8 @@ vector MapVote_RGB(int id)
 void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float count, int id)
 {
 	float alpha;
-	float desc_padding = gtv_text_size_x * 3;
-	float rect_margin = hud_fontsize_y / 2;
+	float desc_padding = gtv_text_size.x * 3;
+	float rect_margin = hud_fontsize.y / 2;
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
 	rect_size_x = tsize + rect_margin;
@@ -100,16 +100,16 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 										  count, tsize, gtv_text_size);
 	title.origin = pos-offset;
 	
-	pos_y += gtv_text_size_small_y;
-	pos_y += gtv_text_size_y/2;
+	pos.y += gtv_text_size_small.y;
+	pos.y += gtv_text_size.y/2;
 	
-	maxh -= gtv_text_size_y;
+	maxh -= gtv_text_size.y;
 	
 	entity picent = spawn();
 	picent.origin = pos-offset;
 	picent.maxs = '1 1 0 ' * min(maxh, desc_padding) * 0.8;
 	
-	pos_x += desc_padding;
+	pos.x += desc_padding;
 	tsize -= desc_padding;
 	
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
@@ -118,10 +118,10 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	if( thelabel != "") 
 	{
 		float i,n = tokenizebyseparator(thelabel, "\n");
-		for(i = 0; i < n && maxh > (nlines+1)*gtv_text_size_small_y; ++i)
+		for(i = 0; i < n && maxh > (nlines+1)*gtv_text_size_small.y; ++i)
 		{
 			getWrappedLine_remaining = argv(i);
-			while(getWrappedLine_remaining && maxh > (nlines+1)*gtv_text_size_small_y)
+			while(getWrappedLine_remaining && maxh > (nlines+1)*gtv_text_size_small.y)
 			{
 				ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors);
 				if (ts != "")
@@ -131,16 +131,16 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 					next.origin = pos-offset;
 					last.chain = next;
 					last = next;
-					pos_y += gtv_text_size_small_y;
+					pos.y += gtv_text_size_small.y;
 					nlines++;
 				}
 			}
 		}
 	}
 	
-	maxh -= max(nlines*gtv_text_size_small_y,picent.maxs_y);
+	maxh -= max(nlines*gtv_text_size_small.y,picent.maxs.y);
 	if ( maxh > 0 )
-		offset_y += maxh/2;
+		offset.y += maxh/2;
 	drawstring(title.origin+offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL); 
 	
 	if(pic != "")
@@ -165,14 +165,14 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	string label;
 	float text_size;
 
-	isize -= hud_fontsize_y; // respect the text when calculating the image size
+	isize -= hud_fontsize.y; // respect the text when calculating the image size
 
 	rgb = MapVote_RGB(id);
 
 	img_size_y = isize;
 	img_size_x = isize / 0.75; // 4:3 x can be stretched easily, height is defined in isize
 
-	pos_y = pos_y + img_size_y;
+	pos_y = pos.y + img_size.y;
 
 	label = MapVote_FormatMapItem(id, map, count, tsize, hud_fontsize);
 
@@ -184,11 +184,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	else
 		theAlpha = 1;
 
-	pos_x -= text_size*0.5;
+	pos.x -= text_size*0.5;
 	drawstring(pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
 
-	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
-	pos_y = pos_y - img_size_y;
+	pos_x = pos.x + text_size*0.5 - img_size.x*0.5;
+	pos_y = pos.y - img_size.y;
 
 	pos += autocvar_scoreboard_border_thickness * '1 1 0';
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
@@ -221,13 +221,13 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, int 
 
 	rgb = MapVote_RGB(id);
 
-	pos_y = pos_y + hud_fontsize_y;
+	pos_y = pos.y + hud_fontsize.y;
 
 	label = MapVote_FormatMapItem(id, _("Don't care"), count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
-	pos_x -= text_size*0.5;
+	pos.x -= text_size*0.5;
 	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
 }
 
@@ -235,9 +235,9 @@ vector MapVote_GridVec(vector gridspec, int i, int m)
 {
 	int r = i % m;
 	return
-		'1 0 0' * (gridspec_x * r)
+		'1 0 0' * (gridspec.x * r)
 		+
-		'0 1 0' * (gridspec_y * (i - r) / m);
+		'0 1 0' * (gridspec.y * (i - r) / m);
 }
 
 float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
@@ -250,10 +250,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	for (r = 0; r < rows; ++r)
 		for (c = 0; c < columns; ++c)
 		{
-			if (mv_mousepos_x >= topleft_x + cellsize_x *  c &&
-				mv_mousepos_x <= topleft_x + cellsize_x * (c + 1) &&
-				mv_mousepos_y >= topleft_y + cellsize_y *  r &&
-				mv_mousepos_y <= topleft_y + cellsize_y * (r + 1))
+			if (mv_mousepos.x >= topleft.x + cellsize.x *  c &&
+				mv_mousepos.x <= topleft.x + cellsize.x * (c + 1) &&
+				mv_mousepos.y >= topleft.y + cellsize.y *  r &&
+				mv_mousepos.y <= topleft.y + cellsize.y * (r + 1))
 			{
 				mv_mouse_selection = r * columns + c;
 				break;
@@ -290,10 +290,10 @@ void MapVote_Draw()
 	if (!autocvar_hud_cursormode)
 	{
 		vector mpos = mv_mousepos + getmousepos();
-		mpos_x = bound(0, mpos_x, vid_conwidth);
-		mpos_y = bound(0, mpos_y, vid_conheight);
+		mpos_x = bound(0, mpos.x, vid_conwidth);
+		mpos_y = bound(0, mpos.y, vid_conheight);
 		
-		if ( mpos_x != mv_mousepos_x || mpos_y != mv_mousepos_y )
+		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
 			mv_selection_keyboard = 0;
 		mv_mousepos = mpos;
 
@@ -318,58 +318,58 @@ void MapVote_Draw()
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
 	pos_x = center - stringwidth(map, false, '12 0 0');
 	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
-	pos_y += 26;
+	pos.y += 26;
 
 	if( mapvote_chosenmap != "" )
 	{
 		pos_x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize*1.5/2);
 		drawstring(pos, mapvote_chosenmap, hud_fontsize*1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
-		pos_y += hud_fontsize_y*2;
+		pos.y += hud_fontsize.y*2;
 	}
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
 	pos_x = center - stringwidth(map, false, '8 0 0');
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
-	pos_y += 22;
+	pos.y += 22;
 	pos_x = xmin;
 	draw_endBoldFont();
 
 	// base for multi-column stuff...
-	ymin = pos_y;
+	ymin = pos.y;
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
 	rows = ceil(mv_num_maps / mv_columns);
 
 	dist_x = (xmax - xmin) / mv_columns;
-	dist_y = (ymax - pos_y) / rows;
+	dist_y = (ymax - pos.y) / rows;
 
 	if ( gametypevote )
 	{
-		tsize = dist_x - hud_fontsize_y;
-		isize = dist_y;
-		float maxheight = (ymax - pos_y) / 3;
+		tsize = dist.x - hud_fontsize.y;
+		isize = dist.y;
+		float maxheight = (ymax - pos.y) / 3;
 		if ( isize > maxheight )
 		{
-			pos_x += (isize - maxheight)/2;
+			pos.x += (isize - maxheight)/2;
 			isize = maxheight;
 		}
 		else
-			dist_y += hud_fontsize_y;
-		pos_x = ( vid_conwidth - dist_x * mv_columns ) / 2;
+			dist.y += hud_fontsize.y;
+		pos_x = ( vid_conwidth - dist.x * mv_columns ) / 2;
 	}
 	else
 	{
-		tsize = dist_x - 10;
-		isize = min(dist_y - 10, 0.75 * tsize);
+		tsize = dist.x - 10;
+		isize = min(dist.y - 10, 0.75 * tsize);
 	}
 
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
 	if ( !gametypevote )
-		pos_x += dist_x / 2;
-	pos_y += (dist_y - isize) / 2;
+		pos.x += dist.x / 2;
+	pos.y += (dist.y - isize) / 2;
 	ymax -= isize;
 
 	if (mv_top2_time)
@@ -397,7 +397,7 @@ void MapVote_Draw()
 
 	if(mv_abstain && i < mv_num_maps) {
 		tmp = mv_votes[i];
-		pos_y = ymax + isize - hud_fontsize_y;
+		pos_y = ymax + isize - hud_fontsize.y;
 		pos_x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}

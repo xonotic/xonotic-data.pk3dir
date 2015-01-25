@@ -169,7 +169,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(valueoffset != "")
 				{
-					switch(data_y)
+					switch(data.y)
 					{
 						case FIELD_STRING:
 							value = strcat(value, valueoffset);
@@ -188,7 +188,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(valueoffsetrandom != "")
 				{
-					switch(data_y)
+					switch(data.y)
 					{
 						case FIELD_FLOAT:
 							value = ftos(stof(value) + random() * stof(valueoffsetrandom));
@@ -225,7 +225,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 		{
 			if(data_y == FIELD_VECTOR)
 				value = strreplace("'", "", value); // why?!?
-			putentityfieldstring(data_x, e, value);
+			putentityfieldstring(data.x, e, value);
 		}
 	}
 }

@@ -117,9 +117,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point_x / fsize) * fsize;
-    vret_y = rint(point_y / fsize) * fsize;
-    vret_z = ceil(point_z / fsize) * fsize;
+    vret_x = rint(point.x / fsize) * fsize;
+    vret_y = rint(point.y / fsize) * fsize;
+    vret_z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -220,8 +220,8 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
 
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end_x = fsnap(end.x, pathlib_gridsize);
+    end_y = fsnap(end.y, pathlib_gridsize);
 
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
@@ -229,7 +229,7 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
     if(pointcontents(end - '0 0 1') != CONTENT_SOLID)
         return end;
 
-    for(surface = start ; surface_z < (end_z + 32); ++surface_z)
+    for(surface = start ; surface.z < (end.z + 32); ++surface.z)
     {
         if(pointcontents(surface) == CONTENT_EMPTY)
             break;
@@ -242,7 +242,7 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
     if(trace_fraction == 1)
         pathlib_movenode_goodnode = 1;
 
-    if(fabs(surface_z - end_z) > 32)
+    if(fabs(surface.z - end.z) > 32)
         pathlib_movenode_goodnode = 0;
 
     return end;
@@ -255,8 +255,8 @@ vector pathlib_swimnode(vector start,vector end,float doedge)
     if(pointcontents(start) != CONTENT_WATER)
         return end;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end_x = fsnap(end.x, pathlib_gridsize);
+    end_y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
         return pathlib_wateroutnode( start, end);
@@ -272,8 +272,8 @@ vector pathlib_flynode(vector start,vector end)
 {
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end_x = fsnap(end.x, pathlib_gridsize);
+    end_y = fsnap(end.y, pathlib_gridsize);
 
     tracebox(start, walknode_boxmin,walknode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -340,8 +340,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     point = last_point + direction * walknode_stepsize * laststep;
 
-    point_x = fsnap(point_x, pathlib_gridsize);
-    point_y = fsnap(point_y, pathlib_gridsize);
+    point_x = fsnap(point.x, pathlib_gridsize);
+    point_y = fsnap(point.y, pathlib_gridsize);
 
     s = point + walknode_stepup;
     e = point - walknode_maxdrop;
@@ -403,8 +403,8 @@ float pathlib_h_manhattan(vector a,vector b)
     //h(n) = D * (abs(n.x-goal.x) + abs(n.y-goal.y))
 
     float h;
-    h  = fabs(a_x - b_x);
-    h += fabs(a_y - b_y);
+    h  = fabs(a.x - b.x);
+    h += fabs(a.y - b.y);
     h *= pathlib_gridsize;
 
     return h;
@@ -419,8 +419,8 @@ float pathlib_h_diagonal(vector a,vector b)
     //h(n) = D * max(abs(n.x-goal.x), abs(n.y-goal.y))
     float h,x,y;
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
     h = pathlib_movecost * max(x,y);
 
     return h;
@@ -450,8 +450,8 @@ float pathlib_h_diagonal2(vector a,vector b)
     h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
     */
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
 
     h_diag = min(x,y);
     h_str = x + y;
@@ -476,9 +476,9 @@ float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
     //h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
 
-    x = fabs(point_x - end_x);
-    y = fabs(point_y - end_y);
-    z = fabs(point_z - end_z);
+    x = fabs(point.x - end.x);
+    y = fabs(point.y - end.y);
+    z = fabs(point.z - end.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;
@@ -506,9 +506,9 @@ float pathlib_h_diagonal3(vector a,vector b)
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
     //h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
-    z = fabs(a_z - b_z);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
+    z = fabs(a.z - b.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;
@@ -782,9 +782,9 @@ float pathlib_expandnode_box(entity node, vector start, vector goal)
 {
     vector v;
 
-    for(v_z = node.origin_z - pathlib_gridsize; v_z <= node.origin_z + pathlib_gridsize; v_z += pathlib_gridsize)
-    for(v_y = node.origin_y - pathlib_gridsize; v_y <= node.origin_y + pathlib_gridsize; v_y += pathlib_gridsize)
-    for(v_x = node.origin_x - pathlib_gridsize; v_x <= node.origin_x + pathlib_gridsize; v_x += pathlib_gridsize)
+    for(v_z = node.origin.z - pathlib_gridsize; v.z <= node.origin.z + pathlib_gridsize; v.z += pathlib_gridsize)
+    for(v_y = node.origin.y - pathlib_gridsize; v.y <= node.origin.y + pathlib_gridsize; v.y += pathlib_gridsize)
+    for(v_x = node.origin.x - pathlib_gridsize; v.x <= node.origin.x + pathlib_gridsize; v.x += pathlib_gridsize)
     {
         if(vlen(v - node.origin))
             pathlib_makenode(node,start,v,goal,pathlib_movecost);
@@ -929,16 +929,16 @@ entity pathlib_astar(vector from,vector to)
 
     pathlib_edge_check_size = (vlen(walknode_boxmin - walknode_boxmax) * 0.5);
 
-    walknode_boxup    = '0 0 2' * self.maxs_z;
+    walknode_boxup    = '0 0 2' * self.maxs.z;
     walknode_stepsize = 32;
     walknode_stepup   = '0 0 1' * walknode_stepsize;
     walknode_maxdrop  = '0 0 3' * walknode_stepsize;
 
-    from_x = fsnap(from_x,pathlib_gridsize);
-    from_y = fsnap(from_y,pathlib_gridsize);
+    from_x = fsnap(from.x,pathlib_gridsize);
+    from_y = fsnap(from.y,pathlib_gridsize);
 
-    to_x = fsnap(to_x,pathlib_gridsize);
-    to_y = fsnap(to_y,pathlib_gridsize);
+    to_x = fsnap(to.x,pathlib_gridsize);
+    to_y = fsnap(to.y,pathlib_gridsize);
 
     dprint("AStar init. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n");
     path = pathlib_mknode(from,world);

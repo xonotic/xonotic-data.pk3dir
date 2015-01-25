@@ -7,13 +7,13 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin_x));
-	WriteCoord(MSG_ENTITY, floor(self.origin_y));
-	WriteCoord(MSG_ENTITY, floor(self.origin_z));
+	WriteCoord(MSG_ENTITY, floor(self.origin.x));
+	WriteCoord(MSG_ENTITY, floor(self.origin.y));
+	WriteCoord(MSG_ENTITY, floor(self.origin.z));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteShort(MSG_ENTITY, self.oldorigin.x);
 	WriteByte(MSG_ENTITY, self.species);
 	return TRUE;
 }
@@ -724,18 +724,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(autocvar_g_mirrordamage_virtual)
 							{
 								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
-								attacker.dmg_take += v_x;
-								attacker.dmg_save += v_y;
+								attacker.dmg_take += v.x;
+								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = v_z;
+								mirrordamage = v.z;
 								mirrorforce = 0;
 							}
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
 								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
-								targ.dmg_take += v_x;
-								targ.dmg_save += v_y;
+								targ.dmg_take += v.x;
+								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
 								if(!autocvar_g_friendlyfire_virtual_force)
@@ -815,7 +815,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				self.oldvelocity = self.velocity;
 				
 				self.spawnorigin = spot.origin;
-				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
@@ -1087,9 +1087,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 								else
 									hitloc = nearest;
 							}
-							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
+							nearest_x = targ.origin.x + targ.mins.x + random() * targ.size.x;
+							nearest_y = targ.origin.y + targ.mins.y + random() * targ.size.y;
+							nearest_z = targ.origin.z + targ.mins.z + random() * targ.size.z;
 						}
 
 						nearest = hitloc * (1 / max(1, hits));

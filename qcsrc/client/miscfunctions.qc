@@ -132,7 +132,7 @@ vector HUD_GetFontsize(string cvarname)
 	if(v_x == 0)
 		v = '8 8 0';
 	if(v_y == 0)
-		v_y = v_x;
+		v_y = v.x;
 	v_z = 0;
 	return v;
 }
@@ -154,8 +154,8 @@ vector rotate(vector v, float a)
 {
 	vector w = '0 0 0';
 	// FTEQCC SUCKS AGAIN
-	w_x =      v_x * cos(a) + v_y * sin(a);
-	w_y = -1 * v_x * sin(a) + v_y * cos(a);
+	w_x =      v.x * cos(a) + v.y * sin(a);
+	w_y = -1 * v.x * sin(a) + v.y * cos(a);
 	return w;
 }
 
@@ -197,8 +197,8 @@ vector project_3d_to_2d(vector vec)
 	vec = cs_project(vec);
 	if(cs_project_is_b0rked > 0)
 	{
-		vec_x *= vid_conwidth / vid_width;
-		vec_y *= vid_conheight / vid_height;
+		vec.x *= vid_conwidth / vid_width;
+		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
 }
@@ -214,7 +214,7 @@ float expandingbox_sizefactor_from_fadelerp(float fadelerp)
 
 vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float boxxsizefactor)
 {
-	boxsize_x *= boxxsizefactor; // easier interface for text
+	boxsize.x *= boxxsizefactor; // easier interface for text
 	return boxsize * (0.5 * (1 - sz));
 }
 
@@ -223,18 +223,18 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 	vector line_dim = '0 0 0';
 
 	// left and right lines
-	pos_x -= thickness;
+	pos.x -= thickness;
 	line_dim_x = thickness;
-	line_dim_y = dim_y;
+	line_dim_y = dim.y;
 	drawfill(pos, line_dim, color, theAlpha, drawflag);
-	drawfill(pos + (dim_x + thickness) * '1 0 0', line_dim, color, theAlpha, drawflag);
+	drawfill(pos + (dim.x + thickness) * '1 0 0', line_dim, color, theAlpha, drawflag);
 
 	// upper and lower lines
-	pos_y -= thickness;
-	line_dim_x = dim_x + thickness * 2; // make upper and lower lines longer
+	pos.y -= thickness;
+	line_dim_x = dim.x + thickness * 2; // make upper and lower lines longer
 	line_dim_y = thickness;
 	drawfill(pos, line_dim, color, theAlpha, drawflag);
-	drawfill(pos + (dim_y + thickness) * '0 1 0', line_dim, color, theAlpha, drawflag);
+	drawfill(pos + (dim.y + thickness) * '0 1 0', line_dim, color, theAlpha, drawflag);
 }
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag)
@@ -242,20 +242,20 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
-	current_pos_y = pos_y;
-	while (current_pos_y < end_pos_y)
+	current_pos_y = pos.y;
+	while (current_pos.y < end_pos.y)
 	{
-		current_pos_x = pos_x;
-		while (current_pos_x < end_pos_x)
+		current_pos_x = pos.x;
+		while (current_pos.x < end_pos.x)
 		{
-			new_size_x = min(sz_x, end_pos_x - current_pos_x);
-			new_size_y = min(sz_y, end_pos_y - current_pos_y);
-			ratio_x = new_size_x / sz_x;
-			ratio_y = new_size_y / sz_y;
+			new_size_x = min(sz.x, end_pos.x - current_pos.x);
+			new_size_y = min(sz.y, end_pos.y - current_pos.y);
+			ratio_x = new_size.x / sz.x;
+			ratio_y = new_size.y / sz.y;
 			drawsubpic(current_pos, new_size, pic, '0 0 0', ratio, color, theAlpha, drawflag);
-			current_pos_x += sz_x;
+			current_pos.x += sz.x;
 		}
-		current_pos_y += sz_y;
+		current_pos.y += sz.y;
 	}
 }
 
@@ -269,18 +269,18 @@ var string _drawpic_picpath;
 	do {\
 		_drawpic_imgsize = draw_getimagesize(pic);\
 		if(_drawpic_imgsize != '0 0 0') {\
-			_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
 			_drawpic_sz = mySize;\
-			if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
-				_drawpic_oldsz = _drawpic_sz_x;\
-				_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-				if(_drawpic_sz_x)\
-					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz.x;\
+				_drawpic_sz_x = _drawpic_sz.y * _drawpic_imgaspect;\
+				if(_drawpic_sz.x)\
+					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 			} else {\
-				_drawpic_oldsz = _drawpic_sz_y;\
-				_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-				if(_drawpic_sz_y)\
-					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+				_drawpic_oldsz = _drawpic_sz.y;\
+				_drawpic_sz_y = _drawpic_sz.x / _drawpic_imgaspect;\
+				if(_drawpic_sz.y)\
+					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 			}\
 		}\
 	} while(0)
@@ -322,27 +322,27 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 }
 #define SET_POS_AND_SZ_Y_ASPECT(allow_colors)\
 	float textaspect, oldsz;\
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz_y) / sz_y;\
-	if(sz_x/sz_y > textaspect) {\
-		oldsz = sz_x;\
-		sz_x = sz_y * textaspect;\
-		pos_x += (oldsz - sz_x) * 0.5;\
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;\
+	if(sz.x/sz.y > textaspect) {\
+		oldsz = sz.x;\
+		sz_x = sz.y * textaspect;\
+		pos.x += (oldsz - sz.x) * 0.5;\
 	} else {\
-		oldsz = sz_y;\
-		sz_y = sz_x / textaspect; \
-		pos_y += (oldsz - sz_y) * 0.5;\
+		oldsz = sz.y;\
+		sz_y = sz.x / textaspect; \
+		pos.y += (oldsz - sz.y) * 0.5;\
 	}
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
 	SET_POS_AND_SZ_Y_ASPECT(FALSE)
-	drawstring(pos, text, '1 1 0' * sz_y, color, theAlpha, drawflag);
+	drawstring(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag);
 }
 
 // drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
 void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
 	SET_POS_AND_SZ_Y_ASPECT(TRUE)
-	drawcolorcodedstring(pos, text, '1 1 0' * sz_y, theAlpha, drawflag);
+	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
 }
 
 vector drawfontscale;
@@ -353,7 +353,7 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, FALSE, theScale * (sz / drawfontscale_x)) / (theScale_x * sz)), text, theScale * (sz / drawfontscale_x), rgb, theAlpha * (1 - fadelerp), flag);
+	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, FALSE, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
@@ -363,7 +363,7 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp) {
 	SET_POS_AND_SZ_Y_ASPECT(FALSE)
-	drawstring_expanding(pos, text, '1 1 0' * sz_y, color, theAlpha, drawflag, fadelerp);
+	drawstring_expanding(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag, fadelerp);
 }
 
 void drawcolorcodedstring_expanding(vector position, string text, vector theScale, float theAlpha, float flag, float fadelerp)
@@ -373,13 +373,13 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, TRUE, theScale * (sz / drawfontscale_x)) / (theScale_x * sz)), text, theScale * (sz / drawfontscale_x), theAlpha * (1 - fadelerp), flag);
+	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, TRUE, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp) {
 	SET_POS_AND_SZ_Y_ASPECT(TRUE)
-	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz_y, theAlpha, drawflag, fadelerp);
+	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz.y, theAlpha, drawflag, fadelerp);
 }
 
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
@@ -397,9 +397,9 @@ float PolyDrawModelSurface(entity e, float i_s)
 	{
 		tri = getsurfacetriangle(e, i_s, i_t);
 		R_BeginPolygon(tex, 0);
-		R_PolygonVertex(getsurfacepoint(e, i_s, tri_x), getsurfacepointattribute(e, i_s, tri_x, SPA_TEXCOORDS0), '1 1 1', 1);
-		R_PolygonVertex(getsurfacepoint(e, i_s, tri_y), getsurfacepointattribute(e, i_s, tri_y, SPA_TEXCOORDS0), '1 1 1', 1);
-		R_PolygonVertex(getsurfacepoint(e, i_s, tri_z), getsurfacepointattribute(e, i_s, tri_z, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri.x), getsurfacepointattribute(e, i_s, tri.x, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri.y), getsurfacepointattribute(e, i_s, tri.y, SPA_TEXCOORDS0), '1 1 1', 1);
+		R_PolygonVertex(getsurfacepoint(e, i_s, tri.z), getsurfacepointattribute(e, i_s, tri.z, SPA_TEXCOORDS0), '1 1 1', 1);
 		R_EndPolygon();
 	}
 	return 1;
@@ -429,19 +429,19 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 		// draw full rectangle
 		R_BeginPolygon(pic, drawflag);
 			v = centre;			t = '0.5 0.5 0';
-			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			v.y -= 0.5 * ringsize.y;	t -= '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 
@@ -453,7 +453,7 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 				R_PolygonVertex(v, t, rgb, a);
 
 				v = centre;			t = '0.5 0.5 0';
-				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 		}
 	}
@@ -462,15 +462,15 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 		// draw upper and first triangle
 		R_BeginPolygon(pic, drawflag);
 			v = centre;			t = '0.5 0.5 0';
-			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 		R_BeginPolygon(pic, drawflag);
@@ -478,11 +478,11 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y -= 0.5 * ringsize_y;	t -= '0.5 -0.5 0';
+			v.y -= 0.5 * ringsize.y;	t -= '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 		d = q - 0.75;
@@ -494,15 +494,15 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 		// draw upper triangle
 		R_BeginPolygon(pic, drawflag);
 			v = centre;			t = '0.5 0.5 0';
-			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+			v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 
@@ -514,7 +514,7 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 				R_PolygonVertex(v, t, rgb, a);
 
 				v = centre;			t = '0.5 0.5 0';
-				v_x -= 0.5 * ringsize_x;	t -= '0.5 0.5 0';
+				v.x -= 0.5 * ringsize.x;	t -= '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 		}
 	}
@@ -526,11 +526,11 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+			v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 			v = centre;			t = '0.5 0.5 0';
-			v_y += 0.5 * ringsize_y;	t += '0.5 -0.5 0';
+			v.y += 0.5 * ringsize.y;	t += '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 
 		d = q - 0.25;
@@ -547,7 +547,7 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 				R_PolygonVertex(v, t, rgb, a);
 
 				v = centre;			t = '0.5 0.5 0';
-				v_x += 0.5 * ringsize_x;	t += '0.5 0.5 0';
+				v.x += 0.5 * ringsize.x;	t += '0.5 0.5 0';
 				R_PolygonVertex(v, t, rgb, a);
 		}
 	}
@@ -555,8 +555,8 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 	if(d > 0)
 	{
 			v = centre;			t = '0.5 0.5 0';
-			v_x += x * 0.5 * ringsize_x;	t += x * '0.5 0.5 0';
-			v_y += y * 0.5 * ringsize_y;	t += y * '0.5 -0.5 0';
+			v.x += x * 0.5 * ringsize.x;	t += x * '0.5 0.5 0';
+			v.y += y * 0.5 * ringsize.y;	t += y * '0.5 -0.5 0';
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}

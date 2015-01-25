@@ -66,7 +66,7 @@ string Slider_toString(entity me)
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Slider).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.controlWidth = absSize_y / absSize_x;
+	me.controlWidth = absSize.y / absSize.x;
 }
 string Slider_valueToText(entity me, float val)
 {
@@ -163,13 +163,13 @@ float Slider_mouseDrag(entity me, vector pos)
 	if(me.pressed)
 	{
 		hit = 1;
-		if(pos_x < 0 - me.tolerance_x) hit = 0;
-		if(pos_y < 0 - me.tolerance_y) hit = 0;
-		if(pos_x >= 1 - me.textSpace + me.tolerance_x) hit = 0;
-		if(pos_y >= 1 + me.tolerance_y) hit = 0;
+		if(pos.x < 0 - me.tolerance.x) hit = 0;
+		if(pos.y < 0 - me.tolerance.y) hit = 0;
+		if(pos.x >= 1 - me.textSpace + me.tolerance.x) hit = 0;
+		if(pos.y >= 1 + me.tolerance.y) hit = 0;
 		if(hit)
 		{
-			v = median(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
+			v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if(me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
 			me.setValue(me, v);
@@ -187,24 +187,24 @@ float Slider_mousePress(entity me, vector pos)
 	float controlCenter;
 	if(me.disabled)
 		return 0;
-	if(pos_x < 0) return 0;
-	if(pos_y < 0) return 0;
-	if(pos_x >= 1 - me.textSpace) return 0;
-	if(pos_y >= 1) return 0;
+	if(pos.x < 0) return 0;
+	if(pos.y < 0) return 0;
+	if(pos.x >= 1 - me.textSpace) return 0;
+	if(pos.y >= 1) return 0;
 	controlCenter = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth) + 0.5 * me.controlWidth;
-	if(fabs(pos_x - controlCenter) <= 0.5 * me.controlWidth)
+	if(fabs(pos.x - controlCenter) <= 0.5 * me.controlWidth)
 	{
 		me.pressed = 1;
-		me.pressOffset = pos_x - controlCenter;
+		me.pressOffset = pos.x - controlCenter;
 		me.previousValue = me.value;
 		//me.mouseDrag(me, pos);
 	}
 	else
 	{
 		float clickValue, pageValue, inRange;
-		clickValue = median(0, (pos_x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
+		clickValue = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 		inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
-		if(pos_x < controlCenter)
+		if(pos.x < controlCenter)
 		{
 			pageValue = me.value - me.valuePageStep;
 			if(me.valueStep)
@@ -230,7 +230,7 @@ float Slider_mousePress(entity me, vector pos)
 		{
 			controlCenter = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth) + 0.5 * me.controlWidth;
 			me.pressed = 1;
-			me.pressOffset = pos_x - controlCenter;
+			me.pressOffset = pos.x - controlCenter;
 			me.previousValue = me.value;
 			//me.mouseDrag(me, pos);
 		}

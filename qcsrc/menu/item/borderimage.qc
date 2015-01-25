@@ -30,7 +30,7 @@ void BorderImage_recalcPositionWithText(entity me, string t)
 		scrs = eX * conwidth + eY * conheight;
 		me.resizeNotify(me, me.saveRelOrigin, me.saveRelSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
 		SUPER(BorderImage).recalcPositionWithText(me, t);
-		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
+		me.realOrigin_y = me.realFontSize.y * me.zoomedOutTitleBarPosition;
 		me.realOrigin_Nexposeed = me.realOrigin;
 		me.realFontSize_Nexposeed = me.realFontSize;
 		me.resizeNotify(me, me.saveRelOrigin, me.saveRelSize, boxToGlobal(me.parent.Nexposee_initialOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_initialSize, scrs));
@@ -48,13 +48,13 @@ void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vecto
 	me.saveRelOrigin = relOrigin;
 	me.saveRelSize = relSize;
 	SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.borderVec_x = me.borderHeight / absSize_x;
-	me.borderVec_y = me.borderHeight / absSize_y;
-	me.realOrigin_y = 0.5 * (me.borderVec_y - me.realFontSize_y);
+	me.borderVec_x = me.borderHeight / absSize.x;
+	me.borderVec_y = me.borderHeight / absSize.y;
+	me.realOrigin_y = 0.5 * (me.borderVec.y - me.realFontSize.y);
 	if(me.closeButton)
 	{
 		// move the close button to the right place
-		me.closeButton.Container_origin = '1 0 0' * (1 - me.borderVec_x);
+		me.closeButton.Container_origin = '1 0 0' * (1 - me.borderVec.x);
 		me.closeButton.Container_size = me.borderVec;
 		me.closeButton.color = me.color;
 		me.closeButton.colorC = me.color;

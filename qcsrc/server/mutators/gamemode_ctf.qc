@@ -51,7 +51,7 @@ void ctf_FlagcarrierWaypoints(entity player)
 
 void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnrate)
 {
-	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
+	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
 	float initial_height = min(autocvar_g_ctf_pass_arc_max, (flag.pass_distance * tanh(autocvar_g_ctf_pass_arc)));
 	float current_height = (initial_height * min(1, (current_distance / flag.pass_distance)));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
@@ -331,7 +331,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			WarpZone_RefSys_AddInverse(flag, receiver); // wz1^-1 ... wzn^-1 receiver
 			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the flag
 
-			flag.pass_distance = vlen((('1 0 0' * targ_origin_x) + ('0 1 0' * targ_origin_y)) - (('1 0 0' *  player.origin_x) + ('0 1 0' *  player.origin_y))); // for the sake of this check, exclude Z axis
+			flag.pass_distance = vlen((('1 0 0' * targ_origin.x) + ('0 1 0' * targ_origin.y)) - (('1 0 0' *  player.origin.x) + ('0 1 0' *  player.origin.y))); // for the sake of this check, exclude Z axis
 			ctf_CalculatePassVelocity(flag, targ_origin, player.origin, FALSE);
 
 			// main
@@ -350,7 +350,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 
 		case DROP_THROW:
 		{
-			makevectors((player.v_angle_y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle_x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
+			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
 			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
@@ -1581,7 +1581,7 @@ void havocbot_role_ctf_middle()
 		vector org;
 
 		org = havocbot_ctf_middlepoint;
-		org_z = self.origin_z;
+		org_z = self.origin.z;
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();

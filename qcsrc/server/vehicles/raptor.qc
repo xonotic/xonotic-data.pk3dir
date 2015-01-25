@@ -231,7 +231,7 @@ void raptor_land()
         self.frame = (hgt / 128) * 25;
 
     self.bomb1.gun1.avelocity_y = 90 + ((self.frame / 25) * 2000);
-    self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
+    self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity.y;
 
     if(hgt < 16)
     {
@@ -307,9 +307,9 @@ float raptor_takeoff()
     if(raptor.frame < 25)
     {
         raptor.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / sys_frametime);
-        raptor.velocity_z = min(raptor.velocity_z * 1.5, 256);
+        raptor.velocity_z = min(raptor.velocity.z * 1.5, 256);
         self.bomb1.gun1.avelocity_y = 90 + ((raptor.frame / 25) * 25000);
-        self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
+        self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity.y;
         player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
 
         setorigin(player, raptor.origin + '0 0 32');
@@ -417,58 +417,58 @@ float raptor_frame()
     vector vang;
     vang = raptor.angles;
     df = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
-    vang_x *= -1;
-    df_x *= -1;
-    if(df_x > 180)  df_x -= 360;
-    if(df_x < -180) df_x += 360;
-    if(df_y > 180)  df_y -= 360;
-    if(df_y < -180) df_y += 360;
+    vang.x *= -1;
+    df.x *= -1;
+    if(df.x > 180)  df.x -= 360;
+    if(df.x < -180) df.x += 360;
+    if(df.y > 180)  df.y -= 360;
+    if(df.y < -180) df.y += 360;
 
-    ftmp = shortangle_f(player.v_angle_y - vang_y, vang_y);
+    ftmp = shortangle_f(player.v_angle.y - vang.y, vang.y);
     if(ftmp > 180)  ftmp -= 360; if(ftmp < -180) ftmp += 360;
-    raptor.avelocity_y = bound(-autocvar_g_vehicle_raptor_turnspeed, ftmp + raptor.avelocity_y * 0.9, autocvar_g_vehicle_raptor_turnspeed);
+    raptor.avelocity_y = bound(-autocvar_g_vehicle_raptor_turnspeed, ftmp + raptor.avelocity.y * 0.9, autocvar_g_vehicle_raptor_turnspeed);
 
     // Pitch
     ftmp = 0;
-    if(player.movement_x > 0 && vang_x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
-    else if(player.movement_x < 0 && vang_x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
+    if(player.movement.x > 0 && vang.x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
+    else if(player.movement.x < 0 && vang.x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
 
-    df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x , autocvar_g_vehicle_raptor_pitchlimit);
-    ftmp = vang_x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df_x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
-    raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchspeed, ftmp + raptor.avelocity_x * 0.9, autocvar_g_vehicle_raptor_pitchspeed);
+    df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df.x , autocvar_g_vehicle_raptor_pitchlimit);
+    ftmp = vang.x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df.x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
+    raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchspeed, ftmp + raptor.avelocity.x * 0.9, autocvar_g_vehicle_raptor_pitchspeed);
 
-    raptor.angles_x = anglemods(raptor.angles_x);
-    raptor.angles_y = anglemods(raptor.angles_y);
-    raptor.angles_z = anglemods(raptor.angles_z);
+    raptor.angles_x = anglemods(raptor.angles.x);
+    raptor.angles_y = anglemods(raptor.angles.y);
+    raptor.angles_z = anglemods(raptor.angles.z);
 
     if(autocvar_g_vehicle_raptor_movestyle == 1)
-        makevectors('0 1 0' * raptor.angles_y);
+        makevectors('0 1 0' * raptor.angles.y);
     else
         makevectors(player.v_angle);
 
     df = raptor.velocity * -autocvar_g_vehicle_raptor_friction;
 
-    if(player.movement_x != 0)
+    if(player.movement.x != 0)
     {
-        if(player.movement_x > 0)
+        if(player.movement.x > 0)
             df += v_forward  * autocvar_g_vehicle_raptor_speed_forward;
-        else if(player.movement_x < 0)
+        else if(player.movement.x < 0)
             df -= v_forward  * autocvar_g_vehicle_raptor_speed_forward;
     }
 
-    if(player.movement_y != 0)
+    if(player.movement.y != 0)
     {
-        if(player.movement_y < 0)
+        if(player.movement.y < 0)
             df -= v_right * autocvar_g_vehicle_raptor_speed_strafe;
-        else if(player.movement_y > 0)
+        else if(player.movement.y > 0)
             df += v_right * autocvar_g_vehicle_raptor_speed_strafe;
 
-        raptor.angles_z = bound(-30,raptor.angles_z + (player.movement_y / autocvar_g_vehicle_raptor_speed_strafe),30);
+        raptor.angles_z = bound(-30,raptor.angles.z + (player.movement.y / autocvar_g_vehicle_raptor_speed_strafe),30);
     }
     else
     {
         raptor.angles_z *= 0.95;
-        if(raptor.angles_z >= -1 && raptor.angles_z <= -1)
+        if(raptor.angles.z >= -1 && raptor.angles.z <= -1)
             raptor.angles_z = 0;
     }
 
@@ -516,7 +516,7 @@ float raptor_frame()
             UpdateAuxiliaryXhair(player, vf, '1 0 0', 1);
             vector _vel = raptor.gun1.enemy.velocity;
             if(raptor.gun1.enemy.movetype == MOVETYPE_WALK)
-                _vel_z *= 0.1;
+                _vel.z *= 0.1;
 
             if(autocvar_g_vehicle_raptor_cannon_predicttarget)
             {
@@ -751,16 +751,16 @@ void raptor_die()
 
 void raptor_impact()
 {
-	if(autocvar_g_vehicle_raptor_bouncepain_x)
-		vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+	if(autocvar_g_vehicle_raptor_bouncepain.x)
+		vehicles_impact(autocvar_g_vehicle_raptor_bouncepain.x, autocvar_g_vehicle_raptor_bouncepain.y, autocvar_g_vehicle_raptor_bouncepain.z);
 }
 
 // If we dont do this ever now and then, the raptors rotors
 // stop working, presumably due to angle overflow. cute.
 void raptor_rotor_anglefix()
 {
-    self.gun1.angles_y = anglemods(self.gun1.angles_y);
-    self.gun2.angles_y = anglemods(self.gun2.angles_y);
+    self.gun1.angles_y = anglemods(self.gun1.angles.y);
+    self.gun2.angles_y = anglemods(self.gun2.angles.y);
     self.nextthink = time + 15;
 }
 

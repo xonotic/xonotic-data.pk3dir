@@ -202,7 +202,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
         else
             dist = localhead.origin;
         dist = dist - point;
-        dist = dist_x * axismod_x * '1 0 0' + dist_y * axismod_y * '0 1 0' + dist_z * axismod_z * '0 0 1';
+        dist = dist.x * axismod.x * '1 0 0' + dist.y * axismod.y * '0 1 0' + dist.z * axismod.z * '0 0 1';
         len = vlen(dist);
 
         for (i = 0; i < num_nearest; ++i)
@@ -368,7 +368,7 @@ string formatmessage(string msg)
 			if (replacement == "" || !cursor_ent)
 				replacement = "nothing";
 		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
+			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
 		else if (escape == "S")
 			replacement = ftos(vlen(self.velocity));
 
@@ -1121,9 +1121,9 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     else
         WriteByte(dest, idx);
 
-    WriteCoord(dest, o_x);
-    WriteCoord(dest, o_y);
-    WriteCoord(dest, o_z);
+    WriteCoord(dest, o.x);
+    WriteCoord(dest, o.y);
+    WriteCoord(dest, o.z);
 }
 void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
 {
@@ -1163,9 +1163,9 @@ void stopsoundto(float dest, entity e, float chan)
             WriteShort(dest, idx);
         else
             WriteByte(dest, idx);
-        WriteCoord(dest, e.origin_x);
-        WriteCoord(dest, e.origin_y);
-        WriteCoord(dest, e.origin_z);
+        WriteCoord(dest, e.origin.x);
+        WriteCoord(dest, e.origin.y);
+        WriteCoord(dest, e.origin.z);
     }
     else
     {
@@ -1703,11 +1703,11 @@ float trace_hits_box(vector start, vector end, vector thmi, vector thma)
     trace_hits_box_a0 = 0;
     trace_hits_box_a1 = 1;
 
-    if (!trace_hits_box_1d(end_x, thmi_x, thma_x))
+    if (!trace_hits_box_1d(end.x, thmi.x, thma.x))
         return FALSE;
-    if (!trace_hits_box_1d(end_y, thmi_y, thma_y))
+    if (!trace_hits_box_1d(end.y, thmi.y, thma.y))
         return FALSE;
-    if (!trace_hits_box_1d(end_z, thmi_z, thma_z))
+    if (!trace_hits_box_1d(end.z, thmi.z, thma.z))
         return FALSE;
 
     return TRUE;
@@ -1847,14 +1847,14 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     for (i = 0; i < attempts; ++i)
     {
-        start_x = org_x + random() * delta_x;
-        start_y = org_y + random() * delta_y;
-        start_z = org_z + random() * delta_z;
+        start_x = org.x + random() * delta.x;
+        start_y = org.y + random() * delta.y;
+        start_z = org.z + random() * delta.z;
 
         // rule 1: start inside world bounds, and outside
         // solid, and don't start from somewhere where you can
         // fall down to evil
-        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta_z, MOVE_NORMAL, e);
+        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
         if (trace_fraction >= 1)
             continue;
         if (trace_startsolid)
@@ -1865,7 +1865,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
             continue;
 
         // rule 2: if we are too high, lower the point
-        if (trace_fraction * delta_z > maxaboveground)
+        if (trace_fraction * delta.z > maxaboveground)
             start = trace_endpos + '0 0 1' * maxaboveground;
         enddown = trace_endpos;
 
@@ -1874,19 +1874,19 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         // the map should have a convex outside hull.
         // these can be traceLINES as we already verified the starting box
         mstart = start + 0.5 * (e.mins + e.maxs);
-        traceline(mstart, mstart + '1 0 0' * delta_x, MOVE_NORMAL, e);
+        traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart - '1 0 0' * delta_x, MOVE_NORMAL, e);
+        traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart + '0 1 0' * delta_y, MOVE_NORMAL, e);
+        traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart - '0 1 0' * delta_y, MOVE_NORMAL, e);
+        traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
+        traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
         if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
 
@@ -1906,9 +1906,9 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 	}
 
         // find a random vector to "look at"
-        end_x = org_x + random() * delta_x;
-        end_y = org_y + random() * delta_y;
-        end_z = org_z + random() * delta_z;
+        end_x = org.x + random() * delta.x;
+        end_y = org.y + random() * delta.y;
+        end_z = org.z + random() * delta.z;
         end = start + normalize(end - start) * vlen(delta);
 
         // rule 4: start TO end must not be too short
@@ -1962,7 +1962,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			break;
 
 		case 4: // left
-			vecs_y = -vecs_y;
+			vecs_y = -vecs.y;
 			break;
 
 		case 1:
@@ -1970,7 +1970,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 2;
+				vecs.z -= 2;
 			}
 			else
 			{
@@ -1983,12 +1983,12 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			{
 				// center
 				vecs_y = 0;
-				vecs_z -= 2;
+				vecs.z -= 2;
 			}
 			else
 			{
 				// left
-				vecs_y = -vecs_y;
+				vecs_y = -vecs.y;
 			}
 			break;
 	}
@@ -2005,7 +2005,7 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 		if (visual)
 		{
 			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs_y = 0; vecs_z -= 2; }
+			else { vecs_y = 0; vecs.z -= 2; }
 		}
 		else
 		{
@@ -2016,17 +2016,17 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	else if (autocvar_g_shootfromcenter)
 	{
 		vecs_y = 0;
-		vecs_z -= 2;
+		vecs.z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{
 		v = stov(s);
 		if (y_is_right)
-			v_y = -v_y;
-		if (v_x != 0)
-			vecs_x = v_x;
-		vecs_y = v_y;
-		vecs_z = v_z;
+			v_y = -v.y;
+		if (v.x != 0)
+			vecs_x = v.x;
+		vecs_y = v.y;
+		vecs_z = v.z;
 	}
 	else if (autocvar_g_shootfromclient)
 	{
@@ -2142,26 +2142,26 @@ float modeleffect_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, self.modelindex);
 	WriteByte(MSG_ENTITY, self.skin);
 	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
 	if(f & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.velocity_x);
-		WriteCoord(MSG_ENTITY, self.velocity_y);
-		WriteCoord(MSG_ENTITY, self.velocity_z);
+		WriteCoord(MSG_ENTITY, self.velocity.x);
+		WriteCoord(MSG_ENTITY, self.velocity.y);
+		WriteCoord(MSG_ENTITY, self.velocity.z);
 	}
 	if(f & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
+		WriteCoord(MSG_ENTITY, self.angles.x);
+		WriteCoord(MSG_ENTITY, self.angles.y);
+		WriteCoord(MSG_ENTITY, self.angles.z);
 	}
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.avelocity_x);
-		WriteCoord(MSG_ENTITY, self.avelocity_y);
-		WriteCoord(MSG_ENTITY, self.avelocity_z);
+		WriteCoord(MSG_ENTITY, self.avelocity.x);
+		WriteCoord(MSG_ENTITY, self.avelocity.y);
+		WriteCoord(MSG_ENTITY, self.avelocity.z);
 	}
 	WriteShort(MSG_ENTITY, self.scale * 256.0);
 	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
@@ -2189,11 +2189,11 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	e.fade_time = t2;
 	e.skin = s;
 	if(s0 >= 0)
-		e.scale = s0 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.scale = s0 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
 	else
 		e.scale = -s0;
 	if(s2 >= 0)
-		e.scale2 = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
 	else
 		e.scale2 = -s2;
 	sz = max(e.scale, e.scale2);

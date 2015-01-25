@@ -129,16 +129,16 @@ vector solve_cubic_abcd(float a, float b, float c, float d)
 	v = solve_cubic_pq(p, q);
 	v = (v -  b * '1 1 1') * (1.0 / (3.0 * a));
 	if(a < 0)
-		v += '1 0 -1' * (v_z - v_x); // swap x, z
+		v += '1 0 -1' * (v.z - v.x); // swap x, z
 	return v;
 }
 
 vector findperpendicular(vector v)
 {
 	vector p;
-	p_x = v_z;
-	p_y = -v_x;
-	p_z = v_y;
+	p_x = v.z;
+	p_y = -v.x;
+	p_z = v.y;
 	return normalize(cliptoplane(p, v));
 }
 

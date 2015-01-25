@@ -442,9 +442,9 @@ void detect_maptype()
 	for(0;;)
 	{
 		o = world.mins;
-		o_x += random() * (world.maxs_x - world.mins_x);
-		o_y += random() * (world.maxs_y - world.mins_y);
-		o_z += random() * (world.maxs_z - world.mins_z);
+		o.x += random() * (world.maxs.x - world.mins.x);
+		o.y += random() * (world.maxs.y - world.mins.y);
+		o.z += random() * (world.maxs.z - world.mins.z);
 
 		tracebox(o, PL_MIN, PL_MAX, o - '0 0 32768', MOVE_WORLDONLY, world);
 		if(trace_fraction == 1)

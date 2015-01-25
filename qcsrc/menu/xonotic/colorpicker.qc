@@ -39,34 +39,34 @@ float XonoticColorpicker_mousePress(entity me, vector coords)
 // must match hslimage.c
 vector hslimage_color(vector v, vector margin)
 {
-    v_x = (v_x - margin_x) / (1 - 2 * margin_x);
-    v_y = (v_y - margin_y) / (1 - 2 * margin_y);
-    if(v_x < 0) v_x = 0;
-    if(v_y < 0) v_y = 0;
-    if(v_x > 1) v_x = 1;
-    if(v_y > 1) v_y = 1;
-    if(v_y > 0.875) // grey bar
-        return hsl_to_rgb(eZ * v_x);
+    v_x = (v.x - margin.x) / (1 - 2 * margin.x);
+    v_y = (v.y - margin.y) / (1 - 2 * margin.y);
+    if(v.x < 0) v_x = 0;
+    if(v.y < 0) v_y = 0;
+    if(v.x > 1) v_x = 1;
+    if(v.y > 1) v_y = 1;
+    if(v.y > 0.875) // grey bar
+        return hsl_to_rgb(eZ * v.x);
     else
-        return hsl_to_rgb(v_x * 6 * eX + eY + v_y / 0.875 * eZ);
+        return hsl_to_rgb(v.x * 6 * eX + eY + v.y / 0.875 * eZ);
 }
 
 vector color_hslimage(vector v, vector margin)
 {
 	vector pos = '0 0 0';
 	v = rgb_to_hsl(v);
-	if (v_y)
+	if (v.y)
 	{
-		pos_x = v_x / 6;
-		pos_y = v_z * 0.875;
+		pos_x = v.x / 6;
+		pos_y = v.z * 0.875;
 	}
 	else // grey scale
 	{
-		pos_x = v_z;
+		pos_x = v.z;
 		pos_y = 0.875 + 0.07;
 	}
-	pos_x = margin_x + pos_x * (1 - 2 * margin_x);
-	pos_y = margin_y + pos_y * (1 - 2 * margin_y);
+	pos_x = margin.x + pos.x * (1 - 2 * margin.x);
+	pos_y = margin.y + pos.y * (1 - 2 * margin.y);
 	return pos;
 }
 
@@ -128,10 +128,10 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 
 	vector margin;
 	margin = me.imagemargin;
-	if(coords_x >= margin_x)
-	if(coords_y >= margin_y)
-	if(coords_x <= 1 - margin_x)
-	if(coords_y <= 1 - margin_y)
+	if(coords.x >= margin.x)
+	if(coords.y >= margin.y)
+	if(coords.x <= 1 - margin.x)
+	if(coords.y <= 1 - margin.y)
 		me.controlledTextbox.enterText(me.controlledTextbox, rgb_to_hexcolor(hslimage_color(coords, margin)));
 
 	return 1;

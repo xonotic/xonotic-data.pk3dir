@@ -108,7 +108,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			{
 				swimming = TRUE;
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
-				for(0; org_z < end_z + self.maxs_z; org_z += stepdist)
+				for(0; org.z < end.z + self.maxs.z; org.z += stepdist)
 				{
 						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
@@ -387,7 +387,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org_z = ent.origin_z + ent.mins_z - PL_MIN_z; // player height
+	org_z = ent.origin.z + ent.mins.z - PL_MIN_z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -408,9 +408,9 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 				vector wm1, wm2;
 				wm1 = w.origin + w.mins;
 				wm2 = w.origin + w.maxs;
-				v_x = bound(wm1_x, org_x, wm2_x);
-				v_y = bound(wm1_y, org_y, wm2_y);
-				v_z = bound(wm1_z, org_z, wm2_z);
+				v_x = bound(wm1_x, org.x, wm2_x);
+				v_y = bound(wm1_y, org.y, wm2_y);
+				v_z = bound(wm1_z, org.z, wm2_z);
 			}
 			else
 				v = w.origin;
@@ -454,14 +454,14 @@ float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
 				m1 = head.origin + head.mins;
 				m2 = head.origin + head.maxs;
 				v = self.origin;
-				v_x = bound(m1_x, v_x, m2_x);
-				v_y = bound(m1_y, v_y, m2_y);
-				v_z = bound(m1_z, v_z, m2_z);
+				v_x = bound(m1_x, v.x, m2_x);
+				v_y = bound(m1_y, v.y, m2_y);
+				v_z = bound(m1_z, v.z, m2_z);
 			}
 			else
 				v = head.origin;
 			diff = v - self.origin;
-			diff_z = max(0, diff_z);
+			diff_z = max(0, diff.z);
 			if (vlen(diff) < maxdist)
 			{
 				head.wpconsidered = TRUE;
@@ -491,9 +491,9 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 	{
 		m1 = wp.absmin;
 		m2 = wp.absmax;
-		v_x = bound(m1_x, p_x, m2_x);
-		v_y = bound(m1_y, p_y, m2_y);
-		v_z = bound(m1_z, p_z, m2_z);
+		v_x = bound(m1_x, p.x, m2_x);
+		v_y = bound(m1_y, p.y, m2_y);
+		v_z = bound(m1_z, p.z, m2_z);
 	}
 	else
 		v = wp.origin;
@@ -716,10 +716,10 @@ void navigation_routerating(entity e, float f, float rangebias)
 				npa = pointa + down;
 				npb = pointb + down;
 
-				if(npa_z<=self.absmax_z)
+				if(npa.z<=self.absmax.z)
 					break;
 
-				if(npb_z<=e.absmax_z)
+				if(npb.z<=e.absmax.z)
 					break;
 
 				traceline(npa, npb, MOVE_NORMAL, self);
@@ -735,7 +735,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			// Rough estimation of fuel consumption
 			// (ignores acceleration and current xyz velocity)
 			xydistance = vlen(pointa - pointb);
-			zdistance = fabs(pointa_z - self.origin_z);
+			zdistance = fabs(pointa.z - self.origin.z);
 
 			t = zdistance / autocvar_g_jetpack_maxspeed_up;
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
@@ -1034,9 +1034,9 @@ void botframe_updatedangerousobjects(float maxupdate)
 		while (head)
 		{
 			v = head.origin;
-			v_x = bound(m1_x, v_x, m2_x);
-			v_y = bound(m1_y, v_y, m2_y);
-			v_z = bound(m1_z, v_z, m2_z);
+			v_x = bound(m1_x, v.x, m2_x);
+			v_y = bound(m1_y, v.y, m2_y);
+			v_z = bound(m1_z, v.z, m2_z);
 			o = (head.absmin + head.absmax) * 0.5;
 			d = head.bot_dodgerating - vlen(o - v);
 			if (d > 0)

@@ -887,8 +887,8 @@ void XonoticServerList_positionSortButton(entity me, entity btn, float theOrigin
 	originInDialogSpace = boxToGlobal(originInLBSpace, me.Container_origin, me.Container_size);
 	sizeInDialogSpace = boxToGlobalSize(sizeInLBSpace, me.Container_size);
 
-	btn.Container_origin_x = originInDialogSpace_x + sizeInDialogSpace_x * theOrigin;
-	btn.Container_size_x   =                         sizeInDialogSpace_x * theSize;
+	btn.Container_origin_x = originInDialogSpace.x + sizeInDialogSpace.x * theOrigin;
+	btn.Container_size_x   =                         sizeInDialogSpace.x * theSize;
 	btn.setText(btn, theTitle);
 	btn.onClick = theFunc;
 	btn.onClickEntity = me;
@@ -898,22 +898,22 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 {
 	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnIconsOrigin = 0;
-	me.columnIconsSize = me.realFontSize_x * 4 * me.iconsSizeFactor;
-	me.columnPingSize = me.realFontSize_x * 3;
-	me.columnMapSize = me.realFontSize_x * 10;
-	me.columnTypeSize = me.realFontSize_x * 4;
-	me.columnPlayersSize = me.realFontSize_x * 5;
-	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize_x;
-	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize_x;
-	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize_x;
-	me.columnMapOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x;
-	me.columnTypeOrigin = me.columnMapOrigin + me.columnMapSize + me.realFontSize_x;
-	me.columnPlayersOrigin = me.columnTypeOrigin + me.columnTypeSize + me.realFontSize_x;
+	me.columnIconsSize = me.realFontSize.x * 4 * me.iconsSizeFactor;
+	me.columnPingSize = me.realFontSize.x * 3;
+	me.columnMapSize = me.realFontSize.x * 10;
+	me.columnTypeSize = me.realFontSize.x * 4;
+	me.columnPlayersSize = me.realFontSize.x * 5;
+	me.columnNameSize = 1 - me.columnPlayersSize - me.columnMapSize - me.columnPingSize - me.columnIconsSize - me.columnTypeSize - 5 * me.realFontSize.x;
+	me.columnPingOrigin = me.columnIconsOrigin + me.columnIconsSize + me.realFontSize.x;
+	me.columnNameOrigin = me.columnPingOrigin + me.columnPingSize + me.realFontSize.x;
+	me.columnMapOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
+	me.columnTypeOrigin = me.columnMapOrigin + me.columnMapSize + me.realFontSize.x;
+	me.columnPlayersOrigin = me.columnTypeOrigin + me.columnTypeSize + me.realFontSize.x;
 
 	me.positionSortButton(me, me.sortButton1, me.columnPingOrigin, me.columnPingSize, _("Ping"), ServerList_PingSort_Click);
 	me.positionSortButton(me, me.sortButton2, me.columnNameOrigin, me.columnNameSize, _("Host name"), ServerList_NameSort_Click);
@@ -1145,18 +1145,18 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	//  RENDER ICONS
 	// --------------
 	vector iconSize = '0 0 0';
-	iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
-	iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
+	iconSize_y = me.realFontSize.y * me.iconsSizeFactor;
+	iconSize_x = me.realFontSize.x * me.iconsSizeFactor;
 
 	vector iconPos = '0 0 0';
-	iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
-	iconPos_y = (1 - iconSize_y) * 0.5;
+	iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
+	iconPos_y = (1 - iconSize.y) * 0.5;
 
 	string n;
 
 	if (!(me.seenIPv4 && me.seenIPv6))
 	{
-		iconPos_x += iconSize_x * 0.5;
+		iconPos.x += iconSize.x * 0.5;
 	}
 	else if(me.seenIPv4 && me.seenIPv6)
 	{
@@ -1167,7 +1167,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
 		if(n)
 			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		iconPos_x += iconSize_x;
+		iconPos.x += iconSize.x;
 	}
 
 	if(q > 0)
@@ -1175,7 +1175,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
 		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 	}
-	iconPos_x += iconSize_x;
+	iconPos.x += iconSize.x;
 
 	if(modname == "Xonotic")
 	{
@@ -1195,14 +1195,14 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		else
 			draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
 	}
-	iconPos_x += iconSize_x;
+	iconPos.x += iconSize.x;
 
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
 	{
 		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
 		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 	}
-	iconPos_x += iconSize_x;
+	iconPos.x += iconSize.x;
 	
 	// --------------
 	//  RENDER TEXT

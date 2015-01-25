@@ -81,7 +81,7 @@ void ListBox_setSelected(entity me, float i)
 void ListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(ListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.controlWidth = me.scrollbarWidth / absSize_x;
+	me.controlWidth = me.scrollbarWidth / absSize.x;
 }
 void ListBox_configureListBox(entity me, float theScrollbarWidth, float theItemHeight)
 {
@@ -184,15 +184,15 @@ float ListBox_mouseDrag(entity me, vector pos)
 	if(me.pressed == 1)
 	{
 		hit = 1;
-		if(pos_x < 1 - me.controlWidth - me.tolerance_y * me.controlWidth) hit = 0;
-		if(pos_y < 0 - me.tolerance_x) hit = 0;
-		if(pos_x >= 1 + me.tolerance_y * me.controlWidth) hit = 0;
-		if(pos_y >= 1 + me.tolerance_x) hit = 0;
+		if(pos.x < 1 - me.controlWidth - me.tolerance.y * me.controlWidth) hit = 0;
+		if(pos.y < 0 - me.tolerance.x) hit = 0;
+		if(pos.x >= 1 + me.tolerance.y * me.controlWidth) hit = 0;
+		if(pos.y >= 1 + me.tolerance.x) hit = 0;
 		if(hit)
 		{
 			// calculate new pos to v
 			float d;
-			d = (pos_y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
+			d = (pos.y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
 			me.scrollPos = me.previousValue + d;
 		}
 		else
@@ -205,29 +205,29 @@ float ListBox_mouseDrag(entity me, vector pos)
 	}
 	else if(me.pressed == 2)
 	{
-		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos_y));
+		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
 	}
 	return 1;
 }
 float ListBox_mousePress(entity me, vector pos)
 {
-	if(pos_x < 0) return 0;
-	if(pos_y < 0) return 0;
-	if(pos_x >= 1) return 0;
-	if(pos_y >= 1) return 0;
+	if(pos.x < 0) return 0;
+	if(pos.y < 0) return 0;
+	if(pos.x >= 1) return 0;
+	if(pos.y >= 1) return 0;
 	me.dragScrollPos = pos;
 	me.updateControlTopBottom(me);
 	me.dragScrollTimer = time;
-	if(pos_x >= 1 - me.controlWidth)
+	if(pos.x >= 1 - me.controlWidth)
 	{
 		// if hit, set me.pressed, otherwise scroll by one page
-		if(pos_y < me.controlTop)
+		if(pos.y < me.controlTop)
 		{
 			// page up
 			me.scrollPos = max(me.scrollPos - 1, 0);
 			me.setSelected(me, min(me.selectedItem, ListBox_getLastFullyVisibleItemAtScrollPos(me, me.scrollPos)));
 		}
-		else if(pos_y > me.controlBottom)
+		else if(pos.y > me.controlBottom)
 		{
 			// page down
 			me.scrollPos = min(me.scrollPos + 1, me.getTotalHeight(me) - 1);
@@ -236,7 +236,7 @@ float ListBox_mousePress(entity me, vector pos)
 		else
 		{
 			me.pressed = 1;
-			me.pressOffset = pos_y;
+			me.pressOffset = pos.y;
 			me.previousValue = me.scrollPos;
 		}
 	}
@@ -245,7 +245,7 @@ float ListBox_mousePress(entity me, vector pos)
 		// continue doing that while dragging (even when dragging outside). When releasing, forward the click to the then selected item.
 		me.pressed = 2;
 		// an item has been clicked. Select it, ...
-		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos_y));
+		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
 	}
 	return 1;
 }
@@ -261,7 +261,7 @@ float ListBox_mouseRelease(entity me, vector pos)
 		me.pressed = 3; // do that here, so setSelected can know the mouse has been released
 		// item dragging mode
 		// select current one one last time...
-		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos_y));
+		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
@@ -322,7 +322,7 @@ void ListBox_updateControlTopBottom(entity me)
 		me.controlBottom = min((me.scrollPos + 1) / me.getTotalHeight(me), 1);
 
 		float minfactor;
-		minfactor = 2 * me.controlWidth / me.size_y * me.size_x;
+		minfactor = 2 * me.controlWidth / me.size.y * me.size.x;
 		f = me.controlBottom - me.controlTop;
 		if(f < minfactor) // FIXME good default?
 		{
@@ -376,7 +376,7 @@ void ListBox_draw(entity me)
 		absSize = boxToGlobalSize(relSize, me.size);
 		draw_scale = boxToGlobalSize(relSize, oldscale);
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
-		y += relSize_y;
+		y += relSize.y;
 	}
 	draw_ClearClip();
 
@@ -397,6 +397,6 @@ void ListBox_doubleClickListBoxItem(entity me, float i, vector where)
 
 void ListBox_drawListBoxItem(entity me, float i, vector absSize, float selected)
 {
-	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize_x) + eY * (8 / absSize_y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
+	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
 }
 #endif

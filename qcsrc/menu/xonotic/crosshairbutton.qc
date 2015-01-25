@@ -111,9 +111,9 @@ void XonoticCrosshairButton_draw(entity me)
 	}
 	else // show the crosshair picker at full size
 	{
-		sz = sz * (0.95 / sz_x);
-		if(sz_y > 0.95)
-			sz = sz * (0.95 / sz_y);
+		sz = sz * (0.95 / sz.x);
+		if(sz.y > 0.95)
+			sz = sz * (0.95 / sz.y);
 	}
 
 	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);

@@ -95,7 +95,7 @@ void InterpolateOrigin_Note()
 	else if(self.iflags & IFLAG_V_ANGLE_X)
 	{
 		self.ivforward1_x = self.ivforward2_x;
-		self.ivforward2_x = self.v_angle_x;
+		self.ivforward2_x = self.v_angle.x;
 	}
 
 	if(self.iflags & IFLAG_VELOCITY)

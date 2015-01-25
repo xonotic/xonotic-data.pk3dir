@@ -143,7 +143,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 	vector sdir;
 
 	grav  = autocvar_sv_gravity;
-	zdist = tgt_z - org_z;
+	zdist = tgt.z - org.z;
 	sdist = vlen(tgt - org - zdist * '0 0 1');
 	sdir  = normalize(tgt - org - zdist * '0 0 1');
 
@@ -163,10 +163,10 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 	vector solution;
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
-	if(!solution_z)
-		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+	if(!solution.z)
+		solution_y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
 	if(zdist == 0)
-		solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
 	if(zdist < 0)
 	{
@@ -176,14 +176,14 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 	}
 	else
@@ -194,14 +194,14 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			spiberbot_calcartillery_flighttime = solution_x;
+			spiberbot_calcartillery_flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			spiberbot_calcartillery_flighttime = solution_y;
+			spiberbot_calcartillery_flighttime = solution.y;
 		}
 	}
 	vs = sdist / spiberbot_calcartillery_flighttime;
@@ -292,7 +292,7 @@ void spiderbot_rocket_do()
             crosshair_trace(self.owner);
 
             rocket.pos1       = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
-            rocket.pos1_z       = trace_endpos_z;
+            rocket.pos1_z       = trace_endpos.z;
 
             traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);
             float h1 = 0.75 * vlen(v - trace_endpos);
@@ -374,16 +374,16 @@ float spiderbot_frame()
 
     // Rotate head
     ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
-    ad_y = bound(-ftmp, ad_y, ftmp);
-    spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
+    ad_y = bound(-ftmp, ad.y, ftmp);
+    spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles.y + ad.y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
-    ad_x = bound(ftmp * -1, ad_x, ftmp);
-    spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles_x + ad_x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
+    ad_x = bound(ftmp * -1, ad.x, ftmp);
+    spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles.x + ad.x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
 
 
     //fixedmakevectors(spider.angles);
-    makevectors(spider.angles + '-2 0 0' * spider.angles_x);
+    makevectors(spider.angles + '-2 0 0' * spider.angles.x);
 
     movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
@@ -423,29 +423,29 @@ float spiderbot_frame()
             else
             {
                 // Turn Body
-                if(player.movement_x == 0 && player.movement_y != 0)
+                if(player.movement_x == 0 && player.movement.y != 0)
                     ftmp = autocvar_g_vehicle_spiderbot_turnspeed_strafe * sys_frametime;
                 else
                     ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
 
-                ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
-                spider.angles_y = anglemods(spider.angles_y + ftmp);
+                ftmp = bound(-ftmp, spider.tur_head.angles.y, ftmp);
+                spider.angles_y = anglemods(spider.angles.y + ftmp);
                 spider.tur_head.angles_y -= ftmp;
 
-                if(player.movement_x != 0)
+                if(player.movement.x != 0)
                 {
-                    if(player.movement_x > 0)
+                    if(player.movement.x > 0)
                     {
                         player.movement_x = 1;
                         spider.frame = 0;
                     }
-                    else if(player.movement_x < 0)
+                    else if(player.movement.x < 0)
                     {
                         player.movement_x = -1;
                         spider.frame = 1;
                     }
                     player.movement_y = 0;
-                    movelib_move_simple(normalize(v_forward * player.movement_x),autocvar_g_vehicle_spiderbot_speed_walk,autocvar_g_vehicle_spiderbot_movement_inertia);
+                    movelib_move_simple(normalize(v_forward * player.movement.x),autocvar_g_vehicle_spiderbot_speed_walk,autocvar_g_vehicle_spiderbot_movement_inertia);
 
                     if(self.sound_nexttime < time || self.delay != 1)
                     {
@@ -455,19 +455,19 @@ float spiderbot_frame()
                         //dprint("spiderbot_walk:", ftos(soundlength("vehicles/spiderbot_walk.wav")), "\n");
                     }
                 }
-                else if(player.movement_y != 0)
+                else if(player.movement.y != 0)
                 {
-                    if(player.movement_y < 0)
+                    if(player.movement.y < 0)
                     {
                         player.movement_y = -1;
                         spider.frame = 2;
                     }
-                    else if(player.movement_y > 0)
+                    else if(player.movement.y > 0)
                     {
                         player.movement_y = 1;
                         spider.frame = 3;
                     }
-                    movelib_move_simple(normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
+                    movelib_move_simple(normalize(v_right * player.movement.y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
                     if(self.sound_nexttime < time || self.delay != 2)
                     {
                         self.delay = 2;
@@ -480,8 +480,8 @@ float spiderbot_frame()
         }
     }
 
-    self.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
-    self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
+    self.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles.x, autocvar_g_vehicle_spiderbot_tiltlimit);
+    self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles.z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
     if(player.BUTTON_ATCK)
     {
@@ -516,7 +516,7 @@ float spiderbot_frame()
             player.vehicle_ammo1 = (spider.vehicle_ammo1 / autocvar_g_vehicle_spiderbot_minigun_ammo_max) * 100;
             spider.gun1.angles_z += 45;
             spider.gun2.angles_z -= 45;
-            if(spider.gun1.angles_z >= 360)
+            if(spider.gun1.angles.z >= 360)
             {
                 spider.gun1.angles_z = 0;
                 spider.gun2.angles_z = 0;
@@ -639,8 +639,8 @@ void spiderbot_exit(float eject)
 
 void spider_impact()
 {
-	if(autocvar_g_vehicle_spiderbot_bouncepain_x)
-		vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
+	if(autocvar_g_vehicle_spiderbot_bouncepain.x)
+		vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain.x, autocvar_g_vehicle_spiderbot_bouncepain.y, autocvar_g_vehicle_spiderbot_bouncepain.z);
 }
 
 void spiderbot_headfade()

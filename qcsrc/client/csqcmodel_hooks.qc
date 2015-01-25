@@ -280,9 +280,9 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 			self.colormap = 0;
 
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			self.glowmod_x = max(self.glowmod_x, 0.0001);
-			self.glowmod_y = max(self.glowmod_y, 0.0001);
-			self.glowmod_z = max(self.glowmod_z, 0.0001);
+			self.glowmod_x = max(self.glowmod.x, 0.0001);
+			self.glowmod_y = max(self.glowmod.y, 0.0001);
+			self.glowmod_z = max(self.glowmod.z, 0.0001);
 		}
 		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
 	}

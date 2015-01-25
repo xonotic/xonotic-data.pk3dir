@@ -264,7 +264,7 @@ void m_keydown(float key, float ascii)
 	{
 		// detect a click outside of the game window
 		vector p = getmousepos();
-		if(p_x < 0 || p_x > realconwidth || p_y < 0 || p_y > realconheight)
+		if(p.x < 0 || p.x > realconwidth || p.y < 0 || p.y > realconheight)
 		{
 			++mouseButtonsPressed;
 			return;
@@ -314,9 +314,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	float width_is_larger;
 
 	sz = draw_PictureSize(img);
-	width_is_larger = (sz_x * draw_scale_y >= sz_y * draw_scale_x);
-	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
-	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
+	width_is_larger = (sz.x * draw_scale.y >= sz.y * draw_scale.x);
+	isz_w = '1 0 0' + '0 1 0' * ((sz.y / sz.x) * (draw_scale.x / draw_scale.y));
+	isz_h = '0 1 0' + '1 0 0' * ((sz.x / sz.y) * (draw_scale.y / draw_scale.x));
 
 	switch(scalemode)
 	{
@@ -338,7 +338,7 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 			break;
 	}
 
-	org = eX * (algn_x * (1 - isz_x)) + eY * (algn_y * (1 - isz_y));
+	org = eX * (algn.x * (1 - isz.x)) + eY * (algn.y * (1 - isz.y));
 	draw_Picture(org, img, isz, '1 1 1', a);
 }
 
@@ -404,20 +404,20 @@ string menuTooltipText;
 float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 float m_testmousetooltipbox(vector pos)
 {
-	if(pos_x >= menuTooltipOrigin_x && pos_x < menuTooltipOrigin_x + menuTooltipSize_x)
-	if(pos_y >= menuTooltipOrigin_y && pos_y < menuTooltipOrigin_y + menuTooltipSize_y)
+	if(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
+	if(pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
 		return FALSE;
 	return TRUE;
 }
 float m_testtooltipbox(vector tooltippos)
 {
-	if(tooltippos_x < 0)
+	if(tooltippos.x < 0)
 		return FALSE;
-	if(tooltippos_y < 0)
+	if(tooltippos.y < 0)
 		return FALSE;
-	if(tooltippos_x + menuTooltipSize_x > 1)
+	if(tooltippos.x + menuTooltipSize.x > 1)
 		return FALSE;
-	if(tooltippos_y + menuTooltipSize_y > 1)
+	if(tooltippos.y + menuTooltipSize.y > 1)
 		return FALSE;
 	menuTooltipOrigin = tooltippos;
 	return TRUE;
@@ -431,8 +431,8 @@ float m_allocatetooltipbox(vector pos)
 	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
 	avoidplus_z = 0;
 
-	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize_x;
-	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize_y;
+	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize.x;
+	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize.y;
 	avoidminus_z = 0;
 
 	// bottom right
@@ -441,27 +441,27 @@ float m_allocatetooltipbox(vector pos)
 		return TRUE;
 
 	// bottom center
-	v_x = pos_x - menuTooltipSize_x * 0.5;
+	v_x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
 
 	// bottom left
-	v_x = pos_x - avoidminus_x;
+	v_x = pos.x - avoidminus.x;
 	if(m_testtooltipbox(v))
 		return TRUE;
 
 	// top left
-	v_y = pos_y - avoidminus_y;
+	v_y = pos.y - avoidminus.y;
 	if(m_testtooltipbox(v))
 		return TRUE;
 
 	// top center
-	v_x = pos_x - menuTooltipSize_x * 0.5;
+	v_x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
 
 	// top right
-	v_x = pos_x + avoidplus_x;
+	v_x = pos.x + avoidplus.x;
 	if(m_testtooltipbox(v))
 		return TRUE;
 
@@ -591,7 +591,7 @@ void m_tooltip(vector pos)
 							w = f;
 					}
 					menuTooltipSize_x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize_y = i * fontsize_y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize_y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
 					menuTooltipSize_z = 0;
 				}
 				break;
@@ -645,25 +645,25 @@ void m_tooltip(vector pos)
 				menuTooltipItem = world; // reload tooltip next frame
 			menu_tooltips_old = menu_tooltips;
 		}
-		else if(menuTooltipOrigin_x < 0) // unallocated?
+		else if(menuTooltipOrigin.x < 0) // unallocated?
 			m_allocatetooltipbox(pos);
 
-		if(menuTooltipOrigin_x >= 0)
+		if(menuTooltipOrigin.x >= 0)
 		{
 			// draw the tooltip!
 			p = SKINBORDER_TOOLTIP;
-			p_x *= 1 / conwidth;
-			p_y *= 1 / conheight;
+			p.x *= 1 / conwidth;
+			p.y *= 1 / conheight;
 			draw_BorderPicture(menuTooltipOrigin, SKINGFX_TOOLTIP, menuTooltipSize, '1 1 1', menuTooltipAlpha, p);
 			p = menuTooltipOrigin;
-			p_x += SKINMARGIN_TOOLTIP_x / conwidth;
-			p_y += SKINMARGIN_TOOLTIP_y / conheight;
+			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
+			p.y += SKINMARGIN_TOOLTIP_y / conheight;
 			getWrappedLine_remaining = menuTooltipText;
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
 				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
-				p_y += fontsize_y;
+				p.y += fontsize.y;
 			}
 		}
 	}
@@ -825,8 +825,8 @@ void m_draw(float width, float height)
 				maxpos = globalToBox(eX * (realconwidth - 1) + eY * (realconheight - 1), draw_shift, draw_scale);
 				dMouse = globalToBoxSize(dMouse, draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
-				menuMousePos_x = bound(minpos_x, menuMousePos_x, maxpos_x);
-				menuMousePos_y = bound(minpos_y, menuMousePos_y, maxpos_y);
+				menuMousePos_x = bound(minpos.x, menuMousePos.x, maxpos.x);
+				menuMousePos_y = bound(minpos.y, menuMousePos.y, maxpos.y);
 				if(mouseButtonsPressed)
 					main.mouseDrag(main, menuMousePos);
 				else
@@ -953,8 +953,8 @@ void m_setpointerfocus(entity wnd)
 		if(focus)
 		{
 			menuMousePos = focus.origin + 0.5 * focus.size;
-			menuMousePos_x *= 1 / conwidth;
-			menuMousePos_y *= 1 / conheight;
+			menuMousePos.x *= 1 / conwidth;
+			menuMousePos.y *= 1 / conheight;
 			if(wnd.focused) // why does this never happen?
 				m_focus_item_chain(wnd, focus);
 		}

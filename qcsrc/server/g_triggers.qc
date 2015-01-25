@@ -847,9 +847,9 @@ float pointparticles_SendEntity(entity to, float fl)
 	}
 	if(fl & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	if(fl & 1)
 	{
@@ -858,12 +858,12 @@ float pointparticles_SendEntity(entity to, float fl)
 			WriteShort(MSG_ENTITY, self.modelindex);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.mins_x);
-				WriteCoord(MSG_ENTITY, self.mins_y);
-				WriteCoord(MSG_ENTITY, self.mins_z);
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, self.mins.x);
+				WriteCoord(MSG_ENTITY, self.mins.y);
+				WriteCoord(MSG_ENTITY, self.mins.z);
+				WriteCoord(MSG_ENTITY, self.maxs.x);
+				WriteCoord(MSG_ENTITY, self.maxs.y);
+				WriteCoord(MSG_ENTITY, self.maxs.z);
 			}
 		}
 		else
@@ -871,9 +871,9 @@ float pointparticles_SendEntity(entity to, float fl)
 			WriteShort(MSG_ENTITY, 0);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, self.maxs.x);
+				WriteCoord(MSG_ENTITY, self.maxs.y);
+				WriteCoord(MSG_ENTITY, self.maxs.z);
 			}
 		}
 		WriteShort(MSG_ENTITY, self.cnt);
@@ -1003,12 +1003,12 @@ float rainsnow_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
-	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
-	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);
-	WriteCoord(MSG_ENTITY, self.origin_z + self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x - self.mins_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y - self.mins_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z - self.mins_z);
+	WriteCoord(MSG_ENTITY, self.origin.x + self.mins.x);
+	WriteCoord(MSG_ENTITY, self.origin.y + self.mins.y);
+	WriteCoord(MSG_ENTITY, self.origin.z + self.mins.z);
+	WriteCoord(MSG_ENTITY, self.maxs.x - self.mins.x);
+	WriteCoord(MSG_ENTITY, self.maxs.y - self.mins.y);
+	WriteCoord(MSG_ENTITY, self.maxs.z - self.mins.z);
 	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
@@ -1040,7 +1040,7 @@ void spawnfunc_func_rain()
 		self.cnt = 12;
 	if (!self.count)
 		self.count = 2000;
-	self.count = 0.01 * self.count * (self.size_x / 1024) * (self.size_y / 1024);
+	self.count = 0.01 * self.count * (self.size.x / 1024) * (self.size.y / 1024);
 	if (self.count < 1)
 		self.count = 1;
 	if(self.count > 65535)
@@ -1078,7 +1078,7 @@ void spawnfunc_func_snow()
 		self.cnt = 12;
 	if (!self.count)
 		self.count = 2000;
-	self.count = 0.01 * self.count * (self.size_x / 1024) * (self.size_y / 1024);
+	self.count = 0.01 * self.count * (self.size.x / 1024) * (self.size.y / 1024);
 	if (self.count < 1)
 		self.count = 1;
 	if(self.count > 65535)
@@ -1107,7 +1107,7 @@ void misc_laser_aim()
 		else
 		{
 			a = vectoangles(self.enemy.origin - self.origin);
-			a_x = -a_x;
+			a_x = -a.x;
 			if(a != self.mangle)
 			{
 				self.mangle = a;
@@ -1226,15 +1226,15 @@ float laser_SendEntity(entity to, float fl)
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	if(fl & 8)
 	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.x * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.y * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.z * 255.0);
 		if(fl & 0x40)
 			WriteByte(MSG_ENTITY, self.alpha * 255.0);
 		if(fl & 0x20)
@@ -1249,14 +1249,14 @@ float laser_SendEntity(entity to, float fl)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.x);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.y);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.z);
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
+			WriteAngle(MSG_ENTITY, self.mangle.x);
+			WriteAngle(MSG_ENTITY, self.mangle.y);
 		}
 	}
 	if(fl & 4)
@@ -1917,7 +1917,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if (!(ear.spawnflags & 256))
 			return msgin;
 
-		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
+		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir.x, !(ear.spawnflags & 512), ear.movedir.y, ear.movedir.z))
 			return msgin;
 
 		magicear_matched = TRUE;

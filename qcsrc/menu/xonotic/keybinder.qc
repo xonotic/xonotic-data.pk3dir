@@ -106,14 +106,14 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 {
 	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize_y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize_x * (1 - me.controlWidth));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 	me.columnFunctionOrigin = 0;
-	me.columnKeysSize = me.realFontSize_x * 12;
-	me.columnFunctionSize = 1 - me.columnKeysSize - 2 * me.realFontSize_x;
-	me.columnKeysOrigin = me.columnFunctionOrigin + me.columnFunctionSize + me.realFontSize_x;
+	me.columnKeysSize = me.realFontSize.x * 12;
+	me.columnFunctionSize = 1 - me.columnKeysSize - 2 * me.realFontSize.x;
+	me.columnKeysOrigin = me.columnFunctionOrigin + me.columnFunctionSize + me.realFontSize.x;
 
 	if(me.userbindEditButton)
 		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[me.selectedItem], 0, 1) != "$");
@@ -326,7 +326,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 		}
 		theAlpha = SKINALPHA_KEYGRABBER_KEYS;
 		theColor = SKINCOLOR_KEYGRABBER_KEYS;
-		extraMargin = me.realFontSize_x * 0.5;
+		extraMargin = me.realFontSize.x * 0.5;
 	}
 
 	if(substring(descr, 0, 1) == "$")

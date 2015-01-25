@@ -292,18 +292,18 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticStatsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
 #if 0
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnNameSize = 0.5 - me.realFontSize_x; // end halfway at maximum length
+	me.columnNameOrigin = me.realFontSize.x;
+	me.columnNameSize = 0.5 - me.realFontSize.x; // end halfway at maximum length
 	me.columnDataOrigin = me.columnNameOrigin + me.columnNameSize;
-	me.columnDataSize = 1 - me.columnNameSize - me.realFontSize_x; // fill the rest of the control
+	me.columnDataSize = 1 - me.columnNameSize - me.realFontSize.x; // fill the rest of the control
 #else
-	me.columnNameOrigin = me.realFontSize_x;
-	me.columnNameSize = 1 - 2 * me.realFontSize_x;
+	me.columnNameOrigin = me.realFontSize.x;
+	me.columnNameSize = 1 - 2 * me.realFontSize.x;
 #endif
 }
 

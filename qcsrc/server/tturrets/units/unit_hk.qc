@@ -82,9 +82,9 @@ void turret_hk_missile_think()
     }
 
     self.angles = vectoangles(self.velocity);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
     makevectors(self.angles);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
 
     if (self.enemy)
     {

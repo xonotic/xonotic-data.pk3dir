@@ -182,7 +182,7 @@ void movelib_beak_simple(float force)
 
     mspeed = max(0,vlen(self.velocity) - force);
     mdir   = normalize(self.velocity);
-    vz = self.velocity_z;
+    vz = self.velocity.z;
     self.velocity = mdir * mspeed;
     self.velocity_z = vz;
 }
@@ -202,8 +202,8 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     e = v_up * spring_length;
 
     // Put springs slightly inside bbox
-    ahead = v_forward * (self.maxs_x * 0.8);
-    side  = v_right   * (self.maxs_y * 0.8);
+    ahead = v_forward * (self.maxs.x * 0.8);
+    side  = v_right   * (self.maxs.y * 0.8);
 
     a = r + ahead + side;
     b = r + ahead - side;
@@ -226,21 +226,21 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     d_z =  (1 - trace_fraction);
     r += trace_endpos;
 
-    a_x = r_z;
+    a_x = r.z;
     r = self.origin;
-    r_z = r_z;
+    r_z = r.z;
 
-    push_angle_x = (a_z - c_z) * _max;
-    push_angle_x += (b_z - d_z) * _max;
+    push_angle_x = (a.z - c.z) * _max;
+    push_angle.x += (b.z - d.z) * _max;
 
-    push_angle_z = (b_z - a_z) * _max;
-    push_angle_z += (d_z - c_z) * _max;
+    push_angle_z = (b.z - a.z) * _max;
+    push_angle.z += (d.z - c.z) * _max;
 
     //self.angles_x += push_angle_x * 0.95;
     //self.angles_z += push_angle_z * 0.95;
 
-    self.angles_x = ((1-blendrate) *  self.angles_x)  + (push_angle_x * blendrate);
-    self.angles_z = ((1-blendrate) *  self.angles_z)  + (push_angle_z * blendrate);
+    self.angles_x = ((1-blendrate) *  self.angles.x)  + (push_angle.x * blendrate);
+    self.angles_z = ((1-blendrate) *  self.angles.z)  + (push_angle.z * blendrate);
 
     //a = self.origin;
     setorigin(self,r);

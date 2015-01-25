@@ -33,13 +33,13 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 	WriteByte(MSG_ENTITY, self.cnt);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
 
-    WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.x * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.y * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.z * 255));
 
     return TRUE;
 }
@@ -678,14 +678,14 @@ void vehicles_enter()
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
         if(self.tur_head)
         {
-            WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
-            WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
+            WriteAngle(MSG_ONE, self.tur_head.angles.x + self.angles.x); // tilt
+            WriteAngle(MSG_ONE, self.tur_head.angles.y + self.angles.y); // yaw
             WriteAngle(MSG_ONE, 0);                                      // roll
         }
         else
         {
-            WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
-            WriteAngle(MSG_ONE,  self.angles_y);      // yaw
+            WriteAngle(MSG_ONE,  self.angles.x * -1); // tilt
+            WriteAngle(MSG_ONE,  self.angles.y);      // yaw
             WriteAngle(MSG_ONE,  0);                  // roll
         }
     }
@@ -804,7 +804,7 @@ void vehicles_exit(float eject)
 
             WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE, 0);
-            WriteAngle(MSG_ONE, _vehicle.angles_y);
+            WriteAngle(MSG_ONE, _vehicle.angles.y);
             WriteAngle(MSG_ONE, 0);
         }
 
@@ -1368,10 +1368,10 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, TRUE);
     ftmp = _aimspeed * frametime;
-    vtmp_y = bound(-ftmp, vtmp_y, ftmp);
-    vtmp_x = bound(-ftmp, vtmp_x, ftmp);
-    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);
-    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);
+    vtmp_y = bound(-ftmp, vtmp.y, ftmp);
+    vtmp_x = bound(-ftmp, vtmp.x, ftmp);
+    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles.y + vtmp.y, _rotlimit_max);
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles.x + vtmp.x, _pichlimit_max);
     return vtag;
 }
 

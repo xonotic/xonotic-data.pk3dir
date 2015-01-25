@@ -103,9 +103,9 @@ void info_autoscreenshot_findtarget()
 		return;
 	}
 	vector a = vectoangles(e.origin - self.origin);
-	a_x = -a_x; // don't ask
-	self.angles_x = a_x;
-	self.angles_y = a_y;
+	a_x = -a.x; // don't ask
+	self.angles_x = a.x;
+	self.angles_y = a.y;
 	// we leave Rick Roll alone
 }
 void spawnfunc_info_autoscreenshot()
@@ -241,7 +241,7 @@ float CheatImpulse(float i)
 			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
 			{
 				sprint(self, "Emergency teleport used random location\n");
-				self.angles_x = -self.angles_x;
+				self.angles_x = -self.angles.x;
 				self.fixangle = TRUE;
 				self.velocity = '0 0 0';
 				DID_CHEAT();
@@ -420,9 +420,9 @@ float CheatCommand(float argc)
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
 			end = normalize(self.origin + self.view_ofs - e.aiment.origin);
-			end_x = (end_x > 0) * 2 - 1;
-			end_y = (end_y > 0) * 2 - 1;
-			end_z = (end_z > 0) * 2 - 1;
+			end_x = (end.x > 0) * 2 - 1;
+			end_y = (end.y > 0) * 2 - 1;
+			end_z = (end.z > 0) * 2 - 1;
 			if(argc == 4)
 				setorigin(e.enemy, stov(argv(3)));
 			else
@@ -546,8 +546,8 @@ float CheatCommand(float argc)
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
-					fputs(f, strcat("\"origin\" \"", ftos(e.absmin_x), " ", ftos(e.absmin_y), " ", ftos(e.absmin_z), "\"\n"));
-					fputs(f, strcat("\"maxs\" \"", ftos(e.absmax_x - e.absmin_x), " ", ftos(e.absmax_y - e.absmin_y), " ", ftos(e.absmax_z - e.absmin_z), "\"\n"));
+					fputs(f, strcat("\"origin\" \"", ftos(e.absmin.x), " ", ftos(e.absmin.y), " ", ftos(e.absmin.z), "\"\n"));
+					fputs(f, strcat("\"maxs\" \"", ftos(e.absmax.x - e.absmin.x), " ", ftos(e.absmax.y - e.absmin.y), " ", ftos(e.absmax.z - e.absmin.z), "\"\n"));
 					fputs(f, strcat("\"cnt\" \"", ftos(e.cnt), "\"\n"));
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
@@ -568,7 +568,7 @@ float CheatCommand(float argc)
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"info_player_race\"\n");
 					fputs(f, strcat("\"angle\" \"", ftos(vectoyaw(start - e.origin)), "\"\n"));
-					fputs(f, strcat("\"origin\" \"", ftos(e.origin_x), " ", ftos(e.origin_y), " ", ftos(e.origin_z), "\"\n"));
+					fputs(f, strcat("\"origin\" \"", ftos(e.origin.x), " ", ftos(e.origin.y), " ", ftos(e.origin.z), "\"\n"));
 					if(e.cnt == -2)
 					{
 						fputs(f, "\"target\" \"checkpoint0\"\n");
@@ -892,7 +892,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	dragger.dragentity = draggee;
 
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
-	dragger.draglocalangle = draggee.angles_y - dragger.v_angle_y;
+	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
 	touchpoint = touchpoint - gettaginfo(draggee, 0);
 	tagscale = pow(vlen(v_forward), -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
@@ -994,21 +994,21 @@ void Drag_Update(entity dragger)
 	draggee.flags &= ~FL_ONGROUND;
 
 	curorigin = gettaginfo(draggee, 0);
-	curorigin = curorigin + v_forward * dragger.draglocalvector_x + v_right * dragger.draglocalvector_y + v_up * dragger.draglocalvector_z;
+	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
 	makevectors(dragger.v_angle);
 	neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
 	goodvelocity = (neworigin - curorigin) * (1 / frametime);
 
-	while(draggee.angles_y - dragger.v_angle_y - dragger.draglocalangle > 180)
+	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle > 180)
 		dragger.draglocalangle += 360;
-	while(draggee.angles_y - dragger.v_angle_y - dragger.draglocalangle <= -180)
+	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle <= -180)
 		dragger.draglocalangle -= 360;
 
 	f = min(frametime * 10, 1);
 	draggee.velocity = draggee.velocity * (1 - f) + goodvelocity * f;
 
 	if(Drag_MayChangeAngles(draggee))
-		draggee.angles_y = draggee.angles_y * (1 - f) + (dragger.v_angle_y + dragger.draglocalangle) * f;
+		draggee.angles_y = draggee.angles.y * (1 - f) + (dragger.v_angle.y + dragger.draglocalangle) * f;
 
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
@@ -1051,12 +1051,12 @@ void DragBox_Think()
 {
 	if(self.aiment && self.enemy)
 	{
-		self.origin_x = (self.aiment.origin_x + self.enemy.origin_x) * 0.5;
-		self.origin_y = (self.aiment.origin_y + self.enemy.origin_y) * 0.5;
-		self.origin_z = (self.aiment.origin_z + self.enemy.origin_z) * 0.5;
-		self.maxs_x = fabs(self.aiment.origin_x - self.enemy.origin_x) * 0.5;
-		self.maxs_y = fabs(self.aiment.origin_y - self.enemy.origin_y) * 0.5;
-		self.maxs_z = fabs(self.aiment.origin_z - self.enemy.origin_z) * 0.5;
+		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;
+		self.origin_y = (self.aiment.origin.y + self.enemy.origin.y) * 0.5;
+		self.origin_z = (self.aiment.origin.z + self.enemy.origin.z) * 0.5;
+		self.maxs_x = fabs(self.aiment.origin.x - self.enemy.origin.x) * 0.5;
+		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
+		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
 		self.mins = -1 * self.maxs;
 		setorigin(self, self.origin); setsize(self, self.mins, self.maxs); // link edict
 	}

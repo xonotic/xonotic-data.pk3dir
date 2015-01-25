@@ -40,9 +40,9 @@ void Draw_PointParticles()
 	for(i = random(); i <= n && fail <= 64*n; ++i)
 	{
 		p = o + self.mins;
-		p_x += random() * sz_x;
-		p_y += random() * sz_y;
-		p_z += random() * sz_z;
+		p.x += random() * sz.x;
+		p.y += random() * sz.y;
+		p.z += random() * sz.z;
 		if(WarpZoneLib_BoxTouchesBrush(p, p, self, world))
 		{
 			if(self.movedir != '0 0 0')
@@ -174,7 +174,7 @@ void Ent_PointParticles()
 		if(!self.absolute)
 		{
 			v = self.maxs - self.mins;
-			self.impulse *= -v_x * v_y * v_z / 262144; // relative: particles per 64^3 cube
+			self.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
 		}
 	}
 

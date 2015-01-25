@@ -480,15 +480,15 @@ string ScoreString(int pFlags, float pValue)
 
 float dotproduct(vector a, vector b)
 {
-	return a_x * b_x + a_y * b_y + a_z * b_z;
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 vector cross(vector a, vector b)
 {
 	return
-		'1 0 0' * (a_y * b_z - a_z * b_y)
-	+	'0 1 0' * (a_z * b_x - a_x * b_z)
-	+	'0 0 1' * (a_x * b_y - a_y * b_x);
+		'1 0 0' * (a.y * b.z - a.z * b.y)
+	+	'0 1 0' * (a.z * b.x - a.x * b.z)
+	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }
 
 // compressed vector format:
@@ -574,23 +574,23 @@ float compressShortVector(vector vec)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
-	ang_x = -ang_x;
-	if(ang_x < -90)
-		ang_x += 360;
-	if(ang_x < -90 && ang_x > +90)
+	ang_x = -ang.x;
+	if(ang.x < -90)
+		ang.x += 360;
+	if(ang.x < -90 && ang.x > +90)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
-		if(vec_z < 0)
+		if(vec.z < 0)
 			y = 31;
 		else
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
@@ -763,7 +763,7 @@ void get_mi_min_max(float mode)
 	mi_min = mi;
 	mi_max = ma;
 	MapInfo_Get_ByName(mi_shortname, 0, 0);
-	if(MapInfo_Map_mins_x < MapInfo_Map_maxs_x)
+	if(MapInfo_Map_mins.x < MapInfo_Map_maxs.x)
 	{
 		mi_min = MapInfo_Map_mins;
 		mi_max = MapInfo_Map_maxs;
@@ -774,59 +774,59 @@ void get_mi_min_max(float mode)
 		if(mode)
 		{
 			// be clever
-			tracebox('1 0 0' * mi_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * ma_x,
+			tracebox('1 0 0' * mi.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * ma.x,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_x = trace_endpos_x;
+				mi_min_x = trace_endpos.x;
 
-			tracebox('0 1 0' * mi_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * ma_y,
+			tracebox('0 1 0' * mi.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * ma.y,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_y = trace_endpos_y;
+				mi_min_y = trace_endpos.y;
 
-			tracebox('0 0 1' * mi_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * ma_z,
+			tracebox('0 0 1' * mi.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * ma.z,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_z = trace_endpos_z;
+				mi_min_z = trace_endpos.z;
 
-			tracebox('1 0 0' * ma_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * mi_x,
+			tracebox('1 0 0' * ma.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * mi.x,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_x = trace_endpos_x;
+				mi_max_x = trace_endpos.x;
 
-			tracebox('0 1 0' * ma_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * mi_y,
+			tracebox('0 1 0' * ma.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * mi.y,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_y = trace_endpos_y;
+				mi_max_y = trace_endpos.y;
 
-			tracebox('0 0 1' * ma_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * mi_z,
+			tracebox('0 0 1' * ma.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * mi.z,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_z = trace_endpos_z;
+				mi_max_z = trace_endpos.z;
 		}
 	}
 }
@@ -843,15 +843,15 @@ void get_mi_min_max_texcoords(float mode)
 	// extend mi_picmax to get a square aspect ratio
 	// center the map in that area
 	extend = mi_picmax - mi_picmin;
-	if(extend_y > extend_x)
+	if(extend.y > extend.x)
 	{
-		mi_picmin_x -= (extend_y - extend_x) * 0.5;
-		mi_picmax_x += (extend_y - extend_x) * 0.5;
+		mi_picmin.x -= (extend.y - extend.x) * 0.5;
+		mi_picmax.x += (extend.y - extend.x) * 0.5;
 	}
 	else
 	{
-		mi_picmin_y -= (extend_x - extend_y) * 0.5;
-		mi_picmax_y += (extend_x - extend_y) * 0.5;
+		mi_picmin.y -= (extend.x - extend.y) * 0.5;
+		mi_picmax.y += (extend.x - extend.y) * 0.5;
 	}
 
 	// add another some percent
@@ -862,10 +862,10 @@ void get_mi_min_max_texcoords(float mode)
 	// calculate the texcoords
 	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
 	// first the two corners of the origin
-	mi_pictexcoord0_x = (mi_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord0_y = (mi_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
-	mi_pictexcoord2_x = (mi_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord2_y = (mi_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord0_x = (mi_min.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord0_y = (mi_min.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	mi_pictexcoord2_x = (mi_max.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord2_y = (mi_max.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
 	// then the other corners
 	mi_pictexcoord1_x = mi_pictexcoord0_x;
 	mi_pictexcoord1_y = mi_pictexcoord2_y;
@@ -1033,17 +1033,17 @@ float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
 {
 	if(mi == ma)
 		return 0;
-	else if(ma == rgb_x)
+	else if(ma == rgb.x)
 	{
-		if(rgb_y >= rgb_z)
-			return (rgb_y - rgb_z) / (ma - mi);
+		if(rgb.y >= rgb.z)
+			return (rgb.y - rgb.z) / (ma - mi);
 		else
-			return (rgb_y - rgb_z) / (ma - mi) + 6;
+			return (rgb.y - rgb.z) / (ma - mi) + 6;
 	}
-	else if(ma == rgb_y)
-		return (rgb_z - rgb_x) / (ma - mi) + 2;
+	else if(ma == rgb.y)
+		return (rgb.z - rgb.x) / (ma - mi) + 2;
 	else // if(ma == rgb_z)
-		return (rgb_x - rgb_y) / (ma - mi) + 4;
+		return (rgb.x - rgb.y) / (ma - mi) + 4;
 }
 
 vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
@@ -1105,8 +1105,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1121,7 +1121,7 @@ vector rgb_to_hsv(vector rgb)
 
 vector hsv_to_rgb(vector hsv)
 {
-	return hue_mi_ma_to_rgb(hsv_x, hsv_z * (1 - hsv_y), hsv_z);
+	return hue_mi_ma_to_rgb(hsv.x, hsv.z * (1 - hsv.y), hsv.z);
 }
 
 vector rgb_to_hsl(vector rgb)
@@ -1129,18 +1129,18 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 
 	hsl_z = 0.5 * (mi + ma);
 	if(mi == ma)
 		hsl_y = 0;
-	else if(hsl_z <= 0.5)
-		hsl_y = (ma - mi) / (2*hsl_z);
+	else if(hsl.z <= 0.5)
+		hsl_y = (ma - mi) / (2*hsl.z);
 	else // if(hsl_z > 0.5)
-		hsl_y = (ma - mi) / (2 - 2*hsl_z);
+		hsl_y = (ma - mi) / (2 - 2*hsl.z);
 
 	return hsl;
 }
@@ -1149,17 +1149,17 @@ vector hsl_to_rgb(vector hsl)
 {
 	float mi, ma, maminusmi;
 
-	if(hsl_z <= 0.5)
-		maminusmi = hsl_y * 2 * hsl_z;
+	if(hsl.z <= 0.5)
+		maminusmi = hsl.y * 2 * hsl.z;
 	else
-		maminusmi = hsl_y * (2 - 2 * hsl_z);
+		maminusmi = hsl.y * (2 - 2 * hsl.z);
 
 	// hsl_z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
-	mi = hsl_z - 0.5 * maminusmi;
-	ma = hsl_z + 0.5 * maminusmi;
+	mi = hsl.z - 0.5 * maminusmi;
+	ma = hsl.z + 0.5 * maminusmi;
 
-	return hue_mi_ma_to_rgb(hsl_x, mi, ma);
+	return hue_mi_ma_to_rgb(hsl.x, mi, ma);
 }
 
 string rgb_to_hexcolor(vector rgb)
@@ -1167,9 +1167,9 @@ string rgb_to_hexcolor(vector rgb)
 	return
 		strcat(
 			"^x",
-			DEC_TO_HEXDIGIT(floor(rgb_x * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_y * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_z * 15 + 0.5))
+			DEC_TO_HEXDIGIT(floor(rgb.x * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb.y * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb.z * 15 + 0.5))
 		);
 }
 
@@ -1177,7 +1177,7 @@ string rgb_to_hexcolor(vector rgb)
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
 
 // requires the same, but is a stronger condition
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;}
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z;}
 
 #ifndef MENUQC
 #endif
@@ -1633,7 +1633,7 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 	vector solution = solve_quadratic(evel * evel - spd * spd, 2 * (eorg * evel), eorg * eorg);
 	// p = 2 * (eorg * evel) / (evel * evel - spd * spd)
 	// q = (eorg * eorg) / (evel * evel - spd * spd)
-	if(!solution_z) // no real solution
+	if(!solution.z) // no real solution
 	{
 		// happens if D < 0
 		// (eorg * evel)^2 < (evel^2 - spd^2) * eorg^2
@@ -1644,17 +1644,17 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 		// spd < |evel| * sin angle(evel, eorg)
 		return '0 0 0';
 	}
-	else if(solution_x > 0)
+	else if(solution.x > 0)
 	{
 		// both solutions > 0: take the smaller one
 		// happens if p < 0 and q > 0
-		ret = normalize(eorg + solution_x * evel);
+		ret = normalize(eorg + solution.x * evel);
 	}
-	else if(solution_y > 0)
+	else if(solution.y > 0)
 	{
 		// one solution > 0: take the larger one
 		// happens if q < 0 or q == 0 and p < 0
-		ret = normalize(eorg + solution_y * evel);
+		ret = normalize(eorg + solution.y * evel);
 	}
 	else
 	{
@@ -1701,12 +1701,12 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 		vector solution = solve_quadratic(1, -2 * (mydir * myvel), myvel * myvel - spd * spd);
 
 		float outspeed;
-		if(solution_z)
-			outspeed = solution_y; // the larger one
+		if(solution.z)
+			outspeed = solution.y; // the larger one
 		else
 		{
 			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
+			outspeed = solution.x; // the real part (that is, the average!)
 			//dprint("impossible shot, adjusting\n");
 		}
 
@@ -1721,9 +1721,9 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 float compressShotOrigin(vector v)
 {
 	float x, y, z;
-	x = rint(v_x * 2);
-	y = rint(v_y * 4) + 128;
-	z = rint(v_z * 4) + 128;
+	x = rint(v.x * 2);
+	y = rint(v.y * 4) + 128;
+	z = rint(v.z * 4) + 128;
 	if(x > 255 || x < 0)
 	{
 		print("shot origin ", vtos(v), " x out of bounds\n");
@@ -1864,7 +1864,7 @@ vector healtharmor_applydamage(float a, float armorblock, float deathtype, float
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
 	v_y = bound(0, damage * armorblock, a); // save
-	v_x = bound(0, damage - v_y, damage); // take
+	v_x = bound(0, damage - v.y, damage); // take
 	v_z = 0;
 	return v;
 }
@@ -1916,14 +1916,14 @@ void WriteInt24_t(float dst, float val)
 }
 void WriteInt48_t(float dst, vector val)
 {
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
+	WriteInt24_t(dst, val.x);
+	WriteInt24_t(dst, val.y);
 }
 void WriteInt72_t(float dst, vector val)
 {
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
-	WriteInt24_t(dst, val_z);
+	WriteInt24_t(dst, val.x);
+	WriteInt24_t(dst, val.y);
+	WriteInt24_t(dst, val.z);
 }
 #endif
 #endif
@@ -2151,9 +2151,9 @@ vector NearestPointOnBox(entity box, vector org)
 	m1 = box.mins + box.origin;
 	m2 = box.maxs + box.origin;
 
-	nearest_x = bound(m1_x, org_x, m2_x);
-	nearest_y = bound(m1_y, org_y, m2_y);
-	nearest_z = bound(m1_z, org_z, m2_z);
+	nearest_x = bound(m1_x, org.x, m2_x);
+	nearest_y = bound(m1_y, org.y, m2_y);
+	nearest_z = bound(m1_z, org.z, m2_z);
 
 	return nearest;
 }
@@ -2573,14 +2573,14 @@ vector get_corner_position(entity box, float corner)
 {
 	switch(corner)
 	{
-		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
-		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
-		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
-		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
-		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
-		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
-		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
-		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
+		case 1: return combine_to_vector(box.absmin.x, box.absmin.y, box.absmin.z);
+		case 2: return combine_to_vector(box.absmax.x, box.absmin.y, box.absmin.z);
+		case 3: return combine_to_vector(box.absmin.x, box.absmax.y, box.absmin.z);
+		case 4: return combine_to_vector(box.absmin.x, box.absmin.y, box.absmax.z);
+		case 5: return combine_to_vector(box.absmax.x, box.absmax.y, box.absmin.z);
+		case 6: return combine_to_vector(box.absmin.x, box.absmax.y, box.absmax.z);
+		case 7: return combine_to_vector(box.absmax.x, box.absmin.y, box.absmax.z);
+		case 8: return combine_to_vector(box.absmax.x, box.absmax.y, box.absmax.z);
 		default: return '0 0 0';
 	}
 }
@@ -2647,11 +2647,11 @@ vector animfixfps(entity e, vector a, vector b)
 	if(a_y == 1)
 	{
 		float dur;
-		dur = frameduration(e.modelindex, a_x);
-		if(dur <= 0 && b_y)
+		dur = frameduration(e.modelindex, a.x);
+		if(dur <= 0 && b.y)
 		{
 			a = b;
-			dur = frameduration(e.modelindex, a_x);
+			dur = frameduration(e.modelindex, a.x);
 		}
 		if(dur > 0)
 			a_z = 1.0 / dur;

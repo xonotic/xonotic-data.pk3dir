@@ -177,15 +177,15 @@ void waypoint_think()
 				continue;
 			}
 			sv = e.origin;
-			sv_x = bound(sm1_x, sv_x, sm2_x);
-			sv_y = bound(sm1_y, sv_y, sm2_y);
-			sv_z = bound(sm1_z, sv_z, sm2_z);
+			sv_x = bound(sm1_x, sv.x, sm2_x);
+			sv_y = bound(sm1_y, sv.y, sm2_y);
+			sv_z = bound(sm1_z, sv.z, sm2_z);
 			ev = self.origin;
 			em1 = e.origin + e.mins;
 			em2 = e.origin + e.maxs;
-			ev_x = bound(em1_x, ev_x, em2_x);
-			ev_y = bound(em1_y, ev_y, em2_y);
-			ev_z = bound(em1_z, ev_z, em2_z);
+			ev_x = bound(em1_x, ev.x, em2_x);
+			ev_y = bound(em1_y, ev.y, em2_y);
+			ev_z = bound(em1_z, ev.z, em2_z);
 			dv = ev - sv;
 			dv_z = 0;
 			if (vlen(dv) >= 1050) // max search distance in XY

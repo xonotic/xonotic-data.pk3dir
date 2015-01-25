@@ -1,9 +1,6 @@
 // from the engine
 vector drawfontscale;
 #define draw_fontscale drawfontscale
-#define draw_fontscale_x drawfontscale_x
-#define draw_fontscale_y drawfontscale_y
-#define draw_fontscale_z drawfontscale_z
 
 vector draw_shift;
 vector draw_scale;

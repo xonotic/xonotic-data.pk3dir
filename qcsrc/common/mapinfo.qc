@@ -293,12 +293,12 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			if(k == "origin")
 			{
 				o = stov(strcat("'", v, "'"));
-				mapMins_x = min(mapMins_x, o_x);
-				mapMins_y = min(mapMins_y, o_y);
-				mapMins_z = min(mapMins_z, o_z);
-				mapMaxs_x = max(mapMaxs_x, o_x);
-				mapMaxs_y = max(mapMaxs_y, o_y);
-				mapMaxs_z = max(mapMaxs_z, o_z);
+				mapMins_x = min(mapMins.x, o.x);
+				mapMins_y = min(mapMins.y, o.y);
+				mapMins_z = min(mapMins.z, o.z);
+				mapMaxs_x = max(mapMaxs.x, o.x);
+				mapMaxs_y = max(mapMaxs.y, o.y);
+				mapMaxs_z = max(mapMaxs.z, o.z);
 			}
 			else if(k == "race_place")
 			{

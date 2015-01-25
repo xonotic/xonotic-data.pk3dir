@@ -126,9 +126,9 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
 	{
 		p = e.origin;
-		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
-		p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
-		p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
+		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
+		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
 		d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
 		if(d < dist)
 		{
@@ -219,7 +219,7 @@ void W_Fireball_Attack1(void)
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
 	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0, 0);
-	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
+	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
 	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 }
 
@@ -316,7 +316,7 @@ void W_Fireball_Attack2(void)
 			break;
 	}
 	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
-	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
+	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
 	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);

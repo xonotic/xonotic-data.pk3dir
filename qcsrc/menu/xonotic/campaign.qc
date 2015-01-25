@@ -212,19 +212,19 @@ void XonoticCampaignList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.itemAbsSize = '0 0 0';
 	SUPER(XonoticCampaignList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize_y * me.itemHeight));
-	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize_x * (1 - me.controlWidth)));
-	me.realUpperMargin1 = 0.5 * me.realFontSize_y;
-	me.realUpperMargin2 = me.realUpperMargin1 + 2 * me.realFontSize_y;
+	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
+	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
+	me.realUpperMargin1 = 0.5 * me.realFontSize.y;
+	me.realUpperMargin2 = me.realUpperMargin1 + 2 * me.realFontSize.y;
 
-	me.checkMarkSize = (eX * (me.itemAbsSize_y / me.itemAbsSize_x) + eY) * 0.5;
+	me.checkMarkSize = (eX * (me.itemAbsSize.y / me.itemAbsSize.x) + eY) * 0.5;
 
 	me.columnPreviewOrigin = 0;
-	me.columnPreviewSize = me.itemAbsSize_y / me.itemAbsSize_x * 4 / 3;
-	me.columnCheckMarkSize = me.checkMarkSize_x;
-	me.columnNameSize = 1 - me.columnPreviewSize - me.columnCheckMarkSize - 4 * me.realFontSize_x;
-	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize_x;
-	me.columnCheckMarkOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize_x * 2;
+	me.columnPreviewSize = me.itemAbsSize.y / me.itemAbsSize.x * 4 / 3;
+	me.columnCheckMarkSize = me.checkMarkSize.x;
+	me.columnNameSize = 1 - me.columnPreviewSize - me.columnCheckMarkSize - 4 * me.realFontSize.x;
+	me.columnNameOrigin = me.columnPreviewOrigin + me.columnPreviewSize + me.realFontSize.x;
+	me.columnCheckMarkOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x * 2;
 
 	me.checkMarkOrigin = eY + eX * (me.columnCheckMarkOrigin + me.columnCheckMarkSize) - me.checkMarkSize;
 
@@ -284,10 +284,10 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 			if(argv(j) != "")
 			{
 				draw_Text(o, argv(j), me.realFontSize, theColor, theAlpha * SKINALPHA_CAMPAIGN_DESCRIPTION, 0);
-				o_y += me.realFontSize_y;
+				o.y += me.realFontSize.y;
 			}
 			else
-				o_y += me.realFontSize_y * me.emptyLineHeight;
+				o.y += me.realFontSize.y * me.emptyLineHeight;
 	}
 }
 void CampaignList_LoadMap(entity btn, entity me)

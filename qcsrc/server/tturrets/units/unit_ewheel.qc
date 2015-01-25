@@ -139,10 +139,10 @@ void ewheel_postthink()
     float vz;
     vector wish_angle, real_angle;
 
-    vz = self.velocity_z;
+    vz = self.velocity.z;
 
-    self.angles_x = anglemods(self.angles_x);
-    self.angles_y = anglemods(self.angles_y);
+    self.angles_x = anglemods(self.angles.x);
+    self.angles_y = anglemods(self.angles.y);
 
     fixedmakevectors(self.angles);
 
@@ -151,9 +151,9 @@ void ewheel_postthink()
     real_angle = wish_angle - self.angles;
     real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
-    self.tur_head.spawnshieldtime = fabs(real_angle_y);
-    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
-    self.angles_y = (self.angles_y + real_angle_y);
+    self.tur_head.spawnshieldtime = fabs(real_angle.y);
+    real_angle_y = bound(-self.tur_head.aim_speed, real_angle.y, self.tur_head.aim_speed);
+    self.angles_y = (self.angles.y + real_angle.y);
 
     if(self.enemy)
         ewheel_move_enemy();
