@@ -131,7 +131,7 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	{
 		float i = me.selectedItem;
 		float a = me.getItemHeight(me, i);
-		for(;;)
+		for(0;;)
 		{
 			--i;
 			if (i < 0)
@@ -146,7 +146,7 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	{
 		float i = me.selectedItem;
 		float a = me.getItemHeight(me, i);
-		for(;;)
+		for(0;;)
 		{
 			++i;
 			if (i >= me.nItems)
@@ -369,7 +369,7 @@ void ListBox_draw(entity me)
 	float y;
 	i = me.getItemAtPos(me, me.scrollPos);
 	y = me.getItemStart(me, i) - me.scrollPos;
-	for(; i < me.nItems && y < 1; ++i)
+	for(0; i < me.nItems && y < 1; ++i)
 	{
 		draw_shift = boxToGlobal(eY * y, oldshift, oldscale);
 		vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);

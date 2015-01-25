@@ -31,7 +31,7 @@ void Porto_Draw()
 	portal_number = 0;
 	nextdir = dir;
 
-	for(;;)
+	for(0;;)
 	{
 		dir = nextdir;
 		traceline(p, p + 65536 * dir, TRUE, porto);

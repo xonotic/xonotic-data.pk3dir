@@ -393,7 +393,7 @@ void sandbox_Database_Load()
 	}
 	else
 	{
-		for(;;)
+		for(0;;)
 		{
 			file_read = fgets(file_get);
 			if(file_read == "")

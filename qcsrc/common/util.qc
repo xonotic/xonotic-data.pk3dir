@@ -2538,7 +2538,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for(; queue_start; queue_start = queue_start.fld)
+	for(0; queue_start; queue_start = queue_start.fld)
 	{
 		// find all neighbors of queue_start
 		entity t;

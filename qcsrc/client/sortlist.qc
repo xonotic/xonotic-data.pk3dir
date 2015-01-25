@@ -92,7 +92,7 @@ void Sort_Finish(entity sort)
 
 entity Sort_Get(entity sort, float i)
 {
-	for(; sort.sort_next && i > 0; --i)
+	for(0; sort.sort_next && i > 0; --i)
 		sort = sort.sort_next;
 	return sort;
 }

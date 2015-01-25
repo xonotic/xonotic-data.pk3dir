@@ -85,7 +85,7 @@ void GameCommand_adminmsg(float request, float argc)
 
 			if((targets) && (admin_message))
 			{
-				for(;targets;)
+				for(0;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
 
@@ -1024,7 +1024,7 @@ void GameCommand_moveplayer(float request, float argc)
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
 			{
-				for(;targets;)
+				for(0;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
 
@@ -1376,7 +1376,7 @@ void GameCommand_shuffleteams(float request)
 				// build a list of the players in a random order
 				FOR_EACH_PLAYER(tmp_player)
 				{
-					for(;;)
+					for(0;;)
 					{
 						i = bound(1, floor(random() * maxclients) + 1, maxclients);
 
@@ -1518,7 +1518,7 @@ void GameCommand_trace(float request, float argc)
 					float hitcount = 0;
 					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
 					float worst_endpos_bug = 0;
-					for(;;)
+					for(0;;)
 					{
 						org = world.mins;
 						delta = world.maxs - world.mins;
@@ -1547,7 +1547,7 @@ void GameCommand_trace(float request, float argc)
 								// how much do we need to back off?
 								safe = 1;
 								unsafe = 0;
-								for(;;)
+								for(0;;)
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
 									tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
@@ -1581,7 +1581,7 @@ void GameCommand_trace(float request, float argc)
 								q0 = p;
 								dq = 0;
 								dqf = 1;
-								for(;;)
+								for(0;;)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if(q == q0)

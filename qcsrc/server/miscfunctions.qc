@@ -1045,7 +1045,7 @@ const float SND_LARGESOUND = 16;
 float sound_allowed(float dest, entity e)
 {
     // sounds from world may always pass
-    for (;;)
+    for(0;;)
     {
         if (e.classname == "body")
             e = e.enemy;
@@ -1484,7 +1484,7 @@ void InitializeEntity(entity e, void(void) func, float order)
 
     cur = initialize_entity_first;
     prev = world;
-    for (;;)
+    for(0;;)
     {
         if (!cur || cur.initialize_entity_order > order)
         {

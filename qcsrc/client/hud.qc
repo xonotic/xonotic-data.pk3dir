@@ -3769,7 +3769,7 @@ void HUD_InfoMessages(void)
 			tm = teams.sort_next;
 			if (tm)
 			{
-				for(; tm.sort_next; tm = tm.sort_next)
+				for(0; tm.sort_next; tm = tm.sort_next)
 				{
 					if(!tm.team_size || tm.team == NUM_SPECTATOR)
 						continue;

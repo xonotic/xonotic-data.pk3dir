@@ -263,7 +263,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	sol = -1;
 	frac = 0;
 	i = 16;
-	for(;;)
+	for(0;;)
 	{
 		if(--i < 1)
 		{
@@ -386,7 +386,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	}
 	WarpZone_MakeAllSolid();
 	i = 16;
-	for(;;)
+	for(0;;)
 	{
 		if(--i < 1)
 		{

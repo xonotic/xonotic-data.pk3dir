@@ -834,7 +834,7 @@ void WarpZone_StartFrame()
 		if(IS_NOT_A_CLIENT(e))
 		{
 			if(warpzone_warpzones_exist)
-				for(; (e = nextent(e)); )
+				for(0; (e = nextent(e)); )
 					WarpZone_StoreProjectileData(e);
 			break;
 		}

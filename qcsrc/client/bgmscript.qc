@@ -195,7 +195,7 @@ float BGMScript(entity e)
 	}
 
 	// find the CURRENT line
-	for(;;)
+	for(0;;)
 	{
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
 		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)

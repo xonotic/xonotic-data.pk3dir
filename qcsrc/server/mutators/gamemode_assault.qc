@@ -338,7 +338,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 	ad = findchain(classname, "func_assault_destructible");
 
-	for (; ad; ad = ad.chain)
+	for(0; ad; ad = ad.chain)
 	{
 		if (ad.target == "")
 			continue;

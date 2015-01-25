@@ -73,7 +73,7 @@ vector color_hslimage(vector v, vector margin)
 float XonoticColorpicker_mouseDrag(entity me, vector coords)
 {
 	float i, carets;
-	for(;;)
+	for(0;;)
 	{
 		i = me.controlledTextbox.cursorPos;
 		if(i >= 2)

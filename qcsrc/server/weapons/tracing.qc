@@ -363,7 +363,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 	WarpZone_trace_forent = self;
 
-	for (;;)
+	for(0;;)
 	{
 		// TODO also show effect while tracing
 		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, WarpZone_trace_forent, world, fireBullet_trace_callback);

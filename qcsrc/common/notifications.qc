@@ -306,7 +306,7 @@ string Process_Notif_Args(
 	string selected, remaining = args;
 	float sel_num = 0;
 
-	for(;(remaining != "");)
+	for(0;(remaining != "");)
 	{
 		selected = car(remaining); remaining = cdr(remaining);
 

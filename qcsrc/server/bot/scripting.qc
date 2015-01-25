@@ -39,7 +39,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 			if(cmdstr == "sound")
 			{
 				// find the LAST word
-				for(;;)
+				for(0;;)
 				{
 					sp = strstrofs(parm, " ", 0);
 					if(sp < 0)
