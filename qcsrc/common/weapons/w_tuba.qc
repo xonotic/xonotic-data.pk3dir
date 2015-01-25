@@ -184,16 +184,13 @@ void W_Tuba_NoteOff(void)
 
 float W_Tuba_GetNote(entity pl, float hittype)
 {
-	float note;
-	float movestate;
-	movestate = 5;
-	if(pl.movement_x < 0) movestate -= 3;
-	if(pl.movement_x > 0) movestate += 3;
-	if(pl.movement_y < 0) movestate -= 1;
-	if(pl.movement_y > 0) movestate += 1;
-#ifdef GMQCC
-	note = 0;
-#endif
+	float movestate = 5;
+	if (pl.movement_x < 0)		movestate -= 3;
+	else if (pl.movement_x > 0)	movestate += 3;
+	if (pl.movement_y < 0)		movestate -= 1;
+	else if (pl.movement_y > 0)	movestate += 1;
+
+	float note = 0;
 	switch(movestate)
 	{
 	// layout: originally I wanted

@@ -11,7 +11,7 @@ vector turret_stdproc_aim_generic()
 {
 
     vector pre_pos, prep;
-    float distance, impact_time, i, mintime;
+    float distance, i, mintime;
 
     turret_tag_fire_update();
 
@@ -30,9 +30,7 @@ vector turret_stdproc_aim_generic()
 		{
 			// FIXME: this cant be the best way to do this..
 			prep = pre_pos;
-#ifdef GMQCC
-			impact_time = 0;
-#endif
+			float impact_time = 0;
 			for(i = 0; i < 4; ++i)
 			{
 				distance = vlen(prep - self.tur_shotorg);

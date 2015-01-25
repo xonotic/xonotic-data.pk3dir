@@ -2672,14 +2672,9 @@ float mod_active; // is there any active mod icon?
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
-	float stat;
-	string pic;
-	vector color;
-#ifdef GMQCC
-	stat = -1;
-	pic = "";
-	color = '0 0 0';
-#endif
+	float stat = -1;
+	string pic = "";
+	vector color = '0 0 0';
 	switch(i)
 	{
 		case 0:
@@ -3266,14 +3261,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
-	float stat, pps_ratio;
-	string pic;
-	vector color;
-#ifdef GMQCC
-	stat = -1;
-	pic = "";
-	color = '0 0 0';
-#endif
+	float stat = -1;
+	string pic = "";
+	vector color = '0 0 0';
 	switch(i)
 	{
 		case 0:
@@ -3298,7 +3288,7 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, fl
 			color = '1 0 1';
 			break;
 	}
-	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
+	float pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
 	if(mySize_x/mySize_y > aspect_ratio)
 	{

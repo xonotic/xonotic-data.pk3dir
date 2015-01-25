@@ -1390,10 +1390,7 @@ void spawnfunc_target_items (void)
 		else
 		{
 			error("invalid spawnflags");
-#ifdef GMQCC
-			itemprefix = string_null;
-			valueprefix = string_null;
-#endif
+			itemprefix = valueprefix = string_null;
 		}
 
 		self.netname = "";

@@ -570,9 +570,7 @@ void WarpZone_InitStep_UpdateTransform()
 		norm = normalize(norm);
 	}
 
-#ifdef GMQCC
 	ang = '0 0 0';
-#endif
 	if(self.aiment)
 	{
 		org = self.aiment.origin;

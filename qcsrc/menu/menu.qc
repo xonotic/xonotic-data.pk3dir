@@ -318,9 +318,6 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
 	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
 
-#ifdef GMQCC
-	isz = '0 0 0';
-#endif
 	switch(scalemode)
 	{
 		default:
