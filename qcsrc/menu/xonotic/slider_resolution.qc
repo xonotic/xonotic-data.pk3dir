@@ -68,7 +68,7 @@ float updateConwidths(float width, float height, float pixelheight)
 	c_y = rint(c.y);
 
 	// Please reload resolutions list and such stuff.
-	XonoticResolutionSlider_DataHasChanged = TRUE;
+	XonoticResolutionSlider_DataHasChanged = true;
 
 	if (c.x != cvar("vid_conwidth") || c.y != cvar("vid_conheight"))
 	{
@@ -208,11 +208,11 @@ void XonoticResolutionSlider_draw(entity me)
 	if (cvar("vid_fullscreen") != me.vid_fullscreen)
 	{
 		me.loadResolutions(me, cvar("vid_fullscreen"));
-		XonoticResolutionSlider_DataHasChanged = TRUE;
+		XonoticResolutionSlider_DataHasChanged = true;
 	}
 	if (XonoticResolutionSlider_DataHasChanged)
 	{
-		XonoticResolutionSlider_DataHasChanged = FALSE;
+		XonoticResolutionSlider_DataHasChanged = false;
 		me.loadCvars(me);
 	}
 	SUPER(XonoticResolutionSlider).draw(me);

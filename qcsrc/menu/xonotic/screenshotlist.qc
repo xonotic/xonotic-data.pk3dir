@@ -71,7 +71,7 @@ string XonoticScreenshotList_screenshotName(entity me, float i)
 	return s;
 }
 
-// if subdir is TRUE look in subdirectories too (1 level)
+// if subdir is true look in subdirectories too (1 level)
 void getScreenshots_for_ext(entity me, string ext, float subdir)
 {
 	string s;
@@ -85,7 +85,7 @@ void getScreenshots_for_ext(entity me, string ext, float subdir)
 		s=strcat(s, "*", ext);
 
 	float list, i, n;
-	list = search_begin(s, FALSE, TRUE);
+	list = search_begin(s, false, true);
 	if(list >= 0)
 	{
 		n = search_getsize(list);
@@ -98,15 +98,15 @@ void getScreenshots_for_ext(entity me, string ext, float subdir)
 			{
 				s = strreplace("/", "^7/", s); // clear colors at the forward slash
 				s = strcat("/", rgb_to_hexcolor(SKINCOLOR_SCREENSHOTLIST_SUBDIR), s); // add a forward slash for sorting, then color
-				bufstr_add(me.listScreenshot, s, TRUE);
+				bufstr_add(me.listScreenshot, s, true);
 			}
-			else { bufstr_add(me.listScreenshot, s, TRUE); }
+			else { bufstr_add(me.listScreenshot, s, true); }
 		}
 		search_end(list);
 	}
 
 	if (subdir)
-		getScreenshots_for_ext(me, ext, FALSE);
+		getScreenshots_for_ext(me, ext, false);
 }
 
 void XonoticScreenshotList_getScreenshots(entity me)
@@ -119,12 +119,12 @@ void XonoticScreenshotList_getScreenshots(entity me)
 		me.nItems = 0;
 		return;
 	}
-	getScreenshots_for_ext(me, ".jpg", TRUE);
-	getScreenshots_for_ext(me, ".tga", TRUE);
-	getScreenshots_for_ext(me, ".png", TRUE);
+	getScreenshots_for_ext(me, ".jpg", true);
+	getScreenshots_for_ext(me, ".tga", true);
+	getScreenshots_for_ext(me, ".png", true);
 	me.nItems = buf_getsize(me.listScreenshot);
 	if(me.nItems > 0)
-		buf_sort(me.listScreenshot, 128, FALSE);
+		buf_sort(me.listScreenshot, 128, false);
 }
 
 void XonoticScreenshotList_destroy(entity me)

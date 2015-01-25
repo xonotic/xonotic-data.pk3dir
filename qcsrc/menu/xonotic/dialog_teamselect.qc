@@ -12,7 +12,7 @@ CLASS(XonoticTeamSelectDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticTeamSelectDialog, team2, entity, NULL)
 	ATTRIB(XonoticTeamSelectDialog, team3, entity, NULL)
 	ATTRIB(XonoticTeamSelectDialog, team4, entity, NULL)
-	ATTRIB(XonoticTeamSelectDialog, requiresConnection, float, TRUE)
+	ATTRIB(XonoticTeamSelectDialog, requiresConnection, float, true)
 ENDCLASS(XonoticTeamSelectDialog)
 #endif
 

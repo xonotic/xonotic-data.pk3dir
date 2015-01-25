@@ -13,7 +13,7 @@ void Announcer_Countdown()
 	if(roundstarttime >= starttime)
 		starttime = roundstarttime;
 	if(starttime <= time && roundstarttime != starttime) // game start time has passed
-		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
+		announcer_5min = announcer_1min = false; // reset maptime announcers now as well
 
 	float countdown = (starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
@@ -101,7 +101,7 @@ void Announcer_Time()
 		{
 			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 300)
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 300))
-					announcer_5min = FALSE;
+					announcer_5min = false;
 		}
 		else
 		{
@@ -111,7 +111,7 @@ void Announcer_Time()
 				//if we're in warmup mode, check whether there's a warmup timelimit
 				if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
 				{
-					announcer_5min = TRUE;
+					announcer_5min = true;
 					Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
 				}
 			}
@@ -125,7 +125,7 @@ void Announcer_Time()
 		{
 			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60)
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
-					announcer_1min = FALSE;
+					announcer_1min = false;
 		}
 		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60)
 			|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
@@ -133,7 +133,7 @@ void Announcer_Time()
 			// if we're in warmup mode, check whether there's a warmup timelimit
 			if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
 			{
-				announcer_1min = TRUE;
+				announcer_1min = true;
 				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_1);
 			}
 		}

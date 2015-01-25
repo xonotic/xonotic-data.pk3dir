@@ -62,7 +62,7 @@ void spawnfunc_weapon_hook(void)
 {
 	if(g_grappling_hook) // offhand hook
 	{
-		startitem_failed = TRUE;
+		startitem_failed = true;
 		remove(self);
 		return;
 	}
@@ -133,12 +133,12 @@ void W_Hook_Attack2(void)
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(self, false, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
 	gren.classname = "hookbomb";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
@@ -155,7 +155,7 @@ void W_Hook_Attack2(void)
 	gren.health = WEP_CVAR_SEC(hook, health);
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
 	gren.event_damage = W_Hook_Damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
 	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);
@@ -168,7 +168,7 @@ void W_Hook_Attack2(void)
 	gren.angles = '0 0 0';
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_HOOKBOMB, TRUE);
+	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -182,7 +182,7 @@ float W_Hook(float req)
 		case WR_AIM:
 		{
 			// no bot AI for hook (yet?)
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -283,7 +283,7 @@ float W_Hook(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -294,12 +294,12 @@ float W_Hook(float req)
 			precache_sound("weapons/hook_fire.wav");
 			precache_sound("weapons/hookbomb_fire.wav");
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -311,28 +311,28 @@ float W_Hook(float req)
 		case WR_CHECKAMMO2:
 		{
 			// infinite ammo for now
-			return TRUE; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
+			return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 		}
 		case WR_CONFIG:
 		{
 			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.hook_refire = time;
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
-			return FALSE;
+			return false;
 		}
 		case WR_KILLMESSAGE:
 		{
 			return WEAPON_HOOK_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -348,20 +348,20 @@ float W_Hook(float req)
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
 				
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/hookbomb_impact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

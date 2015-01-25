@@ -139,12 +139,12 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 					&&
 					(to_client.enemy == other_client)
 				)
-			) { return TRUE; }
+			) { return true; }
 			break;
 		}
 		case NOTIF_ONE_ONLY: // send ONLY to one client
 		{
-			if(to_client == other_client) { return TRUE; }
+			if(to_client == other_client) { return true; }
 			break;
 		}
 		case NOTIF_TEAM: // send only to X team and their spectators
@@ -157,7 +157,7 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 					&&
 					(to_client.enemy.team == other_client.team)
 				)
-			) { return TRUE; }
+			) { return true; }
 			break;
 		}
 		case NOTIF_TEAM_EXCEPT: // send only to X team and their spectators, except for Y person and their spectators
@@ -178,12 +178,12 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 						)
 					)
 				)
-			) { return TRUE; }
+			) { return true; }
 			break;
 		}
 		case NOTIF_ALL: // send to everyone
 		{
-			return TRUE;
+			return true;
 		}
 		case NOTIF_ALL_EXCEPT: // send to everyone except X person and their spectators
 		{
@@ -195,11 +195,11 @@ float Notification_ShouldSend(float broadcast, entity to_client, entity other_cl
 					&&
 					(to_client.enemy == other_client)
 				)
-			) { return TRUE; }
+			) { return true; }
 			break;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 #endif
@@ -290,7 +290,7 @@ string Process_Notif_Line(
 			notifname,
 			stringtype
 		);
-		notif_error = TRUE;
+		notif_error = true;
 		input = substring(input, 1, (strlen(input) - 1));
 	}
 
@@ -325,7 +325,7 @@ string Process_Notif_Args(
 						notifname,
 						NOTIF_MAX_ARGS
 					);
-					notif_error = TRUE;
+					notif_error = true;
 					break;
 				}
 
@@ -357,7 +357,7 @@ string Process_Notif_Args(
 							notifname,
 							selected
 						);
-						notif_error = TRUE;
+						notif_error = true;
 						break;
 					}
 				}
@@ -376,7 +376,7 @@ string Process_Notif_Args(
 						notifname,
 						NOTIF_MAX_HUDARGS
 					);
-					notif_error = TRUE;
+					notif_error = true;
 					break;
 				}
 
@@ -408,7 +408,7 @@ string Process_Notif_Args(
 							notifname,
 							selected
 						);
-						notif_error = TRUE;
+						notif_error = true;
 						break;
 					}
 				}
@@ -427,7 +427,7 @@ string Process_Notif_Args(
 						notifname,
 						NOTIF_MAX_DURCNT
 					);
-					notif_error = TRUE;
+					notif_error = true;
 					break;
 				}
 
@@ -462,7 +462,7 @@ string Process_Notif_Args(
 								notifname,
 								selected
 							);
-							notif_error = TRUE;
+							notif_error = true;
 						}
 						break;
 					}
@@ -565,7 +565,7 @@ void Create_Notification_Entity(
 	string typestring = Get_Notif_TypeName(typeId);
 
 	// Other pre-notif-setup requisites
-	notif_error = FALSE;
+	notif_error = false;
 
 	// ====================
 	//  Notification Setup
@@ -599,12 +599,12 @@ void Create_Notification_Entity(
 						typestring,
 						namestring
 					);
-					notif_error = TRUE;
+					notif_error = true;
 				}
 			}
-			else { notif.nent_enabled = FALSE; }
+			else { notif.nent_enabled = false; }
 			#else
-			notif.nent_enabled = FALSE;
+			notif.nent_enabled = false;
 			#endif
 
 			break;
@@ -621,7 +621,7 @@ void Create_Notification_Entity(
 			#ifdef SVQC
 			float should_process_args = server_is_dedicated;
 			#else
-			float should_process_args = TRUE;
+			float should_process_args = true;
 			#endif
 
 			if(should_process_args)
@@ -648,7 +648,7 @@ void Create_Notification_Entity(
 							strnum,
 							flnum
 						);
-						notif_error = TRUE;
+						notif_error = true;
 					}
 				}
 				else if(args != "")
@@ -680,7 +680,7 @@ void Create_Notification_Entity(
 							typestring,
 							namestring
 						);
-						notif_error = TRUE;
+						notif_error = true;
 					}
 				}
 				else if(icon != "")
@@ -693,7 +693,7 @@ void Create_Notification_Entity(
 						typestring,
 						namestring
 					);
-					notif_error = TRUE;
+					notif_error = true;
 				}
 
 				if(durcnt != "")
@@ -712,7 +712,7 @@ void Create_Notification_Entity(
 							typestring,
 							namestring
 						);
-						notif_error = TRUE;
+						notif_error = true;
 					}
 				}
 				else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
@@ -754,7 +754,7 @@ void Create_Notification_Entity(
 						typestring,
 						namestring
 					);
-					notif_error = TRUE;
+					notif_error = true;
 				}
 			}
 
@@ -774,7 +774,7 @@ void Create_Notification_Entity(
 					typestring,
 					namestring
 				);
-				notif_error = TRUE;
+				notif_error = true;
 			}
 			else
 			{
@@ -818,7 +818,7 @@ void Create_Notification_Entity(
 					typestring,
 					namestring
 				);
-				notif_error = TRUE;
+				notif_error = true;
 			}
 			else
 			{
@@ -865,7 +865,7 @@ void Create_Notification_Entity(
 							typeId,
 							namestring
 						);
-						notif_error = TRUE;
+						notif_error = true;
 						break;
 					}
 				}
@@ -908,7 +908,7 @@ void Create_Notification_Entity(
 				typeId,
 				namestring
 			);
-			notif_error = TRUE;
+			notif_error = true;
 			break;
 		}
 	}
@@ -916,8 +916,8 @@ void Create_Notification_Entity(
 	// now check to see if any errors happened
 	if(notif_error)
 	{
-		notif.nent_enabled = FALSE; // disable the notification so it can't cause trouble
-		notif_global_error = TRUE; // throw the red flag that an error happened on init
+		notif.nent_enabled = false; // disable the notification so it can't cause trouble
+		notif_global_error = true; // throw the red flag that an error happened on init
 	}
 }
 
@@ -1764,9 +1764,9 @@ float Net_Write_Notification(entity client, float sf)
 		WriteShort(MSG_ENTITY, self.nent_net_name);
 		for(i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }
 		for(i = 0; i < self.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[i]); }
-		return TRUE;
+		return true;
 	}
-	else { return FALSE; }
+	else { return false; }
 }
 
 void Kill_Notification(
@@ -1831,7 +1831,7 @@ void Kill_Notification(
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = MSG_CENTER_CPID;
 		net_notif.nent_net_name = killed_cpid;
-		Net_LinkEntity(net_notif, FALSE, autocvar_notification_lifetime_runtime, Net_Write_Notification);
+		Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
 	for(notif = world; (notif = find(notif, classname, "net_notification"));)
@@ -2092,7 +2092,7 @@ void Send_Notification(
 				autocvar_notification_lifetime_mapload
 			);
 
-		Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
+		Net_LinkEntity(net_notif, false, 0, Net_Write_Notification);
 	}
 }
 

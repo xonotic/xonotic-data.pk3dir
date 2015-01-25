@@ -176,7 +176,7 @@ float BGMScript(entity e)
 	if(autocvar_bgmvolume <= 0)
 		return -1;
 
-	e.just_toggled = FALSE;
+	e.just_toggled = false;
 
 	if(bgmtime < 0)
 		return -1;
@@ -189,7 +189,7 @@ float BGMScript(entity e)
 		e.bgmscripttime = bgmtime;
 
 		// treat this as a stop event for all notes, to prevent sticking keys
-		e.bgmscriptstate = FALSE;
+		e.bgmscriptstate = false;
 		e.bgmscriptvolume = 1;
 		e.bgmscriptstatetime = bgmtime - GetTimeForAmplitude(e, amp);
 	}
@@ -214,11 +214,11 @@ float BGMScript(entity e)
 			vel = stof(argv(2));
 			if(vel > 0)
 			{
-				e.just_toggled = e.bgmscriptstate = TRUE;
+				e.just_toggled = e.bgmscriptstate = true;
 				e.bgmscriptvolume = vel;
 			}
 			else
-				e.just_toggled = e.bgmscriptstate = FALSE;
+				e.just_toggled = e.bgmscriptstate = false;
 
 			e.bgmscriptstatetime = e.bgmscripttime - GetTimeForAmplitude(e, amp);
 		}

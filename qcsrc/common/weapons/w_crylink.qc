@@ -266,7 +266,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 
 float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 {
-	entity head = WarpZone_FindRadius((projectile.origin + (projectile.mins + projectile.maxs) * 0.5), rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	entity head = WarpZone_FindRadius((projectile.origin + (projectile.mins + projectile.maxs) * 0.5), rad + MAX_DAMAGEEXTRARADIUS, false);
 	float hit_friendly = 0;
 	float hit_enemy = 0;
 
@@ -283,7 +283,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 		head = head.chain;
 	}
 
-	return (hit_enemy ? FALSE : hit_friendly);
+	return (hit_enemy ? false : hit_friendly);
 }
 
 // NO bounce protection, as bounces are limited!
@@ -329,7 +329,7 @@ void W_Crylink_Touch(void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
 	//if(proj.cnt == 0)
-	//	CSQCProjectile(proj, TRUE, PROJECTILE_CRYLINK, TRUE);
+	//	CSQCProjectile(proj, true, PROJECTILE_CRYLINK, true);
 }
 
 void W_Crylink_Fadethink(void)
@@ -353,7 +353,7 @@ void W_Crylink_Attack(void)
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -367,7 +367,7 @@ void W_Crylink_Attack(void)
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
-		proj.bot_dodge = TRUE;
+		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_PRI(crylink, damage);
 		if(shots == 1) {
 			proj.queuenext = proj;
@@ -408,7 +408,7 @@ void W_Crylink_Attack(void)
 			s_z = v_forward.y;
 		}
 		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
-		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, FALSE);
+		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -435,7 +435,7 @@ void W_Crylink_Attack(void)
 		proj.flags = FL_PROJECTILE;
 		proj.missile_flags = MIF_SPLASH;
     
-		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
@@ -462,7 +462,7 @@ void W_Crylink_Attack2(void)
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -476,7 +476,7 @@ void W_Crylink_Attack2(void)
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
 		proj.classname = "spike";
-		proj.bot_dodge = TRUE;
+		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_SEC(crylink, damage);
 		if(shots == 1) {
 			proj.queuenext = proj;
@@ -525,7 +525,7 @@ void W_Crylink_Attack2(void)
 			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * WEP_CVAR_SEC(crylink, spread) * g_weaponspreadfactor);
 		}
 
-		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, FALSE);
+		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, false);
 		proj.touch = W_Crylink_Touch;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
@@ -551,7 +551,7 @@ void W_Crylink_Attack2(void)
 		proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
         
-		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
@@ -571,11 +571,11 @@ float W_Crylink(float req)
 		case WR_AIM:
 		{
 			if(random() < 0.10)
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), FALSE);
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), FALSE);
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
 				
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -633,7 +633,7 @@ float W_Crylink(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -644,13 +644,13 @@ float W_Crylink(float req)
 			precache_sound("weapons/crylink_fire2.wav");
 			precache_sound("weapons/crylink_linkjoin.wav");
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
 			// don't "run out of ammo" and switch weapons while waiting for release
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
-				return TRUE;
+				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
@@ -660,7 +660,7 @@ float W_Crylink(float req)
 		{
 			// don't "run out of ammo" and switch weapons while waiting for release
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
-				return TRUE;
+				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
@@ -669,12 +669,12 @@ float W_Crylink(float req)
 		case WR_CONFIG:
 		{
 			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -685,7 +685,7 @@ float W_Crylink(float req)
 			return WEAPON_CRYLINK_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -710,21 +710,21 @@ float W_Crylink(float req)
 					sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/crylink_impact2.wav");
 			precache_sound("weapons/crylink_impact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

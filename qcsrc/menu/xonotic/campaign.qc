@@ -96,7 +96,7 @@ entity makeXonoticCampaignList()
 void XonoticCampaignList_configureXonoticCampaignList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.campaignGlob = search_begin("maps/campaign*.txt", TRUE, TRUE);
+	me.campaignGlob = search_begin("maps/campaign*.txt", true, true);
 	me.loadCvars(me);
 	me.campaignGo(me, 0); // takes care of enabling/disabling buttons too
 }

@@ -103,7 +103,7 @@ void MapInfo_Enumerate()
 		_MapInfo_globopen = 0;
 	}
 	MapInfo_Cache_Invalidate();
-	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
+	_MapInfo_globhandle = search_begin("maps/*.bsp", true, true);
 	if(_MapInfo_globhandle >= 0)
 	{
 		_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
@@ -442,7 +442,7 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 		return;
 
 	if(load_default)
-		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, FALSE);
+		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
 	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
 	{
@@ -572,7 +572,7 @@ float _MapInfo_GetTeamPlayBool(float t)
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.team;
-	return FALSE;
+	return false;
 }
 
 void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
@@ -860,16 +860,16 @@ float MapInfo_isRedundant(string fn, string t)
 	t = strreplace("'", "-", t);
 
 	if(!strcasecmp(fn, t))
-		return TRUE;
+		return true;
 
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
 	t = strreplace("-", "", t);
 
 	if(!strcasecmp(fn, t))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
@@ -1039,7 +1039,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 			f = MapInfo_Type_FromString(t);
 			dprint("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
-				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, TRUE);
+				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else
 				dprint("Map ", pFilename, " supports unknown game type ", t, ", ignored\n");
 		}
@@ -1394,7 +1394,7 @@ void MapInfo_Shutdown()
 	{
 		search_end(_MapInfo_globhandle);
 		_MapInfo_globhandle = -1;
-		_MapInfo_globopen = FALSE;
+		_MapInfo_globopen = false;
 	}
 }
 

@@ -49,7 +49,7 @@ void updateanim(entity e)
 			e.animstate_starttime = e.animstate_endtime;
 			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
 		}
-		e.animstate_override = FALSE;
+		e.animstate_override = false;
 	}
 	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
@@ -507,7 +507,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 }
 void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, FALSE);
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, false);
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
@@ -519,11 +519,11 @@ void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2
 {
 	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
-	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, FALSE);
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
 }
 void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, TRUE);
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, true);
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
@@ -535,7 +535,7 @@ void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, 
 {
 	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
-	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }
 
 float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
@@ -640,12 +640,12 @@ vector findbetterlocation (vector org, float mindist)
 	c = 0;
 	while (c < 6)
 	{
-		traceline (org, org + vec, TRUE, world);
+		traceline (org, org + vec, true, world);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
 			loc = trace_endpos;
-			traceline (loc, loc + vec, TRUE, world);
+			traceline (loc, loc + vec, true, world);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
@@ -727,7 +727,7 @@ float LOD_customize()
 			self.modelindex = self.lodmodelindex1;
 		else // if(d == 3)
 			self.modelindex = self.lodmodelindex2;
-		return TRUE;
+		return true;
 	}
 
 	// TODO csqc network this so it only gets sent once
@@ -739,7 +739,7 @@ float LOD_customize()
 	else
 		self.modelindex = self.lodmodelindex2;
 
-	return TRUE;
+	return true;
 }
 
 void LOD_uncustomize()

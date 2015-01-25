@@ -493,7 +493,7 @@ float Portal_Customize()
 	{
 		self.modelindex = self.savemodelindex;
 	}
-	return TRUE;
+	return true;
 }
 
 // cleanup:

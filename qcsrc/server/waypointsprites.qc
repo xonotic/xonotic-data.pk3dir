@@ -168,12 +168,12 @@ void WaypointSprite_Think()
 {
 	float doremove;
 
-	doremove = FALSE;
+	doremove = false;
 
 	if(self.fade_time)
 	{
 		if(time >= self.teleport_time)
-			doremove = TRUE;
+			doremove = true;
 	}
 
 	if(self.exteriormodeltoclient)
@@ -190,18 +190,18 @@ float WaypointSprite_visible_for_player(entity e)
 	// personal waypoints
 	if(self.enemy)
 		if(self.enemy != e)
-			return FALSE;
+			return false;
 
 	// team waypoints
 	if(self.team && self.rule == SPRITERULE_DEFAULT)
 	{
 		if(self.team != e.team)
-			return FALSE;
+			return false;
 		if (!IS_PLAYER(e))
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 entity WaypointSprite_getviewentity(entity e)
@@ -220,14 +220,14 @@ float WaypointSprite_isteammate(entity e, entity e2)
 	if(teamplay)
 	{
 		if(e2.team != e.team)
-			return FALSE;
+			return false;
 	}
 	else
 	{
 		if(e2 != e)
-			return FALSE;
+			return false;
 	}
-	return TRUE;
+	return true;
 }
 
 float WaypointSprite_Customize()
@@ -239,7 +239,7 @@ float WaypointSprite_Customize()
 	e = WaypointSprite_getviewentity(other);
 
 	if(MUTATOR_CALLHOOK(CustomizeWaypoint))
-		return FALSE;
+		return false;
 
 	return self.waypointsprite_visible_for_player(e);
 }
@@ -330,7 +330,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 			WriteByte(MSG_ENTITY, 0);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void WaypointSprite_Reset()
@@ -384,7 +384,7 @@ entity WaypointSprite_Spawn(
 	wp.reset2 = WaypointSprite_Reset;
 	wp.cnt = icon;
 	wp.colormod = rgb;
-	Net_LinkEntity(wp, FALSE, 0, WaypointSprite_SendEntity);
+	Net_LinkEntity(wp, false, 0, WaypointSprite_SendEntity);
 	return wp;
 }
 
@@ -396,7 +396,7 @@ entity WaypointSprite_SpawnFixed(
 	float icon, vector rgb // initial icon and color
 )
 {
-	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, TRUE, icon, rgb);
+	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon, rgb);
 }
 
 .entity waypointsprite_deployed_fixed;
@@ -416,7 +416,7 @@ entity WaypointSprite_DeployFixed(
 		maxdistance = waypointsprite_limitedrange;
 	else
 		maxdistance = 0;
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, FALSE, icon, rgb);
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon, rgb);
 }
 
 .entity waypointsprite_deployed_personal;
@@ -426,7 +426,7 @@ entity WaypointSprite_DeployPersonal(
 	float icon, vector rgb // initial icon and color
 )
 {
-	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, FALSE, icon, rgb);
+	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon, rgb);
 }
 
 .entity waypointsprite_attached;
@@ -448,7 +448,7 @@ entity WaypointSprite_Attach(
 		maxdistance = waypointsprite_limitedrange;
 	else
 		maxdistance = 0;
-	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, FALSE, icon, rgb);
+	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, false, icon, rgb);
 }
 
 entity WaypointSprite_AttachCarrier(
@@ -459,7 +459,7 @@ entity WaypointSprite_AttachCarrier(
 {
 	entity e;
 	WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, FALSE, icon, rgb);
+	e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon, rgb);
 	if(e)
 	{
 		WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);

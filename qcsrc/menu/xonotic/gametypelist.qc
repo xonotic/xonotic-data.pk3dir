@@ -90,7 +90,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 		s2 = _("free for all");
 
 	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(strcat(s1, " ", s2), FALSE, me.realFontSize, 1);
+	float f = draw_CondensedFontFactor(strcat(s1, " ", s2), false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;

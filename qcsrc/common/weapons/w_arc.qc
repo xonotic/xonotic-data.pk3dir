@@ -174,7 +174,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.beam_type);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void Reset_ArcBeam(entity player, vector forward)
@@ -224,7 +224,7 @@ void W_Arc_Beam_Think(void)
 	if( self.owner.BUTTON_ATCK2 || self.beam_bursting)
 	{
 		if(!self.beam_bursting)
-			self.beam_bursting = TRUE;
+			self.beam_bursting = true;
 		burst = ARC_BT_BURSTMASK;
 	}
 
@@ -304,7 +304,7 @@ void W_Arc_Beam_Think(void)
 
 	W_SetupShot_Range(
 		self.owner,
-		TRUE,
+		true,
 		0,
 		"",
 		0,
@@ -332,7 +332,7 @@ void W_Arc_Beam_Think(void)
 	if(!self.beam_initialized)
 	{
 		self.beam_dir = w_shotdir;
-		self.beam_initialized = TRUE;
+		self.beam_initialized = true;
 	}
 
 	// WEAPONTODO: Detect player velocity so that the beam curves when moving too
@@ -586,10 +586,10 @@ void W_Arc_Beam(float burst)
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
-	beam.bot_dodge = TRUE;
+	beam.bot_dodge = true;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = burst;
-	Net_LinkEntity(beam, FALSE, 0, W_Arc_Beam_Send);
+	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
 	entity oldself = self;
 	self = beam;
@@ -600,7 +600,7 @@ void W_Arc_Beam(float burst)
 void Arc_Smoke()
 {
 	makevectors(self.v_angle);
-	W_SetupShot_Range(self,TRUE,0,"",0,0,0);
+	W_SetupShot_Range(self,true,0,"",0,0,0);
 
 	vector smoke_origin = w_shotorg + self.velocity*frametime;
 	if ( self.arc_overheat > time )
@@ -645,7 +645,7 @@ float W_Arc(float req)
 					WEP_CVAR(arc, beam_botaimspeed),
 					0,
 					WEP_CVAR(arc, beam_botaimlifetime),
-					FALSE
+					false
 				);
 			}
 			else
@@ -654,10 +654,10 @@ float W_Arc(float req)
 					1000000,
 					0,
 					0.001,
-					FALSE
+					false
 				);
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -692,7 +692,7 @@ float W_Arc(float req)
 					}
 				}
 				
-				return TRUE;
+				return true;
 			}
 			
 			if(self.arc_BUTTON_ATCK_prev != 0)
@@ -714,7 +714,7 @@ float W_Arc(float req)
 			}
 			#endif
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -727,13 +727,13 @@ float W_Arc(float req)
 			precache_sound("weapons/arc_loop_overheat.wav");
 			if(!arc_shotorigin[0])
 			{
-				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
-				arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 2);
-				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 3);
-				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 4);
+				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 1);
+				arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 2);
+				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 3);
+				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 4);
 			}
 			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -747,7 +747,7 @@ float W_Arc(float req)
 		case WR_CONFIG:
 		{
 			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_KILLMESSAGE:
 		{
@@ -759,20 +759,20 @@ float W_Arc(float req)
 			weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
 			self.arc_overheat = 0;
 			self.arc_cooldown = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_PICKUP:
 		{
-			if ( !client_hasweapon(self, WEP_ARC, FALSE, FALSE) &&
+			if ( !client_hasweapon(self, WEP_ARC, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
 			{
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;
 				self.arc_cooldown = weapon_dropevent_item.arc_cooldown;
 			}
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -860,10 +860,10 @@ void Reset_ArcBeam(void)
 {
 	entity e;
 	for (e = world; (e = findfloat(e, beam_usevieworigin, 1)); ) {
-		e.beam_initialized = FALSE;
+		e.beam_initialized = false;
 	}
 	for (e = world; (e = findfloat(e, beam_usevieworigin, 2)); ) {
-		e.beam_initialized = FALSE;
+		e.beam_initialized = false;
 	}
 }
 
@@ -939,7 +939,7 @@ void Draw_ArcBeam(void)
 		if(!self.beam_initialized)
 		{
 			self.beam_dir = wantdir;
-			self.beam_initialized = TRUE;
+			self.beam_initialized = true;
 		}
 
 		if(self.beam_dir != wantdir)
@@ -1488,8 +1488,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = randomvec();
 				self.beam_alpha = 1;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = FALSE;
+				self.beam_traileffect = false;
+				self.beam_hiteffect = false;
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1525,20 +1525,20 @@ float W_Arc(float req)
 		case WR_IMPACTEFFECT:
 		{
 			// todo
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/arc_loop.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

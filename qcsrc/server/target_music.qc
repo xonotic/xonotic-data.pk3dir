@@ -130,5 +130,5 @@ void spawnfunc_trigger_music()
 	self.use = trigger_music_use;
 	self.reset = trigger_music_reset;
 
-	Net_LinkEntity(self, FALSE, 0, trigger_music_SendEntity);
+	Net_LinkEntity(self, false, 0, trigger_music_SendEntity);
 }

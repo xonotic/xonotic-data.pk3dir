@@ -9,7 +9,7 @@ float Casing_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.angles.x * 256 / 360);
 	WriteByte(MSG_ENTITY, self.angles.y * 256 / 360);
 	WriteByte(MSG_ENTITY, self.angles.z * 256 / 360);
-	return TRUE;
+	return true;
 }
 
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner)
@@ -29,6 +29,6 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
 	e.angles = ang;
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	Net_LinkEntity(e, TRUE, 0.2, Casing_SendEntity);
+	Net_LinkEntity(e, true, 0.2, Casing_SendEntity);
 		// 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
 }

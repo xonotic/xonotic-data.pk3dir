@@ -100,7 +100,7 @@ void antilag_takeback(entity e, float t)
 		e.antilag_saved_origin = e.origin;
 
 	setorigin(e, antilag_takebackorigin(e, t));
-	e.antilag_takenback = TRUE;
+	e.antilag_takenback = true;
 }
 
 void antilag_restore(entity e)
@@ -115,7 +115,7 @@ void antilag_restore(entity e)
 		return;
 
 	setorigin(e, e.antilag_saved_origin);
-	e.antilag_takenback = FALSE;
+	e.antilag_takenback = false;
 }
 
 void antilag_clear(entity e)

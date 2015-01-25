@@ -23,7 +23,7 @@ entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 void XonoticWeaponarenaCheckBox_configureXonoticWeaponarenaCheckBox(entity me, string theWeapon, string theText)
 {
 	me.netname = theWeapon;
-	me.checked = FALSE;
+	me.checked = false;
 	me.loadCvars(me);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
@@ -40,7 +40,7 @@ void XonoticWeaponarenaCheckBox_loadCvars(entity me)
 	{
 		if(argv(i) == me.netname)
 		{
-			me.checked = TRUE;
+			me.checked = true;
 			break;
 		}
 	}

@@ -7,7 +7,7 @@ CLASS(XonoticHUDBuffsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDBuffsDialog, rows, float, 15)
 	ATTRIB(XonoticHUDBuffsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDBuffsDialog, name, string, "HUDbuffs")
-	ATTRIB(XonoticHUDBuffsDialog, requiresConnection, float, TRUE)
+	ATTRIB(XonoticHUDBuffsDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDBuffsDialog)
 #endif
 

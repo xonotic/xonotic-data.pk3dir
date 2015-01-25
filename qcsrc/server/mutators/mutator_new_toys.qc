@@ -88,9 +88,9 @@ float nt_IsNewToy(float w)
 		case WEP_HLAC:
 		case WEP_RIFLE:
 		case WEP_SHOCKWAVE:
-			return TRUE;
+			return true;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 

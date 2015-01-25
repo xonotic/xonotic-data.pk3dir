@@ -320,7 +320,7 @@ string getlsmaps()
 				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 			)
 			{
-				newmaps = TRUE;
+				newmaps = true;
 				if(i % 2) { col = "^4*"; }
 				else { col = "^5*"; }
 			}

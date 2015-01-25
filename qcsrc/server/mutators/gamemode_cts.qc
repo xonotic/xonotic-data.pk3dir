@@ -29,7 +29,7 @@ void havocbot_role_cts()
 
 void cts_ScoreRules()
 {
-	ScoreRules_basics(0, 0, 0, FALSE);
+	ScoreRules_basics(0, 0, 0, false);
 	if(g_race_qualifying)
 	{
 		ScoreInfo_SetLabel_PlayerScore(SP_CTS_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -97,7 +97,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 		}
 	}
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ResetMap)
@@ -131,7 +131,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 		cts_ScoreRules();
 	}
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
@@ -141,7 +141,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
 	if(msg_entity.enemy.race_laptime)
 		race_SendNextCheckpoint(msg_entity.enemy, 1);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ClientConnect)
@@ -168,7 +168,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
@@ -181,7 +181,7 @@ MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
@@ -196,7 +196,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
 
 	self.race_place = 0;
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
@@ -211,20 +211,20 @@ MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
 
 		race_AbandonRaceCheck(self);
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_BotRoles)
 {
 	self.havocbot_role = havocbot_role_cts;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
@@ -241,21 +241,21 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ForbidThrowing)
 {
 	// no weapon dropping in CTS
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cts_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
@@ -264,19 +264,19 @@ MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
 	if(!autocvar_g_cts_selfdamage)
 		frag_damage = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ForbidClearPlayerScore)
 {
-	return TRUE; // in CTS, you don't lose score by observing
+	return true; // in CTS, you don't lose score by observing
 }
 
 MUTATOR_HOOKFUNCTION(cts_SetMods)
 {
 	g_cloaked = 1; // always enable cloak in CTS
 
-	return FALSE;
+	return false;
 }
 
 void cts_Initialize()

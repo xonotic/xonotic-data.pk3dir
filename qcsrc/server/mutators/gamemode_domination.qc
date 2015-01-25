@@ -422,19 +422,19 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 		self.player_blocked = 1;
 	else
 		self.player_blocked = 0;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ClientConnect)
 {
 	set_dom_state(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_BotRoles)
 {
 	self.havocbot_role = havocbot_role_dom;
-	return TRUE;
+	return true;
 }
 
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -513,7 +513,7 @@ void ScoreRules_dom(float teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
 		ScoreRules_basics_end();
@@ -526,7 +526,7 @@ void ScoreRules_dom(float teams)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(teams, sp_score, sp_score, TRUE);
+		ScoreRules_basics(teams, sp_score, sp_score, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);

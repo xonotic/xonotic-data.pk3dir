@@ -207,9 +207,9 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	while (1)
 	{
 		if(self.antilag_debug)
-			WarpZone_traceline_antilag (self, start, end, FALSE, o, self.antilag_debug);
+			WarpZone_traceline_antilag (self, start, end, false, o, self.antilag_debug);
 		else
-			WarpZone_traceline_antilag (self, start, end, FALSE, o, ANTILAG_LATENCY(self));
+			WarpZone_traceline_antilag (self, start, end, false, o, ANTILAG_LATENCY(self));
 		if(o && WarpZone_trace_firstzone)
 		{
 			o = world;
@@ -224,7 +224,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			break;
 
 		// make the entity non-solid so we can hit the next one
-		trace_ent.railgunhit = TRUE;
+		trace_ent.railgunhit = true;
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
@@ -243,12 +243,12 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, TRUE);
+	ent = findfloat(world, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
 		ent.solid = ent.railgunhitsolidbackup;
-		ent = findfloat(ent, railgunhit, TRUE);
+		ent = findfloat(ent, railgunhit, true);
 	}
 
 	// spawn a temporary explosion entity for RadiusDamage calls
@@ -281,7 +281,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, TRUE);
+	ent = findfloat(world, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function
@@ -303,11 +303,11 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		ent.railgunhitloc = '0 0 0';
 		ent.railgunhitsolidbackup = SOLID_NOT;
-		ent.railgunhit = FALSE;
+		ent.railgunhit = false;
 		ent.railgundistance = 0;
 
 		// advance to the next entity
-		ent = findfloat(ent, railgunhit, TRUE);
+		ent = findfloat(ent, railgunhit, true);
 	}
 
 	// calculate hits and fired shots for hitscan
@@ -366,7 +366,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	for(0;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, WarpZone_trace_forent, world, fireBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, world, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
@@ -441,7 +441,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// move the entity along its velocity until it's out of solid, then let it resume
 		// The previously hit entity is ignored here!
-		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE, hit);
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, true, hit);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 

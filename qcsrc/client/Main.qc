@@ -47,7 +47,7 @@ void CSQC_Init(void)
 	compressShortVector_init();
 
 	draw_endBoldFont();
-	menu_visible = FALSE;
+	menu_visible = false;
 	menu_show = menu_show_error;
 	menu_action = func_null;
 
@@ -219,7 +219,7 @@ float SetTeam(entity o, float Team)
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
 			o.has_team = 0;
-			return TRUE;
+			return true;
 		}
 	}
 	else
@@ -230,7 +230,7 @@ float SetTeam(entity o, float Team)
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
 			o.has_team = 1;
-			return TRUE;
+			return true;
 		}
 		else if(Team != o.team)
 		{
@@ -239,10 +239,10 @@ float SetTeam(entity o, float Team)
 			o.team = Team;
 			tm = GetTeam(Team, true);
 			tm.team_size += 1;
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 void Playerchecker_Think()
@@ -321,7 +321,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
-			return TRUE;
+			return true;
 
 	return bSkipKey;
 }
@@ -729,7 +729,7 @@ void Ent_ReadSpawnEvent(float is_new)
 		if(autocvar_cl_unpress_zoom_on_spawn)
 		{
 			localcmd("-zoom\n");
-			button_zoom = FALSE;
+			button_zoom = false;
 		}
 	}
 

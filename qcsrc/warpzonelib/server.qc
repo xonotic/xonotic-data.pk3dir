@@ -26,7 +26,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	setorigin (player, to); // NOTE: this also aborts the move, when this is called by touch
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
-	player.fixangle = TRUE;
+	player.fixangle = true;
 	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
@@ -43,7 +43,7 @@ float WarpZone_Teleported_Send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.angles.x);
 	WriteCoord(MSG_ENTITY, self.angles.y);
 	WriteCoord(MSG_ENTITY, self.angles.z);
-	return TRUE;
+	return true;
 }
 
 float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
@@ -119,7 +119,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
-		player.fixangle = FALSE;
+		player.fixangle = false;
 
 		entity ts = spawn();
 		setmodel(ts, "null");
@@ -254,7 +254,7 @@ float WarpZone_Send(entity to, float sendflags)
 		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
 	}
 
-	return TRUE;
+	return true;
 }
 
 float WarpZone_Camera_Send(entity to, float sendflags)
@@ -299,7 +299,7 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
 	}
 
-	return TRUE;
+	return true;
 }
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -373,7 +373,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 float WarpZone_Projectile_Touch()
 {
 	if(other.classname == "trigger_warpzone")
-		return TRUE;
+		return true;
 
 	// no further impacts if we teleported this frame!
 	// this is because even if we did teleport, the engine still may raise
@@ -382,7 +382,7 @@ float WarpZone_Projectile_Touch()
 	// but if this is called from TouchAreaGrid of the projectile moving,
 	// then this won't do
 	if(time == self.warpzone_teleport_time)
-		return TRUE;
+		return true;
 
 #ifdef WARPZONELIB_KEEPDEBUG
 	// this SEEMS to not happen at the moment, but if it did, it would be more reliable
@@ -433,9 +433,9 @@ float WarpZone_Projectile_Touch()
 #endif
 
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 void WarpZone_InitStep_FindOriginTarget()

@@ -1173,7 +1173,7 @@ void HUD_Panel_Mouse()
 		if(menu_enabled == 2)
 			mouse_over_panel = 0;
 		else
-			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(TRUE);
+			mouse_over_panel = HUD_Panel_Check_Mouse_Pos(true);
 		if (mouse_over_panel && !tab_panel)
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}

@@ -509,9 +509,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
 		if(tracebox_hits_box(start, mi, ma, end, th.absmin, th.absmax))
-			return TRUE;
+			return true;
 
-	return FALSE;
+	return false;
 }
 
 //////////////////////////////////////////////////////////////
@@ -614,7 +614,7 @@ void trigger_gravity_touch()
 {
 	float g;
 
-	if(self.state != TRUE)
+	if(self.state != true)
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -668,12 +668,12 @@ void spawnfunc_trigger_gravity()
 	if(self.noise != "")
 		precache_sound(self.noise);
 
-	self.state = TRUE;
+	self.state = true;
 	IFTARGETED
 	{
 		self.use = trigger_gravity_use;
 		if(self.spawnflags & 2)
-			self.state = FALSE;
+			self.state = false;
 	}
 }
 
@@ -1049,7 +1049,7 @@ void spawnfunc_func_rain()
 	self.state = 1; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
 
@@ -1087,7 +1087,7 @@ void spawnfunc_func_snow()
 	self.state = 0; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
 .float modelscale;
@@ -1334,7 +1334,7 @@ void spawnfunc_misc_laser()
 
 	self.mangle = self.angles;
 
-	Net_LinkEntity(self, FALSE, 0, laser_SendEntity);
+	Net_LinkEntity(self, false, 0, laser_SendEntity);
 
 	IFTARGETED
 	{
@@ -1903,7 +1903,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	entity oldself;
 	string savemessage;
 
-	magicear_matched = FALSE;
+	magicear_matched = false;
 
 	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
@@ -1920,7 +1920,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir.x, !(ear.spawnflags & 512), ear.movedir.y, ear.movedir.z))
 			return msgin;
 
-		magicear_matched = TRUE;
+		magicear_matched = true;
 
 		if(dotrigger)
 		{
@@ -2011,7 +2011,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	if(matchstart == -1) // no match
 		return msgin;
 
-	magicear_matched = TRUE;
+	magicear_matched = true;
 
 	if(dotrigger)
 	{

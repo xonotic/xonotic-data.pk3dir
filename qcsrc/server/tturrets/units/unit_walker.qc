@@ -46,7 +46,7 @@ void walker_meele_do_dmg()
 
 void walker_setnoanim()
 {
-    turrets_setframe(ANIM_NO, FALSE);
+    turrets_setframe(ANIM_NO, false);
     self.animflag = self.frame;
 }
 void walker_rocket_explode()
@@ -192,7 +192,7 @@ void walker_fire_rocket(vector org)
 
     rocket.classname          = "walker_rocket";
     rocket.owner              = self;
-    rocket.bot_dodge          = TRUE;
+    rocket.bot_dodge          = true;
     rocket.bot_dodgerating    = 50;
     rocket.takedamage         = DAMAGE_YES;
     rocket.damageforcescale   = 2;
@@ -218,7 +218,7 @@ void walker_fire_rocket(vector org)
     rocket.tur_health         = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 
-    CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    CSQCProjectile(rocket, false, PROJECTILE_ROCKET, false); // no culling, has fly sound
 }
 
 .vector enemy_last_loc;
@@ -510,7 +510,7 @@ void walker_postthink()
         self.SendFlags |= TNSF_MOVE;
 
     self.oldorigin = self.origin;
-    turrets_setframe(self.animflag, FALSE);
+    turrets_setframe(self.animflag, false);
 }
 
 void walker_attack()
@@ -589,9 +589,9 @@ void turret_walker_dinit()
     setsize(self, WALKER_MIN, WALKER_MAX);
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.iscreature = TRUE;
+    self.iscreature = true;
     self.teleportable = TELEPORT_NORMAL;
-    self.damagedbycontents = TRUE;
+    self.damagedbycontents = true;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;

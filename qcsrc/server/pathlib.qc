@@ -554,10 +554,10 @@ void dumpnode(entity n)
 
     n.path_next    = world;
     n.path_prev    = world;
-    n.is_path_node = FALSE;
+    n.is_path_node = false;
     n.owner        = scraplist;
 #else
-    //n.is_path_node = FALSE;
+    //n.is_path_node = false;
     n.think        = SUB_Remove;
     n.nextthink    = time;
 #endif
@@ -568,7 +568,7 @@ entity pathlib_mknode(vector where,entity parent)
     entity node;
 
     node              = newnode();
-    node.is_path_node = TRUE;
+    node.is_path_node = true;
     node.owner        = openlist;
     node.path_prev    = parent;
 
@@ -635,7 +635,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node = findradius(where,pathlib_gridsize * 0.75);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
         {
             ++pathlib_merge_cnt;
             if(node.owner == openlist)
@@ -727,7 +727,7 @@ void pathlib_close_node(entity node,vector goal)
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
-            pathlib_foundgoal = TRUE;
+            pathlib_foundgoal = true;
         }
     }
 }
@@ -797,11 +797,11 @@ void pathlib_cleanup()
 {
     entity node;
 
-    node = findfloat(world,is_path_node, TRUE);
+    node = findfloat(world,is_path_node, true);
     while(node)
     {
         dumpnode(node);
-        node = findfloat(node,is_path_node, TRUE);
+        node = findfloat(node,is_path_node, true);
     }
 
     if(openlist)

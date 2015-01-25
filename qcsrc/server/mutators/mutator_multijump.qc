@@ -6,15 +6,15 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 	if(self.flags & FL_ONGROUND)
 		self.multijump_count = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 {
 	if (self.flags & FL_JUMPRELEASED && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
-		self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
+		self.multijump_ready = true;  // this is necessary to check that we released the jump button and pressed it again
 	else
-		self.multijump_ready = FALSE;
+		self.multijump_ready = false;
 
 	if(!player_multijump && self.multijump_ready && (autocvar_g_multijump == -1 || self.multijump_count < autocvar_g_multijump) && self.velocity.z > autocvar_g_multijump_speed)
 	{
@@ -24,12 +24,12 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 			{
 				if (self.velocity.z < autocvar_sv_jumpvelocity)
 				{
-					player_multijump = TRUE;
+					player_multijump = true;
 					self.velocity_z = 0;
 				}
 			}
 			else
-				player_multijump = TRUE;
+				player_multijump = true;
 
 			if(player_multijump)
 			{
@@ -53,22 +53,22 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 				self.multijump_count += 1;
 			}
 		}
-		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
+		self.multijump_ready = false; // require releasing and pressing the jump button again for the next jump
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":multijump");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Multi jump");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_multijump)
@@ -78,5 +78,5 @@ MUTATOR_DEFINITION(mutator_multijump)
 	MUTATOR_HOOK(BuildMutatorsString, multijump_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, multijump_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

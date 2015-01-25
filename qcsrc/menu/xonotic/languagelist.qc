@@ -64,7 +64,7 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 
 	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(s, FALSE, me.realFontSize, 1);
+	float f = draw_CondensedFontFactor(s, false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;
@@ -75,7 +75,7 @@ void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(p != "")
 	{
 		vector save_fontscale = draw_fontscale;
-		float f = draw_CondensedFontFactor(p, FALSE, me.realFontSize, 1);
+		float f = draw_CondensedFontFactor(p, false, me.realFontSize, 1);
 		draw_fontscale.x *= f;
 		vector fs = me.realFontSize;
 		fs.x *= f;

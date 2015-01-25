@@ -182,10 +182,10 @@ void trigger_push_touch()
 		{
 			float i;
 			float found;
-			found = FALSE;
+			found = false;
 			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
-					found = TRUE;
+					found = true;
 			if(!found)
 			{
 				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = self;
@@ -201,10 +201,10 @@ void trigger_push_touch()
 				other.lastteleporttime = time;
 
 			if (other.deadflag == DEAD_NO)
-				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
+				animdecide_setaction(other, ANIMACTION_JUMP, true);
 		}
 		else
-			other.jumppadcount = TRUE;
+			other.jumppadcount = true;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;

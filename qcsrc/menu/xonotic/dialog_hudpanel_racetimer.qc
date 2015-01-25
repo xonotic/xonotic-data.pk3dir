@@ -7,7 +7,7 @@ CLASS(XonoticHUDRaceTimerDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDRaceTimerDialog, rows, float, 15)
 	ATTRIB(XonoticHUDRaceTimerDialog, columns, float, 4)
 	ATTRIB(XonoticHUDRaceTimerDialog, name, string, "HUDracetimer")
-	ATTRIB(XonoticHUDRaceTimerDialog, requiresConnection, float, TRUE)
+	ATTRIB(XonoticHUDRaceTimerDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDRaceTimerDialog)
 #endif
 

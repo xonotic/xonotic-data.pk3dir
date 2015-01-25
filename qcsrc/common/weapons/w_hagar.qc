@@ -80,7 +80,7 @@ void W_Hagar_Damage(entity inflictor, entity attacker, float damage, float death
 	if(self.health <= 0)
 		return;
 		
-	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : TRUE)
+	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : true)
 		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY) 
 		&& (self.projectiledeathtype & HITTYPE_SECONDARY));
 	
@@ -126,21 +126,21 @@ void W_Hagar_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
 
-	W_SetupShot(self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
+	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "missile";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 	
 	missile.takedamage = DAMAGE_YES;
 	missile.health = WEP_CVAR_PRI(hagar, health);
 	missile.damageforcescale = WEP_CVAR_PRI(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
-	missile.damagedbycontents = TRUE;
+	missile.damagedbycontents = true;
 	
 	missile.touch = W_Hagar_Touch;
 	missile.use = W_Hagar_Explode;
@@ -158,7 +158,7 @@ void W_Hagar_Attack(void)
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH; 
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -169,21 +169,21 @@ void W_Hagar_Attack2(void)
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
 
-	W_SetupShot(self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "missile";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 	
 	missile.takedamage = DAMAGE_YES;
 	missile.health = WEP_CVAR_SEC(hagar, health);
 	missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 	missile.event_damage = W_Hagar_Damage;
-	missile.damagedbycontents = TRUE;
+	missile.damagedbycontents = true;
 
 	missile.touch = W_Hagar_Touch2;
 	missile.cnt = 0;
@@ -202,7 +202,7 @@ void W_Hagar_Attack2(void)
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH; 
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR_BOUNCING, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -222,7 +222,7 @@ void W_Hagar_Attack2_Load_Release(void)
 
 	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
@@ -236,14 +236,14 @@ void W_Hagar_Attack2_Load_Release(void)
 		missile = spawn();
 		missile.owner = missile.realowner = self;
 		missile.classname = "missile";
-		missile.bot_dodge = TRUE;
+		missile.bot_dodge = true;
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 		
 		missile.takedamage = DAMAGE_YES;
 		missile.health = WEP_CVAR_SEC(hagar, health);
 		missile.damageforcescale = WEP_CVAR_SEC(hagar, damageforcescale);
 		missile.event_damage = W_Hagar_Damage;
-		missile.damagedbycontents = TRUE;
+		missile.damagedbycontents = true;
 
 		missile.touch = W_Hagar_Touch; // not bouncy
 		missile.use = W_Hagar_Explode2;
@@ -273,12 +273,12 @@ void W_Hagar_Attack2_Load_Release(void)
 		}
 		s = s * WEP_CVAR_SEC(hagar, load_spread) * g_weaponspreadfactor;
 		
-		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, FALSE);
+		W_SetupProjVelocity_Explicit(missile, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_SEC(hagar, speed), 0, 0, spread_pershot, false);
 
 		missile.angles = vectoangles(missile.velocity);
 		missile.flags = FL_PROJECTILE;
 
-		CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
+		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
 		other = missile; MUTATOR_CALLHOOK(EditProjectile);
 	}
@@ -320,7 +320,7 @@ void W_Hagar_Attack2_Load(void)
 				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor();
 
 				// require letting go of the alt fire button before we can load again
-				self.hagar_loadblock = TRUE;
+				self.hagar_loadblock = true;
 			}
 		}
 		else
@@ -345,14 +345,14 @@ void W_Hagar_Attack2_Load(void)
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
-				self.hagar_loadbeep = TRUE;
+				self.hagar_loadbeep = true;
 			}
 		}
 	}
 	else if(self.hagar_loadblock)
 	{
 		// the alt fire button has been released, so re-enable loading if blocked
-		self.hagar_loadblock = FALSE;
+		self.hagar_loadblock = false;
 	}
 
 	if(self.hagar_load)
@@ -364,7 +364,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
 				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
-				self.hagar_warning = TRUE;
+				self.hagar_warning = true;
 			}
 		}
 		
@@ -377,8 +377,8 @@ void W_Hagar_Attack2_Load(void)
 	}
 	else
 	{
-		self.hagar_loadbeep = FALSE;
-		self.hagar_warning = FALSE;
+		self.hagar_loadbeep = false;
+		self.hagar_warning = false;
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
@@ -398,11 +398,11 @@ float W_Hagar(float req)
 		case WR_AIM:
 		{
 			if(random()>0.15)
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), FALSE);
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), FALSE);
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 				
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -430,7 +430,7 @@ float W_Hagar(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_GONETHINK:
 		{
@@ -441,7 +441,7 @@ float W_Hagar(float req)
 				W_Hagar_Attack2_Load_Release();
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -452,11 +452,11 @@ float W_Hagar(float req)
 			precache_sound("weapons/hagar_load.wav");
 			precache_sound("weapons/hagar_beep.wav");
 			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
-			self.hagar_loadblock = FALSE;
+			self.hagar_loadblock = false;
 
 			if(self.hagar_load)
 			{
@@ -464,7 +464,7 @@ float W_Hagar(float req)
 				self.hagar_load = 0;
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -481,12 +481,12 @@ float W_Hagar(float req)
 		case WR_CONFIG:
 		{
 			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.hagar_load = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_PLAYERDEATH:
 		{
@@ -494,14 +494,14 @@ float W_Hagar(float req)
 			if(self.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
 				W_Hagar_Attack2_Load_Release();
 				
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			if(!self.hagar_load) // require releasing loaded rockets first
 				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), "weapons/reload.wav");
 				
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -515,7 +515,7 @@ float W_Hagar(float req)
 				return WEAPON_HAGAR_MURDER_SPRAY;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -538,22 +538,22 @@ float W_Hagar(float req)
 					sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/hagexp1.wav");
 			precache_sound("weapons/hagexp2.wav");
 			precache_sound("weapons/hagexp3.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

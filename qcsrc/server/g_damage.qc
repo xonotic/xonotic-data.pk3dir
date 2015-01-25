@@ -15,7 +15,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin.x);
 	WriteByte(MSG_ENTITY, self.species);
-	return TRUE;
+	return true;
 }
 
 void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
@@ -39,7 +39,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
 
-	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
+	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
 
 float checkrules_firstblood;
@@ -288,7 +288,7 @@ float Obituary_WeaponDeath(
 	{
 		w_deathtype = deathtype;
 		float death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
-		w_deathtype = FALSE;
+		w_deathtype = false;
 
 		if(death_message)
 		{
@@ -318,9 +318,9 @@ float Obituary_WeaponDeath(
 			);
 		}
 
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
@@ -329,7 +329,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
-	float notif_firstblood = FALSE;
+	float notif_firstblood = false;
 	float kill_count_to_attacker, kill_count_to_target;
 
 	// Set final information for the death
@@ -359,7 +359,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
 			}
 			else
 			{
@@ -367,19 +367,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
 
 					default:
 					{
-						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -431,8 +431,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if(!checkrules_firstblood)
 			{
-				checkrules_firstblood = TRUE;
-				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
+				checkrules_firstblood = true;
+				notif_firstblood = true; // modify the current messages so that they too show firstblood information
 				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
@@ -493,8 +493,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
-			if (!Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
 		}
 	}
 
@@ -518,7 +518,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			case DEATH_CUSTOM:
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype,
+				Obituary_SpecialDeath(targ, false, deathtype,
 					targ.netname,
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
@@ -530,7 +530,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 				break;
 			}
 		}
@@ -604,7 +604,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)	
-		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT, '0.25 0.90 1');
 }
 
 void Unfreeze (entity targ)
@@ -794,7 +794,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		
 			entity oldself = self;
 			self = targ;
-			entity spot = SelectSpawnPoint (FALSE);
+			entity spot = SelectSpawnPoint (false);
 			
 			if(spot)
 			{
@@ -807,7 +807,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				self.effects |= EF_TELEPORT_BIT;
 
 				self.angles_z = 0; // never spawn tilted even if the spot says to
-				self.fixangle = TRUE; // turn this way immediately
+				self.fixangle = true; // turn this way immediately
 				self.velocity = '0 0 0';
 				self.avelocity = '0 0 0';
 				self.punchangle = '0 0 0';
@@ -990,7 +990,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, false);
 	while (targ)
 	{
 		next = targ.chain;
@@ -1140,7 +1140,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, FALSE, forceintensity, deathtype, directhitentity);
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }
 
 .float fire_damagepersec;
@@ -1254,7 +1254,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 				if(e.fire_owner != o)
 				{
 					e.fire_owner = o;
-					e.fire_hitsound = FALSE;
+					e.fire_hitsound = false;
 				}
 			}
 			if(accuracy_isgooddamage(o, e))
@@ -1270,7 +1270,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_endtime = time + t;
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
-		e.fire_hitsound = FALSE;
+		e.fire_hitsound = false;
 		if(accuracy_isgooddamage(o, e))
 			accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, d);
 		return d;
@@ -1309,7 +1309,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_owner.damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
-	e.fire_hitsound = TRUE;
+	e.fire_hitsound = true;
 
 	if (!IS_INDEPENDENT_PLAYER(e))
 	if(!e.frozen)

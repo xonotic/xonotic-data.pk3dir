@@ -20,7 +20,7 @@ float healer_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, (self.ltime - time)*10.0+0.5);
 	}
 
-	return TRUE;
+	return true;
 }
 #endif // SVQC
 

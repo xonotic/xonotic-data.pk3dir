@@ -42,7 +42,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
 			objerror("Attempted to spawn a mutator-blocked weapon rejected");
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 
@@ -54,7 +54,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(s == "")
 		{
 			remove(self);
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 		t = tokenize_console(s);
@@ -105,7 +105,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(wpn == 0)
 		{
 			remove(self);
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 	}
@@ -161,7 +161,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	// pickup anyway
 	if(g_pickup_weapons_anyway)
-		self.pickup_anyway = TRUE;
+		self.pickup_anyway = true;
 
 	f = FL_WEAPON;
 

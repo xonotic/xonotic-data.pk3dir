@@ -12,15 +12,15 @@ bool item_keys_usekey(entity l, entity p) {
 
 	if (!valid) {
 		// other has none of the needed keys
-		return FALSE;
+		return false;
 	} else if (l.itemkeys == valid) {
 		// ALL needed keys were given
 		l.itemkeys = 0;
-		return TRUE;
+		return true;
 	} else {
 		// only some of the needed keys were given
 		l.itemkeys &= ~valid;
-		return TRUE;
+		return true;
 	}
 }
 
@@ -105,7 +105,7 @@ void spawn_item_key() {
 	{
 		// first nudge it off the floor a little bit to avoid math errors
 		setorigin(self, self.origin + '0 0 1');
-		// note droptofloor returns FALSE if stuck/or would fall too far
+		// note droptofloor returns false if stuck/or would fall too far
 		droptofloor();
 	}
 
@@ -308,8 +308,8 @@ void trigger_keylock_kill(string s) {
 };
 
 void trigger_keylock_touch(void) {
-	bool key_used = FALSE;
-	bool started_delay = FALSE;
+	bool key_used = false;
+	bool started_delay = false;
 
 	// only player may trigger the lock
 	if (!IS_PLAYER(other))
@@ -337,10 +337,10 @@ void trigger_keylock_touch(void) {
 		}
 
 		// trigger target2
-		if (self.delay <= time || started_delay == TRUE)
+		if (self.delay <= time || started_delay == true)
 		if (self.target2) {
 			trigger_keylock_trigger(self.target2);
-			started_delay = TRUE;
+			started_delay = true;
 			self.delay = time + self.wait;
 		}
 	} else {

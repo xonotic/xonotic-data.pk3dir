@@ -23,11 +23,11 @@ float someShadowCvarIsEnabled(entity box)
 {
 	if(cvar("r_shadow_realtime_dlight"))
 		if(cvar("r_shadow_realtime_dlight_shadows"))
-			return TRUE;
+			return true;
 	if(cvar("r_shadow_realtime_world"))
 		if(cvar("r_shadow_realtime_world_shadows"))
-			return TRUE;
-	return FALSE;
+			return true;
+	return false;
 }
 
 void XonoticEffectsSettingsTab_fill(entity me)

@@ -34,7 +34,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			mon = get_monsterinfo(i);
 			if(mon.netname == monster)
 			{
-				found = TRUE;
+				found = true;
 				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}

@@ -149,7 +149,7 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 	float sw, w, h;
 	float aspect, sa, ca;
 
-	sw = stringwidth(s, FALSE, fontsize);
+	sw = stringwidth(s, false, fontsize);
 	if(sw > minwidth)
 		w = sw;
 	else
@@ -720,7 +720,7 @@ void WaypointSprite_Load_Frames(string ext)
 {
 	float dh, n, i, o, f;
 	string s, sname, sframes;
-	dh = search_begin(strcat("models/sprites/*_frame*", ext), FALSE, FALSE);
+	dh = search_begin(strcat("models/sprites/*_frame*", ext), false, false);
 	if (dh < 0)
 		 return;
 	float ext_len = strlen(ext);

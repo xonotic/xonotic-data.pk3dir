@@ -335,13 +335,13 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	SET_POS_AND_SZ_Y_ASPECT(false)
 	drawstring(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag);
 }
 
 // drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
 void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	SET_POS_AND_SZ_Y_ASPECT(true)
 	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
 }
 
@@ -353,7 +353,7 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, FALSE, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
+	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, false, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
 	//    SIZE1
@@ -362,7 +362,7 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp) {
-	SET_POS_AND_SZ_Y_ASPECT(FALSE)
+	SET_POS_AND_SZ_Y_ASPECT(false)
 	drawstring_expanding(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag, fadelerp);
 }
 
@@ -373,12 +373,12 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 
 	drawfontscale = sz * '1 1 0';
 	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
-	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, TRUE, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
+	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, true, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp) {
-	SET_POS_AND_SZ_Y_ASPECT(TRUE)
+	SET_POS_AND_SZ_Y_ASPECT(true)
 	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz.y, theAlpha, drawflag, fadelerp);
 }
 
@@ -597,7 +597,7 @@ vector getcsqcplayercolor(float pl)
 	if(e)
 	{
 		if(e.colormap > 0)
-			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, TRUE);
+			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true);
 	}
 
 	return '1 1 1';
@@ -611,7 +611,7 @@ float getplayerisdead(float pl)
 	if(e)
 		return e.csqcmodel_isdead;
 
-	return FALSE;
+	return false;
 }
 
 void URI_Get_Callback(float id, float status, string data)

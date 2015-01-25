@@ -7,7 +7,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 .float weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
 
-#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE)
+#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true)
 
 void W_SwitchWeapon_Force(entity e, float w);
 

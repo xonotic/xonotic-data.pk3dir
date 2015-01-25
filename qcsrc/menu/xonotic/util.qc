@@ -403,7 +403,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			if(un_compatexpire != "")
 			{
-				string curdate = strftime(FALSE, "%Y%m%d%H%M%S");
+				string curdate = strftime(false, "%Y%m%d%H%M%S");
 				if (strcmp(curdate, un_compatexpire) >= 0)
 					DisableServerBackwardsCompatibility();
 			}
@@ -455,12 +455,12 @@ void updateCheck()
 		float n, i;
 		float allgood;
 		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
-		allgood = TRUE;
+		allgood = true;
 		for(i = 0; i+1 < n; i += 2)
 		{
 			if(fexists(argv(i+1)))
 				continue;
-			allgood = FALSE;
+			allgood = false;
 			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
 				localcmd("\ncurl --pak \"", argv(i), "\"\n");
 		}
@@ -508,9 +508,9 @@ float preMenuInit()
 		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
 		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
 
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 string campaign_name_previous;

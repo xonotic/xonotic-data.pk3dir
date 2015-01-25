@@ -50,9 +50,9 @@ string GetClientErrorString(float clienterror, string original_input)
 float VerifyClientNumber(float tmp_number)
 {
 	if((tmp_number < 1) || (tmp_number > maxclients))
-		return FALSE;
+		return false;
 	else
-		return TRUE;
+		return true;
 }
 
 entity GetIndexedEntity(float argc, float start_index)
@@ -196,7 +196,7 @@ void timeout_handler_think()
 
 				// unlock the view for players so they can move around again
 				FOR_EACH_REALPLAYER(tmp_player)
-					tmp_player.fixangle = FALSE;
+					tmp_player.fixangle = false;
 
 				timeout_handler_reset();
 			}
@@ -456,8 +456,8 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y")));
-			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %e %H:%M:%S %Z %Y")));
 			return;
 		}
 
@@ -698,23 +698,23 @@ void CommonCommand_macro_help(entity caller)
 float CommonCommand_macro_command(float argc, entity caller, string command)
 {
 	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
 	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command)
 	#undef COMMON_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float CommonCommand_macro_usage(float argc, entity caller)
 {
 	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
 	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
 	#undef COMMON_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void CommonCommand_macro_write_aliases(float fh)

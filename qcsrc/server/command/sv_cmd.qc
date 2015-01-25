@@ -91,7 +91,7 @@ void GameCommand_adminmsg(float request, float argc)
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, TRUE, FALSE);
+					accepted = VerifyClientEntity(client, true, false);
 
 					if(accepted <= 0)
 					{
@@ -241,7 +241,7 @@ void GameCommand_anticheat(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client = GetIndexedEntity(argc, 1);
-			float accepted = VerifyClientEntity(client, FALSE, FALSE);
+			float accepted = VerifyClientEntity(client, false, false);
 
 			if(accepted > 0)
 			{
@@ -551,7 +551,7 @@ void GameCommand_defer_clear(float request, float argc)
 			if(argc >= 2)
 			{
 				client = GetIndexedEntity(argc, 1);
-				accepted = VerifyClientEntity(client, TRUE, FALSE);
+				accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
@@ -1030,7 +1030,7 @@ void GameCommand_moveplayer(float request, float argc)
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, FALSE, FALSE);
+					accepted = VerifyClientEntity(client, false, false);
 
 					if(accepted <= 0)
 					{
@@ -1078,7 +1078,7 @@ void GameCommand_moveplayer(float request, float argc)
 								else if(team_id == 0)  // auto team
 								{
 									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, false));
 								}
 								else
 								{
@@ -1190,7 +1190,7 @@ void GameCommand_playerdemo(float request, float argc)
 					case "read":
 					{
 						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, FALSE, TRUE);
+						accepted = VerifyClientEntity(client, false, true);
 
 						if(accepted <= 0)
 						{
@@ -1206,7 +1206,7 @@ void GameCommand_playerdemo(float request, float argc)
 					case "write":
 					{
 						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, FALSE, FALSE);
+						accepted = VerifyClientEntity(client, false, false);
 
 						if(accepted <= 0)
 						{
@@ -1261,7 +1261,7 @@ void GameCommand_printstats(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			DumpStats(FALSE);
+			DumpStats(false);
 			print("stats dumped.\n");
 			return;
 		}
@@ -1468,7 +1468,7 @@ void GameCommand_stuffto(float request, float argc)
 			if(argv(2))
 			{
 				entity client = GetIndexedEntity(argc, 1);
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
@@ -1824,23 +1824,23 @@ void GameCommand_macro_help()
 float GameCommand_macro_command(float argc, string command)
 {
 	#define SERVER_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
 	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef SERVER_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float GameCommand_macro_usage(float argc)
 {
 	#define SERVER_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
 	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef SERVER_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void GameCommand_macro_write_aliases(float fh)

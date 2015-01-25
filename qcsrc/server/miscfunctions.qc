@@ -118,7 +118,7 @@ void GameLogEcho(string s)
     {
         if (!logfile_open)
         {
-            logfile_open = TRUE;
+            logfile_open = true;
             matches = autocvar_sv_eventlog_files_counter + 1;
             cvar_set("sv_eventlog_files_counter", ftos(matches));
             fn = ftos(matches);
@@ -131,7 +131,7 @@ void GameLogEcho(string s)
         if (logfile >= 0)
         {
             if (autocvar_sv_eventlog_files_timestamps)
-                fputs(logfile, strcat(":time:", strftime(TRUE, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
+                fputs(logfile, strcat(":time:", strftime(true, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
             else
                 fputs(logfile, strcat(s, "\n"));
         }
@@ -232,7 +232,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     // now use the first one from our list that we can see
     for (i = 0; i < num_nearest; ++i)
     {
-        traceline(point, nearest_entity[i].origin, TRUE, world);
+        traceline(point, nearest_entity[i].origin, true, world);
         if (trace_fraction == 1)
         {
             if (i != 0)
@@ -378,8 +378,8 @@ string formatmessage(string msg)
 	return msg;
 }
 
-float boolean(float value) { // if value is 0 return FALSE (0), otherwise return TRUE (1)
-	return (value == 0) ? FALSE : TRUE;
+float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
+	return (value == 0) ? false : true;
 }
 
 /*
@@ -643,9 +643,9 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	if (g_lms || g_ca || allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
-			d = TRUE;
+			d = true;
 		else
-			d = FALSE;
+			d = false;
 	}
 	else if (g_cts)
 		d = (i == WEP_SHOTGUN);
@@ -783,7 +783,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon(e, FALSE);
+			float w = want_weapon(e, false);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -1059,13 +1059,13 @@ float sound_allowed(float dest, entity e)
     // sounds to self may always pass
     if (dest == MSG_ONE)
         if (e == msg_entity)
-            return TRUE;
+            return true;
     // sounds by players can be removed
     if (autocvar_bot_sound_monopoly)
         if (IS_REAL_CLIENT(e))
-            return FALSE;
+            return false;
     // anything else may pass
-    return TRUE;
+    return true;
 }
 
 #undef sound
@@ -1194,15 +1194,15 @@ void play2(entity e, string filename)
 float spamsound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
-        return FALSE;
+        return false;
 
     if (time > e.spamtime)
     {
         e.spamtime = time;
         sound(e, chan, samp, vol, atten);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void play2team(float t, string filename)
@@ -1245,7 +1245,7 @@ void precache_playermodel(string m)
 	if(fexists(f))
 		precache_model(f);
 
-	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	globhandle = search_begin(strcat(m, "_*.sounds"), true, false);
 	if (globhandle < 0)
 		return;
 	n = search_getsize(globhandle);
@@ -1262,7 +1262,7 @@ void precache_all_playermodels(string pattern)
 	float globhandle, i, n;
 	string f;
 
-	globhandle = search_begin(pattern, TRUE, FALSE);
+	globhandle = search_begin(pattern, true, false);
 	if (globhandle < 0)
 		return;
 	n = search_getsize(globhandle);
@@ -1612,7 +1612,7 @@ float EliminatedPlayers_SendEntity(entity to, float sendflags)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void EliminatedPlayers_Init(float(entity) isEliminated_func)
@@ -1622,7 +1622,7 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 		backtrace("Can't spawn eliminatedPlayers again!");
 		return;
 	}
-	Net_LinkEntity(eliminatedPlayers = spawn(), FALSE, 0, EliminatedPlayers_SendEntity);
+	Net_LinkEntity(eliminatedPlayers = spawn(), false, 0, EliminatedPlayers_SendEntity);
 	eliminatedPlayers.isEliminated = isEliminated_func;
 }
 
@@ -1677,9 +1677,9 @@ float trace_hits_box_1d(float end, float thmi, float thma)
     {
         // just check if x is in range
         if (0 < thmi)
-            return FALSE;
+            return false;
         if (0 > thma)
-            return FALSE;
+            return false;
     }
     else
     {
@@ -1688,9 +1688,9 @@ float trace_hits_box_1d(float end, float thmi, float thma)
         trace_hits_box_a0 = max(trace_hits_box_a0, min(thmi / end, thma / end));
         trace_hits_box_a1 = min(trace_hits_box_a1, max(thmi / end, thma / end));
         if (trace_hits_box_a0 > trace_hits_box_a1)
-            return FALSE;
+            return false;
     }
-    return TRUE;
+    return true;
 }
 
 float trace_hits_box(vector start, vector end, vector thmi, vector thma)
@@ -1704,13 +1704,13 @@ float trace_hits_box(vector start, vector end, vector thmi, vector thma)
     trace_hits_box_a1 = 1;
 
     if (!trace_hits_box_1d(end.x, thmi.x, thma.x))
-        return FALSE;
+        return false;
     if (!trace_hits_box_1d(end.y, thmi.y, thma.y))
-        return FALSE;
+        return false;
     if (!trace_hits_box_1d(end.z, thmi.z, thma.z))
-        return FALSE;
+        return false;
 
-    return TRUE;
+    return true;
 }
 
 float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma)
@@ -1759,11 +1759,11 @@ void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
-		return TRUE;
+		return true;
 	if(SUB_NoImpactCheck())
 	{
 		if(self.classname == "nade")
-			return FALSE; // no checks here
+			return false; // no checks here
 		else if(self.classname == "grapplinghook")
 			RemoveGrapplingHook(self.realowner);
 		else if(self.classname == "spike")
@@ -1773,11 +1773,11 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		}
 		else
 			remove(self);
-		return TRUE;
+		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
 		UpdateCSQCProjectile(self);
-	return FALSE;
+	return false;
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
@@ -1936,10 +1936,10 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         setorigin(e, start);
         e.angles = vectoangles(end - start);
         dprint("Needed ", ftos(i + 1), " attempts\n");
-        return TRUE;
+        return true;
     }
     else
-        return FALSE;
+        return false;
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)
@@ -2169,7 +2169,7 @@ float modeleffect_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
 	WriteByte(MSG_ENTITY, self.alpha * 255.0);
 
-	return TRUE;
+	return true;
 }
 
 void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2)
@@ -2198,7 +2198,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 		e.scale2 = -s2;
 	sz = max(e.scale, e.scale2);
 	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, FALSE, 0.1, modeleffect_SendEntity);
+	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
 }
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
@@ -2355,9 +2355,9 @@ float LostMovetypeFollow(entity ent)
 float isPushable(entity e)
 {
 	if(e.iscreature)
-		return TRUE;
+		return true;
 	if(e.pushable)
-		return TRUE;
+		return true;
 	switch(e.classname)
 	{
 		case "body":
@@ -2365,11 +2365,11 @@ float isPushable(entity e)
 		case "keepawayball":
 		case "nexball_basketball":
 		case "nexball_football":
-			return TRUE;
+			return true;
 		case "bullet": // antilagged bullets can't hit this either
-			return FALSE;
+			return false;
 	}
 	if (e.projectiledeathtype)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

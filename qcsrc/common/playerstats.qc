@@ -191,7 +191,7 @@ void PlayerStats_GameReport(float finished)
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
-		PlayerStats_GameReport_DelayMapVote = TRUE;
+		PlayerStats_GameReport_DelayMapVote = true;
 		url_multi_fopen(
 			autocvar_g_playerstats_gamereport_uri,
 			FILE_APPEND,
@@ -201,7 +201,7 @@ void PlayerStats_GameReport(float finished)
 	}
 	else
 	{
-		PlayerStats_GameReport_DelayMapVote = FALSE;
+		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
 	}
@@ -215,7 +215,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 	if(PS_GR_OUT_DB >= 0)
 	{
-		PlayerStats_GameReport_DelayMapVote = TRUE;
+		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
 
@@ -252,7 +252,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
 	}
-	else { PlayerStats_GameReport_DelayMapVote = FALSE; }
+	else { PlayerStats_GameReport_DelayMapVote = false; }
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
@@ -392,7 +392,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose has finished
 			dprint("Player stats written\n");
-			PlayerStats_GameReport_DelayMapVote = FALSE;
+			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
 				db_close(PS_GR_OUT_DB);
@@ -405,7 +405,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		default:
 		{
 			print("Player stats writing failed: ", ftos(status), "\n");
-			PlayerStats_GameReport_DelayMapVote = FALSE;
+			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
 				db_close(PS_GR_OUT_DB);

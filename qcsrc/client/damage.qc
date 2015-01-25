@@ -106,7 +106,7 @@ void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 void Ent_DamageInfo(float isNew)
 {
 	float dmg, rad, edge, thisdmg;
-	bool hitplayer = FALSE;
+	bool hitplayer = false;
 	int species, forcemul;
 	vector force, thisforce;
 	entity oldself;
@@ -188,7 +188,7 @@ void Ent_DamageInfo(float isNew)
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
 
 		if(self.isplayermodel)
-			hitplayer = TRUE; // this impact damaged a player
+			hitplayer = true; // this impact damaged a player
 	}
 
 	self = oldself;

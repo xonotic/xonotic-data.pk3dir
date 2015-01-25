@@ -156,8 +156,8 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	norm_y = norm.z;
 	norm_z = 0;
 
-	c0 = colormapPaletteColor(colors & 0x0F, FALSE);
-	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, FALSE);
+	c0 = colormapPaletteColor(colors & 0x0F, false);
+	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
 	R_BeginPolygon("", 0);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);

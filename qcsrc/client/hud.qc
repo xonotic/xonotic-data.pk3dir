@@ -134,12 +134,12 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 
 float stringwidth_colors(string s, vector theSize)
 {
-	return stringwidth(s, TRUE, theSize);
+	return stringwidth(s, true, theSize);
 }
 
 float stringwidth_nocolors(string s, vector theSize)
 {
-	return stringwidth(s, FALSE, theSize);
+	return stringwidth(s, false, theSize);
 }
 
 void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
@@ -1040,7 +1040,7 @@ void HUD_Ammo(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, ammo_rockets, TRUE, FALSE);
+			DrawAmmoItem(pos, ammo_size, ammo_rockets, true, false);
 		}
 		else
 		{
@@ -1048,7 +1048,7 @@ void HUD_Ammo(void)
 				pos,
 				ammo_size,
 				(get_weaponinfo(switchweapon)).ammo_field,
-				TRUE,
+				true,
 				infinite_ammo
 			);
 		}
@@ -1795,7 +1795,7 @@ void HUD_Notify(void)
 			if (attacker != "")
 			{
 				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
-				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
 				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
@@ -2120,7 +2120,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			if (team_count)
 				score_color = Team_ColorRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
-			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += fontsize.y;
 		}
@@ -2177,7 +2177,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		if (team_count)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;
 		++i;
@@ -2420,11 +2420,11 @@ void HUD_RaceTimer (void)
 	if(autocvar__hud_configure)
 	{
 		s = "0:13:37";
-		drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, FALSE, '0.60 0.60 0' * mySize.y), s, '0.60 0.60 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.60 0.60 0' * mySize.y), s, '0.60 0.60 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = _("^1Intermediate 1 (+15.42)");
-		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize.y) + eY * 0.60 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.60 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
-		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize.y) + eY * 0.80 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.80 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(race_checkpointtime)
 	{
@@ -2457,7 +2457,7 @@ void HUD_RaceTimer (void)
 
 		if(s != "" && a > 0)
 		{
-			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime)
@@ -2466,14 +2466,14 @@ void HUD_RaceTimer (void)
 			if(a > 0)
 			{
 				s = sprintf(_("^1PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
-				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize.y) + eY * 0.8 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.8 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
 
 		if(forcetime != "")
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			drawstring_expanding(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.6 * mySize.y), forcetime, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, 0, a);
+			drawstring_expanding(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(forcetime, false, '1 1 0' * 0.6 * mySize.y), forcetime, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, 0, a);
 		}
 		else
 			a = 1;
@@ -2481,7 +2481,7 @@ void HUD_RaceTimer (void)
 		if(race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
-			drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, FALSE, '0.6 0.6 0' * mySize.y), s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.6 0.6 0' * mySize.y), s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 	}
 	else
@@ -2490,13 +2490,13 @@ void HUD_RaceTimer (void)
 		{
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -(race_mycheckpointenemy == ""), race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
 		{
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -(race_othercheckpointenemy == ""), race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime && !race_penaltyaccumulator)
@@ -2509,7 +2509,7 @@ void HUD_RaceTimer (void)
 					s = sprintf(_("^1PENALTY: %.1f (%s)"), (t - time) * 0.1, race_penaltyreason);
 				else
 					s = sprintf(_("^2PENALTY: %.1f (%s)"), 0, race_penaltyreason);
-				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -3626,7 +3626,7 @@ void HUD_EngineInfo(void)
 //
 #define drawInfoMessage(s)\
 	if(autocvar_hud_panel_infomessages_flip)\
-		o_x = pos.x + mySize.x - stringwidth(s, TRUE, fontsize);\
+		o_x = pos.x + mySize.x - stringwidth(s, true, fontsize);\
 	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);\
 	o.y += fontsize.y;
 void HUD_InfoMessages(void)
@@ -4115,7 +4115,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 		return;
 
 	if (!centerprint_showing)
-		centerprint_showing = TRUE;
+		centerprint_showing = true;
 
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
@@ -4259,7 +4259,7 @@ void HUD_CenterPrint (void)
 	float a, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
 	string ts;
-	float all_messages_expired = TRUE;
+	float all_messages_expired = true;
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
@@ -4282,7 +4282,7 @@ void HUD_CenterPrint (void)
 				continue;
 		}
 
-		all_messages_expired = FALSE;
+		all_messages_expired = false;
 
 		// fade the centerprint_hud in/out
 		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
@@ -4346,7 +4346,7 @@ void HUD_CenterPrint (void)
 				if (ts != "")
 				{
 					if (align)
-						pos_x = panel_pos.x + (panel_size.x - stringwidth(ts, TRUE, fontsize)) * align;
+						pos_x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos.y += fontsize.y;
@@ -4387,7 +4387,7 @@ void HUD_CenterPrint (void)
 	drawfontscale = '1 1 0';
 	if (all_messages_expired)
 	{
-		centerprint_showing = FALSE;
+		centerprint_showing = false;
 		reset_centerprint_messages();
 	}
 }

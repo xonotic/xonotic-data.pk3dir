@@ -99,7 +99,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
-		animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+		animdecide_setaction(self, ANIMACTION_JUMP, true);
 
 		self.dodging_single_action = 0;
 	}
@@ -128,22 +128,22 @@ float check_close_to_wall(float threshold) {
 	trace_start = self.origin;
 
 	trace_end = self.origin + (1000*v_right);
-	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
+	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin - (1000*v_right);
-	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
+	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin + (1000*v_forward);
-	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
+	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 
 	trace_end = self.origin - (1000*v_forward);
-	tracebox(trace_start, self.mins, self.maxs, trace_end, TRUE, self);
+	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
 		return 1;
 

@@ -606,9 +606,9 @@ const float MIF_GUIDED_TAG = 128;
 #define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
 #define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
 
-#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
-#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
-#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
+#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? true : false)
+#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)
+#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? true : false)
 
 
 ////

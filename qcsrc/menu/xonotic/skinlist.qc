@@ -86,7 +86,7 @@ void XonoticSkinList_getSkins(entity me)
 	string s;
 
 	buf = buf_create();
-	glob = search_begin("gfx/menu/*/skinvalues.txt", TRUE, TRUE);
+	glob = search_begin("gfx/menu/*/skinvalues.txt", true, true);
 	if(glob < 0)
 	{
 		me.skinlist = buf;

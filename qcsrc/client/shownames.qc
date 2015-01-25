@@ -37,7 +37,7 @@ void Draw_ShowNames(entity ent)
 		}
 
 		// handle tag fading
-		float overlap = FALSE, onscreen, crosshairdistance;
+		float overlap = false, onscreen, crosshairdistance;
 		vector o, eo;
 
 		o = project_3d_to_2d(ent.origin);
@@ -56,7 +56,7 @@ void Draw_ShowNames(entity ent)
 					eo_z = 0;
 					if(vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(ent.origin - view_origin) > vlen(e.origin - view_origin))
 					{
-						overlap = TRUE;
+						overlap = true;
 						break;
 					}
 				}
@@ -72,9 +72,9 @@ void Draw_ShowNames(entity ent)
 				ent.pointtime = time;
 
 			if (!(ent.pointtime + autocvar_hud_shownames_crosshairdistance_time > time))
-				overlap = TRUE;
+				overlap = true;
 			else
-				overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : FALSE); // override what antioverlap says unless allowed by cvar.
+				overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.
 		}
 
 		if(!ent.fadedelay)
@@ -167,7 +167,7 @@ void Draw_ShowNames(entity ent)
 			s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 
 			float width;
-			width = stringwidth(s, TRUE, '1 1 0' * autocvar_hud_shownames_fontsize);
+			width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
 
 			if (width != namewidth)
 				namepos.x += (namewidth - width) / 2;

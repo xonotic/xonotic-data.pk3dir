@@ -94,9 +94,9 @@ void CSQCModel_InterpolateAnimation_1To2_Note(int sf, float set_times)
 void CSQCModel_InterpolateAnimation_Note(float sf)
 {
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	CSQCModel_InterpolateAnimation_2To4_Note(sf, TRUE);
+	CSQCModel_InterpolateAnimation_2To4_Note(sf, true);
 #else
-	CSQCModel_InterpolateAnimation_1To2_Note(sf, TRUE);
+	CSQCModel_InterpolateAnimation_1To2_Note(sf, true);
 #endif
 }
 

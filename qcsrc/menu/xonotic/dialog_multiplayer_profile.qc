@@ -44,7 +44,7 @@ void XonoticProfileTab_fill(entity me)
 			label.allowCut = 1;
 			label.allowColors = 1;
 			label.alpha = 1;
-			label.isBold = TRUE;
+			label.isBold = true;
 			label.fontSize = SKINFONTSIZE_TITLE;
 
 	me.gotoRC(me, 2.5, 0);

@@ -50,7 +50,7 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
-	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), TRUE, TRUE);
+	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
 	if (glob < 0)
 		return;
 
@@ -184,7 +184,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 
 	if (me.numModels <= 0)
 	{
-		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, SKINCOLOR_TEXT, 0.6, FALSE);
+		draw_CenterText('0.5 0.5 0', _("<no model found>"), me.realFontSize, SKINCOLOR_TEXT, 0.6, false);
 		return;
 	}
 
@@ -194,9 +194,9 @@ void XonoticPlayerModelSelector_draw(entity me)
 	draw_beginBoldFont();
 
 #if XONVOTE186 // (nyov) lower name display looks better when there is no description text
-	draw_CenterText('0.5 0.8 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
+	draw_CenterText('0.5 0.8 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, false);
 #else
-	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, FALSE);
+	draw_CenterText('0.5 0 0', me.currentModelTitle, me.realFontSize * (me.titleFontSize / me.fontSize), SKINCOLOR_MODELTITLE, SKINALPHA_MODELTITLE, false);
 #endif
 
 	draw_endBoldFont();
@@ -204,7 +204,7 @@ void XonoticPlayerModelSelector_draw(entity me)
 	o = '0.5 1 0' - eY * me.realFontSize.y * ((n = tokenizebyseparator(me.currentModelDescription, "\n")) + 0.5);
 	for(i = 0; i < n; ++i)
 	{
-		draw_CenterText(o, argv(i), me.realFontSize, SKINCOLOR_TEXT, 1, FALSE);
+		draw_CenterText(o, argv(i), me.realFontSize, SKINCOLOR_TEXT, 1, false);
 		o += eY * me.realFontSize.y;
 	}
 }

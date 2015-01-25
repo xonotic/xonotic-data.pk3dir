@@ -4,7 +4,7 @@ void CreatureFrame (void)
 	float dm;
 
 	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
+	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
@@ -210,10 +210,10 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? TRUE : FALSE;
+	game_delay = (time < game_starttime) ? true : false;
 
-	if(game_delay_last == TRUE)
-	if(game_delay == FALSE)
+	if(game_delay_last == true)
+	if(game_delay == false)
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":startdelay_ended");
 

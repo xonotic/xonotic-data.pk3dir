@@ -132,7 +132,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "cl_hitsound", _("Hit indication sound")));
-		e.sendCvars = TRUE;
+		e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "con_chatsound", _("Chat message sound")));
 	me.TR(me);
@@ -154,7 +154,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("Often"), "0.65");
 			e.addValue(e, _("Always"), "1");
 			e.configureXonoticTextSliderValues(e);
-			e.sendCvars = TRUE;
+			e.sendCvars = true;
 	me.TR(me);
 	me.TR(me);
 		if(cvar("developer"))

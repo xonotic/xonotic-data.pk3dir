@@ -15,24 +15,24 @@
 PlayerJump
 
 When you press the jump key
-returns TRUE if handled
+returns true if handled
 =============
 */
 float PlayerJump (void)
 {
 	if(self.frozen)
-		return TRUE; // no jumping in freezetag when frozen
+		return true; // no jumping in freezetag when frozen
 
 	if(self.player_blocked)
-		return TRUE; // no jumping while blocked
+		return true; // no jumping while blocked
 
-	float doublejump = FALSE;
+	float doublejump = false;
 	float mjumpheight = autocvar_sv_jumpvelocity;
 
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
 	if(MUTATOR_CALLHOOK(PlayerJump))
-		return TRUE;
+		return true;
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
@@ -42,7 +42,7 @@ float PlayerJump (void)
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
 		{
-			doublejump = TRUE;
+			doublejump = true;
 
 			// we MUST clip velocity here!
 			float f;
@@ -55,7 +55,7 @@ float PlayerJump (void)
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		self.velocity_z = self.stat_sv_maxspeed * 0.7;
-		return TRUE;
+		return true;
 	}
 
 	if (!doublejump)
@@ -64,7 +64,7 @@ float PlayerJump (void)
 
 	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
-			return TRUE;
+			return true;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -116,14 +116,14 @@ float PlayerJump (void)
 	self.flags &= ~FL_ONGROUND;
 	self.flags &= ~FL_JUMPRELEASED;
 
-	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+	animdecide_setaction(self, ANIMACTION_JUMP, true);
 
 	if(autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
-	return TRUE;
+	return true;
 }
 void CheckWaterJump()
 {
@@ -136,13 +136,13 @@ void CheckWaterJump()
 	v_forward_z = 0;
 	normalize(v_forward);
 	end = start + v_forward*24;
-	traceline (start, end, TRUE, self);
+	traceline (start, end, true, self);
 	if (trace_fraction < 1)
 	{	// solid at waist
 		start_z = start.z + self.maxs.z - 8;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
-		traceline (start, end, TRUE, self);
+		traceline (start, end, true, self);
 		if (trace_fraction == 1)
 		{	// open at eye level
 			self.flags |= FL_WATERJUMP;
@@ -177,7 +177,7 @@ void CheckPlayerJump()
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 			else if (activate)
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
-			self.jetpack_stopped = TRUE;
+			self.jetpack_stopped = true;
 			self.items &= ~IT_USING_JETPACK;
 		}
 		else if (activate && !self.frozen)
@@ -185,7 +185,7 @@ void CheckPlayerJump()
 	}
 	else
 	{
-		self.jetpack_stopped = FALSE;
+		self.jetpack_stopped = false;
 		self.items &= ~IT_USING_JETPACK;
 	}
 	if (!self.BUTTON_JUMP)
@@ -756,7 +756,7 @@ void SV_PlayerPhysics()
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = TRUE;
+			self.fixangle = true;
 		}
 	}
 

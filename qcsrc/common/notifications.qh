@@ -936,16 +936,16 @@ void Send_Notification_WOCOVA(
 
 #define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
-var float autocvar_notification_show_location = FALSE;
+var float autocvar_notification_show_location = false;
 var string autocvar_notification_show_location_string = ""; //_(" at the %s");
-var float autocvar_notification_show_sprees = TRUE;
+var float autocvar_notification_show_sprees = true;
 var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
-var float autocvar_notification_show_sprees_info_newline = TRUE;
-var float autocvar_notification_show_sprees_info_specialonly = TRUE;
-var float autocvar_notification_errors_are_fatal = TRUE;
+var float autocvar_notification_show_sprees_info_newline = true;
+var float autocvar_notification_show_sprees_info_specialonly = true;
+var float autocvar_notification_errors_are_fatal = true;
 var float autocvar_notification_lifetime_runtime = 0.5;
 var float autocvar_notification_lifetime_mapload = 10;
-var float autocvar_notification_debug = FALSE;
+var float autocvar_notification_debug = false;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;
@@ -958,8 +958,8 @@ var float autocvar_notification_item_centerprinttime = 1.5;
 // DISABLED IN CODE, BUT ENABLED IN CONFIG FOR COMPATIBILITY WITH OLD CLIENTS
 var float autocvar_notification_allow_chatboxprint = 0;
 
-var float autocvar_notification_show_sprees_center = TRUE;
-var float autocvar_notification_show_sprees_center_specialonly = TRUE;
+var float autocvar_notification_show_sprees_center = true;
+var float autocvar_notification_show_sprees_center_specialonly = true;
 #endif
 
 
@@ -1054,7 +1054,7 @@ const float ARG_DC = 6; // unique result to durcnt/centerprint
     ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
     ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
     ARG_CASE(ARG_CS,        "pass_key",      ((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-    ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(TRUE, f2)) \
+    ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(true, f2)) \
     ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
     /*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
     ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
@@ -1092,9 +1092,9 @@ string notif_arg_frag_ping(float newline, float fping)
 string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 {
     if (!(fhealth < 1))
-        return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, notif_arg_frag_ping(FALSE, fping));
+        return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, notif_arg_frag_ping(false, fping));
     else
-        return sprintf(CCR(_("\n(^F4Dead^BG)%s")), notif_arg_frag_ping(FALSE, fping));
+        return sprintf(CCR(_("\n(^F4Dead^BG)%s")), notif_arg_frag_ping(false, fping));
 }
 
 string notif_arg_missing_teams(float f1)
@@ -1558,7 +1558,7 @@ float notif_global_error;
 
 void RegisterNotifications_First()
 {
-    notif_global_error = FALSE;
+    notif_global_error = false;
 
     #ifdef SVQC
     #define dedi (server_is_dedicated ? "a dedicated " : "")
@@ -1577,7 +1577,7 @@ void RegisterNotifications_First()
         #else
         if(autocvar_notification_version_mismatch_server_error)
         #endif
-            notif_global_error = TRUE;
+            notif_global_error = true;
 
         printf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
             PROGNAME, autocvar_notification_version, NOTIF_VERSION);

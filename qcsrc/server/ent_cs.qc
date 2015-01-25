@@ -25,16 +25,16 @@ float entcs_customize()
 	entity o;
 	o = self.owner;
 	if(o.deadflag != DEAD_NO)
-		return FALSE;
+		return false;
 	if (!IS_PLAYER(o))
-		return FALSE;
+		return false;
 	if(other == o)
-		return FALSE;
+		return false;
 	if((IS_PLAYER(other)) || other.caplayer)
 		if(!teamplay || o.team != other.team)
 			if (!radar_showennemies)
-				return FALSE;
-	return TRUE;
+				return false;
+	return true;
 }
 
 float entcs_send(entity to, float sf)
@@ -55,7 +55,7 @@ float entcs_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.health / 10); // FIXME use a better scale?
 	if(sf & 16)
 		WriteByte(MSG_ENTITY, self.armorvalue / 10); // FIXME use a better scale?
-	return TRUE;
+	return true;
 }
 
 void entcs_think()
@@ -97,7 +97,7 @@ entity attach_entcs()
 	ent.think = entcs_think;
 	ent.nextthink = time;
 
-	Net_LinkEntity(ent, FALSE, 0, entcs_send);
+	Net_LinkEntity(ent, false, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
 
 	self.entcs = ent;

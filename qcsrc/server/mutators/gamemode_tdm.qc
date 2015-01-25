@@ -48,7 +48,7 @@ void tdm_DelayedInit()
 MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 {
 	ret_string = "tdm_team";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(gamemode_tdm)

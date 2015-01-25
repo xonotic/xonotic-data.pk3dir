@@ -820,7 +820,7 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 
 	PieceMinsMaxs(rot, piece);
 	if (tet_piecemins.x+orgx<1 || tet_piecemaxs.x+orgx > TET_WIDTH || tet_piecemins.y+orgy<1 || tet_piecemaxs.y+orgy> TET_LINES)
-		return FALSE; // ouside the level
+		return false; // ouside the level
 	for (y = tet_piecemins.y; y <= tet_piecemaxs.y; y = y + 1)
 	{
 		l = GetLine(y + orgy);
@@ -828,9 +828,9 @@ float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 		for (x = tet_piecemins.x; x <= tet_piecemaxs.x; x = x + 1)
 			if (PieceMetric(x, y, rot, piece))
 				if (GetXBlock(x + orgx, l))
-					return FALSE; // uhoh, gonna hit something.
+					return false; // uhoh, gonna hit something.
 	}
-	return TRUE;
+	return true;
 }
 
 void ClearPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/

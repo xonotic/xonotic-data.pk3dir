@@ -73,7 +73,7 @@ float turret_send(entity to, float sf)
             WriteByte(MSG_ENTITY, ceil((self.health / self.tur_health) * 255));
     }
 
-	return TRUE;
+	return true;
 }
 
 void load_unit_settings(entity ent, string unitname, float is_reload)
@@ -182,7 +182,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
     setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
     proj.owner           = self;
     proj.realowner       = self;
-    proj.bot_dodge       = TRUE;
+    proj.bot_dodge       = true;
     proj.bot_dodgerating = self.shot_dmg;
     proj.think           = turret_projectile_explode;
     proj.touch           = turret_projectile_touch;
@@ -980,7 +980,7 @@ void turret_stdproc_use()
 
 void turret_link()
 {
-    Net_LinkEntity(self, TRUE, 0, turret_send);
+    Net_LinkEntity(self, true, 0, turret_send);
     self.think      = turret_think;
     self.nextthink  = time;
     self.tur_head.effects = EF_NODRAW;
@@ -1102,8 +1102,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
-    self.bot_attack = TRUE;
-    self.monster_attack = TRUE;
+    self.bot_attack = true;
+    self.monster_attack = true;
 
     if (!self.turrcaps_flags)
         self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;

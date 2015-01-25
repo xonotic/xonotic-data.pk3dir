@@ -7,7 +7,7 @@ float SpawnPoint_Send(entity to, float sf)
 	WriteShort(MSG_ENTITY, self.origin.y);
 	WriteShort(MSG_ENTITY, self.origin.z);
 
-	return TRUE;
+	return true;
 }
 
 float SpawnEvent_Send(entity to, float sf)
@@ -22,14 +22,14 @@ float SpawnEvent_Send(entity to, float sf)
 		WriteShort(MSG_ENTITY, self.owner.origin.x);
 		WriteShort(MSG_ENTITY, self.owner.origin.y);
 		WriteShort(MSG_ENTITY, self.owner.origin.z);
-		send = TRUE;
+		send = true;
 	}
 	else if((to == self.owner) || (IS_SPEC(to) && (to.enemy == self.owner)) )
 	{
 		WriteByte(MSG_ENTITY, 0);
-		send = TRUE;
+		send = true;
 	}
-	else { send = FALSE; }
+	else { send = false; }
 
 	return send;
 }
@@ -50,7 +50,7 @@ void relocate_spawnpoint()
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
+    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, true, self);
     if (trace_startsolid)
     {
         vector o;
@@ -127,7 +127,7 @@ void relocate_spawnpoint()
 		||
 		autocvar_g_spawn_useallspawns
 	)
-	{ Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send); }
+	{ Net_LinkEntity(self, false, 0, SpawnPoint_Send); }
 }
 
 void spawnfunc_info_player_survivor (void)

@@ -92,7 +92,7 @@ void CopyBody(float keepvelocity)
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(self);
-	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
+	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -112,7 +112,7 @@ void player_setupanimsformodel()
 {
 	// load animation info
 	animdecide_load_if_needed(self);
-	animdecide_setstate(self, 0, FALSE);
+	animdecide_setstate(self, 0, false);
 }
 
 void player_anim (void)
@@ -135,14 +135,14 @@ void player_anim (void)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
-	animdecide_setstate(self, animbits, FALSE);
+	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
 	if (self.weaponentity)
 	{
 		updateanim(self.weaponentity);
 		if (!self.weaponentity.animstate_override)
-			setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+			setanim(self.weaponentity, self.weaponentity.anim_idle, true, false, false);
 	}
 }
 
@@ -194,7 +194,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
-		self.damagedbycontents = FALSE;
+		self.damagedbycontents = false;
 	}
 }
 
@@ -426,9 +426,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 						if (!self.animstate_override)
 						{
 							if (random() > 0.5)
-								animdecide_setaction(self, ANIMACTION_PAIN1, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN1, true);
 							else
-								animdecide_setaction(self, ANIMACTION_PAIN2, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN2, true);
 						}
 					}
 
@@ -497,7 +497,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if (self.health < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
-		defer_ClientKill_Now_TeamChange = FALSE;
+		defer_ClientKill_Now_TeamChange = false;
 
 		if(self.alivetime)
 		{
@@ -523,7 +523,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			remove(self.killindicator);
 			self.killindicator = world;
 			if(self.killindicator_teamchange)
-				defer_ClientKill_Now_TeamChange = TRUE;
+				defer_ClientKill_Now_TeamChange = true;
 
 			if(self.classname == "body")
 			if(deathtype == DEATH_KILL)
@@ -556,7 +556,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		self.fixangle = TRUE;
+		self.fixangle = true;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
@@ -600,9 +600,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		self.death_time = time;
 		if (random() < 0.5)
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, true);
 		else
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, true);
 		if (self.maxs.z > 5)
 		{
 			self.maxs_z = 5;
@@ -666,11 +666,11 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 	{
 		colorstr = "";
-		teamsay = FALSE;
+		teamsay = false;
 	}
 
 	if(intermission_running)
-		teamsay = FALSE;
+		teamsay = false;
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -1096,7 +1096,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, true);
 			if(!sv_taunt)
 				break;
 			if(autocvar_sv_gentle)
@@ -1193,7 +1193,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, true);
 			if(!sv_taunt)
 				break;
 			if(autocvar_sv_gentle)

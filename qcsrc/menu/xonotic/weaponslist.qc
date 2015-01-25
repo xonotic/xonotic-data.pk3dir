@@ -102,7 +102,7 @@ void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, floa
 		msg = sprintf(_("%s (mutator weapon)"), msg);
 
 	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(msg, FALSE, me.realFontSize, 1);
+	float f = draw_CondensedFontFactor(msg, false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;

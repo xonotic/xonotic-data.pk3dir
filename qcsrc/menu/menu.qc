@@ -194,7 +194,7 @@ void m_init_delayed()
 	}
 	fclose(fh);
 
-	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), TRUE, TRUE);
+	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), true, true);
 	if(glob >= 0)
 	{
 		n = search_getsize(glob);
@@ -406,21 +406,21 @@ float m_testmousetooltipbox(vector pos)
 {
 	if(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
 	if(pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 float m_testtooltipbox(vector tooltippos)
 {
 	if(tooltippos.x < 0)
-		return FALSE;
+		return false;
 	if(tooltippos.y < 0)
-		return FALSE;
+		return false;
 	if(tooltippos.x + menuTooltipSize.x > 1)
-		return FALSE;
+		return false;
 	if(tooltippos.y + menuTooltipSize.y > 1)
-		return FALSE;
+		return false;
 	menuTooltipOrigin = tooltippos;
-	return TRUE;
+	return true;
 }
 float m_allocatetooltipbox(vector pos)
 {
@@ -438,34 +438,34 @@ float m_allocatetooltipbox(vector pos)
 	// bottom right
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// bottom center
 	v_x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// bottom left
 	v_x = pos.x - avoidminus.x;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// top left
 	v_y = pos.y - avoidminus.y;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// top center
 	v_x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// top right
 	v_x = pos.x + avoidplus.x;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 entity m_findtooltipitem(entity root, vector pos)
 {
@@ -586,7 +586,7 @@ void m_tooltip(vector pos)
 					{
 						s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
 						++i;
-						f = draw_TextWidth(s, FALSE, fontsize);
+						f = draw_TextWidth(s, false, fontsize);
 						if(f > w)
 							w = f;
 					}
@@ -662,7 +662,7 @@ void m_tooltip(vector pos)
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
+				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
 				p.y += fontsize.y;
 			}
 		}
@@ -756,7 +756,7 @@ void m_draw(float width, float height)
 		{
 			draw_reset_full();
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_BACKGROUND, 1);
-			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
+			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, true);
 			draw_reset_cropped();
 			if(menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0)
 			{
@@ -771,7 +771,7 @@ void m_draw(float width, float height)
 		if(menuAlpha > 0)
 		{
 			draw_reset_full();
-			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, false);
 			draw_reset_cropped();
 		}
 	}

@@ -74,7 +74,7 @@ entity pathlib_nodeatpoint(vector where)
     node = findradius(where,pathlib_gridsize * 0.5);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
             return node;
 
         node = node.chain;

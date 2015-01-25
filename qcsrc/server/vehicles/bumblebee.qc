@@ -86,7 +86,7 @@ void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 	vehicles_projectile("bigplasma_muzzleflash", "weapons/flacexp3.wav",
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
+						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
 }
 
 float bumb_gunner_frame()
@@ -292,7 +292,7 @@ float bumb_gunner_enter()
 	else
 	{
 		dprint("^1ERROR:^7Tried to enter a fully occupied vehicle!\n");
-		return FALSE;
+		return false;
 	}
 
 	_gunner            = other;
@@ -334,28 +334,28 @@ float bumb_gunner_enter()
     other = vh_player;
     _gun = vh_vehicle;
 
-	return TRUE;
+	return true;
 }
 
 float vehicles_valid_pilot()
 {
 	if (!IS_PLAYER(other))
-		return FALSE;
+		return false;
 
 	if(other.deadflag != DEAD_NO)
-		return FALSE;
+		return false;
 
 	if(other.vehicle != world)
-		return FALSE;
+		return false;
 
 	if (!IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
-			return FALSE;
+			return false;
 
 	if(teamplay && other.team != self.team)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 void bumb_touch()
@@ -392,13 +392,13 @@ void bumb_regen()
 									   self.gun2.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * frametime);
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(self.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, frametime, TRUE);
+		vehicles_regen(self.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(self.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, frametime, FALSE);
+		vehicles_regen(self.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, frametime, false);
 
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(self.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, frametime, FALSE);
+		vehicles_regen(self.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, frametime, false);
 
 }
 
@@ -863,7 +863,7 @@ void bumb_spawn(float _f)
 		if(self.gun3.enemy == world)
 		{
 			self.gun3.enemy = spawn();
-			Net_LinkEntity(self.gun3.enemy, TRUE, 0, bumble_raygun_send);
+			Net_LinkEntity(self.gun3.enemy, true, 0, bumble_raygun_send);
 			self.gun3.enemy.SendFlags = BRG_SETUP;
 			self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
 			self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
@@ -913,10 +913,10 @@ void spawnfunc_vehicle_bumblebee()
 	if(!vehicle_initialize(
 			   "Bumblebee", "models/vehicles/bumblebee_body.dpm",
 			   "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
-			   HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,
+			   HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, false,
 			   bumb_spawn, autocvar_g_vehicle_bumblebee_respawntime,
 			   bumb_pilot_frame, bumb_enter, bumb_exit,
-			   bumb_die, bumb_think, FALSE, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_shield))
+			   bumb_die, bumb_think, false, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_shield))
 	{
 		remove(self);
 		return;
@@ -949,7 +949,7 @@ float bumble_raygun_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.hook_end.z);
 	}
 
-	return TRUE;
+	return true;
 }
 #endif // SVQC
 

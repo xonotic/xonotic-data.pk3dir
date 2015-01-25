@@ -145,7 +145,7 @@ void Ent_TubaNote(float bIsNew)
 				self.enemy.enemy = spawn();
 				self.enemy.enemy.classname = "tuba_note_2";
 			}
-			bIsNew = TRUE;
+			bIsNew = true;
 		}
 
 		self.enemy.attenuate = att;

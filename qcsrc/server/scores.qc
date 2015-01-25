@@ -75,7 +75,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 				WriteChar(MSG_ENTITY, self.(teamscores[i]));
 		}
 
-	return TRUE;
+	return true;
 }
 
 void TeamScore_Spawn(float t, string name)
@@ -85,7 +85,7 @@ void TeamScore_Spawn(float t, string name)
 	ts.classname = "csqc_score_team";
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
-	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
+	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
 	PlayerStats_GameReport_AddTeam(t);
@@ -193,7 +193,7 @@ float ScoreInfo_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, teamscores_label[i]);
 		WriteByte(MSG_ENTITY, teamscores_flags[i]);
 	}
-	return TRUE;
+	return true;
 }
 
 void ScoreInfo_Init(float teams)
@@ -206,7 +206,7 @@ void ScoreInfo_Init(float teams)
 	{
 		scores_initialized = spawn();
 		scores_initialized.classname = "ent_client_scoreinfo";
-		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
+		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
 		TeamScore_Spawn(NUM_TEAM_1, "Red");
@@ -250,7 +250,7 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 				WriteChar(MSG_ENTITY, self.(scores[i]));
 		}
 
-	return TRUE;
+	return true;
 }
 
 float PlayerScore_Clear(entity player)
@@ -314,7 +314,7 @@ void PlayerScore_Attach(entity player)
 		error("player already has a scorekeeper");
 	sk = spawn();
 	sk.owner = player;
-	Net_LinkEntity(sk, FALSE, 0, PlayerScore_SendEntity);
+	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
 }
 

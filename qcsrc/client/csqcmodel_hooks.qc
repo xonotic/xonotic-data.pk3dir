@@ -267,7 +267,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, true) * 2;
 	else
 		self.glowmod = '1 1 1';
 
@@ -638,9 +638,9 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 					onground = 1;
 				self.anim_prev_pmove_flags = self.pmove_flags;
 				if(self.pmove_flags & PMF_DUCKED)
-					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
+					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, false);
 				else if(self.anim_state & ANIMSTATE_DUCK)
-					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, FALSE);
+					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, false);
 			}
 			else
 			{
@@ -668,7 +668,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 			self.frame1time = self.anim_frame1time;
 			self.frame2 = self.anim_frame2;
 			self.frame2time = self.anim_frame2time;
-			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
+			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, false);
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{

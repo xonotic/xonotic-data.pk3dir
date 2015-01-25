@@ -354,10 +354,10 @@ void Cmd_HUD_SetFields(float argc)
 		float nocomplain;
 		str = argv(i+1);
 
-		nocomplain = FALSE;
+		nocomplain = false;
 		if(substring(str, 0, 1) == "?")
 		{
-			nocomplain = TRUE;
+			nocomplain = true;
 			str = substring(str, 1, strlen(str) - 1);
 		}
 
@@ -367,13 +367,13 @@ void Cmd_HUD_SetFields(float argc)
 			pattern = substring(str, 0, slash);
 			str = substring(str, slash + 1, strlen(str) - (slash + 1));
 
-			if (!isGametypeInFilter(gametype, teamplay, FALSE, pattern))
+			if (!isGametypeInFilter(gametype, teamplay, false, pattern))
 				continue;
 		}
 
 		strunzone(hud_title[hud_num_fields]);
 		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
-		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
+		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 		str = strtolower(str);
 
 		if(str == "ping") {
@@ -452,7 +452,7 @@ void Cmd_HUD_SetFields(float argc)
 				}
 				hud_title[1] = strzone("|");
 				hud_field[1] = SP_SEPARATOR;
-				hud_size[1] = stringwidth("|", FALSE, hud_fontsize);
+				hud_size[1] = stringwidth("|", false, hud_fontsize);
 				++hud_num_fields;
 				print("fixed missing field '|'\n");
 			}
@@ -461,7 +461,7 @@ void Cmd_HUD_SetFields(float argc)
 		{
 			strunzone(hud_title[hud_num_fields]);
 			hud_title[hud_num_fields] = strzone("|");
-			hud_size[hud_num_fields] = stringwidth("|", FALSE, hud_fontsize);
+			hud_size[hud_num_fields] = stringwidth("|", false, hud_fontsize);
 			hud_field[hud_num_fields] = SP_SEPARATOR;
 			++hud_num_fields;
 			print("fixed missing field '|'\n");
@@ -470,7 +470,7 @@ void Cmd_HUD_SetFields(float argc)
 		{
 			strunzone(hud_title[hud_num_fields]);
 			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_secondary]));
-			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
+			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
 			printf("fixed missing field '%s'\n", scores_label[ps_secondary]);
@@ -479,7 +479,7 @@ void Cmd_HUD_SetFields(float argc)
 		{
 			strunzone(hud_title[hud_num_fields]);
 			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_primary]));
-			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
+			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
 			printf("fixed missing field '%s'\n", scores_label[ps_primary]);
@@ -646,7 +646,7 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 	hud_fixscoreboardcolumnwidth_iconlen *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
 
 	if(hud_fixscoreboardcolumnwidth_iconlen != 0)
-		hud_fixscoreboardcolumnwidth_marginlen = stringwidth(" ", FALSE, hud_fontsize);
+		hud_fixscoreboardcolumnwidth_marginlen = stringwidth(" ", false, hud_fontsize);
 	else
 		hud_fixscoreboardcolumnwidth_marginlen = 0;
 
@@ -665,10 +665,10 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 		if (hud_fixscoreboardcolumnwidth_iconlen != 0)
 			namesize -= hud_fixscoreboardcolumnwidth_marginlen + hud_fixscoreboardcolumnwidth_iconlen;
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
-		hud_fixscoreboardcolumnwidth_len = stringwidth(str, TRUE, hud_fontsize);
+		hud_fixscoreboardcolumnwidth_len = stringwidth(str, true, hud_fontsize);
 	}
 	else
-		hud_fixscoreboardcolumnwidth_len = stringwidth(str, FALSE, hud_fontsize);
+		hud_fixscoreboardcolumnwidth_len = stringwidth(str, false, hud_fontsize);
 
 	f = hud_fixscoreboardcolumnwidth_len + hud_fixscoreboardcolumnwidth_marginlen + hud_fixscoreboardcolumnwidth_iconlen;
 	if(hud_size[i] < f)
@@ -904,7 +904,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 				}
 			}
 
-			tmp_x = stringwidth(hud_title[i], FALSE, hud_fontsize);
+			tmp_x = stringwidth(hud_title[i], false, hud_fontsize);
 			tmp_x = (hud_size[i] - tmp.x);
 			drawstring(pos + tmp, hud_title[i], hud_fontsize, rgb * 1.5, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos.x -= hud_fontsize.x;
@@ -1046,7 +1046,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			s = sprintf("%d%%", weapon_stats*100);
 
 			float padding;
-			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
+			padding = (weapon_width - stringwidth(s, false, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
 			if(!autocvar_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
@@ -1076,7 +1076,7 @@ vector HUD_DrawKeyValue(vector pos, string key, string value) {
 	float px = pos.x;
 	pos.x += hud_fontsize.x * 0.25;
 	drawstring(pos, key, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_x = xmax - stringwidth(value, FALSE, hud_fontsize) - hud_fontsize.x * 0.25;
+	pos_x = xmax - stringwidth(value, false, hud_fontsize) - hud_fontsize.x * 0.25;
 	drawstring(pos, value, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x = px;
 	pos.y+= hud_fontsize.y;
@@ -1278,12 +1278,12 @@ void HUD_DrawScoreboard()
 			draw_beginBoldFont();
 			rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores[ts_primary]));
-			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
 			{
 				str = ftos(tm.(teamscores[ts_secondary]));
-				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize) + eY * hud_fontsize.y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize) + eY * hud_fontsize.y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
 
@@ -1413,7 +1413,7 @@ void HUD_DrawScoreboard()
 	}
 
 	pos.y += 1.2 * hud_fontsize.y;
-	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
 	float respawn_time = getstatf(STAT_RESPAWN_TIME);
@@ -1448,7 +1448,7 @@ void HUD_DrawScoreboard()
 			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
-		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	}
 
 	scoreboard_bottom = pos.y + 2 * hud_fontsize.y;

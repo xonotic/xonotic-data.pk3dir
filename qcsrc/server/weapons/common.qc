@@ -39,28 +39,28 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 
 	if(autocvar_g_projectiles_damage <= -2)
 	{
-		return FALSE; // no damage to projectiles at all, not even with the exceptions
+		return false; // no damage to projectiles at all, not even with the exceptions
 	}
 	else if(autocvar_g_projectiles_damage == -1)
 	{
 		if(is_from_exception)
 			return (exception); // if exception is detected, allow it to override
 		else
-			return FALSE; // otherwise, no other damage is allowed
+			return false; // otherwise, no other damage is allowed
 	}
 	else if(autocvar_g_projectiles_damage == 0)
 	{
 		if(is_from_exception)
 			return (exception); // if exception is detected, allow it to override
 		else if(!is_from_contents)
-			return FALSE; // otherwise, only allow damage from contents
+			return false; // otherwise, only allow damage from contents
 	}	
 	else if(autocvar_g_projectiles_damage == 1)
 	{
 		if(is_from_exception)
 			return (exception); // if exception is detected, allow it to override
 		else if(!(is_from_contents || is_from_owner))
-			return FALSE; // otherwise, only allow self damage and damage from contents
+			return false; // otherwise, only allow self damage and damage from contents
 	}
 	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
 	{
@@ -68,7 +68,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 			return (exception); // if exception is detected, allow it to override
 	}
 
-	return TRUE; // if none of these return, then allow damage anyway.
+	return true; // if none of these return, then allow damage anyway.
 }
 
 void W_PrepareExplosionByDamage(entity attacker, void() explode)

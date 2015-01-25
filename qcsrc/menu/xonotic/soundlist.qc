@@ -71,7 +71,7 @@ void XonoticSoundList_getSounds(entity me)
 	if(me.listSound >= 0)
 		search_end(me.listSound);
 
-	me.listSound = search_begin(s, FALSE, TRUE);
+	me.listSound = search_begin(s, false, true);
 
 	if(me.listSound < 0)
 		me.nItems=0;

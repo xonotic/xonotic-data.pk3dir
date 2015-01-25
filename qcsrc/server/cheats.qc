@@ -178,7 +178,7 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			if(self.personal)
 			{
-				self.speedrunning = TRUE;
+				self.speedrunning = true;
 				tracebox(self.personal.origin, self.mins, self.maxs, self.personal.origin, MOVE_WORLDONLY, self);
 				if(trace_startsolid)
 				{
@@ -190,7 +190,7 @@ float CheatImpulse(float i)
 					setorigin(self, self.personal.origin);
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
-					self.fixangle = TRUE;
+					self.fixangle = true;
 
 					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
@@ -232,7 +232,7 @@ float CheatImpulse(float i)
 					self.angles = e.angles;
 					remove(e);
 					// should we? self.angles_x = -self.angles_x;
-					self.fixangle = TRUE;
+					self.fixangle = true;
 					self.velocity = '0 0 0';
 					DID_CHEAT();
 					break;
@@ -242,7 +242,7 @@ float CheatImpulse(float i)
 			{
 				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles.x;
-				self.fixangle = TRUE;
+				self.fixangle = true;
 				self.velocity = '0 0 0';
 				DID_CHEAT();
 				break;
@@ -319,7 +319,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = particleeffectnum(argv(1));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -334,7 +334,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -750,11 +750,11 @@ float CheatFrame()
 			{
 				// use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				Drag(TRUE, TRUE);
+				Drag(true, true);
 			}
 			else
 			{
-				Drag(FALSE, FALSE); // execute dragging
+				Drag(false, false); // execute dragging
 			}
 			break;
 	}
@@ -772,9 +772,9 @@ float Drag(float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
 
-	// returns TRUE when an entity has been picked up
-	// If pick is TRUE, the object can also be picked up if it's not being held already
-	// If pick is FALSE, only keep dragging the object if it's already being held
+	// returns true when an entity has been picked up
+	// If pick is true, the object can also be picked up if it's not being held already
+	// If pick is false, only keep dragging the object if it's already being held
 
 	switch(0)
 	{
@@ -820,7 +820,7 @@ float Drag(float force_allow_pick, float ischeat)
 						float pick = force_allow_pick;
 						if (e && !pick)
 						{
-							// pick is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+							// pick is true if the object can be picked up. While an object is being carried, the Drag() function
 							// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
@@ -833,14 +833,14 @@ float Drag(float force_allow_pick, float ischeat)
 										break;
 									case 1: // owner can grab
 										if(e.owner == self || e.realowner == self)
-											pick = TRUE;
+											pick = true;
 										break;
 									case 2: // owner and team mates can grab
 										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
-											pick = TRUE;
+											pick = true;
 										break;
 									case 3: // anyone can grab
-										pick = TRUE;
+										pick = true;
 										break;
 									default:
 										break;
@@ -860,13 +860,13 @@ float Drag(float force_allow_pick, float ischeat)
 								Drag_Begin(self, e, trace_endpos);
 								if(ischeat)
 									DID_CHEAT();
-								return TRUE;
+								return true;
 							}
 					}
 			}
 			break;
 	}
-	return FALSE;
+	return false;
 }
 
 // on dragger:
@@ -938,35 +938,35 @@ float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == world)
-		return FALSE;
+		return false;
 	if(draggee.classname == "func_bobbing")
-		return FALSE;
+		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return FALSE;
+		return false;
 	if(draggee.classname == "plat")
-		return FALSE;
+		return false;
 	if(draggee.classname == "func_button")
-		return FALSE;
+		return false;
 //	if(draggee.model == "")
-//		return FALSE;
+//		return false;
 	if(IS_SPEC(draggee))
-		return FALSE;
+		return false;
 	if(IS_OBSERVER(draggee))
-		return FALSE;
+		return false;
 	if(draggee.classname == "exteriorweaponentity")
-		return FALSE;
+		return false;
 	if(draggee.classname == "weaponentity")
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 float Drag_MayChangeAngles(entity draggee)
 {
 	// TODO add more checks for bad stuff here
 	if(substring(draggee.model, 0, 1) == "*")
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
 void Drag_MoveForward(entity dragger)
@@ -1023,18 +1023,18 @@ float Drag_CanDrag(entity dragger)
 float Drag_IsDragging(entity dragger)
 {
 	if(!dragger.dragentity)
-		return FALSE;
+		return false;
 	if(wasfreed(dragger.dragentity) || dragger.dragentity.draggedby != dragger)
 	{
 		dragger.dragentity = world;
-		return FALSE;
+		return false;
 	}
 	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
 	{
 		Drag_Finish(dragger);
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void Drag_MoveDrag(entity from, entity to)

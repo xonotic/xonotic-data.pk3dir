@@ -196,15 +196,15 @@ float set_platmovetype(entity e, string s)
 
 	if(n > 2)
 		if(argv(2) == "force")
-			return TRUE; // no checking, return immediately
+			return true; // no checking, return immediately
 
 	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
 	{
 		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void spawnfunc_path_corner()
@@ -315,7 +315,7 @@ void train_wait()
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		else // instant turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
-		self.train_wait_turning = TRUE;
+		self.train_wait_turning = true;
 		return;
 	}
 
@@ -324,7 +324,7 @@ void train_wait()
 
 	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
-		self.train_wait_turning = FALSE;
+		self.train_wait_turning = false;
 		train_next();
 	}
 	else
@@ -420,7 +420,7 @@ void spawnfunc_func_train()
 	
 	if (self.spawnflags & 2)
 	{
-		self.platmovetype_turn = TRUE;
+		self.platmovetype_turn = true;
 		self.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
 	}
 	else
@@ -995,12 +995,12 @@ float door_check_keys(void) {
 
 	// no key needed
 	if (!door.itemkeys)
-		return TRUE;
+		return true;
 
 	// this door require a key
 	// only a player can have a key
 	if (!IS_PLAYER(other))
-		return FALSE;
+		return false;
 
 	if (item_keys_usekey(door, other)) {
 		// some keys were used
@@ -1022,9 +1022,9 @@ float door_check_keys(void) {
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
-		return TRUE;
+		return true;
 	} else
-		return FALSE;
+		return false;
 }
 
 
@@ -1318,18 +1318,18 @@ float LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
 	float DELTA = 4;
 	if (e1.absmin.x > e2.absmax.x + DELTA)
-		return FALSE;
+		return false;
 	if (e1.absmin.y > e2.absmax.y + DELTA)
-		return FALSE;
+		return false;
 	if (e1.absmin.z > e2.absmax.z + DELTA)
-		return FALSE;
+		return false;
 	if (e2.absmin.x > e1.absmax.x + DELTA)
-		return FALSE;
+		return false;
 	if (e2.absmin.y > e1.absmax.y + DELTA)
-		return FALSE;
+		return false;
 	if (e2.absmin.z > e1.absmax.z + DELTA)
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
 /*
@@ -1702,7 +1702,7 @@ void fd_secret_use()
 	string message_save;
 
 	self.health = 10000;
-	self.bot_attack = TRUE;
+	self.bot_attack = true;
 
 	// exit if still moving around...
 	if (self.origin != self.oldorigin)

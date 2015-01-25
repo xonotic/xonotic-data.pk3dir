@@ -94,7 +94,7 @@ void GenericCommand_qc_curl(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			bool do_exec = FALSE;
+			bool do_exec = false;
 			string do_cvar = string_null;
 			float key = -1;
 			int i;
@@ -108,7 +108,7 @@ void GenericCommand_qc_curl(float request, float argc)
 				}
 				if(argv(i) == "--exec")
 				{
-					do_exec = TRUE;
+					do_exec = true;
 					continue;
 				}
 				if(argv(i) == "--key" && i+2 < argc)
@@ -222,18 +222,18 @@ void GenericCommand_dumpnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
-			float fh, alsoprint = FALSE;
+			float fh, alsoprint = false;
 			string filename = argv(1);
 
 			if(filename == "")
 			{
 				filename = "notifications_dump.cfg";
-				alsoprint = FALSE;
+				alsoprint = false;
 			}
 			else if(filename == "-")
 			{
 				filename = "notifications_dump.cfg";
-				alsoprint = TRUE;
+				alsoprint = true;
 			}
 			fh = fopen(filename, FILE_WRITE);
 
@@ -279,12 +279,12 @@ void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work wit
 			if(filename == "")
 			{
 				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = FALSE;
+				wep_config_alsoprint = false;
 			}
 			else if(filename == "-")
 			{
 				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = TRUE;
+				wep_config_alsoprint = true;
 			}
 			wep_config_file = fopen(filename, FILE_WRITE);
 			
@@ -652,23 +652,23 @@ void GenericCommand_macro_help()
 float GenericCommand_macro_command(float argc, string command)
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
 	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef GENERIC_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float GenericCommand_macro_usage(float argc)
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
 	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef GENERIC_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void GenericCommand_macro_write_aliases(float fh)
@@ -702,13 +702,13 @@ float GenericCommand(string command)
 
 	if(GenericCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		return TRUE; // handled by one of the above GenericCommand_* functions
+		return true; // handled by one of the above GenericCommand_* functions
 	}
 	else if(argc >= 3 && argv(0) == "red")
 	{
 		s = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
 		localcmd(strcat(argv(1), " ", GenericCommand_markup(s)));
-		return TRUE;
+		return true;
 	}
 	else if(argc >= 3 && crc16(0, argv(0)) == 38566 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 59830)
 	{
@@ -748,7 +748,7 @@ float GenericCommand(string command)
 
 		localcmd(strcat(argv(1), " ", s));
 
-		return TRUE;
+		return true;
 	}
 	else if(argc >= 3 && crc16(0, argv(0)) == 3826 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 55790)
 	{
@@ -783,8 +783,8 @@ float GenericCommand(string command)
 
 		localcmd(strcat(argv(1), " ", s2));
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }

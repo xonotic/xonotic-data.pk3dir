@@ -88,7 +88,7 @@ void XonoticPlayList_addToPlayList(entity me, string track)
 
 void XonoticPlayList_removeSelectedFromPlayList(entity me)
 {
-	float i, cpt = FALSE;
+	float i, cpt = false;
 	string s = "";
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
 	if(me.nItems == 0)
@@ -102,7 +102,7 @@ void XonoticPlayList_removeSelectedFromPlayList(entity me)
 			if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 			{
 				if(cvar("music_playlist_current0") == i)
-					cpt = TRUE; // current playing track (we can't start next track here because startSound calls tokenize_console)
+					cpt = true; // current playing track (we can't start next track here because startSound calls tokenize_console)
 				else if(cvar("music_playlist_current0") > i)
 					cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
 			}

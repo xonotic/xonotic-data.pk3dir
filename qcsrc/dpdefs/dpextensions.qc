@@ -5,8 +5,8 @@
 
 //definitions that id Software left out:
 //these are passed as the 'nomonsters' parameter to traceline/tracebox (yes really this was supported in all quake engines, nomonsters is misnamed)
-float MOVE_NORMAL = 0; // same as FALSE
-float MOVE_NOMONSTERS = 1; // same as TRUE
+float MOVE_NORMAL = 0; // same as false
+float MOVE_NOMONSTERS = 1; // same as true
 float MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
 
 //checkextension function
@@ -21,7 +21,7 @@ float(string s) checkextension = #99;
 //// (it is recommended this code be placed in worldspawn or a worldspawn called function somewhere)
 //if (cvar("pr_checkextension"))
 //if (checkextension("DP_SV_SETCOLOR"))
-//	ext_setcolor = TRUE;
+//	ext_setcolor = true;
 //from then on you can check ext_setcolor to know if that extension is available
 
 //BX_WAL_SUPPORT
@@ -1052,7 +1052,7 @@ string(float uselocaltime, string format, ...) strftime = #478;
 //for more format codes please do a web search for strftime 3 and you should find the man(3) pages for this standard C function.
 //
 //practical uses:
-//changing day/night cycle (shops closing, monsters going on the prowl) in an RPG, for this you probably want to use s = strftime(TRUE, "%H");hour = stof(s);
+//changing day/night cycle (shops closing, monsters going on the prowl) in an RPG, for this you probably want to use s = strftime(true, "%H");hour = stof(s);
 //printing current date/time for competitive multiplayer games, such as the beginning/end of each round in real world time.
 //activating eastereggs in singleplayer games on certain dates.
 //
@@ -1470,13 +1470,13 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //field definitions:
 .float() customizeentityforclient; // self = this entity, other = client entity
 //description:
-//allows qc to modify an entity before it is sent to each client, the function returns TRUE if it should send, FALSE if it should not, and is fully capable of editing the entity's fields, this allows cloaked players to appear less transparent to their teammates, navigation markers to only show to their team, etc
+//allows qc to modify an entity before it is sent to each client, the function returns true if it should send, false if it should not, and is fully capable of editing the entity's fields, this allows cloaked players to appear less transparent to their teammates, navigation markers to only show to their team, etc
 //tips on writing customize functions:
-//it is a good idea to return FALSE early in the function if possible to reduce cpu usage, because this function may be called many thousands of times per frame if there are many customized entities on a 64+ player server.
+//it is a good idea to return false early in the function if possible to reduce cpu usage, because this function may be called many thousands of times per frame if there are many customized entities on a 64+ player server.
 //you are free to change anything in self, but please do not change any other entities (the results may be very inconsistent).
 //example ideas for use of this extension:
 //making icons over teammates' heads which are only visible to teammates.  for exasmple: float() playericon_customizeentityforclient = {return self.owner.team == other.team;};
-//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return TRUE;};
+//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return true;};
 //making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;};
 //implementation notes:
 //entity customization is done before per-client culling (visibility for instance) because the entity may be doing setorigin to display itself in different locations on different clients, may be altering its .modelindex, .effects and other fields important to culling, so customized entities increase cpu usage (non-customized entities can use all the early culling they want however, as they are not changing on a per client basis).
@@ -1914,7 +1914,7 @@ void(vector mincorner, vector maxcorner, vector vel, float howmany, float color,
 //vector velocity
 //short count
 //byte color (palette color)
-//byte gravity (TRUE or FALSE, FIXME should this be a scaler instead?)
+//byte gravity (true or false, FIXME should this be a scaler instead?)
 //coord randomvel (how much to jitter the velocity)
 //description:
 //creates a cloud of particles, useful for forcefields but quite customizable.

@@ -28,7 +28,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 			c = trace_endpos;
 		}
 
-		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, FALSE, world);
+		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, false, world);
 
 		white += vlen(trace_endpos - c);
 		c = trace_endpos;
@@ -419,9 +419,9 @@ float RadarMap_Make(float argc)
 		if(radarmapper) // after doing the arguments, see if we successfully went forward.
 		{
 			print("Radarmap entity spawned.\n");
-			return TRUE; // if so, don't print usage.
+			return true; // if so, don't print usage.
 		}
 	}
 
-	return FALSE;
+	return false;
 }

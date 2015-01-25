@@ -425,23 +425,23 @@ void LocalCommand_macro_help()
 bool LocalCommand_macro_command(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
 	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc)
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 bool LocalCommand_macro_usage(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
 	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc)
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void LocalCommand_macro_write_aliases(int fh)
@@ -517,10 +517,10 @@ void GameCommand(string command)
 // These functions are here specifically to add special + - commands to the game, and are not really normal commands.
 // Please add client commands to the function above this, as this is only for special reasons.
 #define CONSOLE_COMMANDS_NORMAL \
-	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = TRUE; }) \
-	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = FALSE; }) \
-	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = TRUE; }) \
-	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = FALSE; }) \
+	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
+	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
+	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = true; }) \
+	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = false; }) \
 	/* nothing */
 
 #define CONSOLE_COMMANDS_MOVEMENT \
@@ -571,12 +571,12 @@ void ConsoleCommand_macro_init()
 bool ConsoleCommand_macro_normal(int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
+		{ if(name == strtolower(argv(0))) { { execution } return true; } }
 
 	CONSOLE_COMMANDS_NORMAL
 	#undef CONSOLE_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 bool ConsoleCommand_macro_movement(int argc)
@@ -584,13 +584,13 @@ bool ConsoleCommand_macro_movement(int argc)
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
+			{ if(name == strtolower(argv(0))) { { execution } return true; } }
 
 		CONSOLE_COMMANDS_MOVEMENT
 		#undef CONSOLE_COMMAND
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -605,14 +605,14 @@ bool CSQC_ConsoleCommand(string command)
 
 	if(ConsoleCommand_macro_normal(argc))
 	{
-		return TRUE;
+		return true;
 	}
 	else if(ConsoleCommand_macro_movement(argc))
 	{
-		return TRUE;
+		return true;
 	}
 
 	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 
-	return FALSE;
+	return false;
 }

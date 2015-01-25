@@ -54,15 +54,15 @@ void nextScreenshot_Click(entity btn, entity me)
 }
 void increaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -2, FALSE);
+	me.screenshotImage.setZoom(me.screenshotImage, -2, false);
 }
 void decreaseZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, -1/2, FALSE);
+	me.screenshotImage.setZoom(me.screenshotImage, -1/2, false);
 }
 void resetZoom_Click(entity btn, entity me)
 {
-	me.screenshotImage.setZoom(me.screenshotImage, 0, FALSE);
+	me.screenshotImage.setZoom(me.screenshotImage, 0, false);
 }
 void toggleSlideShow_Click(entity btn, entity me)
 {

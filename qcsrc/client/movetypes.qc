@@ -125,11 +125,11 @@ void _Movetype_LinkEdict_TouchAreaGrid() // SV_LinkEdict_TouchAreaGrid
 			self = e;
 			other = oldself;
 
-			trace_allsolid = FALSE;
-			trace_startsolid = FALSE;
+			trace_allsolid = false;
+			trace_startsolid = false;
 			trace_fraction = 1;
-			trace_inwater = FALSE;
-			trace_inopen = TRUE;
+			trace_inwater = false;
+			trace_inopen = true;
 			trace_endpos = e.origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
@@ -198,17 +198,17 @@ float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 	self.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
-		return TRUE;
+		return true;
 
 	if(vlen(trace_endpos - self.move_origin) > 0.0001)
 		self.move_origin = trace_endpos;
-	return FALSE;
+	return false;
 }
 
 float _Movetype_UnstickEntity() // SV_UnstickEntity
 {
 	if(!_Movetype_TestEntityPosition('0 0 0'))
-		return TRUE;
+		return true;
 	if(!_Movetype_TestEntityPosition('-1 0 0')) goto success;
 	if(!_Movetype_TestEntityPosition('1 0 0')) goto success;
 	if(!_Movetype_TestEntityPosition('0 -1 0')) goto success;
@@ -224,11 +224,11 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
 	dprintf("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
-	return FALSE;
+	return false;
 :success
 	dprintf("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
-	_Movetype_LinkEdict(TRUE);
-	return TRUE;
+	_Movetype_LinkEdict(true);
+	return true;
 }
 
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f) // SV_ClipVelocity
@@ -293,7 +293,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		}
 	}
 
-	self.move_suspendedinair = FALSE;
+	self.move_suspendedinair = false;
 
 	_Movetype_CheckVelocity();
 
@@ -324,14 +324,14 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	{
 		vector move;
 		move = self.move_velocity * movetime;
-		_Movetype_PushEntity(move, TRUE);
+		_Movetype_PushEntity(move, true);
 		if(wasfreed(self))
 			return;
 
 		if(trace_startsolid)
 		{
 			_Movetype_UnstickEntity();
-			_Movetype_PushEntity(move, FALSE);
+			_Movetype_PushEntity(move, false);
 			if(wasfreed(self))
 				return;
 		}
@@ -378,7 +378,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
 				if(trace_ent.solid == SOLID_BSP)
-					self.move_suspendedinair = TRUE;
+					self.move_suspendedinair = true;
 				self.move_velocity = '0 0 0';
 				self.move_avelocity = '0 0 0';
 			}
@@ -426,7 +426,7 @@ void _Movetype_Physics_Frame(float movedt)
 			_Movetype_CheckWater(self);
 			self.move_origin = self.move_origin + ticrate * self.move_velocity;
 			self.move_angles = self.move_angles + ticrate * self.move_avelocity;
-			_Movetype_LinkEdict(FALSE);
+			_Movetype_LinkEdict(false);
 			break;
 		case MOVETYPE_STEP:
 			error("SV_Physics_Step not implemented");

@@ -689,11 +689,11 @@ void checkpoint_use()
 float race_waypointsprite_visible_for_player(entity e)
 {
 	if(e.race_checkpoint == -1 || self.owner.race_checkpoint == -2)
-		return TRUE;
+		return true;
 	else if(e.race_checkpoint == self.owner.race_checkpoint)
-		return TRUE;
+		return true;
 	else
-		return FALSE;
+		return false;
 }
 
 float have_verified;
@@ -722,7 +722,7 @@ void trigger_race_checkpoint_verify()
 			// race only (middle of the race)
 			g_race_qualifying = 0;
 			self.race_place = 0;
-			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
+			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, false))
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for respawning in race) - bailing out"));
 
 			if(i == 0)
@@ -730,7 +730,7 @@ void trigger_race_checkpoint_verify()
 				// qualifying only
 				g_race_qualifying = 1;
 				self.race_place = race_lowest_place_spawn;
-				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
+				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, false))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 
 				// race only (initial spawn)
@@ -738,7 +738,7 @@ void trigger_race_checkpoint_verify()
 				for(p = 1; p <= race_highest_place_spawn; ++p)
 				{
 					self.race_place = p;
-					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
+					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, false))
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for initially spawning in race) - bailing out"));
 				}
 			}
@@ -750,7 +750,7 @@ void trigger_race_checkpoint_verify()
 		self.race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
-		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
+		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, false))
 			error(strcat("Checkpoint 0 misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 	else

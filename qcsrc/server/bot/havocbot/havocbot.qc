@@ -16,7 +16,7 @@ void havocbot_ai()
 	{
 		if(self.havocbot_blockhead)
 		{
-			self.havocbot_blockhead = FALSE;
+			self.havocbot_blockhead = false;
 		}
 		else
 		{
@@ -51,7 +51,7 @@ void havocbot_ai()
 				if (pointcontents(head.origin + head.maxs + '0 0 1') != CONTENT_EMPTY)
 					continue;
 
-				traceline(self.origin + self.view_ofs , head.origin, TRUE, head);
+				traceline(self.origin + self.view_ofs , head.origin, true, head);
 
 				if(trace_fraction<1)
 					continue;
@@ -71,7 +71,7 @@ void havocbot_ai()
 		}
 
 		// token has been used this frame
-		bot_strategytoken_taken = TRUE;
+		bot_strategytoken_taken = true;
 	}
 
 	if(self.deadflag != DEAD_NO)
@@ -95,8 +95,8 @@ void havocbot_ai()
 			WEP_ACTION(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
-				self.BUTTON_ATCK = FALSE;
-				self.BUTTON_ATCK2 = FALSE;
+				self.BUTTON_ATCK = false;
+				self.BUTTON_ATCK2 = false;
 			}
 			else
 			{
@@ -238,7 +238,7 @@ void havocbot_keyboard_movement(vector destorg)
 		keyboard_z = 0;
 
 	self.havocbot_keyboard = keyboard * maxspeed;
-	if (self.havocbot_ducktime>time) self.BUTTON_CROUCH=TRUE;
+	if (self.havocbot_ducktime>time) self.BUTTON_CROUCH=true;
 
 	keyboard = self.havocbot_keyboard;
 	blend = bound(0,vlen(destorg-self.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
@@ -265,7 +265,7 @@ void havocbot_bunnyhop(vector dir)
 	if(self.aistatus & AI_STATUS_DANGER_AHEAD)
 	{
 		self.aistatus &= ~AI_STATUS_RUNNING;
-		self.BUTTON_JUMP = FALSE;
+		self.BUTTON_JUMP = false;
 		self.bot_canruntogoal = 0;
 		self.bot_timelastseengoal = 0;
 		return;
@@ -300,7 +300,7 @@ void havocbot_bunnyhop(vector dir)
 				if(time - self.bot_timelastseengoal > autocvar_bot_ai_bunnyhop_firstjumpdelay)
 				{
 					float checkdistance;
-					checkdistance = TRUE;
+					checkdistance = true;
 
 					// don't run if it is too close
 					if(self.bot_canruntogoal==0)
@@ -332,7 +332,7 @@ void havocbot_bunnyhop(vector dir)
 							if(vlen(gco - gno) > autocvar_bot_ai_bunnyhop_startdistance)
 							if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
 							{
-								checkdistance = FALSE;
+								checkdistance = false;
 							}
 						}
 					}
@@ -341,12 +341,12 @@ void havocbot_bunnyhop(vector dir)
 					{
 						self.aistatus &= ~AI_STATUS_RUNNING;
 						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance)
-							self.BUTTON_JUMP = TRUE;
+							self.BUTTON_JUMP = true;
 					}
 					else
 					{
 						self.aistatus |= AI_STATUS_RUNNING;
-						self.BUTTON_JUMP = TRUE;
+						self.BUTTON_JUMP = true;
 					}
 				}
 			}
@@ -366,7 +366,7 @@ void havocbot_bunnyhop(vector dir)
 	if((self.flags & FL_ONGROUND) == 0)
 	{
 		if(self.velocity.z < 0 || vlen(self.velocity)<maxspeed)
-			self.BUTTON_JUMP = FALSE;
+			self.BUTTON_JUMP = false;
 
 		// Strafe
 		if(self.aistatus & AI_STATUS_RUNNING)
@@ -469,7 +469,7 @@ void havocbot_movetogoal()
 		}
 
 		// Flying
-		self.BUTTON_HOOK = TRUE;
+		self.BUTTON_HOOK = true;
 		if(self.navigation_jetpack_point.z - PL_MAX_z + PL_MIN_z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
@@ -496,7 +496,7 @@ void havocbot_movetogoal()
 					if(distance>1000)
 						continue;
 
-					traceline(self.origin + self.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), TRUE, world);
+					traceline(self.origin + self.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), true, world);
 
 					if(trace_fraction<1)
 						continue;
@@ -557,11 +557,11 @@ void havocbot_movetogoal()
 			{
 				if(self.velocity.z<0)
 				{
-					self.BUTTON_HOOK = TRUE;
+					self.BUTTON_HOOK = true;
 				}
 			}
 			else
-				self.BUTTON_HOOK = TRUE;
+				self.BUTTON_HOOK = true;
 
 			// If there is no goal try to move forward
 
@@ -586,14 +586,14 @@ void havocbot_movetogoal()
 				}
 			}
 
-			self.havocbot_blockhead = TRUE;
+			self.havocbot_blockhead = true;
 
 			return;
 		}
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR, TRUE, FALSE))
+			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -601,7 +601,7 @@ void havocbot_movetogoal()
 				{
 					if(time > self.rocketjumptime)
 					{
-						self.BUTTON_ATCK2 = TRUE;
+						self.BUTTON_ATCK2 = true;
 						self.rocketjumptime = 0;
 					}
 					return;
@@ -609,7 +609,7 @@ void havocbot_movetogoal()
 
 				self.switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
-				self.BUTTON_ATCK = TRUE;
+				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
 				return;
 			}
@@ -630,9 +630,9 @@ void havocbot_movetogoal()
 		if(self.waterlevel>WATERLEVEL_SWIMMING)
 			dir_z = 1;
 		else if(self.velocity.z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
-			self.BUTTON_JUMP = TRUE;
+			self.BUTTON_JUMP = true;
 		else
-			self.BUTTON_JUMP = FALSE;
+			self.BUTTON_JUMP = false;
 		makevectors(self.v_angle.y * '0 1 0');
 		self.movement_x = dir * v_forward * maxspeed;
 		self.movement_y = dir * v_right * maxspeed;
@@ -688,9 +688,9 @@ void havocbot_movetogoal()
 			{
 				if(self.velocity.z >= 0 && !(self.watertype == CONTENT_WATER && gco.z < self.origin.z) &&
 					( !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
-					self.BUTTON_JUMP = TRUE;
+					self.BUTTON_JUMP = true;
 				else
-					self.BUTTON_JUMP = FALSE;
+					self.BUTTON_JUMP = false;
 			}
 			dir = normalize(flatdir);
 			makevectors(self.v_angle.y * '0 1 0');
@@ -702,17 +702,17 @@ void havocbot_movetogoal()
 
 			// jump if going toward an obstacle that doesn't look like stairs we
 			// can walk up directly
-			tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.2, FALSE, self);
+			tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.2, false, self);
 			if (trace_fraction < 1)
 			if (trace_plane_normal.z < 0.7)
 			{
 				s = trace_fraction;
-				tracebox(self.origin + stepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + stepheightvec, FALSE, self);
+				tracebox(self.origin + stepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + stepheightvec, false, self);
 				if (trace_fraction < s + 0.01)
 				if (trace_plane_normal.z < 0.7)
 				{
 					s = trace_fraction;
-					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, FALSE, self);
+					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, false, self);
 					if (trace_fraction > s)
 						self.BUTTON_JUMP = 1;
 				}
@@ -725,12 +725,12 @@ void havocbot_movetogoal()
 			dst_down = dst_ahead - '0 0 1500';
 
 			// Look ahead
-			traceline(self.origin + self.view_ofs, dst_ahead, TRUE, world);
+			traceline(self.origin + self.view_ofs, dst_ahead, true, world);
 
 			// Check head-banging against walls
 			if(vlen(self.origin + self.view_ofs - trace_endpos) < 25 && !(self.aistatus & AI_STATUS_OUT_WATER))
 			{
-				self.BUTTON_JUMP = TRUE;
+				self.BUTTON_JUMP = true;
 				if(self.facingwalltime && time > self.facingwalltime)
 				{
 					self.ignoregoal = self.goalcurrent;
@@ -759,10 +759,10 @@ void havocbot_movetogoal()
 			self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
-			if((self.flags & FL_ONGROUND) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == TRUE)
+			if((self.flags & FL_ONGROUND) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
 			{
 				// Look downwards
-				traceline(dst_ahead , dst_down, TRUE, world);
+				traceline(dst_ahead , dst_down, true, world);
 			//	te_lightning2(world, self.origin, dst_ahead);	// Draw "ahead" look
 			//	te_lightning2(world, dst_ahead, dst_down);		// Draw "downwards" look
 				if(trace_endpos.z < self.origin.z + self.mins.z)
@@ -801,7 +801,7 @@ void havocbot_movetogoal()
 		dodge = havocbot_dodge();
 		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
-		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), TRUE, world);
+		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), true, world);
 		if(IS_PLAYER(trace_ent))
 			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
 
@@ -842,7 +842,7 @@ void havocbot_movetogoal()
 		havocbot_bunnyhop(dir);
 
 	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
-	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
+	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=true;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
 }
 
@@ -871,7 +871,7 @@ void havocbot_chooseenemy()
 			// and not really really far away
 			// and we're not severely injured
 			// then keep tracking for a half second into the future
-			traceline(self.origin+self.view_ofs, ( self.enemy.absmin + self.enemy.absmax ) * 0.5,FALSE,world);
+			traceline(self.origin+self.view_ofs, ( self.enemy.absmin + self.enemy.absmax ) * 0.5,false,world);
 			if (trace_ent == self.enemy || trace_fraction == 1)
 			if (vlen((( self.enemy.absmin + self.enemy.absmax ) * 0.5) - self.origin) < 1000)
 			if (self.health > 30)
@@ -892,7 +892,7 @@ void havocbot_chooseenemy()
 	eye = self.origin + self.view_ofs;
 	best = world;
 	bestrating = 100000000;
-	head = head2 = findchainfloat(bot_attack, TRUE);
+	head = head2 = findchainfloat(bot_attack, true);
 
 	// Backup hit flags
 	hf = self.dphitcontentsmask;
@@ -911,7 +911,7 @@ void havocbot_chooseenemy()
 			if (bestrating > rating)
 			if (bot_shouldattack(head))
 			{
-				traceline(eye, v, TRUE, self);
+				traceline(eye, v, true, self);
 				if (trace_ent == head || trace_fraction >= 1)
 				{
 					best = head;
@@ -938,7 +938,7 @@ void havocbot_chooseenemy()
 	self.dphitcontentsmask = hf;
 
 	self.enemy = best;
-	self.havocbot_stickenemy = TRUE;
+	self.havocbot_stickenemy = true;
 }
 
 float havocbot_chooseweapon_checkreload(float new_weapon)
@@ -947,23 +947,23 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
 	if(skill < 5)
-		return FALSE;
+		return false;
 
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available = FALSE;
+		float i, other_weapon_available = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
 			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
-				other_weapon_available = TRUE;
+				other_weapon_available = true;
 		}
 		if(other_weapon_available)
-			return TRUE;
+			return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void havocbot_chooseweapon()
@@ -984,7 +984,7 @@ void havocbot_chooseweapon()
 		if(self.weapon==0)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
 		{
-			if(client_hasweapon(self, i, TRUE, FALSE))
+			if(client_hasweapon(self, i, true, false))
 			{
 				self.switchweapon = i;
 				return;
@@ -1011,13 +1011,13 @@ void havocbot_chooseweapon()
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
 	combo_time = time + ct + (ct * ((-0.3*(skill+self.bot_weaponskill))+3));
 
-	combo = FALSE;
+	combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
 	if(self.weapon == self.lastfiredweapon)
 	if(af > combo_time)
 	{
-		combo = TRUE;
+		combo = true;
 		self.lastcombotime = time;
 	}
 
@@ -1030,7 +1030,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				if ( client_hasweapon(self, w, true, false) )
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
@@ -1044,7 +1044,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, TRUE, FALSE) )
+				if ( client_hasweapon(self, w, true, false) )
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
@@ -1057,7 +1057,7 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, TRUE, FALSE) )
+			if ( client_hasweapon(self, w, true, false) )
 			{
 				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
@@ -1118,7 +1118,7 @@ float havocbot_moveto(vector pos)
 		if (!bot_strategytoken_taken)
 		if(self.havocbot_personal_waypoint_searchtime<time)
 		{
-			bot_strategytoken_taken = TRUE;
+			bot_strategytoken_taken = true;
 			if(havocbot_moveto_refresh_route())
 			{
 				dprint(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
@@ -1243,7 +1243,7 @@ vector havocbot_dodge()
 	dodge = '0 0 0';
 	bestdanger = -20;
 	// check for dangerous objects near bot or approaching bot
-	head = findchainfloat(bot_dodge, TRUE);
+	head = findchainfloat(bot_dodge, true);
 	while(head)
 	{
 		if (head.owner != self)

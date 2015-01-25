@@ -10,7 +10,7 @@ void TEST_Fail(string cond)
 
 void TEST_OK()
 {
-	TEST_ok = TRUE;
+	TEST_ok = true;
 }
 
 float TEST_RunAll()

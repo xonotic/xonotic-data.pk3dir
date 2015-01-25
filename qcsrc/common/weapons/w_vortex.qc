@@ -100,7 +100,7 @@ void W_Vortex_Attack(float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
@@ -129,14 +129,14 @@ float W_Vortex(float req)
 	{
 		case WR_AIM:
 		{
-			if(bot_aim(1000000, 0, 1, FALSE))
-				self.BUTTON_ATCK = TRUE;
+			if(bot_aim(1000000, 0, 1, false))
+				self.BUTTON_ATCK = true;
 			else
 			{
 				if(WEP_CVAR(vortex, charge))
-					self.BUTTON_ATCK2 = TRUE;
+					self.BUTTON_ATCK2 = true;
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -238,7 +238,7 @@ float W_Vortex(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -252,7 +252,7 @@ float W_Vortex(float req)
 			precache_sound("weapons/nexwhoosh2.wav");
 			precache_sound("weapons/nexwhoosh3.wav");
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -271,18 +271,18 @@ float W_Vortex(float req)
 			}
 			else
 			{
-				return FALSE; // zoom is not a fire mode
+				return false; // zoom is not a fire mode
 			}
 		}
 		case WR_CONFIG:
 		{
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -293,7 +293,7 @@ float W_Vortex(float req)
 			return WEAPON_VORTEX_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -310,7 +310,7 @@ float W_Vortex(float req)
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 				
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -319,23 +319,23 @@ float W_Vortex(float req)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
 			{
 				reticle_image = "gfx/reticle_nex";
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				// no weapon specific image for this weapon
-				return FALSE;
+				return false;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

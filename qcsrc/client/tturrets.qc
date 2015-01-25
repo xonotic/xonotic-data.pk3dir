@@ -80,7 +80,7 @@ void turret_precache(float _tid)
             precache_sound ("weapons/uzi_fire.wav");
             break;
     }
-    turret_is_precache[_tid] = TRUE;
+    turret_is_precache[_tid] = true;
 }
 
 void turret_tid2info(float _tid)
@@ -513,7 +513,7 @@ void turret_gibboom()
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     for (i = 1; i < 5; i = i + 1)
-        turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin + '0 0 2', self.velocity + randomvec() * 700, '0 0 0', FALSE);
+        turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin + '0 0 2', self.velocity + randomvec() * 700, '0 0 0', false);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode)
@@ -563,23 +563,23 @@ void turret_die()
     {
         // Base
         if(self.turret_type == TID_EWHEEL)
-            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', TRUE);
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
         else if (self.turret_type == TID_WALKER)
-            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', TRUE);
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
         else if (self.turret_type == TID_TESLA)
-            turret_gibtoss(tid2info_base, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', FALSE);
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
         else
         {
             if (random() > 0.5)
             {
-                turret_gibtoss("models/turrets/base-gib2.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
-                turret_gibtoss("models/turrets/base-gib3.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
-                turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+                turret_gibtoss("models/turrets/base-gib2.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', false);
+                turret_gibtoss("models/turrets/base-gib3.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', false);
+                turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', false);
             }
             else
-                turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', TRUE);
+                turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', true);
 
-            entity headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', TRUE);
+            entity headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
             if(headgib)
             {
                 headgib.angles = headgib.move_angles = self.tur_head.angles;

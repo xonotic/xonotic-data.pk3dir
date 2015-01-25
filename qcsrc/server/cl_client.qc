@@ -8,7 +8,7 @@ float ClientData_Send(entity to, float sf)
 	if(to != self.owner)
 	{
 		error("wtf");
-		return FALSE;
+		return false;
 	}
 
 	entity e;
@@ -40,12 +40,12 @@ float ClientData_Send(entity to, float sf)
 		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void ClientData_Attach()
 {
-	Net_LinkEntity(self.clientdata = spawn(), FALSE, 0, ClientData_Send);
+	Net_LinkEntity(self.clientdata = spawn(), false, 0, ClientData_Send);
 	self.clientdata.drawonlytoclient = self;
 	self.clientdata.owner = self;
 }
@@ -142,7 +142,7 @@ void PutObserverInServer (void)
 
 	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 
-	spot = SelectSpawnPoint (TRUE);
+	spot = SelectSpawnPoint (true);
 	if(!spot)
 		error("No spawnpoints for observers?!?\n");
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
@@ -183,10 +183,10 @@ void PutObserverInServer (void)
 		if(autocvar_g_chat_nospectators == 1 || (cvar("g_warmup") && !(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
-		if(self.just_joined == FALSE) {
+		if(self.just_joined == false) {
 			LogTeamchange(self.playerid, -1, 4);
 		} else
-			self.just_joined = FALSE;
+			self.just_joined = false;
 	}
 
 	PlayerScore_Clear(self); // clear scores when needed
@@ -196,9 +196,9 @@ void PutObserverInServer (void)
 	self.spectatortime = time;
 
 	self.classname = "observer";
-	self.iscreature = FALSE;
+	self.iscreature = false;
 	self.teleportable = TELEPORT_SIMPLE;
-	self.damagedbycontents = FALSE;
+	self.damagedbycontents = false;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
@@ -231,8 +231,8 @@ void PutObserverInServer (void)
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
-	self.fixangle = TRUE;
-	self.crouch = FALSE;
+	self.fixangle = true;
+	self.crouch = false;
 	self.revival_time = 0;
 
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
@@ -272,7 +272,7 @@ void FixPlayermodel()
 
 	defaultmodel = "";
 	defaultskin = 0;
-	chmdl = FALSE;
+	chmdl = false;
 
 	if(autocvar_sv_defaultcharacter == 1)
 	{
@@ -319,7 +319,7 @@ void FixPlayermodel()
 			m2 = self.maxs;
 			setplayermodel (self, defaultmodel);
 			setsize (self, m1, m2);
-			chmdl = TRUE;
+			chmdl = true;
 		}
 
 		oldskin = self.skin;
@@ -332,7 +332,7 @@ void FixPlayermodel()
 			m2 = self.maxs;
 			setplayermodel (self, self.playermodel);
 			setsize (self, m1, m2);
-			chmdl = TRUE;
+			chmdl = true;
 		}
 
 		oldskin = self.skin;
@@ -387,9 +387,9 @@ void PutClientInServer (void)
 		accuracy_resend(self);
 
 		if(self.team < 0)
-			JoinBestTeam(self, FALSE, TRUE);
+			JoinBestTeam(self, false, true);
 
-		spot = SelectSpawnPoint (FALSE);
+		spot = SelectSpawnPoint (false);
 		if(!spot)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_NOSPAWNS);
@@ -402,10 +402,10 @@ void PutClientInServer (void)
 			vehicles_exit(VHEF_RELESE);
 
 		self.classname = "player";
-		self.wasplayer = TRUE;
-		self.iscreature = TRUE;
+		self.wasplayer = true;
+		self.iscreature = true;
 		self.teleportable = TELEPORT_NORMAL;
-		self.damagedbycontents = TRUE;
+		self.damagedbycontents = true;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
@@ -512,7 +512,7 @@ void PutClientInServer (void)
 		self.angles_z = 0; // never spawn tilted even if the spot says to
 		if(IS_BOT_CLIENT(self))
 			self.v_angle = self.angles;
-		self.fixangle = TRUE; // turn this way immediately
+		self.fixangle = true; // turn this way immediately
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
 		self.punchangle = '0 0 0';
@@ -523,7 +523,7 @@ void PutClientInServer (void)
 
 		entity spawnevent = spawn();
 		spawnevent.owner = self;
-		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
+		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
 
 		// Cut off any still running player sounds.
 		stopsound(self, CH_PLAYER_SINGLE);
@@ -532,7 +532,7 @@ void PutClientInServer (void)
 		FixPlayermodel();
 		self.drawonlytoclient = world;
 
-		self.crouch = FALSE;
+		self.crouch = false;
 		self.view_ofs = PL_VIEW_OFS;
 		setsize (self, PL_MIN, PL_MAX);
 		self.spawnorigin = spot.origin;
@@ -546,8 +546,8 @@ void PutClientInServer (void)
 
 		self.event_damage = PlayerDamage;
 
-		self.bot_attack = TRUE;
-		self.monster_attack = TRUE;
+		self.bot_attack = true;
+		self.monster_attack = true;
 		
 		self.spider_slowness = 0;
 
@@ -563,7 +563,7 @@ void PutClientInServer (void)
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
-		self.speedrunning = FALSE;
+		self.speedrunning = false;
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
@@ -654,7 +654,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
-	return TRUE;
+	return true;
 }
 
 void ClientInit_CheckUpdate()
@@ -694,7 +694,7 @@ void ClientInit_Spawn()
 	e = spawn();
 	e.classname = "clientinit";
 	e.think = ClientInit_CheckUpdate;
-	Net_LinkEntity(e, FALSE, 0, ClientInit_SendEntity);
+	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
 	o = self;
 	self = e;
@@ -753,7 +753,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( self, FALSE, TRUE );
+		JoinBestTeam( self, false, true );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
@@ -1084,7 +1084,7 @@ void ClientConnect (void)
 		if(self.team_forced > 0)
 			self.team_forced = 0;
 
-	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
+	JoinBestTeam(self, false, false); // if the team number is valid, keep it
 
 	if((autocvar_sv_spectate == 1) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
@@ -1120,7 +1120,7 @@ void ClientConnect (void)
 
 	LogTeamchange(self.playerid, self.team, 1);
 
-	self.just_joined = TRUE;  // stop spamming the eventlog with additional lines when the client connects
+	self.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
 	self.netname_previous = strzone(self.netname);
 
@@ -1707,7 +1707,7 @@ void SpectateCopy(entity spectatee) {
 	self.frozen = spectatee.frozen;
 	self.revive_progress = spectatee.revive_progress;
 	if(!self.BUTTON_USE)
-		self.fixangle = TRUE;
+		self.fixangle = true;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
@@ -1716,7 +1716,7 @@ void SpectateCopy(entity spectatee) {
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        self.fixangle = FALSE;
+        self.fixangle = false;
         //self.velocity = spectatee.vehicle.velocity;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
@@ -1759,7 +1759,7 @@ float SpectateUpdate()
 float SpectateSet()
 {
 	if(self.enemy.classname != "player")
-		return FALSE;
+		return false;
 	/*if(self.enemy.vehicle)
 	{
 
@@ -1783,7 +1783,7 @@ float SpectateSet()
 		if(!SpectateUpdate())
 			PutObserverInServer();
 	//}
-	return TRUE;
+	return true;
 }
 
 void SetSpectator(entity player, entity spectatee)
@@ -1854,7 +1854,7 @@ float SpectatePrev()
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
 	if (!other) // no player
-		return FALSE;
+		return false;
 
 	entity first = other;
 	// skip players until current spectated player
@@ -1873,7 +1873,7 @@ float SpectatePrev()
 			while(other.team != self.team)
 				other = other.chain;
 			if(other == self.enemy)
-				return TRUE;
+				return true;
 		}
 	}
 	else
@@ -1925,7 +1925,7 @@ void LeaveSpectatorMode()
 			nades_RemoveBonus(self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
-				{ JoinBestTeam(self, FALSE, TRUE); }
+				{ JoinBestTeam(self, false, true); }
 
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
@@ -1948,7 +1948,7 @@ void LeaveSpectatorMode()
 
 /**
  * Determines whether the player is allowed to join. This depends on cvar
- * g_maxplayers, if it isn't used this function always return TRUE, otherwise
+ * g_maxplayers, if it isn't used this function always return true, otherwise
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
@@ -2159,16 +2159,16 @@ float isInvisibleString(string s)
 			case 192: // charmap space
 				if (!autocvar_utf8_enable)
 					break;
-				return FALSE;
+				return false;
 			case 160: // space in unicode fonts
 			case 0xE000 + 192: // utf8 charmap space
 				if (autocvar_utf8_enable)
 					break;
 			default:
-				return FALSE;
+				return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 /*
@@ -2319,7 +2319,7 @@ void PlayerPreThink (void)
 			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
-			self.fixangle = TRUE;
+			self.fixangle = true;
 		}
 
 		if(frametime)
@@ -2338,7 +2338,7 @@ void PlayerPreThink (void)
 				}
 			}
 			else
-				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, true) * 2;
 
 			player_powerups();
 		}
@@ -2427,20 +2427,20 @@ void PlayerPreThink (void)
 		{
 			if (!self.crouch)
 			{
-				self.crouch = TRUE;
+				self.crouch = true;
 				self.view_ofs = PL_CROUCH_VIEW_OFS;
 				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
-				// setanim(self, self.anim_duck, FALSE, TRUE, TRUE); // this anim is BROKEN anyway
+				// setanim(self, self.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
 		}
 		else
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, FALSE, self);
+				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, false, self);
 				if (!trace_startsolid)
 				{
-					self.crouch = FALSE;
+					self.crouch = false;
 					self.view_ofs = PL_VIEW_OFS;
 					setsize (self, PL_MIN, PL_MAX);
 				}

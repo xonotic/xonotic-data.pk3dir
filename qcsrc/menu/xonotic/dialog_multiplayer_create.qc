@@ -26,7 +26,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 	{
 		e.configureXonoticTextSlider(e, string_null);
 		l.setText(l, pLabel);
-		e.disabled = l.disabled = TRUE;
+		e.disabled = l.disabled = true;
 	}
 	else
 	{
@@ -49,7 +49,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 
 		// set text field
 		l.setText(l, pLabel);
-		e.disabled = l.disabled = FALSE;
+		e.disabled = l.disabled = false;
 	}
 }
 

@@ -29,8 +29,8 @@ entity makeXonoticScreenshotImage()
 void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me)
 {
 	me.configureXonoticImage(me, string_null, -2);
-	me.zoomLimitedByTheBox = FALSE; // enable this to forbid enlarging the image more than the containing box (if making use of draw_SetClip is a too bad thing)
-	me.zoomSnapToTheBox = FALSE; // disabled: it's cooler
+	me.zoomLimitedByTheBox = false; // enable this to forbid enlarging the image more than the containing box (if making use of draw_SetClip is a too bad thing)
+	me.zoomSnapToTheBox = false; // disabled: it's cooler
 }
 
 void XonoticScreenshotImage_load(entity me, string theImage)
@@ -69,7 +69,7 @@ void XonoticScreenshotImage_draw(entity me)
 		if (me.showTitle && time < me.screenshotTime + 4) // 3 seconds at full alpha, 1 second fading out
 		{
 			theAlpha = (4 - (time - me.screenshotTime));
-			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', theAlpha, FALSE);
+			draw_CenterText('0.5 0 0', me.screenshotTitle, me.realFontSize, '1 1 1', theAlpha, false);
 		}
 		if (time < me.zoomTime + 2) // 1 seconds at full alpha, 1 second fading out
 		{
@@ -81,7 +81,7 @@ void XonoticScreenshotImage_draw(entity me)
 			else
 				zoomString = sprintf("%.2f%%", z);
 			theAlpha = (2 - (time - me.zoomTime));
-			draw_Text('0.05 0.95 0', zoomString, me.realFontSize, '1 1 1', theAlpha, FALSE);
+			draw_Text('0.05 0.95 0', zoomString, me.realFontSize, '1 1 1', theAlpha, false);
 		}
 	}
 }

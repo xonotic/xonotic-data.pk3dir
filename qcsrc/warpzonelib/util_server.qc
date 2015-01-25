@@ -19,11 +19,11 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
-		return FALSE;
+		return false;
 
 	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
 	if (!trace_startsolid)
-		return TRUE;
+		return true;
 
 	m0 = e.mins;
 	m1 = e.maxs;
@@ -47,10 +47,10 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	if (trace_startsolid)
 	{
 		setorigin(e, o);
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 float WarpZoneLib_ExactTrigger_Touch()

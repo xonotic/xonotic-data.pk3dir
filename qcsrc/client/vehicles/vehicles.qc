@@ -325,7 +325,7 @@ void CSQC_BUMBLE_HUD()
 // Right gunner slot occupied?
 	if(!AuxiliaryXhair[1].draw2d)
 	{
-		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), FALSE, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
+		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
 		drawstring(hudloc + picloc + '1 0 0' * shield, _("No right gunner!"), '1 0 0' * picsize.y + '0 1 0' * picsize.y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
 	}
@@ -347,7 +347,7 @@ void CSQC_BUMBLE_HUD()
 // Left gunner slot occupied?
 	if(!AuxiliaryXhair[2].draw2d)
 	{
-		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), FALSE, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
+		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
 		drawstring(hudloc + picloc + '1 0 0' * shield, _("No left gunner!"), '1 0 0' * picsize.y + '0 1 0' * picsize.y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
 	}

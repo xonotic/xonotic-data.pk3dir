@@ -50,7 +50,7 @@ float CSQCModel_Send(entity to, float sf)
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
-	return TRUE;
+	return true;
 }
 
 #ifdef CSQCPLAYER_FORCE_UPDATES

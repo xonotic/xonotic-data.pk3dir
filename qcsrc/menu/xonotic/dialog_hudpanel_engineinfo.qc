@@ -7,7 +7,7 @@ CLASS(XonoticHUDEngineInfoDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDEngineInfoDialog, rows, float, 15)
 	ATTRIB(XonoticHUDEngineInfoDialog, columns, float, 4)
 	ATTRIB(XonoticHUDEngineInfoDialog, name, string, "HUDengineinfo")
-	ATTRIB(XonoticHUDEngineInfoDialog, requiresConnection, float, TRUE)
+	ATTRIB(XonoticHUDEngineInfoDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDEngineInfoDialog)
 #endif
 

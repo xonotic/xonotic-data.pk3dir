@@ -37,12 +37,12 @@ MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_touchexplode)
 {
 	MUTATOR_HOOK(PlayerPreThink, touchexplode_PlayerThink, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

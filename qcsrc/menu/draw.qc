@@ -362,12 +362,12 @@ string draw_TextShortenToWidth(string theText, float maxWidth, float ICanHasKall
 
 float draw_TextWidth_WithColors(string s, vector theFontSize)
 {
-	return draw_TextWidth(s, TRUE, theFontSize);
+	return draw_TextWidth(s, true, theFontSize);
 }
 
 float draw_TextWidth_WithoutColors(string s, vector theFontSize)
 {
-	return draw_TextWidth(s, FALSE, theFontSize);
+	return draw_TextWidth(s, false, theFontSize);
 }
 
 float draw_TextLengthUpToWidth(string theText, float maxWidth, float allowColorCodes, vector theFontSize)

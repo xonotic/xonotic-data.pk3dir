@@ -128,8 +128,8 @@ const int SOLID_SLIDEBOX 	= 3; // touch on edge, but not an onground
 const int SOLID_BSP 		= 4; // bsp clip, touch on edge, block
 const int SOLID_CORPSE 	= 5; // same as SOLID_BBOX, except it behaves as SOLID_NOT against SOLID_SLIDEBOX objects (players/monsters)
 
-const int MOVE_NORMAL = 0; // same as FALSE
-const int MOVE_NOMONSTERS = 1; // same as TRUE
+const int MOVE_NORMAL = 0; // same as false
+const int MOVE_NOMONSTERS = 1; // same as true
 const int MOVE_MISSILE = 2; // save as movement with .movetype == MOVETYPE_FLYMISSILE
 const int MOVE_HITMODEL = 4;
 const int MOVE_WORLDONLY = 3;

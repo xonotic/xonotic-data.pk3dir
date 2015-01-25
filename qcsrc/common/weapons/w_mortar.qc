@@ -227,7 +227,7 @@ void W_Mortar_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(mortar, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -235,7 +235,7 @@ void W_Mortar_Attack(void)
 	gren = spawn();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
@@ -255,7 +255,7 @@ void W_Mortar_Attack(void)
 	gren.health = WEP_CVAR_PRI(mortar, health);
 	gren.damageforcescale = WEP_CVAR_PRI(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_PRI(gren, mortar);
 
@@ -263,9 +263,9 @@ void W_Mortar_Attack(void)
 	gren.flags = FL_PROJECTILE;
 
 	if(WEP_CVAR_PRI(mortar, type) == 0 || WEP_CVAR_PRI(mortar, type) == 2)
-		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
 	else
-		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -276,7 +276,7 @@ void W_Mortar_Attack2(void)
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(mortar, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -284,7 +284,7 @@ void W_Mortar_Attack2(void)
 	gren = spawn();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
@@ -303,7 +303,7 @@ void W_Mortar_Attack2(void)
 	gren.health = WEP_CVAR_SEC(mortar, health);
 	gren.damageforcescale = WEP_CVAR_SEC(mortar, damageforcescale);
 	gren.event_damage = W_Mortar_Grenade_Damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_UP_SEC(gren, mortar);
 
@@ -311,9 +311,9 @@ void W_Mortar_Attack2(void)
 	gren.flags = FL_PROJECTILE;
 
 	if(WEP_CVAR_SEC(mortar, type) == 0 || WEP_CVAR_SEC(mortar, type) == 2)
-		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_GRENADE, true);
 	else
-		CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -328,26 +328,26 @@ float W_Mortar(float req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK = FALSE;
-			self.BUTTON_ATCK2 = FALSE;
+			self.BUTTON_ATCK = false;
+			self.BUTTON_ATCK2 = false;
 			if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
 			{
-				if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), TRUE))
+				if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
 				{
-					self.BUTTON_ATCK = TRUE;
+					self.BUTTON_ATCK = true;
 					if(random() < 0.01) self.bot_secondary_grenademooth = 1;
 				}
 			}
 			else
 			{
-				if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), TRUE))
+				if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
 				{
-					self.BUTTON_ATCK2 = TRUE;
+					self.BUTTON_ATCK2 = true;
 					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		/*case WR_CALCINFO:
 		{
@@ -386,7 +386,7 @@ float W_Mortar(float req)
 					{
 						if(!nade.gl_detonate_later)
 						{
-							nade.gl_detonate_later = TRUE;
+							nade.gl_detonate_later = true;
 							nadefound = 1;
 						}
 					}
@@ -400,7 +400,7 @@ float W_Mortar(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -416,7 +416,7 @@ float W_Mortar(float req)
 			precache_sound("weapons/grenade_stick.wav");
 			precache_sound("weapons/grenade_fire.wav");
 			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -433,12 +433,12 @@ float W_Mortar(float req)
 		case WR_CONFIG:
 		{
 			MORTAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), "weapons/reload.wav"); // WEAPONTODO
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -455,7 +455,7 @@ float W_Mortar(float req)
 				return WEAPON_MORTAR_MURDER_EXPLODE;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -471,20 +471,20 @@ float W_Mortar(float req)
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 				
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/grenade_impact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

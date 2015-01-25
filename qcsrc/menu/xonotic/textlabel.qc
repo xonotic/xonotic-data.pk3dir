@@ -23,7 +23,7 @@ entity makeXonoticHeaderLabel(string theText)
 	me = makeXonoticTextLabel(0.5, theText);
 	me.colorL = SKINCOLOR_HEADER;
 	me.alpha = SKINALPHA_HEADER;
-	me.isBold = TRUE;
+	me.isBold = true;
 	return me;
 }
 void XonoticTextLabel_configureXonoticTextLabel(entity me, float theAlign, string theText)

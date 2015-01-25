@@ -180,7 +180,7 @@ MUTATOR_HOOKABLE(MonsterDropItem);
 
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves
-	// returning TRUE makes the monster stop
+	// returning true makes the monster stop
 	// INPUT:
 		float monster_speed_run;
 		float monster_speed_walk;
@@ -324,7 +324,7 @@ MUTATOR_HOOKABLE(HelpMePing);
 
 MUTATOR_HOOKABLE(VehicleSpawn);
 	// called when a vehicle initializes
-	// return TRUE to remove the vehicle
+	// return true to remove the vehicle
 
 MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle
@@ -335,7 +335,7 @@ MUTATOR_HOOKABLE(VehicleEnter);
 
 MUTATOR_HOOKABLE(VehicleTouch);
 	// called when a player touches a vehicle
-	// return TRUE to stop player from entering the vehicle
+	// return true to stop player from entering the vehicle
 	// INPUT
 	entity self; // vehicle
 	entity other; // player

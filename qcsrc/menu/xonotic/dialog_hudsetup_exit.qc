@@ -7,7 +7,7 @@ CLASS(XonoticHUDExitDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDExitDialog, rows, float, 18)
 	ATTRIB(XonoticHUDExitDialog, columns, float, 4)
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit")
-	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, TRUE)
+	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDExitDialog)
 
 #endif

@@ -13,7 +13,7 @@ void ewheel_attack()
     {
         turret_do_updates(self);
 
-        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, TRUE, TRUE); // WEAPONTODO: this is not a projectile made by the blaster, add separate effect for it
+        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, true, true); // WEAPONTODO: this is not a projectile made by the blaster, add separate effect for it
         _mis.missile_flags = MIF_SPLASH;
 
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
@@ -110,7 +110,7 @@ void  ewheel_move_enemy()
         movelib_beak_simple(autocvar_g_turrets_unit_ewheel_speed_stop);
     }
 
-    turrets_setframe(newframe , FALSE);
+    turrets_setframe(newframe , false);
 
     /*if(self.frame != newframe)
     {
@@ -254,9 +254,9 @@ void turret_ewheel_dinit()
     self.frame = 1;
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.iscreature = TRUE;
+    self.iscreature = true;
     self.teleportable = TELEPORT_NORMAL;
-    self.damagedbycontents = TRUE;
+    self.damagedbycontents = true;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;

@@ -57,7 +57,7 @@ string XonoticDemoList_demoName(entity me, float i)
 	return s;
 }
 
-// if subdir is TRUE look in subdirectories too (1 level)
+// if subdir is true look in subdirectories too (1 level)
 void getDemos_for_ext(entity me, string ext, float subdir)
 {
 	string s;
@@ -71,7 +71,7 @@ void getDemos_for_ext(entity me, string ext, float subdir)
 		s=strcat(s, "*", ext);
 
 	float list, i, n;
-	list = search_begin(s, FALSE, TRUE);
+	list = search_begin(s, false, true);
 	if(list >= 0)
 	{
 		n = search_getsize(list);
@@ -84,15 +84,15 @@ void getDemos_for_ext(entity me, string ext, float subdir)
 			{
 				s = strreplace("/", "^7/", s); // clear colors at the forward slash
 				s = strcat("/", rgb_to_hexcolor(SKINCOLOR_DEMOLIST_SUBDIR), s); // add a forward slash for sorting, then color
-				bufstr_add(me.listDemo, s, TRUE);
+				bufstr_add(me.listDemo, s, true);
 			}
-			else { bufstr_add(me.listDemo, s, TRUE); }
+			else { bufstr_add(me.listDemo, s, true); }
 		}
 		search_end(list);
 	}
 
 	if (subdir)
-		getDemos_for_ext(me, ext, FALSE);
+		getDemos_for_ext(me, ext, false);
 }
 
 void XonoticDemoList_getDemos(entity me)
@@ -105,10 +105,10 @@ void XonoticDemoList_getDemos(entity me)
 		me.nItems = 0;
 		return;
 	}
-	getDemos_for_ext(me, ".dem", TRUE);
+	getDemos_for_ext(me, ".dem", true);
 	me.nItems = buf_getsize(me.listDemo);
 	if(me.nItems > 0)
-		buf_sort(me.listDemo, 128, FALSE);
+		buf_sort(me.listDemo, 128, false);
 }
 
 void XonoticDemoList_destroy(entity me)

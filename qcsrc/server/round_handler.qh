@@ -1,7 +1,7 @@
 entity round_handler;
 .float delay; // stores delay from round end to countdown start
 .float count; // stores initial number of the countdown
-.float wait; // it's set to TRUE when round ends, to FALSE when countdown starts
+.float wait; // it's set to true when round ends, to false when countdown starts
 .float cnt;	// its initial value is .count + 1, then decreased while counting down
 			// reaches 0 when the round starts
 .float round_timelimit;

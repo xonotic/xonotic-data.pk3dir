@@ -220,7 +220,7 @@ void CSQCPlayer_SetCamera()
 				o = self.origin;
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
+				CSQCPlayer_PredictTo(servercommandframe + 1, false);
 				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
@@ -239,7 +239,7 @@ void CSQCPlayer_SetCamera()
 
 				CSQCPlayer_SavePrediction();
 			}
-			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
+			CSQCPlayer_PredictTo(clientcommandframe + 1, true);
 
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)

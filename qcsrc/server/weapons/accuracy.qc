@@ -25,7 +25,7 @@ float accuracy_send(entity to, float sf)
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
 	if(sf == 0)
-		return TRUE;
+		return true;
 	// note: we know that client and server agree about SendFlags...
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
@@ -36,7 +36,7 @@ float accuracy_send(entity to, float sf)
 		else
 			f *= 2;
 	}
-	return TRUE;
+	return true;
 }
 
 // init/free
@@ -46,7 +46,7 @@ void accuracy_init(entity e)
 	e.accuracy.owner = e;
 	e.accuracy.classname = "accuracy";
 	e.accuracy.drawonlytoclient = e;
-	Net_LinkEntity(e.accuracy, FALSE, 0, accuracy_send);
+	Net_LinkEntity(e.accuracy, false, 0, accuracy_send);
 }
 
 void accuracy_free(entity e)
@@ -113,13 +113,13 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 	if(!targ.frozen)
 	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 float accuracy_canbegooddamage(entity attacker)
 {
 	if(!warmup_stage)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

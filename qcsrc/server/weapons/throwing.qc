@@ -73,7 +73,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.think = thrown_wep_think;
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
-	wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+	wep.pickup_anyway = true; // these are ALWAYS pickable
 	
 	//wa = W_AmmoItemCode(wpn);
 	if(ammotype == ammo_none)
@@ -185,5 +185,5 @@ void SpawnThrownWeapon(vector org, float w)
 {
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }

@@ -34,9 +34,9 @@ const float WPFE_THINKRATE = 0.5;
 const float VEHICLE_FLAG_SCALE = 1.0;
 
 // waypoint colors
-#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, FALSE) * 0.75)
+#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, false) * 0.75)
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
-#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5)
 
 // sounds
 #define snd_flag_taken noise

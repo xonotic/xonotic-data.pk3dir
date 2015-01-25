@@ -123,7 +123,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -143,7 +143,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
-	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity);
 
 // non-solid model entities:
 void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity

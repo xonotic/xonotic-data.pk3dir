@@ -237,10 +237,10 @@ float IsServerInList(string list, string srv)
 	string p;
 	float i, n;
 	if(srv == "")
-		return FALSE;
+		return false;
 	srv = netaddress_resolve(srv, 26000);
 	if(srv == "")
-		return FALSE;
+		return false;
 	p = crypto_getidfp(srv);
 	n = tokenize_console(list);
 	for(i = 0; i < n; ++i)
@@ -249,15 +249,15 @@ float IsServerInList(string list, string srv)
 		{
 			if(p)
 				if(argv(i) == p)
-					return TRUE;
+					return true;
 		}
 		else
 		{
 			if(srv == netaddress_resolve(argv(i), 26000))
-				return TRUE;
+				return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 float CheckCategoryOverride(float cat)

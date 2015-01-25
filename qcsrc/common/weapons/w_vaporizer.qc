@@ -56,7 +56,7 @@ void W_Vaporizer_Attack(void)
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, 10000);
+	W_SetupShot(self, true, 0, "", CH_WEAPON_A, 10000);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
@@ -130,11 +130,11 @@ float W_Vaporizer(float req)
 		case WR_AIM:
 		{
 			if(self.WEP_AMMO(VAPORIZER) > 0)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), FALSE); // WEAPONTODO: replace with proper vaporizer cvars
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 				
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -182,7 +182,7 @@ float W_Vaporizer(float req)
 				}
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -196,13 +196,13 @@ float W_Vaporizer(float req)
 			precache_sound("weapons/nexwhoosh3.wav");
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = WEP_AMMO(VAPORIZER);
 			self.vaporizer_lasthit = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -213,7 +213,7 @@ float W_Vaporizer(float req)
 		case WR_CHECKAMMO2:
 		{
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
-				return TRUE;
+				return true;
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
@@ -221,12 +221,12 @@ float W_Vaporizer(float req)
 		case WR_CONFIG:
 		{
 			VAPORIZER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.vaporizer_lasthit = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
@@ -237,7 +237,7 @@ float W_Vaporizer(float req)
 				used_ammo = vaporizer_ammo;
 
 			W_Reload(used_ammo, "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -248,7 +248,7 @@ float W_Vaporizer(float req)
 			return WEAPON_VAPORIZER_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -270,7 +270,7 @@ float W_Vaporizer(float req)
 				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -280,23 +280,23 @@ float W_Vaporizer(float req)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			if(button_zoom || zoomscript_caught)
 			{
 				reticle_image = "gfx/reticle_nex";
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				// no weapon specific image for this weapon
-				return FALSE;
+				return false;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

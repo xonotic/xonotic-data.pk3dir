@@ -10,7 +10,7 @@ float SV_ParseClientCommand_floodcheck()
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
 			self.cmd_floodcount += 1;
-			if(self.cmd_floodcount > autocvar_sv_clientcommand_antispam_count) { return FALSE; } // too much spam, halt
+			if(self.cmd_floodcount > autocvar_sv_clientcommand_antispam_count) { return false; } // too much spam, halt
 		}
 		else
 		{
@@ -18,7 +18,7 @@ float SV_ParseClientCommand_floodcheck()
 			self.cmd_floodcount = 1;
 		}
 	}
-	return TRUE; // continue, as we're not flooding yet
+	return true; // continue, as we're not flooding yet
 }
 
 
@@ -92,7 +92,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 					}
 					else if(autocvar_g_campaign || autocvar_g_balance_teams)
 					{
-						//JoinBestTeam(self, FALSE, TRUE);
+						//JoinBestTeam(self, false, true);
 					}
 					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
@@ -306,7 +306,7 @@ void ClientCommand_mobspawn(float request, float argc)
 					mon = get_monsterinfo(i);
 					if(mon.netname == tospawn)
 					{
-						found = TRUE;
+						found = true;
 						break;
 					}
 				}
@@ -316,10 +316,10 @@ void ClientCommand_mobspawn(float request, float argc)
 					totalspawned += 1;
 				
 					makevectors(self.v_angle);
-					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, true, self);
 					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 				
-					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, false, false, moveflag);
 					
 					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
 					
@@ -357,12 +357,12 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 							return;
 						if (self.ready) // toggle
 						{
-							self.ready = FALSE;
+							self.ready = false;
 							bprint(self.netname, "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
-							self.ready = TRUE;
+							self.ready = true;
 							bprint(self.netname, "^2 is ready\n");
 						}
 
@@ -393,7 +393,7 @@ void ClientCommand_say(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2) { Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
+			if(argc >= 2) { Say(self, false, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
 
@@ -413,7 +413,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2) { Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
+			if(argc >= 2) { Say(self, true, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
 
@@ -635,13 +635,13 @@ void ClientCommand_tell(float request, float argc, string command)
 			if(argc >= 3)
 			{
 				entity tell_to = GetIndexedEntity(argc, 1);
-				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
+				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 
 				if(tell_accepted > 0) // the target is a real client
 				{
 					if(tell_to != self) // and we're allowed to send to them :D
 					{
-						Say(self, FALSE, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), TRUE);
+						Say(self, false, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), true);
 						return;
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
@@ -759,23 +759,23 @@ void ClientCommand_macro_help()
 float ClientCommand_macro_command(float argc, string command)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
 	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float ClientCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
 	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void ClientCommand_macro_write_aliases(float fh)
@@ -826,9 +826,9 @@ void SV_ParseClientCommand(string command)
 
 		default:
 			if(SV_ParseClientCommand_floodcheck())
-				break; // "TRUE": continue, as we're not flooding yet
+				break; // "true": continue, as we're not flooding yet
 			else
-				return; // "FALSE": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
+				return; // "false": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
 	}
 
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */

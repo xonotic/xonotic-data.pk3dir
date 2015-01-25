@@ -20,8 +20,8 @@ CLASS(Animation) EXTENDS(Object)
 	ATTRIB(Animation, duration, float, 0)
 	ATTRIB(Animation, startValue, float, 0)
 	ATTRIB(Animation, delta, float, 0)
-	ATTRIB(Animation, stopped, float, FALSE)
-	ATTRIB(Animation, finished, float, FALSE)
+	ATTRIB(Animation, stopped, float, false)
+	ATTRIB(Animation, finished, float, false)
 ENDCLASS(Animation)
 void setterDummy(entity, float);
 #endif
@@ -89,12 +89,12 @@ float Animation_isStopped(entity me)
 
 void Animation_stopAnim(entity me)
 {
-	me.stopped = TRUE;
+	me.stopped = true;
 }
 
 void Animation_resumeAnim(entity me)
 {
-	me.stopped = FALSE;
+	me.stopped = false;
 }
 
 float Animation_isFinished(entity me)
@@ -105,7 +105,7 @@ float Animation_isFinished(entity me)
 void Animation_finishAnim(entity me)
 {
 	me.value = me.delta + me.startValue;
-	me.finished = TRUE;
+	me.finished = true;
 	me.setter(me.object, me.value);
 }
 

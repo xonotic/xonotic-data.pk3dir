@@ -41,7 +41,7 @@ float SendAuxiliaryXhair(entity to, float sf)
     WriteByte(MSG_ENTITY, rint(self.colormod.y * 255));
     WriteByte(MSG_ENTITY, rint(self.colormod.z * 255));
 
-    return TRUE;
+    return true;
 }
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
@@ -60,7 +60,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
         axh.cnt                 = axh_id;
         axh.drawonlytoclient    = own;
         axh.owner               = own;
-        Net_LinkEntity(axh, FALSE, 0, SendAuxiliaryXhair);
+        Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
     }
 
     setorigin(axh, loc);
@@ -422,7 +422,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
     proj.solid            = SOLID_BBOX;
     proj.movetype         = MOVETYPE_FLYMISSILE;
     proj.flags            = FL_PROJECTILE;
-    proj.bot_dodge        = TRUE;
+    proj.bot_dodge        = true;
     proj.bot_dodgerating  = _dmg;
     proj.velocity         = _vel;
     proj.touch            = vehicles_projectile_explode;
@@ -495,14 +495,14 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.reset              = vehicles_reset;
-    self.iscreature         = TRUE;
-    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
-    self.damagedbycontents	= TRUE;
+    self.iscreature         = true;
+    self.teleportable       = false; // no teleporting for vehicles, too buggy
+    self.damagedbycontents	= true;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
 	self.deadflag           = DEAD_NO;
-    self.bot_attack         = TRUE;
+    self.bot_attack         = true;
     self.flags              = FL_NOTARGET;
     self.avelocity          = '0 0 0';
     self.velocity           = '0 0 0';
@@ -529,12 +529,12 @@ void vehicles_spawn()
 float vehicles_crushable(entity e)
 {
     if(IS_PLAYER(e))
-        return TRUE;
+        return true;
 
     if(e.flags & FL_MONSTER)
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
 void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
@@ -667,7 +667,7 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
-    self.monster_attack       = TRUE;
+    self.monster_attack       = true;
 
     if (IS_REAL_CLIENT(other))
     {
@@ -774,7 +774,7 @@ void vehicles_exit(float eject)
         return;
     }
 
-    vehicles_exit_running = TRUE;
+    vehicles_exit_running = true;
     if(IS_CLIENT(self))
     {
         _vehicle = self.vehicle;
@@ -783,7 +783,7 @@ void vehicles_exit(float eject)
         {
             _vehicle.vehicle_exit(eject);
             self = _oldself;
-            vehicles_exit_running = FALSE;
+            vehicles_exit_running = false;
             return;
         }
     }
@@ -845,7 +845,7 @@ void vehicles_exit(float eject)
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;
     _vehicle.phase = time + 1;
-    _vehicle.monster_attack = FALSE;
+    _vehicle.monster_attack = false;
 
     _vehicle.vehicle_exit(eject);
 
@@ -854,7 +854,7 @@ void vehicles_exit(float eject)
     _vehicle.owner = world;
     self = _oldself;
 
-    vehicles_exit_running = FALSE;
+    vehicles_exit_running = false;
 }
 
 
@@ -1072,7 +1072,7 @@ void vehicles_showwp()
 	    rgb = Team_ColorRGB(self.team);
     else
 	    rgb = '1 1 1';
-    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
+    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
     if(self.waypointsprite_attached)
     {
         WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
@@ -1202,7 +1202,7 @@ float vehicle_addplayerslot(    entity _owner,
     setattachment(_slot.vehicle_hudmodel, _slot, "");
     setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
 
-    return TRUE;
+    return true;
 }
 
 float vehicle_initialize(string  net_name,
@@ -1228,7 +1228,7 @@ float vehicle_initialize(string  net_name,
                          float _max_shield)
 {
 	if(!autocvar_g_vehicles)
-		return FALSE;
+		return false;
 
     if(self.targetname)
     {
@@ -1290,10 +1290,10 @@ float vehicle_initialize(string  net_name,
     self.tur_head           = spawn();
     self.tur_head.owner     = self;
     self.takedamage         = DAMAGE_AIM;
-    self.bot_attack         = TRUE;
-    self.iscreature         = TRUE;
-    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
-    self.damagedbycontents	= TRUE;
+    self.bot_attack         = true;
+    self.iscreature         = true;
+    self.teleportable       = false; // no teleporting for vehicles, too buggy
+    self.damagedbycontents	= true;
     self.hud                = vhud;
     self.tur_health          = _max_health;
     self.tur_head.tur_health = _max_shield;
@@ -1352,9 +1352,9 @@ float vehicle_initialize(string  net_name,
     self.tur_head.team = self.team;
 
 	if(MUTATOR_CALLHOOK(VehicleSpawn))
-		return FALSE;
+		return false;
 
-    return TRUE;
+    return true;
 }
 
 vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
@@ -1366,7 +1366,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
     vtmp = vectoangles(normalize(_target - vtag));
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
-    vtmp = AnglesTransform_Normalize(vtmp, TRUE);
+    vtmp = AnglesTransform_Normalize(vtmp, true);
     ftmp = _aimspeed * frametime;
     vtmp_y = bound(-ftmp, vtmp.y, ftmp);
     vtmp_x = bound(-ftmp, vtmp.x, ftmp);

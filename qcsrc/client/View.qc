@@ -34,7 +34,7 @@ void Porto_Draw()
 	for(0;;)
 	{
 		dir = nextdir;
-		traceline(p, p + 65536 * dir, TRUE, porto);
+		traceline(p, p + 65536 * dir, true, porto);
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 			return;
 		nextdir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal; // mirror dir at trace_plane_normal
@@ -394,25 +394,25 @@ float eventchase_running;
 float WantEventchase()
 {
 	if(autocvar_cl_orthoview)
-		return FALSE;
+		return false;
 	if(intermission)
-		return TRUE;
+		return true;
 	if(spectatee_status >= 0)
 	{
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
-			return TRUE;
+			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
 			{
 				// don't stop eventchase once it's started (even if velocity changes afterwards)
 				if(self.velocity == '0 0 0' || eventchase_running)
-					return TRUE;
+					return true;
 			}
-			else return TRUE;
+			else return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 vector damage_blurpostprocess, content_blurpostprocess;
@@ -867,7 +867,7 @@ void UpdateCrosshair()
 					f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
 					if (f >= 1)
 					{
-						wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
+						wcross_ring_prev = ((ring_image) ? true : false);
 					}
 
 					if(wcross_ring_prev)
@@ -1045,7 +1045,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		// no zoom while dead or in intermission please
 		localcmd("-zoom\n");
-		button_zoom = FALSE;
+		button_zoom = false;
 	}
 
 	// event chase camera
@@ -1053,7 +1053,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		if(WantEventchase())
 		{
-			eventchase_running = TRUE;
+			eventchase_running = true;
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1095,7 +1095,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
-			eventchase_running = FALSE;
+			eventchase_running = false;
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
@@ -1273,13 +1273,13 @@ void CSQC_UpdateView(float w, float h)
 		if(button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
 		{
 			localcmd("-zoom\n");
-			button_zoom = FALSE;
+			button_zoom = false;
 		}
 		if(autocvar_cl_unpress_attack_on_weapon_switch)
 		{
 			localcmd("-fire\n");
 			localcmd("-fire2\n");
-			button_attack2 = FALSE;
+			button_attack2 = false;
 		}
 	}
 	if(last_activeweapon != activeweapon)
@@ -1324,7 +1324,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			cvar_set("chase_active", ftos(chase_active_backup));
 			cvar_set("cl_demo_mousegrab", "0");
-			camera_active = FALSE;
+			camera_active = false;
 		}
 	}
 #ifdef CAMERATEST
@@ -1337,8 +1337,8 @@ void CSQC_UpdateView(float w, float h)
 		chase_active_backup = autocvar_chase_active;
 		cvar_set("chase_active", "2");
 		cvar_set("cl_demo_mousegrab", "1");
-		camera_active = TRUE;
-		camera_mode = FALSE;
+		camera_active = true;
+		camera_mode = false;
 	}
 
 	// Draw the Crosshair

@@ -168,13 +168,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("003Matches: %d", out_total_matches), TRUE);
+			bufstr_add(me.listStats, sprintf("003Matches: %d", out_total_matches), true);
 			
 			if(out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
-				bufstr_add(me.listStats, sprintf("003Wins/Losses: %d/%d", out_total_wins, out_total_losses), TRUE);
-				bufstr_add(me.listStats, sprintf("004Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), TRUE);
+				bufstr_add(me.listStats, sprintf("003Wins/Losses: %d/%d", out_total_wins, out_total_losses), true);
+				bufstr_add(me.listStats, sprintf("004Win_Percentage: %d%%", ((out_total_wins / out_total_matches) * 100)), true);
 			}
 
 			out_total_matches = -1;
@@ -185,13 +185,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if((order == -1) && (out_total_kills >= 0) && (out_total_deaths >= 0))
 		{
-			bufstr_add(me.listStats, sprintf("005Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), TRUE);
+			bufstr_add(me.listStats, sprintf("005Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), true);
 
 			// if there are no deaths, just show kill count 
 			if(out_total_deaths > 0)
-				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), TRUE);
+				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), true);
 			else
-				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", out_total_kills), TRUE);
+				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", out_total_kills), true);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
@@ -273,12 +273,12 @@ void XonoticStatsList_getStats(entity me)
 			else { continue; }
 		}
 
-		bufstr_add(me.listStats, sprintf("%s%s %s", orderstr, outstr, data), TRUE);
+		bufstr_add(me.listStats, sprintf("%s%s %s", orderstr, outstr, data), true);
 	}
 
 	me.nItems = buf_getsize(me.listStats);
 	if(me.nItems > 0)
-		buf_sort(me.listStats, 128, FALSE);
+		buf_sort(me.listStats, 128, false);
 }
 
 void XonoticStatsList_destroy(entity me)
