@@ -1267,7 +1267,7 @@ float(float modlindex, float framenum) frameduration = #277; // returns the inte
 //"leftarm" (which is a child of "torso") which would return 2 instead...
 float(float skel, float bonenum, string g1, string g2, string g3, string g4, string g5, string g6) example_skel_findbonegroup =
 {
-	local string bonename;
+	string bonename;
 	while (bonenum >= 0)
 	{
 		bonename = skel_get_bonename(skel, bonenum);
@@ -1307,8 +1307,6 @@ void(float animmodelindex, float framegroup, float framegroupstarttime) example_
 // apply a different framegroup animation to bones with a specified parent
 void(float animmodelindex, float framegroup, float framegroupstarttime, float blendalpha, string groupbonename, string excludegroupname1, string excludegroupname2) example_skel_player_update_applyoverride =
 {
-	local float bonenum;
-	local float numbones;
 	self.frame = framegroup;
 	self.frame2 = 0;
 	self.frame3 = 0;
@@ -1320,8 +1318,8 @@ void(float animmodelindex, float framegroup, float framegroupstarttime, float bl
 	self.lerpfrac = 0;
 	self.lerpfrac3 = 0;
 	self.lerpfrac4 = 0;
-	bonenum = 0;
-	numbones = skel_get_numbones(self.skeletonindex);
+	float bonenum = 0;
+	float numbones = skel_get_numbones(self.skeletonindex);
 	while (bonenum < numbones)
 	{
 		if (example_skel_findbonegroup(self.skeletonindex, bonenum, groupbonename, excludegroupname1, excludegroupname2, "", "", "") == 1)
@@ -1332,45 +1330,38 @@ void(float animmodelindex, float framegroup, float framegroupstarttime, float bl
 // make eyes point at a target location, be sure v_forward, v_right, v_up are set correctly before calling
 void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 {
-	local float bonenum;
-	local vector ang;
-	local vector oldforward, oldright, oldup;
-	local vector relforward, relright, relup, relorg;
-	local vector boneforward, boneright, boneup, boneorg;
-	local vector parentforward, parentright, parentup, parentorg;
-	local vector u, v;
-	local vector modeleyetarget;
-	bonenum = skel_find_bone(self.skeletonindex, bonename) - 1;
+	float bonenum = skel_find_bone(self.skeletonindex, bonename) - 1;
 	if (bonenum < 0)
 		return;
-	oldforward = v_forward;
-	oldright = v_right;
-	oldup = v_up;
-	v = eyetarget - self.origin;
+	vector oldforward = v_forward;
+	vector oldright = v_right;
+	vector oldup = v_up;
+	vector v = eyetarget - self.origin;
+	vector modeleyetarget;
 	modeleyetarget_x =   v * v_forward;
 	modeleyetarget_y = 0-v * v_right;
 	modeleyetarget_z =   v * v_up;
 	// this is an eyeball, make it point at the target location
 	// first get all the data we can...
-	relorg = skel_get_bonerel(self.skeletonindex, bonenum);
-	relforward = v_forward;
-	relright = v_right;
-	relup = v_up;
-	boneorg = skel_get_boneabs(self.skeletonindex, bonenum);
-	boneforward = v_forward;
-	boneright = v_right;
-	boneup = v_up;
-	parentorg = skel_get_boneabs(self.skeletonindex, skel_get_boneparent(self.skeletonindex, bonenum));
-	parentforward = v_forward;
-	parentright = v_right;
-	parentup = v_up;
+	vector relorg = skel_get_bonerel(self.skeletonindex, bonenum);
+	vector relforward = v_forward;
+	vector relright = v_right;
+	vector relup = v_up;
+	vector boneorg = skel_get_boneabs(self.skeletonindex, bonenum);
+	vector boneforward = v_forward;
+	vector boneright = v_right;
+	vector boneup = v_up;
+	vector parentorg = skel_get_boneabs(self.skeletonindex, skel_get_boneparent(self.skeletonindex, bonenum));
+	vector parentforward = v_forward;
+	vector parentright = v_right;
+	vector parentup = v_up;
 	// get the vector from the eyeball to the target
-	u = modeleyetarget - boneorg;
+	vector u = modeleyetarget - boneorg;
 	// now transform it inversely by the parent matrix to produce new rel vectors
 	v_x = u * parentforward;
 	v_y = u * parentright;
 	v_z = u * parentup;
-	ang = vectoangles2(v, relup);
+	vector ang = vectoangles2(v, relup);
 	ang_x = 0 - ang_x;
 	makevectors(ang);
 	// set the relative bone matrix

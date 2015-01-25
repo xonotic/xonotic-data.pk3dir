@@ -39,9 +39,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 //
 void LaunchDebris (string debrisname, vector force)
 {
-	local	entity dbr;
-
-	dbr = spawn();
+	entity dbr = spawn();
 	setorigin(dbr, self.absmin
 	           + '1 0 0' * random() * (self.absmax_x - self.absmin_x)
 	           + '0 1 0' * random() * (self.absmax_y - self.absmin_y)

@@ -208,13 +208,13 @@ void Net_VehicleSetup()
     }
 }
 #define HUD_GETSTATS \
-    local noref int vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	local noref int shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
-	local noref int energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	local noref int ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	local noref int reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
-	local noref int ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
-	local noref int reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+    int vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
+	int shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
+	noref int energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
+	noref int ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
+	noref int reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
+	noref int ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
+	noref int reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
 
 void CSQC_BUMBLE_HUD()
 {

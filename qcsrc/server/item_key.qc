@@ -7,7 +7,7 @@ TODO:
 - should keys have a trigger?
 */
 
-float item_keys_usekey(entity l, entity p) {
+bool item_keys_usekey(entity l, entity p) {
 	float valid = l.itemkeys & p.itemkeys;
 
 	if (!valid) {
@@ -140,8 +140,8 @@ This is the only correct way to put keys on the map!
 itemkeys MUST always have exactly one bit set.
 */
 void spawnfunc_item_key() {
-	local string _model, _netname;
-	local vector _colormod;
+	string _netname;
+	vector _colormod;
 
 	// reject this entity if more than one key was set!
 	if (self.itemkeys>0 && (self.itemkeys & (self.itemkeys-1)) != 0) {
@@ -196,9 +196,7 @@ void spawnfunc_item_key() {
 	}
 
 	// find default model
-#ifdef GMQCC
-	_model = string_null;
-#endif
+	string _model = string_null;
 	if (self.itemkeys <= ITEM_KEY_BIT(2)) {
 		_model = "models/keys/key.md3";
 	} else if (self.itemkeys >= ITEM_KEY_BIT(3) && self.itemkeys <= ITEM_KEY_BIT(5)) {
@@ -282,13 +280,11 @@ trigger_keylock
  * trigger givent targets
  */
 void trigger_keylock_trigger(string s) {
-	local entity t, stemp, otemp, atemp;
+	entity stemp = self;
+	entity otemp = other;
+	entity atemp = activator;
 
-	stemp = self;
-	otemp = other;
-	atemp = activator;
-
-
+	entity t;
 	for(t = world; (t = find(t, targetname, s)); )
 		if (t.use) {
 			self = t;
@@ -306,16 +302,14 @@ void trigger_keylock_trigger(string s) {
  * kill killtarget of trigger keylock.
  */
 void trigger_keylock_kill(string s) {
-	local entity t;
+	entity t;
 	for(t = world; (t = find(t, targetname, s)); )
 		remove(t);
 };
 
 void trigger_keylock_touch(void) {
-	local float key_used, started_delay;
-
-	key_used = FALSE;
-	started_delay = FALSE;
+	bool key_used = FALSE;
+	bool started_delay = FALSE;
 
 	// only player may trigger the lock
 	if (!IS_PLAYER(other))

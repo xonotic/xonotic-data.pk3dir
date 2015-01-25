@@ -173,9 +173,9 @@ void CSQCModel_InterpolateAnimation_Do()
 void CSQCModel_Draw()
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
-	local noref bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	local noref bool islocalplayer = (self.entnum == player_localnum + 1);
-	local noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	noref bool islocalplayer = (self.entnum == player_localnum + 1);
+	noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
@@ -205,9 +205,9 @@ void CSQCModel_Read(float isnew)
 	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	local noref bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	local noref bool islocalplayer = (self.entnum == player_localnum + 1);
-	local noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	bool islocalplayer = (self.entnum == player_localnum + 1);
+	noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	self.classname = "csqcmodel";
 	self.iflags |= IFLAG_ORIGIN; // interpolate origin too

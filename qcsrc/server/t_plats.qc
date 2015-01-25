@@ -991,13 +991,7 @@ ACTIVATION FUNCTIONS
 */
 
 float door_check_keys(void) {
-	local entity door;
-
-
-	if (self.owner)
-		door = self.owner;
-	else
-		door = self;
+	entity door = self.owner ? self.owner : self;
 
 	// no key needed
 	if (!door.itemkeys)

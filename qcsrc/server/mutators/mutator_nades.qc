@@ -185,8 +185,8 @@ void napalm_fountain_think()
 void nade_napalm_boom()
 {
 	entity fountain;
-	local float c;
-	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c ++)
+	int c;
+	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c++)
 		nade_napalm_ball();
 
 
