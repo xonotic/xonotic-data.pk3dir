@@ -116,7 +116,6 @@ void Net_AuXair2(bool bIsNew)
 
 void Net_VehicleSetup()
 {
-    int i;
     int hud_id = ReadByte();
 
     // Weapon update?
@@ -137,10 +136,10 @@ void Net_VehicleSetup()
     hud_id  = bound(HUD_VEHICLE_FIRST, hud_id, HUD_VEHICLE_LAST);
 
     // Init auxiliary crosshairs
-    entity axh;
+    int i;
     for(i = 0; i < MAX_AXH; ++i)
     {
-        axh = AuxiliaryXhair[i];
+        entity axh = AuxiliaryXhair[i];
         if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
             remove(axh);
 

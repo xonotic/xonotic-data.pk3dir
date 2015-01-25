@@ -48,7 +48,7 @@ void ItemDrawSimple()
 
 void ItemRead(float _IsNew)
 {
-    float sf = ReadByte();
+    int sf = ReadByte();
 
     if(sf & ISF_LOCATION)
     {

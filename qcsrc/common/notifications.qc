@@ -3,7 +3,7 @@
 //  Last updated: August, 2013
 // ================================================
 
-string Get_Notif_TypeName(float net_type)
+string Get_Notif_TypeName(int net_type)
 {
 	switch(net_type)
 	{
@@ -18,7 +18,7 @@ string Get_Notif_TypeName(float net_type)
 	return "";
 }
 
-entity Get_Notif_Ent(float net_type, float net_name)
+entity Get_Notif_Ent(int net_type, int net_name)
 {
 	switch(net_type)
 	{
@@ -224,7 +224,7 @@ void Destroy_Notification_Entity(entity notif)
 void Destroy_All_Notifications(void)
 {
 	entity notif;
-	float i;
+	int i;
 
 	#define DESTROY_LOOP(type,count) \
 		for(i = 1; i <= count; ++i) \
@@ -251,15 +251,15 @@ void Destroy_All_Notifications(void)
 }
 
 string Process_Notif_Line(
-	float typeid,
-	float chat,
+	int typeId,
+	bool chat,
 	string input,
 	string notiftype,
 	string notifname,
 	string stringtype)
 {
 	#ifdef CSQC
-	if(typeid == MSG_INFO)
+	if(typeId == MSG_INFO)
 	{
 		if((chat && autocvar_notification_allow_chatboxprint)
 			|| (autocvar_notification_allow_chatboxprint == 2))
@@ -477,8 +477,8 @@ string Process_Notif_Args(
 void Create_Notification_Entity(
 	float var_default,
 	float var_cvar,
-	float typeid,
-	float nameid,
+	int typeId,
+	int nameid,
 	string namestring,
 	float strnum,
 	float flnum,
@@ -496,21 +496,21 @@ void Create_Notification_Entity(
 	string normal,
 	string gentle,
 	/* MSG_MULTI */
-	float anncename,
-	float infoname,
-	float centername,
+	int anncename,
+	int infoname,
+	int centername,
 	/* MSG_CHOICE */
 	float challow_def,
 	float challow_var,
-	float chtype,
-	float optiona,
-	float optionb)
+	int chtype,
+	int optiona,
+	int optionb)
 {
 	// =====================
 	//  Global Entity Setup
 	// =====================
 	entity notif = spawn();
-	switch(typeid)
+	switch(typeId)
 	{
 		case MSG_ANNCE:
 		{
@@ -550,7 +550,7 @@ void Create_Notification_Entity(
 					"^1NOTIFICATION WITH IMPROPER TYPE: ",
 					"^7net_type = %d, net_name = %s.\n"
 				),
-				typeid,
+				typeId,
 				namestring
 			));
 			return; // It's not possible to recover from this one
@@ -558,11 +558,11 @@ void Create_Notification_Entity(
 	}
 	notif.nent_default = var_default;
 	notif.nent_enabled = (1 <= var_cvar);
-	notif.nent_type = typeid;
+	notif.nent_type = typeId;
 	notif.nent_id = nameid;
 	notif.nent_name = strzone(namestring);
 
-	string typestring = Get_Notif_TypeName(typeid);
+	string typestring = Get_Notif_TypeName(typeId);
 
 	// Other pre-notif-setup requisites
 	notif_error = FALSE;
@@ -570,7 +570,7 @@ void Create_Notification_Entity(
 	// ====================
 	//  Notification Setup
 	// ====================
-	switch(typeid)
+	switch(typeId)
 	{
 		case MSG_ANNCE:
 		{
@@ -725,7 +725,7 @@ void Create_Notification_Entity(
 				#define SET_NOTIF_STRING(string,stringname) \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
-							typeid, \
+							typeId, \
 							(var_cvar > 1), \
 							string, \
 							typestring, \
@@ -862,7 +862,7 @@ void Create_Notification_Entity(
 								"^1NOTIFICATION WITH IMPROPER TYPE: ",
 								"^7net_type = %d, net_name = %s.\n"
 							),
-							typeid,
+							typeId,
 							namestring
 						);
 						notif_error = TRUE;
@@ -905,7 +905,7 @@ void Create_Notification_Entity(
 					"^1NOTIFICATION WITH IMPROPER TYPE: ",
 					"^7net_type = %d, net_name = %s.\n"
 				),
-				typeid,
+				typeId,
 				namestring
 			);
 			notif_error = TRUE;
@@ -974,7 +974,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		NOTIF_WRITE(notif_msg) }
 
 	string notif_msg;
-	float i;
+	int i;
 	entity e;
 
 	// Note: This warning only applies to the notifications.cfg file that is output...
@@ -1188,7 +1188,7 @@ void Debug_Notification(string input)
 string Local_Notification_sprintf(
 	string input, string args,
 	string s1, string s2, string s3, string s4,
-	float f1, float f2, float f3, float f4)
+	int f1, float f2, float f3, float f4)
 {
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
@@ -1201,7 +1201,7 @@ string Local_Notification_sprintf(
 	#endif
 
 	string selected;
-	float sel_num;
+	int sel_num;
 	for(sel_num = 0; sel_num < NOTIF_MAX_ARGS; ++sel_num) { arg_slot[sel_num] = ""; }
 
 	string tmp_s;
@@ -1318,9 +1318,9 @@ void Local_Notification_HUD_Notify_Push(
 	float f1, float f2, float f3, float f4)
 {
 	string selected;
-	float sel_num;
 	arg_slot[0] = ""; arg_slot[1] = "";
 
+	int sel_num;
 	for(sel_num = 0;(hudargs != "");)
 	{
 		selected = car(hudargs); hudargs = cdr(hudargs);

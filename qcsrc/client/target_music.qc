@@ -4,7 +4,7 @@ entity music_target;
 entity music_trigger;
 // FIXME also control bgmvolume here, to not require a target_music for the default track.
 
-.float state;
+.int state;
 .float lastvol;
 
 void TargetMusic_Advance()
@@ -138,9 +138,7 @@ void Ent_TriggerMusic_Remove()
 
 void Ent_ReadTriggerMusic()
 {
-	float f;
-	string s;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();
@@ -170,7 +168,7 @@ void Ent_ReadTriggerMusic()
 		self.volume = ReadByte() / 255.0;
 		self.fade_time = ReadByte() / 16.0;
 		self.fade_rate = ReadByte() / 16.0;
-		s = self.noise;
+		string s = self.noise;
 		if(self.noise)
 			strunzone(self.noise);
 		self.noise = strzone(ReadString());

@@ -116,7 +116,7 @@ void		end_sys_globals;		// flag for structure dumping
 .string		model;
 .float		frame;
 .float		skin;
-.float		effects;
+.int		effects;
 
 .vector		mins, maxs;		// bounding box extents reletive to origin
 .vector		size;			// maxs - mins
@@ -134,9 +134,9 @@ void		end_sys_globals;		// flag for structure dumping
 
 .entity 	enemy;
 
-.float		flags;
+.int		flags;
 
-.float		colormap;
+.int		colormap;
 
 .entity		owner;		// who launched a missile
 
@@ -149,7 +149,7 @@ float		intermission;
 float		scoreboard_showscores;
 float		scoreboard_showaccuracy;
 .string		message;
-.float renderflags;
+.int		renderflags;
 // float		coop;
 // float		deathmatch;
 
@@ -167,7 +167,7 @@ float		dmg_take;
 
 // Basic variables
 .float enttype; // entity type sent from server
-.float sv_entnum; // entity number sent from server
+.int   sv_entnum; // entity number sent from server
 .float team;
 .float team_size;
 
@@ -247,7 +247,8 @@ vector angles_held;
 // weapons
 .float silent;
 
-float w_deathtype, w_issilent, w_random;
+int w_deathtype;
+float w_issilent, w_random;
 vector w_org, w_backoff;
 
 float rifle_scope;
@@ -264,7 +265,7 @@ string weaponorder_bypriority;
 
 float vortex_charge_movingavg;
 
-float serverflags;
+int serverflags;
 
 float uid2name_dialog;
 

@@ -446,7 +446,7 @@ string mmssss(float hundredths)
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
-string ScoreString(float pFlags, float pValue)
+string ScoreString(int pFlags, float pValue)
 {
 	string valstr;
 	float l;
@@ -505,7 +505,7 @@ float lengthLogTable[128];
 
 float invertLengthLog(float x)
 {
-	float l, r, m, lerr, rerr;
+	int l, r, m;
 
 	if(x >= lengthLogTable[127])
 		return 127;
@@ -525,22 +525,21 @@ float invertLengthLog(float x)
 	}
 
 	// now: r is >=, l is <
-	lerr = (x - lengthLogTable[l]);
-	rerr = (lengthLogTable[r] - x);
+	float lerr = (x - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - x);
 	if(lerr < rerr)
 		return l;
 	return r;
 }
 
-vector decompressShortVector(float data)
+vector decompressShortVector(int data)
 {
 	vector out;
-	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	p   = (data & 0xF000) / 0x1000;
-	y   = (data & 0x0F80) / 0x80;
-	len = (data & 0x007F);
+	float p	= (data & 0xF000) / 0x1000;
+	float y	= (data & 0x0F80) / 0x80;
+	int len = (data & 0x007F);
 
 	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
@@ -601,9 +600,9 @@ float compressShortVector(vector vec)
 
 void compressShortVector_init()
 {
-	float l, f, i;
-	l = 1;
-	f = pow(2, 1/8);
+	float l = 1;
+	float f = pow(2, 1/8);
+	int i;
 	for(i = 0; i < 128; ++i)
 	{
 		lengthLogTable[i] = l;
@@ -1313,17 +1312,17 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 
 string find_last_color_code(string s)
 {
-	float start, len, i, carets;
-	start = strstrofs(s, "^", 0);
+	int start = strstrofs(s, "^", 0);
 	if (start == -1) // no caret found
 		return "";
-	len = strlen(s)-1;
+	int len = strlen(s)-1;
+	int i;
 	for(i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
 
-		carets = 1;
+		int carets = 1;
 		while (i-carets >= start && substring(s, i-carets, 1) == "^")
 			++carets;
 
@@ -1742,7 +1741,7 @@ float compressShotOrigin(vector v)
 	}
 	return x * 0x10000 + y * 0x100 + z;
 }
-vector decompressShotOrigin(float f)
+vector decompressShotOrigin(int f)
 {
 	vector v;
 	v_x = ((f & 0xFF0000) / 0x10000) / 2;
@@ -2258,7 +2257,7 @@ string CTX(string s)
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
-string xencode(float f)
+string xencode(int f)
 {
 	float a, b, c, d;
 	d = f % 22; f = floor(f / 22);
@@ -2289,7 +2288,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(float f)
+float lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
@@ -2801,7 +2800,7 @@ float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
 	return 0;
 }
 
-float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
+float Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 {
 	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
 		return CONTENT_SOLID;

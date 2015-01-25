@@ -62,7 +62,7 @@ void healer_setup()
 
 void ent_healer()
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
 	{

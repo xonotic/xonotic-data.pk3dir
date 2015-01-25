@@ -85,7 +85,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 {
 	entity e;
-	float i;
+	int i;
 	if(strstrofs(url, "://", 0) >= 0)
 	{
 		switch(mode)
@@ -209,7 +209,7 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 // close a file
 void url_fclose(entity e)
 {
-	float i;
+	int i;
 
 	if(e.url_fh == URL_FH_CURL)
 	{

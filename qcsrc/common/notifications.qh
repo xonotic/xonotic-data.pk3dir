@@ -4,16 +4,16 @@
 // ================================================
 
 // main types/groups of notifications
-const float MSG_ANNCE = 1; // "Global" AND "personal" announcer messages
-const float MSG_INFO = 2; // "Global" information messages
-const float MSG_CENTER = 3; // "Personal" centerprint messages
-const float MSG_CENTER_CPID = 4; // Kill centerprint message
-const float MSG_MULTI = 5; // Subcall MSG_INFO and/or MSG_CENTER notifications
-const float MSG_CHOICE = 6; // Choose which subcall wrapper to activate
+const int MSG_ANNCE = 1; // "Global" AND "personal" announcer messages
+const int MSG_INFO = 2; // "Global" information messages
+const int MSG_CENTER = 3; // "Personal" centerprint messages
+const int MSG_CENTER_CPID = 4; // Kill centerprint message
+const int MSG_MULTI = 5; // Subcall MSG_INFO and/or MSG_CENTER notifications
+const int MSG_CHOICE = 6; // Choose which subcall wrapper to activate
 
 // negative confirmations
-const float NO_MSG = -12345;  // allows various things to know when no information is added
-const float NOTIF_ABORT = -1234;   // allows Send_Notification to safely abort sending
+const int NO_MSG = -12345;  // allows various things to know when no information is added
+const int NOTIF_ABORT = -1234;   // allows Send_Notification to safely abort sending
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
     VARITEM(1, 0, s1) \
@@ -45,7 +45,7 @@ void Destroy_All_Notifications(void);
 void Create_Notification_Entity(
     float var_default,
     float var_cvar,
-    float typeid,
+    float typeId,
     float nameid,
     string namestring,
     float strnum,
@@ -1352,7 +1352,7 @@ float notif_global_error;
             /* COMMON ======================== */ \
             default,            /* var_default */ \
             ACVNN(name),        /* var_cvar    */ \
-            MSG_ANNCE,          /* typeid      */ \
+            MSG_ANNCE,          /* typeId      */ \
             name,               /* nameid      */ \
             strtoupper(#name),  /* namestring  */ \
             NO_MSG,             /* strnum      */ \
@@ -1394,7 +1394,7 @@ float notif_global_error;
             /* COMMON ======================== */ \
             default,            /* var_default */ \
             ACVNN(name),        /* var_cvar    */ \
-            MSG_INFO,           /* typeid      */ \
+            MSG_INFO,           /* typeId      */ \
             name,               /* nameid      */ \
             strtoupper(#name),  /* namestring  */ \
             strnum,             /* strnum      */ \
@@ -1438,7 +1438,7 @@ float notif_global_error;
             /* COMMON ======================== */ \
             default,            /* var_default */ \
             ACVNN(name),        /* var_cvar    */ \
-            MSG_CENTER,         /* typeid      */ \
+            MSG_CENTER,         /* typeId      */ \
             name,               /* nameid      */ \
             strtoupper(#name),  /* namestring  */ \
             strnum,             /* strnum      */ \
@@ -1480,7 +1480,7 @@ float notif_global_error;
             /* COMMON ======================== */ \
             default,            /* var_default */ \
             ACVNN(name),        /* var_cvar    */ \
-            MSG_MULTI,          /* typeid      */ \
+            MSG_MULTI,          /* typeId      */ \
             name,               /* nameid      */ \
             strtoupper(#name),  /* namestring  */ \
             NO_MSG,             /* strnum      */ \
@@ -1525,7 +1525,7 @@ float notif_global_error;
             /* COMMON ======================== */ \
             default,            /* var_default */ \
             ACVNN(name),        /* var_cvar    */ \
-            MSG_CHOICE,         /* typeid      */ \
+            MSG_CHOICE,         /* typeId      */ \
             name,               /* nameid      */ \
             strtoupper(#name),  /* namestring  */ \
             NO_MSG,             /* strnum      */ \
