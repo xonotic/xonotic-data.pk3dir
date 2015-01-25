@@ -132,6 +132,12 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 	return color;
 }
 
+float HUD_GetRowCount(float item_count, vector size, float item_aspect)
+{
+	float aspect = size_y/size_x;
+	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
+}
+
 float stringwidth_colors(string s, vector theSize)
 {
 	return stringwidth(s, TRUE, theSize);
@@ -521,10 +527,9 @@ void HUD_Weapons(void)
 
 		// NOTE: the goal is to use the all-weapons layout and remove unneeded cells
 		// this way weapon icons always have the same size regardless of owned weapon count
-		
+
 		// get the all-weapons layout
-		rows = old_panel_size_y/old_panel_size_x;
-		rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+		rows = HUD_GetRowCount(WEP_COUNT, old_panel_size, aspect);
 		columns = ceil(WEP_COUNT/rows);
 		weapon_size_x = old_panel_size_x / columns;
 		weapon_size_y = old_panel_size_y / rows;
@@ -655,8 +660,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		rows = panel_size_y/panel_size_x;
-		rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
+		rows = HUD_GetRowCount(weapon_count, panel_size, aspect);
 		columns = ceil(weapon_count/rows);
 		weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
 	}
@@ -999,14 +1003,9 @@ void HUD_Ammo(void)
 	else
 		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
 
-	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
-	//                               ^^^ ammo item aspect goes here
-
+	rows = HUD_GetRowCount(total_ammo_count, mySize, 3);
 	columns = ceil((total_ammo_count)/rows);
-
 	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	
 
 	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -2293,12 +2292,8 @@ void HUD_Score(void)
 		}
 		if(spectatee_status == -1)
 		{
-			rows = mySize_y/mySize_x;
-			rows = bound(1, floor((sqrt(4 * (3/1) * rows * team_count + rows * rows) + rows + 0.5) / 2), team_count);
-			//                               ^^^ ammo item aspect goes here
-
+			rows = HUD_GetRowCount(team_count, mySize, 3);
 			columns = ceil(team_count/rows);
-
 			score_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
 			float newSize;
@@ -2731,9 +2726,8 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	float rows, columns, aspect_ratio;
-	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 2 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 
 	int i;
@@ -3332,9 +3326,8 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 	float layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
-	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 
 	int i;
