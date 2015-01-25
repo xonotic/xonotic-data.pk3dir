@@ -3,7 +3,7 @@
 //  Last updated: December 28th, 2011
 // ==========================================================
 
-const float NUM_MARKUPS = 41;
-float markup_init;
+const int NUM_MARKUPS = 41;
+bool markup_init;
 string markup_from[NUM_MARKUPS];
 string markup_to[NUM_MARKUPS];

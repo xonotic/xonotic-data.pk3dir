@@ -5,11 +5,10 @@
 
 void GenericCommand_markup_init()
 {
-	float i;
 	if (markup_init)
 		return;
-	markup_init = 1;
-	i = 0;
+	markup_init = true;
+	int i = 0;
 	markup_from[i] = "&alien"; markup_to[i] = "\x12"; ++i;
 	markup_from[i] = "&:-)"; markup_to[i] = "\x13"; ++i;
 	markup_from[i] = "&:-("; markup_to[i] = "\x14"; ++i;
@@ -56,7 +55,7 @@ void GenericCommand_markup_init()
 
 string GenericCommand_markup(string s2)
 {
-	float red, ccase, i, j;
+	int red, ccase, i, j;
 	string s, s3;
 
 	GenericCommand_markup_init();

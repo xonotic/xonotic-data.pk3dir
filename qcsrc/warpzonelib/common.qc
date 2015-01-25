@@ -1,4 +1,4 @@
-float trace_dphitcontents;
+int trace_dphitcontents;
 .float dphitcontentsmask;
 
 void WarpZone_Accumulator_Clear(entity acc)
@@ -469,7 +469,7 @@ void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector e
 	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
 }
 
-void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, int boxflags)
 {
 	WarpZone_TrailParticles_trace_callback_own = own;
 	WarpZone_TrailParticles_trace_callback_eff = eff;

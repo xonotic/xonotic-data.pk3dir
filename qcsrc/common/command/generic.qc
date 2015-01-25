@@ -20,12 +20,9 @@ string GetProgramCommandPrefix(void)
 // used by curl command
 void Curl_URI_Get_Callback(float id, float status, string data)
 {
-	float i;
-	float do_exec;
-	string do_cvar;
-	i = id - URI_GET_CURL;
-	do_exec = curl_uri_get_exec[i];
-	do_cvar = curl_uri_get_cvar[i];
+	int i = id - URI_GET_CURL;
+	float do_exec = curl_uri_get_exec[i];
+	string do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
 		dprintf("error: status is %d\n", status);
@@ -56,8 +53,6 @@ void GenericCommand_addtolist(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i;
-
 			if(argc >= 2)
 			{
 				string original_cvar = argv(1);
@@ -70,7 +65,7 @@ void GenericCommand_addtolist(float request, float argc)
 				else // add it to the end of the list if the list doesn't already have it
 				{
 					argc = tokenizebyseparator(cvar_string(original_cvar), " ");
-
+					int i;
 					for(i = 0; i < argc; ++i)
 						if(argv(i) == tmp_string)
 							return; // already in list
@@ -99,18 +94,10 @@ void GenericCommand_qc_curl(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float do_exec;
-			string do_cvar;
-			float key;
-			float i, j;
-			string url;
-			float buf;
-			float r;
-
-			do_exec = FALSE;
-			do_cvar = string_null;
-			key = -1;
-
+			bool do_exec = FALSE;
+			string do_cvar = string_null;
+			float key = -1;
+			int i;
 			for(i = 1; i+1 < argc; ++i)
 			{
 				if(argv(i) == "--cvar" && i+2 < argc)
@@ -135,15 +122,16 @@ void GenericCommand_qc_curl(float request, float argc)
 
 			// now, argv(i) is the URL
 			// following args may be POST parameters
-			url = argv(i);
+			string url = argv(i);
 			++i;
-			buf = buf_create();
-			j = 0;
-			for(; i+1 < argc; i += 2)
+			float buf = buf_create();
+			int j;
+			for(j = 0; i+1 < argc; i += 2)
 				bufstr_set(buf, ++j, sprintf("%s=%s", uri_escape(argv(i)), uri_escape(argv(i+1))));
 			if(i < argc)
 				bufstr_set(buf, ++j, sprintf("submit=%s", uri_escape(argv(i))));
 
+			float r;
 			if(j == 0) // no args: GET
 				r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, string_null, string_null, -1, key);
 			else // with args: POST

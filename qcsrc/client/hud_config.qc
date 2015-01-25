@@ -217,11 +217,9 @@ void HUD_Configure_Exit_Force()
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 {
-	float i;
 	float myCenter_x, myCenter_y, targCenter_x, targCenter_y;
-	vector myTarget;
-	myTarget = myPos;
-
+	vector myTarget = myPos;
+	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
 		if(panel == highlightedPanel) continue;
@@ -625,11 +623,11 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-const float S_MOUSE1 = 1;
-const float S_MOUSE2 = 2;
-const float S_MOUSE3 = 4;
-float mouseClicked;
-float prevMouseClicked; // previous state
+const int S_MOUSE1 = 1;
+const int S_MOUSE2 = 2;
+const int S_MOUSE3 = 4;
+int mouseClicked;
+int prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
 vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
@@ -964,8 +962,8 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 // move a panel to the beginning of the panel order array (which means it gets drawn last, on top of everything else)
 void HUD_Panel_FirstInDrawQ(float id)
 {
-	float i;
-	var float place = -1;
+	int i;
+	int place = -1;
 	// find out where in the array our current id is, save into place
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{

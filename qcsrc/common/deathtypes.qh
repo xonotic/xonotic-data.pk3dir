@@ -67,15 +67,15 @@
 
 #define DT_FIRST 10000
 #define DT_MAX 128 // limit of recursive functions with ACCUMULATE_FUNCTION
-float DT_COUNT;
+int DT_COUNT;
 
 entity deathtypes[DT_MAX];
 .entity death_msgself;
 .entity death_msgmurder;
 
 #define DEATHTYPE(name,msg_death,msg_death_by,position) \
-	float name; \
-	float position; \
+	int name; \
+	int position; \
 	void RegisterDeathtype_##name() \
 	{ \
 		SET_FIRST_OR_LAST(position, DT_FIRST, DT_COUNT) \
@@ -116,10 +116,10 @@ string Deathtype_Name(float deathtype)
 	else { return ftos(deathtype); }
 }
 
-const float DEATH_WEAPONMASK = 0xFF;
-const float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
-const float HITTYPE_SECONDARY = 0x100;
-const float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
-const float HITTYPE_BOUNCE = 0x400;
-const float HITTYPE_RESERVED2 = 0x800;
-const float HITTYPE_RESERVED = 0x1000; // unused yet
+const int DEATH_WEAPONMASK = 0xFF;
+const int DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
+const int HITTYPE_SECONDARY = 0x100;
+const int HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
+const int HITTYPE_BOUNCE = 0x400;
+const int HITTYPE_RESERVED2 = 0x800;
+const int HITTYPE_RESERVED = 0x1000; // unused yet
