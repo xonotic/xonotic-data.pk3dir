@@ -2376,7 +2376,7 @@ float isPushable(entity e)
 
 float LoadConfig(string FileName, int AsTemp)
 {
-		string s;
+		string s, c_var, c_val;
 		float fh = fopen(FileName, FILE_READ);
 		if(fh >= 0)
 		{
@@ -2384,10 +2384,23 @@ float LoadConfig(string FileName, int AsTemp)
 			{
 				tokenize_console(s);
 				if not(argv(0) == "" || argv(1) == "//" || argv(1) == "")
-					if(AsTemp)
-                        cvar_settemp(argv(0), argv(1));
+				{
+                    if(argv(0) == "set" || argv(0) == "seta")
+                    {
+                        c_var = argv(1);
+                        c_val = argv(2);
+                    }
                     else
-                        cvar_set(argv(0), argv(1));
+                    {
+                        c_var = argv(0);
+                        c_val = argv(1);
+                    }
+
+					if(AsTemp)
+                        cvar_settemp(c_var, c_val);
+                    else
+                        cvar_set(c_var, c_val);
+                }
 			}
 			fclose(fh);
             return 0;
