@@ -531,13 +531,8 @@ void HUD_Weapons(void)
 
 		// reduce rows and columns as needed
 		float columns_save = columns;
-		if(weapon_count <= rows)
-		{
-			rows = weapon_count;
-			columns = 1;
-		}
-		else
-			columns = ceil(weapon_count / rows);
+		columns = ceil(weapon_count / rows);
+		rows = ceil(weapon_count / columns);
 
 		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
 		if(columns < columns_save)
