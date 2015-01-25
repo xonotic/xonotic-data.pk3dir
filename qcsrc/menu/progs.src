@@ -12,7 +12,7 @@ config.qh
 ../common/util.qh
 ../common/test.qh
 
-oo/base.h
+oo/base.qh
 
 ../common/playerstats.qh
 ../common/teams.qh
@@ -34,10 +34,10 @@ draw.qh
 skin.qh
 xonotic/util.qh
 
-oo/interface.h
-	classes.c
-oo/implementation.h
-	classes.c
+oo/interface.qh
+	classes.qc
+oo/implementation.qh
+	classes.qc
 
 ../common/util.qc
 ../common/test.qc
