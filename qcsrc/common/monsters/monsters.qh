@@ -23,7 +23,7 @@ const int MON_FLAG_MELEE = 1024;
 .float(float) monster_func; // m_...
 .string mdl; // currently a copy of the model
 .string model; // full name of model
-.float spawnflags;
+.int spawnflags;
 .vector mins, maxs; // monster hitbox size
 
 // other useful macros

@@ -2040,35 +2040,35 @@ float trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not content
 float trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
 string trace_dphittexturename; // texture name of impacted surface
 //constants:
-float DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
-float DPCONTENTS_WATER = 2;
-float DPCONTENTS_SLIME = 4;
-float DPCONTENTS_LAVA = 8;
-float DPCONTENTS_SKY = 16;
-float DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
-float DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
-float DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
-float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
-float DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
-float DPCONTENTS_DONOTENTER = 1024; // AI hint brush
-float DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
-float DPCONTENTS_BOTCLIP = 2048; // AI hint brush
-float DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
-float Q3SURFACEFLAG_NODAMAGE = 1;
-float Q3SURFACEFLAG_SLICK = 2; // low friction surface
-float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
-float Q3SURFACEFLAG_LADDER = 8; // climbable surface
-float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
-float Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
-float Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
-float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
+const int DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
+const int DPCONTENTS_WATER = 2;
+const int DPCONTENTS_SLIME = 4;
+const int DPCONTENTS_LAVA = 8;
+const int DPCONTENTS_SKY = 16;
+const int DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
+const int DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
+const int DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
+const int DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
+const int DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
+const int DPCONTENTS_DONOTENTER = 1024; // AI hint brush
+const int DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
+const int DPCONTENTS_BOTCLIP = 2048; // AI hint brush
+const int DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
+const int Q3SURFACEFLAG_NODAMAGE = 1;
+const int Q3SURFACEFLAG_SLICK = 2; // low friction surface
+const int Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
+const int Q3SURFACEFLAG_LADDER = 8; // climbable surface
+const int Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
+const int Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
+const int Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
+const int Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_HINT = 256; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_SKIP = 512; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NOLIGHTMAP = 1024; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_POINTLIGHT = 2048; // compiler hint (not important to qc)
-float Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
-float Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
-float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
+const int Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
+const int Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
+const int Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_LIGHTFILTER = 32768; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
 //float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
@@ -2459,7 +2459,7 @@ float(string s1, string s2, float len) strncasecmp = #230; // same as strcasecmp
 //idea: ??
 //darkplaces implementation: LordHavoc
 //functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
-float() buf_create = #460;
+int() buf_create = #460;
 void(float bufhandle) buf_del = #461;
 float(float bufhandle) buf_getsize = #462;
 void(float bufhandle_from, float bufhandle_to) buf_copy = #463;

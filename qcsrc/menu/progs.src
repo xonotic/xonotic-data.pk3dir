@@ -1,12 +1,12 @@
 ../../menu.dat
 
+../common/util-pre.qh
 sys-pre.qh
 ../dpdefs/menudefs.qc
 ../dpdefs/keycodes.qc
 sys-post.qh
 
 config.qh
-../common/util-pre.qh
 
 ../warpzonelib/mathlib.qh
 ../common/util.qh

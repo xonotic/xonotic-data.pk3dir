@@ -574,7 +574,7 @@ vector(entity ent, float tagindex) gettaginfo = #452;
 void(vector org, vector vel, float howmany) te_flamejet = #457;
 
 entity(float num) entitybyindex = #459;
-float() buf_create = #460;
+int() buf_create = #460;
 void(float bufhandle) buf_del = #461;
 float(float bufhandle) buf_getsize = #462;
 void(float bufhandle_from, float bufhandle_to) buf_copy = #463;

@@ -1,45 +1,44 @@
 // constants
-#define WANT_CONST /* we WANT these to be constant, but it conflicts with the declaration in dpdefs/progsdefs.qc */
-const      int IT_UNLIMITED_WEAPON_AMMO       	=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const      int IT_UNLIMITED_SUPERWEAPONS      	=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-const      int IT_CTF_SHIELDED                	=       4; // set for the flag shield
-const      int IT_USING_JETPACK               	=       8; // confirmation that button is pressed
-const      int IT_JETPACK                     	=      16; // actual item
-const      int IT_FUEL_REGEN                  	=      32; // fuel regeneration trigger
+const int IT_UNLIMITED_WEAPON_AMMO 		=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_SUPERWEAPONS		=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const int IT_CTF_SHIELDED          		=       4; // set for the flag shield
+const int IT_USING_JETPACK         		=       8; // confirmation that button is pressed
+const int IT_JETPACK               		=      16; // actual item
+const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
 // where is 64... ?
-const      int IT_FUEL                      	=     128;
-WANT_CONST int IT_SHELLS                    	=     256;
-WANT_CONST int IT_NAILS                     	=     512;
-WANT_CONST int IT_ROCKETS                   	=    1024;
-WANT_CONST int IT_CELLS                     	=    2048;
-const      int IT_SUPERWEAPON               	=    4096;
-const      int IT_STRENGTH                  	=    8192;
-const      int IT_INVINCIBLE                	=   16384;
-const      int IT_HEALTH                    	=   32768;
-const      int IT_PLASMA                    	=   65536;
+const int IT_FUEL       				=     128;
+const int IT_SHELLS     				=     256;
+const int IT_NAILS      				=     512;
+const int IT_ROCKETS    				=    1024;
+const int IT_CELLS      				=    2048;
+const int IT_SUPERWEAPON				=    4096;
+const int IT_STRENGTH   				=    8192;
+const int IT_INVINCIBLE 				=   16384;
+const int IT_HEALTH     				=   32768;
+const int IT_PLASMA     				=   65536;
 
 // shared value space (union):
 	// for items:
-	WANT_CONST int IT_KEY1                  	=  131072;
-	WANT_CONST int IT_KEY2                  	=  262144;
+	const int IT_KEY1					=  131072;
+	const int IT_KEY2					=  262144;
 	// for players:
-	const      int IT_RED_FLAG_TAKEN        	=   32768;
-	const      int IT_RED_FLAG_LOST         	=   65536;
-	const      int IT_RED_FLAG_CARRYING     	=   98304;
-	const      int IT_BLUE_FLAG_TAKEN       	=  131072;
-	const      int IT_BLUE_FLAG_LOST        	=  262144;
-	const      int IT_BLUE_FLAG_CARRYING    	=  393216;
+	const int IT_RED_FLAG_TAKEN    		=   32768;
+	const int IT_RED_FLAG_LOST     		=   65536;
+	const int IT_RED_FLAG_CARRYING 		=   98304;
+	const int IT_BLUE_FLAG_TAKEN   		=  131072;
+	const int IT_BLUE_FLAG_LOST    		=  262144;
+	const int IT_BLUE_FLAG_CARRYING		=  393216;
 // end
 
-const      int IT_5HP                       	=  524288;
-const      int IT_25HP                      	= 1048576;
-const      int IT_ARMOR_SHARD               	= 2097152;
-const      int IT_ARMOR                     	= 4194304;
+const int IT_5HP                       	=  524288;
+const int IT_25HP                      	= 1048576;
+const int IT_ARMOR_SHARD               	= 2097152;
+const int IT_ARMOR                     	= 4194304;
 
 // item masks
-const      int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
-const      int IT_PICKUPMASK                	=      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-const      int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+const int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
+const int IT_PICKUPMASK                	=      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 

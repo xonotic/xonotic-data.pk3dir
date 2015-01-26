@@ -4,7 +4,7 @@
 entity monster_info[MON_MAXCOUNT];
 entity dummy_monster_info;
 
-void register_monster(int id, float(float) func, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
+void register_monster(int id, float(float) func, int monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
 {
 	entity e;
 	monster_info[id - 1] = e = spawn();

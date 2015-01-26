@@ -423,7 +423,7 @@ float CVAR_TYPEFLAG_READONLY = 32;
 //idea: ??
 //darkplaces implementation: LordHavoc
 //functions to manage string buffer objects - that is, arbitrary length string arrays that are handled by the engine
-float() buf_create = #440;
+int() buf_create = #440;
 void(float bufhandle) buf_del = #441;
 float(float bufhandle) buf_getsize = #442;
 void(float bufhandle_from, float bufhandle_to) buf_copy = #443;

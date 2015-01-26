@@ -276,7 +276,7 @@ void db_save(float db, string pFilename)
 	fclose(fh);
 }
 
-float db_create()
+int db_create()
 {
 	return buf_create();
 }

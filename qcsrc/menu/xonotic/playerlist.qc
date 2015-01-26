@@ -36,7 +36,7 @@ entity makeXonoticPlayerList()
 
 void XonoticPlayerList_setPlayerList(entity me, string plist)
 {
-	float buf,i,n;
+	int buf,i,n;
 	string s;
 
 	buf = buf_create();

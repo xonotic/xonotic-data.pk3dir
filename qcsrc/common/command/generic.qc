@@ -18,7 +18,7 @@ string GetProgramCommandPrefix(void)
 }
 
 // used by curl command
-void Curl_URI_Get_Callback(float id, float status, string data)
+void Curl_URI_Get_Callback(int id, float status, string data)
 {
 	int i = id - URI_GET_CURL;
 	float do_exec = curl_uri_get_exec[i];
