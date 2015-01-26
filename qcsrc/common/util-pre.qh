@@ -1,18 +1,30 @@
 #ifndef NOCOMPAT
-# define COMPAT_NO_MOD_IS_XONOTIC
+    #define COMPAT_NO_MOD_IS_XONOTIC
+#endif
+
+#ifndef QCC_SUPPORT_ACCUMULATE
+    #ifdef GMQCC
+        #define QCC_SUPPORT_ACCUMULATE
+    #endif
+#endif
+
+#ifndef QCC_SUPPORT_NIL
+    #ifdef GMQCC
+        #define QCC_SUPPORT_NIL
+    #endif
 #endif
 
 #ifndef QCC_SUPPORT_INT
-#define int float
+    #define int float
 
-#define stoi(s) stof(s)
-#define itos(s) ftos(s)
+    #define stoi(s) stof(s)
+    #define itos(s) ftos(s)
 #endif
 
 #ifndef QCC_SUPPORT_BOOL
-#define bool float
+    #define bool float
 
-// Boolean Constants
-const bool true 	= 1;
-const bool false 	= 0;
+    // Boolean Constants
+    const bool true 	= 1;
+    const bool false 	= 0;
 #endif

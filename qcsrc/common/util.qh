@@ -1,4 +1,4 @@
-#ifdef GMQCC
+#ifdef QCC_SUPPORT_ACCUMULATE
 # define ACCUMULATE_FUNCTION(func,otherfunc) \
 	[[accumulate]] void func() { otherfunc(); }
 # define CALL_ACCUMULATED_FUNCTION(func) \
@@ -233,7 +233,7 @@ void WriteInt72_t(float dest, vector val);
 #endif
 
 // the NULL function
-#ifdef GMQCC
+#ifdef QCC_SUPPORT_NIL
 #define func_null nil
 #define string_null nil
 #else

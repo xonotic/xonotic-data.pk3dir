@@ -216,9 +216,7 @@ vector animdecide_getloweranim(entity e)
 		}
 	}
 	// can't get here
-#ifdef GMQCC
 	return vec3(e.anim_idle.x, t, ANIMPRIO_IDLE);
-#endif
 }
 
 void animdecide_setimplicitstate(entity e, float onground)
