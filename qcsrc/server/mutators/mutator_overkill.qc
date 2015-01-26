@@ -97,14 +97,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
 		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
-
-		float minf, maxf, limitf;
-
-		maxf = autocvar_g_balance_fuel_rotstable;
-		minf = autocvar_g_balance_fuel_regenstable;
-		limitf = autocvar_g_balance_fuel_limit;
-
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
 	return TRUE; // return TRUE anyway, as frozen uses no regen
 }
@@ -195,6 +187,38 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	return FALSE;
 }
 
+.float jump_btn_time;
+.float jump_btn_was_down;
+MUTATOR_HOOKFUNCTION(ok_PlayerPhysics)
+{
+    if(!self.BUTTON_JUMP)
+    {
+		float maxf = autocvar_g_balance_fuel_rotstable;
+		float minf = autocvar_g_balance_fuel_regenstable;
+		float limitf = autocvar_g_balance_fuel_limit;
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+
+        self.jump_btn_was_down = FALSE;
+        self.jump_btn_time = 0;
+
+        return FALSE;
+    }
+
+    if(!self.jump_btn_was_down && self.BUTTON_JUMP)
+    {
+        self.jump_btn_was_down = TRUE;
+        self.jump_btn_time = time + 0.2;
+    }
+
+    if(time > self.jump_btn_time && self.ammo_fuel > 0)
+    {
+        self.BUTTON_JETPACK = TRUE;
+        self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime;
+    }
+
+    return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
 	if(autocvar_g_powerups)
@@ -268,6 +292,7 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	if((get_weaponinfo(WEP_HMG)).weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
+	start_items |= IT_JETPACK;
 	start_weapons = warmup_start_weapons = ok_start_items;
 
 	return FALSE;
@@ -348,6 +373,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(BuildMutatorsString, ok_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ok_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, ok_PlayerPhysics, CBC_ORDER_FIRST);
 
 	MUTATOR_ONADD
 	{
