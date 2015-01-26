@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-var float autocvar_cl_movement_errorcompensation = 0;
+float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
 const int REFDEFFLAG_TELEPORTED = 1;

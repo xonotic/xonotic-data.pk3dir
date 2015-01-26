@@ -1,8 +1,8 @@
 #define SKINBEGIN
-#define SKINVECTOR(name,def) var vector SKIN##name = def
-#define SKINFLOAT(name,def) var float SKIN##name = def
+#define SKINVECTOR(name,def) vector SKIN##name = def
+#define SKINFLOAT(name,def) float SKIN##name = def
 //#define SKINSTRING(name,def) const string SKIN##name = def
-#define SKINSTRING(name,def) var string SKIN##name = def
+#define SKINSTRING(name,def) string SKIN##name = def
 #define SKINEND
 #include "skin-customizables.inc"
 #undef SKINEND

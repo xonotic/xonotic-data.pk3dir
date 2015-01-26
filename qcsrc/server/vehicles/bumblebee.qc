@@ -37,7 +37,7 @@ float autocvar_g_vehicle_bumblebee_cannon_ammo;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause;
 
-var float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
+float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
 
 float autocvar_g_vehicle_bumblebee_cannon_turnspeed;
 float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down;
@@ -70,9 +70,9 @@ float autocvar_g_vehicle_bumblebee_blowup_radius;
 float autocvar_g_vehicle_bumblebee_blowup_coredamage;
 float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
 float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
-var vector autocvar_g_vehicle_bumblebee_bouncepain;
+vector autocvar_g_vehicle_bumblebee_bouncepain;
 
-var float autocvar_g_vehicle_bumblebee = 0;
+float autocvar_g_vehicle_bumblebee = 0;
 
 
 float bumble_raygun_send(entity to, float sf);

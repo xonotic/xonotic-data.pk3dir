@@ -1,6 +1,6 @@
 entity players;
 entity teams;
-var float team_count; // real teams
+float team_count; // real teams
 
 void AuditLists()
 {
@@ -260,11 +260,11 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 }
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-var float _drawpic_imgaspect;
-var vector _drawpic_imgsize;
-var vector _drawpic_sz;
-var float _drawpic_oldsz;
-var string _drawpic_picpath;
+float _drawpic_imgaspect;
+vector _drawpic_imgsize;
+vector _drawpic_sz;
+float _drawpic_oldsz;
+string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
 	do {\
 		_drawpic_imgsize = draw_getimagesize(pic);\

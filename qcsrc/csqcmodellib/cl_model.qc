@@ -20,8 +20,8 @@
  * IN THE SOFTWARE.
  */
 
-var float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
-var float autocvar_cl_nolerp = 0;
+float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
+float autocvar_cl_nolerp = 0;
 
 .float csqcmodel_lerpfrac;
 .float csqcmodel_lerpfrac2;

@@ -156,7 +156,7 @@ float category_draw_count;
 #define SLIST_CATEGORY_AUTOCVAR(name) autocvar_menu_slist_categories_##name##_override
 #define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 	float name; \
-	var string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
+	string SLIST_CATEGORY_AUTOCVAR(name) = enoverride;
 SLIST_CATEGORIES
 #undef SLIST_CATEGORY
 

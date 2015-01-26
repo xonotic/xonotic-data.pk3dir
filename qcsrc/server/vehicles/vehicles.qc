@@ -3,11 +3,11 @@ float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 
-var float autocvar_g_vehicles_vortex_damagerate = 0.5;
-var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
-var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
-var float autocvar_g_vehicles_tag_damagerate = 5;
+float autocvar_g_vehicles_vortex_damagerate = 0.5;
+float autocvar_g_vehicles_machinegun_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
+float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
 
@@ -595,7 +595,7 @@ void vehicles_touch()
 
     vehicles_enter();
 }
-var float autocvar_g_vehicles_allow_bots = 0;
+float autocvar_g_vehicles_allow_bots = 0;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles

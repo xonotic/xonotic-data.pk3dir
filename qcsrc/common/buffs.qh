@@ -12,8 +12,8 @@ float BUFF_LAST = 1;
 .float skin; // buff skin
 
 #define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
-	var float BUFF_##NAME; \
-	var entity Buff_Type##sname; \
+	float BUFF_##NAME; \
+	entity Buff_Type##sname; \
 	void RegisterBuffs_##sname() \
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \

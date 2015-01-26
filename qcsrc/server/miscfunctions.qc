@@ -634,8 +634,8 @@ float g_weapon_stay;
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
 {
-	var float i = weaponinfo.weapon;
-	var float d = 0;
+	float i = weaponinfo.weapon;
+	float d = 0;
 
 	if (!i)
 		return 0;
@@ -659,7 +659,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
-	var float t = weaponinfo.weaponstartoverride;
+	float t = weaponinfo.weaponstartoverride;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 

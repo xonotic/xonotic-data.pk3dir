@@ -38,7 +38,7 @@ const float MAX_KEYS_PER_FUNCTION = 2;
 const float MAX_KEYBINDS = 256;
 string Xonotic_KeyBinds_Functions[MAX_KEYBINDS];
 string Xonotic_KeyBinds_Descriptions[MAX_KEYBINDS];
-var float Xonotic_KeyBinds_Count = -1;
+float Xonotic_KeyBinds_Count = -1;
 
 void Xonotic_KeyBinds_Read()
 {

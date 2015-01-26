@@ -56,8 +56,8 @@ void XonoticTextSlider_loadCvars(entity me)
 	if (!me.cvarName)
 		return;
 
-	var float n = tokenize_console(me.cvarName);
-	var string s = cvar_string(argv(0));
+	float n = tokenize_console(me.cvarName);
+	string s = cvar_string(argv(0));
 	float i;
 	for(i = 1; i < n; ++i)
 		s = strcat(s, " ", cvar_string(argv(i)));
@@ -80,7 +80,7 @@ void XonoticTextSlider_saveCvars(entity me)
 
 	if(me.value >= 0 && me.value < me.nValues)
 	{
-		var float n = tokenize_console(me.cvarName);
+		float n = tokenize_console(me.cvarName);
 		if(n == 1)
 		{
 			// this is a special case to allow spaces in the identifiers
@@ -90,7 +90,7 @@ void XonoticTextSlider_saveCvars(entity me)
 		else
 		{
 			float i;
-			var float m = tokenize_console(strcat(me.cvarName, " ", me.getIdentifier(me)));
+			float m = tokenize_console(strcat(me.cvarName, " ", me.getIdentifier(me)));
 			if(m == n + 1)
 			{
 				for(i = 0; i < n; ++i)

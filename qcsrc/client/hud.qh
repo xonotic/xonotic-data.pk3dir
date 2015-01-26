@@ -58,10 +58,10 @@ string hud_skin_prev;
 vector myteamcolors;
 
 entity highlightedPanel_backup;
-var vector panel_pos_backup;
-var vector panel_size_backup;
+vector panel_pos_backup;
+vector panel_size_backup;
 
-var vector panel_size_copied;
+vector panel_size_copied;
 
 entity panel;
 .string panel_name;
@@ -76,21 +76,21 @@ entity panel;
 .float current_panel_bg_padding;
 .float current_panel_fg_alpha;
 .float update_time;
-var float panel_enabled;
-var vector panel_pos;
-var vector panel_size;
-var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
-var vector panel_bg_color;
-var string panel_bg_color_str;
-var float panel_bg_color_team;
-var string panel_bg_color_team_str;
-var float panel_fg_alpha;
-var float panel_bg_alpha;
-var string panel_bg_alpha_str;
-var float panel_bg_border;
-var string panel_bg_border_str;
-var float panel_bg_padding;
-var string panel_bg_padding_str;
+float panel_enabled;
+vector panel_pos;
+vector panel_size;
+string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
+vector panel_bg_color;
+string panel_bg_color_str;
+float panel_bg_color_team;
+string panel_bg_color_team_str;
+float panel_fg_alpha;
+float panel_bg_alpha;
+string panel_bg_alpha_str;
+float panel_bg_border;
+string panel_bg_border_str;
+float panel_bg_padding;
+string panel_bg_padding_str;
 
 .void() panel_draw;
 

@@ -24,7 +24,7 @@ float tet_vs_current_timeout;
 //   2 = game over
 //   3 = waiting for VS players
 
-var float tet_high_score = 0;
+float tet_high_score = 0;
 
 const vector TET_START_PIECE_POS = '5 1 0';
 const float TET_LINES = 22;
@@ -688,7 +688,7 @@ float BastetPiece()
 
 	bastet_profile_evaluate_time = 0;
 	bastet_profile_checkmetrics_time = 0;
-	var float t1 = gettime(GETTIME_HIRES);
+	float t1 = gettime(GETTIME_HIRES);
 
 	b = buf_create(); bastet_piece[0] = 1; bastet_score[0] = BastetSearch(b, 1, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[0]; buf_del(b);
 	b = buf_create(); bastet_piece[1] = 2; bastet_score[1] = BastetSearch(b, 2, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[1]; buf_del(b);
@@ -698,7 +698,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[5] = 6; bastet_score[5] = BastetSearch(b, 6, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[5]; buf_del(b);
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
-	var float t2 = gettime(GETTIME_HIRES);
+	float t2 = gettime(GETTIME_HIRES);
 	dprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1));
 
 	// sort

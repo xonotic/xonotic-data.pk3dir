@@ -223,7 +223,7 @@ void WarpZone_FixPMove()
 }
 
 #ifndef KEEP_ROLL
-var float autocvar_cl_rollkillspeed = 10;
+float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {

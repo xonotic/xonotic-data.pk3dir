@@ -297,7 +297,7 @@ float W_Vortex(float req)
 }
 #endif
 #ifdef CSQC
-var float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
+float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 float W_Vortex(float req)
 {
 	switch(req)

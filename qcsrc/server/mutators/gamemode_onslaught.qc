@@ -1,8 +1,8 @@
 float autocvar_g_onslaught_spawn_at_controlpoints;
 float autocvar_g_onslaught_spawn_at_generator;
 float autocvar_g_onslaught_cp_proxydecap;
-var float autocvar_g_onslaught_cp_proxydecap_distance = 512;
-var float autocvar_g_onslaught_cp_proxydecap_dps = 100;
+float autocvar_g_onslaught_cp_proxydecap_distance = 512;
+float autocvar_g_onslaught_cp_proxydecap_dps = 100;
 
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);

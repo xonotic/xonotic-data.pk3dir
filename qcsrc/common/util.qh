@@ -238,7 +238,7 @@ void WriteInt72_t(float dest, vector val);
 #define string_null nil
 #else
 var void func_null(void);
-var string string_null;
+string string_null;
 #endif
 float float2range11(float f);
 float float2range01(float f);
@@ -371,16 +371,16 @@ void backtrace(string msg);
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
-var string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-var string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-var string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-var string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
+string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
+string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
 // "kill" colors
-var string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-var string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-var string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
 // background color
-var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
 
 string CCR(string input);
 

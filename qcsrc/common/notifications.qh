@@ -934,32 +934,32 @@ void Send_Notification_WOCOVA(
 // MAKE SURE THIS IS ALWAYS SYNCHRONIZED WITH THE DUMP
 // NOTIFICATIONS FUNCTION IN THE .QC FILE!
 
-#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
+#define NOTIF_ADD_AUTOCVAR(name,default) float autocvar_notification_##name = default;
 
-var float autocvar_notification_show_location = false;
-var string autocvar_notification_show_location_string = ""; //_(" at the %s");
-var float autocvar_notification_show_sprees = true;
-var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
-var float autocvar_notification_show_sprees_info_newline = true;
-var float autocvar_notification_show_sprees_info_specialonly = true;
-var float autocvar_notification_errors_are_fatal = true;
-var float autocvar_notification_lifetime_runtime = 0.5;
-var float autocvar_notification_lifetime_mapload = 10;
-var float autocvar_notification_debug = false;
+float autocvar_notification_show_location = false;
+string autocvar_notification_show_location_string = ""; //_(" at the %s");
+float autocvar_notification_show_sprees = true;
+float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
+float autocvar_notification_show_sprees_info_newline = true;
+float autocvar_notification_show_sprees_info_specialonly = true;
+float autocvar_notification_errors_are_fatal = true;
+float autocvar_notification_lifetime_runtime = 0.5;
+float autocvar_notification_lifetime_mapload = 10;
+float autocvar_notification_debug = false;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
-var float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
+float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
-var float autocvar_notification_item_centerprinttime = 1.5;
+float autocvar_notification_item_centerprinttime = 1.5;
 
 // 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
 // DISABLED IN CODE, BUT ENABLED IN CONFIG FOR COMPATIBILITY WITH OLD CLIENTS
-var float autocvar_notification_allow_chatboxprint = 0;
+float autocvar_notification_allow_chatboxprint = 0;
 
-var float autocvar_notification_show_sprees_center = true;
-var float autocvar_notification_show_sprees_center_specialonly = true;
+float autocvar_notification_show_sprees_center = true;
+float autocvar_notification_show_sprees_center_specialonly = true;
 #endif
 
 

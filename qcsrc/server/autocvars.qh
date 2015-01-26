@@ -400,7 +400,7 @@ float autocvar_g_instagib_invis_alpha;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
-var float autocvar_g_movement_highspeed = 1;
+float autocvar_g_movement_highspeed = 1;
 float autocvar_g_multijump;
 float autocvar_g_multijump_add;
 float autocvar_g_multijump_speed;
@@ -583,7 +583,7 @@ float autocvar_snd_soundradius;
 float autocvar_spawn_debug;
 float autocvar_speedmeter;
 float autocvar_sv_accelerate;
-var float autocvar_sv_accuracy_data_share = 1;
+float autocvar_sv_accuracy_data_share = 1;
 string autocvar_sv_adminnick;
 float autocvar_sv_airaccel_qw;
 float autocvar_sv_airaccel_qw_stretchfactor;

@@ -32,7 +32,7 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 }
 
 .vector(vector, vector) camera_transform;
-var float autocvar_cl_warpzone_usetrace = 1;
+float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
 	vector vf, vr, vu;

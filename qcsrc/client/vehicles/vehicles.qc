@@ -24,8 +24,8 @@ const int RSM_FLARE = 2;
 const int RSM_LAST = 2;
 
 entity dropmark;
-var float autocvar_cl_vehicles_hudscale = 0.5;
-var float autocvar_cl_vehicles_hudalpha = 0.75;
+float autocvar_cl_vehicles_hudscale = 0.5;
+float autocvar_cl_vehicles_hudalpha = 0.75;
 
 const string raptor_ico =  "gfx/vehicles/raptor.tga";
 const string raptor_gun =  "gfx/vehicles/raptor_guns.tga";
