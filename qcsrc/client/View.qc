@@ -997,7 +997,14 @@ void CSQC_UpdateView(float w, float h)
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
 
-#define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
+#define CHECKFAIL_ASSERT(flag,func,parm,val) do {                                                                   \
+	float checkfailv = (func)(parm);                                                                                \
+	if (checkfailv != (val)) {                                                                                      \
+		if (!checkfail[(flag)])                                                                                     \
+		localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv));                           \
+		checkfail[(flag)] = 1;                                                                                      \
+	}                                                                                                               \
+} while(0)
 	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
 	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
 	CHECKFAIL_ASSERT(2, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{100}\{105}\{115}\{97}\{98}\{108}\{101}\{100}\{101}\{112}\{116}\{104}\{116}\{101}\{115}\{116}", 0);

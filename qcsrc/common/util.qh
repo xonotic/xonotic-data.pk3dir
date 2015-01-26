@@ -1,6 +1,3 @@
-// a dummy macro that prevents the "hanging ;" warning
-#define ENDS_WITH_CURLY_BRACE
-
 #ifdef GMQCC
 # define ACCUMULATE_FUNCTION(func,otherfunc) \
 	[[accumulate]] void func() { otherfunc(); }

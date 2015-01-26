@@ -223,7 +223,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
 		if(panel == highlightedPanel) continue;
-		HUD_Panel_UpdatePosSize()
+		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
 
 		panel_pos -= '1 1 0' * panel_bg_border;
@@ -285,7 +285,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 void HUD_Panel_SetPos(vector pos)
 {
 	panel = highlightedPanel;
-	HUD_Panel_UpdatePosSize()
+	HUD_Panel_UpdatePosSize();
 	vector mySize;
 	mySize = panel_size;
 
@@ -323,7 +323,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
 		if(panel == highlightedPanel) continue;
-		HUD_Panel_UpdatePosSize()
+		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
 
 		panel_pos -= '1 1 0' * panel_bg_border;
@@ -424,7 +424,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 void HUD_Panel_SetPosSize(vector mySize)
 {
 	panel = highlightedPanel;
-	HUD_Panel_UpdatePosSize()
+	HUD_Panel_UpdatePosSize();
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
 	vector myPos;
@@ -552,7 +552,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 
 	panel = highlightedPanel;
-	HUD_Panel_UpdatePosSize()
+	HUD_Panel_UpdatePosSize();
 
 	highlightedPanel_initial_pos = panel_pos;
 	highlightedPanel_initial_size = panel_size;
@@ -612,7 +612,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 
 	panel = highlightedPanel;
-	HUD_Panel_UpdatePosSize()
+	HUD_Panel_UpdatePosSize();
 
 	if (highlightedPanel_initial_pos != panel_pos || highlightedPanel_initial_size != panel_size)
 	{
@@ -754,7 +754,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if (highlightedPanel)
 			{
 				panel = highlightedPanel;
-				HUD_Panel_UpdatePosSize()
+				HUD_Panel_UpdatePosSize();
 			}
 			else
 				panel_pos = '0 0 0';
@@ -786,7 +786,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 				panel = hud_panel[i];
 				if (panel == tab_panels[i] || panel == starting_panel)
 					continue;
-				HUD_Panel_UpdatePosSize()
+				HUD_Panel_UpdatePosSize();
 				if (panel_pos.y >= level && (panel_pos.y - level) < level_height)
 				if (  ( !tab_backward && panel_pos.x >= start_posX && (panel_pos.x < candidate_pos.x || (panel_pos_x == candidate_pos.x && panel_pos.y <= candidate_pos.y)) )
 					|| ( tab_backward && panel_pos.x <= start_posX && (panel_pos.x > candidate_pos.x || (panel_pos_x == candidate_pos.x && panel_pos.y >= candidate_pos.y)) )  )
@@ -843,7 +843,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (highlightedPanel)
 		{
 			panel = highlightedPanel;
-			HUD_Panel_UpdatePosSize()
+			HUD_Panel_UpdatePosSize();
 			panel_size_copied = panel_size;
 		}
 	}
@@ -856,7 +856,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			return true;
 
 		panel = highlightedPanel;
-		HUD_Panel_UpdatePosSize()
+		HUD_Panel_UpdatePosSize();
 
 		// reduce size if it'd go beyond screen boundaries
 		vector tmp_size = panel_size_copied;
@@ -926,7 +926,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
-		HUD_Panel_UpdatePosSize()
+		HUD_Panel_UpdatePosSize();
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
@@ -1007,7 +1007,7 @@ void HUD_Panel_Highlight(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
-		HUD_Panel_UpdatePosSize()
+		HUD_Panel_UpdatePosSize();
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
@@ -1126,7 +1126,7 @@ void HUD_Panel_Mouse()
 		else
 		{
 			panel = highlightedPanel;
-			HUD_Panel_UpdatePosSize()
+			HUD_Panel_UpdatePosSize();
 		}
 
 		if (highlightedPanel)
@@ -1272,13 +1272,13 @@ void HUD_Configure_PostDraw()
 		if(tab_panel)
 		{
 			panel = tab_panel;
-			HUD_Panel_UpdatePosSize()
+			HUD_Panel_UpdatePosSize();
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
 		}
 		if(highlightedPanel)
 		{
 			panel = highlightedPanel;
-			HUD_Panel_UpdatePosSize()
+			HUD_Panel_UpdatePosSize();
 			HUD_Panel_HlBorder(panel_bg_border * hlBorderSize, '0 0.5 1', 0.4 * (1 - autocvar__menu_alpha));
 		}
 	}
