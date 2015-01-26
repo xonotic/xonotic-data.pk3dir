@@ -1,3 +1,6 @@
+// MenuQC redefines world, change define it here to be safe
+#define world world
+
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
 const int		MASK_ENGINE						= 1;
 const int		MASK_ENGINEVIEWMODELS			= 2;
