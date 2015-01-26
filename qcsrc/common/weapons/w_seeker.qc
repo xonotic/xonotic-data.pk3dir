@@ -668,7 +668,7 @@ float W_Seeker(float req)
 			precache_sound("weapons/tag_fire.wav");
 			precache_sound("weapons/flac_fire.wav");
 			precache_sound("weapons/seeker_fire.wav");
-			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -701,7 +701,7 @@ float W_Seeker(float req)
 		}
 		case WR_CONFIG:
 		{
-			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:

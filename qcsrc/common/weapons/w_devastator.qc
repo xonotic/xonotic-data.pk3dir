@@ -574,7 +574,7 @@ float W_Devastator(float req)
 				precache_sound("weapons/rocket_fire.wav");
 				precache_sound("weapons/rocket_mode.wav");
 			//}
-			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -624,7 +624,7 @@ float W_Devastator(float req)
 		}
 		case WR_CONFIG:
 		{
-			DEVASTATOR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			DEVASTATOR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RESETPLAYER:

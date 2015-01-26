@@ -716,7 +716,7 @@ float W_Shockwave(float req)
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/lasergun_fire.wav");
 			precache_sound("weapons/shotgun_melee.wav");
-			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -727,7 +727,7 @@ float W_Shockwave(float req)
 		}
 		case WR_CONFIG:
 		{
-			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:

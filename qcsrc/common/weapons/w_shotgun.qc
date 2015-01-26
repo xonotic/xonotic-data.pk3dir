@@ -292,7 +292,7 @@ float W_Shotgun(float req)
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/shotgun_fire.wav");
 			precache_sound("weapons/shotgun_melee.wav");
-			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -325,7 +325,7 @@ float W_Shotgun(float req)
 		}
 		case WR_CONFIG:
 		{
-			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:

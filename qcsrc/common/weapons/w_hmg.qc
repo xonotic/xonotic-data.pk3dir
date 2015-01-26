@@ -122,7 +122,7 @@ float W_HeavyMachineGun(float req)
 			precache_model ("models/weapons/v_ok_hmg.md3");
 			precache_model ("models/weapons/h_ok_hmg.iqm");
 			precache_sound ("weapons/uzi_fire.wav");
-			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -145,7 +145,7 @@ float W_HeavyMachineGun(float req)
 		}
 		case WR_CONFIG:
 		{
-			HMG_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			HMG_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:

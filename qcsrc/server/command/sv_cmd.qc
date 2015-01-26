@@ -1815,7 +1815,7 @@ void GameCommand_macro_help()
 	#define SERVER_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 
-	SERVER_COMMANDS(0, 0, "")
+	SERVER_COMMANDS(0, 0, "");
 	#undef SERVER_COMMAND
 
 	return;
@@ -1826,7 +1826,7 @@ float GameCommand_macro_command(float argc, string command)
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef SERVER_COMMAND
 
 	return false;
@@ -1837,7 +1837,7 @@ float GameCommand_macro_usage(float argc)
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef SERVER_COMMAND
 
 	return false;
@@ -1848,7 +1848,7 @@ void GameCommand_macro_write_aliases(float fh)
 	#define SERVER_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
 
-	SERVER_COMMANDS(0, 0, "")
+	SERVER_COMMANDS(0, 0, "");
 	#undef SERVER_COMMAND
 
 	return;

@@ -263,9 +263,10 @@ HUD panels
 */
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha)\
-if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
+#define HUD_Panel_DrawBg(theAlpha) do {																				\
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
+		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+} while(0)
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -3624,11 +3625,12 @@ void HUD_EngineInfo(void)
 
 // Info messages panel (#14)
 //
-#define drawInfoMessage(s)\
-	if(autocvar_hud_panel_infomessages_flip)\
-		o_x = pos.x + mySize.x - stringwidth(s, true, fontsize);\
-	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);\
-	o.y += fontsize.y;
+#define drawInfoMessage(s) do {																						\
+	if(autocvar_hud_panel_infomessages_flip)																		\
+		o_x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
+	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
+	o.y += fontsize.y;																								\
+} while(0)
 void HUD_InfoMessages(void)
 {
 	if(!autocvar__hud_configure)
@@ -3686,22 +3688,22 @@ void HUD_InfoMessages(void)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
@@ -3716,7 +3718,7 @@ void HUD_InfoMessages(void)
 			}
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			//show restart countdown:
 			if (time < getstatf(STAT_GAMESTARTTIME)) {
@@ -3731,7 +3733,7 @@ void HUD_InfoMessages(void)
 		if(warmup_stage && !intermission)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 
 		string blinkcolor;
@@ -3756,12 +3758,12 @@ void HUD_InfoMessages(void)
 				else
 					s = _("^2Waiting for others to ready up...");
 			}
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
 			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 
 		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
@@ -3787,7 +3789,7 @@ void HUD_InfoMessages(void)
 					if (tm.team != NUM_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
-					drawInfoMessage(s)
+					drawInfoMessage(s);
 				}
 			}
 		}
@@ -3795,13 +3797,13 @@ void HUD_InfoMessages(void)
 	else
 	{
 		s = _("^7Press ^3ESC ^7to show HUD options.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3Doubleclick ^7a panel for panel-specific options.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 	}
 }
 

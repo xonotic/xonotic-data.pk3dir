@@ -732,7 +732,7 @@ float W_Arc(float req)
 				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 3);
 				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 4);
 			}
-			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -746,7 +746,7 @@ float W_Arc(float req)
 		}
 		case WR_CONFIG:
 		{
-			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_KILLMESSAGE:

@@ -14,9 +14,10 @@ string wep_config_queue[MAX_WEP_CONFIG];
 	wep_config_queue[WEP_CONFIG_COUNT] = a; \
 	++WEP_CONFIG_COUNT; }
 
-#define WEP_CONFIG_WRITETOFILE(a) { \
+#define WEP_CONFIG_WRITETOFILE(a) do { \
 	fputs(wep_config_file, a); \
-	if(wep_config_alsoprint) { print(a); } }
+	if(wep_config_alsoprint) { print(a); } \
+} while(0)
 
 #define WEP_CONFIG_WRITE_CVARS_NONE(wepname,name) \
 	{ WEP_CONFIG_QUEUE( \

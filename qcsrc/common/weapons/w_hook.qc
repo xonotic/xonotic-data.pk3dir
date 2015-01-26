@@ -293,7 +293,7 @@ float W_Hook(float req)
 			precache_sound("weapons/hook_impact.wav"); // done by g_hook.qc
 			precache_sound("weapons/hook_fire.wav");
 			precache_sound("weapons/hookbomb_fire.wav");
-			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -315,7 +315,7 @@ float W_Hook(float req)
 		}
 		case WR_CONFIG:
 		{
-			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RESETPLAYER:

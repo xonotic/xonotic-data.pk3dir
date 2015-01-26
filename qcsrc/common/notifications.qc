@@ -226,13 +226,14 @@ void Destroy_All_Notifications(void)
 	entity notif;
 	int i;
 
-	#define DESTROY_LOOP(type,count) \
+	#define DESTROY_LOOP(type,count) do { \
 		for(i = 1; i <= count; ++i) \
 		{ \
 			notif = Get_Notif_Ent(type, i); \
 			if (!notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
 			Destroy_Notification_Entity(notif); \
-		}
+		} \
+	} while(0)
 
 	// kill all networked notifications and centerprints
 	#ifdef SVQC
@@ -242,11 +243,11 @@ void Destroy_All_Notifications(void)
 	#endif
 
 	// kill all real notification entities
-	DESTROY_LOOP(MSG_ANNCE, NOTIF_ANNCE_COUNT)
-	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT)
-	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
-	DESTROY_LOOP(MSG_MULTI, NOTIF_MULTI_COUNT)
-	DESTROY_LOOP(MSG_CHOICE, NOTIF_CHOICE_COUNT)
+	DESTROY_LOOP(MSG_ANNCE, NOTIF_ANNCE_COUNT);
+	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT);
+	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT);
+	DESTROY_LOOP(MSG_MULTI, NOTIF_MULTI_COUNT);
+	DESTROY_LOOP(MSG_CHOICE, NOTIF_CHOICE_COUNT);
 	#undef DESTROY_LOOP
 }
 
@@ -722,7 +723,7 @@ void Create_Notification_Entity(
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) \
+				#define SET_NOTIF_STRING(string,stringname) do { \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
 							typeId, \
@@ -732,15 +733,15 @@ void Create_Notification_Entity(
 							namestring, \
 							stringname \
 						)) \
-					);
+					); \
+				} while(0)
 
 				if(GENTLE)
 				{
-					if(gentle != "") { SET_NOTIF_STRING(gentle, "GENTLE") }
-					else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
+					if(gentle != "") { SET_NOTIF_STRING(gentle, "GENTLE"); }
+					else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL"); }
 				}
-				else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
-
+				else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL"); }
 				#undef SET_NOTIF_STRING
 
 				// Check to make sure a string was chosen
@@ -1209,7 +1210,7 @@ string Local_Notification_sprintf(
 	for(sel_num = 0;(args != "");)
 	{
 		selected = car(args); args = cdr(args);
-		NOTIF_HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
+		NOTIF_HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf");
 		switch(strtolower(selected))
 		{
 			#ifdef CSQC
@@ -1324,7 +1325,7 @@ void Local_Notification_HUD_Notify_Push(
 	for(sel_num = 0;(hudargs != "");)
 	{
 		selected = car(hudargs); hudargs = cdr(hudargs);
-		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
+		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push");
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
@@ -1369,7 +1370,7 @@ void Local_Notification_centerprint_generic(
 	for(sel_num = 0;(durcnt != "");)
 	{
 		selected = car(durcnt); durcnt = cdr(durcnt);
-		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic")
+		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic");
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE_ARG_CS_SV_HA(selected,result)

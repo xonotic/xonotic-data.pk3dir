@@ -750,7 +750,7 @@ void ClientCommand_macro_help()
 	#define CLIENT_COMMAND(name,function,description) \
 		{ sprint(self, "  ^2", name, "^7: ", description, "\n"); }
 
-	CLIENT_COMMANDS(0, 0, "")
+	CLIENT_COMMANDS(0, 0, "");
 	#undef CLIENT_COMMAND
 
 	return;
@@ -761,7 +761,7 @@ float ClientCommand_macro_command(float argc, string command)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef CLIENT_COMMAND
 
 	return false;
@@ -772,7 +772,7 @@ float ClientCommand_macro_usage(float argc)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef CLIENT_COMMAND
 
 	return false;
@@ -783,7 +783,7 @@ void ClientCommand_macro_write_aliases(float fh)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
 
-	CLIENT_COMMANDS(0, 0, "")
+	CLIENT_COMMANDS(0, 0, "");
 	#undef CLIENT_COMMAND
 
 	return;

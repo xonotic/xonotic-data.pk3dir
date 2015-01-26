@@ -273,7 +273,7 @@ void BanCommand_macro_help()
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
 
-	BAN_COMMANDS(0, 0, "")
+	BAN_COMMANDS(0, 0, "");
 	#undef BAN_COMMAND
 
 	return;
@@ -284,7 +284,7 @@ float BanCommand_macro_command(float argc, string command)
 	#define BAN_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef BAN_COMMAND
 
 	return false;
@@ -295,7 +295,7 @@ float BanCommand_macro_usage(float argc)
 	#define BAN_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef BAN_COMMAND
 
 	return false;
@@ -306,7 +306,7 @@ void BanCommand_macro_write_aliases(float fh)
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
 
-	BAN_COMMANDS(0, 0, "")
+	BAN_COMMANDS(0, 0, "");
 	#undef BAN_COMMAND
 
 	return;

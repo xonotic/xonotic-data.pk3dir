@@ -405,7 +405,7 @@ float W_Fireball(float req)
 			precache_sound("weapons/fireball_fire.wav");
 			precache_sound("weapons/fireball_fire2.wav");
 			precache_sound("weapons/fireball_prefire2.wav");
-			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -420,7 +420,7 @@ float W_Fireball(float req)
 		}
 		case WR_CONFIG:
 		{
-			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RESETPLAYER:

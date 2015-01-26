@@ -19,7 +19,7 @@ void Draw_Laser()
 	{
 		if(self.count & 0x10)
 		{
-			trace_endpos = self.velocity,
+			trace_endpos = self.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else

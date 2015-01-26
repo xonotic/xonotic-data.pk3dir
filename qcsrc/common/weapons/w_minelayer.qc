@@ -542,7 +542,7 @@ float W_MineLayer(float req)
 			precache_sound("weapons/mine_fire.wav");
 			precache_sound("weapons/mine_stick.wav");
 			precache_sound("weapons/mine_trigger.wav");
-			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -565,7 +565,7 @@ float W_MineLayer(float req)
 		}
 		case WR_CONFIG:
 		{
-			MINELAYER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			MINELAYER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RESETPLAYER:

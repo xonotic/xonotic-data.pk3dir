@@ -1334,10 +1334,11 @@ void CSQC_UpdateView(float w, float h)
 			camera_active = false;
 		}
 	}
+	else
 #ifdef CAMERATEST
-	else if(autocvar_camera_enable)
+	if(autocvar_camera_enable)
 #else
-	else if(autocvar_camera_enable && isdemo())
+	if(autocvar_camera_enable && isdemo())
 #endif
 	{
 		// Enable required Darkplaces cvars

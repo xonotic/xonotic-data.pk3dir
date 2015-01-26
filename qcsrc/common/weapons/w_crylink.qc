@@ -643,7 +643,7 @@ float W_Crylink(float req)
 			precache_sound("weapons/crylink_fire.wav");
 			precache_sound("weapons/crylink_fire2.wav");
 			precache_sound("weapons/crylink_linkjoin.wav");
-			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -668,7 +668,7 @@ float W_Crylink(float req)
 		}
 		case WR_CONFIG:
 		{
-			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:

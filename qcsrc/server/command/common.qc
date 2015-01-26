@@ -689,7 +689,7 @@ void CommonCommand_macro_help(entity caller)
 	#define COMMON_COMMAND(name,function,description) \
 		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
 
-	COMMON_COMMANDS(0, caller, 0, "")
+	COMMON_COMMANDS(0, caller, 0, "");
 	#undef COMMON_COMMAND
 
 	return;
@@ -700,7 +700,7 @@ float CommonCommand_macro_command(float argc, entity caller, string command)
 	#define COMMON_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command)
+	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command);
 	#undef COMMON_COMMAND
 
 	return false;
@@ -711,7 +711,7 @@ float CommonCommand_macro_usage(float argc, entity caller)
 	#define COMMON_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
+	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 	#undef COMMON_COMMAND
 
 	return false;
@@ -722,7 +722,7 @@ void CommonCommand_macro_write_aliases(float fh)
 	#define COMMON_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
 
-	COMMON_COMMANDS(0, world, 0, "")
+	COMMON_COMMANDS(0, world, 0, "");
 	#undef COMMON_COMMAND
 
 	return;

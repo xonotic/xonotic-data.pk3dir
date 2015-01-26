@@ -251,7 +251,7 @@ float W_Vortex(float req)
 			precache_sound("weapons/nexwhoosh1.wav");
 			precache_sound("weapons/nexwhoosh2.wav");
 			precache_sound("weapons/nexwhoosh3.wav");
-			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -276,7 +276,7 @@ float W_Vortex(float req)
 		}
 		case WR_CONFIG:
 		{
-			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:

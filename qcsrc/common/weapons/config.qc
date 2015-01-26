@@ -36,9 +36,9 @@ void Dump_Weapon_Settings(void)
 			i,
 			WEP_NAME(i),
 			(((get_weaponinfo(i)).spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
-		))
-		for(x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(wep_config_queue[x]) }
-		WEP_CONFIG_WRITETOFILE("// }}}\n")
+		));
+		for(x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(wep_config_queue[x]); }
+		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
 		print(sprintf("#%d: %s: %d settings...\n", i, WEP_NAME(i), WEP_CONFIG_COUNT));

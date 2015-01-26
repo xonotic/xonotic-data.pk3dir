@@ -305,7 +305,7 @@ float W_Porto(float req)
 		}
 		case WR_CONFIG:
 		{
-			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_THINK:
@@ -378,7 +378,7 @@ float W_Porto(float req)
 			precache_sound("porto/explode.wav");
 			precache_sound("porto/fire.wav");
 			precache_sound("porto/unsupported.wav");
-			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:

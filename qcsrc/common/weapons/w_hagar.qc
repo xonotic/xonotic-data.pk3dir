@@ -451,7 +451,7 @@ float W_Hagar(float req)
 			precache_sound("weapons/hagar_fire.wav");
 			precache_sound("weapons/hagar_load.wav");
 			precache_sound("weapons/hagar_beep.wav");
-			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -480,7 +480,7 @@ float W_Hagar(float req)
 		}
 		case WR_CONFIG:
 		{
-			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RESETPLAYER:

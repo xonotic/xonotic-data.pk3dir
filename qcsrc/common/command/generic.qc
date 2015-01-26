@@ -643,7 +643,7 @@ void GenericCommand_macro_help()
 	#define GENERIC_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 
-	GENERIC_COMMANDS(0, 0, "")
+	GENERIC_COMMANDS(0, 0, "");
 	#undef GENERIC_COMMAND
 
 	return;
@@ -654,7 +654,7 @@ float GenericCommand_macro_command(float argc, string command)
 	#define GENERIC_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef GENERIC_COMMAND
 
 	return false;
@@ -665,7 +665,7 @@ float GenericCommand_macro_usage(float argc)
 	#define GENERIC_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef GENERIC_COMMAND
 
 	return false;
@@ -676,7 +676,7 @@ void GenericCommand_macro_write_aliases(float fh)
 	#define GENERIC_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_svmenu", name, description); }
 
-	GENERIC_COMMANDS(0, 0, "")
+	GENERIC_COMMANDS(0, 0, "");
 	#undef GENERIC_COMMAND
 
 	return;

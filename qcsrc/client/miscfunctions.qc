@@ -320,28 +320,29 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 	drawpic_aspect_skin_expanding(position, pic, theScale, rgb, theAlpha, flag, fadelerp);
 	drawpic_skin(position, pic, theScale, rgb, theAlpha * fadelerp, flag);
 }
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors)\
-	float textaspect, oldsz;\
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;\
-	if(sz.x/sz.y > textaspect) {\
-		oldsz = sz.x;\
-		sz_x = sz.y * textaspect;\
-		pos.x += (oldsz - sz.x) * 0.5;\
-	} else {\
-		oldsz = sz.y;\
-		sz_y = sz.x / textaspect; \
-		pos.y += (oldsz - sz.y) * 0.5;\
-	}
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) do {																	\
+	float textaspect, oldsz;																						\
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
+	if(sz.x/sz.y > textaspect) {																					\
+		oldsz = sz.x;																								\
+		sz_x = sz.y * textaspect;																					\
+		pos.x += (oldsz - sz.x) * 0.5;																				\
+	} else {																										\
+		oldsz = sz.y;																								\
+		sz_y = sz.x / textaspect; 																					\
+		pos.y += (oldsz - sz.y) * 0.5;																				\
+	}																												\
+} while(0)
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(false)
+	SET_POS_AND_SZ_Y_ASPECT(false);
 	drawstring(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag);
 }
 
 // drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
 void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag) {
-	SET_POS_AND_SZ_Y_ASPECT(true)
+	SET_POS_AND_SZ_Y_ASPECT(true);
 	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
 }
 
@@ -362,7 +363,7 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp) {
-	SET_POS_AND_SZ_Y_ASPECT(false)
+	SET_POS_AND_SZ_Y_ASPECT(false);
 	drawstring_expanding(pos, text, '1 1 0' * sz.y, color, theAlpha, drawflag, fadelerp);
 }
 
@@ -378,7 +379,7 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 }
 
 void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp) {
-	SET_POS_AND_SZ_Y_ASPECT(true)
+	SET_POS_AND_SZ_Y_ASPECT(true);
 	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz.y, theAlpha, drawflag, fadelerp);
 }
 

@@ -1088,7 +1088,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 
-		VOTE_COMMANDS(0, caller, 0, "")
+		VOTE_COMMANDS(0, caller, 0, "");
 		#undef VOTE_COMMAND
 
 		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
@@ -1100,7 +1100,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(2))) { function; return; } } }
 
-		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
+		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 		#undef VOTE_COMMAND
 	}
 
@@ -1112,7 +1112,7 @@ float VoteCommand_macro_command(entity caller, float argc, string vote_command)
 	#define VOTE_COMMAND(name,function,description,assignment) \
 		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(1))) { function; return true; } } }
 
-	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command)
+	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command);
 	#undef VOTE_COMMAND
 
 	return false;

@@ -423,7 +423,7 @@ float W_Tuba(float req)
 			precache_model("models/weapons/h_akordeon.iqm");
 			precache_model("models/weapons/v_kleinbottle.md3");
 			precache_model("models/weapons/h_kleinbottle.iqm");
-			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_SETUP:
@@ -467,7 +467,7 @@ float W_Tuba(float req)
 		}
 		case WR_CONFIG:
 		{
-			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:

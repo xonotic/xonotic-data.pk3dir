@@ -322,16 +322,15 @@ void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 	// player "pops in"
 	if(isnew)
 	{
-#define FIX_FRAMETIME(f,ft) \
-		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0) \
-		{ \
-			self.ft = self.death_time; \
-		}
-		FIX_FRAMETIME(frame, frame1time)
-		FIX_FRAMETIME(frame2, frame2time)
+#define FIX_FRAMETIME(f,ft) do {																					\
+		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0)											\
+			self.ft = self.death_time;																				\
+} while(0)
+		FIX_FRAMETIME(frame, frame1time);
+		FIX_FRAMETIME(frame2, frame2time);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-		FIX_FRAMETIME(frame3, frame3time)
-		FIX_FRAMETIME(frame4, frame4time)
+		FIX_FRAMETIME(frame3, frame3time);
+		FIX_FRAMETIME(frame4, frame4time);
 #endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);

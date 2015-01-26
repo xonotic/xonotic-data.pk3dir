@@ -186,7 +186,7 @@ float W_RocketPropelledChainsaw(float req)
 			precache_model("models/weapons/v_ok_rl.md3");
 			precache_model("models/weapons/g_ok_rl.md3");
 			precache_sound ("weapons/rocket_fire.wav");
-			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
+			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
@@ -201,7 +201,7 @@ float W_RocketPropelledChainsaw(float req)
 		}
 		case WR_CONFIG:
 		{
-			RPC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
+			RPC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 		case WR_RELOAD:
