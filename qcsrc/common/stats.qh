@@ -88,7 +88,7 @@ const float STAT_HEALING_ORB            = 82;
 const float STAT_HEALING_ORB_ALPHA      = 83;
 const float STAT_PLASMA                 = 84;
 const float STAT_OK_AMMO_CHARGE         = 85;
-const float STAT_OK_AMMO_CHARGEPOOl     = 86;
+const float STAT_OK_AMMO_CHARGEPOOL     = 86;
 // 87 empty?
 // 88 empty?
 // 89 empty?

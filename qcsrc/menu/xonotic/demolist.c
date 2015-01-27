@@ -8,7 +8,7 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	METHOD(XonoticDemoList, startDemo, void(entity))
 	METHOD(XonoticDemoList, timeDemo, void(entity))
 	METHOD(XonoticDemoList, demoName, string(entity, float))
-	METHOD(XonoticDemoList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticDemoList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticDemoList, destroy, void(entity))
 	METHOD(XonoticDemoList, showNotify, void(entity))
@@ -21,8 +21,6 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticDemoList, origin, vector, '0 0 0')
 	ATTRIB(XonoticDemoList, itemAbsSize, vector, '0 0 0')
 
-	ATTRIB(XonoticDemoList, lastClickedDemo, float, -1)
-	ATTRIB(XonoticDemoList, lastClickedTime, float, 0)
 	ATTRIB(XonoticDemoList, filterString, string, string_null)
 ENDCLASS(XonoticDemoList)
 
@@ -207,17 +205,9 @@ void DemoConfirm_ListClick_Check_Gamestatus(entity me)
 	}
 }
 
-void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
+void XonoticDemoList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedDemo)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			DemoConfirm_ListClick_Check_Gamestatus(me);
-		}
-	me.lastClickedDemo = i;
-	me.lastClickedTime = time;
+	DemoConfirm_ListClick_Check_Gamestatus(me);
 }
 
 float XonoticDemoList_keyDown(entity me, float scan, float ascii, float shift)

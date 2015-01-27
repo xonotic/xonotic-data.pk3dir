@@ -5,6 +5,7 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	METHOD(XonoticMapList, draw, void(entity))
 	METHOD(XonoticMapList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticMapList, refilter, void(entity))
 	METHOD(XonoticMapList, refilterCallback, void(entity, entity))
@@ -19,9 +20,6 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticMapList, checkMarkSize, vector, '0 0 0')
 	ATTRIB(XonoticMapList, realUpperMargin1, float, 0)
 	ATTRIB(XonoticMapList, realUpperMargin2, float, 0)
-
-	ATTRIB(XonoticMapList, lastClickedMap, float, -1)
-	ATTRIB(XonoticMapList, lastClickedTime, float, 0)
 
 	ATTRIB(XonoticMapList, lastGametype, float, 0)
 	ATTRIB(XonoticMapList, lastFeatures, float, 0)
@@ -143,22 +141,21 @@ void XonoticMapList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(where_x <= me.columnPreviewOrigin + me.columnPreviewSize)
 		if(where_x >= 0)
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, i);
+		}
+}
 
+void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
+{
 	if(where_x >= me.columnNameOrigin)
 		if(where_x <= 1)
 		{
-			if(i == me.lastClickedMap)
-				if(time < me.lastClickedTime + 0.3)
-				{
-					// DOUBLE CLICK!
-					// pop up map info screen
-					main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
-					DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
-					return;
-				}
-			me.lastClickedMap = i;
-			me.lastClickedTime = time;
+			// pop up map info screen
+			m_play_click_sound(MENU_SOUND_OPEN);
+			main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, i, me);
+			DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * i - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 		}
 }
 
@@ -303,22 +300,30 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	if(scan == K_MOUSE2 || scan == K_SPACE || scan == K_ENTER || scan == K_KP_ENTER)
 	{
 		// pop up map info screen
+		m_play_click_sound(MENU_SOUND_OPEN);
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size_x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size_y), eY * me.itemAbsSize_y + eX * (me.itemAbsSize_x * me.columnNameSize));
 	}
 	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
 	{
+		m_play_click_sound(MENU_SOUND_SELECT);
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
 	else if(ascii == 43) // +
 	{
 		if (!me.g_maplistCacheQuery(me, me.selectedItem))
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, me.selectedItem);
+		}
 	}
 	else if(ascii == 45) // -
 	{
 		if(me.g_maplistCacheQuery(me, me.selectedItem))
+		{
+			m_play_click_sound(MENU_SOUND_SELECT);
 			me.g_maplistCacheToggle(me, me.selectedItem);
+		}
 	}
 	else if(scan == K_BACKSPACE)
 	{

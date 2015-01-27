@@ -10,7 +10,7 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, screenshotName, string(entity, float))
-	METHOD(XonoticScreenshotList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticScreenshotList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticScreenshotList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticScreenshotList, destroy, void(entity))
 	METHOD(XonoticScreenshotList, showNotify, void(entity))
@@ -21,8 +21,6 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticScreenshotList, realUpperMargin, float, 0)
 	ATTRIB(XonoticScreenshotList, origin, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotList, itemAbsSize, vector, '0 0 0')
-	ATTRIB(XonoticScreenshotList, lastClickedScreenshot, float, -1)
-	ATTRIB(XonoticScreenshotList, lastClickedTime, float, 0)
 	ATTRIB(XonoticScreenshotList, filterString, string, string_null)
 	ATTRIB(XonoticScreenshotList, filterBox, entity, NULL)
 	ATTRIB(XonoticScreenshotList, filterTime, float, 0)
@@ -280,18 +278,9 @@ void StartScreenshot_Click(entity btn, entity me)
 	me.startScreenshot(me);
 }
 
-void XonoticScreenshotList_clickListBoxItem(entity me, float i, vector where)
+void XonoticScreenshotList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedScreenshot)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			// pop up screenshot
-			me.setSelected(me, i);
-			me.startScreenshot(me);
-		}
-	me.lastClickedScreenshot = i;
-	me.lastClickedTime = time;
+	me.startScreenshot(me);
 }
 
 float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float shift)

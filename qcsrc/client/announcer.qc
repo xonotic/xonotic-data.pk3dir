@@ -27,6 +27,7 @@ void Announcer_Countdown()
 	}
 	else // countdown is still going
 	{
+		// if concomitant countdown to round start overrides countdown to game start
 		if(roundstarttime == starttime)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
@@ -59,9 +60,6 @@ void Announcer_Gamestart()
 
 	if(previous_game_starttime != startTime)
 	{
-		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
-
 		if(time < startTime)
 		{
 			entity e = find(world, classname, "announcer_countdown");
@@ -71,6 +69,11 @@ void Announcer_Gamestart()
 				e.classname = "announcer_countdown";
 				e.think = Announcer_Countdown;
 			}
+
+			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
+			if(time > e.nextthink) // don't play it again if countdown was already going
+				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
+
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}

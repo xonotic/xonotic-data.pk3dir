@@ -55,6 +55,11 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 	me.TR(me);
+		me.TDempty(me, 0.1);
+		for(i = 29; i <= 42; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
+		}
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));

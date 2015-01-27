@@ -9,7 +9,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	METHOD(XonoticPlayList, startSound, void(entity, float))
 	METHOD(XonoticPlayList, resumeSound, void(entity))
 	METHOD(XonoticPlayList, pauseSound, void(entity))
-	METHOD(XonoticPlayList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticPlayList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticPlayList, mouseDrag, float(entity, vector))
 
@@ -25,9 +25,6 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticPlayList, realUpperMargin, float, 0)
 	ATTRIB(XonoticPlayList, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticPlayList, lastClickedSound, float, -1)
-	ATTRIB(XonoticPlayList, lastClickedTime, float, 0)
 ENDCLASS(XonoticPlayList)
 
 entity makeXonoticPlayList();
@@ -183,7 +180,7 @@ void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float i
 	{
 		float f = cvar("music_playlist_sampleposition0");
 		if(f <= 0 || (((time * 2) & 1) && f > 0))
-			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+			draw_Text(me.realUpperMargin * eY + (me.columnNumberOrigin + me.columnNumberSize) * eX, "\xE2\x96\xB6", me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
 
 	s = ftos(i+1);
@@ -279,17 +276,9 @@ void PauseSound_Click(entity btn, entity me)
 	me.pauseSound(me);
 }
 
-void XonoticPlayList_clickListBoxItem(entity me, float i, vector where)
+void XonoticPlayList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedSound)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.startSound(me, 0);
-		}
-	me.lastClickedSound = i;
-	me.lastClickedTime = time;
+	me.startSound(me, 0);
 }
 
 float XonoticPlayList_keyDown(entity me, float scan, float ascii, float shift)

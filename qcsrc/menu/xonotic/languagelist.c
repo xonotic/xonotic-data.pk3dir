@@ -15,10 +15,8 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticLanguageList, columnPercentageOrigin, float, 0)
 	ATTRIB(XonoticLanguageList, columnPercentageSize, float, 0)
 
-	METHOD(XonoticLanguageList, clickListBoxItem, void(entity, float, vector)) // double click handling
+	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)) // enter handling
-	ATTRIB(XonoticLanguageList, lastClickedLanguage, float, -1)
-	ATTRIB(XonoticLanguageList, lastClickedTime, float, 0)
 
 	METHOD(XonoticLanguageList, destroy, void(entity))
 
@@ -140,22 +138,17 @@ void XonoticLanguageList_saveCvars(entity me)
 	cvar_set("_menu_prvm_language", me.languageParameter(me, me.selectedItem, LANGPARM_ID));
 }
 
-void XonoticLanguageList_clickListBoxItem(entity me, float i, vector where)
+void XonoticLanguageList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedLanguage)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.setLanguage(me);
-		}
-	me.lastClickedLanguage = i;
-	me.lastClickedTime = time;
+	m_play_click_sound(MENU_SOUND_EXECUTE);
+	me.setLanguage(me);
 }
 
 float XonoticLanguageList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.setLanguage(me);
 		return 1;
 	}
