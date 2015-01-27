@@ -494,7 +494,7 @@ void MapVote_ReadMask()
 	}
 }
 
-const float NUM_SSDIRS = 4;
+const int NUM_SSDIRS = 4;
 string ssdirs[NUM_SSDIRS];
 int n_ssdirs;
 void MapVote_Init()

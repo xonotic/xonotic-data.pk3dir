@@ -44,19 +44,19 @@ float FONT_USER = 8;
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-const float MAX_HUD_FIELDS = 16;
+const int MAX_HUD_FIELDS = 16;
 
-const float SP_END = -1;
+const int SP_END = -1;
 
-const float SP_PING = -2;
-const float SP_NAME = -3;
-const float SP_KDRATIO = -4;
-const float SP_CLRATIO = -5;
-const float SP_PL = -6;
-const float SP_FRAGS = -7;
-const float SP_SUM = -8;
+const int SP_PING = -2;
+const int SP_NAME = -3;
+const int SP_KDRATIO = -4;
+const int SP_CLRATIO = -5;
+const int SP_PL = -6;
+const int SP_FRAGS = -7;
+const int SP_SUM = -8;
 
-const float SP_SEPARATOR = -100;
+const int SP_SEPARATOR = -100;
 
 float hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
@@ -147,4 +147,4 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 
 float hud;
 float view_quality;
-float framecount;
+int framecount;

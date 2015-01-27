@@ -1,6 +1,6 @@
 .float lip;
 .float bgmscriptangular;
-.float lodmodelindex0, lodmodelindex1, lodmodelindex2;
+.int lodmodelindex0, lodmodelindex1, lodmodelindex2;
 .float loddistance1, loddistance2;
 .vector saved;
 

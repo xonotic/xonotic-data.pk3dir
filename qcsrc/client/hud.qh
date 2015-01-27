@@ -23,7 +23,7 @@ const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
 int weapon_accuracy[WEP_MAXCOUNT];
 
-float complain_weapon;
+int complain_weapon;
 string complain_weapon_name;
 float complain_weapon_type;
 float complain_weapon_time;

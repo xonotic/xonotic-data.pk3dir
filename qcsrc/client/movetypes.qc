@@ -11,7 +11,7 @@ void _Movetype_CheckVelocity() // SV_CheckVelocity
 
 float _Movetype_CheckWater(entity ent) // SV_CheckWater
 {
-	float supercontents;
+	int supercontents;
 	float nativecontents;
 	vector point;
 
@@ -189,10 +189,9 @@ void _Movetype_LinkEdict(float touch_triggers) // SV_LinkEdict
 float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 {
 	vector org;
-	float cont;
 	org = self.move_origin + ofs;
 
-	cont = self.dphitcontentsmask;
+	int cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
 	self.dphitcontentsmask = cont;

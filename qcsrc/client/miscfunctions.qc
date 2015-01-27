@@ -111,14 +111,12 @@ void RemoveTeam(entity Team)
 
 entity GetTeam(int Team, bool add)
 {
-	float num;
-	entity tm;
-	num = (Team == NUM_SPECTATOR) ? 16 : Team;
+	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
 	if (!add)
 		return world;
-	tm = spawn();
+	entity tm = spawn();
 	tm.team = Team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);
@@ -615,7 +613,7 @@ float getplayerisdead(float pl)
 	return false;
 }
 
-void URI_Get_Callback(float id, float status, string data)
+void URI_Get_Callback(int id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
 	{
@@ -647,7 +645,7 @@ void draw_endBoldFont()
 }
 
 
-const float MAX_ACCURACY_LEVELS = 10;
+const int MAX_ACCURACY_LEVELS = 10;
 float acc_lev[MAX_ACCURACY_LEVELS];
 vector acc_col[MAX_ACCURACY_LEVELS];
 float acc_col_loadtime;

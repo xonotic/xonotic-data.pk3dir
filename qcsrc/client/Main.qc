@@ -10,7 +10,7 @@ void clearentity(entity e)
 		clearentity_ent = spawn();
 		clearentity_ent.classname = "clearentity";
 	}
-	float n = e.entnum;
+	int n = e.entnum;
 	copyentity(clearentity_ent, e);
 	e.entnum = n;
 }
@@ -39,7 +39,7 @@ void CSQC_Init(void)
 	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
-	float i;
+	int i;
 
 	binddb = db_create();
 	tempdb = db_create();
@@ -174,7 +174,7 @@ void Shutdown(void)
 }
 
 .float has_team;
-float SetTeam(entity o, float Team)
+float SetTeam(entity o, int Team)
 {
 	entity tm;
 	if(teamplay)
@@ -386,8 +386,8 @@ void Ent_RemovePlayerScore()
 
 void Ent_ReadPlayerScore()
 {
-	float i, n;
-	float isNew;
+	int i, n;
+	bool isNew;
 	entity o;
 
 	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
@@ -444,7 +444,7 @@ void Ent_ReadPlayerScore()
 
 void Ent_ReadTeamScore()
 {
-	float i;
+	int i;
 	entity o;
 
 	self.team = ReadByte();
@@ -458,7 +458,7 @@ void Ent_ReadTeamScore()
 	sf = ReadShort();
 	lf = ReadShort();
 #endif
-	float p;
+	int p;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
 		if(sf & p)
 		{
@@ -1153,7 +1153,7 @@ void Net_TeamNagger()
 
 void Net_ReadPingPLReport()
 {
-	float e, pi, pl, ml;
+	int e, pi, pl, ml;
 	e = ReadByte();
 	pi = ReadShort();
 	pl = ReadByte();

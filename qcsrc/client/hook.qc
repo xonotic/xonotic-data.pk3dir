@@ -52,7 +52,7 @@ void Draw_GrapplingHook()
 	string tex;
 	vector rgb;
 	float t;
-	float s;
+	int s;
 	vector vs;
 	float intensity, offset;
 

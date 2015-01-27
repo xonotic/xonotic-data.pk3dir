@@ -48,7 +48,7 @@ void()		CSQC_Init;
 void()		CSQC_Shutdown;
 float(float f, float t, float n)	CSQC_InputEvent;
 void(float w, float h)		CSQC_UpdateView;
-float(string s)	CSQC_ConsoleCommand;
+bool(string s)	CSQC_ConsoleCommand;
 
 //these fields are read and set by the default player physics
 vector		pmove_org;
@@ -88,7 +88,7 @@ void		end_sys_globals;		// flag for structure dumping
 //
 // system fields (*** = do not set in prog code, maintained by C code)
 //
-.float		modelindex;		// *** model index in the precached list
+.int		modelindex;		// *** model index in the precached list
 .vector		absmin, absmax;	// *** origin + mins / maxs
 
 .int		entnum;	// *** the ent number as on the server
@@ -106,8 +106,8 @@ void		end_sys_globals;		// flag for structure dumping
 
 .string		classname;		// spawn function
 .string		model;
-.float		frame;
-.float		skin;
+.int		frame;
+.int		skin;
 .int		effects;
 
 .vector		mins, maxs;		// bounding box extents reletive to origin
@@ -419,7 +419,7 @@ entity(entity start, .float fld, float match) findfloat = #98;
 float(string s) checkextension = #99;
 // FrikaC and Telejano range #100-#199
 
-float(string filename, float mode) fopen = #110;
+int(string filename, int mode) fopen = #110;
 void(float fhandle) fclose = #111;
 string(float fhandle) fgets = #112;
 void(float fhandle, string s) fputs = #113;
@@ -479,12 +479,12 @@ void(void) drawresetcliparea = #325;
 float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring = #326;
 vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2 = #326;
 
-float(float stnum) getstatf = #330;
-float(float stnum, ...) getstati = #331; // can optionally take first bit and count
+float(int stnum) getstatf = #330;
+int(int stnum, ...) getstati = #331; // can optionally take first bit and count
 string(float firststnum) getstats = #332;
 void(entity e, float mdlindex) setmodelindex = #333;
 string(float mdlindex) modelnameforindex = #334;
-float(string effectname) particleeffectnum = #335;
+int(string effectname) particleeffectnum = #335;
 void(entity ent, float effectnum, vector start, vector end) trailparticles = #336;
 //void(float effectnum, vector origin [, vector dir, float count]) pointparticles = #337;
 void(float effectnum, vector origin , vector dir, float count) pointparticles = #337;
@@ -558,7 +558,7 @@ string(entity e, float s) getsurfacetexture = #437;
 float(entity e, vector p) getsurfacenearpoint = #438;
 vector(entity e, float s, vector p) getsurfaceclippedpoint = #439;
 
-float(string s) tokenize = #441;
+int(string s) tokenize = #441;
 string(float n) argv = #442;
 void(entity e, entity tagentity, string tagname) setattachment = #443;
 float(string pattern, float caseinsensitive, float quiet) search_begin = #444;
@@ -568,7 +568,7 @@ string(float handle, float num) search_getfilename = #447;
 string(string s) cvar_string = #448;
 entity(entity start, .float fld, float match) findflags = #449;
 entity(.float fld, float match) findchainflags = #450;
-float(entity ent, string tagname) gettagindex = #451;
+int(entity ent, string tagname) gettagindex = #451;
 vector(entity ent, float tagindex) gettaginfo = #452;
 
 void(vector org, vector vel, float howmany) te_flamejet = #457;
@@ -1017,7 +1017,7 @@ float GETTIME_CDTRACK = 4;
 //idea: Electro, SavageX, LordHavoc
 //darkplaces implementation: LordHavoc
 //builtin definitions:
-float(string s, string separator1, ...) tokenizebyseparator = #479;
+int(string s, string separator1, ...) tokenizebyseparator = #479;
 //description:
 //this function returns tokens separated by any of the supplied separator strings, example:
 //numnumbers = tokenizebyseparator("10.2.3.4", ".");
@@ -1028,9 +1028,9 @@ float(string s, string separator1, ...) tokenizebyseparator = #479;
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
-float(string s) tokenize_console = #514;
-float(float i) argv_start_index = #515;
-float(float i) argv_end_index = #516;
+int(string s) tokenize_console = #514;
+int(float i) argv_start_index = #515;
+int(float i) argv_end_index = #516;
 //description:
 //this function returns tokens separated just like the console does
 //also, functions are provided to get the index of the first and last character of each token in the original string
@@ -1229,10 +1229,10 @@ float(float modlindex, string framename) frameforname = #276; // finds number of
 float(float modlindex, float framenum) frameduration = #277; // returns the intended play time (in seconds) of the specified framegroup, if it does not exist the result is 0, if it is a single frame it may be a small value around 0.1 or 0.
 //fields:
 .float skeletonindex; // active skeleton overriding standard animation on model
-.float frame; // primary framegroup animation (strength = 1 - lerpfrac - lerpfrac3 - lerpfrac4)
-.float frame2; // secondary framegroup animation (strength = lerpfrac)
-.float frame3; // tertiary framegroup animation (strength = lerpfrac3)
-.float frame4; // quaternary framegroup animation (strength = lerpfrac4)
+.int frame; // primary framegroup animation (strength = 1 - lerpfrac - lerpfrac3 - lerpfrac4)
+.int frame2; // secondary framegroup animation (strength = lerpfrac)
+.int frame3; // tertiary framegroup animation (strength = lerpfrac3)
+.int frame4; // quaternary framegroup animation (strength = lerpfrac4)
 .float lerpfrac; // strength of framegroup blend
 .float lerpfrac3; // strength of framegroup blend
 .float lerpfrac4; // strength of framegroup blend
@@ -1416,12 +1416,12 @@ float(string s) isfunction = #607;
 void(entity e, string s) parseentitydata = #608;
 
 // assorted builtins
-const float		STAT_MOVEVARS_TICRATE           = 240;
-const float		STAT_MOVEVARS_TIMESCALE         = 241;
-const float		STAT_FRAGLIMIT					= 235;
-const float		STAT_TIMELIMIT					= 236;
-const float     STAT_MOVEVARS_GRAVITY           = 242;
-string(void)						ReadPicture = #501;
+const int STAT_MOVEVARS_TICRATE      	= 240;
+const int STAT_MOVEVARS_TIMESCALE    	= 241;
+const int STAT_FRAGLIMIT				= 235;
+const int STAT_TIMELIMIT				= 236;
+const int STAT_MOVEVARS_GRAVITY       	= 242;
+string(void) ReadPicture 				= #501;
 const int PARTICLES_USEALPHA = 1;
 float particles_alphamin, particles_alphamax;
 const int PARTICLES_USECOLOR = 2;

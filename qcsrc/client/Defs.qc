@@ -25,8 +25,8 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum of the VIEW entity
-float 		player_localnum;	//the playernum
+int 		player_localentnum;	//the entnum of the VIEW entity
+int 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 
 float		clientcommandframe;	//player movement
@@ -57,7 +57,7 @@ void()		CSQC_Init;
 void()		CSQC_Shutdown;
 float(float f, float t, float n)	CSQC_InputEvent;
 void(float w, float h)		CSQC_UpdateView;
-float(string s)	CSQC_ConsoleCommand;
+bool(string s)	CSQC_ConsoleCommand;
 
 //these fields are read and set by the default player physics
 vector		pmove_org;
@@ -68,7 +68,7 @@ vector		pmove_maxs;
 float		input_timelength;
 vector		input_angles;
 vector		input_movevalues;	//forwards, right, up.
-float		input_buttons;		//attack, use, jump (default physics only uses jump)
+int			input_buttons;		//attack, use, jump (default physics only uses jump)
 
 float		movevar_gravity;
 float		movevar_stopspeed;
@@ -96,10 +96,10 @@ void		end_sys_globals;		// flag for structure dumping
 //
 // system fields (*** = do not set in prog code, maintained by C code)
 //
-.float		modelindex;		// *** model index in the precached list
+.int		modelindex;		// *** model index in the precached list
 .vector		absmin, absmax;	// *** origin + mins / maxs
 
-.float		entnum;	// *** the ent number as on the server
+.int		entnum;	// *** the ent number as on the server
 .float		drawmask;
 .void()		predraw;
 
@@ -114,8 +114,8 @@ void		end_sys_globals;		// flag for structure dumping
 
 .string		classname;		// spawn function
 .string		model;
-.float		frame;
-.float		skin;
+.int		frame;
+.int		skin;
 .int		effects;
 
 .vector		mins, maxs;		// bounding box extents reletive to origin
@@ -168,11 +168,11 @@ float		dmg_take;
 // Basic variables
 .float enttype; // entity type sent from server
 .int   sv_entnum; // entity number sent from server
-.float team;
-.float team_size;
+.int team;
+.int team_size;
 
 float vid_conwidth, vid_conheight;
-float binddb;
+int binddb;
 
 // QUALIFYING
 float race_checkpoint;
@@ -220,8 +220,8 @@ float spectatee_status;
 string shortmapname;
 
 // database for misc stuff
-float tempdb;
-float ClientProgsDB;
+int tempdb;
+int ClientProgsDB;
 vector hook_shotorigin[4];
 vector lightning_shotorigin[4];
 
@@ -238,14 +238,14 @@ float ticrate;
 const float MIN_DAMAGEEXTRARADIUS = 2;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
-.void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
+.void(float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
 float angles_held_status;
 vector angles_held;
 
 // weapons
-.float silent;
+.bool silent;
 
 int w_deathtype;
 float w_issilent, w_random;
@@ -269,7 +269,7 @@ int serverflags;
 
 float uid2name_dialog;
 
-.float csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 

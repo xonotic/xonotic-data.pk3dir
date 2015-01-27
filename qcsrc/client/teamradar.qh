@@ -1,4 +1,4 @@
-const float MAX_TEAMRADAR_TIMES = 32;
+const int MAX_TEAMRADAR_TIMES = 32;
 
 // to make entities have dots on the team radar
 .float teamradar_icon;

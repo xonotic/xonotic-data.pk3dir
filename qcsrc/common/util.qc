@@ -248,10 +248,9 @@ string fstrunzone(string s)
 	return sc;
 }
 
-float fexists(string f)
+bool fexists(string f)
 {
-    float fh;
-    fh = fopen(f, FILE_READ);
+    int fh = fopen(f, FILE_READ);
     if (fh < 0)
         return false;
     fclose(fh);
@@ -1884,7 +1883,7 @@ string getcurrentmod()
 
 #ifndef MENUQC
 #ifdef CSQC
-float ReadInt24_t()
+int ReadInt24_t()
 {
 	float v;
 	v = ReadShort() * 256; // note: this is signed
@@ -2780,7 +2779,7 @@ float Announcer_PickNumber(float type, float num)
 #endif
 
 #ifndef MENUQC
-float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
 {
 	switch(nativecontents)
 	{
@@ -2800,7 +2799,7 @@ float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
 	return 0;
 }
 
-float Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 {
 	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
 		return CONTENT_SOLID;

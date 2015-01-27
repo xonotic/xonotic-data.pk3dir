@@ -134,7 +134,7 @@ int HUD_CompareScore(float vl, float vr, int f)
 
 float HUD_ComparePlayerScores(entity left, entity right)
 {
-	float vl, vr, r, i;
+	float vl, vr, r;
 	vl = GetPlayerColor(left.sv_entnum);
 	vr = GetPlayerColor(right.sv_entnum);
 
@@ -165,6 +165,7 @@ float HUD_ComparePlayerScores(entity left, entity right)
 	if (r >= 0)
 		return r;
 
+	int i;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		r = HUD_CompareScore(left.scores[i], right.scores[i], scores_flags[i]);
@@ -501,7 +502,7 @@ vector hud_field_icon2_rgb;
 float hud_field_icon0_alpha;
 float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
-string HUD_GetField(entity pl, float field)
+string HUD_GetField(entity pl, int field)
 {
 	float tmp, num, denom, f;
 	string str;
@@ -813,7 +814,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_s
 
 vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
-	float body_table_height, i;
+	float body_table_height;
 	vector tmp = '0 0 0', column_dim = '0 0 0';
 	entity pl;
 
@@ -868,6 +869,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 
 	// print the strings of the columns headers and draw the columns
 	draw_beginBoldFont();
+	int i;
 	for(i = 0; i < hud_num_fields; ++i)
 	{
 		if(hud_field[i] == SP_SEPARATOR)

@@ -484,7 +484,7 @@ void CSQCModel_Effects_PostUpdate(void)
 	if(self.csqcmodel_teleported)
 		Projectile_ResetTrail(self.origin);
 }
-.bool snd_looping;
+.int snd_looping;
 void CSQCModel_Effects_Apply(void)
 {
 	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;

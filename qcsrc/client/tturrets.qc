@@ -13,7 +13,7 @@ void turrets_precache()
     turret_precache(TID_COMMON);
 }
 
-void turret_precache(float _tid)
+void turret_precache(int _tid)
 {
     if (!turret_is_precache[TID_COMMON])
     {
@@ -596,8 +596,7 @@ void turret_die()
 
 void ent_turret()
 {
-    float sf;
-    sf = ReadByte();
+    int sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
 	{

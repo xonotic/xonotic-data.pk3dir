@@ -22,9 +22,9 @@
 
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
-	CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) \
-	CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) \
-	CSQCMODEL_PROPERTY(4, float, ReadByte, WriteByte, modelflags) \
+	CSQCMODEL_PROPERTY(1, int, ReadShort, WriteShort, colormap) \
+	CSQCMODEL_PROPERTY(2, int, ReadInt24_t, WriteInt24_t, effects) \
+	CSQCMODEL_PROPERTY(4, int, ReadByte, WriteByte, modelflags) \
 	CSQCMODEL_PROPERTY_SCALED(8, float, ReadByte, WriteByte, alpha, 254, -1, 254) \
 	CSQCMODEL_PROPERTY(16, float, ReadByte, WriteByte, skin) \
 	CSQCMODEL_PROPERTY(32, float, ReadApproxPastTime, WriteApproxPastTime, death_time) \

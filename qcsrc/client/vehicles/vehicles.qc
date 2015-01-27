@@ -208,11 +208,11 @@ void Net_VehicleSetup()
     }
 }
 #define HUD_GETSTATS \
-    int vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	int shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
+    int vh_health       = getstati(STAT_VEHICLESTAT_HEALTH);  \
+	float shield        = getstati(STAT_VEHICLESTAT_SHIELD);  \
 	noref int energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	noref int ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	noref int reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
+	noref float ammo1   = getstati(STAT_VEHICLESTAT_AMMO1);   \
+	noref float reload1 = getstati(STAT_VEHICLESTAT_RELOAD1); \
 	noref int ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
 	noref int reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
 

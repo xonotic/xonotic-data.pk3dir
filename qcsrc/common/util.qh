@@ -71,7 +71,7 @@ float median(float a, float b, float c);
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
 
-float fexists(string f);
+bool fexists(string f);
 
 vector colormapPaletteColor(float c, float isPants);
 
@@ -222,7 +222,7 @@ string getcurrentmod();
 
 #ifndef MENUQC
 #ifdef CSQC
-float ReadInt24_t();
+int ReadInt24_t();
 vector ReadInt48_t();
 vector ReadInt72_t();
 #else
@@ -262,7 +262,7 @@ float get_model_parameters_age;
 string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
-const float MAX_AIM_BONES = 4;
+const int MAX_AIM_BONES = 4;
 string get_model_parameters_bone_aim[MAX_AIM_BONES];
 float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
 float get_model_parameters_fixbone;
@@ -430,8 +430,8 @@ float Announcer_PickNumber(float type, float num);
 #endif
 
 #ifndef MENUQC
-float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
-float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
 
 // Quadratic splines (bezier)

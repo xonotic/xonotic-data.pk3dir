@@ -1,4 +1,4 @@
-.float dphitcontentsmask;
+.int dphitcontentsmask;
 
 .int cnt; // effect number
 .vector velocity; // particle velocity
