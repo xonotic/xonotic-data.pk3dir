@@ -163,6 +163,8 @@ weapons/weaponsystem.qc
 ../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
 
+../common/triggers/include.qh
+
 t_items.qc
 cl_impulse.qc
 
@@ -170,8 +172,9 @@ ent_cs.qc
 
 cl_player.qc
 cl_client.qc
-t_plats.qc
 antilag.qc
+
+../common/triggers/include.qc
 
 //ctf.qc
 //domination.qc

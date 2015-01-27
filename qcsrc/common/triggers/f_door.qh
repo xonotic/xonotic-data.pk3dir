@@ -1,0 +1,10 @@
+// door constants
+const float DOOR_START_OPEN = 1;
+const float DOOR_DONT_LINK = 4;
+const float DOOR_TOGGLE = 32;
+
+const float SPAWNFLAGS_GOLD_KEY = 8;
+const float SPAWNFLAGS_SILVER_KEY = 16;
+
+// door properties
+.entity trigger_field;
