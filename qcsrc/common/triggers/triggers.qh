@@ -1,0 +1,15 @@
+.void() trigger_touch;
+
+.string bgmscript;
+.float bgmscriptattack;
+.float bgmscriptdecay;
+.float bgmscriptsustain;
+.float bgmscriptrelease;
+
+// used elsewhere (will fix)
+void multi_touch();
+void spawnfunc_trigger_once();
+string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
+
+void target_voicescript_next(entity pl);
+void target_voicescript_clear(entity pl);
