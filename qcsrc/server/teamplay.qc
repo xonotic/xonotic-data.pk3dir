@@ -2,7 +2,7 @@ string cache_mutatormsg;
 string cache_lastmutatormsg;
 
 // client counts for each team
-float c1, c2, c3, c4;
+//float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 

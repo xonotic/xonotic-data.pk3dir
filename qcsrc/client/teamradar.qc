@@ -4,7 +4,6 @@ vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size
 vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
 float teamradar_size; // 2D scale factor
-float hud_panel_radar_scale; // window size = ...qu
 float v_flipped;
 
 float vlen2d(vector v)
@@ -167,7 +166,7 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	R_EndPolygon();
 }
 
-float hud_panel_radar_scale;
+float hud_panel_radar_scale; // window size = ...qu
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
 vector hud_panel_radar_size;

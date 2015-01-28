@@ -9,8 +9,11 @@ CLASS(XonoticDemoBrowserTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticDemoBrowserTab, democlicktype, float, 0)
 ENDCLASS(XonoticDemoBrowserTab)
 entity makeXonoticDemoBrowserTab();
+#ifdef IMPLEMENTATION
+// private:
 const float DMO_PLAY = 1;
 const float DMO_TIME = 2;
+#endif
 #endif
 
 #ifdef IMPLEMENTATION

@@ -1,5 +1,4 @@
 
-entity ka_ball;
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
 // returns true only if it hit targ (don't target non-solid entities)

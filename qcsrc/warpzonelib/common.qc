@@ -1,6 +1,3 @@
-int trace_dphitcontents;
-.float dphitcontentsmask;
-
 void WarpZone_Accumulator_Clear(entity acc)
 {
 	acc.warpzone_transform = '0 0 0';

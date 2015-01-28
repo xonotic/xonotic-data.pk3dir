@@ -17,7 +17,10 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
 ENDCLASS(XonoticStatsList)
 
+#ifndef IMPLEMENTATION
+// public:
 entity statslist; // for reference elsewhere
+#endif
 entity makeXonoticStatsList();
 #endif
 

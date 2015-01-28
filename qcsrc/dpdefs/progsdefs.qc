@@ -291,18 +291,18 @@ const int IT_ROCKET_LAUNCHER	= 32;
 const int IT_LIGHTNING			= 64;
 const int IT_EXTRA_WEAPON		= 128;
 
-const int IT_SHELLS				= 256;
-const int IT_NAILS				= 512;
-const int IT_ROCKETS			= 1024;
-const int IT_CELLS				= 2048;
+//const int IT_SHELLS			= 256;
+//const int IT_NAILS			= 512;
+//const int IT_ROCKETS			= 1024;
+//const int IT_CELLS			= 2048;
 
 const int IT_ARMOR1				= 8192;
 const int IT_ARMOR2				= 16384;
 const int IT_ARMOR3				= 32768;
 const int IT_SUPERHEALTH		= 65536;
 
-const int IT_KEY1				= 131072;
-const int IT_KEY2				= 262144;
+//const int IT_KEY1				= 131072;
+//const int IT_KEY2				= 262144;
 
 const int IT_INVISIBILITY		= 524288;
 const int IT_INVULNERABILITY	= 1048576;

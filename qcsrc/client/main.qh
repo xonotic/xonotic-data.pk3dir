@@ -27,7 +27,6 @@ string minimapname;
 // --------------------------------------------------------------------------
 // General stuff
 
-float drawfont;
 float postinit;
 float gametype;
 
@@ -38,7 +37,6 @@ float gametype;
 //.float ctf_state;
 //.float health;
 
-float FONT_DEFAULT = 0;
 float FONT_USER = 8;
 
 // --------------------------------------------------------------------------
@@ -92,7 +90,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .void(void) draw2d;
 .void(void) entremove;
 float drawframetime;
-vector view_origin, view_angles, view_forward, view_right, view_up;
+vector view_origin, view_forward, view_right, view_up;
 
 float button_zoom;
 float spectatorbutton_zoom;

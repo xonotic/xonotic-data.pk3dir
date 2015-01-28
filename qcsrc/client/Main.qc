@@ -299,8 +299,6 @@ void PostInit(void)
 	postinit = true;
 }
 
-float button_zoom;
-
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.

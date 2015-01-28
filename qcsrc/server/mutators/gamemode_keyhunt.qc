@@ -46,10 +46,10 @@ float kh_Team_ByID(float t)
 	return 0;
 }
 
-entity kh_worldkeylist;
+//entity kh_worldkeylist;
 .entity kh_worldkeynext;
 entity kh_controller;
-float kh_tracking_enabled;
+//float kh_tracking_enabled;
 float kh_teams;
 float kh_interferemsg_time, kh_interferemsg_team;
 .entity kh_next, kh_prev; // linked list

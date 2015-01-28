@@ -7,7 +7,7 @@
 float campaign_level;
 float campaign_won;
 string campaign_index_var;
-float checkrules_equality;
+//float checkrules_equality;
 
 float CampaignBailout(string s)
 {

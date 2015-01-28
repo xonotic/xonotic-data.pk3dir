@@ -24,8 +24,11 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticDemoList, filterString, string, string_null)
 ENDCLASS(XonoticDemoList)
 
+#ifndef IMPLEMENTATION
+// public:
 entity demolist; // for reference elsewhere
 entity makeXonoticDemoList();
+#endif
 void DemoList_Refresh_Click(entity btn, entity me);
 void DemoList_Filter_Change(entity box, entity me);
 #endif

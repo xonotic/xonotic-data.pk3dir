@@ -666,7 +666,7 @@ void WarpZone_InitStep_FinalizeTransform()
 }
 
 float warpzone_initialized;
-entity warpzone_first;
+//entity warpzone_first;
 entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;

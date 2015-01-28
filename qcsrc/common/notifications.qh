@@ -1271,6 +1271,38 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 //  Initialization/Create Declarations
 // ====================================
 
+enum {
+    NO_CPID
+,   CPID_ASSAULT_ROLE
+,   CPID_ROUND
+,   CPID_CAMPCHECK
+,   CPID_CTF_CAPSHIELD
+,   CPID_CTF_LOWPRIO
+,   CPID_CTF_PASS
+,   CPID_STALEMATE
+,   CPID_NADES
+,   CPID_IDLING
+,   CPID_ITEM
+,   CPID_PREVENT_JOIN
+,   CPID_KEEPAWAY
+,   CPID_KEEPAWAY_WARN
+,   CPID_KEYHUNT
+,   CPID_KEYHUNT_OTHER
+,   CPID_LMS
+,   CPID_MISSING_TEAMS
+,   CPID_MISSING_PLAYERS
+,   CPID_INSTAGIB_FINDAMMO
+,   CPID_MOTD
+,   CPID_NIX
+,   CPID_ONSLAUGHT
+,   CPID_OVERTIME
+,   CPID_POWERUP
+,   CPID_RACE_FINISHLAP
+,   CPID_TEAMCHANGE
+,   CPID_TIMEOUT
+// always last
+,   NOTIF_CPID_COUNT
+};
 // notification counts
 const float NOTIF_FIRST = 1;
 float NOTIF_ANNCE_COUNT;
@@ -1278,7 +1310,6 @@ float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_MULTI_COUNT;
 float NOTIF_CHOICE_COUNT;
-float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
 const float NOTIF_ANNCE_MAX   = 100;
@@ -1430,11 +1461,9 @@ float notif_global_error;
 #define MSG_CENTER_NOTIF(default,name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     float name; \
-    float cpid; \
     void RegisterNotification_##name() \
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
-        SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_CENTER_MAX, NOTIF_CENTER_COUNT, "MSG_CENTER") \
         Create_Notification_Entity( \
             /* COMMON ======================== */ \

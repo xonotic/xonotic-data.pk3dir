@@ -7,8 +7,7 @@ QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversio
 
 # We eventually need to get rid of these.
 QCCFLAGS_WTFS ?= \
-	-Wno-field-redeclared \
-	-Wno-double-declaration \
+	-Wno-field-redeclared
 
 QCCFLAGS ?= \
 	-std=gmqcc \

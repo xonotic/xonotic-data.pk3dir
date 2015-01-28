@@ -121,9 +121,9 @@ void CA_RoundStart()
 		allowed_to_spawn = false;
 }
 
-float prev_missing_teams_mask;
 float CA_CheckTeams()
 {
+	static float prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS_OK())

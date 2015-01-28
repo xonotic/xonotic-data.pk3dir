@@ -1034,7 +1034,8 @@ void readlevelcvars(void)
 //#NO AUTOCVARS END
 
 // Sound functions
-string precache_sound (string s) = #19;
+//string precache_sound (string s) = #19;
+// hack
 float precache_sound_index (string s) = #19;
 
 const float SND_VOLUME = 1;

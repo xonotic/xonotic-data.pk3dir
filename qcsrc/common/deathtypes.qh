@@ -2,6 +2,15 @@
 //  Deathtypes, reworked by Samual
 // ================================
 
+int DEATH_SPECIAL_START;
+int NORMAL_POS;
+int DEATH_MONSTER_FIRST;
+int DEATH_MONSTER_LAST;
+int DEATH_TURRET_FIRST;
+int DEATH_TURRET_LAST;
+int DEATH_VHFIRST;
+int DEATH_VHLAST;
+
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
 	DEATHTYPE(DEATH_BUFF_VENGEANCE,         NO_MSG,                             DEATH_MURDER_VENGEANCE,        NORMAL_POS) \
@@ -75,7 +84,6 @@ entity deathtypes[DT_MAX];
 
 #define DEATHTYPE(name,msg_death,msg_death_by,position) \
 	int name; \
-	int position; \
 	void RegisterDeathtype_##name() \
 	{ \
 		SET_FIRST_OR_LAST(position, DT_FIRST, DT_COUNT) \

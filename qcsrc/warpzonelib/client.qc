@@ -155,7 +155,6 @@ void WarpZone_Teleported_Read(float isnew)
 
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
-float autocvar_chase_active;
 
 void WarpZone_View_Outside()
 {

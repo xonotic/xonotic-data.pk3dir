@@ -198,22 +198,22 @@ const int VF_CL_VIEWANGLES_Z	= 36;	//(float)
 
 const int VF_PERSPECTIVE      	= 200;
 
-const int STAT_HEALTH			= 0;
-const int STAT_WEAPONMODEL		= 2;
-const int STAT_AMMO				= 3;
-const int STAT_ARMOR			= 4;
-const int STAT_WEAPONFRAME		= 5;
-const int STAT_SHELLS			= 6;
-const int STAT_NAILS			= 7;
-const int STAT_ROCKETS			= 8;
-const int STAT_CELLS			= 9;
-const int STAT_ACTIVEWEAPON		= 10;
-const int STAT_TOTALSECRETS		= 11;
-const int STAT_TOTALMONSTERS	= 12;
-const int STAT_SECRETS			= 13;
-const int STAT_MONSTERS			= 14;
-const int STAT_ITEMS			= 15;
-const int STAT_VIEWHEIGHT		= 16;
+//const int STAT_HEALTH			= 0;
+//const int STAT_WEAPONMODEL	= 2;
+//const int STAT_AMMO			= 3;
+//const int STAT_ARMOR			= 4;
+//const int STAT_WEAPONFRAME	= 5;
+//const int STAT_SHELLS			= 6;
+//const int STAT_NAILS			= 7;
+//const int STAT_ROCKETS		= 8;
+//const int STAT_CELLS			= 9;
+//const int STAT_ACTIVEWEAPON	= 10;
+//const int STAT_TOTALSECRETS	= 11;
+//const int STAT_TOTALMONSTERS	= 12;
+//const int STAT_SECRETS		= 13;
+//const int STAT_MONSTERS		= 14;
+//const int STAT_ITEMS			= 15;
+//const int STAT_VIEWHEIGHT		= 16;
 
 // Quake Sound Constants
 const int CHAN_AUTO				= 0;
@@ -260,7 +260,7 @@ const vector VEC_1				= '1 1 1';
 const vector VEC_0				= '0 0 0';
 const vector VEC_M1				= '-1 -1 -1';
 
-const float M_PI				= 3.14159265358979323846;
+//const float M_PI				= 3.14159265358979323846;
 
 vector VEC_HULL_MIN				= '-16 -16 -24';
 vector VEC_HULL_MAX				= '16 16 32';
@@ -551,12 +551,12 @@ void(entity own, vector start, vector end) te_lightning3 = #430;
 void(entity own, vector start, vector end) te_beam = #431;
 void(vector dir) vectorvectors = #432;
 void(vector org) te_plasmaburn = #433;
-float(entity e, float s) getsurfacenumpoints = #434;
-vector(entity e, float s, float n) getsurfacepoint = #435;
-vector(entity e, float s) getsurfacenormal = #436;
-string(entity e, float s) getsurfacetexture = #437;
-float(entity e, vector p) getsurfacenearpoint = #438;
-vector(entity e, float s, vector p) getsurfaceclippedpoint = #439;
+//float(entity e, float s) getsurfacenumpoints = #434;
+//vector(entity e, float s, float n) getsurfacepoint = #435;
+//vector(entity e, float s) getsurfacenormal = #436;
+//string(entity e, float s) getsurfacetexture = #437;
+//float(entity e, vector p) getsurfacenearpoint = #438;
+//vector(entity e, float s, vector p) getsurfaceclippedpoint = #439;
 
 int(string s) tokenize = #441;
 string(float n) argv = #442;
@@ -585,11 +585,11 @@ void(float bufhandle, float string_index, string str) bufstr_set = #467;
 float(float bufhandle, string str, float order) bufstr_add = #468;
 void(float bufhandle, float string_index) bufstr_free = #469;
 
-float(float s) asin = #471;
-float(float c) acos = #472;
-float(float t) atan = #473;
-float(float c, float s) atan2 = #474;
-float(float a) tan = #475;
+//float(float s) asin = #471;
+//float(float c) acos = #472;
+//float(float t) atan = #473;
+//float(float c, float s) atan2 = #474;
+//float(float a) tan = #475;
 float(string s) strippedstringlen = #476;
 float(string s) strlennocol = #476; // This is the correct name for the function, but not removing the decolorizedstring mapping.
 string(string s) decolorizedstring = #477;
@@ -601,7 +601,7 @@ string(string s) cvar_defstring = #482;
 void(vector origin, string sample, float volume, float attenuation) pointsound = #483;
 string(string search, string replace, string subject) strreplace = #484;
 string(string search, string replace, string subject) strireplace = #485;
-vector(entity e, float s, float n, float a) getsurfacepointattribute = #486;
+//vector(entity e, float s, float n, float a) getsurfacepointattribute = #486;
 #ifdef SUPPORT_GECKO
 float gecko_create( string name ) = #487;
 void gecko_destroy( string name ) = #488;
@@ -1416,11 +1416,11 @@ float(string s) isfunction = #607;
 void(entity e, string s) parseentitydata = #608;
 
 // assorted builtins
-const int STAT_MOVEVARS_TICRATE      	= 240;
-const int STAT_MOVEVARS_TIMESCALE    	= 241;
-const int STAT_FRAGLIMIT				= 235;
-const int STAT_TIMELIMIT				= 236;
-const int STAT_MOVEVARS_GRAVITY       	= 242;
+//const int STAT_MOVEVARS_TICRATE      	= 240;
+//const int STAT_MOVEVARS_TIMESCALE    	= 241;
+//const int STAT_FRAGLIMIT				= 235;
+//const int STAT_TIMELIMIT				= 236;
+//const int STAT_MOVEVARS_GRAVITY       = 242;
 string(void) ReadPicture 				= #501;
 const int PARTICLES_USEALPHA = 1;
 float particles_alphamin, particles_alphamax;

@@ -1,4 +1,4 @@
-float autocvar_sv_cheats; // must... declare... global
+//float autocvar_sv_cheats; // must... declare... global
 
 float cheatcount_total;
 .float cheatcount;

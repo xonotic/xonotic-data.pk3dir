@@ -421,7 +421,6 @@ void turret_ewheel_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-void(entity e, entity tagentity, string tagname) setattachment = #443;
 void turret_construct()
 {
     if(self.tur_head == world)

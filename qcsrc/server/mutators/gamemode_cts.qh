@@ -1,4 +1,4 @@
-float g_race_qualifying;
+//float g_race_qualifying;
 
 // scores
 const float ST_CTS_LAPS = 1;

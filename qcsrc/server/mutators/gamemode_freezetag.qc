@@ -39,9 +39,9 @@ void freezetag_count_alive_players()
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-float prev_missing_teams_mask;
 float freezetag_CheckTeams()
 {
+	static float prev_missing_teams_mask;
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
