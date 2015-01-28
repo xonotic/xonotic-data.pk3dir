@@ -62,6 +62,8 @@ vehicles/vehicles.qh
 weapons/projectile.qh // TODO
 player_skeleton.qh
 
+../common/triggers/include.qh
+
 sortlist.qc
 miscfunctions.qc
 ../server/t_items.qh
@@ -130,6 +132,8 @@ command/cl_cmd.qc
 ../common/nades.qc
 ../common/buffs.qc
 ../common/physics.qc
+
+../common/triggers/include.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

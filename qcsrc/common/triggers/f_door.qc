@@ -27,19 +27,25 @@ void() door_rotating_go_up;
 
 void door_blocked()
 {
+	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO))
+	{ // KIll Kill Kill!!
+#ifdef SVQC
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#endif
+	}
+	else
+	{
+#ifdef SVQC
+		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#endif
 
-    if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    } else {
-
-        if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-
-         //Dont chamge direction for dead or dying stuff
-        if(other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
-            if (self.wait >= 0)
-            {
-                if (self.state == STATE_DOWN)
+		 //Dont chamge direction for dead or dying stuff
+		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		{
+			if (self.wait >= 0)
+			{
+				if (self.state == STATE_DOWN)
 			if (self.classname == "door")
 			{
 				door_go_up ();
@@ -47,7 +53,7 @@ void door_blocked()
 			{
 				door_rotating_go_up ();
 			}
-                else
+				else
 			if (self.classname == "door")
 			{
 				door_go_down ();
@@ -55,13 +61,17 @@ void door_blocked()
 			{
 				door_rotating_go_down ();
 			}
-            }
-        } else {
-            //gib dying stuff just to make sure
-            if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-        }
-    }
+			}
+		}
+#ifdef SVQC
+		else
+		{
+			//gib dying stuff just to make sure
+			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
+#endif
+	}
 }
 
 void door_hit_top()
@@ -134,7 +144,8 @@ ACTIVATION FUNCTIONS
 =============================================================================
 */
 
-float door_check_keys(void) {
+float door_check_keys(void)
+{
 	local entity door;
 
 
@@ -152,28 +163,41 @@ float door_check_keys(void) {
 	if (!IS_PLAYER(other))
 		return FALSE;
 
-	if (item_keys_usekey(door, other)) {
+	if (item_keys_usekey(door, other))
+	{
 		// some keys were used
-		if (other.key_door_messagetime <= time) {
+		if (other.key_door_messagetime <= time)
+		{
+#ifdef SVQC
 			play2(other, "misc/talk.wav");
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
+#endif
 			other.key_door_messagetime = time + 2;
 		}
-	} else {
+	}
+	else
+	{
 		// no keys were used
-		if (other.key_door_messagetime <= time) {
+		if (other.key_door_messagetime <= time)
+		{
+#ifdef SVQC
 			play2(other, "misc/talk.wav");
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
+#endif
 			other.key_door_messagetime = time + 2;
 		}
 	}
 
-	if (door.itemkeys) {
+	if (door.itemkeys)
+	{
+#ifdef SVQC
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
+#endif
 		return TRUE;
-	} else
+	}
+	else
 		return FALSE;
 }
 
@@ -222,11 +246,11 @@ void door_fire()
 			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == STATE_BOTTOM)
 			{
 				self.lip = 666; // self.lip is used to remember reverse opening direction for door_rotating
-			  	self.pos2 = '0 0 0' - self.pos2;
+				self.pos2 = '0 0 0' - self.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
 			if (!((self.spawnflags & 2) &&  (self.spawnflags & 8) && self.state == STATE_DOWN
-			    && (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0)))))
+				&& (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0)))))
 			{
 				door_rotating_go_up ();
 			}
@@ -251,27 +275,6 @@ void door_use()
 	}
 }
 
-void door_trigger_touch()
-{
-	if (other.health < 1)
-		if (!(other.iscreature && other.deadflag == DEAD_NO))
-			return;
-
-	if (time < self.attack_finished_single)
-		return;
-
-	// check if door is locked
-	if (!door_check_keys())
-		return;
-
-	self.attack_finished_single = time + 1;
-
-	activator = other;
-
-	self = self.owner;
-	door_use ();
-}
-
 void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	entity oself;
@@ -280,7 +283,8 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 			return;
 	self.health = self.health - damage;
 
-	if (self.itemkeys) {
+	if (self.itemkeys)
+	{
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
@@ -314,39 +318,52 @@ void door_touch()
 
 	self.owner.attack_finished_single = time + 2;
 
+#ifdef SVQC
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
+#endif
 }
 
 void door_generic_plat_blocked()
 {
 
-    if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    } else {
+	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
+#ifdef SVQC
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#endif
+	}
+	else
+	{
 
-        if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#ifdef SVQC
+		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#endif
 
-         //Dont chamge direction for dead or dying stuff
-        if(other.deadflag != DEAD_NO && (other.takedamage == DAMAGE_NO)) {
-            if (self.wait >= 0)
-            {
-                if (self.state == STATE_DOWN)
-                    door_rotating_go_up ();
-                else
-                    door_rotating_go_down ();
-            }
-        } else {
-            //gib dying stuff just to make sure
-            if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-        }
-    }
+		 //Dont chamge direction for dead or dying stuff
+		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		{
+			if (self.wait >= 0)
+			{
+				if (self.state == STATE_DOWN)
+					door_rotating_go_up ();
+				else
+					door_rotating_go_down ();
+			}
+		}
+#ifdef SVQC
+		else
+		{
+			//gib dying stuff just to make sure
+			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
+#endif
+	}
 }
 
 void door_rotating_hit_top()
@@ -410,17 +427,68 @@ void door_rotating_go_up()
 
 
 /*
-=============================================================================
+=========================================
+door trigger
 
-SPAWNING FUNCTIONS
-
-=============================================================================
+Spawned if a door lacks a real activator
+=========================================
 */
 
-entity spawn_field(vector fmins, vector fmaxs)
+void door_trigger_touch()
+{
+	if (other.health < 1)
+#ifdef SVQC
+		if (!(other.iscreature && !PHYS_DEAD(other)))
+#elif defined(CSQC)
+		if(!(IS_CLIENT(other) && !PHYS_DEAD(other)))
+			return;
+#endif
+
+	if (time < self.attack_finished_single)
+		return;
+
+	// check if door is locked
+	if (!door_check_keys())
+		return;
+
+	self.attack_finished_single = time + 1;
+
+	activator = other;
+
+	self = self.owner;
+	door_use ();
+}
+
+#ifdef SVQC
+
+float door_trigger_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR_TRIGGER);
+
+	WriteShort(MSG_ENTITY, num_for_edict(self.owner));
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	WriteCoord(MSG_ENTITY, self.mins_x);
+	WriteCoord(MSG_ENTITY, self.mins_y);
+	WriteCoord(MSG_ENTITY, self.mins_z);
+	WriteCoord(MSG_ENTITY, self.maxs_x);
+	WriteCoord(MSG_ENTITY, self.maxs_y);
+	WriteCoord(MSG_ENTITY, self.maxs_z);
+
+	return TRUE;
+}
+
+void door_trigger_link(entity trig)
+{
+	Net_LinkEntity(trig, FALSE, 0, door_trigger_send);
+}
+
+void spawn_field(vector fmins, vector fmaxs)
 {
 	entity	trigger;
-	vector	t1, t2;
+	vector	t1 = fmins, t2 = fmaxs;
 
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
@@ -429,11 +497,46 @@ entity spawn_field(vector fmins, vector fmaxs)
 	trigger.owner = self;
 	trigger.touch = door_trigger_touch;
 
-	t1 = fmins;
-	t2 = fmaxs;
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
-	return (trigger);
+	door_trigger_link(trigger);
 }
+
+#elif defined(CSQC)
+
+void ent_door_trigger()
+{
+	float entnum = ReadShort();
+	self.origin_x = ReadCoord();
+	self.origin_y = ReadCoord();
+	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
+	self.mins_x = ReadCoord();
+	self.mins_y = ReadCoord();
+	self.mins_z = ReadCoord();
+	self.maxs_x = ReadCoord();
+	self.maxs_y = ReadCoord();
+	self.maxs_z = ReadCoord();
+	setsize(self, self.mins, self.maxs);
+
+	self.owner = findfloat(world, sv_entnum, entnum); // if owner doesn't exist, it shouldn't matter much
+	self.classname = "doortriggerfield";
+	self.movetype = MOVETYPE_NONE;
+	self.solid = SOLID_TRIGGER;
+	self.trigger_touch = door_trigger_touch;
+	self.draw = trigger_draw_generic;
+	self.drawmask = MASK_NORMAL;
+	self.move_time = time;
+}
+
+#endif
+#ifdef SVQC
+/*
+=============
+LinkDoors
+
+
+=============
+*/
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
@@ -446,34 +549,23 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 float LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
 	float DELTA = 4;
-	if (e1.absmin_x > e2.absmax_x + DELTA)
-		return FALSE;
-	if (e1.absmin_y > e2.absmax_y + DELTA)
-		return FALSE;
-	if (e1.absmin_z > e2.absmax_z + DELTA)
-		return FALSE;
-	if (e2.absmin_x > e1.absmax_x + DELTA)
-		return FALSE;
-	if (e2.absmin_y > e1.absmax_y + DELTA)
-		return FALSE;
-	if (e2.absmin_z > e1.absmax_z + DELTA)
-		return FALSE;
+	if((e1.absmin_x > e2.absmax_x + DELTA)
+	|| (e1.absmin_y > e2.absmax_y + DELTA)
+	|| (e1.absmin_z > e2.absmax_z + DELTA)
+	|| (e2.absmin_x > e1.absmax_x + DELTA)
+	|| (e2.absmin_y > e1.absmax_y + DELTA)
+	|| (e2.absmin_z > e1.absmax_z + DELTA)
+	) { return FALSE; }
 	return TRUE;
 }
 
-
-/*
-=============
-LinkDoors
-
-
-=============
-*/
-
+void door_link();
 void LinkDoors()
 {
 	entity	t;
 	vector	cmins, cmaxs;
+
+	door_link();
 
 	if (self.enemy)
 		return;		// already linked by another door
@@ -487,7 +579,7 @@ void LinkDoors()
 			return;
 		if (self.items)
 			return;
-		self.trigger_field = spawn_field(self.absmin, self.absmax);
+		spawn_field(self.absmin, self.absmax);
 
 		return;		// don't want to link this door
 	}
@@ -555,7 +647,7 @@ void LinkDoors()
 	if (self.items)
 		return;
 
-	self.trigger_field = spawn_field(cmins, cmaxs);
+	spawn_field(cmins, cmaxs);
 }
 
 
@@ -587,6 +679,55 @@ SILVER_KEY causes the door to open only if the activator holds a silver key.
 FIXME: only one sound set available at the time being
 
 */
+
+float door_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
+
+	WriteShort(MSG_ENTITY, num_for_edict(self));
+	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+	WriteByte(MSG_ENTITY, self.skin);
+	WriteByte(MSG_ENTITY, self.speed);
+	WriteByte(MSG_ENTITY, self.scale);
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	WriteCoord(MSG_ENTITY, self.mins_x);
+	WriteCoord(MSG_ENTITY, self.mins_y);
+	WriteCoord(MSG_ENTITY, self.mins_z);
+	WriteCoord(MSG_ENTITY, self.maxs_x);
+	WriteCoord(MSG_ENTITY, self.maxs_y);
+	WriteCoord(MSG_ENTITY, self.maxs_z);
+
+	WriteCoord(MSG_ENTITY, self.movedir_x);
+	WriteCoord(MSG_ENTITY, self.movedir_y);
+	WriteCoord(MSG_ENTITY, self.movedir_z);
+
+	WriteCoord(MSG_ENTITY, self.angles_x);
+	WriteCoord(MSG_ENTITY, self.angles_y);
+	WriteCoord(MSG_ENTITY, self.angles_z);
+
+	WriteCoord(MSG_ENTITY, self.pos1_x);
+	WriteCoord(MSG_ENTITY, self.pos1_y);
+	WriteCoord(MSG_ENTITY, self.pos1_z);
+	WriteCoord(MSG_ENTITY, self.pos2_x);
+	WriteCoord(MSG_ENTITY, self.pos2_y);
+	WriteCoord(MSG_ENTITY, self.pos2_z);
+
+	WriteCoord(MSG_ENTITY, self.size_x);
+	WriteCoord(MSG_ENTITY, self.size_y);
+	WriteCoord(MSG_ENTITY, self.size_z);
+
+	WriteByte(MSG_ENTITY, self.wait);
+
+	return TRUE;
+}
+
+void door_link()
+{
+	Net_LinkEntity(self, FALSE, 0, door_send);
+}
 
 void door_init_startopen()
 {
@@ -624,9 +765,9 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.dmg && (self.message == ""))
+	if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (self.message2 == ""))
+	if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0)
@@ -671,3 +812,59 @@ void spawnfunc_func_door()
 
 	self.reset = door_reset;
 }
+
+#elif defined(CSQC)
+
+void door_draw()
+{
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0) { return; }
+
+	trigger_touch_generic(door_touch);
+}
+
+void ent_door()
+{
+	self.sv_entnum = ReadShort();
+	self.warpzone_isboxy = ReadByte();
+	self.skin = ReadByte();
+	self.speed = ReadByte();
+	self.scale = ReadByte();
+	self.origin_x = ReadCoord();
+	self.origin_y = ReadCoord();
+	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
+	self.mins_x = ReadCoord();
+	self.mins_y = ReadCoord();
+	self.mins_z = ReadCoord();
+	self.maxs_x = ReadCoord();
+	self.maxs_y = ReadCoord();
+	self.maxs_z = ReadCoord();
+	setsize(self, self.mins, self.maxs);
+	self.movedir_x = ReadCoord();
+	self.movedir_y = ReadCoord();
+	self.movedir_z = ReadCoord();
+	self.angles_x = ReadCoord();
+	self.angles_y = ReadCoord();
+	self.angles_z = ReadCoord();
+	self.pos1_x = ReadCoord();
+	self.pos1_y = ReadCoord();
+	self.pos1_z = ReadCoord();
+	self.pos2_x = ReadCoord();
+	self.pos2_y = ReadCoord();
+	self.pos2_z = ReadCoord();
+	self.size_x = ReadCoord();
+	self.size_y = ReadCoord();
+	self.size_z = ReadCoord();
+	self.wait = ReadByte();
+
+	self.classname = "door";
+	self.movetype = MOVETYPE_PUSH;
+	self.solid = SOLID_TRIGGER;
+	self.draw = door_draw;
+	self.drawmask = MASK_NORMAL;
+	self.move_time = time;
+}
+
+#endif

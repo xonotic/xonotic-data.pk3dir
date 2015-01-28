@@ -8,7 +8,9 @@
 /**
  * list of key names.
  */
+#ifdef SVQC
 string item_keys_names[ITEM_KEY_MAX];
+#endif
 
 /**
  * Use keys from p on l.

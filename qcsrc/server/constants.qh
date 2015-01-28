@@ -19,5 +19,3 @@ const float MSG_ENTITY = 5; // csqc
 const float NUM_PLAYERSKINS_TEAMPLAY = 3;
 
 const float ASSAULT_VALUE_INACTIVE = 1000;
-
-const float DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag

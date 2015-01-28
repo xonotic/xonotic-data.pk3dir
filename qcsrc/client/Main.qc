@@ -351,6 +351,14 @@ void trigger_touch_generic(void() touchfunc)
 		}
 	}
 }
+void trigger_draw_generic()
+{
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0) { return; }
+
+	if(self.trigger_touch) { trigger_touch_generic(self.trigger_touch); }
+}
 
 void Ent_RemoveEntCS()
 {
@@ -855,6 +863,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
 		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
 		case ENT_CLIENT_CONVEYOR: ent_conveyor(); break;
+		case ENT_CLIENT_DOOR: ent_door(); break;
+		case ENT_CLIENT_DOOR_TRIGGER: ent_door_trigger(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

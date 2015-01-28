@@ -80,6 +80,8 @@ anticheat.qh
 cheats.qh
 ../common/playerstats.qh
 
+../common/triggers/include.qh
+
 portals.qh
 
 g_hook.qh // TODO
@@ -143,7 +145,6 @@ t_teleporters.qc
 
 sv_main.qc
 
-g_triggers.qc
 g_models.qc
 
 // singleplayer stuff
@@ -162,8 +163,6 @@ weapons/weaponstats.qc
 weapons/weaponsystem.qc
 ../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
-
-../common/triggers/include.qh
 
 t_items.qc
 cl_impulse.qc

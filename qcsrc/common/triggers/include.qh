@@ -1,1 +1,7 @@
+#ifdef CSQC
+#include "../../server/item_key.qh"
+#endif
 #include "f_door.qh"
+#include "triggers.qh"
+#include "subs.qh"
+#include "triggers.qh"
