@@ -101,7 +101,7 @@ string panel_bg_padding_str;
 
 float current_player;
 
-float GetPlayerColorForce(float i);
+float GetPlayerColorForce(int i);
 
 
 #define HUD_PANELS(HUD_PANEL) 																						\
@@ -255,7 +255,7 @@ HUD_PANELS(HUD_PANEL)
 	} else {                                                                                                        \
 		panel_bg_padding = stof(panel_bg_padding_str);                                                              \
 	}                                                                                                               \
-	panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);                                \
+	panel_bg_padding = min(min(panel_size.x, panel_size.y)/2 - 5, panel_bg_padding);                                \
 } while(0)
 
 // return smoothly faded pos and size of given panel when a dialog is active
@@ -264,28 +264,28 @@ HUD_PANELS(HUD_PANEL)
 	vector menu_enable_size = '0 0 0';                                                                              \
 	float menu_enable_maxsize_x = 0.3 * vid_conwidth;                                                               \
 	float menu_enable_maxsize_y = 0.18 * vid_conheight;                                                             \
-	if (panel_size_x > panel_size_y) {                                                                              \
-		if (panel_size_y > menu_enable_maxsize_y) {                                                                 \
-			menu_enable_size_y = menu_enable_maxsize_y;                                                             \
-			menu_enable_size_x = panel_size_x * (menu_enable_maxsize_y/panel_size_y);                               \
+	if (panel_size.x > panel_size.y) {                                                                              \
+		if (panel_size.y > menu_enable_maxsize_y) {                                                                 \
+			menu_enable_size.y = menu_enable_maxsize_y;                                                             \
+			menu_enable_size.x = panel_size.x * (menu_enable_maxsize_y/panel_size.y);                               \
 			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
 		}                                                                                                           \
-		menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * (vid_conheight - menu_enable_maxsize_y);\
+		menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size.x + eY * (vid_conheight - menu_enable_maxsize_y);\
 	} else {                                                                                                        \
-		if (panel_size_x > menu_enable_maxsize_x) {                                                                 \
-			menu_enable_size_x = menu_enable_maxsize_x;                                                             \
-			menu_enable_size_y = panel_size_y * (menu_enable_maxsize_x/panel_size_x);                               \
+		if (panel_size.x > menu_enable_maxsize_x) {                                                                 \
+			menu_enable_size.x = menu_enable_maxsize_x;                                                             \
+			menu_enable_size.y = panel_size.y * (menu_enable_maxsize_x/panel_size.x);                               \
 			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
 		}                                                                                                           \
-		menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * (vid_conwidth - menu_enable_maxsize_x);\
+		menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size.y + eX * (vid_conwidth - menu_enable_maxsize_x);\
 	}                                                                                                               \
 	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;                  \
 } while(0)
 
 // Scale the pos and size vectors to absolute coordinates
 #define HUD_Panel_ScalePosSize() do {                                                                               \
-	panel_pos_x *= vid_conwidth;  panel_pos_y *= vid_conheight;                                                     \
-	panel_size_x *= vid_conwidth; panel_size_y *= vid_conheight;                                                    \
+	panel_pos.x *= vid_conwidth;  panel_pos.y *= vid_conheight;                                                     \
+	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight;                                                    \
 } while(0)
 
 // NOTE: in hud_configure mode cvars must be reloaded every frame
@@ -350,7 +350,7 @@ HUD_PANELS(HUD_PANEL)
 } while(0)
 
 const int NOTIFY_MAX_ENTRIES = 10;
-const int NOTIFY_ICON_MARGIN = 0.02;
+const float NOTIFY_ICON_MARGIN = 0.02;
 
 int notify_index;
 int notify_count;

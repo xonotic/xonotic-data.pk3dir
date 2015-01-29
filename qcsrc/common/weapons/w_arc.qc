@@ -60,24 +60,24 @@ vector arc_shotorigin[4];
 .vector beam_start;
 .vector beam_dir;
 .vector beam_wantdir;
-.float beam_type;
+.int beam_type;
 
-const float ARC_BT_MISS =        0x00;
-const float ARC_BT_WALL =        0x01;
-const float ARC_BT_HEAL =        0x02;
-const float ARC_BT_HIT =         0x03;
-const float ARC_BT_BURST_MISS =  0x10;
-const float ARC_BT_BURST_WALL =  0x11;
-const float ARC_BT_BURST_HEAL =  0x12;
-const float ARC_BT_BURST_HIT =   0x13;
-const float ARC_BT_BURSTMASK =   0x10;
+const int ARC_BT_MISS =        0x00;
+const int ARC_BT_WALL =        0x01;
+const int ARC_BT_HEAL =        0x02;
+const int ARC_BT_HIT =         0x03;
+const int ARC_BT_BURST_MISS =  0x10;
+const int ARC_BT_BURST_WALL =  0x11;
+const int ARC_BT_BURST_HEAL =  0x12;
+const int ARC_BT_BURST_HIT =   0x13;
+const int ARC_BT_BURSTMASK =   0x10;
 
-const float ARC_SF_SETTINGS =    1;
-const float ARC_SF_START =       2;
-const float ARC_SF_WANTDIR =     4;
-const float ARC_SF_BEAMDIR =     8;
-const float ARC_SF_BEAMTYPE =    16;
-const float ARC_SF_LOCALMASK =   14;
+const int ARC_SF_SETTINGS =    1;
+const int ARC_SF_START =       2;
+const int ARC_SF_WANTDIR =     4;
+const int ARC_SF_BEAMDIR =     8;
+const int ARC_SF_BEAMTYPE =    16;
+const int ARC_SF_LOCALMASK =   14;
 #endif
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

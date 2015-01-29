@@ -118,24 +118,20 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
 {
-	float dt;
-	vector v;
-	float i;
-
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
 	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
-		for(i = 0; i < MAX_TEAMRADAR_TIMES; ++i)
+		for(int i = 0; i < MAX_TEAMRADAR_TIMES; ++i)
 		{
-			dt = pingdata.(teamradar_times[i]);
+			float dt = pingdata.(teamradar_times[i]);
 			if(dt == 0)
 				continue;
 			dt = time - dt;
 			if(dt >= 1 || dt <= 0)
 				continue;
-			v = '2 2 0' * teamradar_size * dt;
+			vector v = '2 2 0' * teamradar_size * dt;
 			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 		}
 	}

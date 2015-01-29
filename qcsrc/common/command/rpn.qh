@@ -6,7 +6,7 @@
 //  Last updated: December 28th, 2011
 // =========================================================
 
-const float MAX_RPN_STACK = 16;
+const int MAX_RPN_STACK = 16;
 int rpn_db;
 int rpn_error;
 int rpn_sp;

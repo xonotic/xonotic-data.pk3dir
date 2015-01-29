@@ -2151,9 +2151,9 @@ void(float skel) skel_delete = #275; // deletes skeleton at the beginning of the
 float(float modlindex, string framename) frameforname = #276; // finds number of a specified frame in the animation, returns -1 if no match found
 float(float modlindex, float framenum) frameduration = #277; // returns the intended play time (in seconds) of the specified framegroup, if it does not exist the result is 0, if it is a single frame it may be a small value around 0.1 or 0.
 //fields:
-.float skeletonindex; // active skeleton overriding standard animation on model
-.float frame; // primary framegroup animation (strength = 1 - lerpfrac - lerpfrac3 - lerpfrac4)
-.float frame2; // secondary framegroup animation (strength = lerpfrac)
+.int skeletonindex; // active skeleton overriding standard animation on model
+.int frame; // primary framegroup animation (strength = 1 - lerpfrac - lerpfrac3 - lerpfrac4)
+.int frame2; // secondary framegroup animation (strength = lerpfrac)
 .float frame3; // tertiary framegroup animation (strength = lerpfrac3)
 .float frame4; // quaternary framegroup animation (strength = lerpfrac4)
 .float lerpfrac; // strength of framegroup blend

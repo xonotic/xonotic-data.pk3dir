@@ -2055,9 +2055,6 @@ string get_model_datafilename(string m, float sk, string fil)
 
 float get_model_parameters(string m, float sk)
 {
-	string fn, s, c;
-	float fh, i;
-
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
@@ -2068,7 +2065,7 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_desc = string_null;
 	get_model_parameters_bone_upperbody = string_null;
 	get_model_parameters_bone_weapon = string_null;
-	for(i = 0; i < MAX_AIM_BONES; ++i)
+	for(int i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		get_model_parameters_bone_aim[i] = string_null;
 		get_model_parameters_bone_aimweight[i] = 0;
@@ -2091,8 +2088,8 @@ float get_model_parameters(string m, float sk)
 		m = substring(m, 0, -7);
 	}
 
-	fn = get_model_datafilename(m, sk, "txt");
-	fh = fopen(fn, FILE_READ);
+	string fn = get_model_datafilename(m, sk, "txt");
+	int fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
 		sk = 0;
@@ -2104,6 +2101,7 @@ float get_model_parameters(string m, float sk)
 
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
+	string s, c;
 	while((s = fgets(fh)))
 	{
 		if(s == "")
@@ -2135,7 +2133,7 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-		for(i = 0; i < MAX_AIM_BONES; ++i)
+		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
 				get_model_parameters_bone_aimweight[i] = stof(car(s));

@@ -5,7 +5,7 @@
 
 	.float cnt;
 	.float alpha;
-	.float state;
+	.int state;
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

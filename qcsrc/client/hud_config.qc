@@ -61,7 +61,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		// common cvars for all panels
-		float i;
+		int i;
 		for (i = 0; i < HUD_PANEL_NUM; ++i)
 		{
 			panel = hud_panel[i];
@@ -324,14 +324,10 @@ void HUD_Panel_SetPos(vector pos)
 
 // check if resize will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
 vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
-	float i;
-
 	vector targEndPos;
-
 	vector dist;
-	float ratio;
-	ratio = mySize.x/mySize.y;
-
+	float ratio = mySize.x/mySize.y;
+	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
 		if(panel == highlightedPanel) continue;
@@ -687,11 +683,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
-	float hit_con_bind = 0, i;
+	bool hit_con_bind = false;
+	int i;
 	for (i = 0; i < keys; ++i)
 	{
 		if(nPrimary == stof(argv(i)))
-			hit_con_bind = 1;
+			hit_con_bind = true;
 	}
 
 	if(bInputType == 0) {
@@ -930,8 +927,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
-	float i, j = 0, border;
-
+	int i, j = 0;
 	while(j < HUD_PANEL_NUM)
 	{
 		i = panel_order[j];
@@ -940,7 +936,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		panel = hud_panel[i];
 		HUD_Panel_UpdatePosSize();
 
-		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
+		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
@@ -1011,7 +1007,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 void HUD_Panel_Highlight(float allow_move)
 {
-	float i, j = 0, border;
+	int i, j = 0;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -1021,7 +1017,7 @@ void HUD_Panel_Highlight(float allow_move)
 		panel = hud_panel[i];
 		HUD_Panel_UpdatePosSize();
 
-		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
+		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
@@ -1228,7 +1224,7 @@ void HUD_Configure_DrawGrid()
 float _menu_alpha_prev;
 void HUD_Configure_Frame()
 {
-	float i;
+	int i;
 	if(autocvar__hud_configure)
 	{
 		if(isdemo() || intermission == 2)

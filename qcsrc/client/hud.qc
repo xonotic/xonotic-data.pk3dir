@@ -240,7 +240,7 @@ float race_CheckName(string net_name) {
 	return 0;
 }
 
-float GetPlayerColorForce(float i)
+float GetPlayerColorForce(int i)
 {
 	if(!teamplay)
 		return 0;
@@ -248,7 +248,7 @@ float GetPlayerColorForce(float i)
 		return stof(getplayerkeyvalue(i, "colors")) & 15;
 }
 
-float GetPlayerColor(float i)
+float GetPlayerColor(int i)
 {
 	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
@@ -258,7 +258,7 @@ float GetPlayerColor(float i)
 		return GetPlayerColorForce(i);
 }
 
-string GetPlayerName(float i)
+string GetPlayerName(int i)
 {
 	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
 }

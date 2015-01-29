@@ -194,7 +194,7 @@ void register_weapons_done()
 	dummy_weapon_info.w_crosshair_size = 1;
 	dummy_weapon_info.model2 = "";
 
-	float i;
+	int i;
 	weaponorder_byid = "";
 	for(i = WEP_MAXCOUNT; i >= 1; --i)
 		if(weapon_info[i-1])

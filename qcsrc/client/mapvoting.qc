@@ -21,7 +21,7 @@ string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, v
 	return strcat(pre, map, post);
 }
 
-string GameTypeVote_DescriptionByID(float id)
+string GameTypeVote_DescriptionByID(int id)
 {
 	return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
 }
@@ -381,7 +381,6 @@ void MapVote_Draw()
 
 void Cmd_MapVote_MapDownload(float argc)
 {
-	float id;
 	entity pak;
 
 	if(argc != 2 || !mv_pk3list)
@@ -390,7 +389,7 @@ void Cmd_MapVote_MapDownload(float argc)
 		return;
 	}
 
-	id = stof(argv(1));
+	int id = stof(argv(1));
 	for(pak = mv_pk3list; pak; pak = pak.chain)
 		if(pak.sv_entnum == id)
 			break;

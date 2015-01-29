@@ -1378,13 +1378,11 @@ void Local_Notification_centerprint_generic(
 	string input, string durcnt,
 	int cpid, float f1, float f2)
 {
-	string selected;
-	float sel_num;
 	arg_slot[0] = ""; arg_slot[1] = "";
 
-	for(sel_num = 0;(durcnt != "");)
+	for(int sel_num = 0;(durcnt != "");)
 	{
-		selected = car(durcnt); durcnt = cdr(durcnt);
+		string selected = car(durcnt); durcnt = cdr(durcnt);
 		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic");
 		switch(strtolower(selected))
 		{
@@ -1657,7 +1655,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 // WOVA = Without Variable Arguments
 void Local_Notification_WOVA(
-	float net_type, float net_name,
+	int net_type, float net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1678,8 +1676,8 @@ void Local_Notification_WOVA(
 #ifdef CSQC
 void Read_Notification(float is_new)
 {
-	float net_type = ReadByte();
-	float net_name = ReadShort();
+	int net_type = ReadByte();
+	int net_name = ReadShort();
 
 	entity notif;
 

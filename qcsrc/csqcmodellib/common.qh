@@ -48,9 +48,9 @@ IN THE SOFTWARE.\
 
 .vector glowmod;
 .vector view_ofs;
-.float frame;
+.int frame;
 .float frame1time;
-.float frame2;
+.int frame2;
 .float frame2time;
 .float lerpfrac;
 
@@ -65,8 +65,8 @@ const int CSQCMODEL_PROPERTY_LERPFRAC = 65536;
 const int CSQCMODEL_PROPERTY_SIZE = 32768;
 
 #define ALLPROPERTIES_COMMON \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME, float, ReadByte, WriteByte, frame) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_MODELINDEX, float, ReadShort, WriteShort, modelindex) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME, int, ReadByte, WriteByte, frame) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_MODELINDEX, int, ReadShort, WriteShort, modelindex) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_x) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_y) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_z) \
@@ -89,7 +89,7 @@ const int CSQCMODEL_PROPERTY_SIZE = 32768;
 .float frame4time;
 .float lerpfrac4;
 #define ALLPROPERTIES ALLPROPERTIES_COMMON \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME2, float, ReadByte, WriteByte, frame2) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME2, int, ReadByte, WriteByte, frame2) \
 	CSQCMODEL_PROPERTY_SCALED(CSQCMODEL_PROPERTY_LERPFRAC, float, ReadByte, WriteByte, lerpfrac, 255, 0, 255)
 #else
 #define ALLPROPERTIES ALLPROPERTIES_COMMON

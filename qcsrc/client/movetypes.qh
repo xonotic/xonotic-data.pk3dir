@@ -8,8 +8,8 @@
 .vector move_velocity;
 .vector move_avelocity;
 .int move_flags;
-.float move_watertype;
-.float move_waterlevel;
+.int move_watertype;
+.int move_waterlevel;
 .void(void) move_touch;
 .void(float, float) contentstransition;
 .float move_bounce_factor;

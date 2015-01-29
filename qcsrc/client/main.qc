@@ -392,14 +392,12 @@ void Ent_Remove();
 
 void Ent_RemovePlayerScore()
 {
-	float i;
-
-	if(self.owner)
-	{
+	if(self.owner) {
 		SetTeam(self.owner, -1);
 		self.owner.gotscores = 0;
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(int i = 0; i < MAX_SCORE; ++i) {
 			self.owner.(scores[i]) = 0; // clear all scores
+		}
 	}
 }
 

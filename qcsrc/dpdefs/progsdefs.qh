@@ -104,7 +104,7 @@ void		end_sys_globals;		// flag for structure dumping
 //
 // system fields (*** = do not set in prog code, maintained by C code)
 //
-.float		modelindex;		// *** model index in the precached list
+.int		modelindex;		// *** model index in the precached list
 .vector		absmin, absmax;	// *** origin + mins / maxs
 
 .float		ltime;			// local time for entity
@@ -121,7 +121,7 @@ void		end_sys_globals;		// flag for structure dumping
 
 .string		classname;		// spawn function
 .string		model;
-.float		frame;
+.int		frame;
 .int		skin;
 .int		effects;
 

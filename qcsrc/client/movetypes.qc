@@ -24,14 +24,10 @@ void _Movetype_CheckVelocity() // SV_CheckVelocity
 
 float _Movetype_CheckWater(entity ent) // SV_CheckWater
 {
-	int supercontents;
-	float nativecontents;
-	vector point;
+	vector point = ent.move_origin;
+	point.z += (ent.mins.z + 1);
 
-	point = ent.move_origin;
-	point_z += (ent.mins.z + 1);
-
-	nativecontents = pointcontents(point);
+	int nativecontents = pointcontents(point);
 
 	if(ent.move_watertype)
 	if(ent.move_watertype != nativecontents)
@@ -44,7 +40,7 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	ent.move_waterlevel = 0;
 	ent.move_watertype = CONTENT_EMPTY;
 
-	supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
+	int supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
 	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
 		ent.move_watertype = nativecontents;

@@ -32,7 +32,7 @@ vector gtv_text_size_small;
 
 string MapVote_FormatMapItem(int id, string map, float count, float maxwidth, vector fontsize);
 
-string GameTypeVote_DescriptionByID(float id);
+string GameTypeVote_DescriptionByID(int id);
 
 vector MapVote_RGB(int id);
 
