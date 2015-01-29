@@ -1,6 +1,8 @@
 #ifndef DEATHTYPES_H
 #define DEATHTYPES_H
 
+#include "notifications.qh"
+
 // ================================
 //  Deathtypes, reworked by Samual
 // ================================

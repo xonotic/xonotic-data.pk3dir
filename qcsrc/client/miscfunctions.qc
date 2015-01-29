@@ -1,24 +1,8 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/command/generic.qh"
-	#include "../common/urllib.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "miscfunctions.qh"
 
+#include "../common/urllib.qh"
 
-entity players;
-entity teams;
-float team_count; // real teams
+#include "../common/command/generic.qh"
 
 void AuditLists()
 {
@@ -175,8 +159,6 @@ vector rotate(vector v, float a)
 	return w;
 }
 
-int ColorTranslateMode;
-
 string ColorTranslateRGB(string s)
 {
 	if(ColorTranslateMode & 1)
@@ -275,54 +257,6 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 	}
 }
 
-// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
-float _drawpic_imgaspect;
-vector _drawpic_imgsize;
-vector _drawpic_sz;
-float _drawpic_oldsz;
-string _drawpic_picpath;
-#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
-	do {\
-		_drawpic_imgsize = draw_getimagesize(pic);\
-		if(_drawpic_imgsize != '0 0 0') {\
-			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
-			_drawpic_sz = mySize;\
-			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
-				_drawpic_oldsz = _drawpic_sz.x;\
-				_drawpic_sz_x = _drawpic_sz.y * _drawpic_imgaspect;\
-				if(_drawpic_sz.x)\
-					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
-			} else {\
-				_drawpic_oldsz = _drawpic_sz.y;\
-				_drawpic_sz_y = _drawpic_sz.x / _drawpic_imgaspect;\
-				if(_drawpic_sz.y)\
-					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
-			}\
-		}\
-	} while(0)
-
-// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	do{\
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
-			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
-		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
-		_drawpic_picpath = string_null;\
-	} while(0)
-
-// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
-#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
-	do{\
-		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
-		if(precache_pic(_drawpic_picpath) == "") {\
-			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
-		}\
-		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
-		_drawpic_picpath = string_null;\
-	} while(0)
-
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
@@ -336,19 +270,6 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 	drawpic_aspect_skin_expanding(position, pic, theScale, rgb, theAlpha, flag, fadelerp);
 	drawpic_skin(position, pic, theScale, rgb, theAlpha * fadelerp, flag);
 }
-#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) do {																	\
-	float textaspect, oldsz;																						\
-	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
-	if(sz.x/sz.y > textaspect) {																					\
-		oldsz = sz.x;																								\
-		sz_x = sz.y * textaspect;																					\
-		pos.x += (oldsz - sz.x) * 0.5;																				\
-	} else {																										\
-		oldsz = sz.y;																								\
-		sz_y = sz.x / textaspect; 																					\
-		pos.y += (oldsz - sz.y) * 0.5;																				\
-	}																												\
-} while(0)
 
 // drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
 void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag) {
@@ -362,7 +283,6 @@ void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAl
 	drawcolorcodedstring(pos, text, '1 1 0' * sz.y, theAlpha, drawflag);
 }
 
-vector drawfontscale;
 void drawstring_expanding(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz;
@@ -579,7 +499,6 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 	}
 }
 
-const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
 vector getplayerorigin(int pl)
 {
 	entity e;
@@ -662,13 +581,6 @@ void draw_endBoldFont()
 	drawfont = FONT_USER+1;
 }
 
-
-const int MAX_ACCURACY_LEVELS = 10;
-float acc_lev[MAX_ACCURACY_LEVELS];
-vector acc_col[MAX_ACCURACY_LEVELS];
-float acc_col_loadtime;
-int acc_levels;
-string acc_color_levels;
 void Accuracy_LoadLevels()
 {
 	if(autocvar_accuracy_color_levels != acc_color_levels)

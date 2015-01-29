@@ -1,0 +1,6 @@
+#ifndef RUBBLE_H
+#define RUBBLE_H
+.float creationtime;
+void RubbleLimit(string cname, float limit, void() deleteproc);
+entity RubbleNew(string cname);
+#endif

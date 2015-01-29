@@ -1,10 +1,21 @@
 #ifndef GENERIC_H
 #define GENERIC_H
 
+#include "markup.qh"
+#include "rpn.qh"
+
 // =========================================================
 //  Declarations for common command code, written by Samual
 //  Last updated: December 28th, 2011
 // =========================================================
+
+void GenericCommand_macro_help();
+
+float GenericCommand_macro_command(float argc, string command);
+
+float GenericCommand_macro_usage(float argc);
+
+void GenericCommand_macro_write_aliases(float fh);
 
 // Used by other game command systems for common commands,
 // and it returns true if handled, false if not.

@@ -22,6 +22,8 @@
 #ifndef CSQCMODELLIB_COMMON_H
 #define CSQCMODELLIB_COMMON_H
 
+#include "../common/csqcmodel_settings.qh"
+
 noref string csqcmodel_license = "\
 Copyright (c) 2011 Rudolf Polzer\
 \

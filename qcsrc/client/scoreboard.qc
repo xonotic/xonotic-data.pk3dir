@@ -1,22 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/stats.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/buffs.qh"
-	#include "../common/counting.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "../common/mapinfo.qh"
-	#include "command/cl_cmd.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-	#include "scoreboard.qh"
-	#include "main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "scoreboard.qh"
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;
@@ -74,7 +56,6 @@ string TranslateScoresLabel(string l)
 	}
 }
 
-void Cmd_HUD_SetFields(float argc);
 void HUD_InitScores()
 {
 	int i, f;
@@ -105,7 +86,6 @@ void HUD_InitScores()
 	Cmd_HUD_SetFields(0);
 }
 
-void HUD_UpdatePlayerPos(entity pl);
 float SetTeam(entity pl, float Team);
 //float lastpnum;
 void HUD_UpdatePlayerTeams()
@@ -627,7 +607,6 @@ string HUD_GetField(entity pl, int field)
 	//return "error";
 }
 
-float xmin, xmax, ymin, ymax, sbwidth;
 float hud_fixscoreboardcolumnwidth_len;
 float hud_fixscoreboardcolumnwidth_iconlen;
 float hud_fixscoreboardcolumnwidth_marginlen;

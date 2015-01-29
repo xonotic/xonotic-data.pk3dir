@@ -19,6 +19,7 @@ float warpzone_cameras_exist;
 .float warpzone_fadestart;
 .float warpzone_fadeend;
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
+void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang);
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
 vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org);

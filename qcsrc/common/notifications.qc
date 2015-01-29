@@ -1,14 +1,4 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../client/defs.qh"
-	#include "teams.qh"
-	#include "util.qh"
-	#include "buffs.qh"
-	#include "counting.qh"
-	#include "weapons/weapons.qh"
-	#include "../client/autocvars.qh"
-	#include "notifications.qh"
-	#include "../client/main.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"

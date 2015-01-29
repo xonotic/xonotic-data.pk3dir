@@ -1,71 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/buffs.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "autocvars.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "teamradar.qh"
-	#include "waypointsprites.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-	#include "../server/t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-float waypointsprite_initialized;
-float waypointsprite_fadedistance;
-float waypointsprite_normdistance;
-float waypointsprite_minscale;
-float waypointsprite_minalpha;
-float waypointsprite_distancealphaexponent;
-float waypointsprite_timealphaexponent;
-float waypointsprite_scale;
-float waypointsprite_fontsize;
-float waypointsprite_edgefadealpha;
-float waypointsprite_edgefadescale;
-float waypointsprite_edgefadedistance;
-float waypointsprite_edgeoffset_bottom;
-float waypointsprite_edgeoffset_left;
-float waypointsprite_edgeoffset_right;
-float waypointsprite_edgeoffset_top;
-float waypointsprite_crosshairfadealpha;
-float waypointsprite_crosshairfadescale;
-float waypointsprite_crosshairfadedistance;
-float waypointsprite_distancefadealpha;
-float waypointsprite_distancefadescale;
-float waypointsprite_distancefadedistance;
-float waypointsprite_alpha;
-
-.float helpme;
-.float rule;
-.string netname; // primary picture
-.string netname2; // secondary picture
-.string netname3; // tertiary picture
-.float team; // team that gets netname2
-.float lifetime;
-.float fadetime;
-.float maxdistance;
-.int hideflags;
-.float spawntime;
-.float health;
-.float build_started;
-.float build_starthealth;
-.float build_finished;
-
-const float SPRITE_HEALTHBAR_WIDTH = 144;
-const float SPRITE_HEALTHBAR_HEIGHT = 9;
-const float SPRITE_HEALTHBAR_MARGIN = 6;
-const float SPRITE_HEALTHBAR_BORDER = 2;
-const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
-const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
-const float SPRITE_ARROW_SCALE = 1.0;
-const float SPRITE_HELPME_BLINK = 2;
+#include "waypointsprites.qh"
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -368,7 +301,6 @@ vector fixrgbexcess(vector rgb)
 	return rgb;
 }
 
-float waypointsprite_count, waypointsprite_newcount;
 void Draw_WaypointSprite()
 {
 	string spriteimage;

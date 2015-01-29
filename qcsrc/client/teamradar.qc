@@ -1,24 +1,8 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "../csqcmodellib/interpolate.qh"
 	#include "teamradar.qh"
-	#include "hud.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
-
-float teamradar_angle; // player yaw angle
-vector teamradar_origin3d_in_texcoord; // player origin
-vector teamradar_origin2d; // 2D origin
-vector teamradar_size2d; // 2D size
-vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
-float teamradar_size; // 2D scale factor
-float v_flipped;
 
 float vlen2d(vector v)
 {
@@ -179,14 +163,6 @@ void draw_teamradar_link(vector start, vector end, int colors)
 	R_PolygonVertex(end - norm, '1 0 0', c1, panel_fg_alpha);
 	R_EndPolygon();
 }
-
-float hud_panel_radar_scale; // window size = ...qu
-float hud_panel_radar_foreground_alpha;
-float hud_panel_radar_rotation;
-vector hud_panel_radar_size;
-float hud_panel_radar_zoommode;
-float hud_panel_radar_maximized_zoommode;
-float hud_panel_radar_maximized_rotation;
 
 void teamradar_loadcvars()
 {

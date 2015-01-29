@@ -1,19 +1,6 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "noise.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
+#include "hud.qh"
+#include "noise.qh"
+#include "../warpzonelib/common.qh"
 
 .float HookType; // ENT_CLIENT_*
 .vector origin;

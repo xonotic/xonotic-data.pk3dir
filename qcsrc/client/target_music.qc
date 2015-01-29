@@ -1,24 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-float music_disabled;
-entity music_default;
-entity music_target;
-entity music_trigger;
-// FIXME also control bgmvolume here, to not require a target_music for the default track.
-
-.int state;
-.float lastvol;
+#include "target_music.qh"
 
 void TargetMusic_Advance()
 {

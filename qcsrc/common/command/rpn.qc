@@ -1,20 +1,4 @@
-#if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
-	#include "../../warpzonelib/mathlib.qh"
-	#include "../util.qh"
-	#include "rpn.qh"
-	#include "generic.qh"
-	#include "shared_defs.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/mathlib.qh"
-    #include "../util.qh"
-    #include "rpn.qh"
-    #include "generic.qh"
-    #include "shared_defs.qh"
-#endif
+#include "rpn.qh"
 
 // ========================================
 //  RPN command code, written by divVerent

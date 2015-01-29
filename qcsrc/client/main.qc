@@ -1,28 +1,23 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-    #include "defs.qh"
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../warpzonelib/client.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/nades.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/cl_cmd.qh"
-    #include "autocvars.qh"
-    #include "../common/notifications.qh"
-    #include "../csqcmodellib/interpolate.qh"
-    #include "hud.qh"
-    #include "waypointsprites.qh"
-    #include "prandom.qh"
-    #include "tturrets.qh"
-    #include "main.qh"
-    #include "../csqcmodellib/cl_model.qh"
-    #include "shownames.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "mapvoting.qh"
+#include "modeleffects.qh"
+#include "particles.qh"
+#include "scoreboard.qh"
+#include "shownames.qh"
+#include "target_music.qh"
+#include "tturrets.qh"
+#include "tuba.qh"
+#include "wall.qh"
+#include "waypointsprites.qh"
+
+#include "vehicles/vehicles.qh"
+
+#include "../server/vehicles/bumblebee.qh"
+
+#include "../common/net_notice.qh"
+
+#include "../common/monsters/monsters.qh"
+
+#include "../warpzonelib/client.qh"
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS

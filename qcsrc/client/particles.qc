@@ -1,30 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../common/constants.qh"
-	#include "../common/stats.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../common/util.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "autocvars.qh"
-	#include "bgmscript.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-.int dphitcontentsmask;
-
-.int cnt; // effect number
-.vector velocity; // particle velocity
-.float waterlevel; // direction jitter
-.int count; // count multiplier
-.int impulse; // density
-.string noise; // sound
-.float atten;
-.float volume;
-.float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-.vector movedir; // trace direction
+#include "particles.qh"
 
 void Draw_PointParticles()
 {
@@ -203,7 +177,6 @@ void Ent_PointParticles()
 	self.entremove = Ent_PointParticles_Remove;
 }
 
-.float glow_color; // palette index
 void Draw_Rain()
 {
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);

@@ -1,11 +1,6 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../common/util.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "player_skeleton.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "player_skeleton.qh"
+
+#include "../warpzonelib/anglestransform.qh"
 
 .float skeleton_info_modelindex;
 .float skeleton_info_skin;

@@ -1,0 +1,28 @@
+#ifndef TUBA_H
+#define TUBA_H
+
+const float TUBA_MIN = -18;
+const float TUBA_MAX =  27;
+const float TUBA_INSTRUMENTS = 3;
+
+#define TUBA_STARTNOTE(i,n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
+.int note; // note
+.float attenuate; // if set, attenuate it
+.float cnt; // current volume
+.float count; // initial volume
+.float tuba_instrument;
+
+int Tuba_PitchStep;
+
+void tubasound(entity e, float restart);
+
+void Ent_TubaNote_Think();
+
+void Ent_TubaNote_UpdateSound();
+
+void Ent_TubaNote_StopSound();
+
+void Ent_TubaNote(float bIsNew);
+
+void Tuba_Precache();
+#endif

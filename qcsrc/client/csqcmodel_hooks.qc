@@ -1,20 +1,22 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
+	#include "gibs.qh"
+	#include "miscfunctions.qh"
+	#include "player_skeleton.qh"
+	#include "sortlist.qh"
+
+	#include "../client/weapons/projectile.qh"
+
 	#include "../common/animdecide.qh"
-	#include "autocvars.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "main.qh"
 	#include "../common/csqcmodel_settings.qh"
-	#include "../csqcmodellib/common.qh"
+
 	#include "../csqcmodellib/cl_model.qh"
 	#include "../csqcmodellib/cl_player.qh"
-	#include "weapons/projectile.qh"
-	#include "player_skeleton.qh"
+	#include "../csqcmodellib/interpolate.qh"
+
+	#include "../warpzonelib/mathlib.qh"
+
+	.float death_time;
+	.float modelflags;
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

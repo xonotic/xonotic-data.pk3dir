@@ -1,11 +1,4 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../csqcmodellib/sv_model.qh"
-#endif
+#include "movelib.qh"
 
 #ifdef SVQC
 .vector moveto;
@@ -62,7 +55,6 @@ vector movelib_inertmove(vector new_vel,float new_bias)
     return new_vel * new_bias + self.velocity * (1-new_bias);
 }
 
-.float  movelib_lastupdate;
 void movelib_move(vector force,float max_velocity,float drag,float theMass,float breakforce)
 {
     float deltatime;
@@ -170,18 +162,6 @@ void movelib_update(vector dir,float force)
 
 }
 */
-
-/*
-void movelib_move_simple(vector newdir,float velo,float blendrate)
-{
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
-}
-*/
-#define movelib_move_simple(newdir,velo,blendrate) \
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
-
-#define movelib_move_simple_gravity(newdir,velo,blendrate) \
-    if(self.flags & FL_ONGROUND) movelib_move_simple(newdir,velo,blendrate)
 
 void movelib_beak_simple(float force)
 {

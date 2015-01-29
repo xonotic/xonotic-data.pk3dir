@@ -1,40 +1,10 @@
-#if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
-    #include "../defs.qh"
-    #include "../../common/constants.qh"
-    #include "../../warpzonelib/anglestransform.qh"
-    #include "../../common/util.qh"
-    #include "../../common/nades.qh"
-    #include "../../common/buffs.qh"
-    #include "../autocvars.qh"
-    #include "../../csqcmodellib/interpolate.qh"
-    #include "../movetypes.qh"
-    #include "../main.qh"
-    #include "../../csqcmodellib/cl_model.qh"
-    #include "projectile.qh"
-    #include "../../server/t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-.vector iorigin1, iorigin2;
-.float spawntime;
-.vector trail_oldorigin;
-.float trail_oldtime;
-.float fade_time, fade_rate;
+#include "projectile.qh"
 
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
 	self.move_movetype = MOVETYPE_NONE;
 }
-
-.float alphamod;
-.int count; // set if clientside projectile
-.int cnt; // sound index
-.float gravity;
-.int snd_looping;
-.bool silent;
 
 void Projectile_ResetTrail(vector to)
 {

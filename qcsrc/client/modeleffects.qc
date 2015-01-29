@@ -1,16 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-
-.float frame1time;
-.float lifetime, fadetime;
-.float teleport_time;
-.float scale1, scale2;
+#include "modeleffects.qh"
 
 void ModelEffect_Draw()
 {

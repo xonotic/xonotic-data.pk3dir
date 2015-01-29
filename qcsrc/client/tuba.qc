@@ -1,27 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../common/constants.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
-const float TUBA_MIN = -18;
-const float TUBA_MAX =  27;
-const float TUBA_INSTRUMENTS = 3;
-
-#define TUBA_STARTNOTE(i,n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
-.int note; // note
-.float attenuate; // if set, attenuate it
-.float cnt; // current volume
-.float count; // initial volume
-.float tuba_instrument;
-
-int Tuba_PitchStep;
+#include "tuba.qh"
 
 void tubasound(entity e, float restart)
 {

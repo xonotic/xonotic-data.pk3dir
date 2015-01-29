@@ -1,13 +1,11 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
 	#include "movetypes.qh"
 	#include "prandom.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
+	#include "rubble.qh"
+
+	.float cnt;
+	.float alpha;
+	.float state;
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

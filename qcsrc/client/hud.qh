@@ -1,6 +1,8 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include "../common/weapons/weapons.qh"
+
 const int HUD_PANEL_MAX = 24;
 entity hud_panel[HUD_PANEL_MAX];
 const int HUD_PANEL_FIRST = 0;
@@ -98,6 +100,8 @@ string panel_bg_padding_str;
 .void() panel_draw;
 
 float current_player;
+
+float GetPlayerColorForce(float i);
 
 
 #define HUD_PANELS(HUD_PANEL) 																						\

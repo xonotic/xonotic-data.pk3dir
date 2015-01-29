@@ -1,56 +1,16 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "../common/constants.qh"
-	#include "../common/util.qh"
-	#include "../common/mapinfo.qh"
-	#include "autocvars.qh"
-	#include "main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "mapvoting.qh"
+#include "scoreboard.qh"
 
-
-int mv_num_maps;
-
-float mv_active;
-string mv_maps[MAPVOTE_COUNT];
-string mv_pics[MAPVOTE_COUNT];
-string mv_pk3[MAPVOTE_COUNT];
-float mv_preview[MAPVOTE_COUNT];
-float mv_votes[MAPVOTE_COUNT];
-float mv_avail[MAPVOTE_COUNT];
-float mv_avail_start[MAPVOTE_COUNT];
-entity mv_pk3list;
-float mv_abstain;
-float mv_ownvote;
-float mv_detail;
-float mv_timeout;
-float mv_top2_time;
-float mv_top2_alpha;
-
-vector mv_mousepos;
-int mv_selection;
-int mv_columns;
-int mv_mouse_selection;
-int mv_selection_keyboard;
-
-float gametypevote;
-string mapvote_chosenmap;
-vector gtv_text_size;
-vector gtv_text_size_small;
-
-string MapVote_FormatMapItem(int id, string map, float count, float maxwidth, vector fontsize)
+string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {
 	string pre, post;
 	pre = sprintf("%d. ", id+1);
 	if(mv_detail)
 	{
-		if(count == 1)
+		if(_count == 1)
 			post = _(" (1 vote)");
-		else if(count >= 0 && mv_avail[id] == GTV_AVAILABLE)
-			post = sprintf(_(" (%d votes)"), count);
+		else if(_count >= 0 && mv_avail[id] == GTV_AVAILABLE)
+			post = sprintf(_(" (%d votes)"), _count);
 		else
 			post = "";
 	}
@@ -78,7 +38,7 @@ vector MapVote_RGB(int id)
 		return '1 1 1';
 }
 
-void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float count, int id)
+void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float _count, int id)
 {
 	float alpha;
 	float desc_padding = gtv_text_size.x * 3;
@@ -111,7 +71,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	entity title;
 	title = spawn();
 	title.message = MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), 
-										  count, tsize, gtv_text_size);
+										  _count, tsize, gtv_text_size);
 	title.origin = pos-offset;
 	
 	pos.y += gtv_text_size_small.y;
@@ -172,7 +132,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	remove(title);
 }
 
-void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, int id)
+void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
 {
 	vector img_size = '0 0 0';
 	vector rgb;
@@ -188,7 +148,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos_y = pos.y + img_size.y;
 
-	label = MapVote_FormatMapItem(id, map, count, tsize, hud_fontsize);
+	label = MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
@@ -227,7 +187,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
-void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, int id)
+void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int id)
 {
 	vector rgb;
 	float text_size;
@@ -237,7 +197,7 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, int 
 
 	pos_y = pos.y + hud_fontsize.y;
 
-	label = MapVote_FormatMapItem(id, _("Don't care"), count, tsize, hud_fontsize);
+	label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
@@ -508,9 +468,6 @@ void MapVote_ReadMask()
 	}
 }
 
-const int NUM_SSDIRS = 4;
-string ssdirs[NUM_SSDIRS];
-int n_ssdirs;
 void MapVote_Init()
 {
 	int i, j;

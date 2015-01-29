@@ -3,19 +3,8 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
-	#include "../defs.qh"
-	#include "../../common/util.qh"
-	#include "../../common/mapinfo.qh"
-	#include "../../common/command/shared_defs.qh"
-	#include "cl_cmd.qh"
-	#include "../autocvars.qh"
-	#include "../hud.qh"
-	#include "../main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "../../common/command/generic.qh"
+#include "../../common/command/shared_defs.qh"
 
 void DrawDebugModel()
 {

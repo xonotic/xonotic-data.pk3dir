@@ -1,6 +1,9 @@
 #ifndef NOTIFICATIONS_H
 #define NOTIFICATIONS_H
 
+#include "constants.qh"
+#include "teams.qh"
+
 // ================================================
 //  Unified notification system, written by Samual
 //  Last updated: March, 2013

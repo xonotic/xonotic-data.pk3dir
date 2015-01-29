@@ -22,6 +22,8 @@
 #ifndef CL_MODEL_H
 #define CL_MODEL_H
 
+#include "common.qh"
+
 void CSQCModel_Read(float isnew);
 
 #define CSQCMODEL_IF(cond)
