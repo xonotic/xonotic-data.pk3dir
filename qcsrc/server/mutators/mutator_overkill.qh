@@ -1,3 +1,6 @@
+#ifndef MUTATOR_OVERKILL_H
+#define MUTATOR_OVERKILL_H
+
 .vector ok_deathloc;
 .float ok_spawnsys_timer;
 .float ok_lastwep;
@@ -12,3 +15,4 @@
 
 void(entity ent, float wep) ok_DecreaseCharge;
 
+#endif

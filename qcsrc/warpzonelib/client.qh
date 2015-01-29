@@ -1,22 +1,6 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#if defined(CSQC)
-    #include "../common/util-pre.qh"
-    #include "../client/sys-pre.qh"
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../client/sys-post.qh"
-    #include "../client/defs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "anglestransform.qh"
-    #include "mathlib.qh"
-    #include "common.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 void WarpZone_Read(float bIsNewEntity);
 void WarpZone_Camera_Read(float bIsNewEntity);
 void WarpZone_Teleported_Read(float bIsNewEntity);

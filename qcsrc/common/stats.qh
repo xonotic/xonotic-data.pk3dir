@@ -1,29 +1,6 @@
 #ifndef STATS_H
 #define STATS_H
 
-#if defined(CSQC)
-    #include "util-pre.qh"
-    #include "../client/sys-pre.qh"
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../client/sys-post.qh"
-    #include "../client/defs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "constants.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "util-pre.qh"
-    #include "../server/sys-pre.qh"
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../warpzonelib/server.qh"
-    #include "constants.qh"
-#endif
-
 // Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 

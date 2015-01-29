@@ -1,3 +1,5 @@
+#ifndef AIM_H
+#define AIM_H
 /*
  * Globals and Fields
  */
@@ -95,3 +97,4 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay);
 
 .void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) lag_func;
+#endif

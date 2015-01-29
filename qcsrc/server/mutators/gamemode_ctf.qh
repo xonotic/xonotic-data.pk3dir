@@ -1,3 +1,5 @@
+#ifndef GAMEMODE_CTF_H
+#define GAMEMODE_CTF_H
 // these are needed since mutators are compiled last
 
 #ifdef SVQC
@@ -131,4 +133,5 @@ vector havocbot_ctf_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
+#endif
 #endif

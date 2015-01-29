@@ -1,42 +1,5 @@
 #ifndef DAMAGE_H
 #define DAMAGE_H
 
-#if defined(CSQC)
-    #include "../common/util-pre.qh"
-    #include "sys-pre.qh"
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "sys-post.qh"
-    #include "defs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/client.qh"
-    #include "../common/playerstats.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/nades.qh"
-    #include "../common/buffs.qh"
-    #include "../common/test.qh"
-    #include "../common/counting.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../common/mapinfo.qh"
-    #include "../common/command/markup.qh"
-    #include "../common/command/rpn.qh"
-    #include "../common/command/generic.qh"
-    #include "../common/command/shared_defs.qh"
-    #include "../common/urllib.qh"
-    #include "../common/animdecide.qh"
-    #include "command/cl_cmd.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "autocvars.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 .float total_damages; // number of effects which currently are attached to a player
 #endif

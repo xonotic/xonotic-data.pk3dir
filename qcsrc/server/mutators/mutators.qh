@@ -1,3 +1,6 @@
+#ifndef MUTATORS_H
+#define MUTATORS_H
+
 MUTATOR_DECLARATION(gamemode_assault);
 MUTATOR_DECLARATION(gamemode_ca);
 MUTATOR_DECLARATION(gamemode_keyhunt);
@@ -37,3 +40,4 @@ MUTATOR_DECLARATION(mutator_buffs);
 MUTATOR_DECLARATION(sandbox);
 MUTATOR_DECLARATION(mutator_overkill);
 
+#endif

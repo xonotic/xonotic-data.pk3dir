@@ -1,3 +1,6 @@
+#ifndef GAMEMODE_INVASION_H
+#define GAMEMODE_INVASION_H
+
 float inv_numspawned;
 float inv_maxspawned;
 float inv_roundcnt;
@@ -12,3 +15,4 @@ float inv_monsters_perteam[17];
 float inv_monsterskill;
 
 const float ST_INV_KILLS = 1;
+#endif

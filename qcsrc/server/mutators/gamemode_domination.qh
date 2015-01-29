@@ -1,3 +1,5 @@
+#ifndef GAMEMODE_DOMINATION_H
+#define GAMEMODE_DOMINATION_H
 // these are needed since mutators are compiled last
 
 // score rule declarations
@@ -27,3 +29,4 @@ float pps_pink;
 // misc globals
 float domination_roundbased;
 float domination_teams;
+#endif

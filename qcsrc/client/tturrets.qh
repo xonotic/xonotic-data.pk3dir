@@ -1,53 +1,6 @@
 #ifndef TTURRETS_H
 #define TTURRETS_H
 
-#if defined(CSQC)
-    #include "../common/util-pre.qh"
-    #include "sys-pre.qh"
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "sys-post.qh"
-    #include "defs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/client.qh"
-    #include "../common/playerstats.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/nades.qh"
-    #include "../common/buffs.qh"
-    #include "../common/test.qh"
-    #include "../common/counting.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../common/mapinfo.qh"
-    #include "../common/command/markup.qh"
-    #include "../common/command/rpn.qh"
-    #include "../common/command/generic.qh"
-    #include "../common/command/shared_defs.qh"
-    #include "../common/urllib.qh"
-    #include "../common/animdecide.qh"
-    #include "command/cl_cmd.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "autocvars.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "damage.qh"
-    #include "../csqcmodellib/interpolate.qh"
-    #include "teamradar.qh"
-    #include "hud.qh"
-    #include "scoreboard.qh"
-    #include "waypointsprites.qh"
-    #include "movetypes.qh"
-    #include "prandom.qh"
-    #include "bgmscript.qh"
-    #include "noise.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 void ent_turret();
 void turrets_precache();
 .entity tur_head;

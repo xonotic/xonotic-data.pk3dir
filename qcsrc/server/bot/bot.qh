@@ -1,3 +1,5 @@
+#ifndef BOT_H
+#define BOT_H
 /*
  * Globals and Fields
  */
@@ -116,3 +118,4 @@ void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
 float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
 
 void bot_calculate_stepheightvec(void);
+#endif

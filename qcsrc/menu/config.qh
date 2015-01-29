@@ -1,14 +1,4 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-    #include "../common/util-pre.qh"
-    #include "sys-pre.qh"
-    #include "../dpdefs/menudefs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "sys-post.qh"
-#elif defined(SVQC)
-#endif
-
 #endif

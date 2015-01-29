@@ -1,3 +1,5 @@
+#ifndef WAYPOINTS_H
+#define WAYPOINTS_H
 /*
  * Globals and Fields
  */
@@ -62,3 +64,4 @@ entity waypoint_spawnpersonal(vector position);
 vector waypoint_fixorigin(vector position);
 
 void botframe_autowaypoints();
+#endif

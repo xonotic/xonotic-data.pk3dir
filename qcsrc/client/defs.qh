@@ -1,11 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.

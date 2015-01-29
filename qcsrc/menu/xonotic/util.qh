@@ -1,36 +1,5 @@
 #ifndef MENU_UTIL_H
 #define MENU_UTIL_H
-#if defined(CSQC)
-#elif defined(MENUQC)
-	#include "../../common/util-pre.qh"
-    #include "../sys-pre.qh"
-    #include "../../dpdefs/menudefs.qh"
-    #include "../../dpdefs/keycodes.qh"
-    #include "../sys-post.qh"
-    #include "../config.qh"
-    #include "../../warpzonelib/mathlib.qh"
-    #include "../../common/util.qh"
-    #include "../../common/test.qh"
-    #include "../oo/base.qh"
-    #include "../../common/playerstats.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/mapinfo.qh"
-    #include "../../common/campaign_common.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "../../common/counting.qh"
-    #include "../../common/command/markup.qh"
-    #include "../../common/command/rpn.qh"
-    #include "../../common/command/generic.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../../common/urllib.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../command/menu_cmd.qh"
-    #include "../menu.qh"
-    #include "../draw.qh"
-    #include "../skin.qh"
-#elif defined(SVQC)
-#endif
 
 float GL_CheckExtension(string ext);
 float GL_Have_TextureCompression();

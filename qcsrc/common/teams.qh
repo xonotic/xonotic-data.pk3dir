@@ -1,47 +1,6 @@
 #ifndef TEAMS_H
 #define TEAMS_H
 
-#if defined(CSQC)
-	#include "util-pre.qh"
-	#include "../client/sys-pre.qh"
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../client/sys-post.qh"
-	#include "../client/defs.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "constants.qh"
-	#include "stats.qh"
-	#include "../warpzonelib/anglestransform.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../warpzonelib/client.qh"
-	#include "playerstats.qh"
-#elif defined(MENUQC)
-	#include "util-pre.qh"
-    #include "../menu/sys-pre.qh"
-    #include "../dpdefs/menudefs.qh"
-    #include "../dpdefs/keycodes.qh"
-    #include "../menu/sys-post.qh"
-    #include "../menu/config.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "util.qh"
-    #include "test.qh"
-    #include "../menu/oo/base.qh"
-    #include "playerstats.qh"
-#elif defined(SVQC)
-	#include "util-pre.qh"
-    #include "../server/sys-pre.qh"
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../warpzonelib/server.qh"
-    #include "constants.qh"
-    #include "stats.qh"
-#endif
-
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1;  // red
 const int NUM_TEAM_2 = 2; // blue

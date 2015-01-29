@@ -1,22 +1,6 @@
 #ifndef GETREPLIES_H
 #define GETREPLIES_H
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../sys-post.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/counting.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../defs.qh"
-    #include "../../common/mapinfo.qh"
-    #include "getreplies.qh"
-    #include "../race.qh"
-#endif
-
 // ======================================================
 //  Declarations for reply messages, re-worked by Samual
 //  Last updated: December 30th, 2011

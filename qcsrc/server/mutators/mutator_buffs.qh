@@ -1,3 +1,6 @@
+#ifndef MUTATOR_BUFFS_H
+#define MUTATOR_BUFFS_H
+
 // buff specific variables \\
 //
 // ammo
@@ -26,3 +29,4 @@ const vector BUFF_MAX = ('16 16 20');
 
 // client side options
 .float cvar_cl_buffs_autoreplace;
+#endif

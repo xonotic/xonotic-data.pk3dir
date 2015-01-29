@@ -1,12 +1,6 @@
 #ifndef SERVER_SYS_PRE_H
 #define SERVER_SYS_PRE_H
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../common/util-pre.qh"
-#endif
-
 #define ATTEN_NORM builtin_ATTEN_NORM
 #define objerror builtin_objerror
 #define droptofloor builtin_droptofloor

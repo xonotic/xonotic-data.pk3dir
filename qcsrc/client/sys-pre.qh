@@ -1,12 +1,6 @@
 #ifndef SYS_PRE_H
 #define SYS_PRE_H
 
-#if defined(CSQC)
-    #include "../common/util-pre.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 #define ATTEN_NORM builtin_ATTEN_NORM
 
 #pragma noref 1

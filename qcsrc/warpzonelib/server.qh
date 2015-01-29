@@ -1,20 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../common/util-pre.qh"
-    #include "../server/sys-pre.qh"
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
-    #include "anglestransform.qh"
-    #include "mathlib.qh"
-    #include "common.qh"
-    #include "util_server.qh"
-#endif
-
 void WarpZone_StartFrame();
 float WarpZone_Projectile_Touch();
 
