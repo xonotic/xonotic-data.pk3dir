@@ -1,19 +1,4 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "mutators/mutators_include.qh"
-    #include "../common/mapinfo.qh"
-    #include "../common/playerstats.qh"
-    #include "scores.qh"
-#endif
+#include "scores.qh"
 
 .entity scorekeeper;
 entity teamscorekeepers[16];

@@ -1,14 +1,16 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/mathlib.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "command/common.qh"
-    #include "anticheat.qh"
-#endif
+#include "anticheat.qh"
+
+#include "antilag.qh"
+#include "autocvars.qh"
+#include "defs.qh"
+#include "miscfunctions.qh"
+
+#include "../dpdefs/progsdefs.qh"
+#include "../dpdefs/dpextensions.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
+#include "command/common.qh"
 
 .float anticheat_jointime;
 

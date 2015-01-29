@@ -1,8 +1,8 @@
+#include "waypointsprites.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "../common/constants.qh"
     #include "../common/util.qh"
     #include "../common/buffs.qh"
@@ -14,14 +14,6 @@
     #include "../common/mapinfo.qh"
     #include "miscfunctions.qh"
 #endif
-
-..entity owned_by_field;
-.float rule;
-.string model1;
-.string model2;
-.string model3;
-
-.float(entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, string m1, string m2, string m3)
 {
@@ -98,8 +90,6 @@ void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col)
 	e.SendFlags |= 32;
 }
 
-.float waypointsprite_pingtime;
-.float waypointsprite_helpmetime;
 void WaypointSprite_Ping(entity e)
 {
 	// anti spam
@@ -110,8 +100,6 @@ void WaypointSprite_Ping(entity e)
 	e.cnt |= 0x80;
 	e.SendFlags |= 32;
 }
-
-float waypointsprite_limitedrange, waypointsprite_deployed_lifetime, waypointsprite_deadlifetime;
 
 void WaypointSprite_HelpMePing(entity e)
 {
@@ -148,6 +136,7 @@ void WaypointSprite_Init()
 	waypointsprite_deployed_lifetime = autocvar_sv_waypointsprite_deployed_lifetime;
 	waypointsprite_deadlifetime = autocvar_sv_waypointsprite_deadlifetime;
 }
+
 void WaypointSprite_InitClient(entity e)
 {
 }
@@ -360,7 +349,7 @@ void WaypointSprite_Reset()
 
 entity WaypointSprite_Spawn(
 	string spr, // sprite
-	float lifetime, float maxdistance, // lifetime, max distance
+	float _lifetime, float maxdistance, // lifetime, max distance
 	entity ref, vector ofs, // position
 	entity showto, float t, // show to whom? Use a flag to indicate a team
 	entity own, .entity ownfield, // remove when own gets killed
@@ -371,8 +360,8 @@ entity WaypointSprite_Spawn(
 	entity wp;
 	wp = spawn();
 	wp.classname = "sprite_waypoint";
-	wp.teleport_time = time + lifetime;
-	wp.fade_time = lifetime;
+	wp.teleport_time = time + _lifetime;
+	wp.fade_time = _lifetime;
 	wp.exteriormodeltoclient = ref;
 	if(ref)
 	{
@@ -416,7 +405,6 @@ entity WaypointSprite_SpawnFixed(
 	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon, rgb);
 }
 
-.entity waypointsprite_deployed_fixed;
 entity WaypointSprite_DeployFixed(
 	string spr,
 	float limited_range,
@@ -436,7 +424,6 @@ entity WaypointSprite_DeployFixed(
 	return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon, rgb);
 }
 
-.entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
 	string spr,
 	vector ofs,
@@ -446,8 +433,6 @@ entity WaypointSprite_DeployPersonal(
 	return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon, rgb);
 }
 
-.entity waypointsprite_attached;
-.entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
 	string spr,
 	float limited_range,

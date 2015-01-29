@@ -1,28 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "../common/mapinfo.qh"
-#endif
+#include "g_triggers.qh"
+#include "t_jumppads.qh"
 
 void SUB_DontUseTargets()
 {
 }
 
-
-void() SUB_UseTargets;
 
 void DelayThink()
 {
@@ -154,9 +136,6 @@ void SUB_UseTargets()
 
 
 //=============================================================================
-
-const float	SPAWNFLAG_NOMESSAGE = 1;
-const float	SPAWNFLAG_NOTOUCH = 1;
 
 // the wait time has passed, so set back up for another activation
 void multi_wait()
@@ -450,7 +429,6 @@ void trigger_hurt_use()
 		self.enemy = world; // let's just destroy it, if taking over is too much work
 }
 
-.float triggerhurttime;
 void trigger_hurt_touch()
 {
 	if (self.active != ACTIVE_ACTIVE)
@@ -497,9 +475,6 @@ Any object touching this will be hurt
 set dmg to damage amount
 defalt dmg = 5
 */
-.entity trigger_hurt_next;
-entity trigger_hurt_last;
-entity trigger_hurt_first;
 void spawnfunc_trigger_hurt()
 {
 	EXACTTRIGGER_INIT;
@@ -541,7 +516,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 //
 //////////////////////////////////////////////////////////////
 
-.float triggerhealtime;
 void trigger_heal_touch()
 {
 	if (self.active != ACTIVE_ACTIVE)
@@ -591,7 +565,6 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)
 {
 	if(own.trigger_gravity_check.owner == own)
@@ -699,8 +672,6 @@ void spawnfunc_trigger_gravity()
 //=============================================================================
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
-.float volume, atten;
-void target_speaker_use_off();
 void target_speaker_use_activator()
 {
 	if (!IS_REAL_CLIENT(activator))
@@ -836,11 +807,6 @@ void spawnfunc_func_stardust() {
 	self.effects = EF_STARDUST;
 }
 
-.string bgmscript;
-.float bgmscriptattack;
-.float bgmscriptdecay;
-.float bgmscriptsustain;
-.float bgmscriptrelease;
 float pointparticles_SendEntity(entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
@@ -1109,7 +1075,6 @@ void spawnfunc_func_snow()
 	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
-.float modelscale;
 void misc_laser_aim()
 {
 	vector a;
@@ -1155,7 +1120,6 @@ void misc_laser_init()
 		self.enemy = find(world, targetname, self.target);
 }
 
-.entity pusher;
 void misc_laser_think()
 {
 	vector o;
@@ -1366,10 +1330,6 @@ void spawnfunc_misc_laser()
 }
 
 // tZorks trigger impulse / gravity
-.float radius;
-.float falloff;
-.float strength;
-.float lastpushtime;
 
 // targeted (directional) mode
 void trigger_impulse_touch1()
@@ -1745,11 +1705,6 @@ void spawnfunc_trigger_gamestart() {
 
 
 
-.entity voicescript; // attached voice script
-.float voicescript_index; // index of next voice, or -1 to use the randomized ones
-.float voicescript_nextthink; // time to play next voice
-.float voicescript_voiceend; // time when this voice ends
-
 void target_voicescript_clear(entity pl)
 {
 	pl.voicescript = world;
@@ -1913,8 +1868,6 @@ void spawnfunc_trigger_disablerelay()
 	self.use = trigger_disablerelay_use;
 }
 
-float magicear_matched;
-float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
 {
 	float domatch, dotrigger, matchstart, l;
@@ -2063,7 +2016,6 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		return msgin;
 }
 
-entity magicears;
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin)
 {
 	entity ear;
@@ -2160,7 +2112,6 @@ void spawnfunc_relay_activatetoggle()
 	self.use = relay_activators_use;
 }
 
-.string chmap, gametype;
 void spawnfunc_target_changelevel_use()
 {
 	if(self.gametype != "")

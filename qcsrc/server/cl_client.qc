@@ -1,41 +1,29 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/net_notice.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/monsters/sv_monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "campaign.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "command/vote.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "anticheat.qh"
-    #include "cheats.qh"
-    #include "../common/playerstats.qh"
-    #include "portals.qh"
-    #include "g_hook.qh"
-    #include "scores.qh"
-    #include "spawnpoints.qh"
-    #include "ipban.qh"
-    #include "race.qh"
-    #include "antilag.qh"
-    #include "playerdemo.qh"
-#endif
+#include "waypointsprites.qh"
+
+#include "cl_impulse.qh"
+#include "cl_player.qh"
+#include "ent_cs.qh"
+#include "g_subs.qh"
+#include "ipban.qh"
+#include "miscfunctions.qh"
+#include "portals.qh"
+#include "teamplay.qh"
+#include "playerdemo.qh"
+#include "secret.qh"
+
+#include "bot/bot.qh"
+#include "bot/navigation.qh"
+
+#include "weapons/hitplot.qh"
+#include "weapons/weaponsystem.qh"
+
+#include "../common/net_notice.qh"
+
+#include "../common/monsters/sv_monsters.qh"
+
+#include "../warpzonelib/server.qh"
+
+float c1, c2, c3, c4;
 
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);

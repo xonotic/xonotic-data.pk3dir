@@ -1,8 +1,8 @@
+#include "g_damage.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "../warpzonelib/common.qh"
     #include "../common/constants.qh"
     #include "../common/teams.qh"
@@ -26,11 +26,6 @@
     #include "scores.qh"
     #include "spawnpoints.qh"
 #endif
-
-.float dmg;
-.float dmg_edge;
-.float dmg_force;
-.float dmg_radius;
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
@@ -71,20 +66,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
 
-float checkrules_firstblood;
-
-float yoda;
-float damage_goodhits;
-float damage_gooddamage;
-
-.float dmg_team;
-.float teamkill_complain;
-.float teamkill_soundtime;
-.entity teamkill_soundsource;
-.entity pusher;
-.float istypefrag;
-.float taunt_soundtime;
-
 float IsFlying(entity a)
 {
 	if(a.flags & FL_ONGROUND)
@@ -102,9 +83,6 @@ void UpdateFrags(entity player, float f)
 	PlayerTeamScore_AddScore(player, f);
 }
 
-// NOTE: f=0 means still count as a (positive) kill, but count no frags for it
-void W_SwitchWeapon_Force(entity e, float w);
-entity GiveFrags_randomweapons;
 void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
 	// TODO route through PlayerScores instead
@@ -304,7 +282,6 @@ void Obituary_SpecialDeath(
 	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
 }
 
-float w_deathtype;
 float Obituary_WeaponDeath(
 	entity notif_target,
 	float murder,
@@ -658,11 +635,6 @@ void Unfreeze (entity targ)
 	targ.iceblock = world;
 }
 
-// these are updated by each Damage call for use in button triggering and such
-entity damage_targ;
-entity damage_inflictor;
-entity damage_attacker;
-
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	float mirrordamage;
@@ -977,7 +949,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-float RadiusDamage_running;
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
@@ -1171,15 +1142,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 {
 	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }
-
-.float fire_damagepersec;
-.float fire_endtime;
-.float fire_deathtype;
-.entity fire_owner;
-.float fire_hitsound;
-.entity fire_burner;
-
-void fireburner_think();
 
 float Fire_IsBurning(entity e)
 {

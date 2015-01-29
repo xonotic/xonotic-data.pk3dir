@@ -1,0 +1,197 @@
+#ifndef G_SUBS_H
+#define G_SUBS_H
+
+void SUB_NullThink(void);
+
+void()  SUB_CalcMoveDone;
+void() SUB_CalcAngleMoveDone;
+//void() SUB_UseTargets;
+void() SUB_Remove;
+
+void spawnfunc_info_null (void);
+
+void setanim(entity e, vector anim, float looping, float override, float restart);
+
+void updateanim(entity e);
+
+/*
+==================
+SUB_Remove
+
+Remove self
+==================
+*/
+void SUB_Remove (void);
+
+/*
+==================
+SUB_Friction
+
+Applies some friction to self
+==================
+*/
+.float friction;
+void SUB_Friction (void);
+
+/*
+==================
+SUB_VanishOrRemove
+
+Makes client invisible or removes non-client
+==================
+*/
+void SUB_VanishOrRemove (entity ent);
+
+void SUB_SetFade_Think (void);
+
+/*
+==================
+SUB_SetFade
+
+Fade 'ent' out when time >= 'when'
+==================
+*/
+void SUB_SetFade (entity ent, float when, float fadetime);
+
+/*
+=============
+SUB_CalcMove
+
+calculate self.velocity and self.nextthink to reach dest from
+self.origin traveling at speed
+===============
+*/
+void SUB_CalcMoveDone (void);
+
+.float platmovetype_turn;
+void SUB_CalcMove_controller_think (void);
+
+void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest);
+
+void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
+
+float TSPEED_TIME = -1;
+float TSPEED_LINEAR = 0;
+float TSPEED_START = 1;
+float TSPEED_END = 2;
+// TODO average too?
+
+void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func);
+
+void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func);
+
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func);
+
+/*
+=============
+SUB_CalcAngleMove
+
+calculate self.avelocity and self.nextthink to reach destangle from
+self.angles rotating
+
+The calling function should make sure self.think is valid
+===============
+*/
+void SUB_CalcAngleMoveDone (void);
+
+// FIXME: I fixed this function only for rotation around the main axes
+void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func);
+
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func);
+
+/*
+==================
+main
+
+unused but required by the engine
+==================
+*/
+void main (void);
+
+// Misc
+
+/*
+==================
+traceline_antilag
+
+A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
+Additionally it moves players back into the past before the trace and restores them afterward.
+==================
+*/
+void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz);
+void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);
+
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity); // returns the number of traces done, for benchmarking
+
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity);
+
+/*
+==================
+findbetterlocation
+
+Returns a point at least 12 units away from walls
+(useful for explosion animations, although the blast is performed where it really happened)
+Ripped from DPMod
+==================
+*/
+vector findbetterlocation (vector org, float mindist);
+
+/*
+==================
+crandom
+
+Returns a random number between -1.0 and 1.0
+==================
+*/
+float crandom (void);
+
+/*
+==================
+Angc used for animations
+==================
+*/
+
+
+float angc (float a1, float a2);
+
+.string lodtarget1;
+.string lodtarget2;
+.string lodmodel1;
+.string lodmodel2;
+.float lodmodelindex0;
+.float lodmodelindex1;
+.float lodmodelindex2;
+.float loddistance1;
+.float loddistance2;
+
+float LOD_customize();
+
+void LOD_uncustomize();
+
+void LODmodel_attach();
+
+void ApplyMinMaxScaleAngles(entity e);
+
+void SetBrushEntityModel();
+
+void SetBrushEntityModelNoLOD();
+
+/*
+================
+InitTrigger
+================
+*/
+
+void SetMovedir();
+
+void InitTrigger();
+
+void InitSolidBSPTrigger();
+
+float InitMovingBrushTrigger();
+#endif

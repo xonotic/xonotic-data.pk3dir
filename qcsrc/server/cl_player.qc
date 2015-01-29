@@ -1,34 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/animdecide.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/accuracy.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "cheats.qh"
-    #include "../common/playerstats.qh"
-    #include "portals.qh"
-#endif
+#include "cl_player.qh"
+#include "g_triggers.qh"
+#include "g_violence.qh"
+#include "miscfunctions.qh"
 
-.entity pusher;
-.float pushltime;
-.float istypefrag;
+#include "weapons/weaponstats.qh"
 
-.float CopyBody_nextthink;
-.void(void) CopyBody_think;
 void CopyBody_Think(void)
 {
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
@@ -223,18 +199,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
-// g_<gametype>_str:
-// If 0, default is used.
-// If <0, 0 is used.
-// Otherwise, g_str (default value) is used.
-// For consistency, negative values there are mapped to zero too.
-#define GAMETYPE_DEFAULTED_SETTING(str) \
-	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	 (gametype_setting_tmp < 0) ? 0 : \
-	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
-	 gametype_setting_tmp)
-
-
 void calculate_player_respawn_time()
 {
 	if(g_ca)
@@ -321,8 +285,6 @@ void calculate_player_respawn_time()
 	if(autocvar_g_forced_respawn)
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
-
-void ClientKill_Now_TeamChange();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -663,7 +625,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-.float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 // message "": do not say, just test flood control
 // return value:
@@ -945,7 +906,6 @@ float GetVoiceMessageVoiceType(string type)
 	return VOICETYPE_TEAMRADIO;
 }
 
-string allvoicesamples;
 .string GetVoiceMessageSampleField(string type)
 {
 	GetPlayerSoundSampleField_notFound = 0;
@@ -1051,8 +1011,6 @@ float LoadPlayerSounds(string f, float first)
 	return 1;
 }
 
-.float modelindex_for_playersound;
-.float skin_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)

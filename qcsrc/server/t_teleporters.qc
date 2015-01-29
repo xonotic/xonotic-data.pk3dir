@@ -1,8 +1,8 @@
+#include "t_teleporters.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "../warpzonelib/common.qh"
     #include "../warpzonelib/util_server.qh"
     #include "../warpzonelib/server.qh"
@@ -25,29 +25,6 @@ void trigger_teleport_use()
 		self.team = activator.team;
 }
 
-#define TDEATHLOOP(o) \
-	entity head; \
-	vector deathmin; \
-	vector deathmax; \
-	float deathradius; \
-	deathmin = (o) + player.mins; \
-	deathmax = (o) + player.maxs; \
-	if(telefragmin != telefragmax) \
-	{ \
-		if(deathmin.x > telefragmin.x) deathmin_x = telefragmin.x; \
-		if(deathmin.y > telefragmin.y) deathmin_y = telefragmin.y; \
-		if(deathmin.z > telefragmin.z) deathmin_z = telefragmin.z; \
-		if(deathmax.x < telefragmax.x) deathmax_x = telefragmax.x; \
-		if(deathmax.y < telefragmax.y) deathmax_y = telefragmax.y; \
-		if(deathmax.z < telefragmax.z) deathmax_z = telefragmax.z; \
-	} \
-	deathradius = max(vlen(deathmin), vlen(deathmax)); \
-	for(head = findradius(o, deathradius); head; head = head.chain) \
-		if(head != player) \
-			if(head.takedamage) \
-				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-
-
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
 	if (IS_PLAYER(player) && player.health >= 1)
@@ -62,7 +39,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	}
 	return 0;
 }
-float tdeath_hit;
+
 void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
 {
 	TDEATHLOOP(player.origin)
@@ -87,21 +64,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
 
-.entity pusher;
-const float TELEPORT_FLAG_SOUND = 1;
-const float TELEPORT_FLAG_PARTICLES = 2;
-const float TELEPORT_FLAG_TDEATH = 4;
-const float TELEPORT_FLAG_FORCE_TDEATH = 8;
-
-#define TELEPORT_FLAGS_WARPZONE   0
-#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
-#define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
-
-// types for .teleportable entity setting
-const float TELEPORT_NORMAL = 1; // play sounds/effects etc
-const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
-
-void Reset_ArcBeam(entity player, vector forward);
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -334,8 +296,6 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-entity teleport_first;
-.entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';

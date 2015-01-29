@@ -1,6 +1,9 @@
 #ifndef NADES_H
 #define NADES_H
 
+.float healer_lifetime;
+.float healer_radius;
+
 // use slots 70-100
 const int PROJECTILE_NADE = 71;
 const int PROJECTILE_NADE_BURN = 72;
@@ -99,6 +102,10 @@ string Nade_TrailEffect(float proj, float nade_team)
 	
 	return "";
 }
+
+#ifdef SVQC
+float healer_send(entity to, float sf);
+#endif
 
 #ifdef CSQC
 // misc functions

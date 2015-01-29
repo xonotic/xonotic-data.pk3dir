@@ -1,3 +1,6 @@
+#ifndef WEAPONS_C
+#define WEAPONS_C
+
 #if defined(CSQC)
 	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
@@ -368,4 +371,5 @@ float GetAmmoStat(.float ammotype)
 		default: return -1;
 	}
 }
+#endif
 #endif

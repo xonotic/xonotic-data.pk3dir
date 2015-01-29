@@ -1,8 +1,4 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-#endif
+#include "../common/weapons/weapons.qc"
 
 //***********************
 //QUAKE 1 ENTITIES - So people can play quake1 maps with the xonotic weapons

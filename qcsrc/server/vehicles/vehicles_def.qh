@@ -1,6 +1,8 @@
 #ifndef VEHICLES_DEF_H
 #define VEHICLES_DEF_H
 
+#include "../tturrets/include/turrets_early.qh"
+
 // #define VEHICLES_USE_ODE
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED

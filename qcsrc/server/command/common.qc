@@ -1,18 +1,7 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/util.qh"
-    #include "../../common/counting.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "common.qh"
-    #include "vote.qh"
-    #include "../scores.qh"
-#endif
+#include "common.qh"
+
+#include "../../common/counting.qh"
+
 
 // ====================================================
 //  Shared code for server commands, written by Samual
@@ -676,70 +665,3 @@ void CommonCommand_(float request, entity caller)
 	}
 }
 */
-
-
-// ==================================
-//  Macro system for common commands
-// ==================================
-
-// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define COMMON_COMMANDS(request,caller,arguments,command) \
-	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
-	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
-	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
-	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
-	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
-	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
-	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
-	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \
-	COMMON_COMMAND("teamstatus", CommonCommand_teamstatus(request, caller), "Show information about player and team scores") \
-	COMMON_COMMAND("time", CommonCommand_time(request, caller), "Print different formats/readouts of time") \
-	COMMON_COMMAND("timein", CommonCommand_timein(request, caller), "Resume the game from being paused with a timeout") \
-	COMMON_COMMAND("timeout", CommonCommand_timeout(request, caller), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
-	COMMON_COMMAND("vote", VoteCommand(request, caller, arguments, command), "Request an action to be voted upon by players") \
-	COMMON_COMMAND("who", CommonCommand_who(request, caller, arguments), "Display detailed client information about all players") \
-	/* nothing */
-
-void CommonCommand_macro_help(entity caller)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
-
-	COMMON_COMMANDS(0, caller, 0, "");
-	#undef COMMON_COMMAND
-
-	return;
-}
-
-float CommonCommand_macro_command(float argc, entity caller, string command)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return true; } }
-
-	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command);
-	#undef COMMON_COMMAND
-
-	return false;
-}
-
-float CommonCommand_macro_usage(float argc, entity caller)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return true; } }
-
-	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
-	#undef COMMON_COMMAND
-
-	return false;
-}
-
-void CommonCommand_macro_write_aliases(float fh)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
-
-	COMMON_COMMANDS(0, world, 0, "");
-	#undef COMMON_COMMAND
-
-	return;
-}

@@ -1,28 +1,4 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/animdecide.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-#endif
-
-const float PUSH_ONCE			= 1;
-const float PUSH_SILENT		= 2;
-
-.float pushltime;
-.float istypefrag;
-.float height;
-
-void() SUB_UseTargets;
-
-float trigger_push_calculatevelocity_flighttime;
+#include "t_jumppads.qh"
 
 void trigger_push_use()
 {
@@ -261,7 +237,6 @@ void trigger_push_touch()
 	}
 }
 
-.vector dest;
 void trigger_push_findtarget()
 {
 	entity e, t;

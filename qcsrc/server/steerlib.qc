@@ -176,13 +176,13 @@ vector steerlib_dodge(vector point,vector dodge_dir,float min_distance)
     Group will move towards the unified direction while keeping close to eachother.
 **/
 .float flock_id;
-vector steerlib_flock(float radius, float standoff,float separation_force,float flock_force)
+vector steerlib_flock(float _radius, float standoff,float separation_force,float flock_force)
 {
     entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
     float ccount = 0;
 
-    flock_member = findradius(self.origin,radius);
+    flock_member = findradius(self.origin, _radius);
     while(flock_member)
     {
         if(flock_member != self)
@@ -190,7 +190,7 @@ vector steerlib_flock(float radius, float standoff,float separation_force,float 
         {
             ++ccount;
             push = push + (steerlib_repell(flock_member.origin,standoff) * separation_force);
-            pull = pull + (steerlib_arrive(flock_member.origin + flock_member.velocity,radius) * flock_force);
+            pull = pull + (steerlib_arrive(flock_member.origin + flock_member.velocity, _radius) * flock_force);
         }
         flock_member = flock_member.chain;
     }
@@ -202,13 +202,13 @@ vector steerlib_flock(float radius, float standoff,float separation_force,float 
     Group will move towards the unified direction while keeping close to eachother.
     xy only version (for ground movers).
 **/
-vector steerlib_flock2d(float radius, float standoff,float separation_force,float flock_force)
+vector steerlib_flock2d(float _radius, float standoff,float separation_force,float flock_force)
 {
     entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
     float ccount = 0;
 
-    flock_member = findradius(self.origin,radius);
+    flock_member = findradius(self.origin,_radius);
     while(flock_member)
     {
         if(flock_member != self)
@@ -216,7 +216,7 @@ vector steerlib_flock2d(float radius, float standoff,float separation_force,floa
         {
             ++ccount;
             push = push + (steerlib_repell(flock_member.origin, standoff) * separation_force);
-            pull = pull + (steerlib_arrive(flock_member.origin + flock_member.velocity, radius) * flock_force);
+            pull = pull + (steerlib_arrive(flock_member.origin + flock_member.velocity, _radius) * flock_force);
         }
         flock_member = flock_member.chain;
     }
@@ -233,13 +233,13 @@ vector steerlib_flock2d(float radius, float standoff,float separation_force,floa
 
     This results in a aligned movement (?!) much like flocking.
 **/
-vector steerlib_swarm(float radius, float standoff,float separation_force,float swarm_force)
+vector steerlib_swarm(float _radius, float standoff,float separation_force,float swarm_force)
 {
     entity swarm_member;
     vector force = '0 0 0', center = '0 0 0';
     float ccount = 0;
 
-    swarm_member = findradius(self.origin,radius);
+    swarm_member = findradius(self.origin,_radius);
 
     while(swarm_member)
     {
@@ -253,7 +253,7 @@ vector steerlib_swarm(float radius, float standoff,float separation_force,float 
     }
 
     center = center * (1 / ccount);
-    force = force + (steerlib_arrive(center,radius) * swarm_force);
+    force = force + (steerlib_arrive(center,_radius) * swarm_force);
 
     return force;
 }

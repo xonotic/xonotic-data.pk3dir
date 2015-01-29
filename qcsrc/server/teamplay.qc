@@ -1,38 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/vote.qh"
-    #include "scores.qh"
-    #include "race.qh"
-#endif
-
-string cache_mutatormsg;
-string cache_lastmutatormsg;
-
-// client counts for each team
-//float c1, c2, c3, c4;
-// # of bots on those teams
-float cb1, cb2, cb3, cb4;
-
-//float audit_teams_time;
+#include "teamplay.qh"
 
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);
 }
-
-void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
 {

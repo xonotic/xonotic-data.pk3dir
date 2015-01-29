@@ -1,14 +1,4 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/mapinfo.qh"
-#endif
+#include "g_violence.qh"
 
 float Violence_GibSplash_SendEntity(entity to, float sf)
 {

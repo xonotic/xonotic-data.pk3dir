@@ -1,3 +1,8 @@
+#include "cheats.qh"
+#include "g_damage.qh"
+#include "race.qh"
+#include "t_teleporters.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -15,7 +20,6 @@
     #include "../common/deathtypes.qh"
     #include "mutators/mutators_include.qh"
     #include "../csqcmodellib/sv_model.qh"
-    #include "cheats.qh"
 #endif
 
 void CopyBody(float keepvelocity);
@@ -788,6 +792,16 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
+// on dragger:
+.float draggravity;
+.float dragspeed; // speed of mouse wheel action
+.float dragdistance; // distance of dragentity's draglocalvector from view_ofs
+.vector draglocalvector; // local attachment vector of the dragentity
+.float draglocalangle;
+// on draggee:
+.entity draggedby;
+.float dragmovetype;
+
 float Drag(float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
@@ -889,15 +903,6 @@ float Drag(float force_allow_pick, float ischeat)
 	return false;
 }
 
-// on dragger:
-.float draggravity;
-.float dragspeed; // speed of mouse wheel action
-.float dragdistance; // distance of dragentity's draglocalvector from view_ofs
-.vector draglocalvector; // local attachment vector of the dragentity
-.float draglocalangle;
-// on draggee:
-.entity draggedby;
-.float dragmovetype;
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 {
 	float tagscale;

@@ -1,20 +1,110 @@
 #ifndef MISCFUNCTIONS_H
 #define MISCFUNCTIONS_H
 
-var void remove(entity e);
-void objerror(string s);
-void droptofloor();
+#include "t_items.qh"
+
+#include "mutators/base.qh"
+#include "mutators/gamemode_race.qh"
+
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+
+#ifdef RELEASE
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
+#else
+string cvar_string_normal(string n)
+{
+	if (!(cvar_type(n) & 1))
+		backtrace(strcat("Attempt to access undefined cvar: ", n));
+	return builtin_cvar_string(n);
+}
+
+float cvar_normal(string n)
+{
+	return stof(cvar_string_normal(n));
+}
+#endif
+#define cvar_set_normal builtin_cvar_set
+
 .vector dropped_origin;
+.void(void) uncustomizeentityforclient;
+.float uncustomizeentityforclient_set;
+.float nottargeted;
 
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
-string GetMapname();
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
+var void remove(entity e);
+void objerror(string s);
+void droptofloor();
+void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
+void() spawnpoint_use;
+void() SUB_Remove;
+
+void attach_sameorigin(entity e, entity to, string tag);
+
+void crosshair_trace(entity pl);
+
+void crosshair_trace_plusvisibletriggers(entity pl);
+
+void detach_sameorigin(entity e);
+
+void follow_sameorigin(entity e, entity to);
+
+string formatmessage(string msg);
+
+void GameLogEcho(string s);
+
+void GameLogInit();
+
+void GameLogClose();
+
+void GetCvars(float f);
+
+string GetMapname();
+
+float isPushable(entity e);
+
+float LostMovetypeFollow(entity ent);
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+
+string NearestLocation(vector p);
+
+void play2(entity e, string filename);
+
+string playername(entity p);
+
+void precache();
+
+void remove_safely(entity e);
+
+void remove_unsafely(entity e);
+
+void SetMovetypeFollow(entity ent, entity e);
+
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn);
+
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+
+void stopsound(entity e, float chan);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+void WarpZone_crosshair_trace(entity pl);
+
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+
+#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
+
+#define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 

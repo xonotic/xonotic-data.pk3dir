@@ -1,23 +1,6 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "command/common.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "antilag.qh"
-#endif
+#include "g_subs.qh"
 
 void SUB_NullThink(void) { }
-
-void()  SUB_CalcMoveDone;
-void() SUB_CalcAngleMoveDone;
-//void() SUB_UseTargets;
-void() SUB_Remove;
 
 void spawnfunc_info_null (void)
 {
@@ -88,7 +71,6 @@ SUB_Friction
 Applies some friction to self
 ==================
 */
-.float friction;
 void SUB_Friction (void)
 {
 	self.nextthink = time;
@@ -166,7 +148,6 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
-.float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
@@ -249,12 +230,6 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	controller.destvec = dest; // end point
 	controller.destvec2 = '0 0 0';
 }
-
-float TSPEED_TIME = -1;
-float TSPEED_LINEAR = 0;
-float TSPEED_START = 1;
-float TSPEED_END = 2;
-// TODO average too?
 
 void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
 {
@@ -717,16 +692,6 @@ float angc (float a1, float a2)
 
 	return a;
 }
-
-.string lodtarget1;
-.string lodtarget2;
-.string lodmodel1;
-.string lodmodel2;
-.float lodmodelindex0;
-.float lodmodelindex1;
-.float lodmodelindex2;
-.float loddistance1;
-.float loddistance2;
 
 float LOD_customize()
 {

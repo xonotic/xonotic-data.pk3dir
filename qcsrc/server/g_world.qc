@@ -1,8 +1,10 @@
+#include "g_world.qh"
+
+#include "../common/buffs.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "../common/constants.qh"
     #include "../common/stats.qh"
     #include "../common/teams.qh"
@@ -1578,15 +1580,6 @@ void CheckRules_Player()
 	//   (div0: and that in CheckRules_World please)
 }
 
-float checkrules_equality;
-float checkrules_suddendeathwarning;
-float checkrules_suddendeathend;
-float checkrules_overtimesadded; //how many overtimes have been already added
-
-const float WINNING_NO = 0; // no winner, but time limits may terminate the game
-const float WINNING_YES = 1; // winner found
-const float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
-const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
 
 float InitiateSuddenDeath()
 {

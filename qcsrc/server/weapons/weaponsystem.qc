@@ -42,13 +42,6 @@ float W_WeaponRateFactor()
 	return t;
 }
 
-// VorteX: static frame globals
-const float WFRAME_DONTCHANGE = -1;
-const float WFRAME_FIRE1 = 0;
-const float WFRAME_FIRE2 = 1;
-const float WFRAME_IDLE = 2;
-const float WFRAME_RELOAD = 3;
-.float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
 
@@ -978,7 +971,6 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
 
-entity weapon_dropevent_item;
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
 {
 	entity oldself = self;

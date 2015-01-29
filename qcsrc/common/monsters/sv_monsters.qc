@@ -381,7 +381,6 @@ float Monster_CanRespawn(entity ent)
 	return true;
 }
 
-float monster_initialize(float mon_id);
 void monster_respawn()
 {
 	// is this function really needed?

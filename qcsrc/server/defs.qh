@@ -1,6 +1,8 @@
 #ifndef SERVER_DEFS_H
 #define SERVER_DEFS_H
 
+#include "../common/weapons/weapons.qh"
+
 #define INDEPENDENT_ATTACK_FINISHED
 
 noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions

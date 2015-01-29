@@ -14,8 +14,6 @@
     #include "../server/constants.qh"
 #endif
 
-.float healer_lifetime;
-.float healer_radius;
 
 #ifdef SVQC
 float healer_send(entity to, float sf)
