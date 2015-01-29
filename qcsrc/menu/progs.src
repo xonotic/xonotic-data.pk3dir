@@ -2,8 +2,8 @@
 
 ../common/util-pre.qh
 sys-pre.qh
-../dpdefs/menudefs.qc
-../dpdefs/keycodes.qc
+../dpdefs/menudefs.qh
+../dpdefs/keycodes.qh
 sys-post.qh
 
 config.qh

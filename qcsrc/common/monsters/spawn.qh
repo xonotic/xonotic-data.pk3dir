@@ -6,8 +6,8 @@
 #elif defined(SVQC)
     #include "../util-pre.qh"
     #include "../../server/sys-pre.qh"
-    #include "../../dpdefs/progsdefs.qc"
-    #include "../../dpdefs/dpextensions.qc"
+    #include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
     #include "../../server/sys-post.qh"
     #include "../../warpzonelib/anglestransform.qh"
     #include "../../warpzonelib/mathlib.qh"

@@ -5,8 +5,8 @@
 #elif defined(MENUQC)
     #include "../common/util-pre.qh"
     #include "sys-pre.qh"
-    #include "../dpdefs/menudefs.qc"
-    #include "../dpdefs/keycodes.qc"
+    #include "../dpdefs/menudefs.qh"
+    #include "../dpdefs/keycodes.qh"
     #include "sys-post.qh"
     #include "config.qh"
     #include "../warpzonelib/mathlib.qh"

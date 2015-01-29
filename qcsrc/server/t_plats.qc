@@ -1,8 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "sys-post.qh"
     #include "../warpzonelib/mathlib.qh"
     #include "../warpzonelib/common.qh"

@@ -2,8 +2,8 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "miscfunctions.qh"
-	#include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "sys-post.qh"
     #include "../common/playerstats.qh"
     #include "../warpzonelib/anglestransform.qh"

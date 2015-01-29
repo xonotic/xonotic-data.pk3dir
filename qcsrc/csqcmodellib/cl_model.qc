@@ -20,8 +20,8 @@
  * IN THE SOFTWARE.
  */
  #if defined(CSQC)
-	 #include "../dpdefs/csprogsdefs.qc"
-	 #include "../client/Defs.qc"
+	 #include "../dpdefs/csprogsdefs.qh"
+	 #include "../client/defs.qh"
 	 #include "../common/util.qh"
 	 #include "../common/animdecide.qh"
 	 #include "interpolate.qh"

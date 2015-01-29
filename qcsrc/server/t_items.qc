@@ -1,5 +1,5 @@
 #if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qc"
+    #include "../dpdefs/csprogsdefs.qh"
     #include "../common/util.qh"
     #include "../common/buffs.qh"
     #include "../common/weapons/weapons.qh"
@@ -11,8 +11,8 @@
     #include "t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+    #include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "../warpzonelib/util_server.qh"
     #include "../common/constants.qh"
     #include "../common/util.qh"

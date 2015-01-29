@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qc"
+	#include "../../dpdefs/progsdefs.qh"
     #include "../../common/constants.qh"
     #include "../../common/weapons/weapons.qh"
     #include "csqcprojectile.qh"

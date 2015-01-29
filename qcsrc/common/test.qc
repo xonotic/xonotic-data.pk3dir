@@ -1,9 +1,9 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
 	#include "test.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/dpextensions.qh"
     #include "test.qh"
 #endif
 

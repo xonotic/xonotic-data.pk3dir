@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qc"
+	#include "../dpdefs/progsdefs.qh"
     #include "../warpzonelib/util_server.qh"
     #include "defs.qh"
     #include "vehicles/vehicles_def.qh"

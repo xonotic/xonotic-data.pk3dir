@@ -2,11 +2,11 @@
 
 ../common/util-pre.qh
 sys-pre.qh
-../dpdefs/csprogsdefs.qc
+../dpdefs/csprogsdefs.qh
 sys-post.qh
 
-Defs.qc
-../dpdefs/keycodes.qc
+defs.qh
+../dpdefs/keycodes.qh
 ../common/constants.qh
 ../common/stats.qh
 
@@ -97,8 +97,8 @@ shownames.qh
 shownames.qc
 
 announcer.qc
-Main.qc
-View.qc
+main.qc
+view.qc
 ../csqcmodellib/interpolate.qc
 waypointsprites.qc
 movetypes.qc

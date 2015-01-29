@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/dpextensions.qh"
     #include "sys-post.qh"
     #include "autocvars.qh"
 #endif

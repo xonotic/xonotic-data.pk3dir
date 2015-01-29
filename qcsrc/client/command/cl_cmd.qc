@@ -4,8 +4,8 @@
 // ==============================================
 
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qc"
-	#include "../Defs.qc"
+	#include "../../dpdefs/csprogsdefs.qh"
+	#include "../defs.qh"
 	#include "../../common/util.qh"
 	#include "../../common/mapinfo.qh"
 	#include "../../common/command/shared_defs.qh"

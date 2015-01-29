@@ -5,8 +5,8 @@
 #elif defined(MENUQC)
     #include "util-pre.qh"
     #include "../menu/sys-pre.qh"
-    #include "../dpdefs/menudefs.qc"
-    #include "../dpdefs/keycodes.qc"
+    #include "../dpdefs/menudefs.qh"
+    #include "../dpdefs/keycodes.qh"
     #include "../menu/sys-post.qh"
     #include "../menu/config.qh"
     #include "../warpzonelib/mathlib.qh"
@@ -20,8 +20,8 @@
 #elif defined(SVQC)
     #include "util-pre.qh"
     #include "../server/sys-pre.qh"
-    #include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+    #include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "../server/sys-post.qh"
     #include "../warpzonelib/anglestransform.qh"
     #include "../warpzonelib/mathlib.qh"

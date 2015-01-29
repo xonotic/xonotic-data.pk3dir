@@ -1,11 +1,11 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
     #include "common.qh"
     #include "../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "../server/sys-post.qh"
     #include "common.qh"
     #include "../common/weapons/weapons.qh"

@@ -1,7 +1,7 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
-	#include "Defs.qc"
-	#include "../dpdefs/keycodes.qc"
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
+	#include "../dpdefs/keycodes.qh"
 	#include "../common/constants.qh"
 	#include "../common/util.qh"
 	#include "../common/mapinfo.qh"

@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
 	#include "../common/constants.qh"
 	#include "../warpzonelib/mathlib.qh"
 	#include "../common/util.qh"

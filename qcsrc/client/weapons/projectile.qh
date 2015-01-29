@@ -4,10 +4,10 @@
 #if defined(CSQC)
     #include "../../common/util-pre.qh"
     #include "../sys-pre.qh"
-    #include "../../dpdefs/csprogsdefs.qc"
+    #include "../../dpdefs/csprogsdefs.qh"
     #include "../sys-post.qh"
-    #include "../Defs.qc"
-    #include "../../dpdefs/keycodes.qc"
+    #include "../defs.qh"
+    #include "../../dpdefs/keycodes.qh"
     #include "../../common/constants.qh"
     #include "../../common/stats.qh"
     #include "../../warpzonelib/anglestransform.qh"

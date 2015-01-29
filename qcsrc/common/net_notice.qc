@@ -1,11 +1,11 @@
 #if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qc"
-    #include "../client/Defs.qc"
+    #include "../dpdefs/csprogsdefs.qh"
+    #include "../client/defs.qh"
     #include "../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+    #include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "net_notice.qh"
     #include "../server/defs.qh"

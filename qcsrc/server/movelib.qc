@@ -1,9 +1,9 @@
 #if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qc"
+    #include "../dpdefs/csprogsdefs.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+    #include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "sys-post.qh"
     #include "../csqcmodellib/sv_model.qh"
 #endif

@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qc"
+	#include "../../dpdefs/progsdefs.qh"
     #include "../sys-post.qh"
     #include "mutators_include.qh"
     #include "../../common/mapinfo.qh"

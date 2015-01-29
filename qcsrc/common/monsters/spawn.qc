@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qc"
+	#include "../../dpdefs/progsdefs.qh"
     #include "../util.qh"
     #include "monsters.qh"
     #include "sv_monsters.qh"

@@ -1,6 +1,6 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
-	#include "../client/Defs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../client/defs.qh"
 	#include "teams.qh"
 	#include "util.qh"
 	#include "buffs.qh"
@@ -11,8 +11,8 @@
 	#include "../client/main.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "teams.qh"
     #include "counting.qh"

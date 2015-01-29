@@ -1,6 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
-	#include "../../dpdefs/menudefs.qc"
+	#include "../../dpdefs/menudefs.qh"
     #include "../../common/util.qh"
     #include "../oo/base.qh"
     #include "menu_cmd.qh"

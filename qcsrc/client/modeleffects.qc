@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
 	#include "main.qh"
 	#include "../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)

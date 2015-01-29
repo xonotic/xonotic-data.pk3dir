@@ -2,8 +2,8 @@
 
 ../common/util-pre.qh
 sys-pre.qh
-../dpdefs/progsdefs.qc
-../dpdefs/dpextensions.qc
+../dpdefs/progsdefs.qh
+../dpdefs/dpextensions.qh
 sys-post.qh
 
 ../warpzonelib/anglestransform.qh

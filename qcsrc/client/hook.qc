@@ -1,6 +1,6 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
-	#include "Defs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
 	#include "../common/constants.qh"
 	#include "../warpzonelib/common.qh"
 	#include "../common/teams.qh"

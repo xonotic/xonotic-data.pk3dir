@@ -1,6 +1,6 @@
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qc"
-	#include "../../client/Defs.qc"
+	#include "../../dpdefs/csprogsdefs.qh"
+	#include "../../client/defs.qh"
 	#include "../../common/buffs.qh"
 	#include "../../client/damage.qh"
 	#include "../../client/movetypes.qh"

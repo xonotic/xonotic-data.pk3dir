@@ -1,8 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qc"
-    #include "../dpdefs/dpextensions.qc"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
     #include "../server/sys-post.qh"
     #include "constants.qh"
     #include "util.qh"
@@ -1040,7 +1040,7 @@ void PlayerInfo_Details()
 
 #ifdef CSQC
 /*
- * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qc:885)
+ * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
 void PlayerInfo_Details()
 {
         print("-- Getting detailed PlayerInfo for local player (CSQC)\n");

@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
 	#include "../warpzonelib/mathlib.qh"
 	#include "prandom.qh"
 #elif defined(MENUQC)

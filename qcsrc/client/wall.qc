@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qc"
+	#include "../dpdefs/csprogsdefs.qh"
 	#include "../common/util.qh"
 	#include "autocvars.qh"
 	#include "../csqcmodellib/interpolate.qh"
