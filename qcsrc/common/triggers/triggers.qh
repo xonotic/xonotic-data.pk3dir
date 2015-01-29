@@ -1,3 +1,7 @@
+const float SF_TRIGGER_INIT = 1;
+const float SF_TRIGGER_UPDATE = 2;
+const float SF_TRIGGER_RESET = 4;
+
 .void() trigger_touch;
 
 .string bgmscript;

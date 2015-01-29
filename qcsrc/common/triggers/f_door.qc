@@ -20,6 +20,17 @@ THINK FUNCTIONS
 =============================================================================
 */
 
+void FixSize(entity e)
+{
+	e.mins_x = rint(e.mins_x);
+	e.mins_y = rint(e.mins_y);
+	e.mins_z = rint(e.mins_z);
+
+	e.maxs_x = rint(e.maxs_x);
+	e.maxs_y = rint(e.maxs_y);
+	e.maxs_z = rint(e.maxs_z);
+}
+
 void() door_go_down;
 void() door_go_up;
 void() door_rotating_go_down;
@@ -107,6 +118,13 @@ void door_go_down()
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
+	print(
+#ifdef SVQC
+	"Server ",
+#elif defined(CSQC)
+	"Client ",
+#endif
+	"going down at time ", ftos(time), "\n");
 
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, door_hit_bottom);
@@ -683,49 +701,84 @@ FIXME: only one sound set available at the time being
 float door_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
+	WriteByte(MSG_ENTITY, sf);
 
-	WriteShort(MSG_ENTITY, num_for_edict(self));
-	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.speed);
-	WriteByte(MSG_ENTITY, self.scale);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	if(sf & SF_TRIGGER_INIT)
+	{
+		WriteString(MSG_ENTITY, self.classname);
+		WriteByte(MSG_ENTITY, self.spawnflags);
+		WriteShort(MSG_ENTITY, ((self.owner == self || !self.owner) ? -1 : num_for_edict(self.owner)));
+		WriteShort(MSG_ENTITY, ((self.enemy == self || !self.enemy) ? -1 : num_for_edict(self.enemy)));
+		WriteShort(MSG_ENTITY, num_for_edict(self));
 
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
+		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
 
-	WriteCoord(MSG_ENTITY, self.movedir_x);
-	WriteCoord(MSG_ENTITY, self.movedir_y);
-	WriteCoord(MSG_ENTITY, self.movedir_z);
+		WriteAngle(MSG_ENTITY, self.origin_x);
+		WriteAngle(MSG_ENTITY, self.origin_y);
+		WriteAngle(MSG_ENTITY, self.origin_z);
 
-	WriteCoord(MSG_ENTITY, self.angles_x);
-	WriteCoord(MSG_ENTITY, self.angles_y);
-	WriteCoord(MSG_ENTITY, self.angles_z);
+		WriteCoord(MSG_ENTITY, self.mins_x);
+		WriteCoord(MSG_ENTITY, self.mins_y);
+		WriteCoord(MSG_ENTITY, self.mins_z);
+		WriteCoord(MSG_ENTITY, self.maxs_x);
+		WriteCoord(MSG_ENTITY, self.maxs_y);
+		WriteCoord(MSG_ENTITY, self.maxs_z);
 
-	WriteCoord(MSG_ENTITY, self.pos1_x);
-	WriteCoord(MSG_ENTITY, self.pos1_y);
-	WriteCoord(MSG_ENTITY, self.pos1_z);
-	WriteCoord(MSG_ENTITY, self.pos2_x);
-	WriteCoord(MSG_ENTITY, self.pos2_y);
-	WriteCoord(MSG_ENTITY, self.pos2_z);
+		WriteCoord(MSG_ENTITY, self.movedir_x);
+		WriteCoord(MSG_ENTITY, self.movedir_y);
+		WriteCoord(MSG_ENTITY, self.movedir_z);
 
-	WriteCoord(MSG_ENTITY, self.size_x);
-	WriteCoord(MSG_ENTITY, self.size_y);
-	WriteCoord(MSG_ENTITY, self.size_z);
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteAngle(MSG_ENTITY, self.angles_z);
 
-	WriteByte(MSG_ENTITY, self.wait);
+		WriteAngle(MSG_ENTITY, self.pos1_x);
+		WriteAngle(MSG_ENTITY, self.pos1_y);
+		WriteAngle(MSG_ENTITY, self.pos1_z);
+		WriteAngle(MSG_ENTITY, self.pos2_x);
+		WriteAngle(MSG_ENTITY, self.pos2_y);
+		WriteAngle(MSG_ENTITY, self.pos2_z);
+
+		WriteCoord(MSG_ENTITY, self.size_x);
+		WriteCoord(MSG_ENTITY, self.size_y);
+		WriteCoord(MSG_ENTITY, self.size_z);
+
+		WriteByte(MSG_ENTITY, self.wait);
+		WriteShort(MSG_ENTITY, self.speed);
+		WriteByte(MSG_ENTITY, self.lip);
+		WriteByte(MSG_ENTITY, self.state);
+		WriteShort(MSG_ENTITY, self.ltime);
+
+		WriteString(MSG_ENTITY, self.model);
+		WriteShort(MSG_ENTITY, self.modelindex);
+	}
+
+	if(sf & SF_TRIGGER_RESET)
+	{
+		// client makes use of this, we do not
+	}
+
+	if(sf & SF_TRIGGER_UPDATE)
+	{
+		WriteAngle(MSG_ENTITY, self.origin_x);
+		WriteAngle(MSG_ENTITY, self.origin_y);
+		WriteAngle(MSG_ENTITY, self.origin_z);
+
+		WriteAngle(MSG_ENTITY, self.pos1_x);
+		WriteAngle(MSG_ENTITY, self.pos1_y);
+		WriteAngle(MSG_ENTITY, self.pos1_z);
+		WriteAngle(MSG_ENTITY, self.pos2_x);
+		WriteAngle(MSG_ENTITY, self.pos2_y);
+		WriteAngle(MSG_ENTITY, self.pos2_z);
+	}
 
 	return TRUE;
 }
 
 void door_link()
 {
+	// set size now, as everything is loaded
+	FixSize(self);
 	Net_LinkEntity(self, FALSE, 0, door_send);
 }
 
@@ -734,7 +787,11 @@ void door_init_startopen()
 	setorigin (self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
+
+	self.SendFlags |= SF_TRIGGER_UPDATE;
 }
+
+#endif
 
 void door_reset()
 {
@@ -743,7 +800,13 @@ void door_reset()
 	self.state = STATE_BOTTOM;
 	self.think = func_null;
 	self.nextthink = 0;
+
+#ifdef SVQC
+	self.SendFlags |= SF_TRIGGER_RESET;
+#endif
 }
+
+#ifdef SVQC
 
 // spawnflags require key (for now only func_door)
 void spawnfunc_func_door()
@@ -815,56 +878,93 @@ void spawnfunc_func_door()
 
 #elif defined(CSQC)
 
-void door_draw()
-{
-	float dt = time - self.move_time;
-	self.move_time = time;
-	if(dt <= 0) { return; }
-
-	trigger_touch_generic(door_touch);
-}
-
 void ent_door()
 {
-	self.sv_entnum = ReadShort();
-	self.warpzone_isboxy = ReadByte();
-	self.skin = ReadByte();
-	self.speed = ReadByte();
-	self.scale = ReadByte();
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	setsize(self, self.mins, self.maxs);
-	self.movedir_x = ReadCoord();
-	self.movedir_y = ReadCoord();
-	self.movedir_z = ReadCoord();
-	self.angles_x = ReadCoord();
-	self.angles_y = ReadCoord();
-	self.angles_z = ReadCoord();
-	self.pos1_x = ReadCoord();
-	self.pos1_y = ReadCoord();
-	self.pos1_z = ReadCoord();
-	self.pos2_x = ReadCoord();
-	self.pos2_y = ReadCoord();
-	self.pos2_z = ReadCoord();
-	self.size_x = ReadCoord();
-	self.size_y = ReadCoord();
-	self.size_z = ReadCoord();
-	self.wait = ReadByte();
+	float sf = ReadByte();
 
-	self.classname = "door";
-	self.movetype = MOVETYPE_PUSH;
-	self.solid = SOLID_TRIGGER;
-	self.draw = door_draw;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
+	if(sf & SF_TRIGGER_INIT)
+	{
+		self.classname = strzone(ReadString());
+		self.spawnflags = ReadByte();
+		float myowner = ReadShort();
+		float myenemy = ReadShort();
+		self.sv_entnum = ReadShort();
+
+		self.warpzone_isboxy = ReadByte();
+
+		self.origin_x = ReadAngle();
+		self.origin_y = ReadAngle();
+		self.origin_z = ReadAngle();
+		setorigin(self, self.origin);
+
+		self.mins_x = ReadCoord();
+		self.mins_y = ReadCoord();
+		self.mins_z = ReadCoord();
+		self.maxs_x = ReadCoord();
+		self.maxs_y = ReadCoord();
+		self.maxs_z = ReadCoord();
+		setsize(self, self.mins, self.maxs);
+
+		self.movedir_x = ReadCoord();
+		self.movedir_y = ReadCoord();
+		self.movedir_z = ReadCoord();
+
+		self.angles_x = ReadAngle();
+		self.angles_y = ReadAngle();
+		self.angles_z = ReadAngle();
+
+		self.pos1_x = ReadAngle();
+		self.pos1_y = ReadAngle();
+		self.pos1_z = ReadAngle();
+		self.pos2_x = ReadAngle();
+		self.pos2_y = ReadAngle();
+		self.pos2_z = ReadAngle();
+
+		self.size_x = ReadCoord();
+		self.size_y = ReadCoord();
+		self.size_z = ReadCoord();
+
+		self.wait = ReadByte();
+		self.speed = ReadShort();
+		self.lip = ReadByte();
+		self.state = ReadByte();
+		self.ltime = ReadShort();
+
+		self.model = strzone(ReadString());
+		self.modelindex = ReadShort();
+
+		self.movetype = MOVETYPE_PUSH;
+		self.solid = SOLID_TRIGGER;
+		self.trigger_touch = door_touch;
+		self.draw = trigger_draw_generic;
+		self.drawmask = MASK_NORMAL;
+		self.move_time = time;
+		self.use = door_use;
+		self.blocked = door_blocked;
+
+		self.owner = ((myowner == -1) ? self : findfloat(world, sv_entnum, myowner));
+		self.enemy = ((myenemy == -1) ? self : findfloat(world, sv_entnum, myenemy));
+	}
+
+	if(sf & SF_TRIGGER_RESET)
+	{
+		door_reset();
+	}
+
+	if(sf & SF_TRIGGER_UPDATE)
+	{
+		self.origin_x = ReadAngle();
+		self.origin_y = ReadAngle();
+		self.origin_z = ReadAngle();
+		setorigin(self, self.origin);
+
+		self.pos1_x = ReadAngle();
+		self.pos1_y = ReadAngle();
+		self.pos1_z = ReadAngle();
+		self.pos2_x = ReadAngle();
+		self.pos2_y = ReadAngle();
+		self.pos2_z = ReadAngle();
+	}
 }
 
 #endif
