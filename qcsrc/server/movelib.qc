@@ -4,7 +4,6 @@
 #elif defined(SVQC)
     #include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "sys-post.qh"
     #include "../csqcmodellib/sv_model.qh"
 #endif
 

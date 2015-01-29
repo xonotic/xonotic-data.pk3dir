@@ -3,7 +3,6 @@
 #elif defined(SVQC)
 	#include "../../dpdefs/progsdefs.qh"
     #include "../../dpdefs/dpextensions.qh"
-    #include "../sys-post.qh"
     #include "../../common/weapons/weapons.qh"
     #include "spawning.qh"
     #include "weaponsystem.qh"

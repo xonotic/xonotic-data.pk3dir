@@ -3,7 +3,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "sys-post.qh"
     #include "../warpzonelib/util_server.qh"
     #include "../common/constants.qh"
     #include "../common/util.qh"

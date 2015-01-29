@@ -4,7 +4,6 @@
 	#include "miscfunctions.qh"
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "sys-post.qh"
     #include "../common/playerstats.qh"
     #include "../warpzonelib/anglestransform.qh"
     #include "../warpzonelib/server.qh"

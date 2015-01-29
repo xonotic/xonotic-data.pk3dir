@@ -6,7 +6,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
     #include "common.qh"
     #include "../common/weapons/weapons.qh"
 #endif

@@ -1,11 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../common/util-pre.qh"
-    #include "../sys-pre.qh"
     #include "../../dpdefs/progsdefs.qh"
     #include "../../dpdefs/dpextensions.qh"
-    #include "../sys-post.qh"
     #include "../../warpzonelib/anglestransform.qh"
     #include "../../warpzonelib/mathlib.qh"
     #include "../../warpzonelib/common.qh"

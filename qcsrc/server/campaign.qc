@@ -3,7 +3,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "sys-post.qh"
     #include "autocvars.qh"
     #include "defs.qh"
     #include "campaign.qh"

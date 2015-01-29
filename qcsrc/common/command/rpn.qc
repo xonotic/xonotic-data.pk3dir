@@ -9,7 +9,6 @@
 #elif defined(SVQC)
 	#include "../../dpdefs/progsdefs.qh"
     #include "../../dpdefs/dpextensions.qh"
-    #include "../../server/sys-post.qh"
     #include "../../warpzonelib/mathlib.qh"
     #include "../util.qh"
     #include "rpn.qh"

@@ -2,7 +2,6 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../dpdefs/dpextensions.qh"
-    #include "sys-post.qh"
     #include "autocvars.qh"
 #endif
 

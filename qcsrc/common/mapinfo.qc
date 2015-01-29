@@ -9,7 +9,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
     #include "util.qh"
     #include "buffs.qh"
     #include "monsters/monsters.qh"
