@@ -1,12 +1,6 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-	#include "../../dpdefs/menudefs.qh"
-    #include "../../common/util.qh"
-    #include "../oo/base.qh"
-    #include "menu_cmd.qh"
-    #include "../menu.qh"
-#elif defined(SVQC)
-#endif
+#include "menu_cmd.qh"
+
+#include "../../common/command/generic.qh"
 
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)

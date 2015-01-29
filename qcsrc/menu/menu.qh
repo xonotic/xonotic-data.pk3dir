@@ -1,6 +1,17 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "draw.qh"
+#include "skin.qh"
+
+#include "oo/base.qh"
+
+#include "xonotic/util.qh"
+
+#include "../common/constants.qh"
+#include "../common/test.qh"
+#include "../common/util.qh"
+
 #define localcmd cmd
 
 #define NULL (null_entity)

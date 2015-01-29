@@ -1,3 +1,5 @@
+#include "../../common/weapons/weapons.qh"
+
 #ifdef INTERFACE
 CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticMutatorsDialog, toString, string(entity))

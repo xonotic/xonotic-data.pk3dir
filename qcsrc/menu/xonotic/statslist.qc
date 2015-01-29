@@ -1,3 +1,6 @@
+#include "../../common/counting.qh"
+#include "../../common/playerstats.qh"
+
 #ifdef INTERFACE
 CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))

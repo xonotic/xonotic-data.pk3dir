@@ -1,7 +1,4 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "../../common/urllib.qh"
 
 float GL_CheckExtension(string ext)
 {

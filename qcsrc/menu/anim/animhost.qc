@@ -1,3 +1,5 @@
+#include "../menu.qh"
+
 #ifdef INTERFACE
 CLASS(AnimHost) EXTENDS(Object)
 	METHOD(AnimHost, addAnim, void(entity, entity))

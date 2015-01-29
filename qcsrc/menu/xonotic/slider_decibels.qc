@@ -1,3 +1,5 @@
+#include "../../warpzonelib/mathlib.qh"
+
 #ifdef INTERFACE
 CLASS(XonoticDecibelsSlider) EXTENDS(XonoticSlider)
 	METHOD(XonoticDecibelsSlider, loadCvars, void(entity))

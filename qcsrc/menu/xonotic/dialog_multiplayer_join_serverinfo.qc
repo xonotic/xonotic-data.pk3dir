@@ -1,3 +1,5 @@
+#include "../../common/mapinfo.qh"
+
 #ifdef INTERFACE
 CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticServerInfoDialog, fill, void(entity))

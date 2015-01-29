@@ -1,29 +1,5 @@
-#if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
-	#include "../constants.qh"
-	#include "../util.qh"
-	#include "../mapinfo.qh"
-	#include "generic.qh"
-	#include "shared_defs.qh"
-	#include "../../client/command/cl_cmd.qh"
-	#include "../notifications.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../constants.qh"
-    #include "../util.qh"
-    #include "../test.qh"
-    #include "generic.qh"
-    #include "shared_defs.qh"
-    #include "../weapons/config.qh"
-    #include "../notifications.qh"
-    #include "../mapinfo.qh"
-    #include "../../server/command/common.qh"
-    #include "../../server/command/banning.qh"
-    #include "../../server/command/cmd.qh"
-    #include "../../server/command/sv_cmd.qh"
-#endif
+#include "generic.qh"
+#include "shared_defs.qh"
 
 // =========================================================
 //  Generic program common command code, written by Samual

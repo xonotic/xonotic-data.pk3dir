@@ -1,3 +1,5 @@
+#include "../../common/campaign_common.qh"
+
 #ifdef INTERFACE
 CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
