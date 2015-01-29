@@ -109,12 +109,11 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	entity w;
-	float i;
+	int i;
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		w = get_weaponinfo(i);
+		entity w = get_weaponinfo(i);
 
 		#define ACCMAC(suffix,field) \
 			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));

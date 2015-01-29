@@ -313,7 +313,7 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 	}
 }
 
-void animdecide_setstate(entity e, float newstate, float restart)
+void animdecide_setstate(entity e, int newstate, float restart)
 {
 	if(!restart)
 		if(newstate == e.anim_state)

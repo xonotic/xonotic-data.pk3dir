@@ -1,12 +1,12 @@
 #ifndef MAPINFO_H
 #define MAPINFO_H
 
-float MAPINFO_TYPE_ALL;
+int MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
 .entity enemy; // internal next pointer
 
-.float items; // game type ID
+.int items; // game type ID
 .string netname; // game type name as in cvar (with g_ prefix)
 .string mdl; // game type short name
 .string message; // human readable name

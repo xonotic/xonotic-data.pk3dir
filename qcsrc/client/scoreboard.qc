@@ -504,7 +504,8 @@ float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
 string HUD_GetField(entity pl, int field)
 {
-	float tmp, num, denom, f;
+	float tmp, num, denom;
+	int f;
 	string str;
 	hud_field_rgb = '1 1 1';
 	hud_field_icon0 = "";
@@ -682,7 +683,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_s
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
 	string str;
-	float field;
+	int field;
 	float is_spec;
 	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
 
@@ -969,7 +970,7 @@ float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
 	int i;
-	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
+	int weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;

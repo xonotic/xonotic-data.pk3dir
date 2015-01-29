@@ -59,8 +59,8 @@ void ClearPlayerSounds();
 
 float LoadPlayerSounds(string f, float first);
 
-.float modelindex_for_playersound;
-.float skin_for_playersound;
+.int modelindex_for_playersound;
+.int skin_for_playersound;
 void UpdatePlayerSounds();
 
 void FakeGlobalSound(string sample, float chan, float voicetype);

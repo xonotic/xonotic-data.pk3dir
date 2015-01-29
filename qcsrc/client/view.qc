@@ -986,8 +986,8 @@ void UpdateCrosshair()
 	}
 }
 
-const float BUTTON_3 = 4;
-const float BUTTON_4 = 8;
+const int BUTTON_3 = 4;
+const int BUTTON_4 = 8;
 float cl_notice_run();
 float prev_myteam;
 void CSQC_UpdateView(float w, float h)

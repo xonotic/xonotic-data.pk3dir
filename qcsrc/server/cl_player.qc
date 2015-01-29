@@ -118,7 +118,7 @@ void player_setupanimsformodel()
 
 void player_anim (void)
 {
-	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
@@ -131,7 +131,7 @@ void player_anim (void)
 		// Clear a previous death animation.
 		deadbits = 0;
 	}
-	float animbits = deadbits;
+	int animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)

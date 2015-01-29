@@ -17,9 +17,9 @@
 
 // generic string stuff
 
-float _MapInfo_Cache_Active;
-float _MapInfo_Cache_DB_NameToIndex;
-float _MapInfo_Cache_Buf_IndexToMapData;
+int _MapInfo_Cache_Active;
+int _MapInfo_Cache_DB_NameToIndex;
+int _MapInfo_Cache_Buf_IndexToMapData;
 
 void MapInfo_Cache_Destroy()
 {
@@ -1247,7 +1247,7 @@ string MapInfo_FixName(string s)
 	return MapInfo_FindName_match;
 }
 
-float MapInfo_CurrentFeatures()
+int MapInfo_CurrentFeatures()
 {
 	int req = 0;
 	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
@@ -1255,7 +1255,7 @@ float MapInfo_CurrentFeatures()
 	return req;
 }
 
-float MapInfo_CurrentGametype()
+int MapInfo_CurrentGametype()
 {
 	entity e;
 	int prev = cvar("gamecfg");

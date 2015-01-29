@@ -12,21 +12,21 @@
 //  Balance Config Generator
 // ==========================
 
-void W_Config_Queue_Swap(float root, float child, entity pass)
+void W_Config_Queue_Swap(int root, int child, entity pass)
 {
 	string oldroot = wep_config_queue[root];
 	wep_config_queue[root] = wep_config_queue[child];
 	wep_config_queue[child] = oldroot;
 }
 
-float W_Config_Queue_Compare(float root, float child, entity pass)
+float W_Config_Queue_Compare(int root, int child, entity pass)
 {
 	return strcmp(wep_config_queue[root], wep_config_queue[child]);
 }
 
 void Dump_Weapon_Settings(void)
 {
-	float i, x, totalsettings = 0;
+	int i, x, totalsettings = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		// step 1: clear the queue

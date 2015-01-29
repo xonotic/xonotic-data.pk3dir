@@ -6,7 +6,7 @@
     #include "mapinfo.qh"
 #endif
 
-void CampaignSetup(float n)
+void CampaignSetup(int n)
 {
 	localcmd("set g_campaign 1\n");
 	localcmd("set _campaign_name \"");

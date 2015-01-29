@@ -79,8 +79,8 @@ void W_RandomWeapons(entity e, float n);
 string GetAmmoPicture(.float ammotype);
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(float i);
-float GetAmmoStat(.float ammotype);
+.float GetAmmoFieldFromNum(int i);
+int GetAmmoStat(.float ammotype);
 #endif
 
 // ammo types
@@ -155,12 +155,12 @@ void register_weapons_done();
 
 // entity properties of weaponinfo:
 // fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A"
-.float weapon;              // M: WEP_id    // WEP_...
+.int weapon;                // M: WEP_id    // WEP_...
 .WepSet weapons;            // A: WEPSET_id // WEPSET_...
 .float(float) weapon_func;  // M: function  // w_...
 ..float ammo_field;         // M: ammotype  // main ammo field
 .int impulse;               // M: impulse   // weapon impulse
-.float spawnflags;          // M: flags     // WEPSPAWNFLAG_... combined
+.int spawnflags;            // M: flags     // WEPSPAWNFLAG_... combined
 .float bot_pickupbasevalue; // M: rating    // bot weapon priority
 .vector wpcolor;            // M: color     // waypointsprite color
 .string wpmodel;            // A: wpn-id    // wpn- sprite name
@@ -176,7 +176,7 @@ void register_weapons_done();
 
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
-	float id; \
+	int id; \
 	WepSet bit; \
 	float function(float); \
 	void RegisterWeapons_##id() \

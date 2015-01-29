@@ -33,7 +33,7 @@ float		deathmatch;
 float		coop;
 float		teamplay;
 
-float		serverflags;		// propagated from level to level, used to
+int			serverflags;		// propagated from level to level, used to
 								// keep track of completed episodes
 
 float		total_secrets;
@@ -122,8 +122,8 @@ void		end_sys_globals;		// flag for structure dumping
 .string		classname;		// spawn function
 .string		model;
 .float		frame;
-.float		skin;
-.float		effects;
+.int		skin;
+.int		effects;
 
 .vector		mins, maxs;		// bounding box extents reletive to origin
 .vector		size;			// maxs - mins
@@ -139,13 +139,13 @@ void		end_sys_globals;		// flag for structure dumping
 // stats
 .float		health;
 .float		frags;
-.float		weapon;			// one of the IT_SHOTGUN, etc flags
+.int		weapon;			// one of the IT_SHOTGUN, etc flags
 .string		weaponmodel;
 .float		weaponframe;
 .float		currentammo;
 .float		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 
-.float		items;			// bit flags
+.int		items;			// bit flags
 
 .float		takedamage;
 .entity		chain;
@@ -169,9 +169,9 @@ void		end_sys_globals;		// flag for structure dumping
 
 .entity 	enemy;
 
-.float		flags;
+.int		flags;
 
-.float		colormap;
+.int		colormap;
 .float		team;
 
 .float		max_health;		// players maximum health is stored here
@@ -191,7 +191,7 @@ void		end_sys_globals;		// flag for structure dumping
 
 .entity 	goalentity;		// a movetarget or an enemy
 
-.float		spawnflags;
+.int		spawnflags;
 
 .string		target;
 .string		targetname;

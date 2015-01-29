@@ -36,7 +36,7 @@
 
 // generic CSQC model code
 
-float CSQCModel_Send(entity to, float sf)
+float CSQCModel_Send(entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));

@@ -213,7 +213,7 @@ void CSQCModel_Draw()
 	self.csqcmodel_teleported = 0;
 }
 
-void CSQCModel_Read(float isnew)
+void CSQCModel_Read(bool isnew)
 {
 	int sf = ReadInt24_t();
 

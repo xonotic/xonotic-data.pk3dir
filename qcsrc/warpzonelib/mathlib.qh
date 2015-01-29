@@ -6,17 +6,17 @@
 // The commented-out functions need no implementation because DarkPlaces offers
 // them as builtins. They are listed here anyway for completeness sake.
 
-const float FP_NAN = 0;
-const float FP_INFINITE = 1;
-const float FP_ZERO = 2;
-const float FP_SUBNORMAL = 3;
-const float FP_NORMAL = 4;
+const int FP_NAN = 0;
+const int FP_INFINITE = 1;
+const int FP_ZERO = 2;
+const int FP_SUBNORMAL = 3;
+const int FP_NORMAL = 4;
 int fpclassify(float x);
-int isfinite(float x);
-int isinf(float x);
-int isnan(float x);
-int isnormal(float x);
-int signbit(float x);
+bool isfinite(float x);
+bool isinf(float x);
+bool isnan(float x);
+bool isnormal(float x);
+bool signbit(float x);
 
 //float acos(float x);
 //float asin(float x);

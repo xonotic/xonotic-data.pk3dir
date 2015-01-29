@@ -14,7 +14,7 @@ string url_fgets(entity e);
 void url_fputs(entity e, string s);
 
 // returns true if handled
-float url_URI_Get_Callback(float id, float status, string data);
+float url_URI_Get_Callback(int id, float status, string data);
 #define MIN_URL_ID URI_GET_URLLIB
 #define NUM_URL_ID (URI_GET_URLLIB_END - URI_GET_URLLIB + 1)
 

@@ -303,7 +303,7 @@ int db_create()
 	return buf_create();
 }
 
-float db_load(string pFilename)
+int db_load(string pFilename)
 {
 	float db, fh, i, j, n;
 	string l;
@@ -395,7 +395,7 @@ void db_test()
 }
 
 // Multiline text file buffers
-float buf_load(string pFilename)
+int buf_load(string pFilename)
 {
 	float buf, fh, i;
 	string l;
@@ -1908,8 +1908,7 @@ string getcurrentmod()
 #ifdef CSQC
 int ReadInt24_t()
 {
-	float v;
-	v = ReadShort() * 256; // note: this is signed
+	int v = ReadShort() * 256; // note: this is signed
 	v += ReadByte(); // note: this is unsigned
 	return v;
 }
@@ -2363,8 +2362,7 @@ float InterpretBoolean(string input)
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
-	float f;
-	f = ReadShort();
+	int f = ReadShort();
 	if(f == 0)
 		return world;
 	return findfloat(world, entnum, f);

@@ -182,7 +182,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
 
-//.float weapon; // current weapon
+//.int weapon; // current weapon
 .float switchweapon; // weapon requested to switch to
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
@@ -346,7 +346,7 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 float next_pingtime;
 
 .float Version;
-.float SendFlags;
+.int SendFlags;
 .float(entity to, float sendflags) SendEntity;
 
 // player sounds, voice messages

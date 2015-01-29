@@ -87,7 +87,7 @@ void Draw_ShowNames(entity ent)
 			if(autocvar_hud_shownames_crosshairdistance > crosshairdistance)
 				ent.pointtime = time;
 
-			if (!(ent.pointtime + autocvar_hud_shownames_crosshairdistance_time > time))
+			if (ent.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time)
 				overlap = true;
 			else
 				overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.

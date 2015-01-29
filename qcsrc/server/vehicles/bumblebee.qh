@@ -1,9 +1,9 @@
 #ifndef BUMBLEBEE_H
 #define BUMBLEBEE_H
 
-const float BRG_SETUP = 2;
-const float BRG_START = 4;
-const float BRG_END = 8;
+const int BRG_SETUP = 2;
+const int BRG_START = 4;
+const int BRG_END = 8;
 
 #ifdef SVQC
 // Auto cvars

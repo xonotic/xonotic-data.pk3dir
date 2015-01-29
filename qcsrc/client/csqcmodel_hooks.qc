@@ -16,7 +16,7 @@
 	#include "../warpzonelib/mathlib.qh"
 
 	.float death_time;
-	.float modelflags;
+	.int modelflags;
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

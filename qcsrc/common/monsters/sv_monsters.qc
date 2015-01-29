@@ -283,7 +283,7 @@ float LoadMonsterSounds(string f, float first)
 	return 1;
 }
 
-.float skin_for_monstersound;
+.int skin_for_monstersound;
 void UpdateMonsterSounds()
 {
 	entity mon = get_monsterinfo(self.monsterid);

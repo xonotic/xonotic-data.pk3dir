@@ -344,7 +344,7 @@ string GetAmmoPicture(.float ammotype)
 }
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(float i)
+.float GetAmmoFieldFromNum(int i)
 {
 	switch(i)
 	{
@@ -358,7 +358,7 @@ string GetAmmoPicture(.float ammotype)
 	}
 }
 
-float GetAmmoStat(.float ammotype)
+int GetAmmoStat(.float ammotype)
 {
 	switch(ammotype)
 	{

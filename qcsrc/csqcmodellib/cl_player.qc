@@ -40,7 +40,8 @@ float autocvar_cl_movement_errorcompensation = 0;
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 vector csqcplayer_origin, csqcplayer_velocity;
-float csqcplayer_sequence, player_pmflags;
+float csqcplayer_sequence;
+int player_pmflags;
 float csqcplayer_moveframe;
 vector csqcplayer_predictionerroro;
 vector csqcplayer_predictionerrorv;

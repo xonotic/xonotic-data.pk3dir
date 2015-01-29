@@ -25,7 +25,7 @@ void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int 
 .float anim_upper_implicit_time;
 
 // explicit anim states (networked)
-void animdecide_setstate(entity e, float newstate, float restart);
+void animdecide_setstate(entity e, int newstate, float restart);
 const int ANIMSTATE_DEAD1 = 1; // base frames: die1
 const int ANIMSTATE_DEAD2 = 2; // base frames: die2
 const int ANIMSTATE_DUCK = 4; // turns walk into duckwalk, jump into duckjump, etc.

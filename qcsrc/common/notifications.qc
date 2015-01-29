@@ -496,8 +496,8 @@ void Create_Notification_Entity(
 	int typeId,
 	int nameid,
 	string namestring,
-	float strnum,
-	float flnum,
+	int strnum,
+	int flnum,
 	/* MSG_ANNCE */
 	float channel,
 	string snd,
@@ -1376,7 +1376,7 @@ void Local_Notification_HUD_Notify_Push(
 
 void Local_Notification_centerprint_generic(
 	string input, string durcnt,
-	float cpid, float f1, float f2)
+	int cpid, float f1, float f2)
 {
 	string selected;
 	float sel_num;
@@ -1425,7 +1425,7 @@ void Local_Notification_centerprint_generic(
 }
 #endif
 
-void Local_Notification(float net_type, float net_name, ...count)
+void Local_Notification(int net_type, int net_name, ...count)
 {
 	// check if this should be aborted
 	if(net_name == NOTIF_ABORT)

@@ -94,7 +94,7 @@ float(string s) checkextension = #99;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_ADDITIVE     = 32;
+const int   EF_ADDITIVE     = 32;
 //description:
 //additive blending when this object is rendered
 
@@ -102,7 +102,7 @@ float   EF_ADDITIVE     = 32;
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_BLUE         = 64;
+const int   EF_BLUE         = 64;
 //description:
 //entity emits blue light (used for quad)
 
@@ -110,7 +110,7 @@ float   EF_BLUE         = 64;
 //idea: LordHavoc
 //darkplaces implementation: [515] and LordHavoc
 //effects bit:
-float EF_DOUBLESIDED = 32768;
+const int EF_DOUBLESIDED = 32768;
 //description:
 //render entity as double sided (backfaces are visible, I.E. you see the 'interior' of the model, rather than just the front), can be occasionally useful on transparent stuff.
 
@@ -118,7 +118,7 @@ float EF_DOUBLESIDED = 32768;
 //idea: C.Brutail, divVerent, maikmerten
 //darkplaces implementation: divVerent
 //effects bit:
-float   EF_DYNAMICMODELLIGHT     = 131072;
+const int   EF_DYNAMICMODELLIGHT     = 131072;
 //description:
 //force dynamic model light on the entity, even if it's a BSP model (or anything else with lightmaps or light colors)
 
@@ -126,7 +126,7 @@ float   EF_DYNAMICMODELLIGHT     = 131072;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_FLAME        = 1024;
+const int   EF_FLAME        = 1024;
 //description:
 //entity is on fire
 
@@ -134,7 +134,7 @@ float   EF_FLAME        = 1024;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_FULLBRIGHT   = 512;
+const int   EF_FULLBRIGHT   = 512;
 //description:
 //entity is always brightly lit
 
@@ -142,7 +142,7 @@ float   EF_FULLBRIGHT   = 512;
 //idea: Supa
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_NODEPTHTEST       = 8192;
+const int   EF_NODEPTHTEST       = 8192;
 //description:
 //makes entity show up to client even through walls, useful with EF_ADDITIVE for special indicators like where team bases are in a map, so that people don't get lost
 
@@ -150,7 +150,7 @@ float   EF_NODEPTHTEST       = 8192;
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_NODRAW       = 16;
+const int   EF_NODRAW       = 16;
 //description:
 //prevents server from sending entity to client (forced invisible, even if it would have been a light source or other such things)
 
@@ -158,7 +158,7 @@ float   EF_NODRAW       = 16;
 //idea: Chris Page, Dresk
 //darkplaces implementation: LordHAvoc
 //effects bit:
-float   EF_NOGUNBOB     = 256;
+const int   EF_NOGUNBOB     = 256;
 //description:
 //this has different meanings depending on the entity it is used on:
 //player entity - prevents gun bobbing on player.viewmodel
@@ -172,7 +172,7 @@ float   EF_NOGUNBOB     = 256;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_NOSHADOW     = 4096;
+const int   EF_NOSHADOW     = 4096;
 //description:
 //realtime lights will not cast shadows from this entity (but can still illuminate it)
 
@@ -180,7 +180,7 @@ float   EF_NOSHADOW     = 4096;
 //idea: id Software
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_RED          = 128;
+const int   EF_RED          = 128;
 //description:
 //entity emits red light (used for invulnerability)
 
@@ -188,7 +188,7 @@ float   EF_RED          = 128;
 //idea: id software
 //darkplaces implementation: divVerent
 //effects bit:
-float   EF_RESTARTANIM_BIT = 1048576;
+const int   EF_RESTARTANIM_BIT = 1048576;
 //description:
 //when toggled, the current animation is restarted. Useful for weapon animation.
 //to toggle this bit in QC, you can do:
@@ -198,7 +198,7 @@ float   EF_RESTARTANIM_BIT = 1048576;
 //idea: MythWorks Inc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float   EF_STARDUST     = 2048;
+const int   EF_STARDUST     = 2048;
 //description:
 //entity emits bouncing sparkles in every direction
 
@@ -206,7 +206,7 @@ float   EF_STARDUST     = 2048;
 //idea: id software
 //darkplaces implementation: divVerent
 //effects bit:
-float   EF_TELEPORT_BIT = 2097152;
+const int   EF_TELEPORT_BIT = 2097152;
 //description:
 //when toggled, interpolation of the entity is skipped for one frame. Useful for teleporting.
 //to toggle this bit in QC, you can do:
@@ -874,7 +874,7 @@ vector(entity e, float s, float n) getsurfacetriangle = #629;
 //idea: VorteX, LordHavoc
 //DarkPlaces implementation: VorteX
 //builtin definitions:
-float(entity ent, string tagname) gettagindex = #451;
+int(entity ent, string tagname) gettagindex = #451;
 vector(entity ent, float tagindex) gettaginfo = #452;
 //description:
 //gettagindex returns the number of a tag on an entity, this number is the same as set by setattachment (in the .tag_index field), allowing the qc to save a little cpu time by keeping the number around if it wishes (this could already be done by calling setattachment and saving off the tag_index).
@@ -1085,7 +1085,7 @@ string(string s) strtoupper = #481; // returns the passed in string in pure uppe
 //idea: Electro, SavageX, LordHavoc
 //darkplaces implementation: LordHavoc
 //builtin definitions:
-float(string s, string separator1, ...) tokenizebyseparator = #479;
+int(string s, string separator1, ...) tokenizebyseparator = #479;
 //description:
 //this function returns tokens separated by any of the supplied separator strings, example:
 //numnumbers = tokenizebyseparator("10.2.3.4", ".");
@@ -1096,9 +1096,9 @@ float(string s, string separator1, ...) tokenizebyseparator = #479;
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
-float(string s) tokenize_console = #514;
-float(float i) argv_start_index = #515;
-float(float i) argv_end_index = #516;
+int(string s) tokenize_console = #514;
+int(float i) argv_start_index = #515;
+int(float i) argv_end_index = #516;
 //description:
 //this function returns tokens separated just like the console does
 //also, functions are provided to get the index of the first and last character of each token in the original string
@@ -1577,7 +1577,7 @@ void(vector origin, string sample, float volume, float attenuation) pointsound =
 //idea: LordHavoc, Dresk
 //darkplaces implementation: LordHavoc
 //field definitions:
-.float modelflags;
+.int modelflags;
 //constant definitions:
 float EF_NOMODELFLAGS = 8388608; // ignore any effects in a model file and substitute your own
 float MF_ROCKET  =   1; // leave a trail
@@ -1638,7 +1638,7 @@ float MF_TRACER3 = 128; // purple trail
 //idea: Spike
 //darkplaces implementation: LordHavoc
 //function definitions:
-float(string effectname) particleeffectnum = #335; // same as in CSQC
+int(string effectname) particleeffectnum = #335; // same as in CSQC
 void(entity ent, float effectnum, vector start, vector end) trailparticles = #336; // same as in CSQC
 void(float effectnum, vector org, vector vel, float howmany) pointparticles = #337; // same as in CSQC
 //SVC definitions:
@@ -2110,7 +2110,7 @@ float(string filename, float mode) fopen = #110; // opens a file inside quake/ga
 void(float fhandle) fclose = #111; // closes a file
 string(float fhandle) fgets = #112; // reads a line of text from the file and returns as a tempstring
 void(float fhandle, string s, ...) fputs = #113; // writes a line of text to the end of the file
-float(string s) strlen = #114; // returns how many characters are in a string
+int(string s) strlen = #114; // returns how many characters are in a string
 string(string s1, string s2, ...) strcat = #115; // concatenates two or more strings (for example "abc", "def" would return "abcdef") and returns as a tempstring
 string(string s, float start, float length) substring = #116; // returns a section of a string as a tempstring - see FTE_STRINGS for enhanced version
 vector(string s) stov = #117; // returns vector value from a string
@@ -2311,7 +2311,7 @@ void() example_skel_player_delete =
 //void(string s) SV_ParseClientCommand;
 //builtin definitions:
 void(entity e, string s) clientcommand = #440;
-float(string s) tokenize = #441;
+int(string s) tokenize = #441;
 string(float n) argv = #442;
 //description:
 //provides QC the ability to completely control server interpretation of client commands ("say" and "color" for example, clientcommand is necessary for this and substring (FRIK_FILE) is useful) as well as adding new commands (tokenize, argv, and stof (FRIK_FILE) are useful for this)), whenever a clc_stringcmd is received the QC function is called, and it is up to the QC to decide what (if anything) to do with it
@@ -2377,7 +2377,7 @@ float EF_SELECTABLE = 16384; // allows cursor to highlight entity (brighten)
 .float style; // light style (like normal light entities, flickering torches or switchable, etc)
 .float pflags; // flags (see PFLAGS_ constants)
 .vector angles; // orientation of the light
-.float skin; // cubemap filter number, can be 1-255 (0 is assumed to be none, and tenebrae only allows 16-255), this selects a projective light filter, a value of 1 loads cubemaps/1posx.tga and cubemaps/1negx.tga and posy, negy, posz, and negz, similar to skybox but some sides need to be rotated or flipped
+.int skin; // cubemap filter number, can be 1-255 (0 is assumed to be none, and tenebrae only allows 16-255), this selects a projective light filter, a value of 1 loads cubemaps/1posx.tga and cubemaps/1negx.tga and posy, negy, posz, and negz, similar to skybox but some sides need to be rotated or flipped
 //constants:
 float PFLAGS_NOSHADOW = 1; // light does not cast shadows
 float PFLAGS_CORONA = 2; // light has a corona flare
@@ -2411,16 +2411,16 @@ float checkpvs(vector viewpos, entity viewee) = #240;
 //darkplaces implementation: KrimZon
 //builtin definitions:
 int(string str, string sub, float startpos) strstrofs = #221; // returns the offset into a string of the matching text, or -1 if not found, case sensitive
-float(string str, float ofs) str2chr = #222; // returns the character at the specified offset as an integer, or 0 if an invalid index, or byte value - 256 if the engine supports UTF8 and the byte is part of an extended character
-string(float c, ...) chr2str = #223; // returns a string representing the character given, if the engine supports UTF8 this may be a multi-byte sequence (length may be more than 1) for characters over 127.
+int(string str, float ofs) str2chr = #222; // returns the character at the specified offset as an integer, or 0 if an invalid index, or byte value - 256 if the engine supports UTF8 and the byte is part of an extended character
+string(int c, ...) chr2str = #223; // returns a string representing the character given, if the engine supports UTF8 this may be a multi-byte sequence (length may be more than 1) for characters over 127.
 string(float ccase, float calpha, float cnum, string s, ...) strconv = #224; // reformat a string with special color characters in the font, DO NOT USE THIS ON UTF8 ENGINES (if you are lucky they will emit ^4 and such color codes instead), the parameter values are 0=same/1=lower/2=upper for ccase, 0=same/1=white/2=red/5=alternate/6=alternate-alternate for redalpha, 0=same/1=white/2=red/3=redspecial/4=whitespecial/5=alternate/6=alternate-alternate for rednum.
 string(float chars, string s, ...) strpad = #225; // pad string with spaces to a specified length, < 0 = left padding, > 0 = right padding
 string(string info, string key, string value, ...) infoadd = #226; // sets or adds a key/value pair to an infostring - note: forbidden characters are \ and "
 string(string info, string key) infoget = #227; // gets a key/value pair in an infostring, returns value or null if not found
-float(string s1, string s2) strcmp = #228; // compare two strings
-float(string s1, string s2, float len) strncmp = #228; // compare two strings up to the specified number of characters, if their length differs and is within the specified limit the result will be negative, otherwise it is the difference in value of their first non-matching character.
-float(string s1, string s2) strcasecmp = #229; // compare two strings with case-insensitive matching, characters a-z are considered equivalent to the matching A-Z character, no other differences, and this does not consider special characters equal even if they look similar
-float(string s1, string s2, float len) strncasecmp = #230; // same as strcasecmp but with a length limit, see strncmp
+int(string s1, string s2) strcmp = #228; // compare two strings
+int(string s1, string s2, float len) strncmp = #228; // compare two strings up to the specified number of characters, if their length differs and is within the specified limit the result will be negative, otherwise it is the difference in value of their first non-matching character.
+int(string s1, string s2) strcasecmp = #229; // compare two strings with case-insensitive matching, characters a-z are considered equivalent to the matching A-Z character, no other differences, and this does not consider special characters equal even if they look similar
+int(string s1, string s2, float len) strncasecmp = #230; // same as strcasecmp but with a length limit, see strncmp
 //string(string s, float start, float length) substring = #116; // see note below
 //description:
 //various string manipulation functions

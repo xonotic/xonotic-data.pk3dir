@@ -349,8 +349,8 @@ HUD_PANELS(HUD_PANEL)
 	HUD_Panel_GetBorder();                                                                                          \
 } while(0)
 
-const float NOTIFY_MAX_ENTRIES = 10;
-const float NOTIFY_ICON_MARGIN = 0.02;
+const int NOTIFY_MAX_ENTRIES = 10;
+const int NOTIFY_ICON_MARGIN = 0.02;
 
 int notify_index;
 int notify_count;

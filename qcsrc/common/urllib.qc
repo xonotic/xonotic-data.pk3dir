@@ -28,13 +28,13 @@ const float URL_FH_STDOUT = -2;
 .entity url_ready_pass;
 
 // for multi handles
-.float url_attempt;
-.float url_mode;
+.int url_attempt;
+.int url_mode;
 
 entity url_fromid[NUM_URL_ID];
-float autocvar__urllib_nextslot;
+int autocvar__urllib_nextslot;
 
-float url_URI_Get_Callback(float id, float status, string data)
+float url_URI_Get_Callback(int id, float status, string data)
 {
 	if(id < MIN_URL_ID)
 		return 0;
@@ -96,7 +96,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
+void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	entity e;
 	int i;
@@ -377,7 +377,7 @@ void url_multi_ready(entity fh, entity me, float status)
 	}
 	me.url_ready(fh, me.url_ready_pass, status);
 }
-void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass)
+void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	float n;
 	n = tokenize_console(url);

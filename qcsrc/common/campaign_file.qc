@@ -87,10 +87,10 @@ float CampaignFile_Load(float offset, float n)
 
 void CampaignFile_Unload()
 {
-	float i;
 	if(campaign_title)
 	{
 		strunzone(campaign_title);
+		int i;
 		for(i = 0; i < campaign_entries; ++i)
 		{
 			strunzone(campaign_gametype[i]);

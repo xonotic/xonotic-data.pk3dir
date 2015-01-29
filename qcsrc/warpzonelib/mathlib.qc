@@ -18,25 +18,25 @@ int fpclassify(float x)
 		return FP_ZERO;
 	return FP_NORMAL;
 }
-int isfinite(float x)
+bool isfinite(float x)
 {
 	return !(isnan(x) || isinf(x));
 }
-int isinf(float x)
+bool isinf(float x)
 {
 	return (x != 0) && (x + x == x);
 }
-int isnan(float x)
+bool isnan(float x)
 {
 	float y;
 	y = x;
 	return (x != y);
 }
-int isnormal(float x)
+bool isnormal(float x)
 {
 	return isfinite(x);
 }
-int signbit(float x)
+bool signbit(float x)
 {
 	return (x < 0);
 }

@@ -16,7 +16,7 @@
 
 
 #ifdef SVQC
-float healer_send(entity to, float sf)
+float healer_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HEALING_ORB);
 	WriteByte(MSG_ENTITY, sf);

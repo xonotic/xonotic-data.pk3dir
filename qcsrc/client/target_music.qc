@@ -53,17 +53,14 @@ void TargetMusic_Advance()
 
 void Net_TargetMusic()
 {
-	float vol, fai, fao, tim, id;
-	string noi;
+	int id = ReadShort();
+	float vol = ReadByte() / 255.0;
+	float fai = ReadByte() / 16.0;
+	float fao = ReadByte() / 16.0;
+	float tim = ReadByte();
+	string noi = ReadString();
+
 	entity e;
-
-	id = ReadShort();
-	vol = ReadByte() / 255.0;
-	fai = ReadByte() / 16.0;
-	fao = ReadByte() / 16.0;
-	tim = ReadByte();
-	noi = ReadString();
-
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
 	{
 		if(e.count == id)

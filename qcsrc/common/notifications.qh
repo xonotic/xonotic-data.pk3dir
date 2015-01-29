@@ -54,8 +54,8 @@ void Create_Notification_Entity(
     float typeId,
     float nameid,
     string namestring,
-    float strnum,
-    float flnum,
+    int strnum,
+    int flnum,
     /* MSG_ANNCE */
     float channel,
     string snd,
@@ -86,7 +86,7 @@ void Dump_Notifications(float fh, float alsoprint);
 void Debug_Notification(string input);
 #endif
 
-void Local_Notification(float net_type, float net_name, ...count);
+void Local_Notification(int net_type, int net_name, ...count);
 void Local_Notification_WOVA(
     float net_type, float net_name,
     float stringcount, float floatcount,
@@ -1508,7 +1508,7 @@ float notif_global_error;
 
 #define MSG_MULTI_NOTIF(default,name,anncename,infoname,centername) \
     NOTIF_ADD_AUTOCVAR(name, default) \
-    float name; \
+    int name; \
     void RegisterNotification_##name() \
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_MULTI_COUNT) \

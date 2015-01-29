@@ -668,8 +668,7 @@ void ent_turret()
 
     if(sf & TNSF_STATUS)
     {
-        float _tmp;
-        _tmp = ReadByte();
+        int _tmp = ReadByte();
         if(_tmp != self.team)
         {
             self.team = _tmp;

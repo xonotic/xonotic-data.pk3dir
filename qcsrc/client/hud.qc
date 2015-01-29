@@ -400,10 +400,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 // Weapon icons (#0)
 //
 entity weaponorder[WEP_MAXCOUNT];
-void weaponorder_swap(float i, float j, entity pass)
+void weaponorder_swap(int i, int j, entity pass)
 {
-	entity h;
-	h = weaponorder[i];
+	entity h = weaponorder[i];
 	weaponorder[i] = weaponorder[j];
 	weaponorder[j] = h;
 }
@@ -468,7 +467,7 @@ void HUD_Weapons(void)
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
-		float weapon_cnt;
+		int weapon_cnt;
 		if(weaponorder_bypriority)
 			strunzone(weaponorder_bypriority);
 		if(weaponorder_byimpulse)

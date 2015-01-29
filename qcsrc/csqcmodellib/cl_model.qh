@@ -24,7 +24,7 @@
 
 #include "common.qh"
 
-void CSQCModel_Read(float isnew);
+void CSQCModel_Read(bool isnew);
 
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF
