@@ -73,15 +73,6 @@ void spawnfunc_func_water()
 #elif defined(CSQC)
 .float speed;
 
-void func_ladder_draw()
-{
-	float dt = time - self.move_time;
-	self.move_time = time;
-	if(dt <= 0) { return; }
-
-	trigger_touch_generic(func_ladder_touch);
-}
-
 void ent_func_ladder()
 {
 	self.classname = strzone(ReadString());
@@ -108,7 +99,8 @@ void ent_func_ladder()
 	self.angles_z = ReadCoord();
 
 	self.solid = SOLID_TRIGGER;
-	self.draw = func_ladder_draw;
+	self.draw = trigger_draw_generic;
+	self.trigger_touch = func_ladder_touch;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
 }

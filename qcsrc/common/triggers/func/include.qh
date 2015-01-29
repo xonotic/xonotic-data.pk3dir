@@ -1,2 +1,4 @@
+#include "conveyor.qh"
 #include "door.qh"
 #include "ladder.qh"
+#include "plat.qh"

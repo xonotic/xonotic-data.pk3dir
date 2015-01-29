@@ -142,3 +142,34 @@ void SUB_UseTargets()
 	self = stemp;
 	other = otemp;
 }
+
+#ifdef CSQC
+void trigger_touch_generic(void() touchfunc)
+{
+	entity e;
+	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+	if(e.isplayermodel)
+	{
+		vector emin = e.absmin, emax = e.absmax;
+		if(self.solid == SOLID_BSP)
+		{
+			emin -= '1 1 1';
+			emax += '1 1 1';
+		}
+		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+		{
+			other = e;
+			touchfunc();
+		}
+	}
+}
+void trigger_draw_generic()
+{
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0) { return; }
+
+	if(self.trigger_touch) { trigger_touch_generic(self.trigger_touch); }
+}
+#endif

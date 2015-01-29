@@ -1,16 +1,38 @@
-#ifdef SVQC
 void generic_plat_blocked()
 {
-    if(self.dmg && other.takedamage != DAMAGE_NO) {
-        if(self.dmgtime2 < time) {
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-            self.dmgtime2 = time + self.dmgtime;
-        }
+#ifdef SVQC
+	if(self.dmg && other.takedamage != DAMAGE_NO)
+	{
+		if(self.dmgtime2 < time)
+		{
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			self.dmgtime2 = time + self.dmgtime;
+		}
 
-        // Gib dead/dying stuff
-        if(other.deadflag != DEAD_NO)
-            Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    }
+		// Gib dead/dying stuff
+		if(other.deadflag != DEAD_NO)
+			Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+	}
+#endif
+}
+
+#ifdef SVQC
+float plat_trigger_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT_TRIGGER);
+	WriteShort(MSG_ENTITY, num_for_edict(self.enemy));
+
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	WriteCoord(MSG_ENTITY, self.mins_x);
+	WriteCoord(MSG_ENTITY, self.mins_y);
+	WriteCoord(MSG_ENTITY, self.mins_z);
+	WriteCoord(MSG_ENTITY, self.maxs_x);
+	WriteCoord(MSG_ENTITY, self.maxs_y);
+	WriteCoord(MSG_ENTITY, self.maxs_z);
+	return TRUE;
 }
 
 void plat_spawn_inside_trigger()
@@ -46,6 +68,7 @@ void plat_spawn_inside_trigger()
 			if(tmin_z < tmax_z)
 			{
 				setsize (trigger, tmin, tmax);
+				Net_LinkEntity(trigger, FALSE, 0, plat_trigger_send);
 				return;
 			}
 
@@ -53,6 +76,31 @@ void plat_spawn_inside_trigger()
 	remove(trigger);
 	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
+#elif defined(CSQC)
+void ent_plat_trigger()
+{
+	float myenemy = ReadShort();
+	self.origin_x = ReadCoord();
+	self.origin_y = ReadCoord();
+	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
+
+	self.mins_x = ReadCoord();
+	self.mins_y = ReadCoord();
+	self.mins_z = ReadCoord();
+	self.maxs_x = ReadCoord();
+	self.maxs_y = ReadCoord();
+	self.maxs_z = ReadCoord();
+	setsize(self, self.mins, self.maxs);
+
+	self.enemy = findfloat(world, sv_entnum, myenemy);
+	if(!self.enemy) { print("^1BAD BAD BAD!!!\n"); }
+	self.drawmask = MASK_NORMAL;
+	self.draw = trigger_draw_generic;
+	self.trigger_touch = plat_center_touch;
+	self.solid = SOLID_TRIGGER;
+}
+#endif
 
 void plat_hit_top()
 {
@@ -84,11 +132,20 @@ void plat_go_up()
 
 void plat_center_touch()
 {
+#ifdef SVQC
 	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
 		return;
+#elif defined(CSQC)
+	if (!IS_PLAYER(other))
+		return;
+#endif
+
+#ifdef CSQC
+	print("Got this far\n");
+#endif
 
 	self = self.enemy;
 	if (self.state == 2)
@@ -99,11 +156,16 @@ void plat_center_touch()
 
 void plat_outside_touch()
 {
+#ifdef SVQC
 	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
 		return;
+#elif defined(CSQC)
+	if (!IS_PLAYER(other))
+		return;
+#endif
 
 	self = self.enemy;
 	if (self.state == 1)
@@ -120,24 +182,32 @@ void plat_trigger_use()
 
 void plat_crush()
 {
-    if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
-        Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-    } else {
-        if((self.dmg) && (other.takedamage != DAMAGE_NO)) {   // Shall we bite?
-            Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-            // Gib dead/dying stuff
-            if(other.deadflag != DEAD_NO)
-                Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-        }
+	if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
+	{ // KIll Kill Kill!!
+#ifdef SVQC
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+#endif
+	}
+	else
+	{
+#ifdef SVQC
+		if((self.dmg) && (other.takedamage != DAMAGE_NO))
+		{   // Shall we bite?
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			// Gib dead/dying stuff
+			if(other.deadflag != DEAD_NO)
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
+#endif
 
-        if (self.state == 4)
-            plat_go_down ();
-        else if (self.state == 3)
-            plat_go_up ();
+		if (self.state == 4)
+			plat_go_down ();
+		else if (self.state == 3)
+			plat_go_up ();
 	// when in other states, then the plat_crush event came delayed after
 	// plat state already had changed
 	// this isn't a bug per se!
-    }
+	}
 }
 
 void plat_use()
@@ -164,8 +234,13 @@ void plat_reset()
 		self.state = 2;
 		self.use = plat_trigger_use;
 	}
+
+#ifdef SVQC
+	self.SendFlags |= SF_TRIGGER_RESET;
+#endif
 }
 
+#ifdef SVQC
 .float platmovetype_start_default, platmovetype_end_default;
 float set_platmovetype(entity e, string s)
 {

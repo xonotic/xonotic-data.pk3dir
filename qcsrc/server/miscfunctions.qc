@@ -1559,9 +1559,6 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
     e.uncustomizeentityforclient_set = !!uncustomizer;
 }
 
-.float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
-
 void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
 {
     vector mi, ma;

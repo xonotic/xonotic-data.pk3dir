@@ -1,0 +1,4 @@
+#ifdef CSQC
+void ent_trigger_push();
+void ent_target_push();
+#endif

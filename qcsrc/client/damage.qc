@@ -31,7 +31,7 @@ void DamageEffect_Think()
 	pointparticles(self.team, org, '0 0 0', 1);
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum)
+void DamageEffect(vector hitorg, float thedamage, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
@@ -75,7 +75,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			return; // allow a single damage on non-skeletal models
 	}
 
-	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
+	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
 
@@ -104,7 +104,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
+	float thedamage, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
 	vector force, thisforce;
 	entity oldself;
 
@@ -118,7 +118,7 @@ void Ent_DamageInfo(float isNew)
 	w_org_y = ReadCoord();
 	w_org_z = ReadCoord();
 
-	dmg = ReadByte();
+	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
@@ -149,10 +149,10 @@ void Ent_DamageInfo(float isNew)
 				continue;
 			if(thisdmg < 0)
 				thisdmg = 0;
-			if(dmg)
+			if(thedamage)
 			{
-				thisdmg = dmg + (edge - dmg) * thisdmg;
-				thisforce = forcemul * vlen(force) * (thisdmg / dmg) * normalize(self.origin - w_org);
+				thisdmg = thedamage + (edge - thedamage) * thisdmg;
+				thisforce = forcemul * vlen(force) * (thisdmg / thedamage) * normalize(self.origin - w_org);
 			}
 			else
 			{
@@ -165,7 +165,7 @@ void Ent_DamageInfo(float isNew)
 			if(vlen(nearest - w_org) > bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS))
 				continue;
 
-			thisdmg = dmg;
+			thisdmg = thedamage;
 			thisforce = forcemul * force;
 		}
 

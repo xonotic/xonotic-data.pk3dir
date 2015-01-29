@@ -117,7 +117,8 @@ void SUB_CalcMove_controller_think (void)
 	vector nextpos;
 	delta = self.destvec;
 	delta2 = self.destvec2;
-	if(time < self.animstate_endtime) {
+	if(time < self.animstate_endtime)
+	{
 		nexttick = time + PHYS_INPUT_FRAMETIME;
 
 		traveltime = self.animstate_endtime - self.animstate_starttime;
@@ -149,7 +150,9 @@ void SUB_CalcMove_controller_think (void)
 
 		self.owner.velocity = veloc;
 		self.nextthink = nexttick;
-	} else {
+	}
+	else
+	{
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		oldself = self;
 		self.owner.think = self.think1;

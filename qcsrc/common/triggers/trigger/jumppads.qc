@@ -1,7 +1,5 @@
 // TODO: split target_push and put it in the target folder
 
-.float height;
-
 #ifdef SVQC
 
 const float PUSH_ONCE = 1;

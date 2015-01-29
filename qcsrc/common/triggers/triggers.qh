@@ -7,6 +7,11 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 .void() trigger_touch;
 
+.float height;
+
+.float nottargeted;
+#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+
 .string bgmscript;
 .float bgmscriptattack;
 .float bgmscriptdecay;
