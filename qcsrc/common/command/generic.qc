@@ -278,7 +278,7 @@ void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work wit
 			wep_config_file = -1;
 			wep_config_alsoprint = -1;
 			string filename = argv(1);
-			
+
 			if(filename == "")
 			{
 				filename = "weapons_dump.cfg";
@@ -290,7 +290,7 @@ void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work wit
 				wep_config_alsoprint = true;
 			}
 			wep_config_file = fopen(filename, FILE_WRITE);
-			
+
 			if(wep_config_file >= 0)
 			{
 				Dump_Weapon_Settings();
@@ -308,7 +308,7 @@ void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work wit
 			#endif
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{

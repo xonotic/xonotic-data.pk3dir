@@ -5,7 +5,7 @@ CLASS(XonoticMediaTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMediaTab, rows, float, 23)
 	ATTRIB(XonoticMediaTab, columns, float, 3)
-	ATTRIB(XonoticMediaTab, name, string, "Media")	
+	ATTRIB(XonoticMediaTab, name, string, "Media")
 ENDCLASS(XonoticMediaTab)
 entity makeXonoticMediaTab();
 #endif

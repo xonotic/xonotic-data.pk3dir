@@ -102,7 +102,7 @@ void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 		{
 			specstr = species_prefix(specnum);
 			specstr = substring(specstr, 0, strlen(specstr) - 1);
-			effectname = strreplace("BLOOD", specstr, effectname); 
+			effectname = strreplace("BLOOD", specstr, effectname);
 		}
 		else { return; } // objects don't bleed
 	}

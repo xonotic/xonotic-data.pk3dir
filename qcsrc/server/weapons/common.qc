@@ -48,7 +48,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
-	
+
 	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
 	if(autocvar_g_projectiles_damage <= -2)
@@ -68,7 +68,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 			return (exception); // if exception is detected, allow it to override
 		else if(!is_from_contents)
 			return false; // otherwise, only allow damage from contents
-	}	
+	}
 	else if(autocvar_g_projectiles_damage == 1)
 	{
 		if(is_from_exception)
@@ -89,13 +89,13 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
-	
+
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		self.owner = attacker;
 		self.realowner = attacker;
 	}
-	
+
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;

@@ -219,7 +219,7 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 	else { DropBall(frost_target.ballcarried, frost_target.origin, frost_target.velocity);}
 	if(frost_target.flagcarried) { ctf_Handle_Throw(frost_target, world, DROP_THROW); }
 	if(frost_target.nade) { toss_nade(frost_target, '0 0 0', time + 0.05); }
-	
+
 	kh_Key_DropAll(frost_target, false);
 }
 
@@ -383,9 +383,9 @@ void nade_heal_think()
 		remove(self);
 		return;
 	}
-	
+
 	self.nextthink = time;
-	
+
 	if(time >= self.nade_special_time)
 	{
 		self.nade_special_time = time+0.25;
@@ -420,15 +420,15 @@ void nade_heal_touch()
 					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
-			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
+			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
 		}
 		else if ( health_factor < 0 )
 		{
 			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL,other.origin,'0 0 0');
 		}
-		
+
 	}
-	
+
 	if ( IS_REAL_CLIENT(other) || (other.vehicle_flags & VHF_ISVEHICLE) )
 	{
 		entity show_red = (other.vehicle_flags & VHF_ISVEHICLE) ? other.owner : other;
@@ -455,9 +455,9 @@ void nade_heal_boom()
 	healer.healer_radius = autocvar_g_nades_nade_radius;
 	vector size = '1 1 1' * healer.healer_radius / 2;
 	setsize(healer,-size,size);
-	
+
 	Net_LinkEntity(healer, true, 0, healer_send);
-	
+
 	healer.think = nade_heal_think;
 	healer.nextthink = time;
 	healer.SendFlags |= 1;
@@ -466,7 +466,7 @@ void nade_heal_boom()
 void nade_monster_boom()
 {
 	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, false, false, 1);
-	
+
 	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
 		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
@@ -561,7 +561,7 @@ void nade_touch()
 		remove(self);
 		return;
 	}
-	
+
 	PROJECTILE_TOUCH;
 
 	//setsize(self, '-2 -2 -2', '2 2 2');
@@ -639,7 +639,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	}
 
 	self.health -= damage;
-	
+
 	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
 		self.realowner = attacker;
 
@@ -767,7 +767,7 @@ float nade_customize()
 			self.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(self.nade_type, false), self.team));
 		self.alpha = 1;
 	}
-	
+
 	return true;
 }
 
@@ -797,7 +797,7 @@ void nade_prime()
 		n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
 		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
-	
+
 	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
 
 	setmodel(n, "models/weapons/v_ok_grenade.md3");
@@ -912,7 +912,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, false, false) || (weaponsInMap & WEPSET_HOOK))
 		key_pressed = self.button16; // if hook is enabled, use an alternate key
-		
+
 	if(self.nade)
 	{
 		self.nade_timer = bound(0, (time - self.nade.lifetime) / autocvar_g_nades_nade_lifetime, 1);
@@ -961,7 +961,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
-				
+
 			if(key_count)
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier * key_count; // multiply by the number of keys the player is holding
 
@@ -975,7 +975,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				self.nade_type = autocvar_g_nades_bonus_type;
 				self.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
-				
+
 			self.nade_type = bound(1, self.nade_type, NADE_TYPE_LAST);
 
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
@@ -1050,7 +1050,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 	{
 		setorigin(self, self.nade_spawnloc.origin);
 		self.nade_spawnloc.cnt -= 1;
-		
+
 		if(self.nade_spawnloc.cnt <= 0)
 		{
 			remove(self.nade_spawnloc);
@@ -1111,7 +1111,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 	}
-	
+
 	return false;
 }
 
@@ -1172,7 +1172,7 @@ void nades_Initialize()
 	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
 	addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
 	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-	
+
 	precache_model("models/ok_nade_counter/ok_nade_counter.md3");
 	precache_model("models/weapons/h_ok_grenade.iqm");
 	precache_model("models/weapons/v_ok_grenade.md3");

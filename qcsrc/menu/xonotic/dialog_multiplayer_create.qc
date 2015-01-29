@@ -31,7 +31,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 	else
 	{
 		e.configureXonoticTextSlider(e, pCvar);
-		
+
 		// clear old values
 		float i;
 		for(i = 0; i <= e.nValues; ++i);

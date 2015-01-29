@@ -112,12 +112,12 @@ void W_Hook_Damage(entity inflictor, entity attacker, float damage, float deatht
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
-		return; // g_projectiles_damage says to halt	
-	
+		return; // g_projectiles_damage says to halt
+
 	self.health = self.health - damage;
-	
+
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
@@ -150,7 +150,7 @@ void W_Hook_Attack2(void)
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
-	
+
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_SEC(hook, health);
 	gren.damageforcescale = WEP_CVAR_SEC(hook, damageforcescale);
@@ -176,7 +176,7 @@ void W_Hook_Attack2(void)
 float W_Hook(float req)
 {
 	float hooked_time_max, hooked_fuel;
-		
+
 	switch(req)
 	{
 		case WR_AIM:
@@ -196,7 +196,7 @@ float W_Hook(float req)
 				{
 					W_DecreaseAmmo(WEP_CVAR_PRI(hook, ammo));
 					self.hook_state |= HOOK_FIRING;
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);				
+					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
 			}
 
@@ -221,13 +221,13 @@ float W_Hook(float req)
 
 			if(self.hook && self.hook.state == 1)
 			{
-				hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);			
+				hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
 				if(hooked_time_max > 0)
 				{
 					if( time > self.hook_time_hooked + hooked_time_max )
 						self.hook_state |= HOOK_REMOVING;
 				}
-				
+
 				hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
 				if(hooked_fuel > 0)
 				{
@@ -253,7 +253,7 @@ float W_Hook(float req)
 			}
 			else
 			{
-				self.hook_time_hooked = time;				
+				self.hook_time_hooked = time;
 				self.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
@@ -282,7 +282,7 @@ float W_Hook(float req)
 					self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -347,7 +347,7 @@ float W_Hook(float req)
 			pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
-				
+
 			return true;
 		}
 		case WR_INIT:

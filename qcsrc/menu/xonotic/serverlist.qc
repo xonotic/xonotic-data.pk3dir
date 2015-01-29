@@ -65,14 +65,14 @@ entity makeXonoticServerList();
 
 #ifndef IMPLEMENTATION
 float autocvar_menu_slist_categories;
-float autocvar_menu_slist_categories_onlyifmultiple; 
+float autocvar_menu_slist_categories_onlyifmultiple;
 float autocvar_menu_slist_purethreshold;
 float autocvar_menu_slist_modimpurity;
 float autocvar_menu_slist_recommendations;
 float autocvar_menu_slist_recommendations_maxping;
-float autocvar_menu_slist_recommendations_minfreeslots; 
+float autocvar_menu_slist_recommendations_minfreeslots;
 float autocvar_menu_slist_recommendations_minhumans;
-float autocvar_menu_slist_recommendations_purethreshold; 
+float autocvar_menu_slist_recommendations_purethreshold;
 
 // server cache fields
 #define SLIST_FIELDS \
@@ -111,7 +111,7 @@ float IsServerInList(string list, string srv);
 entity RetrieveCategoryEnt(float catnum);
 
 float CheckCategoryOverride(float cat);
-float CheckCategoryForEntry(float entry); 
+float CheckCategoryForEntry(float entry);
 float m_gethostcachecategory(float entry) { return CheckCategoryOverride(CheckCategoryForEntry(entry)); }
 
 void RegisterSLCategories();
@@ -265,7 +265,7 @@ float CheckCategoryOverride(float cat)
 	entity catent = RetrieveCategoryEnt(cat);
 	if(catent)
 	{
-		float override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride); 
+		float override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride);
 		if(override) { return override; }
 		else { return cat; }
 	}
@@ -306,7 +306,7 @@ float CheckCategoryForEntry(float entry)
 	if(autocvar_menu_slist_recommendations)
 	{
 		string cname = gethostcachestring(SLIST_FIELD_CNAME, entry);
-		
+
 		if(IsPromoted(cname)) { return CAT_RECOMMENDED; }
 		else
 		{
@@ -321,21 +321,21 @@ float CheckCategoryForEntry(float entry)
 				if(
 					///// check for minimum free slots
 					(freeslots >= autocvar_menu_slist_recommendations_minfreeslots)
-					
+
 					&& // check for purity requirement
 					(
 						(autocvar_menu_slist_recommendations_purethreshold < 0)
 						||
 						(impure <= autocvar_menu_slist_recommendations_purethreshold)
 					)
-					
+
 					&& // check for minimum amount of humans
 					(
 						gethostcachenumber(SLIST_FIELD_NUMHUMANS, entry)
 						>=
 						autocvar_menu_slist_recommendations_minhumans
 					)
-					
+
 					&& // check for maximum latency
 					(
 						gethostcachenumber(SLIST_FIELD_PING, entry)
@@ -358,7 +358,7 @@ float CheckCategoryForEntry(float entry)
 		{
 			// old servers which don't report their mod name are considered modified now
 			case "": { return CAT_MODIFIED; }
-			
+
 			case "xpm": { return CAT_XPM; }
 			case "minstagib":
 			case "instagib": { return CAT_INSTAGIB; }
@@ -367,9 +367,9 @@ float CheckCategoryForEntry(float entry)
 			//case "newtoys": { return CAT_NEWTOYS; }
 
 			// "cts" is allowed as compat, xdf is replacement
-			case "cts": 
+			case "cts":
 			case "xdf": { return CAT_DEFRAG; }
-			
+
 			default: { dprintf("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
 		}
 	}
@@ -554,7 +554,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		if(me.currentSortOrder < 0) { listflags |= SLSF_DESCENDING; }
 		sethostcachesort(me.currentSortField, listflags);
 	}
-	
+
 	resorthostcache();
 	if(mode >= REFRESHSERVERLIST_ASK)
 		refreshhostcache(mode >= REFRESHSERVERLIST_RESET);
@@ -624,7 +624,7 @@ void XonoticServerList_draw(entity me)
 	{
 		float itemcount = gethostcachevalue(SLIST_HOSTCACHEVIEWCOUNT);
 		me.nItems = itemcount;
-		
+
 		//float visible = floor(me.scrollPos / me.itemHeight);
 		// ^ unfortunately no such optimization can be made-- we must process through the
 		// entire list, otherwise there is no way to know which item is first in its category.
@@ -737,7 +737,7 @@ void XonoticServerList_draw(entity me)
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
 		}
 	}
-	
+
 	if(owned)
 	{
 		if(me.selectedServer != me.ipAddressBox.text)
@@ -1011,7 +1011,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 			SET_YRANGE(me.categoriesHeight / (me.categoriesHeight + 1), 1);
 		}
 	}
-	
+
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
@@ -1203,11 +1203,11 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 	}
 	iconPos.x += iconSize.x;
-	
+
 	// --------------
 	//  RENDER TEXT
 	// --------------
-	
+
 	// ping
 	s = ftos(p);
 	draw_Text(me.realUpperMargin * eY + (me.columnPingOrigin + me.columnPingSize - draw_TextWidth(s, 0, me.realFontSize)) * eX, s, me.realFontSize, theColor, theAlpha, 0);

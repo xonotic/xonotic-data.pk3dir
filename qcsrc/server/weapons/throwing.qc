@@ -50,7 +50,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
-	
+
 	W_DropEvent(WR_DROP,own,wpn,wep);
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
@@ -92,7 +92,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
 	wep.pickup_anyway = true; // these are ALWAYS pickable
-	
+
 	//wa = W_AmmoItemCode(wpn);
 	if(ammotype == ammo_none)
 	{
@@ -194,7 +194,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	
+
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }

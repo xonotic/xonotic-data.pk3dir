@@ -6,7 +6,7 @@ CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 21)
 	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5)
 	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser")
-	
+
 	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string))
 	ATTRIB(XonoticScreenshotBrowserTab, screenshotImage, entity, NULL)
 	ATTRIB(XonoticScreenshotBrowserTab, currentScrPath, string, string_null)
@@ -51,7 +51,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;
-			
+
 	/*me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Filter:"));
 		me.TD(me, 1, me.columns - 1.5, e = makeXonoticInputBox(0, string_null));
@@ -62,7 +62,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Refresh"), '0 0 0'));
 			e.onClick = ScreenshotList_Refresh_Click;
 			e.onClickEntity = slist;*/
-			
+
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, me.rows - 2.5, me.columns, slist);
 

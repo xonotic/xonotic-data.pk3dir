@@ -502,7 +502,7 @@ vector monster_pickmovetarget(entity targ)
 		vector targ_origin = ((self.enemy.absmin + self.enemy.absmax) * 0.5);
 		targ_origin = WarpZone_RefSys_TransformOrigin(self.enemy, self, targ_origin); // origin of target as seen by the monster (us)
 		WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
-		
+
 		if((self.enemy == world)
 			|| (self.enemy.deadflag != DEAD_NO || self.enemy.health < 1)
 			|| (self.enemy.frozen)
@@ -516,19 +516,19 @@ vector monster_pickmovetarget(entity targ)
 			self.enemy = world;
 			self.pass_distance = 0;
 		}
-		
+
 		if(self.enemy)
 		{
 			/*WarpZone_TrailParticles(world, particleeffectnum("red_pass"), self.origin, targ_origin);
 			print("Trace origin: ", vtos(targ_origin), "\n");
 			print("Target origin: ", vtos(self.enemy.origin), "\n");
 			print("My origin: ", vtos(self.origin), "\n"); */
-			
+
 			self.monster_movestate = MONSTER_MOVE_ENEMY;
 			self.last_trace = time + 1.2;
 			return targ_origin;
 		}
-	
+
 		/*makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
@@ -753,7 +753,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 				WarpZone_RefSys_Copy(self.enemy, self);
 				WarpZone_RefSys_AddInverse(self.enemy, self); // wz1^-1 ... wzn^-1 receiver
 				self.moveto = WarpZone_RefSys_TransformOrigin(self.enemy, self, (0.5 * (self.enemy.absmin + self.enemy.absmax)));
-				
+
 				self.pass_distance = vlen((('1 0 0' * self.enemy.origin.x) + ('0 1 0' * self.enemy.origin.y)) - (('1 0 0' *  self.origin.x) + ('0 1 0' *  self.origin.y)));
 				MonsterSound(monstersound_sight, 0, false, CH_VOICE);
 			}
@@ -793,7 +793,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	{
 		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			monster_CalculateVelocity(self, self.moveto, self.origin, true, ((self.enemy) ? runspeed : walkspeed));
-		
+
 		/*&if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
@@ -820,9 +820,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
 	}
-	
+
 	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-	
+
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	float turny = 25;
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
@@ -1078,11 +1078,11 @@ void monster_setupcolors(entity mon)
 void monster_changeteam(entity ent, float newteam)
 {
 	if(!teamplay) { return; }
-	
+
 	ent.team = newteam;
 	ent.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(ent);
-	
+
 	if(ent.sprite)
 	{
 		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
@@ -1241,7 +1241,7 @@ float monster_initialize(float mon_id)
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		self.scale *= 1.3;
-		
+
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	if(!self.ticrate)

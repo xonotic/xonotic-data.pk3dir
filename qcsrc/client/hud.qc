@@ -846,12 +846,12 @@ void HUD_Weapons(void)
 // Ammo (#1)
 void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 {
-	
+
 	HUD_Panel_DrawProgressBar(
 		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
 		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
-		autocvar_hud_panel_ammo_progressbar_name, 
-		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color, 
+		autocvar_hud_panel_ammo_progressbar_name,
+		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color,
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 }
@@ -860,12 +860,12 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 {
 	float theAlpha = 1, a, b;
 	vector nade_color, picpos, numpos;
-	
+
 	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
-	
+
 	a = getstatf(STAT_NADE_BONUS);
 	b = getstatf(STAT_NADE_BONUS_SCORE);
-	
+
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
 		numpos = myPos;
@@ -883,10 +883,10 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	{
 		if(autocvar_hud_panel_ammo_text)
 			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		
+
 		if(draw_expanding)
 			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
-			
+
 		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize.y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	}
@@ -1022,7 +1022,7 @@ void HUD_Ammo(void)
 	columns = ceil((total_ammo_count)/rows);
 
 	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
-	
+
 
 	vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -4417,7 +4417,7 @@ void HUD_Buffs(void)
 	{
 		buffs = Buff_Type_first.items; // force first buff
 	}
-	
+
 	float b = 0; // counter to tell other functions that we have buffs
 	entity e;
 	string s = "";
@@ -4450,7 +4450,7 @@ void HUD_Buffs(void)
 	//float is_vertical = (panel_ar < 1);
 	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
 	vector buff_offset = '0 0 0';
-	
+
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);

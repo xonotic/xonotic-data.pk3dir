@@ -67,11 +67,11 @@ void invasion_SpawnChosenMonster(float mon)
 	}
 	else
 		monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, false, false, 2);
-	
+
 	if(spawn_point) monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
 	if(spawn_point && spawn_point.target_range) monster.target_range = spawn_point.target_range;
-	
+
 	if(teamplay)
 	if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
 		monster.team = spawn_point.team;
@@ -82,14 +82,14 @@ void invasion_SpawnChosenMonster(float mon)
 		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(world, NUM_TEAM_2, string_null, 1, 1);
 		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
 		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
-		
+
 		monster.team = RandomSelection_chosen_float;
 	}
-	
+
 	if(teamplay)
 	{
 		monster_setupcolors(monster);
-	
+
 		if(monster.sprite)
 		{
 			WaypointSprite_UpdateTeamRadar(monster.sprite, RADARICON_DANGER, ((monster.team) ? Team_ColorRGB(monster.team) : '1 0 0'));
@@ -98,7 +98,7 @@ void invasion_SpawnChosenMonster(float mon)
 			monster.sprite.SendFlags |= 1;
 		}
 	}
-	
+
 	monster.monster_attack = false; // it's the player's job to kill all the monsters
 
 	if(inv_roundcnt >= inv_maxrounds)
@@ -157,7 +157,7 @@ float Invasion_CheckWinner()
 
 	if(inv_numspawned < 1)
 		return 0; // nothing has spawned yet
-		
+
 	if(teamplay)
 	{
 		if(((red_alive > 0) + (blue_alive > 0) + (yellow_alive > 0) + (pink_alive > 0)) > 1)
@@ -182,7 +182,7 @@ float Invasion_CheckWinner()
 		if(pink_alive > 0)
 		if(winner_team) { winner_team = 0; }
 		else { winner_team = NUM_TEAM_4; }
-	}	
+	}
 	else
 	FOR_EACH_PLAYER(head)
 	{
@@ -300,7 +300,7 @@ MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
 	if(startsWith(self.classname, "monster_"))
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
-	
+
 	return false;
 }
 
@@ -360,7 +360,7 @@ MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
 	if(!(checkentity.flags & FL_MONSTER))
 		return true;
-	
+
 	return false;
 }
 
@@ -406,7 +406,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
 	else
 		invasion_teams = 0;
-	
+
 	independent_players = 1; // to disable extra useless scores
 
 	invasion_ScoreRules(invasion_teams);
@@ -437,7 +437,7 @@ void invasion_Initialize()
 			MON_ACTION(i, MR_PRECACHE);
 		}
 	}
-	
+
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 

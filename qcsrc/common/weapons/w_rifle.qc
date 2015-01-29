@@ -136,7 +136,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 float W_Rifle(float req)
 {
 	float ammo_amount;
-	
+
 	switch(req)
 	{
 		case WR_AIM:
@@ -161,7 +161,7 @@ float W_Rifle(float req)
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -198,7 +198,7 @@ float W_Rifle(float req)
 					}
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -282,7 +282,7 @@ float W_Rifle(float req)
 				else if(w_random < 0.5)
 					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

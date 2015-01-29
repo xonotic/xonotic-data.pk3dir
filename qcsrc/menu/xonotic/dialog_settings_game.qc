@@ -22,7 +22,7 @@ void XonoticGameSettingsTab_fill(entity me)
 {
 	entity mc;
 	mc = makeXonoticTabController(me.rows - 2.5);
-	
+
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("View"),           makeXonoticGameViewSettingsTab()));
@@ -34,13 +34,13 @@ void XonoticGameSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 1.5, 0);
 		me.TD(me, me.rows - 1.5, me.columns, mc);
-		
+
 	/*
 
 	  makeXonoticGameViewSettingsTab()));
 	  makeXonoticGameGeneralSettingsTab()));
 	makeXonoticGameCrosshairSettingsTab()));
-	
+
 	       makeXonoticGameWeaponSettingsTab()));
 	l"),   makeXonoticGamePlayermodelSettingsTab()));
 	       makeXonoticGameHUDSettingsTab()));

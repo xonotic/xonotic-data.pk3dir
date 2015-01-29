@@ -801,7 +801,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-	
+
 	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
@@ -1238,7 +1238,7 @@ float DoNextMapOverride(float reinit)
 		string m;
 		m = GameTypeVote_MapInfo_FixName(autocvar_nextmap);
 		cvar_set("nextmap",m);
-	
+
 		if(!m || gametypevote)
 			return false;
 		if(autocvar_sv_vote_gametype)
@@ -1246,7 +1246,7 @@ float DoNextMapOverride(float reinit)
 			Map_Goto_SetStr(m);
 			return false;
 		}
-		
+
 		if(MapInfo_CheckMap(m))
 		{
 			Map_Goto_SetStr(m);

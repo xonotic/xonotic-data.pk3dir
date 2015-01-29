@@ -382,7 +382,7 @@ float W_Tuba(float req)
 				else
 					self.BUTTON_ATCK2 = 1;
 			}
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -411,7 +411,7 @@ float W_Tuba(float req)
 					self = oldself;
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -457,7 +457,7 @@ float W_Tuba(float req)
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}
-			
+
 			return true;
 		}
 		case WR_CHECKAMMO1:

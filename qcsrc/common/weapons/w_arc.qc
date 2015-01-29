@@ -187,22 +187,22 @@ void Reset_ArcBeam(entity player, vector forward)
 }
 
 float Arc_GetHeat_Percent(entity player)
-{	
+{
 	if ( WEP_CVAR(arc, overheat_max) <= 0 ||  WEP_CVAR(arc, overheat_max) <= 0 )
 	{
 		player.arc_overheat = 0;
 		return 0;
 	}
-	
+
 	if ( player.arc_beam )
 		return player.arc_beam.beam_heat/WEP_CVAR(arc, overheat_max);
-	
+
 	if ( player.arc_overheat > time )
 	{
-		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max) 
+		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max)
 			* player.arc_cooldown;
 	}
-	
+
 	return 0;
 }
 void Arc_Player_SetHeat(entity player)
@@ -218,8 +218,8 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-	
-	
+
+
 	float burst = 0;
 	if( self.owner.BUTTON_ATCK2 || self.beam_bursting)
 	{
@@ -253,21 +253,21 @@ void W_Arc_Beam_Think(void)
 			{
 				cooldown_speed = self.beam_heat / WEP_CVAR(arc, beam_refire);
 			}
-			
+
 			if ( cooldown_speed )
 			{
 				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
 				self.owner.arc_cooldown = cooldown_speed;
 			}
-			
+
 			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
 			{
-				pointparticles( particleeffectnum("arc_overheat"), 
+				pointparticles( particleeffectnum("arc_overheat"),
 					self.beam_start, self.beam_wantdir, 1 );
 				sound(self, CH_WEAPON_A, "weapons/arc_stop.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
-		
+
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
 		self = self.owner;
@@ -280,7 +280,7 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-	
+
 	// decrease ammo
 	float coefficient = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -341,7 +341,7 @@ void W_Arc_Beam_Think(void)
 
 	// note that if we do this, it'll always be corrected to a maximum angle by beam_maxangle handling
 
-	float segments; 
+	float segments;
 	if(self.beam_dir != w_shotdir)
 	{
 		// calculate how much we're going to move the end of the beam to the want position
@@ -390,7 +390,7 @@ void W_Arc_Beam_Think(void)
 		if(WEP_CVAR(arc, beam_degreespersegment))
 		{
 			segments = bound(
-				1, 
+				1,
 				(
 					min(
 						angle,
@@ -545,7 +545,7 @@ void W_Arc_Beam_Think(void)
 
 				new_beam_type = ARC_BT_HIT;
 			}
-			break; 
+			break;
 		}
 		else if(trace_fraction != 1)
 		{
@@ -620,12 +620,12 @@ void Arc_Smoke()
 	else if ( self.arc_beam && WEP_CVAR(arc, overheat_max) > 0 &&
 			self.arc_beam.beam_heat > WEP_CVAR(arc, overheat_min) )
 	{
-		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) / 
+		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) /
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
 			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
 	}
-	
-	if (  self.arc_smoke_sound && ( self.arc_overheat <= time || 
+
+	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
 		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC )
 	{
 		self.arc_smoke_sound = 0;
@@ -667,7 +667,7 @@ float W_Arc(float req)
 			if ( self.arc_overheat <= time )
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
-			
+
 				if(self.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
@@ -683,7 +683,7 @@ float W_Arc(float req)
 					if(weapon_prepareattack(!!self.BUTTON_ATCK2, 0))
 					{
 						W_Arc_Beam(!!self.BUTTON_ATCK2);
-						
+
 						if(!self.arc_BUTTON_ATCK_prev)
 						{
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
@@ -691,10 +691,10 @@ float W_Arc(float req)
 						}
 					}
 				}
-				
+
 				return true;
 			}
-			
+
 			if(self.arc_BUTTON_ATCK_prev != 0)
 			{
 				sound(self, CH_WEAPON_A, "weapons/arc_stop.wav", VOL_BASE, ATTN_NORM);
@@ -810,7 +810,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	// draw primary beam render
 	vector top    = hitorigin + (thickdir * thickness);
 	vector bottom = hitorigin - (thickdir * thickness);
-	
+
 	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
 	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
 
@@ -850,7 +850,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 		trailparticles(beam, beam.beam_traileffect, start, hitorigin);
 	}
 
-	// set up for the next 
+	// set up for the next
 	Draw_ArcBeam_callback_last_thickness = thickness;
 	Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
 	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
@@ -893,7 +893,7 @@ void Draw_ArcBeam(void)
 		// Currently we have to replicate nearly the same method of figuring
 		// out the shotdir that the server does... Ideally in the future we
 		// should be able to acquire this from a generalized function built
-		// into a weapon system for client code. 
+		// into a weapon system for client code.
 
 		// find where we are aiming
 		makevectors(warpzone_save_view_angles);
@@ -987,7 +987,7 @@ void Draw_ArcBeam(void)
 			if(self.beam_degreespersegment)
 			{
 				segments = bound(
-					1, 
+					1,
 					(
 						min(
 							angle,
@@ -1035,7 +1035,7 @@ void Draw_ArcBeam(void)
 			if(self.beam_degreespersegment)
 			{
 				segments = bound(
-					1, 
+					1,
 					(
 						min(
 							angle,

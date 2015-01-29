@@ -96,7 +96,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 				self.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -130,7 +130,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 		cvar_set("timelimit", ftos(race_timelimit));
 		cts_ScoreRules();
 	}
-	
+
 	return false;
 }
 
@@ -148,7 +148,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 {
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
-	
+
 	if(IS_REAL_CLIENT(self))
 	{
 		string rr = CTS_RECORD;
@@ -195,7 +195,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
 	self.race_respawn_spotref = spawn_spot;
 
 	self.race_place = 0;
-	
+
 	return false;
 }
 

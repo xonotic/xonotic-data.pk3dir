@@ -123,9 +123,9 @@ void W_Crylink_LinkExplode(entity e, entity e2)
 
 	if(e == e.realowner.crylink_lastgroup)
 		e.realowner.crylink_lastgroup = world;
-		
+
 	float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
-		
+
 	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), world, world, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, other);
 
 	W_Crylink_LinkExplode(e.queuenext, e2);
@@ -241,7 +241,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 		if(n >= 2)
 		{
 			float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
-			
+
 			if(WEP_CVAR_BOTH(crylink, isprimary, joinexplode))
 			{
 				n /= WEP_CVAR_BOTH(crylink, isprimary, shots);
@@ -279,7 +279,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 			else
 				++hit_enemy;
 		}
-			
+
 		head = head.chain;
 	}
 
@@ -306,7 +306,7 @@ void W_Crylink_Touch(void)
 		f *= a;
 
 	float totaldamage = RadiusDamage(self, self.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius), world, world, WEP_CVAR_BOTH(crylink, isprimary, force) * f, self.projectiledeathtype, other);
-		
+
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(self, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
 		if(self == self.realowner.crylink_lastgroup)
@@ -434,7 +434,7 @@ void W_Crylink_Attack(void)
 
 		proj.flags = FL_PROJECTILE;
 		proj.missile_flags = MIF_SPLASH;
-    
+
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
@@ -550,7 +550,7 @@ void W_Crylink_Attack2(void)
 
 		proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
-        
+
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
@@ -574,7 +574,7 @@ float W_Crylink(float req)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
-				
+
 			return true;
 		}
 		case WR_THINK:
@@ -612,7 +612,7 @@ float W_Crylink(float req)
 						vector pos;
 						entity linkjoineffect;
 						float isprimary = (self.crylink_waitrelease == 1);
-						
+
 						pos = W_Crylink_LinkJoin(self.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
 						linkjoineffect = spawn();
@@ -632,7 +632,7 @@ float W_Crylink(float req)
 					}
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -709,7 +709,7 @@ float W_Crylink(float req)
 				if(!w_issilent)
 					sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

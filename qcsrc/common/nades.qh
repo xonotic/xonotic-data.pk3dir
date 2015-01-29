@@ -99,7 +99,7 @@ string Nade_TrailEffect(float proj, float nade_team)
 		case PROJECTILE_NADE_MONSTER: return "nade_red";
 		case PROJECTILE_NADE_MONSTER_BURN: return "nade_red_burn";
 	}
-	
+
 	return "";
 }
 

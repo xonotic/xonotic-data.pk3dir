@@ -103,12 +103,12 @@ void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, fl
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
-	
+
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
@@ -198,10 +198,10 @@ void W_Mortar_Grenade_Touch2(void)
 		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
-		
+
 		if(WEP_CVAR_SEC(mortar, lifetime_bounce) && self.gl_bouncecnt == 1)
 			self.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
-			
+
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
@@ -346,7 +346,7 @@ float W_Mortar(float req)
 					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 				}
 			}
-			
+
 			return true;
 		}
 		/*case WR_CALCINFO:
@@ -357,11 +357,11 @@ float W_Mortar(float req)
 
 			// for the range calculation, closer to 1 is better
 			wepinfo_pri_range_max = 2000 * wepinfo_pri_speed;
-			wepinfo_pri_range = wepinfo_pri_speed * WEP_CVAR_PRI(mortar, 
-			
+			wepinfo_pri_range = wepinfo_pri_speed * WEP_CVAR_PRI(mortar,
+
 			wepinfo_sec_refire = max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime));
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / wepinfo_sec_refire));
-			
+
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
 			wepinfo_ter_dps = 0;
 			*/
@@ -399,7 +399,7 @@ float W_Mortar(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -470,7 +470,7 @@ float W_Mortar(float req)
 			pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
-				
+
 			return true;
 		}
 		case WR_INIT:

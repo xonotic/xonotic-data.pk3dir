@@ -50,14 +50,14 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	vector rgb = MapVote_RGB(id);
 	vector offset = pos;
 	float nlines = 0;
-	
+
 	if(mv_avail_start[id] != GTV_AVAILABLE)
 		alpha = 0.2;
 	else if ( mv_avail[id] != GTV_AVAILABLE && mv_top2_alpha)
 		alpha = mv_top2_alpha;
 	else
 		alpha = 1;
-	
+
 	if(id == mv_selection && mv_avail[id] == GTV_AVAILABLE)
 	{
 		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
@@ -67,29 +67,29 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
 		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
-	
+
 	entity title;
 	title = spawn();
-	title.message = MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), 
+	title.message = MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)),
 										  _count, tsize, gtv_text_size);
 	title.origin = pos-offset;
-	
+
 	pos.y += gtv_text_size_small.y;
 	pos.y += gtv_text_size.y/2;
-	
+
 	maxh -= gtv_text_size.y;
-	
+
 	entity picent = spawn();
 	picent.origin = pos-offset;
 	picent.maxs = '1 1 0 ' * min(maxh, desc_padding) * 0.8;
-	
+
 	pos.x += desc_padding;
 	tsize -= desc_padding;
-	
+
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
 	entity last = title;
 	entity next = world;
-	if( thelabel != "") 
+	if( thelabel != "")
 	{
 		float i,n = tokenizebyseparator(thelabel, "\n");
 		for(i = 0; i < n && maxh > (nlines+1)*gtv_text_size_small.y; ++i)
@@ -111,15 +111,15 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 			}
 		}
 	}
-	
+
 	maxh -= max(nlines*gtv_text_size_small.y,picent.maxs.y);
 	if ( maxh > 0 )
 		offset.y += maxh/2;
-	drawstring(title.origin+offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL); 
-	
+	drawstring(title.origin+offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL);
+
 	if(pic != "")
 		drawpic(picent.origin+offset, pic, picent.maxs, '1 1 1', alpha, DRAWFLAG_NORMAL);
-	
+
 	for ( last = title.chain; last ; )
 	{
 		drawstring(last.origin+offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
@@ -127,7 +127,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		last = last.chain;
 		remove(next);
 	}
-	
+
 	remove(picent);
 	remove(title);
 }
@@ -242,7 +242,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 
 	if ( mv_selection_keyboard )
 		return mv_selection;
-	
+
 	return mv_mouse_selection;
 }
 
@@ -266,7 +266,7 @@ void MapVote_Draw()
 		vector mpos = mv_mousepos + getmousepos();
 		mpos.x = bound(0, mpos.x, vid_conwidth);
 		mpos.y = bound(0, mpos.y, vid_conheight);
-		
+
 		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
 			mv_selection_keyboard = 0;
 		mv_mousepos = mpos;
@@ -456,7 +456,7 @@ void MapVote_ReadMask()
 			mask = ReadShort();
 		else
 			mask = ReadLong();
-		
+
 		for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 			mv_avail[i] = (mask & power) ? GTV_AVAILABLE : GTV_FORBIDDEN;
 	}
@@ -500,7 +500,7 @@ void MapVote_Init()
 	mv_timeout = ReadCoord();
 
 	gametypevote = ReadByte();
-	
+
 	float mv_real_num_maps = mv_num_maps - mv_abstain;
 
 	if(gametypevote)
@@ -511,7 +511,7 @@ void MapVote_Init()
 
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
-		
+
 		if (mv_real_num_maps > 8 )
 			mv_columns = 3;
 		else
@@ -581,7 +581,7 @@ void MapVote_SendChoice(float index)
 int MapVote_MoveLeft(int pos)
 {
 	int imp;
-	if ( pos < 0 ) 
+	if ( pos < 0 )
 		imp = mv_num_maps - 1;
 	else
 		imp = pos < 1 ? mv_num_maps - 1 : pos - 1;
@@ -592,7 +592,7 @@ int MapVote_MoveLeft(int pos)
 int MapVote_MoveRight(int pos)
 {
 	int imp;
-	if ( pos < 0 ) 
+	if ( pos < 0 )
 		imp = 0;
 	else
 		imp = pos >= mv_num_maps - 1 ? 0 : pos + 1;
@@ -603,7 +603,7 @@ int MapVote_MoveRight(int pos)
 int MapVote_MoveUp(int pos)
 {
 	int imp;
-	if ( pos < 0 ) 
+	if ( pos < 0 )
 		imp = mv_num_maps - 1;
 	else
 	{
@@ -622,7 +622,7 @@ int MapVote_MoveUp(int pos)
 int MapVote_MoveDown(int pos)
 {
 	int imp;
-	if ( pos < 0 ) 
+	if ( pos < 0 )
 		imp = 0;
 	else
 	{

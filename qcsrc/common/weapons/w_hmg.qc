@@ -96,7 +96,7 @@ float W_HeavyMachineGun(float req)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-			
+
 			return true;
 		}
 		case WR_THINK:

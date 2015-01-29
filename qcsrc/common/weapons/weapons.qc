@@ -232,7 +232,7 @@ string W_UndeprecateName(string s)
 	switch ( s )
 	{
 		case "nex"            : return "vortex";
-		case "rocketlauncher" : return "devastator"; 
+		case "rocketlauncher" : return "devastator";
 		case "laser"          : return "blaster";
 		case "minstanex"      : return "vaporizer";
 		case "grenadelauncher": return "mortar";

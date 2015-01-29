@@ -90,15 +90,15 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 					}
 				}
 			}
-			
+
 			// change owner to whoever caused the combo explosion
 			e.realowner = own;
 			e.takedamage = DAMAGE_NO;
 			e.classname = "electro_orb_chain";
-			
+
 			// now set the next one to trigger as well
 			e.think = W_Electro_ExplodeCombo;
-			
+
 			// delay combo chains, looks cooler
 			e.nextthink =
 				(
@@ -120,7 +120,7 @@ void W_Electro_ExplodeCombo(void)
 	W_Electro_TriggerCombo(self.origin, WEP_CVAR(electro, combo_comboradius), self.realowner);
 
 	self.event_damage = func_null;
-	
+
 	RadiusDamage(
 		self,
 		self.realowner,
@@ -148,7 +148,7 @@ void W_Electro_Explode(void)
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
-	
+
 	if(self.movetype == MOVETYPE_BOUNCE)
 	{
 		RadiusDamage(
@@ -215,7 +215,7 @@ void W_Electro_Bolt_Think(void)
 
 				// now set the next one to trigger as well
 				e.think = W_Electro_ExplodeCombo;
-				
+
 				// delay combo chains, looks cooler
 				e.nextthink =
 					(
@@ -414,7 +414,7 @@ void W_Electro_CheckAttack(void)
 		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
-	// WEAPONTODO: when the player releases the button, cut down the length of refire2? 
+	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
 	w_ready();
 }
 
@@ -451,7 +451,7 @@ float W_Electro(float req)
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -469,10 +469,10 @@ float W_Electro(float req)
 					WEP_ACTION(self.weapon, WR_RELOAD);
 					return false;
 				}
-				
+
 				return true;
 			}
-			
+
 			if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
@@ -599,7 +599,7 @@ float W_Electro(float req)
 						sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

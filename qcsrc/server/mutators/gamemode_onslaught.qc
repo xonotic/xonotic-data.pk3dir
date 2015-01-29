@@ -1333,7 +1333,7 @@ void onslaught_controlpoint_reset()
 
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -1405,7 +1405,7 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.colormap = self.colormap;
 
 	waypoint_spawnforitem(self);
-	
+
 	self.think = onslaught_controlpoint_think;
 	self.nextthink = time;
 
@@ -1415,7 +1415,7 @@ void spawnfunc_onslaught_controlpoint()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_controlpoint_reset;
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 
@@ -1669,7 +1669,7 @@ MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 {
 	entity e, ee = world;
-	
+
 	if(self.targetname)
 	{
 		e = find(world,target,self.targetname);
@@ -1679,7 +1679,7 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 			ee = e;
 		}
 	}
-	
+
 	if(ee)
 	{
         activator = ee;

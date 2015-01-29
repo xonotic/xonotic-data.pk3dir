@@ -56,9 +56,9 @@ void W_HLAC_Touch(void)
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	
+
 	isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
-	
+
 	RadiusDamage(self, self.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), world, world, WEP_CVAR_BOTH(hlac, isprimary, force), self.projectiledeathtype, other);
 
 	remove(self);
@@ -149,7 +149,7 @@ void W_HLAC_Attack2(void)
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
@@ -235,7 +235,7 @@ float W_HLAC(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -293,7 +293,7 @@ float W_HLAC(float req)
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
-				
+
 			return true;
 		}
 		case WR_INIT:

@@ -65,7 +65,7 @@ void NIX_GiveCurrentWeapon()
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
 		self.ammo_shells = self.ammo_nails = self.ammo_rockets = self.ammo_cells = self.ammo_plasma = self.ammo_fuel = 0;
-		
+
 		if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			switch(e.ammo_field)

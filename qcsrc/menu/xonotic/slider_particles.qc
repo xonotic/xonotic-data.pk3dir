@@ -42,7 +42,7 @@ void XonoticParticlesSlider_saveCvars(entity me)
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("cl_particles_quality", argv(0));
 		cvar_set("r_drawparticles_drawdistance", argv(1));
-		cvar_set("cl_damageeffect", argv(2)); 
+		cvar_set("cl_damageeffect", argv(2));
 	}
 }
 #endif

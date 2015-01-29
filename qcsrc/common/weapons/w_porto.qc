@@ -255,11 +255,11 @@ void W_Porto_Attack(float type)
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
-	
+
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
-	
+
 	if(self.items & IT_STRENGTH)
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
@@ -290,7 +290,7 @@ float W_Porto(float req)
 	//vector v_angle_save;
 
 	if(g_nexball) { return w_nexball_weapon(req); }
-	
+
 	switch(req)
 	{
 		case WR_AIM:
@@ -300,7 +300,7 @@ float W_Porto(float req)
 			if(!WEP_CVAR(porto, secondary))
 				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
 					self.BUTTON_ATCK = true;
-					
+
 			return true;
 		}
 		case WR_CONFIG:
@@ -363,7 +363,7 @@ float W_Porto(float req)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

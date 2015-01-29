@@ -218,7 +218,7 @@ void W_MineLayer_Think(void)
 			self.movetype = MOVETYPE_NONE;
 		}
 	}
-	
+
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if((time > self.cnt) && (!self.mine_time) && (self.cnt > 0))
@@ -294,15 +294,15 @@ void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, float d
 {
 	if(self.health <= 0)
 		return;
-		
+
 	float is_from_enemy = (inflictor.realowner != self.realowner);
-		
+
 	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
 }
@@ -375,7 +375,7 @@ void W_MineLayer_Attack(void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
-	
+
 	self.minelayer_mines = W_MineLayer_Count(self);
 }
 
@@ -503,7 +503,7 @@ float W_MineLayer(float req)
 				//	dprint(ftos(desirabledamage),"\n");
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -528,7 +528,7 @@ float W_MineLayer(float req)
 				if(W_MineLayer_PlacedMines(true))
 					sound(self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -602,7 +602,7 @@ float W_MineLayer(float req)
 			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
-			
+
 			return true;
 		}
 		case WR_INIT:

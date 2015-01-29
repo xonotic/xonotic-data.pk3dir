@@ -103,7 +103,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 				self.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(race_ResetMap)
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_ScoreRules();
 	}
-	
+
 	return false;
 }
 
@@ -203,7 +203,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
 	self.race_respawn_spotref = spawn_spot;
 
 	self.race_place = 0;
-	
+
 	return false;
 }
 

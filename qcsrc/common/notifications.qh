@@ -734,7 +734,7 @@ void Send_Notification_WOCOVA(
     MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
     MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
     MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,               "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") 
+    MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,               "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 
 #define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
     MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \

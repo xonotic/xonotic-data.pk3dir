@@ -75,7 +75,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 
 	//monster = strcat("$ spawnfunc_monster_", monster);
-	
+
 	entity oldself = self;
 	self = e;
 	monster_initialize(monster_id);

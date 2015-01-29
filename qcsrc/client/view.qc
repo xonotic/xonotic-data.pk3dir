@@ -1491,7 +1491,7 @@ void CSQC_UpdateView(float w, float h)
 
 			if(zoomscript_caught)
 				f = 1;
-			else 
+			else
 				f = current_zoomfraction;
 
 			if(f)

@@ -113,7 +113,7 @@ void W_Vaporizer_Attack(void)
 				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
 			break;
 	}
-	
+
 	W_DecreaseAmmo(((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
@@ -133,7 +133,7 @@ float W_Vaporizer(float req)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
-				
+
 			return true;
 		}
 		case WR_THINK:
@@ -158,7 +158,7 @@ float W_Vaporizer(float req)
 				{
 					// handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
 					self.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();
-					
+
 					// decrease ammo for the laser?
 					if(WEP_CVAR_SEC(vaporizer, ammo))
 						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
@@ -176,12 +176,12 @@ float W_Vaporizer(float req)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
-					
+
 					// now do normal refire
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

@@ -223,7 +223,7 @@ void ClientCommand_mobedit(float request, float argc)
 			{
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-				
+
 				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
 				if(trace_ent.flags & FL_MONSTER)
 				{
@@ -265,7 +265,7 @@ void ClientCommand_mobkill(float request)
 		{
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
+
 			if(trace_ent.flags & FL_MONSTER)
 			{
 				if(trace_ent.realowner != self)
@@ -278,7 +278,7 @@ void ClientCommand_mobkill(float request)
 				return;
 			}
 		}
-	
+
 		default:
 			sprint(self, "Incorrect parameters for ^2mobkill^7\n");
 		case CMD_REQUEST_USAGE:
@@ -299,22 +299,22 @@ void ClientCommand_mobspawn(float request, float argc)
 			entity e;
 			string tospawn;
 			float moveflag, monstercount = 0;
-			
+
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
-			
+
 			if(tospawn == "list")
 			{
 				sprint(self, monsterlist_reply);
 				return;
 			}
-			
+
 			FOR_EACH_MONSTER(e)
 			{
 				if(e.realowner == self)
 					++monstercount;
 			}
-			
+
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
 			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
@@ -329,7 +329,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			{
 				float found = 0, i;
 				entity mon;
-				
+
 				for(i = MON_FIRST; i <= MON_LAST; ++i)
 				{
 					mon = get_monsterinfo(i);
@@ -343,20 +343,20 @@ void ClientCommand_mobspawn(float request, float argc)
 				if(found || tospawn == "random")
 				{
 					totalspawned += 1;
-				
+
 					makevectors(self.v_angle);
 					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, true, self);
 					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
-				
+
 					e = spawnmonster(tospawn, 0, self, self, trace_endpos, false, false, moveflag);
-					
+
 					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
-					
+
 					return;
 				}
 			}
 		}
-	
+
 		default:
 			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
 		case CMD_REQUEST_USAGE:

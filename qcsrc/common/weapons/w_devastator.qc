@@ -126,7 +126,7 @@ void W_Devastator_DoRemoteExplode(void)
 		WEP_CVAR(devastator, remote_jump_radius),
 		false
 	);
-	
+
 	while(head)
 	{
 		if(head.takedamage && (head == self.realowner))
@@ -137,7 +137,7 @@ void W_Devastator_DoRemoteExplode(void)
 				// we handled this as a rocketjump :)
 				handled_as_rocketjump = true;
 
-				// modify velocity 
+				// modify velocity
 				head.velocity_x *= 0.9;
 				head.velocity_y *= 0.9;
 				head.velocity_z = bound(
@@ -321,13 +321,13 @@ void W_Devastator_Damage(entity inflictor, entity attacker, float damage, float 
 {
 	if(self.health <= 0)
 		return;
-	
+
 	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Devastator_Explode);
 }
@@ -374,7 +374,7 @@ void W_Devastator_Attack(void)
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
 
@@ -419,10 +419,10 @@ float W_Devastator(float req)
 						targ = targ.chain;
 					}
 				}
-				
+
 				if(self.BUTTON_ATCK2) self.BUTTON_ATCK = false;
 			}
-			
+
 			return true;
 		}
 		#else
@@ -520,7 +520,7 @@ float W_Devastator(float req)
 				//	dprint(ftos(desirabledamage),"\n");
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
-			
+
 			return true;
 		}
 		#endif
@@ -559,7 +559,7 @@ float W_Devastator(float req)
 						sound(self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -664,7 +664,7 @@ float W_Devastator(float req)
 			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-				
+
 			return true;
 		}
 		case WR_INIT:

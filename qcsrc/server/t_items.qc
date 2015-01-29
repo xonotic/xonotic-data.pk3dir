@@ -425,7 +425,7 @@ void Item_Respawn (void)
 
 	self.think = Item_Think;
 	self.nextthink = time;
-	
+
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
 	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
 }
@@ -1139,7 +1139,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		Item_Reset();
 
     Net_LinkEntity(self, false, 0, ItemSend);
-	
+
 	self.SendFlags |= ISF_SIZE;
 	if(self.angles)
 		self.SendFlags |= ISF_ANGLES;

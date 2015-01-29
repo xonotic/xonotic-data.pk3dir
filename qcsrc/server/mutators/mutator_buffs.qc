@@ -66,22 +66,22 @@ void buff_SetCooldown(float cd)
 void buff_Respawn(entity ent)
 {
 	if(gameover) { return; }
-	
+
 	vector oldbufforigin = ent.origin;
-	
+
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(true);
 		setorigin(ent, ((spot.origin + '0 0 200') + (randomvec() * 300)));
 		ent.angles = spot.angles;
 	}
-	
+
 	tracebox(ent.origin, ent.mins * 1.5, self.maxs * 1.5, ent.origin, MOVE_NOMONSTERS, ent);
-	
+
 	setorigin(ent, trace_endpos); // attempt to unstick
-	
+
 	ent.movetype = MOVETYPE_TOSS;
-	
+
 	makevectors(ent.angles);
 	ent.velocity = '0 0 200';
 	ent.angles = '0 0 0';
@@ -90,9 +90,9 @@ void buff_Respawn(entity ent)
 
 	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
 	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
-	
+
 	WaypointSprite_Ping(ent.buff_waypoint);
-	
+
 	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
@@ -129,11 +129,11 @@ void buff_Touch()
 		}
 		else { return; } // do nothing
 	}
-		
+
 	self.owner = other;
 	self.buff_active = false;
 	self.lifetime = 0;
-	
+
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
 
@@ -176,7 +176,7 @@ void buff_Think()
 		self.color = Buff_Color(self.buffs);
 		self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
 		self.skin = Buff_Skin(self.buffs);
-		
+
 		setmodel(self, "models/relics/relic.md3");
 
 		if(self.buff_waypoint)
@@ -206,11 +206,11 @@ void buff_Think()
 		self.owner = world;
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(self, self.buffs);
-			
+
 		if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
 			buff_Respawn(self);
 	}
-	
+
 	if(self.buff_activetime)
 	if(!gameover)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
@@ -240,12 +240,12 @@ void buff_Think()
 
 		if(self.team && !self.buff_waypoint)
 			buff_Waypoint_Spawn(self);
-			
+
 		if(self.lifetime)
 		if(time >= self.lifetime)
 			buff_Respawn(self);
 	}
-    
+
 	self.nextthink = time;
 	//self.angles_y = time * 110.1;
 }
@@ -265,7 +265,7 @@ void buff_Reset()
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = false;
-	
+
 	if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
 		buff_Respawn(self);
 }
@@ -273,14 +273,14 @@ void buff_Reset()
 void buff_Init(entity ent)
 {
 	if(!cvar("g_buffs")) { remove(self); return; }
-	
+
 	if(!teamplay && self.team) { self.team = 0; }
 
 	entity oldself = self;
 	self = ent;
 	if(!self.buffs || buff_Available(self.buffs))
 		buff_NewType(self, 0);
-	
+
 	self.classname = "item_buff";
 	self.solid = SOLID_TRIGGER;
 	self.flags = FL_ITEM;
@@ -300,16 +300,16 @@ void buff_Init(entity ent)
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
-	
+
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
 	setmodel(self, "models/relics/relic.md3");
 	setsize(self, BUFF_MIN, BUFF_MAX);
-	
+
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
 		buff_Respawn(self);
-	
+
 	self = oldself;
 }
 
@@ -330,7 +330,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
 	ent.noalign = old.noalign;
-	
+
 	buff_Init(ent);
 }
 
@@ -353,7 +353,7 @@ void buff_Vengeance_DelayedDamage()
 {
 	if(self.enemy)
 		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF_VENGEANCE, self.enemy.origin, '0 0 0');
-	
+
 	remove(self);
 	return;
 }
@@ -373,7 +373,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
 	if(frag_target.health - autocvar_g_buffs_medic_survive_health > 0) // not if the final result would be less than 0, medic must get health
 		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
-		
+
 	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
 	if(frag_attacker != frag_target)
@@ -392,14 +392,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
 		frag_force = '0 0 0';
-	
+
 	if(frag_attacker.buffs & BUFF_BASH)
 	if(vlen(frag_force))
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
 		frag_force *= autocvar_g_buffs_bash_force;
-	
+
 	if(frag_attacker.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_time;
@@ -443,7 +443,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 		self.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_speed_speed;
 	}
-	
+
 	if(time < self.buff_disability_time)
 	{
 		self.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
@@ -479,7 +479,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 	{
 		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
 		self.buffs = 0;
-		
+
 		if(self.buff_model)
 		{
 			remove(self.buff_model);
@@ -511,7 +511,7 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 		remove(self.buff_model);
 		self.buff_model = world;
 	}
-	
+
 	// also reset timers here to prevent them continuing after spectating
 	self.buff_disability_time = 0;
 	self.buff_disability_effect_time = 0;
@@ -552,24 +552,24 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_SPEED)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
-		
+
 	if(time < self.buff_disability_time)
 		weapon_rate *= autocvar_g_buffs_disability_rate;
-	
+
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
-	
+
 	if(time < self.buff_disability_time)
 	if(time >= self.buff_disability_effect_time)
 	{
 		pointparticles(particleeffectnum("smoking"), self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
 		self.buff_disability_effect_time = time + 0.5;
 	}
-	
+
 	if(self.frozen)
 	{
 		if(self.buffs)
@@ -578,7 +578,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.buffs = 0;
 		}
 	}
-		
+
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha;
@@ -602,7 +602,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.ammo_nails) { self.ammo_nails = 20; }
 			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
 		}
-		
+
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
 			if(time < self.strength_finished && g_instagib)
@@ -618,7 +618,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
-		
+
 		if(self.oldbuffs & BUFF_FLIGHT)
 			self.gravity = self.buff_flight_prev_gravity;
 		else if(self.buffs & BUFF_FLIGHT)
@@ -646,14 +646,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.buff_model.color = Buff_Color(self.buffs);
 			self.buff_model.glowmod = ((self.buff_model.team) ? Team_ColorRGB(self.buff_model.team) + '0.1 0.1 0.1' : self.buff_model.color);
 			self.buff_model.skin = Buff_Skin(self.buffs);
-			
+
 			self.effects |= EF_NOSHADOW;
 		}
 		else
 		{
 			remove(self.buff_model);
 			self.buff_model = world;
-			
+
 			self.effects &= ~(EF_NOSHADOW);
 		}
 	}
@@ -663,7 +663,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_model.effects = self.effects;
 		self.buff_model.effects |= EF_LOWPRECISION;
 		self.buff_model.effects = self.buff_model.effects & EFMASK_CHEAP; // eat performance
-		
+
 		self.buff_model.alpha = self.alpha;
 	}
 
@@ -698,7 +698,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
 		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
-	
+
 	if(self.buffs & BUFF_SPEED)
 		regen_mod_regen = autocvar_g_buffs_speed_regen;
 
@@ -750,7 +750,7 @@ void buffs_Initialize()
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_jumpheight);
-	
+
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }
 

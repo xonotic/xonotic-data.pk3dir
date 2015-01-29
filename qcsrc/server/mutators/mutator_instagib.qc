@@ -121,7 +121,7 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 	// always refill ammo
 	if(self.monsterid == MON_MAGE)
 		self.skin = 1;
-	
+
 	return false;
 }
 
@@ -250,7 +250,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				frag_damage = frag_mirrordamage = 0;
-				
+
 				if(frag_target != frag_attacker)
 				{
 					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }

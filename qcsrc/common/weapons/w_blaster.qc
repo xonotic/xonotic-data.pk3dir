@@ -68,7 +68,7 @@ void W_Blaster_Touch(void)
 		self.projectiledeathtype,
 		other
 	);
-	
+
 	remove(self);
 }
 
@@ -112,7 +112,7 @@ void W_Blaster_Attack(
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
-	
+
 	W_SetupProjVelocity_Explicit(
 		missile,
 		w_shotdir,
@@ -132,7 +132,7 @@ void W_Blaster_Attack(
 	missile.touch = W_Blaster_Touch;
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = atk_deathtype; 
+	missile.projectiledeathtype = atk_deathtype;
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
@@ -165,7 +165,7 @@ float W_Blaster(float request)
 
 			return true;
 		}
-		
+
 		case WR_THINK:
 		{
 			if(self.BUTTON_ATCK)
@@ -223,8 +223,8 @@ float W_Blaster(float request)
 			}
 			return true;
 		}
-		
-		case WR_INIT: 
+
+		case WR_INIT:
 		{
 			precache_model("models/weapons/g_laser.md3");
 			precache_model("models/weapons/v_laser.md3");
@@ -233,30 +233,30 @@ float W_Blaster(float request)
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		
+
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
 			return true;
 		}
-		
+
 		case WR_CHECKAMMO1:
 		case WR_CHECKAMMO2:
 		{
 			return true; // laser has infinite ammo
 		}
-		
+
 		case WR_CONFIG:
 		{
 			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		
+
 		case WR_SUICIDEMESSAGE:
 		{
 			return WEAPON_BLASTER_SUICIDE;
 		}
-		
+
 		case WR_KILLMESSAGE:
 		{
 			return WEAPON_BLASTER_MURDER;
@@ -278,7 +278,7 @@ float W_Blaster(float request)
 			if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
 			return true;
 		}
-		
+
 		case WR_INIT:
 		{
 			precache_sound("weapons/laserimpact.wav");

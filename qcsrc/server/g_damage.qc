@@ -609,7 +609,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 		RemoveGrapplingHook(head);
 
 	// add waypoint
-	if(show_waypoint)	
+	if(show_waypoint)
 		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT, '0.25 0.90 1');
 }
 
@@ -622,9 +622,9 @@ void Unfreeze (entity targ)
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
-	
+
 	WaypointSprite_Kill(targ.waypointsprite_attached);
-	
+
 	FOR_EACH_PLAYER(head)
 	if(head.hook.aiment == targ)
 		RemoveGrapplingHook(head);
@@ -788,22 +788,22 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			damage = 0;
 			force *= autocvar_g_freezetag_frozen_force;
 		}
-		
+
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
 		{
 			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
-		
+
 			entity oldself = self;
 			self = targ;
 			entity spot = SelectSpawnPoint (false);
-			
+
 			if(spot)
 			{
 				damage = 0;
 				self.deadflag = DEAD_NO;
 
 				self.angles = spot.angles;
-				
+
 				self.effects = 0;
 				self.effects |= EF_TELEPORT_BIT;
 
@@ -814,16 +814,16 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				self.punchangle = '0 0 0';
 				self.punchvector = '0 0 0';
 				self.oldvelocity = self.velocity;
-				
+
 				self.spawnorigin = spot.origin;
 				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
-				
+
 				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
 			}
-			
+
 			self = oldself;
 		}
 

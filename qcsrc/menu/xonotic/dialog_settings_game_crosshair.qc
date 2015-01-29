@@ -99,7 +99,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1, 0.1, "crosshair_ring_alpha"));
 			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
-	
+
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", _("Enable center crosshair dot")));
 		setDependent(e, "crosshair_enabled", 1, 2);
@@ -152,9 +152,9 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "crosshair_enabled", 1, 2);*/
-			
+
 	/*me.TR(me);
-			
+
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

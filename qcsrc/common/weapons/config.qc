@@ -39,7 +39,7 @@ void Dump_Weapon_Settings(void)
 
 		// step 3: sort queue
 		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
-		
+
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
 			"// {{{ #%d: %s%s\n",

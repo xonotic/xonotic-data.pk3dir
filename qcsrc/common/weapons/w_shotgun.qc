@@ -280,7 +280,7 @@ float W_Shotgun(float req)
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:

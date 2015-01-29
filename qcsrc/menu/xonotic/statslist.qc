@@ -175,7 +175,7 @@ void XonoticStatsList_getStats(entity me)
 		if((order == -1) && (out_total_matches >= 0) && (out_total_wins >= 0))
 		{
 			bufstr_add(me.listStats, sprintf("003Matches: %d", out_total_matches), true);
-			
+
 			if(out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, (out_total_matches - out_total_wins));
@@ -193,7 +193,7 @@ void XonoticStatsList_getStats(entity me)
 		{
 			bufstr_add(me.listStats, sprintf("005Kills/Deaths: %d/%d", out_total_kills, out_total_deaths), true);
 
-			// if there are no deaths, just show kill count 
+			// if there are no deaths, just show kill count
 			if(out_total_deaths > 0)
 				bufstr_add(me.listStats, sprintf("006Kill_Ratio: %.2f", (out_total_kills / out_total_deaths)), true);
 			else
@@ -212,10 +212,10 @@ void XonoticStatsList_getStats(entity me)
 		else
 		{
 			float dividerpos = strstrofs(e, "/", 0);
-			
+
 			string gametype = substring(e, 0, dividerpos);
 			if(gametype == "overall") { continue; }
-			
+
 			string event = substring(e, (dividerpos + 1), strlen(e) - (dividerpos + 1));
 
 			// if we are ranked, read these sets of possible options
@@ -251,7 +251,7 @@ void XonoticStatsList_getStats(entity me)
 						data = sprintf("%d%%", stof(data));
 						break;
 					}
-					
+
 					#if 0
 					case "favorite-map":
 					{
@@ -261,7 +261,7 @@ void XonoticStatsList_getStats(entity me)
 						break;
 					}
 					#endif
-					
+
 					default: continue; // nothing to see here
 				}
 
@@ -321,7 +321,7 @@ void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float 
 	string data = bufstr_get(me.listStats, i);
 	string s = car(data);
 	string d = cdr(data);
-	
+
 	s = substring(s, 3, strlen(s) - 3);
 	s = strreplace("_", " ", s);
 	s = draw_TextShortenToWidth(s, 0.5 * me.columnNameSize, 0, me.realFontSize);

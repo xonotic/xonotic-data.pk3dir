@@ -152,7 +152,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	if(spread <= 0)
 		return forward;
 	sstyle = spreadstyle; //autocvar_g_projectiles_spread_style;
-	
+
 	if(sstyle == 0)
 	{
 		// this is the baseline for the spread value!

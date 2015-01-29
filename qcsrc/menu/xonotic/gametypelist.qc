@@ -83,7 +83,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s1 = GameType_GetName(i);
-	
+
 	if(_MapInfo_GetTeamPlayBool(GameType_GetID(i)))
 		s2 = _("teamplay");
 	else

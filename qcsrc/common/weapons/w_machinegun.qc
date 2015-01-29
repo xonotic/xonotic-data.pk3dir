@@ -246,7 +246,7 @@ float W_MachineGun(float req)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -298,7 +298,7 @@ float W_MachineGun(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(machinegun, first_refire), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -385,7 +385,7 @@ float W_MachineGun(float req)
 					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.2)
 					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
-					
+
 			return true;
 		}
 		case WR_INIT:

@@ -61,7 +61,7 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 {
 	float contents = pointcontents(ent.move_origin);
-	
+
 	if(!ent.move_watertype)
 	{
 		// just spawned here

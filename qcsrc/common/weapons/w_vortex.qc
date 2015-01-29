@@ -76,7 +76,7 @@ void SendCSQCVortexBeamParticle(float charge) {
 void W_Vortex_Attack(float issecondary)
 {
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
-	
+
 	mydmg = WEP_CVAR_BOTH(vortex, !issecondary, damage);
 	myforce = WEP_CVAR_BOTH(vortex, !issecondary, force);
 	mymindist = WEP_CVAR_BOTH(vortex, !issecondary, damagefalloff_mindist);
@@ -110,7 +110,7 @@ void W_Vortex_Attack(float issecondary)
 	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
@@ -142,7 +142,7 @@ float W_Vortex(float req)
 		{
 			if(WEP_CVAR(vortex, charge) && self.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
-				
+
 			if(WEP_CVAR_SEC(vortex, chargepool))
 				if(self.vortex_chargepool_ammo < 1)
 				{
@@ -237,7 +237,7 @@ float W_Vortex(float req)
 					}
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -309,7 +309,7 @@ float W_Vortex(float req)
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
-				
+
 			return true;
 		}
 		case WR_INIT:

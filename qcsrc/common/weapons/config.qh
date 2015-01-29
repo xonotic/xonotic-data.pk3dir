@@ -32,7 +32,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 #define WEP_CONFIG_WRITE_CVARS_BOTH(wepname,name) \
 	WEP_CONFIG_WRITE_CVARS_PRI(wepname, name) \
 	WEP_CONFIG_WRITE_CVARS_SEC(wepname, name)
-	
+
 #define WEP_CONFIG_WRITE_CVARS(wepid,wepname,mode,name) WEP_CONFIG_WRITE_CVARS_##mode(wepname, name)
 
 #define WEP_CONFIG_WRITE_PROPS_string(wepname,name) \

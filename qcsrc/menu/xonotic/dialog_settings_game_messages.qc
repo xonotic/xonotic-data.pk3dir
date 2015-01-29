@@ -96,10 +96,10 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 			makeMulti(e, "notification_CENTER_POWERUP_SHIELD notification_CENTER_POWERUP_SPEED notification_CENTER_POWERUP_STRENGTH notification_CENTER_POWERDOWN_INVISIBILITY notification_CENTER_POWERDOWN_SHIELD notification_CENTER_POWERDOWN_SPEED notification_CENTER_POWERDOWN_STRENGTH notification_CENTER_SUPERWEAPON_BROKEN notification_CENTER_SUPERWEAPON_LOST notification_CENTER_SUPERWEAPON_PICKUP notification_INFO_POWERUP_INVISIBILITY notification_INFO_POWERUP_SHIELD notification_INFO_POWERUP_SPEED notification_INFO_POWERUP_STRENGTH");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_CENTER_ITEM_WEAPON_DONTHAVE", _("Weapon centerprint notifications")));
-			makeMulti(e, "notification_CENTER_ITEM_WEAPON_DROP notification_CENTER_ITEM_WEAPON_GOT notification_CENTER_ITEM_WEAPON_NOAMMO notification_CENTER_ITEM_WEAPON_PRIMORSEC notification_CENTER_ITEM_WEAPON_UNAVAILABLE"); 
+			makeMulti(e, "notification_CENTER_ITEM_WEAPON_DROP notification_CENTER_ITEM_WEAPON_GOT notification_CENTER_ITEM_WEAPON_NOAMMO notification_CENTER_ITEM_WEAPON_PRIMORSEC notification_CENTER_ITEM_WEAPON_UNAVAILABLE");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_INFO_ITEM_WEAPON_DONTHAVE", _("Weapon info message notifications")));
-			makeMulti(e, "notification_INFO_ITEM_WEAPON_DROP notification_INFO_ITEM_WEAPON_GOT notification_INFO_ITEM_WEAPON_NOAMMO notification_INFO_ITEM_WEAPON_PRIMORSEC notification_INFO_ITEM_WEAPON_UNAVAILABLE"); 
+			makeMulti(e, "notification_INFO_ITEM_WEAPON_DROP notification_INFO_ITEM_WEAPON_GOT notification_INFO_ITEM_WEAPON_NOAMMO notification_INFO_ITEM_WEAPON_PRIMORSEC notification_INFO_ITEM_WEAPON_UNAVAILABLE");
 
 	me.gotoRC(me, 9, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Announcers")));

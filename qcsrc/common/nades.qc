@@ -57,7 +57,7 @@ void healer_setup()
 	setmodel(self, "models/ctf/shield.md3");
 
 	setorigin(self, self.origin);
-	
+
 	float model_radius = self.maxs.x;
 	vector size = '1 1 1' * self.healer_radius / 2;
 	setsize(self,-size,size);

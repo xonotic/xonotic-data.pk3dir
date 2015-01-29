@@ -371,7 +371,7 @@ float W_Fireball(float req)
 					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_THINK:
@@ -393,7 +393,7 @@ float W_Fireball(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
 				}
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
@@ -465,7 +465,7 @@ float W_Fireball(float req)
 				if(!w_issilent)
 					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
-			
+
 			return true;
 		}
 		case WR_INIT:
