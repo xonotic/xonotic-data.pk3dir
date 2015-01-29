@@ -140,7 +140,8 @@ g_casings.qc
 
 mapvoting.qc
 
-t_jumppads.qc
+../common/triggers/include.qc
+
 t_teleporters.qc
 
 sv_main.qc
@@ -172,8 +173,6 @@ ent_cs.qc
 cl_player.qc
 cl_client.qc
 antilag.qc
-
-../common/triggers/include.qc
 
 //ctf.qc
 //domination.qc

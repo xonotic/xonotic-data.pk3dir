@@ -1,15 +1,6 @@
-.float height;
+// TODO: split target_push and put it in the target folder
 
-#ifdef CSQC
-.float active;
-.string target;
-.string targetname;
-#define ACTIVE_NOT 		0
-#define ACTIVE_ACTIVE 	1
-#define ACTIVE_IDLE 	2
-#define ACTIVE_BUSY 	2
-#define ACTIVE_TOGGLE	3
-#endif
+.float height;
 
 #ifdef SVQC
 
@@ -269,7 +260,6 @@ void trigger_push_touch()
 #endif
 }
 
-.vector dest;
 #ifdef SVQC
 void trigger_push_link();
 void trigger_push_updatelink();
@@ -454,15 +444,6 @@ void spawnfunc_target_position() { target_push_link(); }
 #endif
 
 #ifdef CSQC
-void trigger_push_draw()
-{
-	float dt = time - self.move_time;
-	self.move_time = time;
-	if(dt <= 0) { return; }
-
-	trigger_touch_generic(trigger_push_touch);
-}
-
 void ent_trigger_push()
 {
 	float sf = ReadByte();
@@ -496,10 +477,10 @@ void ent_trigger_push()
 		self.angles_z = ReadCoord();
 
 		self.solid = SOLID_TRIGGER;
-		//self.draw = trigger_push_draw;
+		self.draw = trigger_draw_generic;
+		self.trigger_touch = trigger_push_touch;
 		self.drawmask = MASK_ENGINE;
 		self.move_time = time;
-		//self.touch = trigger_push_touch;
 		trigger_push_findtarget();
 	}
 

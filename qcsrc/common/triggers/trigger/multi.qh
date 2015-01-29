@@ -1,0 +1,4 @@
+#ifdef SVQC
+void multi_trigger();
+void multi_reset();
+#endif

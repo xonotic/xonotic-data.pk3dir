@@ -1044,7 +1044,7 @@ float precache_sound_index (string s) = #19;
 #define SND_LARGEENTITY 8
 #define SND_LARGESOUND  16
 
-float sound_allowed(float dest, entity e)
+float sound_allowed(float destin, entity e)
 {
     // sounds from world may always pass
     for (;;)
@@ -1059,7 +1059,7 @@ float sound_allowed(float dest, entity e)
             break;
     }
     // sounds to self may always pass
-    if (dest == MSG_ONE)
+    if (destin == MSG_ONE)
         if (e == msg_entity)
             return TRUE;
     // sounds by players can be removed
@@ -1071,18 +1071,18 @@ float sound_allowed(float dest, entity e)
 }
 
 #undef sound
-void sound(entity e, float chan, string samp, float vol, float atten)
+void sound(entity e, float chan, string samp, float vol, float attenu)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound7(e, chan, samp, vol, atten, 0, 0);
+    sound7(e, chan, samp, vol, attenu, 0, 0);
 }
 
-void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
+void soundtoat(float destin, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(destin, e))
         return;
 
     entno = num_for_edict(e);
@@ -1091,61 +1091,61 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     float sflags;
     sflags = 0;
 
-    atten = floor(atten * 64);
+    attenu = floor(attenu * 64);
     vol = floor(vol * 255);
 
     if (vol != 255)
         sflags |= SND_VOLUME;
-    if (atten != 64)
+    if (attenu != 64)
         sflags |= SND_ATTENUATION;
     if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
 
-    WriteByte(dest, SVC_SOUND);
-    WriteByte(dest, sflags);
+    WriteByte(destin, SVC_SOUND);
+    WriteByte(destin, sflags);
     if (sflags & SND_VOLUME)
-        WriteByte(dest, vol);
+        WriteByte(destin, vol);
     if (sflags & SND_ATTENUATION)
-        WriteByte(dest, atten);
+        WriteByte(destin, attenu);
     if (sflags & SND_LARGEENTITY)
     {
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        WriteShort(destin, entno);
+        WriteByte(destin, chan);
     }
     else
     {
-        WriteShort(dest, entno * 8 + chan);
+        WriteShort(destin, entno * 8 + chan);
     }
     if (sflags & SND_LARGESOUND)
-        WriteShort(dest, idx);
+        WriteShort(destin, idx);
     else
-        WriteByte(dest, idx);
+        WriteByte(destin, idx);
 
-    WriteCoord(dest, o_x);
-    WriteCoord(dest, o_y);
-    WriteCoord(dest, o_z);
+    WriteCoord(destin, o_x);
+    WriteCoord(destin, o_y);
+    WriteCoord(destin, o_z);
 }
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
+void soundto(float destin, entity e, float chan, string samp, float vol, float attenu)
 {
     vector o;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(destin, e))
         return;
 
     o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(dest, e, o, chan, samp, vol, atten);
+    soundtoat(destin, e, o, chan, samp, vol, attenu);
 }
-void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
+void soundat(entity e, vector o, float chan, string samp, float vol, float attenu)
 {
-    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, attenu);
 }
-void stopsoundto(float dest, entity e, float chan)
+void stopsoundto(float destin, entity e, float chan)
 {
     float entno;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(destin, e))
         return;
 
     entno = num_for_edict(e);
@@ -1157,22 +1157,22 @@ void stopsoundto(float dest, entity e, float chan)
         sflags = SND_LARGEENTITY;
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
-        WriteByte(dest, SVC_SOUND);
-        WriteByte(dest, sflags);
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        WriteByte(destin, SVC_SOUND);
+        WriteByte(destin, sflags);
+        WriteShort(destin, entno);
+        WriteByte(destin, chan);
         if (sflags & SND_LARGESOUND)
-            WriteShort(dest, idx);
+            WriteShort(destin, idx);
         else
-            WriteByte(dest, idx);
-        WriteCoord(dest, e.origin_x);
-        WriteCoord(dest, e.origin_y);
-        WriteCoord(dest, e.origin_z);
+            WriteByte(destin, idx);
+        WriteCoord(destin, e.origin_x);
+        WriteCoord(destin, e.origin_y);
+        WriteCoord(destin, e.origin_z);
     }
     else
     {
-        WriteByte(dest, SVC_STOPSOUND);
-        WriteShort(dest, entno * 8 + chan);
+        WriteByte(destin, SVC_STOPSOUND);
+        WriteShort(destin, entno * 8 + chan);
     }
 }
 void stopsound(entity e, float chan)
@@ -1193,7 +1193,7 @@ void play2(entity e, string filename)
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
 .float spamtime;
-float spamsound(entity e, float chan, string samp, float vol, float atten)
+float spamsound(entity e, float chan, string samp, float vol, float attenu)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return FALSE;
@@ -1201,7 +1201,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, atten);
+        sound(e, chan, samp, vol, attenu);
         return TRUE;
     }
     return FALSE;

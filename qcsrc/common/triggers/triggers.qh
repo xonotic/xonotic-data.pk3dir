@@ -2,6 +2,9 @@ const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
 const float SF_TRIGGER_RESET = 4;
 
+const float	SPAWNFLAG_NOMESSAGE = 1;
+const float	SPAWNFLAG_NOTOUCH = 1;
+
 .void() trigger_touch;
 
 .string bgmscript;
@@ -11,9 +14,25 @@ const float SF_TRIGGER_RESET = 4;
 .float bgmscriptrelease;
 
 // used elsewhere (will fix)
-void multi_touch();
+#ifdef SVQC
 void spawnfunc_trigger_once();
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 
 void target_voicescript_next(entity pl);
 void target_voicescript_clear(entity pl);
+#endif
+
+.float volume, atten;
+
+.vector dest;
+
+#ifdef CSQC
+.float active;
+.string target;
+.string targetname;
+#define ACTIVE_NOT 		0
+#define ACTIVE_ACTIVE 	1
+#define ACTIVE_IDLE 	2
+#define ACTIVE_BUSY 	2
+#define ACTIVE_TOGGLE	3
+#endif
