@@ -48,7 +48,7 @@ float entcs_customize()
 	return true;
 }
 
-float entcs_send(entity to, float sf)
+float entcs_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);

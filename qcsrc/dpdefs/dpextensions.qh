@@ -275,7 +275,7 @@ float EF_DELTA = 8388608;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //effects bit:
-float EF_LOWPRECISION = 4194304;
+const int EF_LOWPRECISION = 4194304;
 //description:
 //uses low quality origin coordinates, reducing network traffic compared to the default high precision, intended for numerous objects (projectiles/gibs/bullet holes/etc).
 
@@ -2352,7 +2352,7 @@ string(float n) argv = #442;
 //idea: FrikaC
 //darkplaces implementation: LordHavoc
 //effects bit:
-float EF_SELECTABLE = 16384; // allows cursor to highlight entity (brighten)
+const int EF_SELECTABLE = 16384; // allows cursor to highlight entity (brighten)
 //field definitions:
 .float cursor_active; // true if cl_prydoncursor mode is on
 .vector cursor_screen; // screen position of cursor as -1 to +1 in _x and _y (_z unused)

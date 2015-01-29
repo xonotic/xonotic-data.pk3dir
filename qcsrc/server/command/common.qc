@@ -411,9 +411,7 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i;
-
-			for(i = 0; i < 10; ++i)
+			for(int i = 0; i < 10; ++i)
 				if(records_reply[i] != "")
 					print_to(caller, records_reply[i]);
 

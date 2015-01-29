@@ -24,10 +24,9 @@ void TEST_OK()
 
 float TEST_RunAll()
 {
-	float f = 0;
+	int f = 0;
 	float n = numentityfields();
-	float i;
-	for(i = 0; i < n; ++i)
+	for(int i = 0; i < n; ++i)
 	{
 		string name = entityfieldname(i);
 		if(substring(name, 0, 6) == "_TEST_")

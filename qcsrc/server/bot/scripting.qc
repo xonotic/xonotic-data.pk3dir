@@ -91,7 +91,7 @@ float bot_havecommand(entity bot, float idx)
 	return 1;
 }
 
-const float MAX_BOT_PLACES = 4;
+const int MAX_BOT_PLACES = 4;
 .float bot_places_count;
 .entity bot_places[MAX_BOT_PLACES];
 .string bot_placenames[MAX_BOT_PLACES];
@@ -100,7 +100,7 @@ entity bot_getplace(string placename)
 	entity e;
 	if(substring(placename, 0, 1) == "@")
 	{
-		float i, p;
+		int i, p;
 		placename = substring(placename, 1, -1);
 		string s, s2;
 		for(i = 0; i < self.bot_places_count; ++i)
@@ -138,35 +138,35 @@ entity bot_getplace(string placename)
 
 
 // NOTE: New commands should be added here. Do not forget to update BOT_CMD_COUNTER
-const float BOT_CMD_NULL 		= 0;
-const float BOT_CMD_PAUSE 		= 1;
-const float BOT_CMD_CONTINUE 	= 2;
-const float BOT_CMD_WAIT 		= 3;
-const float BOT_CMD_TURN 		= 4;
-const float BOT_CMD_MOVETO 		= 5;
-const float BOT_CMD_RESETGOAL 	= 6;	// Not implemented yet
-const float BOT_CMD_CC 			= 7;
-const float BOT_CMD_IF 			= 8;
-const float BOT_CMD_ELSE 		= 9;
-const float BOT_CMD_FI 			= 10;
-const float BOT_CMD_RESETAIM 	= 11;
-const float BOT_CMD_AIM 		= 12;
-const float BOT_CMD_PRESSKEY 	= 13;
-const float BOT_CMD_RELEASEKEY 	= 14;
-const float BOT_CMD_SELECTWEAPON 	= 15;
-const float BOT_CMD_IMPULSE 		= 16;
-const float BOT_CMD_WAIT_UNTIL 		= 17;
-const float BOT_CMD_MOVETOTARGET 	= 18;
-const float BOT_CMD_AIMTARGET 		= 19;
-const float BOT_CMD_BARRIER 		= 20;
-const float BOT_CMD_CONSOLE 		= 21;
-const float BOT_CMD_SOUND 		= 22;
-const float BOT_CMD_DEBUG_ASSERT_CANFIRE = 23;
-const float BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
-const float BOT_CMD_WEND 		= 25;	// TODO: Not implemented yet
-const float BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
+const int BOT_CMD_NULL 			= 0;
+const int BOT_CMD_PAUSE 		= 1;
+const int BOT_CMD_CONTINUE 		= 2;
+const int BOT_CMD_WAIT 			= 3;
+const int BOT_CMD_TURN 			= 4;
+const int BOT_CMD_MOVETO 		= 5;
+const int BOT_CMD_RESETGOAL 	= 6;	// Not implemented yet
+const int BOT_CMD_CC 			= 7;
+const int BOT_CMD_IF 			= 8;
+const int BOT_CMD_ELSE 			= 9;
+const int BOT_CMD_FI 			= 10;
+const int BOT_CMD_RESETAIM 		= 11;
+const int BOT_CMD_AIM 			= 12;
+const int BOT_CMD_PRESSKEY 		= 13;
+const int BOT_CMD_RELEASEKEY 	= 14;
+const int BOT_CMD_SELECTWEAPON 	= 15;
+const int BOT_CMD_IMPULSE 		= 16;
+const int BOT_CMD_WAIT_UNTIL 	= 17;
+const int BOT_CMD_MOVETOTARGET 	= 18;
+const int BOT_CMD_AIMTARGET 	= 19;
+const int BOT_CMD_BARRIER 		= 20;
+const int BOT_CMD_CONSOLE 		= 21;
+const int BOT_CMD_SOUND 		= 22;
+const int BOT_CMD_DEBUG_ASSERT_CANFIRE = 23;
+const int BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
+const int BOT_CMD_WEND 			= 25;	// TODO: Not implemented yet
+const int BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
 
-const float BOT_CMD_COUNTER 	= 24;	// Update this value if you add/remove a command
+const int BOT_CMD_COUNTER 		= 24;	// Update this value if you add/remove a command
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
@@ -174,13 +174,13 @@ const float BOT_CMD_COUNTER 	= 24;	// Update this value if you add/remove a comm
 .float() cmd_resetgoal;
 
 //
-const float BOT_CMD_PARAMETER_NONE = 0;
-const float BOT_CMD_PARAMETER_FLOAT = 1;
-const float BOT_CMD_PARAMETER_STRING = 2;
-const float BOT_CMD_PARAMETER_VECTOR = 3;
+const int BOT_CMD_PARAMETER_NONE = 0;
+const int BOT_CMD_PARAMETER_FLOAT = 1;
+const int BOT_CMD_PARAMETER_STRING = 2;
+const int BOT_CMD_PARAMETER_VECTOR = 3;
 
 float bot_cmds_initialized;
-float bot_cmd_parm_type[BOT_CMD_COUNTER];
+int bot_cmd_parm_type[BOT_CMD_COUNTER];
 string bot_cmd_string[BOT_CMD_COUNTER];
 
 // Bots command queue
@@ -189,7 +189,7 @@ entity bot_cmd;	// global current command
 
 .float is_bot_cmd;			// Tells if the entity is a bot command
 .float bot_cmd_index;			// Position of the command in the queue
-.float bot_cmd_type;			// If of command (see the BOT_CMD_* defines)
+.int bot_cmd_type;			// If of command (see the BOT_CMD_* defines)
 .float bot_cmd_parm_float;		// Field to store a float parameter
 .string bot_cmd_parm_string;		// Field to store a string parameter
 .vector bot_cmd_parm_vector;		// Field to store a vector parameter
@@ -321,7 +321,7 @@ entity find_bot_by_number(float number)
 
 float bot_decodecommand(string cmdstring)
 {
-	float cmd_parm_type, i;
+	float cmd_parm_type;
 	float sp;
 	string parm;
 
@@ -339,6 +339,7 @@ float bot_decodecommand(string cmdstring)
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
+	int i;
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
 		if(bot_cmd_string[i]!=cmdstring)
@@ -380,7 +381,7 @@ float bot_decodecommand(string cmdstring)
 
 void bot_cmdhelp(string scmd)
 {
-	float i, ntype;
+	int i, ntype;
 	string stype;
 
 	if(!bot_cmds_initialized)
@@ -495,7 +496,7 @@ void bot_cmdhelp(string scmd)
 
 void bot_list_commands()
 {
-	float i;
+	int i;
 	string ptype;
 
 	if(!bot_cmds_initialized)
@@ -526,7 +527,7 @@ void bot_list_commands()
 }
 
 // Commands code
-.float bot_exec_status;
+.int bot_exec_status;
 
 #define BOT_EXEC_STATUS_IDLE	0
 #define BOT_EXEC_STATUS_PAUSED	1
@@ -648,13 +649,13 @@ float bot_cmd_select_weapon()
 	return CMD_STATUS_FINISHED;
 }
 
-.float bot_cmd_condition_status;
+.int bot_cmd_condition_status;
 
-const float CMD_CONDITION_NONE = 0;
-const float CMD_CONDITION_true = 1;
-const float CMD_CONDITION_false = 2;
-const float CMD_CONDITION_true_BLOCK = 4;
-const float CMD_CONDITION_false_BLOCK = 8;
+const int CMD_CONDITION_NONE = 0;
+const int CMD_CONDITION_true = 1;
+const int CMD_CONDITION_false = 2;
+const int CMD_CONDITION_true_BLOCK = 4;
+const int CMD_CONDITION_false_BLOCK = 8;
 
 float bot_cmd_eval(string expr)
 {
@@ -875,20 +876,20 @@ float bot_cmd_aimtarget()
 	return CMD_STATUS_EXECUTING;
 }
 
-.float bot_cmd_keys;
+.int bot_cmd_keys;
 
-const float BOT_CMD_KEY_NONE 		= 0;
-const float BOT_CMD_KEY_FORWARD 	= 1;
-const float BOT_CMD_KEY_BACKWARD 	= 2;
-const float BOT_CMD_KEY_RIGHT 		= 4;
-const float BOT_CMD_KEY_LEFT 		= 8;
-const float BOT_CMD_KEY_JUMP 		= 16;
-const float BOT_CMD_KEY_ATTACK1 	= 32;
-const float BOT_CMD_KEY_ATTACK2 	= 64;
-const float BOT_CMD_KEY_USE 		= 128;
-const float BOT_CMD_KEY_HOOK 		= 256;
-const float BOT_CMD_KEY_CROUCH 		= 512;
-const float BOT_CMD_KEY_CHAT 		= 1024;
+const int BOT_CMD_KEY_NONE 		= 0;
+const int BOT_CMD_KEY_FORWARD 	= 1;
+const int BOT_CMD_KEY_BACKWARD 	= 2;
+const int BOT_CMD_KEY_RIGHT 	= 4;
+const int BOT_CMD_KEY_LEFT 		= 8;
+const int BOT_CMD_KEY_JUMP 		= 16;
+const int BOT_CMD_KEY_ATTACK1 	= 32;
+const int BOT_CMD_KEY_ATTACK2 	= 64;
+const int BOT_CMD_KEY_USE 		= 128;
+const int BOT_CMD_KEY_HOOK 		= 256;
+const int BOT_CMD_KEY_CROUCH 	= 512;
+const int BOT_CMD_KEY_CHAT 		= 1024;
 
 float bot_presskeys()
 {

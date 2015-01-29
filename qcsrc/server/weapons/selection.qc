@@ -33,7 +33,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
-		
+
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
 
@@ -123,8 +123,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
-	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast, c;
-	string rest;
+	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
 	WepSet wepset = '0 0 0';
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
@@ -139,9 +138,9 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	if(dir == 0)
 		switchtonext = 1;
 
-	c = 0;
+	int c = 0;
 
-	rest = weaponorder;
+	string rest = weaponorder;
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);

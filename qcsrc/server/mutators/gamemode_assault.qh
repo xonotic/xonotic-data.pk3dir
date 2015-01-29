@@ -5,11 +5,11 @@
 .entity assault_sprite;
 
 // legacy bot defs
-const float HAVOCBOT_AST_ROLE_NONE = 0;
-const float HAVOCBOT_AST_ROLE_DEFENSE = 2;
-const float HAVOCBOT_AST_ROLE_OFFENSE = 4;
+const int HAVOCBOT_AST_ROLE_NONE = 0;
+const int HAVOCBOT_AST_ROLE_DEFENSE = 2;
+const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
 
-.float havocbot_role_flags;
+.int havocbot_role_flags;
 .float havocbot_attack_time;
 
 .void() havocbot_role;

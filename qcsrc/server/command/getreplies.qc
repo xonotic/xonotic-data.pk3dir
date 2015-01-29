@@ -125,7 +125,7 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt = 0, thiscnt;
+	int i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
 	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
@@ -301,7 +301,7 @@ string getladder()
 string getmaplist()
 {
 	string maplist = "", col;
-	float i, argc;
+	int i, argc;
 
 	argc = tokenize_console(autocvar_g_maplist);
 	for(i = 0; i < argc; ++i)
@@ -356,9 +356,8 @@ string getlsmaps()
 string getmonsterlist()
 {
 	string monsterlist = "", col;
-	float i;
 
-	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	for(int i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		if(i % 2) { col = "^2"; }
 		else { col = "^3"; }

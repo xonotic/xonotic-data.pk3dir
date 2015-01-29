@@ -12,7 +12,7 @@
 
 float mouseButtonsPressed;
 vector menuMousePos;
-float menuShiftState;
+int menuShiftState;
 float menuPrevTime;
 float menuAlpha;
 float menuLogoAlpha;

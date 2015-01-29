@@ -7,7 +7,6 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
-float updateCompression();
 #endif
 
 #ifdef IMPLEMENTATION

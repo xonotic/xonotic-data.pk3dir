@@ -221,7 +221,7 @@ float g_weaponspreadfactor;
 WepSet start_weapons;
 WepSet start_weapons_default;
 WepSet start_weapons_defaultmask;
-float start_items;
+int start_items;
 float start_ammo_shells;
 float start_ammo_nails;
 float start_ammo_rockets;
@@ -246,8 +246,8 @@ float g_weapon_stay;
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
-	float i = weaponinfo.weapon;
-	float d = 0;
+	int i = weaponinfo.weapon;
+	int d = 0;
 
 	if (!i)
 		return 0;
@@ -395,7 +395,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon(e, false);
+			int w = want_weapon(e, false);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -457,7 +457,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon(e, g_warmup_allguns);
+				int w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)

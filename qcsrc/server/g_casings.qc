@@ -22,7 +22,7 @@ float Casing_SendEntity(entity to, float sf)
 	return true;
 }
 
-void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner)
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
 {
 	entity e;
 	vector org;

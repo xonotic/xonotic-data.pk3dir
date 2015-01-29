@@ -281,7 +281,7 @@ vector CL_Weapon_GetShotOrg(float wpn)
 
 void CL_Weaponentity_Think()
 {
-	float tb;
+	int tb;
 	self.nextthink = time;
 	if (intermission_running)
 		self.frame = self.anim_idle.x;

@@ -504,7 +504,7 @@ void GameCommand_cointoss(float request, float argc)
 			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
-			
+
 			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
 			return;
 		}
@@ -1379,7 +1379,8 @@ void GameCommand_shuffleteams(float request)
 			if(teamplay)
 			{
 				entity tmp_player;
-				float i, x, z, t_teams, t_players, team_color;
+				int i;
+				float x, z, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;

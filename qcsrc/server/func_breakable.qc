@@ -33,7 +33,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -79,7 +79,7 @@ void func_breakable_colormod()
 		self.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		self.colormod = '1 1 1';
-		
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -142,7 +142,7 @@ void func_breakable_destroyed()
 {
 	func_breakable_look_destroyed();
 	func_breakable_behave_destroyed();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -150,7 +150,7 @@ void func_breakable_restore()
 {
 	func_breakable_look_restore();
 	func_breakable_behave_restore();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -190,7 +190,7 @@ void func_breakable_destroy() {
 	self.message = oldmsg;
 }
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.state == 1)
 		return;
@@ -223,7 +223,7 @@ void func_breakable_reset()
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
-		
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -276,7 +276,7 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 

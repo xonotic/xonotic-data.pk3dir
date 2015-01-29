@@ -7,9 +7,9 @@
 // ======================================================
 
 // ladder bullshit todo
-const float LADDER_FIRSTPOINT = 100;
+const int LADDER_FIRSTPOINT = 100;
 #define LADDER_CNT 10 // position X still gives LADDER_FIRSTPOINT/X points
-const float LADDER_SIZE = 30; 	// ladder shows the top X players
+const int LADDER_SIZE = 30; 	// ladder shows the top X players
 
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];

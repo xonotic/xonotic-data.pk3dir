@@ -23,7 +23,7 @@ string W_Apply_Weaponreplace(string in)
 	{
 		replacement = "";
 		s = argv(i);
-		
+
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
@@ -48,7 +48,7 @@ void weapon_defaultspawnfunc(float wpn)
 	string s;
 	entity oldself;
 	float i, j;
-	float f;
+	int f;
 
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{

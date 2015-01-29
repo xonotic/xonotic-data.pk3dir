@@ -7,7 +7,7 @@ void Send_WeaponComplain(entity e, float wpn, float type);
 .float hasweapon_complain_spam;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 
-.float weaponcomplainindex;
+.int weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
 
 #define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true)

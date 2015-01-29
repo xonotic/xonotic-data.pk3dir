@@ -163,7 +163,7 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 
 	return c / q;
 }
-void sharpen_set(float x, float v)
+void sharpen_set(int x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
 }
@@ -181,8 +181,7 @@ float sharpen_getpixel(float x, float y)
 }
 float sharpen_get(float x, float a)
 {
-	float sum;
-	sum = sharpen_getpixel(x, 1);
+	float sum = sharpen_getpixel(x, 1);
 	if(a == 0)
 		return sum;
 	sum *= (8 + 1/a);
@@ -196,20 +195,18 @@ float sharpen_get(float x, float a)
 	sum -= sharpen_getpixel(x, 2);
 	return bound(0, sum * a, 1);
 }
-void sharpen_shift(float w)
+void sharpen_shift(int w)
 {
-	float i;
-	for(i = 0; i < w; ++i)
+	for(int i = 0; i < w; ++i)
 	{
 		sharpen_buffer[i] = sharpen_buffer[i + RADAR_WIDTH_MAX];
 		sharpen_buffer[i + RADAR_WIDTH_MAX] = sharpen_buffer[i + 2 * RADAR_WIDTH_MAX];
 		sharpen_buffer[i + 2 * RADAR_WIDTH_MAX] = 0;
 	}
 }
-void sharpen_init(float w)
+void sharpen_init(int w)
 {
-	float i;
-	for(i = 0; i < w; ++i)
+	for(int i = 0; i < w; ++i)
 	{
 		sharpen_buffer[i] = 0;
 		sharpen_buffer[i + RADAR_WIDTH_MAX] = 0;

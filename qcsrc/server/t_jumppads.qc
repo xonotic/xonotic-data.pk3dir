@@ -171,10 +171,8 @@ void trigger_push_touch()
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
-			float i;
-			float found;
-			found = false;
-			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
+			bool found = false;
+			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
 					found = true;
 			if(!found)

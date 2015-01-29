@@ -11,7 +11,7 @@
 // - Loads campaign level data (up to n entries starting at offset)
 //   into the globals
 // - Returns the number of entries successfully read
-float CampaignFile_Load(float offset, float n)
+float CampaignFile_Load(int offset, float n)
 {
 	float fh;
 	float lineno;

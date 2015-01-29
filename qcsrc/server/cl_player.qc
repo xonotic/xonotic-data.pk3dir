@@ -286,9 +286,10 @@ void calculate_player_respawn_time()
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
 
-void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	float take, save, dh, da, j;
+	float take, save, dh, da;
+	int j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -525,8 +526,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			Obituary (attacker, inflictor, self, deathtype);
 
         // increment frag counter for used weapon type
-        float w;
-        w = DEATH_WEAPONOF(deathtype);
+        int w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;

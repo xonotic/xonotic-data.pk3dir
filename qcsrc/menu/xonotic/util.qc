@@ -329,8 +329,8 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		n = tokenizebyseparator(data, "\n");
 
 	float i;
-	string s; 
-	
+	string s;
+
 	string un_version = "";
 	string un_download = "";
 	string un_url = "";
@@ -339,12 +339,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string un_promoted = "";
 	string un_recommended = "";
 	string un_compatexpire = "";
-	
+
 	for(i = 0; i < n; ++i)
 	{
 		s = substring(argv(i), 2, -1);
 		if(s == "") { continue; } // ignore empty lines
-		
+
 		switch(substring(argv(i), 0, 1))
 		{
 			case "V":
@@ -411,7 +411,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			}
 		}
 	}
-	
+
 	if(un_emergency_pk3s != "")
 	{
 		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);

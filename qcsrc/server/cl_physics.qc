@@ -31,7 +31,7 @@
 .entity ladder_entity;
 .float gravity;
 .float swamp_slowdown;
-.float lastflags;
+.int lastflags;
 .float lastground;
 .float wasFlying;
 .float spectatorspeed;
@@ -693,7 +693,7 @@ void SV_PlayerPhysics()
 	vector wishvel, wishdir, v;
 	float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
 	string temps;
-	float buttons_prev;
+	int buttons_prev;
 	float not_allowed_to_move;
 	string c;
 

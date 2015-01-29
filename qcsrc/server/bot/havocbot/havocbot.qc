@@ -941,7 +941,7 @@ void havocbot_chooseenemy()
 	self.havocbot_stickenemy = true;
 }
 
-float havocbot_chooseweapon_checkreload(float new_weapon)
+float havocbot_chooseweapon_checkreload(int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
@@ -968,7 +968,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 
 void havocbot_chooseweapon()
 {
-	float i;
+	int i;
 
 	// ;)
 	if(g_weaponarena_weapons == WEPSET_TUBA)
@@ -994,8 +994,8 @@ void havocbot_chooseweapon()
 	}
 
 	// Do not change weapon during the next second after a combo
-	i = time - self.lastcombotime;
-	if(i < 1)
+	float f = time - self.lastcombotime;
+	if(f < 1)
 		return;
 
 	float w;

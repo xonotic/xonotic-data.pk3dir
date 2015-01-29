@@ -7,10 +7,10 @@
     #include "antilag.qh"
 #endif
 
-const float ANTILAG_MAX_ORIGINS = 64;
+const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];
 .float antilag_times[ANTILAG_MAX_ORIGINS];
-.float antilag_index;
+.int antilag_index;
 .vector antilag_saved_origin;
 .float antilag_takenback;
 
@@ -40,9 +40,7 @@ void antilag_record(entity e, float t)
 // finds the index BEFORE t
 float antilag_find(entity e, float t)
 {
-	float i;
-
-	for(i = e.antilag_index; i > 0; --i)
+	for(int i = e.antilag_index; i > 0; --i)
 		if(e.(antilag_times[i]) >= t)
 			if(e.(antilag_times[i - 1]) < t)
 				return i - 1;
@@ -51,7 +49,7 @@ float antilag_find(entity e, float t)
 		if(e.(antilag_times[ANTILAG_MAX_ORIGINS - 1]) < t)
 			return ANTILAG_MAX_ORIGINS - 1;
 
-	for(i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
+	for(int i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
 		if(e.(antilag_times[i]) >= t)
 			if(e.(antilag_times[i - 1]) < t)
 				return i - 1;

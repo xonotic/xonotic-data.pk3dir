@@ -152,8 +152,9 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
 	entity head;
-	float t, noteam, distance;
-	noteam = ((self.team == 0) || !teamplay);
+	int t;
+	float distance;
+	noref bool noteam = ((self.team == 0) || !teamplay);
 
 	if (autocvar_bot_nofire)
 		return;

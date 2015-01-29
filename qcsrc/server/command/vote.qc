@@ -28,7 +28,7 @@
 //  Nagger for players to know status of voting
 float Nagger_SendEntity(entity to, float sendflags)
 {
-	float nags, i, f, b;
+	int nags, i, f, b;
 	entity e;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
 

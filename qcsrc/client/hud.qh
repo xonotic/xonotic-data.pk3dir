@@ -36,8 +36,8 @@ float complain_weapon_time;
 int ps_primary, ps_secondary;
 int ts_primary, ts_secondary;
 
-float last_switchweapon;
-float last_activeweapon;
+int last_switchweapon;
+int last_activeweapon;
 float weapontime;
 float weaponprevtime;
 

@@ -99,9 +99,9 @@ float button_zoom;
 float spectatorbutton_zoom;
 float button_attack2;
 
-float activeweapon;
-float switchingweapon;
-float switchweapon;
+int activeweapon;
+int switchingweapon;
+int switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;

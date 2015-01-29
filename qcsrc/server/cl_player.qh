@@ -34,7 +34,7 @@ void calculate_player_respawn_time();
 
 void ClientKill_Now_TeamChange();
 
-void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);

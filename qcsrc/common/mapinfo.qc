@@ -1415,7 +1415,7 @@ void MapInfo_Shutdown()
 	}
 }
 
-float MapInfo_ForbiddenFlags()
+int MapInfo_ForbiddenFlags()
 {
 	int f = MAPINFO_FLAG_FORBIDDEN;
 
@@ -1430,7 +1430,7 @@ float MapInfo_ForbiddenFlags()
 	return f;
 }
 
-float MapInfo_RequiredFlags()
+int MapInfo_RequiredFlags()
 {
 	int f = 0;
 

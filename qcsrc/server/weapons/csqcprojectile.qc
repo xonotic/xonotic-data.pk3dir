@@ -13,7 +13,7 @@
 
 .float csqcprojectile_type;
 
-float CSQCProjectile_SendEntity(entity to, float sf)
+float CSQCProjectile_SendEntity(entity to, int sf)
 {
 	float ft, fr;
 
@@ -81,7 +81,7 @@ void CSQCProjectile_Check(entity e)
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void CSQCProjectile(entity e, float clientanimate, float type, float docull)
+void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 {
 	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
 

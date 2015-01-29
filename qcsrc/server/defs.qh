@@ -106,7 +106,7 @@ float server_is_dedicated;
 //.float cnt2;
 
 .float play_time;
-.float respawn_flags;
+.int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
 .float death_time;
@@ -183,8 +183,8 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .vector weaponentity_glowmod;
 
 //.int weapon; // current weapon
-.float switchweapon; // weapon requested to switch to
-.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.int switchweapon; // weapon requested to switch to
+.int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 
 // WEAPONTODO
@@ -199,14 +199,14 @@ void w_ready();
 
 
 // weapon states (self.weaponentity.state)
-const float WS_CLEAR			= 0; // no weapon selected
-const float WS_RAISE			= 1; // raise frame
-const float WS_DROP				= 2; // deselecting frame
-const float WS_INUSE			= 3; // fire state
-const float WS_READY			= 4; // idle frame
+const int WS_CLEAR			= 0; // no weapon selected
+const int WS_RAISE			= 1; // raise frame
+const int WS_DROP				= 2; // deselecting frame
+const int WS_INUSE			= 3; // fire state
+const int WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
-const float W_TICSPERFRAME = 2;
+const int W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(float wpn);
 
@@ -284,7 +284,7 @@ float default_weapon_alpha;
 
 .float version_nagtime;
 
-const float NUM_JUMPPADSUSED = 3;
+const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
@@ -432,7 +432,7 @@ float independent_players;
 
 string clientstuff;
 .float phase;
-.float pressedkeys;
+.int pressedkeys;
 
 .float porto_forbidden;
 
@@ -515,7 +515,7 @@ string matchid;
 .float hit_time;
 .float typehit_time;
 
-.float damage_dealt_total; 
+.float damage_dealt_total;
 
 .float stat_leadlimit;
 

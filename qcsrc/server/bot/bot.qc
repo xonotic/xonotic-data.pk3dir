@@ -264,7 +264,7 @@ void bot_setnameandstuff()
 
 void bot_custom_weapon_priority_setup()
 {
-	float tokens, i, c, w;
+	float tokens, i, w;
 
 	bot_custom_weapon = false;
 
@@ -297,7 +297,7 @@ void bot_custom_weapon_priority_setup()
 	// Parse far distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
 
-	c = 0;
+	int c = 0;
 	for(i=0; i < tokens && c < WEP_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {

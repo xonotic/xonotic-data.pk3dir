@@ -76,7 +76,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
-	//vector prevend = w_shotend; 
+	//vector prevend = w_shotend;
 
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
@@ -173,9 +173,9 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	}
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
-	
+
 	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
-	
+
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
@@ -341,7 +341,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = world;
 }
 
-void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects)
+void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
 {
 	vector  end;
 

@@ -23,9 +23,9 @@ float accuracy_byte(float n, float d)
 	return 1 + rint(n * 100.0 / d);
 }
 
-float accuracy_send(entity to, float sf)
+float accuracy_send(entity to, int sf)
 {
-	float w, f;
+	int w, f;
 	entity a;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
@@ -79,7 +79,7 @@ void accuracy_resend(entity e)
 .float hit_time;
 .float fired_time;
 
-void accuracy_add(entity e, float w, float fired, float hit)
+void accuracy_add(entity e, int w, float fired, float hit)
 {
 	entity a;
 	float b;

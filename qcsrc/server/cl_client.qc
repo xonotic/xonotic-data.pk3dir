@@ -30,7 +30,7 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-float ClientData_Send(entity to, float sf)
+float ClientData_Send(entity to, int sf)
 {
 	if(to != self.owner)
 	{
@@ -575,7 +575,7 @@ void PutClientInServer (void)
 
 		self.bot_attack = true;
 		self.monster_attack = true;
-		
+
 		self.spider_slowness = 0;
 
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
@@ -603,8 +603,7 @@ void PutClientInServer (void)
 			WEP_ACTION(j, WR_RESETPLAYER);
 
 			// all weapons must be fully loaded when we spawn
-			entity e;
-			e = get_weaponinfo(j);
+			entity e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.(weapon_load[j]) = e.reloading_ammo;
 		}
@@ -2207,7 +2206,7 @@ Called every frame for each client before the physics are run
 */
 .float usekeypressed;
 void() nexball_setstatus;
-.float items_added;
+.int items_added;
 void PlayerPreThink (void)
 {
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -2307,7 +2306,7 @@ void PlayerPreThink (void)
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
-		
+
 		if(self.health < 1)
 		{
 			if(self.vehicle)
@@ -2446,7 +2445,7 @@ void PlayerPreThink (void)
 			do_crouch = 0;
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
-		// It cannot be predicted by the engine! 
+		// It cannot be predicted by the engine!
 		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
@@ -2495,7 +2494,7 @@ void PlayerPreThink (void)
 
 		player_regen();
 
-		// WEAPONTODO: Add a weapon request for this 
+		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
 		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
 			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
