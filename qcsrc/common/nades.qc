@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/Defs.qc"
+	#include "nades.qh"
+	#include "buffs.qh"
+	#include "../client/movetypes.qh"
+	#include "../server/tturrets/include/turrets_early.qh"
+	#include "../client/main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "constants.qh"
+    #include "../server/constants.qh"
+#endif
+
 .float healer_lifetime;
 .float healer_radius;
 

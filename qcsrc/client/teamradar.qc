@@ -1,3 +1,17 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "teamradar.qh"
+	#include "hud.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 float teamradar_angle; // player yaw angle
 vector teamradar_origin3d_in_texcoord; // player origin
 vector teamradar_origin2d; // 2D origin

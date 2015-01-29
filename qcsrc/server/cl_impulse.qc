@@ -1,3 +1,20 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/constants.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "mutators/mutators_include.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "cheats.qh"
+    #include "round_handler.qh"
+#endif
+
 /*
  * Impulse map:
  *

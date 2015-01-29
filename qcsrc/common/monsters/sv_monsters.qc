@@ -1,3 +1,30 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../server/sys-post.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../constants.qh"
+    #include "../teams.qh"
+    #include "../util.qh"
+    #include "monsters.qh"
+    #include "sv_monsters.qh"
+    #include "../weapons/weapons.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/defs.qh"
+    #include "../deathtypes.qh"
+    #include "../../server/mutators/mutators_include.qh"
+    #include "../../server/tturrets/include/turrets_early.qh"
+    #include "../../server/vehicles/vehicles_def.qh"
+    #include "../../server/campaign.qh"
+    #include "../../server/command/common.qh"
+    #include "../../server/command/cmd.qh"
+    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../server/round_handler.qh"
+    #include "../../server/tturrets/include/turrets.qh"
+#endif
+
 // =========================
 //	SVQC Monster Properties
 // =========================

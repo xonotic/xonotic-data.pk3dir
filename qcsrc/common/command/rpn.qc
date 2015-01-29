@@ -1,3 +1,22 @@
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+	#include "../../warpzonelib/mathlib.qh"
+	#include "../util.qh"
+	#include "rpn.qh"
+	#include "generic.qh"
+	#include "shared_defs.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../server/sys-post.qh"
+    #include "../../warpzonelib/mathlib.qh"
+    #include "../util.qh"
+    #include "rpn.qh"
+    #include "generic.qh"
+    #include "shared_defs.qh"
+#endif
+
 // ========================================
 //  RPN command code, written by divVerent
 //  Last updated: December 28th, 2011

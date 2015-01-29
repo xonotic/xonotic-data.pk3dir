@@ -1,3 +1,24 @@
+#ifndef ANGLETRANSFORM_H
+#define ANGLETRANSFORM_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../common/util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+#endif
+
 #define POSITIVE_PITCH_IS_DOWN
 
 #ifdef POSITIVE_PITCH_IS_DOWN
@@ -30,3 +51,4 @@ vector AnglesTransform_ToVAngles(vector v);
 // transformed = original * transform + postshift
 vector AnglesTransform_Multiply_GetPostShift(vector sf0, vector st0, vector t1, vector st1);
 vector AnglesTransform_PrePostShift_GetPostShift(vector sf, vector t, vector st);
+#endif

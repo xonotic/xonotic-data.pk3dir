@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "accuracy.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../mutators/mutators_include.qh"
+#endif
+
 float accuracy_byte(float n, float d)
 {
 	//printf("accuracy: %d / %d\n", n, d);

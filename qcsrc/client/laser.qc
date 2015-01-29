@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../common/buffs.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way

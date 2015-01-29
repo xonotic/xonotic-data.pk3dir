@@ -1,3 +1,23 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "../common/deathtypes.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+
 .float dmgtime2;
 void generic_plat_blocked()
 {

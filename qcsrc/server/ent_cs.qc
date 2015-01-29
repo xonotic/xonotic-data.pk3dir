@@ -1,3 +1,14 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/constants.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "mutators/mutators_include.qh"
+#endif
+
 /**
  * The point of these entities is to avoid the problems
  * with clientprediction.

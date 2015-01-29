@@ -1,3 +1,16 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../common/constants.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "csqcprojectile.qh"
+    #include "../t_items.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../command/common.qh"
+#endif
+
 .float csqcprojectile_type;
 
 float CSQCProjectile_SendEntity(entity to, float sf)

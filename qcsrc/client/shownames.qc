@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/mapinfo.qh"
+	#include "autocvars.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "shownames.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 // self.isactive = player is in range and coordinates/status (health and armor) are up to date
 // self.origin = player origin TODO: should maybe move this so it's the origin of the shownames tag already in SSQC for culling?
 // self.healthvalue

@@ -1,3 +1,13 @@
+#if defined(CSQC)
+    #include "../dpdefs/csprogsdefs.qc"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+
 #ifdef SVQC
 .vector moveto;
 

@@ -1,3 +1,40 @@
+#ifndef CLIENT_AUTOCVARS_H
+#define CLIENT_AUTOCVARS_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "sys-post.qh"
+    #include "Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/client.qh"
+    #include "../common/playerstats.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/nades.qh"
+    #include "../common/buffs.qh"
+    #include "../common/test.qh"
+    #include "../common/counting.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "../common/mapinfo.qh"
+    #include "../common/command/markup.qh"
+    #include "../common/command/rpn.qh"
+    #include "../common/command/generic.qh"
+    #include "../common/command/shared_defs.qh"
+    #include "../common/urllib.qh"
+    #include "../common/animdecide.qh"
+    #include "command/cl_cmd.qh"
+    #include "../common/monsters/monsters.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 bool autocvar__con_chat_maximized;
 bool autocvar__hud_configure;
 string autocvar__hud_panelorder;
@@ -466,3 +503,4 @@ vector autocvar_crosshair_rpc_color = '0.2 1.0 0.2';
 float autocvar_crosshair_rpc_alpha = 1;
 float autocvar_crosshair_rpc_size = 1;
 int autocvar_cl_nade_timer;
+#endif

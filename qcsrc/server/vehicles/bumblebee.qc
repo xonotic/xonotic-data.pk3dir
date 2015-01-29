@@ -1,3 +1,16 @@
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+	#include "../../client/Defs.qc"
+	#include "../../common/buffs.qh"
+	#include "../../client/damage.qh"
+	#include "../../client/movetypes.qh"
+	#include "../../client/main.qh"
+	#include "../../csqcmodellib/cl_model.qh"
+	#include "../../client/weapons/projectile.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;

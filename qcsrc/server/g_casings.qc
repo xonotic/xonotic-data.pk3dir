@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+#endif
+
 float Casing_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);

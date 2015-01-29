@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "bgmscript.qh"
+	#include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;

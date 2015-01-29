@@ -1,3 +1,33 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../common/constants.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/accuracy.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "weapons/selection.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "tturrets/include/turrets_early.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "../common/playerstats.qh"
+    #include "g_hook.qh"
+    #include "scores.qh"
+    #include "spawnpoints.qh"
+#endif
+
 .float dmg;
 .float dmg_edge;
 .float dmg_force;

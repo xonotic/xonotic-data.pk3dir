@@ -1,3 +1,21 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/command/generic.qh"
+	#include "../common/urllib.qh"
+	#include "autocvars.qh"
+	#include "hud.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 entity players;
 entity teams;
 float team_count; // real teams

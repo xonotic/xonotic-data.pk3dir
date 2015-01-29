@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/buffs.qh"
+	#include "autocvars.qh"
+	#include "movetypes.qh"
+	#include "prandom.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .bool silent;
 
 void Gib_Delete()

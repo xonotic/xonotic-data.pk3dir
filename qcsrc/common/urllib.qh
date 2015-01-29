@@ -1,3 +1,75 @@
+#ifndef URLLIB_H
+#define URLLIB_H
+
+#if defined(CSQC)
+    #include "util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "constants.qh"
+    #include "stats.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/client.qh"
+    #include "playerstats.qh"
+    #include "teams.qh"
+    #include "util.qh"
+    #include "nades.qh"
+    #include "buffs.qh"
+    #include "test.qh"
+    #include "counting.qh"
+    #include "weapons/weapons.qh"
+    #include "mapinfo.qh"
+    #include "command/markup.qh"
+    #include "command/rpn.qh"
+    #include "command/generic.qh"
+    #include "command/shared_defs.qh"
+#elif defined(MENUQC)
+    #include "util-pre.qh"
+    #include "../menu/sys-pre.qh"
+    #include "../dpdefs/menudefs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../menu/sys-post.qh"
+    #include "../menu/config.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "util.qh"
+    #include "test.qh"
+    #include "../menu/oo/base.qh"
+    #include "playerstats.qh"
+    #include "teams.qh"
+    #include "constants.qh"
+    #include "mapinfo.qh"
+    #include "campaign_common.qh"
+    #include "weapons/weapons.qh"
+    #include "counting.qh"
+    #include "command/markup.qh"
+    #include "command/rpn.qh"
+    #include "command/generic.qh"
+    #include "command/shared_defs.qh"
+#elif defined(SVQC)
+    #include "util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../warpzonelib/server.qh"
+    #include "constants.qh"
+    #include "stats.qh"
+    #include "teams.qh"
+    #include "util.qh"
+    #include "nades.qh"
+    #include "buffs.qh"
+    #include "test.qh"
+    #include "counting.qh"
+#endif
+
 const float URL_READY_ERROR    = -1;
 const float URL_READY_CLOSED   =  0;
 const float URL_READY_CANWRITE =  1;
@@ -16,3 +88,4 @@ float url_URI_Get_Callback(float id, float status, string data);
 #define NUM_URL_ID (URI_GET_URLLIB_END - URI_GET_URLLIB + 1)
 
 void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass);
+#endif

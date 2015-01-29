@@ -1,3 +1,14 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/dpextensions.qc"
+    #include "../../common/util.qh"
+    #include "../../common/command/shared_defs.qh"
+    #include "../autocvars.qh"
+    #include "common.qh"
+    #include "banning.qh"
+    #include "../ipban.qh"
+#endif
 // =====================================================
 //  Banning and kicking command code, written by Samual
 //  Last updated: December 29th, 2011

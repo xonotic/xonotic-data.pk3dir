@@ -1,3 +1,9 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .float creationtime;
 
 // LordHavoc: rewrote this file, it was really bad code

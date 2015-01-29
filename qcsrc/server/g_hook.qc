@@ -1,3 +1,22 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "command/common.qh"
+    #include "g_hook.qh"
+    #include "round_handler.qh"
+#endif
+
 /*============================================
 
       Wazat's Xonotic Grappling Hook

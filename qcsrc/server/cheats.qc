@@ -1,3 +1,23 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/monsters/monsters.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/tracing.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "cheats.qh"
+#endif
+
 void CopyBody(float keepvelocity);
 
 #ifdef NOCHEATS

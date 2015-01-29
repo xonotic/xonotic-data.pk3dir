@@ -1,3 +1,28 @@
+#ifndef WARPZONELIB_COMMON_H
+#define WARPZONELIB_COMMON_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "anglestransform.qh"
+    #include "mathlib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../common/util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "anglestransform.qh"
+    #include "mathlib.qh"
+#endif
+
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
@@ -99,4 +124,5 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 #endif
 #ifndef BITXOR_ASSIGN
 # define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif
 #endif

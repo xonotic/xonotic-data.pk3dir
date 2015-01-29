@@ -1,3 +1,19 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "constants.qh"
+    #include "util.qh"
+    #include "urllib.qh"
+    #include "weapons/weapons.qh"
+    #include "../server/weapons/accuracy.qh"
+    #include "../server/defs.qh"
+    #include "playerstats.qh"
+    #include "../server/scores.qh"
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch(void)
 {

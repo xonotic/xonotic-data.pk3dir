@@ -1,3 +1,20 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/constants.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "mutators/mutators_include.qh"
+    #include "spawnpoints.qh"
+    #include "race.qh"
+#endif
+
 float SpawnPoint_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);

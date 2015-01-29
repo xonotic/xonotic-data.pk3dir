@@ -1,3 +1,15 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../common/constants.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 const float TUBA_MIN = -18;
 const float TUBA_MAX =  27;
 const float TUBA_INSTRUMENTS = 3;

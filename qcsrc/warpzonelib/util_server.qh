@@ -1,3 +1,20 @@
+#ifndef UTIL_SERVER_H
+#define UTIL_SERVER_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../common/util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "anglestransform.qh"
+    #include "mathlib.qh"
+    #include "common.qh"
+#endif
+
 float WarpZoneLib_MoveOutOfSolid(entity e);
 float WarpZoneLib_ExactTrigger_Touch();
 void WarpZoneLib_ExactTrigger_Init();
+#endif

@@ -1,3 +1,39 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/monsters/sv_monsters.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/weaponstats.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "mutators/mutators_include.qh"
+    #include "campaign.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/common.qh"
+    #include "command/vote.qh"
+    #include "command/getreplies.qh"
+    #include "command/sv_cmd.qh"
+    #include "anticheat.qh"
+    #include "cheats.qh"
+    #include "../common/playerstats.qh"
+    #include "g_hook.qh"
+    #include "scores.qh"
+    #include "mapvoting.qh"
+    #include "ipban.qh"
+    #include "race.qh"
+    #include "antilag.qh"
+    #include "secret.qh"
+#endif
+
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
 .float latency_cnt;

@@ -1,3 +1,20 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/buffs.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../common/mapinfo.qh"
+    #include "miscfunctions.qh"
+#endif
+
 ..entity owned_by_field;
 .float rule;
 .string model1;

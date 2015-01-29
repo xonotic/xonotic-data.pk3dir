@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "autocvars.qh"
+	#include "../common/deathtypes.qh"
+	#include "damage.qh"
+	#include "movetypes.qh"
+	#include "prandom.qh"
+	#include "vehicles/vehicles.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages

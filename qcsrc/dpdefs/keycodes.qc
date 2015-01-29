@@ -1,3 +1,11 @@
+#ifndef KEYCODES_H
+#define KEYCODES_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 ///////////////////////////
 // key constants
 
@@ -144,4 +152,4 @@ float K_MOUSE13		=	526;
 float K_MOUSE14		=	527;
 float K_MOUSE15		=	528;
 float K_MOUSE16		=	529;
-
+#endif

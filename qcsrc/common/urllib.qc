@@ -1,3 +1,18 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "constants.qh"
+	#include "util.qh"
+	#include "urllib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "constants.qh"
+    #include "util.qh"
+    #include "urllib.qh"
+#endif
+
 // files
 .float url_fh;
 const float URL_FH_CURL = -1;

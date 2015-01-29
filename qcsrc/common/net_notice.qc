@@ -1,3 +1,16 @@
+#if defined(CSQC)
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/Defs.qc"
+    #include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "constants.qh"
+    #include "net_notice.qh"
+    #include "../server/defs.qh"
+#endif
+
 #ifdef SVQC
 void sv_notice_join_think()
 {

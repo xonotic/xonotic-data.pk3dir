@@ -1,3 +1,11 @@
+#ifndef UTIL_PRE_H
+#define UTIL_PRE_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 #ifndef NOCOMPAT
     #define COMPAT_NO_MOD_IS_XONOTIC
 #endif
@@ -27,4 +35,5 @@
     // Boolean Constants
     const bool true 	= 1;
     const bool false 	= 0;
+#endif
 #endif

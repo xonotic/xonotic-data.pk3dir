@@ -1,3 +1,23 @@
+#if defined(CSQC)
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "Defs.qc"
+    #include "../common/constants.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../common/teams.qh"
+    #include "../common/buffs.qh"
+    #include "autocvars.qh"
+    #include "teamradar.qh"
+    #include "movetypes.qh"
+    #include "tturrets.qh"
+    #include "../server/tturrets/include/turrets_early.qh"
+    #include "main.qh"
+    #include "../csqcmodellib/common.qh"
+    #include "../csqcmodellib/cl_model.qh"
+    #include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 string tid2info_base;
 string tid2info_head;
 string tid2info_name;

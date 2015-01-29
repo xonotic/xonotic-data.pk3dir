@@ -19,6 +19,16 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/Defs.qc"
+	#include "../warpzonelib/anglestransform.qh"
+	#include "../client/autocvars.qh"
+	#include "interpolate.qh"
+	#include "cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 .vector iorigin1, iorigin2;
 .vector ivelocity1, ivelocity2;

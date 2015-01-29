@@ -1,3 +1,19 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/animdecide.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+#endif
+
 const float PUSH_ONCE			= 1;
 const float PUSH_SILENT		= 2;
 

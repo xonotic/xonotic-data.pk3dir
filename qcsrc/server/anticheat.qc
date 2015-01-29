@@ -1,3 +1,16 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "command/common.qh"
+    #include "anticheat.qh"
+#endif
+
 .float anticheat_jointime;
 
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)

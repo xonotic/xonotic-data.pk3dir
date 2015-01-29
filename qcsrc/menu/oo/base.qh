@@ -1,3 +1,20 @@
+#ifndef BASE_H
+#define BASE_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+	#include "../../common/util-pre.qh"
+    #include "../sys-pre.qh"
+    #include "../../dpdefs/menudefs.qc"
+    #include "../../dpdefs/keycodes.qc"
+    #include "../sys-post.qh"
+    #include "../config.qh"
+    #include "../../warpzonelib/mathlib.qh"
+    #include "../../common/util.qh"
+    #include "../../common/test.qh"
+#elif defined(SVQC)
+#endif
+
 .string classname;
 entity Object_vtbl;
 .string vtblname;
@@ -25,3 +42,4 @@ entity spawnObject()
 		Object_vtbl = spawnVtbl(e, null_entity);
 	return e;
 }
+#endif

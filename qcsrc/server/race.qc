@@ -1,3 +1,25 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/sv_cmd.qh"
+    #include "portals.qh"
+    #include "scores.qh"
+    #include "spawnpoints.qh"
+    #include "race.qh"
+#endif
+
 float race_readTime(string map, float pos)
 {
 	string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;

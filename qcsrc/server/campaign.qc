@@ -1,3 +1,17 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "campaign.qh"
+    #include "../common/campaign_common.qh"
+    #include "../common/mapinfo.qh"
+    #include "cheats.qh"
+#endif
+
 // campaign cvars:
 //   _campaign_index: index of CURRENT map
 //   _campaign_name: name of the current campaign

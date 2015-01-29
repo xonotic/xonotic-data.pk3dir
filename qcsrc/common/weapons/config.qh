@@ -1,13 +1,49 @@
+#ifndef WEAPONS_CONFIG_H
+#define WEAPONS_CONFIG_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../util-pre.qh"
+    #include "../../server/sys-pre.qh"
+    #include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../server/sys-post.qh"
+    #include "../../warpzonelib/anglestransform.qh"
+    #include "../../warpzonelib/mathlib.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../../warpzonelib/util_server.qh"
+    #include "../../warpzonelib/server.qh"
+    #include "../constants.qh"
+    #include "../stats.qh"
+    #include "../teams.qh"
+    #include "../util.qh"
+    #include "../nades.qh"
+    #include "../buffs.qh"
+    #include "../test.qh"
+    #include "../counting.qh"
+    #include "../urllib.qh"
+    #include "../command/markup.qh"
+    #include "../command/rpn.qh"
+    #include "../command/generic.qh"
+    #include "../command/shared_defs.qh"
+    #include "../net_notice.qh"
+    #include "../animdecide.qh"
+    #include "../monsters/monsters.qh"
+    #include "../monsters/sv_monsters.qh"
+    #include "../monsters/spawn.qh"
+#endif
+
 // ==========================
 //  Balance Config Generator
 // ==========================
 
 void Dump_Weapon_Settings(void);
-float wep_config_file;
-float wep_config_alsoprint;
+int wep_config_file;
+bool wep_config_alsoprint;
 
-const float MAX_WEP_CONFIG = 256;
-float WEP_CONFIG_COUNT;
+const int MAX_WEP_CONFIG = 256;
+int WEP_CONFIG_COUNT;
 string wep_config_queue[MAX_WEP_CONFIG];
 
 #define WEP_CONFIG_QUEUE(a) { \
@@ -43,3 +79,4 @@ string wep_config_queue[MAX_WEP_CONFIG];
 		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
 #define WEP_CONFIG_WRITE_PROPS(wepid,wepname,type,prop,name) WEP_CONFIG_WRITE_PROPS_##type(wepname,name)
+#endif

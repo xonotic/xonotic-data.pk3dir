@@ -1,3 +1,29 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../common/constants.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/animdecide.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/accuracy.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "cheats.qh"
+    #include "../common/playerstats.qh"
+    #include "portals.qh"
+#endif
+
 .entity pusher;
 .float pushltime;
 .float istypefrag;

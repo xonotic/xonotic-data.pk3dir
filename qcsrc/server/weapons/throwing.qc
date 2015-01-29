@@ -1,3 +1,21 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "throwing.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../../common/mapinfo.qh"
+#endif
+
 void thrown_wep_think()
 {
 	self.nextthink = time;

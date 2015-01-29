@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/util.qh"
+    #include "defs.qh"
+    #include "round_handler.qh"
+#endif
+
 void round_handler_Think()
 {
 	float f;

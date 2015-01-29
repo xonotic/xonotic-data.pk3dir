@@ -1,3 +1,16 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../warpzonelib/common.qh"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 float music_disabled;
 entity music_default;
 entity music_target;

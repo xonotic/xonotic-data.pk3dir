@@ -1,3 +1,28 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "anticheat.qh"
+    #include "g_hook.qh"
+#endif
+
 void CreatureFrame (void)
 {
 	entity oldself;

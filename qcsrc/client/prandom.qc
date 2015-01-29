@@ -1,3 +1,11 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../warpzonelib/mathlib.qh"
+	#include "prandom.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 // prandom - PREDICTABLE random number generator (not seeded yet)
 
 #ifdef USE_PRANDOM

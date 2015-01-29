@@ -1,3 +1,37 @@
+#ifndef SV_MONSTERS_H
+#define SV_MONSTERS_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../util-pre.qh"
+    #include "../../server/sys-pre.qh"
+    #include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../server/sys-post.qh"
+    #include "../../warpzonelib/anglestransform.qh"
+    #include "../../warpzonelib/mathlib.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../../warpzonelib/util_server.qh"
+    #include "../../warpzonelib/server.qh"
+    #include "../constants.qh"
+    #include "../stats.qh"
+    #include "../teams.qh"
+    #include "../util.qh"
+    #include "../nades.qh"
+    #include "../buffs.qh"
+    #include "../test.qh"
+    #include "../counting.qh"
+    #include "../urllib.qh"
+    #include "../command/markup.qh"
+    #include "../command/rpn.qh"
+    #include "../command/generic.qh"
+    #include "../command/shared_defs.qh"
+    #include "../net_notice.qh"
+    #include "../animdecide.qh"
+    #include "monsters.qh"
+#endif
+
 .string spawnmob;
 .float monster_attack;
 
@@ -86,3 +120,4 @@ const int MONSTER_MOVE_ENEMY = 5; // used only as a movestate
 
 const int MONSTER_STATE_ATTACK_LEAP = 1;
 const int MONSTER_STATE_ATTACK_MELEE = 2;
+#endif

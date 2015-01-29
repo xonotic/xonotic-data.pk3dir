@@ -1,3 +1,15 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../common/buffs.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "defs.qh"
+    #include "../common/mapinfo.qh"
+#endif
+
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
 //***********************

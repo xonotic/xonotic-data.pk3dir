@@ -1,3 +1,11 @@
+#ifndef DEFS_H
+#define DEFS_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.
@@ -274,3 +282,4 @@ float uid2name_dialog;
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 
 float g_balance_porto_secondary;
+#endif

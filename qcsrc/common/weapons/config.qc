@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../util.qh"
+    #include "config.qh"
+    #include "weapons.qh"
+#endif
+
 // ==========================
 //  Balance Config Generator
 // ==========================

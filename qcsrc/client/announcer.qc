@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "../common/stats.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "../common/notifications.qh"
+    #include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 bool announcer_1min;
 bool announcer_5min;
 void Announcer_Countdown()

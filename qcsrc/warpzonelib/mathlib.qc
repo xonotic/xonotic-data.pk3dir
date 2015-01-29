@@ -1,3 +1,13 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "mathlib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "mathlib.qh"
+#endif
+
 int fpclassify(float x)
 {
 	if(isnan(x))

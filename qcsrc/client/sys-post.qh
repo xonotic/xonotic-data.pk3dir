@@ -1,3 +1,15 @@
+#ifndef SYS_POST_H
+#define SYS_POST_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 #pragma noref 0
 
 #undef ATTEN_NORM
+#endif

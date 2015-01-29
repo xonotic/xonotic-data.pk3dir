@@ -1,3 +1,27 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "../client/Defs.qc"
+    #include "constants.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "util.qh"
+    #include "mapinfo.qh"
+    #include "notifications.qh"
+    #include "deathtypes.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "constants.qh"
+    #include "util.qh"
+    #include "../server/autocvars.qh"
+    #include "../server/defs.qh"
+    #include "notifications.qh"
+    #include "deathtypes.qh"
+    #include "mapinfo.qh"
+#endif
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)

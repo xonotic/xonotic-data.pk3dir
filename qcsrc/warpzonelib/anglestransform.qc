@@ -1,3 +1,13 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "anglestransform.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "anglestransform.qh"
+#endif
+
 #ifdef POSITIVE_PITCH_IS_DOWN
 vector fixedvectoangles(vector a)
 {

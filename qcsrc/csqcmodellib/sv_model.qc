@@ -20,6 +20,20 @@
  * IN THE SOFTWARE.
  */
 
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+	#include "../dpdefs/dpextensions.qc"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/animdecide.qh"
+	#include "../server/constants.qh"
+	#include "../server/defs.qh"
+	#include "common.qh"
+	#include "sv_model.qh"
+#endif
+
 // generic CSQC model code
 
 float CSQCModel_Send(entity to, float sf)

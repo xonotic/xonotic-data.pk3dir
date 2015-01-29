@@ -1,3 +1,11 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "campaign_common.qh"
+    #include "mapinfo.qh"
+#endif
+
 void CampaignSetup(float n)
 {
 	localcmd("set g_campaign 1\n");

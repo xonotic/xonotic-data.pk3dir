@@ -1,3 +1,10 @@
+#if defined(CSQC)
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "autocvars.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 /*
 .vector fx_start;
 .vector fx_end;

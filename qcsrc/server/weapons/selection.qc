@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "selection.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../defs.qh"
+#endif
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
 {

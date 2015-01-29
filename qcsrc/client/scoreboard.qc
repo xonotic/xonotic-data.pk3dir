@@ -1,3 +1,23 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/buffs.qh"
+	#include "../common/counting.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "../common/mapinfo.qh"
+	#include "command/cl_cmd.qh"
+	#include "autocvars.qh"
+	#include "hud.qh"
+	#include "scoreboard.qh"
+	#include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;
 float scoreboard_highlight;

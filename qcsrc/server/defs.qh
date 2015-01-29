@@ -1,3 +1,54 @@
+#ifndef SERVER_DEFS_H
+#define SERVER_DEFS_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../common/util-pre.qh"
+    #include "sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/nades.qh"
+    #include "../common/buffs.qh"
+    #include "../common/test.qh"
+    #include "../common/counting.qh"
+    #include "../common/urllib.qh"
+    #include "../common/command/markup.qh"
+    #include "../common/command/rpn.qh"
+    #include "../common/command/generic.qh"
+    #include "../common/command/shared_defs.qh"
+    #include "../common/net_notice.qh"
+    #include "../common/animdecide.qh"
+    #include "../common/monsters/monsters.qh"
+    #include "../common/monsters/sv_monsters.qh"
+    #include "../common/monsters/spawn.qh"
+    #include "../common/weapons/config.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/accuracy.qh"
+    #include "weapons/common.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "weapons/hitplot.qh"
+    #include "weapons/selection.qh"
+    #include "weapons/spawning.qh"
+    #include "weapons/throwing.qh"
+    #include "weapons/tracing.qh"
+    #include "weapons/weaponstats.qh"
+    #include "weapons/weaponsystem.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+#endif
+
 #define INDEPENDENT_ATTACK_FINISHED
 
 noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
@@ -618,3 +669,4 @@ const int MIF_GUIDED_TAG = 128;
 .string playernick;
 .float elos;
 .float ranks;
+#endif

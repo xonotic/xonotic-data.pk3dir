@@ -1,3 +1,15 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+	#include "../../dpdefs/dpextensions.qc"
+	#include "../../common/urllib.qh"
+	#include "../../common/weapons/weapons.qh"
+	#include "weaponstats.qh"
+	#include "../autocvars.qh"
+	#include "../defs.qh"
+#endif
+
 void WeaponStats_Init()
 {
 	weaponstats_buffer = ((autocvar_sv_weaponstats_file != "") ? buf_create() : -1);

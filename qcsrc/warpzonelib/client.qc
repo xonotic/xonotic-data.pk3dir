@@ -1,3 +1,13 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "common.qh"
+	#include "client.qh"
+	#include "../client/autocvars.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void WarpZone_Fade_PreDraw()
 {
 	vector org;

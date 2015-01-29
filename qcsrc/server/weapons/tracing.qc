@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../warpzonelib/common.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "tracing.qh"
+    #include "../autocvars.qh"
+    #include "../defs.qh"
+    #include "../antilag.qh"
+#endif
+
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)

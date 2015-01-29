@@ -1,3 +1,15 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../dpdefs/keycodes.qc"
+	#include "../common/constants.qh"
+	#include "autocvars.qh"
+	#include "hud.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 #define HUD_Write(s) fputs(fh, s)
 // q: quoted, n: not quoted
 #define HUD_Write_Cvar_n(cvar) HUD_Write(strcat("seta ", cvar, " ", cvar_string(cvar), "\n"))

@@ -1,3 +1,10 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../common/constants.qh"
+#endif
+
 void te_csqc_lightningarc(vector from,vector to)
 {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);

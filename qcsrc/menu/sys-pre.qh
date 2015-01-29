@@ -1,1 +1,11 @@
+#ifndef SYS_PRE_H
+#define SYS_PRE_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+    #include "../common/util-pre.qh"
+#elif defined(SVQC)
+#endif
+
 #pragma noref 1
+#endif

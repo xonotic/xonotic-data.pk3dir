@@ -19,6 +19,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../common/util.qh"
+	#include "interpolate.qh"
+	#include "../client/main.qh"
+	#include "common.qh"
+	#include "cl_model.qh"
+	#include "cl_player.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 float autocvar_cl_movement_errorcompensation = 0;
 

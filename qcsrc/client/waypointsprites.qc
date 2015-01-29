@@ -1,3 +1,23 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/buffs.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "autocvars.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "teamradar.qh"
+	#include "waypointsprites.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 float waypointsprite_initialized;
 float waypointsprite_fadedistance;
 float waypointsprite_normdistance;

@@ -1,3 +1,17 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../dpdefs/keycodes.qc"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/mapinfo.qh"
+	#include "autocvars.qh"
+	#include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 int mv_num_maps;
 
 float mv_active;

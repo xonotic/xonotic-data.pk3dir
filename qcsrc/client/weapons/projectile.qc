@@ -1,3 +1,22 @@
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+    #include "../Defs.qc"
+    #include "../../common/constants.qh"
+    #include "../../warpzonelib/anglestransform.qh"
+    #include "../../common/util.qh"
+    #include "../../common/nades.qh"
+    #include "../../common/buffs.qh"
+    #include "../autocvars.qh"
+    #include "../../csqcmodellib/interpolate.qh"
+    #include "../movetypes.qh"
+    #include "../main.qh"
+    #include "../../csqcmodellib/cl_model.qh"
+    #include "projectile.qh"
+    #include "../../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .vector iorigin1, iorigin2;
 .float spawntime;
 .vector trail_oldorigin;

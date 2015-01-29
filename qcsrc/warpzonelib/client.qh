@@ -1,3 +1,22 @@
+#ifndef CLIENT_H
+#define CLIENT_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "anglestransform.qh"
+    #include "mathlib.qh"
+    #include "common.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void WarpZone_Read(float bIsNewEntity);
 void WarpZone_Camera_Read(float bIsNewEntity);
 void WarpZone_Teleported_Read(float bIsNewEntity);
@@ -10,3 +29,4 @@ void WarpZone_Shutdown();
 
 vector warpzone_save_view_origin;
 vector warpzone_save_view_angles;
+#endif

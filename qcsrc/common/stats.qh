@@ -1,4 +1,30 @@
-// Full list of all stat constants, icnluded in a single location for easy reference
+#ifndef STATS_H
+#define STATS_H
+
+#if defined(CSQC)
+    #include "util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "constants.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../warpzonelib/server.qh"
+    #include "constants.qh"
+#endif
+
+// Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 
 const int MAX_CL_STATS                = 256;
@@ -288,3 +314,4 @@ const int STAT_MOVEVARS_MAXAIRSPEED                   = 252;
 const int STAT_MOVEVARS_STEPHEIGHT                    = 253;
 const int STAT_MOVEVARS_AIRACCEL_QW                   = 254;
 const int STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION    = 255;
+#endif

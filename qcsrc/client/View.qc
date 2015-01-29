@@ -1,3 +1,26 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../warpzonelib/common.qh"
+	#include "../warpzonelib/client.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/nades.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "../common/mapinfo.qh"
+	#include "autocvars.qh"
+	#include "hud.qh"
+	#include "scoreboard.qh"
+	#include "noise.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_player.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 entity porto;
 vector polyline[16];
 void Porto_Draw()

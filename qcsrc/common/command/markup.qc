@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+	#include "../util.qh"
+	#include "markup.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/dpextensions.qc"
+    #include "../util.qh"
+    #include "markup.qh"
+#endif
+
 // =========================================================
 //  Markup chat characters command code, reworked by Samual
 //  Last updated: December 28th, 2011

@@ -1,3 +1,15 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "animdecide.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "util.qh"
+    #include "animdecide.qh"
+    #include "../server/defs.qh"
+#endif
+
 // player animation data for this model
 // each vector is as follows:
 // _x = startframe

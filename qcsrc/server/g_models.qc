@@ -1,3 +1,15 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/constants.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+
 .float modelscale;
 
 void g_model_setcolormaptoactivator (void)

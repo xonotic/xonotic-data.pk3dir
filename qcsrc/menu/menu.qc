@@ -1,3 +1,8 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 ///////////////////////////////////////////////
 // Menu Source File
 ///////////////////////

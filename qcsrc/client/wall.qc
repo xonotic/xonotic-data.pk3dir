@@ -1,3 +1,15 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "bgmscript.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .float lip;
 .float bgmscriptangular;
 .int lodmodelindex0, lodmodelindex1, lodmodelindex2;

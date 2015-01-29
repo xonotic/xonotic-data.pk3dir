@@ -1,3 +1,12 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "defs.qh"
+    #include "playerdemo.qh"
+#endif
+
 .float playerdemo_fh;
 .float playerdemo_mode;
 .float playerdemo_starttime;

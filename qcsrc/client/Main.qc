@@ -1,3 +1,29 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "Defs.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "../warpzonelib/client.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/nades.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/cl_cmd.qh"
+    #include "autocvars.qh"
+    #include "../common/notifications.qh"
+    #include "../csqcmodellib/interpolate.qh"
+    #include "hud.qh"
+    #include "waypointsprites.qh"
+    #include "prandom.qh"
+    #include "tturrets.qh"
+    #include "main.qh"
+    #include "../csqcmodellib/cl_model.qh"
+    #include "shownames.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"

@@ -1,3 +1,21 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "../client/Defs.qc"
+    #include "util.qh"
+    #include "buffs.qh"
+    #include "weapons/weapons.qh"
+    #include "mapinfo.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "util.qh"
+    #include "buffs.qh"
+    #include "monsters/monsters.qh"
+    #include "mapinfo.qh"
+#endif
+
 // generic string stuff
 
 float _MapInfo_Cache_Active;

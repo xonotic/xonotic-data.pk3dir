@@ -19,6 +19,61 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef CL_MODEL_H
+#define CL_MODEL_H
+
+#if defined(CSQC)
+	#include "../common/util-pre.qh"
+	#include "../client/sys-pre.qh"
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/sys-post.qh"
+	#include "../client/Defs.qc"
+	#include "../dpdefs/keycodes.qc"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../warpzonelib/anglestransform.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../warpzonelib/common.qh"
+	#include "../warpzonelib/client.qh"
+	#include "../common/playerstats.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/nades.qh"
+	#include "../common/buffs.qh"
+	#include "../common/test.qh"
+	#include "../common/counting.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "../common/mapinfo.qh"
+	#include "../common/command/markup.qh"
+	#include "../common/command/rpn.qh"
+	#include "../common/command/generic.qh"
+	#include "../common/command/shared_defs.qh"
+	#include "../common/urllib.qh"
+	#include "../common/animdecide.qh"
+	#include "../client/command/cl_cmd.qh"
+	#include "../common/monsters/monsters.qh"
+	#include "../client/autocvars.qh"
+	#include "../common/notifications.qh"
+	#include "../common/deathtypes.qh"
+	#include "../client/damage.qh"
+	#include "interpolate.qh"
+	#include "../client/teamradar.qh"
+	#include "../client/hud.qh"
+	#include "../client/scoreboard.qh"
+	#include "../client/waypointsprites.qh"
+	#include "../client/movetypes.qh"
+	#include "../client/prandom.qh"
+	#include "../client/bgmscript.qh"
+	#include "../client/noise.qh"
+	#include "../client/tturrets.qh"
+	#include "../server/tturrets/include/turrets_early.qh"
+	#include "../client/main.qh"
+	#include "../client/vehicles/vehicles.qh"
+	#include "../common/csqcmodel_settings.qh"
+	#include "common.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 void CSQCModel_Read(float isnew);
 
@@ -48,3 +103,4 @@ void CSQCModel_InterpolateAnimation_1To2_Note(float sf, float set_times);
 void CSQCModel_InterpolateAnimation_2To4_Do();
 void CSQCModel_InterpolateAnimation_1To2_Do();
 // will overwrite lerpfrac, lerpfrac3, lerpfrac4, and possibly clear frame*time if they are undisplayed according to lerpfracs
+#endif

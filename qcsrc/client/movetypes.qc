@@ -1,3 +1,16 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/stats.qh"
+	#include "../common/util.qh"
+	#include "movetypes.qh"
+	#include "../csqcmodellib/common.qh"
+	#include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 

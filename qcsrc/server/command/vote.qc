@@ -1,3 +1,26 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/command/shared_defs.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../../common/mapinfo.qh"
+    #include "common.qh"
+    #include "vote.qh"
+    #include "../../common/playerstats.qh"
+    #include "../scores.qh"
+    #include "../race.qh"
+    #include "../round_handler.qh"
+#endif
+
 // =============================================
 //  Server side voting code, reworked by Samual
 //  Last updated: December 27th, 2011

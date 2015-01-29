@@ -1,3 +1,11 @@
+#ifndef MENUDEFS_H
+#define MENUDEFS_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 //////////////////////////////////////////////////////////
 // sys globals
 
@@ -563,3 +571,4 @@ string	getextresponse(void) = #624;
 const string cvar_string(string name) = #71;
 const string cvar_defstring(string name) = #89;
 float	stringwidth(string text, float handleColors, vector size) = #468;
+#endif

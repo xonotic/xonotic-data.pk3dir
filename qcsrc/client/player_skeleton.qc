@@ -1,3 +1,12 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../common/util.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "player_skeleton.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .float skeleton_info_modelindex;
 .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;

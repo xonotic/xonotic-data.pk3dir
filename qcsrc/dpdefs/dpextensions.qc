@@ -1,3 +1,5 @@
+#ifndef DPEXTENSIONS_H
+#define DPEXTENSIONS_H
 //DarkPlaces supported extension list, draft version 1.04
 
 //things that don't have extensions yet:
@@ -2553,3 +2555,4 @@ void(float pause) setpause = #531;
 float(string url, float id, string content_type, string delim, float buf, float keyid) crypto_uri_postbuf = #513;
 //description:
 //use -1 as buffer handle to justs end delim as postdata
+#endif

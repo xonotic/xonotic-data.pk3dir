@@ -1,3 +1,17 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+	#include "../dpdefs/dpextensions.qc"
+	#include "common.qh"
+	#include "server.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../server/constants.qh"
+	#include "../server/defs.qh"
+	#include "../server/command/common.qh"
+#endif
+
 #ifdef WARPZONELIB_KEEPDEBUG
 #define WARPZONELIB_REMOVEHACK
 #endif

@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../common/constants.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "scores.qh"
+#endif
+
 float c1, c2, c3, c4;
 void CheckAllowedTeams (entity for_whom);
 
@@ -43,4 +53,3 @@ void ScoreRules_generic()
 		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	ScoreRules_basics_end();
 }
-

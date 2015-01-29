@@ -1,3 +1,25 @@
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+	#include "../weapons/weapons.qh"
+	#include "monsters.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../warpzonelib/server.qh"
+    #include "../constants.qh"
+    #include "../util.qh"
+    #include "monsters.qh"
+    #include "sv_monsters.qh"
+    #include "../weapons/weapons.qh"
+    #include "../../server/t_items.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/constants.qh"
+    #include "../../server/defs.qh"
+    #include "../deathtypes.qh"
+    #include "../../server/mutators/mutators_include.qh"
+    #include "../../csqcmodellib/sv_model.qh"
+#endif
 #include "all.qh"
 
 // MONSTER PLUGIN SYSTEM

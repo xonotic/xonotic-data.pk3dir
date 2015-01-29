@@ -1,3 +1,15 @@
+#ifndef SERVER_SYS_POST_H
+#define SERVER_SYS_POST_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../common/util-pre.qh"
+    #include "sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+#endif
+
 #pragma noref 0
 
 #undef ATTEN_NORM
@@ -12,3 +24,4 @@
 var float(string name) cvar;
 var string(string name) cvar_string;
 var void(string name, string value) cvar_set;
+#endif

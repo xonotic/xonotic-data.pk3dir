@@ -1,3 +1,8 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 string draw_mousepointer;
 vector draw_mousepointer_offset;
 vector draw_mousepointer_size;

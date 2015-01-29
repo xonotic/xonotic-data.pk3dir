@@ -1,3 +1,19 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "spawning.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../mutators/mutators_include.qh"
+#endif
+
 string W_Apply_Weaponreplace(string in)
 {
 	float n = tokenize_console(in);

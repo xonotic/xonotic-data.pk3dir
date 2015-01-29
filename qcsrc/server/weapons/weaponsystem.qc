@@ -1,3 +1,25 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/animdecide.qh"
+    #include "../../common/monsters/monsters.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../command/common.qh"
+    #include "../../csqcmodellib/sv_model.qh"
+    #include "../round_handler.qh"
+#endif
+
 /*
 ===========================================================================
 

@@ -1,3 +1,12 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "vehicles/vehicles_def.qh"
+    #include "antilag.qh"
+#endif
+
 const float ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];
 .float antilag_times[ANTILAG_MAX_ORIGINS];

@@ -1,3 +1,29 @@
+#ifndef VOTE_H
+#define VOTE_H
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/command/shared_defs.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../../common/mapinfo.qh"
+    #include "common.qh"
+    #include "vote.qh"
+    #include "../../common/playerstats.qh"
+    #include "../scores.qh"
+    #include "../race.qh"
+    #include "../round_handler.qh"
+#endif
+
 // ================================================
 //  Declarations for the vote system/vote commands
 //  Last updated: December 14th, 2011
@@ -49,3 +75,4 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 .float ready; // flag for if a player is ready
 void reset_map(float dorespawn);
 void ReadyCount();
+#endif

@@ -1,3 +1,30 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/animdecide.qh"
+    #include "../common/monsters/sv_monsters.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../common/mapinfo.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "anticheat.qh"
+    #include "cheats.qh"
+    #include "g_hook.qh"
+    #include "race.qh"
+    #include "playerdemo.qh"
+#endif
+
 .float race_penalty;
 .float restart_jump;
 

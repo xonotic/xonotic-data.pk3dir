@@ -1,3 +1,27 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../../warpzonelib/util_server.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/teams.qh"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "../weapons/accuracy.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../campaign.qh"
+    #include "../../common/mapinfo.qh"
+    #include "../../csqcmodellib/sv_model.qh"
+    #include "../antilag.qh"
+#endif
+
 #include "bot.qh"
 #include "aim.qh"
 #include "navigation.qh"

@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "common.qh"
+    #include "util_server.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
 	float eps = 0.0625;

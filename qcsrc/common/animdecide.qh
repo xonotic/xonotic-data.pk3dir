@@ -1,3 +1,61 @@
+#ifndef ANIMDECIDE_H
+#define ANIMDECIDE_H
+
+#if defined(CSQC)
+    #include "util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "constants.qh"
+    #include "stats.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/client.qh"
+    #include "playerstats.qh"
+    #include "teams.qh"
+    #include "util.qh"
+    #include "nades.qh"
+    #include "buffs.qh"
+    #include "test.qh"
+    #include "counting.qh"
+    #include "weapons/weapons.qh"
+    #include "mapinfo.qh"
+    #include "command/markup.qh"
+    #include "command/rpn.qh"
+    #include "command/generic.qh"
+    #include "command/shared_defs.qh"
+    #include "urllib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../warpzonelib/server.qh"
+    #include "constants.qh"
+    #include "stats.qh"
+    #include "teams.qh"
+    #include "util.qh"
+    #include "nades.qh"
+    #include "buffs.qh"
+    #include "test.qh"
+    #include "counting.qh"
+    #include "urllib.qh"
+    #include "command/markup.qh"
+    #include "command/rpn.qh"
+    #include "command/generic.qh"
+    #include "command/shared_defs.qh"
+    #include "net_notice.qh"
+#endif
+
 // must be called at least once to initialize, or when modelindex is changed
 void animdecide_load_if_needed(entity e);
 
@@ -45,3 +103,4 @@ const int ANIMACTION_PAIN2 = 3; // pain
 const int ANIMACTION_SHOOT = 4; // shoot
 const int ANIMACTION_TAUNT = 5; // taunt
 const int ANIMACTION_MELEE = 6; // melee
+#endif

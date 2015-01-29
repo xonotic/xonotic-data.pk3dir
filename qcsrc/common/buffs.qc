@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/Defs.qc"
+	#include "buffs.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "buffs.qh"
+#endif
+
 vector Buff_Color(float buff_id)
 {
 	entity e;

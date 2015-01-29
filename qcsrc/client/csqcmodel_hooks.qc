@@ -1,3 +1,25 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "Defs.qc"
+	#include "../common/constants.qh"
+	#include "../warpzonelib/mathlib.qh"
+	#include "../common/teams.qh"
+	#include "../common/util.qh"
+	#include "../common/animdecide.qh"
+	#include "autocvars.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "main.qh"
+	#include "../common/csqcmodel_settings.qh"
+	#include "../csqcmodellib/common.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "../csqcmodellib/cl_player.qh"
+	#include "weapons/projectile.qh"
+	#include "player_skeleton.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 void CSQCModel_Hook_PreDraw(bool isplayer);
 
 .bool isplayermodel;

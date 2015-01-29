@@ -1,3 +1,9 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 //.float(entity,entity) sort_cmp;
 .entity sort_next, sort_prev;
 

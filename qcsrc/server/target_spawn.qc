@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../common/util.qh"
+    #include "defs.qh"
+#endif
+
 // spawner entity
 // "classname" "target_spawn"
 // "message" "fieldname value fieldname value ..."

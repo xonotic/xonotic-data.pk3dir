@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../common/constants.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+#endif
+
 .float lifetime;
 // values:
 //   volume

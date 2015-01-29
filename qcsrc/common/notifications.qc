@@ -1,3 +1,28 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../client/Defs.qc"
+	#include "teams.qh"
+	#include "util.qh"
+	#include "buffs.qh"
+	#include "counting.qh"
+	#include "weapons/weapons.qh"
+	#include "../client/autocvars.qh"
+	#include "notifications.qh"
+	#include "../client/main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "constants.qh"
+    #include "teams.qh"
+    #include "counting.qh"
+    #include "../server/autocvars.qh"
+    #include "../server/constants.qh"
+    #include "../server/defs.qh"
+    #include "notifications.qh"
+    #include "../server/mutators/mutators_include.qh"
+#endif
+
 // ================================================
 //  Unified notification system, written by Samual
 //  Last updated: August, 2013

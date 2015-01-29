@@ -1,3 +1,32 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../../warpzonelib/common.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/teams.qh"
+    #include "../../common/util.qh"
+    #include "../../common/command/shared_defs.qh"
+    #include "../../common/monsters/monsters.qh"
+    #include "../../common/monsters/sv_monsters.qh"
+    #include "../../common/monsters/spawn.qh"
+    #include "../autocvars.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../../common/deathtypes.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../vehicles/vehicles_def.qh"
+    #include "../campaign.qh"
+    #include "../../common/mapinfo.qh"
+    #include "common.qh"
+    #include "vote.qh"
+    #include "cmd.qh"
+    #include "../cheats.qh"
+    #include "../scores.qh"
+    #include "../ipban.qh"
+#endif
+
 // =========================================================
 //  Server side networked commands code, reworked by Samual
 //  Last updated: December 28th, 2011

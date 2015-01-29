@@ -1,3 +1,16 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+    #include "common.qh"
+    #include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "common.qh"
+    #include "../common/weapons/weapons.qh"
+#endif
+
 void WarpZone_Accumulator_Clear(entity acc)
 {
 	acc.warpzone_transform = '0 0 0';

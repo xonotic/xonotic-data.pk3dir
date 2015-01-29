@@ -1,3 +1,32 @@
+#ifndef MATHLIB_H
+#define MATHLIB_H
+
+#if defined(CSQC)
+    #include "../common/util-pre.qh"
+    #include "../client/sys-pre.qh"
+    #include "../dpdefs/csprogsdefs.qc"
+    #include "../client/sys-post.qh"
+    #include "../client/Defs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../common/constants.qh"
+    #include "../common/stats.qh"
+    #include "anglestransform.qh"
+#elif defined(MENUQC)
+    #include "../common/util-pre.qh"
+    #include "../menu/sys-pre.qh"
+    #include "../dpdefs/menudefs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "../menu/sys-post.qh"
+    #include "../menu/config.qh"
+#elif defined(SVQC)
+    #include "../common/util-pre.qh"
+    #include "../server/sys-pre.qh"
+    #include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../server/sys-post.qh"
+    #include "anglestransform.qh"
+#endif
+
 // <math.h>
 
 // The commented-out functions need no implementation because DarkPlaces offers
@@ -98,3 +127,4 @@ const float M_2_PI     = 0.63661977236758134308;  /* 2/pi */
 const float M_2_SQRTPI = 1.12837916709551257390;  /* 2/sqrt(pi) */
 const float M_SQRT2    = 1.41421356237309504880;  /* sqrt(2) */
 const float M_SQRT1_2  = 0.70710678118654752440;  /* 1/sqrt(2) */
+#endif

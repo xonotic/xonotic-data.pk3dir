@@ -1,3 +1,17 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "../warpzonelib/common.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "antilag.qh"
+#endif
+
 void SUB_NullThink(void) { }
 
 void()  SUB_CalcMoveDone;

@@ -1,3 +1,18 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qc"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../warpzonelib/common.qh"
+	#include "../common/util.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "autocvars.qh"
+	#include "bgmscript.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .int dphitcontentsmask;
 
 .int cnt; // effect number

@@ -1,4 +1,22 @@
-float GameTypeVote_AvailabilityStatus(string gtname) 
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qc"
+    #include "../dpdefs/dpextensions.qc"
+    #include "sys-post.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/getreplies.qh"
+    #include "command/cmd.qh"
+    #include "../common/playerstats.qh"
+    #include "mapvoting.qh"
+#endif
+
+float GameTypeVote_AvailabilityStatus(string gtname)
 { 
 	float type = MapInfo_Type_FromString(gtname);
 	if( type == 0 )

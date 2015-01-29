@@ -3,6 +3,20 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qc"
+	#include "../Defs.qc"
+	#include "../../common/util.qh"
+	#include "../../common/mapinfo.qh"
+	#include "../../common/command/shared_defs.qh"
+	#include "cl_cmd.qh"
+	#include "../autocvars.qh"
+	#include "../hud.qh"
+	#include "../main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void DrawDebugModel()
 {
 	if(time - floor(time) > 0.5)

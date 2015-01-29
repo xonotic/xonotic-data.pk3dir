@@ -1,3 +1,20 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qc"
+    #include "../../dpdefs/dpextensions.qc"
+    #include "../sys-post.qh"
+    #include "../../common/util.qh"
+    #include "../../common/counting.qh"
+    #include "../../common/command/shared_defs.qh"
+    #include "../autocvars.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "common.qh"
+    #include "vote.qh"
+    #include "../scores.qh"
+#endif
+
 // ====================================================
 //  Shared code for server commands, written by Samual
 //  Last updated: December 27th, 2011

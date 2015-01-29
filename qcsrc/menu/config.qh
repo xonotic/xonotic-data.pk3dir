@@ -1,3 +1,14 @@
-// build config file
-#define MENUQC // so common/*.qc can check for menu QC or game QC
+#ifndef CONFIG_H
+#define CONFIG_H
 
+#if defined(CSQC)
+#elif defined(MENUQC)
+    #include "../common/util-pre.qh"
+    #include "sys-pre.qh"
+    #include "../dpdefs/menudefs.qc"
+    #include "../dpdefs/keycodes.qc"
+    #include "sys-post.qh"
+#elif defined(SVQC)
+#endif
+
+#endif
