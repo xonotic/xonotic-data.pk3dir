@@ -117,9 +117,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point.x / fsize) * fsize;
-    vret_y = rint(point.y / fsize) * fsize;
-    vret_z = ceil(point.z / fsize) * fsize;
+    vret.x = rint(point.x / fsize) * fsize;
+    vret.y = rint(point.y / fsize) * fsize;
+    vret.z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -220,8 +220,8 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
 
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
@@ -255,8 +255,8 @@ vector pathlib_swimnode(vector start,vector end,float doedge)
     if(pointcontents(start) != CONTENT_WATER)
         return end;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
         return pathlib_wateroutnode( start, end);
@@ -272,8 +272,8 @@ vector pathlib_flynode(vector start,vector end)
 {
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     tracebox(start, walknode_boxmin,walknode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -291,8 +291,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     s   = start;
     e   = end;
-    e_z = 0;
-    s_z = 0;
+    e.z = 0;
+    s.z = 0;
     direction  = normalize(s - e);
 
     distance    = vlen(start - end);
@@ -340,8 +340,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     point = last_point + direction * walknode_stepsize * laststep;
 
-    point_x = fsnap(point.x, pathlib_gridsize);
-    point_y = fsnap(point.y, pathlib_gridsize);
+    point.x = fsnap(point.x, pathlib_gridsize);
+    point.y = fsnap(point.y, pathlib_gridsize);
 
     s = point + walknode_stepup;
     e = point - walknode_maxdrop;
@@ -782,9 +782,9 @@ float pathlib_expandnode_box(entity node, vector start, vector goal)
 {
     vector v;
 
-    for(v_z = node.origin.z - pathlib_gridsize; v.z <= node.origin.z + pathlib_gridsize; v.z += pathlib_gridsize)
-    for(v_y = node.origin.y - pathlib_gridsize; v.y <= node.origin.y + pathlib_gridsize; v.y += pathlib_gridsize)
-    for(v_x = node.origin.x - pathlib_gridsize; v.x <= node.origin.x + pathlib_gridsize; v.x += pathlib_gridsize)
+    for(v.z = node.origin.z - pathlib_gridsize; v.z <= node.origin.z + pathlib_gridsize; v.z += pathlib_gridsize)
+    for(v.y = node.origin.y - pathlib_gridsize; v.y <= node.origin.y + pathlib_gridsize; v.y += pathlib_gridsize)
+    for(v.x = node.origin.x - pathlib_gridsize; v.x <= node.origin.x + pathlib_gridsize; v.x += pathlib_gridsize)
     {
         if(vlen(v - node.origin))
             pathlib_makenode(node,start,v,goal,pathlib_movecost);
@@ -934,11 +934,11 @@ entity pathlib_astar(vector from,vector to)
     walknode_stepup   = '0 0 1' * walknode_stepsize;
     walknode_maxdrop  = '0 0 3' * walknode_stepsize;
 
-    from_x = fsnap(from.x,pathlib_gridsize);
-    from_y = fsnap(from.y,pathlib_gridsize);
+    from.x = fsnap(from.x,pathlib_gridsize);
+    from.y = fsnap(from.y,pathlib_gridsize);
 
-    to_x = fsnap(to.x,pathlib_gridsize);
-    to_y = fsnap(to.y,pathlib_gridsize);
+    to.x = fsnap(to.x,pathlib_gridsize);
+    to.y = fsnap(to.y,pathlib_gridsize);
 
     dprint("AStar init. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n");
     path = pathlib_mknode(from,world);

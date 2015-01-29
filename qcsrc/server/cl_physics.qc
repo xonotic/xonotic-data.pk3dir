@@ -158,14 +158,14 @@ void CheckWaterJump()
 // check for a jump-out-of-water
 	makevectors (self.angles);
 	start = self.origin;
-	start_z = start.z + 8;
-	v_forward_z = 0;
+	start.z = start.z + 8;
+	v_forward.z = 0;
 	normalize(v_forward);
 	end = start + v_forward*24;
 	traceline (start, end, true, self);
 	if (trace_fraction < 1)
 	{	// solid at waist
-		start_z = start.z + self.maxs.z - 8;
+		start.z = start.z + self.maxs.z - 8;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
 		traceline (start, end, true, self);
@@ -422,9 +422,9 @@ void RaceCarPhysics()
 	{
 		vector vel_local;
 
-		vel_local_x = v_forward * self.velocity;
-		vel_local_y = v_right * self.velocity;
-		vel_local_z = v_up * self.velocity;
+		vel_local.x = v_forward * self.velocity;
+		vel_local.y = v_right * self.velocity;
+		vel_local.z = v_up * self.velocity;
 
 		self.angles_x = racecar_angle(vel_local.x, vel_local.z);
 		self.angles_z = racecar_angle(-vel_local.y, vel_local.z);
@@ -448,7 +448,7 @@ void RaceCarPhysics()
 
 float IsMoveInDirection(vector mv, float angle) // key mix factor
 {
-	if(mv_x == 0 && mv_y == 0)
+	if(mv.x == 0 && mv.y == 0)
 		return 0; // avoid division by zero
 	angle -= RAD2DEG * atan2(mv.y, mv.x);
 	angle = remainder(angle, 360) / 45;
@@ -610,7 +610,7 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 		return;
 
 	curvel = self.velocity;
-	curvel_z = 0;
+	curvel.z = 0;
 	curspeed = vlen(curvel);
 
 	if(wishspeed > curspeed * 1.01)
@@ -1084,10 +1084,10 @@ void SV_PlayerPhysics()
 		// fix speedhacks :P
 		wishvel = normalize(wishvel) * min(vlen(wishvel) / maxairspd, 1);
 		// add the unused velocity as up component
-		wishvel_z = 0;
+		wishvel.z = 0;
 
 		// if(self.BUTTON_JUMP)
-			wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
+			wishvel.z = sqrt(max(0, 1 - wishvel * wishvel));
 
 		// it is now normalized, so...
 		float a_side, a_up, a_add, a_diff;
@@ -1149,7 +1149,7 @@ void SV_PlayerPhysics()
 
 		wishvel.x *= fxy;
 		wishvel.y *= fxy;
-		wishvel_z = (wishvel.z - autocvar_sv_gravity) * fz + autocvar_sv_gravity;
+		wishvel.z = (wishvel.z - autocvar_sv_gravity) * fz + autocvar_sv_gravity;
 
 		float fvel;
 		fvel = min(1, vlen(wishvel) / best);
@@ -1194,7 +1194,7 @@ void SV_PlayerPhysics()
 		}
 
 		v = self.velocity;
-		v_z = 0;
+		v.z = 0;
 		f = vlen(v);
 		if(f > 0)
 		{
@@ -1285,7 +1285,7 @@ void SV_PlayerPhysics()
 			{
 				vector curdir;
 				curdir = self.velocity;
-				curdir_z = 0;
+				curdir.z = 0;
 				curdir = normalize(curdir);
 				airaccel = airaccel + (autocvar_sv_airstopaccelerate*maxspd_mod - airaccel) * max(0, -(curdir * wishdir));
 			}

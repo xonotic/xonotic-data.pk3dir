@@ -127,7 +127,7 @@ void info_autoscreenshot_findtarget()
 		return;
 	}
 	vector a = vectoangles(e.origin - self.origin);
-	a_x = -a.x; // don't ask
+	a.x = -a.x; // don't ask
 	self.angles_x = a.x;
 	self.angles_y = a.y;
 	// we leave Rick Roll alone
@@ -444,9 +444,9 @@ float CheatCommand(float argc)
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
 			end = normalize(self.origin + self.view_ofs - e.aiment.origin);
-			end_x = (end.x > 0) * 2 - 1;
-			end_y = (end.y > 0) * 2 - 1;
-			end_z = (end.z > 0) * 2 - 1;
+			end.x = (end.x > 0) * 2 - 1;
+			end.y = (end.y > 0) * 2 - 1;
+			end.z = (end.z > 0) * 2 - 1;
 			if(argc == 4)
 				setorigin(e.enemy, stov(argv(3)));
 			else

@@ -29,7 +29,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	}
 
 	move = end - start;
-	move_z = 0;
+	move.z = 0;
 	org = start;
 	dist = totaldist = vlen(move);
 	dir = normalize(move);
@@ -387,7 +387,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org_z = ent.origin.z + ent.mins.z - PL_MIN_z; // player height
+	org.z = ent.origin.z + ent.mins.z - PL_MIN_z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -408,9 +408,9 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 				vector wm1, wm2;
 				wm1 = w.origin + w.mins;
 				wm2 = w.origin + w.maxs;
-				v_x = bound(wm1_x, org.x, wm2_x);
-				v_y = bound(wm1_y, org.y, wm2_y);
-				v_z = bound(wm1_z, org.z, wm2_z);
+				v.x = bound(wm1_x, org.x, wm2_x);
+				v.y = bound(wm1_y, org.y, wm2_y);
+				v.z = bound(wm1_z, org.z, wm2_z);
 			}
 			else
 				v = w.origin;
@@ -454,14 +454,14 @@ float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
 				m1 = head.origin + head.mins;
 				m2 = head.origin + head.maxs;
 				v = self.origin;
-				v_x = bound(m1_x, v.x, m2_x);
-				v_y = bound(m1_y, v.y, m2_y);
-				v_z = bound(m1_z, v.z, m2_z);
+				v.x = bound(m1_x, v.x, m2_x);
+				v.y = bound(m1_y, v.y, m2_y);
+				v.z = bound(m1_z, v.z, m2_z);
 			}
 			else
 				v = head.origin;
 			diff = v - self.origin;
-			diff_z = max(0, diff.z);
+			diff.z = max(0, diff.z);
 			if (vlen(diff) < maxdist)
 			{
 				head.wpconsidered = true;
@@ -491,9 +491,9 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 	{
 		m1 = wp.absmin;
 		m2 = wp.absmax;
-		v_x = bound(m1_x, p.x, m2_x);
-		v_y = bound(m1_y, p.y, m2_y);
-		v_z = bound(m1_z, p.z, m2_z);
+		v.x = bound(m1_x, p.x, m2_x);
+		v.y = bound(m1_y, p.y, m2_y);
+		v.z = bound(m1_z, p.z, m2_z);
 	}
 	else
 		v = wp.origin;
@@ -1034,9 +1034,9 @@ void botframe_updatedangerousobjects(float maxupdate)
 		while (head)
 		{
 			v = head.origin;
-			v_x = bound(m1_x, v.x, m2_x);
-			v_y = bound(m1_y, v.y, m2_y);
-			v_z = bound(m1_z, v.z, m2_z);
+			v.x = bound(m1_x, v.x, m2_x);
+			v.y = bound(m1_y, v.y, m2_y);
+			v.z = bound(m1_z, v.z, m2_z);
 			o = (head.absmin + head.absmax) * 0.5;
 			d = head.bot_dodgerating - vlen(o - v);
 			if (d > 0)

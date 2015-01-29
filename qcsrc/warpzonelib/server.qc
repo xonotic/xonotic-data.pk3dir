@@ -218,11 +218,10 @@ void WarpZone_Touch (void)
 
 float WarpZone_Send(entity to, float sendflags)
 {
-	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
-	f = 0;
+	int f = 0;
 	if(self.warpzone_isboxy)
 		BITSET_ASSIGN(f, 1);
 	if(self.warpzone_fadestart)
@@ -273,7 +272,7 @@ float WarpZone_Send(entity to, float sendflags)
 
 float WarpZone_Camera_Send(entity to, float sendflags)
 {
-	float f = 0;
+	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
@@ -599,7 +598,7 @@ void WarpZone_InitStep_UpdateTransform()
 				norm = -1 * norm;
 			}
 			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
-			ang_x = -ang.x;
+			ang.x = -ang.x;
 			if(norm * v_forward < 0.99)
 				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");
 			if(vlen(org - self.aiment.origin) > 0.5)
@@ -610,7 +609,7 @@ void WarpZone_InitStep_UpdateTransform()
 	{
 		org = point;
 		ang = vectoangles(norm);
-		ang_x = -ang.x;
+		ang.x = -ang.x;
 	}
 	else
 		error("cannot infer origin/angles for this warpzone, please use a killtarget or a trigger_warpzone_position");

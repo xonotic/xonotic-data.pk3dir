@@ -304,17 +304,17 @@ void InputBox_draw(entity me)
 					component = HEXDIGIT_TO_DEC(substring(me.text, i+2, 1));
 					if (component >= 0) // ^xr found
 					{
-						theTempColor_x = component/15;
+						theTempColor.x = component/15;
 
 						component = HEXDIGIT_TO_DEC(substring(me.text, i+3, 1));
 						if (component >= 0) // ^xrg found
 						{
-							theTempColor_y = component/15;
+							theTempColor.y = component/15;
 
 							component = HEXDIGIT_TO_DEC(substring(me.text, i+4, 1));
 							if (component >= 0) // ^xrgb found
 							{
-								theTempColor_z = component/15;
+								theTempColor.z = component/15;
 								theColor = theTempColor;
 								w = draw_TextWidth(substring(me.text, i, 5), 0, me.realFontSize);
 

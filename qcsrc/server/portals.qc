@@ -33,9 +33,9 @@ float PlayerEdgeDistance(entity p, vector v)
 {
 	vector vbest;
 
-	if(v.x < 0) vbest_x = p.mins.x; else vbest_x = p.maxs.x;
-	if(v.y < 0) vbest_y = p.mins.y; else vbest_y = p.maxs.y;
-	if(v.z < 0) vbest_z = p.mins.z; else vbest_z = p.maxs.z;
+	if(v.x < 0) vbest.x = p.mins.x; else vbest.x = p.maxs.x;
+	if(v.y < 0) vbest.y = p.mins.y; else vbest.y = p.maxs.y;
+	if(v.z < 0) vbest.z = p.mins.z; else vbest.z = p.maxs.z;
 
 	return vbest * v;
 }
@@ -56,7 +56,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 
 	// PLAYERS use different math
 #ifndef POSITIVE_PITCH_IS_DOWN
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 #endif
 
 	//print("reference: ", vtos(AnglesTransform_ApplyToVAngles(transform, ang)), "\n");
@@ -86,7 +86,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 		ang = fixedvectoangles(new_forward); // this still gets us a nice pitch value...
 		if(new_up * new_yawforward < 0)
 			new_up = -1 * new_up;
-		ang_y = vectoyaw(new_up); // this vector is the yaw we want
+		ang.y = vectoyaw(new_up); // this vector is the yaw we want
 		//print("UP/DOWN path: ", vtos(ang), "\n");
 	}
 	else
@@ -97,9 +97,9 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	}
 
 #ifndef POSITIVE_PITCH_IS_DOWN
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 #endif
-	ang_z = vangle.z;
+	ang.z = vangle.z;
 	return ang;
 }
 

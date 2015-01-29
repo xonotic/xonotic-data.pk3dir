@@ -153,9 +153,9 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 	for(i = 0; i < q; ++i)
 	{
 		vector v;
-		v_x = a.x + random() * b.x;
-		v_y = a.y + random() * b.y;
-		v_z = a.z + random() * b.z;
+		v.x = a.x + random() * b.x;
+		v.y = a.y + random() * b.y;
+		v.z = a.z + random() * b.z;
 		traceline(v, v, MOVE_WORLDONLY, world);
 		if(trace_startsolid)
 			++c;
@@ -417,7 +417,7 @@ float RadarMap_Make(float argc)
 				case "--res": // minor alias
 				case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
 				case "--qual": // minor alias
-				case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
+				case "--quality": { ++i; radarmapper.size.z = stof(argv(i)); break; }
 
 				default:
 					i = argc;

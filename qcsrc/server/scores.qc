@@ -21,26 +21,26 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 	if(t1.field == t2.field)
 		return previous;
 
-	previous_y = fieldflags & SFL_SORT_PRIO_MASK;
+	previous.y = fieldflags & SFL_SORT_PRIO_MASK;
 
 	if(fieldflags & SFL_ZERO_IS_WORST)
 	{
 		if(t1.field == 0)
 		{
-			previous_x = -1;
+			previous.x = -1;
 			return previous;
 		}
 		else if(t2.field == 0)
 		{
-			previous_x = +1;
+			previous.x = +1;
 			return previous;
 		}
 	}
 
 	if(fieldflags & SFL_LOWER_IS_BETTER)
-		previous_x = (t2.field - t1.field);
+		previous.x = (t2.field - t1.field);
 	else
-		previous_x = (t1.field - t2.field);
+		previous.x = (t1.field - t2.field);
 
 	return previous;
 }
@@ -138,8 +138,8 @@ float TeamScore_Compare(entity t1, entity t2, float strict)
 		result = ScoreField_Compare(t1, t2, f, teamscores_flags[i], result, strict);
 	}
 
-	if (result_x == 0 && strict)
-		result_x = t1.team - t2.team;
+	if (result.x == 0 && strict)
+		result.x = t1.team - t2.team;
 
 	return result.x;
 }
@@ -375,8 +375,8 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 		result = ScoreField_Compare(t1, t2, f, scores_flags[i], result, strict);
 	}
 
-	if (result_x == 0 && strict)
-		result_x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
+	if (result.x == 0 && strict)
+		result.x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
 
 	return result.x;
 }

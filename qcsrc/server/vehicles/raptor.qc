@@ -433,7 +433,7 @@ float raptor_frame()
     if(player.movement.x > 0 && vang.x < autocvar_g_vehicle_raptor_pitchlimit) ftmp = 5;
     else if(player.movement.x < 0 && vang.x > -autocvar_g_vehicle_raptor_pitchlimit) ftmp = -20;
 
-    df_x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df.x , autocvar_g_vehicle_raptor_pitchlimit);
+    df.x = bound(-autocvar_g_vehicle_raptor_pitchlimit, df.x , autocvar_g_vehicle_raptor_pitchlimit);
     ftmp = vang.x - bound(-autocvar_g_vehicle_raptor_pitchlimit, df.x + ftmp, autocvar_g_vehicle_raptor_pitchlimit);
     raptor.avelocity_x = bound(-autocvar_g_vehicle_raptor_pitchspeed, ftmp + raptor.avelocity.x * 0.9, autocvar_g_vehicle_raptor_pitchspeed);
 

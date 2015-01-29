@@ -868,7 +868,7 @@ void GameCommand_gettaginfo(float request, float argc)
 					print(" up = ", ftos(gettaginfo_up.x), " ", ftos(gettaginfo_up.y), " ", ftos(gettaginfo_up.z), "\n");
 					if(argc >= 6)
 					{
-						v_y = -v.y;
+						v.y = -v.y;
 						localcmd(strcat(argv(4), vtos(v), argv(5), "\n"));
 					}
 				}
@@ -1546,13 +1546,13 @@ void GameCommand_trace(float request, float argc)
 						org = world.mins;
 						delta = world.maxs - world.mins;
 
-						start_x = org.x + random() * delta.x;
-						start_y = org.y + random() * delta.y;
-						start_z = org.z + random() * delta.z;
+						start.x = org.x + random() * delta.x;
+						start.y = org.y + random() * delta.y;
+						start.z = org.z + random() * delta.z;
 
-						end_x = org.x + random() * delta.x;
-						end_y = org.y + random() * delta.y;
-						end_z = org.z + random() * delta.z;
+						end.x = org.x + random() * delta.x;
+						end.y = org.y + random() * delta.y;
+						end.z = org.z + random() * delta.z;
 
 						start = stov(vtos(start));
 						end = stov(vtos(end));

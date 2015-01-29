@@ -268,8 +268,8 @@ void W_Hagar_Attack2_Load_Release(void)
 		else
 		{
 			makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
-			s_y = v_forward.x;
-			s_z = v_forward.y;
+			s.y = v_forward.x;
+			s.z = v_forward.y;
 		}
 		s = s * WEP_CVAR_SEC(hagar, load_spread) * g_weaponspreadfactor;
 		

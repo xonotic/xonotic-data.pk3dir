@@ -567,20 +567,20 @@ vector decompressShortVector(int data)
 
 	if(p == 0)
 	{
-		out_x = 0;
-		out_y = 0;
+		out.x = 0;
+		out.y = 0;
 		if(y == 31)
-			out_z = -1;
+			out.z = -1;
 		else
-			out_z = +1;
+			out.z = +1;
 	}
 	else
 	{
 		y   = .19634954084936207740 * y;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out_x = cos(y) *  cos(p);
-		out_y = sin(y) *  cos(p);
-		out_z =          -sin(p);
+		out.x = cos(y) *  cos(p);
+		out.y = sin(y) *  cos(p);
+		out.z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -596,7 +596,7 @@ float compressShortVector(vector vec)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 	if(ang.x < -90)
 		ang.x += 360;
 	if(ang.x < -90 && ang.x > +90)
@@ -803,7 +803,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_x = trace_endpos.x;
+				mi_min.x = trace_endpos.x;
 
 			tracebox('0 1 0' * mi.y,
 					 '1 0 0' * mi.x + '0 0 1' * mi.z,
@@ -812,7 +812,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_y = trace_endpos.y;
+				mi_min.y = trace_endpos.y;
 
 			tracebox('0 0 1' * mi.z,
 					 '1 0 0' * mi.x + '0 1 0' * mi.y,
@@ -821,7 +821,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_z = trace_endpos.z;
+				mi_min.z = trace_endpos.z;
 
 			tracebox('1 0 0' * ma.x,
 					 '0 1 0' * mi.y + '0 0 1' * mi.z,
@@ -830,7 +830,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_x = trace_endpos.x;
+				mi_max.x = trace_endpos.x;
 
 			tracebox('0 1 0' * ma.y,
 					 '1 0 0' * mi.x + '0 0 1' * mi.z,
@@ -839,7 +839,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_y = trace_endpos.y;
+				mi_max.y = trace_endpos.y;
 
 			tracebox('0 0 1' * ma.z,
 					 '1 0 0' * mi.x + '0 1 0' * mi.y,
@@ -848,7 +848,7 @@ void get_mi_min_max(float mode)
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_z = trace_endpos.z;
+				mi_max.z = trace_endpos.z;
 		}
 	}
 }
@@ -1078,45 +1078,45 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
 	if(hue <= 1)
 	{
-		rgb_x = ma;
-		rgb_y = hue * (ma - mi) + mi;
-		rgb_z = mi;
+		rgb.x = ma;
+		rgb.y = hue * (ma - mi) + mi;
+		rgb.z = mi;
 	}
 	//else if(ma == rgb_y)
 	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
 	else if(hue <= 2)
 	{
-		rgb_x = (2 - hue) * (ma - mi) + mi;
-		rgb_y = ma;
-		rgb_z = mi;
+		rgb.x = (2 - hue) * (ma - mi) + mi;
+		rgb.y = ma;
+		rgb.z = mi;
 	}
 	else if(hue <= 3)
 	{
-		rgb_x = mi;
-		rgb_y = ma;
-		rgb_z = (hue - 2) * (ma - mi) + mi;
+		rgb.x = mi;
+		rgb.y = ma;
+		rgb.z = (hue - 2) * (ma - mi) + mi;
 	}
 	//else // if(ma == rgb_z)
 	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
 	else if(hue <= 4)
 	{
-		rgb_x = mi;
-		rgb_y = (4 - hue) * (ma - mi) + mi;
-		rgb_z = ma;
+		rgb.x = mi;
+		rgb.y = (4 - hue) * (ma - mi) + mi;
+		rgb.z = ma;
 	}
 	else if(hue <= 5)
 	{
-		rgb_x = (hue - 4) * (ma - mi) + mi;
-		rgb_y = mi;
-		rgb_z = ma;
+		rgb.x = (hue - 4) * (ma - mi) + mi;
+		rgb.y = mi;
+		rgb.z = ma;
 	}
 	//else if(ma == rgb_x)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
 	else // if(hue <= 6)
 	{
-		rgb_x = ma;
-		rgb_y = mi;
-		rgb_z = (6 - hue) * (ma - mi) + mi;
+		rgb.x = ma;
+		rgb.y = mi;
+		rgb.z = (6 - hue) * (ma - mi) + mi;
 	}
 
 	return rgb;
@@ -1130,13 +1130,13 @@ vector rgb_to_hsv(vector rgb)
 	mi = min(rgb.x, rgb.y, rgb.z);
 	ma = max(rgb.x, rgb.y, rgb.z);
 
-	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	hsv_z = ma;
+	hsv.x = rgb_mi_ma_to_hue(rgb, mi, ma);
+	hsv.z = ma;
 
 	if(ma == 0)
-		hsv_y = 0;
+		hsv.y = 0;
 	else
-		hsv_y = 1 - mi/ma;
+		hsv.y = 1 - mi/ma;
 
 	return hsv;
 }
@@ -1154,15 +1154,15 @@ vector rgb_to_hsl(vector rgb)
 	mi = min(rgb.x, rgb.y, rgb.z);
 	ma = max(rgb.x, rgb.y, rgb.z);
 
-	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
+	hsl.x = rgb_mi_ma_to_hue(rgb, mi, ma);
 
-	hsl_z = 0.5 * (mi + ma);
+	hsl.z = 0.5 * (mi + ma);
 	if(mi == ma)
-		hsl_y = 0;
+		hsl.y = 0;
 	else if(hsl.z <= 0.5)
-		hsl_y = (ma - mi) / (2*hsl.z);
+		hsl.y = (ma - mi) / (2*hsl.z);
 	else // if(hsl_z > 0.5)
-		hsl_y = (ma - mi) / (2 - 2*hsl.z);
+		hsl.y = (ma - mi) / (2 - 2*hsl.z);
 
 	return hsl;
 }
@@ -1592,15 +1592,15 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	{
 		if(b != 0)
 		{
-			v_x = v_y = -c / b;
-			v_z = 1;
+			v.x = v.y = -c / b;
+			v.z = 1;
 		}
 		else
 		{
 			if(c == 0)
 			{
 				// actually, every number solves the equation!
-				v_z = 1;
+				v.z = 1;
 			}
 		}
 	}
@@ -1612,26 +1612,26 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 			D = sqrt(D);
 			if(a > 0) // put the smaller solution first
 			{
-				v_x = ((-b)-D) / (2*a);
-				v_y = ((-b)+D) / (2*a);
+				v.x = ((-b)-D) / (2*a);
+				v.y = ((-b)+D) / (2*a);
 			}
 			else
 			{
-				v_x = (-b+D) / (2*a);
-				v_y = (-b-D) / (2*a);
+				v.x = (-b+D) / (2*a);
+				v.y = (-b-D) / (2*a);
 			}
-			v_z = 1;
+			v.z = 1;
 		}
 		else
 		{
 			// complex solutions!
 			D = sqrt(-D);
-			v_x = -b / (2*a);
+			v.x = -b / (2*a);
 			if(a > 0)
-				v_y =  D / (2*a);
+				v.y =  D / (2*a);
 			else
-				v_y = -D / (2*a);
-			v_z = 0;
+				v.y = -D / (2*a);
+			v.z = 0;
 		}
 	}
 	return v;
@@ -1766,9 +1766,9 @@ float compressShotOrigin(vector v)
 vector decompressShotOrigin(int f)
 {
 	vector v;
-	v_x = ((f & 0xFF0000) / 0x10000) / 2;
-	v_y = ((f & 0xFF00) / 0x100 - 128) / 4;
-	v_z = ((f & 0xFF) - 128) / 4;
+	v.x = ((f & 0xFF0000) / 0x10000) / 2;
+	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
+	v.z = ((f & 0xFF) - 128) / 4;
 	return v;
 }
 
@@ -1866,16 +1866,16 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
 	armorideal = healthdamage * armorblock;
-	v_y = armorideal;
+	v.y = armorideal;
 	if(armordamage < healthdamage)
 	{
-		v_x = armordamage;
-		v_z = 1;
+		v.x = armordamage;
+		v.z = 1;
 	}
 	else
 	{
-		v_x = healthdamage;
-		v_z = 0;
+		v.x = healthdamage;
+		v.z = 0;
 	}
 	return v;
 }
@@ -1885,9 +1885,9 @@ vector healtharmor_applydamage(float a, float armorblock, float deathtype, float
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
-	v_y = bound(0, damage * armorblock, a); // save
-	v_x = bound(0, damage - v.y, damage); // take
-	v_z = 0;
+	v.y = bound(0, damage * armorblock, a); // save
+	v.x = bound(0, damage - v.y, damage); // take
+	v.z = 0;
 	return v;
 }
 #endif
@@ -1915,17 +1915,17 @@ int ReadInt24_t()
 vector ReadInt48_t()
 {
 	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = 0;
+	v.x = ReadInt24_t();
+	v.y = ReadInt24_t();
+	v.z = 0;
 	return v;
 }
 vector ReadInt72_t()
 {
 	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = ReadInt24_t();
+	v.x = ReadInt24_t();
+	v.y = ReadInt24_t();
+	v.z = ReadInt24_t();
 	return v;
 }
 #else
@@ -2160,7 +2160,7 @@ float get_model_parameters(string m, float sk)
 
 vector vec2(vector v)
 {
-	v_z = 0;
+	v.z = 0;
 	return v;
 }
 
@@ -2172,9 +2172,9 @@ vector NearestPointOnBox(entity box, vector org)
 	m1 = box.mins + box.origin;
 	m2 = box.maxs + box.origin;
 
-	nearest_x = bound(m1_x, org.x, m2_x);
-	nearest_y = bound(m1_y, org.y, m2_y);
-	nearest_z = bound(m1_z, org.z, m2_z);
+	nearest.x = bound(m1_x, org.x, m2_x);
+	nearest.y = bound(m1_y, org.y, m2_y);
+	nearest.z = bound(m1_z, org.z, m2_z);
 
 	return nearest;
 }
@@ -2585,7 +2585,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 #ifdef SVQC
 vector combine_to_vector(float x, float y, float z)
 {
-	vector result; result_x = x; result_y = y; result_z = z;
+	vector result; result.x = x; result.y = y; result.z = z;
 	return result;
 }
 
@@ -2654,9 +2654,9 @@ string CCR(string input)
 vector vec3(float x, float y, float z)
 {
 	vector v;
-	v_x = x;
-	v_y = y;
-	v_z = z;
+	v.x = x;
+	v.y = y;
+	v.z = z;
 	return v;
 }
 
@@ -2664,7 +2664,7 @@ vector vec3(float x, float y, float z)
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
-	if(a_y == 1)
+	if(a.y == 1)
 	{
 		float dur;
 		dur = frameduration(e.modelindex, a.x);
@@ -2674,7 +2674,7 @@ vector animfixfps(entity e, vector a, vector b)
 			dur = frameduration(e.modelindex, a.x);
 		}
 		if(dur > 0)
-			a_z = 1.0 / dur;
+			a.z = 1.0 / dur;
 	}
 	return a;
 }

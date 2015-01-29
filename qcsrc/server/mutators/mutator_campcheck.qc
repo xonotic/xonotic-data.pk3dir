@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
 		dist = self.prevorigin - self.origin;
-		dist_z = 0;
+		dist.z = 0;
 		self.campcheck_traveled_distance += fabs(vlen(dist));
 
 		if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime) || (round_handler_IsActive() && !round_handler_IsRoundStarted()))

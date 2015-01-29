@@ -511,9 +511,9 @@ vector randompos(vector m1, vector m2)
 {
     vector v;
     m2 = m2 - m1;
-    v_x = m2_x * random() + m1_x;
-    v_y = m2_y * random() + m1_y;
-    v_z = m2_z * random() + m1_z;
+    v.x = m2_x * random() + m1_x;
+    v.y = m2_y * random() + m1_y;
+    v.z = m2_z * random() + m1_z;
     return  v;
 }
 
@@ -1299,9 +1299,9 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     for (i = 0; i < attempts; ++i)
     {
-        start_x = org.x + random() * delta.x;
-        start_y = org.y + random() * delta.y;
-        start_z = org.z + random() * delta.z;
+        start.x = org.x + random() * delta.x;
+        start.y = org.y + random() * delta.y;
+        start.z = org.z + random() * delta.z;
 
         // rule 1: start inside world bounds, and outside
         // solid, and don't start from somewhere where you can
@@ -1358,9 +1358,9 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 	}
 
         // find a random vector to "look at"
-        end_x = org.x + random() * delta.x;
-        end_y = org.y + random() * delta.y;
-        end_z = org.z + random() * delta.z;
+        end.x = org.x + random() * delta.x;
+        end.y = org.y + random() * delta.y;
+        end.z = org.z + random() * delta.z;
         end = start + normalize(end - start) * vlen(delta);
 
         // rule 4: start TO end must not be too short
@@ -1414,14 +1414,14 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			break;
 
 		case 4: // left
-			vecs_y = -vecs.y;
+			vecs.y = -vecs.y;
 			break;
 
 		case 1:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
-				vecs_y = 0;
+				vecs.y = 0;
 				vecs.z -= 2;
 			}
 			else
@@ -1434,13 +1434,13 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
-				vecs_y = 0;
+				vecs.y = 0;
 				vecs.z -= 2;
 			}
 			else
 			{
 				// left
-				vecs_y = -vecs.y;
+				vecs.y = -vecs.y;
 			}
 			break;
 	}
@@ -1457,28 +1457,28 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 		if (visual)
 		{
 			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs_y = 0; vecs.z -= 2; }
+			else { vecs.y = 0; vecs.z -= 2; }
 		}
 		else
 		{
-			vecs_y = 0;
-			vecs_z = 0;
+			vecs.y = 0;
+			vecs.z = 0;
 		}
 	}
 	else if (autocvar_g_shootfromcenter)
 	{
-		vecs_y = 0;
+		vecs.y = 0;
 		vecs.z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{
 		v = stov(s);
 		if (y_is_right)
-			v_y = -v.y;
+			v.y = -v.y;
 		if (v.x != 0)
-			vecs_x = v.x;
-		vecs_y = v.y;
-		vecs_z = v.z;
+			vecs.x = v.x;
+		vecs.y = v.y;
+		vecs.z = v.z;
 	}
 	else if (autocvar_g_shootfromclient)
 	{
@@ -1516,12 +1516,12 @@ void attach_sameorigin(entity e, entity to, string tag)
     fixedmakevectors(e.angles);
 
     // untransform forward, up!
-    e_forward_x = v_forward * t_forward;
-    e_forward_y = v_forward * t_left;
-    e_forward_z = v_forward * t_up;
-    e_up_x = v_up * t_forward;
-    e_up_y = v_up * t_left;
-    e_up_z = v_up * t_up;
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
 
     e.angles = fixedvectoangles2(e_forward, e_up);
     if (substring(e.model, 0, 1) == "*") // bmodels have their own rules

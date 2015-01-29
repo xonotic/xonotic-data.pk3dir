@@ -368,7 +368,7 @@ float bumb_pilot_frame()
 	else if(pilot.movement.x < 0 && vang.x > -autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = -8;
 
-	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x , autocvar_g_vehicle_bumblebee_pitchlimit);
+	newvel.x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x , autocvar_g_vehicle_bumblebee_pitchlimit);
 	ftmp = vang.x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
 	vehic.avelocity_x = bound(-autocvar_g_vehicle_bumblebee_pitchspeed, ftmp + vehic.avelocity.x * 0.9, autocvar_g_vehicle_bumblebee_pitchspeed);
 

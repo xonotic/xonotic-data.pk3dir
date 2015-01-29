@@ -48,13 +48,13 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 		value = argv(i+1);
 		if(key == "$")
 		{
-			data_x = -1;
-			data_y = FIELD_STRING;
+			data.x = -1;
+			data.y = FIELD_STRING;
 		}
 		else
 		{
 			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
-			if(data_y == 0) // undefined field, i.e., invalid type
+			if(data.y == 0) // undefined field, i.e., invalid type
 			{
 				print("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
 				continue;
@@ -232,7 +232,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 		}
 		else
 		{
-			if(data_y == FIELD_VECTOR)
+			if(data.y == FIELD_VECTOR)
 				value = strreplace("'", "", value); // why?!?
 			putentityfieldstring(data.x, e, value);
 		}
@@ -322,7 +322,7 @@ void initialize_field_db()
 			ft = entityfieldtype(i);
 			new = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
 			prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
-			if(prev_y == 0)
+			if(prev.y == 0)
 			{
 				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(new));
 				if(fn == "target_spawn_spawnfunc")

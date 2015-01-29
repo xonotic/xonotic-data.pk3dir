@@ -82,7 +82,7 @@ string draw_PreloadPictureWithFlags(string pic, float f)
 
 void draw_Picture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha)
 {
-	if(theSize_x == 0 || theSize.y <= 0) // no default sizing please
+	if(theSize.x == 0 || theSize.y <= 0) // no default sizing please
 		return;
 	pic = draw_UseSkinFor(pic);
 	drawpic(boxToGlobal(theOrigin, draw_shift, draw_scale), pic, boxToGlobalSize(theSize, draw_scale), theColor, theAlpha * draw_alpha, 0);
@@ -308,7 +308,7 @@ float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 	vector v;
 	v = '0 0 0';
 	//float r;
-	v_x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
+	v.x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
 	v = globalToBoxSize(v, draw_scale);
 	return v.x;
 }

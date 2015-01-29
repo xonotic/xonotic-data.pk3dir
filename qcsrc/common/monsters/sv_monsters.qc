@@ -576,7 +576,7 @@ vector monster_pickmovetarget(entity targ)
 
 				if(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM))
 				{
-					pos_z = random() * 200;
+					pos.z = random() * 200;
 					if(random() >= 0.5)
 						pos.z *= -1;
 				}

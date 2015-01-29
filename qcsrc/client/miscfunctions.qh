@@ -60,12 +60,12 @@ string _drawpic_picpath;
 			_drawpic_sz = mySize;\
 			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
 				_drawpic_oldsz = _drawpic_sz.x;\
-				_drawpic_sz_x = _drawpic_sz.y * _drawpic_imgaspect;\
+				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
 				if(_drawpic_sz.x)\
 					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 			} else {\
 				_drawpic_oldsz = _drawpic_sz.y;\
-				_drawpic_sz_y = _drawpic_sz.x / _drawpic_imgaspect;\
+				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
 				if(_drawpic_sz.y)\
 					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 			}\
@@ -103,11 +103,11 @@ void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theSc
 	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
 	if(sz.x/sz.y > textaspect) {																					\
 		oldsz = sz.x;																								\
-		sz_x = sz.y * textaspect;																					\
+		sz.x = sz.y * textaspect;																					\
 		pos.x += (oldsz - sz.x) * 0.5;																				\
 	} else {																										\
 		oldsz = sz.y;																								\
-		sz_y = sz.x / textaspect; 																					\
+		sz.y = sz.x / textaspect; 																					\
 		pos.y += (oldsz - sz.y) * 0.5;																				\
 	}																												\
 } while(0)

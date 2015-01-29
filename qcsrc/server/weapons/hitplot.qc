@@ -13,9 +13,9 @@
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {
 	vector ret;
-	ret_x = screenright * v;
-	ret_y = screenup * v;
-	ret_z = screenforward * v;
+	ret.x = screenright * v;
+	ret.y = screenup * v;
+	ret.z = screenforward * v;
 	return ret;
 }
 
@@ -38,8 +38,8 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 		thisv = W_HitPlotUnnormalizedUntransform(screenforward, screenright, screenup, thisv);
 		if(i || j || k)
 		{
-			if(mi.x > thisv.x) mi_x = thisv.x; if(ma.x < thisv.x) ma_x = thisv.x;
-			if(mi.y > thisv.y) mi_y = thisv.y; if(ma.y < thisv.y) ma_y = thisv.y;
+			if(mi.x > thisv.x) mi.x = thisv.x; if(ma.x < thisv.x) ma.x = thisv.x;
+			if(mi.y > thisv.y) mi.y = thisv.y; if(ma.y < thisv.y) ma.y = thisv.y;
 			//if(mi_z > thisv_z) mi_z = thisv_z; if(ma_z < thisv_z) ma_y = thisv_z;
 		}
 		else
@@ -50,9 +50,9 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	}
 
 	thisv = W_HitPlotUnnormalizedUntransform(screenforward, screenright, screenup, v);
-	ret_x = (thisv.x - mi.x) / (ma.x - mi.x);
-	ret_y = (thisv.y - mi.y) / (ma.y - mi.y);
-	ret_z = thisv.z - myv.z;
+	ret.x = (thisv.x - mi.x) / (ma.x - mi.x);
+	ret.y = (thisv.y - mi.y) / (ma.y - mi.y);
+	ret.z = thisv.z - myv.z;
 	return ret;
 }
 

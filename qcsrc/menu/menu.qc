@@ -357,7 +357,7 @@ void drawBackground(string img, float a, string algn, float force1)
 	string c;
 	float scalemode;
 
-	v_z = 0;
+	v.z = 0;
 
 	scalemode = SCALEMODE_CROP;
 
@@ -372,17 +372,17 @@ void drawBackground(string img, float a, string algn, float force1)
 			case "h": scalemode = SCALEMODE_HEIGHT; goto nopic;
 			case "w": scalemode = SCALEMODE_WIDTH; goto nopic;
 			case "s": scalemode = SCALEMODE_STRETCH; goto nopic;
-			case "1": case "4": case "7": v_x = 0.0; break;
-			case "2": case "5": case "8": v_x = 0.5; break;
-			case "3": case "6": case "9": v_x = 1.0; break;
-			default: v_x = random(); break;
+			case "1": case "4": case "7": v.x = 0.0; break;
+			case "2": case "5": case "8": v.x = 0.5; break;
+			case "3": case "6": case "9": v.x = 1.0; break;
+			default: v.x = random(); break;
 		}
 		switch(c)
 		{
-			case "7": case "8": case "9": v_y = 0.0; break;
-			case "4": case "5": case "6": v_y = 0.5; break;
-			case "1": case "2": case "3": v_y = 1.0; break;
-			default: v_y = random(); break;
+			case "7": case "8": case "9": v.y = 0.0; break;
+			case "4": case "5": case "6": v.y = 0.5; break;
+			case "1": case "2": case "3": v.y = 1.0; break;
+			default: v.y = random(); break;
 		}
 		if(l == 0)
 			draw_Picture_Aligned(v, scalemode, img, a);
@@ -432,13 +432,13 @@ float m_allocatetooltipbox(vector pos)
 	vector avoidplus, avoidminus;
 	vector v;
 
-	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
-	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
-	avoidplus_z = 0;
+	avoidplus.x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
+	avoidplus.y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
+	avoidplus.z = 0;
 
-	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize.x;
-	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize.y;
-	avoidminus_z = 0;
+	avoidminus.x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize.x;
+	avoidminus.y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize.y;
+	avoidminus.z = 0;
 
 	// bottom right
 	v = pos + avoidplus;
@@ -446,27 +446,27 @@ float m_allocatetooltipbox(vector pos)
 		return true;
 
 	// bottom center
-	v_x = pos.x - menuTooltipSize.x * 0.5;
+	v.x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
 		return true;
 
 	// bottom left
-	v_x = pos.x - avoidminus.x;
+	v.x = pos.x - avoidminus.x;
 	if(m_testtooltipbox(v))
 		return true;
 
 	// top left
-	v_y = pos.y - avoidminus.y;
+	v.y = pos.y - avoidminus.y;
 	if(m_testtooltipbox(v))
 		return true;
 
 	// top center
-	v_x = pos.x - menuTooltipSize.x * 0.5;
+	v.x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
 		return true;
 
 	// top right
-	v_x = pos.x + avoidplus.x;
+	v.x = pos.x + avoidplus.x;
 	if(m_testtooltipbox(v))
 		return true;
 
@@ -578,7 +578,7 @@ void m_tooltip(vector pos)
 					menuTooltipState = 1;
 					menuTooltipItem = it;
 
-					menuTooltipOrigin_x = -1; // unallocated
+					menuTooltipOrigin.x = -1; // unallocated
 
 					if (menuTooltipText)
 						strunzone(menuTooltipText);
@@ -595,9 +595,9 @@ void m_tooltip(vector pos)
 						if(f > w)
 							w = f;
 					}
-					menuTooltipSize_x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize_y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
-					menuTooltipSize_z = 0;
+					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
+					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize.z = 0;
 				}
 				break;
 			case 1:
@@ -830,8 +830,8 @@ void m_draw(float width, float height)
 				maxpos = globalToBox(eX * (realconwidth - 1) + eY * (realconheight - 1), draw_shift, draw_scale);
 				dMouse = globalToBoxSize(dMouse, draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
-				menuMousePos_x = bound(minpos.x, menuMousePos.x, maxpos.x);
-				menuMousePos_y = bound(minpos.y, menuMousePos.y, maxpos.y);
+				menuMousePos.x = bound(minpos.x, menuMousePos.x, maxpos.x);
+				menuMousePos.y = bound(minpos.y, menuMousePos.y, maxpos.y);
 				if(mouseButtonsPressed)
 					main.mouseDrag(main, menuMousePos);
 				else

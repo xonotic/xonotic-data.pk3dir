@@ -782,8 +782,8 @@ void Draw_Shockwave()
 	{
 		// perfect circle effect lines
 		makevectors('0 360 0' * (0.75 + (counter - 0.5) / divisions));
-		angle_y = v_forward.x;
-		angle_z = v_forward.y;
+		angle.y = v_forward.x;
+		angle.z = v_forward.y;
 
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;

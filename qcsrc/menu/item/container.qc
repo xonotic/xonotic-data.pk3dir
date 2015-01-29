@@ -291,15 +291,15 @@ void Container_addItem(entity me, entity other, vector theOrigin, vector theSize
 	if(theSize.x > 1)
 	{
 		theOrigin.x -= 0.5 * (theSize.x - 1);
-		theSize_x = 1;
+		theSize.x = 1;
 	}
 	if(theSize.y > 1)
 	{
 		theOrigin.y -= 0.5 * (theSize.y - 1);
-		theSize_y = 1;
+		theSize.y = 1;
 	}
-	theOrigin_x = bound(0, theOrigin.x, 1 - theSize.x);
-	theOrigin_y = bound(0, theOrigin.y, 1 - theSize.y);
+	theOrigin.x = bound(0, theOrigin.x, 1 - theSize.x);
+	theOrigin.y = bound(0, theOrigin.y, 1 - theSize.y);
 
 	other.parent = me;
 	other.Container_origin = theOrigin;

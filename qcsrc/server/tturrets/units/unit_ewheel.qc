@@ -152,7 +152,7 @@ void ewheel_postthink()
     real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
     self.tur_head.spawnshieldtime = fabs(real_angle.y);
-    real_angle_y = bound(-self.tur_head.aim_speed, real_angle.y, self.tur_head.aim_speed);
+    real_angle.y = bound(-self.tur_head.aim_speed, real_angle.y, self.tur_head.aim_speed);
     self.angles_y = (self.angles.y + real_angle.y);
 
     if(self.enemy)

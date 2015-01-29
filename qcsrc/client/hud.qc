@@ -27,7 +27,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
 		return;
     }
-	if (theBorderSize_x == 0 && theBorderSize_y == 0) // no border
+	if (theBorderSize.x == 0 && theBorderSize.y == 0) // no border
 	{
 		// draw only the central part
 		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
@@ -100,42 +100,42 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 	float blinkingamt;
 	vector color;
 	if(x >= maxvalue) {
-		color_x = sin(2*M_PI*time);
-		color_y = 1;
-		color_z = sin(2*M_PI*time);
+		color.x = sin(2*M_PI*time);
+		color.y = 1;
+		color.z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
-		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color_z = 0;
+		color.x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
+		color.y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+		color.z = 0;
 	}
 	else if(x > maxvalue * 0.5) {
-		color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+		color.x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
+		color.y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
+		color.z = 1 - (x-100)*0.02; // blue value between 1 -> 0
 	}
 	else if(x > maxvalue * 0.25) {
-		color_x = 1;
-		color_y = 1;
-		color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+		color.x = 1;
+		color.y = 1;
+		color.z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
 	else if(x > maxvalue * 0.1) {
-		color_x = 1;
-		color_y = (x-20)*90/27/100; // green value between 0 -> 1
-		color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+		color.x = 1;
+		color.y = (x-20)*90/27/100; // green value between 0 -> 1
+		color.z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
 	}
 	else {
-		color_x = 1;
-		color_y = 0;
-		color_z = 0;
+		color.x = 1;
+		color.y = 0;
+		color.z = 0;
 	}
 
 	blinkingamt = (1 - x/maxvalue/0.25);
 	if(blinkingamt > 0)
 	{
-		color_x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
-		color_y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
-		color_z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
+		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
+		color.y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
+		color.z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
 	}
 	return color;
 }
@@ -158,7 +158,7 @@ void drawstringright(vector position, string text, vector theScale, vector rgb, 
 
 void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
+	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
 	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
@@ -538,8 +538,8 @@ void HUD_Weapons(void)
 				columns = ceil(max_panel_size.x / (max_panel_size.y / rows * aspect));
 			}
 
-			weapon_size_x = max_panel_size.x / columns;
-			weapon_size_y = max_panel_size.y / rows;
+			weapon_size.x = max_panel_size.x / columns;
+			weapon_size.y = max_panel_size.y / rows;
 			columns = ceil(weapon_count / rows);
 		}
 		else
@@ -550,14 +550,14 @@ void HUD_Weapons(void)
 				rows = ceil(max_panel_size.y / (max_panel_size.x / columns / aspect));
 			}
 
-			weapon_size_x = max_panel_size.x / columns;
-			weapon_size_y = max_panel_size.y / rows;
+			weapon_size.x = max_panel_size.x / columns;
+			weapon_size.y = max_panel_size.y / rows;
 			rows = ceil(weapon_count / columns);
 		}
 
 		// reduce size of the panel
-		panel_size_x = columns * weapon_size.x;
-		panel_size_y = rows * weapon_size.y;
+		panel_size.x = columns * weapon_size.x;
+		panel_size.y = rows * weapon_size.y;
 		panel_pos.x += (max_panel_size.x - panel_size.x) / 2;
 		panel_pos.y += (max_panel_size.y - panel_size.y) / 2;
 
@@ -589,8 +589,8 @@ void HUD_Weapons(void)
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
-				center_x = panel_pos.x + panel_size.x/2;
-				center_y = panel_pos.y + panel_size.y/2;
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
 				screen_ar = vid_conwidth/vid_conheight;
 				if (center.x/center.y < screen_ar) //bottom left
 				{
@@ -607,7 +607,7 @@ void HUD_Weapons(void)
 						panel_pos.y -= f * (panel_pos.y + panel_size.y);
 				}
 				if(f == 1)
-					center_x = -1; // mark the panel as off screen
+					center.x = -1; // mark the panel as off screen
 			}
 			weaponprevtime = time - (1 - f) * timein_effect_length;
 		}
@@ -632,8 +632,8 @@ void HUD_Weapons(void)
 			{
 				f *= f; // for a cooler movement
 				f = 1 - f;
-				center_x = panel_pos.x + panel_size.x/2;
-				center_y = panel_pos.y + panel_size.y/2;
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
 				screen_ar = vid_conwidth/vid_conheight;
 				if (center.x/center.y < screen_ar) //bottom left
 				{
@@ -656,7 +656,7 @@ void HUD_Weapons(void)
 	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
 
-	if(center_x == -1)
+	if(center.x == -1)
 	{
 		draw_endBoldFont();
 		return;
@@ -686,15 +686,15 @@ void HUD_Weapons(void)
 
 		if(weapon_size.x/weapon_size.y > aspect)
 		{
-			barsize_x = aspect * weapon_size.y;
-			barsize_y = weapon_size.y;
-			baroffset_x = (weapon_size.x - barsize.x) / 2;
+			barsize.x = aspect * weapon_size.y;
+			barsize.y = weapon_size.y;
+			baroffset.x = (weapon_size.x - barsize.x) / 2;
 		}
 		else
 		{
-			barsize_y = 1/aspect * weapon_size.x;
-			barsize_x = weapon_size.x;
-			baroffset_y = (weapon_size.y - barsize.y) / 2;
+			barsize.y = 1/aspect * weapon_size.x;
+			barsize.x = weapon_size.x;
+			baroffset.y = (weapon_size.y - barsize.y) / 2;
 		}
 	}
 	if(autocvar_hud_panel_weapons_accuracy)
@@ -1029,16 +1029,16 @@ void HUD_Ammo(void)
 	if(ammo_size.x/ammo_size.y > 3)
 	{
 		newSize = 3 * ammo_size.y;
-		offset_x = ammo_size.x - newSize;
+		offset.x = ammo_size.x - newSize;
 		pos.x += offset.x/2;
-		ammo_size_x = newSize;
+		ammo_size.x = newSize;
 	}
 	else
 	{
 		newSize = 1/3 * ammo_size.x;
-		offset_y = ammo_size.y - newSize;
+		offset.y = ammo_size.y - newSize;
 		pos.y += offset.y/2;
-		ammo_size_y = newSize;
+		ammo_size.y = newSize;
 	}
 
 	float i;
@@ -1113,19 +1113,19 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 	{
 		if(mySize.y/mySize.x > 2)
 		{
-			newSize_y = 2 * mySize.x;
-			newSize_x = mySize.x;
+			newSize.y = 2 * mySize.x;
+			newSize.x = mySize.x;
 
-			newPos_y = myPos.y + (mySize.y - newSize.y) / 2;
-			newPos_x = myPos.x;
+			newPos.y = myPos.y + (mySize.y - newSize.y) / 2;
+			newPos.x = myPos.x;
 		}
 		else
 		{
-			newSize_x = 1/2 * mySize.y;
-			newSize_y = mySize.y;
+			newSize.x = 1/2 * mySize.y;
+			newSize.y = mySize.y;
 
-			newPos_x = myPos.x + (mySize.x - newSize.x) / 2;
-			newPos_y = myPos.y;
+			newPos.x = myPos.x + (mySize.x - newSize.x) / 2;
+			newPos.y = myPos.y;
 		}
 
 		if(icon_right_align)
@@ -1151,19 +1151,19 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 
 	if(mySize.x/mySize.y > 3)
 	{
-		newSize_x = 3 * mySize.y;
-		newSize_y = mySize.y;
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
 
-		newPos_x = myPos.x + (mySize.x - newSize.x) / 2;
-		newPos_y = myPos.y;
+		newPos.x = myPos.x + (mySize.x - newSize.x) / 2;
+		newPos.y = myPos.y;
 	}
 	else
 	{
-		newSize_y = 1/3 * mySize.x;
-		newSize_x = mySize.x;
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
 
-		newPos_y = myPos.y + (mySize.y - newSize.y) / 2;
-		newPos_x = myPos.x;
+		newPos.y = myPos.y + (mySize.y - newSize.y) / 2;
+		newPos.x = myPos.x;
 	}
 
 	if(icon_right_align) // right align
@@ -1263,20 +1263,20 @@ void HUD_Powerups(void)
 		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 		{
 			mySize.x *= (1.0 / 3.0);
-			superweapons_offset_x = mySize.x;
+			superweapons_offset.x = mySize.x;
 			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = 2*mySize.x;
+				shield_offset.x = 2*mySize.x;
 			else
-				strength_offset_x = 2*mySize.x;
+				strength_offset.x = 2*mySize.x;
 		}
 		else
 		{
 			mySize.y *= (1.0 / 3.0);
-			superweapons_offset_y = mySize.y;
+			superweapons_offset.y = mySize.y;
 			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = 2*mySize.y;
+				shield_offset.y = 2*mySize.y;
 			else
-				strength_offset_y = 2*mySize.y;
+				strength_offset.y = 2*mySize.y;
 		}
 	}
 	else
@@ -1285,17 +1285,17 @@ void HUD_Powerups(void)
 		{
 			mySize.x *= 0.5;
 			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = mySize.x;
+				shield_offset.x = mySize.x;
 			else
-				strength_offset_x = mySize.x;
+				strength_offset.x = mySize.x;
 		}
 		else
 		{
 			mySize.y *= 0.5;
 			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = mySize.y;
+				shield_offset.y = mySize.y;
 			else
-				strength_offset_y = mySize.y;
+				strength_offset.y = mySize.y;
 		}
 	}
 
@@ -1509,17 +1509,17 @@ void HUD_HealthArmor(void)
 		{
 			mySize.x *= 0.5;
 			if (autocvar_hud_panel_healtharmor_flip)
-				health_offset_x = mySize.x;
+				health_offset.x = mySize.x;
 			else
-				armor_offset_x = mySize.x;
+				armor_offset.x = mySize.x;
 		}
 		else
 		{
 			mySize.y *= 0.5;
 			if (autocvar_hud_panel_healtharmor_flip)
-				health_offset_y = mySize.y;
+				health_offset.y = mySize.y;
 			else
-				armor_offset_y = mySize.y;
+				armor_offset.y = mySize.y;
 		}
 
 		float health_baralign, armor_baralign, fuel_baralign;
@@ -1910,10 +1910,10 @@ void HUD_Radar(void)
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
 		panel_size = autocvar_hud_panel_radar_maximized_size;
-		panel_size_x = bound(0.2, panel_size.x, 1) * vid_conwidth;
-		panel_size_y = bound(0.2, panel_size.y, 1) * vid_conheight;
-		panel_pos_x = (vid_conwidth - panel_size.x) / 2;
-		panel_pos_y = (vid_conheight - panel_size.y) / 2;
+		panel_size.x = bound(0.2, panel_size.x, 1) * vid_conwidth;
+		panel_size.y = bound(0.2, panel_size.y, 1) * vid_conheight;
+		panel_pos.x = (vid_conwidth - panel_size.x) / 2;
+		panel_pos.y = (vid_conheight - panel_size.y) / 2;
 
 		string panel_bg;
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
@@ -2024,8 +2024,8 @@ void HUD_Radar(void)
 		c2 = rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
 		c3 = rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
-		span_x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
-		span_y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
+		span.x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
+		span.y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
 
 		// max-min distance must fit the radar in x=x, y=y
 		bigsize = min(
@@ -2321,16 +2321,16 @@ void HUD_Score(void)
 			if(score_size.x/score_size.y > 3)
 			{
 				newSize = 3 * score_size.y;
-				offset_x = score_size.x - newSize;
+				offset.x = score_size.x - newSize;
 				pos.x += offset.x/2;
-				score_size_x = newSize;
+				score_size.x = newSize;
 			}
 			else
 			{
 				newSize = 1/3 * score_size.x;
-				offset_y = score_size.y - newSize;
+				offset.y = score_size.y - newSize;
 				pos.y += offset.y/2;
-				score_size_y = newSize;
+				score_size.y = newSize;
 			}
 		}
 		else
@@ -2408,17 +2408,17 @@ void HUD_RaceTimer (void)
 	vector newSize = '0 0 0';
 	if(mySize.x/mySize.y > 4)
 	{
-		newSize_x = 4 * mySize.y;
-		newSize_y = mySize.y;
+		newSize.x = 4 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos.x + (mySize.x - newSize.x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/4 * mySize.x;
-		newSize_x = mySize.x;
+		newSize.y = 1/4 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos.y + (mySize.y - newSize.y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 	mySize = newSize;
 
@@ -2616,17 +2616,17 @@ void HUD_Vote(void)
 	vector newSize = '0 0 0';
 	if(mySize.x/mySize.y > 3)
 	{
-		newSize_x = 3 * mySize.y;
-		newSize_y = mySize.y;
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos.x + (mySize.x - newSize.x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/3 * mySize.x;
-		newSize_x = mySize.x;
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos.y + (mySize.y - newSize.y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 	mySize = newSize;
 
@@ -2712,14 +2712,14 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, flo
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
 		i = aspect_ratio * mySize.y;
-		myPos_x = myPos.x + (mySize.x - i) / 2;
-		mySize_x = i;
+		myPos.x = myPos.x + (mySize.x - i) / 2;
+		mySize.x = i;
 	}
 	else
 	{
 		i = 1/aspect_ratio * mySize.x;
-		myPos_y = myPos.y + (mySize.y - i) / 2;
-		mySize_y = i;
+		myPos.y = myPos.y + (mySize.y - i) / 2;
+		mySize.y = i;
 	}
 
 	if(layout)
@@ -3302,14 +3302,14 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, fl
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
 		i = aspect_ratio * mySize.y;
-		myPos_x = myPos.x + (mySize.x - i) / 2;
-		mySize_x = i;
+		myPos.x = myPos.x + (mySize.x - i) / 2;
+		mySize.x = i;
 	}
 	else
 	{
 		i = 1/aspect_ratio * mySize.x;
-		myPos_y = myPos.y + (mySize.y - i) / 2;
-		mySize_y = i;
+		myPos.y = myPos.y + (mySize.y - i) / 2;
+		mySize.y = i;
 	}
 
 	if (layout) // show text too
@@ -3450,17 +3450,17 @@ void HUD_PressedKeys(void)
 		vector newSize = '0 0 0';
 		if(mySize.x/mySize.y > aspect)
 		{
-			newSize_x = aspect * mySize.y;
-			newSize_y = mySize.y;
+			newSize.x = aspect * mySize.y;
+			newSize.y = mySize.y;
 
-			pos_x = pos.x + (mySize.x - newSize.x) / 2;
+			pos.x = pos.x + (mySize.x - newSize.x) / 2;
 		}
 		else
 		{
-			newSize_y = 1/aspect * mySize.x;
-			newSize_x = mySize.x;
+			newSize.y = 1/aspect * mySize.x;
+			newSize.x = mySize.x;
 
-			pos_y = pos.y + (mySize.y - newSize.y) / 2;
+			pos.y = pos.y + (mySize.y - newSize.y) / 2;
 		}
 		mySize = newSize;
 	}
@@ -3513,8 +3513,8 @@ void HUD_Chat(void)
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
-		panel_pos_y = panel_bg_border;
-		panel_size_y = vid_conheight - panel_bg_border * 2;
+		panel_pos.y = panel_bg_border;
+		panel_size.y = vid_conheight - panel_bg_border * 2;
 		if(panel.current_panel_bg == "0") // force a border when maximized
 		{
 			string panel_bg;
@@ -3634,7 +3634,7 @@ void HUD_EngineInfo(void)
 //
 #define drawInfoMessage(s) do {																						\
 	if(autocvar_hud_panel_infomessages_flip)																		\
-		o_x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
+		o.x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
 	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
 	o.y += fontsize.y;																								\
 } while(0)
@@ -3661,17 +3661,17 @@ void HUD_InfoMessages(void)
 	vector newSize = '0 0 0';
 	if(mySize.x/mySize.y > 5)
 	{
-		newSize_x = 5 * mySize.y;
-		newSize_y = mySize.y;
+		newSize.x = 5 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos.x + (mySize.x - newSize.x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/5 * mySize.x;
-		newSize_x = mySize.x;
+		newSize.y = 1/5 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos.y + (mySize.y - newSize.y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 
 	mySize = newSize;
@@ -3916,17 +3916,17 @@ void HUD_Physics(void)
 	{
 		panel_size.x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
-			speed_offset_x = panel_size.x;
+			speed_offset.x = panel_size.x;
 		else
-			acceleration_offset_x = panel_size.x;
+			acceleration_offset.x = panel_size.x;
 	}
 	else
 	{
 		panel_size.y *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
-			speed_offset_y = panel_size.y;
+			speed_offset.y = panel_size.y;
 		else
-			acceleration_offset_y = panel_size.y;
+			acceleration_offset.y = panel_size.y;
 	}
 	float speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
@@ -3953,26 +3953,26 @@ void HUD_Physics(void)
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
-		tmp_size_x = panel_size.x * 0.75;
-		tmp_size_y = panel_size.y * text_scale;
+		tmp_size.x = panel_size.x * 0.75;
+		tmp_size.y = panel_size.y * text_scale;
 		if (speed_baralign)
-			tmp_offset_x = panel_size.x - tmp_size.x;
+			tmp_offset.x = panel_size.x - tmp_size.x;
 		//else
 			//tmp_offset_x = 0;
-		tmp_offset_y = (panel_size.y - tmp_size.y) / 2;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
 		if (speed_baralign)
-			tmp_offset_x = 0;
+			tmp_offset.x = 0;
 		else
-			tmp_offset_x = tmp_size.x;
+			tmp_offset.x = tmp_size.x;
 		if (autocvar_hud_panel_physics_speed_unit_show)
 		{
 			//tmp_offset_y = 0;
-			tmp_size_x = panel_size.x * (1 - 0.75);
-			tmp_size_y = panel_size.y * 0.4 * text_scale;
-			tmp_offset_y = (panel_size.y * 0.4 - tmp_size.y) / 2;
+			tmp_size.x = panel_size.x * (1 - 0.75);
+			tmp_size.y = panel_size.y * 0.4 * text_scale;
+			tmp_offset.y = (panel_size.y * 0.4 - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
@@ -4016,8 +4016,8 @@ void HUD_Physics(void)
 					peak_offsetX = (1 - min(top_speed, max_speed)/max_speed) * panel_size.x;
                 else // if (speed_baralign == 2)
                     peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
-				peak_size_x = floor(panel_size.x * 0.01 + 1.5);
-                peak_size_y = panel_size.y;
+				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
+                peak_size.y = panel_size.y;
                 if (speed_baralign == 2) // draw two peaks, on both sides
                 {
                     drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -4028,9 +4028,9 @@ void HUD_Physics(void)
 			}
 
 			//top speed
-			tmp_offset_y = panel_size.y * 0.4;
-			tmp_size_x = panel_size.x * (1 - 0.75);
-			tmp_size_y = (panel_size.y - tmp_offset.y) * text_scale;
+			tmp_offset.y = panel_size.y * 0.4;
+			tmp_size.x = panel_size.x * (1 - 0.75);
+			tmp_size.y = (panel_size.y - tmp_offset.y) * text_scale;
 			tmp_offset.y += (panel_size.y - tmp_offset.y - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
@@ -4057,12 +4057,12 @@ void HUD_Physics(void)
 			tmp_size = acceleration_progressbar_scale * panel_size.x * eX + panel_size.y * eY;
 
 			if (acceleration_baralign == 1)
-				tmp_offset_x = panel_size.x - tmp_size.x;
+				tmp_offset.x = panel_size.x - tmp_size.x;
 			else if (acceleration_baralign == 2 || acceleration_baralign == 3)
-				tmp_offset_x = (panel_size.x - tmp_size.x) / 2;
+				tmp_offset.x = (panel_size.x - tmp_size.x) / 2;
 			else
-				tmp_offset_x = 0;
-			tmp_offset_y = 0;
+				tmp_offset.x = 0;
+			tmp_offset.y = 0;
 		}
 		else
 		{
@@ -4072,10 +4072,10 @@ void HUD_Physics(void)
 
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	tmp_size_x = panel_size.x;
-	tmp_size_y = panel_size.y * text_scale;
-	tmp_offset_x = 0;
-	tmp_offset_y = (panel_size.y - tmp_size.y) / 2;
+	tmp_size.x = panel_size.x;
+	tmp_size.y = panel_size.y * text_scale;
+	tmp_offset.x = 0;
+	tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
 		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -4240,7 +4240,7 @@ void HUD_CenterPrint (void)
 		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
-			panel_size_y = min(panel_size.y, vid_conheight - scoreboard_bottom);
+			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
 	}
 
@@ -4355,7 +4355,7 @@ void HUD_CenterPrint (void)
 				if (ts != "")
 				{
 					if (align)
-						pos_x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
+						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos.y += fontsize.y;
@@ -4370,7 +4370,7 @@ void HUD_CenterPrint (void)
 		msg_size = pos.y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos_y = current_msg_posY - CENTERPRINT_SPACING * fontsize.y;
+			pos.y = current_msg_posY - CENTERPRINT_SPACING * fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos.y += (msg_size + CENTERPRINT_SPACING * fontsize.y) * (1 - sqrt(sz));
 

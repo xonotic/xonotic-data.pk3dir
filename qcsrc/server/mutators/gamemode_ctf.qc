@@ -1581,7 +1581,7 @@ void havocbot_role_ctf_middle()
 		vector org;
 
 		org = havocbot_ctf_middlepoint;
-		org_z = self.origin.z;
+		org.z = self.origin.z;
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();

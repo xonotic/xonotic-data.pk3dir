@@ -186,7 +186,7 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
 {
     vector a, b, c, d, e, r, push_angle, ahead, side;
 
-    push_angle_y = 0;
+    push_angle.y = 0;
     r = (self.absmax + self.absmin) * 0.5 + (v_up * spring_up);
     e = v_up * spring_length;
 
@@ -200,29 +200,29 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     d = r - ahead - side;
 
     traceline(a, a - e,MOVE_NORMAL,self);
-    a_z =  (1 - trace_fraction);
+    a.z =  (1 - trace_fraction);
     r = trace_endpos;
 
     traceline(b, b - e,MOVE_NORMAL,self);
-    b_z =  (1 - trace_fraction);
+    b.z =  (1 - trace_fraction);
     r += trace_endpos;
 
     traceline(c, c - e,MOVE_NORMAL,self);
-    c_z =  (1 - trace_fraction);
+    c.z =  (1 - trace_fraction);
     r += trace_endpos;
 
     traceline(d, d - e,MOVE_NORMAL,self);
-    d_z =  (1 - trace_fraction);
+    d.z =  (1 - trace_fraction);
     r += trace_endpos;
 
-    a_x = r.z;
+    a.x = r.z;
     r = self.origin;
-    r_z = r.z;
+    r.z = r.z;
 
-    push_angle_x = (a.z - c.z) * _max;
+    push_angle.x = (a.z - c.z) * _max;
     push_angle.x += (b.z - d.z) * _max;
 
-    push_angle_z = (b.z - a.z) * _max;
+    push_angle.z = (b.z - a.z) * _max;
     push_angle.z += (d.z - c.z) * _max;
 
     //self.angles_x += push_angle_x * 0.95;

@@ -102,11 +102,11 @@ void racer_align4point(float _delta)
     if(self.velocity.z > 0)
         self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
 
-    push_vector_x =  (fl_push - bl_push);
+    push_vector.x =  (fl_push - bl_push);
     push_vector_x += (fr_push - br_push);
     push_vector_x *= 360;
 
-    push_vector_z = (fr_push - fl_push);
+    push_vector.z = (fr_push - fl_push);
     push_vector_z += (br_push - bl_push);
     push_vector_z *= 360;
 
@@ -132,7 +132,7 @@ void racer_fire_cannon(string tagname)
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
-    v_forward_z = v.z * 0.5;
+    v_forward.z = v.z * 0.5;
     bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
 }
 

@@ -217,8 +217,8 @@ void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
-	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
+	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
 	charge = ReadByte() / 255.0;
 
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);

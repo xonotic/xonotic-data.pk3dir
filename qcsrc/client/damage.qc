@@ -133,9 +133,9 @@ void Ent_DamageInfo(float isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org_x = ReadCoord();
-	w_org_y = ReadCoord();
-	w_org_z = ReadCoord();
+	w_org.x = ReadCoord();
+	w_org.y = ReadCoord();
+	w_org.z = ReadCoord();
 
 	dmg = ReadByte();
 	rad = ReadByte();

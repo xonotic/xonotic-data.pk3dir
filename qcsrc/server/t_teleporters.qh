@@ -12,12 +12,12 @@ void trigger_teleport_use();
 	deathmax = (o) + player.maxs; \
 	if(telefragmin != telefragmax) \
 	{ \
-		if(deathmin.x > telefragmin.x) deathmin_x = telefragmin.x; \
-		if(deathmin.y > telefragmin.y) deathmin_y = telefragmin.y; \
-		if(deathmin.z > telefragmin.z) deathmin_z = telefragmin.z; \
-		if(deathmax.x < telefragmax.x) deathmax_x = telefragmax.x; \
-		if(deathmax.y < telefragmax.y) deathmax_y = telefragmax.y; \
-		if(deathmax.z < telefragmax.z) deathmax_z = telefragmax.z; \
+		if(deathmin.x > telefragmin.x) deathmin.x = telefragmin.x; \
+		if(deathmin.y > telefragmin.y) deathmin.y = telefragmin.y; \
+		if(deathmin.z > telefragmin.z) deathmin.z = telefragmin.z; \
+		if(deathmax.x < telefragmax.x) deathmax.x = telefragmax.x; \
+		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; \
+		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; \
 	} \
 	deathradius = max(vlen(deathmin), vlen(deathmax)); \
 	for(head = findradius(o, deathradius); head; head = head.chain) \

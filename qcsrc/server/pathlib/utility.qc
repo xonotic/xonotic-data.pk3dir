@@ -7,9 +7,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point.x / fsize) * fsize;
-    vret_y = rint(point.y / fsize) * fsize;
-    vret_z = ceil(point.z / fsize) * fsize;
+    vret.x = rint(point.x / fsize) * fsize;
+    vret.y = rint(point.y / fsize) * fsize;
+    vret.z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -68,8 +68,8 @@ entity pathlib_nodeatpoint(vector where)
 
     ++pathlib_searched_cnt;
 
-    where_x = fsnap(where.x,pathlib_gridsize);
-    where_y = fsnap(where.y,pathlib_gridsize);
+    where.x = fsnap(where.x,pathlib_gridsize);
+    where.y = fsnap(where.y,pathlib_gridsize);
 
     node = findradius(where,pathlib_gridsize * 0.5);
     while(node)

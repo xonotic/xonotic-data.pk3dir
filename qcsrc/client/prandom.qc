@@ -29,9 +29,9 @@ vector prandomvec()
 
 	do
 	{
-		v_x = prandom();
-		v_y = prandom();
-		v_z = prandom();
+		v.x = prandom();
+		v.y = prandom();
+		v.z = prandom();
 	}
 	while(v * v > 1);
 

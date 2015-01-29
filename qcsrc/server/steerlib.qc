@@ -221,8 +221,8 @@ vector steerlib_flock2d(float _radius, float standoff,float separation_force,flo
         flock_member = flock_member.chain;
     }
 
-    push_z = 0;
-    pull_z = 0;
+    push.z = 0;
+    pull.z = 0;
 
     return push + (pull * (1 / ccount));
 }

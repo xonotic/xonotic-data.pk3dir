@@ -310,12 +310,12 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			if(k == "origin")
 			{
 				o = stov(strcat("'", v, "'"));
-				mapMins_x = min(mapMins.x, o.x);
-				mapMins_y = min(mapMins.y, o.y);
-				mapMins_z = min(mapMins.z, o.z);
-				mapMaxs_x = max(mapMaxs.x, o.x);
-				mapMaxs_y = max(mapMaxs.y, o.y);
-				mapMaxs_z = max(mapMaxs.z, o.z);
+				mapMins.x = min(mapMins.x, o.x);
+				mapMins.y = min(mapMins.y, o.y);
+				mapMins.z = min(mapMins.z, o.z);
+				mapMaxs.x = max(mapMaxs.x, o.x);
+				mapMaxs.y = max(mapMaxs.y, o.y);
+				mapMaxs.z = max(mapMaxs.z, o.z);
 			}
 			else if(k == "race_place")
 			{
@@ -1090,12 +1090,12 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 						print("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs\n");
 					else
 					{
-						MapInfo_Map_mins_x = a;
-						MapInfo_Map_mins_y = b;
-						MapInfo_Map_mins_z = c;
-						MapInfo_Map_maxs_x = d;
-						MapInfo_Map_maxs_y = e;
-						MapInfo_Map_maxs_z = f;
+						MapInfo_Map_mins.x = a;
+						MapInfo_Map_mins.y = b;
+						MapInfo_Map_mins.z = c;
+						MapInfo_Map_maxs.x = d;
+						MapInfo_Map_maxs.y = e;
+						MapInfo_Map_maxs.z = f;
 					}
 				}
 			}

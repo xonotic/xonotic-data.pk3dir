@@ -129,11 +129,11 @@ vector HUD_GetFontsize(string cvarname)
 {
 	vector v;
 	v = stov(cvar_string(cvarname));
-	if(v_x == 0)
+	if(v.x == 0)
 		v = '8 8 0';
-	if(v_y == 0)
-		v_y = v.x;
-	v_z = 0;
+	if(v.y == 0)
+		v.y = v.x;
+	v.z = 0;
 	return v;
 }
 
@@ -154,8 +154,8 @@ vector rotate(vector v, float a)
 {
 	vector w = '0 0 0';
 	// FTEQCC SUCKS AGAIN
-	w_x =      v.x * cos(a) + v.y * sin(a);
-	w_y = -1 * v.x * sin(a) + v.y * cos(a);
+	w.x =      v.x * cos(a) + v.y * sin(a);
+	w.y = -1 * v.x * sin(a) + v.y * cos(a);
 	return w;
 }
 
@@ -222,15 +222,15 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 
 	// left and right lines
 	pos.x -= thickness;
-	line_dim_x = thickness;
-	line_dim_y = dim.y;
+	line_dim.x = thickness;
+	line_dim.y = dim.y;
 	drawfill(pos, line_dim, color, theAlpha, drawflag);
 	drawfill(pos + (dim.x + thickness) * '1 0 0', line_dim, color, theAlpha, drawflag);
 
 	// upper and lower lines
 	pos.y -= thickness;
-	line_dim_x = dim.x + thickness * 2; // make upper and lower lines longer
-	line_dim_y = thickness;
+	line_dim.x = dim.x + thickness * 2; // make upper and lower lines longer
+	line_dim.y = thickness;
 	drawfill(pos, line_dim, color, theAlpha, drawflag);
 	drawfill(pos + (dim.y + thickness) * '0 1 0', line_dim, color, theAlpha, drawflag);
 }
@@ -240,16 +240,16 @@ void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color,
 	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
-	current_pos_y = pos.y;
+	current_pos.y = pos.y;
 	while (current_pos.y < end_pos.y)
 	{
-		current_pos_x = pos.x;
+		current_pos.x = pos.x;
 		while (current_pos.x < end_pos.x)
 		{
-			new_size_x = min(sz.x, end_pos.x - current_pos.x);
-			new_size_y = min(sz.y, end_pos.y - current_pos.y);
-			ratio_x = new_size.x / sz.x;
-			ratio_y = new_size.y / sz.y;
+			new_size.x = min(sz.x, end_pos.x - current_pos.x);
+			new_size.y = min(sz.y, end_pos.y - current_pos.y);
+			ratio.x = new_size.x / sz.x;
+			ratio.y = new_size.y / sz.y;
 			drawsubpic(current_pos, new_size, pic, '0 0 0', ratio, color, theAlpha, drawflag);
 			current_pos.x += sz.x;
 		}

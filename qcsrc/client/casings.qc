@@ -22,7 +22,7 @@ void Casing_Draw()
 {
 	if(self.move_flags & FL_ONGROUND)
 	{
-		self.move_angles_x = 0;
+		self.move_angles.x = 0;
 		self.move_angles_z = 0;
 		self.flags &= ~FL_ONGROUND;
 	}
@@ -80,7 +80,7 @@ void Casing_Touch()
 void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
 {
 	if(thisforce.z < 0)
-		thisforce_z = 0;
+		thisforce.z = 0;
 	self.move_velocity = self.move_velocity + thisforce + '0 0 100';
 	self.move_flags &= ~FL_ONGROUND;
 }

@@ -56,19 +56,19 @@ void plat_spawn_inside_trigger()
 
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
-	tmin_z = tmax.z - (self.pos1_z - self.pos2_z + 8);
+	tmin.z = tmax.z - (self.pos1_z - self.pos2_z + 8);
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
-		tmax_z = tmin.z + 8;
+		tmax.z = tmin.z + 8;
 
 	if (self.size.x <= 50)
 	{
-		tmin_x = (self.mins.x + self.maxs.x) / 2;
-		tmax_x = tmin.x + 1;
+		tmin.x = (self.mins.x + self.maxs.x) / 2;
+		tmax.x = tmin.x + 1;
 	}
 	if (self.size.y <= 50)
 	{
-		tmin_y = (self.mins.y + self.maxs.y) / 2;
-		tmax_y = tmin.y + 1;
+		tmin.y = (self.mins.y + self.maxs.y) / 2;
+		tmax.y = tmin.y + 1;
 	}
 
 	if(tmin.x < tmax.x)
@@ -328,7 +328,7 @@ void train_wait()
 		else // linear movement
 			ang = targ.origin - (self.origin - self.view_ofs); // use the origin of the next path_corner
 		ang = vectoangles(ang);
-		ang_x = -ang.x; // flip up / down orientation
+		ang.x = -ang.x; // flip up / down orientation
 
 		if(self.wait > 0) // slow turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
@@ -1408,17 +1408,17 @@ void LinkDoors()
 		if((t.message != "") && (self.message == ""))
 			self.message = t.message;
 		if (t.absmin.x < cmins.x)
-			cmins_x = t.absmin.x;
+			cmins.x = t.absmin.x;
 		if (t.absmin.y < cmins.y)
-			cmins_y = t.absmin.y;
+			cmins.y = t.absmin.y;
 		if (t.absmin.z < cmins.z)
-			cmins_z = t.absmin.z;
+			cmins.z = t.absmin.z;
 		if (t.absmax.x > cmaxs.x)
-			cmaxs_x = t.absmax.x;
+			cmaxs.x = t.absmax.x;
 		if (t.absmax.y > cmaxs.y)
-			cmaxs_y = t.absmax.y;
+			cmaxs.y = t.absmax.y;
 		if (t.absmax.z > cmaxs.z)
-			cmaxs_z = t.absmax.z;
+			cmaxs.z = t.absmax.z;
 		if(t.enemy == self)
 			break;
 	}
@@ -1627,7 +1627,7 @@ void spawnfunc_func_door_rotating()
 	else // Z
 		self.movedir = '0 1 0';
 
-	if (self.angles_y ==0) self.angles_y = 90;
+	if (self.angles.y ==0) self.angles.y = 90;
 
 	self.movedir = self.movedir * self.angles.y;
 	self.angles = '0 0 0';

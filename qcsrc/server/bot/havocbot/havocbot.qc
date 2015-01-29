@@ -138,7 +138,7 @@ void havocbot_ai()
 		//dprint(vtos(now), ":", vtos(next), "=", vtos(v), " (blend ", ftos(blend), ")\n");
 		//v = now * (distanceblend) + next * (1-distanceblend);
 		if (self.waterlevel < WATERLEVEL_SWIMMING)
-			v_z = 0;
+			v.z = 0;
 		//dprint("walk at:", vtos(v), "\n");
 		//te_lightning2(world, self.origin, self.goalcurrent.origin);
 		bot_aimdir(v, -1);
@@ -204,38 +204,38 @@ void havocbot_keyboard_movement(vector destorg)
 	// at skill >= 4.5, all cases allowed
 	if (keyboard.x > trigger)
 	{
-		keyboard_x = 1;
+		keyboard.x = 1;
 		if (sk < 2.5)
-			keyboard_y = 0;
+			keyboard.y = 0;
 	}
 	else if (keyboard.x < trigger1 && sk > 1.5)
 	{
-		keyboard_x = -1;
+		keyboard.x = -1;
 		if (sk < 4.5)
-			keyboard_y = 0;
+			keyboard.y = 0;
 	}
 	else
 	{
-		keyboard_x = 0;
+		keyboard.x = 0;
 		if (sk < 1.5)
-			keyboard_y = 0;
+			keyboard.y = 0;
 	}
 	if (sk < 4.5)
-		keyboard_z = 0;
+		keyboard.z = 0;
 
 	if (keyboard.y > trigger)
-		keyboard_y = 1;
+		keyboard.y = 1;
 	else if (keyboard.y < trigger1)
-		keyboard_y = -1;
+		keyboard.y = -1;
 	else
-		keyboard_y = 0;
+		keyboard.y = 0;
 
 	if (keyboard.z > trigger)
-		keyboard_z = 1;
+		keyboard.z = 1;
 	else if (keyboard.z < trigger1)
-		keyboard_z = -1;
+		keyboard.z = -1;
 	else
-		keyboard_z = 0;
+		keyboard.z = 0;
 
 	self.havocbot_keyboard = keyboard * maxspeed;
 	if (self.havocbot_ducktime>time) self.BUTTON_CROUCH=true;
@@ -322,8 +322,8 @@ void havocbot_bunnyhop(vector dir)
 					{
 						gno = (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - self.origin) - vectoangles(gco - self.origin);
-						while (deviation.y < -180) deviation_y = deviation.y + 360;
-						while (deviation.y > 180) deviation_y = deviation.y - 360;
+						while (deviation.y < -180) deviation.y = deviation.y + 360;
+						while (deviation.y > 180) deviation.y = deviation.y - 360;
 
 						if(fabs(deviation.y) < 20)
 						if(bunnyhopdistance < vlen(self.origin - gno))
@@ -373,8 +373,8 @@ void havocbot_bunnyhop(vector dir)
 		if(vlen(self.velocity)>maxspeed)
 		{
 			deviation = vectoangles(dir) - vectoangles(self.velocity);
-			while (deviation.y < -180) deviation_y = deviation.y + 360;
-			while (deviation.y > 180) deviation_y = deviation.y - 360;
+			while (deviation.y < -180) deviation.y = deviation.y + 360;
+			while (deviation.y > 180) deviation.y = deviation.y - 360;
 
 			if(fabs(deviation.y)>10)
 				self.movement_x = 0;
@@ -440,7 +440,7 @@ void havocbot_movetogoal()
 			float db, v, d;
 			vector dxy;
 
-			dxy = self.origin - ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ); dxy_z = 0;
+			dxy = self.origin - ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ); dxy.z = 0;
 			d = vlen(dxy);
 			v = vlen(self.velocity -  self.velocity.z * '0 0 1');
 			db = (pow(v,2) / (autocvar_g_jetpack_acceleration_side * 2)) + 100;
@@ -628,7 +628,7 @@ void havocbot_movetogoal()
 	{
 		dir = '0 0 0';
 		if(self.waterlevel>WATERLEVEL_SWIMMING)
-			dir_z = 1;
+			dir.z = 1;
 		else if(self.velocity.z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
 			self.BUTTON_JUMP = true;
 		else
@@ -660,13 +660,13 @@ void havocbot_movetogoal()
 	m1 = self.goalcurrent.origin + self.goalcurrent.mins;
 	m2 = self.goalcurrent.origin + self.goalcurrent.maxs;
 	destorg = self.origin;
-	destorg_x = bound(m1_x, destorg.x, m2_x);
-	destorg_y = bound(m1_y, destorg.y, m2_y);
-	destorg_z = bound(m1_z, destorg.z, m2_z);
+	destorg.x = bound(m1_x, destorg.x, m2_x);
+	destorg.y = bound(m1_y, destorg.y, m2_y);
+	destorg.z = bound(m1_z, destorg.z, m2_z);
 	diff = destorg - self.origin;
 	//dist = vlen(diff);
 	dir = normalize(diff);
-	flatdir = diff;flatdir_z = 0;
+	flatdir = diff;flatdir.z = 0;
 	flatdir = normalize(flatdir);
 	gco = (self.goalcurrent.absmin + self.goalcurrent.absmax) * 0.5;
 
@@ -790,8 +790,8 @@ void havocbot_movetogoal()
 			}
 
 			dir = flatdir;
-			evadeobstacle_z = 0;
-			evadelava_z = 0;
+			evadeobstacle.z = 0;
+			evadelava.z = 0;
 			makevectors(self.v_angle.y * '0 1 0');
 
 			if(evadeobstacle!='0 0 0'||evadelava!='0 0 0')
@@ -815,12 +815,12 @@ void havocbot_movetogoal()
 		if(self.goalcurrent.origin.z + self.goalcurrent.mins.z > self.origin.z + self.mins.z)
 		{
 			if(self.origin.z + self.mins.z  < self.ladder_entity.origin.z + self.ladder_entity.maxs.z)
-				dir_z = 1;
+				dir.z = 1;
 		}
 		else
 		{
 			if(self.origin.z + self.mins.z  > self.ladder_entity.origin.z + self.ladder_entity.mins.z)
-				dir_z = -1;
+				dir.z = -1;
 		}
 	}
 
@@ -1078,12 +1078,12 @@ void havocbot_aim()
 	self.nextaim = time + 0.1;
 	selfvel = self.velocity;
 	if (!self.waterlevel)
-		selfvel_z = 0;
+		selfvel.z = 0;
 	if (self.enemy)
 	{
 		enemyvel = self.enemy.velocity;
 		if (!self.enemy.waterlevel)
-			enemyvel_z = 0;
+			enemyvel.z = 0;
 		lag_additem(time + self.ping, 0, 0, self.enemy, self.origin, selfvel, (self.enemy.absmin + self.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
@@ -1146,7 +1146,7 @@ float havocbot_moveto(vector pos)
 
 		// Heading
 		vector dir = ( ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5 ) - (self.origin + self.view_ofs);
-		dir_z = 0;
+		dir.z = 0;
 		bot_aimdir(dir, -1);
 
 		// Go!

@@ -1340,9 +1340,9 @@ void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 	vector oldup = v_up;
 	vector v = eyetarget - self.origin;
 	vector modeleyetarget;
-	modeleyetarget_x =   v * v_forward;
-	modeleyetarget_y = 0-v * v_right;
-	modeleyetarget_z =   v * v_up;
+	modeleyetarget.x =   v * v_forward;
+	modeleyetarget.y = 0-v * v_right;
+	modeleyetarget.z =   v * v_up;
 	// this is an eyeball, make it point at the target location
 	// first get all the data we can...
 	vector relorg = skel_get_bonerel(self.skeletonindex, bonenum);
@@ -1360,11 +1360,11 @@ void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 	// get the vector from the eyeball to the target
 	vector u = modeleyetarget - boneorg;
 	// now transform it inversely by the parent matrix to produce new rel vectors
-	v_x = u * parentforward;
-	v_y = u * parentright;
-	v_z = u * parentup;
+	v.x = u * parentforward;
+	v.y = u * parentright;
+	v.z = u * parentup;
 	vector ang = vectoangles2(v, relup);
-	ang_x = 0 - ang.x;
+	ang.x = 0 - ang.x;
 	makevectors(ang);
 	// set the relative bone matrix
 	skel_set_bone(self.skeletonindex, bonenum, relorg);

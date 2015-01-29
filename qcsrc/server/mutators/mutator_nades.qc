@@ -129,9 +129,9 @@ void nade_napalm_ball()
 	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
 	proj.effects = EF_LOWPRECISION | EF_FLAME;
 
-	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
-	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
-	kick_z = (random()/2+0.5) * autocvar_g_nades_napalm_ball_spread;
+	kick.x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick.y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick.z = (random()/2+0.5) * autocvar_g_nades_napalm_ball_spread;
 	proj.velocity = kick;
 
 	proj.pushltime = time + autocvar_g_nades_napalm_ball_lifetime;
@@ -268,9 +268,9 @@ void nade_ice_think()
 	float randomw;
 	randomw = random()*M_PI*2;
 	vector randomp;
-	randomp_x = randomr*cos(randomw);
-	randomp_y = randomr*sin(randomw);
-	randomp_z = 1;
+	randomp.x = randomr*cos(randomw);
+	randomp.y = randomr*sin(randomw);
+	randomp.z = 1;
 	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
 
 	if(time >= self.nade_special_time)

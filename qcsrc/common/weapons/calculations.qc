@@ -136,9 +136,9 @@ vector solve_cubic_abcd(float a, float b, float c, float d)
 vector findperpendicular(vector v)
 {
 	vector p;
-	p_x = v.z;
-	p_y = -v.x;
-	p_z = v.y;
+	p.x = v.z;
+	p.y = -v.x;
+	p.z = v.y;
 	return normalize(cliptoplane(p, v));
 }
 

@@ -70,7 +70,7 @@ void Porto_Draw()
 			continue;
 		++portal_number;
 		ang = vectoangles2(trace_plane_normal, dir);
-		ang_x = -ang.x;
+		ang.x = -ang.x;
 		makevectors(ang);
 		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 			return;
@@ -272,7 +272,7 @@ float EnemyHitCheck()
 {
 	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
-	wcross_origin_z = 0;
+	wcross_origin.z = 0;
 	if(trace_ent)
 		n = trace_ent.entnum;
 	else
@@ -352,7 +352,7 @@ float TrueAimCheck()
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
 	if(vecs.x > 0)
-		vecs_y = -vecs.y;
+		vecs.y = -vecs.y;
 	else
 		vecs = '0 0 0';
 
@@ -566,7 +566,7 @@ void UpdateCrosshair()
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
-		wcross_origin_z = 0;
+		wcross_origin.z = 0;
 		if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
@@ -633,40 +633,40 @@ void UpdateCrosshair()
 				//y = green
 				//z = blue
 
-				wcross_color_z = 0;
+				wcross_color.z = 0;
 
 				if(x > 200)
 				{
-					wcross_color_x = 0;
-					wcross_color_y = 1;
+					wcross_color.x = 0;
+					wcross_color.y = 1;
 				}
 				else if(x > 150)
 				{
-					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+					wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
+					wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
 				}
 				else if(x > 100)
 				{
-					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color_z = 1 - (x-100)*0.02;
+					wcross_color.x = 1 - (x-100)*0.02 * 0.6;
+					wcross_color.y = 1 - (x-100)*0.02 * 0.1;
+					wcross_color.z = 1 - (x-100)*0.02;
 				}
 				else if(x > 50)
 				{
-					wcross_color_x = 1;
-					wcross_color_y = 1;
-					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
+					wcross_color.x = 1;
+					wcross_color.y = 1;
+					wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
 				}
 				else if(x > 20)
 				{
-					wcross_color_x = 1;
-					wcross_color_y = (x-20)*90/27/100;
-					wcross_color_z = (x-20)*90/27/100 * 0.2;
+					wcross_color.x = 1;
+					wcross_color.y = (x-20)*90/27/100;
+					wcross_color.z = (x-20)*90/27/100 * 0.2;
 				}
 				else
 				{
-					wcross_color_x = 1;
-					wcross_color_y = 0;
+					wcross_color.x = 1;
+					wcross_color.y = 0;
 				}
 				break;
 			}
@@ -1476,17 +1476,17 @@ void CSQC_UpdateView(float w, float h)
 		{
 			if(autocvar_cl_reticle_stretch)
 			{
-				reticle_size_x = vid_conwidth;
-				reticle_size_y = vid_conheight;
-				reticle_pos_x = 0;
-				reticle_pos_y = 0;
+				reticle_size.x = vid_conwidth;
+				reticle_size.y = vid_conheight;
+				reticle_pos.x = 0;
+				reticle_pos.y = 0;
 			}
 			else
 			{
-				reticle_size_x = max(vid_conwidth, vid_conheight);
-				reticle_size_y = max(vid_conwidth, vid_conheight);
-				reticle_pos_x = (vid_conwidth - reticle_size.x) / 2;
-				reticle_pos_y = (vid_conheight - reticle_size.y) / 2;
+				reticle_size.x = max(vid_conwidth, vid_conheight);
+				reticle_size.y = max(vid_conwidth, vid_conheight);
+				reticle_pos.x = (vid_conwidth - reticle_size.x) / 2;
+				reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 			}
 
 			if(zoomscript_caught)
@@ -1562,25 +1562,25 @@ void CSQC_UpdateView(float w, float h)
 		{
 			if(autocvar_hud_contents_blur && contentavgalpha)
 			{
-				content_blurpostprocess_x = 1;
-				content_blurpostprocess_y = contentavgalpha * autocvar_hud_contents_blur;
-				content_blurpostprocess_z = contentavgalpha * autocvar_hud_contents_blur_alpha;
+				content_blurpostprocess.x = 1;
+				content_blurpostprocess.y = contentavgalpha * autocvar_hud_contents_blur;
+				content_blurpostprocess.z = contentavgalpha * autocvar_hud_contents_blur_alpha;
 			}
 			else
 			{
-				content_blurpostprocess_x = 0;
-				content_blurpostprocess_y = 0;
-				content_blurpostprocess_z = 0;
+				content_blurpostprocess.x = 0;
+				content_blurpostprocess.y = 0;
+				content_blurpostprocess.z = 0;
 			}
 		}
 	}
 
 	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
 	{
-		splash_size_x = max(vid_conwidth, vid_conheight);
-		splash_size_y = max(vid_conwidth, vid_conheight);
-		splash_pos_x = (vid_conwidth - splash_size.x) / 2;
-		splash_pos_y = (vid_conheight - splash_size.y) / 2;
+		splash_size.x = max(vid_conwidth, vid_conheight);
+		splash_size.y = max(vid_conwidth, vid_conheight);
+		splash_pos.x = (vid_conwidth - splash_size.x) / 2;
+		splash_pos.y = (vid_conheight - splash_size.y) / 2;
 
 		float myhealth_flash_temp;
 		myhealth = getstati(STAT_HEALTH);
@@ -1648,15 +1648,15 @@ void CSQC_UpdateView(float w, float h)
 		{
 			if(autocvar_hud_damage_blur && myhealth_flash_temp)
 			{
-				damage_blurpostprocess_x = 1;
-				damage_blurpostprocess_y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
-				damage_blurpostprocess_z = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur_alpha;
+				damage_blurpostprocess.x = 1;
+				damage_blurpostprocess.y = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur;
+				damage_blurpostprocess.z = bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage_blur_alpha;
 			}
 			else
 			{
-				damage_blurpostprocess_x = 0;
-				damage_blurpostprocess_y = 0;
-				damage_blurpostprocess_z = 0;
+				damage_blurpostprocess.x = 0;
+				damage_blurpostprocess.y = 0;
+				damage_blurpostprocess.z = 0;
 			}
 		}
 	}
@@ -1846,8 +1846,8 @@ void CSQC_Demo_Camera()
 		dir = normalize(view_origin - current_position);
 		n = mouse_angles.z;
 		mouse_angles = vectoangles(dir);
-		mouse_angles_x = mouse_angles.x * -1;
-		mouse_angles_z = n;
+		mouse_angles.x = mouse_angles.x * -1;
+		mouse_angles.z = n;
 	}
 	else
 	{
@@ -1859,10 +1859,10 @@ void CSQC_Demo_Camera()
 		}
 	}
 
-	while (mouse_angles.x < -180) mouse_angles_x = mouse_angles.x + 360;
-	while (mouse_angles.x > 180) mouse_angles_x = mouse_angles.x - 360;
-	while (mouse_angles.y < -180) mouse_angles_y = mouse_angles.y + 360;
-	while (mouse_angles.y > 180) mouse_angles_y = mouse_angles.y - 360;
+	while (mouse_angles.x < -180) mouse_angles.x = mouse_angles.x + 360;
+	while (mouse_angles.x > 180) mouse_angles.x = mouse_angles.x - 360;
+	while (mouse_angles.y < -180) mouse_angles.y = mouse_angles.y + 360;
+	while (mouse_angles.y > 180) mouse_angles.y = mouse_angles.y - 360;
 
 	// Fix difference when angles don't have the same sign
 	delta = '0 0 0';
@@ -1879,10 +1879,10 @@ void CSQC_Demo_Camera()
 	attenuation = 1 / max(1, attenuation);
 	current_angles += (mouse_angles - current_angles + delta) * attenuation;
 
-	while (current_angles.x < -180) current_angles_x = current_angles.x + 360;
-	while (current_angles.x > 180) current_angles_x = current_angles.x - 360;
-	while (current_angles.y < -180) current_angles_y = current_angles.y + 360;
-	while (current_angles.y > 180) current_angles_y = current_angles.y - 360;
+	while (current_angles.x < -180) current_angles.x = current_angles.x + 360;
+	while (current_angles.x > 180) current_angles.x = current_angles.x - 360;
+	while (current_angles.y < -180) current_angles.y = current_angles.y + 360;
+	while (current_angles.y > 180) current_angles.y = current_angles.y - 360;
 
 	// Camera position
 	tmp = '0 0 0';
@@ -1890,10 +1890,10 @@ void CSQC_Demo_Camera()
 
 	if( camera_direction.x )
 	{
-		tmp_x = camera_direction.x * cos(current_angles.y * DEG2RAD);
-		tmp_y = camera_direction.x * sin(current_angles.y * DEG2RAD);
+		tmp.x = camera_direction.x * cos(current_angles.y * DEG2RAD);
+		tmp.y = camera_direction.x * sin(current_angles.y * DEG2RAD);
 		if( autocvar_camera_forward_follows && !autocvar_camera_look_player )
-			tmp_z = camera_direction.x * -sin(current_angles.x * DEG2RAD);
+			tmp.z = camera_direction.x * -sin(current_angles.x * DEG2RAD);
 		++dimensions;
 	}
 

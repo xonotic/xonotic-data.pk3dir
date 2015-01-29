@@ -4,8 +4,8 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
 
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
@@ -39,8 +39,8 @@ vector pathlib_swimnode(vector start,vector end, float doedge)
     if(pointcontents(start) != CONTENT_WATER)
         return end;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
         return pathlib_wateroutnode( start, end, doedge);
@@ -56,8 +56,8 @@ vector pathlib_flynode(vector start,vector end, float doedge)
 {
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end.x, pathlib_gridsize);
-    end_y = fsnap(end.y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     tracebox(start, movenode_boxmin,movenode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -84,10 +84,10 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end.x,pathlib_gridsize);
-    end_y = fsnap(end.y,pathlib_gridsize);
-    start_x = fsnap(start.x,pathlib_gridsize);
-    start_y = fsnap(start.y,pathlib_gridsize);
+    end.x = fsnap(end.x,pathlib_gridsize);
+    end.y = fsnap(end.y,pathlib_gridsize);
+    start.x = fsnap(start.x,pathlib_gridsize);
+    start.y = fsnap(start.y,pathlib_gridsize);
 
     // Find the floor
     traceline(start + movenode_stepup, start - movenode_maxdrop, MOVE_WORLDONLY, self);
@@ -128,8 +128,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     }
 
     point = last_point + (direction * movenode_stepsize);
-    point_x = fsnap(point.x,pathlib_gridsize);
-    point_y = fsnap(point.y,pathlib_gridsize);
+    point.x = fsnap(point.x,pathlib_gridsize);
+    point.y = fsnap(point.y,pathlib_gridsize);
 
     //dprint("end_x:  ",ftos(end_x),  "  end_y:  ",ftos(end_y),"\n");
     //dprint("point_x:",ftos(point_x),"  point_y:",ftos(point_y),"\n\n");

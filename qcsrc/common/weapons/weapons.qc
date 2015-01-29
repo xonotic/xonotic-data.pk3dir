@@ -106,11 +106,11 @@ void WriteWepSet(float dst, WepSet w)
 WepSet WepSet_GetFromStat()
 {
 	WepSet w = '0 0 0';
-	w_x = getstati(STAT_WEAPONS);
+	w.x = getstati(STAT_WEAPONS);
 #if WEP_MAXCOUNT > 24
-	w_y = getstati(STAT_WEAPONS2);
+	w.y = getstati(STAT_WEAPONS2);
 #if WEP_MAXCOUNT > 48
-	w_z = getstati(STAT_WEAPONS3);
+	w.z = getstati(STAT_WEAPONS3);
 #endif
 #endif
 	return w;

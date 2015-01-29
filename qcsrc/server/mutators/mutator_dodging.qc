@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD) || frozen_no_doubletap) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{
-				tap_direction_x = 1.0;
+				tap_direction.x = 1.0;
 				dodge_detected = 1;
 			}
  			self.last_FORWARD_KEY_time = time;
@@ -196,7 +196,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement.x < 0) {
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_no_doubletap) {
-			tap_direction_x = -1.0;
+			tap_direction.x = -1.0;
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}
@@ -207,7 +207,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement.y > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT) || frozen_no_doubletap) {
-			tap_direction_y = 1.0;
+			tap_direction.y = 1.0;
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}
@@ -218,7 +218,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (self.movement.y < 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT) || frozen_no_doubletap) {
-			tap_direction_y = -1.0;
+			tap_direction.y = -1.0;
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}

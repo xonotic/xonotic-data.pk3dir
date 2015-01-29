@@ -151,9 +151,9 @@ void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
 	self.classname = "warpzone_teleported";
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	v.x = ReadCoord();
+	v.y = ReadCoord();
+	v.z = ReadCoord();
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
@@ -194,12 +194,12 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	entity e;
 	float pd;
 
-	mi_x = min(o.x, c0_x, c1_x, c2_x, c3_x);
-	ma_x = max(o.x, c0_x, c1_x, c2_x, c3_x);
-	mi_y = min(o.y, c0_y, c1_y, c2_y, c3_y);
-	ma_y = max(o.y, c0_y, c1_y, c2_y, c3_y);
-	mi_z = min(o.z, c0_z, c1_z, c2_z, c3_z);
-	ma_z = max(o.z, c0_z, c1_z, c2_z, c3_z);
+	mi.x = min(o.x, c0_x, c1_x, c2_x, c3_x);
+	ma.x = max(o.x, c0_x, c1_x, c2_x, c3_x);
+	mi.y = min(o.y, c0_y, c1_y, c2_y, c3_y);
+	ma.y = max(o.y, c0_y, c1_y, c2_y, c3_y);
+	mi.z = min(o.z, c0_z, c1_z, c2_z, c3_z);
+	ma.z = max(o.z, c0_z, c1_z, c2_z, c3_z);
 
 	e = WarpZone_Find(mi, ma);
 	if(e)

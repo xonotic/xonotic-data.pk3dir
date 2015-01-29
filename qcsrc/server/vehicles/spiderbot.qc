@@ -164,9 +164,9 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
 	if(!solution.z)
-		solution_y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+		solution.y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
 	if(zdist == 0)
-		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution.x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
 	if(zdist < 0)
 	{
@@ -374,11 +374,11 @@ float spiderbot_frame()
 
     // Rotate head
     ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
-    ad_y = bound(-ftmp, ad.y, ftmp);
+    ad.y = bound(-ftmp, ad.y, ftmp);
     spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles.y + ad.y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
-    ad_x = bound(ftmp * -1, ad.x, ftmp);
+    ad.x = bound(ftmp * -1, ad.x, ftmp);
     spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles.x + ad.x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
 
 

@@ -1087,9 +1087,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 								else
 									hitloc = nearest;
 							}
-							nearest_x = targ.origin.x + targ.mins.x + random() * targ.size.x;
-							nearest_y = targ.origin.y + targ.mins.y + random() * targ.size.y;
-							nearest_z = targ.origin.z + targ.mins.z + random() * targ.size.z;
+							nearest.x = targ.origin.x + targ.mins.x + random() * targ.size.x;
+							nearest.y = targ.origin.y + targ.mins.y + random() * targ.size.y;
+							nearest.z = targ.origin.z + targ.mins.z + random() * targ.size.z;
 						}
 
 						nearest = hitloc * (1 / max(1, hits));

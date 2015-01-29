@@ -105,7 +105,7 @@ void Projectile_Draw()
 
 	vector ang;
 	ang = self.angles;
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 	makevectors(ang);
 
 	a = 1 - (time - self.fade_time) * self.fade_rate;

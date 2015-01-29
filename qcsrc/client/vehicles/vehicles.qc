@@ -95,8 +95,8 @@ void AuxiliaryXhair_Draw2D()
     loc = project_3d_to_2d(self.move_origin) - 0.5 * psize;
     if (!(loc.z < 0 || loc.x < 0 || loc.y < 0 || loc.x > vid_conwidth || loc.y > vid_conheight))
     {
-        loc_z = 0;
-        psize_z = 0;
+        loc.z = 0;
+        psize.z = 0;
         drawpic(loc, self.axh_image, psize, self.colormod, self.alpha, self.axh_drawflag);
     }
 
@@ -251,8 +251,8 @@ void CSQC_BUMBLE_HUD()
 	HUD_GETSTATS
 
     picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc_y = vid_conheight - picsize.y;
-    hudloc_x = vid_conwidth * 0.5 - picsize.x * 0.5;
+    hudloc.y = vid_conheight - picsize.y;
+    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
 
     drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
 
@@ -402,8 +402,8 @@ void CSQC_BUMBLE_GUN_HUD()
 	HUD_GETSTATS
 
     picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc_y = vid_conheight - picsize.y;
-    hudloc_x = vid_conwidth * 0.5 - picsize.x * 0.5;
+    hudloc.y = vid_conheight - picsize.y;
+    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
 
     drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
 
@@ -524,8 +524,8 @@ void CSQC_SPIDER_HUD()
 	HUD_GETSTATS
 
     picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc_y = vid_conheight - picsize.y;
-    hudloc_x = vid_conwidth * 0.5 - picsize.x * 0.5;
+    hudloc.y = vid_conheight - picsize.y;
+    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
 
     drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
 
@@ -686,8 +686,8 @@ void CSQC_RAPTOR_HUD()
 	HUD_GETSTATS
 
     picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc_y = vid_conheight - picsize.y;
-    hudloc_x = vid_conwidth * 0.5 - picsize.x * 0.5;
+    hudloc.y = vid_conheight - picsize.y;
+    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
 
     drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
 
@@ -827,7 +827,7 @@ void CSQC_RAPTOR_HUD()
             {
                 where.x -= picsize.x * 0.5;
                 where.y -= picsize.y * 0.5;
-                where_z = 0;
+                where.z = 0;
                 drawpic(where, raptor_drop, picsize, '0 2 0', 1, DRAWFLAG_ADDITIVE);
             }
             dropmark.cnt = time + 5;
@@ -844,7 +844,7 @@ void CSQC_RAPTOR_HUD()
                 {
                     where.x -= picsize.x * 0.5;
                     where.y -= picsize.y * 0.5;
-                    where_z = 0;
+                    where.z = 0;
                     drawpic(where, raptor_drop, picsize, '2 0 0', 1, DRAWFLAG_ADDITIVE);
                 }
             }
@@ -880,8 +880,8 @@ void CSQC_WAKIZASHI_HUD()
 	HUD_GETSTATS
 
     picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc_y = vid_conheight - picsize.y;
-    hudloc_x = vid_conwidth * 0.5 - picsize.x * 0.5;
+    hudloc.y = vid_conheight - picsize.y;
+    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
 
     drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
 

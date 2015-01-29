@@ -725,7 +725,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
     for(i = 0; i < 100; ++i)
     {
         v = randomvec();
-        v_z = 0;
+        v.z = 0;
         v = v2 + normalize(v) * mysize;
         tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, self.owner);
         if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
@@ -1368,8 +1368,8 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, true);
     ftmp = _aimspeed * frametime;
-    vtmp_y = bound(-ftmp, vtmp.y, ftmp);
-    vtmp_x = bound(-ftmp, vtmp.x, ftmp);
+    vtmp.y = bound(-ftmp, vtmp.y, ftmp);
+    vtmp.x = bound(-ftmp, vtmp.x, ftmp);
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles.y + vtmp.y, _rotlimit_max);
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles.x + vtmp.x, _pichlimit_max);
     return vtag;

@@ -344,7 +344,7 @@ void ListBox_draw(entity me)
 	if(me.pressed == 2)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
 	me.updateControlTopBottom(me);
-	fillSize_x = (1 - me.controlWidth);
+	fillSize.x = (1 - me.controlWidth);
 	if(me.alphaBG)
 		draw_Fill('0 0 0', '0 1 0' + fillSize, me.colorBG, me.alphaBG);
 	if(me.controlWidth)

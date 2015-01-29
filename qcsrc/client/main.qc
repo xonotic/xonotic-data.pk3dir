@@ -512,9 +512,9 @@ void Ent_ClientData()
 	if(f & 8)
 	{
 		angles_held_status = 1;
-		angles_held_x = ReadAngle();
-		angles_held_y = ReadAngle();
-		angles_held_z = 0;
+		angles_held.x = ReadAngle();
+		angles_held.y = ReadAngle();
+		angles_held.z = 0;
 	}
 	else
 		angles_held_status = 0;
@@ -662,9 +662,9 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
-	spn_origin_x = ReadShort();
-	spn_origin_y = ReadShort();
-	spn_origin_z = ReadShort();
+	spn_origin.x = ReadShort();
+	spn_origin.y = ReadShort();
+	spn_origin.z = ReadShort();
 
 	if(is_new)
 	{

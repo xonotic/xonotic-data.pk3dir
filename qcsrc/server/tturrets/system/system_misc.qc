@@ -36,9 +36,9 @@ vector shortangle_v(vector ang1, vector ang2)
 {
     vector vtmp;
 
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
-    vtmp_z = shortangle_f(ang1_z,ang2_z);
+    vtmp.x = shortangle_f(ang1_x,ang2_x);
+    vtmp.y = shortangle_f(ang1_y,ang2_y);
+    vtmp.z = shortangle_f(ang1_z,ang2_z);
 
     return vtmp;
 }
@@ -47,8 +47,8 @@ vector shortangle_vxy(vector ang1, vector ang2)
 {
     vector vtmp = '0 0 0';
 
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
+    vtmp.x = shortangle_f(ang1_x,ang2_x);
+    vtmp.y = shortangle_f(ang1_y,ang2_y);
 
     return vtmp;
 }

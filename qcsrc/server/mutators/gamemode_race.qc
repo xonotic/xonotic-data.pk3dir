@@ -66,11 +66,11 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel_x = fabs(self.movement.x);
-	wishvel_y = fabs(self.movement.y);
+	wishvel.x = fabs(self.movement.x);
+	wishvel.y = fabs(self.movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
-		wishvel_z = 0;
+		wishvel.z = 0;
 		wishspeed = vlen(wishvel);
 		if(wishvel.x >= 2 * wishvel.y)
 		{

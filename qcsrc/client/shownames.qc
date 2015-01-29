@@ -69,7 +69,7 @@ void Draw_ShowNames(entity ent)
 				eo = project_3d_to_2d(e.origin);
 				if (!(eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight))
 				{
-					eo_z = 0;
+					eo.z = 0;
 					if(vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(ent.origin - view_origin) > vlen(e.origin - view_origin))
 					{
 						overlap = true;
@@ -141,7 +141,7 @@ void Draw_ShowNames(entity ent)
 		// draw the sprite image
 		if(o.z >= 0)
 		{
-			o_z = 0;
+			o.z = 0;
 
 			vector myPos, mySize;
 			mySize = (eX * autocvar_hud_shownames_aspect + eY) * autocvar_hud_shownames_fontsize;

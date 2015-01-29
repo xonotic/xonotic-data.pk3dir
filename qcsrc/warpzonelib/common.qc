@@ -518,7 +518,7 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 #ifdef KEEP_ROLL
 	float roll;
 	roll = ang.z;
-	ang_z = 0;
+	ang.z = 0;
 #endif
 
 	ang = AnglesTransform_ApplyToVAngles(wz.warpzone_transform, ang);
@@ -526,7 +526,7 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 #ifdef KEEP_ROLL
 	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
-	ang_z = roll;
+	ang.z = roll;
 #else
 	ang = AnglesTransform_Normalize(ang, false);
 #endif
@@ -554,22 +554,22 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	float roll;
 
 	roll = ang.z;
-	ang_z = 0;
+	ang.z = 0;
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
 	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
 
-	ang_z = roll;
+	ang.z = roll;
 	return ang;
 }
 
 vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 {
 	vector nearest;
-	nearest_x = bound(mi.x, org.x, ma.x);
-	nearest_y = bound(mi.y, org.y, ma.y);
-	nearest_z = bound(mi.z, org.z, ma.z);
+	nearest.x = bound(mi.x, org.x, ma.x);
+	nearest.y = bound(mi.y, org.y, ma.y);
+	nearest.z = bound(mi.z, org.z, ma.z);
 	return nearest;
 }
 

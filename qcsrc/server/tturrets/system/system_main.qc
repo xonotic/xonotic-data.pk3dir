@@ -387,15 +387,15 @@ void turret_stdproc_track()
 
         case TFL_TRACKTYPE_FLUIDINERTIA:
             f_tmp = self.aim_speed * self.ticrate; // dgr/sec -> dgr/tic
-            move_angle_x = bound(-self.aim_speed, move_angle.x * self.track_accel_pitch * f_tmp, self.aim_speed);
-            move_angle_y = bound(-self.aim_speed, move_angle.y * self.track_accel_rot * f_tmp, self.aim_speed);
+            move_angle.x = bound(-self.aim_speed, move_angle.x * self.track_accel_pitch * f_tmp, self.aim_speed);
+            move_angle.y = bound(-self.aim_speed, move_angle.y * self.track_accel_rot * f_tmp, self.aim_speed);
             move_angle = (self.tur_head.avelocity * self.track_blendrate) + (move_angle * (1 - self.track_blendrate));
             break;
 
         case TFL_TRACKTYPE_FLUIDPRECISE:
 
-            move_angle_y = bound(-self.aim_speed, move_angle.y, self.aim_speed);
-            move_angle_x = bound(-self.aim_speed, move_angle.x, self.aim_speed);
+            move_angle.y = bound(-self.aim_speed, move_angle.y, self.aim_speed);
+            move_angle.x = bound(-self.aim_speed, move_angle.x, self.aim_speed);
 
             break;
     }

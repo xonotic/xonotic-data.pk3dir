@@ -82,9 +82,9 @@ float expm1(float x)
 vector frexp(float x)
 {
 	vector v;
-	v_z = 0;
-	v_y = ilogb(x) + 1;
-	v_x = x / exp2(v.y);
+	v.z = 0;
+	v.y = ilogb(x) + 1;
+	v.x = x / exp2(v.y);
 	return v;
 }
 int ilogb(float x)
@@ -156,11 +156,11 @@ vector lgamma(float x)
 		// gamma(1-z) * gamma(z) = pi / sin(pi*z)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))
 		// sign of gamma(1-z) = sign of gamma(z) * sign of sin(pi*z)
-		v_z = sin(M_PI * x);
-		v_x = log(M_PI) - log(fabs(v.z)) - v.x;
+		v.z = sin(M_PI * x);
+		v.x = log(M_PI) - log(fabs(v.z)) - v.x;
 		if(v.z < 0)
-			v_y = -v.y;
-		v_z = 0;
+			v.y = -v.y;
+		v.z = 0;
 		return v;
 	}
 	if(x < 1.1)
@@ -195,9 +195,9 @@ float remainder(float x, float y)
 vector remquo(float x, float y)
 {
 	vector v;
-	v_z = 0;
-	v_y = rint(x / y);
-	v_x = x - y * v.y;
+	v.z = 0;
+	v.y = rint(x / y);
+	v.x = x - y * v.y;
 	return v;
 }
 

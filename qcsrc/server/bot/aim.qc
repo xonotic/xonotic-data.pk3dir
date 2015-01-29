@@ -61,7 +61,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 			return true;
 		}
-		dir_z = dir.z + 0.1; // aim up a little more
+		dir.z = dir.z + 0.1; // aim up a little more
 		c = c + 1;
 	}
 	targ.solid = savesolid;
@@ -189,9 +189,9 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	desiredang = vectoangles(v) + self.bot_badaimoffset;
 	//dprint(" desired:", vtos(desiredang));
 	if (desiredang.x >= 180)
-		desiredang_x = desiredang.x - 360;
-	desiredang_x = bound(-90, 0 - desiredang.x, 90);
-	desiredang_z = self.v_angle.z;
+		desiredang.x = desiredang.x - 360;
+	desiredang.x = bound(-90, 0 - desiredang.x, 90);
+	desiredang.z = self.v_angle.z;
 	//dprint(" / ", vtos(desiredang));
 
 	//// pain throws off aim
@@ -204,9 +204,9 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// calculate turn angles
 	diffang = (desiredang - self.bot_olddesiredang);
 	// wrap yaw turn
-	diffang_y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang_y = diffang.y - 360;
+		diffang.y = diffang.y - 360;
 	self.bot_olddesiredang = desiredang;
 	//dprint(" diff:", vtos(diffang));
 
@@ -238,9 +238,9 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// calculate turn angles
 	diffang = desiredang - self.bot_mouseaim;
 	// wrap yaw turn
-	diffang_y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang_y = diffang.y - 360;
+		diffang.y = diffang.y - 360;
 	//dprint(" diff:", vtos(diffang));
 
 	if (time >= self.bot_aimthinktime)
@@ -253,17 +253,17 @@ float bot_aimdir(vector v, float maxfiredeviation)
 
 	diffang = self.bot_mouseaim - desiredang;
 	// wrap yaw turn
-	diffang_y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang_y = diffang.y - 360;
+		diffang.y = diffang.y - 360;
 	desiredang = desiredang + diffang * bound(0,autocvar_bot_ai_aimskill_think,1);
 
 	// calculate turn angles
 	diffang = desiredang - self.v_angle;
 	// wrap yaw turn
-	diffang_y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang_y = diffang.y - 360;
+		diffang.y = diffang.y - 360;
 	//dprint(" diff:", vtos(diffang));
 
 	// jitter tracking

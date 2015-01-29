@@ -1091,7 +1091,7 @@ void misc_laser_aim()
 		else
 		{
 			a = vectoangles(self.enemy.origin - self.origin);
-			a_x = -a.x;
+			a.x = -a.x;
 			if(a != self.mangle)
 			{
 				self.mangle = a;

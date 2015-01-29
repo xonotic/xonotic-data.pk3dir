@@ -74,8 +74,8 @@ void Image_updateAspect(entity me)
 			if(sz.x <= 0 || sz.y <= 0)
 			{
 				// image is broken or doesn't exist, set the size for the placeholder image
-				sz_x = me.size.x;
-				sz_y = me.size.y;
+				sz.x = me.size.x;
+				sz.y = me.size.y;
 			}
 			asp = sz.x / sz.y;
 		}

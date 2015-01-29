@@ -130,13 +130,13 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 
 	// we want to be onscreen
 	if(o.x < 0)
-		o_x = 0;
+		o.x = 0;
 	if(o.y < 0)
-		o_y = 0;
+		o.y = 0;
 	if(o.x > vid_conwidth - w)
-		o_x = vid_conwidth - w;
+		o.x = vid_conwidth - w;
 	if(o.y > vid_conheight - h)
-		o_x = vid_conheight - h;
+		o.x = vid_conheight - h;
 
 	o.x += 0.5 * (w - sw);
 
@@ -257,13 +257,13 @@ vector fixrgbexcess(vector rgb)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 1 0', '0 0 1');
 			if(rgb.z > 1)
-				rgb_z = 1;
+				rgb.z = 1;
 		}
 		else if(rgb.z > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 0 1', '0 1 0');
 			if(rgb.y > 1)
-				rgb_y = 1;
+				rgb.y = 1;
 		}
 	}
 	else if(rgb.y > 1)
@@ -273,13 +273,13 @@ vector fixrgbexcess(vector rgb)
 		{
 			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 0 1');
 			if(rgb.z > 1)
-				rgb_z = 1;
+				rgb.z = 1;
 		}
 		else if(rgb.z > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 0 1', '1 0 0');
 			if(rgb.x > 1)
-				rgb_x = 1;
+				rgb.x = 1;
 		}
 	}
 	else if(rgb.z > 1)
@@ -289,13 +289,13 @@ vector fixrgbexcess(vector rgb)
 		{
 			rgb = fixrgbexcess_move(rgb, '1 0 0', '0 1 0');
 			if(rgb.y > 1)
-				rgb_y = 1;
+				rgb.y = 1;
 		}
 		else if(rgb.y > 1)
 		{
 			rgb = fixrgbexcess_move(rgb, '0 1 0', '1 0 0');
 			if(rgb.x > 1)
-				rgb_x = 1;
+				rgb.x = 1;
 		}
 	}
 	return rgb;
@@ -459,7 +459,7 @@ void Draw_WaypointSprite()
 		ang = atan2(-d.x, -d.y);
 #endif
 	}
-	o_z = 0;
+	o.z = 0;
 
 	float edgedistance_min, crosshairdistance;
 		edgedistance_min = min((o.y - (vid_conheight * waypointsprite_edgeoffset_top)),

@@ -13,14 +13,14 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	if (!anim)
 		return; // no animation was given to us! We can't use this.
 
-	if (anim_x == e.animstate_startframe)
-	if (anim_y == e.animstate_numframes)
-	if (anim_z == e.animstate_framerate)
+	if (anim.x == e.animstate_startframe)
+	if (anim.y == e.animstate_numframes)
+	if (anim.z == e.animstate_framerate)
 	{
 		if(restart)
 		{
 			if(restart > 0)
-			if(anim_y == 1) // ZYM animation
+			if(anim.y == 1) // ZYM animation
 				BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
 		}
 		else
@@ -175,7 +175,7 @@ void SUB_CalcMove_controller_think (void)
 			vector destangle;
 			destangle = delta + 2 * delta2 * phasepos;
 			destangle = vectoangles(destangle);
-			destangle_x = -destangle.x; // flip up / down orientation
+			destangle.x = -destangle.x; // flip up / down orientation
 
 			// take the shortest distance for the angles
 			self.owner.angles_x -= 360 * floor((self.owner.angles.x - destangle.x) / 360 + 0.5);
@@ -641,9 +641,9 @@ vector findbetterlocation (vector org, float mindist)
 		if (c & 1)
 		{
 			h = vec.y;
-			vec_y = vec.x;
-			vec_x = vec.z;
-			vec_z = h;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
 		}
 		c = c + 1;
 	}

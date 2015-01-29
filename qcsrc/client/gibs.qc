@@ -164,9 +164,9 @@ void Ent_GibSplash(bool isNew)
 
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount
-	org_x = ReadShort() * 4 + 2;
-	org_y = ReadShort() * 4 + 2;
-	org_z = ReadShort() * 4 + 2;
+	org.x = ReadShort() * 4 + 2;
+	org.y = ReadShort() * 4 + 2;
+	org.z = ReadShort() * 4 + 2;
 	vel = decompressShortVector(ReadShort());
 
 	float cl_gentle_gibs = autocvar_cl_gentle_gibs;

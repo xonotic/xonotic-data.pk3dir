@@ -49,11 +49,11 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	{
 		ent.move_watertype = nativecontents;
 		ent.move_waterlevel = 1;
-		point_y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
+		point.y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			ent.move_waterlevel = 2;
-			point_y = ent.origin.y + ent.view_ofs.y;
+			point.y = ent.origin.y + ent.view_ofs.y;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				ent.move_waterlevel = 3;
 		}
@@ -247,9 +247,9 @@ vector _Movetype_ClipVelocity(vector vel, vector norm, float f) // SV_ClipVeloci
 {
 	vel = vel - ((vel * norm) * norm) * f;
 
-	if(vel.x > -0.1 && vel.x < 0.1) vel_x = 0;
-	if(vel.y > -0.1 && vel.y < 0.1) vel_y = 0;
-	if(vel.z > -0.1 && vel.z < 0.1) vel_z = 0;
+	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
+	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
+	if(vel.z > -0.1 && vel.z < 0.1) vel.z = 0;
 
 	return vel;
 }

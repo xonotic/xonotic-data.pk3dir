@@ -13,21 +13,21 @@ vector fixedvectoangles(vector a)
 {
 	vector ang;
 	ang = vectoangles(a);
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 	return ang;
 }
 vector fixedvectoangles2(vector a, vector b)
 {
 	vector ang;
 	ang = vectoangles2(a, b);
-	ang_x = -ang.x;
+	ang.x = -ang.x;
 	return ang;
 }
 #else
 void fixedmakevectors(vector a)
 {
 	// a makevectors that actually inverts vectoangles
-	a_x = -a.x;
+	a.x = -a.x;
 	makevectors(a);
 }
 #endif
@@ -58,12 +58,12 @@ vector AnglesTransform_Invert(vector transform)
 	// but these are orthogonal unit vectors!
 	// so to invert, we can simply fixedvectoangles the TRANSPOSED matrix
 	// TODO is this always -transform?
-	i_forward_x = v_forward.x;
-	i_forward_y = -v_right.x;
-	i_forward_z = v_up.x;
-	i_up_x = v_forward.z;
-	i_up_y = -v_right.z;
-	i_up_z = v_up.z;
+	i_forward.x = v_forward.x;
+	i_forward.y = -v_right.x;
+	i_forward.z = v_up.x;
+	i_up.x = v_forward.z;
+	i_up.y = -v_right.z;
+	i_up.z = v_up.z;
 	return fixedvectoangles2(i_forward, i_up);
 }
 
@@ -73,9 +73,9 @@ vector AnglesTransform_TurnDirectionFR(vector transform)
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
 	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
-	transform_x = -transform.x;
-	transform_y = 180 + transform.y;
-	transform_z = -transform.z;
+	transform.x = -transform.x;
+	transform.y = 180 + transform.y;
+	transform.z = -transform.z;
 	// pitch: -s +c
 	// yaw:   -s -c
 	// roll:  -s +c
@@ -88,9 +88,9 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
 	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
-	transform_x = -transform.x;
-	transform_y = 180 + transform.y;
-	transform_z = 180 - transform.z;
+	transform.x = -transform.x;
+	transform.y = 180 + transform.y;
+	transform.z = 180 - transform.z;
 	return transform;
 }
 
@@ -108,16 +108,16 @@ vector AnglesTransform_Normalize(vector t, float minimize_roll)
 {
 	float need_flip;
 	// first, bring all angles in their range...
-	t_x = t.x - 360 * rint(t.x / 360);
-	t_y = t.y - 360 * rint(t.y / 360);
-	t_z = t.z - 360 * rint(t.z / 360);
+	t.x = t.x - 360 * rint(t.x / 360);
+	t.y = t.y - 360 * rint(t.y / 360);
+	t.z = t.z - 360 * rint(t.z / 360);
 	if(minimize_roll)
 		need_flip = (t.z > 90 || t.z <= -90);
 	else
 		need_flip = (t.x > 90 || t.x < -90); // for pitch we prefer to allow exactly -90 degrees for looking straight down
 	if(need_flip)
 	{
-		if(t.x >= 0) t_x = 180 - t.x; else t_x = -180 - t.x;
+		if(t.x >= 0) t.x = 180 - t.x; else t.x = -180 - t.x;
 		if(t.y > 0) t.y -= 180; else t.y += 180;
 		if(t.z > 0) t.z -= 180; else t.z += 180;
 	}
@@ -141,7 +141,7 @@ vector AnglesTransform_CancelRoll(vector t)
 	{
 		//t_x = -90;
 		t.y += t.z;
-		t_z = 0;
+		t.z = 0;
 	}
 	else
 	{
@@ -150,7 +150,7 @@ vector AnglesTransform_CancelRoll(vector t)
 		{
 			//t_x = 90;
 			t.y -= t.z;
-			t_z = 0;
+			t.z = 0;
 		}
 	}
 	return t;
@@ -159,9 +159,9 @@ vector AnglesTransform_CancelRoll(vector t)
 #ifdef POSITIVE_PITCH_IS_DOWN
 vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	v = AnglesTransform_Multiply(transform, v);
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
@@ -171,12 +171,12 @@ vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
 }
 vector AnglesTransform_FromAngles(vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ToAngles(vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_FromVAngles(vector v)
@@ -195,9 +195,9 @@ vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 }
 vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	v = AnglesTransform_Multiply(transform, v);
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_FromAngles(vector v)
@@ -210,12 +210,12 @@ vector AnglesTransform_ToAngles(vector v)
 }
 vector AnglesTransform_FromVAngles(vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ToVAngles(vector v)
 {
-	v_x = -v.x;
+	v.x = -v.x;
 	return v;
 }
 #endif

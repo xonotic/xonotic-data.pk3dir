@@ -257,31 +257,31 @@ void PieceMinsMaxs(float rot, float pc)
 	// 2 = 2..3
 	// 3 = 1..3
 	// 4 = 1..4
-	tet_piecemins_x = floor(3.0 - sz.x * 0.5);
-	tet_piecemaxs_x = floor(2.0 + sz.x * 0.5);
-	if(sz_y == 1)
+	tet_piecemins.x = floor(3.0 - sz.x * 0.5);
+	tet_piecemaxs.x = floor(2.0 + sz.x * 0.5);
+	if(sz.y == 1)
 	{
 		// special case for "I"
-		tet_piecemins_y = tet_piecemaxs_y = 2;
+		tet_piecemins.y = tet_piecemaxs.y = 2;
 	}
 	else
 	{
-		tet_piecemins_y = 1;
-		tet_piecemaxs_y = sz.y;
+		tet_piecemins.y = 1;
+		tet_piecemaxs.y = sz.y;
 	}
 	//printf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs);
 	if (rot == 1) // 90 degrees
 	{
 		t = tet_piecemins.y;
-		tet_piecemins_y = -tet_piecemins.x + ce.y + ce.x;
-		tet_piecemins_x = t - ce.y + ce.x;
+		tet_piecemins.y = -tet_piecemins.x + ce.y + ce.x;
+		tet_piecemins.x = t - ce.y + ce.x;
 		t = tet_piecemaxs.y;
-		tet_piecemaxs_y = -tet_piecemaxs.x + ce.y + ce.x;
-		tet_piecemaxs_x = t - ce.y + ce.x;
+		tet_piecemaxs.y = -tet_piecemaxs.x + ce.y + ce.x;
+		tet_piecemaxs.x = t - ce.y + ce.x;
 		// swap mins_y, maxs_y
 		t = tet_piecemins.y;
-		tet_piecemins_y = tet_piecemaxs.y;
-		tet_piecemaxs_y = t;
+		tet_piecemins.y = tet_piecemaxs.y;
+		tet_piecemaxs.y = t;
 		// TODO OPTIMIZE
 	}
 	else if (rot == 2)//180
@@ -293,15 +293,15 @@ void PieceMinsMaxs(float rot, float pc)
 	else if (rot == 3) // 270
 	{
 		t = tet_piecemins.y;
-		tet_piecemins_y = tet_piecemins.x - ce.x + ce.y;
-		tet_piecemins_x = -t + ce.x + ce.y;
+		tet_piecemins.y = tet_piecemins.x - ce.x + ce.y;
+		tet_piecemins.x = -t + ce.x + ce.y;
 		t = tet_piecemaxs.y;
-		tet_piecemaxs_y = tet_piecemaxs.x - ce.x + ce.y;
-		tet_piecemaxs_x = -t + ce.x + ce.y;
+		tet_piecemaxs.y = tet_piecemaxs.x - ce.x + ce.y;
+		tet_piecemaxs.x = -t + ce.x + ce.y;
 		// swap mins_x, maxs_x
 		t = tet_piecemins.x;
-		tet_piecemins_x = tet_piecemaxs.x;
-		tet_piecemaxs_x = t;
+		tet_piecemins.x = tet_piecemaxs.x;
+		tet_piecemaxs.x = t;
 		// TODO OPTIMIZE
 	}
 #ifdef VERIFY
@@ -319,10 +319,10 @@ void PieceMinsMaxs(float rot, float pc)
 		for(j = 1; j <= 4; ++j)
 			if(PieceMetric(i, j, rot, pc))
 			{
-				realmins_x = min(realmins.x, i);
-				realmins_y = min(realmins.y, j);
-				realmaxs_x = max(realmaxs.x, i);
-				realmaxs_y = max(realmaxs.y, j);
+				realmins.x = min(realmins.x, i);
+				realmins.y = min(realmins.y, j);
+				realmaxs.x = max(realmaxs.x, i);
+				realmaxs.y = max(realmaxs.y, j);
 			}
 	if(realmins != tet_piecemins || realmaxs != tet_piecemaxs)
 		error(sprintf("incorrect mins/maxs: %v %v in %d rot %d mins %v maxs %v\n", realmins, realmaxs, rot, pc, tet_piecemins, tet_piecemaxs));
@@ -1008,33 +1008,33 @@ void HandleGame(float keyss)
 	nudge = 0;
 	if (keyss & TETKEY_RIGHT)
 	{
-		check_pos_x = check_pos.x + 1;
+		check_pos.x = check_pos.x + 1;
 		tetsnd("tetmove");
 	}
 	else if (keyss & TETKEY_LEFT)
 	{
-		check_pos_x = check_pos.x - 1;
+		check_pos.x = check_pos.x - 1;
 		tetsnd("tetmove");
 	}
 	else if (keyss & TETKEY_ROTRIGHT)
 	{
-		check_pos_z = check_pos.z + 1;
+		check_pos.z = check_pos.z + 1;
 		piece_data = PieceShape(self.piece_type);
 		nudge = 1;
 		tetsnd("tetrot");
 	}
 	else if (keyss & TETKEY_ROTLEFT)
 	{
-		check_pos_z = check_pos.z - 1;
+		check_pos.z = check_pos.z - 1;
 		piece_data = PieceShape(self.piece_type);
 		nudge = 1;
 		tetsnd("tetrot");
 	}
 	// bounds check
 	if (check_pos.z > 3)
-		check_pos_z = 0;
+		check_pos.z = 0;
 	else if (check_pos.z < 0)
-		check_pos_z = 3;
+		check_pos.z = 3;
 
 	// reality check
 	if (CheckMetrics(self.piece_type, check_pos.x, check_pos.y, check_pos.z))
@@ -1070,12 +1070,12 @@ void HandleGame(float keyss)
 	}
 	else if (keyss & TETKEY_DOWN)
 	{
-		check_pos_y = check_pos.y + 1;
+		check_pos.y = check_pos.y + 1;
 		self.tet_autodown = time + 2 / (1 + Tetris_Level());
 	}
 	else if (self.tet_autodown < time)
 	{
-		check_pos_y = check_pos.y + 1;
+		check_pos.y = check_pos.y + 1;
 		self.tet_autodown = time + 2 / (1 + Tetris_Level());
 	}
 	if (CheckMetrics(self.piece_type, check_pos.x, check_pos.y, check_pos.z))

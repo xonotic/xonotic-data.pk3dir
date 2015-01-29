@@ -259,7 +259,7 @@ void turret_draw2d()
         || o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
         || o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
             return; // Dont draw wp's for turrets out of view
-        o_z = 0;
+        o.z = 0;
         if(hud != HUD_NORMAL)
         {
             switch(hud)
@@ -338,7 +338,7 @@ void turret_draw2d()
 	|| o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	    return; // Dont draw wp's for turrets out of view
 
-	o_z = 0;
+	o.z = 0;
 
 	float edgedistance_min, crosshairdistance;
 		edgedistance_min = min((o.y - (vid_conheight * waypointsprite_edgeoffset_top)),
