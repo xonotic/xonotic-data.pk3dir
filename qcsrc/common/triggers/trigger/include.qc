@@ -15,3 +15,4 @@
 #include "relay.qc"
 #include "relay_activators.qc"
 #include "relay_teamcheck.qc"
+#include "swamp.qc"

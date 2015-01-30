@@ -1839,11 +1839,8 @@ void PM_Main()
 
 	maxspeed_mod = 1;
 
-#ifdef SVQC
-	if (self.in_swamp) {
+	if (self.in_swamp)
 		maxspeed_mod *= self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
-	}
-#endif
 
 	// conveyors: first fix velocity
 	if (self.conveyor.state)

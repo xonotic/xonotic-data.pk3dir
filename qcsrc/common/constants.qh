@@ -108,6 +108,7 @@ const float ENT_CLIENT_DOOR = 65;
 const float ENT_CLIENT_DOOR_TRIGGER = 66;
 const float ENT_CLIENT_PLAT = 67;
 const float ENT_CLIENT_PLAT_TRIGGER = 68;
+const float ENT_CLIENT_SWAMP = 69;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 

@@ -180,8 +180,6 @@ antilag.qc
 //nexball.qc
 g_hook.qc
 
-t_swamp.qc
-
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
