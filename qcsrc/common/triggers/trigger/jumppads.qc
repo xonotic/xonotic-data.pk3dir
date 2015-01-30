@@ -2,14 +2,6 @@
 
 #ifdef SVQC
 
-const float PUSH_ONCE = 1;
-const float PUSH_SILENT = 2;
-
-.float pushltime;
-.float istypefrag;
-
-void() SUB_UseTargets;
-
 void trigger_push_use()
 {
 	if(teamplay)

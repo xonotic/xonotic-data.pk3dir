@@ -1,3 +1,4 @@
+#ifdef SVQC
 .float lifetime;
 // values:
 //   volume
@@ -132,3 +133,4 @@ void spawnfunc_trigger_music()
 
 	Net_LinkEntity(self, FALSE, 0, trigger_music_SendEntity);
 }
+#endif

@@ -1,3 +1,4 @@
 #include "multi.qh"
 #include "jumppads.qh"
+#include "secret.qh"
 #include "swamp.qh"

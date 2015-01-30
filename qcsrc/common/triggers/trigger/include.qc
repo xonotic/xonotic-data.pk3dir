@@ -14,5 +14,7 @@
 #include "multivibrator.qc"
 #include "relay.qc"
 #include "relay_activators.qc"
+#include "relay_if.qc"
 #include "relay_teamcheck.qc"
+#include "secret.qc"
 #include "swamp.qc"

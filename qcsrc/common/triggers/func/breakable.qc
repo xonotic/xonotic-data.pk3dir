@@ -1,3 +1,4 @@
+#ifdef SVQC
 .entity sprite;
 
 .float dmg;
@@ -284,3 +285,4 @@ void spawnfunc_func_breakable() {
 void spawnfunc_misc_breakablemodel() {
 	spawnfunc_func_breakable();
 }
+#endif

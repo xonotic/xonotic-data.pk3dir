@@ -2,3 +2,11 @@
 void ent_trigger_push();
 void ent_target_push();
 #endif
+
+const float PUSH_ONCE = 1;
+const float PUSH_SILENT = 2;
+
+.float pushltime;
+.float istypefrag;
+
+void() SUB_UseTargets;

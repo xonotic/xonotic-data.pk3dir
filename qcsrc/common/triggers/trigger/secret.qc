@@ -1,5 +1,4 @@
-
-
+#ifdef SVQC
 void secrets_setstatus() {
 	self.stat_secrets_total = secrets_total;
 	self.stat_secrets_found = secrets_found;
@@ -73,4 +72,4 @@ void spawnfunc_trigger_secret() {
 	// ignore triggering;
 	self.use = func_null;
 }
-
+#endif

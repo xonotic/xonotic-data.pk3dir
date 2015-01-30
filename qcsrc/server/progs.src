@@ -104,7 +104,6 @@ round_handler.qh
 
 // singleplayer stuff
 item_key.qh
-secret.qh
 
 scores_rules.qc
 
@@ -150,7 +149,6 @@ g_models.qc
 
 // singleplayer stuff
 item_key.qc
-secret.qc
 
 weapons/accuracy.qc
 weapons/common.qc
@@ -220,10 +218,6 @@ scores.qc
 spawnpoints.qc
 
 portals.qc
-
-target_spawn.qc
-func_breakable.qc
-target_music.qc
 
 ../common/nades.qc
 ../common/buffs.qc
