@@ -901,7 +901,7 @@ void CompletedLines()
 
 	cleared = 0;
 	y = TET_LINES;
-	for(0;;)
+	for (;;)
 	{
 		ln = GetLine(y);
 		if(strstrofs(ln, "0", 0) < 0)

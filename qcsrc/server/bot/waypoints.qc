@@ -985,7 +985,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 
 	tmin = 0;
 	tmax = 1;
-	for(0;;)
+	for (;;)
 	{
 		if(tmax - tmin < 0.001)
 		{

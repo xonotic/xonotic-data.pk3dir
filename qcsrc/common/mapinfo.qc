@@ -272,7 +272,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	mapMins = '0 0 0';
 	mapMaxs = '0 0 0';
 
-	for(0;;)
+	for (;;)
 	{
 		if (!((s = fgets(fh))))
 			break;
@@ -806,7 +806,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 				print("Map ", pFilename, " references not existing config file ", s, "\n");
 			else
 			{
-				for(0;;)
+				for (;;)
 				{
 					if (!((s = fgets(fh))))
 						break;
@@ -949,7 +949,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 			{
 				n = tokenize_console(cvar_string("g_cdtracks_remaplist"));
 				s = strcat(" ", cvar_string("g_cdtracks_dontusebydefault"), " ");
-				for(0;;)
+				for (;;)
 				{
 					i = floor(random() * n);
 					if(strstrofs(s, strcat(" ", argv(i), " "), 0) < 0)
@@ -997,7 +997,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 	}
 
 	_MapInfo_Map_Reset();
-	for(0;;)
+	for (;;)
 	{
 		if (!((s = fgets(fh))))
 			break;

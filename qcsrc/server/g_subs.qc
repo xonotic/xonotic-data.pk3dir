@@ -543,7 +543,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 	float c;
 	c = 0;
 
-	for(0;;)
+	for (;;)
 	{
 		if(pos * dir >= v2 * dir)
 		{

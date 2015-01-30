@@ -118,7 +118,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	cp1 = cp2 = findchain(classname, "onslaught_controlpoint");
 
 	// Filter control points
-	for(0; cp2; cp2 = cp2.chain)
+	for (; cp2; cp2 = cp2.chain)
 	{
 		cp2.wpcost = c = 0;
 		cp2.wpconsidered = false;
@@ -154,7 +154,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	// We'll consider only the best case
 	bestvalue = 99999999999;
 	cp = world;
-	for(0; cp1; cp1 = cp1.chain)
+	for (; cp1; cp1 = cp1.chain)
 	{
 		if (!cp1.wpconsidered)
 			continue;

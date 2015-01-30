@@ -476,7 +476,7 @@ void detect_maptype()
 	vector o, v;
 	float i;
 
-	for(0;;)
+	for (;;)
 	{
 		o = world.mins;
 		o.x += random() * (world.maxs.x - world.mins.x);

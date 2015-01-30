@@ -637,7 +637,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 
 	p = strstrofs(cmdrestriction, ";", 0); // find first semicolon
 
-	for(0;;)
+	for (;;)
 	{
 		// we know that at any time, startpos <= argc - minargs
 		// so this means: argc-minargs >= startpos >= argc, thus

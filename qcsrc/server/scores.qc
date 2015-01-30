@@ -835,7 +835,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 	sk = p.scorekeeper;
 
 	s = strcat(s, p.netname);
-	for(0;;)
+	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
 		if(i > 0)

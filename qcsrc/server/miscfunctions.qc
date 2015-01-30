@@ -522,7 +522,7 @@ vector randompos(vector m1, vector m2)
 float sound_allowed(float _dest, entity e)
 {
     // sounds from world may always pass
-    for(0;;)
+    for (;;)
     {
         if (e.classname == "body")
             e = e.enemy;
@@ -944,7 +944,7 @@ void InitializeEntity(entity e, void(void) func, float order)
 
     cur = initialize_entity_first;
     prev = world;
-    for(0;;)
+    for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
         {

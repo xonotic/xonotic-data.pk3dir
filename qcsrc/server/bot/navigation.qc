@@ -64,7 +64,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	// Movement loop
 	yaw = vectoyaw(move);
 	move = end - org;
-	for(0;;)
+	for (;;)
 	{
 		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
@@ -108,7 +108,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			{
 				swimming = true;
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
-				for(0; org.z < end.z + self.maxs.z; org.z += stepdist)
+				for (; org.z < end.z + self.maxs.z; org.z += stepdist)
 				{
 						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
@@ -880,7 +880,7 @@ float navigation_routetogoal(entity e, vector startposition)
 	if(e == world)
 		return false;
 
-	for(0;;)
+	for (;;)
 	{
 		// add the spawnfunc_waypoint to the path
 		navigation_pushroute(e);
