@@ -5048,87 +5048,87 @@ void HUD_QuickMenu_Default(string target_submenu)
 	if(target_submenu != "")
 		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
 
-QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
-QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
 
-if(teamplay)
-{
-QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^positive")), "say_team %s", "positive", CTX(_("QMCMD^positive")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^need help, icon")), "say_team %s; g_waypointsprite_team_helpme; cmd voice needhelp", "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^enemy seen, icon")), "say_team %s; g_waypointsprite_team_danger_p; cmd voice incoming", "enemy seen (l:%y^7)", CTX(_("QMCMD^enemy seen (l:%y^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^flag seen, icon")), "say_team %s; g_waypointsprite_team_here_p; cmd voice seenflag", "flag seen (l:%y^7)", CTX(_("QMCMD^flag seen (l:%y^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
-	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
-QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
-}
-QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
-	HUD_Quickmenu_PlayerListEntries("commandmode tell \"%s\"", FALSE);
-QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
-
-
-QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
-	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^1st/3rd person view")), "toggle chase_active")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine on/off")), "toggle cl_forceplayermodels")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players on/off")), "toggle hud_shownames")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon on/off")), "toggle crosshair_per_weapon")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^FPS on/off")), "toggle hud_panel_engineinfo")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph on/off")), "toggle shownetgraph")
-	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
-
-	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound on/off")), "toggle cl_hitsound")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
-
-	if(spectatee_status > 0)
-	{
-	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
-	}
-
-	if(spectatee_status == -1)
-	{
-	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
-	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
-	}
-
-	QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
-	if(prvm_language != "en")
-	QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages on/off")), "toggle hud_panel_quickmenu_translatecommands")
-QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
-
-QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
-	QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
-	QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
-	if(getstatf(STAT_TIMELIMIT) > 0)
-	{
-	QUICKMENU_ENTRY(CTX(_("QMCMD^Reduce match time")), "vcall reducematchtime")
-	QUICKMENU_ENTRY(CTX(_("QMCMD^Extend match time")), "vcall extendmatchtime")
-	}
 	if(teamplay)
-	QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
-QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+	{
+	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^positive")), "say_team %s", "positive", CTX(_("QMCMD^positive")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^need help, icon")), "say_team %s; g_waypointsprite_team_helpme; cmd voice needhelp", "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^enemy seen, icon")), "say_team %s; g_waypointsprite_team_danger_p; cmd voice incoming", "enemy seen (l:%y^7)", CTX(_("QMCMD^enemy seen (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^flag seen, icon")), "say_team %s; g_waypointsprite_team_here_p; cmd voice seenflag", "flag seen (l:%y^7)", CTX(_("QMCMD^flag seen (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
+	}
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
+		HUD_Quickmenu_PlayerListEntries("commandmode tell \"%s\"", FALSE);
+	QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
+		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^1st/3rd person view")), "toggle chase_active")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine on/off")), "toggle cl_forceplayermodels")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players on/off")), "toggle hud_shownames")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon on/off")), "toggle crosshair_per_weapon")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^FPS on/off")), "toggle hud_panel_engineinfo")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph on/off")), "toggle shownetgraph")
+		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
+
+		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound on/off")), "toggle cl_hitsound")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
+		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
+
+		if(spectatee_status > 0)
+		{
+		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person around player")), "chase_active 1; +use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
+		QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")), "Spectator camera")
+		}
+
+		if(spectatee_status == -1)
+		{
+		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "+use")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "-use")
+		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
+		}
+
+		QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
+		if(prvm_language != "en")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages on/off")), "toggle hud_panel_quickmenu_translatecommands")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
+		if(getstatf(STAT_TIMELIMIT) > 0)
+		{
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Reduce match time")), "vcall reducematchtime")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Extend match time")), "vcall extendmatchtime")
+		}
+		if(teamplay)
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
