@@ -5,7 +5,7 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticStatsList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticStatsList, getStats, void(entity))
-	METHOD(XonoticStatsList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticStatsList, destroy, void(entity))
 	METHOD(XonoticStatsList, showNotify, void(entity))
@@ -15,9 +15,6 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0)
 	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
-
-	ATTRIB(XonoticStatsList, lastClickedDemo, float, -1)
-	ATTRIB(XonoticStatsList, lastClickedTime, float, 0)
 ENDCLASS(XonoticStatsList)
 
 entity statslist; // for reference elsewhere
@@ -333,17 +330,9 @@ void XonoticStatsList_showNotify(entity me)
 	PlayerStats_PlayerDetail_CheckUpdate();
 }
 
-void XonoticStatsList_clickListBoxItem(entity me, float i, vector where)
+void XonoticStatsList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedDemo)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			//DemoConfirm_ListClick_Check_Gamestatus(me);
-		}
-	me.lastClickedDemo = i;
-	me.lastClickedTime = time;
+	//DemoConfirm_ListClick_Check_Gamestatus(me);
 }
 
 float XonoticStatsList_keyDown(entity me, float scan, float ascii, float shift)

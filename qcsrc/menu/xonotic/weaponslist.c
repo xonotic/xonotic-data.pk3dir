@@ -117,7 +117,7 @@ float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift
 		WeaponsList_MoveUp_Click(NULL, me);
 		return 1;
 	}
-	else if(scan == 45) // -
+	else if(ascii == 45) // -
 	{
 		WeaponsList_MoveDown_Click(NULL, me);
 		return 1;

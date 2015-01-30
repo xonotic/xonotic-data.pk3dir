@@ -1028,6 +1028,10 @@ void readlevelcvars(void)
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
+	float i;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		WEP_ACTION(i, WR_INIT);
+
 	readplayerstartcvars();
 }
 

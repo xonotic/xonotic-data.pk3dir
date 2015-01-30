@@ -219,6 +219,7 @@ float Nexposee_mousePress(entity me, vector pos)
 		Nexposee_mouseMove(me, pos);
 		if(me.mouseFocusedChild)
 		{
+			m_play_click_sound(MENU_SOUND_OPEN);
 			me.animationState = 1;
 			SUPER(Nexposee).setFocus(me, NULL);
 		}
@@ -230,6 +231,7 @@ float Nexposee_mousePress(entity me, vector pos)
 	{
 		if (!(SUPER(Nexposee).mousePress(me, pos)))
 		{
+			m_play_click_sound(MENU_SOUND_CLOSE);
 			me.animationState = 3;
 			SUPER(Nexposee).setFocus(me, NULL);
 		}
@@ -322,10 +324,12 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 			default:
 			case 0:
 			case 3:
+				m_play_click_sound(MENU_SOUND_OPEN);
 				me.animationState = 1;
 				break;
 			case 1:
 			case 2:
+				m_play_click_sound(MENU_SOUND_CLOSE);
 				me.animationState = 3;
 				break;
 		}

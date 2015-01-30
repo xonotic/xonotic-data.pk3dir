@@ -5,6 +5,7 @@ CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space
+	ATTRIB(XonoticAudioSettingsTab, hiddenMenuSoundsSlider, entity, NULL)
 ENDCLASS(XonoticAudioSettingsTab)
 entity makeXonoticAudioSettingsTab();
 #endif
@@ -136,7 +137,10 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "con_chatsound", _("Chat message sound")));
 	me.TR(me);
-		me.TD(me, 1, 3, makeXonoticCheckBoxEx(2, 0, "menu_sounds", _("Menu sounds")));
+		me.hiddenMenuSoundsSlider = makeXonoticSlider(1, 1, 1, "menu_sounds");
+		me.TD(me, 1, 1.2, makeXonoticSliderCheckBox(0, 1, me.hiddenMenuSoundsSlider, _("Menu sounds")));
+		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(2, 0, me.hiddenMenuSoundsSlider, _("Focus sounds")));
+		setDependent(e, "menu_sounds", 1, 2);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Time announcer:")));

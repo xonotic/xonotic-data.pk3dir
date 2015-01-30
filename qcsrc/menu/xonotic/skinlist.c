@@ -9,7 +9,7 @@ CLASS(XonoticSkinList) EXTENDS(XonoticListBox)
 	METHOD(XonoticSkinList, loadCvars, void(entity))
 	METHOD(XonoticSkinList, saveCvars, void(entity))
 	METHOD(XonoticSkinList, skinParameter, string(entity, float, float))
-	METHOD(XonoticSkinList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticSkinList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticSkinList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticSkinList, destroy, void(entity))
 
@@ -23,9 +23,6 @@ CLASS(XonoticSkinList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticSkinList, realUpperMargin2, float, 0)
 	ATTRIB(XonoticSkinList, origin, vector, '0 0 0')
 	ATTRIB(XonoticSkinList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticSkinList, lastClickedSkin, float, -1)
-	ATTRIB(XonoticSkinList, lastClickedTime, float, 0)
 
 	ATTRIB(XonoticSkinList, name, string, "skinselector")
 ENDCLASS(XonoticSkinList)
@@ -182,22 +179,17 @@ void SetSkin_Click(entity btn, entity me)
 	me.setSkin(me);
 }
 
-void XonoticSkinList_clickListBoxItem(entity me, float i, vector where)
+void XonoticSkinList_doubleClickListBoxItem(entity me, float i, vector where)
 {
-	if(i == me.lastClickedSkin)
-		if(time < me.lastClickedTime + 0.3)
-		{
-			// DOUBLE CLICK!
-			me.setSelected(me, i);
-			me.setSkin(me);
-		}
-	me.lastClickedSkin = i;
-	me.lastClickedTime = time;
+	m_play_click_sound(MENU_SOUND_EXECUTE);
+	me.setSkin(me);
 }
 
 float XonoticSkinList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
+	if(scan == K_ENTER || scan == K_KP_ENTER)
+	{
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.setSkin(me);
 		return 1;
 	}
