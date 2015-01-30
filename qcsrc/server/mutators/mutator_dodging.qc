@@ -60,8 +60,7 @@
 .float last_RIGHT_KEY_time;
 
 // these store the movement direction at the time of the dodge action happening.
-.float dodging_direction_x;
-.float dodging_direction_y;
+.vector dodging_direction;
 
 // this indicates the last time a dodge was executed. used to check if another one is allowed
 // and to ramp up the dodge acceleration in the physics hook.
@@ -112,43 +111,43 @@ void dodging_Initialize()
 // returns 1 if the player is close to a wall
 float check_close_to_wall(float threshold)
 {
-	if (PHYS_DODGING_WALL == 0) { return FALSE; }
+	if (PHYS_DODGING_WALL == 0) { return false; }
 
 	#define X(OFFSET)																\
-	tracebox(self.origin, self.mins, self.maxs, self.origin + OFFSET, TRUE, self);	\
+	tracebox(self.origin, self.mins, self.maxs, self.origin + OFFSET, true, self);	\
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)		\
-		return TRUE;
+		return true;
 	X(1000*v_right);
 	X(-1000*v_right);
 	X(1000*v_forward);
 	X(-1000*v_forward);
 	#undef X
 
-	return FALSE;
+	return false;
 }
 
 float check_close_to_ground(float threshold)
 {
-	return IS_ONGROUND(self) ? TRUE : FALSE;
+	return IS_ONGROUND(self) ? true : false;
 }
 
 float PM_dodging_checkpressedkeys()
 {
 	if(!PHYS_DODGING)
-		return FALSE;
+		return false;
 
 	float frozen_dodging = (PHYS_FROZEN(self) && PHYS_DODGING_FROZEN);
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
-		return FALSE;
+		return false;
 
 	makevectors(PHYS_WORLD_ANGLES(self));
 
 	if (check_close_to_ground(PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
-		return TRUE;
+		return true;
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
@@ -188,9 +187,9 @@ float PM_dodging_checkpressedkeys()
 
 		self.dodging_direction_x = self.dodging_direction_x * 1.0 / length;
 		self.dodging_direction_y = self.dodging_direction_y * 1.0 / length;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void PM_dodging()
@@ -254,7 +253,7 @@ void PM_dodging()
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
-		animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+		animdecide_setaction(self, ANIMACTION_JUMP, true);
 #endif
 
 		self.dodging_single_action = 0;
@@ -275,7 +274,7 @@ void PM_dodging()
 MUTATOR_HOOKFUNCTION(dodging_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
@@ -283,14 +282,14 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
 	// print("dodging_PlayerPhysics\n");
 	PM_dodging();
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys)
 {
 	PM_dodging_checkpressedkeys();
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_dodging)
@@ -318,6 +317,6 @@ MUTATOR_DEFINITION(mutator_dodging)
 		g_dodging = 0;
 	}
 
-	return FALSE;
+	return false;
 }
 #endif

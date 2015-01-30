@@ -19,20 +19,23 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef CL_PLAYER_H
+#define CL_PLAYER_H
 
 entity csqcplayer;
 float csqcplayer_status;
-#define CSQCPLAYERSTATUS_UNPREDICTED 0
-#define CSQCPLAYERSTATUS_FROMSERVER 1
-#define CSQCPLAYERSTATUS_PREDICTED 2
+const int CSQCPLAYERSTATUS_UNPREDICTED = 0;
+const int CSQCPLAYERSTATUS_FROMSERVER = 1;
+const int CSQCPLAYERSTATUS_PREDICTED = 2;
 
 // only ever READ these!
-.float pmove_flags;
-#define PMF_JUMP_HELD 1
-#define PMF_DUCKED 4
-#define PMF_ONGROUND 8
+.int pmove_flags;
+const int PMF_JUMP_HELD = 1;
+//const int PMF_DUCKED = 4;
+//const int PMF_ONGROUND = 8;
 
 void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate();
 float CSQCPlayer_PostUpdate();
 float CSQCPlayer_IsLocalPlayer();
+#endif

@@ -1,46 +1,6 @@
-.float race_penalty;
+#include "physics.qh"
 
-.float gravity;
-.float swamp_slowdown;
-.float lastflags;
-.float lastground;
-.float wasFlying;
-.float spectatorspeed;
-
-.vector movement_old;
-.float buttons_old;
-.vector v_angle_old;
-.string lastclassname;
-
-.float() PlayerPhysplug;
-float AdjustAirAccelQW(float accelqw, float factor);
-
-#ifdef CSQC
-
-.float watertype;
-
-#elif defined(SVQC)
-.float stat_sv_airaccel_qw;
-.float stat_sv_airstrafeaccel_qw;
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-.float stat_movement_highspeed;
-
-.float stat_sv_friction_on_land;
-.float stat_sv_friction_slick;
-
-.float stat_doublejump;
-
-.float stat_jumpspeedcap_min;
-.float stat_jumpspeedcap_max;
-.float stat_jumpspeedcap_disable_onramps;
-
-.float stat_jetpack_accel_side;
-.float stat_jetpack_accel_up;
-.float stat_jetpack_antigravity;
-.float stat_jetpack_fuel;
-.float stat_jetpack_maxspeed_up;
-.float stat_jetpack_maxspeed_side;
+#ifdef SVQC
 
 void Physics_AddStats()
 {
@@ -440,20 +400,20 @@ void PM_AirAccelerate(vector wishdir, float wishspeed)
 PlayerJump
 
 When you press the jump key
-returns TRUE if handled
+returns true if handled
 =============
 */
 float PlayerJump (void)
 {
 	if (PHYS_FROZEN(self))
-		return TRUE; // no jumping in freezetag when frozen
+		return true; // no jumping in freezetag when frozen
 
 #ifdef SVQC
 	if (self.player_blocked)
-		return TRUE; // no jumping while blocked
+		return true; // no jumping while blocked
 #endif
 
-	float doublejump = FALSE;
+	float doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
 
 	player_multijump = doublejump;
@@ -463,7 +423,7 @@ float PlayerJump (void)
 #elif defined(CSQC)
 	if(PM_multijump_checkjump())
 #endif
-		return TRUE;
+		return true;
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
@@ -473,7 +433,7 @@ float PlayerJump (void)
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
 		{
-			doublejump = TRUE;
+			doublejump = true;
 
 			// we MUST clip velocity here!
 			float f;
@@ -486,7 +446,7 @@ float PlayerJump (void)
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		self.velocity_z = PHYS_MAXSPEED(self) * 0.7;
-		return TRUE;
+		return true;
 	}
 
 	if (!doublejump)
@@ -495,7 +455,7 @@ float PlayerJump (void)
 
 	if (PHYS_TRACK_CANJUMP(self))
 		if (IS_JUMP_HELD(self))
-			return TRUE;
+			return true;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -546,12 +506,12 @@ float PlayerJump (void)
 
 	self.oldvelocity_z = self.velocity_z;
 
-	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+	animdecide_setaction(self, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
-	return TRUE;
+	return true;
 }
 
 void CheckWaterJump()
@@ -563,13 +523,13 @@ void CheckWaterJump()
 	v_forward_z = 0;
 	normalize(v_forward);
 	vector end = start + v_forward*24;
-	traceline (start, end, TRUE, self);
+	traceline (start, end, true, self);
 	if (trace_fraction < 1)
 	{	// solid at waist
 		start_z = start_z + self.maxs_z - 8;
 		end = start + v_forward*24;
 		self.movedir = trace_plane_normal * -50;
-		traceline(start, end, TRUE, self);
+		traceline(start, end, true, self);
 		if (trace_fraction == 1)
 		{	// open at eye level
 			self.velocity_z = 225;
@@ -610,7 +570,7 @@ void CheckPlayerJump()
 		float has_fuel = !autocvar_g_jetpack_fuel || self.ammo_fuel || ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO;
 #else
 		PlayerJump(); // Client only
-		float has_fuel = TRUE; // TODO
+		float has_fuel = true; // TODO
 #endif
 		if (!(ITEMS(self) & IT_JETPACK)) { }
 		else if (self.jetpack_stopped) { }
@@ -622,7 +582,7 @@ void CheckPlayerJump()
 			else if (activate)
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 #endif
-			self.jetpack_stopped = TRUE;
+			self.jetpack_stopped = true;
 #ifdef SVQC
 			ITEMS(self) &= ~IT_USING_JETPACK;
 #endif
@@ -634,7 +594,7 @@ void CheckPlayerJump()
 	}
 	else
 	{
-		self.jetpack_stopped = FALSE;
+		self.jetpack_stopped = false;
 #ifdef SVQC
 		ITEMS(self) &= ~IT_USING_JETPACK;
 #endif
@@ -884,40 +844,6 @@ void SpecialCommand()
 #endif
 }
 
-#ifdef SVQC
-float speedaward_speed;
-string speedaward_holder;
-string speedaward_uid;
-#endif
-void race_send_speedaward(float msg)
-{
-#ifdef SVQC
-	// send the best speed of the round
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD);
-	WriteInt24_t(msg, floor(speedaward_speed+0.5));
-	WriteString(msg, speedaward_holder);
-#endif
-}
-
-#ifdef SVQC
-float speedaward_alltimebest;
-string speedaward_alltimebest_holder;
-string speedaward_alltimebest_uid;
-#endif
-void race_send_speedaward_alltimebest(float msg)
-{
-#ifdef SVQC
-	// send the best speed
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
-	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
-	WriteString(msg, speedaward_alltimebest_holder);
-#endif
-}
-
 float PM_check_keepaway(void)
 {
 #ifdef SVQC
@@ -966,13 +892,13 @@ float PM_check_specialcommand(float buttons)
 		{
 			self.specialcommand_pos = 0;
 			SpecialCommand();
-			return TRUE;
+			return true;
 		}
 	}
 	else if (self.specialcommand_pos && (c != substring(specialcommand, self.specialcommand_pos - 1, 1)))
 		self.specialcommand_pos = 0;
 #endif
-	return FALSE;
+	return false;
 }
 
 void PM_check_nickspam(void)
@@ -991,7 +917,7 @@ void PM_check_nickspam(void)
 			PHYS_INPUT_ANGLES(self)_x = random() * 360;
 			PHYS_INPUT_ANGLES(self)_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = TRUE;
+			self.fixangle = true;
 		}
 	}
 #endif
@@ -2005,7 +1931,7 @@ void PM_Main()
 #elif defined(CSQC)
 	self.lastflags = self.pmove_flags;
 #endif
-	
+
 	self.lastclassname = self.classname;
 }
 

@@ -1,0 +1,12 @@
+#ifndef MODELEFFECTS_H
+#define MODELEFFECTS_H
+
+.float frame1time;
+.float lifetime, fadetime;
+.float teleport_time;
+.float scale1, scale2;
+
+void ModelEffect_Draw();
+
+void Ent_ModelEffect(bool isNew);
+#endif

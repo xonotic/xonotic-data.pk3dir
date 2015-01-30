@@ -19,17 +19,30 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../client/defs.qh"
+	#include "../common/constants.qh"
+	#include "../common/stats.qh"
+	#include "../common/util.qh"
+	#include "interpolate.qh"
+	#include "../client/main.qh"
+	#include "common.qh"
+	#include "cl_model.qh"
+	#include "cl_player.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
-var float autocvar_cl_movement_errorcompensation = 0;
-var float autocvar_cl_movement = 2; // testing purposes
+float autocvar_cl_movement_errorcompensation = 0;
+float autocvar_cl_movement = 2; // testing purposes
 
 // engine stuff
-#define REFDEFFLAG_TELEPORTED 1
-#define REFDEFFLAG_JUMPING 2
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 vector csqcplayer_origin, csqcplayer_velocity;
-float csqcplayer_sequence, player_pmflags;
+float csqcplayer_sequence;
+int player_pmflags;
 float csqcplayer_moveframe;
 vector csqcplayer_predictionerroro;
 vector csqcplayer_predictionerrorv;
@@ -181,8 +194,6 @@ float CSQCPlayer_IsLocalPlayer()
 	return (self == csqcplayer);
 }
 
-void(entity e, float fl) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
-
 void CSQCPlayer_SetCamera()
 {
 	vector v0;
@@ -232,7 +243,7 @@ void CSQCPlayer_SetCamera()
 				o = self.origin;
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
+				CSQCPlayer_PredictTo(servercommandframe + 1, false);
 				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
@@ -251,7 +262,7 @@ void CSQCPlayer_SetCamera()
 
 				CSQCPlayer_SavePrediction();
 			}
-			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
+			CSQCPlayer_PredictTo(clientcommandframe + 1, true);
 
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
@@ -263,7 +274,7 @@ void CSQCPlayer_SetCamera()
 
 			CSQCPlayer_SetMinsMaxs();
 
-			self.angles_y = input_angles_y;
+			self.angles_y = input_angles.y;
 		}
 
 		// relink
@@ -286,7 +297,7 @@ void CSQCPlayer_SetCamera()
 
 	if(view)
 	{
-		var float refdefflags = 0;
+		int refdefflags = 0;
 
 		if(view.csqcmodel_teleported)
 			refdefflags |= REFDEFFLAG_TELEPORTED;

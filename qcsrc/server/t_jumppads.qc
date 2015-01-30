@@ -1,25 +1,6 @@
-.float height;
-
-#ifdef CSQC
-.float active;
-.string target;
-.string targetname;
-#define ACTIVE_NOT 		0
-#define ACTIVE_ACTIVE 	1
-#define ACTIVE_IDLE 	2
-#define ACTIVE_BUSY 	2
-#define ACTIVE_TOGGLE	3
-#endif
+#include "t_jumppads.qh"
 
 #ifdef SVQC
-
-const float PUSH_ONCE = 1;
-const float PUSH_SILENT = 2;
-
-.float pushltime;
-.float istypefrag;
-
-void() SUB_UseTargets;
 
 void trigger_push_use()
 {
@@ -30,8 +11,6 @@ void trigger_push_use()
 	}
 }
 #endif
-
-float trigger_push_calculatevelocity_flighttime;
 
 /*
 	trigger_push_calculatevelocity
@@ -58,7 +37,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	if(PHYS_ENTGRAVITY(other))
 		grav *= PHYS_ENTGRAVITY(other);
 
-	zdist = torg_z - org_z;
+	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
 
@@ -99,10 +78,10 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	vector solution;
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
-	if(!solution_z)
-		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+	if(!solution.z)
+		solution.y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
 	if(zdist == 0)
-		solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution.x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
 	if(zdist < 0)
 	{
@@ -112,14 +91,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 	}
 	else
@@ -130,14 +109,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			trigger_push_calculatevelocity_flighttime = solution_x;
+			trigger_push_calculatevelocity_flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 	}
 	vs = sdist / trigger_push_calculatevelocity_flighttime;
@@ -199,15 +178,12 @@ void trigger_push_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
-
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
-			float i;
-			float found;
-			found = FALSE;
-			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
+			bool found = false;
+			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
-					found = TRUE;
+					found = true;
 			if(!found)
 			{
 				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = self;
@@ -223,10 +199,10 @@ void trigger_push_touch()
 				other.lastteleporttime = time;
 
 			if (other.deadflag == DEAD_NO)
-				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
+				animdecide_setaction(other, ANIMACTION_JUMP, true);
 		}
 		else
-			other.jumppadcount = TRUE;
+			other.jumppadcount = true;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
@@ -281,7 +257,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax_z - PL_MIN_z;
+	org.z = self.absmax.z - PL_MIN_z;
 
 	if (self.target)
 	{
@@ -378,7 +354,7 @@ float trigger_push_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.active);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void trigger_push_updatelink()
@@ -388,7 +364,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	Net_LinkEntity(self, FALSE, 0, trigger_push_send);
+	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
 #ifdef SVQC
@@ -438,12 +414,12 @@ float target_push_send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.origin_y);
 	WriteCoord(MSG_ENTITY, self.origin_z);
 
-	return TRUE;
+	return true;
 }
 
 void target_push_link()
 {
-	Net_LinkEntity(self, FALSE, 0, target_push_send);
+	Net_LinkEntity(self, false, 0, target_push_send);
 	self.SendFlags |= 1; // update
 }
 

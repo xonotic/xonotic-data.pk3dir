@@ -1,3 +1,17 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "defs.qh"
+    #include "vehicles/vehicles_def.qh"
+#endif
+#include "../warpzonelib/util_server.qh"
+
+#include "miscfunctions.qh"
+#ifdef CSQC
+#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
+#endif
+
 .float ladder_time;
 .entity ladder_entity;
 
@@ -86,12 +100,12 @@ float func_ladder_send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.angles_y);
 	WriteCoord(MSG_ENTITY, self.angles_z);
 
-	return TRUE;
+	return true;
 }
 
 void func_ladder_link()
 {
-	Net_LinkEntity(self, FALSE, 0, func_ladder_send);
+	Net_LinkEntity(self, false, 0, func_ladder_send);
 }
 
 void spawnfunc_func_ladder()

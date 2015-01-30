@@ -1,3 +1,5 @@
+#ifndef CSQCMODELLIB_SETTINGS_H
+#define CSQCMODELLIB_SETTINGS_H
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
 
@@ -16,7 +18,7 @@
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // force updates of player entities that often even if unchanged
-#define CSQCPLAYER_FORCE_UPDATES 0.25
+const float CSQCPLAYER_FORCE_UPDATES = 0.25;
 
 // mod must define:
 //vector PL_MIN  = ...;
@@ -25,3 +27,4 @@
 //vector PL_CROUCH_MIN  = ...;
 //vector PL_CROUCH_MAX  = ...;
 //vector PL_CROUCH_VIEW_OFS  = ...;
+#endif

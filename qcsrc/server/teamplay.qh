@@ -1,0 +1,55 @@
+#ifndef TEAMPLAY_H
+#define TEAMPLAY_H
+
+string cache_mutatormsg;
+string cache_lastmutatormsg;
+
+// client counts for each team
+//float c1, c2, c3, c4;
+// # of bots on those teams
+float cb1, cb2, cb3, cb4;
+
+//float audit_teams_time;
+
+void TeamchangeFrags(entity e);
+
+void entcs_init();
+
+void LogTeamchange(float player_id, float team_number, float type);
+
+void default_delayedinit();
+
+void ActivateTeamplay();
+
+void InitGameplayMode();
+
+string GetClientVersionMessage();
+
+string getwelcomemessage(void);
+
+void SetPlayerColors(entity pl, float _color);
+
+void SetPlayerTeam(entity pl, float t, float s, float noprint);
+
+// set c1...c4 to show what teams are allowed
+void CheckAllowedTeams (entity for_whom);
+
+float PlayerValue(entity p);
+
+// c1...c4 should be set to -1 (not allowed) or 0 (allowed).
+// teams that are allowed will now have their player counts stored in c1...c4
+void GetTeamCounts(entity ignore);
+
+float TeamSmallerEqThanTeam(float ta, float tb, entity e);
+
+// returns # of smallest team (1, 2, 3, 4)
+// NOTE: Assumes CheckAllowedTeams has already been called!
+float FindSmallestTeam(entity pl, float ignore_pl);
+
+float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
+
+//void() ctf_playerchanged;
+void SV_ChangeTeam(float _color);
+
+void ShufflePlayerOutOfTeam (float source_team);
+#endif

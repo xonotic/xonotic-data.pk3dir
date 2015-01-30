@@ -1,3 +1,7 @@
+#include "menu_cmd.qh"
+
+#include "../../common/command/generic.qh"
+
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)
 {

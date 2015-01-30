@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "util_server.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+#include "common.qh"
+
 void WarpZoneLib_ExactTrigger_Init()
 {
 	vector mi, ma;

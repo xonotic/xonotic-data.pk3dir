@@ -46,12 +46,12 @@ void PM_multijump()
 
 float PM_multijump_checkjump()
 {
-	if(!PHYS_MULTIJUMP) { return FALSE; }
+	if(!PHYS_MULTIJUMP) { return false; }
 
 	if (!IS_JUMP_HELD(self) && !IS_ONGROUND(self)) // jump button pressed this frame and we are in midair
-		self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
+		self.multijump_ready = true;  // this is necessary to check that we released the jump button and pressed it again
 	else
-		self.multijump_ready = FALSE;
+		self.multijump_ready = false;
 
 	if(!player_multijump && self.multijump_ready && (self.multijump_count < PHYS_MULTIJUMP || PHYS_MULTIJUMP == -1) && self.velocity_z > PHYS_MULTIJUMP_SPEED)
 	{
@@ -61,12 +61,12 @@ float PM_multijump_checkjump()
 			{
 				if (self.velocity_z < PHYS_JUMPVELOCITY)
 				{
-					player_multijump = TRUE;
+					player_multijump = true;
 					self.velocity_z = 0;
 				}
 			}
 			else
-				player_multijump = TRUE;
+				player_multijump = true;
 
 			if(player_multijump)
 			{
@@ -95,10 +95,10 @@ float PM_multijump_checkjump()
 				self.multijump_count += 1;
 			}
 		}
-		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
+		self.multijump_ready = false; // require releasing and pressing the jump button again for the next jump
 	}
 
-	return FALSE;
+	return false;
 }
 
 #ifdef SVQC
@@ -107,7 +107,7 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 	multijump_UpdateStats();
 	PM_multijump();
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
@@ -118,13 +118,13 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":multijump");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Multi jump");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_multijump)
@@ -139,6 +139,6 @@ MUTATOR_DEFINITION(mutator_multijump)
 		multijump_AddStats();
 	}
 
-	return FALSE;
+	return false;
 }
 #endif

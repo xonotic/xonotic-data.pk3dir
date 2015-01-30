@@ -1,3 +1,6 @@
+#ifndef RACE_H
+#define RACE_H
+
 float race_spawns;
 float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
 float race_lowest_place_spawn; // where to spawn in qualifying
@@ -26,3 +29,40 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
+
+
+#ifdef SVQC
+float speedaward_speed;
+string speedaward_holder;
+string speedaward_uid;
+#endif
+void race_send_speedaward(float msg)
+{
+#ifdef SVQC
+	// send the best speed of the round
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD);
+	WriteInt24_t(msg, floor(speedaward_speed+0.5));
+	WriteString(msg, speedaward_holder);
+#endif
+}
+
+#ifdef SVQC
+float speedaward_alltimebest;
+string speedaward_alltimebest_holder;
+string speedaward_alltimebest_uid;
+#endif
+void race_send_speedaward_alltimebest(float msg)
+{
+#ifdef SVQC
+	// send the best speed
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
+	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
+	WriteString(msg, speedaward_alltimebest_holder);
+#endif
+}
+
+#endif

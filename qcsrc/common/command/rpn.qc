@@ -1,3 +1,5 @@
+#include "rpn.qh"
+
 // ========================================
 //  RPN command code, written by divVerent
 //  Last updated: December 28th, 2011
@@ -10,7 +12,7 @@ string rpn_pop()
 		return rpn_stack[rpn_sp];
 	} else {
 		print("rpn: stack underflow\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 		return "";
 	}
 }
@@ -21,7 +23,7 @@ void rpn_push(string s)
 		++rpn_sp;
 	} else {
 		print("rpn: stack overflow\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 	}
 }
 string rpn_get()
@@ -30,7 +32,7 @@ string rpn_get()
 		return rpn_stack[rpn_sp - 1];
 	} else {
 		print("rpn: empty stack\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 		return "";
 	}
 }
@@ -40,7 +42,7 @@ void rpn_set(string s)
 		rpn_stack[rpn_sp - 1] = s;
 	} else {
 		print("rpn: empty stack\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 	}
 }
 
@@ -69,7 +71,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 			if(argc >= 2)
 			{
 				rpn_sp = 0;
-				rpn_error = FALSE;
+				rpn_error = false;
 				for(rpnpos = 1; rpnpos < argc; ++rpnpos)
 				{
 					rpncmd = argv(rpnpos);
@@ -104,7 +106,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						else
 						{
 							print("rpn: empty cvar name for 'def'\n");
-							rpn_error = TRUE;
+							rpn_error = true;
 						}
 					} else if(rpncmd == "defs" || rpncmd == "@") {
 						s = "";
@@ -129,7 +131,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						else
 						{
 							print("rpn: empty cvar name for 'defs'\n");
-							rpn_error = TRUE;
+							rpn_error = true;
 						}
 					} else if(rpncmd == "load") {
 						rpn_set(cvar_string(rpn_get()));
@@ -249,7 +251,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 					} else if(rpncmd == "rand") {
 						rpn_setf(ceil(random() * rpn_getf()) - 1);
 					} else if(rpncmd == "crc16") {
-						rpn_setf(crc16(FALSE, rpn_get()));
+						rpn_setf(crc16(false, rpn_get()));
 					} else if(rpncmd == "put") {
 						s2 = rpn_pop();
 						if (!rpn_error)
@@ -342,7 +344,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						i = stof(db_get(rpn_db, "stack.pos"));
 						if(!j)
 						{
-							rpn_error = TRUE;
+							rpn_error = true;
 							print("rpn: empty database\n");
 						} else {
 							--j;
@@ -381,7 +383,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							if(i < 0 || i >= j)
 							{
 								print("rpn: database cursor out of bounds\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 							if(!rpn_error)
 							{
@@ -393,7 +395,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						j = stof(db_get(rpn_db, "stack.pointer"));
 						if(!j)
 						{
-							rpn_error = TRUE;
+							rpn_error = true;
 							print("rpn: empty database, cannot move cursor\n");
 						}
 						if(!rpn_error)
@@ -409,7 +411,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							if(i < 0 || i >= j)
 							{
 								print("rpn: database cursor destination out of bounds\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 							if(!rpn_error)
 							{
@@ -511,7 +513,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							if (!fexists(s))
 							{
 								print("rpn: ERROR: ", s, " does not exist!\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 						}
 					} else if(rpncmd == "fexists") {
@@ -524,9 +526,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 								rpn_setf(0);
 						}
 					} else if(rpncmd == "localtime") {
-						rpn_set(strftime(TRUE, rpn_get()));
+						rpn_set(strftime(true, rpn_get()));
 					} else if(rpncmd == "gmtime") {
-						rpn_set(strftime(FALSE, rpn_get()));
+						rpn_set(strftime(false, rpn_get()));
 					} else if(rpncmd == "time") {
 						rpn_pushf(time);
 					} else if(rpncmd == "digest") {
