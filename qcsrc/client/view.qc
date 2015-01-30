@@ -1358,18 +1358,20 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 	else
-#ifdef CAMERATEST
-	if(autocvar_camera_enable)
-#else
-	if(autocvar_camera_enable && isdemo())
-#endif
 	{
-		// Enable required Darkplaces cvars
-		chase_active_backup = autocvar_chase_active;
-		cvar_set("chase_active", "2");
-		cvar_set("cl_demo_mousegrab", "1");
-		camera_active = true;
-		camera_mode = false;
+#ifdef CAMERATEST
+		if(autocvar_camera_enable)
+#else
+		if(autocvar_camera_enable && isdemo())
+#endif
+		{
+			// Enable required Darkplaces cvars
+			chase_active_backup = autocvar_chase_active;
+			cvar_set("chase_active", "2");
+			cvar_set("cl_demo_mousegrab", "1");
+			camera_active = true;
+			camera_mode = false;
+		}
 	}
 
 	// Draw the Crosshair

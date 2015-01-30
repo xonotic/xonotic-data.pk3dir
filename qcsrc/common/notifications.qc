@@ -2040,7 +2040,7 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) \
+		#define RECURSE_FROM_CHOICE(ent,action) do { \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
 				switch(ent.msg_choice_choices[net_name - 1]) \
@@ -2059,22 +2059,29 @@ void Send_Notification(
 				found_choice.nent_stringcount, \
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
-				f1, f2, f3, f4);
+				f1, f2, f3, f4); \
+		} while(0)
 
 		switch(broadcast)
 		{
 			case NOTIF_ONE_ONLY: // we can potentially save processing power with this broadcast method
 			{
 				if(IS_REAL_CLIENT(client))
-					{ RECURSE_FROM_CHOICE(client, return) }
+				{
+					RECURSE_FROM_CHOICE(client, return);
+				}
 				break;
 			}
 			default:
 			{
 				entity to;
 				FOR_EACH_REALCLIENT(to)
-					{ if(Notification_ShouldSend(broadcast, to, client))
-						{ RECURSE_FROM_CHOICE(to, continue) } }
+				{
+					if(Notification_ShouldSend(broadcast, to, client))
+					{
+						RECURSE_FROM_CHOICE(to, continue);
+					}
+				}
 				break;
 			}
 		}
