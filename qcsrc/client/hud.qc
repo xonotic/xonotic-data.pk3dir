@@ -4556,8 +4556,14 @@ float HUD_QuickMenu_Open(string mode, string submenu)
 			// first skip invalid entries, so we don't check them anymore
 			float argc;
 			argc = tokenize_console(s);
-			if(argc == 0 || argc > 2)
+			if(argc == 0 || argc > 3)
 				continue;
+			if(argc == 3)
+			{
+				// check for special keywords
+				if(argv(2) != "ALLPLAYERS" && argv(2) != "ALLPLAYERS_BUT_ME")
+					continue;
+			}
 			if(argv(0) == "")
 				continue;
 			if(argc == 2 && argv(1) == "")
@@ -4565,11 +4571,24 @@ float HUD_QuickMenu_Open(string mode, string submenu)
 
 			if(argc == 1)
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
-			else
+			else if(argc == 2)
 			{
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
 				++QuickMenu_Buffer_Size;
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", argv(1))); // command
+			}
+			else
+			{
+				if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES)
+				{
+					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+					++QuickMenu_Buffer_Size;
+					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", (argv(2) == "ALLPLAYERS") ? "1" : "0")); // command argument
+					++QuickMenu_Buffer_Size;
+					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", argv(1))); // command for each player
+					++QuickMenu_Buffer_Size;
+					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+				}
 			}
 			++QuickMenu_Buffer_Size;
 		}
@@ -4655,9 +4674,10 @@ float HUD_QuickMenu_IsOpened()
 
 // new_page 0 means page 0, new_page != 0 means next page
 float QuickMenu_Buffer_Index_Prev;
+void HUD_Quickmenu_PlayerListEntries(string cmd, float with_me);
 float HUD_QuickMenu_Page(string target_submenu, float new_page)
 {
-	string s, z_submenu;
+	string s = string_null, cmd = string_null, z_submenu;
 
 	if (new_page == 0)
 		QuickMenu_CurrentPage = 0;
@@ -4726,15 +4746,42 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		else if(entry_num >= QuickMenu_CurrentPage_FirstEntry && substring(s, 0, 1) == "T")
 		{
 			++QuickMenu_Buffer_Index;
-			string cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+			cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
 			if(substring(cmd, 0, 1) == "C")
 				cmd = substring(cmd, 1, -1);
+			else if(substring(cmd, 0, 1) == "P")
+			{
+				cmd = substring(cmd, 1, -1);
+				QuickMenu_Entries = -1;
+				break;
+			}
 			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++entry_num;
 	}
 	strunzone(z_submenu);
+	if(QuickMenu_Entries == -1)
+	{
+		float i;
+		for(i = 0; i < QUICKMENU_MAXLINES; ++i)
+			HUD_QuickMenu_clear_entry(i);
+		HUD_QuickMenu_Buffer_Close();
+
+		QuickMenu_Buffer = buf_create();
+		if(QuickMenu_Buffer < 0)
+			return false;
+
+		HUD_Quickmenu_PlayerListEntries(cmd, stof(substring(s, 1, 2)));
+
+		if(QuickMenu_Buffer_Size <= 0)
+		{
+			buf_del(QuickMenu_Buffer);
+			QuickMenu_Buffer = -1;
+			return 0;
+		}
+		return HUD_QuickMenu_Page("", 0);
+	}
 	if (QuickMenu_Entries == 0)
 	{
 		HUD_QuickMenu_Close();
@@ -5016,6 +5063,18 @@ void HUD_QuickMenu(void)
 	++QuickMenu_Buffer_Size; \
 }
 
+#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,with_me) { \
+	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
+		QUICKMENU_SMENU(submenu,eng_submenu) \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", with_me ? "1" : "0")); \
+		++QuickMenu_Buffer_Size; \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", command)); \
+		++QuickMenu_Buffer_Size; \
+		QUICKMENU_SMENU(submenu,eng_submenu) \
+	} \
+}
+
+
 // useful to Translate a string inside the Command
 #define QUICKMENU_ENTRY_TC(title,command,text,translated_text) {\
 	if(prvm_language == "en") \
@@ -5075,9 +5134,7 @@ void HUD_QuickMenu_Default(string target_submenu)
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
 
-	QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
-		HUD_Quickmenu_PlayerListEntries("commandmode tell \"%s\"", FALSE);
-	QUICKMENU_SMENU(CTX(_("QMCMD^Send private message to")), "Send private message to")
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s\"", false)
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
