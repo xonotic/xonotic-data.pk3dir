@@ -4558,32 +4558,37 @@ float HUD_QuickMenu_Open(string mode, string submenu)
 			argc = tokenize_console(s);
 			if(argc == 0 || argc > 3)
 				continue;
-			if(argc == 3)
-			{
-				// check for special keywords
-				if(argv(2) != "ALLPLAYERS" && argv(2) != "ALLPLAYERS_BUT_ME")
-					continue;
-			}
 			if(argv(0) == "")
 				continue;
-			if(argc == 2 && argv(1) == "")
-				continue;
-
 			if(argc == 1)
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
 			else if(argc == 2)
 			{
+				if(argv(1) == "")
+					continue;
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
 				++QuickMenu_Buffer_Size;
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", argv(1))); // command
 			}
-			else
+			else if(argc == 3)
 			{
+				// check for special keywords
+				float teamplayers = 0, without_me = 0;
+				switch(argv(2))
+				{
+					case "ALLPLAYERS_BUT_ME":		without_me = 1;
+					case "ALLPLAYERS":				teamplayers = 0; break;
+					case "OWNTEAMPLAYERS_BUT_ME":	without_me = 1;
+					case "OWNTEAMPLAYERS":			teamplayers = 1; break;
+					case "ENEMYTEAMPLAYERS":		teamplayers = 2; break;
+					default: continue;
+				}
+
 				if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES)
 				{
 					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
 					++QuickMenu_Buffer_Size;
-					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", (argv(2) == "ALLPLAYERS") ? "1" : "0")); // command argument
+					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", ftos(teamplayers), ftos(without_me))); // command arguments
 					++QuickMenu_Buffer_Size;
 					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", argv(1))); // command for each player
 					++QuickMenu_Buffer_Size;
@@ -4672,9 +4677,31 @@ float HUD_QuickMenu_IsOpened()
 	return (QuickMenu_Entries > 0);
 }
 
+void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float without_me);
+float HUD_Quickmenu_PlayerListEntries_Create(string cmd, float teamplayers, float without_me)
+{
+	float i;
+	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
+		HUD_QuickMenu_clear_entry(i);
+	HUD_QuickMenu_Buffer_Close();
+
+	QuickMenu_Buffer = buf_create();
+	if(QuickMenu_Buffer < 0)
+		return false;
+
+	HUD_Quickmenu_PlayerListEntries(cmd, teamplayers, without_me);
+
+	if(QuickMenu_Buffer_Size <= 0)
+	{
+		buf_del(QuickMenu_Buffer);
+		QuickMenu_Buffer = -1;
+		return false;
+	}
+	return true;
+}
+
 // new_page 0 means page 0, new_page != 0 means next page
 float QuickMenu_Buffer_Index_Prev;
-void HUD_Quickmenu_PlayerListEntries(string cmd, float with_me);
 float HUD_QuickMenu_Page(string target_submenu, float new_page)
 {
 	string s = string_null, cmd = string_null, z_submenu;
@@ -4747,13 +4774,17 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		{
 			++QuickMenu_Buffer_Index;
 			cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
-			if(substring(cmd, 0, 1) == "C")
+			string command_code = substring(cmd, 0, 1);
+			if(command_code == "C")
 				cmd = substring(cmd, 1, -1);
-			else if(substring(cmd, 0, 1) == "P")
+			else if(command_code == "P")
 			{
 				cmd = substring(cmd, 1, -1);
-				QuickMenu_Entries = -1;
-				break;
+				strunzone(z_submenu);
+				if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
+					return HUD_QuickMenu_Page("", 0);
+				HUD_QuickMenu_Close();
+				return 0;
 			}
 			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), cmd);
 		}
@@ -4761,27 +4792,6 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		++entry_num;
 	}
 	strunzone(z_submenu);
-	if(QuickMenu_Entries == -1)
-	{
-		float i;
-		for(i = 0; i < QUICKMENU_MAXLINES; ++i)
-			HUD_QuickMenu_clear_entry(i);
-		HUD_QuickMenu_Buffer_Close();
-
-		QuickMenu_Buffer = buf_create();
-		if(QuickMenu_Buffer < 0)
-			return false;
-
-		HUD_Quickmenu_PlayerListEntries(cmd, stof(substring(s, 1, 2)));
-
-		if(QuickMenu_Buffer_Size <= 0)
-		{
-			buf_del(QuickMenu_Buffer);
-			QuickMenu_Buffer = -1;
-			return 0;
-		}
-		return HUD_QuickMenu_Page("", 0);
-	}
 	if (QuickMenu_Entries == 0)
 	{
 		HUD_QuickMenu_Close();
@@ -5063,16 +5073,17 @@ void HUD_QuickMenu(void)
 	++QuickMenu_Buffer_Size; \
 }
 
-#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,with_me) { \
+#define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
 	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
 		QUICKMENU_SMENU(submenu,eng_submenu) \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", with_me ? "1" : "0")); \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", ftos(teamplayers), ftos(without_me))); \
 		++QuickMenu_Buffer_Size; \
 		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", command)); \
 		++QuickMenu_Buffer_Size; \
 		QUICKMENU_SMENU(submenu,eng_submenu) \
 	} \
 }
+
 
 
 // useful to Translate a string inside the Command
@@ -5085,14 +5096,24 @@ void HUD_QuickMenu(void)
 		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
 }
 
-void HUD_Quickmenu_PlayerListEntries(string cmd, float with_me)
+void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float without_me)
 {
 	entity pl;
+	if(teamplayers && !team_count)
+		return;
+
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.sv_entnum != player_localnum || with_me)
-			QUICKMENU_ENTRY(GetPlayerName(pl.sv_entnum), sprintf(cmd, GetPlayerName(pl.sv_entnum)))
+		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players
+			continue;
+		if(teamplayers == 2 && (pl.team == myteam || pl.team == NUM_SPECTATOR)) // only enemy team players
+			continue;
+		if(without_me && pl.sv_entnum == player_localnum)
+			continue;
+		QUICKMENU_ENTRY(GetPlayerName(pl.sv_entnum), sprintf(cmd, GetPlayerName(pl.sv_entnum)))
 	}
+
+	return;
 }
 
 
@@ -5134,7 +5155,7 @@ void HUD_QuickMenu_Default(string target_submenu)
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
 
-	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s\"", false)
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s\" ^7", 0, 1)
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
