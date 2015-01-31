@@ -1,5 +1,8 @@
 #ifndef CSPROGSDEFS_H
 #define CSPROGSDEFS_H
+
+#pragma noref 1
+
 /*
 ==============================================================================
 
@@ -1444,4 +1447,7 @@ vector gettaginfo_forward;
 vector gettaginfo_right;
 vector gettaginfo_up;
 float checkpvs(vector viewpos, entity viewee) = #240;
+
+#pragma noref 0
+
 #endif

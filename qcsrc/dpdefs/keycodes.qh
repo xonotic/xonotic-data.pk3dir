@@ -1,6 +1,8 @@
 #ifndef KEYCODES_H
 #define KEYCODES_H
 
+#pragma noref 1
+
 ///////////////////////////
 // key constants
 
@@ -147,4 +149,7 @@ float K_MOUSE13		=	526;
 float K_MOUSE14		=	527;
 float K_MOUSE15		=	528;
 float K_MOUSE16		=	529;
+
+#pragma noref 0
+
 #endif
