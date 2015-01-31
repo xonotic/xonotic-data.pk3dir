@@ -1,9 +1,10 @@
+#include "util.qh"
+
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
     #include "../warpzonelib/mathlib.qh"
-    #include "util.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
@@ -13,7 +14,6 @@
     #include "../dpdefs/dpextensions.qh"
     #include "../warpzonelib/mathlib.qh"
     #include "constants.qh"
-    #include "util.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
     #include "notifications.qh"
