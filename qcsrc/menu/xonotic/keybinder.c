@@ -241,7 +241,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 void KeyBinder_Bind_Reset_All(entity btn, entity me)
 {
 	localcmd("unbindall\n");
-	localcmd("exec binds-default.cfg\n");
+	localcmd("exec binds-xonotic.cfg\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
 }
