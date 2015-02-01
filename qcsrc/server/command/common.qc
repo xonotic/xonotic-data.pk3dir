@@ -21,6 +21,14 @@ string GetCallerName(entity caller)
 		return admin_name(); //((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
+// verify that the client provided is acceptable for kicking
+float VerifyKickableEntity(entity client)
+{
+	if (!IS_REAL_CLIENT(client))
+		return CLIENT_NOT_REAL;
+	return CLIENT_ACCEPTABLE;
+}
+
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
