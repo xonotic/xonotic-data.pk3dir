@@ -968,9 +968,10 @@ void IRCSay(string sourcename, string msgin)
 		if(IS_PLAYER(head))
 			continue;
 
-		if(head.netaddress)
-		if(head.netaddress != "")
-		if(head.netaddress != "null/botclient")
+		//if(head.netaddress)
+		//if(head.netaddress != "")
+		//if(head.netaddress != "null/botclient")
+		if(IS_REAL_CLIENT(head))
 			sprint(head, msgstr);
 	}
 }
