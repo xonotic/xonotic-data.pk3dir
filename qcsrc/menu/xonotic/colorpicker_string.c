@@ -97,6 +97,7 @@ float XonoticColorpickerString_mouseDrag(entity me, vector coords)
 
 float XonoticColorpickerString_mouseRelease(entity me, vector coords)
 {
+	m_play_click_sound(MENU_SOUND_SLIDE);
 	me.mouseDrag(me, coords);
 	return 1;
 }
