@@ -4,6 +4,16 @@ float object_count;
 .entity object_attach;
 .string material;
 
+void sandbox_SnapToGrid(entity e, float amnt)
+{
+	vector orig = e.origin;
+	orig_x = rint(orig_x / amnt) * amnt;
+	orig_y = rint(orig_y / amnt) * amnt;
+	orig_z = rint(orig_z / amnt) * amnt;
+	setorigin(e, orig);
+	e.prevorigin = orig;
+}
+
 .float touch_timer;
 void sandbox_ObjectFunction_Touch()
 {
@@ -34,6 +44,18 @@ void sandbox_ObjectFunction_Think()
 {
 	entity e;
 
+	if(autocvar_g_sandbox_snaptogrid && self.origin != self.prevorigin)
+	{
+		sandbox_SnapToGrid(self, autocvar_g_sandbox_snaptogrid);
+		
+		if(self.angles_y > 45)
+			self.angles_y = 90;
+		else if(self.angles_y < -45)
+			self.angles_y = -90;
+		else if(self.angles_y < 45 || self.angles_y > -45)
+			self.angles_y = 0;
+	}
+
 	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_readonly)
 		self.grab = 0; // no grabbing
@@ -56,7 +78,7 @@ void sandbox_ObjectFunction_Think()
 	}
 
 	self.nextthink = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -84,11 +106,14 @@ entity sandbox_ObjectEdit_Get(float permissions)
 void sandbox_ObjectEdit_Scale(entity e, float f)
 {
 	e.scale = f;
+	e.modelscale = f;
 	if(e.scale)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
+		e.modelscale = f;
 		setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+		FixSize(e);
 	}
 }
 
@@ -174,7 +199,7 @@ entity sandbox_ObjectSpawn(float database)
 		setorigin(e, trace_endpos);
 		e.angles_y = self.v_angle_y;
 	}
-	
+
 	oldself = self;
 	self = e;
 	CSQCMODEL_AUTOINIT();
@@ -323,7 +348,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		setmodel(e, argv(argv_num));	++argv_num;
+		setmodel_fixsize(e, argv(argv_num));	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
 		e.colormod = stov(argv(argv_num));	++argv_num;
@@ -480,6 +505,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
 					return TRUE;
 				}
+				if(IS_SPEC(self) || IS_OBSERVER(self))
+				{
+					print_to(self, "^1SANDBOX - WARNING: ^7Cannot spawn objects while spectating");
+					return TRUE;
+				}
 				self.object_flood = time + autocvar_g_sandbox_editor_flood;
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
@@ -498,7 +528,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				e = sandbox_ObjectSpawn(FALSE);
-				setmodel(e, argv(2));
+				setmodel_fixsize(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
@@ -644,6 +674,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.frame = stof(argv(3));
 							break;
 						case "scale":
+							if(e.solid == SOLID_BSP)
+							{
+								print_to(self, "^1SANDBOX - WARNING: ^7BSP solid objects cannot be resized");
+								return TRUE;
+							}
 							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
 						case "solidity":
@@ -655,6 +690,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								case "1": // solid
 									e.solid = SOLID_BBOX;
 									break;
+								case "2": // bsp solid
+									if(autocvar_g_sandbox_allow_bspsolid)
+									{
+										e.solid = SOLID_BSP;
+										break;
+									}
 								default:
 									break;
 							}
@@ -805,33 +846,21 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_SetModname)
+void sandbox_DelayedInit()
 {
-	modname = "Sandbox";
-	return TRUE;
+	sandbox_Database_Load();
 }
 
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
-			sandbox_Database_Load();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// nothing to roll back
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		// nothing to remove
+			InitializeEntity(world, sandbox_DelayedInit, INITPRIO_LAST);
 	}
 
 	return FALSE;

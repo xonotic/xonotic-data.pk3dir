@@ -41,7 +41,10 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+	{
 		self.classname = "observer";
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
+	}
 
 	return FALSE;
 }
@@ -56,7 +59,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 {
 	// Only if the player cannot play at all
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
+	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666 || PlayerScore_Add(self, SP_LMS_LIVES, 0) > 0)
 		self.frags = FRAGS_SPECTATOR;
 	else
 		self.frags = FRAGS_LMS_LOSER;
@@ -72,7 +75,11 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
-	self.classname = "player";
+	if(autocvar_g_lms_join_anytime)
+		self.frags = FRAGS_SPECTATOR;
+	else
+		self.classname = "player";
+
 	campaign_bots_may_start = 1;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
@@ -171,6 +178,16 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(lms_WantWeapon)
+{
+	if(other.spawnflags & WEP_FLAG_NORMAL)
+		ret_float = TRUE;
+	else
+		ret_float = FALSE;
+
+	return FALSE;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
@@ -204,6 +221,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, lms_WantWeapon, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

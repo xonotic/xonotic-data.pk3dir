@@ -25,6 +25,7 @@ oo/base.h
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/command/script.qh
 ../common/urllib.qh
 ../common/monsters/monsters.qh
 
@@ -45,6 +46,7 @@ oo/implementation.h
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/command/script.qc
 command/menu_cmd.qc
 menu.qc
 draw.qc

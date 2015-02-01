@@ -3,6 +3,28 @@ void objerror(string s);
 void droptofloor();
 .vector dropped_origin;
 
+float Player_Trapped(entity player)
+{
+	// 0: free, 1: confined, but free movement, 2: confined and unable to move
+	if(player.frozen)
+		return 2;
+	if(player.deadflag != DEAD_NO)
+		return 2; // technically speaking, player is kinda trapped in limbo (TODO: make sure checking this doesn't break anything)
+	if(player.jb_isprisoned)
+		return 1;
+	return 0;
+}
+
+float checkinlist(string command, string list)
+{
+	string l = strcat(" ", list, " ");
+
+	if(strstrofs(l, strcat(" ", command, " "), 0) >= 0)
+		return TRUE;
+
+	return FALSE;
+}
+
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void crosshair_trace(entity pl)
 {
@@ -29,17 +51,9 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
-string GetMapname();
+string GetMapname(); // why...
 
-string admin_name(void)
-{
-	if(autocvar_sv_adminnick != "")
-		return autocvar_sv_adminnick;
-	else
-		return "SERVER ADMIN";
-}
+string admin_name() { return (autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"; }
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
@@ -90,6 +104,9 @@ const string STR_OBSERVER = "observer";
 #define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
 #define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
 #define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
+#define IS_TURRET(v)			(v.turret_flags & TUR_FLAG_ISTURRET)
+#define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
+#define IS_MONSTER(v)			(v.flags & FL_MONSTER)
 
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
@@ -197,7 +214,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     localhead = find(world, field, value);
     while (localhead)
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
+        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2 || localhead.classname == "item_flag_team") && localhead.target == "###item###")
             dist = localhead.oldorigin;
         else
             dist = localhead.origin;
@@ -303,8 +320,16 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
+	string ammoitems;
 	p = 0;
 	n = 7;
+
+	ammoitems = "batteries";
+	if(self.items & IT_SUPERCELLS) ammoitems = "supercells";
+	if(self.items & IT_PLASMA) ammoitems = "plasma";
+	if(self.items & IT_CELLS) ammoitems = "cells";
+	if(self.items & IT_ROCKETS) ammoitems = "rockets";
+	if(self.items & IT_SHELLS) ammoitems = "shells";
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -332,45 +357,33 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "j": replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)"); break;
+			case "k": replacement = ((self.lastkiller) ? self.lastkiller.netname : "(nobody)"); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			default:
+			{
+				format_escape = escape;
+				format_replacement = replacement;
+				MUTATOR_CALLHOOK(FormatMessage);
+				escape = format_escape;
+				replacement = format_replacement;
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
@@ -491,6 +504,15 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
+	GetCvars_handleString(s, f, cvar_cl_autovote, "cl_autovote");
+	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
+	GetCvars_handleFloat(s, f, cvar_cl_sparkle, "cl_sparkle");
+	GetCvars_handleFloat(s, f, cvar_cl_pony, "cl_pony");
+	GetCvars_handleFloat(s, f, cvar_cl_pony_skin, "cl_pony_skin");
+	GetCvars_handleFloat(s, f, cvar_cl_damnfurries, "cl_damnfurries");
+	GetCvars_handleFloat(s, f, cvar_cl_thestars, "cl_thestars");
+	GetCvars_handleFloat(s, f, cvar_cl_robot, "cl_robot");
+	GetCvars_handleFloat(s, f, cvar_cl_charge, "cl_charge");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -542,16 +564,6 @@ string playername(entity p)
     }
     else
         return p.netname;
-}
-
-vector randompos(vector m1, vector m2)
-{
-    vector v;
-    m2 = m2 - m1;
-    v_x = m2_x * random() + m1_x;
-    v_y = m2_y * random() + m1_y;
-    v_z = m2_z * random() + m1_z;
-    return  v;
 }
 
 //#NO AUTOCVARS START
@@ -640,23 +652,25 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 	if (!i)
 		return 0;
 
-	if (g_lms || g_ca || allguns)
+	if (allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
 			d = TRUE;
 		else
 			d = FALSE;
 	}
-	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
-	else if (g_nexball)
-		d = 0; // weapon is set a few lines later
 	else
 		d = !(!weaponinfo.weaponstart);
 
+	ret_float = d;
+	other = weaponinfo;
+	MUTATOR_CALLHOOK(WantWeapon);
+	d = ret_float;
+	weaponinfo = other;
+
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
-	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
+	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
 	var float t = weaponinfo.weaponstartoverride;
@@ -938,7 +952,7 @@ void readlevelcvars(void)
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
 
-	g_instagib = cvar("g_instagib");
+	sv_showfps = cvar("sv_showfps");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
@@ -956,7 +970,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_assault || cvar("g_campaign"))
+	if (cvar("g_campaign"))
 		warmup_stage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1282,13 +1296,8 @@ void precache_all_playermodels(string pattern)
 void precache()
 {
     // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
+    precache_model ("models/misc/chatbubble.md3");
 	precache_model("models/ice/ice.md3");
-
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
@@ -1318,7 +1327,29 @@ void precache()
             precache_playermodel(s);
         s = autocvar_sv_defaultplayermodel;
         if (s != "")
-            precache_playermodel(s);
+		{
+			float n = tokenize_console(s);
+			if(n > 0)
+			{
+				float i;
+				for (i = 0; i < n; ++i)
+				{
+					//print("Precaching: ", argv(i), "\n");
+					precache_model(argv(i));
+				}
+			}
+
+			precache_playermodel(s);
+		}
+    }
+
+    if(autocvar_sv_allow_customplayermodels)
+    {
+        precache_playermodel("models/player/pony.iqm");
+        precache_playermodel("models/player/renamon.iqm");
+        precache_playermodel("models/player/terminusmale.iqm");
+        precache_playermodel("models/player/ubot.iqm");
+        precache_playermodel("models/player/rosalina.dpm");
     }
 
     if (g_footsteps)
@@ -1361,15 +1392,15 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
+	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+    precache_sound (W_Sound("weapon_switch"));
+    precache_sound (W_Sound("weaponpickup"));
+    precache_sound (W_Sound("unavailable"));
+    precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
+        precache_sound (W_Sound("hook_fire")); // hook
+        precache_sound (W_Sound("hook_impact")); // hook
     }
 
     precache_model("models/elaser.mdl");
@@ -2358,9 +2389,11 @@ float LostMovetypeFollow(entity ent)
 
 float isPushable(entity e)
 {
-	if(e.iscreature)
-		return TRUE;
 	if(e.pushable)
+		return TRUE;
+	if(IS_VEHICLE(e))
+		return FALSE;
+	if(e.iscreature)
 		return TRUE;
 	switch(e.classname)
 	{

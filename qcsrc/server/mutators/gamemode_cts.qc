@@ -279,6 +279,18 @@ MUTATOR_HOOKFUNCTION(cts_SetMods)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(cts_WantWeapon)
+{
+	ret_float = (other.weapon == WEP_SHOTGUN);
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(cts_AllowMobSpawning)
+{
+	ret_string = "You cannot spawn monsters in CTS";
+	return TRUE;
+}
+
 void cts_Initialize()
 {
 	cts_ScoreRules();
@@ -301,6 +313,8 @@ MUTATOR_DEFINITION(gamemode_cts)
 	MUTATOR_HOOK(PlayerDamage_Calculate, cts_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, cts_ForbidClearPlayerScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, cts_SetMods, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, cts_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, cts_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

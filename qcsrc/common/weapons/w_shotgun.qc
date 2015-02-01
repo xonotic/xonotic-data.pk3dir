@@ -60,11 +60,11 @@ void W_Shotgun_Attack(float isprimary)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, TRUE, 5, "weapons/shotgun_fire.wav", ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, TRUE, 5, W_Sound("shotgun_fire"), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -92,7 +92,6 @@ void W_Shotgun_Melee_Think(void)
 	if(!self.cnt) // set start time of melee
 	{
 		self.cnt = time;
-		W_PlayStrengthSound(self.realowner);
 	}
 
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
@@ -119,7 +118,7 @@ void W_Shotgun_Melee_Think(void)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -180,7 +179,7 @@ void W_Shotgun_Melee_Think(void)
 
 void W_Shotgun_Attack2(void)
 {
-	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
 	entity meleetemp;
@@ -286,12 +285,12 @@ float W_Shotgun(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shotgun.md3");
-			precache_model("models/weapons/v_shotgun.md3");
-			precache_model("models/weapons/h_shotgun.iqm");
+			precache_model(W_Model("g_shotgun.md3"));
+			precache_model(W_Model("v_shotgun.md3"));
+			precache_model(W_Model("h_shotgun.iqm"));
 			precache_sound("misc/itempickup.wav");
-			precache_sound("weapons/shotgun_fire.wav");
-			precache_sound("weapons/shotgun_melee.wav");
+			precache_sound(W_Sound("shotgun_fire"));
+			precache_sound(W_Sound("shotgun_melee"));
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -330,7 +329,7 @@ float W_Shotgun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR_PRI(shotgun, ammo), "weapons/reload.wav"); // WEAPONTODO
+			W_Reload(WEP_CVAR_PRI(shotgun, ammo), W_Sound("reload")); // WEAPONTODO
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

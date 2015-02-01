@@ -16,19 +16,13 @@ const      float IT_SUPERWEAPON               =    4096;
 const      float IT_STRENGTH                  =    8192;
 const      float IT_INVINCIBLE                =   16384;
 const      float IT_HEALTH                    =   32768;
-const      float IT_PLASMA                    =   65536;
+const      float IT_SUPERCELLS                =   8388608;
+const      float IT_PLASMA                   =   16777216;
 
 // shared value space (union):
 	// for items:
 	WANT_CONST float IT_KEY1                  =  131072;
 	WANT_CONST float IT_KEY2                  =  262144;
-	// for players:
-	const      float IT_RED_FLAG_TAKEN        =   32768;
-	const      float IT_RED_FLAG_LOST         =   65536;
-	const      float IT_RED_FLAG_CARRYING     =   98304;
-	const      float IT_BLUE_FLAG_TAKEN       =  131072;
-	const      float IT_BLUE_FLAG_LOST        =  262144;
-	const      float IT_BLUE_FLAG_CARRYING    =  393216;
 // end
 
 const      float IT_5HP                       =  524288;

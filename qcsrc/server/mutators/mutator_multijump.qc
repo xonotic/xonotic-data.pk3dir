@@ -1,24 +1,32 @@
 .float multijump_count;
 .float multijump_ready;
+.float cvar_cl_multijump;
 
 MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 {
 	if(self.flags & FL_ONGROUND)
-		self.multijump_count = 0;
+	{
+		if (autocvar_g_multijump > 0)
+			self.multijump_count = 0;
+		else
+			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+	}
 
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 {
+	if (self.cvar_cl_multijump)
 	if (self.flags & FL_JUMPRELEASED && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
 		self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
 	else
 		self.multijump_ready = FALSE;
 
-	if(!player_multijump && self.multijump_ready && (autocvar_g_multijump == -1 || self.multijump_count < autocvar_g_multijump) && self.velocity_z > autocvar_g_multijump_speed)
+	if(!player_multijump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed && vlen(self.velocity) <= autocvar_g_multijump_maxspeed)
 	{
 		if (autocvar_g_multijump)
+		if (self.cvar_cl_multijump)
 		{
 			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
 			{
@@ -50,12 +58,19 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
 					self.velocity_y = wishdir_y * curspeed;
 					// keep velocity_z unchanged!
 				}
-				self.multijump_count += 1;
+				if (autocvar_g_multijump > 0)
+					self.multijump_count += 1;
 			}
 		}
 		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
 	}
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(multijump_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_multijump, "cl_multijump");
 	return FALSE;
 }
 
@@ -75,6 +90,7 @@ MUTATOR_DEFINITION(mutator_multijump)
 {
 	MUTATOR_HOOK(PlayerPhysics, multijump_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerJump, multijump_PlayerJump, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, multijump_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, multijump_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, multijump_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 

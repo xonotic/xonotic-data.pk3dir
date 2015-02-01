@@ -96,6 +96,7 @@ vector view_origin, view_angles, view_forward, view_right, view_up;
 
 float button_zoom;
 float spectatorbutton_zoom;
+float button_attack;
 float button_attack2;
 
 float activeweapon;
@@ -148,3 +149,19 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 float hud;
 float view_quality;
 float framecount;
+
+float vaporizer_delay;
+
+float fovlock;
+
+float cl_fps;
+float sv_showfps;
+
+string sv_announcer;
+
+float num_spectators;
+#define MAX_SPECTATORS 7
+float spectatorlist[MAX_SPECTATORS];
+
+float camera_drawviewmodel_locked;
+float camera_drawviewmodel_backup;

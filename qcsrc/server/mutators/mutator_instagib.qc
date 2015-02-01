@@ -4,15 +4,38 @@ void spawnfunc_item_minst_cells (void)
 	if (!self.ammo_cells)
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 
-	StartItem ("models/items/a_cells.md3",
+	StartItem (Item_Model("a_cells.md3"),
 			   "misc/itempickup.wav", 45, 0,
 			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+}
+
+void spawnfunc_item_minst_rockets (void)
+{
+	if (!g_instagib) { remove(self); return; }
+	if(!cvar("g_instagib_withmines")) { remove(self); return; }
+	if (!self.ammo_rockets)
+		self.ammo_rockets = autocvar_g_instagib_ammo_rockets;
+
+	StartItem (Item_Model("a_rockets.md3"),
+			   "misc/itempickup.wav", 45, 0,
+			   "Vaporizer Ammo", IT_ROCKETS, 0, 0, generic_pickupevalfunc, 100);
+}
+
+void instagib_item_supercells() 
+{
+	if(!g_instagib) { remove(self); return; }
+	if(!self.ammo_supercells)
+		self.ammo_supercells = 2;
+
+	StartItem (Item_Model("a_supercells.md3"),
+			   "misc/itempickup.wav", 45, 0,
+			   "supercells", IT_SUPERCELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 void instagib_health_mega()
 {
 	self.max_health = 1;
-	StartItem ("models/items/g_h100.md3",
+	StartItem (Item_Model("g_h100.md3"),
 			   "misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			   "Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
 }
@@ -37,6 +60,14 @@ void instagib_ammocheck()
 		instagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
+	else if(autocvar_g_rm)
+	{
+		if(!self.instagib_needammo)
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
+			self.instagib_needammo = TRUE;
+		}
+	}
 	else
 	{
 		self.instagib_needammo = TRUE;
@@ -111,7 +142,7 @@ MUTATOR_HOOKFUNCTION(instagib_MatchEnd)
 
 MUTATOR_HOOKFUNCTION(instagib_MonsterLoot)
 {
-	other.monster_loot = spawnfunc_item_minst_cells;
+	other.monster_loot = ((random() > 0.5 && autocvar_g_instagib_use_normal_ammo && cvar("g_instagib_withmines")) ? spawnfunc_item_minst_rockets : spawnfunc_item_minst_cells);
 
 	return FALSE;
 }
@@ -122,14 +153,6 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 	if(self.monsterid == MON_MAGE)
 		self.skin = 1;
 	
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
-{
-	if(checkentity.items & IT_STRENGTH)
-		return TRUE;
-
 	return FALSE;
 }
 
@@ -161,56 +184,6 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 {
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
-
-	if (self.items & IT_STRENGTH)
-	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		if (time > self.strength_finished)
-		{
-			self.alpha = default_player_alpha;
-			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &= ~IT_STRENGTH;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
-		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
-		{
-			self.alpha = autocvar_g_instagib_invis_alpha;
-			self.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
-			self.items |= IT_STRENGTH;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
-		}
-	}
-
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		if (time > self.invincible_finished)
-		{
-			self.items &= ~IT_INVINCIBLE;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
-		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
-		{
-			self.items |= IT_INVINCIBLE;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
-		}
-	}
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
-{
-	if(self.items & IT_INVINCIBLE)
-		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
-
 	return FALSE;
 }
 
@@ -231,17 +204,32 @@ MUTATOR_HOOKFUNCTION(instagib_ForbidThrowing)
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 {
-	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if(frag_deathtype == DEATH_NOAMMO)
+		return FALSE;
+
+	if(autocvar_g_rm)
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR))
+	if(frag_attacker == frag_target || frag_target.classname == "nade")
+		frag_damage = 0;
+
+	if((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2)
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
+	if(frag_attacker == frag_target || forbidWeaponUse(frag_attacker) == 2)
 		frag_damage = 0;
 
 	if(IS_PLAYER(frag_target))
 	{
-		if ((frag_deathtype == DEATH_FALL)  ||
-			(frag_deathtype == DEATH_DROWN) ||
-			(frag_deathtype == DEATH_SLIME) ||
-			(frag_deathtype == DEATH_LAVA))
+		if(frag_deathtype == DEATH_FALL)
+			frag_damage = 0; // never count fall damage
+
+		if(!autocvar_g_instagib_damagedbycontents)
+		switch(frag_deathtype)
 		{
-			frag_damage = 0;
+			case DEATH_DROWN:
+			case DEATH_SLIME:
+			case DEATH_LAVA:
+				frag_damage = 0;
+				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
@@ -249,12 +237,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage)
+					frag_damage = frag_mirrordamage = 0;
 				
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					frag_force = '0 0 0';
+					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(!autocvar_g_instagib_blaster_keepforce)
+						frag_force = '0 0 0';
 				}
 			}
 			else if(frag_target.armorvalue)
@@ -276,12 +266,12 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			frag_attacker.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
-			frag_attacker.damage_dealt += 1;
+			frag_attacker.damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
 	}
 
-	if(frag_target.items & IT_STRENGTH)
+	if(frag_target.buffs & BUFF_INVISIBLE)
 		yoda = 1;
 
 	return FALSE;
@@ -296,10 +286,10 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = 0;
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
-	start_ammo_rockets = warmup_start_ammo_rockets = 0;
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_instagib_withmines_ammo_start");;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
-	start_weapons = warmup_start_weapons = WEPSET_VAPORIZER;
+	start_weapons = warmup_start_weapons = ((cvar("g_instagib_withmines")) ? (WEPSET_VAPORIZER | WEPSET_MINE_LAYER) : WEPSET_VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
@@ -308,7 +298,12 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 {
 	if(self.classname == "item_cells")
-		return TRUE; // no normal cells?
+	if(!autocvar_g_instagib_use_normal_ammo)
+		return TRUE;
+
+	if(self.classname == "item_rockets")
+	if(!autocvar_g_instagib_use_normal_ammo || !cvar("g_instagib_withmines"))
+		return TRUE;
 
 	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
 	{
@@ -318,11 +313,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
-		entity e = spawn();
+		entity e = spawn(), oldself;
 		setorigin(e, self.origin);
-		entity oldself;
 		oldself = self;
 		self = e;
+		self.noalign = oldself.noalign;
+		self.cnt = oldself.cnt;
+		self.team = oldself.team;
 		spawnfunc_item_minst_cells();
 		self = oldself;
 		return TRUE;
@@ -334,39 +331,43 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.ammo_cells > autocvar_g_instagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 
-	if(self.ammo_cells && !self.weapon)
+	if(self.classname != "item_minst_rockets")
+		self.ammo_rockets = bound(0, self.ammo_rockets, autocvar_g_instagib_ammo_rockets);
+
+	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
+		return FALSE;
+
+	if(self.ammo_rockets && !self.weapon)
 		return FALSE;
 
 	return TRUE;
-}
-
-MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
-{
-	entity e = WaypointSprite_getviewentity(other);
-
-	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
-	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
-	if(DIFF_TEAM(self.owner, e))
-		return TRUE;
-
-	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 {
 	switch(self.items)
 	{
-		case IT_STRENGTH:   item_name = "item-invis"; item_color = '0 0 1'; break;
 		case IT_NAILS:      item_name = "item-extralife"; item_color = '1 0 0'; break;
-		case IT_INVINCIBLE: item_name = "item-speed"; item_color = '1 0 1'; break;
 	}
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
+{	
+	if(	(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+	||	(autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR))
+	|| 	(((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
+	)
+		frag_damage = 1000; // always gib if it was a vaporizer death
+
+	(get_weaponinfo(WEP_VAPORIZER)).weaponthrowable = 1; // throwing is forbidden by a mutator hook, enabling this for drop on death
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 {
-	if(self.ammo_cells)
+	if(self.ammo_cells || self.ammo_supercells)
 	{
 		// play some cool sounds ;)
 		if (IS_CLIENT(other))
@@ -395,25 +396,12 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 {
-	if (!autocvar_g_powerups) { return FALSE; }
-	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
-		return FALSE;
+	if(WEP_CVAR_PRI(vaporizer, charge))
+	if(self.classname == "item_cells" || self.classname == "item_minst_cells")
+	if(random() <= 0.5)
+		instagib_item_supercells();
 
-	entity e = spawn();
-
-	if(random() < 0.3)
-		e.think = spawnfunc_item_strength;
-	else if(random() < 0.6)
-		e.think = instagib_health_mega;
-	else
-		e.think = spawnfunc_item_invincible;
-
-	e.nextthink = time + 0.1;
-	e.spawnflags = self.spawnflags;
-	e.noalign = self.noalign;
-	setorigin(e, self.origin);
-
-	return TRUE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsString)
@@ -439,16 +427,14 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(MatchEnd, instagib_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, instagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, instagib_MonsterSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BotShouldAttack, instagib_BotShouldAttack, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, instagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, instagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, instagib_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, instagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, instagib_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, instagib_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, instagib_ForbidThrowing, CBC_ORDER_ANY);
@@ -458,6 +444,24 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(BuildMutatorsString, instagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, instagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, instagib_SetModname, CBC_ORDER_ANY);
+
+	MUTATOR_ONADD
+	{
+		precache_sound(W_Sound("rocket_impact"));
+		
+		if(cvar("g_instagib_withmines"))
+			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+		g_instagib = cvar("g_instagib");
+	}
+	
+	MUTATOR_ONREMOVE
+	{
+		if(cvar("g_instagib_withmines"))
+			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+
+		g_instagib = 0;
+	}
 
 	return FALSE;
 }

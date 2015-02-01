@@ -240,8 +240,6 @@ void W_Porto_Attack(float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
 	gren = spawn();
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;
@@ -259,11 +257,8 @@ void W_Porto_Attack(float type)
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
-	
-	if(self.items & IT_STRENGTH)
-		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
-	else
-		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
+
+	W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -368,9 +363,9 @@ float W_Porto(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_porto.md3");
-			precache_model("models/weapons/v_porto.md3");
-			precache_model("models/weapons/h_porto.iqm");
+			precache_model(W_Model("g_porto.md3"));
+			precache_model(W_Model("v_porto.md3"));
+			precache_model(W_Model("h_porto.iqm"));
 			precache_model("models/portal.md3");
 			precache_sound("porto/bounce.wav");
 			precache_sound("porto/create.wav");

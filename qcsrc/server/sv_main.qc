@@ -8,9 +8,9 @@ void CreatureFrame (void)
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
-		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		float vehic = IS_VEHICLE(self);
 		float projectile = (self.flags & FL_PROJECTILE);
-		float monster = (self.flags & FL_MONSTER);
+		float monster = IS_MONSTER(self);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -207,7 +207,7 @@ void StartFrame (void)
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
-	skill = autocvar_skill;
+	bot_skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;

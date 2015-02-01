@@ -16,29 +16,18 @@ void CA_count_alive_players()
 {
 	entity e;
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOR_EACH_PLAYER(e) {
-		if(e.team == NUM_TEAM_1)
+	FOR_EACH_PLAYER(e)
+	{
+		switch(e.team)
 		{
-			++total_players;
-			if (e.health >= 1) ++redalive;
-		}
-		else if(e.team == NUM_TEAM_2)
-		{
-			++total_players;
-			if (e.health >= 1) ++bluealive;
-		}
-		else if(e.team == NUM_TEAM_3)
-		{
-			++total_players;
-			if (e.health >= 1) ++yellowalive;
-		}
-		else if(e.team == NUM_TEAM_4)
-		{
-			++total_players;
-			if (e.health >= 1) ++pinkalive;
+			case NUM_TEAM_1: if(e.health >= 1) ++redalive; ++total_players; break;
+			case NUM_TEAM_2: if(e.health >= 1) ++bluealive; ++total_players; break;
+			case NUM_TEAM_3: if(e.health >= 1) ++yellowalive; ++total_players; break;
+			case NUM_TEAM_4: if(e.health >= 1) ++pinkalive; ++total_players; break;
 		}
 	}
-	FOR_EACH_REALCLIENT(e) {
+	FOR_EACH_REALCLIENT(e)
+	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
 		e.yellowalive_stat = yellowalive;
@@ -75,15 +64,13 @@ float CA_GetWinnerTeam()
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
-	entity e;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		FOR_EACH_PLAYER(e)
-			nades_Clear(e);
+		nades_Clear(world, TRUE);
 		return 1;
 	}
 
@@ -107,8 +94,7 @@ float CA_CheckWinner()
 	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
-		nades_Clear(e);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -325,10 +311,6 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(ca_FilterItem)
 {
-	if(autocvar_g_powerups <= 0)
-	if(self.flags & FL_POWERUP)
-		return TRUE;
-
 	if(autocvar_g_pickup_items <= 0)
 		return TRUE;
 
@@ -348,6 +330,22 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 {
 	// no regeneration in CA
+	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_WantWeapon)
+{
+	if(other.spawnflags & WEP_FLAG_NORMAL)
+		ret_float = TRUE;
+	else
+		ret_float = FALSE;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ca_CountFrags)
+{
+	// announce remaining frags
 	return TRUE;
 }
 
@@ -392,6 +390,8 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, ca_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Scores_CountFragsRemaining, ca_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

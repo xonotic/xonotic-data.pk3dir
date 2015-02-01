@@ -101,8 +101,8 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
-				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
-				pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, to + v_forward * 32, '0 0 0', 1);
 			}
 			self.pushltime = time + 0.2;
 		}
@@ -212,7 +212,7 @@ void Teleport_Touch (void)
 	if(!other.vehicle.teleportable)
 		return;
 
-	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+	if(IS_TURRET(other))
 		return;
 
 	if(other.deadflag != DEAD_NO)

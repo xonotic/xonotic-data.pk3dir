@@ -187,7 +187,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	else
 		isfriend = islocalplayer;
 
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && isfriend)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && (isfriend || autocvar_cl_forcemyplayermodel_always))
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;
@@ -408,9 +408,9 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			if(self.tag_entity)
 			{
 				// the best part is: IT EXISTS
-				if(substring(self.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.model, 0, 14) == "models/weapons")
 				{
-					if(substring(self.tag_entity.model, 0, 17) == "models/weapons/h_")
+					if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
 						if(!self.tag_index)
@@ -429,8 +429,28 @@ void CSQCModel_AutoTagIndex_Apply(void)
 						self.tag_index = self.tag_entity.bone_weapon;
 					}
 				}
+				else if(substring(self.model, 0, 12) == "models/hats/")
+				{
+					if(substring(self.tag_entity.model, 0, 12) == "models/hats/")
+					{
+						self.tag_index = gettagindex(self.tag_entity, "tag_head");
+						if(!self.tag_index)
+							self.tag_index = gettagindex(self.tag_entity, "head");
+						if(!self.tag_index)
+						{
+							// we need to prevent this from 'appening
+							self.tag_entity = world;
+							self.drawmask = 0;
+						}
+					}
+					else if(self.tag_entity.isplayermodel)
+					{
+						skeleton_loadinfo(self.tag_entity);
+						self.tag_index = self.tag_entity.bone_hat;
+					}
+				}
 
-				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 				{
 					self.tag_index = gettagindex(self.tag_entity, "shot");
 					if(!self.tag_index)
@@ -579,6 +599,8 @@ void CSQCModel_Effects_Apply(void)
 void CSQCPlayer_Precache()
 {
 	precache_sound("misc/jetpack_fly.wav");
+	if(autocvar_cl_forcemyplayermodel != "")
+		precache_model(autocvar_cl_forcemyplayermodel);
 }
 
 // general functions

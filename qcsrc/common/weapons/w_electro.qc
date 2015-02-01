@@ -47,6 +47,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, combo_edgedamage) \
 	w_cvar(id, sn, NONE, combo_force) \
 	w_cvar(id, sn, NONE, combo_radius) \
+	w_cvar(id, sn, NONE, combo_simple) \
 	w_cvar(id, sn, NONE, combo_speed) \
 	w_cvar(id, sn, NONE, combo_safeammocheck) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
@@ -68,7 +69,51 @@ void W_Electro_ExplodeCombo(void);
 #ifdef SVQC
 void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO); }
 
-void W_Electro_TriggerCombo(vector org, float rad, entity own)
+void W_Electro_TriggerCombo_Simple(vector org, float rad, entity own)
+{
+	entity e;
+	for(e = world; (e = find(e, classname, "electro_orb")); )
+	{
+		if(vlen(e.origin - org) <= rad)
+		{
+			// do we allow thruwall triggering?
+			if(WEP_CVAR(electro, combo_comboradius_thruwall))
+			{
+				WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
+				if(trace_fraction != 1)
+				{
+					if(vlen(e.origin - org) >= WEP_CVAR(electro, combo_comboradius_thruwall))
+					{
+						// trigger is through a wall and outside of thruwall range, abort
+						continue;
+					}
+				}
+			}
+			
+			// change owner to whoever caused the combo explosion
+			e.realowner = own;
+			e.takedamage = DAMAGE_NO;
+			e.classname = "electro_orb_chain";
+			
+			// now set the next one to trigger as well
+			e.think = W_Electro_ExplodeCombo;
+			
+			// delay combo chains, looks cooler
+			e.nextthink =
+				(
+					time
+					+
+					(WEP_CVAR(electro, combo_speed) ?
+						(vlen(e.origin - org) / WEP_CVAR(electro, combo_speed))
+						:
+						0
+					)
+				);
+		}
+	}
+}
+
+void W_Electro_TriggerCombo_WarpZone(vector org, float rad, entity own)
 {
 	entity e = WarpZone_FindRadius(org, rad, !WEP_CVAR(electro, combo_comboradius_thruwall));
 	while(e)
@@ -113,6 +158,16 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 		}
 		e = e.chain;
 	}
+}
+
+void W_Electro_TriggerCombo(vector org, float rad, entity own)
+{
+	// TODO: remove when we have unlagged findradius!
+
+	if(WEP_CVAR(electro, combo_simple))
+		W_Electro_TriggerCombo_Simple(org, rad, own);
+	else
+		W_Electro_TriggerCombo_WarpZone(org, rad, own);
 }
 
 void W_Electro_ExplodeCombo(void)
@@ -254,12 +309,12 @@ void W_Electro_Attack_Bolt(void)
 		'0 0 -3',
 		FALSE,
 		2,
-		"weapons/electro_fire.wav",
+		W_Sound("electro_fire"),
 		CH_WEAPON_A,
 		WEP_CVAR_PRI(electro, damage)
 	);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "electro_bolt";
@@ -295,7 +350,7 @@ void W_Electro_Orb_Touch(void)
 	else
 	{
 		//UpdateCSQCProjectile(self);
-		spamsound(self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, W_Sound("electro_bounce"), VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -352,14 +407,14 @@ void W_Electro_Attack_Orb(void)
 		'0 0 -4',
 		FALSE,
 		2,
-		"weapons/electro_fire2.wav",
+		W_Sound("electro_fire2"),
 		CH_WEAPON_A,
 		WEP_CVAR_SEC(electro, damage)
 	);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = spawn();
 	proj.classname = "electro_orb";
@@ -497,14 +552,14 @@ float W_Electro(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_electro.md3");
-			precache_model("models/weapons/v_electro.md3");
-			precache_model("models/weapons/h_electro.iqm");
-			precache_sound("weapons/electro_bounce.wav");
-			precache_sound("weapons/electro_fire.wav");
-			precache_sound("weapons/electro_fire2.wav");
-			precache_sound("weapons/electro_impact.wav");
-			precache_sound("weapons/electro_impact_combo.wav");
+			precache_model(W_Model("g_electro.md3"));
+			precache_model(W_Model("v_electro.md3"));
+			precache_model(W_Model("h_electro.iqm"));
+			precache_sound(W_Sound("electro_bounce"));
+			precache_sound(W_Sound("electro_fire"));
+			precache_sound(W_Sound("electro_fire2"));
+			precache_sound(W_Sound("electro_impact"));
+			precache_sound(W_Sound("electro_impact_combo"));
 			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -540,7 +595,7 @@ float W_Electro(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

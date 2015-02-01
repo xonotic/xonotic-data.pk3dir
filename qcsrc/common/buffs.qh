@@ -1,8 +1,14 @@
+// Welcome to the stuff behind the scenes
+// Below, you will find the list of buffs
+// Add new buffs here!
+// Note: Buffs also need spawnfuncs, which are set below
+
 entity Buff_Type_first;
 entity Buff_Type_last;
 .entity enemy; // internal next pointer
 
 var float BUFF_LAST = 1;
+float BUFF_ALL;
 
 .float items; // buff ID
 .string netname; // buff name
@@ -18,6 +24,7 @@ var float BUFF_LAST = 1;
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \
 		BUFF_LAST = BUFF_##NAME; \
+		BUFF_ALL |= BUFF_##NAME; \
 		Buff_Type##sname = spawn(); \
 		Buff_Type##sname.items = BUFF_##NAME; \
 		Buff_Type##sname.netname = #sname; \
@@ -82,6 +89,10 @@ BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen,  BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(haste,	BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(invis,	BUFF_INVISIBLE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(medic,	BUFF_MEDIC)
+
+#undef BUFF_SPAWNFUNC
+#undef BUFF_SPAWNFUNC_Q3TA_COMPAT
+#undef BUFF_SPAWNFUNCS
 #endif
 
 vector Buff_Color(float buff_id);

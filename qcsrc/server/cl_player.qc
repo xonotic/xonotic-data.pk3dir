@@ -133,6 +133,8 @@ void player_anim (void)
 	float animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
+	if(self.movetype == MOVETYPE_FOLLOW)
+		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);
@@ -155,7 +157,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, FALSE);
 	take = v_x;
 	save = v_y;
 
@@ -206,7 +208,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 #define GAMETYPE_DEFAULTED_SETTING(str) \
 	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
 	 (gametype_setting_tmp < 0) ? 0 : \
-	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) : \
 	 gametype_setting_tmp)
 
 
@@ -351,7 +353,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, autocvar_g_balance_armor_block_bycount);
 	take = v_x;
 	save = v_y;
 
@@ -406,6 +408,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 
+	if (!autocvar_g_spawnshield_nodamage)
 	if (time >= self.spawnshieldtime)
 	{
 		if (!(self.flags & FL_GODMODE))
@@ -455,7 +458,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			float shake;
 			if(IS_BOT_CLIENT(self) && self.health >= 1)
 			{
-				shake = damage * 5 / (bound(0,skill,100) + 1);
+				shake = damage * 5 / (bound(0,bot_skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 				self.v_angle_x = bound(-90, self.v_angle_x, 90);
@@ -529,8 +532,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 			}
+		}
+
+		jeff_Announcer_PlayerDies(attacker, deathtype, self, inflictor);
+
+		if(IS_PLAYER(attacker))
+		{
+			self.lastkiller = attacker;
+			attacker.lastkilled = self;
 		}
 
 		// print an obituary message
@@ -547,8 +558,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_damage = excess;
 		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
+		excess = frag_damage;
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
@@ -609,6 +622,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			setsize(self, self.mins, self.maxs);
 		}
 		// set damage function to corpse damage
+		if(autocvar_g_player_gib_always)
+			excess = 10000;
 		self.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
 		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
@@ -696,6 +711,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		colorprefix = "^7";
 
+	if(source.waterlevel >= WATERLEVEL_SWIMMING)
+		msgin = "[glub glub glub]";
+
 	if(msgin != "")
 	{
 		if(privatesay)
@@ -716,7 +734,14 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else
 		{
-			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
+			if(substring(msgin, 0, 3) == "/me")
+			{
+				//msgin = strreplace("/me", "", msgin);
+				msgin = substring(msgin, 3, strlen(msgin));
+				msgstr = strcat("\{1}^4* ", colorprefix, namestr, "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
@@ -874,6 +899,15 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
+		else if ( teamsay && source.active_minigame )
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOR_EACH_REALCLIENT(head) 
+				if(head != source)
+				if(head.active_minigame == source.active_minigame)
+					sprint(head, msgstr);
+		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
@@ -909,6 +943,36 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	return ret;
+}
+
+void IRCSay(string sourcename, string msgin)
+{
+	entity head;
+
+	if(substring(msgin, 0, 1) == " ")
+		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
+
+	//msgin = formatmessage(msgin);
+
+	if(msgin == "")
+		return;
+
+    string msgstr = strcat("\{1}[IRC] ", sourcename, "^7", msgin);
+
+	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+
+	FOR_EACH_CLIENTSLOT(head)
+	{
+		if(!intermission_running)
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
+		if(IS_PLAYER(head))
+			continue;
+
+		if(head.netaddress)
+		if(head.netaddress != "")
+		if(head.netaddress != "null/botclient")
+			sprint(head, msgstr);
+	}
 }
 
 float GetVoiceMessageVoiceType(string type)

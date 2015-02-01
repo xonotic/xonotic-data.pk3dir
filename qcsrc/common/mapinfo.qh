@@ -61,13 +61,13 @@ REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,TRUE,"timelimit=20 pointlimit=10 te
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,TRUE,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture all the control points to win"));
 #define g_domination IS_GAMETYPE(DOMINATION)
 
-REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,TRUE,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
+REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,TRUE,"timelimit=20 pointlimit=10 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
 #define g_keyhunt IS_GAMETYPE(KEYHUNT)
 
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,TRUE,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,TRUE,"timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,TRUE,"pointlimit=1 timelimit=30",_("Capture control points to reach and destroy the enemy generator"));
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
 REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,TRUE,"timelimit=20 pointlimit=5 leadlimit=0",_("XonSports"));
@@ -79,8 +79,20 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,TRUE,"timelimit=20 po
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,TRUE,"timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,FALSE,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
+REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,TRUE,"timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
+#define g_vip IS_GAMETYPE(VIP)
+
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,TRUE,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
+
+REGISTER_GAMETYPE(_("Conquest"),cq,g_conquest,CONQUEST,TRUE,"timelimit=20 pointlimit=1 teams=2",_("Capture all the spawnpoint control points to win"))
+#define g_conquest IS_GAMETYPE(CONQUEST)
+
+REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,TRUE,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill enemies to 'infect' them with your team color"));
+#define g_infection IS_GAMETYPE(INFECTION)
+
+REGISTER_GAMETYPE(_("Jailbreak"),jb,g_jailbreak,JAILBREAK,TRUE,"teams=2 timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
+#define g_jailbreak IS_GAMETYPE(JAILBREAK)
 
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;

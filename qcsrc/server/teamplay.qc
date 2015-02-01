@@ -1,13 +1,6 @@
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-// client counts for each team
-float c1, c2, c3, c4;
-// # of bots on those teams
-float cb1, cb2, cb3, cb4;
-
-//float audit_teams_time;
-
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);
@@ -77,6 +70,8 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
+		// no custom limits needed here
+		MUTATOR_ADD(gamemode_deathmatch);
 	}
 
 	if(g_tdm)
@@ -133,6 +128,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
 		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
+		if(autocvar_g_keyhunt_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
@@ -156,6 +153,7 @@ void InitGameplayMode()
 	if(g_onslaught)
 	{
 		ActivateTeamplay();
+		fraglimit_override = autocvar_g_onslaught_point_limit;
 		have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_onslaught);
 	}
@@ -166,37 +164,15 @@ void InitGameplayMode()
 		{
 			ActivateTeamplay();
 			race_teams = bound(2, autocvar_g_race_teams, 4);
-			have_team_spawns = -1; // request team spawns
+			if(autocvar_g_race_team_spawns)
+				have_team_spawns = -1; // request team spawns
 		}
 		else
 			race_teams = 0;
+
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
-
-		// we need to find out the correct value for g_race_qualifying
-		float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
-
-		if(autocvar_g_campaign)
-		{
-			g_race_qualifying = 1;
-			independent_players = 1;
-		}
-		else if(!autocvar_g_campaign && want_qualifying)
-		{
-			g_race_qualifying = 2;
-			independent_players = 1;
-			race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
-			race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
-			race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
-			fraglimit_override = 0;
-			leadlimit_override = 0;
-			timelimit_override = autocvar_g_race_qualifying_timelimit;
-		}
-		else
-		{
-			g_race_qualifying = 0;
-		}
 
 		MUTATOR_ADD(gamemode_race);
 	}
@@ -206,22 +182,38 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
-		independent_players = 1;
 		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
 	{
-		fraglimit_override = autocvar_g_nexball_goallimit;
-		leadlimit_override = autocvar_g_nexball_goalleadlimit;
-		ActivateTeamplay();
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_nexball);
+        fraglimit_override = autocvar_g_nexball_goallimit;
+        leadlimit_override = autocvar_g_nexball_goalleadlimit;
+        ActivateTeamplay();
+        have_team_spawns = -1; // request team spawns
+	    MUTATOR_ADD(gamemode_nexball);
 	}
 
 	if(g_keepaway)
 	{
+		fraglimit_override = autocvar_g_keepaway_point_limit;
 		MUTATOR_ADD(gamemode_keepaway);
+	}
+
+	if(g_conquest)
+	{
+		fraglimit_override = autocvar_g_conquest_point_limit;
+		ActivateTeamplay();
+		MUTATOR_ADD(gamemode_conquest);
+	}
+
+	if(g_vip)
+	{
+		fraglimit_override = autocvar_g_vip_point_limit;
+		leadlimit_override = autocvar_g_vip_point_leadlimit;
+		ActivateTeamplay();
+		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_vip);
 	}
 
 	if(g_invasion)
@@ -234,6 +226,22 @@ void InitGameplayMode()
 				have_team_spawns = -1; // request team spawns
 		}
 		MUTATOR_ADD(gamemode_invasion);
+	}
+
+	if(g_infection)
+	{
+		fraglimit_override = autocvar_g_infection_point_limit;
+		leadlimit_override = autocvar_g_infection_point_leadlimit;
+		MUTATOR_ADD(gamemode_infection);
+	}
+
+	if(g_jailbreak)
+	{
+		fraglimit_override = autocvar_g_jailbreak_point_limit;
+		leadlimit_override = autocvar_g_jailbreak_point_leadlimit;
+		ActivateTeamplay();
+		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_jailbreak);
 	}
 
 	if(teamplay)
@@ -254,6 +262,31 @@ void InitGameplayMode()
 		if(qualifying_override >= 0)
 			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
 	}
+
+	if(g_race)
+	{
+		// we need to find out the correct value for g_race_qualifying
+		if(autocvar_g_campaign)
+		{
+			g_race_qualifying = 1;
+		}
+		else if(!autocvar_g_campaign && autocvar_g_race_qualifying_timelimit > 0)
+		{
+			g_race_qualifying = 2;
+			race_fraglimit = autocvar_fraglimit;
+			race_leadlimit = autocvar_leadlimit;
+			race_timelimit = autocvar_timelimit;
+			cvar_set("fraglimit", "0");
+			cvar_set("leadlimit", "0");
+			cvar_set("timelimit", ftos(autocvar_g_race_qualifying_timelimit));
+		}
+		else
+			g_race_qualifying = 0;
+	}
+
+	if(g_race || g_cts)
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -287,7 +320,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -299,10 +332,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage;
@@ -338,6 +367,10 @@ string getwelcomemessage(void)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
+
+	// branding for the win
+	s = strcat(s, "\n\n Running the SMB mod pack\nhttps://github.com/MarioSMB/modpack");
+
 	return s;
 }
 
@@ -389,46 +422,21 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {
-	float dm;
+	float dm = 2;
 	entity head;
-	string teament_name;
+	string teament_name = string_null;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	teament_name = string_null;
-	if(g_onslaught)
-	{
-		// onslaught is special
-		head = findchain(classname, "onslaught_generator");
-		while (head)
-		{
-			if (head.team == NUM_TEAM_1) c1 = 0;
-			if (head.team == NUM_TEAM_2) c2 = 0;
-			if (head.team == NUM_TEAM_3) c3 = 0;
-			if (head.team == NUM_TEAM_4) c4 = 0;
-			head = head.chain;
-		}
-	}
-	else if(g_domination)
-		teament_name = "dom_team";
-	else if(g_ctf)
-		teament_name = "ctf_team";
-	else if(g_tdm)
-		teament_name = "tdm_team";
-	else if(g_nexball)
-		teament_name = "nexball_team";
-	else if(g_assault)
-		c1 = c2 = 0; // Assault always has 2 teams
-	else
-	{
-		// cover anything else by treating it like tdm with no teams spawned
-		dm = 2;
+	ret_string = teament_name;
+	ret_float = dm;
+	float mutator_value = MUTATOR_CALLHOOK(GetTeamCount);
+	teament_name = ret_string;
+	dm = ret_float;
 
-		ret_float = dm;
-		MUTATOR_CALLHOOK(GetTeamCount);
-		dm = ret_float;
-
+	if(!mutator_value)
+	{
 		if(dm >= 4)
 			c1 = c2 = c3 = c4 = 0;
 		else if(dm >= 3)
@@ -445,14 +453,13 @@ void CheckAllowedTeams (entity for_whom)
 		{
 			if(!(g_domination && head.netname == ""))
 			{
-				if(head.team == NUM_TEAM_1)
-					c1 = 0;
-				else if(head.team == NUM_TEAM_2)
-					c2 = 0;
-				else if(head.team == NUM_TEAM_3)
-					c3 = 0;
-				else if(head.team == NUM_TEAM_4)
-					c4 = 0;
+				switch(head.team)
+				{
+					case NUM_TEAM_1: c1 = 0; break;
+					case NUM_TEAM_2: c2 = 0; break;
+					case NUM_TEAM_3: c3 = 0; break;
+					case NUM_TEAM_4: c4 = 0; break;
+				}
 			}
 			head = find(head, classname, teament_name);
 		}
@@ -520,41 +527,14 @@ void GetTeamCounts(entity ignore)
 		if(head != ignore)// && head.netname != "")
 		{
 			value = PlayerValue(head);
-			if(IS_BOT_CLIENT(head))
-				bvalue = value;
-			else
-				bvalue = 0;
-			if(t == NUM_TEAM_1)
+			bvalue = (IS_BOT_CLIENT(head)) ? value : 0;
+
+			switch(t)
 			{
-				if(c1 >= 0)
-				{
-					c1 = c1 + value;
-					cb1 = cb1 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_2)
-			{
-				if(c2 >= 0)
-				{
-					c2 = c2 + value;
-					cb2 = cb2 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_3)
-			{
-				if(c3 >= 0)
-				{
-					c3 = c3 + value;
-					cb3 = cb3 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_4)
-			{
-				if(c4 >= 0)
-				{
-					c4 = c4 + value;
-					cb4 = cb4 + bvalue;
-				}
+				case NUM_TEAM_1: if(c1 >= 0) { c1 += value; cb1 += bvalue; } break;
+				case NUM_TEAM_2: if(c2 >= 0) { c2 += value; cb2 += bvalue; } break;
+				case NUM_TEAM_3: if(c3 >= 0) { c3 += value; cb3 += bvalue; } break;
+				case NUM_TEAM_4: if(c4 >= 0) { c4 += value; cb4 += bvalue; } break;
 			}
 		}
 	}

@@ -310,13 +310,17 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 				if(v == "dom_controlpoint")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DOMINATION;
 				else if(v == "item_flag_team2")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
 				else if(v == "team_CTF_blueflag")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
+				else if(v == "conquest_controlpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CONQUEST;
 				else if(v == "invasion_spawnpoint")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
+				else if(startsWith(v, "jailbreak_"))
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_JAILBREAK;
 				else if(v == "onslaught_generator")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT;
 				else if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
@@ -357,7 +361,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	diameter = vlen(mapMaxs - mapMins);
 
-	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_ASSAULT | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL);
+	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_ASSAULT | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL | MAPINFO_TYPE_VIP);
 	if(twoBaseModes && (MapInfo_Map_supportedGametypes == twoBaseModes))
 	{
 		// we have a CTF-only or Assault-only map. Don't add other modes then,
@@ -373,6 +377,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA;
+			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_VIP;
 		}
 		if(spawnpoints >= 12 && diameter > 5120)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEYHUNT;
@@ -501,6 +506,30 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 
+	if(pWantedType == MAPINFO_TYPE_VIP)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_CONQUEST)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_conquest_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_JAILBREAK)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_jailbreak_teams", sa);
+		s = cdr(s);
+	}
+
 	/* keepaway wuz here
 	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
 	{
@@ -594,6 +623,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
 	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
 	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
+	cvar_set("g_conquest_teams", cvar_defstring("g_conquest_teams"));
+	cvar_set("g_jailbreak_teams", cvar_defstring("g_jailbreak_teams"));
+	cvar_set("g_infection_teams", cvar_defstring("g_infection_teams"));
+	cvar_set("g_invasion_teams", cvar_defstring("g_invasion_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -643,6 +676,9 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
 			cvar_set("g_invasion_teams", v);
+			cvar_set("g_conquest_teams", v);
+			cvar_set("g_jailbreak_teams", v);
+			cvar_set("g_infection_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{
@@ -1127,9 +1163,16 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 				if (!cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
-					MapInfo_Map_clientstuff = strcat(
-						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
-					);
+				{
+#ifdef XMAS
+					if(fexists("tis_xmas"))
+						MapInfo_Map_clientstuff = sprintf("%s%s%d\n", MapInfo_Map_clientstuff, "cd loop xmas", floor(random() * 5));
+					else
+#endif
+						MapInfo_Map_clientstuff = strcat(
+							MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
+						);
+				}
 			}
 		}
 		else

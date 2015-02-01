@@ -1841,6 +1841,10 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	float healthdamage, armordamage, armorideal;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
+#ifdef CHAOS
+	if(DEATH_ISWEAPON(deathtype, WEP_LIGHTSABRE))
+		armorblock = 0; // unique ability
+#endif
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
@@ -1859,12 +1863,16 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage, float bycount)
 {
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
-	v_y = bound(0, damage * armorblock, a); // save
+	// block based on amount of carried armor (idea: CUdyin)
+	if(bycount && armorblock >= 1)
+		v_y = bound(0, damage * bound(0, ((armorblock*(a/100))) / 100, armorblock / 100),  a); // save
+	else
+		v_y = bound(0, damage * armorblock, a); // save
 	v_x = bound(0, damage - v_y, damage); // take
 	v_z = 0;
 	return v;
@@ -2038,6 +2046,7 @@ float get_model_parameters(string m, float sk)
 	string fn, s, c;
 	float fh, i;
 
+	get_model_parameters_description = string_null;
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
@@ -2054,6 +2063,10 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+	get_model_parameters_bone_head = string_null;
+	get_model_parameters_hat_height = '0 0 0';
+	get_model_parameters_hat_scale = 0;
+	get_model_parameters_hat_angles = '0 0 0';
 
 	if (!m)
 		return 1;
@@ -2123,6 +2136,14 @@ float get_model_parameters(string m, float sk)
 			}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
+		if(c == "bone_head")
+			get_model_parameters_bone_head = s;
+		if(c == "hat_height")
+			get_model_parameters_hat_height = stov(s);
+		if(c == "hat_scale")
+			get_model_parameters_hat_scale = stof(s);
+		if(c == "hat_angles")
+			get_model_parameters_hat_angles = stov(s);
 	}
 
 	while((s = fgets(fh)))

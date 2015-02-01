@@ -43,7 +43,6 @@ float Buff_Type_FromSprite(string buff_sprite)
 	return 0;
 }
 
-
 float Buff_Skin(float buff_id)
 {
 	entity e;

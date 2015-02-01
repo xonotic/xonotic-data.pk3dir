@@ -38,6 +38,16 @@ void WepSet_AddStat()
 #endif
 #endif
 }
+void WepSet_AddStat_InMap()
+{
+	addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
+#if WEP_MAXCOUNT > 24
+	addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
+#if WEP_MAXCOUNT > 48
+	addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
+#endif
+#endif
+}
 void WriteWepSet(float dst, WepSet w)
 {
 #if WEP_MAXCOUNT > 48
@@ -58,6 +68,18 @@ WepSet WepSet_GetFromStat()
 	w_y = getstati(STAT_WEAPONS2);
 #if WEP_MAXCOUNT > 48
 	w_z = getstati(STAT_WEAPONS3);
+#endif
+#endif
+	return w;
+}
+WepSet WepSet_GetFromStat_InMap()
+{
+	WepSet w = '0 0 0';
+	w_x = getstati(STAT_WEAPONSINMAP);
+#if WEP_MAXCOUNT > 24
+	w_y = getstati(STAT_WEAPONSINMAP2);
+#if WEP_MAXCOUNT > 48
+	w_z = getstati(STAT_WEAPONSINMAP3);
 #endif
 #endif
 	return w;
@@ -103,7 +125,11 @@ void register_weapon(
 	e.wpcolor = clr;
 	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
 	e.mdl = modelname;
+#ifdef CSQC
 	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+#elif defined(SVQC)
+	e.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
+#endif
 	e.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 	e.w_crosshair = strzone(car(crosshair));
 	string s = cdr(crosshair);
@@ -285,6 +311,7 @@ string GetAmmoPicture(.float ammotype)
 		case ammo_rockets: return "ammo_rockets";
 		case ammo_cells:   return "ammo_cells";
 		case ammo_plasma:  return "ammo_cells";
+		case ammo_supercells: return "ammo_supercells";
 		case ammo_fuel:    return "ammo_fuel";
 		default: return ""; // wtf, no ammo type?
 	}
@@ -300,7 +327,8 @@ string GetAmmoPicture(.float ammotype)
 		case 2: return ammo_rockets;
 		case 3: return ammo_cells;
 		case 4: return ammo_plasma;
-		case 5: return ammo_fuel;
+		case 5: return ammo_supercells;
+		case 6: return ammo_fuel;
 		default: return ammo_none;
 	}
 }
@@ -314,8 +342,37 @@ float GetAmmoStat(.float ammotype)
 		case ammo_rockets: return STAT_ROCKETS;
 		case ammo_cells: return STAT_CELLS;
 		case ammo_plasma: return STAT_PLASMA;
+		case ammo_supercells: return STAT_SUPERCELLS;
 		case ammo_fuel: return STAT_FUEL;
 		default: return -1;
 	}
+}
+#endif
+
+#ifdef SVQC
+string W_Sound(string w_snd)
+{
+	if(autocvar_sv_weapons_sounddir != "" && autocvar_sv_weapons_sounddir != "default")
+	{
+		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, w_snd);
+		float globhandle = search_begin(strcat("sound/", thesnd, ".*"), TRUE, FALSE);
+		if(globhandle >= 0)
+		{
+			search_end(globhandle);
+			return strcat(thesnd, ".wav");
+		}
+	}
+	return strcat("weapons/", w_snd, ".wav");
+}
+
+string W_Model(string w_mdl)
+{
+	if(autocvar_sv_weapons_modeloverride != "" && autocvar_sv_weapons_modeloverride != "default")
+	{
+		string themdl = sprintf("models/weapons_%s/%s", autocvar_sv_weapons_modeloverride, w_mdl);
+		if(fexists(themdl))
+			return themdl;
+	}
+	return strcat("models/weapons/", w_mdl);
 }
 #endif

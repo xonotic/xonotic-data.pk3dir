@@ -19,7 +19,7 @@ const float AI_STATUS_STUCK						= 2048; // Cannot reach any goal
 .float aistatus;
 
 // Skill system
-float skill;
+float bot_skill;
 float autoskill_nextthink;
 
 // havocbot_keyboardskill // keyboard movement
@@ -110,9 +110,5 @@ void bot_serverframe();
  */
 
 void() havocbot_setupbot;
-
-float c1, c2, c3, c4;
-void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
 
 void bot_calculate_stepheightvec(void);

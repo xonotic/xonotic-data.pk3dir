@@ -40,8 +40,8 @@ const float STAT_CTF_STATE              = 33;
 const float STAT_WEAPONS                = 35;
 const float STAT_SWITCHWEAPON           = 36;
 const float STAT_GAMESTARTTIME          = 37;
-const float STAT_STRENGTH_FINISHED      = 38;
-const float STAT_INVINCIBLE_FINISHED    = 39;
+// 38 empty?
+// 39 empty?
 // 40 empty?
 const float STAT_ARC_HEAT               = 41;
 const float STAT_PRESSED_KEYS           = 42;
@@ -80,28 +80,24 @@ const float STAT_WEAPONS2               = 74;
 const float STAT_WEAPONS3               = 75;
 const float STAT_MONSTERS_TOTAL         = 76;
 const float STAT_MONSTERS_KILLED        = 77;
-const float STAT_BUFFS                  = 78;
-const float STAT_NADE_BONUS             = 79;
-const float STAT_NADE_BONUS_TYPE        = 80;
-const float STAT_NADE_BONUS_SCORE       = 81;
-const float STAT_HEALING_ORB            = 82;
-const float STAT_HEALING_ORB_ALPHA      = 83;
-const float STAT_PLASMA                 = 84;
-const float STAT_OK_AMMO_CHARGE         = 85;
-const float STAT_OK_AMMO_CHARGEPOOL     = 86;
-// 87 empty?
-// 88 empty?
-// 89 empty?
-// 90 empty?
-// 91 empty?
-// 92 empty?
-// 93 empty?
-// 94 empty?
-// 95 empty?
-// 96 empty?
-// 97 empty?
-// 98 empty?
-// 99 empty?
+const float STAT_OK_AMMO_CHARGE         = 78;
+const float STAT_OK_AMMO_CHARGEPOOL     = 79;
+const float STAT_NADE_BONUS             = 80;
+const float STAT_NADE_BONUS_TYPE        = 81;
+const float STAT_NADE_BONUS_SCORE       = 82;
+const float STAT_HEALING_ORB            = 83;
+const float STAT_HEALING_ORB_ALPHA      = 84;
+const float STAT_WEAPONSINMAP           = 90;
+const float STAT_WEAPONSINMAP2          = 91;
+const float STAT_WEAPONSINMAP3          = 92;
+const float STAT_SUPERCELLS             = 93;
+const float STAT_CAPTURE_PROGRESS       = 94;
+const float STAT_PRISONED               = 95;
+const float STAT_ROUNDLOST              = 96;
+const float STAT_CTF_FLAGSTATUS         = 97;
+const float STAT_KH_KEYSTATUS           = 97;
+const float STAT_BUFFS                  = 98;
+const float STAT_DISCO_MODE             = 99;
 
 
 /* The following stats change depending on the gamemode, so can share the same ID */
@@ -127,18 +123,12 @@ const float STAT_VIP_BLUE               = 102;
 const float STAT_VIP_YELLOW             = 103;
 const float STAT_VIP_PINK               = 104;
 
-// key hunt
-const float STAT_KH_REDKEY_TEAM         = 100;
-const float STAT_KH_BLUEKEY_TEAM        = 101;
-const float STAT_KH_YELLOWKEY_TEAM      = 102;
-const float STAT_KH_PINKKEY_TEAM        = 103;
-
 /* Gamemode-specific stats end here */
 
 
 const float STAT_FROZEN                 = 105;
 const float STAT_REVIVE_PROGRESS        = 106;
-// 107 empty?
+const float STAT_PLASMA                = 107;
 // 108 empty?
 // 109 empty?
 // 110 empty?

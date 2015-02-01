@@ -25,6 +25,7 @@ string TranslateScoresLabel(string l)
 		case "drops": return CTX(_("SCO^drops"));
 		case "faults": return CTX(_("SCO^faults"));
 		case "fckills": return CTX(_("SCO^fckills"));
+		case "kckills": return CTX(_("SCO^kckills"));
 		case "goals": return CTX(_("SCO^goals"));
 		case "kckills": return CTX(_("SCO^kckills"));
 		case "kdratio": return CTX(_("SCO^kdratio"));
@@ -50,6 +51,8 @@ string TranslateScoresLabel(string l)
 		case "suicides": return CTX(_("SCO^suicides"));
 		case "takes": return CTX(_("SCO^takes"));
 		case "ticks": return CTX(_("SCO^ticks"));
+		case "liberated": return CTX(_("SCO^liberated"));
+		case "captured": return CTX(_("SCO^captured"));
 		default: return l;
 	}
 }
@@ -277,6 +280,9 @@ void Cmd_HUD_Help()
 	        "or in all but these game types. You can also specify 'all' as a\n"
 	        "field to show all fields available for the current game mode.\n\n"));
 
+	print(_("You can also put a ~ sign before them to make the field show up\n"
+		"only if scoreboard_extras is enabled.\n\n"));
+
 	print(_("The special game type names 'teams' and 'noteams' can be used to\n"
 	        "include/exclude ALL teams/noteams game modes.\n\n"));
 
@@ -288,14 +294,18 @@ void Cmd_HUD_Help()
 }
 
 #define HUD_DefaultColumnLayout() \
-"ping pl name | " \
-"-teams,race,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,race,ka/suicides +ft,tdm/suicides -race,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"ping pl ~fps name | " \
+"-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"~+ctf/deaths ~+ctf/suicides +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"+cq/captured +cq/liberated " \
+"+ons/caps +ons/takes " \
+"+inf/survivals " \
 "+lms/lives +lms/rank " \
-"+kh/caps +kh/pushes +kh/destroyed " \
-"?+race/laps ?+race/time ?+race/fastest " \
+"~+kh/deaths ~+kh/suicides +kh/caps +kh/pushes +kh/destroyed " \
+"+vip/survivals +vip/vipkills +dom/caps " \
+"?+rc/laps ?+rc/time ?+rc/fastest " \
 "+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
-"-lms,race,nb/score"
+"-lms,rc,nb/score"
 
 void Cmd_HUD_SetFields(float argc)
 {
@@ -361,6 +371,19 @@ void Cmd_HUD_SetFields(float argc)
 			str = substring(str, 1, strlen(str) - 1);
 		}
 
+		if(substring(str, 0, 1) == "~")
+		{
+			nocomplain = TRUE;
+
+			if(autocvar_scoreboard_extras)
+				str = substring(str, 1, strlen(str) - 1);
+			else
+			{
+				str = "";
+				continue;
+			}
+		}
+
 		slash = strstrofs(str, "/", 0);
 		if(slash >= 0)
 		{
@@ -380,6 +403,8 @@ void Cmd_HUD_SetFields(float argc)
 			hud_field[hud_num_fields] = SP_PING;
 		} else if(str == "pl") {
 			hud_field[hud_num_fields] = SP_PL;
+		} else if(str == "fps") {
+			hud_field[hud_num_fields] = SP_FPS;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			hud_field[hud_num_fields] = SP_KDRATIO;
 		} else if(str == "sum" || str == "diff" || str == "k-d") {
@@ -541,6 +566,17 @@ string HUD_GetField(entity pl, float field)
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
 			hud_field_rgb = '1 0.5 0.5' - '0 0.5 0.5'*tmp;
 			return str;
+
+		case SP_FPS:
+			if (!pl.gotscores)
+				return _("N/A");
+
+			tmp = pl.(scores[field]);
+			if(tmp == 0)
+				return "";
+
+			hud_field_rgb = '1 0 0' + '0 1 1' * (bound(0, tmp, 60) / 60);
+			return ftos(tmp);
 
 		case SP_NAME:
 			if(ready_waiting && pl.ready)
@@ -950,13 +986,17 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 float HUD_WouldDrawScoreboard() {
 	if (autocvar__hud_configure)
 		return 0;
+	else if (HUD_QuickMenu_IsOpened())
+		return 0;
+	else if (HUD_Radar_Clickable())
+		return 0;
 	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -966,13 +1006,25 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
+	WepSet weapons_stat = WepSet_GetFromStat();
+	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float i;
-	float weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
-	float rows;
-	if(autocvar_scoreboard_accuracy_doublerows)
-		rows = 2;
-	else
-		rows = 1;
+	float weapon_stats;
+	float disownedcnt = 0;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		self = get_weaponinfo(i);
+		if(!self.weapon)
+			continue;
+
+		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			++disownedcnt;
+	}
+
+	float weapon_cnt = WEP_COUNT - disownedcnt; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
+	float rows = 1;
 	float height = 40;
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
@@ -1013,7 +1065,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(switchweapon == WEP_VAPORIZER)
 		g_instagib = 1; // TODO: real detection for instagib?
 
-	float weapon_stats;
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
@@ -1024,9 +1075,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_VORTEX && g_instagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
-			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			continue;
 
 		float weapon_alpha;
 		if(weapon_stats >= 0)

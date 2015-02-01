@@ -582,7 +582,7 @@ void Create_Notification_Entity(
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+						precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
@@ -1264,7 +1264,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1277,7 +1277,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1299,7 +1299,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1548,6 +1548,14 @@ void Local_Notification(float net_type, float net_name, ...count)
 			#ifdef CSQC
 			if(notif.nent_icon != "")
 			{
+				if ( notif.nent_iconargs != "" )
+				{
+					notif.nent_icon = Local_Notification_sprintf(
+						notif.nent_icon,notif.nent_iconargs,
+						s1, s2, s3, s4, f1, f2, f3, f4);
+					// remove the newline added by Local_Notification_sprintf
+					notif.nent_icon = strzone(substring(notif.nent_icon,0,strlen(notif.nent_icon)-1));
+				}
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,

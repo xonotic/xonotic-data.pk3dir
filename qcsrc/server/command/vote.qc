@@ -386,9 +386,6 @@ void reset_map(float dorespawn)
 		}
 	}
 
-	if(g_keyhunt)
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
-
 	self = oldself;
 }
 
@@ -819,6 +816,17 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
+
+				if(autocvar_sv_vote_auto)
+				FOR_EACH_REALCLIENT(tmp_player) if(tmp_player != vote_caller)
+				switch(tmp_player.cvar_cl_autovote)
+				{
+					case "yes": tmp_player.vote_selection = VOTE_SELECT_ACCEPT; print_to(tmp_player, "You automatically accepted the vote\n"); break;
+					case "no": tmp_player.vote_selection = VOTE_SELECT_REJECT; print_to(tmp_player, "You automatically rejected the vote\n"); break;
+					case "abstain": tmp_player.vote_selection = VOTE_SELECT_ABSTAIN; print_to(tmp_player, "You automatically abstained from the vote\n"); break;
+					default: break;
+				}
+
 				VoteCount(TRUE); // needed if you are the only one
 			}
 
@@ -1083,7 +1091,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 {
 	string command_origin = GetCommandPrefix(caller);
 
-	if(argc == 2 || argv(2) == "help") // help display listing all commands
+	if(argc == 2 || argv(2) == "1" || argv(2) == "help") // help display listing all commands
 	{
 		print_to(caller, "\nVoting commands:\n");
 		#define VOTE_COMMAND(name,function,description,assignment) \
@@ -1092,9 +1100,13 @@ void VoteCommand_macro_help(entity caller, float argc)
 		VOTE_COMMANDS(0, caller, 0, "")
 		#undef VOTE_COMMAND
 
+		string vote_list = autocvar_sv_vote_commands;
+		if(argv(2) == "1") vote_list = strreplace(" ", "\n^3", vote_list);
+
 		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
 		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help COMMAND"));
-		print_to(caller, strcat("\n^7You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+		print_to(caller, "\n^7You can call a vote for or execute these commands (and maybe further ^3arguments^7):");
+		print_to(caller, strcat("\n^3", vote_list, "^7\n"));
 	}
 	else // usage for individual command
 	{

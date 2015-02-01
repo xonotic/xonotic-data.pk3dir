@@ -1,6 +1,5 @@
 float mv_num_maps;
 
-float mv_active;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT];
@@ -192,6 +191,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos += autocvar_scoreboard_border_thickness * '1 1 0';
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
+
+#ifdef XMAS
+	string xpic = "gfx/menu/default/xmaspic.tga";
+#endif
+
 	if(pic == "")
 	{
 		drawfill(pos, img_size, '.5 .5 .5', .7 * theAlpha, DRAWFLAG_NORMAL);
@@ -199,9 +203,21 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	else
 	{
 		if(drawgetimagesize(pic) == '0 0 0')
+#ifdef APRILFOOLS
+			drawpic_rotated(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
+#else
 			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+#endif
 		else
+#ifdef APRILFOOLS
+			drawpic_rotated(pos, pic, img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
+#else
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+#endif
+#ifdef XMAS
+		if(drawgetimagesize(xpic) != '0 0 0')
+			drawpic(pos, xpic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+#endif
 	}
 
 	if(id == mv_ownvote)

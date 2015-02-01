@@ -94,6 +94,7 @@ MUTATOR_HOOKABLE(GetTeamCount);
 	// should adjust ret_float to contain the team count
 	// INPUT, OUTPUT:
 		float ret_float;
+		string ret_string;
 
 MUTATOR_HOOKABLE(SpectateCopy);
 	// copies variables for spectating "other" to "self"
@@ -107,6 +108,12 @@ MUTATOR_HOOKABLE(WeaponRateFactor);
 	// allows changing attack rate
 	// INPUT, OUTPUT:
 		float weapon_rate;
+
+MUTATOR_HOOKABLE(WantWeapon);
+	// returns which weapon the player/bot should choose
+	// INPUT, OUTPUT:
+		float ret_float;
+		entity other;
 
 MUTATOR_HOOKABLE(SetStartItems);
 	// adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}}
@@ -167,10 +174,9 @@ MUTATOR_HOOKABLE(MonsterDies);
 	// INPUT:
 		entity frag_attacker;
 
-MUTATOR_HOOKABLE(MonsterRespawn);
-	// called when a monster wants to respawn
-	// INPUT:
-		entity other;
+MUTATOR_HOOKABLE(MonsterRemove);
+	// called when a monster is being removed
+	// returning TRUE hides removal effect
 
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
@@ -196,6 +202,12 @@ MUTATOR_HOOKABLE(AllowMobSpawning);
 	// called when a player tries to spawn a monster
 	// return 1 to prevent spawning
 
+MUTATOR_HOOKABLE(FormatMessage);
+	// for replacing chat message commands
+	// INPUT, OUTPUT:
+		string format_escape;
+		string format_replacement;
+
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:
@@ -203,6 +215,7 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 		entity frag_attacker;
 		entity frag_target; // same as self
 		vector damage_force; // NOTE: this force already HAS been applied
+		float frag_mirrordamage;
 	// INPUT, OUTPUT:
 		float damage_take;
 		float damage_save;
@@ -238,6 +251,16 @@ MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
 	// if MUTATOR_RETURNVALUE is 1, don't do anything
 	// return 1 if the use key actually did something
+
+MUTATOR_HOOKABLE(SV_ParseServerCommand);
+	// called when a server command is parsed
+	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
+	// NOTE: return 1 if you handled the command, return 0 to continue handling
+	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+	// INPUT
+	string cmd_name; // command name
+	float cmd_argc; // also, argv() can be used
+	string cmd_string; // whole command, use only if you really have to
 
 MUTATOR_HOOKABLE(SV_ParseClientCommand);
 	// called when a client command is parsed
@@ -277,6 +300,9 @@ MUTATOR_HOOKABLE(Spawn_Score);
 	// IN+OUT
 	vector spawn_score; // _x is priority, _y is "distance"
 
+MUTATOR_HOOKABLE(Scores_CountFragsRemaining);
+	// allows a mutator to count the last remaining frags
+
 MUTATOR_HOOKABLE(SV_StartFrame);
 	// runs globally each server frame
 
@@ -306,7 +332,7 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown);
 MUTATOR_HOOKABLE(BotShouldAttack);
 	// called when a bot checks a target to attack
 	// INPUT
-	entity checkentity;
+	entity other;
 
 MUTATOR_HOOKABLE(PortalTeleport);
 	// called whenever a player goes through a portal gun teleport

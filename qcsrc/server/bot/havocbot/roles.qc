@@ -1,4 +1,3 @@
-
 .float max_armorvalue;
 .float havocbot_role_timeout;
 
@@ -203,12 +202,9 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	}
 }
 
-// choose a role according to the situation
-void havocbot_role_dm();
-
-//DM:
-//go to best items
-void havocbot_role_dm()
+// legacy bot role for standard gamemodes
+// go to best items
+void havocbot_role_generic()
 {
 	if(self.deadflag != DEAD_NO)
 		return;
@@ -224,21 +220,13 @@ void havocbot_role_dm()
 	}
 }
 
-void havocbot_chooserole_dm()
-{
-	self.havocbot_role = havocbot_role_dm;
-}
-
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
-	else if (g_keyhunt)
-		havocbot_chooserole_kh();
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
-	else // assume anything else is deathmatch
-		havocbot_chooserole_dm();
+
+	// assume anything else is generic
+	self.havocbot_role = havocbot_role_generic;
 }

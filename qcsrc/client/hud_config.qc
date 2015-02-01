@@ -29,8 +29,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		HUD_Write_Cvar_q("hud_progressbar_alpha");
-		HUD_Write_Cvar_q("hud_progressbar_strength_color");
-		HUD_Write_Cvar_q("hud_progressbar_shield_color");
 		HUD_Write_Cvar_q("hud_progressbar_health_color");
 		HUD_Write_Cvar_q("hud_progressbar_armor_color");
 		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
@@ -102,8 +100,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_strength");
-					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -191,6 +187,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
+					break;
+				case HUD_PANEL_QUICKMENU:
+					HUD_Write_PanelCvar_q("_align");
 					break;
 			}
 			HUD_Write("\n");
@@ -928,6 +927,9 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if ( ! HUD_Panel_CheckFlags(panel.panel_showflags) )
+			continue;
+
 		HUD_Panel_UpdatePosSize()
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
@@ -1009,6 +1011,9 @@ void HUD_Panel_Highlight(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if ( ! HUD_Panel_CheckFlags(panel.panel_showflags) )
+			continue;
+
 		HUD_Panel_UpdatePosSize()
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize

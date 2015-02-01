@@ -34,6 +34,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, SEC,  speed) \
 	w_cvar(id, sn, SEC,  health) \
 	w_cvar(id, sn, SEC,  damageforcescale) \
+	w_cvar(id, sn, NONE, secondary) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -133,7 +134,7 @@ void W_Hook_Attack2(void)
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(self, FALSE, 4, W_Sound("hookbomb_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -287,12 +288,12 @@ float W_Hook(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_hookgun.md3");
-			precache_model("models/weapons/v_hookgun.md3");
-			precache_model("models/weapons/h_hookgun.iqm");
-			precache_sound("weapons/hook_impact.wav"); // done by g_hook.qc
-			precache_sound("weapons/hook_fire.wav");
-			precache_sound("weapons/hookbomb_fire.wav");
+			precache_model(W_Model("g_hookgun.md3"));
+			precache_model(W_Model("v_hookgun.md3"));
+			precache_model(W_Model("h_hookgun.iqm"));
+			precache_sound(W_Sound("hook_impact")); // done by g_hook.qc
+			precache_sound(W_Sound("hook_fire"));
+			precache_sound(W_Sound("hookbomb_fire"));
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

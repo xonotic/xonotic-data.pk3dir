@@ -447,6 +447,39 @@ float(float bufhandle, string str, float order) bufstr_add = #448;
 void(float bufhandle, float string_index) bufstr_free = #449;
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 
+//DP_QC_ASINACOSATANATAN2TAN
+//idea: Urre
+//darkplaces implementation: LordHavoc
+//constant definitions:
+float DEG2RAD = 0.0174532925199432957692369076848861271344287188854172545609719144;
+float RAD2DEG = 57.2957795130823208767981548141051703324054724665643215491602438612;
+float PI      = 3.1415926535897932384626433832795028841971693993751058209749445923;
+//builtin definitions:
+float(float s) asin = #471; // returns angle in radians for a given sin() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c) acos = #472; // returns angle in radians for a given cos() value, the result is in the range 0 to PI
+float(float t) atan = #473; // returns angle in radians for a given tan() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c, float s) atan2 = #474; // returns angle in radians for a given cos() and sin() value pair, the result is in the range -PI to PI (this is identical to vectoyaw except it returns radians rather than degrees)
+float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(a)) for the given angle in radians, the result is in the range -infinity to +infinity
+//description:
+//useful math functions for analyzing vectors, note that these all use angles in radians (just like the cos/sin functions) not degrees unlike makevectors/vectoyaw/vectoangles, so be sure to do the appropriate conversions (multiply by DEG2RAD or RAD2DEG as needed).
+//note: atan2 can take unnormalized vectors (just like vectoyaw), and the function was included only for completeness (more often you want vectoyaw or vectoangles), atan2(v_x,v_y) * RAD2DEG gives the same result as vectoyaw(v)
+
+//DP_QC_NUM_FOR_EDICT
+//idea: Blub\0
+//darkplaces implementation: Blub\0
+//Function to get the number of an entity - a clean way.
+float(entity num) num_for_edict = #512;
+
+//DP_QC_EDICT_NUM
+//idea: 515
+//DarkPlaces implementation: LordHavoc
+//builtin definitions:
+entity(float entnum) edict_num = #459;
+float(entity ent) wasfreed = #353; // same as in EXT_CSQC extension
+//description:
+//edict_num returns the entity corresponding to a given number, this works even for freed entities, but you should call wasfreed(ent) to see if is currently active.
+//wasfreed returns whether an entity slot is currently free (entities that have never spawned are free, entities that have had remove called on them are also free).
+
 //DP_QC_STRING_CASE_FUNCTIONS
 //idea: Dresk
 //darkplaces implementation: LordHavoc / Dresk

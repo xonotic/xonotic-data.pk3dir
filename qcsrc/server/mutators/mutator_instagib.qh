@@ -1,0 +1,3 @@
+float g_instagib;
+
+void() spawnfunc_item_minst_cells;

@@ -1,39 +1,24 @@
-void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
+void dom_EventLog(string mode, float cpteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
-}
-
-void set_dom_state(entity e)
-{
-	e.dom_total_pps = total_pps;
-	e.dom_pps_red = pps_red;
-	e.dom_pps_blue = pps_blue;
-	if(domination_teams >= 3)
-		e.dom_pps_yellow = pps_yellow;
-	if(domination_teams >= 4)
-		e.dom_pps_pink = pps_pink;
+		GameLogEcho(sprintf(":dom:%s:%d%s", mode, cpteam, ((actor != world) ? strcat(":", ftos(actor.playerid)) : "")));
 }
 
 void dompoint_captured ()
 {
 	entity head;
-	float old_delay, old_team, real_team;
+	float old_delay;
 	string msg = "dom-neut";
 
-	// now that the delay has expired, switch to the latest team to lay claim to this point
-	head = self.owner;
-
-	real_team = self.cnt;
+	self.team = self.cnt;
 	self.cnt = -1;
 
 	dom_EventLog("taken", self.team, self.dmg_inflictor);
 	self.dmg_inflictor = world;
 
-	self.goalentity = head;
-	self.model = head.mdl;
-	self.modelindex = head.dmg;
-	self.skin = head.skin;
+	self.skin = dom_skin[self.team];
+	self.model = dom_model[self.team];
+	self.modelindex = dom_modelindex[self.team];
 
 	float points, wait_time;
 	if (autocvar_g_domination_point_amt)
@@ -46,34 +31,53 @@ void dompoint_captured ()
 		wait_time = self.wait;
 
 	if(domination_roundbased)
-		bprint(sprintf("^3%s^3%s\n", head.netname, self.message));
+	{
+		PlayerScore_Add(self.enemy, SP_SCORE, +points);
+		string msg = "";
+		if(dom_message[self.team] != "")
+			msg = dom_message[self.team];
+		if(self.message != "")
+			msg = self.message;
+		if(msg != "")
+			bprint(strcat(msg, "\n"));
+		else
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_));
+	}
 	else
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, self.message, points, wait_time);
+	{
+		string msg = "";
+		if(dom_message[self.team] != "")
+			msg = dom_message[self.team];
+		if(self.message != "")
+			msg = self.message;
+		if(msg != "")
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_TIME_), msg, points, wait_time);
+		else
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_TIME_NOMSG_), points, wait_time);
+	}
 
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
 	else
 		self.enemy = world;
 
-	if (head.noise != "")
-		if(self.enemy)
-			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
-		else
-			sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
-	if (head.noise1 != "")
-		play2all(head.noise1);
+	if(dom_noise[self.team] != "")
+	if(self.enemy)
+		sound(self.enemy, CH_TRIGGER, dom_noise[self.team], VOL_BASE, ATTEN_NORM);
+	else
+		sound(self, CH_TRIGGER, dom_noise[self.team], VOL_BASE, ATTEN_NORM);
 
-	self.delay = time + wait_time;
+	if(dom_noise1[self.team] != "")
+		play2all(dom_noise1[self.team]);
+
+	//self.delay = time + wait_time;
 
 	// do trigger work
 	old_delay = self.delay;
-	old_team = self.team;
-	self.team = real_team;
 	self.delay = 0;
 	activator = self;
 	SUB_UseTargets ();
 	self.delay = old_delay;
-	self.team = old_team;
 
 	switch(self.team)
 	{
@@ -96,7 +100,7 @@ void dompoint_captured ()
 			wait_time = autocvar_g_domination_point_rate;
 		else
 			wait_time = head.wait;
-		switch(head.goalentity.team)
+		switch(head.team)
 		{
 			case NUM_TEAM_1:
 				pps_red += points/wait_time;
@@ -114,13 +118,10 @@ void dompoint_captured ()
 		total_pps += points/wait_time;
 	}
 
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
-
-	FOR_EACH_REALCLIENT(head)
-		set_dom_state(head);
 }
 
 void AnimateDomPoint()
@@ -136,11 +137,69 @@ void AnimateDomPoint()
 		self.frame = 0;
 }
 
-void dompointthink()
+float dom_Cooldown(entity e)
+{
+	float base, pw, f, c;
+
+	c = 1;
+
+	if(e.cnt == -1 && !e.team)
+	{
+		base = autocvar_g_domination_controlpoint_idletime_neutral;
+		pw	 = autocvar_g_domination_controlpoint_idletime_neutral_power;
+		f	 = autocvar_g_domination_controlpoint_idletime_neutral_factor;
+	}
+	else
+	{
+		base = autocvar_g_domination_controlpoint_idletime;
+		pw	 = autocvar_g_domination_controlpoint_idletime_power;
+		f	 = autocvar_g_domination_controlpoint_idletime_factor;
+	}
+
+	return base + pow(c, pw) * f * base;
+}
+
+float dom_InitialCooldown(entity e) { return ((e.cnt == -1 && !e.team) ? autocvar_g_domination_controlpoint_idletime_neutral_initial : autocvar_g_domination_controlpoint_idletime_initial); }
+
+void dom_Activate(entity e)
+{
+	e.model = dom_model[e.team];
+	e.modelindex = dom_modelindex[e.team];
+	e.skin = dom_skin[e.team];
+
+	e.dom_active = TRUE;
+	e.dom_cooldown = 0;
+	//e.dom_cooldown_max = 0;
+	setsize(e, DOM_CP_MIN, DOM_CP_MAX);
+	WaypointSprite_UpdateMaxHealth(e.sprite, 0);
+	WaypointSprite_UpdateHealth(e.sprite, 0);
+}
+
+void dom_Deactivate(entity e, float cooldown)
+{
+	e.dom_cooldown_max = max(e.dom_cooldown_max, cooldown);
+	e.dom_cooldown	  = max(e.dom_cooldown,	   cooldown);
+
+	if(e.dom_active && e.dom_cooldown > 0)
+	{
+		e.model = dom_model[e.team];
+		e.modelindex = dom_modelindex[e.team];
+		setsize(e, DOM_CP_MIN, DOM_CP_MAX);
+		e.dom_active = FALSE;
+	}
+}
+
+void Dom_ControlPoint_UpdateCooldownProgress(entity e)
+{
+	WaypointSprite_UpdateMaxHealth(e.sprite, e.dom_cooldown_max);
+	WaypointSprite_UpdateHealth(e.sprite, e.dom_cooldown_max - e.dom_cooldown);
+}
+
+void dom_ControlPointThink()
 {
 	float fragamt;
 
-	self.nextthink = time + 0.1;
+	self.nextthink = time;
 
 	//self.frame = self.frame + 1;
 	//if(self.frame > 119)
@@ -149,10 +208,12 @@ void dompointthink()
 
 	// give points
 
-	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
+	if (gameover || self.delay > time || time < game_starttime) // game has ended, don't keep giving points
 		return;
 
-	if(autocvar_g_domination_point_rate)
+	if(self.dom_cooldown)
+		self.delay = time;
+	else if(autocvar_g_domination_point_rate)
 		self.delay = time + autocvar_g_domination_point_rate;
 	else
 		self.delay = time + self.wait;
@@ -160,14 +221,15 @@ void dompointthink()
 	// give credit to the team
 	// NOTE: this defaults to 0
 	if (!domination_roundbased)
-	if (self.goalentity.netname != "")
+	if (self.team)
+	if (self.dom_active)
 	{
 		if(autocvar_g_domination_point_amt)
 			fragamt = autocvar_g_domination_point_amt;
 		else
 			fragamt = self.frags;
-		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
-		TeamScore_AddToTeam(self.goalentity.team, ST_DOM_TICKS, fragamt);
+		TeamScore_AddToTeam(self.team, ST_SCORE, fragamt);
+		TeamScore_AddToTeam(self.team, ST_DOM_TICKS, fragamt);
 
 		// give credit to the individual player, if he is still there
 		if (self.enemy.playerid == self.enemy_playerid)
@@ -178,116 +240,191 @@ void dompointthink()
 		else
 			self.enemy = world;
 	}
+
+	if(self.dom_cooldown) { Dom_ControlPoint_UpdateCooldownProgress(self); }
+	else if(!self.dom_active) { dom_Activate(self); }
+
+	if(time - self.pointupdatetime >= 0.1)
+	{
+		self.dom_unlock_progress = 0;
+		self.dom_capturingplayer = world;
+	}
+
+	self.dom_cooldown = max(0, self.dom_cooldown - frametime);
 }
 
-void dompointtouch()
+void dom_ControlPointTouch()
 {
-	entity head;
-	if (!IS_PLAYER(other))
+	if(gameover) { return; }
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) { return; }
+	
+	entity toucher = other;
+
+	if(gameover) { return; }
+	if(!IS_PLAYER(toucher)) { return; }
+	if(toucher.health < 1 || toucher.frozen) { return; }
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) { return; }
+
+	toucher.pointupdatetime = time;
+
+	if(SAME_TEAM(toucher, self))
+	{
+		if(time >= self.dom_lastmessage)
+		{
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_JAILBREAK_WRONGTEAM);
+			self.dom_lastmessage = time + 1.5;
+		}
 		return;
-	if (other.health < 1)
+	}
+	
+	if(!self.dom_active)
+	{
+		if(time >= self.dom_lastmessage)
+		{
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_JAILBREAK_NOTREADY);
+			self.dom_lastmessage = time + 1.5;
+		}
 		return;
-
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	}
+	
+	if(self.dom_capturingplayer && self.dom_capturingplayer != toucher)
+	{
+		if(time >= self.dom_lastmessage)
+		{
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_JAILBREAK_TOOLATE);
+			self.dom_lastmessage = time + 1.5;
+		}
 		return;
+	}
+	
+	//if(self.cnt == -1 && !self.team)
+		self.dom_unlock_progress = bound(0, self.dom_unlock_progress + frametime * autocvar_g_domination_controlpoint_unlock_speed, 1);
 
-	if(time < self.captime + 0.3)
-		return;
+	self.pointupdatetime = time;
+	self.dom_capturingplayer = toucher;
+	toucher.dom_unlock_progress = self.dom_unlock_progress;
 
-	// only valid teams can claim it
-	head = find(world, classname, "dom_team");
-	while (head && head.team != other.team)
-		head = find(head, classname, "dom_team");
-	if (!head || head.netname == "" || head == self.goalentity)
-		return;
+	if(self.dom_unlock_progress >= 1)
+	{
+		nades_GiveBonus(toucher, autocvar_g_nades_bonus_score_medium);
 
-	// delay capture
+		self.team = 0; // neutral for now
+		self.cnt = toucher.team;
 
-	self.team = self.goalentity.team; // this stores the PREVIOUS team!
+		self.dmg_inflictor = toucher;
 
-	self.cnt = other.team;
-	self.owner = head; // team to switch to after the delay
-	self.dmg_inflictor = other;
+		WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+		WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+		WaypointSprite_Ping(self.sprite);
 
-	// self.state = 1;
-	// self.delay = time + cvar("g_domination_point_capturetime");
-	//self.nextthink = time + cvar("g_domination_point_capturetime");
-	//self.think = dompoint_captured;
+		self.skin = dom_skin[self.team];
+		self.model = dom_model[self.team];
+		self.modelindex = dom_modelindex[self.team];
 
-	// go to neutral team in the mean time
-	head = find(world, classname, "dom_team");
-	while (head && head.netname != "")
-		head = find(head, classname, "dom_team");
-	if(head == world)
-		return;
+		self.dom_lastmessage = time + 2; // no spam
 
-	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
-	WaypointSprite_Ping(self.sprite);
+		self.enemy = toucher; // individual player scoring
+		self.enemy_playerid = toucher.playerid;
+		dompoint_captured();
 
-	self.goalentity = head;
-	self.model = head.mdl;
-	self.modelindex = head.dmg;
-	self.skin = head.skin;
-
-	self.enemy = other; // individual player scoring
-	self.enemy_playerid = other.playerid;
-	dompoint_captured();
+		dom_Deactivate(self, dom_Cooldown(self));
+		entity e;
+		for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
+		if(e != self)
+		if(e.team)
+			dom_Deactivate(e, autocvar_g_domination_controlpoint_idletime);
+		else
+			dom_Deactivate(e, autocvar_g_domination_controlpoint_idletime_neutral);
+	}
 }
 
-void dom_controlpoint_setup()
+void dom_DelayedControlPointSetup(void) // called after a control point is placed on the map by dom_ControlPointSetup()
 {
-	entity head;
-	// find the spawnfunc_dom_team representing unclaimed points
-	head = find(world, classname, "dom_team");
-	while(head && head.netname != "")
-		head = find(head, classname, "dom_team");
-	if (!head)
-		objerror("no spawnfunc_dom_team with netname \"\" found\n");
+	// model setup
+	self.model = dom_model[self.team];
+	self.modelindex = dom_modelindex[self.team];
+	self.noise = dom_noise[self.team]; // capture sound
+	self.noise1 = dom_noise1[self.team]; // global capture sound
+	self.skin = dom_skin[self.team];
 
-	// copy important properties from spawnfunc_dom_team entity
-	self.goalentity = head;
-	setmodel(self, head.mdl); // precision already set
-	self.skin = head.skin;
+	// appearence
+	//setmodel(self, self.model);
+	self.effects = self.effects | EF_LOWPRECISION;
+	if(autocvar_g_domination_point_fullbright)
+		self.effects |= EF_FULLBRIGHT;
 
-	self.cnt = -1;
-
-	if(self.message == "")
-		self.message = " has captured a control point";
-
-	if(self.frags <= 0)
-		self.frags = 1;
-	if(self.wait <= 0)
-		self.wait = 5;
-
-	float points, waittime;
-	if (autocvar_g_domination_point_amt)
-		points = autocvar_g_domination_point_amt;
-	else
-		points = self.frags;
-	if (autocvar_g_domination_point_rate)
-		waittime = autocvar_g_domination_point_rate;
-	else
-		waittime = self.wait;
-
-	total_pps += points/waittime;
-
-	if(!self.t_width)
-		self.t_width = 0.02; // frame animation rate
-	if(!self.t_length)
-		self.t_length = 239; // maximum frame
-
-	self.think = dompointthink;
-	self.nextthink = time;
-	self.touch = dompointtouch;
-	self.solid = SOLID_TRIGGER;
-	self.flags = FL_ITEM;
-	setsize(self, '-32 -32 -32', '32 32 32');
-	setorigin(self, self.origin + '0 0 20');
-	droptofloor();
+	dom_Deactivate(self, dom_InitialCooldown(self));
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + DOM_CP_WPOFFSET, self, sprite, RADARICON_DOMPOINT, '0 1 1');
+}
+
+void dom_Reset()
+{
+	// reset team
+	self.team = 0;
+	self.cnt = -1;
+
+	// model setup
+	self.model = dom_model[self.team];
+	self.modelindex = dom_modelindex[self.team];
+	self.noise = dom_noise[self.team]; // capture sound
+	self.noise1 = dom_noise1[self.team]; // global capture sound
+	self.skin = dom_skin[self.team];
+
+	// main setup
+	self.think = dom_ControlPointThink;
+	self.nextthink = time;
+
+	// waypoint setup
+	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
+
+	dom_Deactivate(self, dom_InitialCooldown(self));
+}
+
+void dom_ControlPointSetup(entity cp)
+{
+	// declarations
+	self = cp; // for later usage with droptofloor()
+
+	if(!cp.t_width)			{ cp.t_width = CP_TICRATE; }
+	if(!cp.t_length)		{ cp.t_length = CP_MAXFRAMES; }
+	if(!cp.scale)			{ cp.scale = CP_SCALE; }
+	if(!cp.frags)			{ cp.frags = 1; }
+	if(!cp.wait)			{ cp.wait = 5; }
+
+	total_pps += ((autocvar_g_domination_point_amt) ? autocvar_g_domination_point_amt : cp.frags) / ((autocvar_g_domination_point_rate) ? autocvar_g_domination_point_rate : cp.wait);
+
+	// main setup
+	cp.think = dom_ControlPointThink;
+	cp.nextthink = time + 0.5;
+	cp.touch = dom_ControlPointTouch;
+	cp.solid = SOLID_TRIGGER;
+	cp.dom_capturingplayer = world;
+	cp.reset = dom_Reset;
+	cp.flags = FL_ITEM;
+	cp.dom_active = TRUE;
+	cp.cnt = -1;
+	cp.team = 0;
+	setsize(cp, DOM_CP_MIN, DOM_CP_MAX);
+	setorigin(cp, cp.origin + '0 0 20'); // move up so droptofloor doesn't put it in solid
+
+	// control point placement
+	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location
+	{
+		cp.noalign = TRUE;
+		cp.movetype = MOVETYPE_NONE;
+	}
+	else // drop to floor, automatically find a platform and set that as spawn origin
+	{
+		cp.noalign = FALSE;
+		self = cp;
+		droptofloor();
+		cp.movetype = MOVETYPE_NONE;
+	}
+
+	InitializeEntity(cp, dom_DelayedControlPointSetup, INITPRIO_SETLOCATION);
 }
 
 float total_controlpoints, redowned, blueowned, yellowowned, pinkowned;
@@ -298,10 +435,10 @@ void Domination_count_controlpoints()
 	for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
 	{
 		++total_controlpoints;
-		redowned += (e.goalentity.team == NUM_TEAM_1);
-		blueowned += (e.goalentity.team == NUM_TEAM_2);
-		yellowowned += (e.goalentity.team == NUM_TEAM_3);
-		pinkowned += (e.goalentity.team == NUM_TEAM_4);
+		redowned += (e.team == NUM_TEAM_1);
+		blueowned += (e.team == NUM_TEAM_2);
+		yellowowned += (e.team == NUM_TEAM_3);
+		pinkowned += (e.team == NUM_TEAM_4);
 	}
 }
 
@@ -339,16 +476,17 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
+		nades_Clear(world, TRUE);
 		return 1;
 	}
 
 	Domination_count_controlpoints();
 
 	float winner_team = Domination_GetWinnerTeam();
-
+	
 	if(winner_team == -1)
 		return 0;
-
+	
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
@@ -360,9 +498,11 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
-
+	
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 
+	nades_Clear(world, TRUE);
+	
 	return 1;
 }
 
@@ -373,9 +513,16 @@ float Domination_CheckPlayers()
 
 void Domination_RoundStart()
 {
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.player_blocked = 0;
+	entity oldself;
+	oldself = self;
+	FOR_EACH_PLAYER(self)
+	{
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELEASE);
+		PutClientInServer();
+	}
+
+	self = oldself;
 }
 
 //go to best items, or control points you don't own
@@ -398,36 +545,58 @@ void havocbot_role_dom()
 
 MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 {
-	ret_float = domination_teams;
-	return 0;
+	//ret_float = domination_teams;
+	ret_string = "dom_team";
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOR_EACH_PLAYER(self)
+	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(dom_PlayerThink)
+{
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
-		PutClientInServer();
-		self.player_blocked = 1;
-		if(IS_REAL_CLIENT(self))
-			set_dom_state(self);
+		self.dom_unlock_progress = 0;
+		return FALSE;
 	}
-	return 1;
+
+	if(time - self.pointupdatetime >= 0.01)
+		self.dom_unlock_progress = 0;
+
+	self.dom_total_pps = total_pps;
+	self.dom_pps_red = pps_red;
+	self.dom_pps_blue = pps_blue;
+	self.dom_pps_yellow = pps_yellow;
+	self.dom_pps_pink = pps_pink;
+
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 {
-	if(domination_roundbased)
-	if(!round_handler_IsRoundStarted())
-		self.player_blocked = 1;
-	else
-		self.player_blocked = 0;
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(dom_ClientConnect)
+MUTATOR_HOOKFUNCTION(dom_SpectateCopy)
 {
-	set_dom_state(self);
+	self.dom_unlock_progress = other.dom_unlock_progress;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(dom_PlayerDamage)
+{
+	entity e;
+	if(self.dom_unlock_progress)
+	{
+		for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
+		if(e.dom_capturingplayer == self)
+			e.dom_unlock_progress = bound(0, e.dom_unlock_progress - autocvar_g_domination_controlpoint_unlock_damage_pushback, 1);
+	}
+	
 	return FALSE;
 }
 
@@ -442,21 +611,9 @@ Control point for Domination gameplay.
 */
 void spawnfunc_dom_controlpoint()
 {
-	if(!g_domination)
-	{
-		remove(self);
-		return;
-	}
-	self.think = dom_controlpoint_setup;
-	self.nextthink = time + 0.1;
-	self.reset = dom_controlpoint_setup;
+	if(!g_domination) { remove(self); return; }
 
-	if(!self.scale)
-		self.scale = 0.6;
-
-	self.effects = self.effects | EF_LOWPRECISION;
-	if (autocvar_g_domination_point_fullbright)
-		self.effects |= EF_FULLBRIGHT;
+	dom_ControlPointSetup(self);
 }
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
@@ -487,25 +644,28 @@ Keys:
 
 void spawnfunc_dom_team()
 {
-	if(!g_domination || autocvar_g_domination_teams_override >= 2)
-	{
-		remove(self);
-		return;
-	}
-	precache_model(self.model);
-	if (self.noise != "")
-		precache_sound(self.noise);
-	if (self.noise1 != "")
-		precache_sound(self.noise1);
+	if(!g_domination || autocvar_g_domination_teams_override >= 2) { remove(self); return; }
+
 	self.classname = "dom_team";
-	setmodel(self, self.model); // precision not needed
-	self.mdl = self.model;
-	self.dmg = self.modelindex;
-	self.model = "";
-	self.modelindex = 0;
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
 		self.team = self.cnt + 1; // WHY are these different anyway?
+
+	precache_model(self.model);
+	setmodel(self, self.model);
+	dom_model[self.team] = self.model;
+	dom_modelindex[self.team] = self.modelindex;
+	
+	self.model = "";
+	self.modelindex = 0;
+	
+	if(self.noise != "") { precache_sound(self.noise); }
+	if(self.noise1 != "") { precache_sound(self.noise1); }
+
+	dom_noise[self.team] = self.noise;
+	dom_noise1[self.team] = self.noise1;
+	dom_message[self.team] = self.message;
+	dom_skin[self.team] = self.skin;
 }
 
 // scoreboard setup
@@ -541,24 +701,29 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_team";
-	self.netname = teamname;
-	self.cnt = teamcolor;
 	self.model = pointmodel;
 	self.skin = pointskin;
-	self.noise = capsound;
-	self.noise1 = capnarration;
-	self.message = capmessage;
-
-	// this code is identical to spawnfunc_dom_team
-	setmodel(self, self.model); // precision not needed
-	self.mdl = self.model;
-	self.dmg = self.modelindex;
+	self.netname = teamname; // needed for team counting
+	self.team = teamcolor;
+	
+	precache_model(self.model);
+	setmodel(self, self.model);
+	dom_model[self.team] = self.model;
+	dom_modelindex[self.team] = self.modelindex;
+	
 	self.model = "";
 	self.modelindex = 0;
-	// this would have to be changed if used in quakeworld
-	self.team = self.cnt + 1;
+	
+	if(capsound != "") { precache_sound(capsound); }
+	if(capnarration != "") { precache_sound(capnarration); }
 
-	//eprint(self);
+	dom_noise[self.team] = capsound;
+	dom_noise1[self.team] = capnarration;
+	dom_message[self.team] = capmessage;
+	dom_skin[self.team] = pointskin;
+	
+	//printf("%d %s %d\n", self.team, dom_model[self.team], dom_modelindex[self.team]);
+
 	self = oldself;
 }
 
@@ -578,12 +743,14 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
-	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+	float i, team_id;
+	for(i = 1; i <= teams; ++i)
+	{
+		team_id = Team_NumberToTeam(i);
+		
+		dom_spawnteam(Team_ColorName(team_id), team_id, sprintf("models/domination/dom_%s.md3", Static_Team_ColorName_Lower(team_id)), 0, "domination/claim.wav", "", "");
+	}
+
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
@@ -600,6 +767,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	CheckAllowedTeams(world);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
+	addstat(STAT_CAPTURE_PROGRESS, AS_FLOAT, dom_unlock_progress);
 	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
 	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
 	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
@@ -634,8 +802,10 @@ MUTATOR_DEFINITION(gamemode_domination)
 {
 	MUTATOR_HOOK(GetTeamCount, dom_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, dom_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, dom_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, dom_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
@@ -651,5 +821,5 @@ MUTATOR_DEFINITION(gamemode_domination)
 		return -1;
 	}
 
-	return 0;
+	return FALSE;
 }

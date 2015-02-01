@@ -365,7 +365,7 @@ void W_Tuba_NoteOn(float hittype)
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)
 	{
-		pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
+		Send_Effect(EFFECT_SMOKE_RING, o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 		self.tuba_smoketime = time + 0.25;
 	}
 }
@@ -419,13 +419,13 @@ float W_Tuba(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_tuba.md3");
-			precache_model("models/weapons/v_tuba.md3");
-			precache_model("models/weapons/h_tuba.iqm");
-			precache_model("models/weapons/v_akordeon.md3");
-			precache_model("models/weapons/h_akordeon.iqm");
-			precache_model("models/weapons/v_kleinbottle.md3");
-			precache_model("models/weapons/h_kleinbottle.iqm");
+			precache_model(W_Model("g_tuba.md3"));
+			precache_model(W_Model("v_tuba.md3"));
+			precache_model(W_Model("h_tuba.iqm"));
+			precache_model(W_Model("v_akordeon.md3"));
+			precache_model(W_Model("h_akordeon.iqm"));
+			precache_model(W_Model("v_kleinbottle.md3"));
+			precache_model(W_Model("h_kleinbottle.iqm"));
 			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -456,7 +456,7 @@ float W_Tuba(float req)
 						break;
 				}
 				W_SetupShot(self, FALSE, 0, "", 0, 0);
-				pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}

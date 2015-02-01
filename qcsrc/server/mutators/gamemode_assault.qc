@@ -54,22 +54,29 @@ void assault_objective_decrease_use()
 	{
 		if(self.enemy.health - self.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.dmg);
+			PlayerScore_Add(activator, SP_SCORE, self.dmg);
 			self.enemy.health = self.enemy.health - self.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.enemy.health);
+			PlayerScore_Add(activator, SP_SCORE, self.enemy.health);
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator, head;
+			entity oldself, oldactivator;
 
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-			FOR_EACH_PLAYER(head)
-				centerprint(head, self.message);
+			{
+				entity player;
+				string s;
+				FOR_EACH_PLAYER(player)
+				{
+					s = strcat(self.message, "\n");
+					centerprint(player, s);
+				}
+			}
 
 			oldactivator = activator;
 			activator = oldself;
@@ -135,6 +142,7 @@ void target_objective_decrease_activate()
 			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
 			WaypointSprite_UpdateHealth(spr, ent.health);
 			ent.sprite = spr;
+			ent.colormod = '2 2 2';
 		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
@@ -163,7 +171,6 @@ void assault_roundstart_use()
 	activator = self;
 	SUB_UseTargets();
 
-#ifdef TTURRETS_ENABLED
 	entity ent, oldself;
 
 	//(Re)spawn all turrets
@@ -179,12 +186,11 @@ void assault_roundstart_use()
 		self = ent;
 
 		// Dubbles as teamchange
-		turret_stdproc_respawn();
+		turret_respawn();
 
 		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
 }
 
 void assault_wall_think()
@@ -205,8 +211,31 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
+void vehicles_clearreturn(entity veh);
+void vehicles_spawn();
 void assault_new_round()
 {
+    entity oldself;
+	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELEASE);
+    }
+
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearreturn(self);
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
+
 	// up round counter
 	self.winning = self.winning + 1;
 
@@ -525,8 +554,8 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 {
-	if (!self.team)
-		self.team = 14;
+	if(!self.team || self.team == MAX_SHOT_DISTANCE)
+		self.team = 5; // this gets reversed when match starts?
 
 	return FALSE;
 }
@@ -544,13 +573,67 @@ MUTATOR_HOOKFUNCTION(assault_BotRoles)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(assault_GetTeamCount)
+{
+	c1 = c2 = 0; // assault always has 2 teams
+	return TRUE;
+}
+
+.float assault_repair_delay;
+MUTATOR_HOOKFUNCTION(assault_PlayerThink)
+{
+	if(self.team == assault_attacker_team) { return FALSE; }
+	if(autocvar_g_assault_repair_amount <= 0) { return FALSE; }
+	if(time < self.assault_repair_delay) { return FALSE; }
+	if(gameover || self.frozen || self.deadflag != DEAD_NO || self.vehicle)
+		return FALSE;
+
+	float n_players = 0;
+	entity cp = findchain(classname, "func_assault_destructible"), head;
+	self.assault_repair_delay = time + 0.5;
+	
+	FOR_EACH_PLAYER(head) if(SAME_TEAM(head, self)) { ++n_players; }
+
+	for(; cp; cp = cp.chain)
+	if(vlen((cp.origin + 0.5 * (cp.absmin + cp.absmax)) - self.origin) < 300)
+	if(cp.health > 0)
+	if(cp.health < cp.max_health)
+	if(cp.target != "")
+	if(time - cp.pain_finished > 3)
+	{
+		cp.health += autocvar_g_assault_repair_amount / n_players;
+		if(cp.sprite) { WaypointSprite_UpdateHealth(cp.sprite, cp.health); }
+	}
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(assault_OnEntityPreSpawn)
+{
+	switch(self.classname)
+	{
+		case "info_player_team1": return TRUE;
+		case "info_player_team2": return TRUE;
+		case "info_player_team3": return TRUE;
+		case "info_player_team4": return TRUE;
+	}
+
+	return FALSE;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_DESTROYED,     "destroyed",       SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      0);
+	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      0);
 	ScoreRules_basics_end();
+}
+
+void assault_Initialize()
+{
+	assault_ScoreRules();
+	warmup_stage = 0;
 }
 
 MUTATOR_DEFINITION(gamemode_assault)
@@ -559,12 +642,15 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, assault_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, assault_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, assault_OnEntityPreSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		assault_ScoreRules();
+		assault_Initialize();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

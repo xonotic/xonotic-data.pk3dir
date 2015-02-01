@@ -122,7 +122,6 @@ void W_Shockwave_Melee_Think(void)
 	if(!self.cnt)
 	{
 		self.cnt = time; 
-		W_PlayStrengthSound(self.realowner);
 	}
 
 	// update values for v_* vectors
@@ -148,7 +147,7 @@ void W_Shockwave_Melee_Think(void)
 			(self.realowner.origin + self.realowner.view_ofs),
 			targpos,
 			FALSE,
-			self.realowner,
+			world, //self.realowner,
 			ANTILAG_LATENCY(self.realowner)
 		);
 		
@@ -228,7 +227,7 @@ void W_Shockwave_Melee_Think(void)
 
 void W_Shockwave_Melee(void)
 {
-	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
 	entity meleetemp;
@@ -359,7 +358,7 @@ void W_Shockwave_Attack(void)
 	float i, queue = 0;
 	
 	// set up the shot direction
-	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -710,12 +709,12 @@ float W_Shockwave(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shotgun.md3");
-			precache_model("models/weapons/v_shotgun.md3");
-			precache_model("models/weapons/h_shotgun.iqm");
+			precache_model(W_Model("g_shotgun.md3"));
+			precache_model(W_Model("v_shotgun.md3"));
+			precache_model(W_Model("h_shotgun.iqm"));
 			precache_sound("misc/itempickup.wav");
-			precache_sound("weapons/lasergun_fire.wav");
-			precache_sound("weapons/shotgun_melee.wav");
+			precache_sound(W_Sound("lasergun_fire"));
+			precache_sound(W_Sound("shotgun_melee"));
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

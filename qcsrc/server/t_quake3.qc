@@ -174,6 +174,7 @@ float DoesQ3ARemoveThisEntity()
 		if(maxclients == 1)
 			gametypename = "single";
 		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// actually, we have oneflag, but it can't be detected this early (map based...)
 		if(strstrofs(self.gametype, gametypename, 0) < 0)
 			return 1;
 	}

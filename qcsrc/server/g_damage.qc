@@ -183,16 +183,10 @@ string AppendItemcodes(string s, entity player)
 	if(w == 0)
 		w = player.cnt; // previous weapon!
 	s = strcat(s, ftos(w));
-	if(time < player.strength_finished)
-		s = strcat(s, "S");
-	if(time < player.invincible_finished)
-		s = strcat(s, "I");
 	if(player.flagcarried != world)
 		s = strcat(s, "F");
 	if(player.BUTTON_CHAT)
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
 	return s;
 }
 
@@ -415,6 +409,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
+			// sprees 2 and 8 are blocked by "" value, so no sending
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
@@ -435,6 +430,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
 				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
+
+#ifdef JEFF
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_JEFF_FIRSTBLOOD);
+#endif
 
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
@@ -493,8 +492,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
+			float f3 = 0;
+			if(deathtype == DEATH_BUFF)
+				f3 = attacker.buffs;
+
 			if (!Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
+				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -508,13 +511,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			// For now, we're just forcing HURTTRIGGER to behave as "DEATH_VOID" and giving it no special options...
 			// Later on you will only be able to make custom messages using DEATH_CUSTOM,
 			// and there will be a REAL DEATH_VOID implementation which mappers will use.
-			/*case DEATH_HURTTRIGGER:
+			case DEATH_HURTTRIGGER:
 			{
-				s1 = targ.netname;
-				s2 = inflictor.message;
-				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
+				Obituary_SpecialDeath(targ, FALSE, deathtype,
+					targ.netname,
+					inflictor.message,
+					deathlocation,
+					targ.killcount,
+					0,
+					0);
 				break;
-			}*/
+			}
 
 			case DEATH_CUSTOM:
 			{
@@ -562,13 +569,13 @@ void Ice_Think()
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
 	if(targ.frozen)
 		return;
 
-	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : start_health);
+	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	targ.frozen = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
@@ -675,7 +682,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELESE);
+			vehicles_exit(VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -723,7 +730,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage, autocvar_g_balance_armor_block_bycount);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -733,7 +740,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, autocvar_g_balance_armor_block_bycount);
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
@@ -760,6 +767,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
+		frag_inflictor = inflictor;
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
@@ -773,24 +781,24 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.frozen)
 		if(deathtype != DEATH_HURTTRIGGER && deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_AUTOTEAMCHANGE)
 		{
-			if(autocvar_g_freezetag_revive_falldamage > 0)
+			if(autocvar_g_freeze_revive_falldamage > 0)
 			if(deathtype == DEATH_FALL)
-			if(damage >= autocvar_g_freezetag_revive_falldamage)
+			if(damage >= autocvar_g_freeze_revive_falldamage)
 			{
 				Unfreeze(targ);
-				targ.health = autocvar_g_freezetag_revive_falldamage_health;
-				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				targ.health = autocvar_g_freeze_revive_falldamage_health;
+				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
 			damage = 0;
-			force *= autocvar_g_freezetag_frozen_force;
+			force *= autocvar_g_freeze_frozen_force;
 		}
 		
-		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
+		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freeze_frozen_damage_trigger)
 		{
-			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 		
 			entity oldself = self;
 			self = targ;
@@ -819,33 +827,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				// don't reset back to last position, even if new position is stuck in solid
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
-				
-				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+
+				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 			
 			self = oldself;
-		}
-
-		if(!g_instagib)
-		{
-			// apply strength multiplier
-			if (attacker.items & IT_STRENGTH)
-			{
-				if(targ == attacker)
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-					force = force * autocvar_g_balance_powerup_strength_selfforce;
-				}
-				else
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_damage;
-					force = force * autocvar_g_balance_powerup_strength_force;
-				}
-			}
-
-			// apply invincibility multiplier
-			if (targ.items & IT_INVINCIBLE)
-				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
 		}
 
 		if (targ == attacker)
@@ -854,17 +840,17 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
-		if(deathtype != DEATH_BUFF_VENGEANCE)
+		if(deathtype != DEATH_BUFF)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
 			entity victim;
-			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+			if(IS_VEHICLE(targ) && targ.owner)
 				victim = targ.owner;
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || (victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (victim.flags & FL_MONSTER))
+			if(IS_PLAYER(victim) || IS_TURRET(victim) || IS_MONSTER(victim) || victim.classname == "func_assault_destructible" || (victim.classname == "onslaught_generator" && !victim.isshielded) || (victim.classname == "onslaught_controlpoint_icon" && !victim.owner.isshielded))
 			{
 				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
@@ -1187,7 +1173,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		mintime = e.fire_endtime - time;
 		maxtime = max(mintime, t);
 
-		mindps = e.fire_damagepersec;
+		mindps = max(0.1, e.fire_damagepersec);
 		maxdps = max(mindps, dps);
 
 		if(maxtime > mintime || maxdps > mindps)
@@ -1311,7 +1297,7 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = TRUE;
 
-	if (!IS_INDEPENDENT_PLAYER(e))
+	if(!IS_INDEPENDENT_PLAYER(e))
 	if(!e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{

@@ -19,6 +19,16 @@ void make_mapinfo_Think()
 	}
 }
 
+float GameCommand_checkinlist(string game_command, string list)
+{
+	string l = strcat(" ", list, " ");
+
+	if(strstrofs(l, strcat(" ", game_command, " "), 0) >= 0)
+		return TRUE;
+
+	return FALSE;
+}
+
 //  used by GameCommand_extendmatchtime() and GameCommand_reducematchtime()
 void changematchtime(float delta, float mi, float ma)
 {
@@ -59,6 +69,21 @@ void changematchtime(float delta, float mi, float ma)
 	}
 
 	cvar_set("timelimit", ftos(new / 60));
+}
+
+void DiscoMode(entity e, float enable)
+{
+	if(e == world)
+		return;
+
+	float accepted;
+
+	accepted = VerifyClientEntity(e, TRUE, FALSE);
+
+	if(accepted > 0) 
+	{
+		e.discomode = enable;
+	}
 }
 
 
@@ -134,47 +159,6 @@ void GameCommand_adminmsg(float request, float argc)
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
 			print("Examples: adminmsg 2,4 \"this infomessage will last for ten seconds\" 10\n");
 			print("          adminmsg 2,5 \"this message will be a centerprint\"\n");
-			return;
-		}
-	}
-}
-
-void GameCommand_mobbutcher(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
-			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
-
-			float removed_count = 0;
-			entity head;
-
-			FOR_EACH_MONSTER(head)
-			{
-				monster_remove(head);
-				++removed_count;
-			}
-
-			monsters_total = 0; // reset stats?
-			monsters_killed = 0;
-
-			totalspawned = 0;
-
-			if(removed_count <= 0)
-				print("No monsters to kill\n");
-			else
-				printf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s"));
-
-			return; // never fall through to usage
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd mobbutcher\n");
-			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -481,7 +465,7 @@ void GameCommand_cointoss(float request, float argc)
 			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
-			
+
 			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
 			return;
 		}
@@ -944,6 +928,71 @@ void GameCommand_gotomap(float request, float argc)
 			print("\nUsage:^3 sv_cmd gotomap map\n");
 			print("  Where 'map' is the *.bsp file to change to.\n");
 			print("See also: ^2gametype^7\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_gravity(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string rm = (autocvar_g_rm ? "rm_" : "");
+			string grav = argv(1);
+			string gravity_list = cvar_string(strcat(rm, "gravity_list"));
+			if(grav == "random")
+			{
+				cvar_set("g_random_gravity", "1");
+				localcmd("defer 2 restart");
+				return;
+			}
+			else if(grav == "help")
+			{
+				localcmd("say ^3Usage: ^2vcall gravity [value]\n");
+				return;
+			}
+			else if(grav == "list")
+			{
+				localcmd(strcat("say ^3Available gravity votes: ^2", gravity_list));
+				return;
+			}
+			if(!cvar(strcat(rm, "gravity_", grav)) || !GameCommand_checkinlist(grav, gravity_list))
+			{
+				localcmd("say ^1That gravity does not exist, vote for ^2gravity list ^1to see available gravity votes\n");
+				return;
+			}
+			cvar_set("sv_gravity", ftos(cvar(strcat(rm, "gravity_", grav))));
+			localcmd(sprintf("say ^3Gravity is now: %d", autocvar_sv_gravity, "\n"));
+			return;
+		}
+			
+		default:
+			print("Incorrect parameters for ^2gravity^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd gravity [command]\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_ircmsg(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			IRCSay(argv(1), argv(2));
+			return;
+		}
+			
+		default:
+			print("Incorrect parameters for ^2ircmsg^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd ircmsg [message]\n");
 			return;
 		}
 	}
@@ -1467,8 +1516,31 @@ void GameCommand_stuffto(float request, float argc)
 		{
 			if(argv(2))
 			{
+				float accepted;
+				if(argv(1) == "all")
+				{
+					entity head;
+					
+					FOR_EACH_REALCLIENT(head)
+					{
+						accepted = VerifyClientEntity(head, TRUE, FALSE);
+						if(accepted > 0)
+						{
+							stuffcmd(head, strcat("\n", argv(2), "\n"));
+							print(strcat("Command: \"", argv(2), "\" sent to ", GetCallerName(head), ".\n"));
+							continue;
+						}
+						else
+						{
+							print("stuffto failed on ", GetCallerName(head), ".\n");
+							continue;
+						}
+					}
+					return;
+				}
+
 				entity client = GetIndexedEntity(argc, 1);
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				accepted = VerifyClientEntity(client, TRUE, FALSE);
 
 				if(accepted > 0)
 				{
@@ -1499,6 +1571,73 @@ void GameCommand_stuffto(float request, float argc)
 		return;
 	}
 	#endif
+}
+
+void GameCommand_discomode(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float accepted;
+			float enable;
+			string msg = "";
+			
+			if ( argv(2) )
+			{
+				enable = stof( argv(2) );
+				if ( !enable )
+					msg = " disabled";
+			}
+			else
+				enable = 1;
+			
+			if(argv(1) == "all")
+			{
+				entity head;
+				
+				FOR_EACH_REALCLIENT(head)
+				{
+					accepted = VerifyClientEntity(head, TRUE, FALSE);
+					if(accepted > 0)
+					{
+						DiscoMode(head,enable);
+						print(strcat("Disco Mode",msg," for ", GetCallerName(head), ".\n"));
+						continue;
+					}
+					else
+					{
+						print("Disco Mode failed on ", GetCallerName(head), ".\n");
+						continue;
+					}
+				}
+				return;
+			}
+
+			entity client = GetIndexedEntity(argc, 1);
+			accepted = VerifyClientEntity(client, TRUE, FALSE);
+
+			if(accepted > 0)
+			{
+				DiscoMode(client,enable);
+				print(strcat("Disco Mode",msg," for ", GetCallerName(client), ".\n"));
+			}
+			else
+				print("Disco Mode: ", GetClientErrorString(accepted, argv(1)), ".\n");
+
+			return;
+		}
+
+		default:
+			print("Incorrect parameters for ^2discomode^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd discomode client [enable]\n");
+			print("  'client' is the entity number or name of the player,\n");
+			print("  'enable' 1 by default. 0 disable, 1 enable \n");
+			return;
+		}
+	}
 }
 
 void GameCommand_trace(float request, float argc)
@@ -1776,7 +1915,6 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
@@ -1788,12 +1926,15 @@ void GameCommand_(float request)
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
 	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments), "Delete race time record for a map") \
+	SERVER_COMMAND("discomode", GameCommand_discomode(request, arguments), "Disco Mode!!") \
 	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request), "Dump list of effects from code and effectinfo.txt") \
 	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request), "Increase the timelimit value incrementally") \
 	SERVER_COMMAND("find", GameCommand_find(request, arguments), "Search through entities for matching classname") \
 	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
 	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
 	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
+	SERVER_COMMAND("gravity", GameCommand_gravity(request, arguments), "Changes gravity based on cvars") \
+	SERVER_COMMAND("ircmsg", GameCommand_ircmsg(request, arguments), "Say a message as an IRC user") \
 	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
 	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
@@ -1864,6 +2005,11 @@ void GameCommand(string command)
 {
 	float argc = tokenize_console(command);
 
+	// for the mutator hook system
+	cmd_name = strtolower(argv(0));
+	cmd_argc = argc;
+	cmd_string = command;
+
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
@@ -1906,6 +2052,10 @@ void GameCommand(string command)
 		{
 			return;
 		}
+	}
+	else if(MUTATOR_CALLHOOK(SV_ParseServerCommand))
+	{
+		return; // handled by a mutator
 	}
 	else if(BanCommand(command))
 	{

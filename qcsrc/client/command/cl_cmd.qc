@@ -238,6 +238,24 @@ void LocalCommand_hud(float request, float argc)
 					return;
 				}
 
+				case "quickmenu":
+				{
+					if(HUD_QuickMenu_IsOpened())
+						HUD_QuickMenu_Close();
+					else
+						HUD_QuickMenu_Open();
+					return;
+				}
+
+				case "minigame":
+				{
+					if(HUD_MinigameMenu_IsOpened())
+						HUD_MinigameMenu_Close();
+					else
+						HUD_MinigameMenu_Open();
+					return;
+				}
+
 				case "save":
 				{
 					if(argv(2))
@@ -266,9 +284,15 @@ void LocalCommand_hud(float request, float argc)
 				case "radar":
 				{
 					if(argv(2))
-						hud_panel_radar_maximized = InterpretBoolean(argv(2));
+						HUD_Radar_Show_Maximized(InterpretBoolean(argv(2)),0);
 					else
-						hud_panel_radar_maximized = !hud_panel_radar_maximized;
+						HUD_Radar_Show_Maximized(!hud_panel_radar_maximized,0);
+					return;
+				}
+				
+				case "clickradar":
+				{
+					HUD_Radar_Show_Maximized(!hud_panel_radar_mouse,1);
 					return;
 				}
 			}
@@ -283,7 +307,7 @@ void LocalCommand_hud(float request, float argc)
 			print("  'configname' is the name to save to for \"save\" action,\n");
 			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			print("  Full list of commands here: \"configure, quickmenu, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}

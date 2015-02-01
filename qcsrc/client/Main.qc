@@ -56,6 +56,19 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
+	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
+	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
+	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
+	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
+	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
+	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
+	if(getkeybind(K_F8) == "") { localcmd("\nbind f8 \"cl_cmd hud quickmenu\"\n"); }
+	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
+
+	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
+	localcmd("\nalias weapon_shockwave \"impulse 250\"\n");
+	localcmd("\nalias weapon_arc \"impulse 251\"\n");
+
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
@@ -65,8 +78,89 @@ void CSQC_Init(void)
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default");
 
+	registercvar("cl_freeze", "0");
+	registercvar("cl_pony", "0");
+	registercvar("cl_pony_skin", "0");
+	registercvar("cl_sparkle", "0");
+	registercvar("cl_multijump", "0");
+	registercvar("cl_dodging", "0");
+	registercvar("cl_spawn_near_teammate", "1");
+	registercvar("cl_damnfurries", "0");
+	registercvar("cl_robot", "0");
+	registercvar("cl_thestars", "0");
+	registercvar("cl_charge", "0");
+	registercvar("cl_magical_hax", "");
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
+	registercvar("cl_autovote", "");
+	registercvar("cl_nocarry", "0");
+	registercvar("cl_buffs_autoreplace", "1");
+	registercvar("cl_physics", "default"); // default is invalid, so it will be overridden by standard physics cvars
+
+	// these need to be defined for quickmenu to work
+	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");
+	registercvar("hud_panel_quickmenu_size", "0.210000 0.250000");
+	registercvar("hud_panel_quickmenu_bg", "");
+	registercvar("hud_panel_quickmenu_bg_color", "");
+	registercvar("hud_panel_quickmenu_bg_color_team", "");
+	registercvar("hud_panel_quickmenu_bg_alpha", "");
+	registercvar("hud_panel_quickmenu_bg_border", "");
+	registercvar("hud_panel_quickmenu_bg_padding", "");
+	registercvar("hud_panel_quickmenu_align", "0");
+
+	// these need to be defined for buffs to work
+	registercvar("hud_panel_buffs", "1");
+	registercvar("hud_panel_buffs_pos", "0.45 0.855");
+	registercvar("hud_panel_buffs_size", "0.05 0.07");
+	registercvar("hud_panel_buffs_bg", "");
+	registercvar("hud_panel_buffs_bg_color", "");
+	registercvar("hud_panel_buffs_bg_color_team", "");
+	registercvar("hud_panel_buffs_bg_alpha", "");
+	registercvar("hud_panel_buffs_bg_border", "");
+	registercvar("hud_panel_buffs_bg_padding", "");
+	//registercvar("hud_panel_buffs_iconalign", "0");
+	
+	
+	// these need to be defined for minigames to work
+	registercvar("hud_panel_minigameboard", "1");
+	registercvar("hud_panel_minigameboard_pos", "0.22 0.15");
+	registercvar("hud_panel_minigameboard_size", "0.50 0.60");
+	registercvar("hud_panel_minigameboard_bg", "border_small");
+	registercvar("hud_panel_minigameboard_bg_color", "");
+	registercvar("hud_panel_minigameboard_bg_color_team", "");
+	registercvar("hud_panel_minigameboard_bg_alpha", "");
+	registercvar("hud_panel_minigameboard_bg_border", "");
+	registercvar("hud_panel_minigameboard_bg_padding", "");
+	
+	registercvar("hud_panel_minigamestatus", "1");
+	registercvar("hud_panel_minigamestatus_pos", "0.74 0.15");
+	registercvar("hud_panel_minigamestatus_size", "0.2 0.60");
+	registercvar("hud_panel_minigamestatus_bg", "border_small");
+	registercvar("hud_panel_minigamestatus_bg_color", "");
+	registercvar("hud_panel_minigamestatus_bg_color_team", "");
+	registercvar("hud_panel_minigamestatus_bg_alpha", "");
+	registercvar("hud_panel_minigamestatus_bg_border", "");
+	registercvar("hud_panel_minigamestatus_bg_padding", "");
+	
+	registercvar("hud_panel_minigamehelp", "1");
+	registercvar("hud_panel_minigamehelp_pos", "0.22 0.78");
+	registercvar("hud_panel_minigamehelp_size", "0.50 0.20");
+	registercvar("hud_panel_minigamehelp_bg", "");
+	registercvar("hud_panel_minigamehelp_bg_color", "");
+	registercvar("hud_panel_minigamehelp_bg_color_team", "");
+	registercvar("hud_panel_minigamehelp_bg_alpha", "");
+	registercvar("hud_panel_minigamehelp_bg_border", "");
+	registercvar("hud_panel_minigamehelp_bg_padding", "");
+	
+	registercvar("hud_panel_minigamemenu", "0");
+	registercvar("hud_panel_minigamemenu_pos", "0 0.26");
+	registercvar("hud_panel_minigamemenu_size", "0.2 0.49");
+	registercvar("hud_panel_minigamemenu_bg", "border_small");
+	registercvar("hud_panel_minigamemenu_bg_color", "");
+	registercvar("hud_panel_minigamemenu_bg_color_team", "");
+	registercvar("hud_panel_minigamemenu_bg_alpha", "");
+	registercvar("hud_panel_minigamemenu_bg_border", "");
+	registercvar("hud_panel_minigamemenu_bg_padding", "");
 
 	gametype = 0;
 
@@ -87,12 +181,16 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+
+	initialize_minigames();
 
 	WaypointSprite_Load();
 
@@ -100,13 +198,13 @@ void CSQC_Init(void)
 	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
+	precache_model("models/ctf/shield.md3");
 
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	Vehicles_Precache();
-	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
@@ -171,6 +269,9 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+
+	deactivate_minigame();
+	HUD_MinigameMenu_Close();
 }
 
 .float has_team;
@@ -284,6 +385,22 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
+void FPSReporter_Think()
+{
+	localcmd("\ncmd report fps ", ftos(floor(cl_fps)), "\n");
+	self.nextthink = time + sv_showfps;
+}
+
+void FPSReporter_Init()
+{
+	if(!sv_showfps)
+		return;
+
+	entity e = spawn();
+	e.think = FPSReporter_Think;
+	e.nextthink = time + 1;
+}
+
 void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
@@ -295,6 +412,9 @@ void PostInit(void)
 
 	Porto_Init();
 	TrueAim_Init();
+	FPSReporter_Init();
+
+	fovlock = -1;
 
 	postinit = true;
 }
@@ -316,7 +436,16 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
+		return true;
+
+	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if(menu_visible && menu_action)
@@ -501,6 +630,26 @@ void Ent_ClientData()
 	else
 		angles_held_status = 0;
 
+	if(f & 16)
+	{
+		fovlock = ReadByte();
+		num_spectators = ReadByte();
+
+		if(fovlock <= 0)
+			fovlock = -1;
+
+		float i, slot;
+
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
+
 	if(newspectatee_status != spectatee_status)
 	{
 		// clear race stuff
@@ -635,6 +784,32 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+.float jb_camera_active;
+void ent_jailcamera()
+{
+	float sf = ReadByte();
+	
+	if(sf & 1)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+
+		self.angles_x = ReadAngle();
+		self.angles_y = ReadAngle();
+		self.angles_z = 0;
+
+		self.classname = "jailcamera";
+		self.jb_camera_active = FALSE;
+	}
+	
+	if(sf & 2)
+	{
+		self.jb_camera_active = ReadByte();
+	}
+}
+
 void Spawn_Draw(void)
 {
 	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
@@ -733,7 +908,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
@@ -819,13 +994,19 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
+		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
+		case ENT_CLIENT_CONQUEST_CONTROLPOINT: conquest_controlpoint_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
+		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -986,6 +1167,14 @@ void Ent_Init()
 
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
+
+	vaporizer_delay = ReadByte();
+
+	sv_showfps = ReadByte();
+
+	sv_announcer = strzone(ReadString());
+
+	if(sv_announcer != "") { Announcer_Precache(); }
 
 	if(!postinit)
 		PostInit();
@@ -1246,6 +1435,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
+			bHandled = true;
+			break;
+		case TE_CSQC_SUPERBLASTPARTICLE:
+			Net_ReadSuperBlastParticle();
 			bHandled = true;
 			break;
 		default:

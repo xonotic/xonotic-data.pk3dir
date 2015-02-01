@@ -1,4 +1,4 @@
-
+.float cvar_cl_dodging;
 .float cvar_cl_dodging_timeout;
 
 
@@ -22,6 +22,7 @@
 .float dodging_velocity_gain;
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging, "cl_dodging");
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
 	return 0;
 }
@@ -46,6 +47,18 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
+
+	if(!self.cvar_cl_dodging)
+		clean_up_and_do_nothing = 1;
+
+	if(cvar("g_overkill"))
+		clean_up_and_do_nothing = 0; // always enabled in overkill
+
+	if(g_dodging == 2)
+		clean_up_and_do_nothing = 0; // forced enabled
+
+	if(self.frozen)
+		clean_up_and_do_nothing = 0; // also enabled in freezetag
 
 	// when swimming, no dodging allowed..
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
@@ -81,8 +94,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		//disable jump key during dodge accel phase
 		if (self.movement_z > 0) self.movement_z = 0;
 
-		self.velocity =
-			  self.velocity
+		self.velocity +=
 			+ ((self.dodging_direction_y * velocity_difference) * v_right)
 			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
 
@@ -93,9 +105,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (self.dodging_single_action == 1) {
 		self.flags &= ~FL_ONGROUND;
 
-		self.velocity =
-			  self.velocity
-			+ (autocvar_sv_dodging_up_speed * v_up);
+		self.velocity += (autocvar_sv_dodging_up_speed * v_up);
 
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -170,14 +180,28 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	tap_direction_y = 0;
 
 	float frozen_dodging, frozen_no_doubletap;
+	float do_nothing = 0;
 	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
 	frozen_no_doubletap = (frozen_dodging && !autocvar_sv_dodging_frozen_doubletap);
 
-	float dodge_detected;
+	float dodge_detected = 0;
 	if (g_dodging == 0)
-		return 0;
+		do_nothing = 1;
 
-	dodge_detected = 0;
+	if(!self.cvar_cl_dodging)
+		do_nothing = 1;
+
+	if(cvar("g_overkill"))
+		do_nothing = 0;
+
+	if(frozen_dodging)
+		do_nothing = 0;
+
+	if(g_dodging == 2)
+		do_nothing = 0;
+
+	if(do_nothing != 0)
+		return 0;
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < autocvar_sv_dodging_delay)
@@ -266,10 +290,9 @@ MUTATOR_DEFINITION(mutator_dodging)
 	// get timeout information from the client, so the client can configure it..
 	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
 
-	// this just turns on the cvar.
 	MUTATOR_ONADD
 	{
-		g_dodging = 1;
+		g_dodging = cvar("g_dodging");
 	}
 
 	// this just turns off the cvar.

@@ -27,3 +27,7 @@
 #include "w_arc.qc"
 #include "w_hmg.qc"
 #include "w_rpc.qc"
+
+// more other weapons
+#include "w_revolver.qc"
+#include "w_lightsabre.qc"

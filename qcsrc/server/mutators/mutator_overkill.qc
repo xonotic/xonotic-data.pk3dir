@@ -18,7 +18,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 		return; // dummy
 
 	if(ent.ok_use_ammocharge)
-	if(!ent.BUTTON_ATCK) // not while attacking?
+	if(!ent.BUTTON_ATCK || autocvar_g_overkill_ammo_charge_attack) // not while attacking?
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
@@ -65,7 +65,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
 
-	if(self.flags & FL_MONSTER)
+	if(IS_MONSTER(self))
 	{
 		remove(other); // remove default item
 		other = world;
@@ -130,8 +130,10 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 	ok_IncreaseCharge(self, self.weapon);
 
+	float weaponuse_forbidden = forbidWeaponUse(self);
+
 	if(self.BUTTON_ATCK2)
-	if(!forbidWeaponUse() || self.weapon_blocked) // allow if weapon is blocked
+	if(!weaponuse_forbidden || (weaponuse_forbidden == 4 || weaponuse_forbidden == 2)) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
@@ -162,7 +164,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, "weapons/dryfire.wav");
+			play2(self, W_Sound("dryfire"));
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
@@ -197,42 +199,41 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
+	// powerups don't actually exist, so we can abuse them as much as we want
+	if(self.classname == "item_strength")
 	{
-		if(self.classname == "item_strength")
-		{
-			entity wep = spawn();
-			setorigin(wep, self.origin);
-			setmodel(wep, "models/weapons/g_ok_hmg.md3");
-			wep.classname = "weapon_hmg";
-			wep.ok_item = TRUE;
-			wep.noalign = self.noalign;
-			wep.cnt = self.cnt;
-			wep.team = self.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-			wep.pickup_anyway = TRUE;
-			wep.think = spawnfunc_weapon_hmg;
-			wep.nextthink = time + 0.1;
-			return TRUE;
-		}
+		self.classname = "item_removing"; // avoid letting other mutators use it
+		entity wep = spawn();
+		setorigin(wep, self.origin);
+		setmodel(wep, "models/weapons/g_ok_hmg.md3");
+		wep.classname = "weapon_hmg";
+		wep.ok_item = TRUE;
+		wep.noalign = self.noalign;
+		wep.cnt = self.cnt;
+		wep.team = self.team;
+		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+		wep.pickup_anyway = TRUE;
+		wep.think = spawnfunc_weapon_hmg;
+		wep.nextthink = time + 0.1;
+		return TRUE;
+	}
 
-		if(self.classname == "item_invincible")
-		{
-			entity wep = spawn();
-			setorigin(wep, self.origin);
-			setmodel(wep, "models/weapons/g_ok_rl.md3");
-			wep.classname = "weapon_rpc";
-			wep.ok_item = TRUE;
-			wep.noalign = self.noalign;
-			wep.cnt = self.cnt;
-			wep.team = self.team;
-			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-			wep.pickup_anyway = TRUE;
-			wep.think = spawnfunc_weapon_rpc;
-			wep.nextthink = time + 0.1;
-			return TRUE;
-		}
+	if(self.classname == "item_invincible")
+	{
+		self.classname = "item_removing"; // avoid letting other mutators use it
+		entity wep = spawn();
+		setorigin(wep, self.origin);
+		setmodel(wep, "models/weapons/g_ok_rl.md3");
+		wep.classname = "weapon_rpc";
+		wep.ok_item = TRUE;
+		wep.noalign = self.noalign;
+		wep.cnt = self.cnt;
+		wep.team = self.team;
+		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+		wep.pickup_anyway = TRUE;
+		wep.think = spawnfunc_weapon_rpc;
+		wep.nextthink = time + 0.1;
+		return TRUE;
 	}
 
 	return FALSE;
@@ -293,11 +294,51 @@ MUTATOR_HOOKFUNCTION(ok_SetModname)
 
 void ok_SetCvars()
 {
+	// we can't rely on custom balances here yet, as servers may be outdated
+
 	// hack to force overkill playermodels
 	cvar_settemp("sv_defaultcharacter", "1");
 	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
 	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
 	cvar_settemp("sv_defaultplayermodel_blue", "models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
+
+	// shotgun
+	cvar_settemp("g_balance_shotgun_primary_damage", "17");
+	cvar_settemp("g_balance_shotgun_primary_bullets", "10");
+	cvar_settemp("g_balance_shotgun_primary_force", "80");
+	cvar_settemp("g_balance_shotgun_primary_spread", "0.07");
+	cvar_settemp("g_balance_shotgun_primary_animtime", "0.65");
+	cvar_settemp("g_balance_shotgun_primary_ammo", "6.25");
+	cvar_settemp("g_balance_shotgun_reload_ammo", "50");
+	cvar_settemp("g_balance_shotgun_reload_time", "2");
+
+	// machinegun
+	cvar_settemp("g_balance_machinegun_sustained_damage", "25");
+	cvar_settemp("g_balance_machinegun_sustained_spread", "0.01");
+	cvar_settemp("g_balance_machinegun_sustained_force", "5");
+	cvar_settemp("g_balance_machinegun_reload_ammo", "30");
+	cvar_settemp("g_balance_machinegun_reload_time", "1.5");
+
+	// vortex
+	cvar_settemp("g_balance_vortex_primary_damage", "100");
+	cvar_settemp("g_balance_vortex_primary_force", "500");
+	cvar_settemp("g_balance_vortex_primary_refire", "0.75");
+	cvar_settemp("g_balance_vortex_primary_animtime", "0.95");
+	cvar_settemp("g_balance_vortex_primary_ammo", "10");
+	cvar_settemp("g_balance_vortex_secondary", "1");
+	cvar_settemp("g_balance_vortex_charge", "0");
+	cvar_settemp("g_balance_vortex_reload_ammo", "50");
+	cvar_settemp("g_balance_vortex_reload_time", "2");
+
+	// laser
+	cvar_settemp("g_balance_vaporizer_secondary_force", "300");
+
+	// misc
+	cvar_settemp("g_projectiles_newton_style_2_minfactor", "1");
+	cvar_settemp("g_pickup_healthmega_anyway", "0");
+	cvar_settemp("g_pickup_healthmega_max", "200");
+	cvar_settemp("g_pickup_armorsmall_anyway", "0");
+	cvar_settemp("g_pickup_armorsmall_max", "20");
 }
 
 void ok_Initialize()
@@ -306,19 +347,17 @@ void ok_Initialize()
 
 	precache_all_playermodels("models/ok_player/*.dpm");
 
-	precache_model("models/weapons/h_ok_mg.iqm");
-	precache_model("models/weapons/v_ok_mg.md3");
-	precache_model("models/weapons/g_ok_mg.md3");
+	precache_model(W_Model("g_ok_mg.md3"));
+	precache_model(W_Model("v_ok_mg.md3"));
+	precache_model(W_Model("h_ok_mg.iqm"));
+	precache_model(W_Model("g_ok_shotgun.md3"));
+	precache_model(W_Model("v_ok_shotgun.md3"));
+	precache_model(W_Model("h_ok_shotgun.iqm"));
+	precache_model(W_Model("g_ok_sniper.md3"));
+	precache_model(W_Model("v_ok_sniper.md3"));
+	precache_model(W_Model("h_ok_sniper.iqm"));
 
-	precache_model("models/weapons/h_ok_shotgun.iqm");
-	precache_model("models/weapons/v_ok_shotgun.md3");
-	precache_model("models/weapons/g_ok_shotgun.md3");
-
-	precache_model("models/weapons/h_ok_sniper.iqm");
-	precache_model("models/weapons/v_ok_sniper.md3");
-	precache_model("models/weapons/g_ok_sniper.md3");
-
-	precache_sound("weapons/dryfire.wav");
+	precache_sound(W_Sound("dryfire"));
 
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);

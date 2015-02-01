@@ -46,6 +46,10 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
+	if ( self.active_minigame )
+	if ( MinigameImpulse(imp) )
+		return;
+
 	// allow only weapon change impulses when not in round time
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
@@ -54,11 +58,11 @@ void ImpulseCommands (void)
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
 
-    if(self.vehicle)
-        if(self.vehicle.deadflag == DEAD_NO)
-            if(self.vehicle.vehicles_impulse)
-                if(self.vehicle.vehicles_impulse(imp))
-                    return;
+	if(self.vehicle)
+	if(self.vehicle.deadflag == DEAD_NO)
+	if(self.vehicle.vehicles_impulse)
+	if(self.vehicle.vehicles_impulse(imp))
+		return;
 
 	if(CheatImpulse(imp))
 	{
@@ -73,7 +77,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 10 && imp <= 20)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(self.deadflag == DEAD_NO && !self.vehicle)
 		{
 			switch(imp)
 			{
@@ -108,12 +112,12 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
+					if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
 					break;
 			}
 		}
-		else
-			self.impulse = imp; // retry in next frame
+		//else
+			//self.impulse = imp; // retry in next frame
 	}
 	else if(imp == 21)
 	{
@@ -121,6 +125,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 200 && imp <= 229)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
@@ -133,6 +138,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 230 && imp <= 253)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 			W_SwitchWeapon (imp - 230 + WEP_FIRST);
 		else
@@ -381,8 +387,4 @@ void ImpulseCommands (void)
 			}
 		}
 	}
-#ifdef TETRIS
-	else if(imp == 100)
-		TetrisImpulse();
-#endif
 }

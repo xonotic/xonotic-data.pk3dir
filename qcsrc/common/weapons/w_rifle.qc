@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0.5 1 0',
-/* modelname */ "campingrifle",
+/* modelname */ "sniperrifle",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairrifle 0.5",
 /* wepimg    */ "weaponrifle",
@@ -58,7 +58,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_SetupShot(self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
-	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
+	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{
@@ -75,12 +75,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 void W_Rifle_Attack(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), W_Sound("campingrifle_fire"));
 }
 
 void W_Rifle_Attack2(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
+	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), W_Sound("campingrifle_fire2"));
 }
 
 .void(void) rifle_bullethail_attackfunc;
@@ -203,11 +203,11 @@ float W_Rifle(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_campingrifle.md3");
-			precache_model("models/weapons/v_campingrifle.md3");
-			precache_model("models/weapons/h_campingrifle.iqm");
-			precache_sound("weapons/campingrifle_fire.wav");
-			precache_sound("weapons/campingrifle_fire2.wav");
+			precache_model(W_Model("g_sniperrifle.md3"));
+			precache_model(W_Model("v_sniperrifle.md3"));
+			precache_model(W_Model("h_sniperrifle.iqm"));
+			precache_sound(W_Sound("campingrifle_fire"));
+			precache_sound(W_Sound("campingrifle_fire2"));
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -235,7 +235,7 @@ float W_Rifle(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

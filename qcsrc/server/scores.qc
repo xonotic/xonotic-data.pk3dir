@@ -1,4 +1,3 @@
-.entity scorekeeper;
 entity teamscorekeepers[16];
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
@@ -208,14 +207,13 @@ void ScoreInfo_Init(float teams)
 		scores_initialized.classname = "ent_client_scoreinfo";
 		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
-	if(teams >= 1)
-		TeamScore_Spawn(NUM_TEAM_1, "Red");
-	if(teams >= 2)
-		TeamScore_Spawn(NUM_TEAM_2, "Blue");
-	if(teams >= 3)
-		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
-	if(teams >= 4)
-		TeamScore_Spawn(NUM_TEAM_4, "Pink");
+	if(teams)
+	{
+		teams = min(4, teams);
+		float i;
+		for(i = 1; i <= teams; ++i)
+			TeamScore_Spawn(Team_NumberToTeam(i), Team_ColorName(Team_NumberToTeam(i)));
+	}
 }
 
 /*
@@ -349,6 +347,29 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(!warmup_stage)
 		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
+}
+
+float PlayerScore_Set(entity player, float scorefield, float score)
+{
+	if(!scores_initialized)	return 0;
+
+	entity s = player.scorekeeper;
+
+	if(!s) {
+		if(gameover)
+			return 0;
+		error("Setting score of unknown player!");
+	}
+
+	float old = s.(scores[scorefield]);
+
+	if(old == score)
+		return old;
+
+	s.SendFlags |= pow(2, scorefield);
+	s.(scores[scorefield]) = score;
+
+	return score;
 }
 
 float PlayerTeamScore_Add(entity player, float pscorefield, float tscorefield, float score)

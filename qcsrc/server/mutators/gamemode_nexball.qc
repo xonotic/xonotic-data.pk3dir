@@ -439,28 +439,28 @@ void nb_spawnteams(void)
 		case NUM_TEAM_1:
 			if(!t_r)
 			{
-				nb_spawnteam("Red", e.team-1)   ;
+				nb_spawnteam(NAME_TEAM_1, e.team-1);
 				t_r = 1;
 			}
 			break;
 		case NUM_TEAM_2:
 			if(!t_b)
 			{
-				nb_spawnteam("Blue", e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_2, e.team-1);
 				t_b = 1;
 			}
 			break;
 		case NUM_TEAM_3:
 			if(!t_y)
 			{
-				nb_spawnteam("Yellow", e.team-1);
+				nb_spawnteam(NAME_TEAM_3, e.team-1);
 				t_y = 1;
 			}
 			break;
 		case NUM_TEAM_4:
 			if(!t_p)
 			{
-				nb_spawnteam("Pink", e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_4, e.team-1);
 				t_p = 1;
 			}
 			break;
@@ -772,7 +772,6 @@ void W_Nexball_Attack2(void)
 	if(!(balls & BALL_BASKET))
 		return;
 	W_SetupShot(self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
-//	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn();
 
 	missile.owner = self;
@@ -858,9 +857,9 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_model("models/weapons/g_porto.md3");
-		precache_model("models/weapons/v_porto.md3");
-		precache_model("models/weapons/h_porto.iqm");
+		precache_model(W_Model("g_porto.md3"));
+		precache_model(W_Model("v_porto.md3"));
+		precache_model(W_Model("h_porto.iqm"));
 		precache_model("models/elaser.mdl");
 		precache_sound("nexball/shoot1.wav");
 		precache_sound("nexball/shoot2.wav");
@@ -975,6 +974,12 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_GetTeamCount)
+{
+	ret_string = "nexball_team";
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
 	if(self.weapon == WEP_MORTAR)
@@ -992,6 +997,18 @@ MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_WantWeapon)
+{
+	ret_float = 0; // weapon is set a few lines later
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_AllowMobSpawning)
+{
+	ret_string = "You cannot spawn monsters in nexball!";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -1001,8 +1018,11 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, nexball_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, nexball_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, nexball_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

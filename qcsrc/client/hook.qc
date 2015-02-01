@@ -122,6 +122,9 @@ void Draw_GrapplingHook()
 	{
 		default:
 		case ENT_CLIENT_HOOK:
+			string suffix = "";
+			if(autocvar_cl_nexuiz_hook)
+				suffix = "_nexuiz";
 			intensity = 1;
 			offset = 0;
 			switch(t)
@@ -132,6 +135,7 @@ void Draw_GrapplingHook()
 				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
 				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
 			}
+			if(suffix) { tex = strcat(tex, suffix); }
 			break;
 		case ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);

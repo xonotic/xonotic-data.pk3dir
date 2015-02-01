@@ -766,6 +766,7 @@ void HUD_Weapons(void)
 						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
 						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
 						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case ammo_supercells:
 						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
 						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
 						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
@@ -1184,16 +1185,14 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 //
 void HUD_Powerups(void)
 {
-	float strength_time, shield_time, superweapons_time;
+	float superweapons_time;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
-		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
 		superweapons_time = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
 
 		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
@@ -1205,8 +1204,6 @@ void HUD_Powerups(void)
 	}
 	else
 	{
-		strength_time = 15;
-		shield_time = 27;
 		superweapons_time = 13;
 	}
 
@@ -1218,7 +1215,7 @@ void HUD_Powerups(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time, superweapons_time), 1));
+	HUD_Panel_DrawBg(bound(0, superweapons_time, 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1227,139 +1224,39 @@ void HUD_Powerups(void)
 
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
-	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
+	vector superweapons_offset = '0 0 0';
 
 	float superweapons_is = -1;
 
-	if(superweapons_time)
-	{
-		if(strength_time)
-		{
-			if(shield_time)
-				superweapons_is = 0;
-			else
-				superweapons_is = 2;
-		}
-		else
-		{
-			if(shield_time)
-				superweapons_is = 1;
-			else
-				superweapons_is = 2;
-		}
-	}
+	if(superweapons_time) { superweapons_is = 2; }
 
 	// FIXME handle superweapons here
-	if(superweapons_is == 0)
+	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-		{
-			mySize_x *= (1.0 / 3.0);
-			superweapons_offset_x = mySize_x;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = 2*mySize_x;
-			else
-				strength_offset_x = 2*mySize_x;
-		}
-		else
-		{
-			mySize_y *= (1.0 / 3.0);
-			superweapons_offset_y = mySize_y;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = 2*mySize_y;
-			else
-				strength_offset_y = 2*mySize_y;
-		}
+		mySize_x *= 0.5;
 	}
 	else
 	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-		{
-			mySize_x *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = mySize_x;
-			else
-				strength_offset_x = mySize_x;
-		}
-		else
-		{
-			mySize_y *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = mySize_y;
-			else
-				strength_offset_y = mySize_y;
-		}
+		mySize_y *= 0.5;
 	}
 
-	float shield_baralign, strength_baralign, superweapons_baralign;
-	float shield_iconalign, strength_iconalign, superweapons_iconalign;
+	float superweapons_baralign;
+	float superweapons_iconalign;
 
 	if (autocvar_hud_panel_powerups_flip)
 	{
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
 	}
 	else
 	{
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
-	}
-
-	if(superweapons_is == 0)
-	{
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = 2;
-	}
-	else if(superweapons_is == 1)
-	{
-		superweapons_offset = strength_offset;
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = strength_baralign;
-	}
-	else // if(superweapons_is == 2)
-	{
-		superweapons_offset = shield_offset;
-		superweapons_iconalign = shield_iconalign;
-		superweapons_baralign = shield_baralign;
-	}
-
-	if(shield_time)
-	{
-		const float maxshield = 30;
-		float shield = ceil(shield_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, autocvar_hud_progressbar_shield_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(shield > 1)
-				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
-			if(shield <= 5)
-				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
-		}
-	}
-
-	if(strength_time)
-	{
-		const float maxstrength = 30;
-		float strength = ceil(strength_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(strength > 1)
-				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
-			if(strength <= 5)
-				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
-		}
+		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
 	}
 
 	if(superweapons_time)
 	{
-		const float maxsuperweapons = 30;
+		float maxsuperweapons = 30;
 		float superweapons = ceil(superweapons_time);
 		if(autocvar_hud_panel_powerups_progressbar)
 			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, autocvar_hud_progressbar_superweapons_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -1875,6 +1772,168 @@ void HUD_Timer(void)
 
 // Radar (#6)
 //
+
+float HUD_Radar_Clickable()
+{
+	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
+}
+
+void HUD_Radar_Show_Maximized(float show,float clickable)
+{
+	hud_panel_radar_maximized = show;
+	hud_panel_radar_temp_hidden = 0;
+	
+	if ( show )
+	{
+		if (clickable)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hud_panel_radar_mouse = 1; 
+		}
+	}
+	else if ( hud_panel_radar_mouse )
+	{
+		hud_panel_radar_mouse = 0;
+		mouseClicked = 0;
+		if(autocvar_hud_cursormode)
+		if(!mv_active)
+			setcursormode(0);
+	}
+}
+void HUD_Radar_Hide_Maximized()
+{
+	HUD_Radar_Show_Maximized(false,false);
+}
+
+
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse || 
+		autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	{
+		HUD_Radar_Hide_Maximized();
+	}
+	else
+	{
+		// allow console/use binds to work without hiding the map
+		string con_keys;
+		float keys;
+		float i;
+		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+		
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			// Show scoreboard
+			if ( bInputType < 2 )
+			{
+				con_keys = findkeysforcommand("+showscores", 0);
+				keys = tokenize(con_keys);
+				for (i = 0; i < keys; ++i)
+				{
+					if ( nPrimary == stof(argv(i)) )
+					{
+						hud_panel_radar_temp_hidden = bInputType == 0;
+						return false;
+					}
+				}
+			}
+		}
+		else if ( bInputType == 0 )
+			HUD_Radar_Hide_Maximized();
+		
+		return false;
+	}
+
+	return true;
+}
+
+void HUD_Radar_Mouse()
+{
+	if ( !hud_panel_radar_mouse ) return;
+	if(mv_active) return;
+	
+	if ( intermission )
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+	
+	if(mouseClicked & S_MOUSE2)
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+	
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+	
+	
+	panel_size = autocvar_hud_panel_radar_maximized_size;
+	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+	panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+	panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		
+	if(mouseClicked & S_MOUSE1)
+	{
+		// click outside
+		if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x + panel_size_x ||
+			 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y + panel_size_y )
+		{
+			HUD_Radar_Hide_Maximized();
+			return;
+		}
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
+		string thecommand = ((gametype == MAPINFO_TYPE_CONQUEST) ? "cq_spawn" : "ons_spawn");
+		localcmd(sprintf("cmd %s %f %f %f",thecommand,pos_x,pos_y,pos_z));
+		
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+
+	vector cursorsize = '32 32 0';
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
 void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
@@ -1894,6 +1953,9 @@ void HUD_Radar(void)
 			}
 		}
 	}
+
+	if ( hud_panel_radar_temp_hidden )
+		return;
 
 	HUD_Panel_UpdateCvars();
 
@@ -2048,8 +2110,27 @@ void HUD_Radar(void)
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+
+	vector coord;
+	vector brightcolor;
 	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
+	{
+		if ( hud_panel_radar_mouse )
+		if ( tm.health > 0 )
+		if ( tm.team == myteam+1 )
+		{
+			coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(tm.origin));
+			if ( vlen(mousepos-coord) < 8 )
+			{
+				brightcolor_x = min(1,tm.teamradar_color_x*1.5);
+				brightcolor_y = min(1,tm.teamradar_color_y*1.5);
+				brightcolor_z = min(1,tm.teamradar_color_z*1.5);
+				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
+			}
+		}
+
 		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
@@ -2059,6 +2140,21 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
+
+	if ( hud_panel_radar_mouse )
+	{			
+		string message = "Click to select teleport destination";
+
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			message = "Click to select spawn location";
+		}
+
+		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, TRUE, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
+							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
+
+		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
+	}
 }
 
 // Score (#7)
@@ -2079,7 +2175,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 	float name_size = mySize_x*0.75;
 	float spacing_size = mySize_x*0.04;
-	const float highlight_alpha = 0.2;
+	float highlight_alpha = 0.2;
 	float i = 0, me_printed = 0, first_pl = 0;
 	string s;
 	if (autocvar__hud_configure)
@@ -2379,6 +2475,13 @@ void HUD_RaceTimer (void)
 		if(!autocvar_hud_panel_racetimer) return;
 		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
+		if(getstati(STAT_HEALTH) <= 0)
+		{
+			// reset timers if player died (double check in the case that serverside command fails)
+			race_laptime = 0;
+			race_checkpointtime = 0;
+			return;
+		}
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -2763,31 +2866,215 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	}
 }
 
+// VIP mod icons
+float redvip_prevframe, bluevip_prevframe, yellowvip_prevframe, pinkvip_prevframe; // status during previous frame
+float redvip_prevstatus, bluevip_prevstatus, yellowvip_prevstatus, pinkvip_prevstatus; // last remembered status
+float redvip_statuschange_time, bluevip_statuschange_time, yellowvip_statuschange_time, pinkvip_statuschange_time; // time when the status changed
+void HUD_Mod_VIP_Reset(void)
+{
+	redvip_prevstatus = bluevip_prevstatus = yellowvip_prevstatus = pinkvip_prevstatus = redvip_prevframe = bluevip_prevframe = yellowvip_prevframe = pinkvip_prevframe = redvip_statuschange_time = bluevip_statuschange_time = yellowvip_statuschange_time = pinkvip_statuschange_time = 0;
+}
+void HUD_Mod_VIP(vector pos, vector mySize)
+{
+	vector redvip_pos, bluevip_pos, yellowvip_pos, pinkvip_pos;
+	vector vip_size;
+	vector e1, e2;
+	float size1, size2;
+	float fs, fs2, fs3;
+	float f; // every function should have that
+
+	float redvip, bluevip, yellowvip, pinkvip, is_vip; // current status
+	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime, yellowvip_statuschange_elapsedtime, pinkvip_statuschange_elapsedtime; // time since the status changed
+	
+	redvip = (getstatf(STAT_VIP_RED) != 0);
+	bluevip = (getstatf(STAT_VIP_BLUE) != 0);
+	yellowvip = (getstatf(STAT_VIP_YELLOW) != 0);
+	pinkvip = (getstatf(STAT_VIP_PINK) != 0);
+	is_vip = (getstati(STAT_VIP) != 0);
+	
+	if(redvip || bluevip || yellowvip || pinkvip)
+		mod_active = 1;
+	else
+		mod_active = 0;
+
+	// when status CHANGES, set old status into prevstatus and current status into status
+	if (redvip != redvip_prevframe)
+	{
+		redvip_statuschange_time = time;
+		redvip_prevstatus = redvip_prevframe;
+		redvip_prevframe = redvip;
+	}
+
+	if (bluevip != bluevip_prevframe)
+	{
+		bluevip_statuschange_time = time;
+		bluevip_prevstatus = bluevip_prevframe;
+		bluevip_prevframe = bluevip;
+	}
+	
+	if (yellowvip != yellowvip_prevframe)
+	{
+		yellowvip_statuschange_time = time;
+		yellowvip_prevstatus = yellowvip_prevframe;
+		yellowvip_prevframe = yellowvip;
+	}
+	
+	if (pinkvip != pinkvip_prevframe)
+	{
+		pinkvip_statuschange_time = time;
+		pinkvip_prevstatus = pinkvip_prevframe;
+		pinkvip_prevframe = pinkvip;
+	}
+
+	redvip_statuschange_elapsedtime = time - redvip_statuschange_time;
+	bluevip_statuschange_elapsedtime = time - bluevip_statuschange_time;
+	yellowvip_statuschange_elapsedtime = time - yellowvip_statuschange_time;
+	pinkvip_statuschange_elapsedtime = time - pinkvip_statuschange_time;
+	
+	switch(team_count)
+	{
+		default:
+		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
+		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
+	}
+	
+	if(mySize_x > mySize_y)
+	{
+		size1 = mySize_x;
+		size2 = mySize_y;
+		e1 = eX;
+		e2 = eY;
+	}
+	else
+	{
+		size1 = mySize_y;
+		size2 = mySize_x;
+		e1 = eY;
+		e2 = eX;
+	}
+	
+	switch(myteam)
+	{
+		default:
+		case NUM_TEAM_1:
+		{
+			redvip_pos = pos;
+			bluevip_pos = pos + eX * fs2 * size1;
+			yellowvip_pos = pos - eX * fs2 * size1;
+			pinkvip_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_2:
+		{
+			redvip_pos = pos + eX * fs2 * size1;
+			bluevip_pos = pos;
+			yellowvip_pos = pos - eX * fs2 * size1;
+			pinkvip_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_3:
+		{
+			redvip_pos = pos + eX * fs3 * size1;
+			bluevip_pos = pos - eX * fs2 * size1;
+			yellowvip_pos = pos;
+			pinkvip_pos = pos + eX * fs2 * size1;
+			break;
+		}
+		case NUM_TEAM_4:
+		{
+			redvip_pos = pos - eX * fs2 * size1;
+			bluevip_pos = pos + eX * fs3 * size1;
+			yellowvip_pos = pos + eX * fs2 * size1;
+			pinkvip_pos = pos;
+			break;
+		}
+	}
+	vip_size = e1 * fs * size1 + e2 * size2;
+	
+	string red_icon = "", red_icon_prevstatus = "";
+	string blue_icon = "", blue_icon_prevstatus = "";
+	string yellow_icon = "", yellow_icon_prevstatus = "";
+	string pink_icon = "", pink_icon_prevstatus = "";
+	
+	if(redvip) { red_icon = "player_red"; }
+	if(bluevip) { blue_icon = "player_blue"; }
+	if(yellowvip) { yellow_icon = "player_yellow"; }
+	if(pinkvip) { pink_icon = "player_pink"; }
+
+	if(redvip_prevframe) { red_icon_prevstatus = "player_red"; }
+	if(bluevip_prevframe) { blue_icon_prevstatus = "player_blue"; }
+	if(yellowvip_prevframe) { yellow_icon_prevstatus = "player_yellow"; }
+	if(pinkvip_prevframe) { pink_icon_prevstatus = "player_pink"; }
+
+	if(is_vip)
+	switch(myteam)
+	{
+		case NUM_TEAM_1: red_icon = "notify_balldropped"; break;
+		case NUM_TEAM_2: blue_icon = "notify_balldropped"; break;
+		case NUM_TEAM_3: yellow_icon = "notify_balldropped"; break;
+		case NUM_TEAM_4: pink_icon = "notify_balldropped"; break;
+	}
+
+	f = bound(0, redvip_statuschange_elapsedtime*2, 1);
+	if(red_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(redvip_pos, red_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(red_icon)
+		drawpic_aspect_skin(redvip_pos, red_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+
+	f = bound(0, bluevip_statuschange_elapsedtime*2, 1);
+	if(blue_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(bluevip_pos, blue_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(blue_icon)
+		drawpic_aspect_skin(bluevip_pos, blue_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, yellowvip_statuschange_elapsedtime*2, 1);
+	if(yellow_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(yellowvip_pos, yellow_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(yellow_icon)
+		drawpic_aspect_skin(yellowvip_pos, yellow_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, pinkvip_statuschange_elapsedtime*2, 1);
+	if(pink_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pinkvip_pos, pink_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(pink_icon)
+		drawpic_aspect_skin(pinkvip_pos, pink_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+}
+
 // CTF HUD modicon section
-float redflag_prevframe, blueflag_prevframe; // status during previous frame
-float redflag_prevstatus, blueflag_prevstatus; // last remembered status
-float redflag_statuschange_time, blueflag_statuschange_time; // time when the status changed
+float redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe, neutralflag_prevframe; // status during previous frame
+float redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus, neutralflag_prevstatus; // last remembered status
+float redflag_statuschange_time, blueflag_statuschange_time, yellowflag_statuschange_time, pinkflag_statuschange_time, neutralflag_statuschange_time; // time when the status changed
 
 void HUD_Mod_CTF_Reset(void)
 {
-	redflag_prevstatus = blueflag_prevstatus = redflag_prevframe = blueflag_prevframe = redflag_statuschange_time = blueflag_statuschange_time = 0;
+	redflag_prevstatus = blueflag_prevstatus = yellowflag_prevstatus = pinkflag_prevstatus = neutralflag_prevstatus = 0;
+	redflag_prevframe = blueflag_prevframe = yellowflag_prevframe = pinkflag_prevframe = neutralflag_prevframe = 0;
+	redflag_statuschange_time = blueflag_statuschange_time = yellowflag_statuschange_time = pinkflag_statuschange_time = neutralflag_statuschange_time = 0;
 }
 
 void HUD_Mod_CTF(vector pos, vector mySize)
 {
-	vector redflag_pos, blueflag_pos;
+	vector redflag_pos, blueflag_pos, yellowflag_pos, pinkflag_pos, neutralflag_pos;
 	vector flag_size;
 	float f; // every function should have that
 
-	float redflag, blueflag; // current status
-	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
-	float stat_items;
+	float redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
+	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime, neutralflag_statuschange_elapsedtime; // time since the status changed
+	float ctf_oneflag; // one-flag CTF mode enabled/disabled
+	float stat_items = getstati(STAT_CTF_FLAGSTATUS, 0, 24);
+	float fs, fs2, fs3, size1, size2;
+	vector e1, e2;
 
-	stat_items = getstati(STAT_ITEMS, 0, 24);
-	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
-	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
+	redflag = (stat_items/CTF_RED_FLAG_TAKEN) & 3;
+	blueflag = (stat_items/CTF_BLUE_FLAG_TAKEN) & 3;
+	yellowflag = (stat_items/CTF_YELLOW_FLAG_TAKEN) & 3;
+	pinkflag = (stat_items/CTF_PINK_FLAG_TAKEN) & 3;
+	neutralflag = (stat_items/CTF_NEUTRAL_FLAG_TAKEN) & 3;
+	
+	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	if(redflag || blueflag)
+	if(redflag || blueflag || yellowflag || pinkflag || neutralflag)
 		mod_active = 1;
 	else
 		mod_active = 0;
@@ -2796,6 +3083,11 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		redflag = 1;
 		blueflag = 2;
+		if(team_count >= 3)
+			yellowflag = 2;
+		if(team_count >= 4)
+			pinkflag = 3;
+		ctf_oneflag = neutralflag = 0; // disable neutral flag in hud editor?
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
@@ -2813,8 +3105,32 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		blueflag_prevframe = blueflag;
 	}
 
+	if (yellowflag != yellowflag_prevframe)
+	{
+		yellowflag_statuschange_time = time;
+		yellowflag_prevstatus = yellowflag_prevframe;
+		yellowflag_prevframe = yellowflag;
+	}
+
+	if (pinkflag != pinkflag_prevframe)
+	{
+		pinkflag_statuschange_time = time;
+		pinkflag_prevstatus = pinkflag_prevframe;
+		pinkflag_prevframe = pinkflag;
+	}
+	
+	if (neutralflag != neutralflag_prevframe)
+	{
+		neutralflag_statuschange_time = time;
+		neutralflag_prevstatus = neutralflag_prevframe;
+		neutralflag_prevframe = neutralflag;
+	}
+
 	redflag_statuschange_elapsedtime = time - redflag_statuschange_time;
 	blueflag_statuschange_elapsedtime = time - blueflag_statuschange_time;
+	yellowflag_statuschange_elapsedtime = time - yellowflag_statuschange_time;
+	pinkflag_statuschange_elapsedtime = time - pinkflag_statuschange_time;
+	neutralflag_statuschange_elapsedtime = time - neutralflag_statuschange_time;
 
 	float BLINK_FACTOR = 0.15;
 	float BLINK_BASE = 0.85;
@@ -2833,7 +3149,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: red_icon = "flag_red_lost"; break;
 		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
+			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_1))
 				red_icon = "flag_red_shielded";
 			else
 				red_icon = string_null;
@@ -2846,7 +3162,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(redflag == 3)
 				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
+			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_1))
 				red_icon_prevstatus = "flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
@@ -2861,7 +3177,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: blue_icon = "flag_blue_lost"; break;
 		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
+			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_2))
 				blue_icon = "flag_blue_shielded";
 			else
 				blue_icon = string_null;
@@ -2874,32 +3190,164 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(blueflag == 3)
 				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
+			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_2))
 				blue_icon_prevstatus = "flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
 			break;
 	}
 
-	if(mySize_x > mySize_y) {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eX * 0.5 * mySize_x;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eX * 0.5 * mySize_x;
-		}
-		flag_size = eX * 0.5 * mySize_x + eY * mySize_y;
-	} else {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eY * 0.5 * mySize_y;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eY * 0.5 * mySize_y;
-		}
-		flag_size = eY * 0.5 * mySize_y + eX * mySize_x;
+	string yellow_icon, yellow_icon_prevstatus;
+	float yellow_alpha, yellow_alpha_prevstatus;
+	yellow_alpha = yellow_alpha_prevstatus = 1;
+	switch(yellowflag) {
+		case 1: yellow_icon = "flag_yellow_taken"; break;
+		case 2: yellow_icon = "flag_yellow_lost"; break;
+		case 3: yellow_icon = "flag_yellow_carrying"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_3))
+				yellow_icon = "flag_yellow_shielded";
+			else
+				yellow_icon = string_null;
+			break;
 	}
+	switch(yellowflag_prevstatus) {
+		case 1: yellow_icon_prevstatus = "flag_yellow_taken"; break;
+		case 2: yellow_icon_prevstatus = "flag_yellow_lost"; break;
+		case 3: yellow_icon_prevstatus = "flag_yellow_carrying"; yellow_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if(yellowflag == 3)
+				yellow_icon_prevstatus = "flag_yellow_carrying"; // make it more visible
+			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_3))
+				yellow_icon_prevstatus = "flag_yellow_shielded";
+			else
+				yellow_icon_prevstatus = string_null;
+			break;
+	}
+	
+	string pink_icon, pink_icon_prevstatus;
+	float pink_alpha, pink_alpha_prevstatus;
+	pink_alpha = pink_alpha_prevstatus = 1;
+	switch(pinkflag) {
+		case 1: pink_icon = "flag_pink_taken"; break;
+		case 2: pink_icon = "flag_pink_lost"; break;
+		case 3: pink_icon = "flag_pink_carrying"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_4))
+				pink_icon = "flag_pink_shielded";
+			else
+				pink_icon = string_null;
+			break;
+	}
+	switch(pinkflag_prevstatus) {
+		case 1: pink_icon_prevstatus = "flag_pink_taken"; break;
+		case 2: pink_icon_prevstatus = "flag_pink_lost"; break;
+		case 3: pink_icon_prevstatus = "flag_pink_carrying"; pink_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if(pinkflag == 3)
+				pink_icon_prevstatus = "flag_pink_carrying"; // make it more visible
+			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_4))
+				pink_icon_prevstatus = "flag_pink_shielded";
+			else
+				pink_icon_prevstatus = string_null;
+			break;
+	}
+	
+	string neutral_icon, neutral_icon_prevstatus;
+	float neutral_alpha, neutral_alpha_prevstatus;
+	neutral_alpha = neutral_alpha_prevstatus = 1;
+	switch(neutralflag) {
+		case 1: neutral_icon = "flag_neutral_taken"; break;
+		case 2: neutral_icon = "flag_neutral_lost"; break;
+		case 3: neutral_icon = "flag_neutral_carrying"; neutral_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if((stat_items & CTF_SHIELDED))
+				neutral_icon = "flag_neutral_shielded";
+			else
+				neutral_icon = string_null;
+			break;
+	}
+	switch(neutralflag_prevstatus) {
+		case 1: neutral_icon_prevstatus = "flag_neutral_taken"; break;
+		case 2: neutral_icon_prevstatus = "flag_neutral_lost"; break;
+		case 3: neutral_icon_prevstatus = "flag_neutral_carrying"; neutral_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if(neutralflag == 3)
+				neutral_icon_prevstatus = "flag_neutral_carrying"; // make it more visible
+			else if((stat_items & CTF_SHIELDED))
+				neutral_icon_prevstatus = "flag_neutral_shielded";
+			else
+				neutral_icon_prevstatus = string_null;
+			break;
+	}
+	
+	if(ctf_oneflag)
+	{
+		// hacky, but these aren't needed
+		red_icon = red_icon_prevstatus = blue_icon = blue_icon_prevstatus = yellow_icon = yellow_icon_prevstatus = pink_icon = pink_icon_prevstatus = string_null;
+		fs = fs2 = fs3 = 1;
+	}
+	else switch(team_count)
+	{
+		default:
+		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
+		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
+	}
+
+	if(mySize_x > mySize_y)
+	{
+		size1 = mySize_x;
+		size2 = mySize_y;
+		e1 = eX;
+		e2 = eY;
+	}
+	else
+	{
+		size1 = mySize_y;
+		size2 = mySize_x;
+		e1 = eY;
+		e2 = eX;
+	}
+	
+	switch(myteam)
+	{
+		default:
+		case NUM_TEAM_1:
+		{
+			redflag_pos = pos;
+			blueflag_pos = pos + eX * fs2 * size1;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_2:
+		{
+			redflag_pos = pos + eX * fs2 * size1;
+			blueflag_pos = pos;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_3:
+		{
+			redflag_pos = pos + eX * fs3 * size1;
+			blueflag_pos = pos - eX * fs2 * size1;
+			yellowflag_pos = pos;
+			pinkflag_pos = pos + eX * fs2 * size1;
+			break;
+		}
+		case NUM_TEAM_4:
+		{
+			redflag_pos = pos - eX * fs2 * size1;
+			blueflag_pos = pos + eX * fs3 * size1;
+			yellowflag_pos = pos + eX * fs2 * size1;
+			pinkflag_pos = pos;
+			break;
+		}
+	}
+	neutralflag_pos = pos;
+	flag_size = e1 * fs * size1 + e2 * size2;
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
@@ -2912,6 +3360,24 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
+
+	f = bound(0, yellowflag_statuschange_elapsedtime*2, 1);
+	if(yellow_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(yellowflag_pos, yellow_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+	if(yellow_icon)
+		drawpic_aspect_skin(yellowflag_pos, yellow_icon, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, pinkflag_statuschange_elapsedtime*2, 1);
+	if(pink_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pinkflag_pos, pink_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+	if(pink_icon)
+		drawpic_aspect_skin(pinkflag_pos, pink_icon, flag_size, '1 1 1', panel_fg_alpha * pink_alpha * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, neutralflag_statuschange_elapsedtime*2, 1);
+	if(neutral_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(neutralflag_pos, neutral_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * neutral_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+	if(neutral_icon)
+		drawpic_aspect_skin(neutralflag_pos, neutral_icon, flag_size, '1 1 1', panel_fg_alpha * neutral_alpha * f, DRAWFLAG_NORMAL);
 }
 
 // Keyhunt HUD modicon section
@@ -2919,14 +3385,17 @@ vector KH_SLOTS[4];
 
 void HUD_Mod_KH(vector pos, vector mySize)
 {
-	mod_active = 1; // keyhunt should never hide the mod icons panel
-
 	// Read current state
 
-	float state = getstati(STAT_KH_KEYS);
+	float state = getstati(STAT_KH_KEYSTATUS);
 	float i, key_state;
 	float all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
+
+	if(state)
+		mod_active = 1;
+	else
+		mod_active = 0;
 
 	for(i = 0; i < 4; ++i)
 	{
@@ -3374,9 +3843,11 @@ void HUD_ModIcons_SetFunc()
 		case MAPINFO_TYPE_CTS:
 		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
 		case MAPINFO_TYPE_CA:
+		case MAPINFO_TYPE_JAILBREAK:
 		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
 		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
 		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+		case MAPINFO_TYPE_VIP:         	HUD_ModIcons_GameType = HUD_Mod_VIP; break;
 	}
 }
 
@@ -3420,6 +3891,114 @@ void HUD_ModIcons(void)
 	else
 		HUD_ModIcons_GameType(panel_pos, panel_size);
 
+	draw_endBoldFont();
+}
+
+void HUD_DiscoMode(void)
+{
+	// vectors for top right, bottom right, bottom and bottom left corners
+
+	vector topright;
+	vector bottom;
+	vector bottomright;
+	vector bottomleft;
+
+	topright_x = vid_conwidth;
+	topright_y = 0;
+	topright_z = 0;
+
+	bottom_x = vid_conwidth/2;
+	bottom_y = vid_conheight;
+	bottom_z = 0;
+
+	bottomright_x = vid_conwidth;
+	bottomright_y = vid_conheight;
+	bottomright_z = 0;
+
+	bottomleft_x = 0;
+	bottomleft_y = vid_conheight;
+	bottomleft_z = 0;
+
+	local vector dmpos;
+	local float dmalpha;
+	dmpos = bottomleft;
+	local vector offset = '0 0 0';
+
+	dmalpha = 1;
+
+	local vector dmcolor = '0 0 1';
+	dmcolor_x = random();
+	
+	drawfill('0 0 0', bottomright, dmcolor, dmalpha * random(), DRAWFLAG_ADDITIVE);
+
+	local string mycolor = "";
+	local string mychar;
+	local float j;
+	local string dmstring = _("^1D^2i^3s^4c^5o ^6Mode");
+
+	local float k;
+	
+	local float discoball;
+	local float discoballs = 8;
+	for ( k = 0; k < discoballs; ++k )
+	{
+		dmpos_y = vid_conheight / 2;
+		dmpos_x = vid_conwidth / 2;
+		
+		//offset_y = 32 * (k+1) * sin(3 * time) * (mod(k, 2)? 1 : -1)  * (mod(k, 3)? 1 : -1);
+		//offset_x = offset_y * (mod(k, 2)? -1 : 1);// * (mod(k, 3)? 0.5 : 1);
+		offset_x = 48 * (k+1) * sin(4*time+10*k) * cos(6.28*k/discoballs);
+		offset_y = 48 * (k+1) * sin(4*time+10*k) * sin(6.28*k/discoballs);
+		
+		dmcolor_x = 1;
+		dmcolor_y = cos(16*time+k)/2+0.5;
+		dmcolor_z = 0;
+		
+		discoball = 32 + (discoballs-k)*8 + 16*(cos(5*time+10*k));
+		offset_x -= discoball/2;
+		offset_y -= discoball/2;
+		
+		dmalpha = 0.6 + cos(64*time+k)*0.3;
+		
+		drawfill(dmpos + offset, discoball*'1 1 0', dmcolor, dmalpha, DRAWFLAG_NORMAL);
+		
+	}
+	
+	draw_beginBoldFont();
+
+	for(k = 0; k < 2; ++k)
+	{
+		dmpos_y = vid_conheight / 2 - 12;
+		dmpos_x = 0.5 * (vid_conwidth - 0.6025 * strlennocol(dmstring) * 24);
+		for(j = 0; j < strlen(dmstring); ++j)
+		{
+			mychar = substring(dmstring, j, 1);
+
+			if(mychar == "^")
+			{
+				if(substring(dmstring, j+1, 1) == "x")
+				{
+					mycolor = substring(dmstring, j, 5);
+					j += 5;
+				}
+				else
+				{
+					mycolor = substring(dmstring, j, 2);
+					++j;
+				}
+				continue;
+			}
+
+			offset_y = 10 * ((k*10)+1) * cos(dmpos_x + 3 * time) * ((j % 2)? 1 : -1) * (k? 1 : -1);
+			offset_x = offset_y * ((j % 2)? -1 : 1);
+			local string resultstr = strcat(mycolor, mychar);
+
+			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
+			dmpos_x += stringwidth(resultstr, TRUE, '24 24 0');
+			drawcolorcodedstring(dmpos + offset, resultstr, '24 24 0', dmalpha * 0.8, DRAWFLAG_ADDITIVE);
+		}
+	}
+	
 	draw_endBoldFont();
 }
 
@@ -3695,7 +4274,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(player_localentnum - 1), fovlock);
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -3742,6 +4321,25 @@ void HUD_InfoMessages(void)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
 			drawInfoMessage(s)
+		}
+
+		if(autocvar_cl_showspectators)
+		if(num_spectators)
+		//if(spectatee_status != -1)
+		{
+			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
+			//drawInfoMessage(s)
+			float limit = min(num_spectators, MAX_SPECTATORS);
+			float i;
+			for(i = 0; i < limit; ++i)
+			{
+				float slot = spectatorlist[i];
+				if(i == 0)
+					s = strcat(s, " ^3", GetPlayerName(slot));
+				else
+					s = strcat("^3", GetPlayerName(slot));
+				drawInfoMessage(s)
+			}
 		}
 
 		string blinkcolor;
@@ -4227,7 +4825,15 @@ void HUD_CenterPrint (void)
 	}
 	HUD_Panel_UpdateCvars();
 
-	if(scoreboard_fade_alpha)
+	if ( HUD_Radar_Clickable() )
+	{
+		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+			return;
+
+		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
+	}
+	else if(scoreboard_fade_alpha)
 	{
 		hud_fade_alpha = hud_fade_alpha_save;
 
@@ -4402,6 +5008,595 @@ void HUD_CenterPrint (void)
 	}
 }
 
+// QuickMenu (#17)
+//
+// QUICKMENU_MAXLINES must be <= 10
+#define QUICKMENU_MAXLINES 10
+#define QUICKMENU_MAXENTRIES 256
+string QuickMenu_Command[QUICKMENU_MAXLINES];
+string QuickMenu_Description[QUICKMENU_MAXLINES];
+float QuickMenu_CurrentPage;
+float QuickMenu_IsLastPage;
+// each quickmenu entry (submenu or command) is composed of 2 entries in the buffer
+#define QUICKMENU_BUFFER_MAXENTRIES 2*QUICKMENU_MAXENTRIES
+var float QuickMenu_Buffer = -1;
+float QuickMenu_Buffer_Size;
+float QuickMenu_Buffer_Index;
+string QuickMenu_CurrentSubMenu;
+float QuickMenu_CurrentPage_FirstEntry;
+var float QuickMenu_Entries;
+float QuickMenu_TimeOut;
+void HUD_QuickMenu_load_entry(float i, string s, string s1)
+{
+	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
+	if (QuickMenu_Description[i])
+		strunzone(QuickMenu_Description[i]);
+	QuickMenu_Description[i] = strzone(s);
+	if (QuickMenu_Command[i])
+		strunzone(QuickMenu_Command[i]);
+	QuickMenu_Command[i] = strzone(s1);
+}
+void HUD_QuickMenu_clear_entry(float i)
+{
+	if (QuickMenu_Description[i])
+		strunzone(QuickMenu_Description[i]);
+	QuickMenu_Description[i] = string_null;
+	if (QuickMenu_Command[i])
+		strunzone(QuickMenu_Command[i]);
+	QuickMenu_Command[i] = string_null;
+}
+
+void HUD_QuickMenu_Load_DefaultEntries();
+float HUD_QuickMenu_Buffer_Init()
+{
+	float fh = -1;
+	string s;
+	if(autocvar_hud_panel_quickmenu_file != "")
+	if(autocvar_hud_panel_quickmenu_file != "0")
+		fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+	if(fh < 0)
+	{
+		QuickMenu_Buffer = buf_create();
+		if(QuickMenu_Buffer < 0)
+			return false;
+		HUD_QuickMenu_Load_DefaultEntries();
+		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+		return true;
+	}
+
+	QuickMenu_Buffer = buf_create();
+	if (QuickMenu_Buffer < 0)
+	{
+		fclose(fh);
+		return false;
+	}
+
+	QuickMenu_Buffer_Size = 0;
+	while((s = fgets(fh)) && QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES)
+	{
+		// first skip invalid entries, so we don't check them anymore
+		float argc;
+		argc = tokenize_console(s);
+		if(argc == 0 || argc > 2)
+			continue;
+		if(argv(0) == "")
+			continue;
+		if(argc == 2 && argv(1) == "")
+			continue;
+
+		if(argc == 1)
+			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+		else
+		{
+			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
+			++QuickMenu_Buffer_Size;
+			bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, argv(1)); // command
+		}
+		++QuickMenu_Buffer_Size;
+		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	}
+
+	if (QuickMenu_Buffer_Size <= 0)
+	{
+		buf_del(QuickMenu_Buffer);
+		QuickMenu_Buffer = -1;
+	}
+	fclose(fh);
+	return true;
+}
+
+void HUD_QuickMenu_Buffer_Close()
+{
+	if (QuickMenu_Buffer >= 0)
+	{
+		buf_del(QuickMenu_Buffer);
+		QuickMenu_Buffer = -1;
+		QuickMenu_Buffer_Size = 0;
+	}
+}
+
+void HUD_QuickMenu_Close()
+{
+	if (QuickMenu_CurrentSubMenu)
+		strunzone(QuickMenu_CurrentSubMenu);
+	QuickMenu_CurrentSubMenu = string_null;
+	float i;
+	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
+		HUD_QuickMenu_clear_entry(i);
+	QuickMenu_Entries = 0;
+	hud_panel_quickmenu = 0;
+	mouseClicked = 0;
+	prevMouseClicked = 0;
+	HUD_QuickMenu_Buffer_Close();
+
+	if(autocvar_hud_cursormode)
+	if(!mv_active)
+		setcursormode(0);
+}
+
+// It assumes submenu open tag is already detected
+void HUD_QuickMenu_skip_submenu(string submenu)
+{
+	string s, z_submenu;
+	z_submenu = strzone(submenu);
+	for(++QuickMenu_Buffer_Index ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+	{
+		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+		if(substring(s, 0, 1) != "S")
+			continue;
+		if(substring(s, 1, strlen(s) - 1) == z_submenu) // submenu end
+			break;
+		HUD_QuickMenu_skip_submenu(substring(s, 1, strlen(s) - 1));
+	}
+	strunzone(z_submenu);
+}
+
+float HUD_QuickMenu_IsOpened()
+{
+	return (QuickMenu_Entries > 0);
+}
+
+// new_page 0 means page 0, new_page != 0 means next page
+float QuickMenu_Buffer_Index_Prev;
+float HUD_QuickMenu_Page(string target_submenu, float new_page)
+{
+	string s, z_submenu;
+
+	if (new_page == 0)
+		QuickMenu_CurrentPage = 0;
+	else
+		++QuickMenu_CurrentPage;
+	QuickMenu_CurrentPage_FirstEntry = QuickMenu_CurrentPage * (QUICKMENU_MAXLINES - 2);
+
+	z_submenu = strzone(target_submenu);
+	if (QuickMenu_CurrentSubMenu)
+		strunzone(QuickMenu_CurrentSubMenu);
+	QuickMenu_CurrentSubMenu = strzone(z_submenu);
+
+	QuickMenu_IsLastPage = TRUE;
+	QuickMenu_Entries = 0;
+
+	QuickMenu_Buffer_Index = 0;
+	if (z_submenu != "")
+	{
+		// skip everything until the submenu open tag is found
+		for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+		{
+			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+			if(substring(s, 0, 1) == "S" && substring(s, 1, strlen(s) - 1) == z_submenu)
+			{
+				// printf("^3 beginning of %s\n", z_submenu);
+				++QuickMenu_Buffer_Index;
+				break;
+			}
+			// printf("^1 skipping %s\n", s);
+		}
+	}
+	float total = 0;
+	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
+	{
+		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+
+		if(z_submenu != "" && substring(s, 1, strlen(s) - 1) == z_submenu)
+		{
+			// printf("^3 end of %s\n", z_submenu);
+			break;
+		}
+
+		if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		{
+			++QuickMenu_Entries;
+			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
+				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
+			else if(QuickMenu_Entries == QUICKMENU_MAXLINES)
+			{
+				HUD_QuickMenu_clear_entry(QUICKMENU_MAXLINES - 1);
+				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
+				QuickMenu_IsLastPage = FALSE;
+				break;
+			}
+		}
+
+		// NOTE: entries are loaded starting from 1, not from 0
+		if(substring(s, 0, 1) == "S") // submenu
+		{
+			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, strlen(s) - 1), "");
+			HUD_QuickMenu_skip_submenu(substring(s, 1, strlen(s) - 1));
+		}
+		else if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		{
+			++QuickMenu_Buffer_Index;
+			string cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, strlen(s) - 1), cmd);
+		}
+
+		++total;
+	}
+	strunzone(z_submenu);
+	if (QuickMenu_Entries == 0)
+	{
+		HUD_QuickMenu_Close();
+		return 0;
+	}
+	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	return 1;
+}
+
+void HUD_QuickMenu_Open()
+{
+	if(!HUD_QuickMenu_Buffer_Init()) return;
+
+	hud_panel_quickmenu = 1;
+	if(autocvar_hud_cursormode)
+		setcursormode(1);
+	hudShiftState = 0;
+
+	HUD_QuickMenu_Page("", 0);
+}
+
+float HUD_QuickMenu_ActionForNumber(float num)
+{
+	if (!QuickMenu_IsLastPage)
+	{
+		if (num < 0 || num >= QUICKMENU_MAXLINES)
+			return 0;
+		if (num == QUICKMENU_MAXLINES - 1)
+			return 0;
+		if (num == 0)
+		{
+			HUD_QuickMenu_Page(QuickMenu_CurrentSubMenu, +1);
+			return 0;
+		}
+	} else if (num <= 0 || num > QuickMenu_Entries)
+		return 0;
+
+	if (QuickMenu_Command[num] != "")
+	{
+		localcmd(strcat("\n", QuickMenu_Command[num], "\n"));
+		return 1;
+	}
+	if (QuickMenu_Description[num] != "")
+		HUD_QuickMenu_Page(QuickMenu_Description[num], 0);
+	return 0;
+}
+
+float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	// we only care for keyboard events
+	if(bInputType == 2)
+		return false;
+
+	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	// allow console bind to work
+	string con_keys;
+	float keys;
+	con_keys = findkeysforcommand("toggleconsole", 0);
+	keys = tokenize(con_keys); // findkeysforcommand returns data for this
+
+	float hit_con_bind = 0, i;
+	for (i = 0; i < keys; ++i)
+	{
+		if(nPrimary == stof(argv(i)))
+			hit_con_bind = 1;
+	}
+
+	if(bInputType == 0) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else if(bInputType == 1) {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+	}
+
+	if(nPrimary == K_ESCAPE)
+	{
+		if (bInputType == 1)
+			return true;
+		HUD_QuickMenu_Close();
+	}
+	else if(nPrimary >= '0' && nPrimary <= '9')
+	{
+		if (bInputType == 1)
+			return true;
+		HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
+	}
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if(hit_con_bind)
+		return false;
+
+	return true;
+}
+void HUD_QuickMenu_Mouse()
+{
+	if(mv_active) return;
+
+	if(!mouseClicked)
+	if(prevMouseClicked & S_MOUSE2)
+	{
+		HUD_QuickMenu_Close();
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars()
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float first_entry_pos, entries_height;
+	vector fontsize;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y);
+
+	if (mousepos_x >= panel_pos_x && mousepos_y >= first_entry_pos && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= first_entry_pos + entries_height)
+	{
+		float entry_num;
+		entry_num = floor((mousepos_y - first_entry_pos) / fontsize_y);
+		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
+		{
+			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
+			vector color;
+			if(mouseClicked & S_MOUSE1)
+				color = '0.5 1 0.5';
+			else if(hudShiftState & S_CTRL)
+				color = '1 1 0.3';
+			else
+				color = '1 1 1';
+			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
+
+			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
+			{
+				float f;
+				if (entry_num < QUICKMENU_MAXLINES - 1)
+					f = HUD_QuickMenu_ActionForNumber(entry_num + 1);
+				else
+					f = HUD_QuickMenu_ActionForNumber(0);
+				if(f && !(hudShiftState & S_CTRL))
+					HUD_QuickMenu_Close();
+			}
+		}
+	}
+
+	vector cursorsize = '32 32 0';
+	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+
+	prevMouseClicked = mouseClicked;
+}
+void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
+{
+	string entry;
+	float offset;
+	entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	if (autocvar_hud_panel_quickmenu_align > 0)
+	{
+		offset = (panel_size_x - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+	}
+	else
+		drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+}
+void HUD_QuickMenu(void)
+{
+	if(!autocvar__hud_configure)
+	{
+		if (hud_configure_prev && hud_configure_prev != -1)
+			HUD_QuickMenu_Close();
+
+		if(!hud_draw_maximized) return;
+		if(mv_active) return;
+		//if(!autocvar_hud_panel_quickmenu) return;
+		if(!hud_panel_quickmenu) return;
+
+		if(time > QuickMenu_TimeOut)
+		{
+			HUD_QuickMenu_Close();
+			return;
+		}
+	}
+	else
+	{
+		if(!HUD_QuickMenu_IsOpened())
+		{
+			QuickMenu_Entries = 1;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			// although real command doesn't matter here, it must not be empty
+			// otherwise the entry is displayed like a submenu
+			for (; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "-");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+			QuickMenu_IsLastPage = FALSE;
+		}
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	HUD_Panel_DrawBg(1);
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	float i;
+	vector fontsize;
+	string color;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+
+	if (!QuickMenu_IsLastPage)
+	{
+		color = "^5";
+		HUD_QuickMenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
+	}
+	else
+		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+
+	for (i = 1; i <= QuickMenu_Entries; ++i) {
+		if (QuickMenu_Description[i] == "")
+			break;
+		if (QuickMenu_Command[i] == "")
+			color = "^4";
+		else
+			color = "^3";
+		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Description[i]), fontsize);
+		panel_pos_y += fontsize_y;
+	}
+}
+
+#define QUICKMENU_SMENU(submenu) \
+	if(QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES) \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", submenu)); \
+	++QuickMenu_Buffer_Size;
+
+#define QUICKMENU_ENTRY(title,command) { \
+	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
+	{ \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", title)); \
+		++QuickMenu_Buffer_Size; \
+		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, command); \
+	} \
+	++QuickMenu_Buffer_Size; \
+}
+
+// useful to Translate a string inside the Command
+#define QUICKMENU_ENTRY_TC(title,command,text,translated_text) \
+	if(cvar_string("prvm_language") == "en") \
+		QUICKMENU_ENTRY(title, sprintf(command, text)) \
+	else if(!autocvar_hud_panel_quickmenu_translatecommands || translated_text == text) \
+		QUICKMENU_ENTRY(strcat("(en)", title), sprintf(command, text)) \
+	else \
+		QUICKMENU_ENTRY(strcat("(", cvar_string("prvm_language"), ")", title), sprintf(command, translated_text))
+
+void HUD_QuickMenu_Load_DefaultEntries()
+{
+QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Chat")))
+
+QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^quad soon")), "say_team %s", "quad soon", CTX(_("QMCMD^quad soon")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^free item, icon")), "say_team %s; g_waypointsprite_team_here_p", "free item %x^7 (l:%y^7)", CTX(_("QMCMD^free item %x^7 (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^took item, icon")), "say_team %s; g_waypointsprite_team_here", "took item (l:%l^7)", CTX(_("QMCMD^took item (l:%l^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^negative")), "say_team %s", "negative", CTX(_("QMCMD^negative")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^positive")), "say_team %s", "positive", CTX(_("QMCMD^positive")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^need help, icon")), "say_team %s; g_waypointsprite_team_helpme; cmd voice needhelp", "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^enemy seen, icon")), "say_team %s; g_waypointsprite_team_danger_p; cmd voice incoming", "enemy seen (l:%y^7)", CTX(_("QMCMD^enemy seen (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^flag seen, icon")), "say_team %s; g_waypointsprite_team_here_p; cmd voice seenflag", "flag seen (l:%y^7)", CTX(_("QMCMD^flag seen (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^defending, icon")), "say_team %s; g_waypointsprite_team_here", "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^roaming, icon")), "say_team %s; g_waypointsprite_team_here", "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^attacking, icon")), "say_team %s; g_waypointsprite_team_here", "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)", CTX(_("QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
+	QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
+QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")))
+
+QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
+	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")))
+		QUICKMENU_ENTRY(CTX(_("QMCMD^1st/3rd person view")), "toggle chase_active")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine on/off")), "toggle cl_forceplayermodels")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players on/off")), "toggle hud_shownames")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon on/off")), "toggle crosshair_per_weapon")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^FPS on/off")), "toggle hud_panel_engineinfo")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph on/off")), "toggle shownetgraph")
+	QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")))
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")))
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound on/off")), "toggle cl_hitsound")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")))
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
+		QUICKMENU_ENTRY(CTX(_("QMCMD^1st person")), "chase_active 0; -use")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person free")), "chase_active 1; +use")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person behind")), "chase_active 1; -use")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Spectator camera")))
+
+	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Increase speed")), "weapnext")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Decrease speed")), "weapprev")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision off")), "-use")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Wall collision on")), "+use")
+	QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")))
+	
+	QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
+QUICKMENU_SMENU(CTX(_("QMCMD^Settings")))
+
+QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
+	QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
+	QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
+	QUICKMENU_ENTRY(CTX(_("QMCMD^Reduce match time")), "vcall reducematchtime")
+	QUICKMENU_ENTRY(CTX(_("QMCMD^Extend match time")), "vcall extendmatchtime")
+	QUICKMENU_ENTRY(CTX(_("QMCMD^Shuffle teams")), "vcall shuffleteams")
+QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
+}
+#undef QUICKMENU_SMENU
+#undef QUICKMENU_ENTRY
+
+
 // Buffs (#18)
 //
 void HUD_Buffs(void)
@@ -4462,17 +5657,38 @@ void HUD_Buffs(void)
 }
 
 
+// Minigame
+//
+#include "../common/minigames/cl_minigames_hud.qc"
+
 /*
 ==================
 Main HUD system
 ==================
 */
 
+float HUD_Panel_CheckFlags(float showflags)
+{
+	if ( HUD_Minigame_Showpanels() )
+		return showflags & PANEL_SHOW_MINIGAME;
+	return showflags & PANEL_SHOW_MAINGAME;
+}
+
+void HUD_Panel_Draw(entity panent)
+{
+	panel = panent;
+	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+		panel.panel_draw();
+}
+
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_CTF)
-		HUD_Mod_CTF_Reset();
+	switch(gametype)
+	{
+		case MAPINFO_TYPE_CTF: HUD_Mod_CTF_Reset(); break;
+		case MAPINFO_TYPE_VIP: HUD_Mod_VIP_Reset(); break;
+	}
 }
 
 void HUD_Main (void)
@@ -4492,16 +5708,24 @@ void HUD_Main (void)
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
 
+	if ( getstati(STAT_DISCO_MODE) )
+		HUD_DiscoMode();
+
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
 		return;
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
+	{
+		hud_fade_alpha = 1;
+		HUD_Panel_Draw(HUD_PANEL(VOTE));
+		hud_fade_alpha = 0;
 		return;
+	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -4601,14 +5825,16 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		(panel = hud_panel[panel_order[i]]).panel_draw();
+		HUD_Panel_Draw(hud_panel[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		(panel = HUD_PANEL(RADAR)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
-		(panel = HUD_PANEL(CHAT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CHAT));
+	if(hud_panel_quickmenu)
+		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 
 	HUD_Configure_PostDraw();
 

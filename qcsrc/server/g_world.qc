@@ -220,6 +220,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_weaponstats_");
 		BADPREFIX("sv_waypointsprite_");
 		BADCVAR("rescan_pending");
+		BADPREFIX("sv_allow_customplayermodels");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
@@ -236,6 +237,16 @@ void cvar_changes_init()
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
+		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
+		BADCVAR("g_vip");
+		BADCVAR("g_vip_teams");
+		BADCVAR("g_jailbreak");
+		BADCVAR("g_jailbreak_teams");
+		BADCVAR("g_infection");
+		BADCVAR("g_infection_teams");
+		BADCVAR("g_invasion");
+		BADCVAR("g_invasion_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -334,6 +345,8 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_freezetag_teams_override");
+		BADCVAR("g_conquest_teams_override");
+		BADCVAR("g_jailbreak_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
@@ -516,10 +529,13 @@ void spawnfunc___init_dedicated_server(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -564,10 +580,15 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+
+	initialize_minigames();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -675,12 +696,6 @@ void spawnfunc_worldspawn (void)
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
 
-		// TODO to mutator system
-		if(autocvar_g_powerups == 0)
-			s = strcat(s, ":no_powerups");
-		if(autocvar_g_powerups > 0)
-			s = strcat(s, ":powerups");
-
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
 	}
@@ -737,6 +752,7 @@ void spawnfunc_worldspawn (void)
 	WeaponStats_Init();
 
 	WepSet_AddStat();
+	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -744,12 +760,11 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
-	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
-	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
+	addstat(STAT_SUPERCELLS, AS_INT, ammo_supercells);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
 	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
@@ -777,6 +792,27 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 
+	// new properties
+	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
+	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
+	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
+	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
+	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
+	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
+	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
+	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
+	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
+	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
+	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
+	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
+
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
@@ -787,6 +823,7 @@ void spawnfunc_worldspawn (void)
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
+	addstat(STAT_DISCO_MODE, AS_INT, discomode);
 
 	next_pingtime = time + 5;
 
@@ -809,6 +846,9 @@ void spawnfunc_worldspawn (void)
 	ClientInit_Spawn();
 	RandomSeed_Spawn();
 	PingPLReport_Spawn();
+
+	if(!g_jailbreak)
+		InitializeEntity(world, JB_NonJBInit, INITPRIO_LAST);
 
 	CheatInit();
 
@@ -868,15 +908,9 @@ void spawnfunc_light (void)
 	remove(self);
 }
 
-string GetGametype()
-{
-	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
-}
+string GetGametype() { return MapInfo_Type_ToString(MapInfo_LoadedGametype); }
 
-string GetMapname()
-{
-	return mapname;
-}
+string GetMapname() { return mapname; }
 
 float Map_Count, Map_Current;
 string Map_Current_Name;
@@ -1261,6 +1295,8 @@ void IntermissionThink()
 	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
 	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
 
+	CSQCMODEL_AUTOUPDATE(); // we don't need to keep checking this after mapvote has started, as by then nothing can happen
+
 	if( (server_screenshot || client_screenshot)
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
@@ -1636,48 +1672,6 @@ void ClearWinners(void)
 		head.winning = 0;
 }
 
-// Onslaught winning condition:
-// game terminates if only one team has a working generator (or none)
-float WinningCondition_Onslaught()
-{
-	entity head;
-	float t1, t2, t3, t4;
-
-	WinningConditionHelper(); // set worldstatus
-
-	if(warmup_stage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	t1 = t2 = t3 = t4 = 0;
-	head = find(world, classname, "onslaught_generator");
-	while (head)
-	{
-		if (head.health > 0)
-		{
-			if (head.team == NUM_TEAM_1) t1 = 1;
-			if (head.team == NUM_TEAM_2) t2 = 1;
-			if (head.team == NUM_TEAM_3) t3 = 1;
-			if (head.team == NUM_TEAM_4) t4 = 1;
-		}
-		head = find(head, classname, "onslaught_generator");
-	}
-	if (t1 + t2 + t3 + t4 < 2)
-	{
-		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, NUM_TEAM_1);
-		if (t2) SetWinners(team, NUM_TEAM_2);
-		if (t3) SetWinners(team, NUM_TEAM_3);
-		if (t4) SetWinners(team, NUM_TEAM_4);
-		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
@@ -1707,9 +1701,12 @@ float WinningCondition_Assault()
 			bprint("ASSAULT: round completed...\n");
 			SetWinners(team, assault_attacker_team);
 
-			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
+			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_DESTROYED, 1);
 
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
+			// why...
+			//TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
+
+			if(ent.cnt >= autocvar_g_assault_round_limit || autocvar_g_campaign) // this was the second round
 			{
 				status = WINNING_YES;
 			}
@@ -1843,7 +1840,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || g_ca || g_freezetag || (g_race && !g_race_qualifying) || g_nexball)
+	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)
@@ -2047,9 +2044,6 @@ void CheckRules_World()
 		return;
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	float wantovertime;
 	wantovertime = 0;
 
@@ -2135,10 +2129,6 @@ void CheckRules_World()
 	{
 		checkrules_status = WinningCondition_LMS();
 	}
-	else if (g_onslaught)
-	{
-		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
-	}
 	else
 	{
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
@@ -2171,6 +2161,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 	{
 		//print("WINNING\n");
+		jeff_Announcer_MatchEnd();
 		NextLevel();
 	}
 }

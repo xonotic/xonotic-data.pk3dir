@@ -40,8 +40,8 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
-	pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, self.origin, '0 0 0', 1);
 
 	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
@@ -72,9 +72,9 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.frozen) { return; }
-	if (!IS_PLAYER(other))
+	if(!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
-		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
 		return;
 	}
@@ -343,6 +343,16 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
+{
+	if(self.ballcarried)
+	{
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
+		self.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
+	}
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
 {
 	if (self.ballcarried)
@@ -350,6 +360,14 @@ MUTATOR_HOOKFUNCTION(ka_BotRoles)
 	else
 		self.havocbot_role = havocbot_role_ka_collector;
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
+{
+	// if neither player has ball then don't attack unless the ball is on the ground
+	if(!other.ballcarried && !self.ballcarried && ka_ball.owner)
+		return TRUE;
+	return FALSE;
 }
 
 
@@ -417,7 +435,9 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, ka_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, ka_BotShouldAttack, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

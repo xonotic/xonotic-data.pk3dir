@@ -69,6 +69,7 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
+float autocvar_g_new_toys_use_pickupsound;
 #define NT_AUTOREPLACE_NEVER 0
 #define NT_AUTOREPLACE_ALWAYS 1
 #define NT_AUTOREPLACE_RANDOM 2
@@ -102,7 +103,7 @@ string nt_GetFullReplacement(string w)
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		case "shotgun": return "shockwave";
+		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
@@ -185,8 +186,8 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
-	if(nt_IsNewToy(self.weapon))
-		self.item_pickupsound = "weapons/weaponpickup_new_toys.wav";
+	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
+		self.item_pickupsound = strzone(W_Sound("weaponpickup_new_toys"));
 	return 0;
 }
 
@@ -202,7 +203,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
 
-		precache_sound("weapons/weaponpickup_new_toys.wav");
+		precache_sound(W_Sound("weaponpickup_new_toys"));
 
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;

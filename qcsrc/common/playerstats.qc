@@ -83,7 +83,7 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 // referred to by PS_GR_P_ADDVAL and PS_GR_T_ADDVAL
 float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
-	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
+	if((prefix == "") || (event_id == "") || PS_GR_OUT_DB < 0) { return 0; }
 
 	string key = sprintf("%s:%s", prefix, event_id);
 	float val = stof(db_get(PS_GR_OUT_DB, key));

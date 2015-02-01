@@ -13,6 +13,11 @@ void skeleton_loadinfo(entity e)
 		return;
 	e.bone_upperbody = 0;
 	e.bone_weapon = gettagindex(e, "weapon");
+	e.bone_hat = gettagindex(e, "head");
+	if(!e.bone_hat)
+		e.bone_hat = gettagindex(e, "tag_head");
+	if(!e.bone_hat)
+		e.bone_hat = gettagindex(e, "bip01 head");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
@@ -31,6 +36,8 @@ void skeleton_loadinfo(entity e)
 			e.fixbone = get_model_parameters_fixbone;
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		if(get_model_parameters_bone_head)
+			e.bone_hat = gettagindex(e, get_model_parameters_bone_head);
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])
@@ -41,7 +48,7 @@ void skeleton_loadinfo(entity e)
 	}
 	else
 		dprint("No model parameters for ", e.model, "\n");
-	dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
+	//dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
 	get_model_parameters(string_null, 0);
 	e.skeleton_info_modelindex = e.modelindex;
 	e.skeleton_info_skin = e.skin;
@@ -180,5 +187,7 @@ void skeleton_from_frames(entity e, float is_dead)
 				skel_set_boneabs(s, e.(bone_aim[i]), org);
 			}
 		}
+
+		e.angles_x = e.angles_z = 0; // bad hax, fix later
 	}
 }
