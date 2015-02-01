@@ -847,8 +847,7 @@ void kh_RemoveKey(entity key)
 	// reset the key
 	setattachment(key, world, "");
 
-	key.think = SUB_Remove;
-	key.nextthink = time;
+	remove(key);
 }
 
 void kh_Reset()
