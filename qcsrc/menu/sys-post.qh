@@ -1,1 +1,5 @@
+#ifndef SYS_POST_H
+#define SYS_POST_H
+
 #pragma noref 0
+#endif

@@ -1,5 +1,4 @@
-//.float(entity,entity) sort_cmp;
-.entity sort_next, sort_prev;
+#include "sortlist.qh"
 
 entity Sort_Spawn()
 {
@@ -92,24 +91,11 @@ void Sort_Finish(entity sort)
 
 entity Sort_Get(entity sort, float i)
 {
-	for(; sort.sort_next && i > 0; --i)
+	for (; sort.sort_next && i > 0; --i)
 		sort = sort.sort_next;
 	return sort;
 }
 */
-
-/**
- * Swap two neighbours in a sortlist.
- * @param a FIRST entity
- * @param b entity after a
- */
-#define SORT_SWAP(a,b)									\
-	b.sort_prev = a.sort_prev;							\
-	a.sort_next = b.sort_next;							\
-	if(b.sort_next) b.sort_next.sort_prev = a;			\
-	if(a.sort_prev) a.sort_prev.sort_next = b;			\
-	a.sort_prev = b;									\
-	b.sort_next = a
 
 /*
 void Sort_Erase(entity ent)

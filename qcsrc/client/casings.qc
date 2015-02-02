@@ -1,4 +1,17 @@
-.float silent;
+#if defined(CSQC)
+	#include "movetypes.qh"
+	#include "prandom.qh"
+	#include "rubble.qh"
+
+	.float cnt;
+	.float alpha;
+	.int state;
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
+.bool silent;
 
 void Casing_Delete()
 {
@@ -44,16 +57,15 @@ void Casing_Touch()
 			if(time >= self.nextthink)
 			{
 				string s;
-				float f;
+				int f = floor(prandom() * 3) + 1;
 
-				f = floor(prandom() * 3) + 1;
 				switch(self.state)
 				{
 					case 1:
-						s = strcat("weapons/casings", ftos(f), ".wav");
+						s = strcat("weapons/casings", itos(f), ".wav");
 						break;
 					default:
-						s = strcat("weapons/brass", ftos(f), ".wav");
+						s = strcat("weapons/brass", itos(f), ".wav");
 						break;
 				}
 
@@ -65,10 +77,10 @@ void Casing_Touch()
 	self.nextthink = time + 0.2;
 }
 
-void Casing_Damage(float thisdmg, float hittype, vector org, vector thisforce)
+void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
 {
-	if(thisforce_z < 0)
-		thisforce_z = 0;
+	if(thisforce.z < 0)
+		thisforce.z = 0;
 	self.move_velocity = self.move_velocity + thisforce + '0 0 100';
 	self.move_flags &= ~FL_ONGROUND;
 }

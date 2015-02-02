@@ -129,16 +129,16 @@ vector solve_cubic_abcd(float a, float b, float c, float d)
 	v = solve_cubic_pq(p, q);
 	v = (v -  b * '1 1 1') * (1.0 / (3.0 * a));
 	if(a < 0)
-		v += '1 0 -1' * (v_z - v_x); // swap x, z
+		v += '1 0 -1' * (v.z - v.x); // swap x, z
 	return v;
 }
 
 vector findperpendicular(vector v)
 {
 	vector p;
-	p_x = v_z;
-	p_y = -v_x;
-	p_z = v_y;
+	p.x = v.z;
+	p.y = -v.x;
+	p.z = v.y;
 	return normalize(cliptoplane(p, v));
 }
 
@@ -152,7 +152,7 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	if(spread <= 0)
 		return forward;
 	sstyle = spreadstyle; //autocvar_g_projectiles_spread_style;
-	
+
 	if(sstyle == 0)
 	{
 		// this is the baseline for the spread value!
