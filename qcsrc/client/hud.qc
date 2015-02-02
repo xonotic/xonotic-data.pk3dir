@@ -491,15 +491,18 @@ void HUD_Weapons(void)
 	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
 		complain_weapon = 0;
 
+	if(autocvar__hud_configure)
+	{
+		if(!weapons_stat)
+			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
+				weapons_stat |= WepSet_FromWeapon(i);
+	}
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (!weapons_stat)
-				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					weapons_stat |= WepSet_FromWeapon(i);
-
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 		}
