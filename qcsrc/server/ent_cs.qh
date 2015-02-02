@@ -1,0 +1,32 @@
+#ifndef ENT_CS_H
+#define ENT_CS_H
+
+/**
+ * The point of these entities is to avoid the problems
+ * with clientprediction.
+ * If you add SendEntity to players, the engine will not
+ * do any prediction anymore, and you'd have to write the whole
+ * prediction code in CSQC, you want that? :P
+ * Data can depend on gamemode. For now, it serves as GPS entities
+ * in onslaught... YAY ;)
+ */
+
+// Beware: do not redefine those in other files
+// and NO, you cannot use ".version", which already exists (at least
+// it did when I added this) But you have to use .Version
+// Capital V
+
+.entity entcs;
+
+void entcs_init();
+
+float entcs_customize();
+
+float entcs_send(entity to, int sf);
+
+void entcs_think();
+
+entity attach_entcs();
+
+void detach_entcs();
+#endif

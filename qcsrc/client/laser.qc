@@ -1,10 +1,21 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../common/buffs.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.float cnt; // end effect
+.int cnt; // end effect
 .vector colormod;
-.float state; // on-off
-.float count; // flags for the laser
+.int state; // on-off
+.int count; // flags for the laser
 .vector velocity;
 .float alpha;
 .float scale; // scaling factor of the thickness
@@ -19,7 +30,7 @@ void Draw_Laser()
 	{
 		if(self.count & 0x10)
 		{
-			trace_endpos = self.velocity,
+			trace_endpos = self.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else
@@ -63,11 +74,10 @@ void Draw_Laser()
 
 void Ent_Laser()
 {
-	float f;
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
-	f = ReadByte();
+	int f = ReadByte();
 	self.count = (f & 0xF0);
 
 	if(self.count & 0x80)
@@ -77,16 +87,16 @@ void Ent_Laser()
 
 	if(f & 1)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		self.origin.x = ReadCoord();
+		self.origin.y = ReadCoord();
+		self.origin.z = ReadCoord();
 		setorigin(self, self.origin);
 	}
 	if(f & 8)
 	{
-		self.colormod_x = ReadByte() / 255.0;
-		self.colormod_y = ReadByte() / 255.0;
-		self.colormod_z = ReadByte() / 255.0;
+		self.colormod.x = ReadByte() / 255.0;
+		self.colormod.y = ReadByte() / 255.0;
+		self.colormod.z = ReadByte() / 255.0;
 		if(f & 0x40)
 			self.alpha = ReadByte() / 255.0;
 		else
@@ -107,14 +117,14 @@ void Ent_Laser()
 	{
 		if(f & 0x80)
 		{
-			self.velocity_x = ReadCoord();
-			self.velocity_y = ReadCoord();
-			self.velocity_z = ReadCoord();
+			self.velocity.x = ReadCoord();
+			self.velocity.y = ReadCoord();
+			self.velocity.z = ReadCoord();
 		}
 		else
 		{
-			self.angles_x = ReadAngle();
-			self.angles_y = ReadAngle();
+			self.angles.x = ReadAngle();
+			self.angles.y = ReadAngle();
 		}
 	}
 	if(f & 4)

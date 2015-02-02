@@ -19,18 +19,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef INTERPOLATE_H
+#define INTERPOLATE_H
 
-.float iflags;
-#define IFLAG_VELOCITY 1
-#define IFLAG_ANGLES 2
-#define IFLAG_AUTOANGLES 4
-#define IFLAG_VALID 8
-#define IFLAG_PREVALID 16
-#define IFLAG_TELEPORTED 32
-#define IFLAG_AUTOVELOCITY 64
-#define IFLAG_V_ANGLE 128
-#define IFLAG_V_ANGLE_X 256
-#define IFLAG_ORIGIN 512
+.int iflags;
+const int IFLAG_VELOCITY = 1;
+const int IFLAG_ANGLES = 2;
+const int IFLAG_AUTOANGLES = 4;
+const int IFLAG_VALID = 8;
+const int IFLAG_PREVALID = 16;
+const int IFLAG_TELEPORTED = 32;
+const int IFLAG_AUTOVELOCITY = 64;
+const int IFLAG_V_ANGLE = 128;
+const int IFLAG_V_ANGLE_X = 256;
+const int IFLAG_ORIGIN = 512;
 #define IFLAG_INTERNALMASK (IFLAG_VALID | IFLAG_PREVALID)
 
 // call this BEFORE reading an entity update
@@ -47,3 +49,4 @@ void InterpolateOrigin_Do();
 
 // in case we interpolate that:
 .vector v_angle;
+#endif

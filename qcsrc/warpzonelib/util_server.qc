@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "common.qh"
+    #include "util_server.qh"
+    #include "../csqcmodellib/sv_model.qh"
+#endif
+
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
 	float eps = 0.0625;
@@ -19,11 +29,11 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
-		return FALSE;
+		return false;
 
 	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
 	if (!trace_startsolid)
-		return TRUE;
+		return true;
 
 	m0 = e.mins;
 	m1 = e.maxs;
@@ -47,10 +57,10 @@ float WarpZoneLib_MoveOutOfSolid(entity e)
 	if (trace_startsolid)
 	{
 		setorigin(e, o);
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 float WarpZoneLib_ExactTrigger_Touch()

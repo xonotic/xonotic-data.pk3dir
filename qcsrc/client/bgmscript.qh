@@ -1,3 +1,6 @@
+#ifndef BGMSCRIPT_H
+#define BGMSCRIPT_H
+
 .string bgmscript;
 .float bgmscriptattack;
 .float bgmscriptdecay;
@@ -8,3 +11,4 @@
 
 void BGMScript_InitEntity(entity e);
 float BGMScript(entity e);
+#endif
