@@ -990,6 +990,7 @@ float PlayerInIDList(entity p, string idlist)
 	return 0;
 }
 
+#ifdef DP_EXT_PRECONNECT
 /*
 =============
 ClientPreConnect
@@ -1008,6 +1009,7 @@ void ClientPreConnect (void)
 		));
 	}
 }
+#endif
 
 /*
 =============
