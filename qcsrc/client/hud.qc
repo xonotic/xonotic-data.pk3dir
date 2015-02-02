@@ -535,13 +535,14 @@ void HUD_Weapons(void)
 		weapon_size_y = old_panel_size_y / rows;
 
 		// reduce rows and columns as needed
-		float columns_save = columns;
 		columns = ceil(weapon_count / rows);
 		rows = ceil(weapon_count / columns);
 
-		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
-		if(columns < columns_save)
-			weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
+		// NOTE: although weapons should aways look the same even if onlyowned is disabled,
+		// we enlarge them a bit when possible to better match the desired aspect ratio
+		// as they look much better
+		weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
+		weapon_size_y = min(old_panel_size_y / rows, weapon_size_x / aspect);
 
 		// reduce size of the panel
 		panel_size_x = columns * weapon_size_x;
