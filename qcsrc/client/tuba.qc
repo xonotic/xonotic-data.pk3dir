@@ -1,15 +1,4 @@
-#define TUBA_MIN -18
-#define TUBA_MAX  27
-#define TUBA_INSTRUMENTS 3
-
-#define TUBA_STARTNOTE(i,n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
-.float note; // note
-.float attenuate; // if set, attenuate it
-.float cnt; // current volume
-.float count; // initial volume
-.float tuba_instrument;
-
-float Tuba_PitchStep;
+#include "tuba.qh"
 
 void tubasound(entity e, float restart)
 {
@@ -117,7 +106,8 @@ void Ent_TubaNote_StopSound()
 
 void Ent_TubaNote(float bIsNew)
 {
-	float f, n, i, att, upd;
+    int f, n, i;
+	float att, upd;
 	f = ReadByte();
 
 	upd = 0;
@@ -144,7 +134,7 @@ void Ent_TubaNote(float bIsNew)
 				self.enemy.enemy = spawn();
 				self.enemy.enemy.classname = "tuba_note_2";
 			}
-			bIsNew = TRUE;
+			bIsNew = true;
 		}
 
 		self.enemy.attenuate = att;
@@ -178,7 +168,8 @@ void Ent_TubaNote(float bIsNew)
 
 void Tuba_Precache()
 {
-	float i, n;
+	float i;
+    int n;
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if(Tuba_PitchStep)
 	{

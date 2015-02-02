@@ -60,7 +60,7 @@ void W_Shotgun_Attack(float isprimary)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, TRUE, 5, "weapons/shotgun_fire.wav", ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, true, 5, "weapons/shotgun_fire.wav", ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
@@ -119,7 +119,7 @@ void W_Shotgun_Melee_Think(void)
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -188,7 +188,7 @@ void W_Shotgun_Attack2(void)
 	meleetemp.realowner = self;
 	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(self, TRUE, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
+	W_SetupShot_Range(self, true, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
 // alternate secondary weapon frames
@@ -203,7 +203,7 @@ void W_Shotgun_Attack3_Frame2()
 	}
 
 	sound(self, CH_WEAPON_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(TRUE); // actually is secondary, but we trick the last shot into playing full reload sound
+	W_Shotgun_Attack(true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1()
@@ -216,7 +216,7 @@ void W_Shotgun_Attack3_Frame1()
 		return;
 	}
 
-	W_Shotgun_Attack(FALSE);
+	W_Shotgun_Attack(false);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
@@ -230,11 +230,11 @@ float W_Shotgun(float req)
 		case WR_AIM:
 		{
 			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR_SEC(shotgun, melee_range))
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -252,7 +252,7 @@ float W_Shotgun(float req)
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_PRI(shotgun, animtime)))
 						{
-							W_Shotgun_Attack(TRUE);
+							W_Shotgun_Attack(true);
 							self.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
 						}
@@ -264,7 +264,7 @@ float W_Shotgun(float req)
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_SEC(shotgun, alt_animtime)))
 						{
-							W_Shotgun_Attack(FALSE);
+							W_Shotgun_Attack(false);
 							self.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
 						}
@@ -280,8 +280,8 @@ float W_Shotgun(float req)
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -292,13 +292,13 @@ float W_Shotgun(float req)
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/shotgun_fire.wav");
 			precache_sound("weapons/shotgun_melee.wav");
-			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -310,28 +310,28 @@ float W_Shotgun(float req)
 		{
 			if(IS_BOT_CLIENT(self))
 			if(vlen(self.origin-self.enemy.origin) > WEP_CVAR_SEC(shotgun, melee_range))
-				return FALSE; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
+				return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
 			switch(WEP_CVAR(shotgun, secondary))
 			{
-				case 1: return TRUE; // melee does not use ammo
+				case 1: return true; // melee does not use ammo
 				case 2: // secondary triple shot
 				{
 					ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
 					ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
 					return ammo_amount;
 				}
-				default: return FALSE; // secondary unavailable
+				default: return false; // secondary unavailable
 			}
 		}
 		case WR_CONFIG:
 		{
-			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(WEP_CVAR_PRI(shotgun, ammo), "weapons/reload.wav"); // WEAPONTODO
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -345,7 +345,7 @@ float W_Shotgun(float req)
 				return WEAPON_SHOTGUN_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -370,22 +370,22 @@ float W_Shotgun(float req)
 				self.prevric = time;
 			}
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");
 			precache_sound("weapons/ric3.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

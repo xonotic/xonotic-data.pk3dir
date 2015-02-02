@@ -1,7 +1,9 @@
-#define CBC_ORDER_EXCLUSIVE 3
-#define CBC_ORDER_FIRST 1
-#define CBC_ORDER_LAST 2
-#define CBC_ORDER_ANY 4
+#ifndef MUTATORS_BASE_H
+#define MUTATORS_BASE_H
+const float CBC_ORDER_EXCLUSIVE = 3;
+const float CBC_ORDER_FIRST = 1;
+const float CBC_ORDER_LAST = 2;
+const float CBC_ORDER_ANY = 4;
 
 float CallbackChain_ReturnValue; // read-only field of the current return value
 
@@ -16,9 +18,9 @@ float CallbackChain_Remove(entity cb, float() func);
 // }
 float CallbackChain_Call(entity cb);
 
-#define MUTATOR_REMOVING 0
-#define MUTATOR_ADDING 1
-#define MUTATOR_ROLLING_BACK 2
+const float MUTATOR_REMOVING = 0;
+const float MUTATOR_ADDING = 1;
+const float MUTATOR_ROLLING_BACK = 2;
 typedef float(float) mutatorfunc_t;
 float Mutator_Add(mutatorfunc_t func, string name);
 void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
@@ -42,12 +44,13 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
 
 // register all possible hooks here
+// some parameters are commented to avoid duplicate declarations
 
 MUTATOR_HOOKABLE(MakePlayerObserver);
 	// called when a player becomes observer, after shared setup
 
 MUTATOR_HOOKABLE(PutClientInServer);
-	entity self; // client wanting to spawn
+//	entity self; // client wanting to spawn
 
 MUTATOR_HOOKABLE(PlayerSpawn);
 	entity spawn_spot; // spot that was used, or world
@@ -82,8 +85,8 @@ MUTATOR_HOOKABLE(PlayerJump);
 MUTATOR_HOOKABLE(GiveFragsForKill);
 	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill
 	// INPUT:
-		entity frag_attacker; // same as self
-		entity frag_target;
+//		entity frag_attacker; // same as self
+//		entity frag_target;
 	// INPUT, OUTPUT:
 		float frag_score;
 
@@ -98,7 +101,7 @@ MUTATOR_HOOKABLE(GetTeamCount);
 MUTATOR_HOOKABLE(SpectateCopy);
 	// copies variables for spectating "other" to "self"
 	// INPUT:
-		entity other;
+//		entity other;
 
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon);
 	// returns 1 if throwing the current weapon shall not be allowed
@@ -119,7 +122,7 @@ MUTATOR_HOOKABLE(BuildMutatorsString);
 MUTATOR_HOOKABLE(BuildMutatorsPrettyString);
 	// appends ", Mutator name" to ret_string for display
 	// INPUT, OUTPUT:
-		string ret_string;
+//		string ret_string;
 
 MUTATOR_HOOKABLE(CustomizeWaypoint);
 	// called every frame
@@ -156,8 +159,8 @@ MUTATOR_HOOKABLE(GetCvars);
 MUTATOR_HOOKABLE(EditProjectile);
 	// can edit any "just fired" projectile
 	// INPUT:
-		entity self;
-		entity other;
+//		entity self;
+//		entity other;
 
 MUTATOR_HOOKABLE(MonsterSpawn);
 	// called when a monster spawns
@@ -165,22 +168,22 @@ MUTATOR_HOOKABLE(MonsterSpawn);
 MUTATOR_HOOKABLE(MonsterDies);
 	// called when a monster dies
 	// INPUT:
-		entity frag_attacker;
+//		entity frag_attacker;
 
 MUTATOR_HOOKABLE(MonsterRespawn);
 	// called when a monster wants to respawn
 	// INPUT:
-		entity other;
+//		entity other;
 
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:
 		.void() monster_loot;
-		entity other;
+//		entity other;
 
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves
-	// returning TRUE makes the monster stop
+	// returning true makes the monster stop
 	// INPUT:
 		float monster_speed_run;
 		float monster_speed_walk;
@@ -199,9 +202,9 @@ MUTATOR_HOOKABLE(AllowMobSpawning);
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:
-		entity frag_inflictor;
-		entity frag_attacker;
-		entity frag_target; // same as self
+//		entity frag_inflictor;
+//		entity frag_attacker;
+//		entity frag_target; // same as self
 		vector damage_force; // NOTE: this force already HAS been applied
 	// INPUT, OUTPUT:
 		float damage_take;
@@ -211,9 +214,9 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 	// called to adjust damage and force values which are applied to the player, used for e.g. strength damage/force multiplier
 	// i'm not sure if I should change this around slightly (Naming of the entities, and also how they're done in g_damage).
 	// INPUT:
-		entity frag_attacker;
-		entity frag_target;
-		float frag_deathtype;
+//		entity frag_attacker;
+//		entity frag_target;
+//		float frag_deathtype;
 	// INPUT, OUTPUT:
 		float frag_damage;
 		float frag_mirrordamage;
@@ -222,7 +225,7 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 MUTATOR_HOOKABLE(PlayerPowerups);
 	// called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items.
 	// INPUT
-	entity self;
+//	entity self;
 	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P
 
 MUTATOR_HOOKABLE(PlayerRegen);
@@ -272,8 +275,8 @@ MUTATOR_HOOKABLE(Spawn_Score);
 	// called when a spawnpoint is being evaluated
 	// return 1 to make the spawnpoint unusable
 	// INPUT
-	entity self; // player wanting to spawn
-	entity spawn_spot; // spot to be evaluated
+//	entity self; // player wanting to spawn
+//	entity spawn_spot; // spot to be evaluated
 	// IN+OUT
 	vector spawn_score; // _x is priority, _y is "distance"
 
@@ -282,20 +285,20 @@ MUTATOR_HOOKABLE(SV_StartFrame);
 
 MUTATOR_HOOKABLE(SetModname);
 	// OUT
-	string modname; // name of the mutator/mod if it warrants showing as such in the server browser
+//	string modname; // name of the mutator/mod if it warrants showing as such in the server browser
 
 MUTATOR_HOOKABLE(Item_Spawn);
 	// called for each item being spawned on a map, including dropped weapons
 	// return 1 to remove an item
 	// INPUT
-	entity self; // the item
+//	entity self; // the item
 
 MUTATOR_HOOKABLE(SetWeaponreplace);
 	// IN
-		entity self; // map entity
-		entity other; // weapon info
+//		entity self; // map entity
+//		entity other; // weapon info
 	// IN+OUT
-		string ret_string;
+//		string ret_string;
 
 MUTATOR_HOOKABLE(Item_RespawnCountdown);
 	// called when an item is about to respawn
@@ -312,7 +315,7 @@ MUTATOR_HOOKABLE(PortalTeleport);
 	// called whenever a player goes through a portal gun teleport
 	// allows you to strip a player of an item if they go through the teleporter to help prevent cheating
 	// INPUT
-	entity self;
+//	entity self;
 
 MUTATOR_HOOKABLE(HelpMePing);
 	// called whenever a player uses impulse 33 (help me) in cl_impulse.qc
@@ -320,11 +323,11 @@ MUTATOR_HOOKABLE(HelpMePing);
 	// but if your mutator uses something different then you can handle it
 	// in a special manner using this hook
 	// INPUT
-	entity self; // the player who pressed impulse 33
+//	entity self; // the player who pressed impulse 33
 
 MUTATOR_HOOKABLE(VehicleSpawn);
 	// called when a vehicle initializes
-	// return TRUE to remove the vehicle
+	// return true to remove the vehicle
 
 MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle
@@ -335,42 +338,43 @@ MUTATOR_HOOKABLE(VehicleEnter);
 
 MUTATOR_HOOKABLE(VehicleTouch);
 	// called when a player touches a vehicle
-	// return TRUE to stop player from entering the vehicle
+	// return true to stop player from entering the vehicle
 	// INPUT
-	entity self; // vehicle
-	entity other; // player
+//	entity self; // vehicle
+//	entity other; // player
 
 MUTATOR_HOOKABLE(VehicleExit);
 	// called when a player exits a vehicle
 	// allows mutators to set special settings in this event
 	// INPUT
-	entity vh_player; // player
-	entity vh_vehicle; // vehicle
+//	entity vh_player; // player
+//	entity vh_vehicle; // vehicle
 
 MUTATOR_HOOKABLE(AbortSpeedrun);
 	// called when a speedrun is aborted and the player is teleported back to start position
 	// INPUT
-	entity self; // player
+//	entity self; // player
 
 MUTATOR_HOOKABLE(ItemTouch);
 	// called at when a item is touched. Called early, can edit item properties.
-	entity self;	// item
-	entity other; 	// player
-	#define MUT_ITEMTOUCH_CONTINUE 0 // return this flag to make the function continue as normal
-	#define MUT_ITEMTOUCH_RETURN 1 // return this flag to make the function return (handled entirely by mutator)
-	#define MUT_ITEMTOUCH_PICKUP 2 // return this flag to have the item "picked up" and taken even after mutator handled it
+//	entity self;	// item
+//	entity other; 	// player
+	const float MUT_ITEMTOUCH_CONTINUE = 0; // return this flag to make the function continue as normal
+	const float MUT_ITEMTOUCH_RETURN = 1; // return this flag to make the function return (handled entirely by mutator)
+	const float MUT_ITEMTOUCH_PICKUP = 2; // return this flag to have the item "picked up" and taken even after mutator handled it
 
 MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
-	entity self;	// player
+//	entity self;	// player
 
 MUTATOR_HOOKABLE(HavocBot_ChooseRole);
-	entity self;
+//	entity self;
 
 MUTATOR_HOOKABLE(AccuracyTargetValid);
 	// called when a target is checked for accuracy
-	entity frag_attacker; // attacker
-	entity frag_target; // target
-	#define MUT_ACCADD_VALID 0 // return this flag to make the function continue if target is a client
-	#define MUT_ACCADD_INVALID 1 // return this flag to make the function always continue
-	#define MUT_ACCADD_INDIFFERENT 2 // return this flag to make the function always return
+//	entity frag_attacker; // attacker
+//	entity frag_target; // target
+	const float MUT_ACCADD_VALID = 0; // return this flag to make the function continue if target is a client
+	const float MUT_ACCADD_INVALID = 1; // return this flag to make the function always continue
+	const float MUT_ACCADD_INDIFFERENT = 2; // return this flag to make the function always return
+#endif

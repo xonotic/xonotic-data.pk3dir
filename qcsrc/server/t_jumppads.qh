@@ -1,0 +1,55 @@
+#ifndef T_JUMPPADS_H
+#define T_JUMPPADS_H
+
+const float PUSH_ONCE		= 1;
+const float PUSH_SILENT		= 2;
+
+.float pushltime;
+.float istypefrag;
+.float height;
+
+void() SUB_UseTargets;
+
+float trigger_push_calculatevelocity_flighttime;
+
+void trigger_push_use();
+
+/*
+	trigger_push_calculatevelocity
+
+	Arguments:
+	  org - origin of the object which is to be pushed
+	  tgt - target entity (can be either a point or a model entity; if it is
+	        the latter, its midpoint is used)
+	  ht  - jump height, measured from the higher one of org and tgt's midpoint
+
+	Returns: velocity for the jump
+	the global trigger_push_calculatevelocity_flighttime is set to the total
+	jump time
+ */
+
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
+
+void trigger_push_touch();
+
+.vector dest;
+void trigger_push_findtarget();
+
+/*
+ * ENTITY PARAMETERS:
+ *
+ *   target:  target of jump
+ *   height:  the absolute value is the height of the highest point of the jump
+ *            trajectory above the higher one of the player and the target.
+ *            the sign indicates whether the highest point is INSIDE (positive)
+ *            or OUTSIDE (negative) of the jump trajectory. General rule: use
+ *            positive values for targets mounted on the floor, and use negative
+ *            values to target a point on the ceiling.
+ *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
+ */
+void spawnfunc_trigger_push();
+
+void spawnfunc_target_push();
+void spawnfunc_info_notnull();
+void spawnfunc_target_position();
+#endif

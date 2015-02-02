@@ -1,3 +1,17 @@
+#include "anticheat.qh"
+
+#include "antilag.qh"
+#include "autocvars.qh"
+#include "defs.qh"
+#include "miscfunctions.qh"
+
+#include "../dpdefs/progsdefs.qh"
+#include "../dpdefs/dpextensions.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
+#include "command/common.qh"
+
 .float anticheat_jointime;
 
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
