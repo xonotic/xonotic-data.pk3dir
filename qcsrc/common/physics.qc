@@ -1739,9 +1739,8 @@ void PM_Main()
 			not_allowed_to_move = 1;
 #endif
 #ifdef SVQC
-		if (!autocvar_sv_ready_restart_after_countdown)
-			if (time < game_starttime)
-				not_allowed_to_move = 1;
+		if (time < game_starttime)
+			not_allowed_to_move = 1;
 #endif
 
 		if (not_allowed_to_move)
