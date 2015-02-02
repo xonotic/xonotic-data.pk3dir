@@ -7,10 +7,10 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, configureSliderValues, void(entity, float, float, float, float, float, float))
 	METHOD(Slider, draw, void(entity))
 	METHOD(Slider, keyDown, float(entity, float, float, float))
+	METHOD(Slider, keyUp, float(entity, float, float, float))
 	METHOD(Slider, mousePress, float(entity, vector))
 	METHOD(Slider, mouseDrag, float(entity, vector))
 	METHOD(Slider, mouseRelease, float(entity, vector))
-	METHOD(Slider, focusEnter, void(entity))
 	METHOD(Slider, valueToText, string(entity, float))
 	METHOD(Slider, toString, string(entity))
 	METHOD(Slider, setValue, void(entity, float))
@@ -18,6 +18,7 @@ CLASS(Slider) EXTENDS(Label)
 	METHOD(Slider, showNotify, void(entity))
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
+	ATTRIB(Slider, allowFocusSound, float, 1)
 	ATTRIB(Slider, value, float, 0)
 	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
@@ -146,7 +147,29 @@ float Slider_keyDown(entity me, float key, float ascii, float shift)
 		me.setValue(me, me.valueMax);
 		return 1;
 	}
-	// TODO more keys
+	// TODO more keys (NOTE also add them to Slider_keyUp)
+	return 0;
+}
+float Slider_keyUp(entity me, float key, float ascii, float shift)
+{
+	if(me.disabled)
+		return 0;
+	switch(key)
+	{
+		case K_LEFTARROW:
+		case K_KP_LEFTARROW:
+		case K_RIGHTARROW:
+		case K_KP_RIGHTARROW:
+		case K_PGUP:
+		case K_KP_PGUP:
+		case K_PGDN:
+		case K_KP_PGDN:
+		case K_HOME:
+		case K_KP_HOME:
+		case K_END:
+		case K_KP_END:
+			m_play_click_sound(MENU_SOUND_SLIDE);
+	}
 	return 0;
 }
 float Slider_mouseDrag(entity me, vector pos)
@@ -242,19 +265,12 @@ float Slider_mouseRelease(entity me, vector pos)
 	me.pressed = 0;
 	if(me.disabled)
 		return 0;
-	if(cvar("menu_sounds"))
-		localsound("sound/misc/menu2.wav");
+	m_play_click_sound(MENU_SOUND_SLIDE);
 	return 1;
 }
 void Slider_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
-}
-void Slider_focusEnter(entity me)
-{
-	if(cvar("menu_sounds") > 1)
-		localsound("sound/misc/menu1.wav");
-	SUPER(Slider).focusEnter(me);
 }
 void Slider_draw(entity me)
 {

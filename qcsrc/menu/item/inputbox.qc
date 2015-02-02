@@ -18,6 +18,7 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, scrollPos, float, 0) // widths
 
 	ATTRIB(InputBox, focusable, float, 1)
+	ATTRIB(InputBox, allowFocusSound, float, 1)
 	ATTRIB(InputBox, disabled, float, 0)
 	ATTRIB(InputBox, lastChangeTime, float, 0)
 	ATTRIB(InputBox, dragScrollTimer, float, 0)
@@ -38,7 +39,6 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, cb_colorF, vector, '1 1 1')
 	ATTRIB(InputBox, cb_colorC, vector, '1 1 1')
 ENDCLASS(InputBox)
-void InputBox_Clear_Click(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -64,11 +64,6 @@ void InputBox_setText(entity me, string txt)
 	if(me.text)
 		strunzone(me.text);
 	SUPER(InputBox).setText(me, strzone(txt));
-}
-
-void InputBox_Clear_Click(entity btn, entity me)
-{
-	me.setText(me, "");
 }
 
 float over_ClearButton(entity me, vector pos)
@@ -135,8 +130,9 @@ float InputBox_mouseRelease(entity me, vector pos)
 	if(me.cb_pressed)
 	if (over_ClearButton(me, pos))
 	{
+		m_play_click_sound(MENU_SOUND_CLEAR);
+		me.setText(me, "");
 		me.cb_pressed = 0;
-		InputBox_Clear_Click(world, me);
 		return 1;
 	}
 	float r = InputBox_mouseDrag(me, pos);
@@ -204,7 +200,10 @@ float InputBox_keyDown(entity me, float key, float ascii, float shift)
 		case K_KP_DEL:
 		case K_DEL:
 			if(shift & S_CTRL)
+			{
+				m_play_click_sound(MENU_SOUND_CLEAR);
 				me.setText(me, "");
+			}
 			else
 				me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
 			return 1;

@@ -51,6 +51,9 @@ string GetCommandPrefix(entity caller);
 // if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller);
 
+// verify that the client provided is acceptable for kicking
+float VerifyKickableEntity(entity client);
+
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
 

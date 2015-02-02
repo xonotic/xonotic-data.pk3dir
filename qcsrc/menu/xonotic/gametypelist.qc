@@ -8,6 +8,7 @@ CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
 	METHOD(XonoticGametypeList, loadCvars, void(entity))
 	METHOD(XonoticGametypeList, saveCvars, void(entity))
 	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticGametypeList, clickListBoxItem, void(entity, float, vector))
 
 	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticGametypeList, realUpperMargin, float, 0)
@@ -45,7 +46,6 @@ void XonoticGametypeList_setSelected(entity me, float i)
 	SUPER(XonoticGametypeList).setSelected(me, i);
 	me.saveCvars(me);
 }
-
 void XonoticGametypeList_loadCvars(entity me)
 {
 	float t;
@@ -111,15 +111,19 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
 	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x);
 }
-
 float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if(scan == K_ENTER || scan == K_KP_ENTER)
 	{
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 		me.parent.gameTypeSelectNotify(me.parent);
 		return 1;
 	}
 
 	return SUPER(XonoticGametypeList).keyDown(me, scan, ascii, shift);
+}
+void XonoticGametypeList_clickListBoxItem(entity me, float i, vector where)
+{
+	m_play_click_sound(MENU_SOUND_SELECT);
 }
 #endif

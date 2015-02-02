@@ -150,32 +150,27 @@ void ModalController_draw(entity me)
 		if(e.ModalController_state)
 		{
 			if(front)
+			{
 				me.switchState(me, front, 2, 0);
+				if(front.ModalController_factor < 1)
+					animating = 1;
+			}
 			front = e;
 		}
 	if(front)
+	{
 		me.switchState(me, front, 1, 0);
+		if(front.ModalController_factor < 1)
+			animating = 1;
+	}
+
+	if(front && front.Container_alpha == front.ModalController_initialAlpha)
+		goto update_done; // update isn't needed, everything stay as is
 
 	df = frametime * 3; // animation speed
 
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
-		f = (e.ModalController_factor = min(1, e.ModalController_factor + df));
-		if(e.ModalController_state)
-			if(f < 1)
-				animating = 1;
-
-		if(f < 1)
-		{
-			prevFactor   = (1 - f) / (1 - f + df);
-			targetFactor =     df  / (1 - f + df);
-		}
-		else
-		{
-			prevFactor = 0;
-			targetFactor = 1;
-		}
-
 		if(e.ModalController_state == 2)
 		{
 			// fading out partially
@@ -193,24 +188,36 @@ void ModalController_draw(entity me)
 		else
 		{
 			// fading out
-			if(f < 1)
-				animating = 1;
 			targetOrigin = e.Container_origin; // stay as is
 			targetSize = e.Container_size; // stay as is
 			targetAlpha = 0;
 		}
 
+		f = (e.ModalController_factor = min(1, e.ModalController_factor + df));
 		if(f == 1)
 		{
+			prevFactor = 0;
+			targetFactor = 1;
 			e.Container_origin = targetOrigin;
 			e.Container_size = targetSize;
 			me.setAlphaOf(me, e, targetAlpha);
 		}
 		else
 		{
-			e.Container_origin = e.Container_origin * prevFactor + targetOrigin * targetFactor;
-			e.Container_size   = e.Container_size   * prevFactor + targetSize   * targetFactor;
-			me.setAlphaOf(me, e, e.Container_alpha  * prevFactor + targetAlpha  * targetFactor);
+			prevFactor = (1 - f) / (1 - f + df);
+			if(!e.ModalController_state) // optimize code and avoid precision errors
+				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor);
+			else
+			{
+				targetFactor = df / (1 - f + df);
+
+				if(e.ModalController_state == 1)
+				{
+					e.Container_origin = e.Container_origin * prevFactor + targetOrigin * targetFactor;
+					e.Container_size   = e.Container_size   * prevFactor + targetSize   * targetFactor;
+				}
+				me.setAlphaOf(me, e, e.Container_alpha  * prevFactor + targetAlpha  * targetFactor);
+			}
 		}
 		// assume: o == to * f_prev + X * (1 - f_prev)
 		// make:   o' = to * f  + X * (1 - f)
@@ -220,10 +227,15 @@ void ModalController_draw(entity me)
 		// --> (maxima)
 		// o' = (to * (f - f_prev) + o * (1 - f)) / (1 - f_prev)
 
-		fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
-		e.Container_fontscale_x = fs.x * e.ModalController_initialFontScale.x;
-		e.Container_fontscale_y = fs.y * e.ModalController_initialFontScale.y;
+		if(e.ModalController_state == 1)
+		{
+			fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+			e.Container_fontscale_x = fs.x * e.ModalController_initialFontScale.x;
+			e.Container_fontscale_y = fs.y * e.ModalController_initialFontScale.y;
+		}
 	}
+	:update_done
+
 	if(animating || !me.focused)
 		me.setFocus(me, NULL);
 	else
