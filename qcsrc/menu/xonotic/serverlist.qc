@@ -561,6 +561,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 }
 void XonoticServerList_focusEnter(entity me)
 {
+	SUPER(XonoticServerList).focusEnter(me);
 	if(time < me.nextRefreshTime)
 	{
 		//print("sorry, no refresh yet\n");
@@ -943,6 +944,7 @@ void ServerList_Favorite_Click(entity btn, entity me)
 	ipstr = netaddress_resolve(me.ipAddressBox.text, 26000);
 	if(ipstr != "")
 	{
+		m_play_click_sound(MENU_SOUND_SELECT);
 		me.toggleFavorite(me, me.ipAddressBox.text);
 		me.ipAddressBoxFocused = -1;
 	}
@@ -1245,6 +1247,7 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		if(me.nItems != 0)
 		{
+			m_play_click_sound(MENU_SOUND_OPEN);
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
 			return 1;

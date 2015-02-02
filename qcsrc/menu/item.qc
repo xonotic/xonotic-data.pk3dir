@@ -17,6 +17,7 @@ CLASS(Item) EXTENDS(Object)
 	METHOD(Item, destroy, void(entity))
 	ATTRIB(Item, focused, float, 0)
 	ATTRIB(Item, focusable, float, 0)
+	ATTRIB(Item, allowFocusSound, float, 0)
 	ATTRIB(Item, parent, entity, NULL)
 	ATTRIB(Item, preferredFocusPriority, float, 0)
 	ATTRIB(Item, origin, vector, '0 0 0')
@@ -121,6 +122,8 @@ float Item_mouseRelease(entity me, vector pos)
 
 void Item_focusEnter(entity me)
 {
+	if(me.allowFocusSound)
+		m_play_focus_sound();
 }
 
 void Item_focusLeave(entity me)

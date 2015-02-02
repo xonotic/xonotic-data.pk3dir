@@ -8,7 +8,7 @@ CLASS(Button) EXTENDS(Label)
 	METHOD(Button, mousePress, float(entity, vector))
 	METHOD(Button, mouseDrag, float(entity, vector))
 	METHOD(Button, mouseRelease, float(entity, vector))
-	METHOD(Button, focusEnter, void(entity))
+	METHOD(Button, playClickSound, void(entity))
 	ATTRIB(Button, onClick, void(entity, entity), func_null)
 	ATTRIB(Button, onClickEntity, entity, NULL)
 	ATTRIB(Button, src, string, string_null)
@@ -18,6 +18,7 @@ CLASS(Button) EXTENDS(Label)
 	ATTRIB(Button, srcMulti, float, 1) // 0: button square left, text right; 1: button stretched, text over it
 	ATTRIB(Button, buttonLeftOfText, float, 0)
 	ATTRIB(Button, focusable, float, 1)
+	ATTRIB(Button, allowFocusSound, float, 1)
 	ATTRIB(Button, pressed, float, 0)
 	ATTRIB(Button, clickTime, float, 0)
 	ATTRIB(Button, disabled, float, 0)
@@ -53,6 +54,7 @@ float Button_keyDown(entity me, float key, float ascii, float shift)
 {
 	if(key == K_ENTER || key == K_SPACE || key == K_KP_ENTER)
 	{
+		me.playClickSound(me);
 		me.clickTime = 0.1; // delayed for effect
 		return 1;
 	}
@@ -79,8 +81,7 @@ float Button_mouseRelease(entity me, vector pos)
 	{
 		if (!me.disabled)
 		{
-			if(cvar("menu_sounds"))
-				localsound("sound/misc/menu2.wav");
+			me.playClickSound(me);
 			if(me.onClick)
 				me.onClick(me, me.onClickEntity);
 		}
@@ -91,12 +92,6 @@ float Button_mouseRelease(entity me, vector pos)
 void Button_showNotify(entity me)
 {
 	me.focusable = !me.disabled;
-}
-void Button_focusEnter(entity me)
-{
-	if(cvar("menu_sounds") > 1)
-		localsound("sound/misc/menu1.wav");
-	SUPER(Button).focusEnter(me);
 }
 void Button_draw(entity me)
 {
@@ -169,5 +164,15 @@ void Button_draw(entity me)
 	me.clickTime -= frametime;
 
 	SUPER(Button).draw(me);
+}
+void Dialog_Close(entity button, entity me);
+void Button_playClickSound(entity me)
+{
+	if(me.onClick == DialogOpenButton_Click)
+		m_play_click_sound(MENU_SOUND_OPEN);
+	else if(me.onClick == Dialog_Close)
+		m_play_click_sound(MENU_SOUND_CLOSE);
+	else
+		m_play_click_sound(MENU_SOUND_EXECUTE);
 }
 #endif

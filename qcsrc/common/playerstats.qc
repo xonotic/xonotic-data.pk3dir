@@ -516,7 +516,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+			url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			*/url_fputs(fh, "\n");
@@ -916,7 +916,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #ifdef MENUQC
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-                        url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+                        url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
                         url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
                         url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 #endif

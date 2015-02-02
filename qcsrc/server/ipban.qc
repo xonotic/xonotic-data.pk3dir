@@ -472,7 +472,7 @@ float Ban_MaybeEnforceBanOnce(entity client)
 	if(client.ban_checked)
 		return false;
 	client.ban_checked = true;
-	return Ban_MaybeEnforceBan(self);
+	return Ban_MaybeEnforceBan(client);
 }
 
 string Ban_Enforce(float i, string reason)
@@ -482,7 +482,8 @@ string Ban_Enforce(float i, string reason)
 
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_REALCLIENT(e)
+	FOR_EACH_CLIENTSLOT(e)
+		if (IS_REAL_CLIENT(e))
 		if(Ban_IsClientBanned(e, i))
 		{
 			if(reason != "")

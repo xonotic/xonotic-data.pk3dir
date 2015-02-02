@@ -1345,6 +1345,7 @@ void spawnfunc_target_items (void)
 {
 	float n, i, j;
 	entity e;
+	string s;
 
 	self.use = target_items_use;
 	if(!self.strength_finished)
@@ -1383,7 +1384,8 @@ void spawnfunc_target_items (void)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
 					e = get_weaponinfo(j);
-					if(argv(i) == e.netname)
+					s = W_UndeprecateName(argv(i));
+					if(s == e.netname)
 					{
 						self.weapons |= WepSet_FromWeapon(j);
 						if(self.spawnflags == 0 || self.spawnflags == 2)
