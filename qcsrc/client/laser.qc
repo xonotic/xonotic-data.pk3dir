@@ -87,16 +87,16 @@ void Ent_Laser()
 
 	if(f & 1)
 	{
-		self.origin.x = ReadCoord();
-		self.origin.y = ReadCoord();
-		self.origin.z = ReadCoord();
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
 	}
 	if(f & 8)
 	{
-		self.colormod.x = ReadByte() / 255.0;
-		self.colormod.y = ReadByte() / 255.0;
-		self.colormod.z = ReadByte() / 255.0;
+		self.colormod_x = ReadByte() / 255.0;
+		self.colormod_y = ReadByte() / 255.0;
+		self.colormod_z = ReadByte() / 255.0;
 		if(f & 0x40)
 			self.alpha = ReadByte() / 255.0;
 		else
@@ -117,14 +117,14 @@ void Ent_Laser()
 	{
 		if(f & 0x80)
 		{
-			self.velocity.x = ReadCoord();
-			self.velocity.y = ReadCoord();
-			self.velocity.z = ReadCoord();
+			self.velocity_x = ReadCoord();
+			self.velocity_y = ReadCoord();
+			self.velocity_z = ReadCoord();
 		}
 		else
 		{
-			self.angles.x = ReadAngle();
-			self.angles.y = ReadAngle();
+			self.angles_x = ReadAngle();
+			self.angles_y = ReadAngle();
 		}
 	}
 	if(f & 4)
