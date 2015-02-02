@@ -22,7 +22,7 @@ void Casing_Draw()
 {
 	if(self.move_flags & FL_ONGROUND)
 	{
-		self.move_angles.x = 0;
+		self.move_angles_x = 0;
 		self.move_angles_z = 0;
 		self.flags &= ~FL_ONGROUND;
 	}
