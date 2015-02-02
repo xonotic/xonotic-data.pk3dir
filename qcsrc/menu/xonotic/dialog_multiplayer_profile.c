@@ -114,7 +114,7 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 		setDependent(e, "cl_allow_uidtracking", 1, 1);
 	me.gotoRC(me, 4, 3.1); // TOP RIGHT
-	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT 
+	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT
 	//me.gotoRC(me, 12.5, 0); // BOTTOM LEFT
 		me.TDempty(me, 0.25);
 		me.TD(me, 9, 2.5, statslist = makeXonoticStatsList());
@@ -141,7 +141,7 @@ void XonoticProfileTab_fill(entity me)
 	//me.gotoRC(me, 6.5, 3.1); me.setFirstColumn(me, me.currentColumn); // TOP SECTION, BOTTOM POS
 	#if 0
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gender:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_gender"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_gender"));
 			e.addValue(e, ZCTX(_("GENDER^Undisclosed")), "0");
 			e.addValue(e, ZCTX(_("GENDER^Female")), "1");
 			e.addValue(e, ZCTX(_("GENDER^Male")), "2");
@@ -153,9 +153,9 @@ void XonoticProfileTab_fill(entity me)
 			#define GENDERWIDTH_LENGTH 2.5
 			#define GENDERWIDTH_ITEM (GENDERWIDTH_LENGTH / 3)
 			me.TDempty(me, GENDERWIDTH_OFFSET);
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "cl_gender", "2", _("Female")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "cl_gender", "1", _("Male")));
-			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "cl_gender", "0", _("Undisclosed")));
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "2", _("Female")));
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "1", _("Male")));
+			me.TD(me, 1, GENDERWIDTH_ITEM, e = makeXonoticRadioButton(3, "_cl_gender", "0", _("Undisclosed")));
 	#endif
 
 	me.gotoRC(me, me.rows - 1, 0);
