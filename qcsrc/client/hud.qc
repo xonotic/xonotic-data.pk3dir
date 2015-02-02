@@ -510,12 +510,8 @@ void HUD_Weapons(void)
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon))
+			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
 				++weapon_count;
-
-		// add it anyway if weaponcomplain is shown
-		if(complain_weapon)
-			++weapon_count;
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
