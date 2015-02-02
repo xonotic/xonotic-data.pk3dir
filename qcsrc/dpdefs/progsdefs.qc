@@ -73,6 +73,9 @@ void() 		PlayerPreThink;
 void() 		PlayerPostThink;
 
 void()		ClientKill;
+#ifdef DP_EXT_PRECONNECT
+void()		ClientPreConnect;
+#endif
 void()		ClientConnect;
 void() 		PutClientInServer;		// call after setting the parm1... parms
 void()		ClientDisconnect;

@@ -15,7 +15,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
-		
+
 	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(IS_BOT_CLIENT(e))
@@ -23,13 +23,13 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 		else
 			{ s = sprintf("player#%d", e.playerid); }
 	}
-	
+
 	e.playerstats_id = strzone(s);
 
 	// now add the player to the database
 	string key = sprintf("%s:*", e.playerstats_id);
 	string p = db_get(PS_GR_OUT_DB, key);
-	
+
 	if(p == "")
 	{
 		if(PS_GR_OUT_PL)
@@ -48,7 +48,7 @@ void PlayerStats_GameReport_AddTeam(float t)
 
 	string key = sprintf("%d", t);
 	string p = db_get(PS_GR_OUT_DB, key);
-	
+
 	if(p == "")
 	{
 		if(PS_GR_OUT_TL)
@@ -67,7 +67,7 @@ void PlayerStats_GameReport_AddEvent(string event_id)
 
 	string key = sprintf("*:%s", event_id);
 	string p = db_get(PS_GR_OUT_DB, key);
-	
+
 	if(p == "")
 	{
 		if(PS_GR_OUT_EVL)
@@ -154,7 +154,7 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 void PlayerStats_GameReport(float finished)
 {
 	if(PS_GR_OUT_DB < 0) { return; }
-	
+
 	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
@@ -348,7 +348,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_playerid", p));
 				if(nn != "") { url_fputs(fh, sprintf("i %s\n", nn)); }
 
-				// player name 
+				// player name
 				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_netname", p));
 				if(nn != "") { url_fputs(fh, sprintf("n %s\n", nn)); }
 
@@ -387,7 +387,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			url_fclose(fh);
 			break;
 		}
-		
+
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
@@ -400,7 +400,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 			}
 			break;
 		}
-		
+
 		case URL_READY_ERROR:
 		default:
 		{
@@ -502,14 +502,14 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			#endif
 			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
 			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+			url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
 			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
 			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 			*/url_fputs(fh, "\n");
 			url_fclose(fh);
 			break;
 		}
-		
+
 		case URL_READY_CANREAD:
 		{
 			string s = "";
@@ -578,7 +578,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			print("Player stats synchronized with server\n");
 			break;
 		}
-		
+
 		case URL_READY_ERROR:
 		default:
 		{
@@ -615,7 +615,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 			db_put(PS_D_IN_DB, marker, PS_D_IN_EVL);
 			strunzone(PS_D_IN_EVL);
 		}
-		else { db_put(PS_D_IN_DB, marker, "#"); } 
+		else { db_put(PS_D_IN_DB, marker, "#"); }
 		PS_D_IN_EVL = strzone(marker);
 	}
 
@@ -703,7 +703,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 			url_fclose(fh);
 			break;
 		}
-		
+
 		case URL_READY_CANREAD:
 		{
 			//print("PlayerStats_PlayerDetail_Handler(): Got response from player stats server:\n");
@@ -715,7 +715,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				string key = "", event = "", data = "";
 
 				if(argv(0) == "#") { continue; }
-				
+
 				if(count == 2)
 				{
 					key = argv(0);
@@ -759,7 +759,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 						}
 						break;
 					}
-					
+
 					default:
 					{
 						printf(
@@ -902,7 +902,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 #ifdef MENUQC
                         url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
                         url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-                        url_fputs(fh, sprintf("g %s\n", cvar_string("_menu_prvm_gender"))); // gender
+                        url_fputs(fh, sprintf("g %s\n", cvar_string("_cl_gender"))); // gender
                         url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
                         url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 #endif
