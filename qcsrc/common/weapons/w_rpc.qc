@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.5 0',
 /* modelname */ "ok_rl",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairrocketlauncher 0.5875",
+/* crosshair */ "gfx/crosshairrocketlauncher 0.7",
 /* wepimg    */ "weaponrpc",
 /* refname   */ "rpc",
 /* wepname	 */ _("Rocket Propelled Chainsaw")
