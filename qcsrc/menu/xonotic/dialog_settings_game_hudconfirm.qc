@@ -30,10 +30,10 @@ void XonoticHUDConfirmDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Do you wish to start a local game to set up the HUD?")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticButton(ZCTX(_("HDCNFRM^Yes")), '1 0 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Yes"), '1 0 0'));
 			e.onClick = HUDSetup_Start;
 			e.onClickEntity = me;
-		me.TD(me, 1, 1, e = makeXonoticButton(ZCTX(_("HDCNFRM^No")), '0 1 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("No"), '0 1 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }

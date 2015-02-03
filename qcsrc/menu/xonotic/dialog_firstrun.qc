@@ -84,9 +84,9 @@ void XonoticFirstRunDialog_fill(entity me)
 
 	me.gotoRC(me, me.rows - 3, 0);
 	me.TDempty(me, 1.5);
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", ZCTX(_("ALWU2N^Yes"))));
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", ZCTX(_("ALWU2N^No"))));
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", ZCTX(_("ALWU2N^Undecided"))));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", _("Yes")));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", _("No")));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", _("Undecided")));
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);
