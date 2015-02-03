@@ -55,17 +55,17 @@ void() mage_shield;
 float friend_needshelp(entity e)
 {
 	if(e == world)
-		return FALSE;
+		return false;
 	if(e.health <= 0)
-		return FALSE;
+		return false;
 	if(DIFF_TEAM(e, self) && e != self.monster_owner)
-		return FALSE;
+		return false;
 	if(e.frozen)
-		return FALSE;
+		return false;
 	if(!IS_PLAYER(e))
 		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
 	if(e.items & IT_INVINCIBLE)
-		return FALSE;
+		return false;
 
 	switch(self.skin)
 	{
@@ -75,7 +75,7 @@ float friend_needshelp(entity e)
 		case 3: return (e.health > 0);
 	}
 
-	return FALSE;
+	return false;
 }
 
 void mage_spike_explode()
@@ -139,9 +139,9 @@ void mage_spike_think()
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen(self.origin + olddir * self.wait) < dist)
-				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
-				traceline(self.origin, eorg, FALSE, self);
+				traceline(self.origin, eorg, false, self);
 
 			// Setup adaptive tracelength
 			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
@@ -187,17 +187,17 @@ void mage_attack_spike()
 
 	self.mage_spike = missile;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
 void mage_heal()
 {
 	entity head;
-	float washealed = FALSE;
+	float washealed = false;
 
 	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(friend_needshelp(head))
 	{
-		washealed = TRUE;
+		washealed = true;
 		string fx = "";
 		if(IS_PLAYER(head))
 		{
@@ -300,10 +300,10 @@ float mage_attack(float attack_type)
 			if(random() <= 0.7)
 			{
 				mage_push();
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -312,25 +312,25 @@ float mage_attack(float attack_type)
 				if(random() <= 0.4)
 				{
 					mage_teleport();
-					return TRUE;
+					return true;
 				}
 				else
 				{
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					defer(0.2, mage_attack_spike);
-					return TRUE;
+					return true;
 				}
 			}
 
 			if(self.mage_spike)
-				return TRUE;
+				return true;
 			else
-				return FALSE;
+				return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_mage()
@@ -350,13 +350,13 @@ float m_mage(float req)
 		case MR_THINK:
 		{
 			entity head;
-			float need_help = FALSE;
+			float need_help = false;
 
 			for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain)
 			if(head != self)
 			if(friend_needshelp(head))
 			{
-				need_help = TRUE;
+				need_help = true;
 				break;
 			}
 
@@ -375,12 +375,12 @@ float m_mage(float req)
 				mage_shield();
 
 			monster_move((autocvar_g_monster_mage_speed_run), (autocvar_g_monster_mage_speed_walk), (autocvar_g_monster_mage_speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = mage_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -390,18 +390,18 @@ float m_mage(float req)
 			self.monster_attackfunc	= mage_attack;
 			self.frame = mage_anim_walk;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/mage.dpm");
 			precache_sound ("weapons/grenade_impact.wav");
 			precache_sound ("weapons/tagexp1.wav");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -412,11 +412,11 @@ float m_mage(float req)
 	{
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

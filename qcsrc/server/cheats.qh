@@ -1,4 +1,7 @@
-float autocvar_sv_cheats; // must... declare... global
+#ifndef CHEATS_H
+#define CHEATS_H
+
+//float autocvar_sv_cheats; // must... declare... global
 
 float cheatcount_total;
 .float cheatcount;
@@ -11,3 +14,4 @@ float CheatCommand(float argc);
 float CheatFrame();
 
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
+#endif

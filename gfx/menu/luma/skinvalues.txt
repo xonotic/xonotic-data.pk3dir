@@ -1,0 +1,209 @@
+title Luma
+author sev
+
+// Image suffixes: c(licked), d(isabled), f(ocused), n(ormal), s(eektrack)
+// Background scaling: c(rop), h(eight), l(etterbox), s(tretch), w(idth)
+// Background positioning:
+//   7 8 9
+//   4 5 6
+//   1 2 3
+
+// background
+ALIGN_BACKGROUND              c5h5
+ALIGN_BACKGROUND_INGAME       c5h5
+ALPHA_BACKGROUND_INGAME       1
+ALPHA_DISABLED                0.2
+ALPHA_BEHIND                  0.5
+
+// button
+COLOR_BUTTON_C                '1 1 1'
+COLOR_BUTTON_D                '1 1 1'
+COLOR_BUTTON_F                '1 1 1'
+COLOR_BUTTON_N                '1 1 1'
+
+// campaign
+ALPHA_CAMPAIGN_CURRENT        1
+COLOR_CAMPAIGN_CURRENT        '0.96 0.99 1'
+ALPHA_CAMPAIGN_DESCRIPTION    0.8
+ALPHA_CAMPAIGN_FUTURE         0.2
+COLOR_CAMPAIGN_FUTURE         '0.96 0.99 1'
+ALPHA_CAMPAIGN_SELECTABLE     0.6
+COLOR_CAMPAIGN_SELECTABLE     '0.96 0.99 1'
+
+// charmap
+ALPHA_CHARMAP_CHAR            0.85
+COLOR_CHARMAP_CHAR            '1 1 1'
+ALPHA_CHARMAP_FOCUS           0.85
+COLOR_CHARMAP_FOCUS           '0.09 0.42 0.69'
+
+// checkbox
+COLOR_CHECKBOX_C              '1 1 1'
+COLOR_CHECKBOX_D              '1 1 1'
+COLOR_CHECKBOX_F              '1 1 1'
+COLOR_CHECKBOX_N              '1 1 1'
+
+// clearbutton
+COLOR_CLEARBUTTON_C           '1 1 1'
+COLOR_CLEARBUTTON_F           '1 1 1'
+COLOR_CLEARBUTTON_N           '1 1 1'
+OFFSET_CLEARBUTTON            0
+
+// colorpicker
+MARGIN_COLORPICKER            '0 0 0'
+
+// credits
+ALPHA_CREDITS_FUNCTION        1
+COLOR_CREDITS_FUNCTION        '0.03 0.25 0.49'
+ALPHA_CREDITS_PERSON          0.8
+COLOR_CREDITS_PERSON          '0.96 0.99 1'
+ALPHA_CREDITS_TITLE           1
+COLOR_CREDITS_TITLE           '0.94 0.45 0.11'
+ROWS_CREDITS                  20
+WIDTH_CREDITS                 0.5
+
+// cursor
+SIZE_CURSOR                   '32 32 0'
+OFFSET_CURSOR                 '0.25 0.125 0'
+ALPHA_CURSOR_INTRO            0
+
+// cvarlist
+COLOR_CVARLIST_CHANGED        '0.95 0.05 0.05'
+COLOR_CVARLIST_CONTROLS       '1 0.2 0.15'
+COLOR_CVARLIST_UNCHANGED      '1 1 1'
+ALPHA_CVARLIST_SAVED          0.85
+ALPHA_CVARLIST_TEMPORARY      0.55
+
+// dialog color
+COLOR_DIALOG_MULTIPLAYER      '1 1 1'
+COLOR_DIALOG_SETTINGS         '1 1 1'
+COLOR_DIALOG_TEAMSELECT       '1 1 1'
+COLOR_DIALOG_SANDBOXTOOLS     '1 1 1'
+COLOR_DIALOG_QUIT             '1 1 1'
+COLOR_DIALOG_ADVANCED         '1 1 1'
+COLOR_DIALOG_MUTATORS         '1 1 1'
+COLOR_DIALOG_MAPINFO          '1 1 1'
+COLOR_DIALOG_USERBIND         '1 1 1'
+COLOR_DIALOG_SINGLEPLAYER     '1 1 1'
+COLOR_DIALOG_CREDITS          '1 1 1'
+COLOR_DIALOG_WEAPONS          '1 1 1'
+COLOR_DIALOG_VIEW             '1 1 1'
+COLOR_DIALOG_MODEL            '1 1 1'
+COLOR_DIALOG_CROSSHAIR        '1 1 1'
+COLOR_DIALOG_HUD              '1 1 1'
+COLOR_DIALOG_SCREENSHOTVIEWER '1 1 1'
+COLOR_DIALOG_SERVERINFO       '1 1 1'
+COLOR_DIALOG_FIRSTRUN         '1 1 1'
+COLOR_DIALOG_CVARS            '1 0.2 0.15'
+COLOR_DIALOG_HUDCONFIRM       '1 0.2 0.15'
+
+// dialog margins
+HEIGHT_DIALOGBORDER           1
+MARGIN_TOP                    8
+MARGIN_BOTTOM                 12
+MARGIN_LEFT                   16
+MARGIN_RIGHT                  16
+MARGIN_COLUMNS                4
+MARGIN_ROWS                   4
+
+// dialog scale transformation centers (NOT the actual positions)
+POSITION_DIALOG_MULTIPLAYER   '0.9 0.4 0'
+POSITION_DIALOG_SINGLEPLAYER  '0.15 0.4 0'
+POSITION_DIALOG_SETTINGS      '0.5 1 0'
+POSITION_DIALOG_CREDITS       '-0.05 1.2 0'
+POSITION_DIALOG_QUIT          '1.05 1.2 0'
+
+// font
+ALPHA_TEXT                    0.8
+COLOR_TEXT                    '0.96 0.99 1'
+ALPHA_HEADER                  0.5
+COLOR_HEADER                  '0.96 0.99 1'
+FONTSIZE_NORMAL               12
+FONTSIZE_TITLE                16
+FONTSIZE_TOOLTIP              12
+HEIGHT_NORMAL                 1.5
+HEIGHT_TITLE                  1.5
+HEIGHT_ZOOMEDTITLE            -1
+
+// inputbox
+COLOR_INPUTBOX_F              '1 1 1'
+COLOR_INPUTBOX_N              '1 1 1'
+MARGIN_INPUTBOX_CHARS         1
+
+// keygrabber
+ALPHA_KEYGRABBER_KEYS         0.8
+COLOR_KEYGRABBER_KEYS         '0.96 0.99 1'
+ALPHA_KEYGRABBER_TITLES       1
+COLOR_KEYGRABBER_TITLES       '0.03 0.25 0.49'
+
+// listbox
+ALPHA_LISTBOX_BACKGROUND      0.5
+COLOR_LISTBOX_BACKGROUND      '0 0 0'
+ALPHA_LISTBOX_SELECTED        1
+COLOR_LISTBOX_SELECTED        '0.97 0.56 0.27'
+ALPHA_LISTBOX_WAITING         0.8
+COLOR_LISTBOX_WAITING         '0.73 0.82 0.9'
+
+// mainmenu
+ALPHAS_MAINMENU               '0.8 0.9 1'
+
+// maplist
+COLOR_MAPLIST_AUTHOR          '0.56 0.72 0.86'
+ALPHA_MAPLIST_INCLUDEDBG      0.3
+COLOR_MAPLIST_INCLUDEDBG      '0.03 0.25 0.49'
+ALPHA_MAPLIST_INCLUDEDFG      1
+ALPHA_MAPLIST_NOTINCLUDEDFG   0.25
+COLOR_MAPLIST_TITLE           '0.96 0.99 1'
+
+// modeltitle
+ALPHA_MODELTITLE              0.8
+COLOR_MODELTITLE              '0.96 0.99 1'
+
+// radiobutton
+COLOR_RADIOBUTTON_C           '1 1 1'
+COLOR_RADIOBUTTON_D           '1 1 1'
+COLOR_RADIOBUTTON_F           '1 1 1'
+COLOR_RADIOBUTTON_N           '1 1 1'
+
+// serverinfo
+COLOR_SERVERINFO_IP           '0.96 0.99 1'
+COLOR_SERVERINFO_NAME         '0.94 0.45 0.11'
+
+// serverlist
+ALPHA_SERVERLIST_CATEGORY     1
+COLOR_SERVERLIST_CATEGORY     '0.03 0.25 0.49'
+ALPHA_SERVERLIST_EMPTY        0.65
+ALPHA_SERVERLIST_FAVORITE     0.8
+COLOR_SERVERLIST_FAVORITE     '1 1 1'
+ALPHA_SERVERLIST_FULL         0.4
+ALPHA_SERVERLIST_HIGHPING     0.4
+COLOR_SERVERLIST_HIGHPING     '0.98 0.08 0.08'
+COLOR_SERVERLIST_LOWPING      '0.08 0.98 0.08'
+COLOR_SERVERLIST_MEDPING      '0.98 0.76 0.08'
+
+// skinlist
+COLOR_SKINLIST_AUTHOR         '0.56 0.72 0.86'
+COLOR_SKINLIST_TITLE          '0.96 0.99 1'
+
+// scrollbar
+COLOR_SCROLLBAR_C             '1 1 1'
+COLOR_SCROLLBAR_F             '1 1 1'
+COLOR_SCROLLBAR_N             '1 1 1'
+COLOR_SCROLLBAR_S             '1 1 1'
+WIDTH_SCROLLBAR               16
+
+// slider
+COLOR_SLIDER_C                '1 1 1'
+COLOR_SLIDER_D                '1 1 1'
+COLOR_SLIDER_F                '1 1 1'
+COLOR_SLIDER_N                '1 1 1'
+COLOR_SLIDER_S                '1 1 1'
+TOLERANCE_SLIDER              '0.2 2 0'
+WIDTH_SLIDERTEXT              0.333333333333
+
+// tooltip
+ALPHA_TOOLTIP                 0.8
+COLOR_TOOLTIP                 '1 0.97 0.94'
+AVOID_TOOLTIP                 '8 8 0'
+BORDER_TOOLTIP                '16 16 0'
+MARGIN_TOOLTIP                '10 8 0'
+WIDTH_TOOLTIP                 0.3

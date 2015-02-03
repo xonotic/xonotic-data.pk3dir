@@ -1,3 +1,13 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+    #include "mathlib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "mathlib.qh"
+#endif
+
 int fpclassify(float x)
 {
 	if(isnan(x))
@@ -8,25 +18,25 @@ int fpclassify(float x)
 		return FP_ZERO;
 	return FP_NORMAL;
 }
-int isfinite(float x)
+bool isfinite(float x)
 {
 	return !(isnan(x) || isinf(x));
 }
-int isinf(float x)
+bool isinf(float x)
 {
 	return (x != 0) && (x + x == x);
 }
-int isnan(float x)
+bool isnan(float x)
 {
 	float y;
 	y = x;
 	return (x != y);
 }
-int isnormal(float x)
+bool isnormal(float x)
 {
 	return isfinite(x);
 }
-int signbit(float x)
+bool signbit(float x)
 {
 	return (x < 0);
 }
@@ -72,9 +82,9 @@ float expm1(float x)
 vector frexp(float x)
 {
 	vector v;
-	v_z = 0;
-	v_y = ilogb(x) + 1;
-	v_x = x / exp2(v_y);
+	v.z = 0;
+	v.y = ilogb(x) + 1;
+	v.x = x / exp2(v.y);
 	return v;
 }
 int ilogb(float x)
@@ -146,11 +156,11 @@ vector lgamma(float x)
 		// gamma(1-z) * gamma(z) = pi / sin(pi*z)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))
 		// sign of gamma(1-z) = sign of gamma(z) * sign of sin(pi*z)
-		v_z = sin(M_PI * x);
-		v_x = log(M_PI) - log(fabs(v_z)) - v_x;
-		if(v_z < 0)
-			v_y = -v_y;
-		v_z = 0;
+		v.z = sin(M_PI * x);
+		v.x = log(M_PI) - log(fabs(v.z)) - v.x;
+		if(v.z < 0)
+			v.y = -v.y;
+		v.z = 0;
 		return v;
 	}
 	if(x < 1.1)
@@ -162,7 +172,7 @@ float tgamma(float x)
 {
 	vector v;
 	v = lgamma(x);
-	return exp(v_x) * v_y;
+	return exp(v.x) * v.y;
 }
 
 float nearbyint(float x)
@@ -185,9 +195,9 @@ float remainder(float x, float y)
 vector remquo(float x, float y)
 {
 	vector v;
-	v_z = 0;
-	v_y = rint(x / y);
-	v_x = x - y * v_y;
+	v.z = 0;
+	v.y = rint(x / y);
+	v.x = x - y * v.y;
 	return v;
 }
 

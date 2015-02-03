@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "bgmscript.qh"
+	#include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;
@@ -176,7 +187,7 @@ float BGMScript(entity e)
 	if(autocvar_bgmvolume <= 0)
 		return -1;
 
-	e.just_toggled = FALSE;
+	e.just_toggled = false;
 
 	if(bgmtime < 0)
 		return -1;
@@ -189,13 +200,13 @@ float BGMScript(entity e)
 		e.bgmscripttime = bgmtime;
 
 		// treat this as a stop event for all notes, to prevent sticking keys
-		e.bgmscriptstate = FALSE;
+		e.bgmscriptstate = false;
 		e.bgmscriptvolume = 1;
 		e.bgmscriptstatetime = bgmtime - GetTimeForAmplitude(e, amp);
 	}
 
 	// find the CURRENT line
-	for(;;)
+	for (;;)
 	{
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
 		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)
@@ -214,11 +225,11 @@ float BGMScript(entity e)
 			vel = stof(argv(2));
 			if(vel > 0)
 			{
-				e.just_toggled = e.bgmscriptstate = TRUE;
+				e.just_toggled = e.bgmscriptstate = true;
 				e.bgmscriptvolume = vel;
 			}
 			else
-				e.just_toggled = e.bgmscriptstate = FALSE;
+				e.just_toggled = e.bgmscriptstate = false;
 
 			e.bgmscriptstatetime = e.bgmscripttime - GetTimeForAmplitude(e, amp);
 		}
