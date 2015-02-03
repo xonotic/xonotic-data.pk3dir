@@ -1,4 +1,15 @@
-vector Buff_Color(float buff_id)
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../client/defs.qh"
+	#include "buffs.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "buffs.qh"
+#endif
+
+vector Buff_Color(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -7,7 +18,7 @@ vector Buff_Color(float buff_id)
 	return '1 1 1';
 }
 
-string Buff_PrettyName(float buff_id)
+string Buff_PrettyName(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -16,7 +27,7 @@ string Buff_PrettyName(float buff_id)
 	return "";
 }
 
-string Buff_Name(float buff_id)
+string Buff_Name(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -25,7 +36,7 @@ string Buff_Name(float buff_id)
 	return "";
 }
 
-float Buff_Type_FromName(string buff_name)
+int Buff_Type_FromName(string buff_name)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -34,7 +45,7 @@ float Buff_Type_FromName(string buff_name)
 	return 0;
 }
 
-float Buff_Type_FromSprite(string buff_sprite)
+int Buff_Type_FromSprite(string buff_sprite)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -44,7 +55,7 @@ float Buff_Type_FromSprite(string buff_sprite)
 }
 
 
-float Buff_Skin(float buff_id)
+int Buff_Skin(float buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -53,7 +64,7 @@ float Buff_Skin(float buff_id)
 	return 0;
 }
 
-string Buff_Sprite(float buff_id)
+string Buff_Sprite(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)

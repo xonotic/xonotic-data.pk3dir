@@ -1,3 +1,6 @@
+#ifndef MUTATORS_INCLUDE_H
+#define MUTATORS_INCLUDE_H
+
 #include "base.qh"
 #include "mutators.qh"
 #include "gamemode_assault.qh"
@@ -16,3 +19,4 @@
 #include "mutator_overkill.qh"
 #include "mutator_nades.qh"
 #include "mutator_buffs.qh"
+#endif

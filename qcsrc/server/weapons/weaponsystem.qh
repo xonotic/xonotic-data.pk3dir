@@ -1,6 +1,43 @@
-float weaponswapping;
+#ifndef WEAPONSYSTEM_H
+#define WEAPONSYSTEM_H
+
+.float wframe;
+
 float internalteam;
+float weaponswapping;
+entity weapon_dropevent_item;
+
+// VorteX: static frame globals
+const float WFRAME_DONTCHANGE = -1;
+const float WFRAME_FIRE1 = 0;
+const float WFRAME_FIRE2 = 1;
+const float WFRAME_IDLE = 2;
+const float WFRAME_RELOAD = 3;
+
+void CL_SpawnWeaponentity();
+
+vector CL_Weapon_GetShotOrg(float wpn);
+
+float forbidWeaponUse();
+
+void W_AttachToShotorg(entity flash, vector offset);
+
+void W_DecreaseAmmo(float ammo_use);
 
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item);
 
-float forbidWeaponUse();
+void W_Reload(float sent_ammo_min, string sent_sound);
+
+void W_WeaponFrame();
+
+float W_WeaponRateFactor();
+
+float weapon_prepareattack(float secondary, float attacktime);
+
+float weapon_prepareattack_check(float secondary, float attacktime);
+
+float weapon_prepareattack_do(float secondary, float attacktime);
+
+void weapon_thinkf(float fr, float t, void() func);
+
+#endif
