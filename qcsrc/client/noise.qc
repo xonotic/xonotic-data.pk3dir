@@ -1,3 +1,10 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "noise.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 .float noise_baccum;
 .float noise_paccum;
 .float noise_paccum2;

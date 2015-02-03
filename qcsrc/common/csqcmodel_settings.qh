@@ -1,3 +1,6 @@
+#ifndef CSQCMODEL_SETTINGS_H
+#define CSQCMODEL_SETTINGS_H
+
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
 
@@ -22,11 +25,11 @@
 
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
-	CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) \
-	CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) \
-	CSQCMODEL_PROPERTY(4, float, ReadByte, WriteByte, modelflags) \
+	CSQCMODEL_PROPERTY(1, int, ReadShort, WriteShort, colormap) \
+	CSQCMODEL_PROPERTY(2, int, ReadInt24_t, WriteInt24_t, effects) \
+	CSQCMODEL_PROPERTY(4, int, ReadByte, WriteByte, modelflags) \
 	CSQCMODEL_PROPERTY_SCALED(8, float, ReadByte, WriteByte, alpha, 254, -1, 254) \
-	CSQCMODEL_PROPERTY(16, float, ReadByte, WriteByte, skin) \
+	CSQCMODEL_PROPERTY(16, int, ReadByte, WriteByte, skin) \
 	CSQCMODEL_PROPERTY(32, float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_PROPERTY(64, float, ReadByte, WriteByte, solid) \
 	CSQCMODEL_IF(!isplayer) \
@@ -39,7 +42,7 @@
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 255, 0, 255) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(isplayer) \
-		CSQCMODEL_PROPERTY(128, float, ReadByte, WriteByte, anim_state) \
+		CSQCMODEL_PROPERTY(128, int, ReadByte, WriteByte, anim_state) \
 		CSQCMODEL_PROPERTY(128, float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
 		CSQCMODEL_IF(!islocalplayer) \
 			CSQCMODEL_PROPERTY(256, float, ReadChar, WriteChar, anim_lower_action) \
@@ -78,3 +81,4 @@
 #endif
 
 #define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE
+#endif

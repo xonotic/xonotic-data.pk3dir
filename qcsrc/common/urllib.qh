@@ -1,3 +1,6 @@
+#ifndef URLLIB_H
+#define URLLIB_H
+
 const float URL_READY_ERROR    = -1;
 const float URL_READY_CLOSED   =  0;
 const float URL_READY_CANWRITE =  1;
@@ -11,8 +14,9 @@ string url_fgets(entity e);
 void url_fputs(entity e, string s);
 
 // returns true if handled
-float url_URI_Get_Callback(float id, float status, string data);
+float url_URI_Get_Callback(int id, float status, string data);
 #define MIN_URL_ID URI_GET_URLLIB
 #define NUM_URL_ID (URI_GET_URLLIB_END - URI_GET_URLLIB + 1)
 
 void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass);
+#endif

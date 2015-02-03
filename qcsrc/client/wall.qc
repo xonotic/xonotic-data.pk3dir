@@ -1,8 +1,4 @@
-.float lip;
-.float bgmscriptangular;
-.float lodmodelindex0, lodmodelindex1, lodmodelindex2;
-.float loddistance1, loddistance2;
-.vector saved;
+#include "wall.qh"
 
 void Ent_Wall_Draw()
 {
@@ -71,7 +67,7 @@ void Ent_Wall_Remove()
 
 void Ent_Wall()
 {
-	float f;
+	int f;
 	var .vector fld;
 
 	InterpolateOrigin_Undo();
