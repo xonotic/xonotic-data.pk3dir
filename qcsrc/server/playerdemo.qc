@@ -1,10 +1,19 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "defs.qh"
+    #include "playerdemo.qh"
+#endif
+
 .float playerdemo_fh;
 .float playerdemo_mode;
 .float playerdemo_starttime;
 .float playerdemo_time;
-#define PLAYERDEMO_MODE_OFF 0
-#define PLAYERDEMO_MODE_READING 1
-#define PLAYERDEMO_MODE_WRITING 2
+const float PLAYERDEMO_MODE_OFF = 0;
+const float PLAYERDEMO_MODE_READING = 1;
+const float PLAYERDEMO_MODE_WRITING = 2;
 void playerdemo_init()
 {
 	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;

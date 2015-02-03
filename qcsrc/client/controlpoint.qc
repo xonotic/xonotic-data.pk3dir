@@ -1,8 +1,12 @@
-float cpicon_precached;
-.float count;
+#include "controlpoint.qh"
+#include "gibs.qh"
+#include "teamradar.qh"
+
+bool cpicon_precached;
+.int count;
 .float pain_finished;
 
-.float iscaptured;
+.bool iscaptured;
 
 .vector cp_origin, cp_bob_origin;
 .float cp_bob_spd;
@@ -25,7 +29,7 @@ void cpicon_precache()
 	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
 	precache_model("models/onslaught/controlpoint_icon.md3");
 
-	cpicon_precached = TRUE;
+	cpicon_precached = true;
 }
 
 void cpicon_draw()
@@ -166,8 +170,7 @@ void cpicon_changeteam()
 
 void ent_cpicon()
 {
-	float sf;
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & CPSF_SETUP)
 	{
@@ -192,8 +195,7 @@ void ent_cpicon()
 
 	if(sf & CPSF_STATUS)
 	{
-		float _tmp;
-		_tmp = ReadByte();
+		int _tmp = ReadByte();
 		if(_tmp != self.team)
 		{
 			self.team = _tmp;

@@ -1,3 +1,6 @@
+#ifndef WEAPONSTATS_H
+#define WEAPONSTATS_H
+
 float weaponstats_buffer;
 
 void WeaponStats_Init();
@@ -8,3 +11,4 @@ void WeaponStats_LogDamage(float awep, float abot, float vwep, float vbot, float
 void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot);
 
 #define WEAPONSTATS_GETINDEX(awep,abot,vwep,vbot) (((vwep) + (awep) * (WEP_LAST - WEP_FIRST + 1) - (WEP_FIRST + WEP_FIRST * (WEP_LAST - WEP_FIRST + 1))) * 4 + (abot) * 2 + (vbot))
+#endif

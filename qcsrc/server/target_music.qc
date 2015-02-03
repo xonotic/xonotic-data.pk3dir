@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../common/constants.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+#endif
+
 .float lifetime;
 // values:
 //   volume
@@ -74,28 +84,28 @@ float trigger_music_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	if(sf & 1)
 	{
 		if(self.model != "null")
 		{
 			WriteShort(MSG_ENTITY, self.modelindex);
-			WriteCoord(MSG_ENTITY, self.mins_x);
-			WriteCoord(MSG_ENTITY, self.mins_y);
-			WriteCoord(MSG_ENTITY, self.mins_z);
-			WriteCoord(MSG_ENTITY, self.maxs_x);
-			WriteCoord(MSG_ENTITY, self.maxs_y);
-			WriteCoord(MSG_ENTITY, self.maxs_z);
+			WriteCoord(MSG_ENTITY, self.mins.x);
+			WriteCoord(MSG_ENTITY, self.mins.y);
+			WriteCoord(MSG_ENTITY, self.mins.z);
+			WriteCoord(MSG_ENTITY, self.maxs.x);
+			WriteCoord(MSG_ENTITY, self.maxs.y);
+			WriteCoord(MSG_ENTITY, self.maxs.z);
 		}
 		else
 		{
 			WriteShort(MSG_ENTITY, 0);
-			WriteCoord(MSG_ENTITY, self.maxs_x);
-			WriteCoord(MSG_ENTITY, self.maxs_y);
-			WriteCoord(MSG_ENTITY, self.maxs_z);
+			WriteCoord(MSG_ENTITY, self.maxs.x);
+			WriteCoord(MSG_ENTITY, self.maxs.y);
+			WriteCoord(MSG_ENTITY, self.maxs.z);
 		}
 		WriteByte(MSG_ENTITY, self.volume * 255.0);
 		WriteByte(MSG_ENTITY, self.fade_time * 16.0);
@@ -130,5 +140,5 @@ void spawnfunc_trigger_music()
 	self.use = trigger_music_use;
 	self.reset = trigger_music_reset;
 
-	Net_LinkEntity(self, FALSE, 0, trigger_music_SendEntity);
+	Net_LinkEntity(self, false, 0, trigger_music_SendEntity);
 }

@@ -1,3 +1,6 @@
+#ifndef TURRETS_H
+#define TURRETS_H
+
 #ifdef TTURRETS_ENABLED
 
 // Include section.
@@ -27,3 +30,4 @@
 //#include "../units/unit_hive.qc"     /// Swarm AI
 
 #endif // TTURRETS_ENABLED
+#endif

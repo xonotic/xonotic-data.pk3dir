@@ -5,11 +5,11 @@
 .entity ons_toucher; // player who touched the control point
 
 // control point / generator constants
-#define ONS_CP_THINKRATE 0.2
-#define GEN_THINKRATE 1
+const float ONS_CP_THINKRATE = 0.2;
+const float GEN_THINKRATE = 1;
 #define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
-#define CPGEN_WAYPOINT_OFFSET ('0 0 128')
-#define CPICON_OFFSET ('0 0 96')
+const vector CPGEN_WAYPOINT_OFFSET = ('0 0 128');
+const vector CPICON_OFFSET = ('0 0 96');
 
 // list of generators on the map
 entity ons_worldgeneratorlist;
@@ -29,28 +29,27 @@ entity ons_worldlinklist;
 // definitions
 .entity sprite;
 .string target2;
-.float iscaptured;
-.float islinked;
-.float isshielded;
+.int iscaptured;
+.int islinked;
+.int isshielded;
 .float lasthealth;
-.float lastteam;
-.float lastshielded;
-.float lastcaptured;
+.int lastteam;
+.int lastshielded;
+.int lastcaptured;
 
-.float waslinked;
+.bool waslinked;
 
-float ons_stalemate;
+bool ons_stalemate;
 
 .float teleport_antispam;
 
-.float ons_roundlost;
+.bool ons_roundlost;
 
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
-float wpforenemy_announced;
 
-.float isgenneighbor[17];
-.float iscpneighbor[17];
+.bool isgenneighbor[17];
+.bool iscpneighbor[17];
 float ons_notification_time[17];
 
 .float ons_overtime_damagedelay;
@@ -62,20 +61,20 @@ float ons_notification_time[17];
 // declarations for functions used outside gamemode_onslaught.qc
 void ons_Generator_UpdateSprite(entity e);
 void ons_ControlPoint_UpdateSprite(entity e);
-float ons_ControlPoint_Attackable(entity cp, float teamnumber);
+bool ons_ControlPoint_Attackable(entity cp, int teamnumber);
 
 // CaptureShield: Prevent capturing or destroying control point/generator if it is not available yet
 float ons_captureshield_force; // push force of the shield
 
 // bot player logic
-#define HAVOCBOT_ONS_ROLE_NONE 		0
-#define HAVOCBOT_ONS_ROLE_DEFENSE	2
-#define HAVOCBOT_ONS_ROLE_ASSISTANT	4
-#define HAVOCBOT_ONS_ROLE_OFFENSE	8
+const int HAVOCBOT_ONS_ROLE_NONE 		= 0;
+const int HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
+const int HAVOCBOT_ONS_ROLE_ASSISTANT 	= 4;
+const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
 
 .entity havocbot_ons_target;
 
-.float havocbot_role_flags;
+.int havocbot_role_flags;
 .float havocbot_attack_time;
 
 void havocbot_role_ons_defense();
@@ -87,8 +86,8 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius);
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius);
 
 // score rule declarations
-#define ST_ONS_CAPS 1
-#define SP_ONS_CAPS 4
-#define SP_ONS_TAKES 6
+const int ST_ONS_CAPS = 1;
+const int SP_ONS_CAPS = 4;
+const int SP_ONS_TAKES = 6;
 
 #endif

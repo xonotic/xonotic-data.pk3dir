@@ -1,5 +1,7 @@
-float generator_precached;
-.float count;
+#include "generator.qh"
+
+bool generator_precached;
+.int count;
 .float max_health;
 
 vector randompos(vector m1, vector m2)
@@ -36,7 +38,7 @@ void generator_precache()
 	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("onslaught/electricity_explode.wav");
 
-	generator_precached = TRUE;
+	generator_precached = true;
 }
 
 void ons_generator_ray_draw()
@@ -104,7 +106,7 @@ void generator_draw()
 		return;
 
 	vector org;
-	float i;
+	int i;
 
 	// White shockwave
 	if(self.count==40||self.count==20)
@@ -217,8 +219,7 @@ void generator_changeteam()
 
 void ent_generator()
 {
-	float sf;
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & GSF_SETUP)
 	{
@@ -242,7 +243,7 @@ void ent_generator()
 
 	if(sf & GSF_STATUS)
 	{
-		float _tmp;
+		int _tmp;
 		_tmp = ReadByte();
 		if(_tmp != self.team)
 		{

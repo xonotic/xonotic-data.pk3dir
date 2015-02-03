@@ -1,4 +1,6 @@
-float cpicon_send(entity to, float sf)
+#include "controlpoint.qh"
+
+bool cpicon_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONTROLPOINT_ICON);
 	WriteByte(MSG_ENTITY, sf);
@@ -25,12 +27,12 @@ float cpicon_send(entity to, float sf)
 			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
 	}
 
-	return TRUE;
+	return true;
 }
 
 void onslaught_controlpoint_icon_link(entity e, void() spawnproc)
 {
-	Net_LinkEntity(e, TRUE, 0, cpicon_send);
+	Net_LinkEntity(e, true, 0, cpicon_send);
 	e.think		= spawnproc;
 	e.nextthink	= time * sys_frametime;
 }
