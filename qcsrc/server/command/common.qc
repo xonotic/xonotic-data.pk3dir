@@ -48,13 +48,13 @@ float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 }
 
 // if the client is not acceptable, return a string to be used for error messages
-string GetClientErrorString(float clienterror, string original_input)
+string GetClientErrorString_color(float clienterror, string original_input, string col)
 {
 	switch(clienterror)
 	{
-		case CLIENT_DOESNT_EXIST: { return strcat("Client '", original_input, "' doesn't exist"); }
-		case CLIENT_NOT_REAL: { return strcat("Client '", original_input, "' is not real"); }
-		case CLIENT_NOT_BOT: { return strcat("Client '", original_input, "' is not a bot"); }
+		case CLIENT_DOESNT_EXIST: { return strcat(col, "Client '", original_input, col, "' doesn't exist"); }
+		case CLIENT_NOT_REAL: { return strcat(col, "Client '", original_input, col, "' is not real"); }
+		case CLIENT_NOT_BOT: { return strcat(col, "Client '", original_input, col, "' is not a bot"); }
 		default: { return "Incorrect usage of GetClientErrorString"; }
 	}
 }
