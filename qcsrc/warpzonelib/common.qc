@@ -564,6 +564,45 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
+float WarpZoneLib_BadClassname(string myclassname)
+{
+	switch(myclassname)
+	{
+		case "weapon_info":
+		case "monster_info":
+		case "deathtype":
+		case "callback":
+		case "callbackchain":
+		case "weaponentity":
+		case "exteriorweaponentity":
+		case "csqc_score_team":
+		case "pingplreport":
+		case "ent_client_scoreinfo":
+		case "saved_cvar_value":
+		case "accuracy":
+		case "entcs_sender_v2":
+		case "entcs_receiver_v2":
+		case "clientinit":
+		case "sprite_waypoint":
+		case "waypoint":
+		case "gibsplash":
+		//case "net_linked": // actually some real entities are linked without classname, fail
+		case "":
+			return TRUE;
+	}
+
+	if(startsWith(myclassname, "msg_"))
+		return TRUE;
+
+	if(startsWith(myclassname, "target_"))
+		return TRUE;
+
+	if(startsWith(myclassname, "info_"))
+		return TRUE;
+
+	return FALSE;
+}
+
 .float WarpZone_findradius_hit;
 .entity WarpZone_findradius_next;
 void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,               vector transform, vector shift, float needlineofsight)
@@ -582,6 +621,8 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 
 	for(e = e0; e; e = e.chain)
 	{
+		if(WarpZoneLib_BadClassname(e.classname))
+			continue;
 		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
@@ -617,6 +658,8 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	}
 	for(e = wz; e; e = e.WarpZone_findradius_next)
 	{
+		if(WarpZoneLib_BadClassname(e.classname))
+			continue;
 		org0_new = WarpZone_TransformOrigin(e, org);
 		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
 		org_new = trace_endpos;
