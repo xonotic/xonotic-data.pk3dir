@@ -47,7 +47,7 @@ float ons_stalemate;
 
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
-float wpforenemy_announced;
+//float wpforenemy_announced;
 
 .float isgenneighbor[17];
 .float iscpneighbor[17];

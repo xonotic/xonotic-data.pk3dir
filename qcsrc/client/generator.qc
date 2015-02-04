@@ -1,6 +1,9 @@
-float generator_precached;
-.float count;
-.float max_health;
+#include "generator.qh"
+#include "waypointsprites.qh"
+
+bool generator_precached;
+.int count;
+.int max_health;
 
 void generator_precache()
 {
@@ -26,7 +29,7 @@ void generator_precache()
 	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("onslaught/electricity_explode.wav");
 
-	generator_precached = TRUE;
+	generator_precached = true;
 }
 
 void ons_generator_ray_draw()

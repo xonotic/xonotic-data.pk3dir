@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_mage_health;
 var float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
@@ -57,13 +59,13 @@ void() M_Mage_Defend_Shield;
 float M_Mage_Defend_Heal_Check(entity e)
 {
 	if(e == world)
-		return FALSE;
+		return false;
 	if(e.health <= 0)
-		return FALSE;
+		return false;
 	if(DIFF_TEAM(e, self) && e != self.monster_follow)
-		return FALSE;
+		return false;
 	if(e.frozen)
-		return FALSE;
+		return false;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);
 
@@ -75,7 +77,7 @@ float M_Mage_Defend_Heal_Check(entity e)
 		case 3: return (e.health > 0);
 	}
 
-	return FALSE;
+	return false;
 }
 
 void M_Mage_Attack_Spike_Explode()
@@ -139,9 +141,9 @@ void M_Mage_Attack_Spike_Think()
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen(self.origin + olddir * self.wait) < dist)
-				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
-				traceline(self.origin, eorg, FALSE, self);
+				traceline(self.origin, eorg, false, self);
 
 			// Setup adaptive tracelength
 			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
@@ -187,17 +189,17 @@ void M_Mage_Attack_Spike()
 
 	self.mage_spike = missile;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
 void M_Mage_Defend_Heal()
 {
 	entity head;
-	float washealed = FALSE;
+	float washealed = false;
 
 	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(M_Mage_Defend_Heal_Check(head))
 	{
-		washealed = TRUE;
+		washealed = true;
 		string fx = "";
 		if(IS_PLAYER(head))
 		{
@@ -300,10 +302,10 @@ float M_Mage_Attack(float attack_type)
 			if(random() <= 0.7)
 			{
 				M_Mage_Attack_Push();
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -312,7 +314,7 @@ float M_Mage_Attack(float attack_type)
 				if(random() <= 0.4)
 				{
 					M_Mage_Attack_Teleport();
-					return TRUE;
+					return true;
 				}
 				else
 				{
@@ -320,18 +322,18 @@ float M_Mage_Attack(float attack_type)
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
-					return TRUE;
+					return true;
 				}
 			}
 
 			if(self.mage_spike)
-				return TRUE;
+				return true;
 			else
-				return FALSE;
+				return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
@@ -349,14 +351,14 @@ float M_Mage(float req)
 		case MR_THINK:
 		{
 			entity head;
-			float need_help = FALSE;
+			float need_help = false;
 
-			for(head = world; (head = findfloat(head, iscreature, TRUE)); )
+			for(head = world; (head = findfloat(head, iscreature, true)); )
 			if(head != self)
 			if(vlen(head.origin - self.origin) <= (autocvar_g_monster_mage_heal_range))
 			if(M_Mage_Defend_Heal_Check(head))
 			{
-				need_help = TRUE;
+				need_help = true;
 				break;
 			}
 
@@ -374,16 +376,16 @@ float M_Mage(float req)
 			if(random() < 0.5)
 				M_Mage_Defend_Shield();
 
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = mage_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -400,17 +402,17 @@ float M_Mage(float req)
 			self.monster_loot = spawnfunc_item_health_large;
 			self.frame = mage_anim_walk;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_sound (W_Sound("grenade_impact"));
 			precache_sound (W_Sound("tagexp1"));
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

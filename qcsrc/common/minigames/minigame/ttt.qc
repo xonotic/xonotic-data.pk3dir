@@ -132,7 +132,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		case "start":
 		{
 			minigame.minigame_flags = (TTT_TURN_PLACE | TTT_TURN_TEAM1);
-			return TRUE;
+			return true;
 		}
 		case "end":
 		{
@@ -143,7 +143,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				if(e.netname) { strunzone(e.netname); }
 				remove(e);
 			}
-			return FALSE;
+			return false;
 		}
 		case "join":
 		{
@@ -151,10 +151,10 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			
 			// Don't allow joining a single player match
 			if ( (minigame.ttt_ai) && pl_num > 0 )
-				return FALSE;
+				return false;
 
 			// Don't allow more than 2 players
-			if(pl_num >= 2) { return FALSE; }
+			if(pl_num >= 2) { return false; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -169,20 +169,20 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			{
 				case "move": 
 					ttt_move(minigame, ...(0,entity), ...(1,float) == 2 ? argv(1) : string_null ); 
-					return TRUE;
+					return true;
 				case "next":
 					ttt_next_match(minigame,...(0,entity));
-					return TRUE;
+					return true;
 				case "singleplayer":
 					if ( minigame_count_players(minigame) == 1 )
 					{
 						minigame.ttt_ai = minigame_next_team(minigame.minigame_players.team, 2);
 						minigame.SendFlags = TTT_SF_SINGLEPLAYER;
 					}
-					return TRUE;
+					return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 		case "network_send":
 		{
@@ -196,11 +196,11 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			{
 				WriteByte(MSG_ENTITY,sent.ttt_ai);
 			}
-			return FALSE;
+			return false;
 		}
 	}
 	
-	return FALSE;
+	return false;
 }
 
 
@@ -550,7 +550,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		{
 			ttt_set_curr_pos("");
 			minigame.message = ttt_turn_to_string(minigame.minigame_flags);
-			return FALSE;
+			return false;
 		}
 		case "key_pressed":
 		{
@@ -564,47 +564,47 @@ float minigame_event_ttt(entity minigame, string event, ...)
 							ttt_set_curr_pos("a3");
 						else
 							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,1,0,3,3));
-						return TRUE;
+						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("c3");
 						else
 							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,-1,0,3,3));
-						return TRUE;
+						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a1");
 						else
 							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,1,3,3));
-						return TRUE;
+						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
 							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,-1,3,3));
-						return TRUE;
+						return true;
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
 						ttt_make_move(minigame);
-						return TRUE;
+						return true;
 				}
 			}
 
-			return FALSE;
+			return false;
 		}
 		case "mouse_pressed":
 		{
 			if(...(0,float) == K_MOUSE1)
 			{
 				ttt_make_move(minigame);
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 		case "mouse_moved":
 		{
@@ -614,7 +614,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			if ( ! ttt_valid_tile(ttt_curr_pos) )
 				ttt_set_curr_pos("");
 
-			return TRUE;
+			return true;
 		}
 		case "network_receive":
 		{
@@ -653,13 +653,13 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				sent.minigame_flags = ReadByte();
 			}
 
-			return FALSE;
+			return false;
 		}
 		case "menu_show":
 		{
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Single Player"),"singleplayer");
-			return FALSE;
+			return false;
 		}
 		case "menu_click":
 		{
@@ -678,11 +678,11 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				if ( minigame_count_players(minigame) == 1 )
 					minigame_cmd("singleplayer");
 			}
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 #endif

@@ -1,3 +1,5 @@
+#include "../../common/vehicles/sv_vehicles.qh"
+
 MUTATOR_HOOKFUNCTION(rvehicles_OnEntityPreSpawn)
 {
 	if(startsWith(self.classname, "vehicle_"))
@@ -27,17 +29,17 @@ MUTATOR_HOOKFUNCTION(rvehicles_OnEntityPreSpawn)
 			}
 		}
 
-		if(!vehicle_initialize(RandomSelection_chosen_float, FALSE)) { self = oldself; remove(e); return FALSE; }
+		if(!vehicle_initialize(RandomSelection_chosen_float, false)) { self = oldself; remove(e); return false; }
 		self = oldself;
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_random_vehicles)
 {
 	MUTATOR_HOOK(OnEntityPreSpawn, rvehicles_OnEntityPreSpawn, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

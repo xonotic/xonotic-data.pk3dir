@@ -1,3 +1,6 @@
+#ifndef HOOK_H
+#define HOOK_H
+
 // Wazat's grappling hook
 .entity		hook;
 void GrapplingHookFrame();
@@ -15,3 +18,4 @@ const float HOOK_WAITING_FOR_RELEASE = 16;
 
 void GrappleHookInit();
 vector hook_shotorigin[4];
+#endif

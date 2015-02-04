@@ -1,5 +1,5 @@
 #ifndef CHAOS
-const float WEP_REVOLVER = 1337; // abuse
+//const int WEP_REVOLVER = 1337; // abuse
 #else
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
@@ -43,6 +43,8 @@ REVOLVER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_revolver(void) { weapon_defaultspawnfunc(WEP_REVOLVER); }
 
 void W_Revolver_Attack()
@@ -51,7 +53,7 @@ void W_Revolver_Attack()
 
 	W_DecreaseAmmo(WEP_CVAR(revolver, ammo));
 
-	W_SetupShot(self, TRUE, 5, W_Sound("revolver_fire"), CH_WEAPON_A, WEP_CVAR(revolver, damage));
+	W_SetupShot(self, true, 5, W_Sound("revolver_fire"), CH_WEAPON_A, WEP_CVAR(revolver, damage));
 	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(revolver, spread), WEP_CVAR(revolver, solidpenetration), WEP_CVAR(revolver, damage), WEP_CVAR(revolver, force), WEP_REVOLVER, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR(revolver, ammo));
@@ -85,16 +87,16 @@ void W_Revolver_SetLoad(float newload)
 
 float W_Revolver_CheckLoad()
 {
-	if(!self.revolver_load) { return TRUE; }
+	if(!self.revolver_load) { return true; }
 	else if(time >= self.revolver_loadspamtime && IS_REAL_CLIENT(self) && self.BUTTON_ATCK && !self.BUTTON_ATCK2) // TODO
 	{
 		self.revolver_loadspamtime = time + WEP_CVAR(revolver, refire) * W_WeaponRateFactor();
 		play2(self, W_Sound("dryfire"));
 		sprint(self, "Please use secondary fire to load the revolver!\n");
-		return FALSE;
+		return false;
 	}
 
-	return FALSE;
+	return false;
 }
 
 float W_Revolver(float req)
@@ -105,11 +107,11 @@ float W_Revolver(float req)
 		case WR_AIM:
 		{
 			if(!W_Revolver_CheckLoad())
-				self.BUTTON_ATCK2 = TRUE;
+				self.BUTTON_ATCK2 = true;
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -141,7 +143,7 @@ float W_Revolver(float req)
 				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(revolver, load_time), w_ready);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -154,12 +156,12 @@ float W_Revolver(float req)
 			precache_sound("misc/itempickup.wav");
 			precache_sound(W_Sound("revolver_fire"));
 			REVOLVER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
 			W_Revolver_SetLoad(0);
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -174,17 +176,17 @@ float W_Revolver(float req)
 			if(ammo_amount >= 1)
 				return !W_Revolver_CheckLoad();
 			else
-				return FALSE;
+				return false;
 		}
 		case WR_CONFIG:
 		{
 			REVOLVER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(WEP_CVAR(revolver, ammo), W_Sound("reload")); // WEAPONTODO
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -195,7 +197,7 @@ float W_Revolver(float req)
 			return WEAPON_REVOLVER_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -220,22 +222,22 @@ float W_Revolver(float req)
 				self.prevric = time;
 			}
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");
 			precache_sound("weapons/ric3.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

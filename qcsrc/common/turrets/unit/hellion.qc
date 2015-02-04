@@ -91,7 +91,7 @@ float t_hellion(float req)
 			else
 				self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
 
-			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, false, false);
 			te_explosion (missile.origin);
 			missile.think		= turret_hellion_missile_think;
 			missile.nextthink	= time;
@@ -101,7 +101,7 @@ float t_hellion(float req)
 			missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 			self.tur_head.frame += 1;
 			
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -111,11 +111,11 @@ float t_hellion(float req)
 			if (self.tur_head.frame >= 7)
 				self.tur_head.frame = 0;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -124,17 +124,17 @@ float t_hellion(float req)
 			self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCHECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_AMMO_OWN;
 			self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/hellion.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -145,15 +145,15 @@ float t_hellion(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

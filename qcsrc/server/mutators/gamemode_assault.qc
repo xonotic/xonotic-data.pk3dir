@@ -1,3 +1,6 @@
+#include "../../common/vehicles/sv_vehicles.qh"
+#include "../../common/turrets/sv_turrets.qh"
+
 // random functions
 void assault_objective_use()
 {
@@ -113,9 +116,9 @@ float assault_decreaser_sprite_visible(entity e)
 	decreaser = self.assault_decreaser;
 
 	if(decreaser.enemy.health >= ASSAULT_VALUE_INACTIVE)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 void target_objective_decrease_activate()
@@ -375,7 +378,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		if (!ad.bot_attack)
 			continue;
 
-		found = FALSE;
+		found = false;
 		for(tod = world; (tod = find(tod, targetname, ad.target)); )
 		{
 			if(tod.classname == "target_objective_decrease")
@@ -383,7 +386,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 				if(tod.enemy.health > 0 && tod.enemy.health < ASSAULT_VALUE_INACTIVE)
 				{
 				//	dprint(etos(ad),"\n");
-					found = TRUE;
+					found = true;
 					break;
 				}
 			}
@@ -403,7 +406,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 	//	te_lightning2(world, '0 0 0', p);
 
 		// Find and rate waypoints around it
-		found = FALSE;
+		found = false;
 		best = world;
 		bestvalue = 99999999999;
 		for(radius=0; radius<1500 && !found; radius+=500)
@@ -414,7 +417,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 				if(wp.classname=="waypoint")
 				if(checkpvs(wp.origin, ad))
 				{
-					found = TRUE;
+					found = true;
 					if(wp.cnt<bestvalue)
 					{
 						best = wp;
@@ -549,7 +552,7 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 	else
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
@@ -557,36 +560,36 @@ MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 	if(!self.team || self.team == MAX_SHOT_DISTANCE)
 		self.team = 5; // this gets reversed when match starts?
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_VehicleSpawn)
 {
 	self.nextthink = time + 0.5;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_BotRoles)
 {
 	havocbot_ast_reset_role(self);
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(assault_GetTeamCount)
 {
 	c1 = c2 = 0; // assault always has 2 teams
-	return TRUE;
+	return true;
 }
 
 .float assault_repair_delay;
 MUTATOR_HOOKFUNCTION(assault_PlayerThink)
 {
-	if(self.team == assault_attacker_team) { return FALSE; }
-	if(autocvar_g_assault_repair_amount <= 0) { return FALSE; }
-	if(time < self.assault_repair_delay) { return FALSE; }
+	if(self.team == assault_attacker_team) { return false; }
+	if(autocvar_g_assault_repair_amount <= 0) { return false; }
+	if(time < self.assault_repair_delay) { return false; }
 	if(gameover || self.frozen || self.deadflag != DEAD_NO || self.vehicle)
-		return FALSE;
+		return false;
 
 	float n_players = 0;
 	entity cp = findchain(classname, "func_assault_destructible"), head;
@@ -604,26 +607,26 @@ MUTATOR_HOOKFUNCTION(assault_PlayerThink)
 		cp.health += autocvar_g_assault_repair_amount / n_players;
 		if(cp.sprite) { WaypointSprite_UpdateHealth(cp.sprite, cp.health); }
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_OnEntityPreSpawn)
 {
 	switch(self.classname)
 	{
-		case "info_player_team1": return TRUE;
-		case "info_player_team2": return TRUE;
-		case "info_player_team3": return TRUE;
-		case "info_player_team4": return TRUE;
+		case "info_player_team1": return true;
+		case "info_player_team2": return true;
+		case "info_player_team3": return true;
+		case "info_player_team4": return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 // scoreboard setup
 void assault_ScoreRules()
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_DESTROYED,     "destroyed",       SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      0);
 	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      0);

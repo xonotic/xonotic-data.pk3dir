@@ -13,6 +13,8 @@ REGISTER_VEHICLE(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_vehicle_tankll48;
 
 float autocvar_g_vehicle_tankll48_respawntime;
@@ -151,7 +153,7 @@ float tankll48_frame()
 	crosshair_trace(player);
 	ad = vectoangles(normalize(trace_endpos - ad));
 	ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(tank.angles), AnglesTransform_FromAngles(ad))) - tank.tur_head.angles;
-	ad = AnglesTransform_Normalize(ad, TRUE);
+	ad = AnglesTransform_Normalize(ad, true);
 	//UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 	
 	// rotate turret and head
@@ -259,7 +261,7 @@ float tankll48_frame()
 		tank.cnt = time;
 		entity missile = spawn();
 		vector v = gettaginfo(self.gun1, gettagindex(self.gun1, "barrels"));
-		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("campingrifle_fire_morebass"), CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
+		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', false, 5, W_Sound("campingrifle_fire_morebass"), CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
 		tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
 		w_shotorg = v;
 
@@ -268,12 +270,12 @@ float tankll48_frame()
 
 		missile.owner = tank;
 		missile.realowner = player;
-		missile.bot_dodge = TRUE;
+		missile.bot_dodge = true;
 		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 
 		missile.takedamage = DAMAGE_NO;
 		missile.event_damage = func_null;
-		missile.damagedbycontents = TRUE;
+		missile.damagedbycontents = true;
 		missile.movetype = MOVETYPE_FLY;
 
 		missile.projectiledeathtype = DEATH_VH_TANKLL48;
@@ -290,18 +292,18 @@ float tankll48_frame()
 		missile.flags = FL_PROJECTILE;
 		missile.pos1 = missile.velocity;
 			
-		CSQCProjectile(missile, TRUE, PROJECTILE_CANNONBALL, FALSE);
+		CSQCProjectile(missile, true, PROJECTILE_CANNONBALL, false);
 	}
 	else
 		vehicles_regen(tank.cnt, vehicle_ammo1, autocvar_g_vehicle_tankll48_cannon_ammo_max,
 										   autocvar_g_vehicle_tankll48_cannon_ammo_regen_pause,
-										   autocvar_g_vehicle_tankll48_cannon_ammo_regen, frametime, FALSE);
+										   autocvar_g_vehicle_tankll48_cannon_ammo_regen, frametime, false);
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(tank.dmg_time, vehicle_shield, autocvar_g_vehicle_tankll48_shield, autocvar_g_vehicle_tankll48_shield_regen_pause, autocvar_g_vehicle_tankll48_shield_regen, frametime, TRUE);
+		vehicles_regen(tank.dmg_time, vehicle_shield, autocvar_g_vehicle_tankll48_shield, autocvar_g_vehicle_tankll48_shield_regen_pause, autocvar_g_vehicle_tankll48_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(tank.dmg_time, vehicle_health, autocvar_g_vehicle_tankll48_health, autocvar_g_vehicle_tankll48_health_regen_pause, autocvar_g_vehicle_tankll48_health_regen, frametime, FALSE);
+		vehicles_regen(tank.dmg_time, vehicle_health, autocvar_g_vehicle_tankll48_health, autocvar_g_vehicle_tankll48_health_regen_pause, autocvar_g_vehicle_tankll48_health_regen, frametime, false);
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 
@@ -464,7 +466,7 @@ void spawnfunc_vehicle_tankll48()
 {
 	if(!autocvar_g_vehicles_extra) { remove(self); return; }
 	if(!autocvar_g_vehicle_tankll48) { remove(self); return; }
-	if(!vehicle_initialize(VEH_TANKLL48, FALSE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_TANKLL48, false)) { remove(self); return; }
 }
 
 float v_tankll48(float req)
@@ -476,7 +478,7 @@ float v_tankll48(float req)
 			if(autocvar_g_vehicle_tankll48_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_tankll48_bouncepain_x, autocvar_g_vehicle_tankll48_bouncepain_y, autocvar_g_vehicle_tankll48_bouncepain_z);
 		
-			return TRUE;
+			return true;
 		}
 		case VR_ENTER:
 		{
@@ -492,14 +494,14 @@ float v_tankll48(float req)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		
-			return TRUE;
+			return true;
 		}
 		case VR_THINK:
 		{
 			if(self.flags & FL_ONGROUND)
 				movelib_beak_simple(autocvar_g_vehicle_tankll48_speed_stop);
 			
-			return TRUE;
+			return true;
 		}
 		case VR_DEATH:
 		{
@@ -519,7 +521,7 @@ float v_tankll48(float req)
 			
 			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
 
-			return TRUE;
+			return true;
 		}
 		case VR_SPAWN:
 		{
@@ -558,7 +560,7 @@ float v_tankll48(float req)
 			
 			self.PlayerPhysplug = tankll48_frame;
 
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -575,11 +577,11 @@ float v_tankll48(float req)
 			self.vehicle_health = autocvar_g_vehicle_tankll48_health;
 			self.vehicle_shield = autocvar_g_vehicle_tankll48_shield;
 			self.max_health = self.vehicle_health;
-			self.pushable = TRUE; // tankll48 can use jumppads
+			self.pushable = true; // tankll48 can use jumppads
 			setorigin(self.tur_head, '0 0 110');
 			setorigin(self.vehicle_hudmodel, '0 0 50');
 
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
@@ -596,11 +598,11 @@ float v_tankll48(float req)
 			precache_sound ( "machines/generator_loop_speedup_pitchdown.wav");
 			precache_sound ( "machines/generator_loop_pitchdown.wav");
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -614,7 +616,7 @@ float v_tankll48(float req)
 		case VR_HUD:
 		{
 			if(autocvar_r_letterbox)
-				return TRUE;
+				return true;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
@@ -714,7 +716,7 @@ float v_tankll48(float req)
 			if (scoreboard_showscores)
 				HUD_DrawScoreboard();
 			
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -728,15 +730,15 @@ float v_tankll48(float req)
 			AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
 			AuxiliaryXhair[2].axh_scale   = 0.5;
 		
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

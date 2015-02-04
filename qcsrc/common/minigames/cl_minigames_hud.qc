@@ -1,4 +1,5 @@
 #include "minigames.qh"
+#include "../../client/mapvoting.qh"
 
 float HUD_mouse_over(entity somepanel)
 {
@@ -420,7 +421,7 @@ void HUD_MinigameMenu_MouseInput()
 {
 	panel = HUD_PANEL(MINIGAME_MENU);
 
-	HUD_Panel_UpdateCvars()
+	HUD_Panel_UpdateCvars();
 
 	if(panel_bg_padding)
 	{

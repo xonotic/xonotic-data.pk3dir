@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_vore_health;
 var float autocvar_g_monster_vore_damageforcescale = 0.4;
 float autocvar_g_monster_vore_attack_spike_damage;
@@ -98,9 +100,9 @@ void M_Vore_Attack_Spike_Think()
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
 			if ( vlen(self.origin + olddir * self.wait) < dist)
-				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
-				traceline(self.origin, eorg, FALSE, self);
+				traceline(self.origin, eorg, false, self);
 
 			// Setup adaptive tracelength
 			self.wait = bound((autocvar_g_monster_vore_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_vore_attack_spike_smart_trace_max));
@@ -146,7 +148,7 @@ void M_Vore_Attack_Spike()
 
 	self.vore_spike = missile;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
 float M_Vore_Attack(float attack_type)
@@ -155,7 +157,7 @@ float M_Vore_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_vore_attack_melee_damage), vore_anim_attack, self.attack_range, (autocvar_g_monster_vore_attack_melee_delay), DEATH_MONSTER_VORE_MELEE, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_vore_attack_melee_damage), vore_anim_attack, self.attack_range, (autocvar_g_monster_vore_attack_melee_delay), DEATH_MONSTER_VORE_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -165,14 +167,14 @@ float M_Vore_Attack(float attack_type)
 				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
 				self.anim_finished = time + 1;
 				Monster_Delay(1, 0, 0.2, M_Vore_Attack_Spike);
-				return TRUE;
+				return true;
 			}
 
-			return (self.vore_spike) ? 2 : FALSE;
+			return (self.vore_spike) ? 2 : false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_vore() { Monster_Spawn(MON_VORE); }
@@ -186,18 +188,18 @@ float M_Vore(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.4;
 			self.frame = vore_anim_pain;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = vore_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -215,17 +217,17 @@ float M_Vore(float req)
 			self.weapon = WEP_MACHINEGUN;
 			self.frame = vore_anim_walk;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_sound (W_Sound("grenade_impact"));
 			precache_sound (W_Sound("tagexp1"));
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

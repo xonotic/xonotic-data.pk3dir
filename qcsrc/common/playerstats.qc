@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "constants.qh"
+    #include "util.qh"
+    #include "urllib.qh"
+    #include "weapons/weapons.qh"
+    #include "../server/weapons/accuracy.qh"
+    #include "../server/defs.qh"
+    #include "playerstats.qh"
+    #include "../server/scores.qh"
+#endif
+
 #ifdef SVQC
 void PlayerStats_Prematch(void)
 {
@@ -14,7 +29,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	if((e.crypto_idfp != "") && (e.cvar_cl_allow_uidtracking == 1))
 		{ s = e.crypto_idfp; }
 	else if(IS_BOT_CLIENT(e))
-		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
+		{ s = sprintf("bot#%g#%s", bot_skill, e.cleanname); }
 
 	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
@@ -94,12 +109,11 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	entity w;
-	float i;
+	int i;
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		w = get_weaponinfo(i);
+		entity w = get_weaponinfo(i);
 
 		#define ACCMAC(suffix,field) \
 			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
@@ -191,7 +205,7 @@ void PlayerStats_GameReport(float finished)
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
-		PlayerStats_GameReport_DelayMapVote = TRUE;
+		PlayerStats_GameReport_DelayMapVote = true;
 		url_multi_fopen(
 			autocvar_g_playerstats_gamereport_uri,
 			FILE_APPEND,
@@ -201,7 +215,7 @@ void PlayerStats_GameReport(float finished)
 	}
 	else
 	{
-		PlayerStats_GameReport_DelayMapVote = FALSE;
+		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
 		PS_GR_OUT_DB = -1;
 	}
@@ -215,7 +229,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 	if(PS_GR_OUT_DB >= 0)
 	{
-		PlayerStats_GameReport_DelayMapVote = TRUE;
+		PlayerStats_GameReport_DelayMapVote = true;
 
 		serverflags |= SERVERFLAG_PLAYERSTATS;
 
@@ -252,7 +266,7 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM);
 	}
-	else { PlayerStats_GameReport_DelayMapVote = FALSE; }
+	else { PlayerStats_GameReport_DelayMapVote = false; }
 }
 
 void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
@@ -392,7 +406,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose has finished
 			dprint("Player stats written\n");
-			PlayerStats_GameReport_DelayMapVote = FALSE;
+			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
 				db_close(PS_GR_OUT_DB);
@@ -405,7 +419,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		default:
 		{
 			print("Player stats writing failed: ", ftos(status), "\n");
-			PlayerStats_GameReport_DelayMapVote = FALSE;
+			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
 				db_close(PS_GR_OUT_DB);
@@ -1024,7 +1038,7 @@ void PlayerInfo_Details()
 
 #ifdef CSQC
 /*
- * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qc:885)
+ * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
 void PlayerInfo_Details()
 {
         print("-- Getting detailed PlayerInfo for local player (CSQC)\n");

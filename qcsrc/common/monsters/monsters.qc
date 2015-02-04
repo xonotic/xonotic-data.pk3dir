@@ -1,10 +1,12 @@
+#include "monsters.qh"
+
 #include "all.qh"
 
 // MONSTER PLUGIN SYSTEM
 entity monster_info[MON_MAXCOUNT];
 entity dummy_monster_info;
 
-void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
+void register_monster(int id, float(float) func, int(float) attackfunc, int monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
 {
 	entity e;
 	string noext = substring(modelname, 0, strlen(modelname) - 4);
@@ -59,7 +61,7 @@ void register_monsters_done()
 	dummy_monster_info.maxs = '0 0 0';
 	dummy_monster_info.model = "";
 }
-entity get_monsterinfo(float id)
+entity get_monsterinfo(int id)
 {
 	entity m;
 	if(id < MON_FIRST || id > MON_LAST)

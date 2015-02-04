@@ -1,3 +1,7 @@
+#include "hud.qh"
+#include "noise.qh"
+#include "../warpzonelib/common.qh"
+
 .float HookType; // ENT_CLIENT_*
 .vector origin;
 .vector velocity;
@@ -52,7 +56,7 @@ void Draw_GrapplingHook()
 	string tex;
 	vector rgb;
 	float t;
-	float s;
+	int s;
 	vector vs;
 	float intensity, offset;
 
@@ -86,7 +90,7 @@ void Draw_GrapplingHook()
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = self.origin;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
@@ -96,7 +100,7 @@ void Draw_GrapplingHook()
 					b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				break;
 		}
 	}
@@ -194,8 +198,7 @@ void Ent_ReadHook(float bIsNew, float type)
 {
 	self.HookType = type;
 
-	float sf;
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
@@ -204,7 +207,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	if(sf & 1)
 	{
-		float myowner = ReadByte();
+		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
 		switch(self.HookType)

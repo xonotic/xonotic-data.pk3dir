@@ -1,4 +1,5 @@
-// sadly, we can't put this stuff inside an #ifdef, as it is always called
+#ifndef JEFF_H
+#define JEFF_H
 
 #define JEFF_ANCE_NOTIF \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_BIOHAZARD,         	CH_INFO, "biohazard",       	  	VOL_BASEVOICE, ATTEN_NONE) \
@@ -47,3 +48,5 @@
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_ULTRAKILL,           	CH_INFO, "ultrakill",        		VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_VENGEANCE,            CH_INFO, "vengeance",         		VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_WICKEDSICK,           CH_INFO, "wickedsick",         		VOL_BASEVOICE, ATTEN_NONE) 
+
+#endif

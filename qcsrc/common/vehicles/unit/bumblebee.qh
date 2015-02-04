@@ -1,0 +1,6 @@
+#ifndef BUMBLEBEE_H
+#define BUMBLEBEE_H
+
+void bumble_raygun_read(bool bIsNew);
+
+#endif

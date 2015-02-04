@@ -56,16 +56,16 @@ MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 		// make it at least half accurate
 		ret_float = bound(2, ((autocvar_g_tdm_teams_override < 2) ? autocvar_g_tdm_teams : autocvar_g_tdm_teams_override), 4);
 		ret_string = string_null;
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(tdm_CountFrags)
 {
 	// announce remaining frags
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(gamemode_tdm)

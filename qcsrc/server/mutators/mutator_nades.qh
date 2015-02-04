@@ -1,3 +1,6 @@
+#ifndef MUTATOR_NADES_H
+#define MUTATOR_NADES_H
+
 .entity nade;
 .entity fake_nade;
 .float nade_timer;
@@ -17,10 +20,11 @@
 
 void toss_nade(entity e, vector _velocity, float _time);
 
-// Remove nades that are being thrown, if allplayers is TRUE, all clients EXCEPT player are checked
+// Remove nades that are being thrown, if allplayers is true, all clients EXCEPT player are checked
 void(entity player, float allplayers) nades_Clear;
 
 // Give a bonus grenade to a player
 void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player
 void(entity player) nades_RemoveBonus;
+#endif

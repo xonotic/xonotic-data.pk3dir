@@ -1,7 +1,5 @@
-float total_players;
 float infection_teams;
 float aliveplayers[17];
-float allowed_to_spawn;
 
 .float inf_team;
 .float inf_nextteam;

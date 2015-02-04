@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_spider_health;
 var float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
@@ -63,7 +65,7 @@ void M_Spider_Attack_Web()
 	proj.owner = proj.realowner = self;
 	proj.use = M_Spider_Attack_Web_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
-	proj.bot_dodge = TRUE;
+	proj.bot_dodge = true;
 	proj.bot_dodgerating = 0;
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
@@ -73,7 +75,7 @@ void M_Spider_Attack_Web()
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, false);
 	proj.touch = M_Spider_Attack_Web_Touch;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;
@@ -81,13 +83,13 @@ void M_Spider_Attack_Web()
 	proj.health = 500;
 	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
-	proj.damagedbycontents = TRUE;
+	proj.damagedbycontents = true;
 
 	proj.bouncefactor = 0.3;
 	proj.bouncestop = 0.05;
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, TRUE);
+	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
 float M_Spider_Attack(float attack_type)
@@ -96,7 +98,7 @@ float M_Spider_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -107,14 +109,14 @@ float M_Spider_Attack(float attack_type)
 				self.anim_finished = time + 1;
 				M_Spider_Attack_Web();
 				self.spider_web_delay = time + 3;
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER); }
@@ -125,17 +127,17 @@ float M_Spider(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = spider_anim_attack;
 			self.angles_x = 180;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -152,16 +154,16 @@ float M_Spider(float req)
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.frame = spider_anim_idle;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_sound (W_Sound("electro_fire2"));
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

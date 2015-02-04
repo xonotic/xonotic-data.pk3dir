@@ -1,3 +1,6 @@
+#include "../../common/effects.qh"
+#include "../round_handler.qh"
+
 float cq_ControlPoint_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONQUEST_CONTROLPOINT);
@@ -36,7 +39,7 @@ float cq_ControlPoint_Send(entity to, float sf)
 	}
 
 
-	return TRUE;
+	return true;
 }
 
 void cq_ControlPoint_SwitchTeam(float newteam, float newstatus, float showmessage)
@@ -135,7 +138,7 @@ void cq_ControlPoint_Think()
 							{
 								PlayerScore_Add(player, SP_CONQUEST_LIBERATED, 1);
 								Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(self.origin, 16), '0 0 0', 1);
-								cq_ControlPoint_SwitchTeam(player.team, CP_NEUTRAL, TRUE);
+								cq_ControlPoint_SwitchTeam(player.team, CP_NEUTRAL, true);
 							}
 
 							break;
@@ -144,12 +147,12 @@ void cq_ControlPoint_Think()
 						case CP_NEUTRAL:
 						{
 							if(self.health == 0)
-								cq_ControlPoint_SwitchTeam(player.team, CP_NEUTRAL, TRUE);
+								cq_ControlPoint_SwitchTeam(player.team, CP_NEUTRAL, true);
 
 							if(self.health == self.max_health)
 							{
 								PlayerScore_Add(player, SP_CONQUEST_CAPTURED, 1);
-								cq_ControlPoint_SwitchTeam(player.team, CP_CAPTURED, TRUE);
+								cq_ControlPoint_SwitchTeam(player.team, CP_CAPTURED, true);
 							}
 
 							break;
@@ -174,7 +177,7 @@ void cq_ControlPoint_Reset()
 		self.health = 0;
 	}
 	self.SendFlags |= CQSF_HEALTH | CQSF_TEAM;
-	cq_ControlPoint_SwitchTeam(self.cq_originalteam, self.cq_status, FALSE);
+	cq_ControlPoint_SwitchTeam(self.cq_originalteam, self.cq_status, false);
 }
 
 void spawnfunc_conquest_controlpoint()
@@ -215,9 +218,9 @@ void spawnfunc_conquest_controlpoint()
 	self.cq_originalteam = self.team;
 
 	waypoint_spawnforitem(self);
-	Net_LinkEntity(self, FALSE, 0, cq_ControlPoint_Send);
+	Net_LinkEntity(self, false, 0, cq_ControlPoint_Send);
 	self.SendFlags = CQSF_SETUP | CQSF_STATE | CQSF_TEAM | CQSF_HEALTH | CQSF_NAME;
-	cq_ControlPoint_SwitchTeam(self.team, self.cq_status, FALSE);
+	cq_ControlPoint_SwitchTeam(self.team, self.cq_status, false);
 }
 
 // round handler
@@ -324,10 +327,10 @@ float cq_CheckWinner()
 	return 1;
 }
 
-float prev_missing_teams_mask;
 float cq_CheckTeams()
 {
-	allowed_to_spawn = TRUE;
+	static float prev_missing_teams_mask;
+	allowed_to_spawn = true;
 	cq_CountAlivePlayers();
 	if(CQ_ALIVE_TEAMS_OK())
 	{
@@ -426,12 +429,12 @@ float cq_Count_SelfControlPoints()
 /**
  * Teleport player to a random position near tele_target
  * if tele_effects is true, teleport sound+particles are created
- * return FALSE on failure
+ * return false on failure
  */
 float cq_Teleport(entity player, entity tele_target, float range, float tele_effects)
 {
 	if ( !tele_target )
-		return FALSE;
+		return false;
 
 	float i;
 	vector loc;
@@ -462,12 +465,12 @@ float cq_Teleport(entity player, entity tele_target, float range, float tele_eff
 
 				if ( tele_effects )
 					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -653,7 +656,7 @@ void cq_Setup_Compat_ons()
 MUTATOR_HOOKFUNCTION(conquest_RemovePlayer)
 {
 	self.cq_deathloc = '0 0 0';
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_PlayerDies)
@@ -663,7 +666,7 @@ MUTATOR_HOOKFUNCTION(conquest_PlayerDies)
 	if ( autocvar_g_conquest_spawn_choose )
 	if ( cq_Count_SelfControlPoints() > 1 )
 		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_ResetMap)
@@ -673,17 +676,17 @@ MUTATOR_HOOKFUNCTION(conquest_ResetMap)
 
 	FOR_EACH_PLAYER(self)
 		PutClientInServer();
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_PlayerSpawn)
 {
 	if ( autocvar_g_conquest_spawn_choose )
 	if ( self.cq_spawn_by )
-	if ( cq_Teleport(self,self.cq_spawn_by,autocvar_g_conquest_teleport_radius,FALSE) )
+	if ( cq_Teleport(self,self.cq_spawn_by,autocvar_g_conquest_teleport_radius,false) )
 	{
 		self.cq_spawn_by = world;
-		return FALSE;
+		return false;
 	}
 
 	float random_target = !(autocvar_g_conquest_spawn_close_to_death), owned_count = cq_Count_SelfControlPoints();
@@ -691,7 +694,7 @@ MUTATOR_HOOKFUNCTION(conquest_PlayerSpawn)
 	vector spawn_loc = self.cq_deathloc;
 
 	// new joining player or round reset, don't bother checking
-	//if(spawn_loc == '0 0 0') { return FALSE; }
+	//if(spawn_loc == '0 0 0') { return false; }
 
 	if(random_target) { RandomSelection_Init(); }
 
@@ -739,20 +742,20 @@ MUTATOR_HOOKFUNCTION(conquest_PlayerSpawn)
 				{
 					setorigin(self, loc);
 					self.angles = normalize(loc - closest_target.origin);
-					return FALSE;
+					return false;
 				}
 			}
 		}
 	}
 
 	print("Warning: No spawns found for team ", ftos(self.team), "\n");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_SV_ParseClientCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return FALSE;
+		return false;
 
 	if ( cmd_name == "cq_spawn" )
 	{
@@ -799,7 +802,7 @@ MUTATOR_HOOKFUNCTION(conquest_SV_ParseClientCommand)
 						return 1;
 					}
 
-					if ( !cq_Teleport(self,closest_target,autocvar_g_conquest_teleport_radius,TRUE) )
+					if ( !cq_Teleport(self,closest_target,autocvar_g_conquest_teleport_radius,true) )
 						sprint(self, "\nUnable to teleport there\n");
 				}
 
@@ -816,7 +819,7 @@ MUTATOR_HOOKFUNCTION(conquest_SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(conquest_PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
+	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
 	if((time > self.teleport_antispam) && (self.deadflag == DEAD_NO) && !self.vehicle && !self.frozen)
 	{
@@ -824,11 +827,11 @@ MUTATOR_HOOKFUNCTION(conquest_PlayerUseKey)
 		if ( source_point )
 		{
 			stuffcmd(self, "qc_cmd_cl hud clickradar\n");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_OnEntityPreSpawn)
@@ -843,7 +846,7 @@ MUTATOR_HOOKFUNCTION(conquest_OnEntityPreSpawn)
 		droptofloor();
 		InitializeEntity(cp, cq_Setup_Compat_ons, INITPRIO_FINDTARGET);
 		self = oldself;
-		return FALSE;
+		return false;
 	}
 	if(self.classname == "dom_controlpoint")
 	{
@@ -854,26 +857,26 @@ MUTATOR_HOOKFUNCTION(conquest_OnEntityPreSpawn)
 		droptofloor();
 		InitializeEntity(cp, cq_Setup_Compat_dom, INITPRIO_FINDTARGET);
 		self = oldself;
-		return FALSE;
+		return false;
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_BotRoles)
 {
 	self.havocbot_role = havocbot_role_cq_offense;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(conquest_GetTeamCount)
 {
 	ret_float = cq_teams;
-	return FALSE;
+	return false;
 }
 
 void cq_ScoreRules(float teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 
 	ScoreInfo_SetLabel_TeamScore(ST_CONQUEST_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CONQUEST_LIBERATED, "liberated", 0);

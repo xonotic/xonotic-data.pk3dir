@@ -1,4 +1,5 @@
-
+#ifndef SV_MINIGAMES_H
+#define SV_MINIGAMES_H
 
 /// Initialize the minigame system
 void initialize_minigames();
@@ -49,3 +50,5 @@ entity minigame_sessions;
 float minigame_SendEntity(entity to, float sf);
 
 var void remove(entity e);
+
+#endif

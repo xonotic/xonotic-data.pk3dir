@@ -1,19 +1,29 @@
+// TODO: include once
+//#ifndef MONSTERS_ALL_H
+//#define MONSTERS_ALL_H
+
+#ifdef SVQC
+#include "sv_monsters.qh"
+#endif
+
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
 #include "monster/mage.qc"
 #ifndef MONSTERS_EXTRA
-#include "monster/wyvern.qc"
+	#include "monster/wyvern.qc"
 #endif
 #include "monster/shambler.qc"
 #include "monster/creeper.qc"
 #ifdef MONSTERS_EXTRA
-#include "monster/demon.qc"
-#include "monster/rotfish.qc"
-#include "monster/ogre.qc"
-#include "monster/spawn.qc"
-#include "monster/scrag.qc"
-#include "monster/rottweiler.qc"
-#include "monster/vore.qc"
-#include "monster/afrit.qc"
-#include "monster/enforcer.qc"
+	#include "monster/demon.qc"
+	#include "monster/rotfish.qc"
+	#include "monster/ogre.qc"
+	#include "monster/spawn.qc"
+	#include "monster/scrag.qc"
+	#include "monster/rottweiler.qc"
+	#include "monster/vore.qc"
+	#include "monster/afrit.qc"
+	#include "monster/enforcer.qc"
 #endif
+
+//#endif

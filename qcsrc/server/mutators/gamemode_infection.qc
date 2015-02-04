@@ -46,9 +46,9 @@ float Infection_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
-		allowed_to_spawn = FALSE;
+		allowed_to_spawn = false;
 		round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
-		nades_Clear(world, TRUE);
+		nades_Clear(world, true);
 		return 1;
 	}
 
@@ -88,7 +88,7 @@ float Infection_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
 
-	nades_Clear(world, TRUE);
+	nades_Clear(world, true);
 
 	return 1;
 }
@@ -107,7 +107,7 @@ void INF_RoundStart()
 
 float INF_CheckTeams()
 {
-	allowed_to_spawn = TRUE;
+	allowed_to_spawn = true;
 	INF_count_alive_players();
 	if(INF_ALIVE_TEAMS_OK())
 	{
@@ -149,22 +149,22 @@ MUTATOR_HOOKFUNCTION(inf_RemovePlayer)
 	self.inf_team = 0;
 	self.inf_realteam = 0;
 	self.inf_nextteam = 0;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf_BotAttack)
 {
 	if(self.inf_team == other.inf_team)
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf_PlayerThink)
 {
 	// temporary hack to fix colors
 	setcolor(self, 16 * self.inf_team + self.inf_team);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
@@ -173,7 +173,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 	if(!self.inf_team)
 	if(bots_would_leave)
 	{
-		entity head = findchainfloat(isbot, TRUE);
+		entity head = findchainfloat(isbot, true);
 		if(head)
 		{
 			entity best = head;
@@ -202,7 +202,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 
 	setcolor(self, 16 * self.inf_team + self.inf_team);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf_PlayerDies)
@@ -217,7 +217,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 		PlayerScore_Add(frag_target, SP_SCORE, -1);
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inf_ResetMap)
@@ -238,25 +238,25 @@ MUTATOR_HOOKFUNCTION(inf_ResetMap)
 		PutClientInServer();
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(inf_ForbidPlayerScore_Clear)
 {
-	return TRUE;
+	return true;
 }
 
 // scoreboard stuff
 void inf_ScoreRules()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_PlayerScore(SP_INF_ROUNDS, "survivals", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
 
 void inf_Initialize()
 {
-	allowed_to_spawn = TRUE;
+	allowed_to_spawn = true;
 
 	infection_teams = autocvar_g_infection_teams;
 
@@ -290,5 +290,5 @@ MUTATOR_DEFINITION(gamemode_infection)
 		return -1;
 	}
 
-	return FALSE;
+	return false;
 }

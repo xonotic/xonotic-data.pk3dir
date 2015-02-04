@@ -19,6 +19,8 @@ const float RSM_FLARE = 2;
 const float RSM_LAST = 2;
 
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_vehicle_raptor;
 
 float autocvar_g_vehicle_raptor_respawntime;
@@ -147,7 +149,7 @@ void raptor_bomb_burst()
 		bomblet.velocity	= normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
 
 		PROJECTILE_MAKETRIGGER(bomblet);
-		CSQCProjectile(bomblet, TRUE, PROJECTILE_RAPTORBOMBLET, TRUE);
+		CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
 	}
 
 	remove(self);
@@ -182,8 +184,8 @@ void raptor_bombdrop()
 	PROJECTILE_MAKETRIGGER(bomb_1);
 	PROJECTILE_MAKETRIGGER(bomb_2);
 
-	CSQCProjectile(bomb_1, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
-	CSQCProjectile(bomb_2, TRUE, PROJECTILE_RAPTORBOMB, TRUE);
+	CSQCProjectile(bomb_1, true, PROJECTILE_RAPTORBOMB, true);
+	CSQCProjectile(bomb_2, true, PROJECTILE_RAPTORBOMB, true);
 }
 
 
@@ -192,7 +194,7 @@ void raptor_fire_cannon(entity gun, string tagname)
 	vehicles_projectile("raptor_cannon_muzzleflash", W_Sound("lasergun_fire"),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
+						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);
 }
 
 void raptor_land()
@@ -540,13 +542,13 @@ float raptor_frame()
 	}
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
+		vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
+		vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, false);
 
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
+		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, false);
 
 	if(!forbidWeaponUse(player))
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
@@ -660,13 +662,13 @@ float raptor_takeoff()
 		player.PlayerPhysplug = raptor_frame;
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
+		vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
+		vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, false);
 
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
+		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, false);
 
 
 	raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
@@ -736,7 +738,7 @@ float raptor_impulse(float _imp)
 				self.vehicle.vehicle_weapon2mode = RSM_FIRST;
 
 			CSQCVehicleSetup(self, 0);
-			return TRUE;
+			return true;
 		case 12:
 		case 16:
 		case 19:
@@ -745,7 +747,7 @@ float raptor_impulse(float _imp)
 				self.vehicle.vehicle_weapon2mode = RSM_LAST;
 
 			CSQCVehicleSetup(self, 0);
-			return TRUE;
+			return true;
 
 		/*
 		case 17: // toss gun, could be used to exit?
@@ -754,13 +756,13 @@ float raptor_impulse(float _imp)
 			break;
 		*/
 	}
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_vehicle_raptor()
 {
 	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RAPTOR, FALSE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
 float v_raptor(float req)
@@ -772,7 +774,7 @@ float v_raptor(float req)
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 				
-			return TRUE;
+			return true;
 		}
 		case VR_ENTER:
 		{
@@ -792,11 +794,11 @@ float v_raptor(float req)
 			   setorigin(self.owner.flagcarried, '-20 0 96');
 
 			CSQCVehicleSetup(self.owner, 0);
-			return TRUE;
+			return true;
 		}
 		case VR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case VR_DEATH:
 		{
@@ -819,7 +821,7 @@ float v_raptor(float req)
 
 			self.colormod = '-0.5 -0.5 -0.5';
 			self.touch = raptor_blowup;
-			return TRUE;
+			return true;
 		}
 		case VR_SPAWN:
 		{
@@ -911,7 +913,7 @@ float v_raptor(float req)
 			self.damageforcescale = 0.25;
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -933,7 +935,7 @@ float v_raptor(float req)
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 			self.max_health = self.vehicle_health;
 				
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
@@ -948,11 +950,11 @@ float v_raptor(float req)
 			precache_sound ("vehicles/raptor_speed.wav");
 			precache_sound ("vehicles/missile_alarm.wav");
 		
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -1013,7 +1015,7 @@ float v_raptor(float req)
 		case VR_HUD:
 		{
 			if(autocvar_r_letterbox)
-				return TRUE;
+				return true;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
 			string raptor_xhair;
@@ -1198,7 +1200,7 @@ float v_raptor(float req)
 				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), raptor_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -1207,15 +1209,15 @@ float v_raptor(float req)
 			
 			AuxiliaryXhair[1].axh_image = "gfx/vehicles/axh-bracket.tga";
 			AuxiliaryXhair[1].axh_scale = 0.25;
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

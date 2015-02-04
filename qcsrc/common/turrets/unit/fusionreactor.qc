@@ -54,17 +54,17 @@ float t_fusionreactor(float req)
 			fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
 			te_smallflash(fl_org);
 			
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
 			self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 		
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -80,17 +80,17 @@ float t_fusionreactor(float req)
 			
 			self.turret_firecheckfunc = turret_fusionreactor_firecheck;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/reactor.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -101,15 +101,15 @@ float t_fusionreactor(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

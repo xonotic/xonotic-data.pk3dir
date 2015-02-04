@@ -109,22 +109,22 @@ MUTATOR_HOOKFUNCTION(pb_MatchEnd)
 	entity head;
 	FOR_EACH_PLAYER(head) { pb_Detach(head); }
 	FOR_EACH_MONSTER(head) { pb_Detach(head); }
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
+	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 	
 	if(self.pbhost)
 	{
 		pb_Detach(self.pbhost);
-		return TRUE;
+		return true;
 	}
 	if(self.piggybacker)
 	{
 		pb_Detach(self);
-		return TRUE;
+		return true;
 	}
 
 	if(!self.vehicle)
@@ -132,7 +132,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 	{
 		entity head, closest_target = world;
 
-		head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+		head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
 		while(head)
 		{
 			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
@@ -155,11 +155,11 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		}
 
 		if(closest_target)
-		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return TRUE; }
-		else { pb_Attach(closest_target, self); return TRUE; }
+		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return true; }
+		else { pb_Attach(closest_target, self); return true; }
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_PlayerThink)
@@ -197,7 +197,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerThink)
 		self.pbhost.monster_moveto_z = v_up_z * updown;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_MonsterThink)
@@ -207,13 +207,13 @@ MUTATOR_HOOKFUNCTION(pb_MonsterThink)
 	if(!self.pbent)
 		pb_FixPBEnt(self);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_ResetMap)
 {
 	FOR_EACH_PLAYER(self) { pb_Detach(self); }
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_RemovePlayer)
@@ -228,7 +228,7 @@ MUTATOR_HOOKFUNCTION(pb_RemovePlayer)
 		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_PlayerDies)
@@ -246,7 +246,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_ItemTouch)
@@ -267,13 +267,13 @@ MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pb_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nocarry, "cl_nocarry");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_piggyback)
@@ -291,5 +291,5 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(ItemTouch, pb_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, pb_GetCvars, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

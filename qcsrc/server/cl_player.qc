@@ -1,9 +1,17 @@
-.entity pusher;
-.float pushltime;
-.float istypefrag;
+#include "cl_player.qh"
+#include "jeff.qh"
+#include "g_triggers.qh"
+#include "g_violence.qh"
+#include "miscfunctions.qh"
 
-.float CopyBody_nextthink;
-.void(void) CopyBody_think;
+#include "mutators/base.qh"
+
+#include "../common/effects.qh"
+
+#include "../common/minigames/sv_minigames.qh"
+
+#include "weapons/weaponstats.qh"
+
 void CopyBody_Think(void)
 {
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
@@ -92,7 +100,7 @@ void CopyBody(float keepvelocity)
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(self);
-	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
+	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -112,12 +120,12 @@ void player_setupanimsformodel()
 {
 	// load animation info
 	animdecide_load_if_needed(self);
-	animdecide_setstate(self, 0, FALSE);
+	animdecide_setstate(self, 0, false);
 }
 
 void player_anim (void)
 {
-	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
@@ -130,21 +138,21 @@ void player_anim (void)
 		// Clear a previous death animation.
 		deadbits = 0;
 	}
-	float animbits = deadbits;
+	int animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
-	animdecide_setstate(self, animbits, FALSE);
+	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
 	if (self.weaponentity)
 	{
 		updateanim(self.weaponentity);
 		if (!self.weaponentity.animstate_override)
-			setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+			setanim(self.weaponentity, self.weaponentity.anim_idle, true, false, false);
 	}
 }
 
@@ -157,7 +165,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, FALSE);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, false);
 	take = v_x;
 	save = v_y;
 
@@ -196,21 +204,9 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
-		self.damagedbycontents = FALSE;
+		self.damagedbycontents = false;
 	}
 }
-
-// g_<gametype>_str:
-// If 0, default is used.
-// If <0, 0 is used.
-// Otherwise, g_str (default value) is used.
-// For consistency, negative values there are mapped to zero too.
-#define GAMETYPE_DEFAULTED_SETTING(str) \
-	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	 (gametype_setting_tmp < 0) ? 0 : \
-	 (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) : \
-	 gametype_setting_tmp)
-
 
 void calculate_player_respawn_time()
 {
@@ -299,11 +295,10 @@ void calculate_player_respawn_time()
 		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 }
 
-void ClientKill_Now_TeamChange();
-
-void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	float take, save, dh, da, j;
+	float take, save, dh, da;
+	int j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -325,7 +320,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		vector d;
 		float f;
 		ear1 = self.origin;
-		ear1_z += 0.125 * self.view_ofs_z + 0.875 * self.maxs_z; // 7/8
+		ear1_z += 0.125 * self.view_ofs.z + 0.875 * self.maxs.z; // 7/8
 		ear2 = ear1;
 		makevectors(self.angles);
 		ear1 += v_right * -10;
@@ -352,10 +347,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-
 	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, autocvar_g_balance_armor_block_bycount);
-	take = v_x;
-	save = v_y;
+	take = v.x;
+	save = v.y;
 
 	if(attacker == self)
 	{
@@ -429,9 +423,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 						if (!self.animstate_override)
 						{
 							if (random() > 0.5)
-								animdecide_setaction(self, ANIMACTION_PAIN1, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN1, true);
 							else
-								animdecide_setaction(self, ANIMACTION_PAIN2, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN2, true);
 						}
 					}
 
@@ -500,7 +494,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if (self.health < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
-		defer_ClientKill_Now_TeamChange = FALSE;
+		defer_ClientKill_Now_TeamChange = false;
 
 		if(self.alivetime)
 		{
@@ -526,7 +520,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			remove(self.killindicator);
 			self.killindicator = world;
 			if(self.killindicator_teamchange)
-				defer_ClientKill_Now_TeamChange = TRUE;
+				defer_ClientKill_Now_TeamChange = true;
 
 			if(self.classname == "body")
 			if(deathtype == DEATH_KILL)
@@ -549,8 +543,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			Obituary (attacker, inflictor, self, deathtype);
 
         // increment frag counter for used weapon type
-        float w;
-        w = DEATH_WEAPONOF(deathtype);
+        int w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
@@ -569,7 +562,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		self.fixangle = TRUE;
+		self.fixangle = true;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
@@ -613,10 +606,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		self.death_time = time;
 		if (random() < 0.5)
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, true);
 		else
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, TRUE);
-		if (self.maxs_z > 5)
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, true);
+		if (self.maxs.z > 5)
 		{
 			self.maxs_z = 5;
 			setsize(self, self.mins, self.maxs);
@@ -653,7 +646,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	}
 }
 
-.float muted; // to be used by prvm_edictset server playernumber muted 1
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
 // message "": do not say, just test flood control
 // return value:
@@ -681,11 +673,11 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 	{
 		colorstr = "";
-		teamsay = FALSE;
+		teamsay = false;
 	}
 
 	if(intermission_running)
-		teamsay = FALSE;
+		teamsay = false;
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -985,7 +977,6 @@ float GetVoiceMessageVoiceType(string type)
 	return VOICETYPE_TEAMRADIO;
 }
 
-string allvoicesamples;
 .string GetVoiceMessageSampleField(string type)
 {
 	GetPlayerSoundSampleField_notFound = 0;
@@ -1091,8 +1082,6 @@ float LoadPlayerSounds(string f, float first)
 	return 1;
 }
 
-.float modelindex_for_playersound;
-.float skin_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
@@ -1161,7 +1150,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, true);
 			if(!sv_taunt)
 				break;
 			if(autocvar_sv_gentle)
@@ -1258,7 +1247,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, true);
 			if(!sv_taunt)
 				break;
 			if(autocvar_sv_gentle)

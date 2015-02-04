@@ -1,44 +1,47 @@
+#ifndef WEAPONS_H
+#define WEAPONS_H
+
 #ifndef MENUQC
 #include "calculations.qh"
 #endif
 
-const float MAX_SHOT_DISTANCE = 32768;
+const int MAX_SHOT_DISTANCE = 32768;
 
 // weapon pickup ratings for bot logic
-const float BOT_PICKUP_RATING_LOW  =  2500;
-const float BOT_PICKUP_RATING_MID  =  5000;
-const float BOT_PICKUP_RATING_HIGH = 10000;
+const int BOT_PICKUP_RATING_LOW  =  2500;
+const int BOT_PICKUP_RATING_MID  =  5000;
+const int BOT_PICKUP_RATING_HIGH = 10000;
 
 // weapon flags
-const float WEP_TYPE_OTHER          =  0x00; // not for damaging people
-const float WEP_TYPE_SPLASH         =  0x01; // splash damage
-const float WEP_TYPE_HITSCAN        =  0x02; // hitscan
-const float WEP_TYPEMASK            =  0x0F;
-const float WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
-const float WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
-const float WEP_FLAG_HIDDEN         =  0x40; // hides from menu
-const float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
-const float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
-const float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_OTHER          =  0x00; // not for damaging people
+const int WEP_TYPE_SPLASH         =  0x01; // splash damage
+const int WEP_TYPE_HITSCAN        =  0x02; // hitscan
+const int WEP_TYPEMASK            =  0x0F;
+const int WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
+const int WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
+const int WEP_FLAG_HIDDEN         =  0x40; // hides from menu
+const int WEP_FLAG_RELOADABLE     =  0x80; // can has reload
+const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
+const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
 // weapon requests
-const float WR_SETUP          =  1; // (SERVER) setup weapon data
-const float WR_THINK          =  2; // (SERVER) logic to run every frame
-const float WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
-const float WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
-const float WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
-const float WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
-const float WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
-const float WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
-const float WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
-const float WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
-const float WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
-const float WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
-const float WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
-const float WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
-const float WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
-const float WR_DROP           = 16; // (SERVER) the weapon is dropped
-const float WR_PICKUP         = 17; // (SERVER) a weapon is picked up
+const int WR_SETUP          =  1; // (SERVER) setup weapon data
+const int WR_THINK          =  2; // (SERVER) logic to run every frame
+const int WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
+const int WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
+const int WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
+const int WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
+const int WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
+const int WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
+const int WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
+const int WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
+const int WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
+const int WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
+const int WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
+const int WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
+const int WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
+const int WR_DROP           = 16; // (SERVER) the weapon is dropped
+const int WR_PICKUP         = 17; // (SERVER) a weapon is picked up
 
 // variables:
 string weaponorder_byid;
@@ -60,14 +63,15 @@ WepSet ReadWepSet();
 // weapon name macros
 #define WEP_FIRST 1
 #define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
-float WEP_COUNT;
-float WEP_LAST;
+int WEP_COUNT;
+int WEP_LAST;
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
 // functions:
 entity get_weaponinfo(float id);
 string W_FixWeaponOrder(string order, float complete);
+string W_UndeprecateName(string s);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
@@ -78,8 +82,8 @@ void W_RandomWeapons(entity e, float n);
 string GetAmmoPicture(.float ammotype);
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(float i);
-float GetAmmoStat(.float ammotype);
+.float GetAmmoFieldFromNum(int i);
+int GetAmmoStat(.float ammotype);
 #endif
 
 #ifdef SVQC
@@ -160,12 +164,12 @@ void register_weapons_done();
 
 // entity properties of weaponinfo:
 // fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A"
-.float weapon;              // M: WEP_id    // WEP_...
+.int weapon;                // M: WEP_id    // WEP_...
 .WepSet weapons;            // A: WEPSET_id // WEPSET_...
 .float(float) weapon_func;  // M: function  // w_...
 ..float ammo_field;         // M: ammotype  // main ammo field
-.float impulse;             // M: impulse   // weapon impulse
-.float spawnflags;          // M: flags     // WEPSPAWNFLAG_... combined
+.int impulse;               // M: impulse   // weapon impulse
+.int spawnflags;            // M: flags     // WEPSPAWNFLAG_... combined
 .float bot_pickupbasevalue; // M: rating    // bot weapon priority
 .vector wpcolor;            // M: color     // waypointsprite color
 .string wpmodel;            // A: wpn-id    // wpn- sprite name
@@ -181,7 +185,7 @@ void register_weapons_done();
 
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
-	float id; \
+	int id; \
 	WepSet bit; \
 	float function(float); \
 	void RegisterWeapons_##id() \
@@ -214,3 +218,4 @@ void register_weapons_done();
 #undef REGISTER_WEAPON
 
 ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done);
+#endif

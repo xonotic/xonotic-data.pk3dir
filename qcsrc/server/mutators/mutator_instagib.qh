@@ -1,3 +1,8 @@
+#ifndef MUTATOR_INSTAGIB_H
+#define MUTATOR_INSTAGIB_H
+
 float g_instagib;
 
 void() spawnfunc_item_minst_cells;
+
+#endif

@@ -47,6 +47,8 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC); }
 
 void W_HLAC_Touch(void)
@@ -56,9 +58,9 @@ void W_HLAC_Touch(void)
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	
+
 	isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
-	
+
 	RadiusDamage(self, self.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), world, world, WEP_CVAR_BOTH(hlac, isprimary, force), self.projectiledeathtype, other);
 
 	remove(self);
@@ -76,7 +78,7 @@ void W_HLAC_Attack(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
@@ -87,7 +89,7 @@ void W_HLAC_Attack(void)
 	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
 
@@ -108,7 +110,7 @@ void W_HLAC_Attack(void)
 	missile.flags = FL_PROJECTILE;
 	missile.projectiledeathtype = WEP_HLAC;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -124,13 +126,13 @@ void W_HLAC_Attack2(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect(EFFECT_LASER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
 
@@ -149,10 +151,10 @@ void W_HLAC_Attack2(void)
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -210,8 +212,8 @@ float W_HLAC(float req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), FALSE);
-			return TRUE;
+			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -235,8 +237,8 @@ float W_HLAC(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -245,7 +247,7 @@ float W_HLAC(float req)
 			precache_model(W_Model("h_hlac.iqm"));
 			precache_sound(W_Sound("lasergun_fire"));
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -261,13 +263,13 @@ float W_HLAC(float req)
 		}
 		case WR_CONFIG:
 		{
-			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), W_Sound("reload"));
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -278,7 +280,7 @@ float W_HLAC(float req)
 			return WEAPON_HLAC_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -293,21 +295,21 @@ float W_HLAC(float req)
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
-				
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/laserimpact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

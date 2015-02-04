@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 1',
 /* modelname */ "minstanex",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairminstanex 0.4",
+/* crosshair */ "gfx/crosshairminstanex 0.6",
 /* wepimg    */ "weaponminstanex",
 /* refname   */ "vaporizer",
 /* wepname   */ _("Vaporizer")
@@ -88,6 +88,8 @@ void Net_ReadSuperBlastParticle();
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
 void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
@@ -120,7 +122,7 @@ float W_Vaporizer_SuperBlast_CheckSpread(vector targetorg, vector nearest_on_lin
 	if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90))
 		return bound(0, (distance_from_line / spreadlimit), 1);
 	else
-		return FALSE;
+		return false;
 }
 
 float W_Vaporizer_SuperBlast_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector attack_endpos)
@@ -134,14 +136,14 @@ float W_Vaporizer_SuperBlast_IsVisible(entity head, vector nearest_on_line, vect
 	if(W_Vaporizer_SuperBlast_CheckSpread(nearest_to_attacker, nearest_on_line, sw_shotorg, attack_endpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_NOMONSTERS, self);
-		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
+		if(trace_fraction == 1) { return true; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
 	if(W_Vaporizer_SuperBlast_CheckSpread(center, nearest_on_line, sw_shotorg, attack_endpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, center, MOVE_NOMONSTERS, self);
-		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
+		if(trace_fraction == 1) { return true; } // yes, the center point is clear and we can allow the damage
 	}
 
 	// STEP THREE: Check each corner to see if they are clear
@@ -151,38 +153,38 @@ float W_Vaporizer_SuperBlast_IsVisible(entity head, vector nearest_on_line, vect
 		if(W_Vaporizer_SuperBlast_CheckSpread(corner, nearest_on_line, sw_shotorg, attack_endpos))
 		{
 			WarpZone_TraceLine(sw_shotorg, corner, MOVE_NOMONSTERS, self);
-			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
+			if(trace_fraction == 1) { return true; } // yes, this corner is clear and we can allow the damage
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
-entity shockwave_hit[32];
-float shockwave_hit_damage[32];
-vector shockwave_hit_force[32];
+entity superblast_hit[32];
+float superblast_hit_damage[32];
+vector superblast_hit_force[32];
 
 float W_Vaporizer_SuperBlast_CheckHit(float queue, entity head, vector final_force, float final_damage)
 {
-	if(!head) { return FALSE; }
+	if(!head) { return false; }
 	float i;
 
 	++queue;
 	
 	for(i = 1; i <= queue; ++i)
 	{
-		if(shockwave_hit[i] == head)
+		if(superblast_hit[i] == head)
 		{
-			if(vlen(final_force) > vlen(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
-			if(final_damage > shockwave_hit_damage[i]) { shockwave_hit_damage[i] = final_damage; }
-			return FALSE;
+			if(vlen(final_force) > vlen(superblast_hit_force[i])) { superblast_hit_force[i] = final_force; }
+			if(final_damage > superblast_hit_damage[i]) { superblast_hit_damage[i] = final_damage; }
+			return false;
 		}
 	}
 
-	shockwave_hit[queue] = head;
-	shockwave_hit_force[queue] = final_force;
-	shockwave_hit_damage[queue] = final_damage;
-	return TRUE;
+	superblast_hit[queue] = head;
+	superblast_hit_force[queue] = final_force;
+	superblast_hit_damage[queue] = final_damage;
+	return true;
 }
 
 void W_RocketMinsta_Explosion(vector loc)
@@ -201,7 +203,7 @@ void W_RocketMinsta_Explosion(vector loc)
 	float i, queue = 0;
 	
 	// splash damage/jumping trace
-	head = WarpZone_FindRadius(loc, autocvar_g_rm_radius, FALSE);
+	head = WarpZone_FindRadius(loc, autocvar_g_rm_radius, false);
 	while(head)
 	{
 		next = head.chain;
@@ -235,9 +237,9 @@ void W_RocketMinsta_Explosion(vector loc)
 
 	for(i = 1; i <= queue; ++i)
 	{
-		head = shockwave_hit[i];
-		final_force = shockwave_hit_force[i];
-		final_damage = shockwave_hit_damage[i];
+		head = superblast_hit[i];
+		final_force = superblast_hit_force[i];
+		final_damage = superblast_hit_damage[i];
 
 		if(accuracy_isgooddamage(self, head))
 			accuracy_add(self, WEP_DEVASTATOR, 0, final_damage);
@@ -245,9 +247,9 @@ void W_RocketMinsta_Explosion(vector loc)
 		Damage(head, self, self, final_damage, (WEP_DEVASTATOR | HITTYPE_SPLASH), head.origin, final_force);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 
-		shockwave_hit[i] = world;
-		shockwave_hit_force[i] = '0 0 0';
-		shockwave_hit_damage[i] = 0;
+		superblast_hit[i] = world;
+		superblast_hit_force[i] = '0 0 0';
+		superblast_hit_damage[i] = 0;
 	}
 }
 
@@ -257,7 +259,7 @@ void W_Vaporizer_Attack(void)
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 	vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(self, true, 0, "", CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
@@ -311,7 +313,7 @@ void W_Vaporizer_SuperBlast()
 	float i, queue = 0;
 	
 	// set up the shot direction
-	W_SetupShot(self, FALSE, 3, W_Sound("minstanex_charge2"), CH_WEAPON_B, WEP_CVAR_PRI(vaporizer, damage));
+	W_SetupShot(self, false, 3, W_Sound("minstanex_charge2"), CH_WEAPON_B, WEP_CVAR_PRI(vaporizer, damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR_PRI(vaporizer, charge_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -324,7 +326,7 @@ void W_Vaporizer_SuperBlast()
 	Damage_DamageInfo(attack_hitpos, WEP_CVAR_PRI(vaporizer, charge_splash_damage), WEP_CVAR_PRI(vaporizer, charge_splash_edgedamage), WEP_CVAR_PRI(vaporizer, charge_splash_radius), w_shotdir * WEP_CVAR_PRI(vaporizer, charge_splash_force), (WEP_VAPORIZER | HITTYPE_SPLASH), 0, self);
 
 	// splash damage/jumping trace
-	head = WarpZone_FindRadius(attack_hitpos, max(WEP_CVAR_PRI(vaporizer, charge_splash_radius), WEP_CVAR_PRI(vaporizer, charge_jump_radius)), FALSE);
+	head = WarpZone_FindRadius(attack_hitpos, max(WEP_CVAR_PRI(vaporizer, charge_splash_radius), WEP_CVAR_PRI(vaporizer, charge_jump_radius)), false);
 	while(head)
 	{
 		next = head.chain;
@@ -372,7 +374,7 @@ void W_Vaporizer_SuperBlast()
 	}
 
 	// cone damage trace
-	head = WarpZone_FindRadius(w_shotorg, WEP_CVAR_PRI(vaporizer, charge_distance), FALSE);
+	head = WarpZone_FindRadius(w_shotorg, WEP_CVAR_PRI(vaporizer, charge_distance), false);
 	while(head)
 	{
 		next = head.chain;
@@ -417,9 +419,9 @@ void W_Vaporizer_SuperBlast()
 
 	for(i = 1; i <= queue; ++i)
 	{
-		head = shockwave_hit[i];
-		final_force = shockwave_hit_force[i];
-		final_damage = shockwave_hit_damage[i];
+		head = superblast_hit[i];
+		final_force = superblast_hit_force[i];
+		final_damage = superblast_hit_damage[i];
 		
 		Damage(head, self, self, final_damage, (WEP_VAPORIZER | HITTYPE_SPLASH), head.origin, final_force);
 		
@@ -427,9 +429,9 @@ void W_Vaporizer_SuperBlast()
 			accuracy_add(self, WEP_VAPORIZER, 1, final_damage);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
-		shockwave_hit[i] = world;
-		shockwave_hit_force[i] = '0 0 0';
-		shockwave_hit_damage[i] = 0;
+		superblast_hit[i] = world;
+		superblast_hit_force[i] = '0 0 0';
+		superblast_hit_damage[i] = 0;
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
 	
@@ -439,7 +441,7 @@ void W_Vaporizer_SuperBlast()
 float W_Vaporizer_SuperBlast_CheckAmmo()
 {
 	if(WEP_CVAR_PRI(vaporizer, charge) == 3)
-		return TRUE; // forced
+		return true; // forced
 	float ammo_amount;
 	ammo_amount = self.ammo_supercells >= 1;
 	ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= 1;
@@ -504,20 +506,20 @@ void W_RocketMinsta_SuperRocket()
 	
 	makevectors(self.angles);
 
-	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, W_Sound("minstanex_charge2"), CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', false, 5, W_Sound("minstanex_charge2"), CH_WEAPON_A, vaporizer_damage);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
 	missile.classname = "rocket";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 	missile.bot_dodgerating = vaporizer_damage;
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = 0;
 	missile.health = 350;
 	missile.event_damage = W_RocketMinsta_SuperRocket_Damage;
-	missile.damagedbycontents = TRUE;
+	missile.damagedbycontents = true;
 
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -535,7 +537,7 @@ void W_RocketMinsta_SuperRocket()
 	missile.flags = FL_PROJECTILE;
 	//missile.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_SUPERROCKET, FALSE); // because of fly sound
+	CSQCProjectile(missile, true, PROJECTILE_SUPERROCKET, false); // because of fly sound
 	
 	self.ammo_supercells -= 1;
 }
@@ -575,7 +577,7 @@ void W_RocketMinsta_Attack2(void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -585,7 +587,7 @@ void W_RocketMinsta_Attack2(void)
         proj = spawn ();
         proj.classname = "plasma_prim";
         proj.owner = proj.realowner = self;
-        proj.bot_dodge = TRUE;
+        proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode;
         proj.think = adaptor_think2use_hittype_splash;
@@ -604,14 +606,14 @@ void W_RocketMinsta_Attack2(void)
         //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / total) * 2 - 1) * v_right * (spread * (rndspread ? random() : 1))) * cvar("g_rm_laser_speed");
 		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
-		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, TRUE);
+		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
         proj.touch = W_RocketMinsta_Laser_Touch;
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
 
-        CSQCProjectile(proj, TRUE, PROJECTILE_ROCKETMINSTA_LASER, TRUE);
+        CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
 
         other = proj; MUTATOR_CALLHOOK(EditProjectile);
         counter++;
@@ -628,7 +630,7 @@ void W_RocketMinsta_Attack3 (void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -638,7 +640,7 @@ void W_RocketMinsta_Attack3 (void)
         proj = spawn ();
         proj.classname = "plasma_prim";
         proj.owner = proj.realowner = self;
-        proj.bot_dodge = TRUE;
+        proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode;
         proj.think = adaptor_think2use_hittype_splash;
@@ -655,14 +657,14 @@ void W_RocketMinsta_Attack3 (void)
 
         proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
-		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, TRUE);
+		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
         proj.touch = W_RocketMinsta_Laser_Touch;
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
 
-        CSQCProjectile(proj, TRUE, PROJECTILE_ROCKETMINSTA_LASER, TRUE);
+        CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
 
         other = proj; MUTATOR_CALLHOOK(EditProjectile);
         counter++;
@@ -683,11 +685,11 @@ float W_Vaporizer(float req)
 		case WR_AIM:
 		{
 			if(self.WEP_AMMO(VAPORIZER) > 0)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), FALSE); // WEAPONTODO: replace with proper vaporizer cvars
-				
-			return TRUE;
+				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -739,7 +741,7 @@ float W_Vaporizer(float req)
 			{
 				if(self.vaporizer_held_down >= 2)
 					stopsound(self, CH_SHOTS_SINGLE);
-				self.vaporizer_held_down = FALSE;
+				self.vaporizer_held_down = false;
 			}
 
 			if (self.BUTTON_ATCK2 || (self.BUTTON_ATCK && !self.ammo_cells && autocvar_g_rm))
@@ -749,7 +751,7 @@ float W_Vaporizer(float req)
 					if(self.jump_interval <= time && !self.held_down)
 					{
 						if(rapid)
-							self.held_down = TRUE;
+							self.held_down = true;
 						self.jump_interval = time + autocvar_g_rm_laser_refire;
 						self.jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
 						damage_goodhits = 0;
@@ -767,7 +769,7 @@ float W_Vaporizer(float req)
 				{
 					// handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
 					self.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();
-					
+
 					// decrease ammo for the laser?
 					if(WEP_CVAR_SEC(vaporizer, ammo))
 						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
@@ -785,15 +787,15 @@ float W_Vaporizer(float req)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
-					
+
 					// now do normal refire
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
 				}
 			}
 			else
-				self.held_down = FALSE;
+				self.held_down = false;
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -808,14 +810,14 @@ float W_Vaporizer(float req)
 			precache_sound(W_Sound("nexwhoosh2"));
 			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
-			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = WEP_AMMO(VAPORIZER);
 			self.vaporizer_lasthit = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -826,20 +828,20 @@ float W_Vaporizer(float req)
 		case WR_CHECKAMMO2:
 		{
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
-				return TRUE;
+				return true;
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:
 		{
-			VAPORIZER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			VAPORIZER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.vaporizer_lasthit = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
@@ -850,7 +852,7 @@ float W_Vaporizer(float req)
 				used_ammo = vaporizer_ammo;
 
 			W_Reload(used_ammo, W_Sound("reload"));
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -867,7 +869,7 @@ float W_Vaporizer(float req)
 				return WEAPON_VAPORIZER_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -974,19 +976,19 @@ void Draw_SuperBlast()
 
 void Net_ReadSuperBlastParticle()
 {
-	entity shockwave;
-	shockwave = spawn();
-	shockwave.draw = Draw_SuperBlast;
+	entity superblast;
+	superblast = spawn();
+	superblast.draw = Draw_SuperBlast;
 	
-	shockwave.sb_shotorg_x = ReadCoord(); shockwave.sb_shotorg_y = ReadCoord(); shockwave.sb_shotorg_z = ReadCoord();
-	shockwave.sb_endpos_x  = ReadCoord(); shockwave.sb_endpos_y  = ReadCoord(); shockwave.sb_endpos_z  = ReadCoord();
+	superblast.sb_shotorg_x = ReadCoord(); superblast.sb_shotorg_y = ReadCoord(); superblast.sb_shotorg_z = ReadCoord();
+	superblast.sb_endpos_x  = ReadCoord(); superblast.sb_endpos_y  = ReadCoord(); superblast.sb_endpos_z  = ReadCoord();
 	
-	shockwave.sb_spread_max = ReadByte();
-	shockwave.sb_spread_min = ReadByte();
+	superblast.sb_spread_max = ReadByte();
+	superblast.sb_spread_min = ReadByte();
 
-	shockwave.sv_entnum = ReadByte();
+	superblast.sv_entnum = ReadByte();
 
-	shockwave.sb_time = time;
+	superblast.sb_time = time;
 }
 
 float W_Vaporizer(float req)
@@ -1008,7 +1010,7 @@ float W_Vaporizer(float req)
 				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -1018,23 +1020,23 @@ float W_Vaporizer(float req)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			if(button_zoom || zoomscript_caught)
 			{
 				reticle_image = "gfx/reticle_nex";
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				// no weapon specific image for this weapon
-				return FALSE;
+				return false;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

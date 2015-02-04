@@ -1,3 +1,39 @@
+#ifndef UTIL_PRE_H
+#define UTIL_PRE_H
+
 #ifndef NOCOMPAT
-# define COMPAT_NO_MOD_IS_XONOTIC
+    #define COMPAT_NO_MOD_IS_XONOTIC
+#endif
+
+#ifndef QCC_SUPPORT_ACCUMULATE
+    #ifdef GMQCC
+        #define QCC_SUPPORT_ACCUMULATE
+    #endif
+#endif
+
+#ifndef QCC_SUPPORT_NIL
+    #ifdef GMQCC
+        #define QCC_SUPPORT_NIL
+    #endif
+#endif
+
+#ifndef QCC_SUPPORT_INT
+    #define int float
+
+    #define stoi(s) stof(s)
+    #define itos(s) ftos(s)
+#endif
+
+#ifndef QCC_SUPPORT_BOOL
+    #define bool float
+
+    // Boolean Constants
+    const int true 	= 1;
+    const int false = 0;
+#endif
+
+// Transitional aliases
+[[deprecated("use true")]] [[alias("true")]] const bool TRUE;
+[[deprecated("use false")]] [[alias("false")]] const bool FALSE;
+
 #endif

@@ -1,7 +1,10 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 // --------------------------------------------------------------------------
 // MENU Functionality
 
-#define DATABUF_PING 0
+const float DATABUF_PING = 0;
 #define DATABUF_CAPTURES (1*maxclients)
 #define DATABUF_DEATHS (2*maxclients)
 #define DATABUF_RETURNS (3*maxclients)
@@ -27,7 +30,6 @@ string minimapname;
 // --------------------------------------------------------------------------
 // General stuff
 
-float drawfont;
 float postinit;
 float gametype;
 
@@ -38,36 +40,35 @@ float gametype;
 //.float ctf_state;
 //.float health;
 
-#define FONT_DEFAULT 0
-#define FONT_USER 8
+float FONT_USER = 8;
 
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-#define MAX_HUD_FIELDS 16
+const int MAX_HUD_FIELDS = 16;
 
-#define SP_END -1
+const int SP_END = -1;
 
-#define SP_PING -2
-#define SP_NAME -3
-#define SP_KDRATIO -4
-#define SP_CLRATIO -5
-#define SP_PL -6
-#define SP_FRAGS -7
-#define SP_SUM -8
+const int SP_PING = -2;
+const int SP_NAME = -3;
+const int SP_KDRATIO = -4;
+const int SP_CLRATIO = -5;
+const int SP_PL = -6;
+const int SP_FRAGS = -7;
+const int SP_SUM = -8;
 
-#define SP_SEPARATOR -100
+const int SP_SEPARATOR = -100;
 
 float hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
 string hud_title[MAX_HUD_FIELDS + 1];
-float hud_num_fields;
+int hud_num_fields;
 
 string scores_label[MAX_SCORE];
-float scores_flags[MAX_SCORE];
+int scores_flags[MAX_SCORE];
 string teamscores_label[MAX_SCORE];
-float teamscores_flags[MAX_SCORE];
-.float scores[MAX_SCORE];
+int teamscores_flags[MAX_SCORE];
+.int scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
 
 #define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
@@ -92,16 +93,16 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .void(void) draw2d;
 .void(void) entremove;
 float drawframetime;
-vector view_origin, view_angles, view_forward, view_right, view_up;
+vector view_origin, view_forward, view_right, view_up;
 
 float button_zoom;
 float spectatorbutton_zoom;
 float button_attack;
 float button_attack2;
 
-float activeweapon;
-float switchingweapon;
-float switchweapon;
+int activeweapon;
+int switchingweapon;
+int switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -119,7 +120,7 @@ float current_zoomfraction;
 float cs_project_is_b0rked;
 float vid_width, vid_height, vid_pixelheight;
 
-float camera_active;		// Demo camera is active if set to TRUE
+float camera_active;		// Demo camera is active if set to true
 float chase_active_backup;
 float camera_roll;
 vector camera_direction;
@@ -127,14 +128,14 @@ vector camera_direction;
 void centerprint_hud(string strMessage);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
-#define ALPHA_MIN_VISIBLE 0.003
+const float ALPHA_MIN_VISIBLE = 0.003;
 
 float armorblockpercent;
 
 //hooks
-float calledhooks;
-#define HOOK_START    1
-#define HOOK_END      2
+int calledhooks;
+const int HOOK_START =    1;
+const int HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 
@@ -148,20 +149,22 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 
 float hud;
 float view_quality;
-float framecount;
 
 float vaporizer_delay;
 
 float fovlock;
 
 float cl_fps;
-float sv_showfps;
+int sv_showfps;
 
 string sv_announcer;
 
-float num_spectators;
-#define MAX_SPECTATORS 7
-float spectatorlist[MAX_SPECTATORS];
+int num_spectators;
+const int MAX_SPECTATORS = 7;
+int spectatorlist[MAX_SPECTATORS];
 
-float camera_drawviewmodel_locked;
-float camera_drawviewmodel_backup;
+bool camera_drawviewmodel_locked;
+bool camera_drawviewmodel_backup;
+
+int framecount;
+#endif

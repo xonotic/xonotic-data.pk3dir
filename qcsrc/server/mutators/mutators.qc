@@ -1,3 +1,11 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "mutators_include.qh"
+    #include "../../common/mapinfo.qh"
+#endif
+
 void mutators_add()
 {
 	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \

@@ -1,3 +1,10 @@
+#include "conquest.qh"
+#include "waypointsprites.qh"
+#include "teamradar.qh"
+#include "miscfunctions.qh"
+#include "hud.qh"
+#include "defs.qh"
+
 .float cq_factor;
 void conquest_controlpoint_draw2d()
 {

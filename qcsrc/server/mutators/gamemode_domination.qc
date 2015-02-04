@@ -1,3 +1,6 @@
+#include "../../common/vehicles/sv_vehicles.qh"
+#include "../round_handler.qh"
+
 void dom_EventLog(string mode, float cpteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
@@ -167,7 +170,7 @@ void dom_Activate(entity e)
 	e.modelindex = dom_modelindex[e.team];
 	e.skin = dom_skin[e.team];
 
-	e.dom_active = TRUE;
+	e.dom_active = true;
 	e.dom_cooldown = 0;
 	//e.dom_cooldown_max = 0;
 	setsize(e, DOM_CP_MIN, DOM_CP_MAX);
@@ -185,7 +188,7 @@ void dom_Deactivate(entity e, float cooldown)
 		e.model = dom_model[e.team];
 		e.modelindex = dom_modelindex[e.team];
 		setsize(e, DOM_CP_MIN, DOM_CP_MAX);
-		e.dom_active = FALSE;
+		e.dom_active = false;
 	}
 }
 
@@ -404,7 +407,7 @@ void dom_ControlPointSetup(entity cp)
 	cp.dom_capturingplayer = world;
 	cp.reset = dom_Reset;
 	cp.flags = FL_ITEM;
-	cp.dom_active = TRUE;
+	cp.dom_active = true;
 	cp.cnt = -1;
 	cp.team = 0;
 	setsize(cp, DOM_CP_MIN, DOM_CP_MAX);
@@ -413,12 +416,12 @@ void dom_ControlPointSetup(entity cp)
 	// control point placement
 	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location
 	{
-		cp.noalign = TRUE;
+		cp.noalign = true;
 		cp.movetype = MOVETYPE_NONE;
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
-		cp.noalign = FALSE;
+		cp.noalign = false;
 		self = cp;
 		droptofloor();
 		cp.movetype = MOVETYPE_NONE;
@@ -476,7 +479,7 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
-		nades_Clear(world, TRUE);
+		nades_Clear(world, true);
 		return 1;
 	}
 
@@ -501,7 +504,7 @@ float Domination_CheckWinner()
 	
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 
-	nades_Clear(world, TRUE);
+	nades_Clear(world, true);
 	
 	return 1;
 }
@@ -547,13 +550,13 @@ MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 {
 	//ret_float = domination_teams;
 	ret_string = "dom_team";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerThink)
@@ -561,7 +564,7 @@ MUTATOR_HOOKFUNCTION(dom_PlayerThink)
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		self.dom_unlock_progress = 0;
-		return FALSE;
+		return false;
 	}
 
 	if(time - self.pointupdatetime >= 0.01)
@@ -573,18 +576,18 @@ MUTATOR_HOOKFUNCTION(dom_PlayerThink)
 	self.dom_pps_yellow = pps_yellow;
 	self.dom_pps_pink = pps_pink;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 {
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_SpectateCopy)
 {
 	self.dom_unlock_progress = other.dom_unlock_progress;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerDamage)
@@ -597,13 +600,13 @@ MUTATOR_HOOKFUNCTION(dom_PlayerDamage)
 			e.dom_unlock_progress = bound(0, e.dom_unlock_progress - autocvar_g_domination_controlpoint_unlock_damage_pushback, 1);
 	}
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_BotRoles)
 {
 	self.havocbot_role = havocbot_role_dom;
-	return TRUE;
+	return true;
 }
 
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -673,7 +676,7 @@ void ScoreRules_dom(float teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
 		ScoreRules_basics_end();
@@ -686,7 +689,7 @@ void ScoreRules_dom(float teams)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(teams, sp_score, sp_score, TRUE);
+		ScoreRules_basics(teams, sp_score, sp_score, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
@@ -763,7 +766,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
-	
+
 	CheckAllowedTeams(world);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
@@ -821,5 +824,5 @@ MUTATOR_DEFINITION(gamemode_domination)
 		return -1;
 	}
 
-	return FALSE;
+	return false;
 }

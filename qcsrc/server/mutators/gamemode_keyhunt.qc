@@ -1,6 +1,4 @@
-// =========================================================
-//  Unofficial key hunt game mode coding, reworked by Mario
-// =========================================================
+#include "../../common/effects.qh"
 
 void kh_EventLog(string mode, float keyteam, entity actor) // use an alias for easy changing and quick editing later
 {
@@ -10,7 +8,7 @@ void kh_EventLog(string mode, float keyteam, entity actor) // use an alias for e
 
 void kh_KeycarrierWaypoints(entity player)
 {
-	WaypointSprite_Spawn("keycarrier", 0, 0, player, KEY_WAYPOINT_OFFSET, world, 0, player, wps_keycarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYKC(player.team));
+	WaypointSprite_Spawn("keycarrier", 0, 0, player, KEY_WAYPOINT_OFFSET, world, 0, player, wps_keycarrier, true, RADARICON_FLAG, WPCOLOR_ENEMYKC(player.team));
 	WaypointSprite_UpdateMaxHealth(player.wps_keycarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
 	WaypointSprite_UpdateHealth(player.wps_keycarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	WaypointSprite_UpdateTeamRadar(player.wps_keycarrier, RADARICON_FLAGCARRIER, WPCOLOR_ENEMYKC(player.team));
@@ -71,11 +69,11 @@ float kh_CheckPassDirection(vector head_center, vector passer_center, vector pas
 		spreadlimit = (autocvar_g_keyhunt_pass_directional_min * (1 - spreadlimit) + autocvar_g_keyhunt_pass_directional_max * spreadlimit);
 
 		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
-			{ return TRUE; }
+			{ return true; }
 		else
-			{ return FALSE; }
+			{ return false; }
 	}
-	else { return TRUE; }
+	else { return true; }
 }
 
 vector kh_AttachedOrigin(entity e)
@@ -83,7 +81,7 @@ vector kh_AttachedOrigin(entity e)
 	if(e.tag_entity)
 	{
 		makevectors(e.tag_entity.angles);
-		return e.tag_entity.origin + e.origin_x * v_forward - e.origin_y * v_right + e.origin_z * v_up;
+		return e.tag_entity.origin + e.origin.x * v_forward - e.origin.y * v_right + e.origin.z * v_up;
 	}
 	else
 		return e.origin;
@@ -94,9 +92,9 @@ vector kh_AttachedOrigin(entity e)
 //  Round Handling
 // ================
 
-float KH_GetWinnerTeam()
+int KH_GetWinnerTeam()
 {
-	float winner_team = 0;
+	int winner_team = 0;
 	entity key;
 	
 	KH_FOR_EACH_KEY(key)
@@ -125,7 +123,7 @@ float KH_CheckWinner()
 		{
 			e.kh_lastkiller = world;
 		}
-		nades_Clear(world, TRUE);
+		nades_Clear(world, true);
 		KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 		kh_worldkeylist = world; // reset key list
 		return 1;
@@ -153,11 +151,11 @@ float KH_CheckWinner()
 			if(time >= kh_alarm_time)
 			FOR_EACH_PLAYER(head)
 			{
-				float head_iscarrier = FALSE;
+				float head_iscarrier = false;
 				KH_FOR_EACH_KEY(key)
 				if(key.owner == head)
 				{
-					head_iscarrier = TRUE;
+					head_iscarrier = true;
 					break;
 				}
 				
@@ -189,7 +187,7 @@ float KH_CheckWinner()
 		e.kh_lastkiller = world;
 	}
 	
-	nades_Clear(world, TRUE);
+	nades_Clear(world, true);
 
 	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 	kh_worldkeylist = world; // reset key list
@@ -223,8 +221,6 @@ void KH_RoundStart()
 	FOR_EACH_PLAYER(tmp_entity) { tmp_entity.spawnshieldtime = time + autocvar_g_spawnshieldtime; }
 }
 
-float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
 void KH_count_alive_players()
 {
 	entity e;
@@ -244,10 +240,10 @@ void KH_count_alive_players()
 #define KH_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define KH_ALIVE_TEAMS_OK() (KH_ALIVE_TEAMS() == kh_teams)
 
-float prev_missing_teams_mask;
 float KH_CheckTeams()
 {
-	allowed_to_spawn = TRUE;
+	static float prev_missing_teams_mask;
+	allowed_to_spawn = true;
 	KH_count_alive_players();
 	if(KH_ALIVE_TEAMS_OK())
 	{
@@ -290,7 +286,6 @@ entity kh_ChooseNewCarrier(entity key)
 	return RandomSelection_chosen_ent;
 }
 
-
 // ====================
 // Drop/Pass/Throw Code
 // ====================
@@ -321,7 +316,7 @@ void kh_Handle_Drop(entity key, entity player, float droptype)
 
 	// waypoints
 	if(autocvar_g_keyhunt_key_dropped_waypoint)
-		WaypointSprite_Spawn("keydropped", 0, 0, key, KEY_DROP_OFFSET, world, ((autocvar_g_keyhunt_key_dropped_waypoint == 2) ? 0 : player.team), key, wps_keydropped, TRUE, RADARICON_FLAG, WPCOLOR_DROPPEDKEY(key.team));
+		WaypointSprite_Spawn("keydropped", 0, 0, key, KEY_DROP_OFFSET, world, ((autocvar_g_keyhunt_key_dropped_waypoint == 2) ? 0 : player.team), key, wps_keydropped, true, RADARICON_FLAG, WPCOLOR_DROPPEDKEY(key.team));
 
 	if(autocvar_g_keyhunt_key_return_time || (autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health))
 	{
@@ -420,7 +415,7 @@ void kh_Handle_Throw(entity player, entity receiver, entity key, float droptype)
 			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, key, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the key
 
 			key.pass_distance = vlen((('1 0 0' * targ_origin_x) + ('0 1 0' * targ_origin_y)) - (('1 0 0' *  player.origin_x) + ('0 1 0' *  player.origin_y))); // for the sake of this check, exclude Z axis
-			kh_CalculatePassVelocity(key, targ_origin, player.origin, FALSE);
+			kh_CalculatePassVelocity(key, targ_origin, player.origin, false);
 
 			// main
 			key.movetype = MOVETYPE_FLY;
@@ -441,7 +436,7 @@ void kh_Handle_Throw(entity player, entity receiver, entity key, float droptype)
 			makevectors((player.v_angle_y * '0 1 0') + (bound(autocvar_g_keyhunt_throw_angle_min, player.v_angle_x, autocvar_g_keyhunt_throw_angle_max) * '1 0 0'));
 
 			key_velocity = (('0 0 1' * autocvar_g_keyhunt_throw_velocity_up) + ((v_forward * autocvar_g_keyhunt_throw_velocity_forward)));
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, key_velocity, FALSE);
+			key.velocity = W_CalculateProjectileVelocity(player.velocity, key_velocity, false);
 			kh_Handle_Drop(key, player, droptype);
 			break;
 		}
@@ -455,7 +450,7 @@ void kh_Handle_Throw(entity player, entity receiver, entity key, float droptype)
 		default:
 		case DROP_NORMAL:
 		{
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, (('0 0 1' * autocvar_g_keyhunt_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_keyhunt_drop_velocity_side)), FALSE);
+			key.velocity = W_CalculateProjectileVelocity(player.velocity, (('0 0 1' * autocvar_g_keyhunt_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_keyhunt_drop_velocity_side)), false);
 			kh_Handle_Drop(key, player, droptype);
 			break;
 		}
@@ -751,7 +746,7 @@ void kh_KeyThink()
 			else
 			{
 				// still a viable target, go for it
-				kh_CalculatePassVelocity(self, targ_origin, self.origin, TRUE);
+				kh_CalculatePassVelocity(self, targ_origin, self.origin, true);
 			}
 			return;
 		}
@@ -773,7 +768,7 @@ float kh_Customize()
 	else if(autocvar_g_keyhunt_key_glowtrails)
 		self.glow_trail = 1;
 
-	return TRUE;
+	return true;
 }
 
 void kh_KeyTouch()
@@ -882,7 +877,7 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 	key.max_key_health = ((autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health) ? autocvar_g_keyhunt_key_health : 100);
 	key.health = key.max_key_health;
 	key.event_damage = kh_KeyDamage;
-	key.pushable = TRUE;
+	key.pushable = true;
 	key.teleportable = TELEPORT_NORMAL;
 	key.damagedbytriggers = autocvar_g_keyhunt_key_return_when_unreachable;
 	key.damagedbycontents = autocvar_g_keyhunt_key_return_when_unreachable;
@@ -971,11 +966,11 @@ void havocbot_role_kh_carrier()
 		return;
 		
 	entity key;
-	float is_carrier = FALSE;
+	float is_carrier = false;
 	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
-		is_carrier = TRUE;
+		is_carrier = true;
 		break;
 	}
 
@@ -1010,11 +1005,11 @@ void havocbot_role_kh_defense()
 		return;
 		
 	entity key;
-	float is_carrier = FALSE;
+	float is_carrier = false;
 	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
-		is_carrier = TRUE;
+		is_carrier = true;
 		break;
 	}
 
@@ -1061,11 +1056,11 @@ void havocbot_role_kh_offense()
 		return;
 		
 	entity key;
-	float is_carrier = FALSE;
+	float is_carrier = false;
 	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
-		is_carrier = TRUE;
+		is_carrier = true;
 		break;
 	}
 
@@ -1112,11 +1107,11 @@ void havocbot_role_kh_freelancer()
 		return;
 		
 	entity key;
-	float is_carrier = FALSE;
+	float is_carrier = false;
 	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
-		is_carrier = TRUE;
+		is_carrier = true;
 		break;
 	}
 
@@ -1198,17 +1193,17 @@ MUTATOR_HOOKFUNCTION(kh_PlayerPreThink)
 	if(self.wps_keycarrier)
 		WaypointSprite_UpdateHealth(self.wps_keycarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	entity key;
-	float targ_iscarrier = FALSE, attacker_iscarrier = FALSE;
+	float targ_iscarrier = false, attacker_iscarrier = false;
 	KH_FOR_EACH_KEY(key)
 	{
-		if(key.owner == frag_attacker) { attacker_iscarrier = TRUE; }
-		if(key.owner == frag_target) { targ_iscarrier = TRUE; }
+		if(key.owner == frag_attacker) { attacker_iscarrier = true; }
+		if(key.owner == frag_target) { targ_iscarrier = true; }
 	}
 
 	if(attacker_iscarrier) // if the attacker is a keycarrier
@@ -1234,15 +1229,15 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDamage) // for changing damage and force values th
 		}
 		// todo: add notification for when key carrier needs help?
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	entity tmp_entity;
-	float targ_iscarrier = FALSE;
+	float targ_iscarrier = false;
 
-	KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == frag_target) { targ_iscarrier = TRUE; break; }
+	KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == frag_target) { targ_iscarrier = true; break; }
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && targ_iscarrier)
 	{
@@ -1259,7 +1254,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 
 	FOR_EACH_PLAYER(tmp_entity) if(tmp_entity.kh_lastkiller == frag_target) { tmp_entity.kh_lastkiller = frag_attacker; }
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_GiveFragsForKill)
@@ -1281,7 +1276,7 @@ MUTATOR_HOOKFUNCTION(kh_RemovePlayer)
 		if(key.kh_dropper == self) { key.kh_dropper = world; }
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PortalTeleport)
@@ -1292,12 +1287,12 @@ MUTATOR_HOOKFUNCTION(kh_PortalTeleport)
 	KH_FOR_EACH_KEY(key)
 	if(key.owner == self) { kh_Handle_Throw(self, world, key, DROP_NORMAL); }
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
+	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
 	entity player = self, key, player_key = world;
 	
@@ -1310,7 +1305,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 		if(autocvar_g_keyhunt_pass)
 		{
 			entity head, closest_target = world;
-			head = WarpZone_FindRadius(player.origin, autocvar_g_keyhunt_pass_radius, TRUE);
+			head = WarpZone_FindRadius(player.origin, autocvar_g_keyhunt_pass_radius, true);
 
 			while(head) // find the closest acceptable target to pass to
 			{
@@ -1341,7 +1336,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_KEYHUNT_PASS_REQUESTING, head.netname);
 							}
 							player.throw_antispam = time + autocvar_g_keyhunt_pass_wait;
-							return TRUE;
+							return true;
 						}
 						else if(player_key)
 						{
@@ -1358,7 +1353,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 				head = head.chain;
 			}
 
-			if(closest_target) { kh_Handle_Throw(player, closest_target, player_key, DROP_PASS); return TRUE; }
+			if(closest_target) { kh_Handle_Throw(player, closest_target, player_key, DROP_PASS); return true; }
 		}
 
 		// throw the key in front of you
@@ -1371,12 +1366,12 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 					player.throw_prevtime = time;
 					player.throw_count = 1;
 					kh_Handle_Throw(player, world, player_key, DROP_THROW);
-					return TRUE;
+					return true;
 				}
 				else
 				{
 					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_KEYHUNT_KEY_THROW_PUNISH, rint((player.throw_prevtime + autocvar_g_keyhunt_throw_punish_delay) - time));
-					return FALSE;
+					return false;
 				}
 			}
 			else
@@ -1387,12 +1382,12 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 
 				player.throw_prevtime = time;
 				kh_Handle_Throw(player, world, player_key, DROP_THROW);
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_ResetMapGlobal)
@@ -1404,13 +1399,13 @@ MUTATOR_HOOKFUNCTION(kh_ResetMapGlobal)
 	}
 	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 	kh_worldkeylist = world; // reset key list
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_ResetMap)
 {
 	// don't reset players
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(kh_HelpMePing)
@@ -1422,11 +1417,11 @@ MUTATOR_HOOKFUNCTION(kh_HelpMePing)
 	}
 	else // create a normal help me waypointsprite
 	{
-		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, KEY_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, FALSE, RADARICON_HELPME, '1 0.5 0');
+		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, KEY_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME, '1 0.5 0');
 		WaypointSprite_Ping(self.wps_helpme);
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(kh_VehicleEnter)
@@ -1449,7 +1444,7 @@ MUTATOR_HOOKFUNCTION(kh_VehicleEnter)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_VehicleExit)
@@ -1464,7 +1459,7 @@ MUTATOR_HOOKFUNCTION(kh_VehicleExit)
 		key.angles = '0 0 0';
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_MatchEnd)
@@ -1482,7 +1477,7 @@ MUTATOR_HOOKFUNCTION(kh_MatchEnd)
 				key.movetype = MOVETYPE_NONE;
 				key.takedamage = DAMAGE_NO;
 				key.solid = SOLID_NOT;
-				key.nextthink = FALSE; // stop thinking
+				key.nextthink = false; // stop thinking
 
 				//dprint("stopping the ", key.netname, " from moving.\n");
 				break;
@@ -1497,7 +1492,7 @@ MUTATOR_HOOKFUNCTION(kh_MatchEnd)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh_BotRoles)
@@ -1509,13 +1504,13 @@ MUTATOR_HOOKFUNCTION(kh_BotRoles)
 		self.havocbot_role = havocbot_role_kh_defense;
 	else
 		self.havocbot_role = havocbot_role_kh_freelancer;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
 {
 	ret_float = kh_teams;
-	return FALSE;
+	return false;
 }
 
 
@@ -1527,7 +1522,7 @@ MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
 void kh_ScoreRules(float teams)
 {
 	CheckAllowedTeams(world);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_KH_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);

@@ -54,6 +54,8 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL); }
 
 void W_Fireball_Explode(void)
@@ -122,13 +124,13 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 		return;
 
 	RandomSelection_Init();
-	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
+	for(e = WarpZone_FindRadius(self.origin, dist, true); e; e = e.chain)
 	if(e != self.realowner) if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
 	{
 		p = e.origin;
-		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
-		p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
-		p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
+		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
+		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
 		d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
 		if(d < dist)
 		{
@@ -180,14 +182,14 @@ void W_Fireball_Attack1(void)
 {
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "plasma_prim";
 	proj.owner = proj.realowner = self;
-	proj.bot_dodge = TRUE;
+	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(fireball, damage);
 	proj.pushltime = time + WEP_CVAR_PRI(fireball, lifetime);
 	proj.use = W_Fireball_Explode;
@@ -210,14 +212,14 @@ void W_Fireball_Attack1(void)
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREBALL, TRUE);
+	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0, 0);
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 0, "", 0, 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
@@ -314,7 +316,7 @@ void W_Fireball_Attack2(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
@@ -323,7 +325,7 @@ void W_Fireball_Attack2(void)
 	proj = spawn();
 	proj.owner = proj.realowner = self;
 	proj.classname = "grenade";
-	proj.bot_dodge = TRUE;
+	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
@@ -341,7 +343,7 @@ void W_Fireball_Attack2(void)
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -352,26 +354,26 @@ float W_Fireball(float req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK = FALSE;
-			self.BUTTON_ATCK2 = FALSE;
+			self.BUTTON_ATCK = false;
+			self.BUTTON_ATCK2 = false;
 			if(self.bot_primary_fireballmooth == 0)
 			{
-				if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), FALSE))
+				if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
 				{
-					self.BUTTON_ATCK = TRUE;
+					self.BUTTON_ATCK = true;
 					if(random() < 0.02) self.bot_primary_fireballmooth = 0;
 				}
 			}
 			else
 			{
-				if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), TRUE))
+				if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
 				{
-					self.BUTTON_ATCK2 = TRUE;
+					self.BUTTON_ATCK2 = true;
 					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -392,8 +394,8 @@ float W_Fireball(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -405,27 +407,27 @@ float W_Fireball(float req)
 			precache_sound(W_Sound("fireball_fire2"));
 			precache_sound(W_Sound("fireball_prefire2"));
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		case WR_CHECKAMMO2:
 		{
-			return TRUE; // fireball has infinite ammo
+			return true; // fireball has infinite ammo
 		}
 		case WR_CONFIG:
 		{
-			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.fireball_primarytime = time;
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -442,7 +444,7 @@ float W_Fireball(float req)
 				return WEAPON_FIREBALL_MURDER_BLAST;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -464,21 +466,21 @@ float W_Fireball(float req)
 				if(!w_issilent)
 					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/fireball_impact2.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

@@ -1,3 +1,6 @@
+#ifndef SV_TURRETS_H
+#define SV_TURRETS_H
+
 // turret fields
 .float ticrate; // interal ai think rate
 .vector aim_idle; // where to aim while idle
@@ -68,6 +71,8 @@ const float TFL_TRACKTYPE_FLUIDINERTIA = 3; // simulated inertia ("wobbly" mode)
 .float track_accel_rotate;
 .float track_blendrate;
 
+void() turret_respawn;
+
 /// updates aim org, shot org, shot dir and enemy org for selected turret
 void turret_do_updates(entity e_turret);
 .vector tur_shotdir_updated;
@@ -104,3 +109,5 @@ vector tvt_tadv; // turret angle diff vector, updated by a successful call to tu
 float tvt_thadf; // turret head angle diff float, updated by a successful call to turret_validate_target
 float tvt_tadf; // turret angle diff float, updated by a successful call to turret_validate_target
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
+
+#endif

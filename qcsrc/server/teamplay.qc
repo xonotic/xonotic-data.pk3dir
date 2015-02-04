@@ -1,12 +1,9 @@
-string cache_mutatormsg;
-string cache_lastmutatormsg;
+#include "teamplay.qh"
 
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);
 }
-
-void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
 {
@@ -575,11 +572,11 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 
 	// invalid
 	if(ca < 0 || cb < 0)
-		return FALSE;
+		return false;
 
 	// equal
 	if(ta == tb)
-		return TRUE;
+		return true;
 
 	if(IS_REAL_CLIENT(e))
 	{
@@ -593,10 +590,10 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
-			return TRUE;
+			return true;
 	if(ca >= 1)
 		if(cb < 1)
-			return FALSE;
+			return false;
 
 	// first, normalize
 	f = max(ca, cb, 1);
@@ -715,7 +712,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		// otherwise end up on the smallest team (handled below)
 	}
 
-	smallest = FindSmallestTeam(pl, TRUE);
+	smallest = FindSmallestTeam(pl, true);
 
 	if(!only_return_best && !pl.bot_forced_team)
 	{
@@ -792,7 +789,7 @@ void SV_ChangeTeam(float _color)
 	if(scolor == dcolor)
 	{
 		//bprint("same team change\n");
-		SetPlayerTeam(self, dteam, steam, TRUE);
+		SetPlayerTeam(self, dteam, steam, true);
 		return;
 	}
 
@@ -820,7 +817,7 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, FALSE);
+	SetPlayerTeam(self, dteam, steam, false);
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{
@@ -964,7 +961,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	// move the player to the new team
 	TeamchangeFrags(selected);
-	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
+	SetPlayerTeam(selected, smallestteam, source_team, false);
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');

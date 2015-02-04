@@ -75,7 +75,7 @@ void M_Enforcer_Attack_Plasma()
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = autocvar_g_monster_enforcer_attack_plasma_damage;
 	gren.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(gren);
@@ -89,11 +89,11 @@ void M_Enforcer_Attack_Plasma()
 	gren.touch = M_Enforcer_Attack_Plasma_Touch;
 
 	gren.missile_flags = MIF_SPLASH;
-	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, FALSE);
+	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, false);
 
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_ELECTRO, TRUE);
+	CSQCProjectile(gren, true, PROJECTILE_ELECTRO, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 
@@ -112,11 +112,11 @@ float M_Enforcer_Attack(float attack_type)
 			self.anim_finished = time + 0.7 * autocvar_g_monster_enforcer_attack_plasma_shots;
 			self.state = MONSTER_ATTACK_RANGED;
 			Monster_Delay(autocvar_g_monster_enforcer_attack_plasma_shots - 1, 0.3, 0.4, M_Enforcer_Attack_Plasma);
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_enforcer() { Monster_Spawn(MON_ENFORCER); }
@@ -127,7 +127,7 @@ float M_Enforcer(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
@@ -139,12 +139,12 @@ float M_Enforcer(float req)
 				case 3: self.frame = enforcer_anim_pain3; self.pain_finished = time + 0.7; break;
 				case 4: self.frame = enforcer_anim_pain4; self.pain_finished = time + 1; break;
 			}
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = ((random() > 0.5) ? enforcer_anim_death1 : enforcer_anim_death2);
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -161,17 +161,17 @@ float M_Enforcer(float req)
 			self.monster_loot = spawnfunc_item_cells;
 			self.weapon = WEP_CRYLINK;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_sound(W_Sound("tag_impact"));
 			precache_sound(W_Sound("lasergun_fire"));
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

@@ -1,3 +1,7 @@
+#include "controlpoint.qh"
+#include "waypointsprites.qh"
+#include "teamradar.qh"
+
 float cpicon_precached;
 .float count;
 .float pain_finished;
@@ -25,7 +29,7 @@ void cpicon_precache()
 	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
 	precache_model("models/onslaught/controlpoint_icon.md3");
 
-	cpicon_precached = TRUE;
+	cpicon_precached = true;
 }
 
 void cpicon_draw()

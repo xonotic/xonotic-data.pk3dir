@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_wyvern_health;
 var float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
@@ -72,7 +74,7 @@ void M_Wyvern_Attack_Fireball()
 	missile.think = M_Wyvern_Attack_Fireball_Explode;
 	missile.enemy = self.enemy;
 	missile.touch = M_Wyvern_Attack_Fireball_Touch;
-	CSQCProjectile(missile, TRUE, PROJECTILE_FIREMINE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
 float M_Wyvern_Attack(float attack_type)
@@ -87,11 +89,11 @@ float M_Wyvern_Attack(float attack_type)
 
 			M_Wyvern_Attack_Fireball();
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN); }
@@ -107,11 +109,11 @@ float M_Wyvern(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
@@ -119,7 +121,7 @@ float M_Wyvern(float req)
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
 			self.velocity_z = 100 + 100 * random();
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -136,15 +138,15 @@ float M_Wyvern(float req)
 			self.monster_loot = spawnfunc_item_cells;
 			self.frame = wyvern_anim_hover;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

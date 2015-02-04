@@ -1,3 +1,5 @@
+#include "minigames.qh"
+
 entity minigame_get_descriptor(string id)
 {
 	entity e;
@@ -85,7 +87,7 @@ entity msle_spawn(entity minigame_session, string class_name)
 	e.minigame_autoclean = 1;
 	#ifdef SVQC
 		e.customizeentityforclient = minigame_CheckSend;
-		Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
+		Net_LinkEntity(e, false, 0, minigame_SendEntity);
 	#endif
 	return e;
 }

@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra_FilterItem)
@@ -37,10 +37,10 @@ MUTATOR_HOOKFUNCTION(ra_FilterItem)
 	{
 		case IT_5HP:
 		case IT_ARMOR_SHARD:
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ra_StartItems)
@@ -55,30 +55,30 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 		warmup_start_weapons |= WEPSET_BLASTER;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra_ForbidThrowCurrentWeapon)
 {
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ra_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":RA");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Rifle Arena");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra_SetModname)
 {
 	modname = "Rifle Arena";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(mutator_riflearena)
@@ -104,5 +104,5 @@ MUTATOR_DEFINITION(mutator_riflearena)
 		return -1;
 	}
 
-	return FALSE;
+	return false;
 }

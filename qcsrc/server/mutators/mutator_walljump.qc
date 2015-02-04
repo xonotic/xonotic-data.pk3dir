@@ -1,3 +1,5 @@
+#include "../../common/effects.qh"
+
 .float lastwj;
 
 vector PlayerTouchWall ()
@@ -8,22 +10,22 @@ vector PlayerTouchWall ()
 	max_normal = 0.2;
 	start = self.origin;
 	end = start + v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, self.mins, self.maxs, end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, self.mins, self.maxs, end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start + v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, self.mins, self.maxs, end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, TRUE, self);
+	tracebox (start, self.mins, self.maxs, end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
@@ -58,18 +60,18 @@ MUTATOR_HOOKFUNCTION(walljump_PlayerJump)
 
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+			animdecide_setaction(self, ANIMACTION_JUMP, true);
 			
-			player_multijump = TRUE;
+			player_multijump = true;
 		}
 	}
 	
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_walljump)
 {
 	MUTATOR_HOOK(PlayerJump, walljump_PlayerJump, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

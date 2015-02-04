@@ -1,47 +1,48 @@
-// these are needed since mutators are compiled last
+#ifndef GAMEMODE_KEYHUNT_H
+#define GAMEMODE_KEYHUNT_H
 
 #ifdef SVQC
 
 // score rule declarations
-#define ST_KH_CAPS 1
-#define SP_KH_CAPS 4
-#define SP_KH_CAPTIME 5
-#define SP_KH_PICKUPS 6
-#define SP_KH_DROPS 7
-#define SP_KH_KCKILLS 8
+const int ST_KH_CAPS = 1;
+const int SP_KH_CAPS = 4;
+const int SP_KH_CAPTIME = 5;
+const int SP_KH_PICKUPS = 6;
+const int SP_KH_DROPS = 7;
+const int SP_KH_KCKILLS = 8;
 
 // key constants // for most of these, there is just one question to be asked: WHYYYYY?
-#define KEY_MIN ('-10 -10 -46')
-#define KEY_MAX ('10 10 3')
+const vector KEY_MIN = ('-10 -10 -46');
+const vector KEY_MAX = ('10 10 3');
 
-#define KH_KEY_ZSHIFT 22
-#define KH_KEY_XYDIST 24
-#define KH_KEY_XYSPEED 45
+const float KH_KEY_ZSHIFT = 22;
+const float KH_KEY_XYDIST = 24;
+const float KH_KEY_XYSPEED = 45;
 
-#define KH_VEHICLE_KEY_XYDIST 100
-#define KH_VEHICLE_KEY_ZSHIFT 80
+const float KH_VEHICLE_KEY_XYDIST = 100;
+const float KH_VEHICLE_KEY_ZSHIFT = 80;
 
-#define KEY_SCALE 1
+const float KEY_SCALE = 1;
 
-#define KEY_BRIGHTNESS 2
+const float KEY_BRIGHTNESS = 2;
 
-#define KEY_THINKRATE 0.1
-#define KEY_TOUCHRATE 0.5
+const float KEY_THINKRATE = 0.1;
+const float KEY_TOUCHRATE = 0.5;
 
-#define KEY_DROP_OFFSET ('0 0 16')
-#define KEY_CARRY_OFFSET ('-16 0 8')
+const vector KEY_DROP_OFFSET = ('0 0 16');
+const vector KEY_CARRY_OFFSET = ('-16 0 8');
 #define KEY_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
-#define KEY_WAYPOINT_OFFSET ('0 0 64')
-#define KEY_FLOAT_OFFSET ('0 0 16')
-#define KEY_PASS_ARC_OFFSET ('0 0 -10')
+const vector KEY_WAYPOINT_OFFSET = ('0 0 64');
+const vector KEY_FLOAT_OFFSET = ('0 0 16');
+const vector KEY_PASS_ARC_OFFSET = ('0 0 -10');
 
-#define VEHICLE_KEY_OFFSET ('0 0 96')
-#define VEHICLE_KEY_SCALE 2
+const vector VEHICLE_KEY_OFFSET = ('0 0 96');
+const float VEHICLE_KEY_SCALE = 2;
 
 // waypoint colors
-#define WPCOLOR_ENEMYKC(t) (colormapPaletteColor(t - 1, FALSE) * 0.75)
+#define WPCOLOR_ENEMYKC(t) (colormapPaletteColor(t - 1, false) * 0.75)
 #define WPCOLOR_KEYCARRIER(t) ('0.8 0.8 0')
-#define WPCOLOR_DROPPEDKEY(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+#define WPCOLOR_DROPPEDKEY(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5)
 
 // sounds
 #define snd_key_taken noise
@@ -53,9 +54,9 @@
 .string snd_key_pass;
 
 // effects
-.float toucheffectnum;
-.float passeffectnum;
-.float capeffectnum;
+.int toucheffectnum;
+.int passeffectnum;
+.int capeffectnum;
 
 // list of keys on the map
 entity kh_worldkeylist;
@@ -63,38 +64,32 @@ entity kh_worldkeylist;
 .entity kh_stalekeynext;
 
 // waypoint sprites
-.entity wps_helpme;
+//.entity wps_helpme;
 .entity wps_keycarrier;
 .entity wps_keydropped;
 .entity wps_enemykeycarrier;
-.float wps_helpme_time;
-float wpforenemy_announced;
-float wpforenemy_nextthink;
+//.float wps_helpme_time;
+//bool wpforenemy_announced;
+//float wpforenemy_nextthink;
 
 // statuses
-#define KEY_DROPPED 2
-#define KEY_CARRY 3
-#define KEY_PASSING 4
+const int KEY_DROPPED = 2;
+const int KEY_CARRY = 3;
+const int KEY_PASSING = 4;
 
 // others defined in CTF code (TODO: separate?)
-#define PICKUP_START 3
-#define PICKUP_KILLED 4
-
-// carrier stats
-.float stat_kh_redkey_team;
-.float stat_kh_bluekey_team;
-.float stat_kh_yellowkey_team;
-.float stat_kh_pinkkey_team;
+const int PICKUP_START = 3;
+const int PICKUP_KILLED = 4;
 
 // key properties
 .float kh_pickuptime;
 .float kh_droptime;
-.float kh_status; // status of the key (KEY_DROPPED, KEY_CARRY declared globally)
+.int kh_status; // status of the key (KEY_DROPPED, KEY_CARRY declared globally)
 .entity kh_dropper; // don't allow spam of dropping the key
 .entity kh_lastkiller;
-.float max_key_health;
+.int max_key_health;
 .float next_take_time;
-float kh_teams;
+int kh_teams;
 
 // passing/throwing properties
 .float pass_distance;
@@ -102,7 +97,7 @@ float kh_teams;
 .entity pass_target;
 .float throw_antispam;
 .float throw_prevtime;
-.float throw_count;
+.int throw_count;
 
 // alarms
 float kh_alarm_time;
@@ -119,17 +114,19 @@ float kh_siren_time;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float kh_keystatus;
+.int kh_keystatus;
 
-const float	KH_RED_KEY_TAKEN			= 1;
-const float	KH_RED_KEY_LOST				= 2;
-const float	KH_RED_KEY_CARRYING			= 3;
-const float	KH_BLUE_KEY_TAKEN			= 4;
-const float	KH_BLUE_KEY_LOST			= 8;
-const float	KH_BLUE_KEY_CARRYING		= 12;
-const float	KH_YELLOW_KEY_TAKEN			= 16;
-const float	KH_YELLOW_KEY_LOST			= 32;
-const float	KH_YELLOW_KEY_CARRYING		= 48;
-const float	KH_PINK_KEY_TAKEN			= 64;
-const float	KH_PINK_KEY_LOST			= 128;
-const float	KH_PINK_KEY_CARRYING		= 192;
+const int KH_RED_KEY_TAKEN			= 1;
+const int KH_RED_KEY_LOST			= 2;
+const int KH_RED_KEY_CARRYING		= 3;
+const int KH_BLUE_KEY_TAKEN			= 4;
+const int KH_BLUE_KEY_LOST			= 8;
+const int KH_BLUE_KEY_CARRYING		= 12;
+const int KH_YELLOW_KEY_TAKEN		= 16;
+const int KH_YELLOW_KEY_LOST		= 32;
+const int KH_YELLOW_KEY_CARRYING	= 48;
+const int KH_PINK_KEY_TAKEN			= 64;
+const int KH_PINK_KEY_LOST			= 128;
+const int KH_PINK_KEY_CARRYING		= 192;
+
+#endif

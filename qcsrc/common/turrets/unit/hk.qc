@@ -117,7 +117,7 @@ void turret_hk_missile_think()
 				  self.enemy.velocity *
 				  min((vlen(self.enemy.origin - self.origin) / vlen(self.velocity)),0.5);
 
-		traceline(self.origin, pre_pos,TRUE,self.enemy);
+		traceline(self.origin, pre_pos,true,self.enemy);
 		ve = normalize(pre_pos - self.origin);
 		fe = trace_fraction;
 
@@ -137,7 +137,7 @@ void turret_hk_missile_think()
 		lt_seek = myspeed * 2.95;
 
 		// Trace forward
-		traceline(self.origin, self.origin + v_forward * lt_for,FALSE,self);
+		traceline(self.origin, self.origin + v_forward * lt_for,false,self);
 		vf = trace_endpos;
 		ff = trace_fraction;
 
@@ -158,22 +158,22 @@ void turret_hk_missile_think()
 		if (ff < 0.5) pt_seek = 1;
 
 		// Trace left
-		traceline(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,FALSE,self);
+		traceline(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,false,self);
 		vl = trace_endpos;
 		fl = trace_fraction;
 
 		// Trace right
-		traceline(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+		traceline(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
 		vr = trace_endpos;
 		fr = trace_fraction;
 
 		// Trace up
-		traceline(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+		traceline(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
 		vu = trace_endpos;
 		fu = trace_fraction;
 
 		// Trace down
-		traceline(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+		traceline(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
 		vd = trace_endpos;
 		fd = trace_fraction;
 
@@ -283,7 +283,7 @@ float t_hk(float req)
 		{
 			entity missile;
 
-			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
+			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, false, false);
 			te_explosion (missile.origin);
 
 			missile.think			= turret_hk_missile_think;
@@ -298,7 +298,7 @@ float t_hk(float req)
 			if (self.tur_head.frame == 0)
 				self.tur_head.frame = self.tur_head.frame + 1;
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -308,11 +308,11 @@ float t_hk(float req)
 			if (self.tur_head.frame > 5)
 				self.tur_head.frame = 0;
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -325,17 +325,17 @@ float t_hk(float req)
 
 			self.turret_addtarget = turret_hk_addtarget;
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/hk.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -346,15 +346,15 @@ float t_hk(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

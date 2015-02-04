@@ -1,3 +1,5 @@
+#include "../common/weapons/weapons.qc"
+
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
 //***********************

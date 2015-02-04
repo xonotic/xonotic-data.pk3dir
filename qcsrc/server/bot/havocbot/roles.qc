@@ -11,7 +11,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 	float rating, d, discard, distance, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
-	head = findchainfloat(bot_pickup, TRUE);
+	head = findchainfloat(bot_pickup, true);
 
 	while (head)
 	{
@@ -29,7 +29,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		// Check if the item can be picked up safely
 		if(head.classname == "droppedweapon")
 		{
-			traceline(o, o + '0 0 -1500', TRUE, world);
+			traceline(o, o + '0 0 -1500', true, world);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
@@ -56,7 +56,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 		if(teamplay)
 		{
-			discard = FALSE;
+			discard = false;
 
 			FOR_EACH_PLAYER(player)
 			{
@@ -76,7 +76,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 					friend_distance = d;
 
-					discard = TRUE;
+					discard = true;
 
 					if( head.health && player.health > self.health )
 						continue;
@@ -103,7 +103,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
 						continue;
 
-					discard = FALSE;
+					discard = false;
 				}
 				else
 				{
@@ -151,8 +151,9 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
 	entity head;
-	float t, noteam, distance;
-	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
+	int t;
+	float distance;
+	noref bool noteam = ((self.team == 0) || !teamplay);
 
 	if (autocvar_bot_nofire)
 		return;
@@ -183,7 +184,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			// not falling
 			if((head.flags & FL_ONGROUND) == 0)
 			{
-				traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
+				traceline(head.origin, head.origin + '0 0 -1500', true, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if( t != CONTENT_SOLID )
 				if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)

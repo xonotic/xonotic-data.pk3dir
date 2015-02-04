@@ -68,11 +68,11 @@ roflsound "New toys, new toys!" sound.
 
 .string new_toys;
 
-float autocvar_g_new_toys_autoreplace;
-float autocvar_g_new_toys_use_pickupsound;
-#define NT_AUTOREPLACE_NEVER 0
-#define NT_AUTOREPLACE_ALWAYS 1
-#define NT_AUTOREPLACE_RANDOM 2
+int autocvar_g_new_toys_autoreplace;
+bool autocvar_g_new_toys_use_pickupsound;
+const int NT_AUTOREPLACE_NEVER = 0;
+const int NT_AUTOREPLACE_ALWAYS = 1;
+const int NT_AUTOREPLACE_RANDOM = 2;
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -80,7 +80,7 @@ MUTATOR_HOOKFUNCTION(nt_SetModname)
 	return 0;
 }
 
-float nt_IsNewToy(float w)
+bool nt_IsNewToy(int w)
 {
 	switch(w)
 	{
@@ -89,9 +89,9 @@ float nt_IsNewToy(float w)
 		case WEP_HLAC:
 		case WEP_RIFLE:
 		case WEP_SHOCKWAVE:
-			return TRUE;
+			return true;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 

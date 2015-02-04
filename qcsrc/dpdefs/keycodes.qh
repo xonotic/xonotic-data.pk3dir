@@ -1,0 +1,155 @@
+#ifndef KEYCODES_H
+#define KEYCODES_H
+
+#pragma noref 1
+
+///////////////////////////
+// key constants
+
+//
+// these are the key numbers that should be passed to Key_Event
+//
+int K_TAB			= 9;
+int K_ENTER		    = 13;
+int K_ESCAPE		= 27;
+int K_SPACE		    = 32;
+
+// normal keys should be passed as lowercased ascii
+
+int K_BACKSPACE	    = 127;
+int K_UPARROW		= 128;
+int K_DOWNARROW	    = 129;
+int K_LEFTARROW	    = 130;
+int K_RIGHTARROW	= 131;
+
+int K_ALT		    = 132;
+int K_CTRL	        = 133;
+int K_SHIFT	        = 134;
+
+int K_F1		    = 135;
+int K_F2		    = 136;
+int K_F3		    = 137;
+int K_F4		    = 138;
+int K_F5		    = 139;
+int K_F6		    = 140;
+int K_F7		    = 141;
+int K_F8		    = 142;
+int K_F9		    = 143;
+int K_F10		    = 144;
+int K_F11		    = 145;
+int K_F12		    = 146;
+
+int K_INS		    = 147;
+int K_DEL		    = 148;
+int K_PGDN	        = 149;
+int K_PGUP	        = 150;
+int K_HOME	        = 151;
+int K_END		    = 152;
+
+int K_NUMLOCK		= 154;
+int K_CAPSLOCK	    = 155;
+int K_SCROLLLOCK	= 156;
+
+int K_KP_0	        = 157;
+int K_KP_INS	    = 157; // same as K_KP_0
+int K_KP_1	        = 158;
+int K_KP_END	    = 158; // same as K_KP_1
+int K_KP_2	        = 159;
+int K_KP_DOWNARROW  = 159; // same as K_KP_2
+int K_KP_3	        = 160;
+int K_KP_PGDN       = 160; // same as K_KP_3
+int K_KP_4	        = 161;
+int K_KP_LEFTARROW  = 161; // same as K_KP_4
+int K_KP_5	        = 162;
+int K_KP_6	        = 163;
+int K_KP_RIGHTARROW = 163; // same as K_KP_6
+int K_KP_7	        = 164;
+int K_KP_HOME       = 164; // same as K_KP_7
+int K_KP_8	        = 165;
+int K_KP_UPARROW    = 165; // same as K_KP_8
+int K_KP_9	        = 166;
+int K_KP_PGUP       = 166; // same as K_KP_9
+int K_KP_PERIOD     = 167;
+int K_KP_DEL        = 167; // same as K_KP_PERIOD
+int K_KP_DIVIDE     = 168;
+int K_KP_SLASH      = 168; // same as K_KP_DIVIDE
+int K_KP_MULTIPLY   = 169;
+int K_KP_MINUS	    = 170;
+int K_KP_PLUS		= 171;
+int K_KP_ENTER	    = 172;
+int K_KP_EQUALS	    = 173;
+
+// mouse buttons generate virtual keys
+int K_PAUSE	        = 153;
+
+//
+// joystick buttons
+//
+int K_JOY1          = 768;
+int K_JOY2          = 769;
+int K_JOY3          = 770;
+int K_JOY4          = 771;
+
+//
+//
+// aux keys are for multi-buttoned joysticks to generate so they can use
+// the normal binding process
+//
+int K_AUX1	        = 772;
+int K_AUX2	        = 773;
+int K_AUX3	        = 774;
+int K_AUX4	        = 775;
+int K_AUX5	        = 776;
+int K_AUX6	        = 777;
+int K_AUX7	        = 778;
+int K_AUX8	        = 779;
+int K_AUX9	        = 780;
+int K_AUX10	        = 781;
+int K_AUX11	        = 782;
+int K_AUX12	        = 783;
+int K_AUX13	        = 784;
+int K_AUX14	        = 785;
+int K_AUX15	        = 786;
+int K_AUX16	        = 787;
+int K_AUX17	        = 788;
+int K_AUX18	        = 789;
+int K_AUX19	        = 790;
+int K_AUX20	        = 791;
+int K_AUX21	        = 792;
+int K_AUX22	        = 793;
+int K_AUX23	        = 794;
+int K_AUX24	        = 795;
+int K_AUX25	        = 796;
+int K_AUX26	        = 797;
+int K_AUX27	        = 798;
+int K_AUX28	        = 799;
+int K_AUX29	        = 800;
+int K_AUX30	        = 801;
+int K_AUX31	        = 802;
+int K_AUX32	        = 803;
+
+//
+// mouse buttons generate virtual keys
+//
+int K_MOUSE1		= 512;
+int K_MOUSE2		= 513;
+int K_MOUSE3		= 514;
+int K_MWHEELUP	    = 515;
+int K_MWHEELDOWN	= 516;
+int K_MOUSE4		= 517;
+int K_MOUSE5		= 518;
+int K_MOUSE6		= 519;
+int K_MOUSE7		= 520;
+int K_MOUSE8		= 521;
+int K_MOUSE9		= 522;
+int K_MOUSE10		= 523;
+int K_MOUSE11		= 524;
+int K_MOUSE12		= 525;
+int K_MOUSE13		= 526;
+int K_MOUSE14		= 527;
+int K_MOUSE15		= 528;
+int K_MOUSE16		= 529;
+
+#pragma noref 0
+
+#endif

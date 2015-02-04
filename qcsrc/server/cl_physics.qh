@@ -1,0 +1,6 @@
+#ifndef CL_PHYSICS_H
+#define CL_PHYSICS_H
+
+.float restart_jump;
+
+#endif

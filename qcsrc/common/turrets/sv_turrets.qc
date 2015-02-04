@@ -1,7 +1,5 @@
-// =========================
-//  SVQC Turret Properties
-// =========================
-
+#ifdef SVQC
+#include "../../server/autocvars.qh"
 
 // Generic aiming
 vector turret_aim_generic()
@@ -166,7 +164,6 @@ float turret_targetscore_generic(entity _turret, entity _target)
 }
 
 // Generic damage handling
-void() turret_respawn;
 void turret_hide()
 {
 	self.effects   |= EF_NODRAW;
@@ -358,7 +355,7 @@ float turret_send(entity to, float sf)
 			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
 	}
 
-	return TRUE;
+	return true;
 }
 
 void load_unit_settings(entity ent, string unitname, float is_reload)
@@ -466,7 +463,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 	setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
 	proj.owner		  = self;
 	proj.realowner	  = self;
-	proj.bot_dodge	  = TRUE;
+	proj.bot_dodge	  = true;
 	proj.bot_dodgerating = self.shot_dmg;
 	proj.think		  = turret_projectile_explode;
 	proj.touch		  = turret_projectile_touch;
@@ -1191,7 +1188,7 @@ void turret_use()
 
 void turret_link()
 {
-	Net_LinkEntity(self, TRUE, 0, turret_send);
+	Net_LinkEntity(self, true, 0, turret_send);
 	self.think	 = turret_think;
 	self.nextthink = time;
 	self.tur_head.effects = EF_NODRAW;
@@ -1222,12 +1219,12 @@ void turrets_manager_think()
 float turret_initialize(float tur_id)
 {
 	if(!autocvar_g_turrets)
-		return FALSE;
+		return false;
 
 	entity e;
 	entity tur = get_turretinfo(tur_id);
 	if(tur.turretid == 0)
-		return FALSE; // invalid turret
+		return false; // invalid turret
 		
 	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
 
@@ -1338,7 +1335,7 @@ float turret_initialize(float tur_id)
 	self.turret_firecheckfunc	= turret_firecheck;
 	self.event_damage			= turret_damage;
 	self.use					= turret_use;
-	self.bot_attack				= TRUE;
+	self.bot_attack				= true;
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;
 	
@@ -1388,7 +1385,8 @@ float turret_initialize(float tur_id)
 	TUR_ACTION(tur_id, TR_SETUP);
 	
 	if(MUTATOR_CALLHOOK(TurretSpawn))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
+#endif

@@ -1,3 +1,5 @@
+#ifndef EFFECTS_H
+#define EFFECTS_H
 // Global list of effects, networked to CSQC by ID to save bandwidth and to use client particle numbers (allows mismatching effectinfos to some degree)
 // Not too concerned about the order of this list, just keep the weapon effects together!
 
@@ -98,31 +100,31 @@
 // --------------------------
 // --------------------
 
-.float eent_net_name; // id
+.int eent_net_name; // id
 .vector eent_net_location;
 .vector eent_net_velocity;
-.float eent_eff_trail;
+.int eent_eff_trail;
 .string eent_eff_name;
-.float eent_net_count;
+.int eent_net_count;
 
 #ifdef CSQC
-void Read_Effect(float is_new);
+void Read_Effect(bool is_new);
 #endif
 
 #ifdef SVQC
-void Send_Effect(float eff_name, vector eff_loc, vector eff_vel, float eff_cnt);
+void Send_Effect(int eff_name, vector eff_loc, vector eff_vel, float eff_cnt);
 #endif
 
-#define EFFECT_FIRST 1
-float EFFECT_COUNT;
+const int EFFECT_FIRST = 1;
+int EFFECT_COUNT;
 
-#define MAX_EFFECTS 512
+const int MAX_EFFECTS = 512;
 entity effects_ent[MAX_EFFECTS];
 
-void Create_Effect_Entity(float eff_name, string eff_string, float eff_trail);
+void Create_Effect_Entity(int eff_name, string eff_string, int eff_trail);
 
 #define EFFECT(istrail,name,realname) \
-    float name; \
+    int name; \
     void RegisterEffect_##name() \
     { \
         SET_FIELD_COUNT(name, EFFECT_FIRST, EFFECT_COUNT) \
@@ -153,3 +155,5 @@ ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_First);
 EFFECTS
 ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_Done);
 #undef EFFECT
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef RACE_H
+#define RACE_H
+
 float race_spawns;
 float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
 float race_lowest_place_spawn; // where to spawn in qualifying
@@ -39,6 +42,6 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
-
 void race_send_speedaward(float msg);
 void race_send_speedaward_alltimebest(float msg);
+#endif

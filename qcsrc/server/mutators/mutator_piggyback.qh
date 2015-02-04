@@ -1,3 +1,6 @@
+#ifndef MUTATOR_PIGGYBACK_H
+#define MUTATOR_PIGGYBACK_H
+
 .entity piggybacker;
 .entity pbent;
 .entity pbhost;
@@ -10,3 +13,5 @@ void pb_Detach(entity host);
 
 entity pb_TailOf(entity p);
 entity pb_RootOf(entity p);
+
+#endif

@@ -1,3 +1,14 @@
+#include "mapvoting.qh"
+#include "scoreboard.qh"
+#include "teamradar.qh"
+#include "../common/buffs.qh"
+#include "../common/counting.qh"
+#include "../common/mapinfo.qh"
+#include "../common/nades.qh"
+#include "../server/t_items.qh"
+#include "../server/mutators/gamemode_ctf.qh"
+#include "../server/mutators/gamemode_keyhunt.qh"
+
 /*
 ==================
 Misc HUD functions
@@ -14,12 +25,12 @@ Misc HUD functions
 //   1/4 height: bottom part
 void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
 {
-    if (theBorderSize_x < 0 && theBorderSize_y < 0) // draw whole image as it is
+    if (theBorderSize.x < 0 && theBorderSize.y < 0) // draw whole image as it is
     {
 		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
 		return;
     }
-	if (theBorderSize_x == 0 && theBorderSize_y == 0) // no border
+	if (theBorderSize.x == 0 && theBorderSize.y == 0) // no border
 	{
 		// draw only the central part
 		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
@@ -30,16 +41,16 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	vector width, height;
 	vector bW, bH;
 	//pic = draw_UseSkinFor(pic);
-	width = eX * theSize_x;
-	height = eY * theSize_y;
-	if(theSize_x <= theBorderSize_x * 2)
+	width = eX * theSize.x;
+	height = eY * theSize.y;
+	if(theSize.x <= theBorderSize.x * 2)
 	{
 		// not wide enough... draw just left and right then
-		bW = eX * (0.25 * theSize_x / (theBorderSize_x * 2));
-		if(theSize_y <= theBorderSize_y * 2)
+		bW = eX * (0.25 * theSize.x / (theBorderSize.x * 2));
+		if(theSize.y <= theBorderSize.y * 2)
 		{
 			// not high enough... draw just corners
-			bH = eY * (0.25 * theSize_y / (theBorderSize_y * 2));
+			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
 			drawsubpic(theOrigin,                 width * 0.5 + height * 0.5, pic, '0 0 0',           bW + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width   * 0.5, width * 0.5 + height * 0.5, pic, eX - bW,           bW + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + height  * 0.5, width * 0.5 + height * 0.5, pic, eY - bH,           bW + bH, theColor, theAlpha, 0);
@@ -47,7 +58,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		}
 		else
 		{
-			dY = theBorderSize_x * eY;
+			dY = theBorderSize.x * eY;
 			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
 			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
@@ -58,11 +69,11 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 	}
 	else
 	{
-		if(theSize_y <= theBorderSize_y * 2)
+		if(theSize.y <= theBorderSize.y * 2)
 		{
 			// not high enough... draw just top and bottom then
-			bH = eY * (0.25 * theSize_y / (theBorderSize_y * 2));
-			dX = theBorderSize_x * eX;
+			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
+			dX = theBorderSize.x * eX;
 			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0    0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
 			drawsubpic(theOrigin + width - dX,                            dX + height * 0.5, pic, '0.75 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
@@ -72,8 +83,8 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 		}
 		else
 		{
-			dX = theBorderSize_x * eX;
-			dY = theBorderSize_x * eY;
+			dX = theBorderSize.x * eX;
+			dY = theBorderSize.x * eY;
 			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
 			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
 			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
@@ -92,65 +103,71 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 	float blinkingamt;
 	vector color;
 	if(x >= maxvalue) {
-		color_x = sin(2*M_PI*time);
-		color_y = 1;
-		color_z = sin(2*M_PI*time);
+		color.x = sin(2*M_PI*time);
+		color.y = 1;
+		color.z = sin(2*M_PI*time);
 	}
 	else if(x > maxvalue * 0.75) {
-		color_x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
-		color_y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
-		color_z = 0;
+		color.x = 0.4 - (x-150)*0.02 * 0.4; //red value between 0.4 -> 0
+		color.y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+		color.z = 0;
 	}
 	else if(x > maxvalue * 0.5) {
-		color_x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
-		color_y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
-		color_z = 1 - (x-100)*0.02; // blue value between 1 -> 0
+		color.x = 1 - (x-100)*0.02 * 0.6; //red value between 1 -> 0.4
+		color.y = 1 - (x-100)*0.02 * 0.1; // green value between 1 -> 0.9
+		color.z = 1 - (x-100)*0.02; // blue value between 1 -> 0
 	}
 	else if(x > maxvalue * 0.25) {
-		color_x = 1;
-		color_y = 1;
-		color_z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+		color.x = 1;
+		color.y = 1;
+		color.z = 0.2 + (x-50)*0.02 * 0.8; // blue value between 0.2 -> 1
 	}
 	else if(x > maxvalue * 0.1) {
-		color_x = 1;
-		color_y = (x-20)*90/27/100; // green value between 0 -> 1
-		color_z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+		color.x = 1;
+		color.y = (x-20)*90/27/100; // green value between 0 -> 1
+		color.z = (x-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
 	}
 	else {
-		color_x = 1;
-		color_y = 0;
-		color_z = 0;
+		color.x = 1;
+		color.y = 0;
+		color.z = 0;
 	}
 
 	blinkingamt = (1 - x/maxvalue/0.25);
 	if(blinkingamt > 0)
 	{
-		color_x = color_x - color_x * blinkingamt * sin(2*M_PI*time);
-		color_y = color_y - color_y * blinkingamt * sin(2*M_PI*time);
-		color_z = color_z - color_z * blinkingamt * sin(2*M_PI*time);
+		color.x = color.x - color.x * blinkingamt * sin(2*M_PI*time);
+		color.y = color.y - color.y * blinkingamt * sin(2*M_PI*time);
+		color.z = color.z - color.z * blinkingamt * sin(2*M_PI*time);
 	}
 	return color;
 }
 
+float HUD_GetRowCount(float item_count, vector size, float item_aspect)
+{
+	float aspect = size_y / size_x;
+	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
+}
+
 float stringwidth_colors(string s, vector theSize)
 {
-	return stringwidth(s, TRUE, theSize);
+	return stringwidth(s, true, theSize);
 }
 
 float stringwidth_nocolors(string s, vector theSize)
 {
-	return stringwidth(s, FALSE, theSize);
+	return stringwidth(s, false, theSize);
 }
 
 void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x -= 2 / 3 * strlen(text) * theScale_x;
+	position.x -= 2 / 3 * strlen(text) * theScale.x;
 	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale_x);
+	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
 	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
@@ -232,7 +249,7 @@ float race_CheckName(string net_name) {
 	return 0;
 }
 
-float GetPlayerColorForce(float i)
+float GetPlayerColorForce(int i)
 {
 	if(!teamplay)
 		return 0;
@@ -240,7 +257,7 @@ float GetPlayerColorForce(float i)
 		return stof(getplayerkeyvalue(i, "colors")) & 15;
 }
 
-float GetPlayerColor(float i)
+float GetPlayerColor(int i)
 {
 	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
@@ -250,7 +267,7 @@ float GetPlayerColor(float i)
 		return GetPlayerColorForce(i);
 }
 
-string GetPlayerName(float i)
+string GetPlayerName(int i)
 {
 	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
 }
@@ -263,9 +280,10 @@ HUD panels
 */
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha)\
-if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
+#define HUD_Panel_DrawBg(theAlpha) do {																				\
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
+		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+} while(0)
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -291,37 +309,37 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 		}
 
         if (baralign == 1) // bottom align
-			theOrigin_y += (1 - length_ratio) * theSize_y;
+			theOrigin.y += (1 - length_ratio) * theSize.y;
         else if (baralign == 2) // center align
-            theOrigin_y += 0.5 * (1 - length_ratio) * theSize_y;
+            theOrigin.y += 0.5 * (1 - length_ratio) * theSize.y;
         else if (baralign == 3) // center align, positive values down, negative up
 		{
-			theSize_y *= 0.5;
+			theSize.y *= 0.5;
 			if (length_ratio > 0)
-				theOrigin_y += theSize_y;
+				theOrigin.y += theSize.y;
 			else
 			{
-				theOrigin_y += (1 + length_ratio) * theSize_y;
+				theOrigin.y += (1 + length_ratio) * theSize.y;
 				length_ratio = -length_ratio;
 			}
 		}
-		theSize_y *= length_ratio;
+		theSize.y *= length_ratio;
 
 		vector bH;
-		width = eX * theSize_x;
-		height = eY * theSize_y;
-		if(theSize_y <= theSize_x * 2)
+		width = eX * theSize.x;
+		height = eY * theSize.y;
+		if(theSize.y <= theSize.x * 2)
 		{
 			// button not high enough
 			// draw just upper and lower part then
-			square = eY * theSize_y * 0.5;
-			bH = eY * (0.25 * theSize_y / (theSize_x * 2));
+			square = eY * theSize.y * 0.5;
+			bH = eY * (0.25 * theSize.y / (theSize.x * 2));
 			drawsubpic(theOrigin,          square + width, pic, '0 0 0', eX + bH, theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + square, square + width, pic, eY - bH, eX + bH, theColor, theAlpha, drawflag);
 		}
 		else
 		{
-			square = eY * theSize_x;
+			square = eY * theSize.x;
 			drawsubpic(theOrigin,                   width   +     square, pic, '0 0    0', '1 0.25 0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin +          square, theSize - 2 * square, pic, '0 0.25 0', '1 0.5  0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + height - square, width   +     square, pic, '0 0.75 0', '1 0.25 0', theColor, theAlpha, drawflag);
@@ -333,37 +351,37 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 		}
 
 		if (baralign == 1) // right align
-			theOrigin_x += (1 - length_ratio) * theSize_x;
+			theOrigin.x += (1 - length_ratio) * theSize.x;
         else if (baralign == 2) // center align
-            theOrigin_x += 0.5 * (1 - length_ratio) * theSize_x;
+            theOrigin.x += 0.5 * (1 - length_ratio) * theSize.x;
         else if (baralign == 3) // center align, positive values on the right, negative on the left
 		{
-			theSize_x *= 0.5;
+			theSize.x *= 0.5;
 			if (length_ratio > 0)
-				theOrigin_x += theSize_x;
+				theOrigin.x += theSize.x;
 			else
 			{
-				theOrigin_x += (1 + length_ratio) * theSize_x;
+				theOrigin.x += (1 + length_ratio) * theSize.x;
 				length_ratio = -length_ratio;
 			}
 		}
-		theSize_x *= length_ratio;
+		theSize.x *= length_ratio;
 
 		vector bW;
-		width = eX * theSize_x;
-		height = eY * theSize_y;
-		if(theSize_x <= theSize_y * 2)
+		width = eX * theSize.x;
+		height = eY * theSize.y;
+		if(theSize.x <= theSize.y * 2)
 		{
 			// button not wide enough
 			// draw just left and right part then
-			square = eX * theSize_x * 0.5;
-			bW = eX * (0.25 * theSize_x / (theSize_y * 2));
+			square = eX * theSize.x * 0.5;
+			bW = eX * (0.25 * theSize.x / (theSize.y * 2));
 			drawsubpic(theOrigin,          square + height, pic, '0 0 0', eY + bW, theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + square, square + height, pic, eX - bW, eY + bW, theColor, theAlpha, drawflag);
 		}
 		else
 		{
-			square = eX * theSize_y;
+			square = eX * theSize.y;
 			drawsubpic(theOrigin,                  height  +     square, pic, '0    0 0', '0.25 1 0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin +         square, theSize - 2 * square, pic, '0.25 0 0', '0.5  1 0', theColor, theAlpha, drawflag);
 			drawsubpic(theOrigin + width - square, height  +     square, pic, '0.75 0 0', '0.25 1 0', theColor, theAlpha, drawflag);
@@ -382,19 +400,18 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 		pic = "gfx/hud/default/num_leading";
 	}
 
-	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, theAlpha, drawflag);
-	if(mySize_x/mySize_y > 2)
-		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, theAlpha, drawflag);
-	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
+	drawsubpic(pos, eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0 0 0', '0.25 1 0', color, theAlpha, drawflag);
+	if(mySize.x/mySize.y > 2)
+		drawsubpic(pos + eX * mySize.y, eX * (mySize.x - 2 * mySize.y) + eY * mySize.y, pic, '0.25 0 0', '0.5 1 0', color, theAlpha, drawflag);
+	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
 // Weapon icons (#0)
 //
 entity weaponorder[WEP_MAXCOUNT];
-void weaponorder_swap(float i, float j, entity pass)
+void weaponorder_swap(int i, int j, entity pass)
 {
-	entity h;
-	h = weaponorder[i];
+	entity h = weaponorder[i];
 	weaponorder[i] = weaponorder[j];
 	weaponorder[j] = h;
 }
@@ -413,19 +430,17 @@ void HUD_Weapons(void)
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	float i, f, a;
-	float screen_ar, center_x = 0, center_y;
+	float screen_ar;
+	vector center = '0 0 0';
 	float weapon_count, weapon_id;
-	float row, column, rows = 0, columns = 0;
+	float row, column, rows = 0, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
-
-	float panel_weapon_accuracy;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
 	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
-	float ammo_full;
-	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
+	vector barsize = '0 0 0', baroffset = '0 0 0';
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
 
@@ -433,7 +448,6 @@ void HUD_Weapons(void)
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_pos, weapon_size = '0 0 0';
-	local noref vector max_panel_size; // fteqcc sucks
 	vector color;
 
 	// check to see if we want to continue
@@ -459,7 +473,7 @@ void HUD_Weapons(void)
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
-		float weapon_cnt;
+		int weapon_cnt;
 		if(weaponorder_bypriority)
 			strunzone(weaponorder_bypriority);
 		if(weaponorder_byimpulse)
@@ -489,15 +503,18 @@ void HUD_Weapons(void)
 	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
 		complain_weapon = 0;
 
+	if(autocvar__hud_configure)
+	{
+		if(!weapons_stat)
+			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
+				weapons_stat |= WepSet_FromWeapon(i);
+	}
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (!weapons_stat)
-				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					weapons_stat |= WepSet_FromWeapon(i);
-
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 		}
@@ -505,12 +522,8 @@ void HUD_Weapons(void)
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon))
+			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
 				++weapon_count;
-
-		// add it anyway if weaponcomplain is shown
-		if(complain_weapon)
-			++weapon_count;
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
@@ -519,41 +532,36 @@ void HUD_Weapons(void)
 			return;
 		}
 
-		max_panel_size = panel_size - '2 2 0' * panel_bg_padding;
+		vector old_panel_size = panel_size;
+		if(panel_bg_padding)
+			old_panel_size -= '2 2 0' * panel_bg_padding;
 
-		// calculate distribution and size of table cells
-		if(max_panel_size_x > max_panel_size_y)
-		{
-			while(weapon_count > columns * rows)
-			{
-				++rows;
-				columns = ceil(max_panel_size_x / (max_panel_size_y / rows * aspect));
-			}
+		// NOTE: the goal is to use the all-weapons layout and remove unneeded cells
+		// this way weapon icons always have the same size regardless of owned weapon count
 
-			weapon_size_x = max_panel_size_x / columns;
-			weapon_size_y = max_panel_size_y / rows;
-			columns = ceil(weapon_count / rows);
-		}
-		else
-		{
-			while(weapon_count > columns * rows)
-			{
-				++columns;
-				rows = ceil(max_panel_size_y / (max_panel_size_x / columns / aspect));
-			}
+		// get the all-weapons layout
+		rows = HUD_GetRowCount(WEP_COUNT, old_panel_size, aspect);
+		columns = ceil(WEP_COUNT/rows);
+		weapon_size.x = old_panel_size.x / columns;
+		weapon_size.y = old_panel_size.y / rows;
 
-			weapon_size_x = max_panel_size_x / columns;
-			weapon_size_y = max_panel_size_y / rows;
-			rows = ceil(weapon_count / columns);
-		}
+		// reduce rows and columns as needed
+		columns = ceil(weapon_count / rows);
+		rows = ceil(weapon_count / columns);
+
+		// NOTE: although weapons should aways look the same even if onlyowned is disabled,
+		// we enlarge them a bit when possible to better match the desired aspect ratio
+		// as they look much better
+		weapon_size.x = min(old_panel_size.x / columns, aspect * weapon_size.y);
+		weapon_size.y = min(old_panel_size.y / rows, weapon_size.x / aspect);
 
 		// reduce size of the panel
-		panel_size_x = columns * weapon_size_x;
-		panel_size_y = rows * weapon_size_y;
-		panel_pos_x += (max_panel_size_x - panel_size_x) / 2;
-		panel_pos_y += (max_panel_size_y - panel_size_y) / 2;
-
-		panel_size += '2 2 0' * panel_bg_padding;
+		panel_size.x = columns * weapon_size.x;
+		panel_size.y = rows * weapon_size.y;
+		panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+		panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+		if(panel_bg_padding)
+			panel_size += '2 2 0' * panel_bg_padding;
 	}
 	else
 		weapon_count = WEP_COUNT;
@@ -581,25 +589,25 @@ void HUD_Weapons(void)
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
-				center_x = panel_pos_x + panel_size_x/2;
-				center_y = panel_pos_y + panel_size_y/2;
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
 				screen_ar = vid_conwidth/vid_conheight;
-				if (center_x/center_y < screen_ar) //bottom left
+				if (center.x/center.y < screen_ar) //bottom left
 				{
-					if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
-						panel_pos_y += f * (vid_conheight - panel_pos_y);
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+						panel_pos.y += f * (vid_conheight - panel_pos.y);
 					else //left
-						panel_pos_x -= f * (panel_pos_x + panel_size_x);
+						panel_pos.x -= f * (panel_pos.x + panel_size.x);
 				}
 				else //top right
 				{
-					if ((vid_conwidth - center_x)/center_y < screen_ar) //right
-						panel_pos_x += f * (vid_conwidth - panel_pos_x);
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+						panel_pos.x += f * (vid_conwidth - panel_pos.x);
 					else //top
-						panel_pos_y -= f * (panel_pos_y + panel_size_y);
+						panel_pos.y -= f * (panel_pos.y + panel_size.y);
 				}
 				if(f == 1)
-					center_x = -1; // mark the panel as off screen
+					center.x = -1; // mark the panel as off screen
 			}
 			weaponprevtime = time - (1 - f) * timein_effect_length;
 		}
@@ -624,22 +632,22 @@ void HUD_Weapons(void)
 			{
 				f *= f; // for a cooler movement
 				f = 1 - f;
-				center_x = panel_pos_x + panel_size_x/2;
-				center_y = panel_pos_y + panel_size_y/2;
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
 				screen_ar = vid_conwidth/vid_conheight;
-				if (center_x/center_y < screen_ar) //bottom left
+				if (center.x/center.y < screen_ar) //bottom left
 				{
-					if ((vid_conwidth - center_x)/center_y < screen_ar) //bottom
-						panel_pos_y += f * (vid_conheight - panel_pos_y);
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+						panel_pos.y += f * (vid_conheight - panel_pos.y);
 					else //left
-						panel_pos_x -= f * (panel_pos_x + panel_size_x);
+						panel_pos.x -= f * (panel_pos.x + panel_size.x);
 				}
 				else //top right
 				{
-					if ((vid_conwidth - center_x)/center_y < screen_ar) //right
-						panel_pos_x += f * (vid_conwidth - panel_pos_x);
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+						panel_pos.x += f * (vid_conwidth - panel_pos.x);
 					else //top
-						panel_pos_y -= f * (panel_pos_y + panel_size_y);
+						panel_pos.y -= f * (panel_pos.y + panel_size.y);
 				}
 			}
 		}
@@ -648,7 +656,7 @@ void HUD_Weapons(void)
 	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
 
-	if(center_x == -1)
+	if(center.x == -1)
 	{
 		draw_endBoldFont();
 		return;
@@ -664,10 +672,9 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		rows = panel_size_y/panel_size_x;
-		rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
+		rows = HUD_GetRowCount(weapon_count, panel_size, aspect);
 		columns = ceil(weapon_count/rows);
-		weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+		weapon_size = eX * panel_size.x*(1/columns) + eY * panel_size.y*(1/rows);
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
@@ -676,17 +683,17 @@ void HUD_Weapons(void)
 		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
 
-		if(weapon_size_x/weapon_size_y > aspect)
+		if(weapon_size.x/weapon_size.y > aspect)
 		{
-			barsize_x = aspect * weapon_size_y;
-			barsize_y = weapon_size_y;
-			baroffset_x = (weapon_size_x - barsize_x) / 2;
+			barsize.x = aspect * weapon_size.y;
+			barsize.y = weapon_size.y;
+			baroffset.x = (weapon_size.x - barsize.x) / 2;
 		}
 		else
 		{
-			barsize_y = 1/aspect * weapon_size_x;
-			barsize_x = weapon_size_x;
-			baroffset_y = (weapon_size_y - barsize_y) / 2;
+			barsize.y = 1/aspect * weapon_size.x;
+			barsize.x = weapon_size.x;
+			baroffset.y = (weapon_size.y - barsize.y) / 2;
 		}
 	}
 	if(autocvar_hud_panel_weapons_accuracy)
@@ -694,7 +701,7 @@ void HUD_Weapons(void)
 
 	// draw items
 	row = column = 0;
-	vector label_size = '1 1 0' * min(weapon_size_x, weapon_size_y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
+	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
@@ -711,8 +718,8 @@ void HUD_Weapons(void)
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos
-			+ eX * column * weapon_size_x
-			+ eY * row * weapon_size_y);
+			+ eX * column * weapon_size.x
+			+ eY * row * weapon_size.y);
 
 		// draw background behind currently selected weapon
 		if(self.weapon == switchweapon)
@@ -721,7 +728,7 @@ void HUD_Weapons(void)
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
 		{
-			panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
+			float panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -757,6 +764,7 @@ void HUD_Weapons(void)
 			// draw ammo status bar
 			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
 			{
+				float ammo_full;
 				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
@@ -774,10 +782,10 @@ void HUD_Weapons(void)
 					}
 
 					drawsetcliparea(
-						weapon_pos_x + baroffset_x,
-						weapon_pos_y + baroffset_y,
-						barsize_x * bound(0, a/ammo_full, 1),
-						barsize_y
+						weapon_pos.x + baroffset.x,
+						weapon_pos.y + baroffset.y,
+						barsize.x * bound(0, a/ammo_full, 1),
+						barsize.y
 					);
 
 					drawpic_aspect_skin(
@@ -839,12 +847,12 @@ void HUD_Weapons(void)
 // Ammo (#1)
 void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 {
-	
+
 	HUD_Panel_DrawProgressBar(
-		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
-		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
-		autocvar_hud_panel_ammo_progressbar_name, 
-		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color, 
+		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
+		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
+		autocvar_hud_panel_ammo_progressbar_name,
+		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color,
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
 }
@@ -853,20 +861,20 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 {
 	float theAlpha = 1, a, b;
 	vector nade_color, picpos, numpos;
-	
+
 	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
-	
+
 	a = getstatf(STAT_NADE_BONUS);
 	b = getstatf(STAT_NADE_BONUS_SCORE);
-	
+
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
 		numpos = myPos;
-		picpos = myPos + eX * 2 * mySize_y;
+		picpos = myPos + eX * 2 * mySize.y;
 	}
 	else
 	{
-		numpos = myPos + eX * mySize_y;
+		numpos = myPos + eX * mySize.y;
 		picpos = myPos;
 	}
 
@@ -875,13 +883,13 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	if(b > 0 || a > 0)
 	{
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
-			
-		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+
+		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize.y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	}
 }
 
@@ -911,13 +919,13 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	vector iconPos, textPos;
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
-		iconPos = myPos + eX * 2 * mySize_y;
+		iconPos = myPos + eX * 2 * mySize.y;
 		textPos = myPos;
 	}
 	else
 	{
 		iconPos = myPos;
-		textPos = myPos + eX * mySize_y;
+		textPos = myPos + eX * mySize.y;
 	}
 
 	float isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
@@ -949,12 +957,12 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if(ammo > 0 && autocvar_hud_panel_ammo_progressbar)
-		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x, autocvar_hud_panel_ammo_progressbar_name, ammo/autocvar_hud_panel_ammo_maxammo, 0, 0, textColor, autocvar_hud_progressbar_alpha * alpha, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_panel_ammo_text)
-		drawstring_aspect(textPos, text, eX * (2/3) * mySize_x + eY * mySize_y, textColor, alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(textPos, text, eX * (2/3) * mySize.x + eY * mySize.y, textColor, alpha, DRAWFLAG_NORMAL);
 
-	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize_y, iconColor, alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize.y, iconColor, alpha, DRAWFLAG_NORMAL);
 }
 
 float nade_prevstatus;
@@ -1008,30 +1016,25 @@ void HUD_Ammo(void)
 	else
 		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
 
-	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
-	//                               ^^^ ammo item aspect goes here
-
+	rows = HUD_GetRowCount(total_ammo_count, mySize, 3);
 	columns = ceil((total_ammo_count)/rows);
+	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
-	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	
-
-	local vector offset = '0 0 0'; // fteqcc sucks
+	vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
-	if(ammo_size_x/ammo_size_y > 3)
+	if(ammo_size.x/ammo_size.y > 3)
 	{
-		newSize = 3 * ammo_size_y;
-		offset_x = ammo_size_x - newSize;
-		pos_x += offset_x/2;
-		ammo_size_x = newSize;
+		newSize = 3 * ammo_size.y;
+		offset.x = ammo_size.x - newSize;
+		pos.x += offset.x/2;
+		ammo_size.x = newSize;
 	}
 	else
 	{
-		newSize = 1/3 * ammo_size_x;
-		offset_y = ammo_size_y - newSize;
-		pos_y += offset_y/2;
-		ammo_size_y = newSize;
+		newSize = 1/3 * ammo_size.x;
+		offset.y = ammo_size.y - newSize;
+		pos.y += offset.y/2;
+		ammo_size.y = newSize;
 	}
 
 	float i;
@@ -1041,7 +1044,7 @@ void HUD_Ammo(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			DrawAmmoItem(pos, ammo_size, ammo_rockets, TRUE, FALSE);
+			DrawAmmoItem(pos, ammo_size, ammo_rockets, true, false);
 		}
 		else
 		{
@@ -1049,7 +1052,7 @@ void HUD_Ammo(void)
 				pos,
 				ammo_size,
 				(get_weaponinfo(switchweapon)).ammo_field,
-				TRUE,
+				true,
 				infinite_ammo
 			);
 		}
@@ -1069,7 +1072,7 @@ void HUD_Ammo(void)
 		{
 			ammotype = GetAmmoFieldFromNum(i);
 			DrawAmmoItem(
-				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
+				pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y),
 				ammo_size,
 				ammotype,
 				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
@@ -1091,7 +1094,7 @@ void HUD_Ammo(void)
 
 		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
 
-		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
+		DrawAmmoNades(pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
 	}
 
 	draw_endBoldFont();
@@ -1104,76 +1107,76 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 
 	if (vertical)
 	{
-		if(mySize_y/mySize_x > 2)
+		if(mySize.y/mySize.x > 2)
 		{
-			newSize_y = 2 * mySize_x;
-			newSize_x = mySize_x;
+			newSize.y = 2 * mySize.x;
+			newSize.x = mySize.x;
 
-			newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
-			newPos_x = myPos_x;
+			newPos.y = myPos.y + (mySize.y - newSize.y) / 2;
+			newPos.x = myPos.x;
 		}
 		else
 		{
-			newSize_x = 1/2 * mySize_y;
-			newSize_y = mySize_y;
+			newSize.x = 1/2 * mySize.y;
+			newSize.y = mySize.y;
 
-			newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
-			newPos_y = myPos_y;
+			newPos.x = myPos.x + (mySize.x - newSize.x) / 2;
+			newPos.y = myPos.y;
 		}
 
 		if(icon_right_align)
 		{
 			numpos = newPos;
-			picpos = newPos + eY * newSize_x;
+			picpos = newPos + eY * newSize.x;
 		}
 		else
 		{
 			picpos = newPos;
-			numpos = newPos + eY * newSize_x;
+			numpos = newPos + eY * newSize.x;
 		}
 
-		newSize_y /= 2;
+		newSize.y /= 2;
 		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		// make number smaller than icon, it looks better
 		// reduce only y to draw numbers with different number of digits with the same y size
-		numpos_y += newSize_y * ((1 - 0.7) / 2);
-		newSize_y *= 0.7;
+		numpos.y += newSize.y * ((1 - 0.7) / 2);
+		newSize.y *= 0.7;
 		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		return;
 	}
 
-	if(mySize_x/mySize_y > 3)
+	if(mySize.x/mySize.y > 3)
 	{
-		newSize_x = 3 * mySize_y;
-		newSize_y = mySize_y;
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
 
-		newPos_x = myPos_x + (mySize_x - newSize_x) / 2;
-		newPos_y = myPos_y;
+		newPos.x = myPos.x + (mySize.x - newSize.x) / 2;
+		newPos.y = myPos.y;
 	}
 	else
 	{
-		newSize_y = 1/3 * mySize_x;
-		newSize_x = mySize_x;
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
 
-		newPos_y = myPos_y + (mySize_y - newSize_y) / 2;
-		newPos_x = myPos_x;
+		newPos.y = myPos.y + (mySize.y - newSize.y) / 2;
+		newPos.x = myPos.x;
 	}
 
 	if(icon_right_align) // right align
 	{
 		numpos = newPos;
-		picpos = newPos + eX * 2 * newSize_y;
+		picpos = newPos + eX * 2 * newSize.y;
 	}
 	else // left align
 	{
-		numpos = newPos + eX * newSize_y;
+		numpos = newPos + eX * newSize.y;
 		picpos = newPos;
 	}
 
 	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
 	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
-	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
-	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize.y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
 void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
@@ -1222,23 +1225,13 @@ void HUD_Powerups(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float panel_ar = mySize_x/mySize_y;
+	float panel_ar = mySize.x/mySize.y;
 	float is_vertical = (panel_ar < 1);
 	vector superweapons_offset = '0 0 0';
 
 	float superweapons_is = -1;
 
 	if(superweapons_time) { superweapons_is = 2; }
-
-	// FIXME handle superweapons here
-	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-	{
-		mySize_x *= 0.5;
-	}
-	else
-	{
-		mySize_y *= 0.5;
-	}
 
 	float superweapons_baralign;
 	float superweapons_iconalign;
@@ -1361,18 +1354,18 @@ void HUD_HealthArmor(void)
 		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
 
 		float x;
-		x = floor(v_x + 1);
+		x = floor(v.x + 1);
 
         float maxtotal = maxhealth + maxarmor;
 		string biggercount;
-		if(v_z) // NOT fully armored
+		if(v.z) // NOT fully armored
 		{
 			biggercount = "health";
 			if(autocvar_hud_panel_healtharmor_progressbar)
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, x/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			if(armor)
             if(autocvar_hud_panel_healtharmor_text)
-				drawpic_aspect_skin(pos + eX * mySize_x - eX * 0.5 * mySize_y, "armor", '0.5 0.5 0' * mySize_y, '1 1 1', panel_fg_alpha * armor / health, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "armor", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha * armor / health, DRAWFLAG_NORMAL);
 		}
 		else
 		{
@@ -1381,34 +1374,34 @@ void HUD_HealthArmor(void)
 				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_armor, x/maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_armor_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			if(health)
             if(autocvar_hud_panel_healtharmor_text)
-				drawpic_aspect_skin(pos + eX * mySize_x - eX * 0.5 * mySize_y, "health", '0.5 0.5 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "health", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
         if(autocvar_hud_panel_healtharmor_text)
 			DrawNumIcon(pos, mySize, x, biggercount, 0, iconalign, HUD_Get_Num_Color(x, maxtotal), 1);
 
 		if(fuel)
-			HUD_Panel_DrawProgressBar(pos, eX * mySize_x + eY * 0.2 * mySize_y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawProgressBar(pos, eX * mySize.x + eY * 0.2 * mySize.y, "progressbar", fuel/100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 	}
 	else
 	{
-		float panel_ar = mySize_x/mySize_y;
+		float panel_ar = mySize.x/mySize.y;
 		float is_vertical = (panel_ar < 1);
 		vector health_offset = '0 0 0', armor_offset = '0 0 0';
 		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 		{
-			mySize_x *= 0.5;
+			mySize.x *= 0.5;
 			if (autocvar_hud_panel_healtharmor_flip)
-				health_offset_x = mySize_x;
+				health_offset.x = mySize.x;
 			else
-				armor_offset_x = mySize_x;
+				armor_offset.x = mySize.x;
 		}
 		else
 		{
-			mySize_y *= 0.5;
+			mySize.y *= 0.5;
 			if (autocvar_hud_panel_healtharmor_flip)
-				health_offset_y = mySize_y;
+				health_offset.y = mySize.y;
 			else
-				armor_offset_y = mySize_y;
+				armor_offset.y = mySize.y;
 		}
 
 		float health_baralign, armor_baralign, fuel_baralign;
@@ -1534,13 +1527,13 @@ void HUD_HealthArmor(void)
 		if(fuel)
 		{
 			if (is_vertical)
-				mySize_x *= 0.2 / 2; //if vertical always halve x to not cover too much numbers with 3 digits
+				mySize.x *= 0.2 / 2; //if vertical always halve x to not cover too much numbers with 3 digits
 			else
-				mySize_y *= 0.2;
+				mySize.y *= 0.2;
 			if (panel_ar >= 4)
-				mySize_x *= 2; //restore full panel size
+				mySize.x *= 2; //restore full panel size
 			else if (panel_ar < 1/4)
-				mySize_y *= 2; //restore full panel size
+				mySize.y *= 2; //restore full panel size
 			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
@@ -1616,18 +1609,18 @@ void HUD_Notify(void)
 	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
 	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
-	float entry_height = size_y / entry_count;
+	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size.y / size.x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size.y / entry_count;
 
-	float panel_width_half = size_x * 0.5;
+	float panel_width_half = size.x * 0.5;
 	float icon_width_half = entry_height * icon_aspect / 2;
-	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
+	float name_maxwidth = panel_width_half - icon_width_half - size.x * NOTIFY_ICON_MARGIN;
 
 	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
 	vector icon_size = (eX * icon_aspect + eY) * entry_height;
 	vector icon_left = eX * (panel_width_half - icon_width_half);
 	vector attacker_right = eX * name_maxwidth;
-	vector victim_left = eX * (size_x - name_maxwidth);
+	vector victim_left = eX * (size.x - name_maxwidth);
 
 	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
@@ -1680,7 +1673,7 @@ void HUD_Notify(void)
 
 		if (icon != "" && victim != "")
 		{
-			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size_y));
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
 
 			icon_pos = pos + icon_left + eY * i * entry_height;
 			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
@@ -1692,7 +1685,7 @@ void HUD_Notify(void)
 			if (attacker != "")
 			{
 				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
-				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
 				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
@@ -1964,10 +1957,10 @@ void HUD_Radar(void)
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
 		panel_size = autocvar_hud_panel_radar_maximized_size;
-		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
-		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
-		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
-		panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		panel_size.x = bound(0.2, panel_size.x, 1) * vid_conwidth;
+		panel_size.y = bound(0.2, panel_size.y, 1) * vid_conheight;
+		panel_pos.x = (vid_conwidth - panel_size.x) / 2;
+		panel_pos.y = (vid_conheight - panel_size.y) / 2;
 
 		string panel_bg;
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
@@ -1999,7 +1992,7 @@ void HUD_Radar(void)
 		switch(hud_panel_radar_maximized_rotation)
 		{
 			case 0:
-				teamradar_angle = view_angles_y - 90;
+				teamradar_angle = view_angles.y - 90;
 				break;
 			default:
 				teamradar_angle = 90 * hud_panel_radar_maximized_rotation;
@@ -2028,7 +2021,7 @@ void HUD_Radar(void)
 		switch(hud_panel_radar_rotation)
 		{
 			case 0:
-				teamradar_angle = view_angles_y - 90;
+				teamradar_angle = view_angles.y - 90;
 				break;
 			default:
 				teamradar_angle = 90 * hud_panel_radar_rotation;
@@ -2075,16 +2068,16 @@ void HUD_Radar(void)
 		vector c0, c1, c2, c3, span;
 		c0 = rotate(mi_min, teamradar_angle * DEG2RAD);
 		c1 = rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
-		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
+		c2 = rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
+		c3 = rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
-		span_x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
-		span_y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
+		span.x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
+		span.y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
 
 		// max-min distance must fit the radar in x=x, y=y
 		bigsize = min(
-			teamradar_size2d_x * scale2d / (1.05 * span_x),
-			teamradar_size2d_y * scale2d / (1.05 * span_y)
+			teamradar_size2d.x * scale2d / (1.05 * span.x),
+			teamradar_size2d.y * scale2d / (1.05 * span.y)
 		);
 	}
 
@@ -2100,10 +2093,10 @@ void HUD_Radar(void)
 		+ (1 - f) * view_origin);
 
 	drawsetcliparea(
-		pos_x,
-		pos_y,
-		mySize_x,
-		mySize_y
+		pos.x,
+		pos.y,
+		mySize.x,
+		mySize.y
 	);
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
@@ -2150,7 +2143,7 @@ void HUD_Radar(void)
 			message = "Click to select spawn location";
 		}
 
-		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, TRUE, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
+		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
 							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
 
 		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
@@ -2164,18 +2157,18 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
 	entity tm = world, pl;
-#define SCOREPANEL_MAX_ENTRIES 6
-#define SCOREPANEL_ASPECTRATIO 2
-	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	vector fontsize = '1 1 0' * (mySize_y/entries);
+	float SCOREPANEL_MAX_ENTRIES = 6;
+	float SCOREPANEL_ASPECTRATIO = 2;
+	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize.y/mySize.x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	vector fontsize = '1 1 0' * (mySize.y/entries);
 
 	vector rgb, score_color;
 	rgb = '1 1 1';
 	score_color = '1 1 1';
 
-	float name_size = mySize_x*0.75;
-	float spacing_size = mySize_x*0.04;
-	float highlight_alpha = 0.2;
+	float name_size = mySize.x*0.75;
+	float spacing_size = mySize.x*0.04;
+	const float highlight_alpha = 0.2;
 	float i = 0, me_printed = 0, first_pl = 0;
 	string s;
 	if (autocvar__hud_configure)
@@ -2184,15 +2177,15 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		if (team_count)
 		{
 			// show team scores in the first line
-			float score_size = mySize_x / team_count;
+			float score_size = mySize.x / team_count;
 			players_per_team = max(2, ceil((entries - 1) / team_count));
 			for(i=0; i<team_count; ++i) {
 				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
-					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize_y, Team_ColorRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize.y, Team_ColorRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
-			pos_y += fontsize_y;
+			pos.y += fontsize.y;
 		}
 		score = 10 + SCOREPANEL_MAX_ENTRIES * 3;
 		for (i=first_pl; i<entries; ++i)
@@ -2203,7 +2196,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			if (i == entries-1 && autocvar_hud_panel_score_rankings == 1)
 			{
 				rgb = '1 1 0';
-				drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 				s = GetPlayerName(player_localnum);
 				score = 7;
 			}
@@ -2216,9 +2209,9 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			if (team_count)
 				score_color = Team_ColorRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
-			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-			pos_y += fontsize_y;
+			pos.y += fontsize.y;
 		}
 		return;
 	}
@@ -2228,17 +2221,17 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	if (team_count)
 	{
 		// show team scores in the first line
-		float score_size = mySize_x / team_count;
+		float score_size = mySize.x / team_count;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == NUM_SPECTATOR)
 				continue;
 			if (tm.team == myteam)
-				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize.y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize.y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			++i;
 		}
 		first_pl = 1;
-		pos_y += fontsize_y;
+		pos.y += fontsize.y;
 		tm = teams.sort_next;
 	}
 	i = first_pl;
@@ -2268,14 +2261,14 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			if (i == first_pl)
 				rgb = '0 1 0'; //first: green
 			me_printed = 1;
-			drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (team_count)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
-		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos_y += fontsize_y;
+		pos.y += fontsize.y;
 		++i;
 	}
 	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
@@ -2336,12 +2329,12 @@ void HUD_Score(void)
 				distribution_color = '1 0 0';
 				sign = "+";
 			}
-			drawstring_aspect(pos + eX * 0.75 * mySize_x, strcat(sign, distrtimer), eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * 0.75 * mySize.x, strcat(sign, distrtimer), eX * 0.25 * mySize.x + eY * (1/3) * mySize.y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		// race record display
 		if (distribution <= 0)
-			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos, timer, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, timer, eX * 0.75 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else if (!teamplay) { // non-teamgames
 		if ((spectatee_status == -1 && !autocvar__hud_configure) || autocvar_hud_panel_score_rankings)
@@ -2381,14 +2374,14 @@ void HUD_Score(void)
 		{
 			if (distribution > 0)
 				distribution_str = strcat("+", distribution_str);
-			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize.x + eY * mySize.y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(pos + eX * 0.75 * mySize.x, distribution_str, eX * 0.25 * mySize.x + eY * (1/3) * mySize.y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else { // teamgames
 		float row, column, rows = 0, columns = 0;
-		local noref vector offset = '0 0 0';
+		vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
 		if(autocvar_hud_panel_score_rankings)
 		{
@@ -2397,32 +2390,28 @@ void HUD_Score(void)
 		}
 		if(spectatee_status == -1)
 		{
-			rows = mySize_y/mySize_x;
-			rows = bound(1, floor((sqrt(4 * (3/1) * rows * team_count + rows * rows) + rows + 0.5) / 2), team_count);
-			//                               ^^^ ammo item aspect goes here
-
+			rows = HUD_GetRowCount(team_count, mySize, 3);
 			columns = ceil(team_count/rows);
-
-			score_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+			score_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
 			float newSize;
-			if(score_size_x/score_size_y > 3)
+			if(score_size.x/score_size.y > 3)
 			{
-				newSize = 3 * score_size_y;
-				offset_x = score_size_x - newSize;
-				pos_x += offset_x/2;
-				score_size_x = newSize;
+				newSize = 3 * score_size.y;
+				offset.x = score_size.x - newSize;
+				pos.x += offset.x/2;
+				score_size.x = newSize;
 			}
 			else
 			{
-				newSize = 1/3 * score_size_x;
-				offset_y = score_size_y - newSize;
-				pos_y += offset_y/2;
-				score_size_y = newSize;
+				newSize = 1/3 * score_size.x;
+				offset.y = score_size.y - newSize;
+				pos.y += offset.y/2;
+				score_size.y = newSize;
 			}
 		}
 		else
-			score_size = eX * mySize_x*(1/4) + eY * mySize_y*(1/3);
+			score_size = eX * mySize.x*(1/4) + eY * mySize.y*(1/3);
 
 		float max_fragcount;
 		max_fragcount = -99;
@@ -2440,7 +2429,7 @@ void HUD_Score(void)
 
 			if (spectatee_status == -1)
 			{
-				score_pos = pos + eX * column * (score_size_x + offset_x) + eY * row * (score_size_y + offset_y);
+				score_pos = pos + eX * column * (score_size.x + offset.x) + eY * row * (score_size.y + offset.y);
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 				drawstring_aspect(score_pos, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2453,12 +2442,12 @@ void HUD_Score(void)
 			}
 			else if(tm.team == myteam) {
 				if (max_fragcount == score)
-					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize.x + eY * mySize.y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
-					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize.x + eY * (1/3) * rows * mySize.y, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * 0.75 * mySize.x + eY * (1/3) * rows * mySize.y, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				++rows;
 			}
 		}
@@ -2501,19 +2490,19 @@ void HUD_RaceTimer (void)
 
 	// always force 4:1 aspect
 	vector newSize = '0 0 0';
-	if(mySize_x/mySize_y > 4)
+	if(mySize.x/mySize.y > 4)
 	{
-		newSize_x = 4 * mySize_y;
-		newSize_y = mySize_y;
+		newSize.x = 4 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/4 * mySize_x;
-		newSize_x = mySize_x;
+		newSize.y = 1/4 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 	mySize = newSize;
 
@@ -2523,11 +2512,11 @@ void HUD_RaceTimer (void)
 	if(autocvar__hud_configure)
 	{
 		s = "0:13:37";
-		drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.60 0.60 0' * mySize_y), s, '0.60 0.60 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.60 0.60 0' * mySize.y), s, '0.60 0.60 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = _("^1Intermediate 1 (+15.42)");
-		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.60 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.60 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
-		drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.20 * mySize_y) + eY * 0.80 * mySize_y, s, '1 1 0' * 0.20 * mySize_y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.80 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if(race_checkpointtime)
 	{
@@ -2560,7 +2549,7 @@ void HUD_RaceTimer (void)
 
 		if(s != "" && a > 0)
 		{
-			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime)
@@ -2569,14 +2558,14 @@ void HUD_RaceTimer (void)
 			if(a > 0)
 			{
 				s = sprintf(_("^1PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
-				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.8 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.8 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
 
 		if(forcetime != "")
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			drawstring_expanding(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(forcetime, FALSE, '1 1 0' * 0.6 * mySize_y), forcetime, '1 1 0' * 0.6 * mySize_y, '1 1 1', panel_fg_alpha, 0, a);
+			drawstring_expanding(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(forcetime, false, '1 1 0' * 0.6 * mySize.y), forcetime, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, 0, a);
 		}
 		else
 			a = 1;
@@ -2584,7 +2573,7 @@ void HUD_RaceTimer (void)
 		if(race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
-			drawstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, FALSE, '0.6 0.6 0' * mySize_y), s, '0.6 0.6 0' * mySize_y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.6 0.6 0' * mySize.y), s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 	}
 	else
@@ -2593,13 +2582,13 @@ void HUD_RaceTimer (void)
 		{
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
 			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -(race_mycheckpointenemy == ""), race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
 		{
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
 			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -(race_othercheckpointenemy == ""), race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
 		if(race_penaltytime && !race_penaltyaccumulator)
@@ -2612,7 +2601,7 @@ void HUD_RaceTimer (void)
 					s = sprintf(_("^1PENALTY: %.1f (%s)"), (t - time) * 0.1, race_penaltyreason);
 				else
 					s = sprintf(_("^2PENALTY: %.1f (%s)"), 0, race_penaltyreason);
-				drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.2 * mySize.y) + eY * 0.6 * mySize.y, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
 	}
@@ -2709,61 +2698,61 @@ void HUD_Vote(void)
 
 	// always force 3:1 aspect
 	vector newSize = '0 0 0';
-	if(mySize_x/mySize_y > 3)
+	if(mySize.x/mySize.y > 3)
 	{
-		newSize_x = 3 * mySize_y;
-		newSize_y = mySize_y;
+		newSize.x = 3 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/3 * mySize_x;
-		newSize_x = mySize_x;
+		newSize.y = 1/3 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 	mySize = newSize;
 
 	s = _("A vote has been called for:");
 	if(uid2name_dialog)
 		s = _("Allow servers to store and display your name?");
-	drawstring_aspect(pos, s, eX * mySize_x + eY * (2/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
-	s = textShortenToWidth(vote_called_vote, mySize_x, '1 1 0' * mySize_y * (1/8), stringwidth_colors);
+	drawstring_aspect(pos, s, eX * mySize.x + eY * (2/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
+	s = textShortenToWidth(vote_called_vote, mySize.x, '1 1 0' * mySize.y * (1/8), stringwidth_colors);
 	if(autocvar__hud_configure)
 		s = _("^1Configure the HUD");
-	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize_y, s, eX * mySize_x + eY * (1.75/8) * mySize_y, a, DRAWFLAG_NORMAL);
+	drawcolorcodedstring_aspect(pos + eY * (2/8) * mySize.y, s, eX * mySize.x + eY * (1.75/8) * mySize.y, a, DRAWFLAG_NORMAL);
 
 	// print the yes/no counts
     s = sprintf(_("Yes (%s): %d"), getcommandkey("vyes", "vyes"), vote_yescount);
-	drawstring_aspect(pos + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '0 1 0', a, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '0 1 0', a, DRAWFLAG_NORMAL);
     s = sprintf(_("No (%s): %d"), getcommandkey("vno", "vno"), vote_nocount);
-	drawstring_aspect(pos + eX * 0.5 * mySize_x + eY * (4/8) * mySize_y, s, eX * 0.5 * mySize_x + eY * (1.5/8) * mySize_y, '1 0 0', a, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + eX * 0.5 * mySize.x + eY * (4/8) * mySize.y, s, eX * 0.5 * mySize.x + eY * (1.5/8) * mySize.y, '1 0 0', a, DRAWFLAG_NORMAL);
 
 	// draw the progress bar backgrounds
-	drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_back", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+	drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_back", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
 
 	// draw the highlights
 	if(vote_highlighted == 1) {
-		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5, mySize.y);
+		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
 	else if(vote_highlighted == -1) {
-		drawsetcliparea(pos_x + 0.5 * mySize_x, pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_voted", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos.x + 0.5 * mySize.x, pos.y, mySize.x * 0.5, mySize.y);
+		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_voted", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
 
 	// draw the progress bars
 	if(vote_yescount && vote_needed)
 	{
-		drawsetcliparea(pos_x, pos_y, mySize_x * 0.5 * (vote_yescount/vote_needed), mySize_y);
-		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_prog", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos.x, pos.y, mySize.x * 0.5 * (vote_yescount/vote_needed), mySize.y);
+		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
 
 	if(vote_nocount && vote_needed)
 	{
-		drawsetcliparea(pos_x + mySize_x - mySize_x * 0.5 * (vote_nocount/vote_needed), pos_y, mySize_x * 0.5, mySize_y);
-		drawpic_skin(pos + eY * (5/8) * mySize_y, "voteprogress_prog", eX * mySize_x + eY * (3/8) * mySize_y, '1 1 1', a, DRAWFLAG_NORMAL);
+		drawsetcliparea(pos.x + mySize.x - mySize.x * 0.5 * (vote_nocount/vote_needed), pos.y, mySize.x * 0.5, mySize.y);
+		drawpic_skin(pos + eY * (5/8) * mySize.y, "voteprogress_prog", eX * mySize.x + eY * (3/8) * mySize.y, '1 1 1', a, DRAWFLAG_NORMAL);
 	}
 
 	drawresetcliparea();
@@ -2774,16 +2763,11 @@ void HUD_Vote(void)
 
 float mod_active; // is there any active mod icon?
 
-void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
-	float stat;
-	string pic;
-	vector color;
-#ifdef GMQCC
-	stat = -1;
-	pic = "";
-	color = '0 0 0';
-#endif
+	float stat = -1;
+	string pic = "";
+	vector color = '0 0 0';
 	switch(i)
 	{
 		case 0:
@@ -2809,23 +2793,23 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, f
 			break;
 	}
 
-	if(mySize_x/mySize_y > aspect_ratio)
+	if(mySize.x/mySize.y > aspect_ratio)
 	{
-		i = aspect_ratio * mySize_y;
-		myPos_x = myPos_x + (mySize_x - i) / 2;
-		mySize_x = i;
+		i = aspect_ratio * mySize.y;
+		myPos.x = myPos.x + (mySize.x - i) / 2;
+		mySize.x = i;
 	}
 	else
 	{
-		i = 1/aspect_ratio * mySize_x;
-		myPos_y = myPos_y + (mySize_y - i) / 2;
-		mySize_y = i;
+		i = 1/aspect_ratio * mySize.x;
+		myPos.y = myPos.y + (mySize.y - i) / 2;
+		mySize.y = i;
 	}
 
 	if(layout)
 	{
-		drawpic_aspect_skin(myPos, pic, eX * 0.7 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(myPos + eX * 0.7 * mySize_x, ftos(stat), eX * 0.3 * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(myPos, pic, eX * 0.7 * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(myPos + eX * 0.7 * mySize.x, ftos(stat), eX * 0.3 * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2836,24 +2820,23 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 
-	float layout;
+	int layout;
 	if(gametype == MAPINFO_TYPE_CA)
 		layout = autocvar_hud_panel_modicons_ca_layout;
 	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
 	float rows, columns, aspect_ratio;
-	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 2 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
-	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	itemSize = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 	for(i=0; i<team_count; ++i)
 	{
-		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
+		pos = myPos + eX * column * itemSize.x + eY * row * itemSize.y;
 
 		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -3426,30 +3409,30 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	vector slot_size;
 
-	if(all_keys == 4 && mySize_x * 0.5 < mySize_y && mySize_y * 0.5 < mySize_x)
+	if(all_keys == 4 && mySize.x * 0.5 < mySize.y && mySize.y * 0.5 < mySize.x)
 	{
 		// Quadratic arrangement
-		slot_size = eX * mySize_x * 0.5 + eY * mySize_y * 0.5;
+		slot_size = eX * mySize.x * 0.5 + eY * mySize.y * 0.5;
 		KH_SLOTS[0] = pos;
-		KH_SLOTS[1] = pos + eX * slot_size_x;
-		KH_SLOTS[2] = pos + eY * slot_size_y;
-		KH_SLOTS[3] = pos + eX * slot_size_x + eY * slot_size_y;
+		KH_SLOTS[1] = pos + eX * slot_size.x;
+		KH_SLOTS[2] = pos + eY * slot_size.y;
+		KH_SLOTS[3] = pos + eX * slot_size.x + eY * slot_size.y;
 	}
 	else
 	{
-		if(mySize_x > mySize_y)
+		if(mySize.x > mySize.y)
 		{
 			// Horizontal arrangement
-			slot_size = eX * mySize_x / all_keys + eY * mySize_y;
+			slot_size = eX * mySize.x / all_keys + eY * mySize.y;
 			for(i = 0; i < all_keys; ++i)
-				KH_SLOTS[i] = pos + eX * slot_size_x * i;
+				KH_SLOTS[i] = pos + eX * slot_size.x * i;
 		}
 		else
 		{
 			// Vertical arrangement
-			slot_size = eX * mySize_x + eY * mySize_y / all_keys;
+			slot_size = eX * mySize.x + eY * mySize.y / all_keys;
 			for(i = 0; i < all_keys; ++i)
-				KH_SLOTS[i] = pos + eY * slot_size_y * i;
+				KH_SLOTS[i] = pos + eY * slot_size.y * i;
 		}
 	}
 
@@ -3539,12 +3522,12 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 
 	vector kaball_pos, kaball_size;
 
-	if(mySize_x > mySize_y) {
-		kaball_pos = pos + eX * 0.25 * mySize_x;
-		kaball_size = eX * 0.5 * mySize_x + eY * mySize_y;
+	if(mySize.x > mySize.y) {
+		kaball_pos = pos + eX * 0.25 * mySize.x;
+		kaball_size = eX * 0.5 * mySize.x + eY * mySize.y;
 	} else {
-		kaball_pos = pos + eY * 0.25 * mySize_y;
-		kaball_size = eY * 0.5 * mySize_y + eX * mySize_x;
+		kaball_pos = pos + eY * 0.25 * mySize.y;
+		kaball_size = eY * 0.5 * mySize.y + eX * mySize.x;
 	}
 
 	float kaball_statuschange_elapsedtime = time - kaball_statuschange_time;
@@ -3554,7 +3537,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(kaball_pos, "keepawayball_carrying", kaball_size, '1 1 1', panel_fg_alpha * kaball_alpha, DRAWFLAG_NORMAL, f);
 
 	if(kaball)
-		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, "keepawayball_carrying", eX * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * kaball_alpha * f, DRAWFLAG_NORMAL);
 }
 
 
@@ -3580,11 +3563,11 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 		if (p > 1)
 			p = 2 - p;
 
-		HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, (mySize_x <= mySize_y), 0, autocvar_hud_progressbar_nexball_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", p, (mySize.x <= mySize.y), 0, autocvar_hud_progressbar_nexball_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	if (stat_items & IT_KEY1)
-		drawpic_aspect_skin(pos, "nexball_carrying", eX * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, "nexball_carrying", eX * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // Race/CTS HUD mod icons
@@ -3633,16 +3616,16 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	vector textPos, medalPos;
 	float squareSize;
-	if(mySize_x > mySize_y) {
+	if(mySize.x > mySize.y) {
 		// text on left side
-		squareSize = min(mySize_y, mySize_x/2);
-		textPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eY * 0.5 * (mySize_y - squareSize);
-		medalPos = pos + eX * 0.5 * max(0, mySize_x/2 - squareSize) + eX * 0.5 * mySize_x + eY * 0.5 * (mySize_y - squareSize);
+		squareSize = min(mySize.y, mySize.x/2);
+		textPos = pos + eX * 0.5 * max(0, mySize.x/2 - squareSize) + eY * 0.5 * (mySize.y - squareSize);
+		medalPos = pos + eX * 0.5 * max(0, mySize.x/2 - squareSize) + eX * 0.5 * mySize.x + eY * 0.5 * (mySize.y - squareSize);
 	} else {
 		// text on top
-		squareSize = min(mySize_x, mySize_y/2);
-		textPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eX * 0.5 * (mySize_x - squareSize);
-		medalPos = pos + eY * 0.5 * max(0, mySize_y/2 - squareSize) + eY * 0.5 * mySize_y + eX * 0.5 * (mySize_x - squareSize);
+		squareSize = min(mySize.x, mySize.y/2);
+		textPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eX * 0.5 * (mySize.x - squareSize);
+		medalPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eY * 0.5 * mySize.y + eX * 0.5 * (mySize.x - squareSize);
 	}
 
 	f = time - crecordtime_change_time;
@@ -3734,16 +3717,11 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	}
 }
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, float i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
 {
-	float stat, pps_ratio;
-	string pic;
-	vector color;
-#ifdef GMQCC
-	stat = -1;
-	pic = "";
-	color = '0 0 0';
-#endif
+	float stat = -1;
+	string pic = "";
+	vector color = '0 0 0';
 	switch(i)
 	{
 		case 0:
@@ -3768,19 +3746,19 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 			color = '1 0 1';
 			break;
 	}
-	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
+	float pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
-	if(mySize_x/mySize_y > aspect_ratio)
+	if(mySize.x/mySize.y > aspect_ratio)
 	{
-		i = aspect_ratio * mySize_y;
-		myPos_x = myPos_x + (mySize_x - i) / 2;
-		mySize_x = i;
+		i = aspect_ratio * mySize.y;
+		myPos.x = myPos.x + (mySize.x - i) / 2;
+		mySize.x = i;
 	}
 	else
 	{
-		i = 1/aspect_ratio * mySize_x;
-		myPos_y = myPos_y + (mySize_y - i) / 2;
-		mySize_y = i;
+		i = 1/aspect_ratio * mySize.x;
+		myPos.y = myPos.y + (mySize.y - i) / 2;
+		mySize.y = i;
 	}
 
 	if (layout) // show text too
@@ -3788,17 +3766,17 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 		//draw the text
 		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
 		if (layout == 2) // average pps
-			drawstring_aspect(myPos + eX * mySize_y, ftos_decimals(stat, 2), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), eX * (2/3) * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
-			drawstring_aspect(myPos + eX * mySize_y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), eX * (2/3) * mySize.x + eY * mySize.y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	//draw the icon
-	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	if (stat > 0)
 	{
-		drawsetcliparea(myPos_x, myPos_y + mySize_y * (1 - pps_ratio), mySize_y, mySize_y * pps_ratio);
-		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawsetcliparea(myPos.x, myPos.y + mySize.y * (1 - pps_ratio), mySize.y, mySize.y * pps_ratio);
+		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawresetcliparea();
 	}
 }
@@ -3807,20 +3785,19 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 
-	float layout = autocvar_hud_panel_modicons_dom_layout;
+	int layout = autocvar_hud_panel_modicons_dom_layout;
 	float rows, columns, aspect_ratio;
-	rows = mySize_y/mySize_x;
 	aspect_ratio = (layout) ? 3 : 1;
-	rows = bound(1, floor((sqrt((4 * aspect_ratio * team_count + rows) * rows) + rows + 0.5) / 2), team_count);
+	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 
 	int i;
 	float row = 0, column = 0;
 	vector pos, itemSize;
-	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	itemSize = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 	for(i=0; i<team_count; ++i)
 	{
-		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
+		pos = myPos + eX * column * itemSize.x + eY * row * itemSize.y;
 
 		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -3994,7 +3971,7 @@ void HUD_DiscoMode(void)
 			local string resultstr = strcat(mycolor, mychar);
 
 			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
-			dmpos_x += stringwidth(resultstr, TRUE, '24 24 0');
+			dmpos_x += stringwidth(resultstr, true, '24 24 0');
 			drawcolorcodedstring(dmpos + offset, resultstr, '24 24 0', dmalpha * 0.8, DRAWFLAG_ADDITIVE);
 		}
 	}
@@ -4029,42 +4006,42 @@ void HUD_PressedKeys(void)
 	if(aspect)
 	{
 		vector newSize = '0 0 0';
-		if(mySize_x/mySize_y > aspect)
+		if(mySize.x/mySize.y > aspect)
 		{
-			newSize_x = aspect * mySize_y;
-			newSize_y = mySize_y;
+			newSize.x = aspect * mySize.y;
+			newSize.y = mySize.y;
 
-			pos_x = pos_x + (mySize_x - newSize_x) / 2;
+			pos.x = pos.x + (mySize.x - newSize.x) / 2;
 		}
 		else
 		{
-			newSize_y = 1/aspect * mySize_x;
-			newSize_x = mySize_x;
+			newSize.y = 1/aspect * mySize.x;
+			newSize.x = mySize.x;
 
-			pos_y = pos_y + (mySize_y - newSize_y) / 2;
+			pos.y = pos.y + (mySize.y - newSize.y) / 2;
 		}
 		mySize = newSize;
 	}
 
 	vector keysize;
-	keysize = eX * mySize_x * (1/3.0) + eY * mySize_y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
+	keysize = eX * mySize.x * (1/3.0) + eY * mySize.y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
 	float pressedkeys;
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
 
 	if(autocvar_hud_panel_pressedkeys_attack)
 	{
-		drawpic_aspect_skin(pos + eX * keysize_x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(pos + eX * keysize_x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		pos_y += keysize_y;
+		drawpic_aspect_skin(pos + eX * keysize.x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * keysize.x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos.y += keysize.y;
 	}
 
 	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * keysize_x * 2, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	pos_y += keysize_y;
+	drawpic_aspect_skin(pos + eX * keysize.x, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize.x * 2, ((pressedkeys & KEY_JUMP) ? "key_jump_inv.tga" : "key_jump.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	pos.y += keysize.y;
 	drawpic_aspect_skin(pos, ((pressedkeys & KEY_LEFT) ? "key_left_inv.tga" : "key_left.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos + eX * keysize_x * 2, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize.x, ((pressedkeys & KEY_BACKWARD) ? "key_backward_inv.tga" : "key_backward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(pos + eX * keysize.x * 2, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // Handle chat as a panel (#12)
@@ -4094,8 +4071,8 @@ void HUD_Chat(void)
 
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
-		panel_pos_y = panel_bg_border;
-		panel_size_y = vid_conheight - panel_bg_border * 2;
+		panel_pos.y = panel_bg_border;
+		panel_size.y = vid_conheight - panel_bg_border * 2;
 		if(panel.current_panel_bg == "0") // force a border when maximized
 		{
 			string panel_bg;
@@ -4125,11 +4102,11 @@ void HUD_Chat(void)
 	if (!autocvar_con_chatrect)
 		cvar_set("con_chatrect", "1");
 
-	cvar_set("con_chatrect_x", ftos(pos_x/vid_conwidth));
-	cvar_set("con_chatrect_y", ftos(pos_y/vid_conheight));
+	cvar_set("con_chatrect_x", ftos(pos.x/vid_conwidth));
+	cvar_set("con_chatrect_y", ftos(pos.y/vid_conheight));
 
-	cvar_set("con_chatwidth", ftos(mySize_x/vid_conwidth));
-	cvar_set("con_chat", ftos(floor(mySize_y/autocvar_con_chatsize - 0.5)));
+	cvar_set("con_chatwidth", ftos(mySize.x/vid_conwidth));
+	cvar_set("con_chat", ftos(floor(mySize.y/autocvar_con_chatsize - 0.5)));
 
 	if(autocvar__hud_configure)
 	{
@@ -4143,8 +4120,8 @@ void HUD_Chat(void)
 				a = panel_fg_alpha;
 			else
 				a = panel_fg_alpha * floor(((i + 1) * 7 + autocvar_con_chattime)/45);
-			drawcolorcodedstring(pos, textShortenToWidth(_("^3Player^7: This is the chat area."), mySize_x, chatsize, stringwidth_colors), chatsize, a, DRAWFLAG_NORMAL);
-			pos_y += chatsize_y;
+			drawcolorcodedstring(pos, textShortenToWidth(_("^3Player^7: This is the chat area."), mySize.x, chatsize, stringwidth_colors), chatsize, a, DRAWFLAG_NORMAL);
+			pos.y += chatsize.y;
 		}
 	}
 }
@@ -4213,11 +4190,12 @@ void HUD_EngineInfo(void)
 
 // Info messages panel (#14)
 //
-#define drawInfoMessage(s)\
-	if(autocvar_hud_panel_infomessages_flip)\
-		o_x = pos_x + mySize_x - stringwidth(s, TRUE, fontsize);\
-	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);\
-	o_y += fontsize_y;
+#define drawInfoMessage(s) do {																						\
+	if(autocvar_hud_panel_infomessages_flip)																		\
+		o.x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
+	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
+	o.y += fontsize.y;																								\
+} while(0)
 void HUD_InfoMessages(void)
 {
 	if(!autocvar__hud_configure)
@@ -4239,19 +4217,19 @@ void HUD_InfoMessages(void)
 
 	// always force 5:1 aspect
 	vector newSize = '0 0 0';
-	if(mySize_x/mySize_y > 5)
+	if(mySize.x/mySize.y > 5)
 	{
-		newSize_x = 5 * mySize_y;
-		newSize_y = mySize_y;
+		newSize.x = 5 * mySize.y;
+		newSize.y = mySize.y;
 
-		pos_x = pos_x + (mySize_x - newSize_x) / 2;
+		pos.x = pos.x + (mySize.x - newSize.x) / 2;
 	}
 	else
 	{
-		newSize_y = 1/5 * mySize_x;
-		newSize_x = mySize_x;
+		newSize.y = 1/5 * mySize.x;
+		newSize.x = mySize.x;
 
-		pos_y = pos_y + (mySize_y - newSize_y) / 2;
+		pos.y = pos.y + (mySize.y - newSize.y) / 2;
 	}
 
 	mySize = newSize;
@@ -4260,7 +4238,7 @@ void HUD_InfoMessages(void)
 	o = pos;
 
 	vector fontsize;
-	fontsize = '0.20 0.20 0' * mySize_y;
+	fontsize = '0.20 0.20 0' * mySize.y;
 
 	float a;
 	a = panel_fg_alpha;
@@ -4275,22 +4253,22 @@ void HUD_InfoMessages(void)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(player_localentnum - 1), fovlock);
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
@@ -4305,7 +4283,7 @@ void HUD_InfoMessages(void)
 			}
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 
 			//show restart countdown:
 			if (time < getstatf(STAT_GAMESTARTTIME)) {
@@ -4314,13 +4292,13 @@ void HUD_InfoMessages(void)
 				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
 				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
 				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-				o_y += fontsize_y;
+				o.y += fontsize.y;
 			}
 		}
 		if(warmup_stage && !intermission)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 
 		if(autocvar_cl_showspectators)
@@ -4338,7 +4316,7 @@ void HUD_InfoMessages(void)
 					s = strcat(s, " ^3", GetPlayerName(slot));
 				else
 					s = strcat("^3", GetPlayerName(slot));
-				drawInfoMessage(s)
+				drawInfoMessage(s);
 			}
 		}
 
@@ -4364,12 +4342,12 @@ void HUD_InfoMessages(void)
 				else
 					s = _("^2Waiting for others to ready up...");
 			}
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 		else if(warmup_stage && !intermission && !spectatee_status)
 		{
 			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
-			drawInfoMessage(s)
+			drawInfoMessage(s);
 		}
 
 		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
@@ -4378,7 +4356,7 @@ void HUD_InfoMessages(void)
 			tm = teams.sort_next;
 			if (tm)
 			{
-				for(; tm.sort_next; tm = tm.sort_next)
+				for (; tm.sort_next; tm = tm.sort_next)
 				{
 					if(!tm.team_size || tm.team == NUM_SPECTATOR)
 						continue;
@@ -4395,7 +4373,7 @@ void HUD_InfoMessages(void)
 					if (tm.team != NUM_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
-					drawInfoMessage(s)
+					drawInfoMessage(s);
 				}
 			}
 		}
@@ -4403,13 +4381,13 @@ void HUD_InfoMessages(void)
 	else
 	{
 		s = _("^7Press ^3ESC ^7to show HUD options.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3Doubleclick ^7a panel for panel-specific options.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 		s = _("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.");
-		drawInfoMessage(s)
+		drawInfoMessage(s);
 	}
 }
 
@@ -4484,7 +4462,7 @@ void HUD_Physics(void)
 	else if(autocvar_hud_panel_physics_speed_vertical)
 		speed = floor( vlen(vel) * conversion_factor + 0.5 );
 	else
-		speed = floor( vlen(vel - vel_z * '0 0 1') * conversion_factor + 0.5 );
+		speed = floor( vlen(vel - vel.z * '0 0 1') * conversion_factor + 0.5 );
 
 	//compute acceleration
 	float acceleration, f;
@@ -4497,7 +4475,7 @@ void HUD_Physics(void)
 		if(autocvar_hud_panel_physics_acceleration_vertical)
 			acceleration = (vlen(vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(vel - '0 0 1' * vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+			acceleration = (vlen(vel - '0 0 1' * vel.z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed.z));
 
 		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
 
@@ -4509,23 +4487,23 @@ void HUD_Physics(void)
 	}
 
 	//compute layout
-	float panel_ar = panel_size_x/panel_size_y;
+	float panel_ar = panel_size.x/panel_size.y;
 	vector speed_offset = '0 0 0', acceleration_offset = '0 0 0';
 	if (panel_ar >= 5 && !acceleration_progressbar_scale)
 	{
-		panel_size_x *= 0.5;
+		panel_size.x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
-			speed_offset_x = panel_size_x;
+			speed_offset.x = panel_size.x;
 		else
-			acceleration_offset_x = panel_size_x;
+			acceleration_offset.x = panel_size.x;
 	}
 	else
 	{
-		panel_size_y *= 0.5;
+		panel_size.y *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
-			speed_offset_y = panel_size_y;
+			speed_offset.y = panel_size.y;
 		else
-			acceleration_offset_y = panel_size_y;
+			acceleration_offset.y = panel_size.y;
 	}
 	float speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
@@ -4552,26 +4530,26 @@ void HUD_Physics(void)
 	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
-		tmp_size_x = panel_size_x * 0.75;
-		tmp_size_y = panel_size_y * text_scale;
+		tmp_size.x = panel_size.x * 0.75;
+		tmp_size.y = panel_size.y * text_scale;
 		if (speed_baralign)
-			tmp_offset_x = panel_size_x - tmp_size_x;
+			tmp_offset.x = panel_size.x - tmp_size.x;
 		//else
 			//tmp_offset_x = 0;
-		tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
 		if (speed_baralign)
-			tmp_offset_x = 0;
+			tmp_offset.x = 0;
 		else
-			tmp_offset_x = tmp_size_x;
+			tmp_offset.x = tmp_size.x;
 		if (autocvar_hud_panel_physics_speed_unit_show)
 		{
 			//tmp_offset_y = 0;
-			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = panel_size_y * 0.4 * text_scale;
-			tmp_offset_y = (panel_size_y * 0.4 - tmp_size_y) / 2;
+			tmp_size.x = panel_size.x * (1 - 0.75);
+			tmp_size.y = panel_size.y * 0.4 * text_scale;
+			tmp_offset.y = (panel_size.y * 0.4 - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
@@ -4607,30 +4585,30 @@ void HUD_Physics(void)
 			if(speed < top_speed)
 			if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
 			{
-				float peak_offset_x;
+				float peak_offsetX;
 				vector peak_size = '0 0 0';
 				if (speed_baralign == 0)
-					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
+					peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x;
                 else if (speed_baralign == 1)
-					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
+					peak_offsetX = (1 - min(top_speed, max_speed)/max_speed) * panel_size.x;
                 else // if (speed_baralign == 2)
-                    peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
-				peak_size_x = floor(panel_size_x * 0.01 + 1.5);
-                peak_size_y = panel_size_y;
+                    peak_offsetX = min(top_speed, max_speed)/max_speed * panel_size.x * 0.5;
+				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
+                peak_size.y = panel_size.y;
                 if (speed_baralign == 2) // draw two peaks, on both sides
                 {
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x + peak_offset_x - peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size_x - peak_offset_x + peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
                 }
                 else
-                    drawfill(panel_pos + speed_offset + eX * (peak_offset_x - peak_size_x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+                    drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size, autocvar_hud_progressbar_speed_color, f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 
 			//top speed
-			tmp_offset_y = panel_size_y * 0.4;
-			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = (panel_size_y - tmp_offset_y) * text_scale;
-			tmp_offset_y += (panel_size_y - tmp_offset_y - tmp_size_y) / 2;
+			tmp_offset.y = panel_size.y * 0.4;
+			tmp_size.x = panel_size.x * (1 - 0.75);
+			tmp_size.y = (panel_size.y - tmp_offset.y) * text_scale;
+			tmp_offset.y += (panel_size.y - tmp_offset.y - tmp_size.y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -4653,15 +4631,15 @@ void HUD_Physics(void)
 
 		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
 		{
-			tmp_size = acceleration_progressbar_scale * panel_size_x * eX + panel_size_y * eY;
+			tmp_size = acceleration_progressbar_scale * panel_size.x * eX + panel_size.y * eY;
 
 			if (acceleration_baralign == 1)
-				tmp_offset_x = panel_size_x - tmp_size_x;
+				tmp_offset.x = panel_size.x - tmp_size.x;
 			else if (acceleration_baralign == 2 || acceleration_baralign == 3)
-				tmp_offset_x = (panel_size_x - tmp_size_x) / 2;
+				tmp_offset.x = (panel_size.x - tmp_size.x) / 2;
 			else
-				tmp_offset_x = 0;
-			tmp_offset_y = 0;
+				tmp_offset.x = 0;
+			tmp_offset.y = 0;
 		}
 		else
 		{
@@ -4671,10 +4649,10 @@ void HUD_Physics(void)
 
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	tmp_size_x = panel_size_x;
-	tmp_size_y = panel_size_y * text_scale;
-	tmp_offset_x = 0;
-	tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
+	tmp_size.x = panel_size.x;
+	tmp_size.y = panel_size.y * text_scale;
+	tmp_offset.x = 0;
+	tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
 		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
@@ -4683,9 +4661,9 @@ void HUD_Physics(void)
 
 // CenterPrint (#16)
 //
-#define CENTERPRINT_MAX_MSGS 10
-#define CENTERPRINT_MAX_ENTRIES 50
-#define CENTERPRINT_SPACING 0.7
+const float CENTERPRINT_MAX_MSGS = 10;
+const float CENTERPRINT_MAX_ENTRIES = 50;
+const float CENTERPRINT_SPACING = 0.7;
 float cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
 float centerprint_msgID[CENTERPRINT_MAX_MSGS];
@@ -4723,7 +4701,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 		return;
 
 	if (!centerprint_showing)
-		centerprint_showing = TRUE;
+		centerprint_showing = true;
 
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
@@ -4842,12 +4820,12 @@ void HUD_CenterPrint (void)
 			return;
 		vector target_pos;
 
-		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size.x);
 
-		if(target_pos_y > panel_pos_y)
+		if(target_pos.y > panel_pos.y)
 		{
 			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
-			panel_size_y = min(panel_size_y, vid_conheight - scoreboard_bottom);
+			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
 	}
 
@@ -4869,17 +4847,17 @@ void HUD_CenterPrint (void)
 	// fontsize = '1 1 0' * height;
 	height = vid_conheight/50 * autocvar_hud_panel_centerprint_fontscale;
 	fontsize = '1 1 0' * height;
-	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
+	entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n, g;
-	float a, sz, align, current_msg_pos_y = 0, msg_size;
+	float a, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
 	string ts;
-	float all_messages_expired = TRUE;
+	float all_messages_expired = true;
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
-		pos_y += panel_size_y;
+		pos.y += panel_size.y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
@@ -4898,7 +4876,7 @@ void HUD_CenterPrint (void)
 				continue;
 		}
 
-		all_messages_expired = FALSE;
+		all_messages_expired = false;
 
 		// fade the centerprint_hud in/out
 		if(centerprint_time[j] < 0)  // Expired but forced. Expire time is the fade-in time.
@@ -4942,46 +4920,46 @@ void HUD_CenterPrint (void)
 				getWrappedLine_remaining = argv(k);
 				while(getWrappedLine_remaining)
 				{
-					ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
+					ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
-						pos_y -= fontsize_y;
+						pos.y -= fontsize.y;
 					else
-						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
+						pos.y -= fontsize.y * CENTERPRINT_SPACING/2;
 				}
 			}
-			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
+			current_msg_posY = pos.y; // save starting pos (first line) of the current message
 		}
 
-		msg_size = pos_y;
+		msg_size = pos.y;
 		for(k = 0; k < n; ++k)
 		{
 			getWrappedLine_remaining = argv(k);
 			while(getWrappedLine_remaining)
 			{
-				ts = getWrappedLine(panel_size_x * sz, fontsize, stringwidth_colors);
+				ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
 					if (align)
-						pos_x = panel_pos_x + (panel_size_x - stringwidth(ts, TRUE, fontsize)) * align;
+						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
-						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize_y, ts, fontsize, a, DRAWFLAG_NORMAL);
-					pos_y += fontsize_y;
+						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
+					pos.y += fontsize.y;
 				}
 				else
-					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
+					pos.y += fontsize.y * CENTERPRINT_SPACING/2;
 			}
 		}
 
 		++g; // move next position number up
 
-		msg_size = pos_y - msg_size;
+		msg_size = pos.y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
-			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
+			pos.y = current_msg_posY - CENTERPRINT_SPACING * fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
+				pos.y += (msg_size + CENTERPRINT_SPACING * fontsize.y) * (1 - sqrt(sz));
 
-			if (pos_y < panel_pos_y) // check if the next message can be shown
+			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
 				return;
@@ -4989,11 +4967,11 @@ void HUD_CenterPrint (void)
 		}
 		else
 		{
-			pos_y += CENTERPRINT_SPACING * fontsize_y;
+			pos.y += CENTERPRINT_SPACING * fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
+				pos.y -= (msg_size + CENTERPRINT_SPACING * fontsize.y) * (1 - sqrt(sz));
 
-			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next message can be shown
+			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
 				return;
@@ -5003,7 +4981,7 @@ void HUD_CenterPrint (void)
 	drawfontscale = '1 1 0';
 	if (all_messages_expired)
 	{
-		centerprint_showing = FALSE;
+		centerprint_showing = false;
 		reset_centerprint_messages();
 	}
 }
@@ -5173,7 +5151,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 		strunzone(QuickMenu_CurrentSubMenu);
 	QuickMenu_CurrentSubMenu = strzone(z_submenu);
 
-	QuickMenu_IsLastPage = TRUE;
+	QuickMenu_IsLastPage = true;
 	QuickMenu_Entries = 0;
 
 	QuickMenu_Buffer_Index = 0;
@@ -5212,7 +5190,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			{
 				HUD_QuickMenu_clear_entry(QUICKMENU_MAXLINES - 1);
 				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
-				QuickMenu_IsLastPage = FALSE;
+				QuickMenu_IsLastPage = false;
 				break;
 			}
 		}
@@ -5371,7 +5349,7 @@ void HUD_QuickMenu_Mouse()
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
 
-	HUD_Panel_UpdateCvars()
+	HUD_Panel_UpdateCvars();
 
 	if(panel_bg_padding)
 	{
@@ -5465,7 +5443,7 @@ void HUD_QuickMenu(void)
 				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "-");
 			++QuickMenu_Entries;
 			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
-			QuickMenu_IsLastPage = FALSE;
+			QuickMenu_IsLastPage = false;
 		}
 	}
 
@@ -5613,7 +5591,7 @@ void HUD_Buffs(void)
 	{
 		buffs = Buff_Type_first.items; // force first buff
 	}
-	
+
 	float b = 0; // counter to tell other functions that we have buffs
 	entity e;
 	string s = "";
@@ -5646,7 +5624,7 @@ void HUD_Buffs(void)
 	//float is_vertical = (panel_ar < 1);
 	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
 	vector buff_offset = '0 0 0';
-	
+
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
@@ -5693,7 +5671,7 @@ void HUD_Reset (void)
 
 void HUD_Main (void)
 {
-	float i;
+	int i;
 	// global hud theAlpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;

@@ -147,7 +147,7 @@ void ie_Database_Save()
 	for(head = world; (head = find(head, classname, "itemeditor_item")); )
 	{
 		// use a line of text for each item, listing all properties
-		fputs(file_get, strcat(ie_ItemPort_Save(head, TRUE), "\n"));
+		fputs(file_get, strcat(ie_ItemPort_Save(head, true), "\n"));
 	}
 	fclose(file_get);
 }
@@ -177,13 +177,13 @@ void ie_Database_Load()
 				continue;
 
 			entity e;
-			e = ie_ItemPort_Load(file_read, TRUE);
+			e = ie_ItemPort_Load(file_read, true);
 		}
 		ie_Debug(strcat("^3ITEMEDITOR - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
 	}
 	fclose(file_get);
 
-	ie_database_loaded = TRUE;
+	ie_database_loaded = true;
 }
 
 void ie_Remove(entity e);
@@ -192,7 +192,7 @@ void ie_Database_Unload()
 	entity head;
 	for(head = world; (head = find(head, classname, "itemeditor_item")); )
 		ie_Remove(head);
-	ie_database_loaded = FALSE;
+	ie_database_loaded = false;
 }
 
 void ie_Think()
@@ -237,36 +237,36 @@ void ie_Remove(entity e)
 
 float ie_CheckItem(entity e)
 {
-	if(!e || e.classname != "itemeditor_item") { return FALSE; }
-	return TRUE;
+	if(!e || e.classname != "itemeditor_item") { return false; }
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ie_ClientCommand)
 {
 	if(cmd_name == "itemeditor")
 	{
-		if(!ie_enabled || autocvar_g_itemeditor_readonly) { sprint(self, "Item editing is currently disabled\n"); return TRUE; }
+		if(!ie_enabled || autocvar_g_itemeditor_readonly) { sprint(self, "Item editing is currently disabled\n"); return true; }
 
 		if(argv(1) == "spawn")
 		{
-			if(!argv(2) || argv(2) == "") { sprint(self, "You must specify an item name\n"); return TRUE; }
-			if(ie_itemcount >= autocvar_g_itemeditor_max) { sprint(self, "Too many items!\n"); return TRUE; }
+			if(!argv(2) || argv(2) == "") { sprint(self, "You must specify an item name\n"); return true; }
+			if(ie_itemcount >= autocvar_g_itemeditor_max) { sprint(self, "Too many items!\n"); return true; }
 			
 			string item_name = strzone(argv(2));
-			if(ie_FixItemName(item_name) == "") { sprint(self, "Invalid item\n"); strunzone(item_name); return TRUE; }
+			if(ie_FixItemName(item_name) == "") { sprint(self, "Invalid item\n"); strunzone(item_name); return true; }
 
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			entity e = ie_SpawnItem(FALSE);
+			entity e = ie_SpawnItem(false);
 			setorigin(e, trace_endpos);
 			e.ie_itemname = item_name;
 			ie_SetItemType(e);
-			return TRUE;
+			return true;
 		}
 
 		if(argv(1) == "remove")
 		{
 			entity e, theitem = world;
-			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 50, 50, FALSE); e; e = e.chain)
+			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 50, 50, false); e; e = e.chain)
 				if(e.classname == "itemeditor_item")
 				{
 					print("Got one\n");
@@ -279,22 +279,22 @@ MUTATOR_HOOKFUNCTION(ie_ClientCommand)
 			{
 				ie_Remove(theitem);
 				sprint(self, "Successfully removed an item\n");
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				sprint(self, "Item not found\n");
-				return TRUE;
+				return true;
 			}
 		}
 		
 		if(argv(1) == "edit")
 		{
-			if(!argv(2)) { sprint(self, "You must specify a property edit\n"); return TRUE; }
-			if(!ie_enabled) { sprint(self, "Editing is not enabled\n"); return TRUE; }
+			if(!argv(2)) { sprint(self, "You must specify a property edit\n"); return true; }
+			if(!ie_enabled) { sprint(self, "Editing is not enabled\n"); return true; }
 
 			entity e, theitem = world;
-			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 50, 50, FALSE); e; e = e.chain)
+			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 50, 50, false); e; e = e.chain)
 			if(e.classname == "itemeditor_item")
 			{
 				theitem = e;
@@ -305,18 +305,18 @@ MUTATOR_HOOKFUNCTION(ie_ClientCommand)
 			if(argv(3))
 			switch(argv(2))
 			{
-				case "cnt": theitem.cnt = stof(argv(3)); return TRUE;
-				case "team": theitem.team = stof(argv(3)); return TRUE;
-				case "noalign": case "float": theitem.noalign = stof(argv(3)); return TRUE;
-				default: print_to(self, "Unknown option"); return TRUE;
+				case "cnt": theitem.cnt = stof(argv(3)); return true;
+				case "team": theitem.team = stof(argv(3)); return true;
+				case "noalign": case "float": theitem.noalign = stof(argv(3)); return true;
+				default: print_to(self, "Unknown option"); return true;
 			}
 		}
 
 		sprint(self, "Command was not handled\n");
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ie_ServerCommand)
@@ -328,34 +328,34 @@ MUTATOR_HOOKFUNCTION(ie_ServerCommand)
 			case "enable":
 			case "start":
 			{
-				if(!ie_database_loaded) { print("Enabling editing while database is unloaded could cause chaos, stopping\n"); return TRUE; }
-				ie_enabled = TRUE;
+				if(!ie_database_loaded) { print("Enabling editing while database is unloaded could cause chaos, stopping\n"); return true; }
+				ie_enabled = true;
 				bprint("Item editing has been enabled!\n");
-				return TRUE;
+				return true;
 			}
 			case "disable":
 			case "stop":
 			{
-				ie_enabled = FALSE;
+				ie_enabled = false;
 				bprint("Item editing has been disabled!\n");
-				return TRUE;
+				return true;
 			}
 			case "load":
 			{
-				if(ie_itemcount > 0 || ie_database_loaded) { print("Item database has already been loaded\n"); return TRUE; }
+				if(ie_itemcount > 0 || ie_database_loaded) { print("Item database has already been loaded\n"); return true; }
 
 				ie_Database_Load();
 				bprint("Item database has been loaded!\n");
-				return TRUE;
+				return true;
 			}
 			case "unload":
 			{
-				if(ie_itemcount <= 0 || !ie_database_loaded) { print("Item database has already been unloaded\n"); return TRUE; }
+				if(ie_itemcount <= 0 || !ie_database_loaded) { print("Item database has already been unloaded\n"); return true; }
 
-				ie_enabled = FALSE; // we must disable this, so as to not break stuff
+				ie_enabled = false; // we must disable this, so as to not break stuff
 				ie_Database_Unload();
 				bprint("Item database has been unloaded!\n");
-				return TRUE;
+				return true;
 			}
 			case "removeitems":
 			{
@@ -366,13 +366,13 @@ MUTATOR_HOOKFUNCTION(ie_ServerCommand)
 					RemoveItem(head);
 
 				bprint("Regular items removed!\n");
-				return TRUE;
+				return true;
 			}
 		}
 		print("Command was not handled\n");
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 float ie_autosave_time;
@@ -383,18 +383,18 @@ MUTATOR_HOOKFUNCTION(ie_StartFrame)
 		head.grab = (autocvar_g_itemeditor_readonly || !ie_enabled) ? 0 : 3;
 
 	if(!ie_enabled)
-		return FALSE;
+		return false;
 	if(!ie_database_loaded)
-		return FALSE;
+		return false;
 	if(!autocvar_g_itemeditor_storage_autosave)
-		return FALSE;
+		return false;
 	if(time < ie_autosave_time)
-		return FALSE;
+		return false;
 	ie_autosave_time = time + autocvar_g_itemeditor_storage_autosave;
 
 	ie_Database_Save();
 
-	return TRUE;
+	return true;
 }
 
 void ie_DelayedInit()
@@ -415,5 +415,5 @@ MUTATOR_DEFINITION(mutator_itemeditor)
 			InitializeEntity(world, ie_DelayedInit, INITPRIO_LAST);
 	}
 
-	return FALSE;
+	return false;
 }

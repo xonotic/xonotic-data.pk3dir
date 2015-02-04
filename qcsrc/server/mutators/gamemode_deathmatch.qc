@@ -5,7 +5,7 @@ void dm_DelayedInit()
 MUTATOR_HOOKFUNCTION(dm_CountFrags)
 {
 	// announce remaining frags
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(gamemode_deathmatch)

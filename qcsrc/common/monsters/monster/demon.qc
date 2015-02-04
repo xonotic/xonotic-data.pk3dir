@@ -61,17 +61,17 @@ float M_Demon_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_demon_attack_melee_damage), demon_anim_attack, self.attack_range, (autocvar_g_monster_demon_attack_melee_delay), DEATH_MONSTER_DEMON_MELEE, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_demon_attack_melee_damage), demon_anim_attack, self.attack_range, (autocvar_g_monster_demon_attack_melee_delay), DEATH_MONSTER_DEMON_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(vlen(self.enemy.origin - self.origin) <= autocvar_g_monster_demon_attack_leap_mindist) { return FALSE; }
+			if(vlen(self.enemy.origin - self.origin) <= autocvar_g_monster_demon_attack_leap_mindist) { return false; }
 			makevectors(self.angles);
 			return Monster_Attack_Leap(demon_anim_leap, M_Demon_Attack_Leap_Touch, v_forward * (autocvar_g_monster_demon_attack_leap_speed) + '0 0 200', (autocvar_g_monster_demon_attack_leap_delay));
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_demon() { Monster_Spawn(MON_DEMON); }
@@ -84,18 +84,18 @@ float M_Demon(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.5;
 			self.frame = demon_anim_pain;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = demon_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -112,15 +112,15 @@ float M_Demon(float req)
 			self.monster_loot = spawnfunc_item_health_large;
 			self.frame = demon_anim_stand;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

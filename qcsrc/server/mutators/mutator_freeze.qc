@@ -1,3 +1,5 @@
+#include "../round_handler.qh"
+
 void freeze_Unfreeze(entity ent)
 {
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
@@ -15,33 +17,33 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerSpawn)
 {
 	freeze_Unfreeze(self);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 {
 	if(frag_deathtype == DEATH_HURTTRIGGER)
-		return FALSE;
+		return false;
 
 	calculate_player_respawn_time(); // player doesn't actually die
 
-	float can_freeze = FALSE;
+	float can_freeze = false;
 
 	if(frag_target.cvar_cl_freeze)
 	if(cvar("g_freeze") == 1)
-		can_freeze = TRUE;
+		can_freeze = true;
 
 	if(cvar("g_freeze") == 2)
-		can_freeze = TRUE;
+		can_freeze = true;
 
 	if(cvar("g_freeze") == 3)
-		can_freeze = FALSE; // force off (easier than disabling & restarting, will fix later)
+		can_freeze = false; // force off (easier than disabling & restarting, will fix later)
 		
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
 		if(self.frozen)
 			self.freeze_flag = FROZEN_RESPAWNING;
-		return TRUE;
+		return true;
 	}
 
 	if(can_freeze)
@@ -69,19 +71,19 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		self.freezetag_frozen_time = time;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 {
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || gameover)
-		return FALSE;
+		return false;
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
-		return FALSE;
+		return false;
 
-	float button_pressed = FALSE, n;
+	float button_pressed = false, n;
 
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
@@ -166,7 +168,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 							if(!o)
 								o = other;
 							if(self.frozen == 1)
-								other.reviving = TRUE;
+								other.reviving = true;
 							++n;
 						}
 					}
@@ -211,7 +213,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 				if(other.reviving)
 				{
 					other.revive_progress = self.revive_progress;
-					other.reviving = FALSE;
+					other.reviving = false;
 				}
 			}
 		}
@@ -268,26 +270,26 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			freeze_Unfreeze(self);
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_freeze, "cl_freeze");
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Freeze");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Freeze");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_freeze)
@@ -299,5 +301,5 @@ MUTATOR_DEFINITION(mutator_freeze)
 	MUTATOR_HOOK(BuildMutatorsString, freeze_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, freeze_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

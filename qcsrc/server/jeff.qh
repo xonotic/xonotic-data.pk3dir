@@ -1,0 +1,14 @@
+#ifndef SV_JEFF_H
+#define SV_JEFF_H
+
+void jeff_Announcer_MatchEnd();
+
+void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, entity inflictor);
+
+void jeff_Announcer_VehicleEnter(entity player, entity veh);
+
+void jeff_Announcer_ItemTouch(entity player, entity item);
+
+void jeff_Announcer_FireBullet(entity targ, entity ent, vector hitloc, vector start, vector end);
+
+#endif

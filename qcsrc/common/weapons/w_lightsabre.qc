@@ -1,5 +1,5 @@
 #ifndef CHAOS
-const float WEP_LIGHTSABRE = 1337;
+//const int WEP_LIGHTSABRE = 1337;
 #else
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
@@ -47,6 +47,9 @@ LIGHTSABRE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+#include "../animdecide.qh"
+
 void spawnfunc_weapon_lightsabre(void) { weapon_defaultspawnfunc(WEP_LIGHTSABRE); }
 
 .float swing_prev;
@@ -54,7 +57,7 @@ void spawnfunc_weapon_lightsabre(void) { weapon_defaultspawnfunc(WEP_LIGHTSABRE)
 
 float W_Lightsabre_Melee_Block(entity player)
 {
-	if(!IS_PLAYER(player)) { return FALSE; }
+	if(!IS_PLAYER(player)) { return false; }
 
 	entity player_melee = world, e;
 	entity myowner = self.realowner;
@@ -66,12 +69,12 @@ float W_Lightsabre_Melee_Block(entity player)
 		break;
 	}
 
-	if(!player_melee) { return FALSE; }
+	if(!player_melee) { return false; }
 
 	makevectors (player.v_angle);
 	float dot = normalize (myowner.origin - player.origin) * v_forward;
 
-	if(dot <= 0.3) { return FALSE; }
+	if(dot <= 0.3) { return false; }
 
 	//if((myowner.v_angle_x - player.v_angle_x < 70) && (myowner.v_angle_x - player.v_angle_x > -70)) //Look up and down
 	//if((myowner.v_angle_y - player.v_angle_y > 160) || (myowner.v_angle_y - player.v_angle_y < -160)) //Side to side Facing eachother
@@ -81,7 +84,7 @@ float W_Lightsabre_Melee_Block(entity player)
 	string thesound = strcat("lightsabre_hit", ftos(max(1, floor(random() * 4))));
 	sound(myowner, CH_WEAPON_A, W_Sound(thesound), VOL_BASE, ATTEN_NORM);
 
-	return TRUE;
+	return true;
 }
 
 void W_Lightsabre_Melee_Think(void)
@@ -124,7 +127,7 @@ void W_Lightsabre_Melee_Think(void)
 			+ (v_up * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self.realowner, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -203,7 +206,7 @@ void W_Lightsabre_Attack(void)
 	meleetemp.realowner = self;
 	meleetemp.think = W_Lightsabre_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(self, TRUE, 0, "", 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
+	W_SetupShot_Range(self, true, 0, "", 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
 .float lightsabre_active;
@@ -212,14 +215,14 @@ void W_LightSabre_SetActive(float newactive, float dosound)
 {
 	if(newactive)
 	{
-		self.lightsabre_active = TRUE;
+		self.lightsabre_active = true;
 		self.weaponname = "lightsabre_active";
 		if(dosound)
 			sound(self, CH_WEAPON_A, W_Sound("lightsabre_activate"), VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
-		self.lightsabre_active = FALSE;
+		self.lightsabre_active = false;
 		self.weaponname = "lightsabre";
 		if(dosound)
 			sound(self, CH_WEAPON_A, W_Sound("lightsabre_deactivate"), VOL_BASE, ATTEN_NORM);
@@ -233,11 +236,11 @@ float W_Lightsabre(float req)
 		case WR_AIM:
 		{
 			if(random() >= 0.5)
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -246,14 +249,14 @@ float W_Lightsabre(float req)
 			{
 				if(!self.lightsabre_active)
 				{
-					W_LightSabre_SetActive(1, TRUE);
+					W_LightSabre_SetActive(1, true);
 					weapon_thinkf(WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, self.BUTTON_ATCK2, animtime), w_ready);
 				}
 				else
 					weapon_thinkf(WFRAME_FIRE1, 0, W_Lightsabre_Attack);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -272,31 +275,31 @@ float W_Lightsabre(float req)
 			precache_sound(W_Sound("lightsabre_hit2"));
 			precache_sound(W_Sound("lightsabre_hit3"));
 			LIGHTSABRE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
-			W_LightSabre_SetActive(0, FALSE);
-			return TRUE;
+			W_LightSabre_SetActive(0, false);
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO2:
 		{
-			return TRUE;
+			return true;
 		}
 		case WR_CONFIG:
 		{
 			LIGHTSABRE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
-			W_LightSabre_SetActive(((self.lightsabre_active) ? 0 : 1), TRUE);
-			return TRUE;
+			W_LightSabre_SetActive(((self.lightsabre_active) ? 0 : 1), true);
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -307,7 +310,7 @@ float W_Lightsabre(float req)
 			return WEAPON_LIGHTSABRE_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -318,19 +321,19 @@ float W_Lightsabre(float req)
 	{
 		case WR_IMPACTEFFECT:
 		{
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

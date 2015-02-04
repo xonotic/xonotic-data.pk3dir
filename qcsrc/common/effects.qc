@@ -62,15 +62,15 @@ float Net_Write_Effect(entity client, float sf)
 	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
 	if(self.eent_net_velocity)
 	{
-		WriteByte(MSG_ENTITY, TRUE);
+		WriteByte(MSG_ENTITY, true);
 		WriteCoord(MSG_ENTITY, self.eent_net_velocity_x);
 		WriteCoord(MSG_ENTITY, self.eent_net_velocity_y);
 		WriteCoord(MSG_ENTITY, self.eent_net_velocity_z);
 	}
-	else { WriteByte(MSG_ENTITY, FALSE); }
+	else { WriteByte(MSG_ENTITY, false); }
 
 	if(!self.eent_eff_trail) { WriteByte(MSG_ENTITY, self.eent_net_count); }
-	return TRUE;
+	return true;
 }
 
 // problem with this is, we might not have all the available effects for it
@@ -104,6 +104,6 @@ void Send_Effect(float eff_name, vector eff_loc, vector eff_vel, float eff_cnt)
 	net_eff.think = SUB_Remove;
 	net_eff.nextthink = time + 0.2; // don't need to keep this long
 
-	Net_LinkEntity(net_eff, FALSE, 0, Net_Write_Effect);
+	Net_LinkEntity(net_eff, false, 0, Net_Write_Effect);
 }
 #endif

@@ -18,6 +18,8 @@ const float BRG_START = 4;
 const float BRG_END = 8;
 
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_vehicle_bumblebee_speed_forward;
 float autocvar_g_vehicle_bumblebee_speed_strafe;
 float autocvar_g_vehicle_bumblebee_speed_up;
@@ -51,7 +53,7 @@ float autocvar_g_vehicle_bumblebee_cannon_ammo;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause;
 
-var float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
+float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
 
 float autocvar_g_vehicle_bumblebee_cannon_turnspeed;
 float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down;
@@ -84,10 +86,9 @@ float autocvar_g_vehicle_bumblebee_blowup_radius;
 float autocvar_g_vehicle_bumblebee_blowup_coredamage;
 float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
 float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
-var vector autocvar_g_vehicle_bumblebee_bouncepain;
+vector autocvar_g_vehicle_bumblebee_bouncepain;
 
-var float autocvar_g_vehicle_bumblebee = 0;
-
+bool autocvar_g_vehicle_bumblebee = 0;
 
 float bumble_raygun_send(entity to, float sf);
 
@@ -97,7 +98,7 @@ void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 	vehicles_projectile("bigplasma_muzzleflash", W_Sound("flacexp3"),
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
+						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
 }
 
 float bumblebee_gunner_frame()
@@ -165,7 +166,7 @@ float bumblebee_gunner_frame()
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
 		if(gun.enemy.movetype == MOVETYPE_WALK)
-			_vel_z *= 0.1;
+			_vel.z *= 0.1;
 
 
 		ad = vf;
@@ -228,7 +229,7 @@ void bumblebee_gunner_exit(float _exitflag)
 
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
 		WriteAngle(MSG_ONE, 0);
-		WriteAngle(MSG_ONE, self.vehicle.angles_y);
+		WriteAngle(MSG_ONE, self.vehicle.angles.y);
 		WriteAngle(MSG_ONE, 0);
 	}
 
@@ -299,7 +300,7 @@ float bumblebee_gunner_enter()
 	else
 	{
 		dprint("^1ERROR:^7Tried to enter a fully occupied vehicle!\n");
-		return FALSE;
+		return false;
 	}
 
 	_gunner            = other;
@@ -315,7 +316,7 @@ float bumblebee_gunner_enter()
 	other.event_damage      = func_null;
 	other.view_ofs          = '0 0 0';
 	other.hud               = _gun.hud;
-	other.teleportable		= FALSE;
+	other.teleportable		= false;
 	other.PlayerPhysplug    = _gun.PlayerPhysplug;
 	other.vehicle_ammo1     = self.vehicle_ammo1;
 	other.vehicle_ammo2     = self.vehicle_ammo2;
@@ -335,7 +336,7 @@ float bumblebee_gunner_enter()
 		WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
 		WriteAngle(MSG_ONE, 0);                             // roll
 	}
-	
+
 	_gun.vehicle_hudmodel.viewmodelforclient = other;
 
 	CSQCVehicleSetup(other, other.hud);
@@ -346,28 +347,28 @@ float bumblebee_gunner_enter()
     other = vh_player;
     _gun = vh_vehicle;
 
-	return TRUE;
+	return true;
 }
 
 float vehicles_valid_pilot()
 {
 	if (!IS_PLAYER(other))
-		return FALSE;
+		return false;
 
 	if(other.deadflag != DEAD_NO)
-		return FALSE;
+		return false;
 
 	if(other.vehicle != world)
-		return FALSE;
+		return false;
 
 	if (!IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
-			return FALSE;
+			return false;
 
 	if(teamplay && other.team != self.team)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 void bumblebee_touch()
@@ -405,13 +406,13 @@ void bumblebee_regen()
 									   self.gun2.vehicle_energy + autocvar_g_vehicle_bumblebee_cannon_ammo_regen * frametime);
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(self.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, frametime, TRUE);
+		vehicles_regen(self.dmg_time, vehicle_shield, autocvar_g_vehicle_bumblebee_shield, autocvar_g_vehicle_bumblebee_shield_regen_pause, autocvar_g_vehicle_bumblebee_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(self.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, frametime, FALSE);
+		vehicles_regen(self.dmg_time, vehicle_health, autocvar_g_vehicle_bumblebee_health, autocvar_g_vehicle_bumblebee_health_regen_pause, autocvar_g_vehicle_bumblebee_health_regen, frametime, false);
 
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(self.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, frametime, FALSE);
+		vehicles_regen(self.wait, vehicle_energy, autocvar_g_vehicle_bumblebee_energy, autocvar_g_vehicle_bumblebee_energy_regen_pause, autocvar_g_vehicle_bumblebee_energy_regen, frametime, false);
 
 }
 
@@ -447,58 +448,58 @@ float bumblebee_pilot_frame()
 
 	vang = vehic.angles;
 	newvel = vectoangles(normalize(trace_endpos - self.origin + '0 0 32'));
-	vang_x *= -1;
-	newvel_x *= -1;
-	if(newvel_x > 180)  newvel_x -= 360;
-	if(newvel_x < -180) newvel_x += 360;
-	if(newvel_y > 180)  newvel_y -= 360;
-	if(newvel_y < -180) newvel_y += 360;
+	vang.x *= -1;
+	newvel.x *= -1;
+	if(newvel.x > 180)  newvel.x -= 360;
+	if(newvel.x < -180) newvel.x += 360;
+	if(newvel.y > 180)  newvel.y -= 360;
+	if(newvel.y < -180) newvel.y += 360;
 
-	ftmp = shortangle_f(pilot.v_angle_y - vang_y, vang_y);
+	ftmp = shortangle_f(pilot.v_angle.y - vang.y, vang.y);
 	if(ftmp > 180)  ftmp -= 360;
 	if(ftmp < -180) ftmp += 360;
-	vehic.avelocity_y = bound(-autocvar_g_vehicle_bumblebee_turnspeed, ftmp + vehic.avelocity_y * 0.9, autocvar_g_vehicle_bumblebee_turnspeed);
+	vehic.avelocity_y = bound(-autocvar_g_vehicle_bumblebee_turnspeed, ftmp + vehic.avelocity.y * 0.9, autocvar_g_vehicle_bumblebee_turnspeed);
 
 	// Pitch
 	ftmp = 0;
-	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit)
+	if(pilot.movement.x > 0 && vang.x < autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = 4;
-	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit)
+	else if(pilot.movement.x < 0 && vang.x > -autocvar_g_vehicle_bumblebee_pitchlimit)
 		ftmp = -8;
 
-	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x , autocvar_g_vehicle_bumblebee_pitchlimit);
-	ftmp = vang_x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
-	vehic.avelocity_x = bound(-autocvar_g_vehicle_bumblebee_pitchspeed, ftmp + vehic.avelocity_x * 0.9, autocvar_g_vehicle_bumblebee_pitchspeed);
+	newvel.x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x , autocvar_g_vehicle_bumblebee_pitchlimit);
+	ftmp = vang.x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel.x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
+	vehic.avelocity_x = bound(-autocvar_g_vehicle_bumblebee_pitchspeed, ftmp + vehic.avelocity.x * 0.9, autocvar_g_vehicle_bumblebee_pitchspeed);
 
-	vehic.angles_x = anglemods(vehic.angles_x);
-	vehic.angles_y = anglemods(vehic.angles_y);
-	vehic.angles_z = anglemods(vehic.angles_z);
+	vehic.angles_x = anglemods(vehic.angles.x);
+	vehic.angles_y = anglemods(vehic.angles.y);
+	vehic.angles_z = anglemods(vehic.angles.z);
 
-	makevectors('0 1 0' * vehic.angles_y);
+	makevectors('0 1 0' * vehic.angles.y);
 	newvel = vehic.velocity * -autocvar_g_vehicle_bumblebee_friction;
 
-	if(pilot.movement_x != 0)
+	if(pilot.movement.x != 0)
 	{
-		if(pilot.movement_x > 0)
+		if(pilot.movement.x > 0)
 			newvel += v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
-		else if(pilot.movement_x < 0)
+		else if(pilot.movement.x < 0)
 			newvel -= v_forward  * autocvar_g_vehicle_bumblebee_speed_forward;
 	}
 
-	if(pilot.movement_y != 0)
+	if(pilot.movement.y != 0)
 	{
-		if(pilot.movement_y < 0)
+		if(pilot.movement.y < 0)
 			newvel -= v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
-		else if(pilot.movement_y > 0)
+		else if(pilot.movement.y > 0)
 			newvel += v_right * autocvar_g_vehicle_bumblebee_speed_strafe;
 		ftmp = newvel * v_right;
 		ftmp *= frametime * 0.1;
-		vehic.angles_z = bound(-15, vehic.angles_z + ftmp, 15);
+		vehic.angles_z = bound(-15, vehic.angles.z + ftmp, 15);
 	}
 	else
 	{
 		vehic.angles_z *= 0.95;
-		if(vehic.angles_z >= -1 && vehic.angles_z <= -1)
+		if(vehic.angles.z >= -1 && vehic.angles.z <= -1)
 			vehic.angles_z = 0;
 	}
 
@@ -754,13 +755,13 @@ float bumble_raygun_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.hook_end_z);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void spawnfunc_vehicle_bumblebee()
 {
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
-	if(!vehicle_initialize(VEH_BUMBLEBEE, FALSE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
 float v_bumblebee(float req)
@@ -772,14 +773,14 @@ float v_bumblebee(float req)
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 				
-			return TRUE;
+			return true;
 		}
 		case VR_ENTER:
 		{
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
-			return TRUE;
+			return true;
 		}
 		case VR_THINK:
 		{
@@ -801,7 +802,7 @@ float v_bumblebee(float req)
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return TRUE;
+					return true;
 				}
 				
 				if(self.gunner2)
@@ -814,11 +815,11 @@ float v_bumblebee(float req)
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return TRUE;
+					return true;
 				}		
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case VR_DEATH:
 		{
@@ -882,7 +883,7 @@ float v_bumblebee(float req)
 			self.nextthink 		= 0;
 
 			setorigin(self, self.pos1);
-			return TRUE;
+			return true;
 		}
 		case VR_SPAWN:
 		{
@@ -944,7 +945,7 @@ float v_bumblebee(float req)
 				if(self.gun3.enemy == world)
 				{			
 					self.gun3.enemy = spawn();
-					Net_LinkEntity(self.gun3.enemy, TRUE, 0, bumble_raygun_send);
+					Net_LinkEntity(self.gun3.enemy, true, 0, bumble_raygun_send);
 					self.gun3.enemy.SendFlags = BRG_SETUP;			
 					self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;			
 					self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
@@ -960,7 +961,7 @@ float v_bumblebee(float req)
 			self.PlayerPhysplug = bumblebee_pilot_frame;
 			
 			setorigin(self, self.origin + '0 0 25');
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -983,7 +984,7 @@ float v_bumblebee(float req)
 			self.max_health = self.vehicle_health;
 			self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 				
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
@@ -994,11 +995,11 @@ float v_bumblebee(float req)
 			precache_model("models/vehicles/wakizashi_cockpit.dpm");
 			precache_model("models/vehicles/spiderbot_cockpit.dpm");
 			precache_model("models/vehicles/raptor_cockpit.dpm");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -1013,7 +1014,6 @@ float v_bumblebee(float req)
 
 void CSQC_BUMBLE_GUN_HUD()
 {
-
 	if(autocvar_r_letterbox)
 		return;
 
@@ -1169,9 +1169,9 @@ void bumble_raygun_draw()
 	}
 }
 
-void bumble_raygun_read(float bIsNew)
+void bumble_raygun_read(bool bIsNew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & BRG_SETUP)
 	{
@@ -1214,7 +1214,7 @@ float v_bumblebee(float req)
 		case VR_HUD:
 		{
 			if(autocvar_r_letterbox)
-				return TRUE;
+				return true;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
@@ -1314,7 +1314,7 @@ float v_bumblebee(float req)
 		// Right gunner slot occupied?
 			if(!AuxiliaryXhair[1].draw2d)
 			{
-				shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));
+				shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), false, '1 0 0' * picsize_y + '0 1 0' * picsize_y));
 				drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
 				drawstring(hudloc + picloc + '1 0 0' * shield, _("No right gunner!"), '1 0 0' * picsize_y + '0 1 0' * picsize_y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
 			}
@@ -1336,7 +1336,7 @@ float v_bumblebee(float req)
 		// Left gunner slot occupied?
 			if(!AuxiliaryXhair[2].draw2d)
 			{
-				shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));
+				shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), false, '1 0 0' * picsize_y + '0 1 0' * picsize_y));
 				drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
 				drawstring(hudloc + picloc + '1 0 0' * shield, _("No left gunner!"), '1 0 0' * picsize_y + '0 1 0' * picsize_y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
 			}
@@ -1358,7 +1358,7 @@ float v_bumblebee(float req)
 				picsize_y *= 0.5;
 				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 			}
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -1373,15 +1373,15 @@ float v_bumblebee(float req)
 			// Gunner2
 			AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-target.tga";
 			AuxiliaryXhair[2].axh_scale   = 0.75;
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

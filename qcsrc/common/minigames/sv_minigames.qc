@@ -1,3 +1,5 @@
+#include "minigames.qh"
+
 void player_clear_minigame(entity player)
 {
 	player.active_minigame = world;
@@ -144,7 +146,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
 		player_pointer.customizeentityforclient = minigame_CheckSend;
-		Net_LinkEntity(player_pointer, FALSE, 0, minigame_SendEntity);
+		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
 		{
@@ -185,7 +187,7 @@ entity start_minigame(entity player, string minigame )
 			end_minigame(minig);
 			return world;
 		}
-		Net_LinkEntity(minig, FALSE, 0, minigame_SendEntity);
+		Net_LinkEntity(minig, false, 0, minigame_SendEntity);
 		
 		if ( !minigame_sessions )
 			minigame_sessions = minig;
@@ -287,7 +289,7 @@ string invite_minigame(entity inviter, entity player)
 {
 	if ( !inviter || !inviter.active_minigame )
 		return "Invalid minigame";
-	if ( !VerifyClientEntity(player, TRUE, FALSE) )
+	if ( !VerifyClientEntity(player, true, false) )
 		return "Invalid player";
 	if ( inviter == player )
 		return "You can't invite yourself";

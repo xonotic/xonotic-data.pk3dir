@@ -1,1 +1,5 @@
+#ifndef MENU_CMD_H
+#define MENU_CMD_H
+
 void GameCommand(string command);
+#endif

@@ -13,6 +13,8 @@ REGISTER_VEHICLE(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_vehicle_yugo;
 
 float autocvar_g_vehicle_yugo_speed_afterburn;
@@ -249,13 +251,13 @@ float yugo_frame()
 	player.vehicle_reload1 = bound(0, 100 * ((time - yugo.lip) / (yugo.delay - yugo.lip)), 100);
 
 	if(yugo.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(yugo.dmg_time, vehicle_shield, autocvar_g_vehicle_yugo_shield, autocvar_g_vehicle_yugo_shield_regen_pause, autocvar_g_vehicle_yugo_shield_regen, frametime, TRUE);
+		vehicles_regen(yugo.dmg_time, vehicle_shield, autocvar_g_vehicle_yugo_shield, autocvar_g_vehicle_yugo_shield_regen_pause, autocvar_g_vehicle_yugo_shield_regen, frametime, true);
 
 	if(yugo.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(yugo.dmg_time, vehicle_health, autocvar_g_vehicle_yugo_health, autocvar_g_vehicle_yugo_health_regen_pause, autocvar_g_vehicle_yugo_health_regen, frametime, FALSE);
+		vehicles_regen(yugo.dmg_time, vehicle_health, autocvar_g_vehicle_yugo_health, autocvar_g_vehicle_yugo_health_regen_pause, autocvar_g_vehicle_yugo_health_regen, frametime, false);
 
 	if(yugo.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(yugo.wait, vehicle_energy, autocvar_g_vehicle_yugo_energy, autocvar_g_vehicle_yugo_energy_regen_pause, autocvar_g_vehicle_yugo_energy_regen, frametime, FALSE);
+		vehicles_regen(yugo.wait, vehicle_energy, autocvar_g_vehicle_yugo_energy, autocvar_g_vehicle_yugo_energy_regen_pause, autocvar_g_vehicle_yugo_energy_regen, frametime, false);
 
 
 	VEHICLE_UPDATE_PLAYER(player, health, yugo);
@@ -389,7 +391,7 @@ void spawnfunc_vehicle_yugo()
 {
 	if(!autocvar_g_vehicles_extra) { remove(self); return; }
 	if(!autocvar_g_vehicle_yugo) { remove(self); return; }
-	if(!vehicle_initialize(VEH_YUGO, FALSE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_YUGO, false)) { remove(self); return; }
 }
 
 float v_yugo(float req)
@@ -400,7 +402,7 @@ float v_yugo(float req)
 		{
 			if(autocvar_g_vehicle_yugo_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_yugo_bouncepain_x, autocvar_g_vehicle_yugo_bouncepain_y, autocvar_g_vehicle_yugo_bouncepain_z);
-			return TRUE;
+			return true;
 		}
 		case VR_ENTER:
 		{
@@ -411,12 +413,12 @@ float v_yugo(float req)
 			if(self.owner.flagcarried)
 			   setorigin(self.owner.flagcarried, '-190 0 96');
 			   
-			return TRUE;
+			return true;
 		}
 		case VR_THINK:
 		{
 
-			return TRUE;
+			return true;
 		}
 		case VR_DEATH:
 		{
@@ -445,7 +447,7 @@ float v_yugo(float req)
 			self.think = yugo_blowup_think;
 			self.nextthink = time;
 	
-			return TRUE;
+			return true;
 		}
 		case VR_SPAWN:
 		{
@@ -483,7 +485,7 @@ float v_yugo(float req)
 			self.vehicle_health = autocvar_g_vehicle_yugo_health;
 			self.vehicle_shield = autocvar_g_vehicle_yugo_shield;
 			
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -506,7 +508,7 @@ float v_yugo(float req)
 			self.vehicle_shield = autocvar_g_vehicle_yugo_shield;
 			self.max_health = self.vehicle_health;
 				
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
@@ -519,11 +521,11 @@ float v_yugo(float req)
 
 			precache_model ("models/vhshield.md3");
 			precache_model ("models/vehicles/yugo.dpm");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -538,7 +540,7 @@ float v_yugo(float req)
 		case VR_HUD:
 		{
 			if(autocvar_r_letterbox)
-				return TRUE;
+				return true;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
@@ -640,21 +642,21 @@ float v_yugo(float req)
 
 			if (scoreboard_showscores)
 				HUD_DrawScoreboard();
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
 			AuxiliaryXhair[0].axh_image = "gfx/vehicles/axh-bracket.tga";
 			AuxiliaryXhair[0].axh_scale = 0.25;
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

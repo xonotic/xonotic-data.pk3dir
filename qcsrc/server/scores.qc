@@ -1,3 +1,6 @@
+#include "scores.qh"
+
+.entity scorekeeper;
 entity teamscorekeepers[16];
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
@@ -13,31 +16,31 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 {
 	if(!strict && !(fieldflags & SFL_SORT_PRIO_MASK)) // column does not sort
 		return previous;
-	if((fieldflags & SFL_SORT_PRIO_MASK) < previous_y)
+	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)
 		return previous;
 	if(t1.field == t2.field)
 		return previous;
 
-	previous_y = fieldflags & SFL_SORT_PRIO_MASK;
+	previous.y = fieldflags & SFL_SORT_PRIO_MASK;
 
 	if(fieldflags & SFL_ZERO_IS_WORST)
 	{
 		if(t1.field == 0)
 		{
-			previous_x = -1;
+			previous.x = -1;
 			return previous;
 		}
 		else if(t2.field == 0)
 		{
-			previous_x = +1;
+			previous.x = +1;
 			return previous;
 		}
 	}
 
 	if(fieldflags & SFL_LOWER_IS_BETTER)
-		previous_x = (t2.field - t1.field);
+		previous.x = (t2.field - t1.field);
 	else
-		previous_x = (t1.field - t2.field);
+		previous.x = (t1.field - t2.field);
 
 	return previous;
 }
@@ -74,7 +77,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 				WriteChar(MSG_ENTITY, self.(teamscores[i]));
 		}
 
-	return TRUE;
+	return true;
 }
 
 void TeamScore_Spawn(float t, string name)
@@ -84,7 +87,7 @@ void TeamScore_Spawn(float t, string name)
 	ts.classname = "csqc_score_team";
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
-	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
+	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
 	PlayerStats_GameReport_AddTeam(t);
@@ -135,10 +138,10 @@ float TeamScore_Compare(entity t1, entity t2, float strict)
 		result = ScoreField_Compare(t1, t2, f, teamscores_flags[i], result, strict);
 	}
 
-	if (result_x == 0 && strict)
-		result_x = t1.team - t2.team;
+	if (result.x == 0 && strict)
+		result.x = t1.team - t2.team;
 
-	return result_x;
+	return result.x;
 }
 
 /*
@@ -192,7 +195,7 @@ float ScoreInfo_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY, teamscores_label[i]);
 		WriteByte(MSG_ENTITY, teamscores_flags[i]);
 	}
-	return TRUE;
+	return true;
 }
 
 void ScoreInfo_Init(float teams)
@@ -205,7 +208,7 @@ void ScoreInfo_Init(float teams)
 	{
 		scores_initialized = spawn();
 		scores_initialized.classname = "ent_client_scoreinfo";
-		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
+		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
 	if(teams)
 	{
@@ -248,7 +251,7 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 				WriteChar(MSG_ENTITY, self.(scores[i]));
 		}
 
-	return TRUE;
+	return true;
 }
 
 float PlayerScore_Clear(entity player)
@@ -312,7 +315,7 @@ void PlayerScore_Attach(entity player)
 		error("player already has a scorekeeper");
 	sk = spawn();
 	sk.owner = player;
-	Net_LinkEntity(sk, FALSE, 0, PlayerScore_SendEntity);
+	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
 }
 
@@ -394,10 +397,10 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 		result = ScoreField_Compare(t1, t2, f, scores_flags[i], result, strict);
 	}
 
-	if (result_x == 0 && strict)
-		result_x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
+	if (result.x == 0 && strict)
+		result.x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
 
-	return result_x;
+	return result.x;
 }
 
 void WinningConditionHelper()
@@ -794,8 +797,8 @@ float TeamScore_GetCompareValue(float t)
 	return s;
 }
 
-#define NAMEWIDTH 22
-#define SCORESWIDTH 58
+const float NAMEWIDTH = 22;
+const float SCORESWIDTH = 58;
 // TODO put this somewhere in common?
 string Score_NicePrint_ItemColor(float vflags)
 {
@@ -854,7 +857,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 	sk = p.scorekeeper;
 
 	s = strcat(s, p.netname);
-	for(;;)
+	for (;;)
 	{
 		i = strlennocol(s) - NAMEWIDTH;
 		if(i > 0)

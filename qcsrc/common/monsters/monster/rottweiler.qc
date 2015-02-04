@@ -35,16 +35,16 @@ float M_Rottweiler_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rottweiler_attack_melee_damage), ((random() >= 0.5) ? rottweiler_anim_attack1 : rottweiler_anim_attack2), self.attack_range, (autocvar_g_monster_rottweiler_attack_melee_delay), DEATH_MONSTER_ROTTWEILER, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rottweiler_attack_melee_damage), ((random() >= 0.5) ? rottweiler_anim_attack1 : rottweiler_anim_attack2), self.attack_range, (autocvar_g_monster_rottweiler_attack_melee_delay), DEATH_MONSTER_ROTTWEILER, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			// rottweiler has no ranged attack yet!
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_rottweiler() { Monster_Spawn(MON_ROTTWEILER); }
@@ -55,7 +55,7 @@ float M_Rottweiler(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
@@ -64,12 +64,12 @@ float M_Rottweiler(float req)
 				self.pain_finished = time + 1.5;
 				self.frame = rottweiler_anim_pain;
 			}
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = (random() >= 0.5) ? rottweiler_anim_death1 : rottweiler_anim_death2;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -86,15 +86,15 @@ float M_Rottweiler(float req)
 			self.monster_loot = spawnfunc_item_health_small;
 			self.frame = rottweiler_anim_idle;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

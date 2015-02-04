@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_shambler_health;
 var float autocvar_g_monster_shambler_damageforcescale = 0.1;
 float autocvar_g_monster_shambler_attack_smash_damage;
@@ -55,7 +57,7 @@ void M_Shambler_Attack_Smash()
 void M_Shambler_Attack_Swing()
 {
 	float r = (random() < 0.5);
-	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true);
 	if(r)
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
@@ -132,7 +134,7 @@ void M_Shambler_Attack_Lightning()
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
@@ -151,14 +153,14 @@ void M_Shambler_Attack_Lightning()
 	gren.health = 50;
 	gren.damageforcescale = 0;
 	gren.event_damage = M_Shambler_Attack_Lightning_Damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_SHAMBLER_LIGHTNING, TRUE);
+	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
 float M_Shambler_Attack(float attack_type)
@@ -168,7 +170,7 @@ float M_Shambler_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			M_Shambler_Attack_Swing();
-			return TRUE;
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -184,7 +186,7 @@ float M_Shambler_Attack(float attack_type)
 				self.anim_finished = time + 1.1;
 				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
 				self.shambler_lastattack = time + 3 + random() * 1.5;
-				return TRUE;
+				return true;
 			}
 			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
 			{
@@ -194,14 +196,14 @@ float M_Shambler_Attack(float attack_type)
 				self.anim_finished = 1.1;
 				self.shambler_lastattack = time + 3 + random() * 1.5;
 				Monster_Delay(1, 0, 0.6, M_Shambler_Attack_Lightning);
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER); }
@@ -212,18 +214,18 @@ float M_Shambler(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.5;
 			self.frame = shambler_anim_pain;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = shambler_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -246,15 +248,15 @@ float M_Shambler(float req)
 			self.spawn_time = time + 1.1;
 			self.spawnshieldtime = self.spawn_time;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

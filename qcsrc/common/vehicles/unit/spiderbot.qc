@@ -20,6 +20,8 @@ const float SBRM_ARTILLERY = 3;
 const float SBRM_LAST = 3;
 
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_vehicle_spiderbot;
 
 float autocvar_g_vehicle_spiderbot_respawntime;
@@ -261,7 +263,7 @@ void spiderbot_rocket_do()
 			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
 								   v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
+								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
 			crosshair_trace(self.owner);
 			float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
 			_dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
@@ -275,7 +277,7 @@ void spiderbot_rocket_do()
 			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
 								   v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE, self.owner);
+								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, self.owner);
 			crosshair_trace(self.owner);
 			rocket.pos1	   = trace_endpos;
 			rocket.nextthink  = time;
@@ -287,7 +289,7 @@ void spiderbot_rocket_do()
 			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
 								   v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
+								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
 
 			crosshair_trace(self.owner);
 
@@ -369,7 +371,7 @@ float spiderbot_frame()
 	crosshair_trace(player);
 	ad = vectoangles(normalize(trace_endpos - ad));
 	ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(spider.angles), AnglesTransform_FromAngles(ad))) - spider.tur_head.angles;
-	ad = AnglesTransform_Normalize(ad, TRUE);
+	ad = AnglesTransform_Normalize(ad, true);
 	//UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
 
 	// Rotate head
@@ -525,16 +527,16 @@ float spiderbot_frame()
 	else
 		vehicles_regen(spider.cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
 										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
-										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, FALSE);
+										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, false);
 
 
 	spiderbot_rocket_do();
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(spider.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, TRUE);
+		vehicles_regen(spider.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, true);
 
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, FALSE);
+		vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, false);
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 	player.vehicle_ammo2 = spider.tur_head.frame;
@@ -716,7 +718,7 @@ float spiderbot_impulse(float _imp)
 
 			//centerprint(self, strcat("Rocket mode is ", ftos(self.vehicle.vehicle_weapon2mode)));
 			CSQCVehicleSetup(self, 0);
-			return TRUE;
+			return true;
 		case 12:
 		case 16:
 		case 19:
@@ -726,7 +728,7 @@ float spiderbot_impulse(float _imp)
 
 			//centerprint(self, strcat("Rocket mode is ", ftos(self.vehicle.vehicle_weapon2mode)));
 			CSQCVehicleSetup(self, 0);
-			return TRUE;
+			return true;
 
 		/*
 		case 17: // toss gun, could be used to exit?
@@ -735,13 +737,13 @@ float spiderbot_impulse(float _imp)
 			break;
 		*/
 	}
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_vehicle_spiderbot()
 {
 	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
-	if(!vehicle_initialize(VEH_SPIDERBOT, FALSE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
 float v_spiderbot(float req)
@@ -753,7 +755,7 @@ float v_spiderbot(float req)
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 		
-			return TRUE;
+			return true;
 		}
 		case VR_ENTER:
 		{
@@ -769,14 +771,14 @@ float v_spiderbot(float req)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		
-			return TRUE;
+			return true;
 		}
 		case VR_THINK:
 		{
 			if(self.flags & FL_ONGROUND)
 				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 			
-			return TRUE;
+			return true;
 		}
 		case VR_DEATH:
 		{
@@ -796,7 +798,7 @@ float v_spiderbot(float req)
 			
 			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
 
-			return TRUE;
+			return true;
 		}
 		case VR_SPAWN:
 		{
@@ -829,7 +831,7 @@ float v_spiderbot(float req)
 			
 			self.PlayerPhysplug = spiderbot_frame;
 
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -846,9 +848,9 @@ float v_spiderbot(float req)
 			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 			self.max_health = self.vehicle_health;
-			self.pushable = TRUE; // spiderbot can use jumppads
+			self.pushable = true; // spiderbot can use jumppads
 
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
@@ -868,17 +870,17 @@ float v_spiderbot(float req)
 			precache_sound ("vehicles/spiderbot_strafe.wav");
 			precache_sound ("vehicles/spiderbot_walk.wav");
 			precache_sound ("vehicles/spiderbot_land.wav");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
 #ifdef CSQC
-var float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
-var float autocvar_cl_vehicle_spiderbot_cross_size = 1;
+float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 #define spider_ico  "gfx/vehicles/sbot.tga"
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
@@ -892,7 +894,7 @@ float v_spiderbot(float req)
 		case VR_HUD:
 		{
 			if(autocvar_r_letterbox)
-				return TRUE;
+				return true;
 
 			vector picsize, hudloc = '0 0 0', pic2size, picloc;
 			float i;
@@ -1051,7 +1053,7 @@ float v_spiderbot(float req)
 				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), spider_xhair, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case VR_SETUP:
 		{
@@ -1065,15 +1067,15 @@ float v_spiderbot(float req)
 			AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
 			AuxiliaryXhair[2].axh_scale   = 0.5;
 		
-			return TRUE;
+			return true;
 		}
 		case VR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

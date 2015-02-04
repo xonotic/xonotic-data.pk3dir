@@ -32,16 +32,16 @@ float M_Rotfish_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rotfish_attack_melee_damage), rotfish_anim_attack, self.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rotfish_attack_melee_damage), rotfish_anim_attack, self.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			// rotfish has no ranged attack yet
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_rotfish() { Monster_Spawn(MON_ROTFISH); }
@@ -53,18 +53,18 @@ float M_Rotfish(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = 0.8;
 			self.frame = rotfish_anim_pain;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = rotfish_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -82,15 +82,15 @@ float M_Rotfish(float req)
 			self.monster_loot = spawnfunc_item_armor_small;
 			self.frame = rotfish_anim_swim;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

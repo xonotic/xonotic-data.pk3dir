@@ -1,3 +1,11 @@
+#ifdef SVQC
+#include "sv_turrets.qh"
+#include "util.qh"
+#include "../../server/autocvars.qh"
+#elif defined(CSQC)
+#include "../../server/movelib.qh"
+#endif
+
 #include "unit/ewheel.qc"
 #include "unit/flac.qc"
 #include "unit/fusionreactor.qc"

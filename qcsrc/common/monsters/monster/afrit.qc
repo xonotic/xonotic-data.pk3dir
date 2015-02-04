@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../server/mutators/base.qh"
+
 float autocvar_g_monster_afrit_health;
 var float autocvar_g_monster_afrit_damageforcescale = 0.3;
 float autocvar_g_monster_afrit_attack_fireball_damage;
@@ -78,7 +80,7 @@ void M_Afrit_Attack_Fireball()
 	missile.think = M_Afrit_Attack_Fireball_Explode;
 	missile.enemy = self.enemy;
 	missile.touch = M_Afrit_Attack_Fireball_Touch;
-	CSQCProjectile(missile, TRUE, PROJECTILE_FIREMINE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
 float M_Afrit_Attack(float attack_type)
@@ -94,11 +96,11 @@ float M_Afrit_Attack(float attack_type)
 
 			Monster_Delay(2, 0.3, 0.7, M_Afrit_Attack_Fireball);
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_afrit() { Monster_Spawn(MON_AFRIT); }
@@ -137,7 +139,7 @@ float M_Afrit(float req)
 				self.armorvalue = 0.95; // almost invincible
 			else
 				self.armorvalue = autocvar_g_monsters_armor_blockpercent;
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
@@ -148,13 +150,13 @@ float M_Afrit(float req)
 				self.pain_finished = time + 0.6;
 				self.frame = afrit_anim_pain;
 			}
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = (random() >= 0.5) ? afrit_anim_die1 : afrit_anim_die2;
 			self.superweapons_finished = time + 20;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -175,17 +177,17 @@ float M_Afrit(float req)
 			self.weapon = WEP_FIREBALL; // hehehe
 			self.effects |= EF_FLAME;
 
-			self.noalign = FALSE; // starts on ground
+			self.noalign = false; // starts on ground
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

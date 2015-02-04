@@ -97,7 +97,7 @@ float M_Zombie_Defend_Block()
 
 	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);
 
-	return TRUE;
+	return true;
 }
 
 float M_Zombie_Attack(float attack_type)
@@ -118,7 +118,7 @@ float M_Zombie_Attack(float attack_type)
 			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
 				return M_Zombie_Defend_Block();
 
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -127,7 +127,7 @@ float M_Zombie_Attack(float attack_type)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE); }
@@ -140,19 +140,19 @@ float M_Zombie(float req)
 		{
 			if(time >= self.spawn_time)
 				self.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.34;
 			self.frame = (random() >= 0.5) ? zombie_anim_painfront1 : zombie_anim_painfront2;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -177,15 +177,15 @@ float M_Zombie(float req)
 			self.respawntime = 0.2;
 			self.damageforcescale = 0.0001; // no push while spawning
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

@@ -38,6 +38,8 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
 
 void W_Porto_Success(void)
@@ -194,7 +196,7 @@ void W_Porto_Touch(void)
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
 			self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * norm));
-			CSQCProjectile(self, TRUE, PROJECTILE_PORTO_BLUE, TRUE); // change type
+			CSQCProjectile(self, true, PROJECTILE_PORTO_BLUE, true); // change type
 		}
 		else
 		{
@@ -235,7 +237,7 @@ void W_Porto_Attack(float type)
 {
 	entity gren;
 
-	W_SetupShot(self, FALSE, 4, "porto/fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, "porto/fire.wav", CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -245,7 +247,7 @@ void W_Porto_Attack(float type)
 	gren.owner = gren.realowner = self;
 	gren.playerid = self.playerid;
 	gren.classname = "porto";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
 	gren.movetype = MOVETYPE_BOUNCEMISSILE;
 	PROJECTILE_MAKETRIGGER(gren);
@@ -253,7 +255,7 @@ void W_Porto_Attack(float type)
 	gren.scale = 4;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
-	
+
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
@@ -272,9 +274,9 @@ void W_Porto_Attack(float type)
 	gren.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 
 	if(type > 0)
-		CSQCProjectile(gren, TRUE, PROJECTILE_PORTO_BLUE, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_PORTO_BLUE, true);
 	else
-		CSQCProjectile(gren, TRUE, PROJECTILE_PORTO_RED, TRUE);
+		CSQCProjectile(gren, true, PROJECTILE_PORTO_RED, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -285,23 +287,23 @@ float W_Porto(float req)
 	//vector v_angle_save;
 
 	if(g_nexball) { return w_nexball_weapon(req); }
-	
+
 	switch(req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK = FALSE;
-			self.BUTTON_ATCK2 = FALSE;
+			self.BUTTON_ATCK = false;
+			self.BUTTON_ATCK2 = false;
 			if(!WEP_CVAR(porto, secondary))
-				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), FALSE))
-					self.BUTTON_ATCK = TRUE;
-					
-			return TRUE;
+				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+					self.BUTTON_ATCK = true;
+
+			return true;
 		}
 		case WR_CONFIG:
 		{
-			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -358,8 +360,8 @@ float W_Porto(float req)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -373,21 +375,21 @@ float W_Porto(float req)
 			precache_sound("porto/explode.wav");
 			precache_sound("porto/fire.wav");
 			precache_sound("porto/unsupported.wav");
-			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
-			return TRUE;
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.porto_current = world;
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -398,20 +400,20 @@ float W_Porto(float req)
 		case WR_IMPACTEFFECT:
 		{
 			print("Since when does Porto send DamageInfo?\n");
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			// nothing to do
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

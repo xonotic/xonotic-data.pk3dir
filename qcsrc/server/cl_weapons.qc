@@ -1,3 +1,5 @@
+#include "../round_handler.qh"
+
 void W_TriggerReload()
 {
     weapon_action(self.weapon, WR_RELOAD);
@@ -8,7 +10,7 @@ void W_SwitchWeapon(float imp)
 {
 	if (self.switchweapon != imp)
 	{
-		if (client_hasweapon(self, imp, TRUE, TRUE))
+		if (client_hasweapon(self, imp, true, true))
 			W_SwitchWeapon_Force(self, imp);
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
@@ -50,7 +52,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 		++c;
 
-		if(!skipmissing || client_hasweapon(pl, weaponwant, TRUE, FALSE))
+		if(!skipmissing || client_hasweapon(pl, weaponwant, true, false))
 		{
 			if(switchtonext)
 				return weaponwant;
@@ -91,7 +93,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 			--c;
 			if(c == 0)
 			{
-				client_hasweapon(pl, weaponwant, TRUE, TRUE);
+				client_hasweapon(pl, weaponwant, true, true);
 				break;
 			}
 		}
@@ -102,7 +104,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 void W_CycleWeapon(string weaponorder, float dir)
 {
 	float w;
-	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, TRUE);
+	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, true);
 	if(w > 0)
 		W_SwitchWeapon(w);
 }
@@ -140,7 +142,7 @@ void W_PreviousWeapon(float list)
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon()
 {
-	if(client_hasweapon(self, self.cnt, TRUE, FALSE))
+	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);
 	else
 		W_SwitchToOtherWeapon(self);
@@ -148,7 +150,7 @@ void W_LastWeapon()
 
 float w_getbestweapon(entity e)
 {
-	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE);
+	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, false, true);
 }
 
 // generic weapons table
@@ -235,7 +237,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.think = thrown_wep_think;
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
-		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+		wep.pickup_anyway = true; // these are ALWAYS pickable
 		return "";
 	}
 	else
@@ -293,7 +295,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.think = thrown_wep_think;
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
-		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+		wep.pickup_anyway = true; // these are ALWAYS pickable
 
 		return s;
 	}
@@ -417,7 +419,7 @@ void W_WeaponFrame()
 
 			entity newwep = get_weaponinfo(self.switchweapon);
 
-			//setanim(self, self.anim_draw, FALSE, TRUE, TRUE);
+			//setanim(self, self.anim_draw, false, true, true);
 			self.weaponentity.state = WS_RAISE;
 			weapon_action(self.switchweapon, WR_SETUP);
 

@@ -1,26 +1,23 @@
-// =====================
-//  Monster definitions
-//   For server (SVQC)
-// =====================
-
+#ifndef SV_MONSTERS_H
+#define SV_MONSTERS_H
 
 // stats networking
-.float stat_monsters_killed;
-.float stat_monsters_total;
-float monsters_total;
-float monsters_killed;
+.int stat_monsters_killed;
+.int stat_monsters_total;
+int monsters_total;
+int monsters_killed;
 
 // monster properties
-.float monster_movestate; // move target priority
+.int monster_movestate; // move target priority
 .entity monster_follow; // follow target
 .float wander_delay; // logic delay between moving while idle
 .float wander_distance; // distance to move between wander delays
 .float monster_lifetime; // monster dies instantly after this delay, set from spawn
 .float attack_range; // melee attack if closer, ranged attack if further away (TODO: separate ranged attack range?)
 .float spawn_time; // delay monster thinking until spawn animation has completed
-.float candrop; // toggle to allow disabling monster item drops
-.float monster_movestate; // will be phased out
-.float monster_moveflags;
+.bool candrop; // toggle to allow disabling monster item drops
+.int monster_movestate; // will be phased out
+.int monster_moveflags;
 .string oldtarget2; // a copy of the original follow target string
 .float last_trace; // logic delay between target tracing
 .float last_enemycheck; // for checking enemy
@@ -29,55 +26,71 @@ float monsters_killed;
 .vector monster_face; // custom looking direction for monster (reset to '0 0 0' when you're done!)
 .float speed2; // run speed
 .float stopspeed;
-.float m_anim_run;
-.float m_anim_walk;
-.float m_anim_idle;
-.float oldskin;
+.int m_anim_run;
+.int m_anim_walk;
+.int m_anim_idle;
+.int oldskin;
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
 // other properties
-.float monster_attack; // indicates whether an entity can be attacked by monsters
+.bool monster_attack; // indicates whether an entity can be attacked by monsters
 .float spider_slowness; // effect time of slowness inflicted by spiders
 
 // monster state declarations
-const float MONSTER_MOVE_FOLLOW = 1; // monster will follow if in range, or stand still
-const float MONSTER_MOVE_WANDER = 2; // monster will ignore owner & wander around
-const float MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn location when not attacking
-const float MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
-const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
-const float MONSTER_ATTACK_MELEE = 6;
-const float MONSTER_ATTACK_RANGED = 7;
+const int MONSTER_MOVE_FOLLOW = 1; // monster will follow if in range, or stand still
+const int MONSTER_MOVE_WANDER = 2; // monster will ignore owner & wander around
+const int MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn location when not attacking
+const int MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
+const int MONSTER_MOVE_ENEMY = 5; // used only as a movestate
+const int MONSTER_ATTACK_MELEE = 6;
+const int MONSTER_ATTACK_RANGED = 7;
 
 // skill declarations
-const float MONSTER_SKILL_EASY = 1;
-const float MONSTER_SKILL_MEDIUM = 3;
-const float MONSTER_SKILL_HARD = 5;
-const float MONSTER_SKILL_INSANE = 7;
-const float MONSTER_SKILL_NIGHTMARE = 10;
+const int MONSTER_SKILL_EASY = 1;
+const int MONSTER_SKILL_MEDIUM = 3;
+const int MONSTER_SKILL_HARD = 5;
+const int MONSTER_SKILL_INSANE = 7;
+const int MONSTER_SKILL_NIGHTMARE = 10;
 
-const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
-const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
-const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
+const int MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
+const int MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
+const int MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
 
 // spawn flags
-const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
-const float MONSTERFLAG_NORESPAWN = 4;
-const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
-const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
-const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
-const float MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
-const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
-const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
+const int MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
+const int MONSTERFLAG_NORESPAWN = 4;
+const int MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
+const int MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
+const int MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
+const int MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
+const int MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
+const int MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
 
 // compatibility with old maps (soon to be removed)
-#define monster_lifetime lifetime
-#define monster_skill skill
+.float monster_lifetime;
+.int monster_skill;
 
 // functions used elsewhere
-void Monster_Remove(entity mon); // removes a monster
+void Monster_Remove(entity mon);
+
 void monsters_setstatus();
-float Monster_Spawn(float mon_id);
+
+bool Monster_Spawn(int mon_id);
+
+void monster_setupcolors(entity mon);
+
+void Monster_Touch();
+
+void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func);
+
+float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, float deathtype, float dostop);
+
+bool Monster_Attack_Leap(int anm, void() touchfunc, vector vel, float animtime);
+
+void monster_makevectors(entity e);
+
+void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float chan);
 
 // monster sounds
 .float msound_delay; // temporary antilag system
@@ -96,3 +109,4 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
+#endif

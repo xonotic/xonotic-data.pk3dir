@@ -22,12 +22,12 @@ float t_mlrs(float req)
 			entity missile;
 
 			turret_tag_fire_update();
-			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, TRUE, TRUE);
+			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, true, true);
 			missile.nextthink = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
 			missile.missile_flags = MIF_SPLASH;
 			te_explosion (missile.origin);
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -39,11 +39,11 @@ float t_mlrs(float req)
 				dprint("shot_dmg:",ftos(self.shot_dmg),"\n");
 			}
 		
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -54,17 +54,17 @@ float t_mlrs(float req)
 			self.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
 			self.volly_counter = self.shot_volly;
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/mlrs.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -75,15 +75,15 @@ float t_mlrs(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

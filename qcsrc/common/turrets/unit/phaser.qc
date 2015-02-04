@@ -83,7 +83,7 @@ float t_phaser(float req)
 			beam.scale = self.target_range / 256;
 			beam.movetype = MOVETYPE_NONE;
 			beam.enemy = self.enemy;
-			beam.bot_dodge = TRUE;
+			beam.bot_dodge = true;
 			beam.bot_dodgerating = beam.shot_dmg;
 			sound (beam, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTEN_NORM);
 			self.fireflag = 1;
@@ -98,7 +98,7 @@ float t_phaser(float req)
 			if (self.tur_head.frame == 0)
 				self.tur_head.frame = 1;
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -122,11 +122,11 @@ float t_phaser(float req)
 				}
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -135,7 +135,7 @@ float t_phaser(float req)
 
 			self.turret_firecheckfunc = turret_phaser_firecheck;
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
@@ -143,11 +143,11 @@ float t_phaser(float req)
 			precache_model ("models/turrets/phaser.md3");
 			precache_model ("models/turrets/phaser_beam.md3");
 			precache_sound ("turrets/phaser.wav");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -158,15 +158,15 @@ float t_phaser(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

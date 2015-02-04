@@ -1,3 +1,5 @@
+#include "../../common/buffs.qh"
+
 void spawnfunc_item_minst_cells (void)
 {
 	if (!g_instagib) { remove(self); return; }
@@ -47,7 +49,7 @@ void instagib_stop_countdown(entity e)
 	if (!e.instagib_needammo)
 		return;
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
-	e.instagib_needammo = FALSE;
+	e.instagib_needammo = false;
 }
 void instagib_ammocheck()
 {
@@ -65,12 +67,12 @@ void instagib_ammocheck()
 		if(!self.instagib_needammo)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
-			self.instagib_needammo = TRUE;
+			self.instagib_needammo = true;
 		}
 	}
 	else
 	{
-		self.instagib_needammo = TRUE;
+		self.instagib_needammo = true;
 		if (self.health <= 5)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
@@ -137,14 +139,14 @@ MUTATOR_HOOKFUNCTION(instagib_MatchEnd)
 	FOR_EACH_PLAYER(head)
 		instagib_stop_countdown(head);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_MonsterLoot)
 {
 	other.monster_loot = ((random() > 0.5 && autocvar_g_instagib_use_normal_ammo && cvar("g_instagib_withmines")) ? spawnfunc_item_minst_rockets : spawnfunc_item_minst_cells);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
@@ -152,39 +154,39 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 	// always refill ammo
 	if(self.monsterid == MON_MAGE)
 		self.skin = 1;
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_MakePlayerObserver)
 {
 	instagib_stop_countdown(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerSpawn)
 {
 	self.effects |= EF_FULLBRIGHT;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPreThink)
 {
 	instagib_ammocheck();
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerRegen)
 {
 	// no regeneration in instagib
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 {
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_SplitHealthArmor)
@@ -192,20 +194,20 @@ MUTATOR_HOOKFUNCTION(instagib_SplitHealthArmor)
 	damage_save = 0;
 	damage_take = frag_damage;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ForbidThrowing)
 {
 	// weapon dropping on death handled by FilterItem
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 {
 	if(frag_deathtype == DEATH_NOAMMO)
-		return FALSE;
+		return false;
 
 	if(autocvar_g_rm)
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR))
@@ -239,7 +241,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 			{
 				if(!autocvar_g_instagib_blaster_keepdamage)
 					frag_damage = frag_mirrordamage = 0;
-				
+
 				if(frag_target != frag_attacker)
 				{
 					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
@@ -274,7 +276,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 	if(frag_target.buffs & BUFF_INVISIBLE)
 		yoda = 1;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
@@ -292,23 +294,23 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 	start_weapons = warmup_start_weapons = ((cvar("g_instagib_withmines")) ? (WEPSET_VAPORIZER | WEPSET_MINE_LAYER) : WEPSET_VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 {
 	if(self.classname == "item_cells")
 	if(!autocvar_g_instagib_use_normal_ammo)
-		return TRUE;
+		return true;
 
 	if(self.classname == "item_rockets")
 	if(!autocvar_g_instagib_use_normal_ammo || !cvar("g_instagib_withmines"))
-		return TRUE;
+		return true;
 
 	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
-		return FALSE;
+		return false;
 	}
 
 	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
@@ -322,11 +324,11 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 		self.team = oldself.team;
 		spawnfunc_item_minst_cells();
 		self = oldself;
-		return TRUE;
+		return true;
 	}
 
 	if(self.flags & FL_POWERUP)
-		return FALSE;
+		return false;
 
 	if(self.ammo_cells > autocvar_g_instagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
@@ -335,12 +337,12 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 		self.ammo_rockets = bound(0, self.ammo_rockets, autocvar_g_instagib_ammo_rockets);
 
 	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
-		return FALSE;
+		return false;
 
 	if(self.ammo_rockets && !self.weapon)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
@@ -349,7 +351,7 @@ MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 	{
 		case IT_NAILS:      item_name = "item-extralife"; item_color = '1 0 0'; break;
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
@@ -362,7 +364,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
 
 	(get_weaponinfo(WEP_VAPORIZER)).weaponthrowable = 1; // throwing is forbidden by a mutator hook, enabling this for drop on death
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
@@ -401,25 +403,25 @@ MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 	if(random() <= 0.5)
 		instagib_item_supercells();
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":instagib");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", instagib");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_SetModname)
 {
 	modname = "instagib";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(mutator_instagib)
@@ -463,5 +465,5 @@ MUTATOR_DEFINITION(mutator_instagib)
 		g_instagib = 0;
 	}
 
-	return FALSE;
+	return false;
 }

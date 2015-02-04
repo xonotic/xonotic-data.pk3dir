@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_spawn_health;
 var float autocvar_g_monster_spawn_damageforcescale = 0.6;
 float autocvar_g_monster_spawn_attack_explode_damage;
@@ -76,7 +78,7 @@ float M_Spawn_Attack(float attack_type)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_spawn() { Monster_Spawn(MON_SPAWN); }
@@ -92,18 +94,18 @@ float M_Spawn(float req)
 			if(self.movetype == MOVETYPE_BOUNCE)
 			if(time >= self.attack_finished_single)
 				self.movetype = MOVETYPE_WALK;
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			// KABOOM!
 			self.frame = 0;
 			defer(0.05, M_Spawn_Attack_Explode); // simply defer to prevent recursion
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -121,15 +123,15 @@ float M_Spawn(float req)
 			self.monster_loot = spawnfunc_item_rockets;
 			self.frame = spawn_anim_walk;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

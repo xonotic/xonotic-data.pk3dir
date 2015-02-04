@@ -1,7 +1,7 @@
-// =========================
-//  SVQC Vehicle Properties
-// =========================
-
+#include "../effects.qh"
+#include "vehicles.qh"
+#include "sv_vehicles.qh"
+#include "../../server/jeff.qh"
 
 float SendAuxiliaryXhair(entity to, float sf)
 {
@@ -18,7 +18,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 	WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
 	WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
 
-	return TRUE;
+	return true;
 }
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
@@ -37,7 +37,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 		axh.cnt				 = axh_id;
 		axh.drawonlytoclient	= own;
 		axh.owner			   = own;
-		Net_LinkEntity(axh, FALSE, 0, SendAuxiliaryXhair);
+		Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
 	}
 
 	setorigin(axh, loc);
@@ -234,7 +234,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 	proj.solid			= SOLID_BBOX;
 	proj.movetype		 = MOVETYPE_FLYMISSILE;
 	proj.flags			= FL_PROJECTILE;
-	proj.bot_dodge		= TRUE;
+	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
 	proj.touch			= vehicles_projectile_explode;
@@ -341,7 +341,7 @@ float vehicle_addplayerslot(	entity _owner,
 	setattachment(_slot.vehicle_hudmodel, _slot, "");
 	setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
 
-	return TRUE;
+	return true;
 }
 
 vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
@@ -353,7 +353,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 	vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
 	vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
-	vtmp = AnglesTransform_Normalize(vtmp, TRUE);
+	vtmp = AnglesTransform_Normalize(vtmp, true);
 	ftmp = _aimspeed * frametime;
 	vtmp_y = bound(-ftmp, vtmp_y, ftmp);
 	vtmp_x = bound(-ftmp, vtmp_x, ftmp);
@@ -495,7 +495,7 @@ void vehicles_showwp()
 		rgb = Team_ColorRGB(self.team);
 	else
 		rgb = '1 1 1';
-	WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
+	WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
@@ -707,12 +707,12 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 float vehicles_crushable(entity e)
 {
 	if(IS_PLAYER(e))
-		return TRUE;
+		return true;
 
 	if(IS_MONSTER(e))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
@@ -798,7 +798,7 @@ void vehicles_exit(float eject)
 		return;
 	}
 
-	vehicles_exit_running = TRUE;
+	vehicles_exit_running = true;
 	if(IS_CLIENT(self))
 	{
 		_vehicle = self.vehicle;
@@ -807,7 +807,7 @@ void vehicles_exit(float eject)
 		{
 			_vehicle.vehicle_exit(eject);
 			self = _oldself;
-			vehicles_exit_running = FALSE;
+			vehicles_exit_running = false;
 			return;
 		}
 	}
@@ -887,7 +887,7 @@ void vehicles_exit(float eject)
 	
 	self = _oldself;
 
-	vehicles_exit_running = FALSE;
+	vehicles_exit_running = false;
 }
 
 void vehicles_touch()
@@ -986,7 +986,7 @@ void vehicles_enter(entity pl, entity veh)
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
 		if(autocvar_g_vehicles_steal_show_waypoint)
-			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
+			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER, Team_ColorRGB(pl.team));
 	}
 	else return;
 
@@ -1008,8 +1008,8 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, FALSE, pl);
-	pl.crouch = FALSE;
+	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, false, pl);
+	pl.crouch = false;
 	pl.view_ofs = PL_VIEW_OFS;
 	setsize (pl, PL_MIN, PL_MAX);
 
@@ -1019,7 +1019,7 @@ void vehicles_enter(entity pl, entity veh)
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
 	pl.movetype			= MOVETYPE_NOCLIP;
-	pl.teleportable		= FALSE;
+	pl.teleportable		= false;
 	pl.alpha			= -1;
 	pl.event_damage		= func_null;
 	pl.view_ofs			= '0 0 0';
@@ -1108,14 +1108,14 @@ void vehicles_spawn()
 	self.owner				= world;
 	self.touch				= vehicles_touch;
 	self.event_damage		= vehicles_damage;
-	self.iscreature			= TRUE;
-	self.teleportable		= FALSE; // no teleporting for vehicles, too buggy
-	self.damagedbycontents	= TRUE;
+	self.iscreature			= true;
+	self.teleportable		= false; // no teleporting for vehicles, too buggy
+	self.damagedbycontents	= true;
 	self.movetype			= MOVETYPE_WALK;
 	self.solid				= SOLID_SLIDEBOX;
 	self.takedamage			= DAMAGE_AIM;
 	self.deadflag			= DEAD_NO;
-	self.bot_attack			= TRUE;
+	self.bot_attack			= true;
 	self.flags				= FL_NOTARGET;
 	self.avelocity			= '0 0 0';
 	self.velocity			= '0 0 0';
@@ -1151,12 +1151,12 @@ void vehicles_spawn()
 float vehicle_initialize(float vehicle_id, float nodrop)
 {
 	if(!autocvar_g_vehicles)
-		return FALSE;
+		return false;
 
 	entity veh = get_vehicleinfo(vehicle_id);
 	
 	if(!veh.vehicleid)
-		return FALSE;
+		return false;
 	
 	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
@@ -1196,10 +1196,10 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	self.tur_head				= spawn();
 	self.tur_head.owner			= self;
 	self.takedamage				= DAMAGE_NO;
-	self.bot_attack				= TRUE;
-	self.iscreature				= TRUE;
-	self.teleportable			= FALSE; // no teleporting for vehicles, too buggy
-	self.damagedbycontents		= TRUE;
+	self.bot_attack				= true;
+	self.iscreature				= true;
+	self.teleportable			= false; // no teleporting for vehicles, too buggy
+	self.damagedbycontents		= true;
 	self.vehicleid				= vehicle_id;
 	self.PlayerPhysplug			= veh.PlayerPhysplug;
 	self.event_damage			= func_null;
@@ -1258,7 +1258,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		self.nextthink = time + game_starttime;
 
 	if(MUTATOR_CALLHOOK(VehicleSpawn))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }

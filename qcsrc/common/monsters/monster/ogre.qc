@@ -11,6 +11,8 @@ REGISTER_MONSTER(
 
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_monster_ogre_health;
 var float autocvar_g_monster_ogre_damageforcescale = 0.4;
 float autocvar_g_monster_ogre_attack_machinegun_spread;
@@ -144,7 +146,7 @@ void M_Ogre_Attack_Grenade()
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = autocvar_g_monster_ogre_attack_grenade_damage;
 	gren.movetype = MOVETYPE_BOUNCE;
 	gren.bouncefactor = autocvar_g_monster_ogre_attack_grenade_bouncefactor;
@@ -163,14 +165,14 @@ void M_Ogre_Attack_Grenade()
 	gren.health = autocvar_g_monster_ogre_attack_grenade_health;
 	gren.damageforcescale = autocvar_g_monster_ogre_attack_grenade_damageforcescale;
 	gren.event_damage = M_Ogre_Attack_Grenade_Damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, FALSE);
+	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, false);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+	CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 
@@ -216,7 +218,7 @@ void M_Ogre_Attack_Chainsaw()
 			+ (v_up * swing_factor * autocvar_g_monster_ogre_attack_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_monster_ogre_attack_melee_swing_side));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, 0);
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, 0);
 
 		// draw lightning beams for debugging
 		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -293,7 +295,7 @@ float M_Ogre_Attack(float attack_type)
 			self.state = MONSTER_ATTACK_MELEE;
 			self.frame = ogre_anim_swing;
 
-			return TRUE;
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -302,11 +304,11 @@ float M_Ogre_Attack(float attack_type)
 			self.attack_finished_single = time + 1;
 			self.anim_finished = time + 0.5;
 			self.frame = ogre_anim_shoot;
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_ogre() { Monster_Spawn(MON_OGRE); }
@@ -317,7 +319,7 @@ float M_Ogre(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
@@ -330,12 +332,12 @@ float M_Ogre(float req)
 				case 4: self.frame = ogre_anim_pain4; self.anim_finished = time + 1.5; break;
 				case 5: self.frame = ogre_anim_pain5; self.anim_finished = time + 1.4; break;
 			}
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = ((random() >= 0.5) ? ogre_anim_death1 : ogre_anim_death2);
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -355,15 +357,15 @@ float M_Ogre(float req)
 			self.spawn_time = time + 1;
 			self.spawnshieldtime = self.spawn_time;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

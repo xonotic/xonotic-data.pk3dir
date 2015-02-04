@@ -1,3 +1,16 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "autocvars.qh"
+    #include "defs.qh"
+    #include "command/banning.qh"
+    #include "ipban.qh"
+#endif
+
 /*
  * Protocol of online ban list:
  *
@@ -238,7 +251,7 @@ void OnlineBanList_Think()
 	remove(self);
 }
 
-#define BAN_MAX 256
+const float BAN_MAX = 256;
 float ban_loaded;
 string ban_ip[BAN_MAX];
 float ban_expire[BAN_MAX];
@@ -276,11 +289,11 @@ void Ban_SaveBans()
 float Ban_Delete(float i)
 {
 	if(i < 0)
-		return FALSE;
+		return false;
 	if(i >= ban_count)
-		return FALSE;
+		return false;
 	if(ban_expire[i] == 0)
-		return FALSE;
+		return false;
 	if(ban_expire[i] > 0)
 	{
 		OnlineBanList_SendUnban(ban_ip[i]);
@@ -289,7 +302,7 @@ float Ban_Delete(float i)
 	ban_expire[i] = 0;
 	ban_ip[i] = "";
 	Ban_SaveBans();
-	return TRUE;
+	return true;
 }
 
 void Ban_LoadBans()
@@ -298,7 +311,7 @@ void Ban_LoadBans()
 	for(i = 0; i < ban_count; ++i)
 		Ban_Delete(i);
 	ban_count = 0;
-	ban_loaded = TRUE;
+	ban_loaded = true;
 	n = tokenize_console(autocvar_g_banned_list);
 	if(stof(argv(0)) == 1)
 	{
@@ -360,10 +373,10 @@ float Ban_GetClientIP(entity client)
 		goto ipv6;
 	i2 = strstrofs(s, ".", i1 + 1);
 	if(i2 < 0)
-		return FALSE;
+		return false;
 	i3 = strstrofs(s, ".", i2 + 1);
 	if(i3 < 0)
-		return FALSE;
+		return false;
 	i4 = strstrofs(s, ".", i3 + 1);
 	if(i4 >= 0)
 		s = substring(s, 0, i4);
@@ -372,21 +385,21 @@ float Ban_GetClientIP(entity client)
 	ban_ip2 = substring(s, 0, i2); // 16
 	ban_ip3 = substring(s, 0, i3); // 24
 	ban_ip4 = strcat1(s); // 32
-	return TRUE;
+	return true;
 
 :ipv6
 	i1 = strstrofs(s, ":", 0);
 	if(i1 < 0)
-		return FALSE;
+		return false;
 	i1 = strstrofs(s, ":", i1 + 1);
 	if(i1 < 0)
-		return FALSE;
+		return false;
 	i2 = strstrofs(s, ":", i1 + 1);
 	if(i2 < 0)
-		return FALSE;
+		return false;
 	i3 = strstrofs(s, ":", i2 + 1);
 	if(i3 < 0)
-		return FALSE;
+		return false;
 
 	ban_ip1 = strcat(substring(s, 0, i1), "::/32"); // 32
 	ban_ip2 = strcat(substring(s, 0, i2), "::/48"); // 48
@@ -397,7 +410,7 @@ float Ban_GetClientIP(entity client)
 	else
 		ban_ip3 = strcat(substring(s, 0, i2), ":0::/56");
 
-	return TRUE;
+	return true;
 }
 
 float Ban_IsClientBanned(entity client, float idx)
@@ -406,7 +419,7 @@ float Ban_IsClientBanned(entity client, float idx)
 	if(!ban_loaded)
 		Ban_LoadBans();
 	if(!Ban_GetClientIP(client))
-		return FALSE;
+		return false;
 	if(idx < 0)
 	{
 		b = 0;
@@ -417,27 +430,27 @@ float Ban_IsClientBanned(entity client, float idx)
 		b = idx;
 		e = idx + 1;
 	}
-	ipbanned = FALSE;
+	ipbanned = false;
 	for(i = b; i < e; ++i)
 	{
 		string s;
 		if(time > ban_expire[i])
 			continue;
 		s = ban_ip[i];
-		if(ban_ip1 == s) ipbanned = TRUE;
-		if(ban_ip2 == s) ipbanned = TRUE;
-		if(ban_ip3 == s) ipbanned = TRUE;
-		if(ban_ip4 == s) ipbanned = TRUE;
-		if(ban_idfp == s) return TRUE;
+		if(ban_ip1 == s) ipbanned = true;
+		if(ban_ip2 == s) ipbanned = true;
+		if(ban_ip3 == s) ipbanned = true;
+		if(ban_ip4 == s) ipbanned = true;
+		if(ban_idfp == s) return true;
 	}
 	if(ipbanned)
 	{
 		if(!autocvar_g_banned_list_idmode)
-			return TRUE;
+			return true;
 		if (!ban_idfp)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 float Ban_MaybeEnforceBan(entity client)
@@ -448,17 +461,17 @@ float Ban_MaybeEnforceBan(entity client)
 		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
 		dropclient(client);
 		bprint(s);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 .float ban_checked;
 float Ban_MaybeEnforceBanOnce(entity client)
 {
 	if(client.ban_checked)
-		return FALSE;
-	client.ban_checked = TRUE;
+		return false;
+	client.ban_checked = true;
 	return Ban_MaybeEnforceBan(client);
 }
 
@@ -517,7 +530,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 					if(substring(reason, 0, 1) != "~") // like IRC: unauthenticated banner
 						OnlineBanList_SendBan(ip, bantime, reason);
 
-			return FALSE;
+			return false;
 		}
 
 	// do we have a free slot?
@@ -544,7 +557,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 	if(ban_expire[i] > time + bantime)
 	{
 		print(ip, " could not get banned due to no free ban slot\n");
-		return FALSE;
+		return false;
 	}
 	// okay, insert our new victim as i
 	Ban_Delete(i);
@@ -563,7 +576,7 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 			if(substring(reason, 0, 1) != "~") // like IRC: unauthenticated banner
 				OnlineBanList_SendBan(ip, bantime, reason);
 
-	return TRUE;
+	return true;
 }
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)

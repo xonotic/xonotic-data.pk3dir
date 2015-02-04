@@ -1,3 +1,9 @@
+#if defined(SVQC)
+#include "../sv_minigames.qh"
+#elif defined(CSQC)
+#include "../cl_minigames.qh"
+#endif
+
 /**
 
 How to create a minigame

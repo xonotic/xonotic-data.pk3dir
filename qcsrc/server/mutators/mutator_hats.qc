@@ -8,7 +8,7 @@ void hats_Precache(string pattern)
 	float globhandle, i, n;
 	string f;
 
-	globhandle = search_begin(pattern, TRUE, FALSE);
+	globhandle = search_begin(pattern, true, false);
 	if (globhandle < 0)
 		return;
 	n = search_getsize(globhandle);
@@ -109,8 +109,8 @@ void hat_Think()
 
 float hats_Customize()
 {
-	if(other.cvar_cl_nohats) { return FALSE; }
-	return TRUE;
+	if(other.cvar_cl_nohats) { return false; }
+	return true;
 }
 
 void hats_SpawnHat()
@@ -146,14 +146,14 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 	self.hatname = strzone(self.cvar_cl_hat);
 #endif
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(hats_GetCvars)
 {
 	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_hat, "cl_magical_hax");
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nohats, "cl_nohats");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(hats_RemovePlayer)
@@ -161,7 +161,7 @@ MUTATOR_HOOKFUNCTION(hats_RemovePlayer)
 	self.hatentity = world;
 	self.hatname = "";
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_hats)
@@ -176,5 +176,5 @@ MUTATOR_DEFINITION(mutator_hats)
 		hats_Precache("models/hats/*.md3");
 	}
 
-	return FALSE;
+	return false;
 }

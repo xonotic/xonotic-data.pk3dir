@@ -1,13 +1,15 @@
+#include "../round_handler.qh"
+
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
-#define ICE_MAX_ALPHA 1
-#define ICE_MIN_ALPHA 0.1
+const float ICE_MAX_ALPHA = 1;
+const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
-#define SP_FREEZETAG_REVIVALS 4
+const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	ScoreRules_basics_end();
 }
@@ -39,11 +41,11 @@ void freezetag_count_alive_players()
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-float prev_missing_teams_mask;
 float freezetag_CheckTeams()
 {
 	freezetag_count_alive_players();
 
+	static float prev_missing_teams_mask;
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
@@ -96,18 +98,18 @@ float freezetag_getWinnerTeam()
 
 float ft_EnemyWaypoint_Customize()
 {
-	if(self.owner.frozen || self.owner.deadflag) { return FALSE; }
+	if(self.owner.frozen || self.owner.deadflag) { return false; }
 
 	entity e = WaypointSprite_getviewentity(other);
 
-	if(SAME_TEAM(self.owner, e)) { return FALSE; }
+	if(SAME_TEAM(self.owner, e)) { return false; }
 
-	return TRUE;
+	return true;
 }
 
 void ft_EnemyWaypoints(entity player)
 {
-	WaypointSprite_Spawn("enemy", 0, 0, player, ENEMY_WAYPOINT_OFFSET, world, 0, player, wps_enemy, TRUE, RADARICON_FLAG, WPCOLOR_ENEMY(player.team));
+	WaypointSprite_Spawn("enemy", 0, 0, player, ENEMY_WAYPOINT_OFFSET, world, 0, player, wps_enemy, true, RADARICON_FLAG, WPCOLOR_ENEMY(player.team));
 	WaypointSprite_UpdateMaxHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
 	WaypointSprite_UpdateHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	WaypointSprite_UpdateTeamRadar(player.wps_enemy, RADARICON_FLAGCARRIER, WPCOLOR_ENEMY(player.team));
@@ -122,7 +124,7 @@ float freezetag_CheckWinner()
 	if(!ft_stalemate)
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		ft_stalemate = TRUE;
+		ft_stalemate = true;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_FREEZETAG_STALEMATE);
 		FOR_EACH_PLAYER(e)
 		{
@@ -149,7 +151,7 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 
-	ft_stalemate = FALSE;
+	ft_stalemate = false;
 	FOR_EACH_PLAYER(e)
 	{
 		e.freezetag_frozen_timeout = 0;
@@ -157,7 +159,7 @@ float freezetag_CheckWinner()
 		WaypointSprite_Kill(e.wps_enemy);
 	}
 
-	nades_Clear(world, TRUE);
+	nades_Clear(world, true);
 
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
@@ -217,7 +219,7 @@ void freezetag_Freeze(entity attacker)
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
 		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
-	Freeze(self, 0, 1, TRUE);
+	Freeze(self, 0, 1, true);
 
 	freezetag_count_alive_players();
 
@@ -237,8 +239,8 @@ void freezetag_Unfreeze(entity attacker)
 float freezetag_isEliminated(entity e)
 {
 	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 
@@ -454,8 +456,8 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 
 MUTATOR_HOOKFUNCTION(freezetag_ResetMap)
 {
-	ft_stalemate = FALSE;
-	return FALSE;
+	ft_stalemate = false;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
@@ -504,7 +506,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			if(!o)
 				o = other;
 			if(self.frozen == 1)
-				other.reviving = TRUE;
+				other.reviving = true;
 			++n;
 		}
 	}
@@ -547,7 +549,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			if(other.reviving)
 			{
 				other.revive_progress = self.revive_progress;
-				other.reviving = FALSE;
+				other.reviving = false;
 			}
 		}
 	}
@@ -577,13 +579,13 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 			self.havocbot_role = havocbot_role_ft_offense;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
 	ret_float = freezetag_teams;
-	return FALSE;
+	return false;
 }
 
 void freezetag_Initialize()

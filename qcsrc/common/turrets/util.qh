@@ -1,0 +1,22 @@
+#ifndef TURRETS_UTIL_H
+#define TURRETS_UTIL_H
+
+#define turret_tag_fire_update() self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));v_forward = normalize(v_forward)
+
+float shortangle_f(float ang1, float ang2);
+
+float anglemods(float v);
+
+vector shortangle_v(vector ang1, vector ang2);
+
+vector shortangle_vxy(vector ang1, vector ang2);
+
+vector real_origin(entity ent);
+
+vector angleofs(entity from, entity to);
+
+vector angleofs3(vector from, vector from_a, entity to);
+
+void FireImoBeam (vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, float deathtype);
+
+#endif

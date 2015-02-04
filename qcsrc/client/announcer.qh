@@ -1,0 +1,7 @@
+#ifndef ANNOUNCER_H
+#define ANNOUNCER_H
+
+string AnnouncerOption();
+void Announcer_Precache();
+
+#endif

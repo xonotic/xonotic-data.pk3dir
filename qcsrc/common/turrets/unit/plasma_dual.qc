@@ -11,6 +11,8 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 void spawnfunc_turret_plasma_dual() { if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
 float t_plasma_dual(float req)
@@ -49,13 +51,13 @@ float t_plasma_dual(float req)
 			}
 			else
 			{
-				entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
+				entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
 				missile.missile_flags = MIF_SPLASH;
 				Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 				self.tur_head.frame += 1;
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -65,11 +67,11 @@ float t_plasma_dual(float req)
 			if (self.tur_head.frame > 6)
 				self.tur_head.frame = 0;
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -80,17 +82,17 @@ float t_plasma_dual(float req)
 			
 			turret_do_updates(self);
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/plasmad.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -101,15 +103,15 @@ float t_plasma_dual(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

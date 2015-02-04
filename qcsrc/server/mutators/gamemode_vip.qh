@@ -6,9 +6,6 @@ float g_vip_soulgems;
 .float gem_pickedup;
 .float gem_dropped;
 
-float allowed_to_spawn;
-float red_players, blue_players, yellow_players, pink_players;
-float prev_total_players, total_players;
 .float isvip;
 .entity wps_vip;
 float redgem_count, bluegem_count, yellowgem_count, pinkgem_count;

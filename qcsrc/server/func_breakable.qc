@@ -1,3 +1,5 @@
+#include "weapons/common.qh"
+
 .entity sprite;
 
 .float dmg;
@@ -31,7 +33,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -39,13 +41,11 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 //
 void LaunchDebris (string debrisname, vector force)
 {
-	local	entity dbr;
-
-	dbr = spawn();
+	entity dbr = spawn();
 	setorigin(dbr, self.absmin
-	           + '1 0 0' * random() * (self.absmax_x - self.absmin_x)
-	           + '0 1 0' * random() * (self.absmax_y - self.absmin_y)
-	           + '0 0 1' * random() * (self.absmax_z - self.absmin_z));
+	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
+	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
+	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z));
 	setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
@@ -54,13 +54,13 @@ void LaunchDebris (string debrisname, vector force)
 	dbr.solid = self.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-	dbr.velocity_x = self.debrisvelocity_x + self.debrisvelocityjitter_x * crandom();
-	dbr.velocity_y = self.debrisvelocity_y + self.debrisvelocityjitter_y * crandom();
-	dbr.velocity_z = self.debrisvelocity_z + self.debrisvelocityjitter_z * crandom();
+	dbr.velocity_x = self.debrisvelocity.x + self.debrisvelocityjitter.x * crandom();
+	dbr.velocity_y = self.debrisvelocity.y + self.debrisvelocityjitter.y * crandom();
+	dbr.velocity_z = self.debrisvelocity.z + self.debrisvelocityjitter.z * crandom();
 	self.velocity = self.velocity + force * self.debrisdamageforcescale;
-	dbr.avelocity_x = random()*self.debrisavelocityjitter_x;
-	dbr.avelocity_y = random()*self.debrisavelocityjitter_y;
-	dbr.avelocity_z = random()*self.debrisavelocityjitter_z;
+	dbr.avelocity_x = random()*self.debrisavelocityjitter.x;
+	dbr.avelocity_y = random()*self.debrisavelocityjitter.y;
+	dbr.avelocity_z = random()*self.debrisavelocityjitter.z;
 	dbr.damageforcescale = self.debrisdamageforcescale;
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
@@ -79,13 +79,13 @@ void func_breakable_colormod()
 		self.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
 		self.colormod = '1 1 1';
-		
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
 void func_breakable_look_destroyed()
 {
-	float floor_z;
+	float floorZ;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		self.dropped_origin = self.origin;
@@ -94,9 +94,9 @@ void func_breakable_look_destroyed()
 		self.model = "";
 	else {
 		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
-			floor_z = self.absmin_z;
+			floorZ = self.absmin.z;
 			setorigin(self,((self.absmax+self.absmin)*.5));
-			self.origin_z = floor_z;
+			self.origin_z = floorZ;
 		}
 		setmodel(self, self.mdl_dead);
 	}
@@ -116,7 +116,7 @@ void func_breakable_behave_destroyed()
 {
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
-	self.bot_attack = FALSE;
+	self.bot_attack = false;
 	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
@@ -131,7 +131,7 @@ void func_breakable_behave_restore()
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
 	self.takedamage = DAMAGE_AIM;
-	self.bot_attack = TRUE;
+	self.bot_attack = true;
 	self.event_damage = func_breakable_damage;
 	self.state = 0;
 	self.nextthink = 0; // cancel auto respawn
@@ -142,7 +142,7 @@ void func_breakable_destroyed()
 {
 	func_breakable_look_destroyed();
 	func_breakable_behave_destroyed();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -150,7 +150,7 @@ void func_breakable_restore()
 {
 	func_breakable_look_restore();
 	func_breakable_behave_restore();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -190,7 +190,7 @@ void func_breakable_destroy() {
 	self.message = oldmsg;
 }
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.state == 1)
 		return;
@@ -224,7 +224,7 @@ void func_breakable_reset()
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
-		
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -277,7 +277,7 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 

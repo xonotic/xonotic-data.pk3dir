@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetMap)
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 	if(IS_PLAYER(self))
 		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
@@ -46,14 +46,14 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
@@ -70,7 +70,7 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 		else
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 		self.frags = FRAGS_SPECTATOR;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerThink)
@@ -96,20 +96,20 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerRegen)
 {
 	if(autocvar_g_lms_regenerate)
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
 {
 	// forbode!
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
@@ -130,7 +130,7 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 	}
 	frag_score = 0;
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms_SetStartItems)
@@ -145,13 +145,13 @@ MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_KeepScore)
 {
 	// don't clear player score
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
@@ -160,10 +160,10 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 	if(self.classname == "item_health_mega")
 	{
 		self.max_health = 1;
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms_ItemTouch)
@@ -181,17 +181,17 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 MUTATOR_HOOKFUNCTION(lms_WantWeapon)
 {
 	if(other.spawnflags & WEP_FLAG_NORMAL)
-		ret_float = TRUE;
+		ret_float = true;
 	else
-		ret_float = FALSE;
+		ret_float = false;
 
-	return FALSE;
+	return false;
 }
 
 // scoreboard stuff
 void lms_ScoreRules()
 {
-	ScoreRules_basics(0, 0, 0, FALSE);
+	ScoreRules_basics(0, 0, 0, false);
 	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
 	ScoreRules_basics_end();

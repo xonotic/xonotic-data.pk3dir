@@ -1,3 +1,6 @@
+#ifndef GAMEMODE_JAILBREAK_H
+#define GAMEMODE_JAILBREAK_H
+
 float g_jailbreak_claim;
 float g_jailbreak_jail_deathmatch;
 
@@ -84,3 +87,5 @@ entity jb_worldcplist;
 
 // TODO: cvar this
 #define JB_TORTURE_DURATION 15
+
+#endif

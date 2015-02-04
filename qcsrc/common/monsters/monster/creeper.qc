@@ -41,15 +41,15 @@ float M_Creeper_Attack(float attack_type)
 
 				RadiusDamage (self, self, (autocvar_g_monster_creeper_attack_explode_damage), (autocvar_g_monster_creeper_attack_explode_edgedamage), (autocvar_g_monster_creeper_attack_explode_radius), world, world, (autocvar_g_monster_creeper_attack_explode_force), DEATH_MONSTER_CREEPER, other);
 
-				//Monster_Sound(monstersound_attack, 0, FALSE, CH_SHOTS);
+				//Monster_Sound(monstersound_attack, 0, false, CH_SHOTS);
 				Damage (self, world, world, self.health + self.max_health + 200, DEATH_KILL, self.origin, '0 0 0'); // killing monster should be reliable enough
 				self.event_damage = func_null;
 				self.frame = creeper_anim_idle;
 			}
 			else
 			{
-				Monster_Sound(monstersound_ranged, 0, FALSE, CH_VOICE);
-				self.creeper_primed = TRUE;
+				Monster_Sound(monstersound_ranged, 0, false, CH_VOICE);
+				self.creeper_primed = true;
 
 				self.colormod = '1 0 0';
 				self.frame = creeper_anim_idle;
@@ -58,16 +58,16 @@ float M_Creeper_Attack(float attack_type)
 				self.state = MONSTER_ATTACK_MELEE;
 				self.attack_finished_single = time + (autocvar_g_monster_creeper_attack_explode_prime_delay);
 			}
-			return TRUE;
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			// creeper has no ranged attacks
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_creeper() { Monster_Spawn(MON_CREEPER); }
@@ -80,18 +80,18 @@ float M_Creeper(float req)
 		{
 			if(self.creeper_primed)
 			if(vlen(self.origin - self.enemy.origin) >= self.attack_range * 2)
-				self.creeper_primed = FALSE;
+				self.creeper_primed = false;
 			if(self.health > 0 && time > self.attack_finished_single) { self.colormod = '1 1 1'; }
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = creeper_anim_die;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -110,15 +110,15 @@ float M_Creeper(float req)
 			self.frame = creeper_anim_idle;
 			self.colormod = '1 1 1';
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC

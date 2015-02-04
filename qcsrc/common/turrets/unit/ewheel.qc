@@ -11,6 +11,8 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 float autocvar_g_turrets_unit_ewheel_speed_fast;
 float autocvar_g_turrets_unit_ewheel_speed_slow;
 float autocvar_g_turrets_unit_ewheel_speed_slower;
@@ -105,7 +107,7 @@ void ewheel_move_enemy()
 		movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 	}
 
-	turrets_setframe(newframe, FALSE);
+	turrets_setframe(newframe, false);
 }
 
 void ewheel_move_idle()
@@ -136,7 +138,7 @@ float t_ewheel(float req)
 			{
 				turret_do_updates(self);
 
-				_mis = turret_projectile(W_Sound("lasergun_fire"), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, TRUE, TRUE);
+				_mis = turret_projectile(W_Sound("lasergun_fire"), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, true, true);
 				_mis.missile_flags = MIF_SPLASH;
 
 				Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
@@ -147,7 +149,7 @@ float t_ewheel(float req)
 					self.tur_head.frame = 0;
 			}
 			
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -182,7 +184,7 @@ float t_ewheel(float req)
 			if(vlen(self.velocity))
 				self.SendFlags |= TNSF_MOVE;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
@@ -194,7 +196,7 @@ float t_ewheel(float req)
 #endif
 			self.pathcurrent = world;
 	
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -231,9 +233,9 @@ float t_ewheel(float req)
 				}
 			}
 			
-			self.iscreature				= TRUE;
+			self.iscreature				= true;
 			self.teleportable			= TELEPORT_NORMAL;
-			self.damagedbycontents		= TRUE;
+			self.damagedbycontents		= true;
 			self.movetype				= MOVETYPE_WALK;
 			self.solid					= SOLID_SLIDEBOX;
 			self.takedamage				= DAMAGE_AIM;
@@ -248,17 +250,17 @@ float t_ewheel(float req)
 			self.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
 			self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 		
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/ewheel-base2.md3");
 			precache_model ("models/turrets/ewheel-gun1.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -296,15 +298,15 @@ float t_ewheel(float req)
 			self.move_time		= time;
 			self.draw			= ewheel_draw;
 			
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

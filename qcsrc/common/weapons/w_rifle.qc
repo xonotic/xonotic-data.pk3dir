@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 0',
 /* modelname */ "sniperrifle",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairrifle 0.5",
+/* crosshair */ "gfx/crosshairrifle 0.6",
 /* wepimg    */ "weaponrifle",
 /* refname   */ "rifle",
 /* wepname   */ _("Rifle")
@@ -46,6 +46,8 @@ RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../effects.qh"
+
 void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
@@ -56,7 +58,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_DecreaseAmmo(pAmmo);
 
-	W_SetupShot(self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
@@ -136,33 +138,33 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 float W_Rifle(float req)
 {
 	float ammo_amount;
-	
+
 	switch(req)
 	{
 		case WR_AIM:
 		{
-			self.BUTTON_ATCK=FALSE;
-			self.BUTTON_ATCK2=FALSE;
+			self.BUTTON_ATCK=false;
+			self.BUTTON_ATCK2=false;
 			if(vlen(self.origin-self.enemy.origin) > 1000)
 				self.bot_secondary_riflemooth = 0;
 			if(self.bot_secondary_riflemooth == 0)
 			{
-				if(bot_aim(1000000, 0, 0.001, FALSE))
+				if(bot_aim(1000000, 0, 0.001, false))
 				{
-					self.BUTTON_ATCK = TRUE;
+					self.BUTTON_ATCK = true;
 					if(random() < 0.01) self.bot_secondary_riflemooth = 1;
 				}
 			}
 			else
 			{
-				if(bot_aim(1000000, 0, 0.001, FALSE))
+				if(bot_aim(1000000, 0, 0.001, false))
 				{
-					self.BUTTON_ATCK2 = TRUE;
+					self.BUTTON_ATCK2 = true;
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -198,8 +200,8 @@ float W_Rifle(float req)
 					}
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -209,7 +211,7 @@ float W_Rifle(float req)
 			precache_sound(W_Sound("campingrifle_fire"));
 			precache_sound(W_Sound("campingrifle_fire2"));
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -225,18 +227,18 @@ float W_Rifle(float req)
 		}
 		case WR_CONFIG:
 		{
-			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RESETPLAYER:
 		{
 			self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), W_Sound("reload"));
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -260,7 +262,7 @@ float W_Rifle(float req)
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
@@ -282,8 +284,8 @@ float W_Rifle(float req)
 				else if(w_random < 0.5)
 					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -294,23 +296,23 @@ float W_Rifle(float req)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			if(button_zoom || zoomscript_caught)
 			{
 				reticle_image = "gfx/reticle_nex";
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				// no weapon specific image for this weapon
-				return FALSE;
+				return false;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

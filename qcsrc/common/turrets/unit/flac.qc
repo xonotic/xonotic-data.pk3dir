@@ -11,6 +11,8 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+
 void turret_flac_projectile_think_explode()
 {
 	if(self.enemy != world)
@@ -40,7 +42,7 @@ float t_flac(float req)
 
 			turret_tag_fire_update();
 
-			proj = turret_projectile(W_Sound("hagar_fire"), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
+			proj = turret_projectile(W_Sound("hagar_fire"), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, true, true);
 			Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 			proj.think	  = turret_flac_projectile_think_explode;
 			proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);
@@ -50,15 +52,15 @@ float t_flac(float req)
 			if (self.tur_head.frame >= 4)
 				self.tur_head.frame = 0;
 			
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -67,17 +69,17 @@ float t_flac(float req)
 			self.damage_flags |= TFL_DMG_HEADSHAKE;
 			self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/flac.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -88,15 +90,15 @@ float t_flac(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

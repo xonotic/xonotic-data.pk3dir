@@ -70,7 +70,7 @@ void M_Scrag_Attack_Spike()
 	missile.think = M_Scrag_Attack_Spike_Explode;
 	missile.enemy = self.enemy;
 	missile.touch = M_Scrag_Attack_Spike_Touch;
-	CSQCProjectile(missile, TRUE, PROJECTILE_SCRAG_SPIKE, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_SCRAG_SPIKE, true);
 }
 
 float M_Scrag_Attack(float attack_type)
@@ -96,11 +96,11 @@ float M_Scrag_Attack(float attack_type)
 					self.monster_moveto = self.monster_face = '0 0 0';
 			}
 
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_scrag() { Monster_Spawn(MON_SCRAG); }
@@ -115,13 +115,13 @@ float M_Scrag(float req)
 	{
 		case MR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.3;
 			self.frame = scrag_anim_pain;
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
@@ -129,7 +129,7 @@ float M_Scrag(float req)
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
 			self.velocity_z = 100 + 100 * random();
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -146,15 +146,15 @@ float M_Scrag(float req)
 			self.monster_loot = spawnfunc_item_shells;
 			self.frame = scrag_anim_hover;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
