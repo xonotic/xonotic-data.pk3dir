@@ -529,12 +529,7 @@ void HUD_Weapons(void)
 			return;
 		}
 
-		vector old_panel_size = panel_size;
-		if(panel_bg_padding)
-			old_panel_size -= '2 2 0' * panel_bg_padding;
-
-		// NOTE: the goal is to use the all-weapons layout and remove unneeded cells
-		// this way weapon icons always have the same size regardless of owned weapon count
+		vector old_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
 		rows = HUD_GetRowCount(WEP_COUNT, old_panel_size, aspect);
@@ -543,22 +538,41 @@ void HUD_Weapons(void)
 		weapon_size.y = old_panel_size.y / rows;
 
 		// reduce rows and columns as needed
-		columns = ceil(weapon_count / rows);
-		rows = ceil(weapon_count / columns);
-
-		// NOTE: although weapons should aways look the same even if onlyowned is disabled,
+		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		// as they look much better
-		weapon_size.x = min(old_panel_size.x / columns, aspect * weapon_size.y);
-		weapon_size.y = min(old_panel_size.y / rows, weapon_size.x / aspect);
+		if(rows > columns)
+		{
+			columns = ceil(weapon_count / rows);
+			rows = ceil(weapon_count / columns);
+			weapon_size.y = min(old_panel_size.y / rows, weapon_size.x / aspect);
+			weapon_size.x = min(old_panel_size.x / columns, aspect * weapon_size.y);
+		}
+		else
+		{
+			rows = ceil(weapon_count / columns);
+			columns = ceil(weapon_count / rows);
+			weapon_size.x = min(old_panel_size.x / columns, aspect * weapon_size.y);
+			weapon_size.y = min(old_panel_size.y / rows, weapon_size.x / aspect);
+		}
 
 		// reduce size of the panel
 		panel_size.x = columns * weapon_size.x;
 		panel_size.y = rows * weapon_size.y;
-		panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
-		panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
-		if(panel_bg_padding)
-			panel_size += '2 2 0' * panel_bg_padding;
+
+		// center the resized panel, or snap it to the screen edge when close enough
+		if(panel_pos.x)
+			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
+				panel_pos.x += old_panel_size.x - panel_size.x;
+			else
+				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+
+		if(panel_pos.y)
+			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
+				panel_pos.y += old_panel_size.y - panel_size.y;
+			else
+				panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+
+		panel_size += '2 2 0' * panel_bg_padding;
 	}
 	else
 		weapon_count = WEP_COUNT;
