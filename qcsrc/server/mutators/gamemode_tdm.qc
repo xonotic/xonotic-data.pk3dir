@@ -6,7 +6,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 void spawnfunc_tdm_team()
 {
-	if(!g_tdm) { remove(self); return; }
+	if(!g_tdm || !self.cnt) { remove(self); return; }
 
 	self.classname = "tdm_team";
 	self.team = self.cnt + 1;
@@ -34,20 +34,31 @@ void tdm_DelayedInit()
 	{
 		print("No ""tdm_team"" entities found on this map, creating them anyway.\n");
 
-		float numteams = min(4, autocvar_g_tdm_teams_override);
-
-		if(numteams < 2) { numteams = autocvar_g_tdm_teams; }
+		float numteams = autocvar_g_tdm_teams_override;
+		if(numteams < 2 || numteams > 4)
+			numteams = autocvar_g_tdm_teams;
 		numteams = bound(2, numteams, 4);
 
-		float i;
-		for(i = 1; i <= numteams; ++i)
-			tdm_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
+		tdm_SpawnTeam(NAME_TEAM_1, NUM_TEAM_1 - 1);
+		tdm_SpawnTeam(NAME_TEAM_2, NUM_TEAM_2 - 1);
+		if(numteams >= 3)
+			tdm_SpawnTeam(NAME_TEAM_3, NUM_TEAM_3 - 1);
+		if(numteams >= 4)
+			tdm_SpawnTeam(NAME_TEAM_4, NUM_TEAM_4 - 1);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 {
 	ret_string = "tdm_team";
+	if(find(world, classname, "tdm_team") == world)
+	{
+		// make it at least half accurate
+		ret_float = bound(2, ((autocvar_g_tdm_teams_override < 2) ? autocvar_g_tdm_teams : autocvar_g_tdm_teams_override), 4);
+		ret_string = string_null;
+		return FALSE;
+	}
+
 	return TRUE;
 }
 
