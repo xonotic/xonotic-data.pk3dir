@@ -101,6 +101,8 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
 
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
+float trace_hits_box(vector start, vector end, vector thmi, vector thma);
+
 void WarpZone_crosshair_trace(entity pl);
 
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);

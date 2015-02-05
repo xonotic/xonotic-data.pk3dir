@@ -1,6 +1,7 @@
 // Modded announcer and random functions for the Jeff Resurrection servers
 #ifdef JEFF
 #include "../common/buffs.qh"
+#include "miscfunctions.qh"
 
 var float autocvar_jeff_announce_eagleeye_distance = 32768;
 var float autocvar_jeff_announce_rocketscientist_count = 5;
