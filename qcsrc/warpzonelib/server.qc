@@ -1,3 +1,17 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "common.qh"
+	#include "server.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../server/constants.qh"
+	#include "../server/defs.qh"
+	#include "../server/command/common.qh"
+#endif
+
 #ifdef WARPZONELIB_KEEPDEBUG
 #define WARPZONELIB_REMOVEHACK
 #endif
@@ -26,7 +40,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	setorigin (player, to); // NOTE: this also aborts the move, when this is called by touch
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
-	player.fixangle = TRUE;
+	player.fixangle = true;
 	player.velocity = to_velocity;
 
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
@@ -40,10 +54,10 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 float WarpZone_Teleported_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
-	WriteCoord(MSG_ENTITY, self.angles_x);
-	WriteCoord(MSG_ENTITY, self.angles_y);
-	WriteCoord(MSG_ENTITY, self.angles_z);
-	return TRUE;
+	WriteCoord(MSG_ENTITY, self.angles.x);
+	WriteCoord(MSG_ENTITY, self.angles.y);
+	WriteCoord(MSG_ENTITY, self.angles.z);
+	return true;
 }
 
 float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
@@ -119,7 +133,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
-		player.fixangle = FALSE;
+		player.fixangle = false;
 
 		entity ts = spawn();
 		setmodel(ts, "null");
@@ -204,11 +218,10 @@ void WarpZone_Touch (void)
 
 float WarpZone_Send(entity to, float sendflags)
 {
-	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
-	f = 0;
+	int f = 0;
 	if(self.warpzone_isboxy)
 		BITSET_ASSIGN(f, 1);
 	if(self.warpzone_fadestart)
@@ -220,33 +233,33 @@ float WarpZone_Send(entity to, float sendflags)
 	// we need THESE to render the warpzone (and cull properly)...
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
 	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
+	WriteCoord(MSG_ENTITY, self.mins.x);
+	WriteCoord(MSG_ENTITY, self.mins.y);
+	WriteCoord(MSG_ENTITY, self.mins.z);
+	WriteCoord(MSG_ENTITY, self.maxs.x);
+	WriteCoord(MSG_ENTITY, self.maxs.y);
+	WriteCoord(MSG_ENTITY, self.maxs.z);
 	WriteByte(MSG_ENTITY, bound(1, self.scale * 16, 255));
 
 	// we need THESE to calculate the proper transform
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_origin_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_angles_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin_z);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_x);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_y);
-	WriteCoord(MSG_ENTITY, self.warpzone_targetangles_z);
+	WriteCoord(MSG_ENTITY, self.warpzone_origin.x);
+	WriteCoord(MSG_ENTITY, self.warpzone_origin.y);
+	WriteCoord(MSG_ENTITY, self.warpzone_origin.z);
+	WriteCoord(MSG_ENTITY, self.warpzone_angles.x);
+	WriteCoord(MSG_ENTITY, self.warpzone_angles.y);
+	WriteCoord(MSG_ENTITY, self.warpzone_angles.z);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin.x);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin.y);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetorigin.z);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetangles.x);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetangles.y);
+	WriteCoord(MSG_ENTITY, self.warpzone_targetangles.z);
 
 	if(f & 2)
 	{
@@ -254,12 +267,12 @@ float WarpZone_Send(entity to, float sendflags)
 		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
 	}
 
-	return TRUE;
+	return true;
 }
 
 float WarpZone_Camera_Send(entity to, float sendflags)
 {
-	float f = 0;
+	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
@@ -271,27 +284,27 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	// we need THESE to render the warpzone (and cull properly)...
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
 	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
+	WriteCoord(MSG_ENTITY, self.mins.x);
+	WriteCoord(MSG_ENTITY, self.mins.y);
+	WriteCoord(MSG_ENTITY, self.mins.z);
+	WriteCoord(MSG_ENTITY, self.maxs.x);
+	WriteCoord(MSG_ENTITY, self.maxs.y);
+	WriteCoord(MSG_ENTITY, self.maxs.z);
 	WriteByte(MSG_ENTITY, bound(1, self.scale * 16, 255));
 
 	// we need THESE to calculate the proper transform
-	WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-	WriteCoord(MSG_ENTITY, self.enemy.origin_z);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_x);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_y);
-	WriteCoord(MSG_ENTITY, self.enemy.angles_z);
+	WriteCoord(MSG_ENTITY, self.enemy.origin.x);
+	WriteCoord(MSG_ENTITY, self.enemy.origin.y);
+	WriteCoord(MSG_ENTITY, self.enemy.origin.z);
+	WriteCoord(MSG_ENTITY, self.enemy.angles.x);
+	WriteCoord(MSG_ENTITY, self.enemy.angles.y);
+	WriteCoord(MSG_ENTITY, self.enemy.angles.z);
 
 	if(f & 2)
 	{
@@ -299,7 +312,7 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 		WriteShort(MSG_ENTITY, self.warpzone_fadeend);
 	}
 
-	return TRUE;
+	return true;
 }
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -373,7 +386,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 float WarpZone_Projectile_Touch()
 {
 	if(other.classname == "trigger_warpzone")
-		return TRUE;
+		return true;
 
 	// no further impacts if we teleported this frame!
 	// this is because even if we did teleport, the engine still may raise
@@ -382,7 +395,7 @@ float WarpZone_Projectile_Touch()
 	// but if this is called from TouchAreaGrid of the projectile moving,
 	// then this won't do
 	if(time == self.warpzone_teleport_time)
-		return TRUE;
+		return true;
 
 #ifdef WARPZONELIB_KEEPDEBUG
 	// this SEEMS to not happen at the moment, but if it did, it would be more reliable
@@ -433,9 +446,9 @@ float WarpZone_Projectile_Touch()
 #endif
 
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 void WarpZone_InitStep_FindOriginTarget()
@@ -545,14 +558,14 @@ void WarpZone_InitStep_UpdateTransform()
 		for(i_t = 0; i_t < n_t; ++i_t)
 		{
 			tri = getsurfacetriangle(self, i_s, i_t);
-			a = getsurfacepoint(self, i_s, tri_x);
-			b = getsurfacepoint(self, i_s, tri_y);
-			c = getsurfacepoint(self, i_s, tri_z);
+			a = getsurfacepoint(self, i_s, tri.x);
+			b = getsurfacepoint(self, i_s, tri.y);
+			c = getsurfacepoint(self, i_s, tri.z);
 			p = b - a;
 			q = c - a;
-			n =     '1 0 0' * (q_y * p_z - q_z * p_y)
-			+       '0 1 0' * (q_z * p_x - q_x * p_z)
-			+       '0 0 1' * (q_x * p_y - q_y * p_x);
+			n =     '1 0 0' * (q.y * p.z - q.z * p.y)
+			+       '0 1 0' * (q.z * p.x - q.x * p.z)
+			+       '0 0 1' * (q.x * p.y - q.y * p.x);
 			area = area + vlen(n);
 			norm = norm + n;
 			point = point + vlen(n) * (a + b + c);
@@ -570,9 +583,7 @@ void WarpZone_InitStep_UpdateTransform()
 		norm = normalize(norm);
 	}
 
-#ifdef GMQCC
 	ang = '0 0 0';
-#endif
 	if(self.aiment)
 	{
 		org = self.aiment.origin;
@@ -587,7 +598,7 @@ void WarpZone_InitStep_UpdateTransform()
 				norm = -1 * norm;
 			}
 			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
-			ang_x = -ang_x;
+			ang.x = -ang.x;
 			if(norm * v_forward < 0.99)
 				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");
 			if(vlen(org - self.aiment.origin) > 0.5)
@@ -598,7 +609,7 @@ void WarpZone_InitStep_UpdateTransform()
 	{
 		org = point;
 		ang = vectoangles(norm);
-		ang_x = -ang_x;
+		ang.x = -ang.x;
 	}
 	else
 		error("cannot infer origin/angles for this warpzone, please use a killtarget or a trigger_warpzone_position");
@@ -668,7 +679,7 @@ void WarpZone_InitStep_FinalizeTransform()
 }
 
 float warpzone_initialized;
-entity warpzone_first;
+//entity warpzone_first;
 entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;
@@ -836,7 +847,7 @@ void WarpZone_StartFrame()
 		if(IS_NOT_A_CLIENT(e))
 		{
 			if(warpzone_warpzones_exist)
-				for(; (e = nextent(e)); )
+				for (; (e = nextent(e)); )
 					WarpZone_StoreProjectileData(e);
 			break;
 		}
@@ -894,7 +905,7 @@ void WarpZone_PlayerPhysics_FixVAngle(void)
 {
 #ifndef WARPZONE_DONT_FIX_VANGLE
 	if(IS_REAL_CLIENT(self))
-	if(self.v_angle_z <= 360) // if not already adjusted
+	if(self.v_angle.z <= 360) // if not already adjusted
 	if(time - self.ping * 0.001 < self.warpzone_teleport_time)
 	{
 		self.v_angle = WarpZone_TransformVAngles(self.warpzone_teleport_zone, self.v_angle);

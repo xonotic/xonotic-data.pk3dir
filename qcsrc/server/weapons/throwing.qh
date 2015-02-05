@@ -1,3 +1,6 @@
+#ifndef THROWING_H
+#define THROWING_H
+
 .float savenextthink;
 void thrown_wep_think();
 
@@ -10,3 +13,4 @@ float W_IsWeaponThrowable(float w);
 void W_ThrowWeapon(vector velo, vector delta, float doreduce);
 
 void SpawnThrownWeapon(vector org, float w);
+#endif

@@ -1,11 +1,13 @@
+#ifndef GAMEMODE_DOMINATION_H
+#define GAMEMODE_DOMINATION_H
 // these are needed since mutators are compiled last
 
 // score rule declarations
-#define ST_DOM_TICKS 1
-#define SP_DOM_TICKS 4
-#define SP_DOM_TAKES 5
-#define ST_DOM_CAPS 1
-#define SP_DOM_CAPS 4
+const float ST_DOM_TICKS = 1;
+const float SP_DOM_TICKS = 4;
+const float SP_DOM_TAKES = 5;
+const float ST_DOM_CAPS = 1;
+const float SP_DOM_CAPS = 4;
 
 // pps: points per second
 .float dom_total_pps;
@@ -27,3 +29,4 @@ float pps_pink;
 // misc globals
 float domination_roundbased;
 float domination_teams;
+#endif
