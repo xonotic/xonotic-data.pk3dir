@@ -609,8 +609,10 @@ void UpdateCrosshair()
 			}
 		}
 
-		if(wcross_name == "")
+		if(wcross_name == "") {
 			wcross_name = strcat("gfx/crosshair", wcross_style);
+			precache_pic(wcross_name, PRECACHE_PIC_MIPMAP);
+		}
 
 		// MAIN CROSSHAIR COLOR DECISION
 		switch(autocvar_crosshair_color_special)
@@ -1796,6 +1798,12 @@ void CSQC_UpdateView(float w, float h)
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
 }
 
+void View_Precache(void) {
+	precache_pic("gfx/crosshair_ring.tga", PRECACHE_PIC_MIPMAP);
+	precache_pic("gfx/crosshair_ring_inner.tga", PRECACHE_PIC_MIPMAP);
+	precache_pic("gfx/crosshair_ring_rifle.tga", PRECACHE_PIC_MIPMAP);
+	precache_pic("gfx/crosshairdot.tga", PRECACHE_PIC_MIPMAP);
+}
 
 void CSQC_common_hud(void)
 {

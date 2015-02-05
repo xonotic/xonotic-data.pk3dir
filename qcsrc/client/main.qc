@@ -52,6 +52,7 @@ void menu_sub_null()
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
+void View_Precache();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
@@ -122,6 +123,7 @@ void CSQC_Init(void)
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 
+	View_Precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
