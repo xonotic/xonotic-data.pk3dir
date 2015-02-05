@@ -88,6 +88,8 @@ float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float 
 
 bool Monster_Attack_Leap(int anm, void() touchfunc, vector vel, float animtime);
 
+entity Monster_FindTarget(entity mon);
+
 void monster_makevectors(entity e);
 
 void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float chan);
