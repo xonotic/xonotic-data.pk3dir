@@ -540,7 +540,7 @@ void HUD_Weapons(void)
 		// reduce rows and columns as needed
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		if(rows > columns)
+		if(old_panel_size.y > old_panel_size.x)
 		{
 			columns = ceil(weapon_count / rows);
 			rows = ceil(weapon_count / columns);
@@ -560,13 +560,13 @@ void HUD_Weapons(void)
 		panel_size.y = rows * weapon_size.y;
 
 		// center the resized panel, or snap it to the screen edge when close enough
-		if(panel_pos.x)
+		if(panel_pos.x > 0.001)
 			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
 				panel_pos.x += old_panel_size.x - panel_size.x;
 			else
 				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
 
-		if(panel_pos.y)
+		if(panel_pos.y > 0.001)
 			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
 				panel_pos.y += old_panel_size.y - panel_size.y;
 			else
