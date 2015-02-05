@@ -552,12 +552,12 @@ void nade_boom()
 
 void nade_touch()
 {
-	float is_weapclip = 0;
+	/*float is_weapclip = 0;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
 	if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
-		is_weapclip = 1;
-	if(ITEM_TOUCH_NEEDKILL() || is_weapclip)
+		is_weapclip = 1;*/
+	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
 		remove(self);
 		return;
