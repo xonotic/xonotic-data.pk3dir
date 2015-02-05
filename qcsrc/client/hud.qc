@@ -560,13 +560,13 @@ void HUD_Weapons(void)
 		panel_size.y = rows * weapon_size.y;
 
 		// center the resized panel, or snap it to the screen edge when close enough
-		if(panel_pos.x > 0.001)
+		if(panel_pos.x > vid_conwidth * 0.001)
 			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
 				panel_pos.x += old_panel_size.x - panel_size.x;
 			else
 				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
 
-		if(panel_pos.y > 0.001)
+		if(panel_pos.y > vid_conheight * 0.001)
 			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
 				panel_pos.y += old_panel_size.y - panel_size.y;
 			else
