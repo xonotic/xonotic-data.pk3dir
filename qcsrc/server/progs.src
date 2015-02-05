@@ -25,7 +25,6 @@ g_damage.qc
 g_hook.qc
 g_models.qc
 g_subs.qc
-g_tetris.qc
 g_triggers.qc
 g_violence.qc
 g_world.qc

@@ -389,8 +389,4 @@ void ImpulseCommands (void)
 			}
 		}
 	}
-#ifdef TETRIS
-	else if(imp == 100)
-		TetrisImpulse();
-#endif
 }
