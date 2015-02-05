@@ -1097,7 +1097,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 {
 	//self.jb_isprisoned = false;
 
-	if(!round_handler_IsRoundStarted()) { return false; }
+	if(!round_handler_IsRoundStarted()) { self.jb_isprisoned = false; return false; }
 
 	if(self.jb_imprisoner != world)
 	{
