@@ -94,6 +94,8 @@ weapons/weaponsystem.qc
 ../common/monsters/monsters.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
+../common/minigames/minigames.qc
+../common/minigames/sv_minigames.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc

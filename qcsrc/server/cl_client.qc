@@ -19,6 +19,8 @@
 
 #include "../common/net_notice.qh"
 
+#include "../common/minigames/sv_minigames.qh"
+
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../warpzonelib/server.qh"
@@ -1273,6 +1275,9 @@ void ClientDisconnect (void)
 
 	PlayerStats_GameReport_FinalizePlayer(self);
 
+	if ( self.active_minigame )
+		part_minigame(self);
+
 	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
@@ -1340,6 +1345,20 @@ void ClientDisconnect (void)
 }
 
 .float BUTTON_CHAT;
+float ChatBubbleCustomize()
+{
+	entity e = WaypointSprite_getviewentity(other), own = self.owner;
+
+	if(!own.deadflag && IS_PLAYER(own))
+	{
+		if(own.BUTTON_CHAT) { self.skin = 0; return true; }
+		if(own.active_minigame) { self.skin = 1; return true; }
+		if(SAME_TEAM(own, e) && e != own) { self.skin = 2; return true; }
+	}
+
+	return false;
+}
+
 void ChatBubbleThink()
 {
 	self.nextthink = time;
@@ -1350,10 +1369,6 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if (self.owner.BUTTON_CHAT && !self.owner.deadflag)
-		self.model = self.mdl;
-	else
-		self.model = "";
 }
 
 void UpdateChatBubble()
@@ -1366,6 +1381,8 @@ void UpdateChatBubble()
 		self.chatbubbleentity = spawn();
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
+		self.chatbubbleentity.alpha = 1;
+		self.chatbubbleentity.customizeentityforclient = ChatBubbleCustomize;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
 		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
@@ -1373,7 +1390,7 @@ void UpdateChatBubble()
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs.z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
-		self.chatbubbleentity.model = "";
+		//self.chatbubbleentity.model = "";
 		self.chatbubbleentity.effects = EF_LOWPRECISION;
 	}
 }
@@ -2095,6 +2112,11 @@ void PrintWelcomeMessage()
 
 void ObserverThink()
 {
+	if ( self.impulse )
+	{
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
+	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
@@ -2125,6 +2147,11 @@ void ObserverThink()
 
 void SpectatorThink()
 {
+	if ( self.impulse )
+	{
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
+	}
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
