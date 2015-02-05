@@ -166,5 +166,5 @@ int spectatorlist[MAX_SPECTATORS];
 bool camera_drawviewmodel_locked;
 bool camera_drawviewmodel_backup;
 
-int framecount;
+float framecount;
 #endif

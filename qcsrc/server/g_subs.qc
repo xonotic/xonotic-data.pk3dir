@@ -476,9 +476,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 
 	// do the trace
 	if(wz)
-		WarpZone_TraceBox (v1, mi, ma, v2, nomonst, world);
+		WarpZone_TraceBox (v1, mi, ma, v2, nomonst, forent);
 	else
-		tracebox (v1, mi, ma, v2, nomonst, world);
+		tracebox (v1, mi, ma, v2, nomonst, forent);
 
 	// restore players to current positions
 	if (lag)

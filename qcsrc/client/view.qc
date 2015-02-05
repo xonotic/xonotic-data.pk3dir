@@ -1042,7 +1042,7 @@ void UpdateCrosshair()
 }
 
 float fps_start;
-int fps_frames;
+float fps_frames;
 
 void FPSCounter_Update()
 {

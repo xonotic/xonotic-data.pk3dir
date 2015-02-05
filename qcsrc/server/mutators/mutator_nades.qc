@@ -704,7 +704,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
-	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
+	//_nade.solid = SOLID_TRIGGER; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
 	if(_nade.nade_type == NADE_TYPE_TRANSLOCATE || _nade.nade_type == NADE_TYPE_SPAWN)
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
