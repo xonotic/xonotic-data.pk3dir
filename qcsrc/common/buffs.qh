@@ -53,7 +53,9 @@ REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
 REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
 REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
 REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
+#ifdef MONTY
 REGISTER_BUFF(_("Blessed"),blessed,BLESSED,14,'0.9 0.3 0');
+#endif
 #undef REGISTER_BUFF
 
 #ifdef SVQC
@@ -81,7 +83,9 @@ BUFF_SPAWNFUNCS(vengeance,		BUFF_VENGEANCE)
 BUFF_SPAWNFUNCS(jump,			BUFF_JUMP)
 BUFF_SPAWNFUNCS(flight,			BUFF_FLIGHT)
 BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
+#ifdef MONTY
 BUFF_SPAWNFUNCS(blessed,		BUFF_BLESSED)
+#endif
 BUFF_SPAWNFUNCS(random,			0)
 
 BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler,    BUFF_MEDIC)
