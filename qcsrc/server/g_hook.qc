@@ -144,7 +144,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running || (self.aiment.flags & FL_PROJECTILE))
+	if(LostMovetypeFollow(self) || intermission_running || ((self.aiment.flags & FL_PROJECTILE) && self.aiment.classname != "nade"))
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -248,7 +248,7 @@ void GrapplingHookThink()
 				dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
 				{
-					if(self.aiment.movetype == MOVETYPE_WALK)
+					if(self.aiment.movetype == MOVETYPE_WALK || self.aiment.classname == "nade")
 					{
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
@@ -257,6 +257,8 @@ void GrapplingHookThink()
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 							self.aiment.flags &= ~FL_ONGROUND;
+							if(self.aiment.flags & FL_PROJECTILE)
+								UpdateCSQCProjectile(self.aiment);
 						}
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
@@ -267,7 +269,7 @@ void GrapplingHookThink()
 				realpull.flags &= ~FL_ONGROUND;
 			}
 
-			if(!frozen_pulling)
+			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
 				realpull.velocity = WarpZone_RefSys_TransformVelocity(self, realpull, ((realpull == self.realowner) ? v : (v * autocvar_g_balance_grapplehook_piggybackfriction)));
 
 			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)

@@ -547,6 +547,11 @@ void nade_boom()
 		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
 	}
 
+	entity head;
+	for(head = world; (head = find(head, classname, "grapplinghook")); )
+	if(head.aiment == self)
+		RemoveGrapplingHook(head.realowner);
+
 	remove(self);
 }
 
