@@ -102,9 +102,8 @@ void HUD_MinigameMenu_CurrentButton();
 bool auto_close_minigamemenu;
 void deactivate_minigame()
 {
-	if ( !active_minigame )
+	if ( !active_minigame || active_minigame != self )
 		return;
-	
 	active_minigame.minigame_event(active_minigame,"deactivate");
 	entity e = world;
 	while( (e = findentity(e, owner, self)) )
@@ -115,7 +114,7 @@ void deactivate_minigame()
 
 	minigame_self = world;
 	active_minigame = world;
-	
+
 	if ( auto_close_minigamemenu )
 	{
 		HUD_MinigameMenu_Close();

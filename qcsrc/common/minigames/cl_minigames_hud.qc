@@ -1,7 +1,8 @@
 #include "minigames.qh"
 #include "../../client/mapvoting.qh"
 
-float HUD_mouse_over(entity somepanel)
+// whether the mouse is over the given panel
+bool HUD_mouse_over(entity somepanel)
 {
 	vector pos = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_pos")));
 	vector sz = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_size")));
@@ -13,6 +14,7 @@ float HUD_mouse_over(entity somepanel)
 // Minigame Board
 // ====================================================================
 
+// Draws the minigame game board
 void HUD_MinigameBoard ()
 {
 	entity hud_minigame = world;
@@ -38,6 +40,7 @@ void HUD_MinigameBoard ()
 // ====================================================================
 // Minigame Status
 // ====================================================================
+// Draws the minigame status panel
 void HUD_MinigameStatus ()
 {
 	entity hud_minigame = world;
@@ -188,6 +191,8 @@ bool HUD_MinigameMenu_Click_ExpandCollapse()
 		}
 		if ( self.list_next )
 			self.list_next.list_prev = self;
+		else
+			HUD_MinigameMenu_last_entry = self;
 	}
 	else
 	{
@@ -310,7 +315,7 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string menumessage, string even
 		menumessage, HUD_MinigameMenu_ClickCustomEntry, parent );
 	e.netname = event_arg;
 	HUD_MinigameMenu_InsertEntry(e, parent);
-	dprint("CustomEntry ",ftos(num_for_edict(parent))," ",menumessage," ",event_arg,"\n");
+	//dprint("CustomEntry ",ftos(num_for_edict(parent))," ",menumessage," ",event_arg,"\n");
 }
 
 // Click action for the Current Game menu
@@ -460,7 +465,7 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 							  fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-// minigame menu panel UI
+// Minigame menu panel UI
 void HUD_MinigameMenu ()
 {	
 	if ( !HUD_MinigameMenu_IsOpened() )

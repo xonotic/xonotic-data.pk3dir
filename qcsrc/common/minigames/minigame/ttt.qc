@@ -484,8 +484,8 @@ void ttt_aimove(entity minigame)
 		int piecemask_free = 0;
 		int pieceflag = 1;
 		string pos;
-		
 		for ( int i = 0; i < 3; i++ )
+		{
 			for ( int j = 0; j < 3; j++ )
 			{
 				pos = minigame_tile_buildname(i,j);
@@ -501,6 +501,7 @@ void ttt_aimove(entity minigame)
 					piecemask_free |= pieceflag;
 				pieceflag <<= 1;
 			}
+		}
 			
 		// TODO multiple AI difficulties
 		dprint(sprintf("TTT AI: self: %x opponent: %x free: %x\n",
