@@ -17,7 +17,7 @@ Required functions
 ------------------
 
 SVQC:
-	float minigame_event_<id>(entity minigame, string event, ...count)
+	int minigame_event_<id>(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 CSQC:
 	void minigame_hud_board_<id>(vector pos, vector mySize)
@@ -27,7 +27,7 @@ CSQC:
 		draws the game status panel inside the rectangle defined by pos and mySize
 		(That rectangle is expressed in window coordinates)
 		This panel shows eg scores, captured pieces and so on
-	float minigame_event_<id>(entity minigame, string event, ...count)
+	int minigame_event_<id>(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 
 Managing entities

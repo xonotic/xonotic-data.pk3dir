@@ -36,7 +36,7 @@ vector minigame_hud_normalize(vector v, vector pos, vector mySize)
 }
 
 // Check if the mouse is inside the given area
-float minigame_hud_mouse_in(vector pos, vector sz)
+bool minigame_hud_mouse_in(vector pos, vector sz)
 {
 	return mousepos_x >= pos_x && mousepos_x < pos_x + sz_x &&
 	       mousepos_y >= pos_y && mousepos_y < pos_y + sz_y ;
@@ -99,7 +99,7 @@ void minigame_autoclean_entity(entity e)
 }
 
 void HUD_MinigameMenu_CurrentButton();
-float auto_close_minigamemenu;
+bool auto_close_minigamemenu;
 void deactivate_minigame()
 {
 	if ( !active_minigame )
@@ -263,10 +263,10 @@ void ent_read_minigame()
 
 string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	float last_word;
+	int last_word;
 	string s;
-	float take_until;
-	float skip = 0;
+	int take_until;
+	int skip = 0;
 
 	s = getWrappedLine_remaining;
 
@@ -281,8 +281,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	if ( take_until > strlen(s) )
 		take_until = strlen(s);
 	
-	float i;
-	for ( i = 0; i < take_until; i++ )
+	for ( int i = 0; i < take_until; i++ )
 		if ( substring(s,i,1) == "\n" )
 		{
 			take_until = i;
@@ -320,7 +319,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 }
 
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags, float align )
+	vector fontsize, vector color, float theAlpha, int drawflags, float align )
 {	
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
@@ -339,7 +338,7 @@ vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text,
 }
 
 vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
-	string text, vector fontsize, float theAlpha, float drawflags, float align )
+	string text, vector fontsize, float theAlpha, int drawflags, float align )
 {
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
@@ -358,21 +357,21 @@ vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 }
 
 void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags )
+	vector fontsize, vector color, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_nocolors);
 	drawstring(pos, line, fontsize, color, theAlpha, drawflags);
 }
 
 void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, float theAlpha, float drawflags )
+	vector fontsize, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_colors);
 	drawcolorcodedstring(pos, line, fontsize, theAlpha, drawflags);
 }
 
 void minigame_drawpic_centered( vector pos, string texture, vector sz, 
-	vector color, float thealpha, float drawflags )
+	vector color, float thealpha, int drawflags )
 {
 	drawpic( pos-sz/2, texture, sz, color, thealpha, drawflags );
 }

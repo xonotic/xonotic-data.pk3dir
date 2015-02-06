@@ -103,12 +103,12 @@ float current_player;
 
 float GetPlayerColorForce(int i);
 float GetPlayerColor(int i);
-.float panel_showflags;
-const float PANEL_SHOW_NEVER    = 0x00;
-const float PANEL_SHOW_MAINGAME = 0x01;
-const float PANEL_SHOW_MINIGAME = 0x02;
-const float PANEL_SHOW_ALWAYS   = 0xff;
-float HUD_Panel_CheckFlags(float showflags);
+.int panel_showflags;
+const int PANEL_SHOW_NEVER    = 0x00;
+const int PANEL_SHOW_MAINGAME = 0x01;
+const int PANEL_SHOW_MINIGAME = 0x02;
+const int PANEL_SHOW_ALWAYS   = 0xff;
+bool HUD_Panel_CheckFlags(int showflags);
 
 #define HUD_PANELS(HUD_PANEL) 																						\
 	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons,        PANEL_SHOW_MAINGAME ) 								\

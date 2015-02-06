@@ -1,20 +1,20 @@
-const float TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
-const float TTT_TURN_WIN   = 0x0200; // player has won
-const float TTT_TURN_DRAW  = 0x0400; // no moves are possible
-const float TTT_TURN_NEXT  = 0x0800; // a player wants to start a new match
-const float TTT_TURN_TYPE  = 0x0f00; // turn type mask
+const int TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
+const int TTT_TURN_WIN   = 0x0200; // player has won
+const int TTT_TURN_DRAW  = 0x0400; // no moves are possible
+const int TTT_TURN_NEXT  = 0x0800; // a player wants to start a new match
+const int TTT_TURN_TYPE  = 0x0f00; // turn type mask
 
-const float TTT_TURN_TEAM1 = 0x0001;
-const float TTT_TURN_TEAM2 = 0x0002;
-const float TTT_TURN_TEAM  = 0x000f; // turn team mask
+const int TTT_TURN_TEAM1 = 0x0001;
+const int TTT_TURN_TEAM2 = 0x0002;
+const int TTT_TURN_TEAM  = 0x000f; // turn team mask
 
 // send flags
-const float TTT_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
-const float TTT_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.ttt_ai
+const int TTT_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
+const int TTT_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.ttt_ai
 
-.float ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
-.float ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
-.float ttt_ai;      // (minigame) when non-zero, singleplayer vs AI
+.int ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
+.int ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
+.int ttt_ai;      // (minigame) when non-zero, singleplayer vs AI
 
 // find tic tac toe piece given its tile name
 entity ttt_find_piece(entity minig, string tile)
@@ -27,43 +27,43 @@ entity ttt_find_piece(entity minig, string tile)
 }
 
 // Checks if the given piece completes a row
-float ttt_winning_piece(entity piece)
+bool ttt_winning_piece(entity piece)
 {
-	float number = minigame_tile_number(piece.netname);
-	float letter = minigame_tile_letter(piece.netname);
+	int number = minigame_tile_number(piece.netname);
+	int letter = minigame_tile_letter(piece.netname);
 	
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,number)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,number)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,number)).team == piece.team )
-		return 1;
+		return true;
 	
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,0)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,2)).team == piece.team )
-		return 1;
+		return true;
 	
 	if ( number == letter )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,0)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,2)).team == piece.team )
-		return 1;
+		return true;
 	
 	if ( number == 2-letter )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,2)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,0)).team == piece.team )
-		return 1;
+		return true;
 	
-	return 0;
+	return false;
 }
 
 // check if the tile name is valid (3x3 grid)
-float ttt_valid_tile(string tile)
+bool ttt_valid_tile(string tile)
 {
 	if ( !tile )
 		return 0;
-	float number = minigame_tile_number(tile);
-	float letter = minigame_tile_letter(tile);
+	int number = minigame_tile_number(tile);
+	int letter = minigame_tile_letter(tile);
 	return 0 <= number && number < 3 && 0 <= letter && letter < 3;
 }
 
@@ -125,7 +125,7 @@ void ttt_next_match(entity minigame, entity player)
 
 
 // required function, handle server side events
-float minigame_event_ttt(entity minigame, string event, ...)
+int minigame_event_ttt(entity minigame, string event, ...)
 {
 	switch(event)
 	{
@@ -147,7 +147,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		}
 		case "join":
 		{
-			float pl_num = minigame_count_players(minigame);
+			int pl_num = minigame_count_players(minigame);
 			
 			// Don't allow joining a single player match
 			if ( (minigame.ttt_ai) && pl_num > 0 )
@@ -168,7 +168,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			switch(argv(0))
 			{
 				case "move": 
-					ttt_move(minigame, ...(0,entity), ...(1,float) == 2 ? argv(1) : string_null ); 
+					ttt_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null ); 
 					return true;
 				case "next":
 					ttt_next_match(minigame,...(0,entity));
@@ -187,7 +187,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		case "network_send":
 		{
 			entity sent = ...(0,entity);
-			float sf = ...(1,float);
+			int sf = ...(1,int);
 			if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
 			{
 				WriteByte(MSG_ENTITY,sent.minigame_flags);
@@ -209,7 +209,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 string ttt_curr_pos; // identifier of the tile under the mouse
 vector ttt_boardpos; // HUD board position
 vector ttt_boardsize;// HUD board size
-.float ttt_checkwin; // Used to optimize checks to display a win
+.int ttt_checkwin; // Used to optimize checks to display a win
 
 // Required function, draw the game board
 void minigame_hud_board_ttt(vector pos, vector mySize)
@@ -306,7 +306,7 @@ void minigame_hud_status_ttt(vector pos, vector mySize)
 }
 
 // Turn a set of flags into a help message
-string ttt_turn_to_string(float turnflags)
+string ttt_turn_to_string(int turnflags)
 {
 	if ( turnflags & TTT_TURN_DRAW )
 		return _("Draw");
@@ -334,18 +334,18 @@ string ttt_turn_to_string(float turnflags)
 	return "";
 }
 
-const float TTT_AI_POSFLAG_A1 = 0x0001;
-const float TTT_AI_POSFLAG_A2 = 0x0002;
-const float TTT_AI_POSFLAG_A3 = 0x0004;
-const float TTT_AI_POSFLAG_B1 = 0x0008;
-const float TTT_AI_POSFLAG_B2 = 0x0010;
-const float TTT_AI_POSFLAG_B3 = 0x0020;
-const float TTT_AI_POSFLAG_C1 = 0x0040;
-const float TTT_AI_POSFLAG_C2 = 0x0080;
-const float TTT_AI_POSFLAG_C3 = 0x0100;
+const int TTT_AI_POSFLAG_A1 = 0x0001;
+const int TTT_AI_POSFLAG_A2 = 0x0002;
+const int TTT_AI_POSFLAG_A3 = 0x0004;
+const int TTT_AI_POSFLAG_B1 = 0x0008;
+const int TTT_AI_POSFLAG_B2 = 0x0010;
+const int TTT_AI_POSFLAG_B3 = 0x0020;
+const int TTT_AI_POSFLAG_C1 = 0x0040;
+const int TTT_AI_POSFLAG_C2 = 0x0080;
+const int TTT_AI_POSFLAG_C3 = 0x0100;
 
 // convert a flag to a position
-string ttt_ai_piece_flag2pos(float pieceflag)
+string ttt_ai_piece_flag2pos(int pieceflag)
 {
 	switch(pieceflag)
 	{
@@ -375,13 +375,13 @@ string ttt_ai_piece_flag2pos(float pieceflag)
 	}
 }
 
-float ttt_ai_checkmask(float piecemask, float checkflags)
+bool ttt_ai_checkmask(int piecemask, int checkflags)
 {
 	return checkflags && (piecemask & checkflags) == checkflags;
 }
 
 // get the third flag if the mask matches two of them
-float ttt_ai_1of3(float piecemask, float flag1, float flag2, float flag3)
+int ttt_ai_1of3(int piecemask, int flag1, int flag2, int flag3)
 {
 	if ( ttt_ai_checkmask(piecemask,flag1|flag2|flag3) )
 		return 0;
@@ -399,17 +399,16 @@ float ttt_ai_1of3(float piecemask, float flag1, float flag2, float flag3)
 }
 
 // Select a random flag in the mask
-float ttt_ai_random(float piecemask)
+int ttt_ai_random(int piecemask)
 {
 	if ( !piecemask )
 		return 0;
 	
-	float i;
-	float f = 1;
+	int f = 1;
 	
 	RandomSelection_Init();
 	
-	for ( i = 0; i < 9; i++ )
+	for ( int i = 0; i < 9; i++ )
 	{
 		if ( piecemask & f )
 			RandomSelection_Add(world, f, string_null, 1, 1);
@@ -422,9 +421,9 @@ float ttt_ai_random(float piecemask)
 }
 
 // Block/complete a 3 i na row
-float ttt_ai_block3 ( float piecemask, float piecemask_free )
+int ttt_ai_block3 ( int piecemask, int piecemask_free )
 {
-	float r = 0;
+	int r = 0;
 	
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_A2,TTT_AI_POSFLAG_A3);
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_B1,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_B3);
@@ -443,9 +442,9 @@ float ttt_ai_block3 ( float piecemask, float piecemask_free )
 // 1) tries to win the game if possible
 // 2) tries to block the opponent if they have 2 in a row
 // 3) places a piece randomly
-string ttt_ai_choose_simple(float piecemask_self, float piecemask_opponent, float piecemask_free )
+string ttt_ai_choose_simple(int piecemask_self, int piecemask_opponent, int piecemask_free )
 {
-	float move = 0;
+	int move = 0;
 	
 	dprint("TTT AI: checking winning move\n");
 	if (( move = ttt_ai_block3(piecemask_self,piecemask_free) ))
@@ -480,15 +479,14 @@ void ttt_aimove(entity minigame)
 		 * '---'---'---'
 		 *   A   B   C
 		 */
-		float piecemask_self = 0;
-		float piecemask_opponent = 0;
-		float piecemask_free = 0;
-		float pieceflag = 1;
+		int piecemask_self = 0;
+		int piecemask_opponent = 0;
+		int piecemask_free = 0;
+		int pieceflag = 1;
 		string pos;
 		
-		float i,j;
-		for ( i = 0; i < 3; i++ )
-			for ( j = 0; j < 3; j++ )
+		for ( int i = 0; i < 3; i++ )
+			for ( int j = 0; j < 3; j++ )
 			{
 				pos = minigame_tile_buildname(i,j);
 				entity piece = ttt_find_piece(minigame,pos);
@@ -542,7 +540,7 @@ void ttt_set_curr_pos(string s)
 }
 
 // Required function, handle client events
-float minigame_event_ttt(entity minigame, string event, ...)
+int minigame_event_ttt(entity minigame, string event, ...)
 {
 	switch(event)
 	{
@@ -556,7 +554,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		{
 			if((minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team)
 			{
-				switch ( ...(0,float) )
+				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
@@ -598,7 +596,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		}
 		case "mouse_pressed":
 		{
-			if(...(0,float) == K_MOUSE1)
+			if(...(0,int) == K_MOUSE1)
 			{
 				ttt_make_move(minigame);
 				return true;
@@ -619,7 +617,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		case "network_receive":
 		{
 			entity sent = ...(0,entity);
-			float sf = ...(1,float);
+			int sf = ...(1,int);
 			if ( sent.classname == "minigame" )
 			{
 				if ( sf & MINIG_SF_UPDATE )
@@ -631,8 +629,8 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				
 				if ( (sf & TTT_SF_SINGLEPLAYER) )
 				{
-					float ai = ReadByte();
-					float spawnai = ai && !sent.ttt_ai;
+					int ai = ReadByte();
+					bool spawnai = ai && !sent.ttt_ai;
 					sent.ttt_ai = ai;
 					
 					if ( spawnai )

@@ -170,7 +170,7 @@ void HUD_MinigameMenu_ClickCreate_Entry()
 
 // Helper click action for collapsible entries
 // returns true when you have to create the sub-entries
-float HUD_MinigameMenu_Click_ExpandCollapse()
+bool HUD_MinigameMenu_Click_ExpandCollapse()
 {
 	entity e;
 	if ( self.flags & 2 )
@@ -277,10 +277,9 @@ void HUD_MinigameMenu_ClickInvite()
 {
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
-		float i;
 		entity e;
 		entity prev = self;
-		for(i = 0; i < maxclients; ++i)
+		for(int i = 0; i < maxclients; ++i)
 		{
 			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
@@ -329,7 +328,7 @@ void HUD_MinigameMenu_ClickCurrentGame()
 	}
 }
 // Whether the minigame menu panel is open
-float HUD_MinigameMenu_IsOpened()
+bool HUD_MinigameMenu_IsOpened()
 {
 	return !!HUD_MinigameMenu_entries;
 }
@@ -480,12 +479,11 @@ void HUD_MinigameMenu ()
 	HUD_MinigameMenu_DrawEntry(panel_pos,_("Minigames"),hud_fontsize*2,'0.25 0.47 0.72');
 	panel_pos_y += hud_fontsize_y*2;
 	
-	entity e;
 	vector color;
 	vector offset;
 	float itemh;
 	vector imgsz = '22 22 0'; // NOTE: if changed, edit where HUD_MinigameMenu_activeitem is selected
-	for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
+	for ( entity e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
 	{
 		color = e.colormod;
 		
@@ -574,7 +572,6 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	}
 	else
 	{
-		
 		if(bInputType == 0) {
 			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
@@ -592,11 +589,9 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		
 		// allow some binds
 		string con_keys;
-		float keys;
-		float i;
 		con_keys = findkeysforcommand("toggleconsole", 0);
-		keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		for (i = 0; i < keys; ++i)
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false;
@@ -693,7 +688,7 @@ void HUD_Minigame_Mouse()
 			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-float HUD_Minigame_Showpanels()
+bool HUD_Minigame_Showpanels()
 {
 	return HUD_MinigameMenu_IsOpened() && ( autocvar__hud_configure || minigame_isactive() );
 }
