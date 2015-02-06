@@ -1197,6 +1197,8 @@ void Ent_Init()
 
 	sv_announcer = strzone(ReadString());
 
+	//sv_banner = strzone(ReadString());
+
 	if(sv_announcer != "") { Announcer_Precache(); }
 
 	if(!postinit)
