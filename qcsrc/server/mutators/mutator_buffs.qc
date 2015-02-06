@@ -373,6 +373,81 @@ void buff_SpawnReplacement(entity ent, entity old)
 	buff_Init(ent);
 }
 
+#ifdef MONTY
+void buff_Blessed_Foot_Touch()
+{
+	if(other.iscreature && other.takedamage && other.health > 0)
+	{
+		int mydamage = 9999;
+		if(other == self.realowner)
+			mydamage = 5; // but spammed
+		Damage (other, self, world, mydamage, DEATH_FOOT, other.origin, '0 0 0');
+	}
+}
+
+void buff_Blessed_Foot_Think()
+{
+	self.nextthink = time;
+	if(self.buff_blessed_time)
+	if(time >= self.buff_blessed_time)
+	{
+		remove(self);
+		return;
+	}
+	if(self.origin_z <= self.buff_blessed_bottom_z)
+	{
+		if(!self.buff_blessed_soundplayed)
+		{
+			self.buff_blessed_time = time + 1;
+			self.velocity = '0 0 0';
+			setorigin(self, self.buff_blessed_bottom);
+			//sound(self, CH_TRIGGER_SINGLE, "monty/foot.wav", VOL_BASE, ATTEN_MAX);
+			sound(self, CH_TRIGGER_SINGLE, "monty/foot.wav", VOL_BASEVOICE, ATTEN_MIN);
+			self.buff_blessed_soundplayed = true;
+		}
+	}
+	else
+	{
+		self.velocity = '0 0 -1500';
+		//setorigin(self, self.origin - '0 0 10');
+	}
+}
+
+void buff_Blessed_SpawnFoot(entity player)
+{
+	makevectors(player.angles);
+	vector org = player.origin + (v_forward * 220) + ('0 0 1' * 32);
+	vector bottom;
+	vector top;
+	entity foot = spawn();
+
+	foot.realowner = player; // don't set owner, as we want this to crush owner
+	foot.classname = "montyfoot";
+	foot.solid = SOLID_TRIGGER;
+	foot.touch = buff_Blessed_Foot_Touch;
+	foot.think = buff_Blessed_Foot_Think;
+	foot.nextthink = time;
+	foot.movetype = MOVETYPE_NOCLIP;
+	foot.scale = 6;
+
+	setmodel(foot, "models/monty/foot.iqm");
+	setsize(foot, '-150 -150 0', '150 150 250');
+
+	//tracebox(org, foot.mins, foot.maxs, org + '0 0 800', MOVE_NORMAL, foot);
+	top = org + '0 0 800';
+	foot.dphitcontentsmask = DPCONTENTS_SOLID;
+	tracebox(org, foot.mins, foot.maxs, org - '0 0 2000', MOVE_WORLDONLY, foot);
+	foot.dphitcontentsmask = DPCONTENTS_LAVA;
+	bottom = trace_endpos;
+
+	foot.buff_blessed_bottom = bottom;
+	foot.buff_blessed_top = top;
+	setorigin(foot, top);
+
+	sound(player, CH_TRIGGER_SINGLE, "monty/ni.wav", VOL_BASEVOICE, ATTEN_NORM);
+}
+#endif
+
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
@@ -629,6 +704,20 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		}
 	}
 
+#ifdef MONTY
+	if(!self.crouch)
+		self.buff_blessed_crouch_held = false;
+
+	if(self.buffs & BUFF_BLESSED)
+	if(time >= self.buff_blessed_time)
+	if(self.crouch && !self.buff_blessed_crouch_held)
+	{
+		buff_Blessed_SpawnFoot(self);
+		self.buff_blessed_time = time + 0.5;
+		self.buff_blessed_crouch_held = true;
+	}
+#endif
+
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha;
@@ -785,12 +874,15 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
+	precache_model("models/monty/foot.iqm");
 	precache_model("models/relics/relic.md3");
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");
 	precache_sound(W_Sound("rocket_impact"));
 	precache_sound("keepaway/respawn.wav");
+	precache_sound("monty/foot.wav");
+	precache_sound("monty/ni.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 

@@ -423,7 +423,8 @@ void Send_Notification_WOCOVA(
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_DROWN,               2, 1, "s1 s2loc spree_lost", "s1",       "notify_water",         _("^BG%s^K1 couldn't catch their breath%s%s"), _("^BG%s^K1 was in the water for too long%s%s")) \
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_FALL,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_fall",          _("^BG%s^K1 hit the ground with a crunch%s%s"), _("^BG%s^K1 hit the ground with a bit too much force%s%s")) \
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_FIRE,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 became a bit too crispy%s%s"), _("^BG%s^K1 felt a little hot%s%s")) \
-    MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,             2, 1, "s1 s2loc spree_lost", "s1",       "notify_selfkill",      _("^BG%s^K1 died%s%s"), "") \
+    MSG_INFO_NOTIF(1, INFO_DEATH_SELF_FOOT,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_parrot",         _("^BG%s^K1 is a dead parrot!%s%s"),"") \
+    MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,             2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 died%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s")) \
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_AFRIT,           2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was turned to ash by an Afrit%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_CREEPER,         2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blown up by Creeper%s%s"), "") \
@@ -700,6 +701,7 @@ void Send_Notification_WOCOVA(
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_DROWN,            0, 0, "",             NO_CPID,             "0 0", _("^K1You couldn't catch your breath!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FALL,             0, 0, "",             NO_CPID,             "0 0", _("^K1You hit the ground with a crunch!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FIRE,             0, 0, "",             NO_CPID,             "0 0", _("^K1You got a little bit too crispy!"), _("^K1You felt a little too hot!")) \
+    MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FOOT,             0, 0, "",             NO_CPID,             "0 0", _("^K1This is an ex-parrot!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_GENERIC,          0, 0, "",             NO_CPID,             "0 0", _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_LAVA,             0, 0, "",             NO_CPID,             "0 0", _("^K1You couldn't stand the heat!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_MONSTER,          0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed by a monster!"), _("^K1You need to watch out for monsters!")) \
@@ -907,6 +909,7 @@ void Send_Notification_WOCOVA(
     MSG_MULTI_NOTIF(1, DEATH_SELF_DROWN,                     NO_MSG,        INFO_DEATH_SELF_DROWN,                     CENTER_DEATH_SELF_DROWN) \
     MSG_MULTI_NOTIF(1, DEATH_SELF_FALL,                      NO_MSG,        INFO_DEATH_SELF_FALL,                      CENTER_DEATH_SELF_FALL) \
     MSG_MULTI_NOTIF(1, DEATH_SELF_FIRE,                      NO_MSG,        INFO_DEATH_SELF_FIRE,                      CENTER_DEATH_SELF_FIRE) \
+    MSG_MULTI_NOTIF(1, DEATH_SELF_FOOT,                      NO_MSG,        INFO_DEATH_SELF_FOOT,                      CENTER_DEATH_SELF_FOOT) \
     MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
     MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
     MSG_MULTI_NOTIF(1, DEATH_SELF_MON_AFRIT,                 NO_MSG,        INFO_DEATH_SELF_MON_AFRIT,                 CENTER_DEATH_SELF_MONSTER) \

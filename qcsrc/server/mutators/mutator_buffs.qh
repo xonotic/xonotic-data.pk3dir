@@ -12,6 +12,14 @@
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
+#ifdef MONTY
+// blessed
+.float buff_blessed_time; // a little delay to prevent super spam
+.vector buff_blessed_bottom;
+.vector buff_blessed_top;
+.bool buff_blessed_soundplayed;
+.bool buff_blessed_crouch_held;
+#endif
 
 // buff definitions
 .float buff_active;
