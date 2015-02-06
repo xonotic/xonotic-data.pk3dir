@@ -1345,20 +1345,6 @@ void ClientDisconnect (void)
 }
 
 .float BUTTON_CHAT;
-float ChatBubbleCustomize()
-{
-	entity e = WaypointSprite_getviewentity(other), own = self.owner;
-
-	if(!own.deadflag && IS_PLAYER(own))
-	{
-		if(own.BUTTON_CHAT) { self.skin = 0; return true; }
-		if(own.active_minigame) { self.skin = 1; return true; }
-		if(SAME_TEAM(own, e) && e != own) { self.skin = 2; return true; }
-	}
-
-	return false;
-}
-
 void ChatBubbleThink()
 {
 	self.nextthink = time;
@@ -1369,6 +1355,20 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
+	
+	self.mdl = "";
+	
+	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	{
+		if ( self.owner.active_minigame )
+			self.mdl = "models/sprites/minigame_busy.iqm";
+		else if ( self.owner.BUTTON_CHAT )
+			self.mdl = "models/misc/chatbubble.spr";
+	}
+	
+	if ( self.model != self.mdl )
+		setmodel(self, self.mdl);
+
 }
 
 void UpdateChatBubble()
@@ -1381,13 +1381,11 @@ void UpdateChatBubble()
 		self.chatbubbleentity = spawn();
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
-		self.chatbubbleentity.alpha = 1;
-		self.chatbubbleentity.customizeentityforclient = ChatBubbleCustomize;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
 		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs.z * '0 0 1');
+		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
 		//self.chatbubbleentity.model = "";
