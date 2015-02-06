@@ -4464,42 +4464,43 @@ void HUD_Buffs(void)
 //
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
-const int QUICKMENU_MAXENTRIES = 256;
-string QuickMenu_Command[QUICKMENU_MAXLINES];
-string QuickMenu_Description[QUICKMENU_MAXLINES];
-int QuickMenu_CurrentPage;
+// visible etries are loaded from QuickMenu_Buffer into QuickMenu_Page_* arrays
+string QuickMenu_Page_Command[QUICKMENU_MAXLINES];
+string QuickMenu_Page_Description[QUICKMENU_MAXLINES];
+int QuickMenu_Page_Entries;
+int QuickMenu_Page;
 bool QuickMenu_IsLastPage;
-// each quickmenu entry (submenu or command) is composed of 2 entries in the buffer
+// all the entries are loaded into QuickMenu_Buffer
+// each entry (submenu or command) is composed of 2 entries
+const int QUICKMENU_MAXENTRIES = 256;
 const int QUICKMENU_BUFFER_MAXENTRIES = 2 * QUICKMENU_MAXENTRIES;
 int QuickMenu_Buffer = -1;
 int QuickMenu_Buffer_Size;
 int QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
-int QuickMenu_CurrentPage_FirstEntry;
-int QuickMenu_Entries;
 float QuickMenu_TimeOut;
 // if s1 is not empty s will be displayed as command otherwise as submenu
-void HUD_QuickMenu_load_entry(int i, string s, string s1)
+void HUD_QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
 	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
-	if (QuickMenu_Description[i])
-		strunzone(QuickMenu_Description[i]);
-	QuickMenu_Description[i] = strzone(s);
-	if (QuickMenu_Command[i])
-		strunzone(QuickMenu_Command[i]);
-	QuickMenu_Command[i] = strzone(s1);
+	if (QuickMenu_Page_Description[i])
+		strunzone(QuickMenu_Page_Description[i]);
+	QuickMenu_Page_Description[i] = strzone(s);
+	if (QuickMenu_Page_Command[i])
+		strunzone(QuickMenu_Page_Command[i]);
+	QuickMenu_Page_Command[i] = strzone(s1);
 }
-void HUD_QuickMenu_clear_entry(int i)
+void HUD_QuickMenu_Page_ClearEntry(int i)
 {
-	if (QuickMenu_Description[i])
-		strunzone(QuickMenu_Description[i]);
-	QuickMenu_Description[i] = string_null;
-	if (QuickMenu_Command[i])
-		strunzone(QuickMenu_Command[i]);
-	QuickMenu_Command[i] = string_null;
+	if (QuickMenu_Page_Description[i])
+		strunzone(QuickMenu_Page_Description[i]);
+	QuickMenu_Page_Description[i] = string_null;
+	if (QuickMenu_Page_Command[i])
+		strunzone(QuickMenu_Page_Command[i]);
+	QuickMenu_Page_Command[i] = string_null;
 }
 
-float HUD_QuickMenu_Page(string target_submenu, float new_page);
+float HUD_QuickMenu_Page_Load(string target_submenu, float new_page);
 void HUD_QuickMenu_Default(string submenu);
 bool HUD_QuickMenu_Open(string mode, string submenu)
 {
@@ -4601,9 +4602,9 @@ bool HUD_QuickMenu_Open(string mode, string submenu)
 	}
 
 	if(mode == "file")
-		HUD_QuickMenu_Page(submenu, 0);
+		HUD_QuickMenu_Page_Load(submenu, 0);
 	else
-		HUD_QuickMenu_Page("", 0);
+		HUD_QuickMenu_Page_Load("", 0);
 
 	hud_panel_quickmenu = 1;
 	if(autocvar_hud_cursormode)
@@ -4631,8 +4632,8 @@ void HUD_QuickMenu_Close()
 	QuickMenu_CurrentSubMenu = string_null;
 	int i;
 	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
-		HUD_QuickMenu_clear_entry(i);
-	QuickMenu_Entries = 0;
+		HUD_QuickMenu_Page_ClearEntry(i);
+	QuickMenu_Page_Entries = 0;
 	hud_panel_quickmenu = 0;
 	mouseClicked = 0;
 	prevMouseClicked = 0;
@@ -4662,7 +4663,7 @@ void HUD_QuickMenu_skip_submenu(string submenu)
 
 bool HUD_QuickMenu_IsOpened()
 {
-	return (QuickMenu_Entries > 0);
+	return (QuickMenu_Page_Entries > 0);
 }
 
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, float without_me);
@@ -4670,7 +4671,7 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float w
 {
 	int i;
 	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
-		HUD_QuickMenu_clear_entry(i);
+		HUD_QuickMenu_Page_ClearEntry(i);
 	HUD_QuickMenu_Buffer_Close();
 
 	QuickMenu_Buffer = buf_create();
@@ -4690,15 +4691,14 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float w
 
 // new_page 0 means page 0, new_page != 0 means next page
 int QuickMenu_Buffer_Index_Prev;
-bool HUD_QuickMenu_Page(string target_submenu, int new_page)
+bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
 {
 	string s = string_null, cmd = string_null, z_submenu;
 
 	if (new_page == 0)
-		QuickMenu_CurrentPage = 0;
+		QuickMenu_Page = 0;
 	else
-		++QuickMenu_CurrentPage;
-	QuickMenu_CurrentPage_FirstEntry = QuickMenu_CurrentPage * (QUICKMENU_MAXLINES - 2);
+		++QuickMenu_Page;
 
 	z_submenu = strzone(target_submenu);
 	if (QuickMenu_CurrentSubMenu)
@@ -4706,7 +4706,7 @@ bool HUD_QuickMenu_Page(string target_submenu, int new_page)
 	QuickMenu_CurrentSubMenu = strzone(z_submenu);
 
 	QuickMenu_IsLastPage = true;
-	QuickMenu_Entries = 0;
+	QuickMenu_Page_Entries = 0;
 
 	QuickMenu_Buffer_Index = 0;
 	if (z_submenu != "")
@@ -4719,14 +4719,19 @@ bool HUD_QuickMenu_Page(string target_submenu, int new_page)
 			{
 				// printf("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
-				break;
+				break; // target_submenu found!
 			}
 			// printf("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
 			printf("Couldn't find submenu \"%s\"\n", z_submenu);
 	}
-	int entry_num = 0;
+
+	// only the last page can contain up to QUICKMENU_MAXLINES entries
+	// the other ones contain only (QUICKMENU_MAXLINES - 2) entries
+	// so that the panel can show an empty row and "Continue..."
+	float first_entry = QuickMenu_Page * (QUICKMENU_MAXLINES - 2);
+	int entry_num = 0; // counts entries in target_submenu
 	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
 		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
@@ -4737,14 +4742,14 @@ bool HUD_QuickMenu_Page(string target_submenu, int new_page)
 			break;
 		}
 
-		if(entry_num >= QuickMenu_CurrentPage_FirstEntry)
+		if(entry_num >= first_entry)
 		{
-			++QuickMenu_Entries;
-			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
+			++QuickMenu_Page_Entries;
+			if(QuickMenu_Page_Entries == QUICKMENU_MAXLINES - 2)
 				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
-			else if(QuickMenu_Entries == QUICKMENU_MAXLINES)
+			else if(QuickMenu_Page_Entries == QUICKMENU_MAXLINES)
 			{
-				HUD_QuickMenu_clear_entry(QUICKMENU_MAXLINES - 1);
+				HUD_QuickMenu_Page_ClearEntry(QUICKMENU_MAXLINES - 1);
 				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
 				QuickMenu_IsLastPage = false;
 				break;
@@ -4754,11 +4759,11 @@ bool HUD_QuickMenu_Page(string target_submenu, int new_page)
 		// NOTE: entries are loaded starting from 1, not from 0
 		if(substring(s, 0, 1) == "S") // submenu
 		{
-			if(entry_num >= QuickMenu_CurrentPage_FirstEntry)
-				HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), "");
+			if(entry_num >= first_entry)
+				HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
 			HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if(entry_num >= QuickMenu_CurrentPage_FirstEntry && substring(s, 0, 1) == "T")
+		else if(entry_num >= first_entry && substring(s, 0, 1) == "T")
 		{
 			++QuickMenu_Buffer_Index;
 			cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
@@ -4767,20 +4772,21 @@ bool HUD_QuickMenu_Page(string target_submenu, int new_page)
 				cmd = substring(cmd, 1, -1);
 			else if(command_code == "P")
 			{
+				// throw away the current quickmenu buffer and load a new one
 				cmd = substring(cmd, 1, -1);
 				strunzone(z_submenu);
 				if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
-					return HUD_QuickMenu_Page("", 0);
+					return HUD_QuickMenu_Page_Load("", 0);
 				HUD_QuickMenu_Close();
 				return false;
 			}
-			HUD_QuickMenu_load_entry(QuickMenu_Entries, substring(s, 1, -1), cmd);
+			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++entry_num;
 	}
 	strunzone(z_submenu);
-	if (QuickMenu_Entries == 0)
+	if (QuickMenu_Page_Entries == 0)
 	{
 		HUD_QuickMenu_Close();
 		return false;
@@ -4799,19 +4805,19 @@ bool HUD_QuickMenu_ActionForNumber(int num)
 			return false;
 		if (num == 0)
 		{
-			HUD_QuickMenu_Page(QuickMenu_CurrentSubMenu, +1);
+			HUD_QuickMenu_Page_Load(QuickMenu_CurrentSubMenu, +1);
 			return false;
 		}
-	} else if (num <= 0 || num > QuickMenu_Entries)
+	} else if (num <= 0 || num > QuickMenu_Page_Entries)
 		return false;
 
-	if (QuickMenu_Command[num] != "")
+	if (QuickMenu_Page_Command[num] != "")
 	{
-		localcmd(strcat("\n", QuickMenu_Command[num], "\n"));
+		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
 		return true;
 	}
-	if (QuickMenu_Description[num] != "")
-		HUD_QuickMenu_Page(QuickMenu_Description[num], 0);
+	if (QuickMenu_Page_Description[num] != "")
+		HUD_QuickMenu_Page_Load(QuickMenu_Page_Description[num], 0);
 	return false;
 }
 
@@ -4918,8 +4924,8 @@ void HUD_QuickMenu_Mouse()
 	float first_entry_pos, entries_height;
 	vector fontsize;
 	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
-	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
-	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y);
+	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
+	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y);
 
 	if (mousepos_x >= panel_pos_x && mousepos_y >= first_entry_pos && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= first_entry_pos + entries_height)
 	{
@@ -4992,17 +4998,17 @@ void HUD_QuickMenu(void)
 	{
 		if(!HUD_QuickMenu_IsOpened())
 		{
-			QuickMenu_Entries = 1;
-			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
-			++QuickMenu_Entries;
-			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
-			++QuickMenu_Entries;
+			QuickMenu_Page_Entries = 1;
+			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
+			++QuickMenu_Page_Entries;
+			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
+			++QuickMenu_Page_Entries;
 			// although real command doesn't matter here, it must not be empty
 			// otherwise the entry is displayed like a submenu
-			for (; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
-				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "-");
-			++QuickMenu_Entries;
-			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+			for (; QuickMenu_Page_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Page_Entries)
+				HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Command%d"), QuickMenu_Page_Entries), "-");
+			++QuickMenu_Page_Entries;
+			HUD_QuickMenu_Page_ClearEntry(QuickMenu_Page_Entries);
 			QuickMenu_IsLastPage = false;
 		}
 	}
@@ -5028,16 +5034,16 @@ void HUD_QuickMenu(void)
 		HUD_QuickMenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
 	}
 	else
-		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
 
-	for (i = 1; i <= QuickMenu_Entries; ++i) {
-		if (QuickMenu_Description[i] == "")
+	for (i = 1; i <= QuickMenu_Page_Entries; ++i) {
+		if (QuickMenu_Page_Description[i] == "")
 			break;
-		if (QuickMenu_Command[i] == "")
+		if (QuickMenu_Page_Command[i] == "")
 			color = "^4";
 		else
 			color = "^3";
-		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Description[i]), fontsize);
+		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), fontsize);
 		panel_pos_y += fontsize_y;
 	}
 }
@@ -5111,7 +5117,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float withou
 
 // Specifying target_submenu, this function only loads entries inside target_submenu
 // NOTE: alternatively we could have loaded the whole default quickmenu and
-// then called HUD_QuickMenu_Page(target_submenu, 0);
+// then called HUD_QuickMenu_Page_Load(target_submenu, 0);
 // but this sytem is more reliable since we can always refer to target_submenu
 // with the English title even if a translation is active
 void HUD_QuickMenu_Default(string target_submenu)
