@@ -85,7 +85,7 @@ REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,true,"timelimit=20 pointl
 REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,true,"timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
 #define g_vip IS_GAMETYPE(VIP)
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,true,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,true,"pointlimit=50 teams=0 monstercount=10",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
 REGISTER_GAMETYPE(_("Conquest"),cq,g_conquest,CONQUEST,true,"timelimit=20 pointlimit=1 teams=2",_("Capture all the spawnpoint control points to win"))

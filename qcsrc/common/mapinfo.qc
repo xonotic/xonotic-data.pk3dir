@@ -705,6 +705,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 		{
 			// ignore
 		}
+		else if(k == "monstercount")
+		{
+			cvar_set("g_invasion_monster_count", v);
+		}
 		else
 		{
 			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
