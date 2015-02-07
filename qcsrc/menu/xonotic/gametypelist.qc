@@ -71,7 +71,10 @@ void XonoticGametypeList_saveCvars(entity me)
 		return;
 	}
 	MapInfo_SwitchGameType(t);
-	me.parent.gameTypeChangeNotify(me.parent);
+	entity owner = me.parent;
+	if (owner) { // not set immediately
+		owner.gameTypeChangeNotify(owner);
+	}
 }
 void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
