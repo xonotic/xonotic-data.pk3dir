@@ -31,12 +31,11 @@ entity makeXonoticGametypeList(void)
 }
 void XonoticGametypeList_configureXonoticGametypeList(entity me)
 {
-	float i;
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
 	// we want the pics mipmapped
-	for(i = 0; i < GameType_GetCount(); ++i)
+	for(int i = 0; i < GameType_GetCount(); ++i)
 		draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
 
 	me.loadCvars(me);
@@ -67,10 +66,10 @@ void XonoticGametypeList_loadCvars(entity me)
 }
 void XonoticGametypeList_saveCvars(entity me)
 {
-	float t;
-	t = GameType_GetID(me.selectedItem);
-	if(t == MapInfo_CurrentGametype())
+	int t = GameType_GetID(me.selectedItem);
+	if (t == MapInfo_CurrentGametype()) {
 		return;
+	}
 	MapInfo_SwitchGameType(t);
 	me.parent.gameTypeChangeNotify(me.parent);
 }
