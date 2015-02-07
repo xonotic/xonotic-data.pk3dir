@@ -175,6 +175,20 @@ float tgamma(float x)
 	return exp(v.x) * v.y;
 }
 
+/**
+ * Pythonic mod:
+ * TODO: %% operator?
+ *
+ *  1 %  2 ==  1
+ * -1 %  2 ==  1
+ *  1 % -2 == -1
+ * -1 % -2 == -1
+ */
+float pymod(float x, float y)
+{
+	return x - y * floor(x / y);
+}
+
 float nearbyint(float x)
 {
 	return rint(x);

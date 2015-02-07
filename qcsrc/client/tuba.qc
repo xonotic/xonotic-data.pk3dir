@@ -24,7 +24,7 @@ void tubasound(entity e, bool restart)
 		float vol2 = 0;
 		float speed2 = 1;
 
-		int m = e.note % Tuba_PitchStep;
+		int m = pymod(e.note, Tuba_PitchStep);
 		if (m) {
 			if (e.note - m < TUBA_MIN) {
 				if (restart) {
@@ -163,7 +163,7 @@ void Tuba_Precache()
 		}
 	}
 	for (int n = TUBA_MIN; n <= TUBA_MAX; ++n) {
-		if (!Tuba_PitchStep || (n % Tuba_PitchStep) == 0) {
+		if (!Tuba_PitchStep || pymod(n, Tuba_PitchStep) == 0) {
 			for (int i = 0; i < TUBA_INSTRUMENTS; ++i) {
 				precache_sound(TUBA_STARTNOTE(i, n));
 			}
