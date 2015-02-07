@@ -541,7 +541,7 @@ void HUD_Weapons(void)
 		// reduce rows and columns as needed
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		if(padded_panel_size.y > padded_panel_size.x)
+		if(padded_panel_size.x / padded_panel_size.y < aspect)
 		{
 			columns = ceil(weapon_count / rows);
 			rows = ceil(weapon_count / columns);
