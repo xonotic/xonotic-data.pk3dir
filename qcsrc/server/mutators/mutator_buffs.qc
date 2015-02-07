@@ -131,6 +131,11 @@ void buff_Touch()
 		return;
 	}
 
+	if(IS_MONSTER(other))
+	if(cvar("g_piggyback"))
+	if(other.piggybacker)
+		other = other.piggybacker;
+
 	if(cvar("g_piggyback"))
 	if(other.buffs)
 	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)

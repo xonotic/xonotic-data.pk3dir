@@ -638,6 +638,9 @@ void Item_Touch (void)
 		}
 	}
 
+	if(cvar("g_piggyback") && IS_MONSTER(other) && other.piggybacker && IS_PLAYER(other.piggybacker))
+		other = other.piggybacker; // the piggyback mutator hook will do the rest
+
 	if (!IS_PLAYER(other))
 		return;
 	if (other.frozen)
