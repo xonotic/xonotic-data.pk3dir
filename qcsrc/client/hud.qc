@@ -539,21 +539,36 @@ void HUD_Weapons(void)
 		weapon_size.y = padded_panel_size.y / rows;
 
 		// reduce rows and columns as needed
-		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
-		// we enlarge them a bit when possible to better match the desired aspect ratio
 		if(padded_panel_size.x / padded_panel_size.y < aspect)
 		{
 			columns = ceil(weapon_count / rows);
 			rows = ceil(weapon_count / columns);
-			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
-			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
 		}
 		else
 		{
 			rows = ceil(weapon_count / columns);
 			columns = ceil(weapon_count / rows);
-			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
-			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+		}
+
+		// reduce cell size to match the desired aspect ratio
+		// NOTE: it doesn't reduce weapon icon size itself at all
+		// (assuming aspect ratio of the real weapon image == aspect)
+		if(weapon_size.x / weapon_size.y > aspect)
+			weapon_size.x = aspect * weapon_size.y;
+		else
+			weapon_size.y = weapon_size.x / aspect;
+
+		float maxscale = autocvar_hud_panel_weapons_onlyowned_icon_maxscale;
+		if(maxscale == 0)
+			maxscale = 99;
+		if(maxscale > 1)
+		{
+			weapon_size.x = min(padded_panel_size.x / columns, weapon_size.x * maxscale);
+			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.y * maxscale);
+			if(weapon_size.x / weapon_size.y > aspect)
+				weapon_size.x = aspect * weapon_size.y;
+			else
+				weapon_size.y = weapon_size.x / aspect;
 		}
 
 		// reduce size of the panel
