@@ -408,12 +408,14 @@ string W_Sound(string w_snd)
 	if(autocvar_sv_weapons_sounddir != "" && autocvar_sv_weapons_sounddir != "default")
 	{
 		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, w_snd);
-		float globhandle = search_begin(strcat("sound/", thesnd, ".*"), true, false);
-		if(globhandle >= 0)
-		{
-			search_end(globhandle);
+		if(fexists(strcat("sound/", thesnd, ".ogg")))
 			return strcat(thesnd, ".wav");
-		}
+
+		if(fexists(strcat("sound/", thesnd, ".wav")))
+			return strcat(thesnd, ".wav");
+
+		if(fexists(strcat("sound/", thesnd, ".flac")))
+			return strcat(thesnd, ".wav");
 	}
 	return strcat("weapons/", w_snd, ".wav");
 }
