@@ -1,3 +1,5 @@
+#include "../../common/urllib.qh"
+
 float GL_CheckExtension(string ext)
 {
 	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
@@ -87,7 +89,14 @@ void saveCvarsMulti(entity me)
 
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
-		cvar_set(argv(i), s);
+	{
+		if(substring(argv(i), 0, 1) == "!")
+			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		else
+			cvar_set(argv(i), s);
+
+		CheckSendCvars(me, argv(i));
+	}
 }
 void makeMulti(entity e, string otherCvars)
 {
@@ -280,8 +289,13 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
+}
+
+void DisableServerBackwardsCompatibility()
+{
+	cvar_set("gameversion_min", ftos(100 * floor(cvar("gameversion") / 100)));
 }
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data)
@@ -295,17 +309,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	}
 	if(status != 0)
 	{
-		print(sprintf(_("error receiving update notification: status is %d\n"), status));
+		dprintf("error receiving update notification: status is %d\n", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		print(_("error: received HTML instead of an update notification\n"));
+		dprint("error: received HTML instead of an update notification\n");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		print(_("error: received carriage returns from update notification server\n"));
+		dprint("error: received carriage returns from update notification server\n");
 		return;
 	}
 
@@ -313,40 +327,107 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		n = 0;
 	else
 		n = tokenizebyseparator(data, "\n");
-	
-	if(n >= 1)
+
+	float i;
+	string s;
+
+	string un_version = "";
+	string un_download = "";
+	string un_url = "";
+	string un_bannedservers = "";
+	string un_emergency_pk3s = "";
+	string un_promoted = "";
+	string un_recommended = "";
+	string un_compatexpire = "";
+
+	for(i = 0; i < n; ++i)
 	{
-		_Nex_ExtResponseSystem_UpdateTo = argv(0);
+		s = substring(argv(i), 2, -1);
+		if(s == "") { continue; } // ignore empty lines
 
-		if(vercmp(cvar_string("g_xonoticversion"), _Nex_ExtResponseSystem_UpdateTo) >= 0)
+		switch(substring(argv(i), 0, 1))
 		{
-			_Nex_ExtResponseSystem_UpdateTo = ""; // no update needed
-		}
-		else
-		{
-			// update needed
-			if(n >= 2)
-				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
-			if(n >= 3)
-				_Nex_ExtResponseSystem_UpdateToURL = strzone(argv(2));
-		}
-
-		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
-
-		if(n >= 4)
-		{
-			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
-			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
-		}
-
-		if(n >= 5)
-		{
-			if(cvar("menu_updatecheck_getpacks"))
+			case "V":
 			{
-				_Nex_ExtResponseSystem_Packs = strzone(argv(4));
-				_Nex_ExtResponseSystem_PacksStep = 1;
+				un_version = s;
+				break;
+			}
+			case "C":
+			{
+				un_compatexpire = s;
+				break;
+			}
+			case "D":
+			{
+				un_download = s;
+				break;
+			}
+			case "U":
+			{
+				un_url = s;
+				break;
+			}
+			case "B":
+			{
+				APPEND_TO_STRING(un_bannedservers, " ", s);
+				break;
+			}
+			case "E":
+			{
+				if(cvar("menu_updatecheck_getpacks"))
+					APPEND_TO_STRING(un_emergency_pk3s, " ", s);
+				break;
+			}
+			case "P":
+			{
+				APPEND_TO_STRING(un_promoted, " ", s);
+				break;
+			}
+			case "R":
+			{
+				APPEND_TO_STRING(un_recommended, " ", s);
+				break;
 			}
 		}
+	}
+
+	if(un_version != "")
+	{
+		if(vercmp(cvar_string("g_xonoticversion"), un_version) < 0)
+		{
+			// update needed
+			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
+			if(un_download) { printf(_("Update can be downloaded at:\n%s\n"), un_download); }
+			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
+			DisableServerBackwardsCompatibility();
+		}
+		else if(cvar_string("g_xonoticversion") == un_version)
+		{
+			if(un_compatexpire != "")
+			{
+				string curdate = strftime(false, "%Y%m%d%H%M%S");
+				if (strcmp(curdate, un_compatexpire) >= 0)
+					DisableServerBackwardsCompatibility();
+			}
+		}
+	}
+
+	if(un_emergency_pk3s != "")
+	{
+		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);
+		_Nex_ExtResponseSystem_PacksStep = 1;
+	}
+
+	if(un_promoted != "")
+	{
+		_Nex_ExtResponseSystem_PromotedServers = strzone(un_promoted);
+		_Nex_ExtResponseSystem_PromotedServersNeedsRefresh = 1;
+	}
+
+	if(un_recommended != "")
+	{
+		_Nex_ExtResponseSystem_RecommendedServers = strzone(un_recommended);
+		_Nex_ExtResponseSystem_RecommendedServersNeedsRefresh = 1;
 	}
 }
 
@@ -366,36 +447,8 @@ void updateCheck()
 
 			// for privacy, munge the start count a little
 			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-
-#ifdef CVAR_POPCON
-			float cvar_handle, popcon_handle;
-			float n, i, j;
-			string k, s;
-			cvar_handle = buf_create();
-			buf_cvarlist(cvar_handle, "", "");
-			n = buf_getsize(cvar_handle);
-			popcon_handle = buf_create();
-			for(i= 0, j = 0; i < n; ++i)
-			{
-				k = bufstr_get(cvar_handle, i);
-				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
-					continue;
-				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
-				bufstr_set(popcon_handle, j, s);
-				++j;
-			}
-			buf_del(cvar_handle);
-			uri_postbuf(
-				uri, URI_GET_UPDATENOTIFICATION,
-				"application/x-www-form-urlencoded",
-				"&",
-				popcon_handle
-			);
-			buf_del(popcon_handle);
-#else
+			uri = sprintf("http://update.xonotic.org/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
 			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-#endif
 		}
 	}
 
@@ -404,12 +457,12 @@ void updateCheck()
 		float n, i;
 		float allgood;
 		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
-		allgood = TRUE;
+		allgood = true;
 		for(i = 0; i+1 < n; i += 2)
 		{
 			if(fexists(argv(i+1)))
 				continue;
-			allgood = FALSE;
+			allgood = false;
 			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
 				localcmd("\ncurl --pak \"", argv(i), "\"\n");
 		}
@@ -443,13 +496,13 @@ float preMenuInit()
 	{
 		draw_reset_cropped();
 
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale.x / draw_scale.y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz.y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
 
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		boxA = '0.05 0.5 0' + 0.25 * sz.y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz.y * eY;
 		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
+
 		boxA += sz * 0.1;
 		boxB -= sz * 0.1;
 		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
@@ -457,17 +510,17 @@ float preMenuInit()
 		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
 		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
 
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 string campaign_name_previous;
 float campaign_won_previous;
 #ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK;
+string autocvar_menu_watermark = WATERMARK;
 #else
-var string autocvar_menu_watermark = "";
+string autocvar_menu_watermark = "";
 #endif
 void postMenuDraw()
 {
@@ -485,8 +538,8 @@ void preMenuDraw()
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
 		// TODO rather turn this into a dialog
-		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
-		line = eY * fs_y;
+		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
+		line = eY * fs.y;
 		string l1, l2;
 		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
 		l2 = "http://www.xonotic.org/";
@@ -497,17 +550,17 @@ void preMenuDraw()
 				draw_TextWidth(l1, 0, fs),
 				draw_TextWidth(l2, 0, fs)
 			);
-		sz_y = 3 * fs_y;
+		sz_y = 3 * fs.y;
 
 		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
-		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
-		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
+		mid = eX * (0.5 + 0.5 * (1 - sz.x) * cos(time * 0.071))
+		    + eY * (0.5 + 0.5 * (1 - sz.y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
-	if not(campaign_name_previous)
+	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)
 	{
@@ -595,7 +648,6 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA) \
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	GAMETYPE(MAPINFO_TYPE_CTF) \
 	GAMETYPE(MAPINFO_TYPE_CA) \
@@ -607,72 +659,55 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_LMS) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
-	GAMETYPE(MAPINFO_TYPE_RACE) \
+	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
 	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
+	//GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/* nothing */
 
-float GameType_GetID(float cnt)
+int GameType_GetID(int cnt)
 {
-	float i;
-	i = 0;
-	
-	#define GAMETYPE(id) if(i++ == cnt) return id;
+	int i = 0;
+
+	#define GAMETYPE(id) { if (i++ == cnt) return id; }
 	GAMETYPES
 	#undef GAMETYPE
 
 	unused_float = i;
-	
+
 	return 0;
 }
 
-float GameType_GetCount()
+int GameType_GetCount()
 {
-	float i;
-	i = 0;
-	
+	int i = 0;
+
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	
+
 	return i;
 }
 
-string GameType_GetName(float cnt)
+string GameType_GetName(int cnt)
 {
-	float i = GameType_GetID(cnt);
-	
+	int i = GameType_GetID(cnt);
+
 	if(i)
 		return MapInfo_Type_ToText(i);
-	
+
 	return "";
 }
 
-string GameType_GetIcon(float cnt)
+string GameType_GetIcon(int cnt)
 {
-	float i = GameType_GetID(cnt);
-	
+	int i = GameType_GetID(cnt);
+
 	if(i)
 		return strcat("gametype_", MapInfo_Type_ToString(i));
-	
+
 	return "";
 }
-
-/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
-{
-	float i = GameType_GetID(cnt);
-	string s = _MapInfo_GetDefaultEx(i);
-	
-	if(i)
-	{
-		if(strstrofs(s, "teams", 0) >= 0)
-			return _("teamplay");
-		else
-			return _("free for all");
-	}
-	
-	return _("tuba for all");
-}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {
@@ -731,4 +766,16 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+void CheckSendCvars(entity me, string cvarnamestring)
+{
+	if(me.sendCvars)
+	{
+		printf("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
+		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+		{
+			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
+		}
+	}
 }

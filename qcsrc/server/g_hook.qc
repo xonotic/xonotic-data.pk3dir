@@ -1,3 +1,22 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "command/common.qh"
+    #include "g_hook.qh"
+    #include "round_handler.qh"
+#endif
+
 /*============================================
 
       Wazat's Xonotic Grappling Hook
@@ -22,8 +41,8 @@ void GrapplingHookFrame();
 void RemoveGrapplingHook(entity pl);
 void SetGrappleHookBindings();
 // hook impulses
-float GRAPHOOK_FIRE		= 20;
-float GRAPHOOK_RELEASE		= 21;
+const float GRAPHOOK_FIRE		= 20;
+const float GRAPHOOK_RELEASE		= 21;
 // (note: you can change the hook impulse #'s to whatever you please)
 
 4. Open client.c and add this to the top of PutClientInServer():
@@ -59,7 +78,7 @@ void RemoveGrapplingHook(entity pl)
 	if(pl.movetype == MOVETYPE_FLY)
 		pl.movetype = MOVETYPE_WALK;
 
-	//pl.disableclientprediction = FALSE;
+	//pl.disableclientprediction = false;
 }
 
 void GrapplingHookReset(void)
@@ -74,7 +93,7 @@ void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
 	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
 	self.think = GrapplingHookThink;
@@ -99,17 +118,17 @@ float GrapplingHookSend(entity to, float sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
+		WriteCoord(MSG_ENTITY, self.hook_start.x);
+		WriteCoord(MSG_ENTITY, self.hook_start.y);
+		WriteCoord(MSG_ENTITY, self.hook_start.z);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
+		WriteCoord(MSG_ENTITY, self.hook_end.x);
+		WriteCoord(MSG_ENTITY, self.hook_end.y);
+		WriteCoord(MSG_ENTITY, self.hook_end.z);
 	}
-	return TRUE;
+	return true;
 }
 
 void GrapplingHookThink()
@@ -138,7 +157,7 @@ void GrapplingHookThink()
 	vs = hook_shotorigin[s];
 
 	makevectors(self.realowner.v_angle);
-	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 	myorg = WarpZone_RefSys_TransformOrigin(self.realowner, self, org);
 
 	if(self.hook_length < 0)
@@ -210,14 +229,14 @@ void GrapplingHookThink()
 					{
 						v = v - dv * 0.5;
 						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-						self.aiment.flags &~= FL_ONGROUND;
+						self.aiment.flags &= ~FL_ONGROUND;
 						self.aiment.pusher = self.realowner;
 						self.aiment.pushltime = time + autocvar_g_maxpushtime;
 						self.aiment.istypefrag = self.aiment.BUTTON_CHAT;
 					}
 				}
 
-				self.realowner.flags &~= FL_ONGROUND;
+				self.realowner.flags &= ~FL_ONGROUND;
 			}
 
 			self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
@@ -235,11 +254,11 @@ void GrapplingHookThink()
 			self.realowner.velocity = dir*spd;
 			self.realowner.movetype = MOVETYPE_FLY;
 
-			self.realowner.flags &~= FL_ONGROUND;
+			self.realowner.flags &= ~FL_ONGROUND;
 		}
 	}
 
-	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
+	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.realowner, self.origin); // + v_forward * (-9);
 
 	if(myorg != self.hook_start)
@@ -267,19 +286,19 @@ void GrapplingHookTouch (void)
 			WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
 		}
 
-	//self.realowner.disableclientprediction = TRUE;
+	//self.realowner.disableclientprediction = true;
 }
 
 void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
-			
+
 	self.health = self.health - damage;
-		
+
 	if (self.health <= 0)
 	{
 		if(attacker != self.realowner)
@@ -311,8 +330,8 @@ void FireGrapplingHook (void)
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
-	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTEN_NORM);
+	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
 	org = trace_endpos;
@@ -335,7 +354,7 @@ void FireGrapplingHook (void)
 
 	missile.state = 0; // not latched onto anything
 
-	W_SetupProjectileVelocityEx(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, false);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -354,7 +373,7 @@ void FireGrapplingHook (void)
 
 	missile.hook_start = missile.hook_end = missile.origin;
 
-	Net_LinkEntity(missile, FALSE, 0, GrapplingHookSend);
+	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
 //  void GrapplingHookFrame()
@@ -383,7 +402,7 @@ void GrapplingHookFrame()
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
 		{
-			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire))
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
@@ -392,22 +411,22 @@ void GrapplingHookFrame()
 		else
 		{
 			self.hook_state |= HOOK_REMOVING;
-			self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 		}
 
-		self.hook_state &~= HOOK_RELEASING;
+		self.hook_state &= ~HOOK_RELEASING;
 		if(self.BUTTON_CROUCH)
 		{
-			self.hook_state &~= HOOK_PULLING;
+			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;
 		}
 		else
 		{
 			self.hook_state |= HOOK_PULLING;
-			//self.hook_state &~= HOOK_RELEASING;
+			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
-	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
+	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK)
 	{
 		if(self.BUTTON_HOOK && !self.hook_switchweapon)
 			W_SwitchWeapon(WEP_HOOK);
@@ -416,7 +435,7 @@ void GrapplingHookFrame()
 
 	if(!g_grappling_hook && self.weapon != WEP_HOOK)
 	{
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
 
@@ -425,13 +444,14 @@ void GrapplingHookFrame()
 		if (self.hook)
 			RemoveGrapplingHook(self);
 		FireGrapplingHook();
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
+		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
 		if (self.hook)
 			RemoveGrapplingHook(self);
-		self.hook_state &~= HOOK_REMOVING;
+		self.hook_state &= ~HOOK_REMOVING;
 	}
 
 	/*
@@ -475,11 +495,11 @@ void GrappleHookInit()
 	}
 	else
 	{
-		weapon_action(WEP_HOOK, WR_PRECACHE);
-		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
-		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
-		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);
-		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 4);
+		WEP_ACTION(WEP_HOOK, WR_INIT);
+		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 1);
+		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 2);
+		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 3);
+		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 4);
 	}
 }
 

@@ -58,9 +58,9 @@ void physical_item_damage(entity inflictor, entity attacker, float damage, float
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
 	if(self.owner == world && autocvar_g_physical_items <= 1)
-		return FALSE;
+		return false;
 	if (self.spawnflags & 1) // floating item
-		return FALSE;
+		return false;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	self.movetype = MOVETYPE_FOLLOW;
 	self.aiment = wep; // attach the original weapon
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_physical_items)
@@ -105,7 +105,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 	// check if we have a physics engine
 	MUTATOR_ONADD
 	{
-		if not(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE"))
+		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
 		{
 			dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
 			return -1;

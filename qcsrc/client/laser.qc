@@ -1,19 +1,25 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../common/buffs.qh"
+	#include "../csqcmodellib/interpolate.qh"
+	#include "main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
+
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.float cnt; // end effect
+.int cnt; // end effect
 .vector colormod;
-.float state; // on-off
-.float count; // flags for the laser
+.int state; // on-off
+.int count; // flags for the laser
 .vector velocity;
 .float alpha;
 .float scale; // scaling factor of the thickness
 .float modelscale; // scaling factor of the dlight
-
-// TODO move these into a heade file
-float trace_dphitq3surfaceflags;
-float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
-float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
 
 void Draw_Laser()
 {
@@ -24,7 +30,7 @@ void Draw_Laser()
 	{
 		if(self.count & 0x10)
 		{
-			trace_endpos = self.velocity,
+			trace_endpos = self.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else
@@ -57,7 +63,7 @@ void Draw_Laser()
 			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
 		}
 	}
-	if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
+	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
 		if(self.cnt >= 0)
 			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
@@ -68,11 +74,10 @@ void Draw_Laser()
 
 void Ent_Laser()
 {
-	float f;
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
-	f = ReadByte();
+	int f = ReadByte();
 	self.count = (f & 0xF0);
 
 	if(self.count & 0x80)

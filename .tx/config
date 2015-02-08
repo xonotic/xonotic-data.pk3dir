@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[xonotic.commonpot]
+file_filter = translations/xonotic.commonpot/<lang>..po
+source_file = translations/xonotic.commonpot/en..po
+source_lang = en
+

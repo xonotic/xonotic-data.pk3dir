@@ -1,3 +1,7 @@
+#include "menu_cmd.qh"
+
+#include "../../common/command/generic.qh"
+
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)
 {
@@ -51,6 +55,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "update_conwidths_before_vid_restart")
+	{
+		updateConwidths(cvar("vid_width"), cvar("vid_height"), cvar("vid_pixelheight"));
+		return;
+	}
+
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
 		string filter = string_null;
@@ -79,7 +89,10 @@ void GameCommand(string theCommand)
 				}
 		}
 		else if(argc == 2 && !isdemo()) // don't allow this command in demos
+		{
+			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
+		}
 		if(filter)
 			strunzone(filter);
 		return;

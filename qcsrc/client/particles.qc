@@ -1,15 +1,4 @@
-.float dphitcontentsmask;
-
-.float cnt; // effect number
-.vector velocity; // particle velocity
-.float waterlevel; // direction jitter
-.float count; // count multiplier
-.float impulse; // density
-.string noise; // sound
-.float atten;
-.float volume;
-.float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-.vector movedir; // trace direction
+#include "particles.qh"
 
 void Draw_PointParticles()
 {
@@ -40,9 +29,9 @@ void Draw_PointParticles()
 	for(i = random(); i <= n && fail <= 64*n; ++i)
 	{
 		p = o + self.mins;
-		p_x += random() * sz_x;
-		p_y += random() * sz_y;
-		p_z += random() * sz_z;
+		p.x += random() * sz.x;
+		p.y += random() * sz.y;
+		p.z += random() * sz.z;
 		if(WarpZoneLib_BoxTouchesBrush(p, p, self, world))
 		{
 			if(self.movedir != '0 0 0')
@@ -83,9 +72,9 @@ void Ent_PointParticles_Remove()
 
 void Ent_PointParticles()
 {
-	float f, i;
+	float i;
 	vector v;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)
@@ -174,7 +163,7 @@ void Ent_PointParticles()
 		if(!self.absolute)
 		{
 			v = self.maxs - self.mins;
-			self.impulse *= -v_x * v_y * v_z / 262144; // relative: particles per 64^3 cube
+			self.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
 		}
 	}
 
@@ -188,7 +177,6 @@ void Ent_PointParticles()
 	self.entremove = Ent_PointParticles_Remove;
 }
 
-.float glow_color; // palette index
 void Draw_Rain()
 {
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
@@ -225,79 +213,22 @@ void Ent_RainOrSnow()
 		self.draw = Draw_Snow;
 }
 
-entity zcurve;
-void zcurveparticles(float effectnum, vector start, vector end, float end_dz, float speed, float depth)
-{
-	// end_dz:
-	//   IF IT WERE A STRAIGHT LINE, it'd end end_dz above end
-
-	vector mid;
-	mid = (start + end) * 0.5;
-
-	end_dz *= 0.25;
-	mid_z += end_dz;
-
-	--depth;
-	if(depth < 0 || normalize(mid - start) * normalize(end - start) > 0.999999)
-	// TODO make this a variable threshold
-	// currently: 0.081 degrees
-	// 0.99999 would be 0.256 degrees and is visible
-	{
-		zcurve.velocity = speed * normalize(end - start);
-		trailparticles(zcurve, effectnum, start, end);
-	}
-	else
-	{
-		zcurveparticles(effectnum, start, mid, end_dz, speed, depth);
-		zcurveparticles(effectnum, mid, end, end_dz, speed, depth);
-	}
-}
-
-void Net_ReadZCurveParticles()
-{
-	vector start, end;
-	float end_dz;
-	float effectnum, speed;
-
-	if(!zcurve)
-	{
-		zcurve = spawn();
-		zcurve.classname = "zcurve";
-	}
-
-	effectnum = ReadShort();
-
-	start_x = ReadCoord();
-	start_y = ReadCoord();
-	start_z = ReadCoord();
-
-	do
-	{
-		end_x = ReadCoord();
-		end_y = ReadCoord();
-		end_z = ReadCoord();
-		end_dz = ReadCoord();
-		speed = ReadShort();
-		zcurveparticles(effectnum, start, end, end_dz, 16 * (speed & 0x7FFF), 5); // at most 32 segments
-	}
-	while(!(speed & 0x8000));
-}
-
-void Net_ReadNexgunBeamParticle()
+void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
-	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
+	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
 	charge = ReadByte() / 255.0;
-	
+
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);
-	
+
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
-	particles_alphamin = particles_alphamax = charge;
-	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, charge, 1);
+	particles_alphamin = particles_alphamax = particles_fade = charge;
+
+	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, charge, 1);
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 }

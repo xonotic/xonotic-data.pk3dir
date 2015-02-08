@@ -1,5 +1,9 @@
+#ifndef SHOWNAMES_H
+#define SHOWNAMES_H
+
 .float healthvalue;
 .float armorvalue;
 .float sameteam;
 .float fadedelay;
 .float pointtime;
+#endif

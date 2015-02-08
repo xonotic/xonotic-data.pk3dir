@@ -19,6 +19,16 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../client/defs.qh"
+	#include "../warpzonelib/anglestransform.qh"
+	#include "../client/autocvars.qh"
+	#include "interpolate.qh"
+	#include "cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 .vector iorigin1, iorigin2;
 .vector ivelocity1, ivelocity2;
@@ -29,13 +39,13 @@
 .float itime1, itime2;
 void InterpolateOrigin_Reset()
 {
-	self.iflags &~= IFLAG_INTERNALMASK;
+	self.iflags &= ~IFLAG_INTERNALMASK;
 	self.itime1 = self.itime2 = 0;
 }
 void InterpolateOrigin_Note()
 {
 	float dt;
-	float f0;
+	int f0;
 
 	dt = time - self.itime2;
 
@@ -95,7 +105,7 @@ void InterpolateOrigin_Note()
 	else if(self.iflags & IFLAG_V_ANGLE_X)
 	{
 		self.ivforward1_x = self.ivforward2_x;
-		self.ivforward2_x = self.v_angle_x;
+		self.ivforward2_x = self.v_angle.x;
 	}
 
 	if(self.iflags & IFLAG_VELOCITY)
@@ -106,7 +116,7 @@ void InterpolateOrigin_Note()
 
 	if(self.iflags & IFLAG_TELEPORTED)
 	{
-		self.iflags &~= IFLAG_TELEPORTED;
+		self.iflags &= ~IFLAG_TELEPORTED;
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
 	else if(vlen(self.iorigin2 - self.iorigin1) > 1000)
