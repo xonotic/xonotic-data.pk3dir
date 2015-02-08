@@ -130,3 +130,4 @@
 #include "mutator_piggyback.qc"
 #include "mutator_buffs.qc"
 #include "mutator_itemeditor.qc"
+#include "mutator_skycycle.qc"
