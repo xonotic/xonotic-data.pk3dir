@@ -7,8 +7,8 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 		frag_attacker.health += bound(0, damage_take, frag_target.health);
 		frag_attacker.health = bound(0, frag_attacker.health, autocvar_g_balance_health_limit);
 	}
-		
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsString)

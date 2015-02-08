@@ -1,3 +1,6 @@
+#ifndef PRANDOM_H
+#define PRANDOM_H
+
 // prandom - PREDICTABLE random number generator
 
 #define USE_PRANDOM
@@ -17,4 +20,5 @@ void prandom_debug();
 #define prandomvec randomvec
 #define psrandom(x)
 #define prandom_debug()
+#endif
 #endif

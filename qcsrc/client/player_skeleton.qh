@@ -1,9 +1,13 @@
+#ifndef PLAYER_SKELETON
+#define PLAYER_SKELETON
+
 void free_skeleton_from_frames(entity e);
 void skeleton_from_frames(entity e, float is_dead);
 void skeleton_loadinfo(entity e);
 
 .float bone_upperbody;
-.float bone_weapon;
+.int bone_weapon;
 .float bone_aim[MAX_AIM_BONES];
 .float bone_aimweight[MAX_AIM_BONES];
 .float fixbone;
+#endif

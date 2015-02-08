@@ -1,3 +1,26 @@
+#include "util.qh"
+
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+    #include "../client/defs.qh"
+    #include "constants.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "mapinfo.qh"
+    #include "notifications.qh"
+    #include "deathtypes.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../warpzonelib/mathlib.qh"
+    #include "constants.qh"
+    #include "../server/autocvars.qh"
+    #include "../server/defs.qh"
+    #include "notifications.qh"
+    #include "deathtypes.qh"
+    #include "mapinfo.qh"
+#endif
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)
@@ -148,7 +171,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 float dist_point_line(vector p, vector l0, vector ldir)
 {
 	ldir = normalize(ldir);
-	
+
 	// remove the component in line direction
 	p = p - (p * ldir) * ldir;
 
@@ -241,30 +264,29 @@ vector colormapPaletteColor(float c, float isPants)
 string fstrunzone(string s)
 {
 	string sc;
-	if not(s)
+	if (!s)
 		return s;
 	sc = strcat(s, "");
 	strunzone(s);
 	return sc;
 }
 
-float fexists(string f)
+bool fexists(string f)
 {
-    float fh;
-    fh = fopen(f, FILE_READ);
+    int fh = fopen(f, FILE_READ);
     if (fh < 0)
-        return FALSE;
+        return false;
     fclose(fh);
-    return TRUE;
+    return true;
 }
 
 // Databases (hash tables)
-#define DB_BUCKETS 8192
+const float DB_BUCKETS = 8192;
 void db_save(float db, string pFilename)
 {
 	float fh, i, n;
 	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0) 
+	if(fh < 0)
 	{
 		print(strcat("^1Can't write DB to ", pFilename));
 		return;
@@ -276,12 +298,12 @@ void db_save(float db, string pFilename)
 	fclose(fh);
 }
 
-float db_create()
+int db_create()
 {
 	return buf_create();
 }
 
-float db_load(string pFilename)
+int db_load(string pFilename)
 {
 	float db, fh, i, j, n;
 	string l;
@@ -346,14 +368,14 @@ void db_close(float db)
 string db_get(float db, string pKey)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(false, pKey) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), pKey));
 }
 
 void db_put(float db, string pKey, string pValue)
 {
 	float h;
-	h = mod(crc16(FALSE, pKey), DB_BUCKETS);
+	h = crc16(false, pKey) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
 }
 
@@ -373,7 +395,7 @@ void db_test()
 }
 
 // Multiline text file buffers
-float buf_load(string pFilename)
+int buf_load(string pFilename)
 {
 	float buf, fh, i;
 	string l;
@@ -408,6 +430,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -430,7 +468,7 @@ string mmssss(float hundredths)
 	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
-string ScoreString(float pFlags, float pValue)
+string ScoreString(int pFlags, float pValue)
 {
 	string valstr;
 	float l;
@@ -458,21 +496,21 @@ string ScoreString(float pFlags, float pValue)
 		valstr = TIME_ENCODED_TOSTRING(pValue);
 	else
 		valstr = ftos(pValue);
-	
+
 	return valstr;
 }
 
 float dotproduct(vector a, vector b)
 {
-	return a_x * b_x + a_y * b_y + a_z * b_z;
+	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 vector cross(vector a, vector b)
 {
 	return
-		'1 0 0' * (a_y * b_z - a_z * b_y)
-	+	'0 1 0' * (a_z * b_x - a_x * b_z)
-	+	'0 0 1' * (a_x * b_y - a_y * b_x);
+		'1 0 0' * (a.y * b.z - a.z * b.y)
+	+	'0 1 0' * (a.z * b.x - a.x * b.z)
+	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }
 
 // compressed vector format:
@@ -489,7 +527,7 @@ float lengthLogTable[128];
 
 float invertLengthLog(float x)
 {
-	float l, r, m, lerr, rerr;
+	int l, r, m;
 
 	if(x >= lengthLogTable[127])
 		return 127;
@@ -509,41 +547,40 @@ float invertLengthLog(float x)
 	}
 
 	// now: r is >=, l is <
-	lerr = (x - lengthLogTable[l]);
-	rerr = (lengthLogTable[r] - x);
+	float lerr = (x - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - x);
 	if(lerr < rerr)
 		return l;
 	return r;
 }
 
-vector decompressShortVector(float data)
+vector decompressShortVector(int data)
 {
 	vector out;
-	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	p   = (data & 0xF000) / 0x1000;
-	y   = (data & 0x0F80) / 0x80;
-	len = (data & 0x007F);
+	float p	= (data & 0xF000) / 0x1000;
+	float y	= (data & 0x0F80) / 0x80;
+	int len = (data & 0x007F);
 
 	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
 	if(p == 0)
 	{
-		out_x = 0;
-		out_y = 0;
+		out.x = 0;
+		out.y = 0;
 		if(y == 31)
-			out_z = -1;
+			out.z = -1;
 		else
-			out_z = +1;
+			out.z = +1;
 	}
 	else
 	{
 		y   = .19634954084936207740 * y;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out_x = cos(y) *  cos(p);
-		out_y = sin(y) *  cos(p);
-		out_z =          -sin(p);
+		out.x = cos(y) *  cos(p);
+		out.y = sin(y) *  cos(p);
+		out.z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -559,23 +596,23 @@ float compressShortVector(vector vec)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
-	ang_x = -ang_x;
-	if(ang_x < -90)
-		ang_x += 360;
-	if(ang_x < -90 && ang_x > +90)
+	ang.x = -ang.x;
+	if(ang.x < -90)
+		ang.x += 360;
+	if(ang.x < -90 && ang.x > +90)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
-		if(vec_z < 0)
+		if(vec.z < 0)
 			y = 31;
 		else
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
@@ -585,9 +622,9 @@ float compressShortVector(vector vec)
 
 void compressShortVector_init()
 {
-	float l, f, i;
-	l = 1;
-	f = pow(2, 1/8);
+	float l = 1;
+	float f = pow(2, 1/8);
+	int i;
 	for(i = 0; i < 128; ++i)
 	{
 		lengthLogTable[i] = l;
@@ -613,18 +650,18 @@ void compressShortVector_init()
 #ifndef MENUQC
 float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
 {
-	traceline(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
 	return 1;
 }
 #endif
@@ -664,7 +701,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 				neworder = strcat(neworder, ftos(w), " ");
 		}
 	}
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -677,7 +714,7 @@ string mapPriorityList(string order, string(string) mapfunc)
 	neworder = "";
 	for(i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
-	
+
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
@@ -702,7 +739,7 @@ string swapInPriorityList(string order, float i, float j)
 		}
 		return substring(s, 0, strlen(s) - 1);
 	}
-	
+
 	return order;
 }
 
@@ -748,7 +785,7 @@ void get_mi_min_max(float mode)
 	mi_min = mi;
 	mi_max = ma;
 	MapInfo_Get_ByName(mi_shortname, 0, 0);
-	if(MapInfo_Map_mins_x < MapInfo_Map_maxs_x)
+	if(MapInfo_Map_mins.x < MapInfo_Map_maxs.x)
 	{
 		mi_min = MapInfo_Map_mins;
 		mi_max = MapInfo_Map_maxs;
@@ -759,59 +796,59 @@ void get_mi_min_max(float mode)
 		if(mode)
 		{
 			// be clever
-			tracebox('1 0 0' * mi_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * ma_x,
+			tracebox('1 0 0' * mi.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * ma.x,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_x = trace_endpos_x;
+				mi_min.x = trace_endpos.x;
 
-			tracebox('0 1 0' * mi_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * ma_y,
+			tracebox('0 1 0' * mi.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * ma.y,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_y = trace_endpos_y;
+				mi_min.y = trace_endpos.y;
 
-			tracebox('0 0 1' * mi_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * ma_z,
+			tracebox('0 0 1' * mi.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * ma.z,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_min_z = trace_endpos_z;
+				mi_min.z = trace_endpos.z;
 
-			tracebox('1 0 0' * ma_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * mi_x,
+			tracebox('1 0 0' * ma.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * mi.x,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_x = trace_endpos_x;
+				mi_max.x = trace_endpos.x;
 
-			tracebox('0 1 0' * ma_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * mi_y,
+			tracebox('0 1 0' * ma.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * mi.y,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_y = trace_endpos_y;
+				mi_max.y = trace_endpos.y;
 
-			tracebox('0 0 1' * ma_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * mi_z,
+			tracebox('0 0 1' * ma.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * mi.z,
 					 MOVE_WORLDONLY,
 					 world);
 			if(!trace_startsolid)
-				mi_max_z = trace_endpos_z;
+				mi_max.z = trace_endpos.z;
 		}
 	}
 }
@@ -828,15 +865,15 @@ void get_mi_min_max_texcoords(float mode)
 	// extend mi_picmax to get a square aspect ratio
 	// center the map in that area
 	extend = mi_picmax - mi_picmin;
-	if(extend_y > extend_x)
+	if(extend.y > extend.x)
 	{
-		mi_picmin_x -= (extend_y - extend_x) * 0.5;
-		mi_picmax_x += (extend_y - extend_x) * 0.5;
+		mi_picmin.x -= (extend.y - extend.x) * 0.5;
+		mi_picmax.x += (extend.y - extend.x) * 0.5;
 	}
 	else
 	{
-		mi_picmin_y -= (extend_x - extend_y) * 0.5;
-		mi_picmax_y += (extend_x - extend_y) * 0.5;
+		mi_picmin.y -= (extend.x - extend.y) * 0.5;
+		mi_picmax.y += (extend.x - extend.y) * 0.5;
 	}
 
 	// add another some percent
@@ -847,10 +884,10 @@ void get_mi_min_max_texcoords(float mode)
 	// calculate the texcoords
 	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
 	// first the two corners of the origin
-	mi_pictexcoord0_x = (mi_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord0_y = (mi_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
-	mi_pictexcoord2_x = (mi_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord2_y = (mi_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord0_x = (mi_min.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord0_y = (mi_min.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	mi_pictexcoord2_x = (mi_max.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord2_y = (mi_max.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
 	// then the other corners
 	mi_pictexcoord1_x = mi_pictexcoord0_x;
 	mi_pictexcoord1_y = mi_pictexcoord2_y;
@@ -866,7 +903,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	created_saved_value = 0;
 
-	if not(tmp_cvar || tmp_value)
+	if (!(tmp_cvar || tmp_value))
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
@@ -874,7 +911,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -911,7 +948,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -922,8 +959,8 @@ float almost_equals(float a, float b)
 	float eps;
 	eps = (max(a, -a) + max(b, -b)) * 0.001;
 	if(a - b < eps && b - a < eps)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 float almost_in_bounds(float a, float b, float c)
@@ -1018,17 +1055,17 @@ float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
 {
 	if(mi == ma)
 		return 0;
-	else if(ma == rgb_x)
+	else if(ma == rgb.x)
 	{
-		if(rgb_y >= rgb_z)
-			return (rgb_y - rgb_z) / (ma - mi);
+		if(rgb.y >= rgb.z)
+			return (rgb.y - rgb.z) / (ma - mi);
 		else
-			return (rgb_y - rgb_z) / (ma - mi) + 6;
+			return (rgb.y - rgb.z) / (ma - mi) + 6;
 	}
-	else if(ma == rgb_y)
-		return (rgb_z - rgb_x) / (ma - mi) + 2;
+	else if(ma == rgb.y)
+		return (rgb.z - rgb.x) / (ma - mi) + 2;
 	else // if(ma == rgb_z)
-		return (rgb_x - rgb_y) / (ma - mi) + 4;
+		return (rgb.x - rgb.y) / (ma - mi) + 4;
 }
 
 vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
@@ -1041,45 +1078,45 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
 	if(hue <= 1)
 	{
-		rgb_x = ma;
-		rgb_y = hue * (ma - mi) + mi;
-		rgb_z = mi;
+		rgb.x = ma;
+		rgb.y = hue * (ma - mi) + mi;
+		rgb.z = mi;
 	}
 	//else if(ma == rgb_y)
 	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
 	else if(hue <= 2)
 	{
-		rgb_x = (2 - hue) * (ma - mi) + mi;
-		rgb_y = ma;
-		rgb_z = mi;
+		rgb.x = (2 - hue) * (ma - mi) + mi;
+		rgb.y = ma;
+		rgb.z = mi;
 	}
 	else if(hue <= 3)
 	{
-		rgb_x = mi;
-		rgb_y = ma;
-		rgb_z = (hue - 2) * (ma - mi) + mi;
+		rgb.x = mi;
+		rgb.y = ma;
+		rgb.z = (hue - 2) * (ma - mi) + mi;
 	}
 	//else // if(ma == rgb_z)
 	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
 	else if(hue <= 4)
 	{
-		rgb_x = mi;
-		rgb_y = (4 - hue) * (ma - mi) + mi;
-		rgb_z = ma;
+		rgb.x = mi;
+		rgb.y = (4 - hue) * (ma - mi) + mi;
+		rgb.z = ma;
 	}
 	else if(hue <= 5)
 	{
-		rgb_x = (hue - 4) * (ma - mi) + mi;
-		rgb_y = mi;
-		rgb_z = ma;
+		rgb.x = (hue - 4) * (ma - mi) + mi;
+		rgb.y = mi;
+		rgb.z = ma;
 	}
 	//else if(ma == rgb_x)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
 	else // if(hue <= 6)
 	{
-		rgb_x = ma;
-		rgb_y = mi;
-		rgb_z = (6 - hue) * (ma - mi) + mi;
+		rgb.x = ma;
+		rgb.y = mi;
+		rgb.z = (6 - hue) * (ma - mi) + mi;
 	}
 
 	return rgb;
@@ -1090,23 +1127,23 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
 
-	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	hsv_z = ma;
+	hsv.x = rgb_mi_ma_to_hue(rgb, mi, ma);
+	hsv.z = ma;
 
 	if(ma == 0)
-		hsv_y = 0;
+		hsv.y = 0;
 	else
-		hsv_y = 1 - mi/ma;
-	
+		hsv.y = 1 - mi/ma;
+
 	return hsv;
 }
 
 vector hsv_to_rgb(vector hsv)
 {
-	return hue_mi_ma_to_rgb(hsv_x, hsv_z * (1 - hsv_y), hsv_z);
+	return hue_mi_ma_to_rgb(hsv.x, hsv.z * (1 - hsv.y), hsv.z);
 }
 
 vector rgb_to_hsl(vector rgb)
@@ -1114,19 +1151,19 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
 
-	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	
-	hsl_z = 0.5 * (mi + ma);
+	hsl.x = rgb_mi_ma_to_hue(rgb, mi, ma);
+
+	hsl.z = 0.5 * (mi + ma);
 	if(mi == ma)
-		hsl_y = 0;
-	else if(hsl_z <= 0.5)
-		hsl_y = (ma - mi) / (2*hsl_z);
+		hsl.y = 0;
+	else if(hsl.z <= 0.5)
+		hsl.y = (ma - mi) / (2*hsl.z);
 	else // if(hsl_z > 0.5)
-		hsl_y = (ma - mi) / (2 - 2*hsl_z);
-	
+		hsl.y = (ma - mi) / (2 - 2*hsl.z);
+
 	return hsl;
 }
 
@@ -1134,17 +1171,17 @@ vector hsl_to_rgb(vector hsl)
 {
 	float mi, ma, maminusmi;
 
-	if(hsl_z <= 0.5)
-		maminusmi = hsl_y * 2 * hsl_z;
+	if(hsl.z <= 0.5)
+		maminusmi = hsl.y * 2 * hsl.z;
 	else
-		maminusmi = hsl_y * (2 - 2 * hsl_z);
-	
+		maminusmi = hsl.y * (2 - 2 * hsl.z);
+
 	// hsl_z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
-	mi = hsl_z - 0.5 * maminusmi;
-	ma = hsl_z + 0.5 * maminusmi;
+	mi = hsl.z - 0.5 * maminusmi;
+	ma = hsl.z + 0.5 * maminusmi;
 
-	return hue_mi_ma_to_rgb(hsl_x, mi, ma);
+	return hue_mi_ma_to_rgb(hsl.x, mi, ma);
 }
 
 string rgb_to_hexcolor(vector rgb)
@@ -1152,9 +1189,9 @@ string rgb_to_hexcolor(vector rgb)
 	return
 		strcat(
 			"^x",
-			DEC_TO_HEXDIGIT(floor(rgb_x * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_y * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_z * 15 + 0.5))
+			DEC_TO_HEXDIGIT(floor(rgb.x * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb.y * 15 + 0.5)),
+			DEC_TO_HEXDIGIT(floor(rgb.z * 15 + 0.5))
 		);
 }
 
@@ -1162,7 +1199,7 @@ string rgb_to_hexcolor(vector rgb)
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
 
 // requires the same, but is a stronger condition
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;}
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z;}
 
 #ifndef MENUQC
 #endif
@@ -1199,7 +1236,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1227,7 +1264,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 				}
 			}
 	}
-	
+
 	return left;
 }
 
@@ -1263,7 +1300,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 		// terminate, as the range still halves each time - but nevertheless, it is
 		// guaranteed that it finds ONE valid cutoff place (where "left" is in
 		// range, and "right" is outside).
-		
+
 		// terencehill: the following code detects truncated ^xrgb tags (e.g. ^x or ^x4)
 		// and decrease left on the basis of the chars detected of the truncated tag
 		// Even if the ^xrgb tag is not complete/correct, left is decreased
@@ -1291,28 +1328,28 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 				}
 			}
 	}
-	
+
 	return left;
 }
 
 string find_last_color_code(string s)
 {
-	float start, len, i, carets;
-	start = strstrofs(s, "^", 0);
+	int start = strstrofs(s, "^", 0);
 	if (start == -1) // no caret found
 		return "";
-	len = strlen(s)-1;
+	int len = strlen(s)-1;
+	int i;
 	for(i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
 
-		carets = 1;
+		int carets = 1;
 		while (i-carets >= start && substring(s, i-carets, 1) == "^")
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
@@ -1338,7 +1375,7 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -1384,7 +1421,7 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
-	
+
 	if(w <= 0)
 	{
 		getWrappedLine_remaining = string_null;
@@ -1476,7 +1513,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
 		{
-			if not(subpattern4)
+			if (!subpattern4)
 				return 0;
 			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 				return 0;
@@ -1555,15 +1592,15 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	{
 		if(b != 0)
 		{
-			v_x = v_y = -c / b;
-			v_z = 1;
+			v.x = v.y = -c / b;
+			v.z = 1;
 		}
 		else
 		{
 			if(c == 0)
 			{
 				// actually, every number solves the equation!
-				v_z = 1;
+				v.z = 1;
 			}
 		}
 	}
@@ -1575,26 +1612,26 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 			D = sqrt(D);
 			if(a > 0) // put the smaller solution first
 			{
-				v_x = ((-b)-D) / (2*a);
-				v_y = ((-b)+D) / (2*a);
+				v.x = ((-b)-D) / (2*a);
+				v.y = ((-b)+D) / (2*a);
 			}
 			else
 			{
-				v_x = (-b+D) / (2*a);
-				v_y = (-b-D) / (2*a);
+				v.x = (-b+D) / (2*a);
+				v.y = (-b-D) / (2*a);
 			}
-			v_z = 1;
+			v.z = 1;
 		}
 		else
 		{
 			// complex solutions!
 			D = sqrt(-D);
-			v_x = -b / (2*a);
+			v.x = -b / (2*a);
 			if(a > 0)
-				v_y =  D / (2*a);
+				v.y =  D / (2*a);
 			else
-				v_y = -D / (2*a);
-			v_z = 0;
+				v.y = -D / (2*a);
+			v.z = 0;
 		}
 	}
 	return v;
@@ -1618,7 +1655,7 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 	vector solution = solve_quadratic(evel * evel - spd * spd, 2 * (eorg * evel), eorg * eorg);
 	// p = 2 * (eorg * evel) / (evel * evel - spd * spd)
 	// q = (eorg * eorg) / (evel * evel - spd * spd)
-	if(!solution_z) // no real solution
+	if(!solution.z) // no real solution
 	{
 		// happens if D < 0
 		// (eorg * evel)^2 < (evel^2 - spd^2) * eorg^2
@@ -1629,17 +1666,17 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 		// spd < |evel| * sin angle(evel, eorg)
 		return '0 0 0';
 	}
-	else if(solution_x > 0)
+	else if(solution.x > 0)
 	{
 		// both solutions > 0: take the smaller one
 		// happens if p < 0 and q > 0
-		ret = normalize(eorg + solution_x * evel);
+		ret = normalize(eorg + solution.x * evel);
 	}
-	else if(solution_y > 0)
+	else if(solution.y > 0)
 	{
 		// one solution > 0: take the larger one
 		// happens if q < 0 or q == 0 and p < 0
-		ret = normalize(eorg + solution_y * evel);
+		ret = normalize(eorg + solution.y * evel);
 	}
 	else
 	{
@@ -1686,12 +1723,12 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 		vector solution = solve_quadratic(1, -2 * (mydir * myvel), myvel * myvel - spd * spd);
 
 		float outspeed;
-		if(solution_z)
-			outspeed = solution_y; // the larger one
+		if(solution.z)
+			outspeed = solution.y; // the larger one
 		else
 		{
 			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
+			outspeed = solution.x; // the real part (that is, the average!)
 			//dprint("impossible shot, adjusting\n");
 		}
 
@@ -1703,25 +1740,12 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
-void check_unacceptable_compiler_bugs()
-{
-	if(cvar("_allow_unacceptable_compiler_bugs"))
-		return;
-	tokenize_console("foo bar");
-	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
-		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
-
-	string s = "";
-	if not(s)
-		error("The empty string counts as false. We do not want that!");
-}
-
 float compressShotOrigin(vector v)
 {
 	float x, y, z;
-	x = rint(v_x * 2);
-	y = rint(v_y * 4) + 128;
-	z = rint(v_z * 4) + 128;
+	x = rint(v.x * 2);
+	y = rint(v.y * 4) + 128;
+	z = rint(v.z * 4) + 128;
 	if(x > 255 || x < 0)
 	{
 		print("shot origin ", vtos(v), " x out of bounds\n");
@@ -1739,12 +1763,12 @@ float compressShotOrigin(vector v)
 	}
 	return x * 0x10000 + y * 0x100 + z;
 }
-vector decompressShotOrigin(float f)
+vector decompressShotOrigin(int f)
 {
 	vector v;
-	v_x = ((f & 0xFF0000) / 0x10000) / 2;
-	v_y = ((f & 0xFF00) / 0x100 - 128) / 4;
-	v_z = ((f & 0xFF) - 128) / 4;
+	v.x = ((f & 0xFF0000) / 0x10000) / 2;
+	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
+	v.z = ((f & 0xFF) - 128) / 4;
 	return v;
 }
 
@@ -1842,16 +1866,16 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
 	armorideal = healthdamage * armorblock;
-	v_y = armorideal;
+	v.y = armorideal;
 	if(armordamage < healthdamage)
 	{
-		v_x = armordamage;
-		v_z = 1;
+		v.x = armordamage;
+		v.z = 1;
 	}
 	else
 	{
-		v_x = healthdamage;
-		v_z = 0;
+		v.x = healthdamage;
+		v.z = 0;
 	}
 	return v;
 }
@@ -1861,9 +1885,9 @@ vector healtharmor_applydamage(float a, float armorblock, float deathtype, float
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
-	v_y = bound(0, damage * armorblock, a); // save
-	v_x = bound(0, damage - v_y, damage); // take
-	v_z = 0;
+	v.y = bound(0, damage * armorblock, a); // save
+	v.x = bound(0, damage - v.y, damage); // take
+	v.z = 0;
 	return v;
 }
 #endif
@@ -1882,27 +1906,26 @@ string getcurrentmod()
 
 #ifndef MENUQC
 #ifdef CSQC
-float ReadInt24_t()
+int ReadInt24_t()
 {
-	float v;
-	v = ReadShort() * 256; // note: this is signed
+	int v = ReadShort() * 256; // note: this is signed
 	v += ReadByte(); // note: this is unsigned
 	return v;
 }
 vector ReadInt48_t()
 {
 	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = 0;
+	v.x = ReadInt24_t();
+	v.y = ReadInt24_t();
+	v.z = 0;
 	return v;
 }
 vector ReadInt72_t()
 {
 	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = ReadInt24_t();
+	v.x = ReadInt24_t();
+	v.y = ReadInt24_t();
+	v.z = ReadInt24_t();
 	return v;
 }
 #else
@@ -1914,14 +1937,14 @@ void WriteInt24_t(float dst, float val)
 }
 void WriteInt48_t(float dst, vector val)
 {
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
+	WriteInt24_t(dst, val.x);
+	WriteInt24_t(dst, val.y);
 }
 void WriteInt72_t(float dst, vector val)
 {
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
-	WriteInt24_t(dst, val_z);
+	WriteInt24_t(dst, val.x);
+	WriteInt24_t(dst, val.y);
+	WriteInt24_t(dst, val.z);
 }
 #endif
 #endif
@@ -2032,9 +2055,6 @@ string get_model_datafilename(string m, float sk, string fil)
 
 float get_model_parameters(string m, float sk)
 {
-	string fn, s, c;
-	float fh, i;
-
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
@@ -2045,14 +2065,14 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_desc = string_null;
 	get_model_parameters_bone_upperbody = string_null;
 	get_model_parameters_bone_weapon = string_null;
-	for(i = 0; i < MAX_AIM_BONES; ++i)
+	for(int i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		get_model_parameters_bone_aim[i] = string_null;
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
 
-	if not(m)
+	if (!m)
 		return 1;
 
 	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
@@ -2068,8 +2088,8 @@ float get_model_parameters(string m, float sk)
 		m = substring(m, 0, -7);
 	}
 
-	fn = get_model_datafilename(m, sk, "txt");
-	fh = fopen(fn, FILE_READ);
+	string fn = get_model_datafilename(m, sk, "txt");
+	int fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
 		sk = 0;
@@ -2081,6 +2101,7 @@ float get_model_parameters(string m, float sk)
 
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
+	string s, c;
 	while((s = fgets(fh)))
 	{
 		if(s == "")
@@ -2106,11 +2127,13 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-		for(i = 0; i < MAX_AIM_BONES; ++i)
+		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
 				get_model_parameters_bone_aimweight[i] = stof(car(s));
@@ -2135,7 +2158,7 @@ float get_model_parameters(string m, float sk)
 
 vector vec2(vector v)
 {
-	v_z = 0;
+	v.z = 0;
 	return v;
 }
 
@@ -2147,9 +2170,9 @@ vector NearestPointOnBox(entity box, vector org)
 	m1 = box.mins + box.origin;
 	m2 = box.maxs + box.origin;
 
-	nearest_x = bound(m1_x, org_x, m2_x);
-	nearest_y = bound(m1_y, org_y, m2_y);
-	nearest_z = bound(m1_z, org_z, m2_z);
+	nearest.x = bound(m1_x, org.x, m2_x);
+	nearest.y = bound(m1_y, org.y, m2_y);
+	nearest.z = bound(m1_z, org.z, m2_z);
 
 	return nearest;
 }
@@ -2253,13 +2276,13 @@ string CTX(string s)
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
-string xencode(float f)
+string xencode(int f)
 {
 	float a, b, c, d;
-	d = mod(f, 22); f = floor(f / 22);
-	c = mod(f, 22); f = floor(f / 22);
-	b = mod(f, 22); f = floor(f / 22);
-	a = mod(f,  2); // f = floor(f /  2);
+	d = f % 22; f = floor(f / 22);
+	c = f % 22; f = floor(f / 22);
+	b = f % 22; f = floor(f / 22);
+	a = f %  2; // f = floor(f /  2);
 	return strcat(
 		"^",
 		substring(XENCODE_2,  a, 1),
@@ -2284,7 +2307,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(float f)
+float lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
@@ -2322,13 +2345,13 @@ float InterpretBoolean(string input)
 		case "yes":
 		case "true":
 		case "on":
-			return TRUE;
-		
+			return true;
+
 		case "no":
 		case "false":
 		case "off":
-			return FALSE;
-		
+			return false;
+
 		default: return stof(input);
 	}
 }
@@ -2337,8 +2360,7 @@ float InterpretBoolean(string input)
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
-	float f;
-	f = ReadShort();
+	int f = ReadShort();
 	if(f == 0)
 		return world;
 	return findfloat(world, entnum, f);
@@ -2368,7 +2390,7 @@ void m_shutdown()
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
 
-#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 #define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 #define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 // this will use the value:
@@ -2454,25 +2476,25 @@ float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
 float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 {
 	if(startspeedfactor < 0 || endspeedfactor < 0)
-		return FALSE;
+		return false;
 
 	/*
 	// if this is the case, the possible zeros of the first derivative are outside
 	// 0..1
-	We can calculate this condition as condition 
+	We can calculate this condition as condition
 	if(se <= 3)
-		return TRUE;
+		return true;
 	*/
 
 	// better, see below:
 	if(startspeedfactor <= 3 && endspeedfactor <= 3)
-		return TRUE;
+		return true;
 
 	// if this is the case, the first derivative has no zeros at all
 	float se = startspeedfactor + endspeedfactor;
 	float s_e = startspeedfactor - endspeedfactor;
 	if(3 * (se - 4) * (se - 4) + s_e * s_e <= 12) // an ellipse
-		return TRUE;
+		return true;
 
 	// Now let s <= 3, s <= 3, s+e >= 3 (triangle) then we get se <= 6 (top right corner).
 	// we also get s_e <= 6 - se
@@ -2480,7 +2502,7 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// is quadratic, has value 12 at 3 and 6, and value < 12 in between.
 	// Therefore, above "better" check works!
 
-	return FALSE;
+	return false;
 
 	// known good cases:
 	// (0, [0..3])
@@ -2492,6 +2514,28 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// (3, [0..3])
 	// (3.5, [0.2..2.3])
 	// (4, 1)
+
+	/*
+	   On another note:
+	   inflection point is always at (2s + e - 3) / (3s + 3e - 6).
+
+	   s + e - 2 == 0: no inflection
+
+	   s + e > 2:
+	   0 < inflection < 1 if:
+	   0 < 2s + e - 3 < 3s + 3e - 6
+	   2s + e > 3 and 2e + s > 3
+
+	   s + e < 2:
+	   0 < inflection < 1 if:
+	   0 > 2s + e - 3 > 3s + 3e - 6
+	   2s + e < 3 and 2e + s < 3
+
+	   Therefore: there is an inflection point iff:
+	   e outside (3 - s)/2 .. 3 - s*2
+
+	   in other words, if (s,e) in triangle (1,1)(0,3)(0,1.5) or in triangle (1,1)(3,0)(1.5,0)
+	*/
 }
 
 .float FindConnectedComponent_processing;
@@ -2512,7 +2556,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for(; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.fld)
 	{
 		// find all neighbors of queue_start
 		entity t;
@@ -2536,8 +2580,31 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z)
+{
+	vector result; result.x = x; result.y = y; result.z = z;
+	return result;
+}
+
+vector get_corner_position(entity box, float corner)
+{
+	switch(corner)
+	{
+		case 1: return combine_to_vector(box.absmin.x, box.absmin.y, box.absmin.z);
+		case 2: return combine_to_vector(box.absmax.x, box.absmin.y, box.absmin.z);
+		case 3: return combine_to_vector(box.absmin.x, box.absmax.y, box.absmin.z);
+		case 4: return combine_to_vector(box.absmin.x, box.absmin.y, box.absmax.z);
+		case 5: return combine_to_vector(box.absmax.x, box.absmax.y, box.absmin.z);
+		case 6: return combine_to_vector(box.absmin.x, box.absmax.y, box.absmax.z);
+		case 7: return combine_to_vector(box.absmax.x, box.absmin.y, box.absmax.z);
+		case 8: return combine_to_vector(box.absmax.x, box.absmax.y, box.absmax.z);
+		default: return '0 0 0';
+	}
+}
+#endif
+
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2559,18 +2626,17 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
 {
 	// See the autocvar declarations in util.qh for default values
-	
+
 	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
 
 	// "kill" colors
 	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
@@ -2586,9 +2652,9 @@ string CCR(string input)
 vector vec3(float x, float y, float z)
 {
 	vector v;
-	v_x = x;
-	v_y = y;
-	v_z = z;
+	v.x = x;
+	v.y = y;
+	v.z = z;
 	return v;
 }
 
@@ -2596,17 +2662,17 @@ vector vec3(float x, float y, float z)
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
-	if(a_y == 1)
+	if(a.y == 1)
 	{
 		float dur;
-		dur = frameduration(e.modelindex, a_x);
-		if(dur <= 0 && b_y)
+		dur = frameduration(e.modelindex, a.x);
+		if(dur <= 0 && b.y)
 		{
 			a = b;
-			dur = frameduration(e.modelindex, a_x);
+			dur = frameduration(e.modelindex, a.x);
 		}
 		if(dur > 0)
-			a_z = 1.0 / dur;
+			a.z = 1.0 / dur;
 	}
 	return a;
 }
@@ -2629,15 +2695,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_GAMESTART_10;
-				case 9:  return ANNCE_NUM_GAMESTART_9; 
-				case 8:  return ANNCE_NUM_GAMESTART_8; 
-				case 7:  return ANNCE_NUM_GAMESTART_7; 
-				case 6:  return ANNCE_NUM_GAMESTART_6; 
-				case 5:  return ANNCE_NUM_GAMESTART_5; 
-				case 4:  return ANNCE_NUM_GAMESTART_4; 
-				case 3:  return ANNCE_NUM_GAMESTART_3; 
-				case 2:  return ANNCE_NUM_GAMESTART_2; 
-				case 1:  return ANNCE_NUM_GAMESTART_1; 
+				case 9:  return ANNCE_NUM_GAMESTART_9;
+				case 8:  return ANNCE_NUM_GAMESTART_8;
+				case 7:  return ANNCE_NUM_GAMESTART_7;
+				case 6:  return ANNCE_NUM_GAMESTART_6;
+				case 5:  return ANNCE_NUM_GAMESTART_5;
+				case 4:  return ANNCE_NUM_GAMESTART_4;
+				case 3:  return ANNCE_NUM_GAMESTART_3;
+				case 2:  return ANNCE_NUM_GAMESTART_2;
+				case 1:  return ANNCE_NUM_GAMESTART_1;
 			}
 			break;
 		}
@@ -2646,15 +2712,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_IDLE_10;
-				case 9:  return ANNCE_NUM_IDLE_9; 
-				case 8:  return ANNCE_NUM_IDLE_8; 
-				case 7:  return ANNCE_NUM_IDLE_7; 
-				case 6:  return ANNCE_NUM_IDLE_6; 
-				case 5:  return ANNCE_NUM_IDLE_5; 
-				case 4:  return ANNCE_NUM_IDLE_4; 
-				case 3:  return ANNCE_NUM_IDLE_3; 
-				case 2:  return ANNCE_NUM_IDLE_2; 
-				case 1:  return ANNCE_NUM_IDLE_1; 
+				case 9:  return ANNCE_NUM_IDLE_9;
+				case 8:  return ANNCE_NUM_IDLE_8;
+				case 7:  return ANNCE_NUM_IDLE_7;
+				case 6:  return ANNCE_NUM_IDLE_6;
+				case 5:  return ANNCE_NUM_IDLE_5;
+				case 4:  return ANNCE_NUM_IDLE_4;
+				case 3:  return ANNCE_NUM_IDLE_3;
+				case 2:  return ANNCE_NUM_IDLE_2;
+				case 1:  return ANNCE_NUM_IDLE_1;
 			}
 			break;
 		}
@@ -2663,15 +2729,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_KILL_10;
-				case 9:  return ANNCE_NUM_KILL_9; 
-				case 8:  return ANNCE_NUM_KILL_8; 
-				case 7:  return ANNCE_NUM_KILL_7; 
-				case 6:  return ANNCE_NUM_KILL_6; 
-				case 5:  return ANNCE_NUM_KILL_5; 
-				case 4:  return ANNCE_NUM_KILL_4; 
-				case 3:  return ANNCE_NUM_KILL_3; 
-				case 2:  return ANNCE_NUM_KILL_2; 
-				case 1:  return ANNCE_NUM_KILL_1; 
+				case 9:  return ANNCE_NUM_KILL_9;
+				case 8:  return ANNCE_NUM_KILL_8;
+				case 7:  return ANNCE_NUM_KILL_7;
+				case 6:  return ANNCE_NUM_KILL_6;
+				case 5:  return ANNCE_NUM_KILL_5;
+				case 4:  return ANNCE_NUM_KILL_4;
+				case 3:  return ANNCE_NUM_KILL_3;
+				case 2:  return ANNCE_NUM_KILL_2;
+				case 1:  return ANNCE_NUM_KILL_1;
 			}
 			break;
 		}
@@ -2680,15 +2746,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_RESPAWN_10;
-				case 9:  return ANNCE_NUM_RESPAWN_9; 
-				case 8:  return ANNCE_NUM_RESPAWN_8; 
-				case 7:  return ANNCE_NUM_RESPAWN_7; 
-				case 6:  return ANNCE_NUM_RESPAWN_6; 
-				case 5:  return ANNCE_NUM_RESPAWN_5; 
-				case 4:  return ANNCE_NUM_RESPAWN_4; 
-				case 3:  return ANNCE_NUM_RESPAWN_3; 
-				case 2:  return ANNCE_NUM_RESPAWN_2; 
-				case 1:  return ANNCE_NUM_RESPAWN_1; 
+				case 9:  return ANNCE_NUM_RESPAWN_9;
+				case 8:  return ANNCE_NUM_RESPAWN_8;
+				case 7:  return ANNCE_NUM_RESPAWN_7;
+				case 6:  return ANNCE_NUM_RESPAWN_6;
+				case 5:  return ANNCE_NUM_RESPAWN_5;
+				case 4:  return ANNCE_NUM_RESPAWN_4;
+				case 3:  return ANNCE_NUM_RESPAWN_3;
+				case 2:  return ANNCE_NUM_RESPAWN_2;
+				case 1:  return ANNCE_NUM_RESPAWN_1;
 			}
 			break;
 		}
@@ -2697,15 +2763,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_ROUNDSTART_10;
-				case 9:  return ANNCE_NUM_ROUNDSTART_9; 
-				case 8:  return ANNCE_NUM_ROUNDSTART_8; 
-				case 7:  return ANNCE_NUM_ROUNDSTART_7; 
-				case 6:  return ANNCE_NUM_ROUNDSTART_6; 
-				case 5:  return ANNCE_NUM_ROUNDSTART_5; 
-				case 4:  return ANNCE_NUM_ROUNDSTART_4; 
-				case 3:  return ANNCE_NUM_ROUNDSTART_3; 
-				case 2:  return ANNCE_NUM_ROUNDSTART_2; 
-				case 1:  return ANNCE_NUM_ROUNDSTART_1; 
+				case 9:  return ANNCE_NUM_ROUNDSTART_9;
+				case 8:  return ANNCE_NUM_ROUNDSTART_8;
+				case 7:  return ANNCE_NUM_ROUNDSTART_7;
+				case 6:  return ANNCE_NUM_ROUNDSTART_6;
+				case 5:  return ANNCE_NUM_ROUNDSTART_5;
+				case 4:  return ANNCE_NUM_ROUNDSTART_4;
+				case 3:  return ANNCE_NUM_ROUNDSTART_3;
+				case 2:  return ANNCE_NUM_ROUNDSTART_2;
+				case 1:  return ANNCE_NUM_ROUNDSTART_1;
 			}
 			break;
 		}
@@ -2714,15 +2780,15 @@ float Announcer_PickNumber(float type, float num)
 			switch(num)
 			{
 				case 10: return ANNCE_NUM_10;
-				case 9:  return ANNCE_NUM_9; 
-				case 8:  return ANNCE_NUM_8; 
-				case 7:  return ANNCE_NUM_7; 
-				case 6:  return ANNCE_NUM_6; 
-				case 5:  return ANNCE_NUM_5; 
-				case 4:  return ANNCE_NUM_4; 
-				case 3:  return ANNCE_NUM_3; 
-				case 2:  return ANNCE_NUM_2; 
-				case 1:  return ANNCE_NUM_1; 
+				case 9:  return ANNCE_NUM_9;
+				case 8:  return ANNCE_NUM_8;
+				case 7:  return ANNCE_NUM_7;
+				case 6:  return ANNCE_NUM_6;
+				case 5:  return ANNCE_NUM_5;
+				case 4:  return ANNCE_NUM_4;
+				case 3:  return ANNCE_NUM_3;
+				case 2:  return ANNCE_NUM_2;
+				case 1:  return ANNCE_NUM_1;
 			}
 			break;
 		}
@@ -2730,3 +2796,55 @@ float Announcer_PickNumber(float type, float num)
 	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
+
+#ifndef MENUQC
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
+{
+	switch(nativecontents)
+	{
+		case CONTENT_EMPTY:
+			return 0;
+		case CONTENT_SOLID:
+			return DPCONTENTS_SOLID | DPCONTENTS_OPAQUE;
+		case CONTENT_WATER:
+			return DPCONTENTS_WATER;
+		case CONTENT_SLIME:
+			return DPCONTENTS_SLIME;
+		case CONTENT_LAVA:
+			return DPCONTENTS_LAVA | DPCONTENTS_NODROP;
+		case CONTENT_SKY:
+			return DPCONTENTS_SKY | DPCONTENTS_NODROP | DPCONTENTS_OPAQUE; // to match behaviour of Q3 maps, let sky count as opaque
+	}
+	return 0;
+}
+
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
+{
+	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
+		return CONTENT_SOLID;
+	if(supercontents & DPCONTENTS_SKY)
+		return CONTENT_SKY;
+	if(supercontents & DPCONTENTS_LAVA)
+		return CONTENT_LAVA;
+	if(supercontents & DPCONTENTS_SLIME)
+		return CONTENT_SLIME;
+	if(supercontents & DPCONTENTS_WATER)
+		return CONTENT_WATER;
+	return CONTENT_EMPTY;
+}
+#endif
+
+vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (t * t) +
+		(b - a) * (2 * t) +
+		a;
+}
+
+vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (2 * t) +
+		(b - a) * 2;
+}

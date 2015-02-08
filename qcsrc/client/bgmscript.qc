@@ -1,3 +1,14 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
+	#include "../common/util.qh"
+	#include "autocvars.qh"
+	#include "bgmscript.qh"
+	#include "main.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;
@@ -17,10 +28,10 @@ float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 	//   attack: from 0 to 1, in time a for a full length
 	//   decay: from 1 to s, in time d
 	//   sustain: s
-	
+
 	if(t < 0)
 		return 0;
-	
+
 	if(a)
 		if(t <= a)
 			return t / a;
@@ -38,10 +49,10 @@ float GetReleaseAmplitude(float d, float s, float r, float t)
 
 	if(!r)
 		return 0;
-	
+
 	if(t > r)
 		return 0;
-	
+
 	releaseval = s * (1 - t / r);
 
 	if(t < -d)
@@ -70,7 +81,7 @@ float GetReleaseTime(float d, float s, float r, float amp)
 
 	if(!s)
 		return 0;
-	
+
 	// if amp > s, we may be in the attack or in the prolonged decay curve
 	releasetime = (1 - amp / s) * r;
 
@@ -131,7 +142,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			print(sprintf("ERROR: bgmscript does not define %s\n", e.bgmscript));
+			printf("ERROR: bgmscript does not define %s\n", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
 		}
@@ -172,11 +183,11 @@ float BGMScript(entity e)
 
 	if(e.bgmscript == "")
 		return 1;
-	
+
 	if(autocvar_bgmvolume <= 0)
 		return -1;
 
-	e.just_toggled = FALSE;
+	e.just_toggled = false;
 
 	if(bgmtime < 0)
 		return -1;
@@ -189,13 +200,13 @@ float BGMScript(entity e)
 		e.bgmscripttime = bgmtime;
 
 		// treat this as a stop event for all notes, to prevent sticking keys
-		e.bgmscriptstate = FALSE;
+		e.bgmscriptstate = false;
 		e.bgmscriptvolume = 1;
 		e.bgmscriptstatetime = bgmtime - GetTimeForAmplitude(e, amp);
 	}
 
 	// find the CURRENT line
-	for(;;)
+	for (;;)
 	{
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
 		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)
@@ -214,11 +225,11 @@ float BGMScript(entity e)
 			vel = stof(argv(2));
 			if(vel > 0)
 			{
-				e.just_toggled = e.bgmscriptstate = TRUE;
+				e.just_toggled = e.bgmscriptstate = true;
 				e.bgmscriptvolume = vel;
 			}
 			else
-				e.just_toggled = e.bgmscriptstate = FALSE;
+				e.just_toggled = e.bgmscriptstate = false;
 
 			e.bgmscriptstatetime = e.bgmscripttime - GetTimeForAmplitude(e, amp);
 		}

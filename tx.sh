@@ -7,6 +7,9 @@ mergebase=`git log --pretty=oneline -1 .tx/merge-base | cut -d ' ' -f 1`
 
 set -e
 
+# Update the .pot.
+sh check-translations.sh pot
+
 # First upload our current .pot.
 mkdir -p translations/xonotic.commonpot/
 cp common.pot translations/xonotic.commonpot/en..po
@@ -61,5 +64,13 @@ for f in translations/xonotic.commonpot/*..po; do
 		cp "$tcurfile" "$gnewfile"
 	fi
 done
-tx push -t
+tx push -t --skip
 date > .tx/merge-base
+
+# Build new languages list.
+sh check-translations.sh txt > languages.txt.new
+mv languages.txt.new languages.txt
+
+# Report stats.
+git diff --stat
+git diff --color-words languages.txt

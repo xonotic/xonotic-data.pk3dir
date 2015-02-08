@@ -1,4 +1,8 @@
-.float creationtime;
+#if defined(CSQC)
+	#include "rubble.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
 
 // LordHavoc: rewrote this file, it was really bad code
 

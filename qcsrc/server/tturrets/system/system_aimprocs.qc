@@ -11,7 +11,7 @@ vector turret_stdproc_aim_generic()
 {
 
     vector pre_pos, prep;
-    float distance, impact_time, i, mintime;
+    float distance, i, mintime;
 
     turret_tag_fire_update();
 
@@ -25,14 +25,12 @@ vector turret_stdproc_aim_generic()
 
     // Lead?
     if (self.aim_flags & TFL_AIM_LEAD)
-    {    	
+    {
 		if (self.aim_flags & TFL_AIM_SHOTTIMECOMPENSATE)       // Need to conpensate for shot traveltime
 		{
 			// FIXME: this cant be the best way to do this..
 			prep = pre_pos;
-#ifdef GMQCC
-			impact_time = 0;
-#endif
+			float impact_time = 0;
 			for(i = 0; i < 4; ++i)
 			{
 				distance = vlen(prep - self.tur_shotorg);
@@ -43,16 +41,16 @@ vector turret_stdproc_aim_generic()
 			prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 
 			if(self.aim_flags & TFL_AIM_ZPREDICT)
-			if not(self.enemy.flags & FL_ONGROUND)
+			if (!(self.enemy.flags & FL_ONGROUND))
 			if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
-				prep_z = pre_pos_z;
-				vz = self.enemy.velocity_z;
+				prep.z = pre_pos.z;
+				vz = self.enemy.velocity.z;
 				for(i = 0; i < impact_time; i += sys_frametime)
 				{
 					vz = vz - (autocvar_sv_gravity * sys_frametime);
-					prep_z = prep_z + vz * sys_frametime;
+					prep.z = prep.z + vz * sys_frametime;
 				}
 			}
 			pre_pos = prep;
@@ -60,7 +58,7 @@ vector turret_stdproc_aim_generic()
 		else
 			pre_pos = pre_pos + self.enemy.velocity * mintime;
     }
-    
+
     if(self.aim_flags & TFL_AIM_GROUNDGROUND)
     {
         //tracebox(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);

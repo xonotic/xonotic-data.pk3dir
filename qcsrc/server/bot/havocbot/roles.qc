@@ -12,7 +12,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 	float rating, d, discard, distance, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
-	head = findchainfloat(bot_pickup, TRUE);
+	head = findchainfloat(bot_pickup, true);
 
 	while (head)
 	{
@@ -30,7 +30,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		// Check if the item can be picked up safely
 		if(head.classname == "droppedweapon")
 		{
-			traceline(o, o + '0 0 -1500', TRUE, world);
+			traceline(o, o + '0 0 -1500', true, world);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
@@ -57,7 +57,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 		if(teamplay)
 		{
-			discard = FALSE;
+			discard = false;
 
 			FOR_EACH_PLAYER(player)
 			{
@@ -77,7 +77,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 					friend_distance = d;
 
-					discard = TRUE;
+					discard = true;
 
 					if( head.health && player.health > self.health )
 						continue;
@@ -98,10 +98,13 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if (head.ammo_rockets && player.ammo_rockets > self.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && player.ammo_cells > self.ammo_cells )
+					if (head.ammo_cells && player.ammo_cells > self.ammo_cells)
 						continue;
 
-					discard = FALSE;
+					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
+						continue;
+
+					discard = false;
 				}
 				else
 				{
@@ -149,8 +152,9 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
 	entity head;
-	float t, noteam, distance;
-	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
+	int t;
+	float distance;
+	noref bool noteam = ((self.team == 0) || !teamplay);
 
 	if (autocvar_bot_nofire)
 		return;
@@ -181,7 +185,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			// not falling
 			if((head.flags & FL_ONGROUND) == 0)
 			{
-				traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
+				traceline(head.origin, head.origin + '0 0 -1500', true, world);
 				t = pointcontents(trace_endpos + '0 0 1');
 				if( t != CONTENT_SOLID )
 				if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
@@ -221,60 +225,19 @@ void havocbot_role_dm()
 	}
 }
 
-//Race:
-//go to next checkpoint, and annoy enemies
-.float race_checkpoint;
-void havocbot_role_race()
-{
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	entity e;
-	if (self.bot_strategytime < time)
-	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		/*
-		havocbot_goalrating_items(100, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(500, self.origin, 20000);
-		*/
-
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
-		{
-			if(e.cnt == self.race_checkpoint)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-			else if(self.race_checkpoint == -1)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-		}
-
-		navigation_goalrating_end();
-	}
-}
-
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
-}
-
-void havocbot_chooserole_race()
-{
-	self.havocbot_role = havocbot_role_race;
 }
 
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch
