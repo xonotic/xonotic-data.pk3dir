@@ -721,7 +721,8 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		{
 			Unfreeze(self);
 			self.health = 0;
-			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+			if(self.event_damage)
+				self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
 
 		else if ( self.revive_progress <= 0 )
