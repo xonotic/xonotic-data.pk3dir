@@ -164,7 +164,7 @@ float MapInfo_Type_FromString(string t);
 string MapInfo_Type_Description(float t);
 string MapInfo_Type_ToString(float t);
 string MapInfo_Type_ToText(float t);
-void MapInfo_SwitchGameType(float t);
+void MapInfo_SwitchGameType(int t);
 
 // to be called from worldspawn to set up cvars
 void MapInfo_LoadMapSettings(string s);

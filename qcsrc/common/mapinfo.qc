@@ -1334,11 +1334,11 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 	return r;
 }
 
-void MapInfo_SwitchGameType(float t)
+void MapInfo_SwitchGameType(int t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for (entity e = MapInfo_Type_first; e; e = e.enemy) {
 		cvar_set(e.netname, (t == e.items) ? "1" : "0");
+	}
 }
 
 void MapInfo_LoadMap(string s, float reinit)
