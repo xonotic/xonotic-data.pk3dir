@@ -563,16 +563,24 @@ void HUD_Weapons(void)
 
 		// center the resized panel, or snap it to the screen edge when close enough
 		if(panel_pos.x > vid_conwidth * 0.001)
+		{
 			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
 				panel_pos.x += old_panel_size.x - panel_size.x;
 			else
 				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+		}
+		else if(old_panel_size.x > vid_conwidth * 0.999)
+			panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
 
 		if(panel_pos.y > vid_conheight * 0.001)
+		{
 			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
 				panel_pos.y += old_panel_size.y - panel_size.y;
 			else
 				panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+		}
+		else if(old_panel_size.y > vid_conheight * 0.999)
+			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
 		weapon_count = WEP_COUNT;
