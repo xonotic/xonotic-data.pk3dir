@@ -1,3 +1,8 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 ///////////////////////////////////////////////
 // Menu Source File
 ///////////////////////
@@ -7,7 +12,7 @@
 
 float mouseButtonsPressed;
 vector menuMousePos;
-float menuShiftState;
+int menuShiftState;
 float menuPrevTime;
 float menuAlpha;
 float menuLogoAlpha;
@@ -16,10 +21,13 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
+      realconwidth, realconheight;
+
 void m_sync()
 {
 	updateCompression();
-	updateConwidths();
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw.
 
 	loadAllCvars(main);
 }
@@ -50,10 +58,8 @@ void m_init()
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
 
-	check_unacceptable_compiler_bugs();
-
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
+	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -64,7 +70,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
@@ -74,12 +80,13 @@ void m_init()
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
+	RegisterSLCategories();
+
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
-	initConwidths();
 
 	if(!restarting)
 	{
@@ -89,21 +96,30 @@ void m_init()
 			m_hide();
 		cvar_set("_menu_initialized", "1");
 	}
+
 }
 
-float MENU_ASPECT = 1.25; // 1280x1024
-float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
+const float MENU_ASPECT = 1.25; // 1280x1024
+
 void draw_reset_cropped()
 {
-	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
+	draw_reset(conwidth, conheight, 0.5 * (realconwidth - conwidth), 0.5 * (realconheight - conheight));
 }
 void draw_reset_full()
 {
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
-void UpdateConWidthHeight()
+
+void UpdateConWidthHeight(float w, float h, float p)
 {
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
+	{
+		if (updateConwidths(w, h, p))
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		vidwidth_s = w;
+		vidheight_s = h;
+		vidpixelheight_s = p;
+	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
@@ -120,18 +136,6 @@ void UpdateConWidthHeight()
 		conwidth = realconwidth;
 		conheight = realconwidth / MENU_ASPECT;
 	}
-	screenconwidth = conwidth;
-	screenconheight = conheight;
-	if(conwidth < MENU_MINHEIGHT * MENU_ASPECT)
-	{
-		conheight *= MENU_MINHEIGHT * MENU_ASPECT / conwidth;
-		conwidth = MENU_MINHEIGHT * MENU_ASPECT;
-	}
-	if(conheight < MENU_MINHEIGHT)
-	{
-		conwidth *= MENU_MINHEIGHT / conheight;
-		conheight = MENU_MINHEIGHT;
-	}
 	if(main)
 	{
 		if(conwidth_s != conwidth || conheight_s != conheight)
@@ -139,6 +143,10 @@ void UpdateConWidthHeight()
 			draw_reset_cropped();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
+	}
+	else
+	{
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
 	}
 }
 
@@ -148,8 +156,6 @@ void m_init_delayed()
 	float fh, glob, n, i;
 	string s;
 
-	conwidth = conheight = -1;
-	UpdateConWidthHeight();
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -193,7 +199,7 @@ void m_init_delayed()
 	}
 	fclose(fh);
 
-	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), TRUE, TRUE);
+	glob = search_begin(strcat(draw_currentSkin, "/*.tga"), true, true);
 	if(glob >= 0)
 	{
 		n = search_getsize(glob);
@@ -257,6 +263,19 @@ void m_keydown(float key, float ascii)
 		return;
 	if(!Menu_Active)
 		return;
+
+	if(menuMouseMode)
+	if(key >= K_MOUSE1 && key <= K_MOUSE3)
+	{
+		// detect a click outside of the game window
+		vector p = getmousepos();
+		if(p.x < 0 || p.x > realconwidth || p.y < 0 || p.y > realconheight)
+		{
+			++mouseButtonsPressed;
+			return;
+		}
+	}
+
 	if(keyGrabber)
 	{
 		entity e;
@@ -289,24 +308,21 @@ void m_keydown(float key, float ascii)
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
 }
 
-float SCALEMODE_CROP = 0;
-float SCALEMODE_LETTERBOX = 1;
-float SCALEMODE_WIDTH = 2;
-float SCALEMODE_HEIGHT = 3;
-float SCALEMODE_STRETCH = 4;
+const float SCALEMODE_CROP = 0;
+const float SCALEMODE_LETTERBOX = 1;
+const float SCALEMODE_WIDTH = 2;
+const float SCALEMODE_HEIGHT = 3;
+const float SCALEMODE_STRETCH = 4;
 void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 {
 	vector sz, org, isz, isz_w, isz_h;
 	float width_is_larger;
 
 	sz = draw_PictureSize(img);
-	width_is_larger = (sz_x * draw_scale_y >= sz_y * draw_scale_x);
-	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
-	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
+	width_is_larger = (sz.x * draw_scale.y >= sz.y * draw_scale.x);
+	isz_w = '1 0 0' + '0 1 0' * ((sz.y / sz.x) * (draw_scale.x / draw_scale.y));
+	isz_h = '0 1 0' + '1 0 0' * ((sz.x / sz.y) * (draw_scale.y / draw_scale.x));
 
-#ifdef GMQCC
-	isz = '0 0 0';
-#endif
 	switch(scalemode)
 	{
 		default:
@@ -327,7 +343,7 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 			break;
 	}
 
-	org = eX * (algn_x * (1 - isz_x)) + eY * (algn_y * (1 - isz_y));
+	org = eX * (algn.x * (1 - isz.x)) + eY * (algn.y * (1 - isz.y));
 	draw_Picture(org, img, isz, '1 1 1', a);
 }
 
@@ -341,7 +357,7 @@ void drawBackground(string img, float a, string algn, float force1)
 	string c;
 	float scalemode;
 
-	v_z = 0;
+	v.z = 0;
 
 	scalemode = SCALEMODE_CROP;
 
@@ -356,17 +372,17 @@ void drawBackground(string img, float a, string algn, float force1)
 			case "h": scalemode = SCALEMODE_HEIGHT; goto nopic;
 			case "w": scalemode = SCALEMODE_WIDTH; goto nopic;
 			case "s": scalemode = SCALEMODE_STRETCH; goto nopic;
-			case "1": case "4": case "7": v_x = 0.0; break;
-			case "2": case "5": case "8": v_x = 0.5; break;
-			case "3": case "6": case "9": v_x = 1.0; break;
-			default: v_x = random(); break;
+			case "1": case "4": case "7": v.x = 0.0; break;
+			case "2": case "5": case "8": v.x = 0.5; break;
+			case "3": case "6": case "9": v.x = 1.0; break;
+			default: v.x = random(); break;
 		}
 		switch(c)
 		{
-			case "7": case "8": case "9": v_y = 0.0; break;
-			case "4": case "5": case "6": v_y = 0.5; break;
-			case "1": case "2": case "3": v_y = 1.0; break;
-			default: v_y = random(); break;
+			case "7": case "8": case "9": v.y = 0.0; break;
+			case "4": case "5": case "6": v.y = 0.5; break;
+			case "1": case "2": case "3": v.y = 1.0; break;
+			default: v.y = random(); break;
 		}
 		if(l == 0)
 			draw_Picture_Aligned(v, scalemode, img, a);
@@ -393,68 +409,68 @@ string menuTooltipText;
 float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 float m_testmousetooltipbox(vector pos)
 {
-	if(pos_x >= menuTooltipOrigin_x && pos_x < menuTooltipOrigin_x + menuTooltipSize_x)
-	if(pos_y >= menuTooltipOrigin_y && pos_y < menuTooltipOrigin_y + menuTooltipSize_y)
-		return FALSE;
-	return TRUE;
+	if(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
+	if(pos.y >= menuTooltipOrigin.y && pos.y < menuTooltipOrigin.y + menuTooltipSize.y)
+		return false;
+	return true;
 }
 float m_testtooltipbox(vector tooltippos)
 {
-	if(tooltippos_x < 0)
-		return FALSE;
-	if(tooltippos_y < 0)
-		return FALSE;
-	if(tooltippos_x + menuTooltipSize_x > 1)
-		return FALSE;
-	if(tooltippos_y + menuTooltipSize_y > 1)
-		return FALSE;
+	if(tooltippos.x < 0)
+		return false;
+	if(tooltippos.y < 0)
+		return false;
+	if(tooltippos.x + menuTooltipSize.x > 1)
+		return false;
+	if(tooltippos.y + menuTooltipSize.y > 1)
+		return false;
 	menuTooltipOrigin = tooltippos;
-	return TRUE;
+	return true;
 }
 float m_allocatetooltipbox(vector pos)
 {
 	vector avoidplus, avoidminus;
 	vector v;
 
-	avoidplus_x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
-	avoidplus_y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
-	avoidplus_z = 0;
+	avoidplus.x = (SKINAVOID_TOOLTIP_x + SKINSIZE_CURSOR_x - SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth;
+	avoidplus.y = (SKINAVOID_TOOLTIP_y + SKINSIZE_CURSOR_y - SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight;
+	avoidplus.z = 0;
 
-	avoidminus_x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize_x;
-	avoidminus_y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize_y;
-	avoidminus_z = 0;
+	avoidminus.x = (SKINAVOID_TOOLTIP_x + SKINOFFSET_CURSOR_x * SKINSIZE_CURSOR_x) / conwidth + menuTooltipSize.x;
+	avoidminus.y = (SKINAVOID_TOOLTIP_y + SKINOFFSET_CURSOR_y * SKINSIZE_CURSOR_y) / conheight + menuTooltipSize.y;
+	avoidminus.z = 0;
 
 	// bottom right
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
-		return TRUE;
-	
+		return true;
+
 	// bottom center
-	v_x = pos_x - menuTooltipSize_x * 0.5;
+	v.x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// bottom left
-	v_x = pos_x - avoidminus_x;
+	v.x = pos.x - avoidminus.x;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// top left
-	v_y = pos_y - avoidminus_y;
+	v.y = pos.y - avoidminus.y;
 	if(m_testtooltipbox(v))
-		return TRUE;
+		return true;
 
 	// top center
-	v_x = pos_x - menuTooltipSize_x * 0.5;
+	v.x = pos.x - menuTooltipSize.x * 0.5;
 	if(m_testtooltipbox(v))
-		return TRUE;
-	
+		return true;
+
 	// top right
-	v_x = pos_x + avoidplus_x;
+	v.x = pos.x + avoidplus.x;
 	if(m_testtooltipbox(v))
-		return TRUE;
-	
-	return FALSE;
+		return true;
+
+	return false;
 }
 entity m_findtooltipitem(entity root, vector pos)
 {
@@ -562,7 +578,7 @@ void m_tooltip(vector pos)
 					menuTooltipState = 1;
 					menuTooltipItem = it;
 
-					menuTooltipOrigin_x = -1; // unallocated
+					menuTooltipOrigin.x = -1; // unallocated
 
 					if (menuTooltipText)
 						strunzone(menuTooltipText);
@@ -575,13 +591,13 @@ void m_tooltip(vector pos)
 					{
 						s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
 						++i;
-						f = draw_TextWidth(s, FALSE, fontsize);
+						f = draw_TextWidth(s, false, fontsize);
 						if(f > w)
 							w = f;
 					}
-					menuTooltipSize_x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
-					menuTooltipSize_y = i * fontsize_y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
-					menuTooltipSize_z = 0;
+					menuTooltipSize.x = w + 2 * (SKINMARGIN_TOOLTIP_x / conwidth);
+					menuTooltipSize.y = i * fontsize.y + 2 * (SKINMARGIN_TOOLTIP_y / conheight);
+					menuTooltipSize.z = 0;
 				}
 				break;
 			case 1:
@@ -634,31 +650,31 @@ void m_tooltip(vector pos)
 				menuTooltipItem = world; // reload tooltip next frame
 			menu_tooltips_old = menu_tooltips;
 		}
-		else if(menuTooltipOrigin_x < 0) // unallocated?
+		else if(menuTooltipOrigin.x < 0) // unallocated?
 			m_allocatetooltipbox(pos);
 
-		if(menuTooltipOrigin_x >= 0)
+		if(menuTooltipOrigin.x >= 0)
 		{
 			// draw the tooltip!
 			p = SKINBORDER_TOOLTIP;
-			p_x *= 1 / conwidth;
-			p_y *= 1 / conheight;
+			p.x *= 1 / conwidth;
+			p.y *= 1 / conheight;
 			draw_BorderPicture(menuTooltipOrigin, SKINGFX_TOOLTIP, menuTooltipSize, '1 1 1', menuTooltipAlpha, p);
 			p = menuTooltipOrigin;
-			p_x += SKINMARGIN_TOOLTIP_x / conwidth;
-			p_y += SKINMARGIN_TOOLTIP_y / conheight;
+			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
+			p.y += SKINMARGIN_TOOLTIP_y / conheight;
 			getWrappedLine_remaining = menuTooltipText;
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
-				draw_Text(p, s, fontsize, '1 1 1', SKINALPHA_TOOLTIP * menuTooltipAlpha, FALSE);
-				p_y += fontsize_y;
+				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
+				p.y += fontsize.y;
 			}
 		}
 	}
 }
 
-void m_draw()
+void m_draw(float width, float height)
 {
 	float t;
 	float realFrametime;
@@ -672,8 +688,7 @@ void m_draw()
 	if (anim)
 		anim.tickAll(anim);
 
-	if(main)
-		UpdateConWidthHeight();
+	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
 	if(!menuInitialized)
 	{
@@ -746,7 +761,7 @@ void m_draw()
 		{
 			draw_reset_full();
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_BACKGROUND, 1);
-			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, TRUE);
+			drawBackground(SKINGFX_BACKGROUND, bound(0, menuLogoAlpha, 1), SKINALIGN_BACKGROUND, true);
 			draw_reset_cropped();
 			if(menuAlpha <= 0 && SKINALPHA_CURSOR_INTRO > 0)
 			{
@@ -761,7 +776,7 @@ void m_draw()
 		if(menuAlpha > 0)
 		{
 			draw_reset_full();
-			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, FALSE);
+			drawBackground(SKINGFX_BACKGROUND_INGAME, menuAlpha * SKINALPHA_BACKGROUND_INGAME, SKINALIGN_BACKGROUND_INGAME, false);
 			draw_reset_cropped();
 		}
 	}
@@ -815,8 +830,8 @@ void m_draw()
 				maxpos = globalToBox(eX * (realconwidth - 1) + eY * (realconheight - 1), draw_shift, draw_scale);
 				dMouse = globalToBoxSize(dMouse, draw_scale);
 				menuMousePos += dMouse * cvar("menu_mouse_speed");
-				menuMousePos_x = bound(minpos_x, menuMousePos_x, maxpos_x);
-				menuMousePos_y = bound(minpos_y, menuMousePos_y, maxpos_y);
+				menuMousePos.x = bound(minpos.x, menuMousePos.x, maxpos.x);
+				menuMousePos.y = bound(minpos.y, menuMousePos.y, maxpos.y);
 				if(mouseButtonsPressed)
 					main.mouseDrag(main, menuMousePos);
 				else
@@ -943,8 +958,8 @@ void m_setpointerfocus(entity wnd)
 		if(focus)
 		{
 			menuMousePos = focus.origin + 0.5 * focus.size;
-			menuMousePos_x *= 1 / conwidth;
-			menuMousePos_y *= 1 / conheight;
+			menuMousePos.x *= 1 / conwidth;
+			menuMousePos.y *= 1 / conheight;
 			if(wnd.focused) // why does this never happen?
 				m_focus_item_chain(wnd, focus);
 		}
@@ -978,7 +993,8 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-		if(e)
+
+		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();
 			m_activate_window(e);
@@ -986,4 +1002,21 @@ void m_goto(string itemname)
 			m_display();
 		}
 	}
+}
+
+float menuLastFocusSoundTime;
+void m_play_focus_sound()
+{
+	if(cvar("menu_sounds") > 1)
+		if(time - menuLastFocusSoundTime > 0.25)
+		{
+			localsound(MENU_SOUND_FOCUS);
+			menuLastFocusSoundTime = time;
+		}
+}
+
+void m_play_click_sound(string soundfile)
+{
+	if(cvar("menu_sounds"))
+		localsound(soundfile);
 }

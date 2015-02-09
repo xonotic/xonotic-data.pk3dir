@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "autocvars.qh"
+	#include "../common/deathtypes.qh"
+	#include "damage.qh"
+	#include "movetypes.qh"
+	#include "prandom.qh"
+	#include "vehicles/vehicles.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages
@@ -22,11 +38,7 @@ void DamageEffect_Think()
 		return;
 	}
 	self.state = self.owner.csqcmodel_isdead;
-#ifdef COMPAT_XON050_ENGINE
-	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
-#else
 	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum) && !autocvar_chase_active)
-#endif
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
@@ -35,11 +47,12 @@ void DamageEffect_Think()
 	pointparticles(self.team, org, '0 0 0', 1);
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum)
+void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, nearestbone = 0;
+	int nearestbone = 0;
+	float life;
 	string specstr, effectname;
 	entity e;
 
@@ -80,27 +93,22 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	}
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
-	specstr = species_prefix(specnum);
-	type = DEATH_WEAPONOF(type);
-	e = get_weaponinfo(type);
 
-	effectname = strcat("damage_", e.netname);
-	
-	// if damage was dealt with a bullet weapon, our effect is blood
-	// since blood is species dependent, include the species tag
-	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
+	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
+
+	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
 		if(self.isplayermodel)
 		{
-			effectname = strcat(effectname, "_", specstr);
-			effectname = substring(effectname, 0, strlen(effectname) - 1); // remove the _ symbol at the end of the species tag
+			specstr = species_prefix(specnum);
+			specstr = substring(specstr, 0, strlen(specstr) - 1);
+			effectname = strreplace("BLOOD", specstr, effectname);
 		}
-		else
-			return; // objects don't bleed
+		else { return; } // objects don't bleed
 	}
 
 	e = spawn();
-	setmodel(e, "null"); // necessary to attach and read origin // samual: FIXME: this is weird, is there some better way to do this?
+	setmodel(e, "null"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;
@@ -113,7 +121,9 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
+	float dmg, rad, edge, thisdmg;
+	bool hitplayer = false;
+	int species, forcemul;
 	vector force, thisforce;
 	entity oldself;
 
@@ -123,9 +133,9 @@ void Ent_DamageInfo(float isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org_x = ReadCoord();
-	w_org_y = ReadCoord();
-	w_org_z = ReadCoord();
+	w_org.x = ReadCoord();
+	w_org.y = ReadCoord();
+	w_org.z = ReadCoord();
 
 	dmg = ReadByte();
 	rad = ReadByte();
@@ -133,7 +143,7 @@ void Ent_DamageInfo(float isNew)
 	force = decompressShortVector(ReadShort());
 	species = ReadByte();
 
-	if not(isNew)
+	if (!isNew)
 		return;
 
 	if(rad < 0)
@@ -143,7 +153,7 @@ void Ent_DamageInfo(float isNew)
 	}
 	else
 		forcemul = 1;
-	
+
 	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
 	{
 		// attached ents suck
@@ -182,7 +192,7 @@ void Ent_DamageInfo(float isNew)
 			if(vlen(thisforce))
 			{
 				self.move_velocity = self.move_velocity + damage_explosion_calcpush(self.damageforcescale * thisforce, self.move_velocity, autocvar_g_balance_damagepush_speedfactor);
-				self.move_flags &~= FL_ONGROUND;
+				self.move_flags &= ~FL_ONGROUND;
 			}
 
 		if(w_issilent)
@@ -194,11 +204,11 @@ void Ent_DamageInfo(float isNew)
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
 
 		if(self.isplayermodel)
-			hitplayer = TRUE; // this impact damaged a player
+			hitplayer = true; // this impact damaged a player
 	}
 
 	self = oldself;
-	
+
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
@@ -206,45 +216,45 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
-		
+
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
-		
+
 		switch(w_deathtype)
 		{
 			case DEATH_VH_CRUSH:
 				break;
-				
+
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
 				string _snd;
 				_snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("spiderbot_minigun_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_ROCKET:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("spiderbot_rocket_explode"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_DEATH:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
 				break;
-            
+
 			case DEATH_VH_WAKI_GUN:
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("wakizashi_gun_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_ROCKET:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("wakizashi_rocket_explode"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_DEATH:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
 				break;
-				
+
 			case DEATH_VH_RAPT_CANNON:
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("raptor_cannon_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_FRAGMENT:
@@ -256,25 +266,25 @@ void Ent_DamageInfo(float isNew)
 					ang = vectoangles(vel);
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("raptor_bomb_spread"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_BOMB:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("raptor_bomb_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
-				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("bigplasma_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 		}
 	}
-	
-	
+
+
 	if(DEATH_ISTURRET(w_deathtype))
 	{
 		string _snd;
@@ -283,80 +293,71 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
-		
+
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
-		
+
 		switch(w_deathtype)
-		{   
+		{
 			 case DEATH_TURRET_EWHEEL:
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("laser_impact"), self.origin, w_backoff * 1000, 1);
 				break;
-			 
+
 			 case DEATH_TURRET_FLAC:
 				pointparticles(particleeffectnum("hagar_explode"), w_org, '0 0 0', 1);
 				_snd = strcat("weapons/hagexp", ftos(1 + rint(random() * 2)), ".waw");
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
 				break;
-				
+
 			 case DEATH_TURRET_MLRS:
 			 case DEATH_TURRET_HK:
 			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("rocket_explode"), self.origin, w_backoff * 1000, 1);
 				break;
-			 
+
 			 case DEATH_TURRET_MACHINEGUN:
 			 case DEATH_TURRET_WALK_GUN:
 				_snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("machinegun_impact"), self.origin, w_backoff * 1000, 1);
 				break;
-						  
+
 			 case DEATH_TURRET_PLASMA:
-				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
 				break;
-						  
+
 			 case DEATH_TURRET_WALK_MEELE:
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_MIN);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PHASER:
 				break;
-				
+
 			 case DEATH_TURRET_TESLA:
 				te_smallflash(self.origin);
 				break;
 
 		}
 	}
-	
+
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
-	if not(hitplayer && !rad) // don't show ground impacts for hitscan weapons if a player was hit
+	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		float hitwep;
-
-		hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
+		int hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_MINSTANEX)
+		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) { WEP_ACTION(hitwep, WR_IMPACTEFFECT); }
 	}
-}
-
-void DamageInfo_Precache()
-{
-	float i;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }

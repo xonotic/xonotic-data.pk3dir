@@ -40,7 +40,7 @@
 \g_pinata\I giocatori rilasceranno tutte le armi che possedevano appena vengono uccisi
 \g_weapon_stay\Le armi rimangono dopo che vengono raccolte
 \g_weaponarena\Selezionando un'arena dedicata ad un'arma si darà a tutti i giocatori quell'arma con munizioni infinite, e disabiliterà tutti gli altri raccoglimenti delle armi.
-\g_minstagib\Ai giocatori sarà dato il Minstanex, che è un railgun con danni illimitati. Se il giocatore rimane senza munizioni, avrà 10 secondi per trovarne alcune, altrimenti morirà. Il fuoco secondario è un laser che non infligge nessun danno ed è buono per effettuare vari trickjump.
+\g_instagib\Ai giocatori sarà dato il Minstanex, che è un railgun con danni illimitati. Se il giocatore rimane senza munizioni, avrà 10 secondi per trovarne alcune, altrimenti morirà. Il fuoco secondario è un laser che non infligge nessun danno ed è buono per effettuare vari trickjump.
 \g_nix\"No items Xonotic" - invece di raccogliere oggetti, ognuno giocherà con la stessa arma. Dopo un pò di tempo, un conto alla rovescia inizierà, dopo il quale ognuno passerà ad un'altra arma.
 \g_nix_with_laser\Porta sempre il laser come arma aggiuntiva nella modalità "No items Xonotic"
 \XonoticMultiplayerDialog/Seleziona tutto\Seleziona tutte le mappe

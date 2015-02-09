@@ -1,6 +1,6 @@
-#define SVQC
+#ifndef SERVER_SYS_PRE_H
+#define SERVER_SYS_PRE_H
 
-#define ATTN_NORM builtin_ATTN_NORM
 #define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
 #define sound builtin_sound
@@ -10,3 +10,5 @@
 #define cvar builtin_cvar
 
 #pragma noref 1
+
+#endif

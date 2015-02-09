@@ -1,20 +1,9 @@
-string cache_mutatormsg;
-string cache_lastmutatormsg;
-
-// client counts for each team
-float c1, c2, c3, c4;
-// # of bots on those teams
-float cb1, cb2, cb3, cb4;
-
-//float audit_teams_time;
+#include "teamplay.qh"
 
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);
 }
-
-void tdm_init();
-void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
 {
@@ -54,9 +43,9 @@ void InitGameplayMode()
 
 	MapInfo_LoadMapSettings(mapname);
 	teamplay = 0;
-	serverflags &~= SERVERFLAG_TEAMPLAY;
+	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
-	if not(cvar_value_issafe(world.fog))
+	if (!cvar_value_issafe(world.fog))
 	{
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
@@ -83,9 +72,11 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
-		tdm_init();
+		fraglimit_override = autocvar_g_tdm_point_limit;
+		leadlimit_override = autocvar_g_tdm_point_leadlimit;
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_tdm);
 	}
 
 	if(g_domination)
@@ -93,8 +84,10 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
-		MUTATOR_ADD(gamemode_domination);
+		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_domination);
 	}
 
 	if(g_ctf)
@@ -102,8 +95,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_capturelimit_override;
 		leadlimit_override = autocvar_captureleadlimit_override;
-		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_ctf);
 	}
 
 	if(g_lms)
@@ -115,18 +108,13 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_lms);
 	}
 
-	if(g_arena)
-	{
-		fraglimit_override = autocvar_g_arena_point_limit;
-		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		MUTATOR_ADD(gamemode_arena);
-	}
-
 	if(g_ca)
 	{
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
+		if(autocvar_g_ca_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_ca);
 	}
 
@@ -143,14 +131,16 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
+		if(autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_freezetag);
 	}
 
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_assault);
 	}
 
 	if(g_onslaught)
@@ -162,7 +152,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -171,10 +160,35 @@ void InitGameplayMode()
 		}
 		else
 			race_teams = 0;
-
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		// we need to find out the correct value for g_race_qualifying
+		float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
+
+		if(autocvar_g_campaign)
+		{
+			g_race_qualifying = 1;
+			independent_players = 1;
+		}
+		else if(!autocvar_g_campaign && want_qualifying)
+		{
+			g_race_qualifying = 2;
+			independent_players = 1;
+			race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
+			race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
+			race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
+			fraglimit_override = 0;
+			leadlimit_override = 0;
+			timelimit_override = autocvar_g_race_qualifying_timelimit;
+		}
+		else
+		{
+			g_race_qualifying = 0;
+		}
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -182,20 +196,34 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		independent_players = 1;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
 	{
-        fraglimit_override = autocvar_g_nexball_goallimit;
-        leadlimit_override = autocvar_g_nexball_goalleadlimit;
-        ActivateTeamplay();
-        have_team_spawns = -1; // request team spawns
-	    MUTATOR_ADD(gamemode_nexball);
+		fraglimit_override = autocvar_g_nexball_goallimit;
+		leadlimit_override = autocvar_g_nexball_goalleadlimit;
+		ActivateTeamplay();
+		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_nexball);
 	}
-        
+
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
+	}
+
+	if(g_invasion)
+	{
+		fraglimit_override = autocvar_g_invasion_point_limit;
+		if(autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if(autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
+		MUTATOR_ADD(gamemode_invasion);
 	}
 
 	if(teamplay)
@@ -215,35 +243,6 @@ void InitGameplayMode()
 			cvar_set("leadlimit", ftos(leadlimit_override));
 		if(qualifying_override >= 0)
 			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
-
-	if(g_race)
-	{
-		// we need to find out the correct value for g_race_qualifying
-		if(autocvar_g_campaign)
-		{
-			g_race_qualifying = 1;
-		}
-		else if(!autocvar_g_campaign && autocvar_g_race_qualifying_timelimit > 0)
-		{
-			g_race_qualifying = 2;
-			race_fraglimit = autocvar_fraglimit;
-			race_leadlimit = autocvar_leadlimit;
-			race_timelimit = autocvar_timelimit;
-			cvar_set("fraglimit", "0");
-			cvar_set("leadlimit", "0");
-			cvar_set("timelimit", ftos(autocvar_g_race_qualifying_timelimit));
-		}
-		else
-			g_race_qualifying = 0;
-	}
-
-	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
 	}
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
@@ -278,22 +277,16 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(autocvar_g_start_weapon_laser == 0)
+	if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
-	if(autocvar_sv_gravity < 800)
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
 	if(g_grappling_hook)
 		modifications = strcat(modifications, ", Hook");
-	if(g_midair)
-		modifications = strcat(modifications, ", Midair");
-	if(g_pinata)
-		modifications = strcat(modifications, ", Piñata");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
-	if(g_bloodloss > 0)
-		modifications = strcat(modifications, ", Blood loss");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
 	if(autocvar_g_powerups == 0)
@@ -313,6 +306,9 @@ string getwelcomemessage(void)
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+
+	if (cvar("g_nades"))
+		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -417,10 +413,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);
@@ -508,7 +501,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(head) || head.caplayer)
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot
@@ -592,11 +585,11 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 
 	// invalid
 	if(ca < 0 || cb < 0)
-		return FALSE;
+		return false;
 
 	// equal
 	if(ta == tb)
-		return TRUE;
+		return true;
 
 	if(IS_REAL_CLIENT(e))
 	{
@@ -606,14 +599,14 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 			cb -= cbb * 0.999;
 		}
 	}
-	
+
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
-			return TRUE;
+			return true;
 	if(ca >= 1)
 		if(cb < 1)
-			return FALSE;
+			return false;
 
 	// first, normalize
 	f = max(ca, cb, 1);
@@ -658,16 +651,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_freezetag)
-			error("Too few teams available for freeze tag\n");
 		else
-			error("Too few teams available for team deathmatch\n");
+			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
@@ -677,7 +662,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		GetTeamCounts(world);
 
 	RandomSelection_Init();
-	
+
 	t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;
@@ -740,7 +725,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		// otherwise end up on the smallest team (handled below)
 	}
 
-	smallest = FindSmallestTeam(pl, TRUE);
+	smallest = FindSmallestTeam(pl, true);
 
 	if(!only_return_best && !pl.bot_forced_team)
 	{
@@ -817,12 +802,12 @@ void SV_ChangeTeam(float _color)
 	if(scolor == dcolor)
 	{
 		//bprint("same team change\n");
-		SetPlayerTeam(self, dteam, steam, TRUE);
+		SetPlayerTeam(self, dteam, steam, true);
 		return;
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -832,7 +817,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
@@ -845,7 +830,7 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, FALSE);
+	SetPlayerTeam(self, dteam, steam, false);
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{
@@ -989,50 +974,9 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	// move the player to the new team
 	TeamchangeFrags(selected);
-	SetPlayerTeam(selected, smallestteam, source_team, FALSE);
+	SetPlayerTeam(selected, smallestteam, source_team, false);
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
-}
-
-// code from here on is just to support maps that don't have team entities
-void tdm_spawnteam (string teamname, float teamcolor)
-{
-	entity e;
-	e = spawn();
-	e.classname = "tdm_team";
-	e.netname = teamname;
-	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
-}
-
-// spawn some default teams if the map is not set up for tdm
-void tdm_spawnteams()
-{
-	float numteams;
-
-	numteams = autocvar_g_tdm_teams_override;
-	if(numteams < 2)
-		numteams = autocvar_g_tdm_teams;
-	numteams = bound(2, numteams, 4);
-
-	tdm_spawnteam("Red", NUM_TEAM_1-1);
-	tdm_spawnteam("Blue", NUM_TEAM_2-1);
-	if(numteams >= 3)
-		tdm_spawnteam("Yellow", NUM_TEAM_3-1);
-	if(numteams >= 4)
-		tdm_spawnteam("Pink", NUM_TEAM_4-1);
-}
-
-void tdm_delayedinit()
-{
-	// if no teams are found, spawn defaults
-	if (find(world, classname, "tdm_team") == world)
-		tdm_spawnteams();
-}
-
-void tdm_init()
-{
-	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
+	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

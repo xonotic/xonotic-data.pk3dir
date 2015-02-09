@@ -1,53 +1,55 @@
+#include "rpn.qh"
+
 // ========================================
 //  RPN command code, written by divVerent
 //  Last updated: December 28th, 2011
 // ========================================
 
-string rpn_pop() 
+string rpn_pop()
 {
 	if(rpn_sp > 0) {
 		--rpn_sp;
 		return rpn_stack[rpn_sp];
 	} else {
 		print("rpn: stack underflow\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 		return "";
 	}
 }
-void rpn_push(string s) 
+void rpn_push(string s)
 {
 	if(rpn_sp < MAX_RPN_STACK) {
 		rpn_stack[rpn_sp] = s;
 		++rpn_sp;
 	} else {
 		print("rpn: stack overflow\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 	}
 }
-string rpn_get() 
+string rpn_get()
 {
 	if(rpn_sp > 0) {
 		return rpn_stack[rpn_sp - 1];
 	} else {
 		print("rpn: empty stack\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 		return "";
 	}
 }
-void rpn_set(string s) 
+void rpn_set(string s)
 {
 	if(rpn_sp > 0) {
 		rpn_stack[rpn_sp - 1] = s;
 	} else {
 		print("rpn: empty stack\n");
-		rpn_error = TRUE;
+		rpn_error = true;
 	}
 }
 
 float rpn_getf() { return stof(rpn_get()); }
 float rpn_popf() { return stof(rpn_pop()); }
-void rpn_pushf(float f) { return rpn_push(ftos(f)); }
-void rpn_setf(float f) { return rpn_set(ftos(f)); }
+void rpn_pushf(float f) { return rpn_push(sprintf("%.9g", f)); }
+void rpn_setf(float f) { return rpn_set(sprintf("%.9g", f)); }
 
 void GenericCommand_rpn(float request, float argc, string command)
 {
@@ -58,18 +60,18 @@ void GenericCommand_rpn(float request, float argc, string command)
 			float i, j, f, f2, f3, rpnpos;
 			//vector rgb;
 			string s, s2, rpncmd;
-			
+
 			if(!rpn_db)
 			{
 				rpn_db = db_create();
 				db_put(rpn_db, "stack.pointer", "0");
 				db_put(rpn_db, "stack.pos", "-1");
 			}
-			
+
 			if(argc >= 2)
 			{
 				rpn_sp = 0;
-				rpn_error = FALSE;
+				rpn_error = false;
 				for(rpnpos = 1; rpnpos < argc; ++rpnpos)
 				{
 					rpncmd = argv(rpnpos);
@@ -104,7 +106,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						else
 						{
 							print("rpn: empty cvar name for 'def'\n");
-							rpn_error = TRUE;
+							rpn_error = true;
 						}
 					} else if(rpncmd == "defs" || rpncmd == "@") {
 						s = "";
@@ -129,7 +131,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						else
 						{
 							print("rpn: empty cvar name for 'defs'\n");
-							rpn_error = TRUE;
+							rpn_error = true;
 						}
 					} else if(rpncmd == "load") {
 						rpn_set(cvar_string(rpn_get()));
@@ -158,6 +160,31 @@ void GenericCommand_rpn(float request, float argc, string command)
 						f = rpn_popf();
 						f2 = rpn_getf();
 						rpn_setf(f2 - f * floor(f2 / f));
+					} else if(rpncmd == "pow" || rpncmd == "**") {
+						f = rpn_popf();
+						rpn_setf(pow(rpn_getf(), f));
+					} else if(rpncmd == "bitand" || rpncmd == "&") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() & f);
+					} else if(rpncmd == "bitor" || rpncmd == "|") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() | f);
+					} else if(rpncmd == "bitxor" || rpncmd == "^") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() ^ f);
+					} else if(rpncmd == "and" || rpncmd == "&&") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() && f);
+					} else if(rpncmd == "or" || rpncmd == "||") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() || f);
+					} else if(rpncmd == "xor" || rpncmd == "^^") {
+						f = rpn_popf();
+						rpn_setf(!rpn_getf() != !f);
+					} else if(rpncmd == "bitnot") {
+						rpn_setf(~rpn_popf());
+					} else if(rpncmd == "not") {
+						rpn_setf(!rpn_popf());
 					} else if(rpncmd == "abs") {
 						rpn_setf(fabs(rpn_getf()));
 					} else if(rpncmd == "sgn") {
@@ -174,6 +201,14 @@ void GenericCommand_rpn(float request, float argc, string command)
 						rpn_setf(floor(rpn_getf()));
 					} else if(rpncmd == "ceil" || rpncmd == "c") {
 						rpn_setf(ceil(rpn_getf()));
+					} else if(rpncmd == "exp") {
+						rpn_setf(exp(rpn_getf()));
+					} else if(rpncmd == "log") {
+						rpn_setf(exp(rpn_getf()));
+					} else if(rpncmd == "sin") {
+						rpn_setf(sin(rpn_getf()));
+					} else if(rpncmd == "cos") {
+						rpn_setf(cos(rpn_getf()));
 					} else if(rpncmd == "max") {
 						f = rpn_popf();
 						f2 = rpn_getf();
@@ -189,12 +224,12 @@ void GenericCommand_rpn(float request, float argc, string command)
 						rpn_setf(bound(f3, f2, f));
 					} else if(rpncmd == "when") {
 						f = rpn_popf();
-						f2 = rpn_popf();
-						f3 = rpn_getf();
+						s = rpn_pop();
+						s2 = rpn_get();
 						if(f)
-							rpn_setf(f3);
+							rpn_set(s2);
 						else
-							rpn_setf(f2);
+							rpn_set(s);
 					} else if(rpncmd == ">" || rpncmd == "gt") {
 						f = rpn_popf();
 						rpn_setf(rpn_getf() > f);
@@ -216,7 +251,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 					} else if(rpncmd == "rand") {
 						rpn_setf(ceil(random() * rpn_getf()) - 1);
 					} else if(rpncmd == "crc16") {
-						rpn_setf(crc16(FALSE, rpn_get()));
+						rpn_setf(crc16(false, rpn_get()));
 					} else if(rpncmd == "put") {
 						s2 = rpn_pop();
 						if (!rpn_error)
@@ -254,7 +289,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							print("rpn: database underflow\n");
 						}
 					} else if(rpncmd == "dbget") {
-						
+
 						i = stof(db_get(rpn_db, "stack.pointer"));
 						if(i)
 						{
@@ -288,13 +323,13 @@ void GenericCommand_rpn(float request, float argc, string command)
 						{
 							j = stof(db_get(rpn_db, "stack.pointer"));
 							i = stof(db_get(rpn_db, "stack.pos"));
-							
+
 							if(i < 0)
 							{
 								i = 0;
 								db_put(rpn_db, "stack.pos", "0");
 							}
-							
+
 							db_put(rpn_db, "stack.pointer", ftos(j+1));
 							for(--j; j >= i; --j)
 							{
@@ -309,7 +344,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						i = stof(db_get(rpn_db, "stack.pos"));
 						if(!j)
 						{
-							rpn_error = TRUE;
+							rpn_error = true;
 							print("rpn: empty database\n");
 						} else {
 							--j;
@@ -348,7 +383,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							if(i < 0 || i >= j)
 							{
 								print("rpn: database cursor out of bounds\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 							if(!rpn_error)
 							{
@@ -360,7 +395,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						j = stof(db_get(rpn_db, "stack.pointer"));
 						if(!j)
 						{
-							rpn_error = TRUE;
+							rpn_error = true;
 							print("rpn: empty database, cannot move cursor\n");
 						}
 						if(!rpn_error)
@@ -371,12 +406,12 @@ void GenericCommand_rpn(float request, float argc, string command)
 								i = 0;
 							else
 								i = stof(s);
-							
+
 							j = stof(db_get(rpn_db, "stack.pointer"));
 							if(i < 0 || i >= j)
 							{
 								print("rpn: database cursor destination out of bounds\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 							if(!rpn_error)
 							{
@@ -393,7 +428,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 						// tokens f..f2 represent s2
 						// UNION: add all tokens to s that are in s2 but not in s
 						s = "";
-						for(i = 0; i < f; ++i)	
+						for(i = 0; i < f; ++i)
 							s = strcat(s, " ", argv(i));
 						for(i = f; i < f2; ++i) {
 							for(j = 0; j < f; ++j)
@@ -478,7 +513,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 							if (!fexists(s))
 							{
 								print("rpn: ERROR: ", s, " does not exist!\n");
-								rpn_error = TRUE;
+								rpn_error = true;
 							}
 						}
 					} else if(rpncmd == "fexists") {
@@ -491,9 +526,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 								rpn_setf(0);
 						}
 					} else if(rpncmd == "localtime") {
-						rpn_set(strftime(TRUE, rpn_get()));
+						rpn_set(strftime(true, rpn_get()));
 					} else if(rpncmd == "gmtime") {
-						rpn_set(strftime(FALSE, rpn_get()));
+						rpn_set(strftime(false, rpn_get()));
 					} else if(rpncmd == "time") {
 						rpn_pushf(time);
 					} else if(rpncmd == "digest") {
@@ -502,6 +537,11 @@ void GenericCommand_rpn(float request, float argc, string command)
 					} else if(rpncmd == "sprintf1s") {
 						s = rpn_pop();
 						rpn_set(sprintf(s, rpn_get()));
+					} else if(rpncmd == "eval") {
+						s = rpn_pop();
+						command = strcat(s, substring(command, argv_end_index(rpnpos), -1));
+						argc = tokenize_console(command);
+						rpnpos = -1;
 					} else {
 						rpn_push(cvar_string(rpncmd));
 					}
@@ -517,7 +557,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -528,9 +568,12 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    x x exch --------------------------> x x : swap the top two\n");
 			print("    /cvarname load --------------------> x   : loads a cvar\n");
 			print("    /cvarname x def ------------------->     : writes to a cvar\n");
-			print("    f f add|sub|mul|div|mod|max|min ---> f   : adds/... two numbers\n");
-			print("    f f eq|ne|gt|ge|lt|le -------------> f   : compares two numbers\n");
+			print("    f f add|sub|mul|div|mod|pow -------> f   : adds/... two numbers\n");
+			print("    f f and|or|xor|bitand|bitor|bitxor > f   : logical and bitwise operations\n");
+			print("    f f eq|ne|gt|ge|lt|le|max|min -----> f   : compares two numbers\n");
 			print("    f neg|abs|sgn|rand|floor|ceil------> f   : negates/... a number\n");
+			print("    f not|bitnot ----------------------> f   : logical and bitwise negation\n");
+			print("    f exp|log|sin|cos -----------------> f   : exponential function & Co.\n");
 			print("    f f f bound -----------------------> f   : bounds the middle number\n");
 			print("    f1 f2 b when ----------------------> f   : f1 if b, f2 otherwise\n");
 			print("    s s union|intersection|difference -> s   : set operations\n");
@@ -551,6 +594,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    s /MD4 digest ---------------------> s   : MD4 digest\n");
 			print("    s /SHA256 digest ------------------> s   : SHA256 digest\n");
 			print("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)\n");
+			print("    s eval ---------------------------->     : does something eval\n");
 			print("    Set operations operate on 'such''strings'.\n");
 			print("    Unknown tokens insert their cvar value.\n");
 			return;

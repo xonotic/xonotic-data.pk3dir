@@ -1,0 +1,20 @@
+#ifndef TARGET_MUSIC_H
+#define TARGET_MUSIC_H
+
+entity music_default;
+entity music_target;
+entity music_trigger;
+
+.int state;
+.float lastvol;
+
+void TargetMusic_Advance();
+
+void Net_TargetMusic();
+
+void Ent_TriggerMusic_Think();
+
+void Ent_TriggerMusic_Remove();
+
+void Ent_ReadTriggerMusic();
+#endif

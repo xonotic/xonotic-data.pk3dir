@@ -4,21 +4,21 @@
 // #define KH_PLAYER_USE_CARRIEDMODEL
 
 #ifdef KH_PLAYER_USE_ATTACHMENT
-vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
-vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
-vector KH_PLAYER_ATTACHMENT = '0 0 0';
-vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
-string KH_PLAYER_ATTACHMENT_BONE = "";
+const vector KH_PLAYER_ATTACHMENT_DIST_ROTATED = '0 -4 0';
+const vector KH_PLAYER_ATTACHMENT_DIST = '4 0 0';
+const vector KH_PLAYER_ATTACHMENT = '0 0 0';
+const vector KH_PLAYER_ATTACHMENT_ANGLES = '0 0 0';
+const string KH_PLAYER_ATTACHMENT_BONE = "";
 #else
-float KH_KEY_ZSHIFT = 22;
-float KH_KEY_XYDIST = 24;
-float KH_KEY_XYSPEED = 45;
+const float KH_KEY_ZSHIFT = 22;
+const float KH_KEY_XYDIST = 24;
+const float KH_KEY_XYSPEED = 45;
 #endif
-float KH_KEY_WP_ZSHIFT = 20;
+const float KH_KEY_WP_ZSHIFT = 20;
 
-vector KH_KEY_MIN = '-10 -10 -46';
-vector KH_KEY_MAX = '10 10 3';
-float KH_KEY_BRIGHTNESS = 2;
+const vector KH_KEY_MIN = '-10 -10 -46';
+const vector KH_KEY_MAX = '10 10 3';
+const float KH_KEY_BRIGHTNESS = 2;
 
 float kh_no_radar_circles;
 
@@ -46,10 +46,10 @@ float kh_Team_ByID(float t)
 	return 0;
 }
 
-entity kh_worldkeylist;
+//entity kh_worldkeylist;
 .entity kh_worldkeynext;
 entity kh_controller;
-float kh_tracking_enabled;
+//float kh_tracking_enabled;
 float kh_teams;
 float kh_interferemsg_time, kh_interferemsg_team;
 .entity kh_next, kh_prev; // linked list
@@ -67,24 +67,44 @@ string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
 
 float kh_key_dropped, kh_key_carried;
 
+const float ST_KH_CAPS = 1;
+const float SP_KH_CAPS = 4;
+const float SP_KH_PUSHES = 5;
+const float SP_KH_DESTROYS = 6;
+const float SP_KH_PICKUPS = 7;
+const float SP_KH_KCKILLS = 8;
+const float SP_KH_LOSSES = 9;
+void kh_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
+	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
+
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
 {
 	if(!IS_PLAYER(e) || self.team != e.team)
 		if(!kh_tracking_enabled)
-			return FALSE;
+			return false;
 
-	return TRUE;
+	return true;
 }
 
 float kh_Key_waypointsprite_visible_for_player(entity e) // ??
 {
 	if(!kh_tracking_enabled)
-		return FALSE;
+		return false;
 	if(!self.owner)
-		return TRUE;
+		return true;
 	if(!self.owner.owner)
-		return TRUE;
-	return FALSE;  // draw only when key is not owned
+		return true;
+	return false;  // draw only when key is not owned
 }
 
 void kh_update_state()
@@ -180,7 +200,7 @@ vector kh_AttachedOrigin(entity e)  // runs when a team captures the flag, it ca
 	if(e.tag_entity)
 	{
 		makevectors(e.tag_entity.angles);
-		return e.tag_entity.origin + e.origin_x * v_forward - e.origin_y * v_right + e.origin_z * v_up;
+		return e.tag_entity.origin + e.origin.x * v_forward - e.origin.y * v_right + e.origin.z * v_up;
 	}
 	else
 		return e.origin;
@@ -217,7 +237,7 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 #else
 	setattachment(key, key.owner, "");
 	setorigin(key, '0 0 1' * KH_KEY_ZSHIFT);  // fixing x, y in think
-	key.angles_y -= key.owner.angles_y;
+	key.angles_y -= key.owner.angles.y;
 #endif
 	key.flags = 0;
 	key.solid = SOLID_NOT;
@@ -254,9 +274,9 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
-	setorigin(key, key.owner.origin + key.origin_z * '0 0 1');
+	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
 	setattachment(key, world, "");
-	key.angles_y += key.owner.angles_y;
+	key.angles_y += key.owner.angles.y;
 #endif
 	key.flags = FL_ITEM;
 	key.solid = SOLID_TRIGGER;
@@ -397,7 +417,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTEN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -426,7 +446,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		// maybe start a shorter countdown?
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if(other.deadflag != DEAD_NO)
 		return;
@@ -474,10 +494,10 @@ void kh_FinishRound()  // runs when a team captures the keys
 	kh_interferemsg_time = 0;
 	entity key;
 
-	kh_no_radar_circles = TRUE;
+	kh_no_radar_circles = true;
 	FOR_EACH_KH_KEY(key)
 		kh_Key_Remove(key);
-	kh_no_radar_circles = FALSE;
+	kh_no_radar_circles = false;
 
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -500,9 +520,10 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 		f = DistributeEvenly_Get(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
 		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		nades_GiveBonus(key.owner, autocvar_g_nades_bonus_score_high);
 	}
 
-	first = TRUE;
+	first = true;
 	string keyowner = "";
 	FOR_EACH_KH_KEY(key)
 		if(key.owner.kh_next == key)
@@ -510,12 +531,12 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			if(!first)
 				keyowner = strcat(keyowner, ", ");
 			keyowner = key.owner.netname;
-			first = FALSE;
+			first = false;
 		}
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(teem, INFO_KEYHUNT_CAPTURE_), keyowner);
 
-	first = TRUE;
+	first = true;
 	midpoint = '0 0 0';
 	firstorigin = '0 0 0';
 	lastorigin = '0 0 0';
@@ -532,7 +553,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 		lastorigin = thisorigin;
 		if(first)
 			firstorigin = thisorigin;
-		first = FALSE;
+		first = false;
 	}
 	if(kh_teams > 2)
 	{
@@ -627,9 +648,9 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			--j;
 		}
 	}
-	
+
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
-	
+
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
 
@@ -647,8 +668,8 @@ void kh_Key_Think()  // runs all the time
 	if(self.owner)
 	{
 #ifndef KH_PLAYER_USE_ATTACHMENT
-		makevectors('0 1 0' * (self.cnt + mod(time, 360) * KH_KEY_XYSPEED));
-		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
+		makevectors('0 1 0' * (self.cnt + (time % 360) * KH_KEY_XYSPEED));
+		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin.z);
 #endif
 	}
 
@@ -662,7 +683,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTEN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -700,7 +721,7 @@ void key_reset()
 	kh_Key_Remove(self);
 }
 
-string STR_ITEM_KH_KEY = "item_kh_key";
+const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
 	entity key;
@@ -748,7 +769,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
+	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 
 	kh_Key_AssignTo(key, initial_owner);
@@ -790,15 +811,15 @@ void kh_Key_DropOne(entity key)
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
-	
+
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
-	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
+	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, false);
 	key.pusher = world;
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -818,13 +839,13 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_LOST_), player.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, FALSE);
+			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
 			key.pusher = mypusher;
 			key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTN_NORM);
+		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -840,8 +861,8 @@ float kh_CheckPlayers(float num)
 				if(!tmp_player.BUTTON_CHAT)
 					if(tmp_player.team == t_team)
 						++players;
-		
-		if not(players) { return t_team; }
+
+		if (!players) { return t_team; }
 	}
 	return 0;
 }
@@ -855,7 +876,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if not(p1 || p2 || p3 || p4)
+	if (!(p1 || p2 || p3 || p4))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -872,7 +893,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 
-	kh_tracking_enabled = TRUE;
+	kh_tracking_enabled = true;
 }
 
 void kh_StartRound()  // runs at the start of each round
@@ -893,7 +914,7 @@ void kh_StartRound()  // runs at the start of each round
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 
@@ -914,7 +935,7 @@ void kh_StartRound()  // runs at the start of each round
 		kh_Key_Spawn(my_player, 360 * i / kh_teams, i);
 	}
 
-	kh_tracking_enabled = FALSE;
+	kh_tracking_enabled = false;
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
 }
@@ -989,7 +1010,7 @@ void kh_Initialize()  // sets up th KH environment
 
 	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
-	ScoreRules_kh(kh_teams);
+	kh_ScoreRules(kh_teams);
 }
 
 void kh_finalize()
@@ -1004,18 +1025,18 @@ void kh_finalize()
 
 MUTATOR_HOOKFUNCTION(kh_Key_DropAll)
 {
-	kh_Key_DropAll(self, TRUE);
+	kh_Key_DropAll(self, true);
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
-		kh_Key_DropAll(self, TRUE);
+		kh_Key_DropAll(self, true);
 	else if(IS_PLAYER(other))
-		kh_Key_DropAll(self, FALSE);
+		kh_Key_DropAll(self, false);
 	else
-		kh_Key_DropAll(self, TRUE);
+		kh_Key_DropAll(self, true);
 	return 0;
 }
 

@@ -1,31 +1,29 @@
+#include "t_teleporters.qh"
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "tturrets/include/turrets_early.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "../common/mapinfo.qh"
+    #include "anticheat.qh"
+#endif
+
 void trigger_teleport_use()
 {
 	if(teamplay)
 		self.team = activator.team;
 }
-
-#define TDEATHLOOP(o) \
-	entity head; \
-	vector deathmin; \
-	vector deathmax; \
-	float deathradius; \
-	deathmin = (o) + player.mins; \
-	deathmax = (o) + player.maxs; \
-	if(telefragmin != telefragmax) \
-	{ \
-		if(deathmin_x > telefragmin_x) deathmin_x = telefragmin_x; \
-		if(deathmin_y > telefragmin_y) deathmin_y = telefragmin_y; \
-		if(deathmin_z > telefragmin_z) deathmin_z = telefragmin_z; \
-		if(deathmax_x < telefragmax_x) deathmax_x = telefragmax_x; \
-		if(deathmax_y < telefragmax_y) deathmax_y = telefragmax_y; \
-		if(deathmax_z < telefragmax_z) deathmax_z = telefragmax_z; \
-	} \
-	deathradius = max(vlen(deathmin), vlen(deathmax)); \
-	for(head = findradius(o, deathradius); head; head = head.chain) \
-		if(head != player) \
-			if(head.takedamage) \
-				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-	
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
@@ -33,7 +31,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						return 1;
@@ -41,14 +39,14 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	}
 	return 0;
 }
-float tdeath_hit;
+
 void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
 {
 	TDEATHLOOP(player.origin)
 	{
 		if (IS_PLAYER(player) && player.health >= 1)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 			{
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
@@ -65,20 +63,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 {
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
-
-.entity pusher;
-#define TELEPORT_FLAG_SOUND 1
-#define TELEPORT_FLAG_PARTICLES 2
-#define TELEPORT_FLAG_TDEATH 4
-#define TELEPORT_FLAG_FORCE_TDEATH 8
-
-#define TELEPORT_FLAGS_WARPZONE   0
-#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
-#define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
-
-// types for .teleportable entity setting
-#define TELEPORT_NORMAL 1 // play sounds/effects etc
-#define TELEPORT_SIMPLE 2 // only do teleport, nothing special
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
@@ -97,7 +81,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
@@ -113,10 +97,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	setorigin (player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
-	player.fixangle = TRUE;
+	player.fixangle = true;
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
+	makevectors(player.angles);
+	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
 
 	if(IS_PLAYER(player))
@@ -126,7 +112,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
-		player.flags &~= FL_ONGROUND;
+		player.flags &= ~FL_ONGROUND;
 
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
@@ -153,21 +139,21 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	vector locout;
 	entity e;
 	float p;
-	
+
 	// Find the output teleporter
 	if(teleporter.enemy)
 	{
 		e = teleporter.enemy;
 	}
 	else
-	{ 
+	{
 		RandomSelection_Init();
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
 		{
 			p = 1;
 			if(autocvar_g_telefrags_avoid)
 			{
-				locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
@@ -177,18 +163,18 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	}
 
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
-	
+
 	makevectors(e.mangle);
 
 	if(e.speed)
 		if(vlen(player.velocity) > e.speed)
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
-			
+
 	if(autocvar_g_teleport_maxspeed)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
-	locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
 	return e;
@@ -201,36 +187,36 @@ void Teleport_Touch (void)
 
 	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
-	if not(other.teleportable)
+
+	if (!other.teleportable)
 		return;
-    
+
 	if(other.vehicle)
 	if(!other.vehicle.teleportable)
 		return;
-			
+
 	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 		return;
-        
+
 	if(other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;
 
 	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
-		
+
 	entity e;
 	e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
 	SUB_UseTargets();
-	if not(self.target) self.target = s;
+	if (!self.target) self.target = s;
 
 	oldself = self;
 	self = e;
@@ -310,16 +296,14 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-entity teleport_first; 
-.entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;
-	
-	self.active = ACTIVE_ACTIVE;	
-	
+
+	self.active = ACTIVE_ACTIVE;
+
 	self.use = trigger_teleport_use;
 
 	// this must be called to spawn the teleport waypoints for bots
@@ -330,14 +314,22 @@ void spawnfunc_trigger_teleport (void)
 		objerror ("Teleporter with no target");
 		return;
 	}
-	
+
 	self.teleport_next = teleport_first;
 	teleport_first = self;
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
+	makevectors(pl.angles);
+	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
+	{
+		entity oldself = self;
+		self = pl;
+		anticheat_fixangle();
+		self = oldself;
+	}
 	// "disown" projectiles after teleport
 	if(pl.owner)
 	if(pl.owner == pl.realowner)

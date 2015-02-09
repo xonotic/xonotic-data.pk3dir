@@ -1,9 +1,4 @@
-entity music_default;
-entity music_target;
-entity music_trigger;
-
-.float state;
-.float lastvol;
+#include "target_music.qh"
 
 void TargetMusic_Advance()
 {
@@ -48,9 +43,9 @@ void TargetMusic_Advance()
 				cvar_set("bgmvolume", ftos(vol));
 #endif
 			else if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTN_NONE); // restart
+				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTN_NONE);
+				sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
 			e.lastvol = vol;
 		}
 	}
@@ -76,17 +71,14 @@ void Init_TargetMusic()
 
 void Net_TargetMusic()
 {
-	float vol, fai, fao, tim, id;
-	string noi;
+	int id = ReadShort();
+	float vol = ReadByte() / 255.0;
+	float fai = ReadByte() / 16.0;
+	float fao = ReadByte() / 16.0;
+	float tim = ReadByte();
+	string noi = ReadString();
+
 	entity e;
-
-	id = ReadShort();
-	vol = ReadByte() / 255.0;
-	fai = ReadByte() / 16.0;
-	fao = ReadByte() / 16.0;
-	tim = ReadByte();
-	noi = ReadString();
-
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
 	{
 		if(e.count == id)
@@ -104,10 +96,10 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTN_NONE);
+		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
-			print(sprintf(_("Cannot initialize sound %s\n"), e.noise));
+			dprintf("Cannot initialize sound %s\n", e.noise);
 			strunzone(e.noise);
 			e.noise = string_null;
 		}
@@ -147,9 +139,7 @@ void Ent_TriggerMusic_Remove()
 
 void Ent_ReadTriggerMusic()
 {
-	float f;
-	string s;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();
@@ -179,17 +169,17 @@ void Ent_ReadTriggerMusic()
 		self.volume = ReadByte() / 255.0;
 		self.fade_time = ReadByte() / 16.0;
 		self.fade_rate = ReadByte() / 16.0;
-		s = self.noise;
+		string s = self.noise;
 		if(self.noise)
 			strunzone(self.noise);
 		self.noise = strzone(ReadString());
 		if(self.noise != s)
 		{
 			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTN_NONE);
+			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
 			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
 			{
-				print(sprintf(_("Cannot initialize sound %s\n"), self.noise));
+				dprintf("Cannot initialize sound %s\n", self.noise);
 				strunzone(self.noise);
 				self.noise = string_null;
 			}

@@ -1,10 +1,10 @@
 /*
 
-CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   hook
-									minsta  porto
+CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
+									vaporizer  porto
 									tuba
 
-NEW             rifle   hlac    minel                           seeker   
+NEW             rifle   hlac    minel                           seeker
 IDEAS                                   OPEN    flak    OPEN            FUN FUN FUN FUN
 
 
@@ -18,28 +18,28 @@ weaponreplace lists.
 Entity:
 
 {
-"classname" "weapon_nex"
+"classname" "weapon_vortex"
 "new_toys" "rifle"
 }
--> This will spawn as Rifle in this mutator ONLY, and as Nex otherwise.
+-> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_nex"
-"new_toys" "nex rifle"
+"classname" "weapon_vortext"
+"new_toys" "vortex rifle"
 }
--> This will spawn as either Nex or Rifle in this mutator ONLY, and as Nex otherwise.
+-> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_nex"
-"new_toys" "nex"
+"classname" "weapon_vortex"
+"new_toys" "vortex"
 }
--> This is always a Nex.
+-> This is always a Vortex.
 
 If the map specifies no "new_toys" argument
 
 There will be two default replacements selectable: "replace all" and "replace random".
-In "replace all" mode, e.g. Nex will have the default replacement "rifle".
-In "replace random" mode, Nex will have the default replacement "nex rifle".
+In "replace all" mode, e.g. Vortex will have the default replacement "rifle".
+In "replace random" mode, Vortex will have the default replacement "vortex rifle".
 
 This mutator's replacements run BEFORE regular weaponreplace!
 
@@ -69,9 +69,9 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-#define NT_AUTOREPLACE_NEVER 0
-#define NT_AUTOREPLACE_ALWAYS 1
-#define NT_AUTOREPLACE_RANDOM 2
+const float NT_AUTOREPLACE_NEVER = 0;
+const float NT_AUTOREPLACE_ALWAYS = 1;
+const float NT_AUTOREPLACE_RANDOM = 2;
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -87,9 +87,10 @@ float nt_IsNewToy(float w)
 		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
-			return TRUE;
+		case WEP_SHOCKWAVE:
+			return true;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 
@@ -98,9 +99,10 @@ string nt_GetFullReplacement(string w)
 	switch(w)
 	{
 		case "hagar": return "seeker";
-		case "rocketlauncher": return "minelayer";
-		case "uzi": return "hlac";
-		case "nex": return "rifle";
+		case "devastator": return "minelayer";
+		case "machinegun": return "hlac";
+		case "vortex": return "rifle";
+		case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
@@ -110,7 +112,7 @@ string nt_GetReplacement(string w, float m)
 	if(m == NT_AUTOREPLACE_NEVER)
 		return w;
 	string s = nt_GetFullReplacement(w);
-	if not(s)
+	if (!s)
 		return w;
 	if(m == NT_AUTOREPLACE_RANDOM)
 		s = strcat(w, " ", s);
@@ -125,11 +127,11 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 
 	float i, j, k, n;
 
-	WEPSET_DECLARE_A(newdefault);
-	WEPSET_DECLARE_A(warmup_newdefault);
-	
-	WEPSET_CLEAR_A(newdefault);
-	WEPSET_CLEAR_A(warmup_newdefault);
+	WepSet newdefault;
+	WepSet warmup_newdefault;
+
+	newdefault = '0 0 0';
+	warmup_newdefault = '0 0 0';
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -143,20 +145,20 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 			for(k = WEP_FIRST; k <= WEP_LAST; ++k)
 				if(get_weaponinfo(k).netname == argv(j))
 				{
-					if(WEPSET_CONTAINS_AW(start_weapons, i))
-						WEPSET_OR_AW(newdefault, k);
-					if(WEPSET_CONTAINS_AW(warmup_start_weapons, i))
-						WEPSET_OR_AW(warmup_newdefault, k);
+					if(start_weapons & WepSet_FromWeapon(i))
+						newdefault |= WepSet_FromWeapon(k);
+					if(warmup_start_weapons & WepSet_FromWeapon(i))
+						warmup_newdefault |= WepSet_FromWeapon(k);
 				}
 	}
 
-	WEPSET_AND_AA(newdefault, start_weapons_defaultmask);
-	WEPSET_ANDNOT_AA(start_weapons, start_weapons_defaultmask);
-	WEPSET_OR_AA(start_weapons, newdefault);
+	newdefault &= start_weapons_defaultmask;
+	start_weapons &= ~start_weapons_defaultmask;
+	start_weapons |= newdefault;
 
-	WEPSET_AND_AA(warmup_newdefault, warmup_start_weapons_defaultmask);
-	WEPSET_ANDNOT_AA(warmup_start_weapons, warmup_start_weapons_defaultmask);
-	WEPSET_OR_AA(warmup_start_weapons, warmup_newdefault);
+	warmup_newdefault &= warmup_start_weapons_defaultmask;
+	warmup_start_weapons &= ~warmup_start_weapons_defaultmask;
+	warmup_start_weapons |= warmup_newdefault;
 
 	return 0;
 }
@@ -206,7 +208,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		float i;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
+				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

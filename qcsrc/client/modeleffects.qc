@@ -1,7 +1,4 @@
-.float frame1time;
-.float lifetime, fadetime;
-.float teleport_time;
-.float scale1, scale2;
+#include "modeleffects.qh"
 
 void ModelEffect_Draw()
 {
@@ -22,16 +19,13 @@ void ModelEffect_Draw()
 	}
 }
 
-void Ent_ModelEffect(float isNew)
+void Ent_ModelEffect(bool isNew)
 {
-	float f;
-	entity e;
-
 	self.classname = "modeleffect_spawner";
 
-	f = ReadByte();
+	int f = ReadByte();
 
-	e = spawn();
+	entity e = spawn();
 	e.classname = "modeleffect";
 	e.model = "from network";
 	e.modelindex = ReadShort();

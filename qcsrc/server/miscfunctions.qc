@@ -1,9 +1,35 @@
-var void remove(entity e);
-void objerror(string s);
-void droptofloor();
-.vector dropped_origin;
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "miscfunctions.qh"
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../common/playerstats.qh"
+    #include "../warpzonelib/anglestransform.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/urllib.qh"
+    #include "../common/command/generic.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/accuracy.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "weapons/selection.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "tturrets/include/turrets_early.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "ipban.qh"
+#endif
 
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
@@ -23,15 +49,11 @@ void crosshair_trace_plusvisibletriggers(entity pl)
 	for (e = first; e; e = e.chain)
 		e.solid = SOLID_TRIGGER;
 }
-void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void WarpZone_crosshair_trace(entity pl)
 {
 	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
-string GetMapname();
 
 string admin_name(void)
 {
@@ -41,8 +63,6 @@ string admin_name(void)
 		return "SERVER ADMIN";
 }
 
-float DistributeEvenly_amount;
-float DistributeEvenly_totalweight;
 void DistributeEvenly_Init(float amount, float totalweight)
 {
     if (DistributeEvenly_amount)
@@ -77,35 +97,6 @@ float DistributeEvenly_GetRandomized(float weight)
     return f;
 }
 
-#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
-
-string STR_PLAYER = "player";
-string STR_SPECTATOR = "spectator";
-string STR_OBSERVER = "observer";
-
-#define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
-#define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
-#define IS_OBSERVER(v) 			(v.classname == STR_OBSERVER)
-#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
-#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
-#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
-#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
-
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
-
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
-
-#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
-
-// copies a string to a tempstring (so one can strunzone it)
-string strcat1(string s) = #115; // FRIK_FILE
-
-float logfile_open;
-float logfile;
 
 void GameLogEcho(string s)
 {
@@ -116,7 +107,7 @@ void GameLogEcho(string s)
     {
         if (!logfile_open)
         {
-            logfile_open = TRUE;
+            logfile_open = true;
             matches = autocvar_sv_eventlog_files_counter + 1;
             cvar_set("sv_eventlog_files_counter", ftos(matches));
             fn = ftos(matches);
@@ -129,7 +120,7 @@ void GameLogEcho(string s)
         if (logfile >= 0)
         {
             if (autocvar_sv_eventlog_files_timestamps)
-                fputs(logfile, strcat(":time:", strftime(TRUE, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
+                fputs(logfile, strcat(":time:", strftime(true, "%Y-%m-%d %H:%M:%S", "\n", s, "\n")));
             else
                 fputs(logfile, strcat(s, "\n"));
         }
@@ -155,32 +146,6 @@ void GameLogClose()
     }
 }
 
-#define strstr strstrofs
-/*
-// NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
-// IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
-// STRINGS AND TAKE QUITE LONG. haystack and needle MUST
-// BE CONSTANT OR strzoneD!
-float strstr(string haystack, string needle, float offset)
-{
-	float len, endpos;
-	string found;
-	len = strlen(needle);
-	endpos = strlen(haystack) - len;
-	while(offset <= endpos)
-	{
-		found = substring(haystack, offset, len);
-		if(found == needle)
-			return offset;
-		offset = offset + 1;
-	}
-	return -1;
-}
-*/
-
-float NUM_NEAREST_ENTITIES = 4;
-entity nearest_entity[NUM_NEAREST_ENTITIES];
-float nearest_length[NUM_NEAREST_ENTITIES];
 entity findnearest(vector point, .string field, string value, vector axismod)
 {
     entity localhead;
@@ -200,7 +165,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
         else
             dist = localhead.origin;
         dist = dist - point;
-        dist = dist_x * axismod_x * '1 0 0' + dist_y * axismod_y * '0 1 0' + dist_z * axismod_z * '0 0 1';
+        dist = dist.x * axismod.x * '1 0 0' + dist.y * axismod.y * '0 1 0' + dist.z * axismod.z * '0 0 1';
         len = vlen(dist);
 
         for (i = 0; i < num_nearest; ++i)
@@ -230,7 +195,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     // now use the first one from our list that we can see
     for (i = 0; i < num_nearest; ++i)
     {
-        traceline(point, nearest_entity[i].origin, TRUE, world);
+        traceline(point, nearest_entity[i].origin, true, world);
         if (trace_fraction == 1)
         {
             if (i != 0)
@@ -353,19 +318,20 @@ string formatmessage(string msg)
 				wep = self.switchweapon;
 			if (!wep)
 				wep = self.cnt;
-			replacement = W_Name(wep);
+			replacement = WEP_NAME(wep);
 		} else if (escape == "W") {
 			if (self.items & IT_SHELLS) replacement = "shells";
 			else if (self.items & IT_NAILS) replacement = "bullets";
 			else if (self.items & IT_ROCKETS) replacement = "rockets";
 			else if (self.items & IT_CELLS) replacement = "cells";
+			else if (self.items & IT_PLASMA) replacement = "plasma";
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
 			replacement = cursor_ent.netname;
 			if (replacement == "" || !cursor_ent)
 				replacement = "nothing";
 		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
+			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
 		else if (escape == "S")
 			replacement = ftos(vlen(self.velocity));
 
@@ -375,8 +341,8 @@ string formatmessage(string msg)
 	return msg;
 }
 
-float boolean(float value) { // if value is 0 return FALSE (0), otherwise return TRUE (1)
-	return (value == 0) ? FALSE : TRUE;
+float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
+	return (value == 0) ? false : true;
 }
 
 /*
@@ -458,7 +424,6 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o;
@@ -487,6 +452,7 @@ void GetCvars(float f)
 
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
+	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
@@ -524,7 +490,7 @@ void GetCvars(float f)
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
 		if (s == "cl_allow_uidtracking")
-			PlayerStats_AddPlayer(self);
+			PlayerStats_GameReport_AddPlayer(self);
 	}
 }
 
@@ -545,91 +511,16 @@ vector randompos(vector m1, vector m2)
 {
     vector v;
     m2 = m2 - m1;
-    v_x = m2_x * random() + m1_x;
-    v_y = m2_y * random() + m1_y;
-    v_z = m2_z * random() + m1_z;
+    v.x = m2_x * random() + m1_x;
+    v.y = m2_y * random() + m1_y;
+    v.z = m2_z * random() + m1_z;
     return  v;
 }
 
-//#NO AUTOCVARS START
-
-float g_pickup_shells;
-float g_pickup_shells_max;
-float g_pickup_nails;
-float g_pickup_nails_max;
-float g_pickup_rockets;
-float g_pickup_rockets_max;
-float g_pickup_cells;
-float g_pickup_cells_max;
-float g_pickup_fuel;
-float g_pickup_fuel_jetpack;
-float g_pickup_fuel_max;
-float g_pickup_armorsmall;
-float g_pickup_armorsmall_max;
-float g_pickup_armorsmall_anyway;
-float g_pickup_armormedium;
-float g_pickup_armormedium_max;
-float g_pickup_armormedium_anyway;
-float g_pickup_armorbig;
-float g_pickup_armorbig_max;
-float g_pickup_armorbig_anyway;
-float g_pickup_armorlarge;
-float g_pickup_armorlarge_max;
-float g_pickup_armorlarge_anyway;
-float g_pickup_healthsmall;
-float g_pickup_healthsmall_max;
-float g_pickup_healthsmall_anyway;
-float g_pickup_healthmedium;
-float g_pickup_healthmedium_max;
-float g_pickup_healthmedium_anyway;
-float g_pickup_healthlarge;
-float g_pickup_healthlarge_max;
-float g_pickup_healthlarge_anyway;
-float g_pickup_healthmega;
-float g_pickup_healthmega_max;
-float g_pickup_healthmega_anyway;
-float g_pickup_ammo_anyway;
-float g_pickup_weapons_anyway;
-float g_weaponarena;
-WEPSET_DECLARE_A(g_weaponarena_weapons);
-float g_weaponarena_random;
-float g_weaponarena_random_with_laser;
-string g_weaponarena_list;
-float g_weaponspeedfactor;
-float g_weaponratefactor;
-float g_weapondamagefactor;
-float g_weaponforcefactor;
-float g_weaponspreadfactor;
-
-WEPSET_DECLARE_A(start_weapons);
-WEPSET_DECLARE_A(start_weapons_default);
-WEPSET_DECLARE_A(start_weapons_defaultmask);
-float start_items;
-float start_ammo_shells;
-float start_ammo_nails;
-float start_ammo_rockets;
-float start_ammo_cells;
-float start_ammo_fuel;
-float start_health;
-float start_armorvalue;
-WEPSET_DECLARE_A(warmup_start_weapons);
-WEPSET_DECLARE_A(warmup_start_weapons_default);
-WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
-float warmup_start_ammo_shells;
-float warmup_start_ammo_nails;
-float warmup_start_ammo_rockets;
-float warmup_start_ammo_cells;
-float warmup_start_ammo_fuel;
-float warmup_start_health;
-float warmup_start_armorvalue;
-float g_weapon_stay;
-
-entity get_weaponinfo(float w);
-
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
-	var float i = weaponinfo.weapon;
-	var float d = 0;
+	int i = weaponinfo.weapon;
+	int d = 0;
 
 	if (!i)
 		return 0;
@@ -637,26 +528,26 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	if (g_lms || g_ca || allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
-			d = TRUE;
+			d = true;
 		else
-			d = FALSE;
+			d = false;
 	}
 	else if (g_cts)
 		d = (i == WEP_SHOTGUN);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
-		d = (i == WEP_LASER || i == WEP_SHOTGUN);
-		
+		d = !(!weaponinfo.weaponstart);
+
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
-	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
-	
+	float t = weaponinfo.weaponstartoverride;
+
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
-	
+
 	// bit order in t:
 	// 1: want or not
 	// 2: is default?
@@ -676,19 +567,20 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	WEPSET_CLEAR_A(start_weapons);
-	WEPSET_CLEAR_A(start_weapons_default);
-	WEPSET_CLEAR_A(start_weapons_defaultmask);
+	start_weapons = '0 0 0';
+	start_weapons_default = '0 0 0';
+	start_weapons_defaultmask = '0 0 0';
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
+	start_ammo_plasma = 0;
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
-	WEPSET_CLEAR_A(g_weaponarena_weapons);
+	g_weaponarena_weapons = '0 0 0';
 
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
@@ -705,15 +597,15 @@ void readplayerstartcvars()
 	{
 		// forcibly turn off weaponarena
 	}
-	else if (s == "all")
+	else if (s == "all" || s == "1")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-				WEPSET_OR_AW(g_weaponarena_weapons, j);
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
 	else if (s == "most")
@@ -723,9 +615,9 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
-					WEPSET_OR_AW(g_weaponarena_weapons, j);
+					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
 	else if (s == "none")
@@ -746,7 +638,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					WEPSET_OR_AW(g_weaponarena_weapons, j);
+					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -763,13 +655,12 @@ void readplayerstartcvars()
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;
-	g_weaponarena_random_with_laser = cvar("g_weaponarena_random_with_laser");
+	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
-		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
-		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
+		start_weapons = g_weaponarena_weapons;
 		start_items |= IT_UNLIMITED_AMMO;
 	}
 	else
@@ -777,28 +668,26 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon("g_start_weapon_", e, FALSE);
+			int w = want_weapon(e, false);
 			if(w & 1)
-				WEPSET_OR_AW(start_weapons, i);
+				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
-				WEPSET_OR_AW(start_weapons_default, i);
+				start_weapons_default |= WepSet_FromWeapon(i);
 			if(w & 4)
-				WEPSET_OR_AW(start_weapons_defaultmask, i);
+				start_weapons_defaultmask |= WepSet_FromWeapon(i);
 		}
 	}
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
-	if(cvar("g_nexball"))
-		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
-
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
-		start_ammo_cells = 999;
 		start_ammo_nails = 999;
+		start_ammo_rockets = 999;
+		start_ammo_cells = 999;
+		start_ammo_plasma = 999;
 		start_ammo_fuel = 999;
 	}
 	else
@@ -807,44 +696,47 @@ void readplayerstartcvars()
 		start_ammo_nails = cvar("g_start_ammo_nails");
 		start_ammo_rockets = cvar("g_start_ammo_rockets");
 		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
-	if (inWarmupStage)
+	if (warmup_stage)
 	{
 		warmup_start_ammo_shells = start_ammo_shells;
 		warmup_start_ammo_nails = start_ammo_nails;
 		warmup_start_ammo_rockets = start_ammo_rockets;
 		warmup_start_ammo_cells = start_ammo_cells;
+		warmup_start_ammo_plasma = start_ammo_plasma;
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
-		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
-		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
+		warmup_start_weapons = start_weapons;
+		warmup_start_weapons_default = start_weapons_default;
+		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
 		if (!g_weaponarena && !g_ca)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
-			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
 			warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
+			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
+			warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			WEPSET_CLEAR_A(warmup_start_weapons);
-			WEPSET_CLEAR_A(warmup_start_weapons_default);
-			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
+			warmup_start_weapons = '0 0 0';
+			warmup_start_weapons_default = '0 0 0';
+			warmup_start_weapons_defaultmask = '0 0 0';
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				int w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
-					WEPSET_OR_AW(warmup_start_weapons, i);
+					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
-					WEPSET_OR_AW(warmup_start_weapons_default, i);
+					warmup_start_weapons_default |= WepSet_FromWeapon(i);
 				if(w & 4)
-					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
+					warmup_start_weapons_defaultmask |= WepSet_FromWeapon(i);
 			}
 		}
 	}
@@ -854,205 +746,39 @@ void readplayerstartcvars()
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
+	WepSet precache_weapons = start_weapons;
+	if (g_warmup_allguns != 1)
+		precache_weapons |= warmup_start_weapons;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
-			weapon_action(i, WR_PRECACHE);
+		if(precache_weapons & WepSet_FromWeapon(i))
+			WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
-	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_rockets = max(0, start_ammo_rockets);
+	start_ammo_cells = max(0, start_ammo_cells);
+	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
-	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
+	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
+	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-float g_bugrigs;
-float g_bugrigs_planar_movement;
-float g_bugrigs_planar_movement_car_jumping;
-float g_bugrigs_reverse_spinning;
-float g_bugrigs_reverse_speeding;
-float g_bugrigs_reverse_stopping;
-float g_bugrigs_air_steering;
-float g_bugrigs_angle_smoothing;
-float g_bugrigs_friction_floor;
-float g_bugrigs_friction_brake;
-float g_bugrigs_friction_air;
-float g_bugrigs_accel;
-float g_bugrigs_speed_ref;
-float g_bugrigs_speed_pow;
-float g_bugrigs_steer;
-
-float sv_autotaunt;
-float sv_taunt;
-
-string GetGametype(); // g_world.qc
-void readlevelcvars(void)
-{
-	// load mutators
-	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
-		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
-		
-	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
-	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
-	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
-	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
-	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
-	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
-	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
-	
-	#undef CHECK_MUTATOR_ADD
-	
-	if(cvar("sv_allow_fullbright"))
-		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
-
-    g_bugrigs = cvar("g_bugrigs");
-    g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
-    g_bugrigs_planar_movement_car_jumping = cvar("g_bugrigs_planar_movement_car_jumping");
-    g_bugrigs_reverse_spinning = cvar("g_bugrigs_reverse_spinning");
-    g_bugrigs_reverse_speeding = cvar("g_bugrigs_reverse_speeding");
-    g_bugrigs_reverse_stopping = cvar("g_bugrigs_reverse_stopping");
-    g_bugrigs_air_steering = cvar("g_bugrigs_air_steering");
-    g_bugrigs_angle_smoothing = cvar("g_bugrigs_angle_smoothing");
-    g_bugrigs_friction_floor = cvar("g_bugrigs_friction_floor");
-    g_bugrigs_friction_brake = cvar("g_bugrigs_friction_brake");
-    g_bugrigs_friction_air = cvar("g_bugrigs_friction_air");
-    g_bugrigs_accel = cvar("g_bugrigs_accel");
-    g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
-    g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
-    g_bugrigs_steer = cvar("g_bugrigs_steer");
-	
-	g_minstagib = cvar("g_minstagib");
-
-	sv_clones = cvar("sv_clones");
-	sv_foginterval = cvar("sv_foginterval");
-	g_cloaked = cvar("g_cloaked");
-    if(g_cts)
-        g_cloaked = 1; // always enable cloak in CTS
-	g_jump_grunt = cvar("g_jump_grunt");
-	g_footsteps = cvar("g_footsteps");
-	g_grappling_hook = cvar("g_grappling_hook");
-	g_jetpack = cvar("g_jetpack");
-	g_midair = cvar("g_midair");
-	g_norecoil = cvar("g_norecoil");
-	g_bloodloss = cvar("g_bloodloss");
-	sv_maxidle = cvar("sv_maxidle");
-	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	sv_autotaunt = cvar("sv_autotaunt");
-	sv_taunt = cvar("sv_taunt");
-
-	inWarmupStage = cvar("g_warmup");
-	g_warmup_limit = cvar("g_warmup_limit");
-	g_warmup_allguns = cvar("g_warmup_allguns");
-	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
-
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_minstagib || g_assault || cvar("g_campaign"))
-		inWarmupStage = 0; // these modes cannot work together, sorry
-
-	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
-	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
-	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
-	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
-	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
-	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
-	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
-	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
-	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
-	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
-	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
-	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
-	g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
-	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
-
-	g_weaponspeedfactor = cvar("g_weaponspeedfactor");
-	g_weaponratefactor = cvar("g_weaponratefactor");
-	g_weapondamagefactor = cvar("g_weapondamagefactor");
-	g_weaponforcefactor = cvar("g_weaponforcefactor");
-	g_weaponspreadfactor = cvar("g_weaponspreadfactor");
-
-	g_pickup_shells = cvar("g_pickup_shells");
-	g_pickup_shells_max = cvar("g_pickup_shells_max");
-	g_pickup_nails = cvar("g_pickup_nails");
-	g_pickup_nails_max = cvar("g_pickup_nails_max");
-	g_pickup_rockets = cvar("g_pickup_rockets");
-	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
-	g_pickup_cells = cvar("g_pickup_cells");
-	g_pickup_cells_max = cvar("g_pickup_cells_max");
-	g_pickup_fuel = cvar("g_pickup_fuel");
-	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
-	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
-	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
-	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
-	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
-	g_pickup_armormedium = cvar("g_pickup_armormedium");
-	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
-	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
-	g_pickup_armorbig = cvar("g_pickup_armorbig");
-	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
-	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
-	g_pickup_armorlarge = cvar("g_pickup_armorlarge");
-	g_pickup_armorlarge_max = cvar("g_pickup_armorlarge_max");
-	g_pickup_armorlarge_anyway = cvar("g_pickup_armorlarge_anyway");
-	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
-	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
-	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
-	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
-	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
-	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
-	g_pickup_healthlarge = cvar("g_pickup_healthlarge");
-	g_pickup_healthlarge_max = cvar("g_pickup_healthlarge_max");
-	g_pickup_healthlarge_anyway = cvar("g_pickup_healthlarge_anyway");
-	g_pickup_healthmega = cvar("g_pickup_healthmega");
-	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
-	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
-
-	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
-	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
-
-	g_pinata = cvar("g_pinata");
-
-    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-    if(!g_weapon_stay)
-        g_weapon_stay = cvar("g_weapon_stay");
-
-	if not(inWarmupStage)
-		game_starttime = time + cvar("g_start_delay");
-
-	readplayerstartcvars();
-}
-
-//#NO AUTOCVARS END
-
-// Sound functions
-string precache_sound (string s) = #19;
-float precache_sound_index (string s) = #19;
-
-#define SND_VOLUME      1
-#define SND_ATTENUATION 2
-#define SND_LARGEENTITY 8
-#define SND_LARGESOUND  16
-
-float sound_allowed(float dest, entity e)
+float sound_allowed(float _dest, entity e)
 {
     // sounds from world may always pass
     for (;;)
@@ -1067,40 +793,30 @@ float sound_allowed(float dest, entity e)
             break;
     }
     // sounds to self may always pass
-    if (dest == MSG_ONE)
+    if (_dest == MSG_ONE)
         if (e == msg_entity)
-            return TRUE;
+            return true;
     // sounds by players can be removed
     if (autocvar_bot_sound_monopoly)
         if (IS_REAL_CLIENT(e))
-            return FALSE;
+            return false;
     // anything else may pass
-    return TRUE;
+    return true;
 }
 
-#ifdef COMPAT_XON010_CHANNELS
-void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    builtin_sound(e, chan, samp, vol, atten);
-}
-#else
 #undef sound
-void sound(entity e, float chan, string samp, float vol, float atten)
+void sound(entity e, float chan, string samp, float vol, float _atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound7(e, chan, samp, vol, atten, 0, 0);
+    sound7(e, chan, samp, vol, _atten, 0, 0);
 }
-#endif
 
-void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten)
 {
     float entno, idx;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(_dest, e))
         return;
 
     entno = num_for_edict(e);
@@ -1109,61 +825,61 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
     float sflags;
     sflags = 0;
 
-    atten = floor(atten * 64);
+    _atten = floor(_atten * 64);
     vol = floor(vol * 255);
 
     if (vol != 255)
         sflags |= SND_VOLUME;
-    if (atten != 64)
+    if (_atten != 64)
         sflags |= SND_ATTENUATION;
     if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
 
-    WriteByte(dest, SVC_SOUND);
-    WriteByte(dest, sflags);
+    WriteByte(_dest, SVC_SOUND);
+    WriteByte(_dest, sflags);
     if (sflags & SND_VOLUME)
-        WriteByte(dest, vol);
+        WriteByte(_dest, vol);
     if (sflags & SND_ATTENUATION)
-        WriteByte(dest, atten);
+        WriteByte(_dest, _atten);
     if (sflags & SND_LARGEENTITY)
     {
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        WriteShort(_dest, entno);
+        WriteByte(_dest, chan);
     }
     else
     {
-        WriteShort(dest, entno * 8 + chan);
+        WriteShort(_dest, entno * 8 + chan);
     }
     if (sflags & SND_LARGESOUND)
-        WriteShort(dest, idx);
+        WriteShort(_dest, idx);
     else
-        WriteByte(dest, idx);
+        WriteByte(_dest, idx);
 
-    WriteCoord(dest, o_x);
-    WriteCoord(dest, o_y);
-    WriteCoord(dest, o_z);
+    WriteCoord(_dest, o.x);
+    WriteCoord(_dest, o.y);
+    WriteCoord(_dest, o.z);
 }
-void soundto(float dest, entity e, float chan, string samp, float vol, float atten)
+void soundto(float _dest, entity e, float chan, string samp, float vol, float _atten)
 {
     vector o;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(_dest, e))
         return;
 
     o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(dest, e, o, chan, samp, vol, atten);
+    soundtoat(_dest, e, o, chan, samp, vol, _atten);
 }
-void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
+void soundat(entity e, vector o, float chan, string samp, float vol, float _atten)
 {
-    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, _atten);
 }
-void stopsoundto(float dest, entity e, float chan)
+void stopsoundto(float _dest, entity e, float chan)
 {
     float entno;
 
-    if (!sound_allowed(dest, e))
+    if (!sound_allowed(_dest, e))
         return;
 
     entno = num_for_edict(e);
@@ -1175,22 +891,22 @@ void stopsoundto(float dest, entity e, float chan)
         sflags = SND_LARGEENTITY;
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
-        WriteByte(dest, SVC_SOUND);
-        WriteByte(dest, sflags);
-        WriteShort(dest, entno);
-        WriteByte(dest, chan);
+        WriteByte(_dest, SVC_SOUND);
+        WriteByte(_dest, sflags);
+        WriteShort(_dest, entno);
+        WriteByte(_dest, chan);
         if (sflags & SND_LARGESOUND)
-            WriteShort(dest, idx);
+            WriteShort(_dest, idx);
         else
-            WriteByte(dest, idx);
-        WriteCoord(dest, e.origin_x);
-        WriteCoord(dest, e.origin_y);
-        WriteCoord(dest, e.origin_z);
+            WriteByte(_dest, idx);
+        WriteCoord(_dest, e.origin.x);
+        WriteCoord(_dest, e.origin.y);
+        WriteCoord(_dest, e.origin.z);
     }
     else
     {
-        WriteByte(dest, SVC_STOPSOUND);
-        WriteShort(dest, entno * 8 + chan);
+        WriteByte(_dest, SVC_STOPSOUND);
+        WriteShort(_dest, entno * 8 + chan);
     }
 }
 void stopsound(entity e, float chan)
@@ -1206,23 +922,23 @@ void play2(entity e, string filename)
 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE);
+    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
 }
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
 .float spamtime;
-float spamsound(entity e, float chan, string samp, float vol, float atten)
+float spamsound(entity e, float chan, string samp, float vol, float _atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
-        return FALSE;
+        return false;
 
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, atten);
-        return TRUE;
+        sound(e, chan, samp, vol, _atten);
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void play2team(float t, string filename)
@@ -1244,7 +960,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
+    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -1265,7 +981,7 @@ void precache_playermodel(string m)
 	if(fexists(f))
 		precache_model(f);
 
-	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	globhandle = search_begin(strcat(m, "_*.sounds"), true, false);
 	if (globhandle < 0)
 		return;
 	n = search_getsize(globhandle);
@@ -1282,7 +998,7 @@ void precache_all_playermodels(string pattern)
 	float globhandle, i, n;
 	string f;
 
-	globhandle = search_begin(pattern, TRUE, FALSE);
+	globhandle = search_begin(pattern, true, false);
 	if (globhandle < 0)
 		return;
 	n = search_getsize(globhandle);
@@ -1299,6 +1015,7 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
+	precache_model("models/ice/ice.md3");
 
 #ifdef TTURRETS_ENABLED
     if (autocvar_g_turrets)
@@ -1387,18 +1104,6 @@ void precache()
         precache_sound ("weapons/hook_impact.wav"); // hook
     }
 
-    if(autocvar_sv_precacheweapons)
-    {
-        //precache weapon models/sounds
-        float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_action(wep, WR_PRECACHE);
-            wep = wep + 1;
-        }
-    }
-
     precache_model("models/elaser.mdl");
     precache_model("models/laser.mdl");
     precache_model("models/ebomb.mdl");
@@ -1413,30 +1118,13 @@ void precache()
     if (self.noise)
     {
         precache_sound (self.noise);
-        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTN_NONE);
+        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
 
 #include "precache-for-csqc.inc"
 }
 
-// WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
-#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
-
-#define INITPRIO_FIRST              0
-#define INITPRIO_GAMETYPE           0
-#define INITPRIO_GAMETYPE_FALLBACK  1
-#define INITPRIO_FINDTARGET        10
-#define INITPRIO_DROPTOFLOOR       20
-#define INITPRIO_SETLOCATION       90
-#define INITPRIO_LINKDOORS         91
-#define INITPRIO_LAST              99
-
-.void(void) initialize_entity;
-.float initialize_entity_order;
-.entity initialize_entity_next;
-entity initialize_entity_first;
 
 void make_safe_for_remove(entity e)
 {
@@ -1571,8 +1259,6 @@ void InitializeEntitiesRun()
     remove = remove_unsafely;
 }
 
-.float uncustomizeentityforclient_set;
-.void(void) uncustomizeentityforclient;
 void UncustomizeEntitiesRun()
 {
     entity oldself;
@@ -1588,10 +1274,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
     e.uncustomizeentityforclient_set = !!uncustomizer;
 }
 
-.float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
 
-void() SUB_Remove;
 void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
 {
     vector mi, ma;
@@ -1620,6 +1303,44 @@ void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendf
     }
 }
 
+
+entity eliminatedPlayers;
+.float(entity) isEliminated;
+float EliminatedPlayers_SendEntity(entity to, float sendflags)
+{
+	float i, f, b;
+	entity e;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sendflags);
+
+	if(sendflags & 1)
+	{
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+			{
+				if(eliminatedPlayers.isEliminated(e))
+					f |= b;
+			}
+			WriteByte(MSG_ENTITY, f);
+		}
+	}
+
+	return true;
+}
+
+void EliminatedPlayers_Init(float(entity) isEliminated_func)
+{
+	if(eliminatedPlayers)
+	{
+		backtrace("Can't spawn eliminatedPlayers again!");
+		return;
+	}
+	Net_LinkEntity(eliminatedPlayers = spawn(), false, 0, EliminatedPlayers_SendEntity);
+	eliminatedPlayers.isEliminated = isEliminated_func;
+}
+
+
 void adaptor_think2touch()
 {
     entity o;
@@ -1643,7 +1364,7 @@ void adaptor_think2use()
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {
-	if not(self.flags & FL_ONGROUND) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
 }
@@ -1670,9 +1391,9 @@ float trace_hits_box_1d(float end, float thmi, float thma)
     {
         // just check if x is in range
         if (0 < thmi)
-            return FALSE;
+            return false;
         if (0 > thma)
-            return FALSE;
+            return false;
     }
     else
     {
@@ -1681,9 +1402,9 @@ float trace_hits_box_1d(float end, float thmi, float thma)
         trace_hits_box_a0 = max(trace_hits_box_a0, min(thmi / end, thma / end));
         trace_hits_box_a1 = min(trace_hits_box_a1, max(thmi / end, thma / end));
         if (trace_hits_box_a0 > trace_hits_box_a1)
-            return FALSE;
+            return false;
     }
-    return TRUE;
+    return true;
 }
 
 float trace_hits_box(vector start, vector end, vector thmi, vector thma)
@@ -1696,14 +1417,14 @@ float trace_hits_box(vector start, vector end, vector thmi, vector thma)
     trace_hits_box_a0 = 0;
     trace_hits_box_a1 = 1;
 
-    if (!trace_hits_box_1d(end_x, thmi_x, thma_x))
-        return FALSE;
-    if (!trace_hits_box_1d(end_y, thmi_y, thma_y))
-        return FALSE;
-    if (!trace_hits_box_1d(end_z, thmi_z, thma_z))
-        return FALSE;
+    if (!trace_hits_box_1d(end.x, thmi.x, thma.x))
+        return false;
+    if (!trace_hits_box_1d(end.y, thmi.y, thma.y))
+        return false;
+    if (!trace_hits_box_1d(end.z, thmi.z, thma.z))
+        return false;
 
-    return TRUE;
+    return true;
 }
 
 float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma)
@@ -1720,7 +1441,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprint(sprintf(_("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.origin)));
+		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1752,10 +1473,12 @@ void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
-		return TRUE;
+		return true;
 	if(SUB_NoImpactCheck())
 	{
-		if(self.classname == "grapplinghook")
+		if(self.classname == "nade")
+			return false; // no checks here
+		else if(self.classname == "grapplinghook")
 			RemoveGrapplingHook(self.realowner);
 		else if(self.classname == "spike")
 		{
@@ -1764,16 +1487,13 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		}
 		else
 			remove(self);
-		return TRUE;
+		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
 		UpdateCSQCProjectile(self);
-	return FALSE;
+	return false;
 }
-#define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
-#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -1816,86 +1536,10 @@ string uid2name(string myuid) {
 			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
 		}
 	}
-	
+
 	if(s == "")
 		s = "^1Unregistered Player";
 	return s;
-}
-
-float race_readTime(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
-}
-
-string race_readUID(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
-}
-
-float race_readPos(string map, float t) {
-	float i;
-	for (i = 1; i <= RANKINGS_CNT; ++i)
-		if (race_readTime(map, i) == 0 || race_readTime(map, i) > t)
-			return i;
-
-	return 0; // pos is zero if unranked
-}
-
-void race_writeTime(string map, float t, string myuid)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	float newpos;
-	newpos = race_readPos(map, t);
-
-	float i, prevpos = 0;
-	for(i = 1; i <= RANKINGS_CNT; ++i)
-	{
-		if(race_readUID(map, i) == myuid)
-			prevpos = i;
-	}
-	if (prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
-		for (i = prevpos; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	} else { // player has no ranked record yet
-		for (i = RANKINGS_CNT; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	}
-
-	// store new time itself
-	db_put(ServerProgsDB, strcat(map, rr, "time", ftos(newpos)), ftos(t));
-	db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(newpos)), myuid);
-}
-
-string race_readName(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
@@ -1914,14 +1558,14 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     for (i = 0; i < attempts; ++i)
     {
-        start_x = org_x + random() * delta_x;
-        start_y = org_y + random() * delta_y;
-        start_z = org_z + random() * delta_z;
+        start.x = org.x + random() * delta.x;
+        start.y = org.y + random() * delta.y;
+        start.z = org.z + random() * delta.z;
 
         // rule 1: start inside world bounds, and outside
         // solid, and don't start from somewhere where you can
         // fall down to evil
-        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta_z, MOVE_NORMAL, e);
+        tracebox(start, e.mins, e.maxs, start - '0 0 1' * delta.z, MOVE_NORMAL, e);
         if (trace_fraction >= 1)
             continue;
         if (trace_startsolid)
@@ -1932,7 +1576,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
             continue;
 
         // rule 2: if we are too high, lower the point
-        if (trace_fraction * delta_z > maxaboveground)
+        if (trace_fraction * delta.z > maxaboveground)
             start = trace_endpos + '0 0 1' * maxaboveground;
         enddown = trace_endpos;
 
@@ -1941,39 +1585,41 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         // the map should have a convex outside hull.
         // these can be traceLINES as we already verified the starting box
         mstart = start + 0.5 * (e.mins + e.maxs);
-        traceline(mstart, mstart + '1 0 0' * delta_x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
+        traceline(mstart, mstart + '1 0 0' * delta.x, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart - '1 0 0' * delta_x, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
+        traceline(mstart, mstart - '1 0 0' * delta.x, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart + '0 1 0' * delta_y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
+        traceline(mstart, mstart + '0 1 0' * delta.y, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart - '0 1 0' * delta_y, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
+        traceline(mstart, mstart - '0 1 0' * delta.y, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
-        traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
-        if (trace_fraction >= 1)
+        traceline(mstart, mstart + '0 0 1' * delta.z, MOVE_NORMAL, e);
+        if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
             continue;
 
-	// rule 4: we must "see" some spawnpoint
+	// rule 4: we must "see" some spawnpoint or item
 	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
 		if(checkpvs(mstart, sp))
-			break;
+			if((traceline(mstart, sp.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				break;
 	if(!sp)
 	{
 		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
 			if(checkpvs(mstart, sp))
-				break;
+				if((traceline(mstart, sp.origin + (sp.mins + sp.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+					break;
 		if(!sp)
 			continue;
 	}
 
         // find a random vector to "look at"
-        end_x = org_x + random() * delta_x;
-        end_y = org_y + random() * delta_y;
-        end_z = org_z + random() * delta_z;
+        end.x = org.x + random() * delta.x;
+        end.y = org.y + random() * delta.y;
+        end.z = org.z + random() * delta.z;
         end = start + normalize(end - start) * vlen(delta);
 
         // rule 4: start TO end must not be too short
@@ -2001,69 +1647,10 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         setorigin(e, start);
         e.angles = vectoangles(end - start);
         dprint("Needed ", ftos(i + 1), " attempts\n");
-        return TRUE;
+        return true;
     }
     else
-        return FALSE;
-}
-
-float zcurveparticles_effectno;
-vector zcurveparticles_start;
-float zcurveparticles_spd;
-
-void endzcurveparticles()
-{
-	if(zcurveparticles_effectno)
-	{
-		// terminator
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd | 0x8000);
-	}
-	zcurveparticles_effectno = 0;
-}
-
-void zcurveparticles(float effectno, vector start, vector end, float end_dz, float spd)
-{
-	spd = bound(0, floor(spd / 16), 32767);
-	if(effectno != zcurveparticles_effectno || start != zcurveparticles_start)
-	{
-		endzcurveparticles();
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
-		WriteShort(MSG_BROADCAST, effectno);
-		WriteCoord(MSG_BROADCAST, start_x);
-		WriteCoord(MSG_BROADCAST, start_y);
-		WriteCoord(MSG_BROADCAST, start_z);
-		zcurveparticles_effectno = effectno;
-		zcurveparticles_start = start;
-	}
-	else
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd);
-	WriteCoord(MSG_BROADCAST, end_x);
-	WriteCoord(MSG_BROADCAST, end_y);
-	WriteCoord(MSG_BROADCAST, end_z);
-	WriteCoord(MSG_BROADCAST, end_dz);
-	zcurveparticles_spd = spd;
-}
-
-void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, vector vel)
-{
-	float end_dz;
-	vector vecxy, velxy;
-
-	vecxy = end - start;
-	vecxy_z = 0;
-	velxy = vel;
-	velxy_z = 0;
-
-	if (vlen(velxy) < 0.000001 * fabs(vel_z))
-	{
-		endzcurveparticles();
-		trailparticles(world, effectno, start, end);
-		return;
-	}
-
-	end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
-	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
+        return false;
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)
@@ -2086,15 +1673,15 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			break;
 
 		case 4: // left
-			vecs_y = -vecs_y;
+			vecs.y = -vecs.y;
 			break;
 
 		case 1:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
-				vecs_y = 0;
-				vecs_z -= 2;
+				vecs.y = 0;
+				vecs.z -= 2;
 			}
 			else
 			{
@@ -2106,13 +1693,13 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
-				vecs_y = 0;
-				vecs_z -= 2;
+				vecs.y = 0;
+				vecs.z -= 2;
 			}
 			else
 			{
 				// left
-				vecs_y = -vecs_y;
+				vecs.y = -vecs.y;
 			}
 			break;
 	}
@@ -2129,28 +1716,28 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 		if (visual)
 		{
 			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs_y = 0; vecs_z -= 2; }
+			else { vecs.y = 0; vecs.z -= 2; }
 		}
 		else
 		{
-			vecs_y = 0;
-			vecs_z = 0;
+			vecs.y = 0;
+			vecs.z = 0;
 		}
 	}
 	else if (autocvar_g_shootfromcenter)
 	{
-		vecs_y = 0;
-		vecs_z -= 2;
+		vecs.y = 0;
+		vecs.z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{
 		v = stov(s);
 		if (y_is_right)
-			v_y = -v_y;
-		if (v_x != 0)
-			vecs_x = v_x;
-		vecs_y = v_y;
-		vecs_z = v_z;
+			v.y = -v.y;
+		if (v.x != 0)
+			vecs.x = v.x;
+		vecs.y = v.y;
+		vecs.z = v.z;
 	}
 	else if (autocvar_g_shootfromclient)
 	{
@@ -2188,12 +1775,12 @@ void attach_sameorigin(entity e, entity to, string tag)
     fixedmakevectors(e.angles);
 
     // untransform forward, up!
-    e_forward_x = v_forward * t_forward;
-    e_forward_y = v_forward * t_left;
-    e_forward_z = v_forward * t_up;
-    e_up_x = v_up * t_forward;
-    e_up_y = v_up * t_left;
-    e_up_z = v_up * t_up;
+    e_forward.x = v_forward * t_forward;
+    e_forward.y = v_forward * t_left;
+    e_forward.z = v_forward * t_up;
+    e_up.x = v_up * t_forward;
+    e_up.y = v_up * t_left;
+    e_up.z = v_up * t_up;
 
     e.angles = fixedvectoangles2(e_forward, e_up);
     if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
@@ -2266,26 +1853,26 @@ float modeleffect_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, self.modelindex);
 	WriteByte(MSG_ENTITY, self.skin);
 	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
 	if(f & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.velocity_x);
-		WriteCoord(MSG_ENTITY, self.velocity_y);
-		WriteCoord(MSG_ENTITY, self.velocity_z);
+		WriteCoord(MSG_ENTITY, self.velocity.x);
+		WriteCoord(MSG_ENTITY, self.velocity.y);
+		WriteCoord(MSG_ENTITY, self.velocity.z);
 	}
 	if(f & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
+		WriteCoord(MSG_ENTITY, self.angles.x);
+		WriteCoord(MSG_ENTITY, self.angles.y);
+		WriteCoord(MSG_ENTITY, self.angles.z);
 	}
 	if(f & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.avelocity_x);
-		WriteCoord(MSG_ENTITY, self.avelocity_y);
-		WriteCoord(MSG_ENTITY, self.avelocity_z);
+		WriteCoord(MSG_ENTITY, self.avelocity.x);
+		WriteCoord(MSG_ENTITY, self.avelocity.y);
+		WriteCoord(MSG_ENTITY, self.avelocity.z);
 	}
 	WriteShort(MSG_ENTITY, self.scale * 256.0);
 	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
@@ -2293,7 +1880,7 @@ float modeleffect_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
 	WriteByte(MSG_ENTITY, self.alpha * 255.0);
 
-	return TRUE;
+	return true;
 }
 
 void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2)
@@ -2313,16 +1900,16 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	e.fade_time = t2;
 	e.skin = s;
 	if(s0 >= 0)
-		e.scale = s0 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.scale = s0 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
 	else
 		e.scale = -s0;
 	if(s2 >= 0)
-		e.scale2 = s2 / max6(-e.mins_x, -e.mins_y, -e.mins_z, e.maxs_x, e.maxs_y, e.maxs_z);
+		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
 	else
 		e.scale2 = -s2;
 	sz = max(e.scale, e.scale2);
 	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, FALSE, 0.1, modeleffect_SendEntity);
+	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
 }
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
@@ -2332,7 +1919,7 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 
 float randombit(float bits)
 {
-	if not(bits & (bits-1)) // this ONLY holds for powers of two!
+	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
 		return bits;
 
 	float n, f, b, r;
@@ -2391,26 +1978,6 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 		return 1;
 }
 
-
-
-
-#ifdef RELEASE
-#define cvar_string_normal builtin_cvar_string
-#define cvar_normal builtin_cvar
-#else
-string cvar_string_normal(string n)
-{
-	if not(cvar_type(n) & 1)
-		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return builtin_cvar_string(n);
-}
-
-float cvar_normal(string n)
-{
-	return stof(cvar_string_normal(n));
-}
-#endif
-#define cvar_set_normal builtin_cvar_set
 
 void defer_think()
 {
@@ -2479,9 +2046,9 @@ float LostMovetypeFollow(entity ent)
 float isPushable(entity e)
 {
 	if(e.iscreature)
-		return TRUE;
+		return true;
 	if(e.pushable)
-		return TRUE;
+		return true;
 	switch(e.classname)
 	{
 		case "body":
@@ -2489,11 +2056,11 @@ float isPushable(entity e)
 		case "keepawayball":
 		case "nexball_basketball":
 		case "nexball_football":
-			return TRUE;
+			return true;
 		case "bullet": // antilagged bullets can't hit this either
-			return FALSE;
+			return false;
 	}
 	if (e.projectiledeathtype)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

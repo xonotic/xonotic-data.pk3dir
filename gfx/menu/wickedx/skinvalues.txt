@@ -23,7 +23,7 @@ MARGIN_COLORPICKER              '0 0 0'
 //   uses "border" images
 //   uses "closebutton" images
 MARGIN_TOP                      8
-MARGIN_BOTTOM                   12
+MARGIN_BOTTOM                   16
 MARGIN_LEFT                     16
 MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
@@ -37,7 +37,7 @@ FONTSIZE_TITLE                  16
 HEIGHT_TITLE                    1.5
 HEIGHT_ZOOMEDTITLE              -1
 
-// general 
+// general
 //   uses "background" images
 //   uses "background_ingame" images
 ALIGN_BACKGROUND                h5h5
@@ -46,6 +46,9 @@ ALPHA_BACKGROUND_INGAME         1
 ALPHA_DISABLED                  0.2
 ALPHA_BEHIND                    0.5
 ALPHA_TEXT                      0.7
+COLOR_TEXT                      '1 1 1'
+ALPHA_HEADER                    0.5
+COLOR_HEADER                    '1 1 1'
 
 // mouse
 //   uses "cursor" images
@@ -67,6 +70,7 @@ MARGIN_TOOLTIP                  '8 8 0'
 BORDER_TOOLTIP                  '16 16 0'
 FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
+COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
 AVOID_TOOLTIP                   '8 8 0'
 
@@ -94,8 +98,8 @@ WIDTH_CREDITS                   0.5
 
 // item: cvar list
 ALPHA_CVARLIST_SAVED            1
-ALPHA_CVARLIST_TEMPORARY        0.7    
-COLOR_CVARLIST_CHANGED          '0 0.375 0.75' 
+ALPHA_CVARLIST_TEMPORARY        0.7
+COLOR_CVARLIST_CHANGED          '0 0.375 0.75'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
@@ -133,10 +137,18 @@ COLOR_SERVERLIST_HIGHPING       '1 0 0'
 ALPHA_SERVERLIST_HIGHPING       0.4
 ALPHA_SERVERLIST_FAVORITE       0.8
 COLOR_SERVERLIST_FAVORITE       '1 1 1'
+ALPHA_SERVERLIST_CATEGORY       0.7
+COLOR_SERVERLIST_CATEGORY       '1 1 1'
 
 // item: skin list
 COLOR_SKINLIST_TITLE            '1 1 1'
 COLOR_SKINLIST_AUTHOR           '0 0.375 0.75'
+
+// item: demo list
+COLOR_DEMOLIST_SUBDIR           '0.5 0.5 0.5'
+
+// item: screenshot list
+COLOR_SCREENSHOTLIST_SUBDIR     '0.5 0.5 0.5'
 
 //------------------------------------------------------------------------------
 // Images (colors multiplied to images)
@@ -180,6 +192,7 @@ COLOR_DIALOG_MODEL              '1 1 1'
 COLOR_DIALOG_CROSSHAIR          '1 1 1'
 COLOR_DIALOG_HUD                '1 1 1'
 COLOR_DIALOG_SERVERINFO         '1 1 1'
+COLOR_DIALOG_SCREENSHOTVIEWER   '1 1 1'
 COLOR_DIALOG_CVARS              '1 0 0'
 COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 
@@ -204,11 +217,12 @@ ALPHA_KEYGRABBER_KEYS           0.7
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
-// item: player name editor
-//   uses "charmap" images
-//   uses "charmapbutton" images
+// item: charmap
+ALPHA_CHARMAP_CHAR              0.85
+COLOR_CHARMAP_CHAR              '1 1 1'
+ALPHA_CHARMAP_FOCUS             0.75
+COLOR_CHARMAP_FOCUS             '0 0.375 0.75'
 
 // item: radio button
 //   uses "radiobutton" images
