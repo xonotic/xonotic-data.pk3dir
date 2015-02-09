@@ -3,11 +3,11 @@ float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 
-var float autocvar_g_vehicles_nex_damagerate = 0.5;
-var float autocvar_g_vehicles_uzi_damagerate = 0.5;
-var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
-var float autocvar_g_vehicles_tag_damagerate = 5;
+float autocvar_g_vehicles_vortex_damagerate = 0.5;
+float autocvar_g_vehicles_machinegun_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
+float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
 
@@ -16,7 +16,7 @@ void vehicles_return();
 void vehicles_enter();
 void vehicles_touch();
 void vehicles_reset_colors();
-void vehicles_clearrturn();
+void vehicles_clearreturn();
 void vehicles_setreturn();
 
 
@@ -33,20 +33,20 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 	WriteByte(MSG_ENTITY, self.cnt);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
 
-    WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.x * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.y * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod.z * 255));
 
-    return TRUE;
+    return true;
 }
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
-    if not(IS_REAL_CLIENT(own))
+    if (!IS_REAL_CLIENT(own))
         return;
 
     entity axh;
@@ -60,7 +60,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
         axh.cnt                 = axh_id;
         axh.drawonlytoclient    = own;
         axh.owner               = own;
-        Net_LinkEntity(axh, FALSE, 0, SendAuxiliaryXhair);
+        Net_LinkEntity(axh, false, 0, SendAuxiliaryXhair);
     }
 
     setorigin(axh, loc);
@@ -101,15 +101,15 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 **/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
-    if not(IS_REAL_CLIENT(own))
+    if (!IS_REAL_CLIENT(own))
         return;
-	
+
 	msg_entity = own;
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
 	if(vehicle_id != 0)
-	    WriteByte(MSG_ONE, vehicle_id);        
+	    WriteByte(MSG_ONE, vehicle_id);
 	else
         WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + HUD_VEHICLE_LAST);
 }
@@ -275,7 +275,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE ||
+        if(!trace_ent.vehicle_flags & VHF_ISVEHICLE ||
 				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
 				trace_ent.takedamage == DAMAGE_TARGETDRONE)
             trace_ent = world;
@@ -397,7 +397,7 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+    RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
     remove (self);
 }
@@ -422,7 +422,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
     proj.solid            = SOLID_BBOX;
     proj.movetype         = MOVETYPE_FLYMISSILE;
     proj.flags            = FL_PROJECTILE;
-    proj.bot_dodge        = TRUE;
+    proj.bot_dodge        = true;
     proj.bot_dodgerating  = _dmg;
     proj.velocity         = _vel;
     proj.touch            = vehicles_projectile_explode;
@@ -456,6 +456,30 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 }
 // End generic vehile projectile system
 
+void vehicles_reset()
+{
+	if(self.owner)
+	{
+		entity oldself = self;
+		self = self.owner;
+		vehicles_exit(VHEF_RELESE);
+		self = oldself;
+	}
+	self.alpha      = -1;
+	self.movetype   = MOVETYPE_NONE;
+	self.effects    = EF_NODRAW;
+	self.colormod  = '0 0 0';
+	self.avelocity = '0 0 0';
+	self.velocity  = '0 0 0';
+	self.event_damage = func_null;
+	self.solid = SOLID_NOT;
+	self.deadflag = DEAD_NO;
+
+	self.touch = func_null;
+	self.nextthink = 0;
+	vehicles_setreturn();
+}
+
 /** vehicles_spawn
     Exetuted for all vehicles on (re)spawn.
     Sets defaults for newly spawned units.
@@ -470,14 +494,15 @@ void vehicles_spawn()
     self.owner              = world;
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
-    self.iscreature         = TRUE;
-    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
-    self.damagedbycontents	= TRUE;
+    self.reset              = vehicles_reset;
+    self.iscreature         = true;
+    self.teleportable       = false; // no teleporting for vehicles, too buggy
+    self.damagedbycontents	= true;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
 	self.deadflag           = DEAD_NO;
-    self.bot_attack         = TRUE;
+    self.bot_attack         = true;
     self.flags              = FL_NOTARGET;
     self.avelocity          = '0 0 0';
     self.velocity           = '0 0 0';
@@ -492,10 +517,10 @@ void vehicles_spawn()
     setorigin(self, self.pos1 + '0 0 0');
     // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
-    
+
     if(self.vehicle_controller)
         self.team = self.vehicle_controller.team;
-       
+
     vehicles_reset_colors();
     self.vehicle_spawn(VHSF_NORMAL);
 }
@@ -504,15 +529,15 @@ void vehicles_spawn()
 float vehicles_crushable(entity e)
 {
     if(IS_PLAYER(e))
-        return TRUE;
+        return true;
 
     if(e.flags & FL_MONSTER)
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
-void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
+void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return;
@@ -539,7 +564,7 @@ void vehicles_touch()
 {
 	if(MUTATOR_CALLHOOK(VehicleTouch))
 		return;
-	
+
     // Vehicle currently in use
     if(self.owner)
     {
@@ -559,7 +584,7 @@ void vehicles_touch()
         return;
     }
 
-    if not(IS_PLAYER(other))
+    if (!IS_PLAYER(other))
         return;
 
     if(other.deadflag != DEAD_NO)
@@ -570,18 +595,24 @@ void vehicles_touch()
 
     vehicles_enter();
 }
-var float autocvar_g_vehicles_allow_bots = 0;
+float autocvar_g_vehicles_allow_bots = 0;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
-   
-    if (IS_BOT_CLIENT(other))    
+
+    if (IS_BOT_CLIENT(other))
         if (autocvar_g_vehicles_allow_bots)
             dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
         else
             return;
 
     if(self.phase > time)
+        return;
+    if(other.frozen)
+        return;
+    if(other.vehicle)
+        return;
+    if(other.deadflag != DEAD_NO)
         return;
 
     if(teamplay)
@@ -636,32 +667,33 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
-    
+    self.monster_attack       = true;
+
     if (IS_REAL_CLIENT(other))
     {
         msg_entity = other;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
         WriteEntity(MSG_ONE, self.vehicle_viewport);
-                
+
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
         if(self.tur_head)
         {
-            WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
-            WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
+            WriteAngle(MSG_ONE, self.tur_head.angles.x + self.angles.x); // tilt
+            WriteAngle(MSG_ONE, self.tur_head.angles.y + self.angles.y); // yaw
             WriteAngle(MSG_ONE, 0);                                      // roll
         }
         else
         {
-            WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
-            WriteAngle(MSG_ONE,  self.angles_y);      // yaw
+            WriteAngle(MSG_ONE,  self.angles.x * -1); // tilt
+            WriteAngle(MSG_ONE,  self.angles.y);      // yaw
             WriteAngle(MSG_ONE,  0);                  // roll
         }
     }
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     CSQCVehicleSetup(self.owner, self.hud);
-    
+
     vh_player = other;
     vh_vehicle = self;
     MUTATOR_CALLHOOK(VehicleEnter);
@@ -693,7 +725,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
     for(i = 0; i < 100; ++i)
     {
         v = randomvec();
-        v_z = 0;
+        v.z = 0;
         v = v2 + normalize(v) * mysize;
         tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, self.owner);
         if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
@@ -735,31 +767,31 @@ void vehicles_exit(float eject)
     entity _vehicle;
     entity _player;
     entity _oldself = self;
-    
+
     if(vehicles_exit_running)
     {
         dprint("^1vehicles_exit allready running! this is not good..\n");
         return;
     }
-    
-    vehicles_exit_running = TRUE;
+
+    vehicles_exit_running = true;
     if(IS_CLIENT(self))
     {
         _vehicle = self.vehicle;
-            
+
         if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
         {
             _vehicle.vehicle_exit(eject);
             self = _oldself;
-            vehicles_exit_running = FALSE;
-            return;            
+            vehicles_exit_running = false;
+            return;
         }
     }
     else
         _vehicle = self;
-    
+
     _player = _vehicle.owner;
-    
+
     self = _vehicle;
 
     if (_player)
@@ -772,10 +804,10 @@ void vehicles_exit(float eject)
 
             WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE, 0);
-            WriteAngle(MSG_ONE, _vehicle.angles_y);
+            WriteAngle(MSG_ONE, _vehicle.angles.y);
             WriteAngle(MSG_ONE, 0);
         }
-        
+
         setsize(_player, PL_MIN,PL_MAX);
 
         _player.takedamage     = DAMAGE_AIM;
@@ -793,12 +825,12 @@ void vehicles_exit(float eject)
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }
     _vehicle.flags |= FL_NOTARGET;
-    
+
     if(_vehicle.deadflag == DEAD_NO)
         _vehicle.avelocity          = '0 0 0';
-    
+
     _vehicle.tur_head.nodrawtoclient             = world;
-    
+
     if(!teamplay)
         _vehicle.team = 0;
 
@@ -809,19 +841,20 @@ void vehicles_exit(float eject)
     _vehicle = vh_vehicle;
 
     _vehicle.team = _vehicle.tur_head.team;
-        
+
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
-    _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
+    _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;
     _vehicle.phase = time + 1;
-    
+    _vehicle.monster_attack = false;
+
     _vehicle.vehicle_exit(eject);
-    
+
     vehicles_setreturn();
-    vehicles_reset_colors();        
+    vehicles_reset_colors();
     _vehicle.owner = world;
     self = _oldself;
-    
-    vehicles_exit_running = FALSE;
+
+    vehicles_exit_running = false;
 }
 
 
@@ -832,7 +865,7 @@ void vehicles_regen(float timer, .float regen_field, float field_max, float rpau
     {
         if(_healthscale)
             regen = regen * (self.vehicle_health / self.tur_health);
-            
+
         self.regen_field = min(self.regen_field + regen * delta_time, field_max);
 
         if(self.owner)
@@ -880,24 +913,25 @@ void vehicles_painframe()
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
-    
-    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
-        damage *= autocvar_g_vehicles_nex_damagerate;
-        
-    if(DEATH_ISWEAPON(deathtype, WEP_UZI))
-        damage *= autocvar_g_vehicles_uzi_damagerate;
-        
+
+	// WEAPONTODO
+    if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+        damage *= autocvar_g_vehicles_vortex_damagerate;
+
+    if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+        damage *= autocvar_g_vehicles_machinegun_damagerate;
+
     if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
         damage *= autocvar_g_vehicles_rifle_damagerate;
-        
-    if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
-        damage *= autocvar_g_vehicles_minstanex_damagerate;
+
+    if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+        damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
     if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
         damage *= autocvar_g_vehicles_tag_damagerate;
-    
+
     self.enemy = attacker;
-    
+
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
     {
         if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
@@ -942,7 +976,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         if(sound_allowed(MSG_BROADCAST, attacker))
             spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
     }
-    
+
 	if(self.damageforcescale < 1 && self.damageforcescale > 0)
 		self.velocity += force * self.damageforcescale;
 	else
@@ -964,7 +998,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
 }
 
-void vehicles_clearrturn()
+void vehicles_clearreturn()
 {
     entity ret;
     // Remove "return helper", if any.
@@ -1038,7 +1072,7 @@ void vehicles_showwp()
 	    rgb = Team_ColorRGB(self.team);
     else
 	    rgb = '1 1 1';
-    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
+    WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
     if(self.waypointsprite_attached)
     {
         WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
@@ -1055,7 +1089,7 @@ void vehicles_setreturn()
 {
     entity ret;
 
-    vehicles_clearrturn();
+    vehicles_clearreturn();
 
     ret = spawn();
     ret.classname   = "vehicle_return";
@@ -1063,19 +1097,16 @@ void vehicles_setreturn()
     ret.team        = self.team;
     ret.think       = vehicles_showwp;
 
-    if(self.deadflag != DEAD_NO)
-    {
-        ret.cnt         = time + self.vehicle_respawntime;
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 5);
-    }
-    else
-    {
-        ret.nextthink   = min(time + self.vehicle_respawntime, time + self.vehicle_respawntime - 1);
-    }
+	if(self.deadflag != DEAD_NO)
+	{
+		ret.cnt = max(game_starttime, time) + self.vehicle_respawntime;
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 5);
+	}
+	else
+		ret.nextthink = max(game_starttime, time) + max(0, self.vehicle_respawntime - 1);
 
     setmodel(ret, "null");
     setorigin(ret, self.pos1 + '0 0 96');
-
 }
 
 void vehicles_reset_colors()
@@ -1133,7 +1164,7 @@ void vehicle_use()
         self.active = ACTIVE_NOT;
     else
         self.active = ACTIVE_ACTIVE;
-    
+
     if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO)
     {
         dprint("^3Eat shit yall!\n");
@@ -1142,18 +1173,18 @@ void vehicle_use()
     }
     else if(self.active == ACTIVE_NOT && self.deadflag != DEAD_NO)
     {
-        
+
     }
 }
 
-float vehicle_addplayerslot(    entity _owner, 
-                                entity _slot, 
-                                float _hud, 
+float vehicle_addplayerslot(    entity _owner,
+                                entity _slot,
+                                float _hud,
                                 string _hud_model,
-                                float() _framefunc, 
+                                float() _framefunc,
                                 void(float) _exitfunc)
 {
-    if not (_owner.vehicle_flags & VHF_MULTISLOT)
+    if (!(_owner.vehicle_flags & VHF_MULTISLOT))
         _owner.vehicle_flags |= VHF_MULTISLOT;
 
     _slot.PlayerPhysplug = _framefunc;
@@ -1164,14 +1195,14 @@ float vehicle_addplayerslot(    entity _owner,
     _slot.vehicle_hudmodel = spawn();
     _slot.vehicle_hudmodel.viewmodelforclient = _slot;
     _slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
-    
+
     setmodel(_slot.vehicle_hudmodel, _hud_model);
     setmodel(_slot.vehicle_viewport, "null");
-    
+
     setattachment(_slot.vehicle_hudmodel, _slot, "");
     setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
-    
-    return TRUE;
+
+    return true;
 }
 
 float vehicle_initialize(string  net_name,
@@ -1197,8 +1228,8 @@ float vehicle_initialize(string  net_name,
                          float _max_shield)
 {
 	if(!autocvar_g_vehicles)
-		return FALSE;
-	
+		return false;
+
     if(self.targetname)
     {
         self.vehicle_controller = find(world, target, self.targetname);
@@ -1208,19 +1239,19 @@ float vehicle_initialize(string  net_name,
         }
         else
         {
-            self.team = self.vehicle_controller.team;        
+            self.team = self.vehicle_controller.team;
             self.use = vehicle_use;
-            
+
             if(teamplay)
             {
                 if(self.vehicle_controller.team == 0)
                     self.active = ACTIVE_NOT;
                 else
-                    self.active = ACTIVE_ACTIVE;                
+                    self.active = ACTIVE_ACTIVE;
             }
         }
     }
-    
+
     precache_sound("onslaught/ons_hit2.wav");
     precache_sound("onslaught/electricity_explode.wav");
 
@@ -1259,10 +1290,10 @@ float vehicle_initialize(string  net_name,
     self.tur_head           = spawn();
     self.tur_head.owner     = self;
     self.takedamage         = DAMAGE_AIM;
-    self.bot_attack         = TRUE;
-    self.iscreature         = TRUE;
-    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
-    self.damagedbycontents	= TRUE;
+    self.bot_attack         = true;
+    self.iscreature         = true;
+    self.teleportable       = false; // no teleporting for vehicles, too buggy
+    self.damagedbycontents	= true;
     self.hud                = vhud;
     self.tur_health          = _max_health;
     self.tur_head.tur_health = _max_shield;
@@ -1273,15 +1304,14 @@ float vehicle_initialize(string  net_name,
     self.event_damage        = func_null;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
-    self.nextthink           = time;
-    self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
+	self.vehicle_respawntime = max(0, _respawntime);
     self.effects             = EF_NODRAW;
 	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
-    if(!autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + game_starttime;
-    else
-        self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+	if(!autocvar_g_vehicles_delayspawn || !self.vehicle_respawntime)
+		self.nextthink = time;
+	else
+		self.nextthink = max(time, game_starttime) + max(0, self.vehicle_respawntime + ((random() * 2 - 1) * autocvar_g_vehicles_delayspawn_jitter));
 
 	if(autocvar_g_playerclip_collisions)
 		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
@@ -1310,25 +1340,25 @@ float vehicle_initialize(string  net_name,
     }
 
     setsize(self, min_s, max_s);
-    if not (nodrop)
+    if (!nodrop)
     {
         setorigin(self, self.origin);
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
         setorigin(self, trace_endpos);
     }
-    
+
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
-	
-	if(MUTATOR_CALLHOOK(VehicleSpawn))
-		return FALSE;
 
-    return TRUE;
+	if(MUTATOR_CALLHOOK(VehicleSpawn))
+		return false;
+
+    return true;
 }
 
-vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
-                         float _pichlimit_min, float _pichlimit_max, 
+vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname,
+                         float _pichlimit_min, float _pichlimit_max,
                          float _rotlimit_min, float _rotlimit_max, float _aimspeed)
 {
     vector vtmp, vtag;
@@ -1338,10 +1368,10 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, -360, 360);
     ftmp = _aimspeed * frametime;
-    vtmp_y = bound(-ftmp, vtmp_y, ftmp);
-    vtmp_x = bound(-ftmp, vtmp_x, ftmp);
-    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
-    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);
+    vtmp.y = bound(-ftmp, vtmp.y, ftmp);
+    vtmp.x = bound(-ftmp, vtmp.x, ftmp);
+    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles.y + vtmp.y, _rotlimit_max);
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles.x + vtmp.x, _pichlimit_max);
     return vtag;
 }
 
@@ -1370,23 +1400,23 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, 
 	_gib.movetype = MOVETYPE_TOSS;
 	_gib.solid = SOLID_CORPSE;
 	_gib.colormod = '-0.5 -0.5 -0.5';
-	_gib.effects = EF_LOWPRECISION;	
+	_gib.effects = EF_LOWPRECISION;
 	_gib.avelocity = _rot;
-	
+
 	if(_burn)
 		_gib.effects |= EF_FLAME;
-	
+
 	if(_explode)
 	{
-		_gib.think = vehicles_gib_explode; 
+		_gib.think = vehicles_gib_explode;
 		_gib.nextthink = time + random() * _explode;
 		_gib.touch = vehicles_gib_explode;
 	}
 	else
 	{
 		_gib.cnt = time + _maxtime;
-		_gib.think = vehicles_gib_think; 
-		_gib.nextthink = time + _maxtime - 1;		
+		_gib.think = vehicles_gib_think;
+		_gib.nextthink = time + _maxtime - 1;
 		_gib.alpha = 1;
 	}
 	return _gib;

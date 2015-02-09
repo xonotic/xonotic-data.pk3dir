@@ -1,3 +1,6 @@
+#ifndef PLAYERDEMO_H
+#define PLAYERDEMO_H
+
 void playerdemo_init();
 void playerdemo_shutdown();
 void playerdemo_write();
@@ -5,3 +8,4 @@ float playerdemo_read();
 
 void playerdemo_open_read(string f);
 void playerdemo_open_write(string f);
+#endif

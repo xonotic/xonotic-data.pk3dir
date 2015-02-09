@@ -82,9 +82,9 @@ void turret_hk_missile_think()
     }
 
     self.angles = vectoangles(self.velocity);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
     makevectors(self.angles);
-    self.angles_x = self.angles_x * -1;
+    self.angles_x = self.angles.x * -1;
 
     if (self.enemy)
     {
@@ -101,7 +101,7 @@ void turret_hk_missile_think()
                   self.enemy.velocity *
                   min((vlen(self.enemy.origin - self.origin) / vlen(self.velocity)),0.5);
 
-        traceline(self.origin, pre_pos,TRUE,self.enemy);
+        traceline(self.origin, pre_pos,true,self.enemy);
         ve = normalize(pre_pos - self.origin);
         fe = trace_fraction;
 
@@ -121,7 +121,7 @@ void turret_hk_missile_think()
         lt_seek = myspeed * 2.95;
 
         // Trace forward
-        traceline(self.origin, self.origin + v_forward * lt_for,FALSE,self);
+        traceline(self.origin, self.origin + v_forward * lt_for,false,self);
         vf = trace_endpos;
         ff = trace_fraction;
 
@@ -142,22 +142,22 @@ void turret_hk_missile_think()
         if (ff < 0.5) pt_seek = 1;
 
         // Trace left
-        traceline(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,FALSE,self);
+        traceline(self.origin, self.origin + (-1 * (v_right * pt_seek) + (v_forward * ff)) * lt_seek,false,self);
         vl = trace_endpos;
         fl = trace_fraction;
 
         // Trace right
-        traceline(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        traceline(self.origin,  self.origin + ((v_right * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
         vr = trace_endpos;
         fr = trace_fraction;
 
         // Trace up
-        traceline(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        traceline(self.origin,  self.origin + ((v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
         vu = trace_endpos;
         fu = trace_fraction;
 
         // Trace down
-        traceline(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,FALSE,self);
+        traceline(self.origin,  self.origin + (-1 * (v_up * pt_seek) + (v_forward * ff)) * lt_seek ,false,self);
         vd = trace_endpos;
         fd = trace_fraction;
 
@@ -247,7 +247,7 @@ void turret_hk_attack()
 {
     entity missile;
 
-    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
+    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, false, false);
     te_explosion (missile.origin);
 
     missile.think            = turret_hk_missile_think;
@@ -258,7 +258,7 @@ void turret_hk_attack()
     missile.cnt              = time + 30;
     missile.ticrate          = max(autocvar_sys_ticrate, 0.05);
     missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
-    
+
     if (self.tur_head.frame == 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 
@@ -289,7 +289,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
 
 void turret_hk_dinit()
 {
-    if (self.netname == "")      
+    if (self.netname == "")
         self.netname  = "Hunter-killer turret";
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;

@@ -174,23 +174,6 @@ sprite nb-ball            "Ball"          e8d8a0 000000 0.0
 sprite ka-ball            "Ball"          00ffff 000000 0.0
 sprite ka-ballcarrier     "Ball carrier"  ff0000 000000 0.0
 
-sprite wpn-laser          "Laser"         ff8080 000000 0.0 # bright red
-sprite wpn-shotgun        "Shotgun"       804000 000000 0.0 # brown
-sprite wpn-uzi            "Machine Gun"   ffff00 000000 0.0 # yellow
-sprite wpn-gl             "Mortar"        ff0000 000000 0.0 # red
-sprite wpn-electro        "Electro"       0080ff 000000 0.0 # bluish cyan
-sprite wpn-crylink        "Crylink"       ff80ff 000000 0.0 # bright pink
-sprite wpn-nex            "Nex"           00ffff 000000 0.0 # cyan
-sprite wpn-hagar          "Hagar"         ffff80 000000 0.0 # bright yellow
-sprite wpn-rl             "Rocket Launcher" ffff00 000000 0.0 # yellow
-sprite wpn-porto          "Port-O-Launch" 808080 000000 0.0 # grey
-sprite wpn-minstanex      "Minstanex"     80ffff 000000 0.0 # bright cyan
-sprite wpn-hookgun        "Hook"          008000 000000 0.0 # dark green
-sprite wpn-fireball       "Fireball"      ff8000 000000 0.0 # orange
-sprite wpn-hlac           "HLAC"          00ff00 000000 0.0 # green
-sprite wpn-campingrifle   "Rifle"         80ff00 000000 0.0 # orange
-sprite wpn-minelayer      "Mine Layer"    ccff00 000000 0.0 # yellowish orange
-
 sprite dom-neut           "Control point" 00ffff 000000 0.0
 sprite dom-red            "Control point" ff0000 000000 0.0
 sprite dom-blue           "Control point" 0050ff 000000 0.0

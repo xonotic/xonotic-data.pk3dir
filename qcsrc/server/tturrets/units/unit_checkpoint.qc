@@ -38,7 +38,7 @@ void turret_checkpoint_think()
 {
     if(self.enemy)
         te_lightning1(self,self.origin, self.enemy.origin);
-    
+
     self.nextthink = time + 0.25;
 }
 #endif
@@ -72,7 +72,7 @@ void spawnfunc_turret_checkpoint()
 {
     setorigin(self,self.origin);
     self.think = turret_checkpoint_init;
-    self.nextthink = time + 0.2;    
+    self.nextthink = time + 0.2;
 }
 
 // Compat.
