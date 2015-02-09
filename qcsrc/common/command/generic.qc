@@ -1,3 +1,6 @@
+#include "generic.qh"
+#include "shared_defs.qh"
+
 // =========================================================
 //  Generic program common command code, written by Samual
 //  Last updated: February 19th, 2012
@@ -18,17 +21,14 @@ string GetProgramCommandPrefix(void)
 }
 
 // used by curl command
-void Curl_URI_Get_Callback(float id, float status, string data)
+void Curl_URI_Get_Callback(int id, float status, string data)
 {
-	float i;
-	float do_exec;
-	string do_cvar;
-	i = id - URI_GET_CURL;
-	do_exec = curl_uri_get_exec[i];
-	do_cvar = curl_uri_get_cvar[i];
+	int i = id - URI_GET_CURL;
+	float do_exec = curl_uri_get_exec[i];
+	string do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		printf(_("error: status is %d\n"), status);
+		dprintf("error: status is %d\n", status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;
@@ -56,8 +56,6 @@ void GenericCommand_addtolist(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i;
-
 			if(argc >= 2)
 			{
 				string original_cvar = argv(1);
@@ -70,7 +68,7 @@ void GenericCommand_addtolist(float request, float argc)
 				else // add it to the end of the list if the list doesn't already have it
 				{
 					argc = tokenizebyseparator(cvar_string(original_cvar), " ");
-
+					int i;
 					for(i = 0; i < argc; ++i)
 						if(argv(i) == tmp_string)
 							return; // already in list
@@ -99,18 +97,10 @@ void GenericCommand_qc_curl(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float do_exec;
-			string do_cvar;
-			float key;
-			float i, j;
-			string url;
-			float buf;
-			float r;
-
-			do_exec = FALSE;
-			do_cvar = string_null;
-			key = -1;
-
+			bool do_exec = false;
+			string do_cvar = string_null;
+			float key = -1;
+			int i;
 			for(i = 1; i+1 < argc; ++i)
 			{
 				if(argv(i) == "--cvar" && i+2 < argc)
@@ -121,7 +111,7 @@ void GenericCommand_qc_curl(float request, float argc)
 				}
 				if(argv(i) == "--exec")
 				{
-					do_exec = TRUE;
+					do_exec = true;
 					continue;
 				}
 				if(argv(i) == "--key" && i+2 < argc)
@@ -135,15 +125,16 @@ void GenericCommand_qc_curl(float request, float argc)
 
 			// now, argv(i) is the URL
 			// following args may be POST parameters
-			url = argv(i);
+			string url = argv(i);
 			++i;
-			buf = buf_create();
-			j = 0;
-			for(; i+1 < argc; i += 2)
+			float buf = buf_create();
+			int j;
+			for(j = 0; i+1 < argc; i += 2)
 				bufstr_set(buf, ++j, sprintf("%s=%s", uri_escape(argv(i)), uri_escape(argv(i+1))));
 			if(i < argc)
 				bufstr_set(buf, ++j, sprintf("submit=%s", uri_escape(argv(i))));
 
+			float r;
 			if(j == 0) // no args: GET
 				r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, string_null, string_null, -1, key);
 			else // with args: POST
@@ -153,7 +144,7 @@ void GenericCommand_qc_curl(float request, float argc)
 			{
 				curl_uri_get_exec[curl_uri_get_pos] = do_exec;
 				curl_uri_get_cvar[curl_uri_get_pos] = do_cvar;
-				curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
+				curl_uri_get_pos = (curl_uri_get_pos + 1) % (URI_GET_CURL_END - URI_GET_CURL + 1);
 			}
 			else
 				print(_("error creating curl handle\n"));
@@ -234,18 +225,18 @@ void GenericCommand_dumpnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
-			float fh, alsoprint = FALSE;
+			float fh, alsoprint = false;
 			string filename = argv(1);
 
 			if(filename == "")
 			{
-				filename = "notifications.cfg";
-				alsoprint = FALSE;
+				filename = "notifications_dump.cfg";
+				alsoprint = false;
 			}
 			else if(filename == "-")
 			{
-				filename = "notifications.cfg";
-				alsoprint = TRUE;
+				filename = "notifications_dump.cfg";
+				alsoprint = true;
 			}
 			fh = fopen(filename, FILE_WRITE);
 
@@ -269,7 +260,60 @@ void GenericCommand_dumpnotifs(float request)
 		case CMD_REQUEST_USAGE:
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
+			print("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work with other progs than just server
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifdef SVQC
+			wep_config_file = -1;
+			wep_config_alsoprint = -1;
+			string filename = argv(1);
+
+			if(filename == "")
+			{
+				filename = "weapons_dump.cfg";
+				wep_config_alsoprint = false;
+			}
+			else if(filename == "-")
+			{
+				filename = "weapons_dump.cfg";
+				wep_config_alsoprint = true;
+			}
+			wep_config_file = fopen(filename, FILE_WRITE);
+
+			if(wep_config_file >= 0)
+			{
+				Dump_Weapon_Settings();
+				print(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+				fclose(wep_config_file);
+				wep_config_file = -1;
+				wep_config_alsoprint = -1;
+			}
+			else
+			{
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+			}
+			#else
+			print(_("Weapons dump command only works with sv_cmd.\n"));
+			#endif
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
+			print("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
 			print("  if supplied with '-' output to console as well as default,\n");
 			print("  if left blank, it will only write to default.\n");
 			return;
@@ -585,6 +629,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
+	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
@@ -601,7 +646,7 @@ void GenericCommand_macro_help()
 	#define GENERIC_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 
-	GENERIC_COMMANDS(0, 0, "")
+	GENERIC_COMMANDS(0, 0, "");
 	#undef GENERIC_COMMAND
 
 	return;
@@ -610,23 +655,23 @@ void GenericCommand_macro_help()
 float GenericCommand_macro_command(float argc, string command)
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef GENERIC_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float GenericCommand_macro_usage(float argc)
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef GENERIC_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void GenericCommand_macro_write_aliases(float fh)
@@ -634,7 +679,7 @@ void GenericCommand_macro_write_aliases(float fh)
 	#define GENERIC_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_svmenu", name, description); }
 
-	GENERIC_COMMANDS(0, 0, "")
+	GENERIC_COMMANDS(0, 0, "");
 	#undef GENERIC_COMMAND
 
 	return;
@@ -660,13 +705,13 @@ float GenericCommand(string command)
 
 	if(GenericCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		return TRUE; // handled by one of the above GenericCommand_* functions
+		return true; // handled by one of the above GenericCommand_* functions
 	}
 	else if(argc >= 3 && argv(0) == "red")
 	{
 		s = substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
 		localcmd(strcat(argv(1), " ", GenericCommand_markup(s)));
-		return TRUE;
+		return true;
 	}
 	else if(argc >= 3 && crc16(0, argv(0)) == 38566 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 59830)
 	{
@@ -706,7 +751,7 @@ float GenericCommand(string command)
 
 		localcmd(strcat(argv(1), " ", s));
 
-		return TRUE;
+		return true;
 	}
 	else if(argc >= 3 && crc16(0, argv(0)) == 3826 && crc16(0, strcat(argv(0), argv(0), argv(0))) == 55790)
 	{
@@ -741,8 +786,8 @@ float GenericCommand(string command)
 
 		localcmd(strcat(argv(1), " ", s2));
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }

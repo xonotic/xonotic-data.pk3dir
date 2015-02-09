@@ -1,6 +1,10 @@
+#ifndef SCORES_H
+#define SCORES_H
+
 entity scores_initialized; // non-world when scores labels/rules have been set
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
+.float scoreboard_pos;
 
 /**
  * Attaches a PlayerScore entity to a player. Use that in ClientConnect.
@@ -123,3 +127,4 @@ string GetTeamScoreString(float tm, float shortString);
  * nospectators: exclude spectators
  */
 entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);
+#endif

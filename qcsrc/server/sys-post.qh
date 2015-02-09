@@ -1,6 +1,6 @@
-#pragma noref 0
+#ifndef SERVER_SYS_POST_H
+#define SERVER_SYS_POST_H
 
-#undef ATTEN_NORM
 #undef objerror
 #undef droptofloor
 #undef sound
@@ -9,6 +9,10 @@
 #undef cvar_string
 #undef cvar
 
-var float(string var) cvar;
-var string(string var) cvar_string;
-var void(string var, string val) cvar_set;
+var float(string name) cvar;
+var string(string name) cvar_string;
+var void(string name, string value) cvar_set;
+
+#pragma noref 0
+
+#endif

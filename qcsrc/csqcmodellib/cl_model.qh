@@ -19,8 +19,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef CL_MODEL_H
+#define CL_MODEL_H
 
-void CSQCModel_Read(float isnew);
+#include "common.qh"
+
+void CSQCModel_Read(bool isnew);
 
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF
@@ -48,3 +52,4 @@ void CSQCModel_InterpolateAnimation_1To2_Note(float sf, float set_times);
 void CSQCModel_InterpolateAnimation_2To4_Do();
 void CSQCModel_InterpolateAnimation_1To2_Do();
 // will overwrite lerpfrac, lerpfrac3, lerpfrac4, and possibly clear frame*time if they are undisplayed according to lerpfracs
+#endif

@@ -63,20 +63,13 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator;
+			entity oldself, oldactivator, head;
 
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-			{
-				entity player;
-				string s;
-				FOR_EACH_PLAYER(player)
-				{
-					s = strcat(self.message, "\n");
-					centerprint(player, s);
-				}
-			}
+			FOR_EACH_PLAYER(head)
+				centerprint(head, self.message);
 
 			oldactivator = activator;
 			activator = oldself;
@@ -113,9 +106,9 @@ float assault_decreaser_sprite_visible(entity e)
 	decreaser = self.assault_decreaser;
 
 	if(decreaser.enemy.health >= ASSAULT_VALUE_INACTIVE)
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 void target_objective_decrease_activate()
@@ -353,7 +346,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		if (!ad.bot_attack)
 			continue;
 
-		found = FALSE;
+		found = false;
 		for(tod = world; (tod = find(tod, targetname, ad.target)); )
 		{
 			if(tod.classname == "target_objective_decrease")
@@ -361,7 +354,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 				if(tod.enemy.health > 0 && tod.enemy.health < ASSAULT_VALUE_INACTIVE)
 				{
 				//	dprint(etos(ad),"\n");
-					found = TRUE;
+					found = true;
 					break;
 				}
 			}
@@ -381,7 +374,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 	//	te_lightning2(world, '0 0 0', p);
 
 		// Find and rate waypoints around it
-		found = FALSE;
+		found = false;
 		best = world;
 		bestvalue = 99999999999;
 		for(radius=0; radius<1500 && !found; radius+=500)
@@ -392,7 +385,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 				if(wp.classname=="waypoint")
 				if(checkpvs(wp.origin, ad))
 				{
-					found = TRUE;
+					found = true;
 					if(wp.cnt<bestvalue)
 					{
 						best = wp;
@@ -523,11 +516,11 @@ void havocbot_ast_reset_role(entity bot)
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 {
 	if(self.team == assault_attacker_team)
-		centerprint(self, "You are attacking!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
-		centerprint(self, "You are defending!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
@@ -535,26 +528,26 @@ MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 	if (!self.team)
 		self.team = 14;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_VehicleSpawn)
 {
 	self.nextthink = time + 0.5;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_BotRoles)
 {
 	havocbot_ast_reset_role(self);
-	return TRUE;
+	return true;
 }
 
 // scoreboard setup
 void assault_ScoreRules()
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
+	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, true);
 	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
@@ -565,7 +558,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(PlayerSpawn, assault_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

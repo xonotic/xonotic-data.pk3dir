@@ -1,7 +1,18 @@
-entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../util.qh"
+    #include "monsters.qh"
+    #include "sv_monsters.qh"
+    #include "spawn.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/defs.qh"
+#endif
+entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
 	// ensure spawnfunc database is initialized
-	initialize_field_db();
+	//initialize_field_db();
 
 	entity e = spawn();
 	float i;
@@ -10,6 +21,9 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 	if(!respwn)
 		e.spawnflags |= MONSTERFLAG_NORESPAWN;
+
+	if(invincible)
+		e.spawnflags |= MONSTERFLAG_INVINCIBLE;
 
 	setorigin(e, orig);
 
@@ -31,7 +45,8 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			mon = get_monsterinfo(i);
 			if(mon.netname == monster)
 			{
-				found = TRUE;
+				found = true;
+				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
 		}
@@ -59,9 +74,14 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		e.angles = spawnedby.angles;
 	}
 
-	monster = strcat("$ spawnfunc_monster_", monster);
+	//monster = strcat("$ spawnfunc_monster_", monster);
 
-	target_spawn_edit_entity(e, monster, world, world, world, world, world);
+	entity oldself = self;
+	self = e;
+	monster_initialize(monster_id);
+	self = oldself;
+
+	//target_spawn_edit_entity(e, monster, world, world, world, world, world);
 
 	return e;
 }

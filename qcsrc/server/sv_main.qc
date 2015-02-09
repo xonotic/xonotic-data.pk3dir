@@ -1,10 +1,34 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "../warpzonelib/common.qh"
+    #include "../warpzonelib/server.qh"
+    #include "../common/constants.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "../common/mapinfo.qh"
+    #include "command/common.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "anticheat.qh"
+    #include "g_hook.qh"
+#endif
+
 void CreatureFrame (void)
 {
 	entity oldself;
 	float dm;
 
 	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
+	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
@@ -62,7 +86,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTEN_NORM);
+							sound (self, CH_PLAYER_SINGLE, "player/lava.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
@@ -71,7 +95,7 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTEN_NORM);
+							sound (self, CH_PLAYER_SINGLE, "player/slime.wav", VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
@@ -94,7 +118,7 @@ void CreatureFrame (void)
 		{
 			// check for falling damage
 			float velocity_len = vlen(self.velocity);
-			if(!self.hook.state && !(g_cts && !autocvar_g_cts_selfdamage))
+			if(!self.hook.state)
 			{
 				dm = vlen(self.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
 				if (self.deadflag)
@@ -155,7 +179,6 @@ float game_delay;
 float game_delay_last;
 
 float RedirectionThink();
-entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
 {
 	execute_next_frame();
@@ -211,10 +234,10 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? TRUE : FALSE;
+	game_delay = (time < game_starttime) ? true : false;
 
-	if(game_delay_last == TRUE)
-	if(game_delay == FALSE)
+	if(game_delay_last == true)
+	if(game_delay == false)
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":startdelay_ended");
 
@@ -237,6 +260,8 @@ void StartFrame (void)
 
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	anticheat_startframe();
 
 	MUTATOR_CALLHOOK(SV_StartFrame);
 }
@@ -378,20 +403,20 @@ void SV_OnEntityPreSpawnFunction()
 	else if (self.angles == '0 -2 0')
 		self.angles = '+90 0 0';
 
-	if(self.originjitter_x != 0)
-		self.origin_x = self.origin_x + (random() * 2 - 1) * self.originjitter_x;
-	if(self.originjitter_y != 0)
-		self.origin_y = self.origin_y + (random() * 2 - 1) * self.originjitter_y;
-	if(self.originjitter_z != 0)
-		self.origin_z = self.origin_z + (random() * 2 - 1) * self.originjitter_z;
-	if(self.anglesjitter_x != 0)
-		self.angles_x = self.angles_x + (random() * 2 - 1) * self.anglesjitter_x;
-	if(self.anglesjitter_y != 0)
-		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglesjitter_y;
-	if(self.anglesjitter_z != 0)
-		self.angles_z = self.angles_z + (random() * 2 - 1) * self.anglesjitter_z;
+	if(self.originjitter.x != 0)
+		self.origin_x = self.origin.x + (random() * 2 - 1) * self.originjitter.x;
+	if(self.originjitter.y != 0)
+		self.origin_y = self.origin.y + (random() * 2 - 1) * self.originjitter.y;
+	if(self.originjitter.z != 0)
+		self.origin_z = self.origin.z + (random() * 2 - 1) * self.originjitter.z;
+	if(self.anglesjitter.x != 0)
+		self.angles_x = self.angles.x + (random() * 2 - 1) * self.anglesjitter.x;
+	if(self.anglesjitter.y != 0)
+		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglesjitter.y;
+	if(self.anglesjitter.z != 0)
+		self.angles_z = self.angles.z + (random() * 2 - 1) * self.anglesjitter.z;
 	if(self.anglejitter != 0)
-		self.angles_y = self.angles_y + (random() * 2 - 1) * self.anglejitter;
+		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglejitter;
 
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
 	{

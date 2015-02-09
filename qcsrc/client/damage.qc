@@ -1,3 +1,19 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "defs.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "autocvars.qh"
+	#include "../common/deathtypes.qh"
+	#include "damage.qh"
+	#include "movetypes.qh"
+	#include "prandom.qh"
+	#include "vehicles/vehicles.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages
@@ -22,11 +38,7 @@ void DamageEffect_Think()
 		return;
 	}
 	self.state = self.owner.csqcmodel_isdead;
-#ifdef COMPAT_XON050_ENGINE
-	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
-#else
 	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum) && !autocvar_chase_active)
-#endif
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
@@ -35,11 +47,12 @@ void DamageEffect_Think()
 	pointparticles(self.team, org, '0 0 0', 1);
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum)
+void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, nearestbone = 0;
+	int nearestbone = 0;
+	float life;
 	string specstr, effectname;
 	entity e;
 
@@ -80,27 +93,22 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	}
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
-	specstr = species_prefix(specnum);
-	type = DEATH_WEAPONOF(type);
-	e = get_weaponinfo(type);
 
-	effectname = strcat("damage_", e.netname);
+	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
 
-	// if damage was dealt with a bullet weapon, our effect is blood
-	// since blood is species dependent, include the species tag
-	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
+	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
 		if(self.isplayermodel)
 		{
-			effectname = strcat(effectname, "_", specstr);
-			effectname = substring(effectname, 0, strlen(effectname) - 1); // remove the _ symbol at the end of the species tag
+			specstr = species_prefix(specnum);
+			specstr = substring(specstr, 0, strlen(specstr) - 1);
+			effectname = strreplace("BLOOD", specstr, effectname);
 		}
-		else
-			return; // objects don't bleed
+		else { return; } // objects don't bleed
 	}
 
 	e = spawn();
-	setmodel(e, "null"); // necessary to attach and read origin // samual: FIXME: this is weird, is there some better way to do this?
+	setmodel(e, "null"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;
@@ -113,7 +121,9 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
+	float dmg, rad, edge, thisdmg;
+	bool hitplayer = false;
+	int species, forcemul;
 	vector force, thisforce;
 	entity oldself;
 
@@ -123,9 +133,9 @@ void Ent_DamageInfo(float isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org_x = ReadCoord();
-	w_org_y = ReadCoord();
-	w_org_z = ReadCoord();
+	w_org.x = ReadCoord();
+	w_org.y = ReadCoord();
+	w_org.z = ReadCoord();
 
 	dmg = ReadByte();
 	rad = ReadByte();
@@ -194,7 +204,7 @@ void Ent_DamageInfo(float isNew)
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
 
 		if(self.isplayermodel)
-			hitplayer = TRUE; // this impact damaged a player
+			hitplayer = true; // this impact damaged a player
 	}
 
 	self = oldself;
@@ -338,25 +348,16 @@ void Ent_DamageInfo(float isNew)
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		float hitwep;
-
-		hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
+		int hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_MINSTANEX)
+		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) { WEP_ACTION(hitwep, WR_IMPACTEFFECT); }
 	}
-}
-
-void DamageInfo_Precache()
-{
-	float i;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
