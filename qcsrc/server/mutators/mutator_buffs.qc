@@ -428,6 +428,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage = 0;
 	}
 
+	if(frag_attacker.buffs & BUFF_INFERNO)
+	if(frag_target != frag_attacker)
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * autocvar_g_buffs_inferno_burntime, autocvar_g_buffs_inferno_burntime, DEATH_BUFF);
+
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE)
 	if(!frag_target.vehicle)
