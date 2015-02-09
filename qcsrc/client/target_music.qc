@@ -37,7 +37,7 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(e.noise == "")
-#ifdef COMPAT_XON070_BGMVOLUME
+#ifdef COMPAT_XON080_BGMVOLUME
 				cvar_settemp("bgmvolume", ftos(vol));
 #else
 				cvar_set("bgmvolume", ftos(vol));

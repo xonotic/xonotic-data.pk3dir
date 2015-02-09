@@ -3,7 +3,7 @@
 
 #ifndef NOCOMPAT
     #define COMPAT_NO_MOD_IS_XONOTIC
-    #define COMPAT_XON070_BGMVOLUME
+    #define COMPAT_XON080_BGMVOLUME
 #endif
 
 #ifndef QCC_SUPPORT_ACCUMULATE
