@@ -1,0 +1,40 @@
+#ifndef CL_IMPULSE_H
+#define CL_IMPULSE_H
+
+/*
+ * Impulse map:
+ *
+ * 0 reserved (no input)
+ * 1 to 9, 14: weapon shortcuts
+ * 10: next weapon according to linear list
+ * 11: most recently used weapon
+ * 12: previous weapon according to linear list
+ * 13: best weapon according to priority list
+ * 15: next weapon according to priority list
+ * 16: previous weapon according to priority list
+ * 17: throw weapon
+ * 18: next weapon according to sbar_hudselector 1 list
+ * 19: previous weapon according to sbar_hudselector 1 list
+ * 20: reload if needed
+ *
+ * 30 to 39: create waypoints
+ * 47: clear personal waypoints
+ * 48: clear team waypoints
+ *
+ * 99: loaded
+ *
+ * 140: moving clone
+ * 141: ctf speedrun
+ * 142: fixed clone
+ * 143: emergency teleport
+ * 148: unfairly eliminate
+ *
+ * TODO:
+ * 200 to 209: prev weapon shortcuts
+ * 210 to 219: best weapon shortcuts
+ * 220 to 229: next weapon shortcuts
+ * 230 to 253: individual weapons (up to 24)
+ */
+
+void ImpulseCommands (void);
+#endif

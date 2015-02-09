@@ -66,13 +66,13 @@ void turret_hellion_missile_think()
 void turret_hellion_attack()
 {
     entity missile;
-		
+
 	if(self.tur_head.frame != 0)
 		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
 	else
 		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
-    
-    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+
+    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, false, false);
     te_explosion (missile.origin);
     missile.think        = turret_hellion_missile_think;
     missile.nextthink    = time;

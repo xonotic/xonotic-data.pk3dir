@@ -1,24 +1,32 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "test.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/dpextensions.qh"
+    #include "test.qh"
+#endif
+
 float TEST_failed;
 float TEST_ok;
 
 void TEST_Fail(string cond)
 {
-	print(sprintf("Assertion failed: ", cond));
+	printf("Assertion failed: ", cond);
 	//backtrace();
 	++TEST_failed;
 }
 
 void TEST_OK()
 {
-	TEST_ok = TRUE;
+	TEST_ok = true;
 }
 
 float TEST_RunAll()
 {
-	float f = 0;
+	int f = 0;
 	float n = numentityfields();
-	float i;
-	for(i = 0; i < n; ++i)
+	for(int i = 0; i < n; ++i)
 	{
 		string name = entityfieldname(i);
 		if(substring(name, 0, 6) == "_TEST_")
@@ -27,29 +35,29 @@ float TEST_RunAll()
 	}
 	if(f)
 	{
-		print(sprintf("%d tests failed\n", f));
+		printf("%d tests failed\n", f);
 		return 1;
 	}
 	else
 	{
-		print(sprintf("All tests OK\n", f));
+		printf("All tests OK\n", f);
 		return 0;
 	}
 }
 
 float TEST_Run(string s)
 {
-	print(sprintf("%s: testing...\n", s));
+	printf("%s: testing...\n", s);
 	TEST_failed = TEST_ok = 0;
 	callfunction(strcat("_TEST_", s));
 	if(TEST_failed > 0)
 	{
-		print(sprintf("%s: %d items failed.\n", s, TEST_failed));
+		printf("%s: %d items failed.\n", s, TEST_failed);
 		return 0;
 	}
 	else if(!TEST_ok)
 	{
-		print(sprintf("%s: did not complete.\n", s));
+		printf("%s: did not complete.\n", s);
 		return 0;
 	}
 	return 1;
