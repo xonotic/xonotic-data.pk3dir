@@ -5,6 +5,7 @@
 #elif defined(SVQC)
     #include "../warpzonelib/common.qh"
     #include "../common/constants.qh"
+    #include "../common/buffs.qh"
     #include "../common/teams.qh"
     #include "../common/util.qh"
     #include "../common/weapons/weapons.qh"
@@ -499,8 +500,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
+			float f3 = 0;
+			if(deathtype == DEATH_BUFF)
+				f3 = attacker.buffs;
+
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -855,7 +860,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
-		if(deathtype != DEATH_BUFF_VENGEANCE)
+		if(deathtype != DEATH_BUFF)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{

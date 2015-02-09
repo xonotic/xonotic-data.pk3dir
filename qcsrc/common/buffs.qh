@@ -1,11 +1,16 @@
 #ifndef BUFFS_H
 #define BUFFS_H
+// Welcome to the stuff behind the scenes
+// Below, you will find the list of buffs
+// Add new buffs here!
+// Note: Buffs also need spawnfuncs, which are set below
 
 entity Buff_Type_first;
 entity Buff_Type_last;
 .entity enemy; // internal next pointer
 
 int BUFF_LAST = 1;
+int BUFF_ALL;
 
 .int items; // buff ID
 .string netname; // buff name
@@ -21,6 +26,7 @@ int BUFF_LAST = 1;
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \
 		BUFF_LAST = BUFF_##NAME; \
+		BUFF_ALL |= BUFF_##NAME; \
 		Buff_Type##sname = spawn(); \
 		Buff_Type##sname.items = BUFF_##NAME; \
 		Buff_Type##sname.netname = #sname; \
@@ -77,7 +83,7 @@ BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
 BUFF_SPAWNFUNCS(random,			0)
 
 BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler,    BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance,	BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance, BUFF_RESISTANCE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(scout,      BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen,  BUFF_AMMO)
 
@@ -85,6 +91,10 @@ BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen,  BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(haste,	BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(invis,	BUFF_INVISIBLE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(medic,	BUFF_MEDIC)
+
+#undef BUFF_SPAWNFUNC
+#undef BUFF_SPAWNFUNC_Q3TA_COMPAT
+#undef BUFF_SPAWNFUNCS
 #endif
 
 vector Buff_Color(int buff_id);

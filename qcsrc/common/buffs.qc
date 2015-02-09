@@ -54,8 +54,7 @@ int Buff_Type_FromSprite(string buff_sprite)
 	return 0;
 }
 
-
-int Buff_Skin(float buff_id)
+int Buff_Skin(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
