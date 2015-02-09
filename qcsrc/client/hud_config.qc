@@ -98,7 +98,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_timeout_speed_in");
 					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
-					HUD_Write_PanelCvar_q("onlyowned_icon_maxscale");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
