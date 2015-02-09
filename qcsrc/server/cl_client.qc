@@ -1170,7 +1170,7 @@ float PlayerInIDList(entity p, string idlist)
 	float n, i;
 	string s;
 
-	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
+	// NOTE: we do NOT check crypto_idfp_signed here, an unsigned ID is fine too for this
 	if (!p.crypto_idfp)
 		return 0;
 
