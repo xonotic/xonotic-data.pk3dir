@@ -373,6 +373,12 @@ void buff_Vengeance_DelayedDamage()
 	return;
 }
 
+float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
+{
+	float f = (x - offset_x) / intersect_x;
+	return offset_y + (intersect_y - offset_y) * logn((base - 1) * (f + 1), base);
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF) { return false; }
@@ -429,8 +435,16 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	}
 
 	if(frag_attacker.buffs & BUFF_INFERNO)
-	if(frag_target != frag_attacker)
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * autocvar_g_buffs_inferno_burntime, autocvar_g_buffs_inferno_burntime, DEATH_BUFF);
+	if(frag_target != frag_attacker) {
+		float time = buff_Inferno_CalculateTime(
+			frag_damage,
+			0, 0,
+			autocvar_g_buffs_inferno_burntime_target_damage,
+			autocvar_g_buffs_inferno_burntime_target_time,
+			autocvar_g_buffs_inferno_burntime_factor
+		);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF);
+	}
 
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE)

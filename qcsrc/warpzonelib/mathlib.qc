@@ -95,6 +95,10 @@ float ldexp(float x, int e)
 {
 	return x * pow(2, e);
 }
+float logn(float x, float base)
+{
+	return log(x) / log(base);
+}
 float log10(float x)
 {
 	return log(x) * M_LOG10E;
