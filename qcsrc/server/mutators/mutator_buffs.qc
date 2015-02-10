@@ -438,7 +438,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_target != frag_attacker) {
 		float time = buff_Inferno_CalculateTime(
 			frag_damage,
-			0, 0,
+			0,
+			autocvar_g_buffs_inferno_burntime_min_time,
 			autocvar_g_buffs_inferno_burntime_target_damage,
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor

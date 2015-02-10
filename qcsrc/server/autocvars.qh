@@ -883,6 +883,7 @@ float autocvar_g_buffs_invisible_alpha;
 float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_buffs_inferno_burntime_factor;
+float autocvar_g_buffs_inferno_burntime_min_time;
 float autocvar_g_buffs_inferno_burntime_target_damage;
 float autocvar_g_buffs_inferno_burntime_target_time;
 float autocvar_g_buffs_inferno_damagemultiplier;
