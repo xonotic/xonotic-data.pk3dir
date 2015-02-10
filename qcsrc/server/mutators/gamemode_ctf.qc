@@ -1076,9 +1076,16 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	ctf_CaptureShield_Spawn(self);
 }
 
+void set_flag_string(entity flag, .string field, string value, string teamname)
+{
+	if(flag.field == "")
+		flag.field = strzone(sprintf(value,teamname));
+}
+
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// declarations
+	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	self = flag; // for later usage with droptofloor()
 
 	// main setup
@@ -1112,21 +1119,21 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence
-	if(flag.model == "")       { flag.model = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_model : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_model : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_model : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_model : autocvar_g_ctf_flag_neutral_model)))); }
-	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
-	if(!flag.skin)             { flag.skin = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_skin : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_skin : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_skin : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_skin : autocvar_g_ctf_flag_neutral_skin)))); }
-	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : ((teamnumber == NUM_TEAM_4) ? "pinkflag_touch" : "neutralflag_touch")))); }
-	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : ((teamnumber == NUM_TEAM_4) ? "pink_pass" : "neutral_pass")))); }
-	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : ((teamnumber == NUM_TEAM_4) ? "pink_cap" : "")))); } // neutral flag cant be capped itself
+	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
+	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
+	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
+	set_flag_string(flag, toucheffect, 	"%sflag_touch", teamname);
+	set_flag_string(flag, passeffect, 	"%sflag_pass", 	teamname);
+	set_flag_string(flag, capeffect, 	"%sflag_cap", 	teamname);
 
-	// sound
-	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = ((teamnumber == NUM_TEAM_1) ? "ctf/red_taken.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_taken.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_taken.wav" : ((teamnumber == NUM_TEAM_4) ? "ctf/pink_taken.wav" : "ctf/neutral_taken.wav")))); }
-	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = ((teamnumber == NUM_TEAM_1) ? "ctf/red_returned.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_returned.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_returned.wav" : ((teamnumber == NUM_TEAM_4) ? "ctf/pink_returned.wav" : "")))); } // neutral flag can't be returned by players
-	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = ((teamnumber == NUM_TEAM_1) ? "ctf/red_capture.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_capture.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_capture.wav" : ((teamnumber == NUM_TEAM_4) ? "ctf/pink_capture.wav" : "")))); } // again can't be captured
-	if(flag.snd_flag_respawn == "")  { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = ((teamnumber == NUM_TEAM_1) ? "ctf/red_dropped.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_dropped.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_dropped.wav" : ((teamnumber == NUM_TEAM_4) ? "ctf/pink_dropped.wav" : "ctf/neutral_dropped.wav")))); }
-	if(flag.snd_flag_touch == "")    { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
-	if(flag.snd_flag_pass == "")     { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
+	// sounds
+	set_flag_string(flag, snd_flag_taken, 		"ctf/%s_taken.wav", 	teamname);
+	set_flag_string(flag, snd_flag_returned, 	"ctf/%s_returned.wav", 	teamname);
+	set_flag_string(flag, snd_flag_capture, 	"ctf/%s_capture.wav", 	teamname);
+	set_flag_string(flag, snd_flag_dropped, 	"ctf/%s_dropped.wav", 	teamname);
+	if(flag.snd_flag_respawn == "")  	{ flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
+	if(flag.snd_flag_touch == "")    	{ flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
+	if(flag.snd_flag_pass == "")     	{ flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 
 	// precache
 	precache_sound(flag.snd_flag_taken);
@@ -1147,7 +1154,14 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		flag.glow_color = ((teamnumber == NUM_TEAM_1) ? 251 : ((teamnumber == NUM_TEAM_2) ? 210 : ((teamnumber == NUM_TEAM_3) ? 110 : ((teamnumber == NUM_TEAM_4) ? 145 : 254))));
+		switch(teamnumber)
+		{
+			case NUM_TEAM_1: flag.glow_color = 251; break;
+			case NUM_TEAM_2: flag.glow_color = 210; break;
+			case NUM_TEAM_3: flag.glow_color = 110; break;
+			case NUM_TEAM_4: flag.glow_color = 145; break;
+			default:		 flag.glow_color = 254; break;
+		}
 		flag.glow_size = 25;
 		flag.glow_trail = 1;
 	}
@@ -1162,7 +1176,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 			case NUM_TEAM_2: flag.effects |= EF_BLUE; break;
 			case NUM_TEAM_3: flag.effects |= EF_DIMLIGHT; break;
 			case NUM_TEAM_4: flag.effects |= EF_RED; break;
-			default: flag.effects |= EF_DIMLIGHT; break;
+			default:		 flag.effects |= EF_DIMLIGHT; break;
 		}
 	}
 	
