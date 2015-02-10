@@ -375,8 +375,7 @@ void buff_Vengeance_DelayedDamage()
 
 float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
-	float f = (x - offset_x) / intersect_x;
-	return offset_y + (intersect_y - offset_y) * logn((base - 1) * (f + 1), base);
+	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
