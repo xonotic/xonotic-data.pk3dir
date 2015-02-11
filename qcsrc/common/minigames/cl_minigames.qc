@@ -251,9 +251,12 @@ void ent_read_minigame()
 	if ( minigame_ent )
 		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
 	
-	dprint("CL Reading entity: ",ftos(num_for_edict(self)),
-		" classname:",self.classname," enttype:",ftos(self.enttype) );
-	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+	if ( sf & MINIG_SF_CREATE )
+	{
+		dprint("CL Reading entity: ",ftos(num_for_edict(self)),
+			" classname:",self.classname," enttype:",ftos(self.enttype) );
+		dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+	}
 }
 #undef ReadFloat
 #undef ReadString

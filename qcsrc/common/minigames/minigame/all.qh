@@ -43,6 +43,7 @@ used as send flags for minigame entities:
 
 * MINIG_SF_CREATE
 	Used when creating a new object, you can use this to define fields that don't change
+	Don't add MINIG_SF_CREATE to SendFlags on your own
 * MINIG_SF_UPDATE
 	A miscellaneous update, can be safely used if the entity has just a few fields
 * MINIG_SF_CUSTOM
@@ -62,6 +63,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 
 #include "nmm.qc"
 #include "ttt.qc"
+#include "pong.qc"
 
 /**
  * Registration:
@@ -72,6 +74,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #define REGISTERED_MINIGAMES \
 	MINIGAME(nmm, "Nine Men's Morris") \
 	MINIGAME(ttt, "Tic Tac Toe") \
+	MINIGAME(pong, "Pong") \
 	/*empty line*/
 
 /**
@@ -102,4 +105,6 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
  */
 #define MINIGAME_SIMPLELINKED_ENTITIES \
 	MSLE(minigame_board_piece,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_UPDATE, Short, minigame_flags) FIELD(MINIG_SF_UPDATE, Vector2D,origin)) \
+	MSLE(pong_paddle,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(MINIG_SF_UPDATE,Vector2D,origin)) \
+	MSLE(pong_ball, FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
 	/*empty line*/ 
