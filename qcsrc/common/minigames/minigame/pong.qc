@@ -1,20 +1,18 @@
-// minigame flags
-const int PONG_MGF_RESET = 0x0010; // Ball is reset to the center
-
 // send flags
 const int PONG_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // sent when reporting scores
 const int PONG_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.pong_ai
 
 // fields
-.int   pong_ai;    // (minigame) when non-zero, singleplayer vs AI
-.int   pong_score; // (minigame_player) number of goals
-.float pong_length;// (pong_paddle) size (0,1)
+.int       pong_ai;    // (minigame) when non-zero, singleplayer vs AI
+.int       pong_score; // (minigame_player) number of goals
+.entity pong_paddles[2];// (minigame) paddles
+.float     pong_length;// (pong_paddle) size (0,1)
 
 #ifdef SVQC
 
 float autocvar_sv_minigames_pong_paddlesize = 0.3;
 float autocvar_sv_minigames_pong_paddlespeed= 1;
-float autocvar_sv_minigames_pong_ballwait  = 1;
+float autocvar_sv_minigames_pong_ballwait   = 1;
 float autocvar_sv_minigames_pong_ballspeed  = 1;
 
 void pong_ball_think();
@@ -42,6 +40,33 @@ void pong_reset_ball(entity ball)
 	ball.nextthink = time + autocvar_sv_minigames_pong_ballwait;
 }
 
+void pong_add_score(entity minigame, int pteam)
+{
+	if ( !minigame )
+		return;
+	entity paddle = minigame.pong_paddles[pteam-1];
+	if ( paddle.realowner )
+	{
+		paddle.realowner.pong_score++;
+		paddle.realowner.SendFlags |= PONG_SF_PLAYERSCORE;
+	}
+}
+
+bool pong_goal(entity ball, int pteam)
+{
+	entity paddle = ball.owner.pong_paddles[pteam-1];
+	if (!paddle)
+		return false;
+	if ( ball.origin_y < paddle.origin_y-paddle.pong_length/2 ||
+		ball.origin_y > paddle.origin_y+paddle.pong_length/2 )
+	{
+		pong_add_score(ball.owner,minigame_next_team(pteam, 2));
+		pong_reset_ball(ball);
+		return true;
+	}
+	return false;
+}
+
 void pong_ball_think()
 {
 	float think_speed = autocvar_sys_ticrate;
@@ -60,14 +85,21 @@ void pong_ball_think()
 		self.velocity_y *= -1;
 	}
 	
-	// todo score
 	if ( self.origin_x <= 0 )
 	{
-		pong_reset_ball(self);
+		if ( !pong_goal(self,2) )
+		{
+			 self.origin_x = 0;
+			 self.velocity_x *= -1;
+		}
 	}
 	else if ( self.origin_x >= 1 )
 	{
-		pong_reset_ball(self);
+		if ( !pong_goal(self,1) )
+		{
+			 self.origin_x = 1;
+			 self.velocity_x *= -1;
+		}
 	}
 	
 	self.SendFlags |= MINIG_SF_UPDATE;
@@ -104,8 +136,6 @@ int minigame_event_pong(entity minigame, string event, ...)
 		{
 			entity ball = msle_spawn(minigame,"pong_ball");
 			pong_reset_ball(ball);
-			minigame.minigame_flags = PONG_MGF_RESET; // todo useful?
-			
 			return true;
 		}
 		case "end":
@@ -132,15 +162,19 @@ int minigame_event_pong(entity minigame, string event, ...)
 			entity paddle = msle_spawn(minigame,"pong_paddle");// Note puddle isn't a typo
 			paddle.pong_length = autocvar_sv_minigames_pong_paddlesize;
 			paddle.origin_y = 0.5;
-			paddle.origin_x = pl_team == 1 ? 0.95 : 0.05;
+			paddle.origin_x = pl_team == 1 ? 0.99 : 0.01;
 			paddle.think = pong_paddle_think;
 			paddle.nextthink = time;
 			paddle.team = pl_team;
 			paddle.realowner = player;
+			minigame.pong_paddles[pl_team-1] = paddle;
 
 			// Team 1 by default
 			return pl_team;
 		}
+		case "part":
+			// todo
+			return false;
 		case "cmd":
 			// nothing to do
 			return false;
@@ -187,9 +221,9 @@ void minigame_hud_board_pong(vector pos, vector mySize)
 		else if ( e.classname == "pong_paddle" )
 		{
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
-			paddle_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
+			paddle_size = minigame_hud_denormalize_size(eX / 32 + eY*e.pong_length,pos,mySize);
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/paddle"),
-					paddle_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL );
+					paddle_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
 }
