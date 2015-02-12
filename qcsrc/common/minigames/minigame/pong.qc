@@ -100,15 +100,25 @@ void pong_ball_think()
 	
 	self.origin_x += self.velocity_x * think_speed;
 	self.origin_y += self.velocity_y * think_speed;
+	
+	// TODO consider the ball's radius (and add cvar for that)
 	if ( self.origin_y <= 0 )
 	{
-		self.origin_y = 0;
-		self.velocity_y *= -1;
+		if ( !pong_goal(self,3) )
+		{
+			self.origin_y = 0;
+			self.velocity_y *= -1;
+			self.team = 3;
+		}
 	}
 	else if ( self.origin_y >= 1 )
 	{
-		self.origin_y = 1;
-		self.velocity_y *= -1;
+		if ( !pong_goal(self,4) )
+		{
+			self.origin_y = 1;
+			self.velocity_y *= -1;
+			self.team = 4;
+		}
 	}
 	
 	if ( self.origin_x <= 0 )
@@ -129,7 +139,6 @@ void pong_ball_think()
 			 self.team = 1;
 		}
 	}
-	// TODO team 3 4 goal check
 	
 	self.SendFlags |= MINIG_SF_UPDATE;
 }
