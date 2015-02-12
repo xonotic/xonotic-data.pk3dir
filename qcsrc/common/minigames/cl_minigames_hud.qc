@@ -268,6 +268,7 @@ void HUD_MinigameMenu_ClickNoop()
 // Click action for Quit
 void HUD_MinigameMenu_ClickQuit()
 {
+	deactivate_minigame();
 	minigame_cmd("end");
 }
 

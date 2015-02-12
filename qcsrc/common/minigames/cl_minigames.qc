@@ -102,11 +102,11 @@ void HUD_MinigameMenu_CurrentButton();
 bool auto_close_minigamemenu;
 void deactivate_minigame()
 {
-	if ( !active_minigame || active_minigame != self )
+	if ( !active_minigame )
 		return;
 	active_minigame.minigame_event(active_minigame,"deactivate");
 	entity e = world;
-	while( (e = findentity(e, owner, self)) )
+	while( (e = findentity(e, owner, active_minigame)) )
 		if ( e.minigame_autoclean )
 		{
 			minigame_autoclean_entity(e);
@@ -122,6 +122,12 @@ void deactivate_minigame()
 	}
 	else
 		HUD_MinigameMenu_CurrentButton();
+}
+
+void minigame_entremove()
+{
+	if ( self == active_minigame )
+		deactivate_minigame();
 }
 
 void activate_minigame(entity minigame)
@@ -143,9 +149,7 @@ void activate_minigame(entity minigame)
 	
 	if ( active_minigame )
 	{
-		entity olds = minigame_self;
 		deactivate_minigame();
-		minigame_self = olds;
 	}
 	
 	if ( minigame_self.owner != minigame )
@@ -211,7 +215,7 @@ void ent_read_minigame()
 		
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = deactivate_minigame;
+			self.entremove = minigame_entremove;
 			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
