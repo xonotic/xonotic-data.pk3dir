@@ -42,5 +42,6 @@
 // more other weapons
 #include "w_revolver.qc"
 #include "w_lightsabre.qc"
+#include "w_flak.qc"
 
 //#endif

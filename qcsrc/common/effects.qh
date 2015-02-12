@@ -32,6 +32,7 @@
     EFFECT(0, EFFECT_SHOTGUN_MUZZLEFLASH,       "shotgun_muzzleflash") \
     EFFECT(0, EFFECT_GRENADE_MUZZLEFLASH,       "grenadelauncher_muzzleflash") \
     EFFECT(0, EFFECT_GRENADE_EXPLODE,           "grenade_explode") \
+    EFFECT(0, EFFECT_FLAK_BOUNCE,               "flak_bounce") \
     EFFECT(0, EFFECT_CRYLINK_JOINEXPLODE,       "crylink_joinexplode") \
     EFFECT(0, EFFECT_CRYLINK_MUZZLEFLASH,       "crylink_muzzleflash") \
     EFFECT(0, EFFECT_VORTEX_MUZZLEFLASH,        "nex_muzzleflash") \

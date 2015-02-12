@@ -1,4 +1,5 @@
 #include "projectile.qh"
+#include "../../common/weapons/w_flak.qh"
 
 void SUB_Stop()
 {
@@ -307,6 +308,9 @@ void Ent_Projectile()
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_CANNONBALL: setmodel(self, "models/sphere/sphere.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
+			case PROJECTILE_FLAK: setmodel(self, "models/tracer.mdl");self.traileffect = particleeffectnum("tr_rifle_weak"); break;
+			case PROJECTILE_FLAK_BOMB: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
+
 			default:
 				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -350,6 +354,7 @@ void Ent_Projectile()
 				self.mins = '-32 -32 -32';
 				self.maxs = '32 32 32';
 				break;
+			case PROJECTILE_FLAK_BOMB:
 			case PROJECTILE_GRENADE:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
@@ -361,6 +366,12 @@ void Ent_Projectile()
 				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_mortar_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_mortar_bouncestop;
+				break;
+			case PROJECTILE_FLAK:
+				self.mins = '0 0 -3';
+				self.maxs = '0 0 -3';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = Flak_Touch;
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				self.mins = '-8 -8 -8';

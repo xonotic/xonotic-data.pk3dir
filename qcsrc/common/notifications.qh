@@ -574,6 +574,9 @@ void Send_Notification_WOCOVA(
     MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_MURDER_FIREMINE,      3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponfireball",         _("^BG%s%s^K1 got burnt by ^BG%s^K1's firemine%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_SUICIDE_BLAST,        2, 1, "s1 s2loc spree_lost", "s1",                 "weaponfireball",         _("^BG%s^K1 should have used a smaller gun%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE,     2, 1, "s1 s2loc spree_lost", "s1",                 "weaponfireball",         _("^BG%s^K1 forgot about their firemine%s%s"), "") \
+    MSG_INFO_NOTIF(1, INFO_WEAPON_FLAK_MURDER_SPLASH,            3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponflak",             _("^BG%s%s^K1 could not hide from ^BG%s^K1's Flak Cannon%s%s"), "") \
+    MSG_INFO_NOTIF(1, INFO_WEAPON_FLAK_MURDER_SPRAY,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponflak",             _("^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"), "") \
+    MSG_INFO_NOTIF(1, INFO_WEAPON_FLAK_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weaponflak",             _("^BG%s^K1 was shredded by their own Flak Cannon%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_HAGAR_MURDER_BURST,            3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhagar",            _("^BG%s%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_HAGAR_MURDER_SPRAY,            3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhagar",            _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Hagar rockets%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_HAGAR_SUICIDE,                 2, 1, "s1 s2loc spree_lost", "s1",                 "weaponhagar",            _("^BG%s^K1 played with tiny Hagar rockets%s%s"), "") \
@@ -999,6 +1002,9 @@ void Send_Notification_WOCOVA(
     MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_MURDER_FIREMINE,      NO_MSG,        INFO_WEAPON_FIREBALL_MURDER_FIREMINE,      NO_MSG) \
     MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_BLAST,        NO_MSG,        INFO_WEAPON_FIREBALL_SUICIDE_BLAST,        CENTER_DEATH_SELF_GENERIC) \
     MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_FIREMINE,     NO_MSG,        INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE,     CENTER_DEATH_SELF_GENERIC) \
+    MSG_MULTI_NOTIF(1, WEAPON_FLAK_MURDER_SPLASH,            NO_MSG,        INFO_WEAPON_FLAK_MURDER_SPLASH,            NO_MSG) \
+    MSG_MULTI_NOTIF(1, WEAPON_FLAK_MURDER_SPRAY,             NO_MSG,        INFO_WEAPON_FLAK_MURDER_SPRAY,             NO_MSG) \
+    MSG_MULTI_NOTIF(1, WEAPON_FLAK_SUICIDE,                  NO_MSG,        INFO_WEAPON_FLAK_SUICIDE,                  NO_MSG) \
     MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_BURST,            NO_MSG,        INFO_WEAPON_HAGAR_MURDER_BURST,            NO_MSG) \
     MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_SPRAY,            NO_MSG,        INFO_WEAPON_HAGAR_MURDER_SPRAY,            NO_MSG) \
     MSG_MULTI_NOTIF(1, WEAPON_HAGAR_SUICIDE,                 NO_MSG,        INFO_WEAPON_HAGAR_SUICIDE,                 CENTER_DEATH_SELF_GENERIC) \
