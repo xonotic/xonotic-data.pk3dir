@@ -277,7 +277,7 @@ void initialize_minigames()
 		minig.classname = "minigame_descriptor"; \
 		minig.netname = #name; \
 		minig.message = nicename; \
-		minig.minigame_event = minigame_event_##name; \
+		minig.minigame_event = name##_server_event; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.list_next = minig; \
 		last_minig = minig;

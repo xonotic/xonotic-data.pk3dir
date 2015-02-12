@@ -51,9 +51,9 @@ void initialize_minigames()
 		minig.classname = "minigame_descriptor"; \
 		minig.netname = strzone(strtolower(#name)); \
 		minig.message = nicename; \
-		minig.minigame_hud_board = minigame_hud_board_##name; \
-		minig.minigame_hud_status = minigame_hud_status_##name; \
-		minig.minigame_event = minigame_event_##name; \
+		minig.minigame_hud_board = name##_hud_board; \
+		minig.minigame_hud_status = name##_hud_status; \
+		minig.minigame_event = name##_client_event; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.list_next = minig; \
 		last_minig = minig;

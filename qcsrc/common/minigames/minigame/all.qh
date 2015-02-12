@@ -17,17 +17,17 @@ Required functions
 ------------------
 
 SVQC:
-	int minigame_event_<id>(entity minigame, string event, ...count)
+	int <id>_server_event(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 CSQC:
-	void minigame_hud_board_<id>(vector pos, vector mySize)
+	void <id>_hud_board(vector pos, vector mySize)
 		draws the main game board inside the rectangle defined by pos and mySize
 		(That rectangle is expressed in window coordinates)
-	void minigame_hud_status_<id>(vector pos, vector mySize)
+	void <id>_hud_status(vector pos, vector mySize)
 		draws the game status panel inside the rectangle defined by pos and mySize
 		(That rectangle is expressed in window coordinates)
 		This panel shows eg scores, captured pieces and so on
-	int minigame_event_<id>(entity minigame, string event, ...count)
+	int <id>_client_event(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 
 Managing entities

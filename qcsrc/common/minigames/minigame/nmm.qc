@@ -211,7 +211,7 @@ int nmm_count_pieces(entity minigame, int teamn, int pieceflags)
 }
 
 // required function, handle server side events
-int minigame_event_nmm(entity minigame, string event, ...)
+int nmm_server_event(entity minigame, string event, ...)
 {
 	if ( event == "start" )
 	{
@@ -425,7 +425,7 @@ bool nmm_draw_avaliable(entity tile)
 }
 
 // Required function, draw the game board
-void minigame_hud_board_nmm(vector pos, vector mySize)
+void nmm_hud_board(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	nmm_boardpos = pos;
@@ -493,7 +493,7 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 }
 
 // Required function, draw the game status panel
-void minigame_hud_status_nmm(vector pos, vector mySize)
+void nmm_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(1);
 	vector ts;
@@ -616,7 +616,7 @@ string nmm_turn_to_string(int turnflags)
 }
 
 // Required function, handle client events
-int minigame_event_nmm(entity minigame, string event, ...)
+int nmm_client_event(entity minigame, string event, ...)
 {
 	if ( event == "activate" )
 	{

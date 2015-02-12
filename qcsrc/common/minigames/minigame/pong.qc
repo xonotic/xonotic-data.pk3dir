@@ -188,7 +188,7 @@ vector pong_team_to_paddlepos(int nteam)
 }
 
 // required function, handle server side events
-int minigame_event_pong(entity minigame, string event, ...)
+int pong_server_event(entity minigame, string event, ...)
 {
 	switch (event)
 	{
@@ -297,7 +297,7 @@ vector pong_team_to_color(int nteam)
 }
 
 // Required function, draw the game board
-void minigame_hud_board_pong(vector pos, vector mySize)
+void pong_hud_board(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("pong/board"));
@@ -337,7 +337,7 @@ void minigame_hud_board_pong(vector pos, vector mySize)
 
 
 // Required function, draw the game status panel
-void minigame_hud_status_pong(vector pos, vector mySize)
+void pong_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(1);
 	vector ts;
@@ -387,7 +387,7 @@ string pong_message(int mgflags)
 }
 
 // Required function, handle client events
-int minigame_event_pong(entity minigame, string event, ...)
+int pong_client_event(entity minigame, string event, ...)
 {
 	switch(event)
 	{

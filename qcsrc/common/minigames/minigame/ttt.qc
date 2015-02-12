@@ -125,7 +125,7 @@ void ttt_next_match(entity minigame, entity player)
 
 
 // required function, handle server side events
-int minigame_event_ttt(entity minigame, string event, ...)
+int ttt_server_event(entity minigame, string event, ...)
 {
 	switch(event)
 	{
@@ -212,7 +212,7 @@ vector ttt_boardsize;// HUD board size
 .int ttt_checkwin; // Used to optimize checks to display a win
 
 // Required function, draw the game board
-void minigame_hud_board_ttt(vector pos, vector mySize)
+void ttt_hud_board(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	ttt_boardpos = pos;
@@ -264,7 +264,7 @@ void minigame_hud_board_ttt(vector pos, vector mySize)
 
 
 // Required function, draw the game status panel
-void minigame_hud_status_ttt(vector pos, vector mySize)
+void ttt_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(1);
 	vector ts;
@@ -541,7 +541,7 @@ void ttt_set_curr_pos(string s)
 }
 
 // Required function, handle client events
-int minigame_event_ttt(entity minigame, string event, ...)
+int ttt_client_event(entity minigame, string event, ...)
 {
 	switch(event)
 	{
