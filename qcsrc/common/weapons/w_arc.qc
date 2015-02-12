@@ -62,6 +62,12 @@ vector arc_shotorigin[4];
 .vector beam_wantdir;
 .int beam_type;
 
+.int arc_type;
+const int ARC_ELECTRIC = 1;
+const int ARC_FLAME = 2;
+const int ARC_ICE = 3;
+// plasma, poison?
+
 const int ARC_BT_MISS =        0x00;
 const int ARC_BT_WALL =        0x01;
 const int ARC_BT_HEAL =        0x02;
@@ -174,6 +180,7 @@ float W_Arc_Beam_Send(entity to, float sf)
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
 		WriteByte(MSG_ENTITY, self.beam_type);
+		WriteByte(MSG_ENTITY, self.arc_type);
 	}
 
 	return true;
@@ -211,6 +218,32 @@ void Arc_Player_SetHeat(entity player)
 {
 	player.arc_heat_percent = Arc_GetHeat_Percent(player);
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
+}
+
+.float arc_frost;
+.float arc_freezedown;
+void Arc_Player_SetFrost(entity attacker, entity targ)
+{
+	if(!targ || !attacker)
+		return;
+	float cooldown_speed = 0;
+	if ( attacker.beam_heat > WEP_CVAR(arc, overheat_min) && WEP_CVAR(arc, cooldown) > 0 )
+	{
+		cooldown_speed = WEP_CVAR(arc, cooldown);
+	}
+	else
+	{
+		cooldown_speed = attacker.beam_heat / WEP_CVAR(arc, beam_refire);
+	}
+
+	if ( cooldown_speed )
+	{
+		targ.arc_frost = time + attacker.beam_heat / cooldown_speed;
+		targ.arc_freezedown = cooldown_speed;
+	}
+
+	if(targ.arc_freezedown >= WEP_CVAR(arc, overheat_max))
+		Freeze (targ, bound(1, attacker.beam_heat / cooldown_speed, 10), 2, false);
 }
 
 void W_Arc_Beam_Think(void)
@@ -543,6 +576,20 @@ void W_Arc_Beam_Think(void)
 					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
 				);
 
+				switch(self.arc_type)
+				{
+					case ARC_FLAME:
+					{
+						Fire_AddDamage(trace_ent, self.owner, rootdamage * falloff * 1, 1, WEP_ARC | HITTYPE_BOUNCE);
+						break;
+					}
+					case ARC_ICE:
+					{
+						Arc_Player_SetFrost(self, trace_ent);
+						break;
+					}
+				}
+
 				new_beam_type = ARC_BT_HIT;
 			}
 			break;
@@ -584,6 +631,7 @@ void W_Arc_Beam(float burst)
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
+	beam.arc_type = self.arc_type;
 	beam.bot_dodge = true;
 	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
 	beam.beam_bursting = burst;
@@ -1164,6 +1212,28 @@ void Remove_ArcBeam(void)
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 }
 
+string W_Arc_BeamEffect()
+{
+	switch(self.arc_type)
+	{
+		case ARC_FLAME: return "arc_beam_fire";
+		case ARC_ICE: return "arc_beam_ice";
+		default:
+		case ARC_ELECTRIC: return "arc_beam";
+	}
+}
+
+string W_Arc_HitEffect()
+{
+	switch(self.arc_type)
+	{
+		case ARC_FLAME: return "arc_fire_sparks";
+		case ARC_ICE: return "iceorglass";
+		default:
+		case ARC_ELECTRIC: return "arc_lightning";
+	}
+}
+
 void Ent_ReadArcBeam(float isnew)
 {
 	int sf = ReadByte();
@@ -1270,6 +1340,7 @@ void Ent_ReadArcBeam(float isnew)
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
 		self.beam_type = ReadByte();
+		self.arc_type = ReadByte();
 		switch(self.beam_type)
 		{
 			case ARC_BT_MISS:
@@ -1277,8 +1348,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1302,8 +1373,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1354,8 +1425,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 0;
@@ -1380,8 +1451,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1406,8 +1477,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1458,8 +1529,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(W_Arc_BeamEffect());
+				self.beam_hiteffect = particleeffectnum(W_Arc_HitEffect());
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
