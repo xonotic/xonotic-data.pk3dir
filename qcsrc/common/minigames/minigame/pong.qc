@@ -1,12 +1,16 @@
+// minigame flags
+const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join
+const int PONG_STATUS_PLAY = 0x0020; // playing
+
 // send flags
-const int PONG_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // sent when reporting scores
-const int PONG_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.pong_ai
+// (minigame_player) sent when reporting scores
+const int PONG_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
 
 // fields
-.int       pong_ai;    // (minigame) when non-zero, singleplayer vs AI
-.int       pong_score; // (minigame_player) number of goals
-.entity pong_paddles[2];// (minigame) paddles
-.float     pong_length;// (pong_paddle) size (0,1)
+const int PONG_MAX_PLAYERS = 2; // TODO 4
+.int    pong_score;     // (minigame_player) number of goals
+.entity pong_paddles[PONG_MAX_PLAYERS];// (minigame) paddles
+.float  pong_length;    // (pong_paddle) size (0,1)
 
 #ifdef SVQC
 
@@ -17,41 +21,59 @@ float autocvar_sv_minigames_pong_ballspeed  = 1;
 
 void pong_ball_think();
 
-void pong_ball_thinkthrow()
+// Throws a ball in a random direction and sets the think function
+void pong_ball_throw(entity ball)
 {
 	float angle;
 	do
 		angle = random()*M_PI*2;
 	while ( (angle > 0.44*M_PI && angle < 0.55*M_PI) || 
 		(angle > 1.44*M_PI && angle < 1.55*M_PI) );
-	self.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ballspeed;
-	self.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ballspeed;
-	self.SendFlags |= MINIG_SF_UPDATE;
-	self.think = pong_ball_think;
-	self.nextthink = time;
+	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ballspeed;
+	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ballspeed;
+	ball.SendFlags |= MINIG_SF_UPDATE;
+	ball.think = pong_ball_think;
+	ball.nextthink = time;
+	ball.team = 0;
 }
 
-void pong_reset_ball(entity ball)
+// Think equivalent of pong_ball_throw, used to delay throws
+void pong_ball_throwthink()
+{
+	pong_ball_throw(self);
+}
+
+// Moves ball to the center and stops its motion
+void pong_ball_reset(entity ball)
 {
 	ball.velocity = '0 0 0';
 	ball.origin = '0.5 0.5 0';
 	ball.SendFlags |= MINIG_SF_UPDATE;
-	ball.think = pong_ball_thinkthrow;
-	ball.nextthink = time + autocvar_sv_minigames_pong_ballwait;
+	ball.think = SUB_NullThink;
+	ball.team = 0;
 }
 
-void pong_add_score(entity minigame, int pteam)
+// Add the score to the given team in the minigame
+void pong_add_score(entity minigame, int team_thrower, int team_receiver, int delta)
 {
 	if ( !minigame )
 		return;
-	entity paddle = minigame.pong_paddles[pteam-1];
-	if ( paddle.realowner )
+	
+	if ( team_thrower == 0 )
+		team_thrower = team_receiver;
+	
+	if ( team_thrower == team_receiver )
+		delta *= -1;
+	
+	entity paddle_thrower = minigame.pong_paddles[team_thrower-1];
+	if ( paddle_thrower.realowner )
 	{
-		paddle.realowner.pong_score++;
-		paddle.realowner.SendFlags |= PONG_SF_PLAYERSCORE;
+		paddle_thrower.realowner.minigame_players.pong_score += delta;
+		paddle_thrower.realowner.minigame_players.SendFlags |= PONG_SF_PLAYERSCORE;
 	}
 }
 
+// Checks for a goal, when that happes adds scores and resets the ball
 bool pong_goal(entity ball, int pteam)
 {
 	entity paddle = ball.owner.pong_paddles[pteam-1];
@@ -60,13 +82,17 @@ bool pong_goal(entity ball, int pteam)
 	if ( ball.origin_y < paddle.origin_y-paddle.pong_length/2 ||
 		ball.origin_y > paddle.origin_y+paddle.pong_length/2 )
 	{
-		pong_add_score(ball.owner,minigame_next_team(pteam, 2));
-		pong_reset_ball(ball);
+		pong_add_score(ball.owner ,ball.team, pteam, 1);
+		pong_ball_reset(ball);
+		ball.think = pong_ball_throwthink;
+		ball.nextthink = time + autocvar_sv_minigames_pong_ballwait;
 		return true;
 	}
+	
 	return false;
 }
 
+// Moves the ball around
 void pong_ball_think()
 {
 	float think_speed = autocvar_sys_ticrate;
@@ -91,6 +117,7 @@ void pong_ball_think()
 		{
 			 self.origin_x = 0;
 			 self.velocity_x *= -1;
+			 self.team = 2;
 		}
 	}
 	else if ( self.origin_x >= 1 )
@@ -99,12 +126,15 @@ void pong_ball_think()
 		{
 			 self.origin_x = 1;
 			 self.velocity_x *= -1;
+			 self.team = 1;
 		}
 	}
+	// TODO team 3 4 goal check
 	
 	self.SendFlags |= MINIG_SF_UPDATE;
 }
 
+// Moves the paddle
 void pong_paddle_think()
 {
 	float think_speed = autocvar_sys_ticrate;
@@ -124,7 +154,18 @@ void pong_paddle_think()
 			self.origin_y = 1;
 		self.SendFlags |= MINIG_SF_UPDATE;
 	}
-		
+}
+
+vector pong_team_to_paddlepos(int nteam)
+{
+	switch(nteam)
+	{
+		case 1: return '0.99 0.5 0';
+		case 2: return '0.01 0.5 0';
+		case 3: return '0.5 0.01 0';
+		case 4: return '0.5 0.99 0';
+		default:return '0 0 0';
+	}
 }
 
 // required function, handle server side events
@@ -134,8 +175,7 @@ int minigame_event_pong(entity minigame, string event, ...)
 	{
 		case "start":
 		{
-			entity ball = msle_spawn(minigame,"pong_ball");
-			pong_reset_ball(ball);
+			minigame.minigame_flags |= PONG_STATUS_WAIT;
 			return true;
 		}
 		case "end":
@@ -145,24 +185,24 @@ int minigame_event_pong(entity minigame, string event, ...)
 		{
 			int pl_num = minigame_count_players(minigame);
 			
-			// Don't allow joining a single player match
-			if ( (minigame.pong_ai) && pl_num > 0 )
+			// Don't allow joining a match that is already running
+			if ( minigame.minigame_flags & PONG_STATUS_PLAY )
 				return false;
 
-			// Don't allow more than 2 players
-			if(pl_num >= 2) { return false; }
+			// Don't allow any more players
+			if(pl_num >= PONG_MAX_PLAYERS) 
+				return false;
 
 			int pl_team = 1;
 			// Get the right team
 			if(minigame.minigame_players)
-				pl_team = minigame_next_team(minigame.minigame_players.team, 2);
+				pl_team = minigame_next_team(minigame.minigame_players.team, PONG_MAX_PLAYERS);
 			
 			
 			entity player = ...(0,entity);
 			entity paddle = msle_spawn(minigame,"pong_paddle");// Note puddle isn't a typo
 			paddle.pong_length = autocvar_sv_minigames_pong_paddlesize;
-			paddle.origin_y = 0.5;
-			paddle.origin_x = pl_team == 1 ? 0.99 : 0.01;
+			paddle.origin = pong_team_to_paddlepos(pl_team);
 			paddle.think = pong_paddle_think;
 			paddle.nextthink = time;
 			paddle.team = pl_team;
@@ -173,9 +213,25 @@ int minigame_event_pong(entity minigame, string event, ...)
 			return pl_team;
 		}
 		case "part":
-			// todo
+			// TODO remove paddle or switch to AI
 			return false;
 		case "cmd":
+			switch(argv(0))
+			{
+				case "throw":
+					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
+					{
+						minigame.minigame_flags = PONG_STATUS_PLAY |
+							(minigame.minigame_flags & ~PONG_STATUS_WAIT);
+						minigame.SendFlags |= MINIG_SF_UPDATE;
+						
+						entity ball = msle_spawn(minigame,"pong_ball");
+						pong_ball_reset(ball);
+						pong_ball_throw(ball);
+					}
+					return true;
+						
+			}
 			// nothing to do
 			return false;
 		case "network_send":
@@ -184,11 +240,7 @@ int minigame_event_pong(entity minigame, string event, ...)
 			int sf = ...(1,int);
 			if ( sent.classname == "minigame_player" && (sf & PONG_SF_PLAYERSCORE ) )
 			{
-				WriteByte(MSG_ENTITY,sent.pong_score);
-			}
-			else if ( sent.classname == "minigame" && (sf & PONG_SF_SINGLEPLAYER) )
-			{
-				WriteByte(MSG_ENTITY,sent.pong_ai);
+				WriteLong(MSG_ENTITY,sent.pong_score);
 			}
 			return false;
 		}
@@ -222,6 +274,7 @@ void minigame_hud_board_pong(vector pos, vector mySize)
 		{
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
 			paddle_size = minigame_hud_denormalize_size(eX / 32 + eY*e.pong_length,pos,mySize);
+			// TODO team paddles
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/paddle"),
 					paddle_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
@@ -241,7 +294,7 @@ void minigame_hud_status_pong(vector pos, vector mySize)
 	mySize_y -= ts_y;
 	
 	vector player_fontsize = hud_fontsize * 1.75;
-	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
+	ts_y = ( mySize_y - PONG_MAX_PLAYERS*player_fontsize_y ) / PONG_MAX_PLAYERS;
 	ts_x = mySize_x;
 	vector mypos;
 	vector tile_size = '48 48 0';
@@ -251,9 +304,9 @@ void minigame_hud_status_pong(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_player" )
 		{
+			// TODO show the team color
 			mypos = pos;
-			if ( e.team == 2 )
-				mypos_y  += player_fontsize_y + ts_y;
+			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -266,6 +319,14 @@ void minigame_hud_status_pong(vector pos, vector mySize)
 	}
 }
 
+// convert minigame flags to a message
+string pong_message(int mgflags)
+{
+	string rmessage = "";
+	if (mgflags & PONG_STATUS_WAIT)
+		rmessage = _("Press \"Throw Ball\" to start the match with the current players");
+	return rmessage;
+}
 
 // Required function, handle client events
 int minigame_event_pong(entity minigame, string event, ...)
@@ -291,38 +352,28 @@ int minigame_event_pong(entity minigame, string event, ...)
 			int sf = ...(1,int);
 			if ( sent.classname == "minigame_player" && (sf & PONG_SF_PLAYERSCORE ) )
 			{
-				sent.pong_score = ReadByte();
+				sent.pong_score = ReadLong();
 			}
-			else if ( sent.classname == "minigame" && (sf & PONG_SF_SINGLEPLAYER) )
+			else if ( sent.classname == "minigame" )
 			{
-				int ai = ReadByte();
-				bool spawnai = ai && !sent.pong_ai;
-				sent.pong_ai = ai;
-				
-				if ( spawnai )
+				if ( sf & MINIG_SF_UPDATE )
 				{
-					entity aiplayer = spawn();
-					aiplayer.classname = "minigame_player";
-					aiplayer.owner = minigame;
-					aiplayer.team = ai;
-					aiplayer.minigame_playerslot = 0;
-					aiplayer.minigame_autoclean = 1;
-					// todo aiplayer.think
+					sent.message = pong_message(sent.minigame_flags);
 				}
 			}
 			return false;
 		}
 		case "menu_show":
 		{
-			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Single Player"),"singleplayer");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Throw Ball"),"pong_throw");
 			return false;
 		}
 		case "menu_click":
 		{
-			if ( ...(0,string) == "singleplayer" && !minigame.pong_ai )
+			string cmd = ...(0,string);
+			if( cmd == "pong_throw" && minigame.minigame_flags & PONG_STATUS_WAIT )
 			{
-				if ( minigame_count_players(minigame) == 1 )
-					minigame_cmd("singleplayer");
+				minigame_cmd("throw");
 			}
 			return false;
 		}

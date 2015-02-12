@@ -3,6 +3,7 @@
 void player_clear_minigame(entity player)
 {
 	player.active_minigame = world;
+	player.minigame_players = world;
 	if ( IS_PLAYER(player) )
 		player.movetype = MOVETYPE_WALK;
 	else
@@ -145,6 +146,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.list_next = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
+		player.minigame_players = player_pointer;
 		player_pointer.customizeentityforclient = minigame_CheckSend;
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
