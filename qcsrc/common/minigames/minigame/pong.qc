@@ -8,11 +8,17 @@ const int PONG_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
 // (pong_ball) sent when changing team
 const int PONG_SF_BALLTEAM = MINIG_SF_CUSTOM;
 
+// keys
+const int PONG_KEY_INCREASE = 0x01; // Move down/right
+const int PONG_KEY_DECREASE = 0x02; // Move up/left
+const int PONG_KEY_BOTH     = 0x03; // Player jamming keys at ramdom
+
 // fields
 const int PONG_MAX_PLAYERS = 4;
-.int    pong_score;     // (minigame_player) number of goals
+.int    pong_score;                    // (minigame_player) number of goals
+.int    pong_keys;                     // (client) pressed keys
 .entity pong_paddles[PONG_MAX_PLAYERS];// (minigame) paddles
-.float  pong_length;    // (pong_paddle) size (0,1)
+.float  pong_length;                   // (pong_paddle) size (0,1)
 
 #ifdef SVQC
 
@@ -29,8 +35,7 @@ void pong_ball_throw(entity ball)
 	float angle;
 	do
 		angle = random()*M_PI*2;
-	while ( (angle > 0.44*M_PI && angle < 0.55*M_PI) || 
-		(angle > 1.44*M_PI && angle < 1.55*M_PI) );
+	while ( fabs(sin(angle)) < 0.17 || fabs(cos(angle)) < 0.17 );
 	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ballspeed;
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ballspeed;
 	ball.think = pong_ball_think;
@@ -159,18 +164,20 @@ void pong_paddle_think()
 	float think_speed = autocvar_sys_ticrate;
 	self.nextthink = time + think_speed;
 	
-	if ( self.realowner.movement.x > 0 && self.origin_y > self.pong_length/2 )
+	if ( self.realowner.minigame_players.pong_keys &&
+		self.realowner.minigame_players.pong_keys != PONG_KEY_BOTH )
 	{
-		self.origin_y -= autocvar_sv_minigames_pong_paddlespeed * think_speed;
-		if ( self.origin_y < 0 )
-			self.origin_y = 0;
-		self.SendFlags |= MINIG_SF_UPDATE;
-	}
-	else if ( self.realowner.movement.x < 0 && self.origin_y < 1-self.pong_length/2 )
-	{
-		self.origin_y += autocvar_sv_minigames_pong_paddlespeed * think_speed;
-		if ( self.origin_y > 1 )
-			self.origin_y = 1;
+		float movement = autocvar_sv_minigames_pong_paddlespeed * think_speed;
+		float halflen = self.pong_length/2;
+		
+		if ( self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
+			movement *= -1;
+		
+		if ( self.team > 2 )
+			self.origin_x = bound(halflen, self.origin_x+movement, 1-halflen);
+		else
+			self.origin_y = bound(halflen, self.origin_y+movement, 1-halflen);
+		
 		self.SendFlags |= MINIG_SF_UPDATE;
 	}
 }
@@ -217,7 +224,6 @@ int pong_server_event(entity minigame, string event, ...)
 			if(minigame.minigame_players)
 				pl_team = minigame_next_team(minigame.minigame_players.team, PONG_MAX_PLAYERS);
 			
-			
 			entity player = ...(0,entity);
 			entity paddle = msle_spawn(minigame,"pong_paddle");// Note puddle isn't a typo
 			paddle.pong_length = autocvar_sv_minigames_pong_paddlesize;
@@ -235,6 +241,8 @@ int pong_server_event(entity minigame, string event, ...)
 			// TODO remove paddle or switch to AI
 			return false;
 		case "cmd":
+		{
+			entity player = ...(0,entity);
 			switch(argv(0))
 			{
 				case "throw":
@@ -249,10 +257,22 @@ int pong_server_event(entity minigame, string event, ...)
 						pong_ball_throw(ball);
 					}
 					return true;
+				case "+movei":
+					player.pong_keys |= PONG_KEY_INCREASE;
+					return true;
+				case "+moved":
+					player.pong_keys |= PONG_KEY_DECREASE;
+					return true;
+				case "-movei":
+					player.pong_keys &= ~PONG_KEY_INCREASE;
+					return true;
+				case "-moved":
+					player.pong_keys &= ~PONG_KEY_DECREASE;
+					return true;
 						
 			}
-			// nothing to do
 			return false;
+		}
 		case "network_send":
 		{
 			entity sent = ...(0,entity);
@@ -358,7 +378,6 @@ void pong_hud_status(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_player" )
 		{
-			// TODO show the team color
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
 			
@@ -369,10 +388,14 @@ void pong_hud_status(vector pos, vector mySize)
 				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
-			mypos_y += player_fontsize_y;
-			
-			drawstring(mypos,ftos(e.pong_score),tile_size,
+			drawstring(mypos+eY*player_fontsize_y,ftos(e.pong_score),tile_size,
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			if ( e == minigame_self )
+			{
+				drawborderlines(1, mypos, eX*mySize_x+eY*ts_y, 
+					pong_team_to_color(e.team), 1, DRAWFLAG_NORMAL);
+			}
 		}
 	}
 }
@@ -398,9 +421,32 @@ int pong_client_event(entity minigame, string event, ...)
 			{
 				case K_UPARROW:
 				case K_KP_UPARROW:
+				case K_LEFTARROW:
+				case K_KP_LEFTARROW:
+					minigame_cmd("+moved");
 					return true;
 				case K_DOWNARROW:
 				case K_KP_DOWNARROW:
+				case K_RIGHTARROW:
+				case K_KP_RIGHTARROW:
+					minigame_cmd("+movei");
+					return true;
+			}
+			return false;
+		case "key_released":
+			switch ( ...(0,int) )
+			{
+				case K_UPARROW:
+				case K_KP_UPARROW:
+				case K_LEFTARROW:
+				case K_KP_LEFTARROW:
+					minigame_cmd("-moved");
+					return true;
+				case K_DOWNARROW:
+				case K_KP_DOWNARROW:
+				case K_RIGHTARROW:
+				case K_KP_RIGHTARROW:
+					minigame_cmd("-movei");
 					return true;
 			}
 			return false;
