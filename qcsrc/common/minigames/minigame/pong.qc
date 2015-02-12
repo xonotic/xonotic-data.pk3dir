@@ -5,9 +5,11 @@ const int PONG_STATUS_PLAY = 0x0020; // playing
 // send flags
 // (minigame_player) sent when reporting scores
 const int PONG_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
+// (pong_ball) sent when changing team
+const int PONG_SF_BALLTEAM = MINIG_SF_CUSTOM;
 
 // fields
-const int PONG_MAX_PLAYERS = 2; // TODO 4
+const int PONG_MAX_PLAYERS = 4;
 .int    pong_score;     // (minigame_player) number of goals
 .entity pong_paddles[PONG_MAX_PLAYERS];// (minigame) paddles
 .float  pong_length;    // (pong_paddle) size (0,1)
@@ -31,10 +33,10 @@ void pong_ball_throw(entity ball)
 		(angle > 1.44*M_PI && angle < 1.55*M_PI) );
 	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ballspeed;
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ballspeed;
-	ball.SendFlags |= MINIG_SF_UPDATE;
 	ball.think = pong_ball_think;
 	ball.nextthink = time;
 	ball.team = 0;
+	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 }
 
 // Think equivalent of pong_ball_throw, used to delay throws
@@ -51,6 +53,7 @@ void pong_ball_reset(entity ball)
 	ball.SendFlags |= MINIG_SF_UPDATE;
 	ball.think = SUB_NullThink;
 	ball.team = 0;
+	ball.SendFlags |= PONG_SF_BALLTEAM;
 }
 
 // Add the score to the given team in the minigame
@@ -73,20 +76,31 @@ void pong_add_score(entity minigame, int team_thrower, int team_receiver, int de
 	}
 }
 
+bool pong_paddlemiss(float ball_coord, float pad_coord, float pad_len)
+{
+	return ball_coord < pad_coord - pad_len/2 || ball_coord > pad_coord + pad_len/2;
+}
+
 // Checks for a goal, when that happes adds scores and resets the ball
 bool pong_goal(entity ball, int pteam)
 {
 	entity paddle = ball.owner.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
-	if ( ball.origin_y < paddle.origin_y-paddle.pong_length/2 ||
-		ball.origin_y > paddle.origin_y+paddle.pong_length/2 )
+	
+	if ( (pteam > 2 && pong_paddlemiss(ball.origin_x,paddle.origin_x,paddle.pong_length)) ||
+		pong_paddlemiss(ball.origin_y,paddle.origin_y,paddle.pong_length) )
 	{
 		pong_add_score(ball.owner ,ball.team, pteam, 1);
 		pong_ball_reset(ball);
 		ball.think = pong_ball_throwthink;
 		ball.nextthink = time + autocvar_sv_minigames_pong_ballwait;
 		return true;
+	}
+	else
+	{
+		ball.team = pteam;
+		ball.SendFlags |= PONG_SF_BALLTEAM;
 	}
 	
 	return false;
@@ -108,7 +122,6 @@ void pong_ball_think()
 		{
 			self.origin_y = 0;
 			self.velocity_y *= -1;
-			self.team = 3;
 		}
 	}
 	else if ( self.origin_y >= 1 )
@@ -117,7 +130,6 @@ void pong_ball_think()
 		{
 			self.origin_y = 1;
 			self.velocity_y *= -1;
-			self.team = 4;
 		}
 	}
 	
@@ -127,7 +139,6 @@ void pong_ball_think()
 		{
 			 self.origin_x = 0;
 			 self.velocity_x *= -1;
-			 self.team = 2;
 		}
 	}
 	else if ( self.origin_x >= 1 )
@@ -136,7 +147,6 @@ void pong_ball_think()
 		{
 			 self.origin_x = 1;
 			 self.velocity_x *= -1;
-			 self.team = 1;
 		}
 	}
 	
@@ -260,6 +270,31 @@ int minigame_event_pong(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
+#include "waypointsprites.qh" // drawrotpic
+
+float pong_team_to_angle(int nteam)
+{
+	switch(nteam)
+	{
+		default:
+		case 1: return 0;
+		case 2: return M_PI;
+		case 3: return M_PI*3/2;
+		case 4: return M_PI/2;
+	}
+}
+
+vector pong_team_to_color(int nteam)
+{
+	switch(nteam)
+	{
+		case 1: return '1 0 0';
+		case 2: return '0 0 1';
+		case 3: return '1 1 0';
+		case 4: return '1 0 1';
+		default:return '1 1 1';
+	}
+}
 
 // Required function, draw the game board
 void minigame_hud_board_pong(vector pos, vector mySize)
@@ -278,14 +313,24 @@ void minigame_hud_board_pong(vector pos, vector mySize)
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
 					ball_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			
+			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
+					ball_size, pong_team_to_color(e.team), 
+					panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 		else if ( e.classname == "pong_paddle" )
 		{
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
-			paddle_size = minigame_hud_denormalize_size(eX / 32 + eY*e.pong_length,pos,mySize);
-			// TODO team paddles
-			minigame_drawpic_centered( obj_pos, minigame_texture("pong/paddle"),
-					paddle_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			paddle_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
+			
+			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle-glow"), 
+				paddle_size, paddle_size/2, pong_team_to_color(e.team), 
+				panel_fg_alpha, DRAWFLAG_ADDITIVE );
+			
+			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle"), 
+				paddle_size, paddle_size/2, '1 1 1', 
+				panel_fg_alpha, DRAWFLAG_NORMAL );
+			
 		}
 	}
 }
@@ -316,6 +361,10 @@ void minigame_hud_status_pong(vector pos, vector mySize)
 			// TODO show the team color
 			mypos = pos;
 			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
+			
+			drawfill(mypos, eX*mySize_x+eY*ts_y, pong_team_to_color(e.team),
+					 0.25, DRAWFLAG_ADDITIVE);
+			
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
