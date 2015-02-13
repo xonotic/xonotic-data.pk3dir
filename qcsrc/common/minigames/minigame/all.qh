@@ -106,6 +106,6 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #define MINIGAME_SIMPLELINKED_ENTITIES \
 	MSLE(minigame_board_piece,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_UPDATE, Short, minigame_flags) FIELD(MINIG_SF_UPDATE, Vector2D,origin)) \
 	MSLE(pong_paddle,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(MINIG_SF_UPDATE,Vector2D,origin)) \
-	MSLE(pong_ball, FIELD(PONG_SF_BALLTEAM,Byte,team) FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
+	MSLE(pong_ball,FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(PONG_SF_BALLTEAM,Byte,team) FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
 	MSLE(pong_ai, FIELD(MINIG_SF_CREATE,Byte,team) FIELD(PONG_SF_PLAYERSCORE, Long, pong_score)) \
 	/*empty line*/ 
