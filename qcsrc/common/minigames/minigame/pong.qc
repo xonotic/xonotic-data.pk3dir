@@ -492,14 +492,15 @@ void pong_hud_board(vector pos, vector mySize)
 	{
 		if ( e.classname == "pong_ball" )
 		{
-			obj_size =  minigame_hud_denormalize_size('2 2 0'*e.pong_length,pos,mySize);
+			// Note: 4*radius = 2*diameter because the image is large enough to fit the glow around the ball
+			obj_size =  minigame_hud_denormalize_size('4 4 0'*e.pong_length,pos,mySize);
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
 			
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
 					obj_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball-glow"),
-					2*obj_size, pong_team_to_color(e.team), 
+					obj_size, pong_team_to_color(e.team), 
 					panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 		else if ( e.classname == "pong_paddle" )
