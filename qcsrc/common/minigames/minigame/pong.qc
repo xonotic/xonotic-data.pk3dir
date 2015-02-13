@@ -487,32 +487,32 @@ void pong_hud_board(vector pos, vector mySize)
 	
 	entity e;
 	vector obj_pos;
-	vector ball_size;
-	vector paddle_size;
+	vector obj_size;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "pong_ball" )
 		{
-			ball_size =  minigame_hud_denormalize_size('2 2 0'*e.pong_length,pos,mySize);
+			obj_size =  minigame_hud_denormalize_size('2 2 0'*e.pong_length,pos,mySize);
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
-			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
-					ball_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball"),
-					ball_size, pong_team_to_color(e.team), 
+					obj_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			
+			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball-glow"),
+					2*obj_size, pong_team_to_color(e.team), 
 					panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 		else if ( e.classname == "pong_paddle" )
 		{
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
-			paddle_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
+			obj_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
 			
 			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle-glow"), 
-				paddle_size, paddle_size/2, pong_team_to_color(e.team), 
+				obj_size, obj_size/2, pong_team_to_color(e.team), 
 				panel_fg_alpha, DRAWFLAG_ADDITIVE );
 			
 			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle"), 
-				paddle_size, paddle_size/2, '1 1 1', 
+				obj_size, obj_size/2, '1 1 1', 
 				panel_fg_alpha, DRAWFLAG_NORMAL );
 			
 		}
