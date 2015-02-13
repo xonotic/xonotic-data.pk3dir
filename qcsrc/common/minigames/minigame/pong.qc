@@ -23,12 +23,15 @@ const int PONG_MAX_PLAYERS = 4;
 
 #ifdef SVQC
 
-float autocvar_sv_minigames_pong_paddle_size   = 0.3;
-float autocvar_sv_minigames_pong_paddle_speed  = 0.75;
-float autocvar_sv_minigames_pong_ball_wait     = 1;
-float autocvar_sv_minigames_pong_ball_speed    = 1;
-float autocvar_sv_minigames_pong_ai_thinkspeed = 0.1;
-float autocvar_sv_minigames_pong_ai_tolerance  = 0.33;
+float autocvar_sv_minigames_pong_paddle_size;
+float autocvar_sv_minigames_pong_paddle_speed;
+
+float autocvar_sv_minigames_pong_ball_wait;
+float autocvar_sv_minigames_pong_ball_speed;
+float autocvar_sv_minigames_pong_ball_radius;
+
+float autocvar_sv_minigames_pong_ai_thinkspeed;
+float autocvar_sv_minigames_pong_ai_tolerance;
 
 void pong_ball_think();
 
