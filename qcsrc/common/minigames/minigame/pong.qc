@@ -29,6 +29,7 @@ float autocvar_sv_minigames_pong_paddle_speed;
 float autocvar_sv_minigames_pong_ball_wait;
 float autocvar_sv_minigames_pong_ball_speed;
 float autocvar_sv_minigames_pong_ball_radius;
+float autocvar_sv_minigames_pong_ball_number;
 
 float autocvar_sv_minigames_pong_ai_thinkspeed;
 float autocvar_sv_minigames_pong_ai_tolerance;
@@ -203,40 +204,49 @@ void pong_ai_think()
 	float think_speed = autocvar_sv_minigames_pong_ai_thinkspeed;
 	self.nextthink = time + think_speed;
 	
-	float distance = self.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance;
-	distance += autocvar_sv_minigames_pong_paddle_speed * think_speed;
-	float target;
+	float distance;
+	float next_distance;
+	float min_distance = 1;
+	entity ball = world;
+	entity mayball = world;
+	while ( ( mayball = findentity(mayball,owner,self.owner) ) )
+		if ( mayball.classname == "pong_ball" )
+		{
+			distance = vlen(mayball.origin-self.pong_ai_paddle.origin);
+			next_distance = vlen(mayball.origin+mayball.velocity-self.pong_ai_paddle.origin);
+			if (  distance < min_distance && ( distance < 0.5 || next_distance < distance ) )
+			{
+				min_distance = distance;
+				ball = mayball;
+			}
+		}
+	
+	float target = 0.5;
 	float self_pos;
 	
-	entity ball = world;
-	self.pong_keys = 0;
-	while ( ( ball = findentity(ball,owner,self.owner) ) )
-		if ( ball.classname == "pong_ball" )
-		{			
-			if ( self.team <= 2 )
-			{
-				target = ball.origin_y + ball.velocity_y*think_speed;
-				if ( ( self.team == 1 && ball.origin_x < 0.5 && ball.velocity_x < 0 ) ||
-						( self.team == 2 && ball.origin_x > 0.5 && ball.velocity_x > 0 ) )
-					target = 0.5;
-				self_pos = self.pong_ai_paddle.origin_y;
-			}
-			else
-			{
-				target = ball.origin_x + ball.velocity_x*think_speed;
-				if ( ( self.team == 4 && ball.origin_y < 0.5 && ball.velocity_y < 0 ) ||
-						( self.team == 3 && ball.origin_y > 0.5 && ball.velocity_y > 0 ) )
-					target = 0.5;
-				self_pos = self.pong_ai_paddle.origin_x;
-			}
-			
-			if (target < self_pos - distance)
-				self.pong_keys = PONG_KEY_DECREASE;
-			else if (target > self_pos + distance)
-				self.pong_keys = PONG_KEY_INCREASE;
-			
-			break; // TODO support multiple balls?
-		}
+	
+	if ( self.team <= 2 )
+	{
+		if ( ball )
+			target = ball.origin_y + ball.velocity_y*think_speed;
+		self_pos = self.pong_ai_paddle.origin_y;
+	}
+	else
+	{
+		if ( ball )
+			target = ball.origin_x + ball.velocity_x*think_speed;
+		self_pos = self.pong_ai_paddle.origin_x;
+	}
+	
+	distance = self.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance
+		+ autocvar_sv_minigames_pong_paddle_speed * think_speed;
+
+	if (target < self_pos - distance)
+		self.pong_keys = PONG_KEY_DECREASE;
+	else if (target > self_pos + distance)
+		self.pong_keys = PONG_KEY_INCREASE;
+	else
+		self.pong_keys = 0;
 }
 
 entity pong_ai_spawn(entity paddle)
@@ -378,9 +388,14 @@ int pong_server_event(entity minigame, string event, ...)
 							(minigame.minigame_flags & ~PONG_STATUS_WAIT);
 						minigame.SendFlags |= MINIG_SF_UPDATE;
 						
-						entity ball = msle_spawn(minigame,"pong_ball");
-						ball.pong_length = autocvar_sv_minigames_pong_ball_radius;
-						pong_ball_reset(ball);
+						int i;
+						entity ball;
+						for ( i = 0; i < autocvar_sv_minigames_pong_ball_number; i++ )
+						{
+							ball = msle_spawn(minigame,"pong_ball");
+							ball.pong_length = autocvar_sv_minigames_pong_ball_radius;
+							pong_ball_reset(ball);
+						}
 					}
 					return true;
 				case "+movei":
