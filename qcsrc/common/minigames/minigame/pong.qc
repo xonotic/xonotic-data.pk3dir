@@ -526,7 +526,7 @@ void pong_hud_status(vector pos, vector mySize)
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	
+	ts_y += hud_fontsize_y;
 	pos_y += ts_y;
 	mySize_y -= ts_y;
 	
