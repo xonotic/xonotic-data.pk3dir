@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 1',
 /* modelname */ "minstanex",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairminstanex 0.4",
+/* crosshair */ "gfx/crosshairminstanex 0.6",
 /* wepimg    */ "weaponminstanex",
 /* refname   */ "vaporizer",
 /* wepname   */ _("Vaporizer")
