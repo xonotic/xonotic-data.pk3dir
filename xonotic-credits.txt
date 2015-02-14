@@ -20,6 +20,7 @@ Jan "zykure" Behrens
 JH0nny
 Łukasz "kuniu the frogg" Polek
 Matthias "matthiaskrgr" Krüger
+Mattia "Melanosuchus" Basaglia
 MrBougo
 Nick "bitbomb" Lucca
 nilyt/nyov
@@ -124,7 +125,6 @@ Dale "graphitemaster" Weiler
 **Other Active Contributors
 Erik "Ablu" Schilling
 Jope "Sless" Withers
-Mattia "Melanosuchus" Basaglia
 Mircea "Taoki" Kitsune
 Robert "ai" Kuroto
 
@@ -144,6 +144,7 @@ set_killer
 
 *Czech
 shogun assassin/woky
+Tomáš "CZHeron" Volavka
 
 *Dutch
 Alexander "freefang" van Dam
@@ -192,6 +193,7 @@ XCostaX
 
 *Polish
 4m
+Alex "tiprogrammierer.alex" Progger
 Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
@@ -201,6 +203,7 @@ xXxCHAOTICxXx
 *Romanian
 BusterDBK
 Mircea "Taoki" Kitsune
+Tudor "TropiKo" Ionel
 
 *Russian
 Alex "alextalker7" Talker
