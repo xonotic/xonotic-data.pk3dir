@@ -693,11 +693,11 @@ void ctf_CheckStalemate(void)
 
 	if(ctf_oneflag && stale_flags == 1)
 		ctf_stalemate = true;
-	else if(stale_flags == ctf_teams)
+	else if(stale_flags >= 2)
 		ctf_stalemate = true;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = false; wpforenemy_announced = false; }
-	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < 2 && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = false; wpforenemy_announced = false; }
 
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
