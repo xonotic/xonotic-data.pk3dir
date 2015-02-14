@@ -121,9 +121,9 @@ bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector pas
 
 bool ctf_CaptureShield_CheckStatus(entity p)
 {
-	float s, s2, s3, s4, se, se2, se3, se4, sr, ser;
+	int s, s2, s3, s4, se, se2, se3, se4, sr, ser;
 	entity e;
-	float players_worseeq, players_total;
+	int players_worseeq, players_total;
 
 	if(ctf_captureshield_max_ratio <= 0)
 		return false;
@@ -722,7 +722,7 @@ void ctf_CheckStalemate(void)
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -1839,7 +1839,7 @@ void havocbot_role_ctf_defense()
 	}
 }
 
-void havocbot_role_ctf_setrole(entity bot, float role)
+void havocbot_role_ctf_setrole(entity bot, int role)
 {
 	dprint(strcat(bot.netname," switched to "));
 	switch(role)
@@ -2398,7 +2398,7 @@ void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
 // ==============
 
 // scoreboard setup
-void ctf_ScoreRules(float teams)
+void ctf_ScoreRules(int teams)
 {
 	CheckAllowedTeams(world);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
@@ -2413,7 +2413,7 @@ void ctf_ScoreRules(float teams)
 }
 
 // code from here on is just to support maps that don't have flag and team entities
-void ctf_SpawnTeam (string teamname, float teamcolor)
+void ctf_SpawnTeam (string teamname, int teamcolor)
 {
 	entity oldself;
 	oldself = self;
