@@ -146,10 +146,44 @@ float HUD_GetRowCount(float item_count, vector size, float item_aspect)
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
-float HUD_GetColumnCount(float item_count, vector size, float item_aspect)
+vector HUD_GetTableSize(float item_count, vector psize, float item_aspect)
 {
-	float aspect = size_x / size_y;
-	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
+	float columns, rows;
+	float ratio, best_ratio = 0;
+	float best_columns = 1, best_rows = 1;
+	bool vertical = (psize.x / psize.y >= item_aspect);
+	if(vertical)
+	{
+		psize = eX * psize.y + eY * psize.x;
+		item_aspect = 1 / item_aspect;
+	}
+
+	rows = ceil(sqrt(item_count));
+	columns = ceil(item_count/rows);
+	while(columns >= 1)
+	{
+		ratio = (psize.x/columns) / (psize.y/rows);
+		if(ratio > item_aspect)
+			ratio = item_aspect * item_aspect / ratio;
+
+		if(ratio <= best_ratio)
+			break; // ratio starts decreasing by now, skip next configurations
+
+		best_columns = columns;
+		best_rows = rows;
+		best_ratio = ratio;
+
+		if(columns == 1)
+			break;
+
+		--columns;
+		rows = ceil(item_count/columns);
+	}
+
+	if(vertical)
+		return eX * best_rows + eY * best_columns;
+	else
+		return eX * best_columns + eY * best_rows;
 }
 
 float stringwidth_colors(string s, vector theSize)
@@ -512,6 +546,17 @@ void HUD_Weapons(void)
 		if(!weapons_stat)
 			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
 				weapons_stat |= WepSet_FromWeapon(i);
+
+		#if 0
+		/// debug code
+		if(cvar("wep_add"))
+		{
+			weapons_stat = '0 0 0';
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % WEP_COUNT);
+			for(i = WEP_FIRST; i <= countw; ++i)
+				weapons_stat |= WepSet_FromWeapon(i);
+		}
+		#endif
 	}
 
 	// determine which weapons are going to be shown
@@ -529,6 +574,7 @@ void HUD_Weapons(void)
 			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
 				++weapon_count;
 
+
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
 		{
@@ -540,16 +586,9 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		if(padded_panel_size.x / padded_panel_size.y < aspect)
-		{
-			columns = HUD_GetColumnCount(WEP_COUNT, padded_panel_size, aspect);
-			rows = ceil(WEP_COUNT/columns);
-		}
-		else
-		{
-			rows = HUD_GetRowCount(WEP_COUNT, padded_panel_size, aspect);
-			columns = ceil(WEP_COUNT/rows);
-		}
+		vector table_size = HUD_GetTableSize(WEP_COUNT, padded_panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
 		weapon_size.y = padded_panel_size.y / rows;
 
@@ -714,17 +753,11 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		if(panel_size.x / panel_size.y < aspect)
-		{
-			columns = HUD_GetColumnCount(WEP_COUNT, panel_size, aspect);
-			rows = ceil(WEP_COUNT/columns);
-		}
-		else
-		{
-			rows = HUD_GetRowCount(WEP_COUNT, panel_size, aspect);
-			columns = ceil(WEP_COUNT/rows);
-		}
-		weapon_size = eX * panel_size.x*(1/columns) + eY * panel_size.y*(1/rows);
+		vector table_size = HUD_GetTableSize(WEP_COUNT, panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = panel_size.x / columns;
+		weapon_size.y = panel_size.y / rows;
 		vertical_order = (columns >= rows);
 	}
 
@@ -882,9 +915,14 @@ void HUD_Weapons(void)
 			drawstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
-		/// debug
-		//drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
-		//drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		#if 0
+		/// debug code
+		if(!autocvar_hud_panel_weapons_onlyowned)
+		{
+			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		#endif
 
 		// continue with new position for the next weapon
 		if(vertical_order)
