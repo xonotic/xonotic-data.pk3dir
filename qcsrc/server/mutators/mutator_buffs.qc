@@ -422,7 +422,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 
 	if(frag_attacker.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)
-		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_time;
+		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
 	if(frag_attacker.buffs & BUFF_MEDIC)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
@@ -605,11 +605,27 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_disability_effect_time = time + 0.5;
 	}
 
-	if(self.frozen)
+	// handle buff lost status
+	// 1: notify everyone else
+	// 2: notify carrier as well
+	int buff_lost = 0;
+
+	if(self.buff_time)
+	if(time >= self.buff_time)
+		buff_lost = 2;
+
+	if(self.frozen) { buff_lost = 1; }
+
+	if(buff_lost)
 	{
 		if(self.buffs)
 		{
 			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+			if(buff_lost >= 2)
+			{
+				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, self.buffs); // TODO: special timeout message?
+				sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+			}
 			self.buffs = 0;
 		}
 	}
@@ -620,6 +636,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 	if(self.buffs != self.oldbuffs)
 	{
+		if(self.buffs && Buff_Timer(self.buffs))
+			self.buff_time = time + Buff_Timer(self.buffs);
+		else
+			self.buff_time = 0;
+
 		if(self.oldbuffs & BUFF_AMMO)
 		{
 			if(self.buff_ammo_prev_infitems)
@@ -784,6 +805,7 @@ void buffs_Initialize()
 	precache_sound("keepaway/respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
+	addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
 	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_jumpheight);
 
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);

@@ -92,7 +92,7 @@ const int STAT_HEALING_ORB_ALPHA      = 83;
 const int STAT_PLASMA                 = 84;
 const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
-// 87 empty?
+const int STAT_BUFF_TIME              = 87;
 // 88 empty?
 // 89 empty?
 // 90 empty?

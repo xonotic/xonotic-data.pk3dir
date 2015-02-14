@@ -11,7 +11,6 @@
 .float buff_flight_prev_gravity;
 // jump
 .float stat_jumpheight;
-//const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
@@ -21,7 +20,7 @@
 .float buff_activetime;
 .float buff_activetime_updated;
 .entity buff_waypoint;
-.float oldbuffs; // for updating effects
+.int oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)
 
 const vector BUFF_MIN = ('-16 -16 -20');

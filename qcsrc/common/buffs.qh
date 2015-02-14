@@ -18,6 +18,17 @@ int BUFF_ALL;
 .vector colormod; // buff color
 .string model2; // buff sprite
 .int skin; // buff skin
+.float buff_time;
+
+// hacky function to return the cvar value only to server - TODO: do this properly!
+float sv_cvar(string cvarname)
+{
+#ifdef SVQC
+	return cvar(cvarname);
+#else
+	return 0;
+#endif
+}
 
 #define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
 	int BUFF_##NAME; \
@@ -33,6 +44,7 @@ int BUFF_ALL;
 		Buff_Type##sname.message = hname; \
 		Buff_Type##sname.skin = bskin; \
 		Buff_Type##sname.colormod = bcolor; \
+		Buff_Type##sname.buff_time = sv_cvar(strcat("g_buffs_", #sname, "_time")); \
 		Buff_Type##sname.model2 = strzone(strcat("buff-", #sname)); \
 		if(!Buff_Type_first) \
 			Buff_Type_first = Buff_Type##sname; \
@@ -106,4 +118,5 @@ int Buff_Type_FromName(string buff_name);
 int Buff_Type_FromSprite(string buff_sprite);
 int Buff_Skin(int buff_id);
 string Buff_Sprite(int buff_id);
+float Buff_Timer(int buff_id);
 #endif

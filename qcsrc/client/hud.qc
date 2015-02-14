@@ -4459,8 +4459,26 @@ void HUD_Buffs(void)
 	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
 	vector buff_offset = '0 0 0';
 
+	/*float strength = ceil(strength_time);
+		if(autocvar_hud_panel_powerups_progressbar)
+			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(strength > 1)
+				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
+			if(strength <= 5)
+				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
+		}*/
+
+	float buff_time, buff_maxtime;
+	buff_time = bound(0, getstatf(STAT_BUFF_TIME) - time, 99);
+	buff_maxtime = 60; // TODO: stat?
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
+		if(buff_time && autocvar_hud_panel_buffs_progressbar)
+			HUD_Panel_DrawProgressBar(pos + buff_offset, mySize, autocvar_hud_panel_buffs_progressbar_name, buff_time/buff_maxtime, 0, 0, 
+									  Buff_Color(e.items) * 0.5, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
 		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 	}
