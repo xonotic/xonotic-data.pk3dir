@@ -91,9 +91,9 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Jetpack on jump:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_jetpack_jump"));
-			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, ZCTX(_("JPJUMP^Disabled")), "0");
 			e.addValue(e, _("Air only"), "1");
-			e.addValue(e, _("All"), "2");
+			e.addValue(e, ZCTX(_("JPJUMP^All")), "2");
 			e.configureXonoticTextSliderValues(e);
 			e.sendCvars = true;
 	me.TR(me);

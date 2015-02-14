@@ -40,8 +40,8 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom")));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 1; i <= 14; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+		for(i = 31; i <= 42; ++i) {
+			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 		// show a larger preview of the selected crosshair
@@ -50,14 +50,14 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 15; i <= 28; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+		for(i = 43; i <= 54; ++i) {
+			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 29; i <= 42; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+		for(i = 55; i <= 66; ++i) {
+			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 	me.TR(me);

@@ -142,9 +142,9 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Decolorize:")));
 			setDependent(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_shownames_decolorize"));
-			e.addValue(e, ZCTX(_("Never")), "0");
-			e.addValue(e, ZCTX(_("Teamplay")), "1");
-			e.addValue(e, ZCTX(_("Always")), "2");
+			e.addValue(e, _("Never"), "0");
+			e.addValue(e, _("Teamplay"), "1");
+			e.addValue(e, _("Always"), "2");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "hud_shownames", 1, 1);
 

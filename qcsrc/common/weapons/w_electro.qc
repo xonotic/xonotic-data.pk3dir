@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0 0.5 1',
 /* modelname */ "electro",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairelectro 0.5",
+/* crosshair */ "gfx/crosshairelectro 0.6",
 /* wepimg    */ "weaponelectro",
 /* refname   */ "electro",
 /* wepname   */ _("Electro")
