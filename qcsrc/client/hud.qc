@@ -591,29 +591,24 @@ void HUD_Weapons(void)
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
 		weapon_size.y = padded_panel_size.y / rows;
-
-		// reduce table trying to keep the original table proportions as much as possible
 		vertical_order = (columns >= rows);
-		if(vertical_order)
-		{
-			rows = ceil(sqrt(weapon_count / (columns / rows)));
-			columns = ceil(weapon_count / rows);
-		}
-		else
-		{
-			columns = ceil(sqrt(weapon_count / (rows / columns)));
-			rows = ceil(weapon_count / columns);
-		}
 
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		if(padded_panel_size.y > padded_panel_size.x)
+		if(padded_panel_size.x / padded_panel_size.y < aspect)
 		{
+			// maximum number of rows that allows to display items with the desired aspect ratio
+			float max_rows = floor(padded_panel_size.y / (weapon_size.x / aspect));
+			columns = min(columns, ceil(weapon_count / max_rows));
+			rows = ceil(weapon_count / columns);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
 		}
 		else
 		{
+			float max_columns = floor(padded_panel_size.x / (weapon_size.y * aspect));
+			rows = min(rows, ceil(weapon_count / max_columns));
+			columns = ceil(weapon_count / rows);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
 		}
