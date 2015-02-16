@@ -147,8 +147,6 @@ void WarpZone_Camera_Read(float isnew)
 }
 
 void CL_RotateMoves(vector ang) = #638;
-float autocvar_in_pitch_min;
-float autocvar_in_pitch_max;
 void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
