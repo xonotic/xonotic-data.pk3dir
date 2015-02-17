@@ -632,7 +632,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
-		self.alpha = autocvar_g_buffs_invisible_alpha;
+		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+
+#define BUFF_ONADD(b) if((self.buffs & (b)) && !(self.oldbuffs & (b)))
+#define BUFF_ONREM(b) if(!(self.buffs & (b)) && (self.oldbuffs & (b)))
 
 	if(self.buffs != self.oldbuffs)
 	{
@@ -641,43 +644,36 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		else
 			self.buff_time = 0;
 
-		if(self.oldbuffs & BUFF_AMMO)
+		BUFF_ONADD(BUFF_AMMO)
+		{
+			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
+			self.items |= IT_UNLIMITED_WEAPON_AMMO;
+		}
+
+		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(self.buff_ammo_prev_infitems)
 				self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else
 				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 		}
-		else if(self.buffs & BUFF_AMMO)
-		{
-			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
-			self.items |= IT_UNLIMITED_WEAPON_AMMO;
-			if(!self.ammo_shells) { self.ammo_shells = 20; }
-			if(!self.ammo_cells) { self.ammo_cells = 20; }
-			if(!self.ammo_rockets) { self.ammo_rockets = 20; }
-			if(!self.ammo_nails) { self.ammo_nails = 20; }
-			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
-		}
 
-		if(self.oldbuffs & BUFF_INVISIBLE)
+		BUFF_ONADD(BUFF_INVISIBLE)
 		{
 			if(time < self.strength_finished && g_instagib)
 				self.alpha = autocvar_g_instagib_invis_alpha;
 			else
 				self.alpha = self.buff_invisible_prev_alpha;
-		}
-		else if(self.buffs & BUFF_INVISIBLE)
-		{
-			if(time < self.strength_finished && g_instagib)
-				self.buff_invisible_prev_alpha = default_player_alpha;
-			else
-				self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 
-		if(self.oldbuffs & BUFF_FLIGHT)
+		BUFF_ONREM(BUFF_INVISIBLE)
+			self.alpha = self.buff_invisible_prev_alpha;
+
+		BUFF_ONADD(BUFF_FLIGHT)
 			self.gravity = self.buff_flight_prev_gravity;
-		else if(self.buffs & BUFF_FLIGHT)
+
+		BUFF_ONREM(BUFF_FLIGHT)
 		{
 			self.buff_flight_prev_gravity = self.gravity;
 			self.gravity = autocvar_g_buffs_flight_gravity;
@@ -723,6 +719,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_model.alpha = self.alpha;
 	}
 
+#undef BUFF_ONADD
+#undef BUFF_ONREM
 	return false;
 }
 
