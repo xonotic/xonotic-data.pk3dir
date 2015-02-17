@@ -14,6 +14,8 @@
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
+// common buff variables
+.float buff_effect_delay;
 
 // buff definitions
 .float buff_active;
@@ -22,6 +24,8 @@
 .entity buff_waypoint;
 .int oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)
+
+const string BUFF_MODEL = "models/relics/relic.md3";
 
 const vector BUFF_MIN = ('-16 -16 -20');
 const vector BUFF_MAX = ('16 16 20');

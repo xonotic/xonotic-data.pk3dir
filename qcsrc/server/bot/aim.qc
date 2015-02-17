@@ -334,8 +334,8 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	hf = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= g_weaponspeedfactor;
-	shotspeedupward *= g_weaponspeedfactor;
+	shotspeed *= W_WeaponSpeedFactor();
+	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
 		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");

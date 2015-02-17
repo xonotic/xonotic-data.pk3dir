@@ -24,10 +24,35 @@ float buffs_BuffModel_Customize()
 	return true;
 }
 
+void buffs_BuffModel_Spawn(entity player)
+{
+	player.buff_model = spawn();
+	setmodel(player.buff_model, BUFF_MODEL);
+	setsize(player.buff_model, '0 0 -40', '0 0 40');
+	setattachment(player.buff_model, player, "");
+	setorigin(player.buff_model, '0 0 1' * (player.buff_model.maxs.z * 1));
+	player.buff_model.owner = player;
+	player.buff_model.scale = 0.7;
+	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
+	player.buff_model.light_lev = 200;
+	player.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
+}
+
 vector buff_GlowColor(entity buff)
 {
 	//if(buff.team) { return Team_ColorRGB(buff.team); }
 	return buff.color;
+}
+
+void buff_Effect(entity player, string eff)
+{
+	if(!autocvar_g_buffs_effects) { return; }
+
+	if(time >= self.buff_effect_delay)
+	{
+		pointparticles(particleeffectnum(eff), player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
+		self.buff_effect_delay = time + 0.05; // prevent spam
+	}
 }
 
 // buff item
@@ -183,7 +208,7 @@ void buff_Think()
 		self.glowmod = buff_GlowColor(self);
 		self.skin = Buff_Skin(self.buffs);
 
-		setmodel(self, "models/relics/relic.md3");
+		setmodel(self, BUFF_MODEL);
 
 		if(self.buff_waypoint)
 		{
@@ -319,7 +344,7 @@ void buff_Init(entity ent)
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
-	setmodel(self, "models/relics/relic.md3");
+	setmodel(self, BUFF_MODEL);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
@@ -349,6 +374,20 @@ void buff_SpawnReplacement(entity ent, entity old)
 	buff_Init(ent);
 }
 
+void buff_Vengeance_DelayedDamage()
+{
+	if(self.enemy)
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
+
+	remove(self);
+	return;
+}
+
+float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
+{
+	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
+}
+
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
@@ -364,20 +403,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	return false;
 }
 
-void buff_Vengeance_DelayedDamage()
-{
-	if(self.enemy)
-		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
-
-	remove(self);
-	return;
-}
-
-float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
-{
-	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
-}
-
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF) { return false; }
@@ -391,8 +416,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-	if(frag_target.health - autocvar_g_buffs_medic_survive_health > 0) // not if the final result would be less than 0, medic must get health
-		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
+		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
 
 	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
@@ -594,6 +618,18 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
+{
+	if(self.buffs & BUFF_SPEED)
+		ret_float *= autocvar_g_buffs_speed_weaponspeed;
+
+	if(time < self.buff_disability_time)
+		ret_float *= autocvar_g_buffs_disability_weaponspeed;
+
+	return false;
+}
+
+string autocvar_blah;
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
@@ -671,30 +707,20 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.alpha = self.buff_invisible_prev_alpha;
 
 		BUFF_ONADD(BUFF_FLIGHT)
-			self.gravity = self.buff_flight_prev_gravity;
-
-		BUFF_ONREM(BUFF_FLIGHT)
 		{
 			self.buff_flight_prev_gravity = self.gravity;
 			self.gravity = autocvar_g_buffs_flight_gravity;
 		}
 
+		BUFF_ONREM(BUFF_FLIGHT)
+			self.gravity = self.buff_flight_prev_gravity;
+
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
 		{
 			if(!self.buff_model)
-			{
-				self.buff_model = spawn();
-				setmodel(self.buff_model, "models/relics/relic.md3");
-				setsize(self.buff_model, '0 0 -40', '0 0 40');
-				setattachment(self.buff_model, self, "");
-				setorigin(self.buff_model, '0 0 1' * (self.buff_model.maxs.z * 1));
-				self.buff_model.owner = self;
-				self.buff_model.scale = 0.7;
-				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
-				self.buff_model.light_lev = 200;
-				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
-			}
+				buffs_BuffModel_Spawn(self);
+
 			self.buff_model.color = Buff_Color(self.buffs);
 			self.buff_model.glowmod = buff_GlowColor(self.buff_model);
 			self.buff_model.skin = Buff_Skin(self.buffs);
@@ -795,7 +821,7 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
-	precache_model("models/relics/relic.md3");
+	precache_model(BUFF_MODEL);
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");
@@ -828,6 +854,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WeaponSpeedFactor, buffs_WeaponSpeed, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
