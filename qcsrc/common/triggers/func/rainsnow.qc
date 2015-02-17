@@ -49,7 +49,7 @@ void spawnfunc_func_rain()
 	self.state = 1; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
 
@@ -87,6 +87,6 @@ void spawnfunc_func_snow()
 	self.state = 0; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 #endif

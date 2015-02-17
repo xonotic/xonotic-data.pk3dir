@@ -1,3 +1,5 @@
+#include "../../common/urllib.qh"
+
 float GL_CheckExtension(string ext)
 {
 	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
@@ -327,8 +329,8 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		n = tokenizebyseparator(data, "\n");
 
 	float i;
-	string s; 
-	
+	string s;
+
 	string un_version = "";
 	string un_download = "";
 	string un_url = "";
@@ -337,12 +339,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 	string un_promoted = "";
 	string un_recommended = "";
 	string un_compatexpire = "";
-	
+
 	for(i = 0; i < n; ++i)
 	{
 		s = substring(argv(i), 2, -1);
 		if(s == "") { continue; } // ignore empty lines
-		
+
 		switch(substring(argv(i), 0, 1))
 		{
 			case "V":
@@ -403,13 +405,13 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			if(un_compatexpire != "")
 			{
-				string curdate = strftime(FALSE, "%Y%m%d%H%M%S");
+				string curdate = strftime(false, "%Y%m%d%H%M%S");
 				if (strcmp(curdate, un_compatexpire) >= 0)
 					DisableServerBackwardsCompatibility();
 			}
 		}
 	}
-	
+
 	if(un_emergency_pk3s != "")
 	{
 		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);
@@ -455,12 +457,12 @@ void updateCheck()
 		float n, i;
 		float allgood;
 		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
-		allgood = TRUE;
+		allgood = true;
 		for(i = 0; i+1 < n; i += 2)
 		{
 			if(fexists(argv(i+1)))
 				continue;
-			allgood = FALSE;
+			allgood = false;
 			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
 				localcmd("\ncurl --pak \"", argv(i), "\"\n");
 		}
@@ -494,11 +496,11 @@ float preMenuInit()
 	{
 		draw_reset_cropped();
 
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale.x / draw_scale.y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz.y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
 
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		boxA = '0.05 0.5 0' + 0.25 * sz.y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz.y * eY;
 		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
 
 		boxA += sz * 0.1;
@@ -508,17 +510,17 @@ float preMenuInit()
 		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
 		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
 
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 string campaign_name_previous;
 float campaign_won_previous;
 #ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK;
+string autocvar_menu_watermark = WATERMARK;
 #else
-var string autocvar_menu_watermark = "";
+string autocvar_menu_watermark = "";
 #endif
 void postMenuDraw()
 {
@@ -536,8 +538,8 @@ void preMenuDraw()
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
 		// TODO rather turn this into a dialog
-		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
-		line = eY * fs_y;
+		fs = ((1/draw_scale.x) * eX + (1/draw_scale.y) * eY) * 12;
+		line = eY * fs.y;
 		string l1, l2;
 		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
 		l2 = "http://www.xonotic.org/";
@@ -548,11 +550,11 @@ void preMenuDraw()
 				draw_TextWidth(l1, 0, fs),
 				draw_TextWidth(l2, 0, fs)
 			);
-		sz_y = 3 * fs_y;
+		sz_y = 3 * fs.y;
 
 		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
-		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
-		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
+		mid = eX * (0.5 + 0.5 * (1 - sz.x) * cos(time * 0.071))
+		    + eY * (0.5 + 0.5 * (1 - sz.y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);

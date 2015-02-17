@@ -46,12 +46,12 @@ float func_ladder_send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.angles_y);
 	WriteCoord(MSG_ENTITY, self.angles_z);
 
-	return TRUE;
+	return true;
 }
 
 void func_ladder_link()
 {
-	Net_LinkEntity(self, FALSE, 0, func_ladder_send);
+	Net_LinkEntity(self, false, 0, func_ladder_send);
 }
 
 void spawnfunc_func_ladder()

@@ -1,13 +1,16 @@
+#ifndef SELECTION_H
+#define SELECTION_H
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 
 .float hasweapon_complain_spam;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 
-.float weaponcomplainindex;
+.int weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
 
-#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE)
+#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true)
 
 void W_SwitchWeapon_Force(entity e, float w);
 
@@ -27,3 +30,4 @@ void W_PreviousWeapon(float list);
 
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(void);
+#endif

@@ -19,7 +19,7 @@ void fd_secret_use()
 	string message_save;
 
 	self.health = 10000;
-	self.bot_attack = TRUE;
+	self.bot_attack = true;
 
 	// exit if still moving around...
 	if (self.origin != self.oldorigin)

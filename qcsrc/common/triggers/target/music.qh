@@ -1,0 +1,6 @@
+#ifndef TARGET_MUSIC_H
+#define TARGET_MUSIC_H
+
+.float lifetime;
+
+#endif

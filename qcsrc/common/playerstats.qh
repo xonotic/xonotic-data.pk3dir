@@ -1,12 +1,15 @@
+#ifndef PLAYERSTATS_H
+#define PLAYERSTATS_H
+
 #ifdef SVQC
 //float PS_PM_IN_DB = -1;   // playerstats_prematch_in_db      // db for info COLLECTED at the beginning of a match
-float PS_GR_OUT_DB = -1;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
+int PS_GR_OUT_DB = -1;  // playerstats_gamereport_out_db   // db of info SENT at the end of a match
 //float PS_GR_IN_DB = -1;   // playerstats_gamereport_in_db    // db for info COLLECTED at the end of a match
-float PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
+int PS_B_IN_DB = -1;    // playerstats_playerbasic_in_db   // db for info COLLECTED for basic player info (ELO)
 #endif
 
 #ifdef MENUQC
-float PS_D_IN_DB = -1; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
+int PS_D_IN_DB = -1; // playerstats_playerdetail_in_db  // db for info COLLECTED for detailed player profile display
 #endif
 
 #ifdef SVQC
@@ -85,15 +88,15 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status);
 //string autocvar_g_playerstats_uri;
 
 string autocvar_g_playerstats_gamereport_ladder;
-var string autocvar_g_playerstats_gamereport_uri = "http://stats.xonotic.org/stats/submit";
+string autocvar_g_playerstats_gamereport_uri = "http://stats.xonotic.org/stats/submit";
 
-#define PS_B_STATUS_ERROR -2
-#define PS_B_STATUS_IDLE -1
-#define PS_B_STATUS_WAITING 0
-#define PS_B_STATUS_RECEIVED 1
-#define PS_B_STATUS_UPDATING 2
+const float PS_B_STATUS_ERROR = -2;
+const float PS_B_STATUS_IDLE = -1;
+const float PS_B_STATUS_WAITING = 0;
+const float PS_B_STATUS_RECEIVED = 1;
+const float PS_B_STATUS_UPDATING = 2;
 .float playerstats_basicstatus;
-var string autocvar_g_playerstats_playerbasic_uri = "http://stats.xonotic.org";
+string autocvar_g_playerstats_playerbasic_uri = "http://stats.xonotic.org";
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest);
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer);
@@ -102,14 +105,15 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status);
 #ifdef MENUQC
 float PS_D_NEXTUPDATETIME;
 float PS_D_LASTGAMECOUNT;
-#define PS_D_STATUS_ERROR -2
-#define PS_D_STATUS_IDLE -1
-#define PS_D_STATUS_WAITING 0
-#define PS_D_STATUS_RECEIVED 1
-var float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
-var string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
-var float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
+const float PS_D_STATUS_ERROR = -2;
+const float PS_D_STATUS_IDLE = -1;
+const float PS_D_STATUS_WAITING = 0;
+const float PS_D_STATUS_RECEIVED = 1;
+float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
+string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
+float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
 void PlayerStats_PlayerDetail(void);
 void PlayerStats_PlayerDetail_CheckUpdate(void);
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
+#endif
 #endif

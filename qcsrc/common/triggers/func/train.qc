@@ -32,7 +32,7 @@ void train_wait()
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		else // instant turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
-		self.train_wait_turning = TRUE;
+		self.train_wait_turning = true;
 		return;
 	}
 
@@ -41,7 +41,7 @@ void train_wait()
 
 	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
-		self.train_wait_turning = FALSE;
+		self.train_wait_turning = false;
 		train_next();
 	}
 	else
@@ -137,7 +137,7 @@ void spawnfunc_func_train()
 	
 	if (self.spawnflags & 2)
 	{
-		self.platmovetype_turn = TRUE;
+		self.platmovetype_turn = true;
 		self.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
 	}
 	else

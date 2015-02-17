@@ -3,12 +3,12 @@ MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 	start_ammo_shells = warmup_start_ammo_shells = 0;
 	start_weapons = warmup_start_weapons = WEPSET_SHOTGUN;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(melee_ForbidThrowing)
 {
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(melee_FilterItem)
@@ -17,22 +17,22 @@ MUTATOR_HOOKFUNCTION(melee_FilterItem)
 	{
 		case IT_5HP:
 		case IT_ARMOR_SHARD:
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(melee_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":MeleeOnly");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(melee_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Melee Only Arena");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_melee_only)
@@ -43,5 +43,5 @@ MUTATOR_DEFINITION(mutator_melee_only)
 	MUTATOR_HOOK(BuildMutatorsString, melee_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, melee_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

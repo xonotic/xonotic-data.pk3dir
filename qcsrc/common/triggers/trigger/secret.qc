@@ -1,4 +1,14 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../..//dpdefs/progsdefs.qh"
+    #include "../../util.qh"
+    #include "../../../server/defs.qh"
+    #include "secret.qh"
+#endif
+
 #ifdef SVQC
+
 void secrets_setstatus() {
 	self.stat_secrets_total = secrets_total;
 	self.stat_secrets_found = secrets_found;

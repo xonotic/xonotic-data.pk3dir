@@ -8,7 +8,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	entity oldself;
 	string savemessage;
 
-	magicear_matched = FALSE;
+	magicear_matched = false;
 
 	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
@@ -25,7 +25,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
 			return msgin;
 
-		magicear_matched = TRUE;
+		magicear_matched = true;
 
 		if(dotrigger)
 		{
@@ -116,7 +116,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	if(matchstart == -1) // no match
 		return msgin;
 
-	magicear_matched = TRUE;
+	magicear_matched = true;
 
 	if(dotrigger)
 	{

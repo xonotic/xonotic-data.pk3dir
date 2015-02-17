@@ -1,3 +1,15 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+	#include "../../dpdefs/dpextensions.qh"
+	#include "../../common/urllib.qh"
+	#include "../../common/weapons/weapons.qh"
+	#include "weaponstats.qh"
+	#include "../autocvars.qh"
+	#include "../defs.qh"
+#endif
+
 void WeaponStats_Init()
 {
 	weaponstats_buffer = ((autocvar_sv_weaponstats_file != "") ? buf_create() : -1);
@@ -14,11 +26,11 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			// we can write
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
-			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
+			url_fputs(fh, strcat("#date ", strftime(true, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
 #ifdef WATERMARK
 			url_fputs(fh, strcat("#version ", WATERMARK, "\n"));
 #endif
-			url_fputs(fh, strcat("#config ", ftos(crc16(FALSE, cvar_purechanges)), "\n"));
+			url_fputs(fh, strcat("#config ", ftos(crc16(false, cvar_purechanges)), "\n"));
 			url_fputs(fh, strcat("#cvar_purechanges ", ftos(cvar_purechanges_count), "\n"));
 			n = tokenizebyseparator(cvar_purechanges, "\n");
 			for(i = 0; i < n; ++i)
@@ -32,7 +44,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 					{
 						//vector is: kills hits damage
 						url_fputs(fh, sprintf("%s%d %d\t%d %d\t", prefix, i, ibot, j, jbot));
-						url_fputs(fh, sprintf("%d %d %g\n", v_x, v_y, v_z));
+						url_fputs(fh, sprintf("%d %d %g\n", v.x, v.y, v.z));
 					}
 				}
 			url_fputs(fh, "#end\n\n");

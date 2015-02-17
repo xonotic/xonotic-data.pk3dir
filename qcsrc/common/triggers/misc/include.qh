@@ -1,1 +1,6 @@
+#ifndef TRIGGERS_MISC_INCLUDE_H
+#define TRIGGERS_MISC_INCLUDE_H
+
 // nothing yet
+
+#endif

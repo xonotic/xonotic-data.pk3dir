@@ -163,12 +163,12 @@ float door_check_keys(void)
 
 	// no key needed
 	if (!door.itemkeys)
-		return TRUE;
+		return true;
 
 	// this door require a key
 	// only a player can have a key
 	if (!IS_PLAYER(other))
-		return FALSE;
+		return false;
 
 #ifdef SVQC
 	if (item_keys_usekey(door, other))
@@ -202,10 +202,10 @@ float door_check_keys(void)
 		play2(other, "misc/talk.wav");
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 #endif
-		return TRUE;
+		return true;
 	}
 	else
-		return FALSE;
+		return false;
 }
 
 void door_fire()
@@ -484,12 +484,12 @@ float door_trigger_send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.maxs_y);
 	WriteCoord(MSG_ENTITY, self.maxs_z);
 
-	return TRUE;
+	return true;
 }
 
 void door_trigger_link(entity trig)
 {
-	Net_LinkEntity(trig, FALSE, 0, door_trigger_send);
+	Net_LinkEntity(trig, false, 0, door_trigger_send);
 }
 
 void spawn_field(vector fmins, vector fmaxs)
@@ -562,8 +562,8 @@ float LinkDoors_isconnected(entity e1, entity e2, entity pass)
 	|| (e2.absmin_x > e1.absmax_x + DELTA)
 	|| (e2.absmin_y > e1.absmax_y + DELTA)
 	|| (e2.absmin_z > e1.absmax_z + DELTA)
-	) { return FALSE; }
-	return TRUE;
+	) { return false; }
+	return true;
 }
 
 void door_link();
@@ -760,14 +760,14 @@ float door_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.pos2_z);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void door_link()
 {
 	// set size now, as everything is loaded
 	FixSize(self);
-	Net_LinkEntity(self, FALSE, 0, door_send);
+	Net_LinkEntity(self, false, 0, door_send);
 }
 
 void door_init_startopen()

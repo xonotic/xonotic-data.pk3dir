@@ -1,4 +1,8 @@
+#ifndef BGMSCRIPT_H
+#define BGMSCRIPT_H
+
 .float just_toggled;
 
 void BGMScript_InitEntity(entity e);
 float BGMScript(entity e);
+#endif

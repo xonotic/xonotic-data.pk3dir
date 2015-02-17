@@ -1,3 +1,6 @@
+#ifndef SUBS_H
+#define SUBS_H
+
 void SUB_Remove();
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
@@ -64,4 +67,6 @@ float	STATE_DOWN		= 3;
 .string		noise, noise1, noise2, noise3;	// contains names of wavs to play
 
 .float		max_health;		// players maximum health is stored here
+#endif
+
 #endif

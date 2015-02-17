@@ -1,3 +1,7 @@
+#ifndef SPAWNING_H
+#define SPAWNING_H
+
 string W_Apply_Weaponreplace(string in);
 
 void weapon_defaultspawnfunc(float wpn);
+#endif

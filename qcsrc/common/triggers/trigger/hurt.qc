@@ -85,8 +85,8 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
 		if(tracebox_hits_box(start, mi, ma, end, th.absmin, th.absmax))
-			return TRUE;
+			return true;
 
-	return FALSE;
+	return false;
 }
 #endif

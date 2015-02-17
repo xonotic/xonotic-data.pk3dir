@@ -41,7 +41,7 @@ void trigger_gravity_touch()
 {
 	float g;
 
-	if(self.state != TRUE)
+	if(self.state != true)
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -95,12 +95,12 @@ void spawnfunc_trigger_gravity()
 	if(self.noise != "")
 		precache_sound(self.noise);
 
-	self.state = TRUE;
+	self.state = true;
 	IFTARGETED
 	{
 		self.use = trigger_gravity_use;
 		if(self.spawnflags & 2)
-			self.state = FALSE;
+			self.state = false;
 	}
 }
 #endif

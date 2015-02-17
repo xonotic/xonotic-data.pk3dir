@@ -1,3 +1,6 @@
+#ifndef TRIGGERS_INCLUDE_H
+#define TRIGGERS_INCLUDE_H
+
 // some required common stuff
 #ifdef CSQC
 	#include "../../server/item_key.qh"
@@ -17,3 +20,5 @@
 
 // trigger
 #include "trigger/include.qh"
+
+#endif

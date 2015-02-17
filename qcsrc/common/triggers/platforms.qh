@@ -1,3 +1,6 @@
+#ifndef PLATFORMS_H
+#define PLATFORMS_H
+
 .float dmgtime2;
 
 void() plat_center_touch;
@@ -12,4 +15,6 @@ const float PLAT_LOW_TRIGGER = 1;
 
 #ifdef CSQC
 void ent_plat_trigger();
+#endif
+
 #endif

@@ -1,3 +1,5 @@
+#include "include.qh"
+
 #include "counter.qc"
 #include "delay.qc"
 #include "disablerelay.qc"

@@ -1,4 +1,14 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../../dpdefs/progsdefs.qh"
+    #include "../../../dpdefs/dpextensions.qh"
+    #include "../../util.qh"
+    #include "../../../server/defs.qh"
+#endif
+
 #ifdef SVQC
+
 // spawner entity
 // "classname" "target_spawn"
 // "message" "fieldname value fieldname value ..."
@@ -40,13 +50,13 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 		value = argv(i+1);
 		if(key == "$")
 		{
-			data_x = -1;
-			data_y = FIELD_STRING;
+			data.x = -1;
+			data.y = FIELD_STRING;
 		}
 		else
 		{
 			data = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", key)));
-			if(data_y == 0) // undefined field, i.e., invalid type
+			if(data.y == 0) // undefined field, i.e., invalid type
 			{
 				print("target_spawn: invalid/unknown entity key ", key, " specified, ignored!\n");
 				continue;
@@ -170,7 +180,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(valueoffset != "")
 				{
-					switch(data_y)
+					switch(data.y)
 					{
 						case FIELD_STRING:
 							value = strcat(value, valueoffset);
@@ -189,7 +199,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(valueoffsetrandom != "")
 				{
-					switch(data_y)
+					switch(data.y)
 					{
 						case FIELD_FLOAT:
 							value = ftos(stof(value) + random() * stof(valueoffsetrandom));
@@ -224,9 +234,9 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 		}
 		else
 		{
-			if(data_y == FIELD_VECTOR)
+			if(data.y == FIELD_VECTOR)
 				value = strreplace("'", "", value); // why?!?
-			putentityfieldstring(data_x, e, value);
+			putentityfieldstring(data.x, e, value);
 		}
 	}
 }
@@ -314,7 +324,7 @@ void initialize_field_db()
 			ft = entityfieldtype(i);
 			new = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
 			prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
-			if(prev_y == 0)
+			if(prev.y == 0)
 			{
 				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(new));
 				if(fn == "target_spawn_spawnfunc")

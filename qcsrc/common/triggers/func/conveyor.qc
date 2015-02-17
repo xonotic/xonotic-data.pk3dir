@@ -103,7 +103,7 @@ float conveyor_send(entity to, float sf)
 	if(sf & 2)
 		WriteByte(MSG_ENTITY, self.state);
 
-	return TRUE;
+	return true;
 }
 
 void conveyor_init()
@@ -124,7 +124,7 @@ void conveyor_init()
 
 	FixSize(self);
 
-	Net_LinkEntity(self, 0, FALSE, conveyor_send);
+	Net_LinkEntity(self, 0, false, conveyor_send);
 
 	self.SendFlags |= 1;
 }

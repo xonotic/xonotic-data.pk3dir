@@ -1,3 +1,25 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../../dpdefs/progsdefs.qh"
+    #include "../../../warpzonelib/util_server.qh"
+    #include "../../weapons/weapons.qh"
+    #include "../../../server/defs.qh"
+    #include "../../deathtypes.qh"
+#endif
+
+/*
+*		t_swamp.c
+*		Adds spawnfunc_trigger_swamp and suppoart routines for xonotic 1.2.1+
+*		Author tZork (Jakob MG)
+*		jakob@games43.se
+*		2005 11 29
+*/
+
+.float swamp_interval;	//Hurt players in swamp with this interval
+.float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
+.entity swampslug;
+
 #ifdef SVQC
 void spawnfunc_trigger_swamp(void);
 #endif
@@ -100,12 +122,12 @@ float swamp_send(entity to, float sf)
 	WriteAngle(MSG_ENTITY, self.angles_y);
 	WriteAngle(MSG_ENTITY, self.angles_z);
 
-	return TRUE;
+	return true;
 }
 
 void swamp_link()
 {
-	Net_LinkEntity(self, FALSE, 0, func_ladder_send);
+	Net_LinkEntity(self, false, 0, func_ladder_send);
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?

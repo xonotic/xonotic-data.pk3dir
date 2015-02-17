@@ -243,7 +243,7 @@ void spawnfunc_misc_laser()
 
 	self.mangle = self.angles;
 
-	Net_LinkEntity(self, FALSE, 0, laser_SendEntity);
+	Net_LinkEntity(self, false, 0, laser_SendEntity);
 
 	IFTARGETED
 	{

@@ -32,7 +32,7 @@ float plat_trigger_send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.maxs_x);
 	WriteCoord(MSG_ENTITY, self.maxs_y);
 	WriteCoord(MSG_ENTITY, self.maxs_z);
-	return TRUE;
+	return true;
 }
 
 void plat_spawn_inside_trigger()
@@ -68,7 +68,7 @@ void plat_spawn_inside_trigger()
 			if(tmin_z < tmax_z)
 			{
 				setsize (trigger, tmin, tmax);
-				Net_LinkEntity(trigger, FALSE, 0, plat_trigger_send);
+				Net_LinkEntity(trigger, false, 0, plat_trigger_send);
 				return;
 			}
 
@@ -260,14 +260,14 @@ float set_platmovetype(entity e, string s)
 
 	if(n > 2)
 		if(argv(2) == "force")
-			return TRUE; // no checking, return immediately
+			return true; // no checking, return immediately
 
 	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
 	{
 		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 #endif

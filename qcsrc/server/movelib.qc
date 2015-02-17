@@ -1,3 +1,5 @@
+#include "movelib.qh"
+
 #ifdef SVQC
 .vector moveto;
 
@@ -53,7 +55,6 @@ vector movelib_inertmove(vector new_vel,float new_bias)
     return new_vel * new_bias + self.velocity * (1-new_bias);
 }
 
-.float  movelib_lastupdate;
 void movelib_move(vector force,float max_velocity,float drag,float theMass,float breakforce)
 {
     float deltatime;
@@ -162,18 +163,6 @@ void movelib_update(vector dir,float force)
 }
 */
 
-/*
-void movelib_move_simple(vector newdir,float velo,float blendrate)
-{
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
-}
-*/
-#define movelib_move_simple(newdir,velo,blendrate) \
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
-
-#define movelib_move_simple_gravity(newdir,velo,blendrate) \
-    if(self.flags & FL_ONGROUND) movelib_move_simple(newdir,velo,blendrate)
-
 void movelib_beak_simple(float force)
 {
     float mspeed;
@@ -182,7 +171,7 @@ void movelib_beak_simple(float force)
 
     mspeed = max(0,vlen(self.velocity) - force);
     mdir   = normalize(self.velocity);
-    vz = self.velocity_z;
+    vz = self.velocity.z;
     self.velocity = mdir * mspeed;
     self.velocity_z = vz;
 }
@@ -197,13 +186,13 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
 {
     vector a, b, c, d, e, r, push_angle, ahead, side;
 
-    push_angle_y = 0;
+    push_angle.y = 0;
     r = (self.absmax + self.absmin) * 0.5 + (v_up * spring_up);
     e = v_up * spring_length;
 
     // Put springs slightly inside bbox
-    ahead = v_forward * (self.maxs_x * 0.8);
-    side  = v_right   * (self.maxs_y * 0.8);
+    ahead = v_forward * (self.maxs.x * 0.8);
+    side  = v_right   * (self.maxs.y * 0.8);
 
     a = r + ahead + side;
     b = r + ahead - side;
@@ -211,36 +200,36 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     d = r - ahead - side;
 
     traceline(a, a - e,MOVE_NORMAL,self);
-    a_z =  (1 - trace_fraction);
+    a.z =  (1 - trace_fraction);
     r = trace_endpos;
 
     traceline(b, b - e,MOVE_NORMAL,self);
-    b_z =  (1 - trace_fraction);
+    b.z =  (1 - trace_fraction);
     r += trace_endpos;
 
     traceline(c, c - e,MOVE_NORMAL,self);
-    c_z =  (1 - trace_fraction);
+    c.z =  (1 - trace_fraction);
     r += trace_endpos;
 
     traceline(d, d - e,MOVE_NORMAL,self);
-    d_z =  (1 - trace_fraction);
+    d.z =  (1 - trace_fraction);
     r += trace_endpos;
 
-    a_x = r_z;
+    a.x = r.z;
     r = self.origin;
-    r_z = r_z;
+    r.z = r.z;
 
-    push_angle_x = (a_z - c_z) * _max;
-    push_angle_x += (b_z - d_z) * _max;
+    push_angle.x = (a.z - c.z) * _max;
+    push_angle.x += (b.z - d.z) * _max;
 
-    push_angle_z = (b_z - a_z) * _max;
-    push_angle_z += (d_z - c_z) * _max;
+    push_angle.z = (b.z - a.z) * _max;
+    push_angle.z += (d.z - c.z) * _max;
 
     //self.angles_x += push_angle_x * 0.95;
     //self.angles_z += push_angle_z * 0.95;
 
-    self.angles_x = ((1-blendrate) *  self.angles_x)  + (push_angle_x * blendrate);
-    self.angles_z = ((1-blendrate) *  self.angles_z)  + (push_angle_z * blendrate);
+    self.angles_x = ((1-blendrate) *  self.angles.x)  + (push_angle.x * blendrate);
+    self.angles_z = ((1-blendrate) *  self.angles.z)  + (push_angle.z * blendrate);
 
     //a = self.origin;
     setorigin(self,r);

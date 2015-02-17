@@ -67,12 +67,12 @@ float plat_send(entity to, float sf)
 		// used on client
 	}
 
-	return TRUE;
+	return true;
 }
 
 void plat_link()
 {
-	Net_LinkEntity(self, 0, FALSE, plat_send);
+	Net_LinkEntity(self, 0, false, plat_send);
 }
 
 void spawnfunc_func_plat()

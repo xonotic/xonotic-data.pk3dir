@@ -1,3 +1,6 @@
+#ifndef TRIGGERS_H
+#define TRIGGERS_H
+
 const float SF_TRIGGER_INIT = 1;
 const float SF_TRIGGER_UPDATE = 2;
 const float SF_TRIGGER_RESET = 4;
@@ -18,6 +21,8 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 .float bgmscriptsustain;
 .float bgmscriptrelease;
 
+.float lip;
+
 // used elsewhere (will fix)
 #ifdef SVQC
 void spawnfunc_trigger_once();
@@ -32,12 +37,18 @@ void target_voicescript_clear(entity pl);
 .vector dest;
 
 #ifdef CSQC
+float WarpZoneLib_ExactTrigger_Touch();
+#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
+
 .float active;
 .string target;
 .string targetname;
-#define ACTIVE_NOT 		0
-#define ACTIVE_ACTIVE 	1
-#define ACTIVE_IDLE 	2
-#define ACTIVE_BUSY 	2
-#define ACTIVE_TOGGLE	3
+
+const int ACTIVE_NOT 		= 0;
+const int ACTIVE_ACTIVE 	= 1;
+const int ACTIVE_IDLE 		= 2;
+const int ACTIVE_BUSY 		= 2;
+const int ACTIVE_TOGGLE		= 3;
+#endif
+
 #endif

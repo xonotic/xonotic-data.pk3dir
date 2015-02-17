@@ -1,3 +1,6 @@
+#ifndef TRIGGER_SWAMP_H
+#define TRIGGER_SWAMP_H
+
 .float swamp_interval;	//Hurt players in swamp with this interval
 .float swamp_slowdown;	//Players in swamp get slowd down by this mutch 0-1 is slowdown 1-~ is speedup (!?)
 .entity swampslug;
@@ -7,4 +10,6 @@
 
 #ifdef CSQC
 void ent_swamp();
+#endif
+
 #endif

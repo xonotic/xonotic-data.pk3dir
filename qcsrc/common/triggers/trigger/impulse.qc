@@ -1,10 +1,4 @@
 #ifdef SVQC
-// tZorks trigger impulse / gravity
-.float radius;
-.float falloff;
-.float strength;
-.float lastpushtime;
-
 // targeted (directional) mode
 void trigger_impulse_touch1()
 {
