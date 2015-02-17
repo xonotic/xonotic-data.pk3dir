@@ -629,7 +629,6 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
 	return false;
 }
 
-string autocvar_blah;
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
