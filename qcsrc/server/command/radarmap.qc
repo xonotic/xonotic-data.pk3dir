@@ -414,7 +414,7 @@ float RadarMap_Make(float argc)
 				case "--res": // minor alias
 				case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
 				case "--qual": // minor alias
-				case "--quality": { ++i; radarmapper.size.z = stof(argv(i)); break; }
+				case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
 
 				default:
 					i = argc;

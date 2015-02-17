@@ -21,10 +21,10 @@ void XonoticDemoTimeConfirmDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Do you really wish to disconnect now?")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticButton(ZCTX(_("DMCNFRM^Yes")), '1 0 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Yes"), '1 0 0'));
 			e.onClick = Handle_TimeDemo_Click;
 			e.onClickEntity = demolist;
-		me.TD(me, 1, 1, e = makeXonoticButton(ZCTX(_("DMCNFRM^No")), '0 1 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("No"), '0 1 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }

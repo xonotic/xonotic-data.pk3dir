@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '1 0.5 1',
 /* modelname */ "crylink",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshaircrylink 0.4",
+/* crosshair */ "gfx/crosshaircrylink 0.5",
 /* wepimg    */ "weaponcrylink",
 /* refname   */ "crylink",
 /* wepname   */ _("Crylink")

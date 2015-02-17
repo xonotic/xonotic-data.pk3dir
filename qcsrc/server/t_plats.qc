@@ -1629,7 +1629,7 @@ void spawnfunc_func_door_rotating()
 	else // Z
 		self.movedir = '0 1 0';
 
-	if (self.angles.y ==0) self.angles.y = 90;
+	if (self.angles.y ==0) self.angles_y = 90;
 
 	self.movedir = self.movedir * self.angles.y;
 	self.angles = '0 0 0';

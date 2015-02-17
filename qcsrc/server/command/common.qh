@@ -58,7 +58,8 @@ float VerifyKickableEntity(entity client);
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
 
 // if the client is not acceptable, return a string to be used for error messages
-string GetClientErrorString(float clienterror, string original_input);
+string GetClientErrorString_color(float clienterror, string original_input, string col);
+#define GetClientErrorString(clienterror,original_input) GetClientErrorString_color(clienterror,original_input,"^7")
 
 // is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number);

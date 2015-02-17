@@ -1,6 +1,8 @@
 #ifndef WEAPONS_C
 #define WEAPONS_C
 
+#include "weapons.qh"
+
 #if defined(CSQC)
 	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
@@ -12,7 +14,6 @@
 	#include "../../warpzonelib/client.qh"
 	#include "../util.qh"
 	#include "../buffs.qh"
-	#include "weapons.qh"
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes.qh"
 	#include "../../csqcmodellib/interpolate.qh"
@@ -35,7 +36,6 @@
     #include "../buffs.qh"
     #include "../monsters/monsters.qh"
     #include "config.qh"
-    #include "weapons.qh"
     #include "../../server/weapons/csqcprojectile.qh"
     #include "../../server/weapons/tracing.qh"
     #include "../../server/t_items.qh"

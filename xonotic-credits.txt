@@ -4,6 +4,7 @@ Ant "Antibody" Zucaro
 Marvin "Mirio" Beck
 Merlijn Hofstra
 Peter "Morphed" Pielak
+Ruszkai "CuBe0wL" Ákos
 Samual "Ares" Lenks
 Tyler "-z-" Mulligan
 Zac "Mario" Jardine
@@ -19,6 +20,7 @@ Jan "zykure" Behrens
 JH0nny
 Łukasz "kuniu the frogg" Polek
 Matthias "matthiaskrgr" Krüger
+Mattia "Melanosuchus" Basaglia
 MrBougo
 Nick "bitbomb" Lucca
 nilyt/nyov
@@ -69,7 +71,7 @@ MintOX
 packer
 Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 Severin "sev" Meyer
 
 *Music / Sound FX
@@ -96,7 +98,7 @@ Zac "Mario" Jardine
 
 *Marketing / PR
 Tyler "-z-" Mulligan
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 Samual "Ares" Lenks
 Saulo "mand1nga" Gil
 
@@ -123,7 +125,6 @@ Dale "graphitemaster" Weiler
 **Other Active Contributors
 Erik "Ablu" Schilling
 Jope "Sless" Withers
-Mattia "Melanosuchus" Basaglia
 Mircea "Taoki" Kitsune
 Robert "ai" Kuroto
 
@@ -143,19 +144,15 @@ set_killer
 
 *Czech
 shogun assassin/woky
+Tomáš "CZHeron" Volavka
 
 *Dutch
 Alexander "freefang" van Dam
 PinkRobot
 vegiburger
 
-*German
-cvcxc
-Erik "Ablu" Schilling
-Jope "Sless" Withers
-Marvin "Mirio" Beck
-Rudolf "divVerent" Polzer
-Yepoleb
+*English (Australia)
+Zac "Mario" Jardine
 
 *Finnish
 Henry "Exitium" Sanmark
@@ -167,6 +164,14 @@ Maxime "Taximus" Paradis
 RedGuff
 Yannick "SpiKe" Le Guen
 
+*German
+cvcxc
+Erik "Ablu" Schilling
+Jope "Sless" Withers
+Marvin "Mirio" Beck
+Rudolf "divVerent" Polzer
+Yepoleb
+
 *Greek
 Γιάννης "Evropi" Α.
 Konstantinos "LDinos" Mihalenas
@@ -174,7 +179,7 @@ Savoritias
 Vindex
 
 *Hungarian
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 xaN1C4n3
 
 *Japanese
@@ -188,6 +193,7 @@ XCostaX
 
 *Polish
 4m
+Alex "tiprogrammierer.alex" Progger
 Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
@@ -197,9 +203,11 @@ xXxCHAOTICxXx
 *Romanian
 BusterDBK
 Mircea "Taoki" Kitsune
+Tudor "TropiKo" Ionel
 
 *Russian
 Alex "alextalker7" Talker
+Alexandr "zrg"
 Andrei "adem4ik" Stepanov
 gravicappa
 Hot Dog
@@ -218,7 +226,7 @@ Alan "aagp" Garcia
 Ari_tent
 brunodeleo
 Kammy
-roader_gentto
+roader_gentoo
 Rodrigo Mouton Laudin
 SouL
 

@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '1 1 0',
 /* modelname */ "rl",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairrocketlauncher 0.5875",
+/* crosshair */ "gfx/crosshairrocketlauncher 0.7",
 /* wepimg    */ "weaponrocketlauncher",
 /* refname   */ "devastator",
 /* wepname   */ _("Devastator")
