@@ -187,6 +187,7 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
 		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "");                         break;
+	case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit");        break;
 		default:                      GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
 	}
 

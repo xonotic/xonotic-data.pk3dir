@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 0',
 /* modelname */ "campingrifle",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairrifle 0.5",
+/* crosshair */ "gfx/crosshairrifle 0.6",
 /* wepimg    */ "weaponrifle",
 /* refname   */ "rifle",
 /* wepname   */ _("Rifle")

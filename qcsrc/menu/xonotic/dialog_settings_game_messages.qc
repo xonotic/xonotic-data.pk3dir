@@ -52,10 +52,10 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Sprees in info messages:")));
 			setDependent(e, "notification_show_sprees", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("notification_show_sprees_info"));
-			e.addValue(e, ZCTX(_("Disabled")), "0");
-			e.addValue(e, ZCTX(_("Target")), "1");
-			e.addValue(e, ZCTX(_("Attacker")), "2");
-			e.addValue(e, ZCTX(_("Both")), "3");
+			e.addValue(e, ZCTX(_("SPREES^Disabled")), "0");
+			e.addValue(e, _("Target"), "1");
+			e.addValue(e, _("Attacker"), "2");
+			e.addValue(e, ZCTX(_("SPREES^Both")), "3");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "notification_show_sprees", 1, 1);
 	#endif

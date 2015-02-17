@@ -28,7 +28,12 @@
     #define bool float
 
     // Boolean Constants
-    const bool true 	= 1;
-    const bool false 	= 0;
+    const int true 	= 1;
+    const int false = 0;
 #endif
+
+// Transitional aliases
+[[deprecated("use true")]] [[alias("true")]] const bool TRUE;
+[[deprecated("use false")]] [[alias("false")]] const bool FALSE;
+
 #endif

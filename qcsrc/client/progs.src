@@ -1,9 +1,7 @@
 ../../csprogs.dat
 
 ../common/util-pre.qh
-sys-pre.qh
 ../dpdefs/csprogsdefs.qh
-sys-post.qh
 
 announcer.qc
 bgmscript.qc

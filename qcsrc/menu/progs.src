@@ -1,10 +1,8 @@
 ../../menu.dat
 
 ../common/util-pre.qh
-sys-pre.qh
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
-sys-post.qh
 
 oo/interface.qh
 	classes.qc
